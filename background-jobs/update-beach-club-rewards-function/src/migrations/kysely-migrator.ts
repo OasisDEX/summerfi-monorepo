@@ -154,6 +154,7 @@ export class KyselyMigrator {
       .ifNotExists()
       .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
       .addColumn('custom_code', 'varchar(100)', (col) => col.unique())
+      .addColumn('type', 'varchar(100)', (col) => col.notNull())
       // Running totals
       .addColumn('total_points_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
       .addColumn('total_summer_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
@@ -308,8 +309,8 @@ export class KyselyMigrator {
           new_code_id := nextval('referral_codes_seq')::text;
           
           -- Create a referral code for the new user
-          INSERT INTO referral_codes (id)
-          VALUES (new_code_id)
+          INSERT INTO referral_codes (id, type)
+          VALUES (new_code_id, 'user')
           ON CONFLICT (id) DO NOTHING;
           
           -- Set the user's referral_code to their own code
@@ -490,8 +491,17 @@ export class KyselyMigrator {
         console.log(`Dropped table: ${table}`)
       }
 
-      // Drop the trigger function
+      // drop functions
+      await client.query('DROP FUNCTION IF EXISTS auto_create_referral_code() CASCADE')
       await client.query('DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE')
+
+      // drop triggers
+      await client.query('DROP TRIGGER IF EXISTS auto_create_user_referral_code ON users')
+      await client.query(
+        'DROP TRIGGER IF EXISTS update_referral_codes_updated_at ON referral_codes',
+      )
+      await client.query('DROP TRIGGER IF EXISTS update_users_updated_at ON users')
+      await client.query('DROP TRIGGER IF EXISTS update_points_config_updated_at ON points_config')
 
       await client.query('COMMIT')
       console.log('✅ Database reset completed')

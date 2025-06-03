@@ -1,7 +1,7 @@
 import { Kysely, PostgresDialect, sql } from 'kysely'
 import { DB } from 'kysely-codegen'
 import { Pool } from 'pg'
-import { ConfigService } from './config-updated'
+import { ConfigService } from './config'
 import { KyselyMigrator } from './migrations/kysely-migrator'
 import { Network } from './types'
 
@@ -41,6 +41,7 @@ enum ReferralCodeType {
   USER = 'user',
   INTEGRATOR = 'integrator',
   INVALID = 'invalid',
+  TEST = 'test',
 }
 export class DatabaseService {
   protected pool: Pool
@@ -116,21 +117,26 @@ export class DatabaseService {
   }
 
   /**
-   * Validate if referral code exists in database or is internal referral code
+   * Validate if referral code exists in database or is integrator referral code
    */
-  private async validateReferralCode(referralCodeId: string): Promise<ReferralCodeType> {
+  private async validateReferralCode(referralCodeId: string): Promise<string | null> {
     try {
       const parsedReferralCodeId = parseInt(referralCodeId)
       if (parsedReferralCodeId > 100 && parsedReferralCodeId < 2000000) {
-        return ReferralCodeType.INTEGRATOR
+        await this.ensureReferralCode(referralCodeId, ReferralCodeType.INTEGRATOR)
+        return referralCodeId
+      }
+      if (parsedReferralCodeId >= 0 && parsedReferralCodeId < 100) {
+        await this.ensureReferralCode(referralCodeId, ReferralCodeType.TEST)
+        return referralCodeId
       }
       const result = await this.db.executeQuery(
         sql`SELECT 1 FROM referral_codes WHERE id = ${referralCodeId} LIMIT 1`.compile(this.db),
       )
-      return result.rows.length > 0 ? ReferralCodeType.USER : ReferralCodeType.INVALID
+      return result.rows.length > 0 ? referralCodeId : null
     } catch (error) {
       console.error('Error validating referral code:', error)
-      return ReferralCodeType.INVALID
+      return null
     }
   }
 
@@ -149,34 +155,8 @@ export class DatabaseService {
     let validatedReferrerId: string | null = null
 
     if (data.referrerId) {
-      // referral code might be integer or hex string
-      if (data.referrerId.startsWith('0x')) {
-        const decodedReferralCode = this.decodeHexReferralCode(data.referrerId)
-        if (decodedReferralCode !== null) {
-          validatedReferrerId = decodedReferralCode.toString()
-        }
-      } else {
-        validatedReferrerId = data.referrerId
-      }
-
-      if (validatedReferrerId !== null) {
-        const referralCodeId = validatedReferrerId.toString()
-        const referralCodeType = await this.validateReferralCode(referralCodeId)
-
-        if (referralCodeType === ReferralCodeType.USER) {
-          validatedReferrerId = referralCodeId
-          console.log(`Valid referral code found: ${data.referrerId} -> ${referralCodeId}`)
-        } else if (referralCodeType === ReferralCodeType.INTEGRATOR) {
-          await this.ensureReferralCode(referralCodeId)
-        } else {
-          console.log(
-            `Invalid referral code (not found in database): ${data.referrerId} -> ${referralCodeId}`,
-          )
-        }
-      } else {
-        console.log(`Invalid referral code format: ${data.referrerId} - skip processing user`)
-        return
-      }
+      const referralCodeId = data.referrerId
+      validatedReferrerId = await this.validateReferralCode(referralCodeId)
     }
 
     await this.db
@@ -184,8 +164,8 @@ export class DatabaseService {
       .values({
         id: userId,
         referrer_id: validatedReferrerId,
-        referral_chain: data.referralChain || null,
-        referral_timestamp: data.referralTimestamp || null,
+        referral_chain: validatedReferrerId ? data.referralChain : null,
+        referral_timestamp: validatedReferrerId ? data.referralTimestamp : null,
         is_active: false,
       })
       .onConflict((oc) => oc.doNothing())
@@ -210,7 +190,7 @@ export class DatabaseService {
     const feeTier = isVolatile ? 0.003 : 0.01
     const dailyFeeGeneratedByThePosition = (depositUsd * feeTier) / 365
     const dailyReferrerFees = dailyFeeGeneratedByThePosition * (isVolatile ? 0.00025 : 0.0005)
-    const dailyOwnerFees = dailyFeeGeneratedByThePosition - dailyReferrerFees
+    const dailyOwnerFees = dailyFeeGeneratedByThePosition * (isVolatile ? 0.00015 : 0.00025)
 
     await this.db
       .insertInto('positions')
@@ -385,19 +365,19 @@ export class DatabaseService {
       sql`
       WITH owner_fees AS (
         SELECT 
-          u.id,
+          u.referral_code,
           SUM(p.fees_per_day_owner) as total_daily_fees
         FROM users u
         INNER JOIN positions p ON u.id = p.user_id
-        WHERE u.is_active = true
-        GROUP BY u.id
+        WHERE u.is_active = true AND u.referral_code IS NOT NULL
+        GROUP BY u.referral_code
       )
       UPDATE referral_codes
       SET 
         fees_per_day = COALESCE(of.total_daily_fees, 0),
         total_fees_earned = total_fees_earned + COALESCE(of.total_daily_fees, 0) / 24
       FROM owner_fees of
-      WHERE referral_codes.id = of.id
+      WHERE referral_codes.id = of.referral_code
     `.compile(this.db),
     )
 
@@ -529,12 +509,13 @@ export class DatabaseService {
   /**
    * Get or create referral code
    */
-  async ensureReferralCode(id: string, customCode?: string): Promise<void> {
+  async ensureReferralCode(id: string, type: ReferralCodeType, customCode?: string): Promise<void> {
     await this.db
       .insertInto('referral_codes')
       .values({
         id,
         custom_code: customCode || null,
+        type,
         total_points_earned: '0',
         total_deposits_usd: '0',
         active_users_count: 0,

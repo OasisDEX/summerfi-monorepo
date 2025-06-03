@@ -46,7 +46,7 @@ export class ReferralProcessor {
       let periodStart: Date
       if (!lastProcessed) {
         // First run - process last 24 hours
-        periodStart = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+        periodStart = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
         this.logger.log('📍 First run - processing last 24 hours')
       } else {
         periodStart = lastProcessed
