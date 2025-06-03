@@ -1,3 +1,4 @@
+import { type CSSProperties, type FC } from 'react'
 import { BeachClubRadialGradient } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
@@ -7,7 +8,19 @@ import classNames from './BeachClubPalmBackground.module.css'
 import palmLeft from '@/public/img/beach_club/palm_1.png'
 import palmRight from '@/public/img/beach_club/palm_2.png'
 
-export const BeachClubPalmBackground = () => {
+interface BeachClubPalmBackgroundProps {
+  leftPalmSyles?: CSSProperties
+  rightPalmSyles?: CSSProperties
+  topGradientStyles?: CSSProperties
+  bottomGradientStyles?: CSSProperties
+}
+
+export const BeachClubPalmBackground: FC<BeachClubPalmBackgroundProps> = ({
+  leftPalmSyles,
+  rightPalmSyles,
+  topGradientStyles,
+  bottomGradientStyles,
+}) => {
   const searchParams = useSearchParams()
 
   const isBeachClub = searchParams.get('tab') === 'beach-club'
@@ -24,10 +37,16 @@ export const BeachClubPalmBackground = () => {
           transition: 'opacity 0.3s ease-in-out',
           opacity: isBeachClub ? 0.7 : 0,
           zIndex: -1,
+          ...leftPalmSyles,
         }}
         className={classNames.palmHidden}
       />
-      <BeachClubRadialGradient isBeachClub={isBeachClub} />
+      <BeachClubRadialGradient
+        isBeachClub={isBeachClub}
+        wrapperStyle={{
+          ...topGradientStyles,
+        }}
+      />
       <Image
         src={palmRight}
         alt="palm_right"
@@ -39,6 +58,7 @@ export const BeachClubPalmBackground = () => {
           transition: 'opacity 0.3s ease-in-out',
           opacity: isBeachClub ? 0.7 : 0,
           zIndex: -1,
+          ...rightPalmSyles,
         }}
       />
       <BeachClubRadialGradient
@@ -46,6 +66,7 @@ export const BeachClubPalmBackground = () => {
         wrapperStyle={{
           bottom: '0',
           transform: 'translate(-50%, 350px)',
+          ...bottomGradientStyles,
         }}
         opacity={0.7}
       />

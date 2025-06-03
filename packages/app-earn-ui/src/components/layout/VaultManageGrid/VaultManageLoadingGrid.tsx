@@ -20,11 +20,13 @@ import vaultManageGridStyles from './VaultManageGrid.module.css'
 interface VaultManageLoadingGridProps {
   detailsContent: ReactNode
   sidebarContent: ReactNode
+  isMobile?: boolean
 }
 
 export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
   detailsContent,
   sidebarContent,
+  isMobile,
 }) => {
   const riskTooltipLabel = getVaultRiskTooltipLabel({
     risk: 'lower',
@@ -33,15 +35,15 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
           <Text as="div" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-            Earn / &nbsp;
+            Earn /
           </Text>
           <SkeletonLine height={17} width={300} style={{ marginTop: '2px' }} />
           <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
             &nbsp;/&nbsp;
           </Text>
-          <SkeletonLine height={17} width={300} style={{ marginTop: '2px' }} />
+          <SkeletonLine height={17} width={120} style={{ marginTop: '2px' }} />
         </div>
       </div>
       <div className={vaultManageGridStyles.vaultManageGridPositionWrapper}>
@@ -70,13 +72,19 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                 }
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text
+              style={{
+                color: 'var(--earn-protocol-secondary-100)',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <BonusLabel isLoading withTokenBonus />
             </Text>
           </div>
           <SimpleGrid
-            columns={3}
-            rows={1}
+            columns={isMobile ? 1 : 3}
+            rows={isMobile ? 3 : 1}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -120,7 +128,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Current APY"
+                title="30d APY"
                 value={
                   <SkeletonLine
                     radius="16px"

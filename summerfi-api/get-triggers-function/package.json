@@ -18,7 +18,7 @@
     "@summerfi/triggers-calculations": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
     "bignumber.js": "9.1.2",
-    "viem": "2.27.2",
+    "viem": "2.29.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

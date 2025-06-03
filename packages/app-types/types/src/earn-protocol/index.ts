@@ -298,6 +298,16 @@ export type SupportedDefillamaTvlProtocols =
   | 'ethena'
   | 'fluid'
 
+export type ProAppStats = {
+  monthlyVolume: number
+  managedOnOasis: number
+  medianVaultSize: number
+  vaultsWithActiveTrigger: number
+  executedTriggersLast90Days: number
+  lockedCollateralActiveTrigger: number
+  triggersSuccessRate: number
+}
+
 export type LandingPageData = {
   systemConfig: EarnAppConfigType
   vaultsWithConfig: SDKVaultishType[]
@@ -306,4 +316,5 @@ export type LandingPageData = {
     [key in SupportedDefillamaTvlProtocols]: bigint
   }
   totalRebalances: number
+  proAppStats: ProAppStats
 }

@@ -10,7 +10,6 @@ import {
   getVaultsProtocolsList,
   getVaultUrl,
   networkIconByNetworkName,
-  SimpleGrid,
   SUMR_CAP,
   Text,
   useAmount,
@@ -129,7 +128,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { push } = useRouter()
   const queryParams = useSearchParams()
 
-  const { isMobile, isTablet, isMobileOrTablet } = useMobileCheck(deviceType)
+  const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
   const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
   const sortingMethodId = useMemo(
@@ -431,12 +430,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       isMobileOrTablet={isMobileOrTablet}
       onRefresh={revalidateVaultsListData}
       topContent={
-        <SimpleGrid
-          columns={isMobile ? 1 : 3}
-          rows={isMobile ? 3 : 1}
-          className={vaultsListViewStyles.topContentGrid}
-          gap={isMobile ? 16 : isTablet ? 64 : 170}
-        >
+        <div className={vaultsListViewStyles.topContentGrid}>
           <DataBlock
             title="Protocol TVL"
             titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
@@ -459,7 +453,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             size="large"
             value={formattedProtocolsSupportedCount}
           />
-        </SimpleGrid>
+        </div>
       }
       leftContent={
         <>
@@ -492,6 +486,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               />
             </div>
             <Dropdown
+              dropdownChildrenStyle={{
+                width: isMobile ? '100%' : 'fit-content',
+              }}
               dropdownValue={{
                 value: selectedSortingMethod.id,
                 content: <VaultsSortingItem label={selectedSortingMethod.label} />,

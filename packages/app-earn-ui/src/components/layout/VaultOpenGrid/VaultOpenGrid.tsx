@@ -242,8 +242,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             {simulationGraph}
           </AnimateHeight>
           <SimpleGrid
-            columns={2}
-            rows={2}
+            columns={isMobileOrTablet ? 1 : 2}
+            rows={isMobileOrTablet ? 4 : 2}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -301,7 +301,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                       <Text
-                        variant="p4semi"
+                        variant="p3semi"
                         style={{
                           marginRight: 'var(--general-space-4)',
                         }}

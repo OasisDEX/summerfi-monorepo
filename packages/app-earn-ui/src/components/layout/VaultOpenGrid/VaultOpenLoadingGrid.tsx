@@ -20,11 +20,13 @@ import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 interface VaultOpenLoadingGridProps {
   detailsContent: ReactNode
   sidebarContent: ReactNode
+  isMobile?: boolean
 }
 
 export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
   detailsContent,
   sidebarContent,
+  isMobile,
 }) => {
   const riskTooltipLabel = getVaultRiskTooltipLabel({
     risk: 'lower',
@@ -66,13 +68,19 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
                 }
               />
             </Dropdown>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            <Text
+              style={{
+                color: 'var(--earn-protocol-secondary-100)',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <BonusLabel isLoading withTokenBonus />
             </Text>
           </div>
           <SimpleGrid
-            columns={2}
-            rows={2}
+            columns={isMobile ? 1 : 2}
+            rows={isMobile ? 4 : 2}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -98,7 +106,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Current APY"
+                title="Live APY"
                 value={
                   <SkeletonLine
                     radius="16px"
@@ -112,15 +120,28 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
                 subValueSize="medium"
               />
             </Box>
-            <Box
-              style={{
-                gridColumn: '1/3',
-              }}
-            >
+            <Box>
               <DataBlock
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
+                value={
+                  <SkeletonLine
+                    radius="16px"
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    height={30}
+                    width={100}
+                  />
+                }
+                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
+                subValueSize="medium"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Deposit cap"
                 value={
                   <SkeletonLine
                     radius="16px"

@@ -83,15 +83,15 @@ const VaultSwitchCard = ({
         <div className={controlsSwitchStyles.dataRow}>
           <div className={controlsSwitchStyles.dataRowColumn}>
             <VaultSwitchCardDataBlock title="Balance" value={positionBalance} />
-            {apy30d && (
+            {!!apy30d && (
               <VaultSwitchCardDataBlock title="30d APY" value={formatDecimalAsPercent(apy30d)} />
             )}
           </div>
           <div className={controlsSwitchStyles.dataRowColumn}>
-            {apyLive && (
+            {!!apyLive && (
               <VaultSwitchCardDataBlock title="Live APY" value={formatDecimalAsPercent(apyLive)} />
             )}
-            {apySpread && (
+            {!!apySpread && (
               <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
                 APY Spread:&nbsp;
                 <Text as="span" variant="p4semi" style={{ color: apySpreadColor }}>

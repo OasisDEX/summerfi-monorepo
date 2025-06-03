@@ -74,7 +74,7 @@ const VaultBoxContent = ({
       {capitalize(risk)} Risk
     </Text>
     <div className={controlsSwitchTransactionViewStyles.divider} />
-    {apy && (
+    {!!apy && (
       <Text variant="p4semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
         Live&nbsp;APY:&nbsp;{formatDecimalAsPercent(apy)}
       </Text>

@@ -1,5 +1,6 @@
 .actionButton {
   font-size: 14px;
+  line-height: 14px;
   padding: var(--spacing-space-x-small) var(--spacing-space-medium);
   height: 38px;
 }

@@ -1,4 +1,7 @@
+import { type FC } from 'react'
 import { Emphasis, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type ProAppStats } from '@summerfi/app-types'
+import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
@@ -16,9 +19,9 @@ const StatBlock = ({ title, value }: { title: string; value: string }) => {
   )
 }
 
-export const BuildBySummerFi = () => {
+const BuildBySummerFiHeader = () => {
   return (
-    <div>
+    <>
       <div className={buildBySummerFiStyles.buildBySummerFiHeaderWrapper}>
         <Text variant="h2" className={buildBySummerFiStyles.buildBySummerFiHeader}>
           Built by <Emphasis variant="h2colorful">Summer.fi</Emphasis>,{' '}
@@ -38,10 +41,35 @@ export const BuildBySummerFi = () => {
           </WithArrow>
         </Link>
       </div>
+    </>
+  )
+}
+
+interface BuildBySummerFiProps {
+  proAppStats?: ProAppStats
+}
+
+export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({ proAppStats }) => {
+  if (!proAppStats) {
+    return (
+      <div>
+        <BuildBySummerFiHeader />
+      </div>
+    )
+  }
+
+  const { monthlyVolume, managedOnOasis, lockedCollateralActiveTrigger } = proAppStats
+
+  return (
+    <div>
+      <BuildBySummerFiHeader />
       <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
-        <StatBlock title="Summer.fi TVL" value="2.63B" />
-        <StatBlock title="Summer.fi 30D Volume" value="$374.66M" />
-        <StatBlock title="Capital Automated" value="$202.50M" />
+        <StatBlock title="Summer.fi TVL" value={`$${formatFiatBalance(managedOnOasis)}`} />
+        <StatBlock title="Summer.fi 30D Volume" value={`$${formatFiatBalance(monthlyVolume)}`} />
+        <StatBlock
+          title="Capital Automated"
+          value={`$${formatFiatBalance(lockedCollateralActiveTrigger)}`}
+        />
         <StatBlock title="Time Operating" value="7 years" />
       </div>
     </div>

@@ -1,19 +1,26 @@
+'use client'
 import {
   Expander,
   Sidebar,
   SkeletonLine,
   Text,
+  useMobileCheck,
   VaultManageLoadingGrid,
 } from '@summerfi/app-earn-ui'
 
 import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
 export const VaultManageLoadingView = () => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+
   return (
     <VaultManageLoadingGrid
+      isMobile={isMobile}
       detailsContent={[
         <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
           <Expander

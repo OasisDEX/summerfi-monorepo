@@ -8,6 +8,7 @@ import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-
 import { NextResponse } from 'next/server'
 
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
+import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-stats'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -27,22 +28,24 @@ const emptyTvls = {
 }
 
 export async function GET() {
-  const [{ vaults }, configRaw, rebalanceActivity, ...protocolTvlsArray] = await Promise.all([
-    getVaultsList(),
-    systemConfigHandler(),
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 1,
-    }),
-    ...supportedDefillamaProtocols.map((protocol) => {
-      return getProtocolTvl(
-        supportedDefillamaProtocolsConfig[
-          protocol as keyof typeof supportedDefillamaProtocolsConfig
-        ].defillamaProtocolName,
-        protocol,
-      )
-    }),
-  ])
+  const [{ vaults }, configRaw, rebalanceActivity, proAppStats, ...protocolTvlsArray] =
+    await Promise.all([
+      getVaultsList(),
+      systemConfigHandler(),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 1,
+      }),
+      getProAppStats(),
+      ...supportedDefillamaProtocols.map((protocol) => {
+        return getProtocolTvl(
+          supportedDefillamaProtocolsConfig[
+            protocol as keyof typeof supportedDefillamaProtocolsConfig
+          ].defillamaProtocolName,
+          protocol,
+        )
+      }),
+    ])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -72,5 +75,6 @@ export async function GET() {
     vaultsApyByNetworkMap,
     protocolTvls,
     totalRebalances,
+    proAppStats,
   } as LandingPageData)
 }

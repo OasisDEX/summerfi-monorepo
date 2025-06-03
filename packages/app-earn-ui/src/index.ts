@@ -2,7 +2,7 @@
 export { GlobalStyles } from './GlobalStyles'
 
 export { Box } from './components/atoms/Box/Box'
-export { Button } from './components/atoms/Button/Button'
+export { Button, type ButtonVariant } from './components/atoms/Button/Button'
 import type ButtonClassNames from './components/atoms/Button/Button.module.css'
 
 export { ButtonClassNames }

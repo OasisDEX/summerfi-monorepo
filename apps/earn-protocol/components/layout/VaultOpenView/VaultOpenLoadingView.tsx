@@ -1,14 +1,27 @@
-import { Expander, Sidebar, SkeletonLine, Text, VaultOpenLoadingGrid } from '@summerfi/app-earn-ui'
+'use client'
+import {
+  Expander,
+  Sidebar,
+  SkeletonLine,
+  Text,
+  useMobileCheck,
+  VaultOpenLoadingGrid,
+} from '@summerfi/app-earn-ui'
 
 import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import { detailsLinks } from './vault-details-links'
 
 import vaultOpenViewStyles from './VaultOpenView.module.css'
 
 export const VaultOpenLoadingView = () => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+
   return (
     <VaultOpenLoadingGrid
+      isMobile={isMobile}
       detailsContent={
         <div className={vaultOpenViewStyles.leftContentWrapper}>
           <VaultOpenHeaderBlock detailsLinks={detailsLinks} />
