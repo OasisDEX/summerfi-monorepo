@@ -21,6 +21,7 @@ export class ConfigService {
         'active_user_threshold_usd',
         'points_formula_base',
         'points_formula_log_multiplier',
+        'run_migrations',
         'enable_backfill',
         'is_updating',
       ])

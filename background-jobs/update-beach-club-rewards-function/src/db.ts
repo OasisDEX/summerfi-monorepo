@@ -508,9 +508,10 @@ export class DatabaseService {
     try {
       const result = await this.db
         .selectFrom('points_config')
-        .select('run_migrations')
+        .select(['key', 'value'])
+        .where('key', '=', 'run_migrations')
         .executeTakeFirst()
-      return result?.run_migrations === 'true'
+      return result?.value === 'true'
     } catch (error) {
       console.error('Db not initialized:', error)
       return true
