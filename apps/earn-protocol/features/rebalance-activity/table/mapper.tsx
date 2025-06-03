@@ -101,6 +101,7 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
               <Icon tokenName={asset} variant="s" />
               <TableCellText
                 style={{ color: 'var(--earn-protocol-secondary-40)', display: 'flex' }}
+                as="div"
               >
                 {formatCryptoBalance(amount)} rebalanced
                 <Link href={scannerLink} target="_blank">

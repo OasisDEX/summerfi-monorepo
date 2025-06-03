@@ -492,6 +492,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               />
             </div>
             <Dropdown
+              dropdownChildrenStyle={{
+                width: isMobile ? '100%' : 'fit-content',
+              }}
               dropdownValue={{
                 value: selectedSortingMethod.id,
                 content: <VaultsSortingItem label={selectedSortingMethod.label} />,

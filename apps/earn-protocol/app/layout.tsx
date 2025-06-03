@@ -9,7 +9,7 @@ import {
   sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
-import { type DeviceType } from '@summerfi/app-types'
+import { DeviceType } from '@summerfi/app-types'
 import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
@@ -23,6 +23,7 @@ import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { fontInter } from '@/helpers/fonts'
+import { getDeviceType } from '@/middleware'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 
 export const metadata: Metadata = {
@@ -38,10 +39,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
+  const headersList = await headers()
 
   const locale = 'en'
 
   const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
+
+  // Get device type from cookie or detect it from user agent
+  let deviceType = getServerSideCookies('deviceType', cookie) as DeviceType | ''
+
+  if (!deviceType) {
+    const userAgent = headersList.get('user-agent')
+
+    if (userAgent) {
+      const { deviceType: detectedType } = getDeviceType(userAgent)
+
+      deviceType = detectedType
+    }
+  }
+
+  const resolvedDeviceType = deviceType || DeviceType.DESKTOP
 
   if (config.maintenance && process.env.NODE_ENV !== 'development') {
     return (
@@ -69,7 +86,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
-  const deviceType = getServerSideCookies('deviceType', cookie) as DeviceType
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
 
@@ -101,7 +117,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           accountKitInitializedState={accountKitInitializedState}
           config={config}
           analyticsCookie={analyticsCookie}
-          deviceType={deviceType}
+          deviceType={resolvedDeviceType}
           localConfigContextState={{
             slippageConfig,
             sumrNetApyConfig,
