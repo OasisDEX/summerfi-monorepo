@@ -1,5 +1,6 @@
 import { Kysely } from 'kysely'
 import { DB } from 'kysely-codegen'
+import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface PointsConfig {
   processingIntervalHours: number
@@ -10,7 +11,10 @@ export interface PointsConfig {
 }
 
 export class ConfigService {
-  constructor(private db: Kysely<DB>) {}
+  constructor(
+    private db: Kysely<DB>,
+    private logger: Logger,
+  ) {}
 
   async getConfig(): Promise<PointsConfig> {
     const result = await this.db
@@ -59,7 +63,7 @@ export class ConfigService {
   }
 
   async setIsUpdating(isUpdating: boolean): Promise<void> {
-    console.log(`🔄 Setting is_updating to: ${isUpdating}`)
+    this.logger.info(`🔄 Setting is_updating to: ${isUpdating}`)
 
     // Ensure the record exists first
     await this.db
@@ -69,7 +73,7 @@ export class ConfigService {
         value: isUpdating.toString(),
         updated_at: new Date(),
       })
-      .onConflict((oc: any) =>
+      .onConflict((oc) =>
         oc.column('key').doUpdateSet({
           value: isUpdating.toString(),
           updated_at: new Date(),
@@ -77,7 +81,7 @@ export class ConfigService {
       )
       .execute()
 
-    console.log(`✅ Successfully set is_updating to: ${isUpdating}`)
+    this.logger.info(`✅ Successfully set is_updating to: ${isUpdating}`)
   }
 
   async getIsUpdating(): Promise<boolean> {
@@ -89,11 +93,11 @@ export class ConfigService {
         value: 'false',
         updated_at: new Date(),
       })
-      .onConflict((oc: any) => oc.column('key').doNothing())
+      .onConflict((oc) => oc.column('key').doNothing())
       .execute()
 
     const config = await this.getConfig()
-    console.log(`📖 Retrieved is_updating flag: ${config.isUpdating}`)
+    this.logger.info(`📖 Retrieved is_updating flag: ${config.isUpdating}`)
     return config.isUpdating
   }
 }

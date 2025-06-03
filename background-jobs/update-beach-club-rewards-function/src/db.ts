@@ -3,6 +3,7 @@ import { DB } from 'kysely-codegen'
 import { Pool } from 'pg'
 import { ConfigService, PointsConfig } from './config'
 import { KyselyMigrator } from './migrations/kysely-migrator'
+import { Logger } from '@aws-lambda-powertools/logger'
 import { Network } from './types'
 import * as dotenv from 'dotenv'
 import path from 'node:path'
@@ -76,6 +77,7 @@ export class DatabaseService {
   protected db: Kysely<DB>
   public config: ConfigService
   public migrator: KyselyMigrator | null = null
+  public logger: Logger
 
   // SUMR token price in USD
   private readonly SUMR_TOKEN_PRICE_USD = 0.25
@@ -90,6 +92,7 @@ export class DatabaseService {
   ]
 
   constructor() {
+    this.logger = new Logger({ serviceName: 'db' })
     const BEACH_CLUB_REWARDS_DB_CONNECTION_STRING =
       process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
     if (!BEACH_CLUB_REWARDS_DB_CONNECTION_STRING) {
@@ -117,7 +120,7 @@ export class DatabaseService {
       }),
     })
 
-    this.config = new ConfigService(this.db)
+    this.config = new ConfigService(this.db, new Logger({ serviceName: 'config' }))
   }
   async setMigrator(): Promise<void> {
     if (!this.migrator) {
