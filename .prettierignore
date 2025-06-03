@@ -20,6 +20,7 @@ artifacts
 **/*.module.css.d.ts
 sst-env.d.ts
 
+background-jobs/**/src/generated
 packages/**/src/generated
 sdk/**/src/generated
 summerfi-api/**/src/generated
