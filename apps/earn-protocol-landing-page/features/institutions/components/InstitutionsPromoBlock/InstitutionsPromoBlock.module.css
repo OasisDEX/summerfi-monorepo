@@ -74,7 +74,7 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  color: var(--color-text-secondary)
+  color: var(--color-text-secondary);
 }
 
 .institutionsPromoBlockWrapper .part.darkSide ul li svg {
