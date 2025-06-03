@@ -49,6 +49,7 @@ jobs:
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
       SUMMER_PRO_PRODUCT_HUB_KEY: ${{ secrets.SUMMER_PRO_PRODUCT_HUB_KEY }}
       PRO_APP_URL: ${{ secrets.PRO_APP_URL }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3

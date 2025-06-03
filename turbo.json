@@ -109,7 +109,8 @@
     "EARN_APP_URL",
     "SUMMER_PRO_PRODUCT_HUB_KEY",
     "PRO_APP_URL",
-    "ENVIRONMENT_TAG"
+    "ENVIRONMENT_TAG",
+    "BEACH_CLUB_REWARDS_DB_CONNECTION_STRING"
   ],
   "tasks": {
     "dev": {

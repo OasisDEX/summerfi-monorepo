@@ -25,49 +25,6 @@ async function main() {
         }
         break
 
-      case 'backfill':
-        console.log('🔄 Starting backfill...')
-        const fromDateStr = args[1]
-        const fromDate = fromDateStr ? new Date(fromDateStr) : undefined
-        if (fromDateStr && isNaN(fromDate!.getTime())) {
-          console.error('❌ Invalid date format. Use YYYY-MM-DD')
-          process.exit(1)
-        }
-        const backfillResult = await processor.backfill(fromDate)
-        if (backfillResult.success) {
-          console.log(`✅ Backfill completed successfully`)
-          console.log(
-            `   Period: ${backfillResult.periodStart.toISOString()} to ${backfillResult.periodEnd.toISOString()}`,
-          )
-          console.log(`   Users processed: ${backfillResult.usersProcessed}`)
-          console.log(`   Active users: ${backfillResult.activeUsers}`)
-        } else {
-          console.error('❌ Backfill failed:', backfillResult.error)
-          process.exit(1)
-        }
-        break
-
-      case 'stats':
-        console.log('📊 Fetching statistics...')
-        const stats = await processor.getStats()
-        console.log('\n📈 Referral System Statistics:')
-        console.log(`   Last processed: ${stats.lastProcessed?.toISOString() || 'Never'}`)
-        console.log(`   Total referral codes: ${stats.totalReferralCodes}`)
-        console.log(`   Total active users: ${stats.totalActiveUsers}`)
-
-        if (stats.topReferrers.length > 0) {
-          console.log('\n🏆 Top Referrers:')
-          stats.topReferrers.forEach((ref, index) => {
-            console.log(`   ${index + 1}. ${ref.id}${ref.customCode ? ` (${ref.customCode})` : ''}`)
-            console.log(
-              `      Points: ${ref.totalPoints.toFixed(2)} (${ref.pointsPerDay.toFixed(2)}/day)`,
-            )
-            console.log(`      Active users: ${ref.activeUsers}`)
-            console.log(`      Total deposits: $${ref.totalDeposits.toFixed(2)}`)
-          })
-        }
-        break
-
       case 'migrate':
         console.log('🔧 Running database migrations...')
         await db.migrate()

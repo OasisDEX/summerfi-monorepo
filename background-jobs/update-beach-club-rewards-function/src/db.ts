@@ -85,12 +85,25 @@ export class DatabaseService {
   ]
 
   constructor() {
+    const BEACH_CLUB_REWARDS_DB_CONNECTION_STRING =
+      process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
+    if (!BEACH_CLUB_REWARDS_DB_CONNECTION_STRING) {
+      throw new Error('BEACH_CLUB_REWARDS_DB_CONNECTION_STRING is not set')
+    }
+    const connectionString = BEACH_CLUB_REWARDS_DB_CONNECTION_STRING.replace('postgres://', '')
+
+    const host = connectionString.split('@')[1].split(':')[0]
+    const port = connectionString.split('@')[1].split(':')[1].split('/')[0]
+    const database = connectionString.split('@')[1].split(':')[1].split('/')[1]
+    const user = connectionString.split('@')[0].split(':')[0]
+    const password = connectionString.split('@')[0].split(':')[1]
+
     this.pool = new Pool({
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5439'),
-      database: process.env.DB_NAME || 'beach_club_points',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
+      host,
+      port: parseInt(port),
+      database,
+      user,
+      password,
     })
 
     this.db = new Kysely<DB>({
@@ -507,6 +520,11 @@ export class DatabaseService {
       created_at: row.created_at || new Date(),
       updated_at: row.updated_at || new Date(),
     }))
+  }
+
+  async notInitialized(): Promise<boolean> {
+    const result = await this.db.selectFrom('referral_codes').select('id').executeTakeFirst()
+    return result === null
   }
 
   async close(): Promise<void> {

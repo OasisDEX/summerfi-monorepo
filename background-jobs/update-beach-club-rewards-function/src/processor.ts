@@ -1,8 +1,7 @@
 import { ReferralClient } from './client'
 import { DatabaseService, PositionUpdate } from './db'
 import { Account, HourlySnapshot } from './types'
-import { Kysely, sql } from 'kysely'
-import { DB } from 'kysely-codegen'
+import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface ProcessingResult {
   success: boolean
@@ -15,12 +14,6 @@ export interface ProcessingResult {
 
 export interface ProcessorConfig {
   logger?: Logger
-}
-
-export interface Logger {
-  log(...args: any[]): void
-  error(...args: any[]): void
-  warn(...args: any[]): void
 }
 
 export class ReferralProcessor {
@@ -46,7 +39,9 @@ export class ReferralProcessor {
   constructor(config?: ProcessorConfig) {
     this.db = new DatabaseService()
     this.client = new ReferralClient()
-    this.logger = config?.logger || console
+    this.logger =
+      config?.logger ||
+      new Logger({ serviceName: 'update-beach-club-rewards-function', logLevel: 'DEBUG' })
     this.referralStartDate = new Date('2025-05-27')
   }
 
@@ -54,14 +49,14 @@ export class ReferralProcessor {
    * Process the latest period since last execution
    */
   async processLatest(): Promise<ProcessingResult> {
-    this.logger.log('🚀 Processing latest referral points...')
+    this.logger.info('🚀 Processing latest referral points...')
 
     // Safety check - ensure we're not already processing
     const isUpdating = await this.db.config.getIsUpdating()
-    this.logger.log(`🔍 Current is_updating flag: ${isUpdating}`)
+    this.logger.info(`🔍 Current is_updating flag: ${isUpdating}`)
 
     if (isUpdating) {
-      this.logger.log('⚠️ Processing already in progress - skipping this run')
+      this.logger.info('⚠️ Processing already in progress - skipping this run')
       return {
         success: true,
         usersProcessed: 0,
@@ -74,11 +69,11 @@ export class ReferralProcessor {
     try {
       // Set updating flag to true
       await this.db.config.setIsUpdating(true)
-      this.logger.log('🔒 Set processing lock to true')
+      this.logger.info('🔒 Set processing lock to true')
 
       // Verify the flag was set
       const verifyFlag = await this.db.config.getIsUpdating()
-      this.logger.log(`✅ Verified is_updating flag: ${verifyFlag}`)
+      this.logger.info(`✅ Verified is_updating flag: ${verifyFlag}`)
 
       return await this.db.executeInTransaction(async (trx) => {
         const lastProcessed = await this.db.getLastProcessedTimestampInTransaction(trx)
@@ -88,19 +83,19 @@ export class ReferralProcessor {
         let periodStart: Date
         if (!lastProcessed) {
           periodStart = this.referralStartDate
-          this.logger.log('📍 First run - processing from referral start date')
+          this.logger.info('📍 First run - processing from referral start date')
         } else {
           periodStart = lastProcessed
         }
 
         const periodEnd = now
 
-        this.logger.log(`📅 Processing Period:`)
-        this.logger.log(`   From: ${periodStart.toISOString()}`)
-        this.logger.log(`   To:   ${periodEnd.toISOString()}`)
+        this.logger.info(`📅 Processing Period:`)
+        this.logger.info(`   From: ${periodStart.toISOString()}`)
+        this.logger.info(`   To:   ${periodEnd.toISOString()}`)
 
         if (periodStart >= periodEnd) {
-          this.logger.log('⏰ No new data to process')
+          this.logger.info('⏰ No new data to process')
           return {
             success: true,
             usersProcessed: 0,
@@ -123,9 +118,7 @@ export class ReferralProcessor {
           for (let i = 0; i < chunks; i++) {
             const chunkStart = new Date(periodStart.getTime() + i * 1 * 60 * 60 * 1000)
             const chunkEnd = new Date(periodStart.getTime() + (i + 1) * 1 * 60 * 60 * 1000)
-            const startTimer = performance.now()
             const result = await this.processPeriodInTransaction(trx, chunkStart, chunkEnd)
-            console.log('time after processPeriodInTransaction', performance.now() - startTimer)
             if (!result.success) {
               throw new Error(`Processing failed for chunk: ${result.error?.message}`)
             } else {
@@ -135,7 +128,7 @@ export class ReferralProcessor {
                   last_processed_timestamp: chunkEnd,
                 })
                 .execute()
-              this.logger.log(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
+              this.logger.info(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
             }
           }
         } else {
@@ -149,7 +142,7 @@ export class ReferralProcessor {
                 last_processed_timestamp: periodEnd,
               })
               .execute()
-            this.logger.log(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
+            this.logger.info(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
           }
         }
 
@@ -162,7 +155,7 @@ export class ReferralProcessor {
         }
       })
     } catch (error) {
-      this.logger.error('❌ Processing failed:', error)
+      this.logger.error('❌ Processing failed:', { error: error as Error })
       return {
         success: false,
         usersProcessed: 0,
@@ -173,12 +166,12 @@ export class ReferralProcessor {
       }
     } finally {
       // Always clear the updating flag
-      this.logger.log('🔓 Releasing processing lock...')
+      this.logger.info('🔓 Releasing processing lock...')
       await this.db.config.setIsUpdating(false)
 
       // Verify the flag was cleared
       const verifyCleared = await this.db.config.getIsUpdating()
-      this.logger.log(`✅ Verified is_updating flag after clear: ${verifyCleared}`)
+      this.logger.info(`✅ Verified is_updating flag after clear: ${verifyCleared}`)
     }
   }
 
@@ -200,10 +193,10 @@ export class ReferralProcessor {
     const timestampGt = BigInt(Math.floor(periodStart.getTime() / 1000))
     const timestampLt = BigInt(Math.floor(periodEnd.getTime() / 1000))
 
-    this.logger.log(`📡 Fetching newly referred accounts in this period...`)
+    this.logger.info(`📡 Fetching newly referred accounts in this period...`)
     const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
 
-    this.logger.log(`📊 Found ${validAccounts.length} new valid referred accounts`)
+    this.logger.info(`📊 Found ${validAccounts.length} new valid referred accounts`)
 
     // Store new users - batch insert for better performance
     if (validAccounts.length > 0) {
@@ -218,7 +211,7 @@ export class ReferralProcessor {
             trx,
             account.referralData.id,
           )
-          this.logger.log(
+          this.logger.info(
             `Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`,
           )
         }
@@ -258,7 +251,7 @@ export class ReferralProcessor {
     periodStart: Date,
     periodEnd: Date,
   ): Promise<ProcessingResult> {
-    this.logger.log(
+    this.logger.info(
       `\n🔄 Processing period: ${periodStart.toISOString()} → ${periodEnd.toISOString()}`,
     )
 
@@ -270,10 +263,10 @@ export class ReferralProcessor {
       const timestampGt = BigInt(Math.floor(periodStart.getTime() / 1000))
       const timestampLt = BigInt(Math.floor(periodEnd.getTime() / 1000))
 
-      // this.logger.log(`📡 Fetching newly referred accounts in this period...`)
+      // this.logger.info(`📡 Fetching newly referred accounts in this period...`)
       // const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
 
-      // this.logger.log(`📊 Found ${validAccounts.length} new valid referred accounts`)
+      // this.logger.info(`📊 Found ${validAccounts.length} new valid referred accounts`)
 
       // // Store new users - batch insert for better performance
       // if (validAccounts.length > 0) {
@@ -285,7 +278,7 @@ export class ReferralProcessor {
 
       //     if (account.referralData?.id) {
       //       validatedReferrerId = await this.db.validateReferralCodeInTransaction(trx, account.referralData.id)
-      //       this.logger.log(`Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`)
+      //       this.logger.info(`Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`)
       //     }
 
       //     userValues.push({
@@ -315,7 +308,7 @@ export class ReferralProcessor {
         .execute()
 
       const userIds = allUsers.map((u: any) => u.id)
-      this.logger.log(`📊 Updating positions for ${userIds.length} users...`)
+      this.logger.info(`📊 Updating positions for ${userIds.length} users...`)
 
       // Step 3: Fetch and update positions
       const positionsByChain = await this.client.getAllPositionsWithHourlySnapshots(userIds, {
@@ -339,11 +332,11 @@ export class ReferralProcessor {
       await this.db.updateUserTotalsInTransaction(trx, userIds, config)
 
       // Step 4: Recalculate all referral stats
-      this.logger.log('📊 Recalculating referral stats...')
+      this.logger.info('📊 Recalculating referral stats...')
       await this.db.recalculateReferralStatsInTransaction(trx)
 
       // Step 5: Update daily rates and accumulate points
-      this.logger.log('💰 Updating points and daily rates...')
+      this.logger.info('💰 Updating points and daily rates...')
       await this.db.updateDailyRatesAndPointsInTransaction(trx)
 
       // Step 6: Update daily stats for historical tracking
@@ -358,7 +351,7 @@ export class ReferralProcessor {
 
       const activeUsers = Number(activeUsersResult?.count || 0)
 
-      this.logger.log(
+      this.logger.info(
         `✅ Period complete: ${userIds.length} users processed, ${activeUsers} active users`,
       )
 
@@ -370,7 +363,7 @@ export class ReferralProcessor {
         periodEnd,
       }
     } catch (error) {
-      this.logger.error('❌ Error during period processing:', error)
+      this.logger.error('❌ Error during period processing:', { error: error as Error })
       return {
         success: false,
         usersProcessed: 0,
