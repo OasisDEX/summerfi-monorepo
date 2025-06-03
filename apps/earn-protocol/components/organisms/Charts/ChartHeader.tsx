@@ -1,4 +1,4 @@
-import { Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
+import { Button, Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
 import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
 import classNames from './ChartHeader.module.css'
@@ -12,6 +12,8 @@ type ChartHeaderProps = {
   timeframes: TimeframesItem
   setTimeframe?: (timeframe: string) => void
   wrapperStyle?: React.CSSProperties
+  isZoomed?: boolean
+  onResetZoom?: () => void
 }
 
 export const ChartHeader = ({
@@ -23,6 +25,8 @@ export const ChartHeader = ({
   setTimeframe,
   timeframes,
   wrapperStyle,
+  isZoomed = false,
+  onResetZoom,
 }: ChartHeaderProps) => {
   return (
     <div className={classNames.wrapper} style={wrapperStyle}>
@@ -34,12 +38,19 @@ export const ChartHeader = ({
           onChange={() => setCheckboxValue(!checkboxValue)}
         />
       )}
-      {timeframe && setTimeframe && (
-        <Timeframes
-          timeframes={timeframes}
-          activeTimeframe={timeframe}
-          setActiveTimeframe={setTimeframe}
-        />
+      {isZoomed ? (
+        <Button onClick={onResetZoom} variant="neutralSmall" style={{ height: '24px' }}>
+          Reset Zoom
+        </Button>
+      ) : (
+        timeframe &&
+        setTimeframe && (
+          <Timeframes
+            timeframes={timeframes}
+            activeTimeframe={timeframe}
+            setActiveTimeframe={setTimeframe}
+          />
+        )
       )}
     </div>
   )

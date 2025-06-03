@@ -6,6 +6,7 @@ import {
   ComposedChart,
   Legend,
   Line,
+  ReferenceArea,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -20,16 +21,36 @@ type YieldsChartProps = {
   colors: { [key: string]: string }
   timeframe: TimeframesType
   summerVaultName: string
+  isSelectingZoom?: boolean
+  selectionZoomStart?: number | null
+  selectionZoomEnd?: number | null
+  selectionHandlers?: {
+    handleMouseDown: (ev: unknown) => void
+    handleMouseMove: (ev: unknown) => void
+    handleMouseUp: () => void
+  }
 }
 
-export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: YieldsChartProps) => {
+export const YieldsChart = ({
+  data,
+  dataNames,
+  colors,
+  summerVaultName,
+  isSelectingZoom = false,
+  selectionZoomStart = null,
+  selectionZoomEnd = null,
+  selectionHandlers,
+}: YieldsChartProps) => {
   const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
 
   return (
-    <RechartResponsiveWrapper>
+    <RechartResponsiveWrapper height="550px">
       <ResponsiveContainer width="100%" height="90%">
         <ComposedChart
           data={data}
+          onMouseDown={selectionHandlers?.handleMouseDown}
+          onMouseMove={selectionHandlers?.handleMouseMove}
+          onMouseUp={selectionHandlers?.handleMouseUp}
           margin={{
             top: 50,
             right: 0,
@@ -51,10 +72,16 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
             tickFormatter={(timestamp: string) => {
               return timestamp.split(' ')[0]
             }}
+            style={{
+              userSelect: 'none',
+            }}
           />
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
+            style={{
+              userSelect: 'none',
+            }}
           />
           <Tooltip
             formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
@@ -63,6 +90,7 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
               backgroundColor: 'var(--color-surface-subtle)',
               borderRadius: '5px',
               padding: '10px',
+              display: isSelectingZoom ? 'none' : 'block',
             }}
             labelStyle={{
               fontSize: '16px',
@@ -117,6 +145,16 @@ export const YieldsChart = ({ data, dataNames, colors, summerVaultName }: Yields
               />
             )
           })}
+          {isSelectingZoom && selectionZoomStart !== null && selectionZoomEnd !== null && (
+            <ReferenceArea
+              x1={data[selectionZoomStart]?.timestamp}
+              x2={data[selectionZoomEnd]?.timestamp}
+              strokeOpacity={0.3}
+              fillOpacity={0.2}
+              fill="#FF49A4"
+              stroke="#FF49A4"
+            />
+          )}
           <Legend
             onMouseEnter={({ dataKey }) => {
               setHighlightedProtocol(dataKey as string)

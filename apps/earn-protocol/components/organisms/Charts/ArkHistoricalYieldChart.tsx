@@ -19,7 +19,18 @@ export const ArkHistoricalYieldChart = ({
   chartData,
   summerVaultName,
 }: ArkHistoricalYieldChartProps) => {
-  const { timeframe, setTimeframe, timeframes } = useTimeframes({
+  const {
+    timeframe,
+    setTimeframe,
+    timeframes,
+    isZoomed,
+    zoomedData,
+    handleResetZoom,
+    isSelectingZoom,
+    selectionZoomStart,
+    selectionZoomEnd,
+    createSelectionHandlers,
+  } = useTimeframes({
     chartData: chartData.data,
   })
   const [compare, setCompare] = useState(false)
@@ -48,9 +59,13 @@ export const ArkHistoricalYieldChart = ({
     return chartData.data[timeframe]
   }, [timeframe, chartData, compare, summerVaultName])
 
+  const dataToDisplay = isZoomed ? (zoomedData as typeof parsedData) : parsedData
+
   const parsedDataWithCutoff =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d'] ? [] : parsedData
+    !chartData || chartData.data['7d'].length <= POINTS_REQUIRED_FOR_CHART['7d']
+      ? []
+      : dataToDisplay
 
   return (
     <Card
@@ -69,6 +84,8 @@ export const ArkHistoricalYieldChart = ({
         checkboxLabel="Compare to others"
         timeframe={timeframe}
         setTimeframe={(nextTimeFrame) => setTimeframe(nextTimeFrame as TimeframesType)}
+        isZoomed={isZoomed}
+        onResetZoom={handleResetZoom}
       />
       <YieldsChart
         summerVaultName={summerVaultName}
@@ -76,6 +93,10 @@ export const ArkHistoricalYieldChart = ({
         colors={colors}
         data={parsedDataWithCutoff}
         dataNames={dataNames}
+        isSelectingZoom={isSelectingZoom}
+        selectionZoomStart={selectionZoomStart}
+        selectionZoomEnd={selectionZoomEnd}
+        selectionHandlers={createSelectionHandlers(parsedData)}
       />
     </Card>
   )

@@ -91,7 +91,7 @@ export const HistoricalChart = ({
                 marginLeft: '70%',
               }
             : {
-                marginLeft: '-20px',
+                marginLeft: '-50px',
               }
         }
       >
@@ -100,7 +100,7 @@ export const HistoricalChart = ({
           margin={{
             top: chartHidden ? 0 : 20,
             right: 0,
-            left: 0,
+            left: 10,
             bottom: 10,
           }}
           onMouseMove={({ activePayload }) => {
@@ -135,9 +135,10 @@ export const HistoricalChart = ({
           />
           <YAxis
             strokeWidth={0}
-            tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
+            tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
             interval="preserveStartEnd"
             scale="linear"
+            width={65}
             domain={[
               (dataMin: number) => {
                 return Math.max(dataMin - Number(dataMin * 0.001), 0)
