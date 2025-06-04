@@ -66,7 +66,7 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
   })
 
   new Cron(stack, 'update-beach-club-rewards-cron', {
-    schedule: 'rate(1 minute)',
+    schedule: 'rate(1 hour)',
     enabled: true,
     job: updateBeachClubRewardsFunction,
   })
