@@ -161,7 +161,8 @@ export default function InstitutionsPage() {
       </div>
       <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
       <div className={institutionsPageStyles.buildBySummerSpacer}>
-        <BuildBySummerFi proAppStats={landingPageData.proAppStats} />
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+        <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       </div>
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">
