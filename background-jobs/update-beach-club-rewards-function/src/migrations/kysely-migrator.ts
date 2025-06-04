@@ -148,26 +148,17 @@ export class KyselyMigrator {
 
   // Simplified schema migration
   private async migration001SimplifiedUp(db: Kysely<any>): Promise<void> {
-    // 1. Create referral_codes table (aggregated stats)
+    // 1. Create referral_codes table (simplified - no more totals)
     await db.schema
       .createTable('referral_codes')
       .ifNotExists()
       .addColumn('id', 'varchar(100)', (col) => col.primaryKey())
       .addColumn('custom_code', 'varchar(100)', (col) => col.unique())
       .addColumn('type', 'varchar(100)', (col) => col.notNull())
-      // Running totals
-      .addColumn('total_points_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('total_summer_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('total_fees_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('total_summer_claimed', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('total_fees_claimed', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('total_points_claimed', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
       .addColumn('active_users_count', 'integer', (col) => col.notNull().defaultTo(0))
-      .addColumn('total_deposits_usd', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      // Daily rates for frontend
-      .addColumn('points_per_day', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('fees_per_day', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('summer_per_day', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('total_deposits_referred_usd', sql`decimal(30,18)`, (col) =>
+        col.notNull().defaultTo(0),
+      )
       // Tracking
       .addColumn('last_calculated_at', 'timestamptz')
       .addColumn('created_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
@@ -193,7 +184,30 @@ export class KyselyMigrator {
       .addColumn('updated_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
       .execute()
 
-    // 3. Create positions table (current state only - no snapshots!)
+    // 3. Create rewards_balances table (new normalized table)
+    await db.schema
+      .createTable('rewards_balances')
+      .ifNotExists()
+      .addColumn('id', 'serial', (col) => col.primaryKey())
+      .addColumn('referral_code_id', 'varchar(100)', (col) =>
+        col.notNull().references('referral_codes.id').onDelete('cascade'),
+      )
+      .addColumn('currency', 'varchar(50)', (col) => col.notNull()) // 'points', 'summer', 'USDC', 'WETH', etc.
+      .addColumn('balance', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('balance_usd', sql`decimal(30,18)`, (col) => col.defaultTo(0)) // null for points/summer
+      .addColumn('amount_per_day', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0)) // in asset terms
+      .addColumn('amount_per_day_usd', sql`decimal(30,18)`, (col) => col.defaultTo(0)) // USD equivalent
+      .addColumn('total_earned', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('total_claimed', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('created_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
+      .addColumn('updated_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
+      .addUniqueConstraint('rewards_balances_referral_code_currency_unique', [
+        'referral_code_id',
+        'currency',
+      ])
+      .execute()
+
+    // 4. Create positions table (current state only - no snapshots!)
     await db.schema
       .createTable('positions')
       .ifNotExists()
@@ -202,15 +216,21 @@ export class KyselyMigrator {
       .addColumn('user_id', 'varchar(100)', (col) =>
         col.notNull().references('users.id').onDelete('cascade'),
       )
-      .addColumn('current_deposit_usd', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('fees_per_day_referrer', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
-      .addColumn('fees_per_day_owner', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('current_deposit_usd', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('current_deposit_asset', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('currency_symbol', 'varchar(20)', (col) => col.notNull().defaultTo('USD'))
+      .addColumn('fees_per_day_referrer', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('fees_per_day_owner', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('fees_per_day_referrer_usd', sql`decimal(30,18)`, (col) =>
+        col.notNull().defaultTo(0),
+      )
+      .addColumn('fees_per_day_owner_usd', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
       .addColumn('is_volatile', 'boolean', (col) => col.notNull().defaultTo(false))
       .addColumn('last_synced_at', 'timestamptz')
       .addPrimaryKeyConstraint('positions_pkey', ['id', 'chain'])
       .execute()
 
-    // 4. Create processing checkpoint table
+    // 5. Create processing checkpoint table
     await db.schema
       .createTable('processing_checkpoint')
       .ifNotExists()
@@ -219,7 +239,7 @@ export class KyselyMigrator {
       .addColumn('created_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
       .execute()
 
-    // 5. Create daily stats table (optional, for historical tracking)
+    // 6. Create daily stats table (optional, for historical tracking)
     await db.schema
       .createTable('daily_stats')
       .ifNotExists()
@@ -227,13 +247,13 @@ export class KyselyMigrator {
         col.notNull().references('referral_codes.id').onDelete('cascade'),
       )
       .addColumn('date', 'date', (col) => col.notNull())
-      .addColumn('points_earned', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('points_earned', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
       .addColumn('active_users', 'integer', (col) => col.notNull().defaultTo(0))
-      .addColumn('total_deposits', sql`decimal(20,8)`, (col) => col.notNull().defaultTo(0))
+      .addColumn('total_deposits', sql`decimal(30,18)`, (col) => col.notNull().defaultTo(0))
       .addPrimaryKeyConstraint('daily_stats_pkey', ['referral_id', 'date'])
       .execute()
 
-    // 6. Create points_config table for configuration
+    // 7. Create points_config table for configuration
     await db.schema
       .createTable('points_config')
       .ifNotExists()
@@ -245,16 +265,17 @@ export class KyselyMigrator {
       .addColumn('updated_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
       .execute()
 
-    // 7. Create points distribution table
+    // 8. Create points distribution table
     await db.schema
       .createTable('rewards_distributions')
       .ifNotExists()
       .addColumn('id', 'serial', (col) => col.primaryKey())
-      .addColumn('referral_id', 'varchar(100)', (col) =>
+      .addColumn('batch_id', 'varchar(100)', (col) => col.notNull())
+      .addColumn('referral_code_id', 'varchar(100)', (col) =>
         col.notNull().references('referral_codes.id').onDelete('cascade'),
       )
-      .addColumn('amount', sql`decimal(20,8)`, (col) => col.notNull())
-      .addColumn('type', 'varchar(100)', (col) => col.notNull())
+      .addColumn('currency', 'varchar(50)', (col) => col.notNull())
+      .addColumn('amount', sql`decimal(30,18)`, (col) => col.notNull())
       .addColumn('description', 'text', (col) => col.notNull())
       .addColumn('distribution_timestamp', 'timestamptz', (col) =>
         col.notNull().defaultTo(sql`NOW()`),
@@ -262,19 +283,55 @@ export class KyselyMigrator {
       .addColumn('created_at', 'timestamptz', (col) => col.defaultTo(sql`NOW()`))
       .execute()
 
-    // Add index for rewards_distributions
+    // Add indexes for rewards_distributions
     await db.schema
-      .createIndex('idx_points_distributions_referral_id')
+      .createIndex('idx_rewards_distributions_referral_code_id')
       .ifNotExists()
       .on('rewards_distributions')
-      .column('referral_id')
+      .column('referral_code_id')
       .execute()
 
     await db.schema
-      .createIndex('idx_points_distributions_timestamp')
+      .createIndex('idx_rewards_distributions_currency')
+      .ifNotExists()
+      .on('rewards_distributions')
+      .column('currency')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_rewards_distributions_timestamp')
       .ifNotExists()
       .on('rewards_distributions')
       .column('distribution_timestamp')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_rewards_distributions_batch_id')
+      .ifNotExists()
+      .on('rewards_distributions')
+      .column('batch_id')
+      .execute()
+
+    // Add indexes for rewards_balances
+    await db.schema
+      .createIndex('idx_rewards_balances_referral_code_id')
+      .ifNotExists()
+      .on('rewards_balances')
+      .column('referral_code_id')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_rewards_balances_currency')
+      .ifNotExists()
+      .on('rewards_balances')
+      .column('currency')
+      .execute()
+
+    await db.schema
+      .createIndex('idx_rewards_balances_referral_code_currency')
+      .ifNotExists()
+      .on('rewards_balances')
+      .columns(['referral_code_id', 'currency'])
       .execute()
 
     // Create triggers to update updated_at columns
@@ -334,7 +391,7 @@ export class KyselyMigrator {
     )
 
     // Apply triggers to tables with updated_at
-    const tablesWithUpdatedAt = ['referral_codes', 'users', 'points_config']
+    const tablesWithUpdatedAt = ['referral_codes', 'users', 'points_config', 'rewards_balances']
     for (const table of tablesWithUpdatedAt) {
       await db.executeQuery(
         sql`
@@ -453,6 +510,13 @@ export class KyselyMigrator {
       .column('chain')
       .execute()
 
+    await db.schema
+      .createIndex('idx_positions_currency_symbol')
+      .ifNotExists()
+      .on('positions')
+      .column('currency_symbol')
+      .execute()
+
     // Processing checkpoint index
     await db.schema
       .createIndex('idx_processing_checkpoint_timestamp')
@@ -483,6 +547,7 @@ export class KyselyMigrator {
     await db.schema.dropTable('daily_stats').ifExists().execute()
     await db.schema.dropTable('processing_checkpoint').ifExists().execute()
     await db.schema.dropTable('positions').ifExists().execute()
+    await db.schema.dropTable('rewards_balances').ifExists().execute()
     await db.schema.dropTable('points_config').ifExists().execute()
     await db.schema.dropTable('users').ifExists().execute()
     await db.schema.dropTable('referral_codes').ifExists().execute()
@@ -516,6 +581,7 @@ export class KyselyMigrator {
         'rewards_distributions',
         'points_distributions',
         'positions',
+        'rewards_balances',
         'points_config',
         'referral_points',
         'custom_referral_codes',
@@ -542,6 +608,9 @@ export class KyselyMigrator {
       )
       await client.query('DROP TRIGGER IF EXISTS update_users_updated_at ON users')
       await client.query('DROP TRIGGER IF EXISTS update_points_config_updated_at ON points_config')
+      await client.query(
+        'DROP TRIGGER IF EXISTS update_rewards_balances_updated_at ON rewards_balances',
+      )
       await client.query('DROP SEQUENCE IF EXISTS referral_codes_seq CASCADE')
       await client.query('COMMIT')
       console.log('✅ Database reset completed')

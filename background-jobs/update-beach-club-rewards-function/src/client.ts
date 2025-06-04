@@ -1,13 +1,11 @@
 import { GraphQLClient } from 'graphql-request'
 import {
-  GetAccountsQuery,
+  GetAccountsWithHourlySnapshotsQuery,
   GetReferredAccountsQuery,
   ValidatePositionsQuery,
 } from './generated/graphql'
 import {
-  ACCOUNTS_QUERY,
   ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY,
-  ACCOUNTS_WITH_POSITIONS_QUERY,
   REFERRED_ACCOUNTS_QUERY,
   VALIDATE_POSITIONS_QUERY,
 } from './graphql/operations'
@@ -64,58 +62,6 @@ export class ReferralClient {
     }
   }
 
-  async getAccounts(
-    chain: SupportedChain,
-    addresses: string[],
-    pagination: PaginationOptions,
-  ): Promise<Account[]> {
-    try {
-      const lowercasedAddresses = addresses.map((a) => a.toLowerCase())
-      const where: any = { id_in: lowercasedAddresses }
-      if (pagination.lastId) {
-        where.id_gt = pagination.lastId
-      }
-
-      const data = await this.clients[chain].request<GetAccountsQuery>(ACCOUNTS_QUERY, {
-        where,
-        first: pagination.first,
-        lastId: pagination.lastId,
-      })
-      return data.accounts.filter(Boolean).map((a) => convertAccount(a as any)) as Account[]
-    } catch (error) {
-      console.error(`Error fetching accounts from ${chain}:`, error)
-      return []
-    }
-  }
-
-  async getAccountsWithPositions(
-    chain: SupportedChain,
-    accountIds: string[],
-    pagination: PaginationOptions,
-  ): Promise<Account[]> {
-    try {
-      const lowercasedIds = accountIds.map((id) => id.toLowerCase())
-      const variables: any = {
-        accountIds: lowercasedIds,
-        first: pagination.first,
-      }
-      if (pagination.lastId) {
-        variables.lastId = pagination.lastId
-      } else {
-        variables.lastId = ''
-      }
-
-      const data = (await this.clients[chain].request(
-        ACCOUNTS_WITH_POSITIONS_QUERY,
-        variables,
-      )) as any
-      return data.accounts.filter(Boolean).map((a: any) => convertAccount(a)) as Account[]
-    } catch (error) {
-      console.error(`Error fetching accounts with positions from ${chain}:`, error)
-      return []
-    }
-  }
-
   // New method to get accounts with hourly snapshots for specific time range
   async getAccountsWithHourlySnapshots(
     chain: SupportedChain,
@@ -137,11 +83,11 @@ export class ReferralClient {
         variables.lastId = ''
       }
 
-      const data = (await this.clients[chain].request(
+      const data = await this.clients[chain].request<GetAccountsWithHourlySnapshotsQuery>(
         ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY,
         variables,
-      )) as any
-      return data.accounts.filter(Boolean).map((a: any) => convertAccount(a)) as Account[]
+      )
+      return data.accounts.filter(Boolean).map((a) => convertAccount(a)) as Account[]
     } catch (error) {
       console.error(`Error fetching accounts with hourly snapshots from ${chain}:`, error)
       return []
@@ -360,36 +306,5 @@ export class ReferralClient {
         (account) => validationResults[account.id],
       ),
     }
-  }
-
-  // Method to get all positions for valid accounts with pagination
-  async getAllPositionsForAccounts(accountIds: string[]): Promise<{ [chain: string]: Account[] }> {
-    const result: { [chain: string]: Account[] } = {}
-
-    for (const chain of SUPPORTED_CHAINS) {
-      const allAccounts: Account[] = []
-      let lastId: string | undefined
-      const batchSize = 50
-
-      // Paginate through accounts
-      while (true) {
-        const accounts = await this.getAccountsWithPositions(chain, accountIds, {
-          first: batchSize,
-          lastId,
-        })
-
-        if (accounts.length === 0) break
-
-        allAccounts.push(...accounts)
-
-        if (accounts.length < batchSize) break
-
-        lastId = accounts[accounts.length - 1].id
-      }
-
-      result[chain] = allAccounts
-    }
-
-    return result
   }
 }

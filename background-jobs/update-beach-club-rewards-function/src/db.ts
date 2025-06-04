@@ -15,8 +15,12 @@ export type PositionUpdate = {
   chain: string
   user_id: string
   current_deposit_usd: string
+  current_deposit_asset: string
+  currency_symbol: string
   fees_per_day_referrer: string
   fees_per_day_owner: string
+  fees_per_day_referrer_usd: string
+  fees_per_day_owner_usd: string
   is_volatile: boolean
   last_synced_at: Date
 }
@@ -24,14 +28,25 @@ export type PositionUpdate = {
 export interface SimplifiedReferralCode {
   id: string
   custom_code: string | null
-  total_points_earned: number
-  total_deposits_usd: number
+  total_deposits_referred_usd: number
   active_users_count: number
-  points_per_day: number
-  fees_per_day: number
   last_calculated_at: Date | null
   created_at: Date
   updated_at: Date
+}
+
+export interface RewardsBalance {
+  id: number
+  referral_code_id: string
+  currency: string
+  balance: number
+  balance_usd: number | null
+  amount_per_day: number
+  amount_per_day_usd: number | null
+  total_earned: number
+  total_claimed: number
+  created_at: Date | null
+  updated_at: Date | null
 }
 
 export interface SimplifiedUser {
@@ -39,7 +54,7 @@ export interface SimplifiedUser {
   referrer_id: string | null
   referral_chain: string | null
   referral_timestamp: Date | null
-  total_deposits_usd: number
+  total_deposits_referred_usd: number
   is_active: boolean
   last_activity_at: Date | null
   created_at: Date
@@ -51,6 +66,8 @@ export interface SimplifiedPosition {
   chain: string
   user_id: string
   current_deposit_usd: number
+  current_deposit_asset: number
+  currency_symbol: string
   last_synced_at: Date | null
 }
 enum ReferralCodeType {
@@ -60,16 +77,15 @@ enum ReferralCodeType {
   TEST = 'test',
 }
 
-enum RewardType {
-  FEES = 'fees',
-  POINTS = 'points',
-  SUMR = 'summer_tokens',
-}
-
 enum RewardDescription {
   REGULAR = 'regular_distribution',
   BONUS = 'bonus',
   CLAIM = 'claim',
+}
+
+enum RewardCurrency {
+  POINTS = 'points',
+  SUMR = 'SUMR',
 }
 
 export class DatabaseService {
@@ -158,85 +174,7 @@ export class DatabaseService {
       .select((eb) => eb.fn.count('id').as('count'))
       .executeTakeFirst()
 
-    return (result?.count as any) > 0
-  }
-
-  /**
-   * Decode hex referral code to integer
-   */
-  private decodeHexReferralCode(hexCode: string): number | null {
-    try {
-      // Remove 0x prefix if present
-      const cleanHex = hexCode.startsWith('0x') ? hexCode.slice(2) : hexCode
-      // search for the hex value in the string as it might have zeroes padded
-      // Convert hex to BigInt then to number
-      const decoded = parseInt(cleanHex, 16)
-      // Validate it's a reasonable number (not 0, not too large)
-      if (decoded === 0 || decoded > Number.MAX_SAFE_INTEGER) {
-        return null
-      }
-      return decoded
-    } catch (error) {
-      console.error('Error decoding hex referral code:', error)
-      return null
-    }
-  }
-
-  /**
-   * Validate if referral code exists in database or is integrator referral code
-   */
-  private async validateReferralCode(referralCodeId: string): Promise<string | null> {
-    try {
-      const parsedReferralCodeId = parseInt(referralCodeId)
-      if (parsedReferralCodeId > 100 && parsedReferralCodeId < 2000000) {
-        await this.ensureReferralCode(referralCodeId, ReferralCodeType.INTEGRATOR)
-        return referralCodeId
-      }
-      if (parsedReferralCodeId >= 0 && parsedReferralCodeId < 100) {
-        await this.ensureReferralCode(referralCodeId, ReferralCodeType.TEST)
-        return referralCodeId
-      }
-      const result = await this.db.executeQuery(
-        sql`SELECT 1 FROM referral_codes WHERE id = ${referralCodeId} LIMIT 1`.compile(this.db),
-      )
-      return result.rows.length > 0 ? referralCodeId : null
-    } catch (error) {
-      console.error('Error validating referral code:', error)
-      return null
-    }
-  }
-
-  /**
-   * Create or update user with referral info
-   */
-  async upsertUser(
-    userId: string,
-    data: {
-      referrerId?: string
-      referralChain?: Network
-      referralTimestamp?: Date
-    },
-  ): Promise<void> {
-    // Validate and decode referral code if provided
-    let validatedReferrerId: string | null = null
-
-    if (data.referrerId) {
-      const referralCodeId = data.referrerId
-      validatedReferrerId = await this.validateReferralCode(referralCodeId)
-      console.log('validatedReferrerId', validatedReferrerId)
-    }
-
-    await this.db
-      .insertInto('users')
-      .values({
-        id: userId,
-        referrer_id: validatedReferrerId,
-        referral_chain: validatedReferrerId ? data.referralChain : null,
-        referral_timestamp: validatedReferrerId ? data.referralTimestamp : null,
-        is_active: false,
-      })
-      .onConflict((oc) => oc.doNothing())
-      .execute()
+    return (result?.count ? Number(result.count) : 0) > 0
   }
 
   async updatePositionsInTransaction(
@@ -246,12 +184,16 @@ export class DatabaseService {
     await trx
       .insertInto('positions')
       .values(positionUpdates)
-      .onConflict((oc: any) =>
+      .onConflict((oc) =>
         oc.columns(['id', 'chain']).doUpdateSet({
-          current_deposit_usd: (eb: any) => eb.ref('excluded.current_deposit_usd'),
-          fees_per_day_referrer: (eb: any) => eb.ref('excluded.fees_per_day_referrer'),
-          fees_per_day_owner: (eb: any) => eb.ref('excluded.fees_per_day_owner'),
-          last_synced_at: (eb: any) => eb.ref('excluded.last_synced_at'),
+          current_deposit_usd: (eb) => eb.ref('excluded.current_deposit_usd'),
+          current_deposit_asset: (eb) => eb.ref('excluded.current_deposit_asset'),
+          currency_symbol: (eb) => eb.ref('excluded.currency_symbol'),
+          fees_per_day_referrer: (eb) => eb.ref('excluded.fees_per_day_referrer'),
+          fees_per_day_owner: (eb) => eb.ref('excluded.fees_per_day_owner'),
+          fees_per_day_referrer_usd: (eb) => eb.ref('excluded.fees_per_day_referrer_usd'),
+          fees_per_day_owner_usd: (eb) => eb.ref('excluded.fees_per_day_owner_usd'),
+          last_synced_at: (eb) => eb.ref('excluded.last_synced_at'),
         }),
       )
       .execute()
@@ -260,26 +202,28 @@ export class DatabaseService {
   /**
    * Update user activity status based on deposit threshold
    */
-  async updateUserTotalsInTransaction(
+  async updateUsersIsActiveFlag(
     trx: Kysely<DB>,
     userIds: string[],
     config: PointsConfig,
   ): Promise<void> {
-    for (const userId of userIds) {
-      await trx.executeQuery(
-        sql`
-      UPDATE users 
-      SET 
-        is_active = (
-          SELECT COALESCE(SUM(current_deposit_usd), 0) >= ${config.activeUserThresholdUsd}
-          FROM positions 
-          WHERE user_id = ${userId}
-        ),
-        last_activity_at = NOW()
-      WHERE id = ${userId}
-    `.compile(trx),
-      )
+    if (userIds.length === 0) {
+      return // No users to update
     }
+
+    await trx.executeQuery(
+      sql`
+     UPDATE users u
+SET 
+  is_active = (
+    SELECT COALESCE(SUM(p.current_deposit_usd), 0) >= ${config.activeUserThresholdUsd}
+    FROM positions p
+    WHERE p.user_id = u.id -- Correlated subquery
+  ),
+  last_activity_at = NOW()
+WHERE u.id = ANY(${userIds});
+    `.compile(trx),
+    )
   }
 
   /**
@@ -291,7 +235,7 @@ export class DatabaseService {
       UPDATE referral_codes rc
       SET 
         active_users_count = COALESCE(stats.active_users, 0),
-        total_deposits_usd = COALESCE(stats.total_deposits, '0'),
+        total_deposits_referred_usd = COALESCE(stats.total_deposits, '0'),
         updated_at = NOW()
       FROM (
         SELECT 
@@ -314,141 +258,240 @@ export class DatabaseService {
   async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>): Promise<void> {
     const config = await this.config.getConfig()
 
-    // update points per day - simplified without active users calculation
-    await trx.executeQuery(
-      sql`
-      UPDATE referral_codes rc
-      SET 
-        points_per_day = rc.total_deposits_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1)),
-        -- Accumulate points (hourly rate)
-        total_points_earned = rc.total_points_earned + (
-          rc.total_deposits_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1)) / 24
-        ),
-        last_calculated_at = NOW()
-      WHERE rc.active_users_count > 0
-      `.compile(trx),
-    )
+    // Generate unique batch ID for this processing run
+    const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
-    // Insert new point distributions
+    // 1. Calculate and distribute points for all referral codes with active users
     await trx.executeQuery(
       sql`
-      INSERT INTO rewards_distributions (referral_id, amount, description, type)
-      SELECT id, points_per_day / 24, ${RewardDescription.REGULAR}, ${RewardType.POINTS} FROM referral_codes
-      WHERE active_users_count > 0
+      WITH hourly_points_distributions AS (
+        SELECT 
+          rc.id as referral_code_id,
+          ${RewardCurrency.POINTS} as currency,
+          (rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1))) / 24 as hourly_amount,
+          rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1)) as daily_amount
+        FROM referral_codes rc
+        WHERE rc.active_users_count > 0
+      )
+      -- Insert distribution records first
+      INSERT INTO rewards_distributions (batch_id, referral_code_id, currency, amount, description)
+      SELECT 
+        ${batchId},
+        referral_code_id,
+        currency,
+        hourly_amount,
+        ${RewardDescription.REGULAR}
+      FROM hourly_points_distributions
+      WHERE hourly_amount > 0
     `.compile(trx),
     )
 
+    // Update balances for points based on distributions
+    await trx.executeQuery(
+      sql`
+      INSERT INTO rewards_balances (referral_code_id, currency, balance, amount_per_day, total_earned)
+      SELECT 
+        rd.referral_code_id,
+        rd.currency,
+        SUM(rd.amount) as hourly_amount,
+        SUM(rd.amount) * 24 as daily_amount,
+        SUM(rd.amount) as hourly_amount
+      FROM rewards_distributions rd
+      WHERE rd.currency = ${RewardCurrency.POINTS}
+        AND rd.description = ${RewardDescription.REGULAR}
+        AND rd.batch_id = ${batchId}
+      GROUP BY rd.referral_code_id, rd.currency
+      ON CONFLICT (referral_code_id, currency) 
+      DO UPDATE SET
+        balance = rewards_balances.balance + EXCLUDED.balance,
+        amount_per_day = EXCLUDED.amount_per_day,
+        total_earned = rewards_balances.total_earned + EXCLUDED.balance,
+        updated_at = NOW()
+    `.compile(trx),
+    )
+
+    // 2. Calculate and distribute SUMR rewards for all referral codes with active users
     const sumrCaseStatement = this.SUMR_REWARD_TIERS.map((tier) => {
       if (tier.maxAmount === Infinity) {
-        return `ELSE total_deposits_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
+        return `ELSE rc.total_deposits_referred_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
       } else {
-        return `WHEN total_deposits_usd <= ${tier.maxAmount} THEN total_deposits_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
+        return `WHEN rc.total_deposits_referred_usd <= ${tier.maxAmount} THEN rc.total_deposits_referred_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
       }
     }).join('\n          ')
 
-    // Insert SUMR token distributions (hourly rate)
     await trx.executeQuery(
       sql`
-      INSERT INTO rewards_distributions (referral_id, amount, description, type)
+      WITH hourly_sumr_distributions AS (
+        SELECT 
+          rc.id as referral_code_id,
+          ${RewardCurrency.SUMR} as currency,
+          CASE 
+            ${sql.raw(sumrCaseStatement)}
+          END as hourly_amount,
+          CASE 
+            ${sql.raw(sumrCaseStatement)}
+          END * 24 as daily_amount
+        FROM referral_codes rc
+        WHERE rc.active_users_count > 0 AND rc.total_deposits_referred_usd > 0
+      )
+      -- Insert distribution records first
+      INSERT INTO rewards_distributions (batch_id, referral_code_id, currency, amount, description)
       SELECT 
-        id, 
-        CASE 
-          ${sql.raw(sumrCaseStatement)}
-        END as hourly_sumr_rewards,
-        ${RewardDescription.REGULAR}, 
-        ${RewardType.SUMR} 
-      FROM referral_codes
-      WHERE active_users_count > 0 AND total_deposits_usd > 0
+        ${batchId},
+        referral_code_id,
+        currency,
+        hourly_amount,
+        ${RewardDescription.REGULAR}
+      FROM hourly_sumr_distributions
+      WHERE hourly_amount > 0
     `.compile(trx),
     )
 
-    // update summer per day and total summer earned
-    const sumrUpdateCaseStatement = this.SUMR_REWARD_TIERS.map((tier) => {
-      if (tier.maxAmount === Infinity) {
-        return `ELSE total_deposits_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
-      } else {
-        return `WHEN total_deposits_usd <= ${tier.maxAmount} THEN total_deposits_usd * ${tier.percentage} / ${this.SUMR_TOKEN_PRICE_USD} / 8760`
-      }
-    }).join('\n        ')
-
+    // Update balances for SUMR based on distributions
     await trx.executeQuery(
       sql`
-      UPDATE referral_codes
-      SET summer_per_day = CASE 
-        ${sql.raw(sumrUpdateCaseStatement)}
-      END,
-      total_summer_earned = total_summer_earned + CASE 
-        ${sql.raw(sumrUpdateCaseStatement)}
-      END,
-      last_calculated_at = NOW()
-      WHERE active_users_count > 0 AND total_deposits_usd > 0
+      INSERT INTO rewards_balances (referral_code_id, currency, balance, amount_per_day, total_earned)
+      SELECT 
+        rd.referral_code_id,
+        rd.currency,
+        SUM(rd.amount) as hourly_amount,
+        SUM(rd.amount) * 24 as daily_amount,
+        SUM(rd.amount) as hourly_amount
+      FROM rewards_distributions rd
+      WHERE rd.currency = ${RewardCurrency.SUMR}
+        AND rd.description = ${RewardDescription.REGULAR}
+        AND rd.batch_id = ${batchId}
+      GROUP BY rd.referral_code_id, rd.currency
+      ON CONFLICT (referral_code_id, currency) 
+      DO UPDATE SET
+        balance = rewards_balances.balance + EXCLUDED.balance,
+        amount_per_day = EXCLUDED.amount_per_day,
+        total_earned = rewards_balances.total_earned + EXCLUDED.balance,
+        updated_at = NOW()
     `.compile(trx),
     )
+
+    // 3. Calculate and distribute fee rewards for referral codes
     await trx.executeQuery(
       sql`
-      WITH daily_referrer_fees_by_code AS (
-        -- Calculate total daily fees earned by codes as referrers
+      WITH daily_referrer_fees_by_code_currency AS (
+        -- Calculate total daily fees earned by codes as referrers, grouped by currency
         SELECT
           u.referrer_id as referral_code_id,
-          SUM(p.fees_per_day_referrer) as total_daily_referrer_fees
+          p.currency_symbol,
+          SUM(p.fees_per_day_referrer) as total_daily_referrer_fees,
+          SUM(p.fees_per_day_referrer_usd) as total_daily_referrer_fees_usd
         FROM users u
         INNER JOIN positions p ON u.id = p.user_id
         WHERE u.referrer_id IS NOT NULL AND u.is_active = true
-        GROUP BY u.referrer_id
+        GROUP BY u.referrer_id, p.currency_symbol
       ),
-      daily_owner_fees_by_code AS (
-        -- Calculate total daily fees earned by codes for their owner's positions
+      daily_owner_fees_by_code_currency AS (
+        -- Calculate total daily fees earned by codes for their owner's positions, grouped by currency
         SELECT
           u.referral_code as referral_code_id,
-          SUM(p.fees_per_day_owner) as total_daily_owner_fees
+          p.currency_symbol,
+          SUM(p.fees_per_day_owner) as total_daily_owner_fees,
+          SUM(p.fees_per_day_owner_usd) as total_daily_owner_fees_usd
         FROM users u
         INNER JOIN positions p ON u.id = p.user_id
-        WHERE u.referral_code IS NOT NULL AND u.is_active = true -- User must have a code and be active
-        GROUP BY u.referral_code
+        WHERE u.referral_code IS NOT NULL AND u.is_active = true
+        GROUP BY u.referral_code, p.currency_symbol
       ),
-      target_referral_codes_for_update AS (
-        -- Define all referral codes that should be processed:
-        -- 1. Codes that have referred active users.
-        SELECT id FROM referral_codes WHERE active_users_count > 0
-        UNION
-        -- 2. Codes belonging to active users (for owner fees), ensuring the code exists.
-        SELECT u.referral_code FROM users u WHERE u.is_active = true AND u.referral_code IS NOT NULL
-      ),
-      all_calculated_daily_fees AS (
-        -- Combine both fee types for all targeted referral codes.
-        -- This ensures that if a code earns 0 fees today (but is in the target list), 
-        -- its fees_per_day is correctly set to 0.
+      hourly_fee_distributions AS (
+        -- Combine both fee types for all referral codes by currency
         SELECT
-          target_rc.id as referral_code_id,
-          COALESCE(drf.total_daily_referrer_fees, 0) as daily_referrer_component,
-          COALESCE(dof.total_daily_owner_fees, 0) as daily_owner_component,
-          (COALESCE(drf.total_daily_referrer_fees, 0) + COALESCE(dof.total_daily_owner_fees, 0)) as final_total_daily_fees
-        FROM
-          target_referral_codes_for_update target_rc
-        LEFT JOIN daily_referrer_fees_by_code drf ON target_rc.id = drf.referral_code_id
-        LEFT JOIN daily_owner_fees_by_code dof ON target_rc.id = dof.referral_code_id
+          COALESCE(drf.referral_code_id, dof.referral_code_id) as referral_code_id,
+          COALESCE(drf.currency_symbol, dof.currency_symbol) as currency_symbol,
+          (COALESCE(drf.total_daily_referrer_fees, 0) + COALESCE(dof.total_daily_owner_fees, 0)) / 24 as hourly_fees,
+          (COALESCE(drf.total_daily_referrer_fees_usd, 0) + COALESCE(dof.total_daily_owner_fees_usd, 0)) / 24 as hourly_fees_usd,
+          COALESCE(drf.total_daily_referrer_fees, 0) + COALESCE(dof.total_daily_owner_fees, 0) as daily_fees,
+          COALESCE(drf.total_daily_referrer_fees_usd, 0) + COALESCE(dof.total_daily_owner_fees_usd, 0) as daily_fees_usd
+        FROM daily_referrer_fees_by_code_currency drf
+        FULL OUTER JOIN daily_owner_fees_by_code_currency dof 
+          ON drf.referral_code_id = dof.referral_code_id 
+          AND drf.currency_symbol = dof.currency_symbol
+        WHERE COALESCE(drf.total_daily_referrer_fees, 0) + COALESCE(dof.total_daily_owner_fees, 0) > 0
       )
-      UPDATE referral_codes rc
-      SET
-        fees_per_day = acdf.final_total_daily_fees,
-        total_fees_earned = rc.total_fees_earned + (acdf.final_total_daily_fees / 24), -- Accumulate total
-        last_calculated_at = NOW()
-      FROM all_calculated_daily_fees acdf
-      WHERE rc.id = acdf.referral_code_id;
+      -- Insert distribution records first
+      INSERT INTO rewards_distributions (batch_id, referral_code_id, currency, amount, description)
+      SELECT 
+        ${batchId},
+        referral_code_id,
+        currency_symbol,
+        hourly_fees,
+        ${RewardDescription.REGULAR}
+      FROM hourly_fee_distributions
+      WHERE hourly_fees > 0
     `.compile(trx),
     )
 
-    // insert fees distributions (hourly rate)
+    // Update balances for fees based on distributions
     await trx.executeQuery(
       sql`
-      INSERT INTO rewards_distributions (referral_id, amount, description, type)
+      INSERT INTO rewards_balances (referral_code_id, currency, balance, balance_usd, amount_per_day, amount_per_day_usd, total_earned)
       SELECT 
-        id, 
-        COALESCE(fees_per_day, 0) / 24, 
-        ${RewardDescription.REGULAR}, 
-        ${RewardType.FEES} 
-      FROM referral_codes
-      WHERE active_users_count > 0 AND COALESCE(fees_per_day, 0) / 24 > 0
+        rd.referral_code_id,
+        rd.currency,
+        SUM(rd.amount) as hourly_fees,
+        -- For USD equivalent, we need to calculate from the original fee data since distributions only store asset amounts
+        COALESCE(SUM(fee_usd.hourly_fees_usd), 0) as hourly_fees_usd,
+        SUM(rd.amount) * 24 as daily_fees,
+        COALESCE(SUM(fee_usd.hourly_fees_usd) * 24, 0) as daily_fees_usd,
+        SUM(rd.amount) as hourly_fees
+      FROM rewards_distributions rd
+      LEFT JOIN (
+        -- Calculate USD amounts for the current distributions
+        WITH daily_referrer_fees_by_code_currency AS (
+          SELECT
+            u.referrer_id as referral_code_id,
+            p.currency_symbol,
+            (COALESCE(SUM(p.fees_per_day_referrer_usd), 0)) / 24 as hourly_referrer_fees_usd
+          FROM users u
+          INNER JOIN positions p ON u.id = p.user_id
+          WHERE u.referrer_id IS NOT NULL AND u.is_active = true
+          GROUP BY u.referrer_id, p.currency_symbol
+        ),
+        daily_owner_fees_by_code_currency AS (
+          SELECT
+            u.referral_code as referral_code_id,
+            p.currency_symbol,
+            (COALESCE(SUM(p.fees_per_day_owner_usd), 0)) / 24 as hourly_owner_fees_usd
+          FROM users u
+          INNER JOIN positions p ON u.id = p.user_id
+          WHERE u.referral_code IS NOT NULL AND u.is_active = true
+          GROUP BY u.referral_code, p.currency_symbol
+        )
+        SELECT
+          COALESCE(drf.referral_code_id, dof.referral_code_id) as referral_code_id,
+          COALESCE(drf.currency_symbol, dof.currency_symbol) as currency_symbol,
+          COALESCE(drf.hourly_referrer_fees_usd, 0) + COALESCE(dof.hourly_owner_fees_usd, 0) as hourly_fees_usd
+        FROM daily_referrer_fees_by_code_currency drf
+        FULL OUTER JOIN daily_owner_fees_by_code_currency dof 
+          ON drf.referral_code_id = dof.referral_code_id 
+          AND drf.currency_symbol = dof.currency_symbol
+      ) fee_usd ON rd.referral_code_id = fee_usd.referral_code_id AND rd.currency = fee_usd.currency_symbol
+      WHERE rd.currency NOT IN (${RewardCurrency.POINTS}, ${RewardCurrency.SUMR})
+        AND rd.description = ${RewardDescription.REGULAR}
+        AND rd.batch_id = ${batchId}
+      GROUP BY rd.referral_code_id, rd.currency
+      ON CONFLICT (referral_code_id, currency) 
+      DO UPDATE SET
+        balance = rewards_balances.balance + EXCLUDED.balance,
+        balance_usd = rewards_balances.balance_usd + EXCLUDED.balance_usd,
+        amount_per_day = EXCLUDED.amount_per_day,
+        amount_per_day_usd = EXCLUDED.amount_per_day_usd,
+        total_earned = rewards_balances.total_earned + EXCLUDED.balance,
+        updated_at = NOW()
+    `.compile(trx),
+    )
+
+    // 4. Update referral codes last_calculated_at
+    await trx.executeQuery(
+      sql`
+      UPDATE referral_codes 
+      SET last_calculated_at = NOW()
+      WHERE active_users_count > 0
     `.compile(trx),
     )
   }
@@ -464,13 +507,14 @@ export class DatabaseService {
       sql`
       INSERT INTO daily_stats (referral_id, date, points_earned, active_users, total_deposits)
       SELECT 
-        id as referral_id,
+        rc.id as referral_id,
         ${today}::date as date,
-        points_per_day as points_earned,
-        active_users_count as active_users,
-        total_deposits_usd as total_deposits
-      FROM referral_codes
-      WHERE active_users_count > 0
+        COALESCE(rb.amount_per_day, 0) as points_earned,
+        rc.active_users_count as active_users,
+        rc.total_deposits_referred_usd as total_deposits
+      FROM referral_codes rc
+      LEFT JOIN rewards_balances rb ON rc.id = rb.referral_code_id AND rb.currency = ${RewardCurrency.POINTS}
+      WHERE rc.active_users_count > 0
       ON CONFLICT (referral_id, date) 
       DO UPDATE SET
         points_earned = EXCLUDED.points_earned,
@@ -520,10 +564,7 @@ export class DatabaseService {
 
     return {
       ...result,
-      total_points_earned: Number(result.total_points_earned),
-      total_deposits_usd: Number(result.total_deposits_usd),
-      points_per_day: Number(result.points_per_day),
-      fees_per_day: Number(result.fees_per_day),
+      total_deposits_referred_usd: Number(result.total_deposits_referred_usd),
       created_at: result.created_at || new Date(),
       updated_at: result.updated_at || new Date(),
     }
@@ -547,6 +588,51 @@ export class DatabaseService {
     await this.db.destroy()
   }
 
+  /**
+   * Helper methods for rewards balances
+   */
+  async getRewardsBalance(
+    referralCodeId: string,
+    currency: string,
+  ): Promise<RewardsBalance | null> {
+    const result = await this.db
+      .selectFrom('rewards_balances')
+      .selectAll()
+      .where('referral_code_id', '=', referralCodeId)
+      .where('currency', '=', currency)
+      .executeTakeFirst()
+
+    if (!result) return null
+
+    return {
+      ...result,
+      balance: Number(result.balance),
+      balance_usd: result.balance_usd ? Number(result.balance_usd) : null,
+      amount_per_day: Number(result.amount_per_day),
+      amount_per_day_usd: result.amount_per_day_usd ? Number(result.amount_per_day_usd) : null,
+      total_earned: Number(result.total_earned),
+      total_claimed: Number(result.total_claimed),
+    }
+  }
+
+  async getAllRewardsBalances(referralCodeId: string): Promise<RewardsBalance[]> {
+    const results = await this.db
+      .selectFrom('rewards_balances')
+      .selectAll()
+      .where('referral_code_id', '=', referralCodeId)
+      .execute()
+
+    return results.map((result) => ({
+      ...result,
+      balance: Number(result.balance),
+      balance_usd: result.balance_usd ? Number(result.balance_usd) : null,
+      amount_per_day: Number(result.amount_per_day),
+      amount_per_day_usd: result.amount_per_day_usd ? Number(result.amount_per_day_usd) : null,
+      total_earned: Number(result.total_earned),
+      total_claimed: Number(result.total_claimed),
+    }))
+  }
+
   get rawDb() {
     return this.db
   }
@@ -560,26 +646,6 @@ export class DatabaseService {
    */
   async executeInTransaction<T>(callback: (trx: Kysely<DB>) => Promise<T>): Promise<T> {
     return await this.db.transaction().execute(callback)
-  }
-
-  /**
-   * Get or create referral code
-   */
-  async ensureReferralCode(id: string, type: ReferralCodeType, customCode?: string): Promise<void> {
-    await this.db
-      .insertInto('referral_codes')
-      .values({
-        id,
-        custom_code: customCode || null,
-        type,
-        total_points_earned: '0',
-        total_deposits_usd: '0',
-        active_users_count: 0,
-        points_per_day: '0',
-        fees_per_day: '0',
-      })
-      .onConflict((oc) => oc.column('id').doNothing())
-      .execute()
   }
 
   /**
@@ -624,13 +690,10 @@ export class DatabaseService {
         id,
         custom_code: customCode || null,
         type,
-        total_points_earned: '0',
-        total_deposits_usd: '0',
+        total_deposits_referred_usd: '0',
         active_users_count: 0,
-        points_per_day: '0',
-        fees_per_day: '0',
       })
-      .onConflict((oc: any) => oc.column('id').doNothing())
+      .onConflict((oc) => oc.column('id').doNothing())
       .execute()
   }
 }

@@ -263,42 +263,6 @@ export class ReferralProcessor {
       const timestampGt = BigInt(Math.floor(periodStart.getTime() / 1000))
       const timestampLt = BigInt(Math.floor(periodEnd.getTime() / 1000))
 
-      // this.logger.info(`📡 Fetching newly referred accounts in this period...`)
-      // const { validAccounts } = await this.client.getValidReferredAccounts(timestampGt, timestampLt)
-
-      // this.logger.info(`📊 Found ${validAccounts.length} new valid referred accounts`)
-
-      // // Store new users - batch insert for better performance
-      // if (validAccounts.length > 0) {
-      //   // First, validate all referral codes and prepare user data
-      //   const userValues = []
-
-      //   for (const account of validAccounts) {
-      //     let validatedReferrerId: string | null = null
-
-      //     if (account.referralData?.id) {
-      //       validatedReferrerId = await this.db.validateReferralCodeInTransaction(trx, account.referralData.id)
-      //       this.logger.info(`Validated referral code ${account.referralData.id} -> ${validatedReferrerId}`)
-      //     }
-
-      //     userValues.push({
-      //       id: account.id,
-      //       referrer_id: validatedReferrerId,
-      //       referral_chain: validatedReferrerId ? account.referralChain : null,
-      //       referral_timestamp: validatedReferrerId
-      //         ? new Date(Number(account.referralTimestamp) * 1000)
-      //         : null,
-      //       is_active: false,
-      //     })
-      //   }
-
-      //   await trx
-      //     .insertInto('users')
-      //     .values(userValues)
-      //     .onConflict((oc: any) => oc.doNothing())
-      //     .execute()
-      // }
-
       // Step 2: Get all users that need position updates
       const allUsers = await trx
         .selectFrom('users')
@@ -328,18 +292,19 @@ export class ReferralProcessor {
         await this.db.updatePositionsInTransaction(trx, positionUpdates)
       }
 
-      // Update user totals for all affected users
-      await this.db.updateUserTotalsInTransaction(trx, userIds, config)
+      // Step 4: Update users is_active flag
+      this.logger.info('🔄 Updating users is_active flag...')
+      await this.db.updateUsersIsActiveFlag(trx, userIds, config)
 
-      // Step 4: Recalculate all referral stats
+      // Step 5: Recalculate all referral stats
       this.logger.info('📊 Recalculating referral stats...')
       await this.db.recalculateReferralStatsInTransaction(trx)
 
-      // Step 5: Update daily rates and accumulate points
+      // Step 6: Update daily rates and accumulate points
       this.logger.info('💰 Updating points and daily rates...')
       await this.db.updateDailyRatesAndPointsInTransaction(trx)
 
-      // Step 6: Update daily stats for historical tracking
+      // Step 7: Update daily stats for historical tracking
       await this.db.updateDailyStatsInTransaction(trx)
 
       // Get final stats
@@ -395,12 +360,24 @@ export class ReferralProcessor {
             )
             if (latestSnapshot) {
               const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
-              const isVolatile = position.vault.inputToken.symbol === 'WETH'
+              const depositAsset = Number(latestSnapshot.inputTokenBalanceNormalized || 0)
+              const assetSymbol = position.vault.inputToken.symbol
+              const isVolatile = assetSymbol === 'WETH'
 
               const feeTier = isVolatile
                 ? this.FEE_CONFIG.volatile.feeTier
                 : this.FEE_CONFIG.stable.feeTier
-              const dailyFeeGeneratedByThePosition = (depositUsd * feeTier) / 365
+              const dailyFeeGeneratedByThePositionUsd = (depositUsd * feeTier) / 365
+              const dailyFeeGeneratedByThePosition = (depositAsset * feeTier) / 365
+              const dailyReferrerFeesUsd =
+                dailyFeeGeneratedByThePositionUsd *
+                (isVolatile
+                  ? this.FEE_CONFIG.volatile.referrerRate
+                  : this.FEE_CONFIG.stable.referrerRate)
+              const dailyOwnerFeesUsd =
+                dailyFeeGeneratedByThePositionUsd *
+                (isVolatile ? this.FEE_CONFIG.volatile.ownerRate : this.FEE_CONFIG.stable.ownerRate)
+
               const dailyReferrerFees =
                 dailyFeeGeneratedByThePosition *
                 (isVolatile
@@ -415,8 +392,12 @@ export class ReferralProcessor {
                 chain: chain as any,
                 user_id: account.id,
                 current_deposit_usd: depositUsd.toString(),
+                current_deposit_asset: depositAsset.toString(),
+                currency_symbol: assetSymbol,
                 fees_per_day_referrer: dailyReferrerFees.toString(),
                 fees_per_day_owner: dailyOwnerFees.toString(),
+                fees_per_day_referrer_usd: dailyReferrerFeesUsd.toString(),
+                fees_per_day_owner_usd: dailyOwnerFeesUsd.toString(),
                 is_volatile: isVolatile,
                 last_synced_at: new Date(),
               })

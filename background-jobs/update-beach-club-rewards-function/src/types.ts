@@ -27,6 +27,7 @@ export interface HourlySnapshot {
   id: string
   timestamp: string
   inputTokenBalanceNormalizedInUSD: string
+  inputTokenBalanceNormalized: string
   stakedInputTokenBalanceNormalizedInUSD?: string
   unstakedInputTokenBalanceNormalizedInUSD?: string
 }
@@ -42,24 +43,8 @@ export interface Position {
       symbol: string
     }
   }
-  inputTokenDeposits?: string
-  inputTokenDepositsNormalized?: string
-  inputTokenWithdrawalsNormalized?: string
-  inputTokenDepositsNormalizedInUSD?: string
-  inputTokenWithdrawals?: string
-  inputTokenWithdrawalsNormalizedInUSD?: string
-  inputTokenBalance?: string
-  outputTokenBalance?: string
-  stakedInputTokenBalance?: string
-  stakedOutputTokenBalance?: string
-  unstakedInputTokenBalance?: string
-  unstakedOutputTokenBalance?: string
-  inputTokenBalanceNormalized?: string
-  stakedInputTokenBalanceNormalized?: string
-  unstakedInputTokenBalanceNormalized?: string
-  inputTokenBalanceNormalizedInUSD?: string
-  stakedInputTokenBalanceNormalizedInUSD?: string
-  unstakedInputTokenBalanceNormalizedInUSD?: string
+  inputTokenBalanceNormalizedInUSD: string
+  inputTokenBalanceNormalized: string
   createdTimestamp: string
   createdBlockNumber?: string
   referralData?: ReferralData
@@ -90,24 +75,8 @@ export function convertPosition(position: any): Position {
     id: position.id,
     account: position.account,
     vault: position.vault,
-    inputTokenDeposits: position.inputTokenDeposits,
-    inputTokenDepositsNormalized: position.inputTokenDepositsNormalized,
-    inputTokenWithdrawalsNormalized: position.inputTokenWithdrawalsNormalized,
-    inputTokenDepositsNormalizedInUSD: position.inputTokenDepositsNormalizedInUSD,
-    inputTokenWithdrawals: position.inputTokenWithdrawals,
-    inputTokenWithdrawalsNormalizedInUSD: position.inputTokenWithdrawalsNormalizedInUSD,
-    inputTokenBalance: position.inputTokenBalance,
-    outputTokenBalance: position.outputTokenBalance,
-    stakedInputTokenBalance: position.stakedInputTokenBalance,
-    stakedOutputTokenBalance: position.stakedOutputTokenBalance,
-    unstakedInputTokenBalance: position.unstakedInputTokenBalance,
-    unstakedOutputTokenBalance: position.unstakedOutputTokenBalance,
     inputTokenBalanceNormalized: position.inputTokenBalanceNormalized,
-    stakedInputTokenBalanceNormalized: position.stakedInputTokenBalanceNormalized,
-    unstakedInputTokenBalanceNormalized: position.unstakedInputTokenBalanceNormalized,
     inputTokenBalanceNormalizedInUSD: position.inputTokenBalanceNormalizedInUSD,
-    stakedInputTokenBalanceNormalizedInUSD: position.stakedInputTokenBalanceNormalizedInUSD,
-    unstakedInputTokenBalanceNormalizedInUSD: position.unstakedInputTokenBalanceNormalizedInUSD,
     createdTimestamp: position.createdTimestamp,
     referralData: position.referralData,
     hourlySnapshots: position.hourlySnapshots?.map((s: any) => convertHourlySnapshot(s)),
@@ -119,7 +88,6 @@ export function convertHourlySnapshot(snapshot: any): HourlySnapshot {
     id: snapshot.id,
     timestamp: snapshot.timestamp,
     inputTokenBalanceNormalizedInUSD: snapshot.inputTokenBalanceNormalizedInUSD,
-    stakedInputTokenBalanceNormalizedInUSD: snapshot.stakedInputTokenBalanceNormalizedInUSD,
-    unstakedInputTokenBalanceNormalizedInUSD: snapshot.unstakedInputTokenBalanceNormalizedInUSD,
+    inputTokenBalanceNormalized: snapshot.inputTokenBalanceNormalized,
   }
 }

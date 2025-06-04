@@ -132,82 +132,6 @@ describe('DatabaseService', () => {
     })
   })
 
-  describe('ensureReferralCode', () => {
-    it('should create referral code with defaults', async () => {
-      await db.ensureReferralCode('ref123', 'USER' as any)
-
-      expect(mockKysely.insertInto).toHaveBeenCalledWith('referral_codes')
-      expect(mockKysely.values).toHaveBeenCalledWith({
-        id: 'ref123',
-        custom_code: null,
-        type: 'USER',
-        total_points_earned: '0',
-        total_deposits_usd: '0',
-        active_users_count: 0,
-        points_per_day: '0',
-        fees_per_day: '0',
-      })
-      expect(mockKysely.execute).toHaveBeenCalled()
-    })
-
-    it('should create referral code with custom code', async () => {
-      await db.ensureReferralCode('ref123', 'USER' as any, 'CUSTOM123')
-
-      expect(mockKysely.values).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: 'ref123',
-          custom_code: 'CUSTOM123',
-          type: 'USER',
-        }),
-      )
-    })
-
-    it('should handle conflicts with doNothing', async () => {
-      await db.ensureReferralCode('ref123', 'USER' as any)
-
-      expect(mockKysely.onConflict).toHaveBeenCalled()
-    })
-  })
-
-  describe('upsertUser', () => {
-    it('should insert new user with referral info', async () => {
-      await db.upsertUser('user123', {
-        referrerId: 'ref123',
-        referralChain: 'Base' as any,
-        referralTimestamp: new Date('2024-01-01'),
-      })
-
-      // Should insert user (referral code validation happens internally)
-      expect(mockKysely.insertInto).toHaveBeenCalledWith('users')
-      expect(mockKysely.values).toHaveBeenCalledWith({
-        id: 'user123',
-        referrer_id: null, // Since validation returns null in mock
-        referral_chain: null,
-        referral_timestamp: null,
-        is_active: false,
-      })
-    })
-
-    it('should handle user without referrer', async () => {
-      await db.upsertUser('user123', {})
-
-      expect(mockKysely.insertInto).toHaveBeenCalledWith('users')
-      expect(mockKysely.values).toHaveBeenCalledWith({
-        id: 'user123',
-        referrer_id: null,
-        referral_chain: null,
-        referral_timestamp: null,
-        is_active: false,
-      })
-    })
-
-    it('should handle conflicts with doUpdateSet', async () => {
-      await db.upsertUser('user123', { referrerId: 'ref123' })
-
-      expect(mockKysely.onConflict).toHaveBeenCalled()
-    })
-  })
-
   describe('updatePosition', () => {
     it('should update position successfully', async () => {
       const mockTrx = mockKysely
@@ -217,8 +141,12 @@ describe('DatabaseService', () => {
           chain: 'Base',
           user_id: 'user123',
           current_deposit_usd: '1000.5',
+          current_deposit_asset: '1000.5',
+          currency_symbol: 'USDC',
           fees_per_day_referrer: '0.1',
           fees_per_day_owner: '0.05',
+          fees_per_day_referrer_usd: '0.1',
+          fees_per_day_owner_usd: '0.05',
           is_volatile: false,
           last_synced_at: new Date(),
         },
@@ -236,8 +164,12 @@ describe('DatabaseService', () => {
           chain: 'Base',
           user_id: 'user123',
           current_deposit_usd: '1000.5',
+          current_deposit_asset: '1000.5',
+          currency_symbol: 'USDC',
           fees_per_day_referrer: '0.1',
           fees_per_day_owner: '0.05',
+          fees_per_day_referrer_usd: '0.1',
+          fees_per_day_owner_usd: '0.05',
           is_volatile: false,
           last_synced_at: new Date(),
         },
@@ -258,21 +190,21 @@ describe('DatabaseService', () => {
 
     it('should update user totals successfully', async () => {
       const mockTrx = mockKysely
-      await db.updateUserTotalsInTransaction(mockTrx, ['user123'], mockConfig)
+      await db.updateUsersIsActiveFlag(mockTrx, ['user123'], mockConfig)
 
       expect(mockKysely.executeQuery).toHaveBeenCalled()
     })
 
     it('should handle multiple users', async () => {
       const mockTrx = mockKysely
-      await db.updateUserTotalsInTransaction(mockTrx, ['user123', 'user456'], mockConfig)
+      await db.updateUsersIsActiveFlag(mockTrx, ['user123', 'user456'], mockConfig)
 
       expect(mockKysely.executeQuery).toHaveBeenCalled()
     })
 
     it('should handle empty user list', async () => {
       const mockTrx = mockKysely
-      await db.updateUserTotalsInTransaction(mockTrx, [], mockConfig)
+      await db.updateUsersIsActiveFlag(mockTrx, [], mockConfig)
 
       // With empty array, no queries should be executed
       expect(mockKysely.executeQuery).not.toHaveBeenCalled()
@@ -353,11 +285,8 @@ describe('DatabaseService', () => {
       mockKysely.executeTakeFirst.mockResolvedValue({
         id: 'ref123',
         custom_code: 'CUSTOM',
-        total_points_earned: '1000.5',
-        total_deposits_usd: '5000',
+        total_deposits_referred_usd: '5000',
         active_users_count: 10,
-        points_per_day: '100.25',
-        fees_per_day: '500.75',
         last_calculated_at: new Date(),
         created_at: new Date(),
         updated_at: new Date(),
@@ -368,11 +297,8 @@ describe('DatabaseService', () => {
       expect(result).toEqual({
         id: 'ref123',
         custom_code: 'CUSTOM',
-        total_points_earned: 1000.5,
-        total_deposits_usd: 5000,
+        total_deposits_referred_usd: 5000,
         active_users_count: 10,
-        points_per_day: 100.25,
-        fees_per_day: 500.75,
         last_calculated_at: expect.any(Date),
         created_at: expect.any(Date),
         updated_at: expect.any(Date),
@@ -391,11 +317,8 @@ describe('DatabaseService', () => {
       mockKysely.executeTakeFirst.mockResolvedValue({
         id: 'ref123',
         custom_code: null,
-        total_points_earned: '0',
-        total_deposits_usd: '0',
+        total_deposits_referred_usd: '0',
         active_users_count: 0,
-        points_per_day: '0',
-        fees_per_day: '0',
         last_calculated_at: null,
         created_at: null,
         updated_at: null,
@@ -405,30 +328,6 @@ describe('DatabaseService', () => {
 
       expect(result!.created_at).toBeInstanceOf(Date)
       expect(result!.updated_at).toBeInstanceOf(Date)
-    })
-  })
-
-  describe('getTopReferralCodes', () => {
-    it('should return top referral codes', async () => {
-      mockKysely.execute.mockResolvedValue([
-        { id: 'ref1', custom_code: 'CUSTOM1' },
-        { id: 'ref2', custom_code: 'CUSTOM2' },
-      ])
-
-      // Remove this test as the method doesn't exist
-      // const result = await db.getTopReferralCodes(10)
-
-      // expect(result).toHaveLength(2)
-      // expect(mockKysely.selectFrom).toHaveBeenCalledWith('referral_codes')
-    })
-
-    it('should handle empty results', async () => {
-      mockKysely.execute.mockResolvedValue([])
-
-      // Remove this test as the method doesn't exist
-      // await db.getTopReferralCodes()
-
-      // expect(mockKysely.selectFrom).toHaveBeenCalledWith('referral_codes')
     })
   })
 

@@ -1,77 +1,76 @@
-# Referral Aggregator
+# Beach Club Rewards System
 
-## 🚀 Recent Consolidation
+## 🚀 Multi-Currency Rewards Platform
 
-The referral aggregator has been streamlined into a unified structure that focuses on essential operations. All processing logic is now consolidated into a single processor with a unified entry point that supports:
-
-- **Processing** - Hourly referral points calculation
-- **Backfilling** - Historical points calculation using the same logic
-- **Statistics** - View current stats and top referrers
-
-See [CONSOLIDATION.md](./CONSOLIDATION.md) for detailed information about the new structure.
-
-### Quick Start
-
-```bash
-# Process latest period
-npm run process
-
-# Backfill from beginning
-npm run backfill
-
-# Show statistics
-npm run stats
-
-# Show help
-npm run execute -- --help
-```
-
-A comprehensive referral tracking and points calculation system that processes data from multiple blockchain networks and rewards referrers based on their referred users' activity.
+A comprehensive rewards tracking and calculation system that processes data from multiple blockchain networks and rewards referral codes based on their users' activity. The system supports multiple reward currencies including points, SUMR tokens, and trading fee rewards in various assets.
 
 ## Features
 
-### Enhanced Points System with Hourly Snapshots
+### Enhanced Multi-Currency Rewards System
 
-The system now uses **hourly snapshots** from the subgraph for more accurate balance calculations:
+The system now supports **multiple reward currencies** with precise asset tracking:
 
-- **Snapshot-based Processing**: Instead of using current position balances, the system fetches actual hourly snapshots for specific time periods
-- **Historical Accuracy**: Backfill operations use snapshots from the exact time periods being processed
-- **Consistent Data**: Both regular processing and backfill use the same data source for consistency
-- **Time-specific Queries**: Process data for exact hourly windows (e.g., 2PM-3PM) using snapshot timestamps
+- **Points Rewards**: Traditional referral points based on deposit amounts and user activity
+- **SUMR Token Rewards**: Tiered SUMR token rewards based on deposit volumes
+- **Fee Rewards**: Trading fee sharing in underlying assets (USDC, WETH, etc.)
+- **Asset-Native Tracking**: Rewards tracked in both asset amounts and USD equivalents
+- **Batch Processing**: Precise distribution tracking with unique batch IDs
 
-### Points Calculation Formula
+### Rewards Calculation Formulas
 
-```points = total_deposits_usd * (base_rate + log_multiplier * ln(active_users + 1))
+#### Points Formula
+```
+points_per_hour = total_deposits_usd * (base_rate + log_multiplier * ln(active_users + 1)) / 24
 ```
 
-**Default Configuration:**
-- `base_rate`: 0.00005 (configurable)
-- `log_multiplier`: 0.0005 (configurable)  
-- `active_user_threshold`: $100 USD (configurable)
+#### SUMR Token Rewards (Tiered)
+```
+Tier 1 (≤$10K):    0.1% annual / SUMR price / 8760 hours
+Tier 2 (≤$100K):   0.2% annual / SUMR price / 8760 hours  
+Tier 3 (≤$250K):   0.3% annual / SUMR price / 8760 hours
+Tier 4 (≤$500K):   0.4% annual / SUMR price / 8760 hours
+Tier 5 (>$500K):   0.5% annual / SUMR price / 8760 hours
+```
+
+#### Fee Rewards
+- **Referrer Fees**: Hourly fees earned from referred users' positions
+- **Owner Fees**: Hourly fees earned from referral code owner's positions
+- **Multi-Asset**: Supports USDC, WETH, and other trading fee currencies
+
+### Default Configuration
+- `points_formula_base`: 0.00005 (configurable)
+- `points_formula_log_multiplier`: 0.0005 (configurable)  
+- `active_user_threshold_usd`: $0.1 USD (configurable)
 - `processing_interval`: 1 hour (configurable)
+- `sumr_token_price_usd`: $0.25 (configurable)
 
 ### Key Features
 
-- **Multi-chain Support**: Ethereum, Sonic, Arbitrum, Base
-- **Hourly Processing**: Automated points calculation every hour using snapshots
-- **Active User Concept**: Users with ≥$100 USD deposits (configurable)
+- **Multi-Chain Support**: Ethereum, Sonic, Arbitrum, Base
+- **Hourly Processing**: Automated rewards calculation every hour using position snapshots
+- **Active User Concept**: Users with deposits ≥ threshold (configurable)
 - **Historical Backfill**: Process historical data using time-specific snapshots
-- **Point Distribution Tracking**: Individual point awards with timestamps
+- **Batch Distribution Tracking**: Precise tracking with unique batch IDs
 - **Configuration Management**: Runtime configuration updates
 - **Type-safe Database**: Kysely integration for compile-time query validation
+- **Asset-Native Rewards**: Track rewards in actual tokens alongside USD values
 
-## GraphQL Snapshots Integration
+## GraphQL Integration
 
-The system uses the following GraphQL query structure to fetch hourly snapshots:
+The system fetches position data using GraphQL snapshots:
 
 ```graphql
 {
   accounts {
     positions {
-      hourlySnapshots(where: {timestamp_gt: $timestampGt, timestamp_lt: $timestampLt}) {
+      vault {
+        inputToken {
+          symbol
+        }
+      }
+      snapshots(where: {timestamp_gt: $timestampGt, timestamp_lt: $timestampLt}) {
+        inputTokenBalanceNormalized
         inputTokenBalanceNormalizedInUSD
-        stakedInputTokenBalanceNormalizedInUSD
-        unstakedInputTokenBalanceNormalizedInUSD
         timestamp
       }
     }
@@ -79,213 +78,158 @@ The system uses the following GraphQL query structure to fetch hourly snapshots:
 }
 ```
 
-This ensures we get balance data for specific time windows, enabling:
-- Accurate historical processing
-- Consistent hourly calculations
-- Time-specific point awards
+This enables:
+- Asset-specific balance tracking (USDC amounts, WETH amounts, etc.)
+- USD equivalent calculations
+- Historical accuracy for backfill operations
+- Time-specific reward distributions
+
+## Database Schema
+
+### Enhanced Rewards Architecture
+
+The system uses a comprehensive normalized schema supporting multiple currencies and precise tracking:
+
+#### 🏢 **Referral Codes Table**
+Central referral code management:
+- `id` - Unique referral code identifier
+- `custom_code` - Human-readable code (optional)
+- `type` - Code type (user, integrator, test)
+- `active_users_count` - Number of active referred users
+- `total_deposits_referred_usd` - Total USD value of referred deposits
+
+#### 👥 **Users Table**
+User management with referral relationships:
+- `id` - User's wallet address (primary key)
+- `referrer_id` - Referral code that referred this user
+- `referral_code` - User's own referral code (auto-generated)
+- `referral_chain` - Blockchain where referral occurred
+- `is_active` - Whether user meets activity threshold
+
+#### 💰 **Rewards Balances Table**
+**Normalized rewards tracking per referral code per currency:**
+- `referral_code_id` - Referral code earning rewards
+- `currency` - Reward currency (points, SUMR, USDC, WETH, etc.)
+- `balance` - Current balance in asset terms
+- `balance_usd` - USD equivalent (null for points/SUMR)
+- `amount_per_day` - Daily earning rate in asset terms
+- `amount_per_day_usd` - Daily earning rate in USD
+- `total_earned` - Lifetime earnings in asset terms
+- `total_claimed` - Amount claimed/withdrawn
+
+#### 📊 **Rewards Distributions Table**
+**Detailed distribution history with batch tracking:**
+- `batch_id` - Unique batch identifier for each processing run
+- `referral_code_id` - Referral code receiving distribution
+- `currency` - Reward currency
+- `amount` - Amount distributed (hourly, in asset terms)
+- `description` - Distribution type (regular, bonus, etc.)
+- `distribution_timestamp` - When distribution occurred
+
+#### 🏦 **Positions Table**
+**Enhanced position tracking with asset details:**
+- `id, chain` - Position identifier (composite primary key)
+- `user_id` - Position owner
+- `current_deposit_usd` - USD value of deposits
+- `current_deposit_asset` - Asset amount of deposits
+- `currency_symbol` - Asset symbol (USDC, WETH, etc.)
+- `fees_per_day_referrer` - Daily referrer fees in asset terms
+- `fees_per_day_owner` - Daily owner fees in asset terms
+- `fees_per_day_referrer_usd` - Daily referrer fees in USD
+- `fees_per_day_owner_usd` - Daily owner fees in USD
+
+#### ⚙️ **Configuration Tables**
+- **Points Config**: Runtime configuration management
+- **Processing Checkpoint**: Last processed timestamp tracking
+- **Daily Stats**: Historical statistics per referral code
+
+### Key Schema Benefits
+
+1. **Multi-Currency Support**: Native support for points, tokens, and fee currencies
+2. **Asset-Native Tracking**: Balances in actual tokens (1.5 USDC) alongside USD values
+3. **Precise Distribution Tracking**: Batch IDs eliminate timing-based inconsistencies
+4. **Referral Code Focus**: Rewards tied to referral codes, supporting codes without users
+5. **Comprehensive Audit Trail**: Complete history of all distributions
+6. **Normalized Design**: Eliminates data duplication and ensures consistency
 
 ## Usage
 
-### Enhanced Processor with Snapshots
+### Processing Commands
 
 ```bash
-# Start with snapshots and backfill
-npm run enhanced-processor-snapshots
+# Process latest period
+pnpm run execute
 
-# Start without backfill
-npm run enhanced-processor-snapshots --no-backfill
+# Reset database and reprocess
+pnpm run resrun
 
-# Show help
-npm run enhanced-processor-snapshots --help
-```
-
-### Legacy Processor (Current Balance)
-
-```bash
-# Original processor using current position balances
-npm run enhanced-processor
-
-# Start without backfill
-npm run enhanced-processor --no-backfill
-```
-
-### Backfill Operations
-
-```bash
-# Backfill from earliest referral
-npm run backfill
-
-# Backfill from specific date
-npm run backfill 2024-01-01
-
-# Show backfill help
-npm run backfill --help
-```
-
-### Statistics and Monitoring
-
-```bash
-# Show system statistics
-npm run stats
-
-# Show specific account details
-npm run stats 0x1234567890abcdef...
-
-# Show configuration
-npm run config --show
+# Run tests
+pnpm test
 ```
 
 ### Configuration Management
 
 ```bash
-# Update processing interval to 2 hours
-npm run config processing_interval_hours 2
+# Update processing interval
+pnpm run config processing_interval_hours 1
 
-# Update active user threshold to $200
-npm run config active_user_threshold_usd 200
+# Update active user threshold  
+pnpm run config active_user_threshold_usd 0.1
 
-# Update points formula parameters
-npm run config points_formula_base 0.0001
-npm run config points_formula_log_multiplier 0.001
-
-# Enable/disable backfill
-npm run config enable_backfill true
-```
-
-## Snapshot vs Current Balance Comparison
-
-| Feature | Snapshot-based | Current Balance |
-|---------|---------------|-----------------|
-| **Accuracy** | ✅ Historical accuracy | ⚠️ Current state only |
-| **Backfill** | ✅ Time-specific data | ⚠️ Approximate |
-| **Consistency** | ✅ Same data source | ⚠️ Different approaches |
-| **Performance** | ⚠️ More queries | ✅ Simpler queries |
-| **Use Case** | Production/Analysis | Development/Testing |
-
-## Database Schema
-
-The referral aggregator uses a simplified database schema with a clean one-to-many referral relationship structure:
-
-### Core Tables
-
-#### 🙋‍♂️ **Users Table**
-The central table that manages all users and their referral relationships:
-
-- **Primary Key**: `(id, chain)` - Each user exists once per chain
-- **One-to-Many Relationship**: One referrer can have multiple referred users, but each user can only have one referrer per chain
-- **Columns**:
-  - `id` - User's wallet address
-  - `chain` - Blockchain network (Ethereum, Sonic, Arbitrum, Base)
-  - `referrer_id` - Address of the user who referred them (nullable)
-  - `referral_timestamp` - When they were referred (nullable)
-  - `created_at` - Record creation timestamp
-  - `updated_at` - Auto-updated on modifications
-
-#### 🏆 **Referral Points Table**
-Tracks accumulated points for referrers:
-- `account_id` - Referrer's address (primary key)
-- `points` - Total points earned
-- `total_deposits_usd` - Total USD deposits from referred users
-- `active_referred_users` - Count of active referred users
-- `last_calculation_timestamp` - When points were last calculated
-
-#### 📊 **Position Snapshots Table**  
-Stores user position data from subgraphs:
-- `account_id` - User's address
-- `chain` - Blockchain network
-- `position_id` - Unique position identifier  
-- `deposit_amount_usd` - USD value of deposits
-- `created_timestamp` - When position was created
-- `snapshot_timestamp` - When snapshot was taken
-
-#### 📈 **Point Distributions Table**
-Historical record of all point distributions:
-- `account_id` - Referrer who received points
-- `points_awarded` - Points given in this distribution
-- `period_start` / `period_end` - Time period for calculation
-- `active_referred_users` - Number of active users at time of calculation
-
-#### 🎯 **User Activity Status Table**
-Tracks user activity and eligibility:
-- `account_id` - User's address
-- `total_deposits_usd` - Total deposits across all positions
-- `is_active` - Whether user meets activity threshold
-- `last_deposit_timestamp` - Most recent deposit
-
-#### 🏷️ **Custom Referral Codes Table**
-Maps custom codes to actual referrer addresses:
-- `custom_code` - Human-readable code (e.g., "boobo")
-- `actual_referrer_id` - Real referrer address
-- `referrer_address` - Display address for the referrer
-- `is_active` - Whether code is currently valid
-
-### Key Benefits of New Schema
-
-1. **Simplified Relationships**: Direct one-to-many relationship in users table
-2. **Data Integrity**: Each user can only be referred once per chain  
-3. **Cross-Chain Support**: Users exist independently on each chain
-4. **Custom Codes Ready**: Built-in support for branded referral codes
-5. **Audit Trail**: Complete history of point distributions
-6. **Performance**: Optimized indexes for fast queries
-
-### Migration Strategy
-
-The schema was completely reset and rebuilt with:
-- ✅ Clean one-to-many referral structure
-- ✅ Automatic `updated_at` triggers
-- ✅ Comprehensive indexing
-- ✅ All existing functionality preserved
-- ✅ Custom referral codes infrastructure
-
-### Example Queries
-
-```sql
--- Get all users referred by a specific referrer
-SELECT * FROM users WHERE referrer_id = '0x123...';
-
--- Count active referred users for a referrer  
-SELECT COUNT(*) FROM users u
-JOIN user_activity_status uas ON u.id = uas.account_id
-WHERE u.referrer_id = '0x123...' AND uas.is_active = true;
-
--- Get referral hierarchy for a chain
-SELECT u.id, u.referrer_id, u.referral_timestamp 
-FROM users u 
-WHERE u.chain = 'Ethereum' 
-ORDER BY u.referral_timestamp;
+# Update points formula
+pnpm run config points_formula_base 0.00005
+pnpm run config points_formula_log_multiplier 0.0005
 ```
 
 ## Architecture
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Subgraph      │    │   GraphQL        │    │   Enhanced      │
-│   (Hourly       │◄───┤   Client         │◄───┤   Processor     │
+│   Subgraph      │    │   GraphQL        │    │   Rewards       │
+│   (Position     │◄───┤   Client         │◄───┤   Processor     │
 │   Snapshots)    │    │                  │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                                          │
 ┌─────────────────┐    ┌──────────────────┐             │
 │   Configuration │◄───┤   Database       │◄────────────┘
-│   Service       │    │   (Kysely +      │
-│                 │    │   Raw SQL)       │
+│   Service       │    │   (Normalized    │
+│                 │    │   Multi-Currency)│
 └─────────────────┘    └──────────────────┘
                                 │
                        ┌──────────────────┐
-                       │   Points         │
-                       │   Calculation    │
-                       │   Service        │
+                       │   Batch-Based    │
+                       │   Distribution   │
+                       │   Tracking       │
                        └──────────────────┘
 ```
+
+## Reward Types
+
+### 1. Points Rewards
+- **Purpose**: Gamification and engagement
+- **Calculation**: Logarithmic formula based on deposits and referrals
+- **Currency**: Non-transferable points
+- **Distribution**: Hourly
+
+### 2. SUMR Token Rewards  
+- **Purpose**: Protocol token incentives
+- **Calculation**: Tiered percentage of deposits
+- **Currency**: SUMR tokens
+- **Distribution**: Hourly
+- **Tiers**: 5 tiers from 0.1% to 0.5% annual
+
+### 3. Fee Rewards
+- **Purpose**: Revenue sharing from trading fees
+- **Calculation**: Actual fees generated by positions
+- **Currencies**: USDC, WETH, and other trading pairs
+- **Distribution**: Hourly
+- **Types**: Referrer fees + Position owner fees
 
 ## Environment Variables
 
 ```bash
 # Database Configuration
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_NAME=beach_club_points
-DB_USER=postgres
-DB_PASSWORD=postgres
+BEACH_CLUB_REWARDS_DB_CONNECTION_STRING=postgresql://user:pass@host:port/db
 
 # Optional: Custom subgraph URLs
 ETHEREUM_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol
@@ -294,86 +238,87 @@ ARBITRUM_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-arbi
 BASE_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-base
 ```
 
-## Migration Guide
+## Example Queries
 
-### From Current Balance to Snapshots
+### Get All Rewards for a Referral Code
+```sql
+SELECT currency, balance, balance_usd, amount_per_day 
+FROM rewards_balances 
+WHERE referral_code_id = '12345';
+```
 
-1. **Test Environment**: Start with `enhanced-processor-snapshots` in test environment
-2. **Compare Results**: Run both processors and compare point calculations
-3. **Gradual Migration**: Switch to snapshots for new deployments
-4. **Data Validation**: Verify historical backfill accuracy
+### Track Distribution History
+```sql
+SELECT batch_id, currency, amount, distribution_timestamp
+FROM rewards_distributions 
+WHERE referral_code_id = '12345' 
+ORDER BY distribution_timestamp DESC;
+```
 
-### Configuration Updates
+### Asset-Specific Balances
+```sql
+SELECT currency, balance, amount_per_day
+FROM rewards_balances 
+WHERE referral_code_id = '12345' AND currency IN ('USDC', 'WETH');
+```
 
-```bash
-# Recommended production settings
-npm run config processing_interval_hours 1
-npm run config active_user_threshold_usd 100
-npm run config points_formula_base 0.00005
-npm run config points_formula_log_multiplier 0.0005
-npm run config enable_backfill true
+### Daily Stats
+```sql
+SELECT date, points_earned, active_users, total_deposits
+FROM daily_stats 
+WHERE referral_id = '12345' 
+ORDER BY date DESC LIMIT 30;
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **No Snapshots Found**: Ensure timestamp ranges are correct and snapshots exist
-2. **Performance Issues**: Check database indexes and query optimization
-3. **Configuration Errors**: Verify database connection and config table setup
-4. **Type Errors**: Ensure Kysely types are up to date
+1. **Balance Inconsistencies**: Check batch_id uniqueness and distribution completeness
+2. **Missing Asset Data**: Verify position snapshots include inputTokenBalanceNormalized
+3. **Currency Mismatches**: Ensure position currency_symbol matches reward currencies
+4. **Batch Processing Errors**: Check for duplicate batch_ids or timing issues
 
 ### Debug Commands
 
 ```bash
-# Check snapshot data
-npm run stats
+# Check rewards balances
+SELECT * FROM rewards_balances WHERE referral_code_id = 'YOUR_CODE';
 
-# Verify configuration
-npm run config --show
+# Verify distributions
+SELECT batch_id, COUNT(*) FROM rewards_distributions GROUP BY batch_id ORDER BY batch_id DESC LIMIT 10;
 
-# Test specific time range
-npm run backfill 2024-01-01 --verbose
+# Check position data
+SELECT currency_symbol, COUNT(*) FROM positions GROUP BY currency_symbol;
 ```
-
-### Monitoring
-
-Monitor these key metrics:
-- Point distributions per hour
-- Active user count trends
-- Processing time per cycle
-- Database query performance
-- Snapshot data availability
 
 ## Development
 
 ### Building
-
 ```bash
-npm run build
+pnpm build
 ```
 
 ### Testing
-
 ```bash
-npm test
-npm run test:watch
+pnpm test
+pnpm run test:watch
 ```
 
-### Type Checking
-
+### Database Migration
 ```bash
-npx tsc --noEmit
+pnpm run migrate
+pnpm run migrate:rollback
 ```
 
 ## Contributing
 
 1. Use TypeScript for type safety
-2. Add tests for new features
-3. Update documentation
-4. Follow existing code patterns
-5. Test with both processors (snapshot and current)
+2. Add tests for new reward types
+3. Update documentation for schema changes
+4. Follow batch-based processing patterns
+5. Test with multiple currencies
 
 ---
 
-**Note**: The snapshot-based approach is recommended for production use due to its improved accuracy and consistency. The current balance approach remains available for development and testing purposes. 
+**Note**: This system supports referral codes that may exist without associated users (integrator codes, test codes), making it more flexible than user-based reward systems. Rewards are always tied to referral codes, and users automatically receive their own referral codes upon creation. 

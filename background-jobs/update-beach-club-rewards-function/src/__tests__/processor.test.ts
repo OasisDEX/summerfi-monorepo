@@ -97,7 +97,7 @@ describe('ReferralProcessor', () => {
           updateProcessingCheckpoint: jest.fn(),
           upsertUser: jest.fn(),
           updatePositionsInTransaction: jest.fn(),
-          updateUserTotalsInTransaction: jest.fn(),
+          updateUsersIsActiveFlag: jest.fn(),
           recalculateReferralStatsInTransaction: jest.fn(),
           updateDailyRatesAndPointsInTransaction: jest.fn(),
           updateDailyStatsInTransaction: jest.fn(),
@@ -150,6 +150,8 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                inputTokenBalanceNormalized: '1000',
+                inputTokenBalanceNormalizedInUSD: '1000',
                 vault: {
                   id: 'vault1',
                   inputToken: {
@@ -160,6 +162,7 @@ describe('ReferralProcessor', () => {
                   {
                     id: 'snapshot1',
                     timestamp: Math.floor(now.getTime() / 1000).toString(),
+                    inputTokenBalanceNormalized: '1000',
                     inputTokenBalanceNormalizedInUSD: '1000',
                   },
                 ],
@@ -261,6 +264,8 @@ describe('ReferralProcessor', () => {
               {
                 id: 'pos1',
                 createdTimestamp: '1704067200',
+                inputTokenBalanceNormalized: '1000',
+                inputTokenBalanceNormalizedInUSD: '1000',
                 vault: {
                   id: 'vault1',
                   inputToken: { symbol: 'USDC' },
@@ -269,6 +274,7 @@ describe('ReferralProcessor', () => {
                   {
                     id: 'snapshot1',
                     timestamp: '1704070800',
+                    inputTokenBalanceNormalized: '1000',
                     inputTokenBalanceNormalizedInUSD: '1000',
                   },
                 ],
@@ -316,9 +322,24 @@ describe('ReferralProcessor', () => {
       const periodEnd = new Date('2024-01-01T06:00:00Z')
 
       const snapshots = [
-        { id: 'snap1', timestamp: '1704070800', inputTokenBalanceNormalizedInUSD: '100' }, // 01:00
-        { id: 'snap2', timestamp: '1704074400', inputTokenBalanceNormalizedInUSD: '200' }, // 02:00
-        { id: 'snap3', timestamp: '1704078000', inputTokenBalanceNormalizedInUSD: '300' }, // 03:00
+        {
+          id: 'snap1',
+          timestamp: '1704070800',
+          inputTokenBalanceNormalized: '100',
+          inputTokenBalanceNormalizedInUSD: '100',
+        }, // 01:00
+        {
+          id: 'snap2',
+          timestamp: '1704074400',
+          inputTokenBalanceNormalized: '200',
+          inputTokenBalanceNormalizedInUSD: '200',
+        }, // 02:00
+        {
+          id: 'snap3',
+          timestamp: '1704078000',
+          inputTokenBalanceNormalized: '300',
+          inputTokenBalanceNormalizedInUSD: '300',
+        }, // 03:00
       ]
 
       const result = (processor as any).getLatestSnapshot(snapshots, periodStart, periodEnd)
@@ -331,9 +352,24 @@ describe('ReferralProcessor', () => {
       const periodEnd = new Date('2024-01-01T04:00:00Z')
 
       const snapshots = [
-        { id: 'snap1', timestamp: '1704070800', inputTokenBalanceNormalizedInUSD: '100' }, // 01:00 - before
-        { id: 'snap2', timestamp: '1704078000', inputTokenBalanceNormalizedInUSD: '200' }, // 03:00 - in period
-        { id: 'snap3', timestamp: '1704085200', inputTokenBalanceNormalizedInUSD: '300' }, // 05:00 - after
+        {
+          id: 'snap1',
+          timestamp: '1704070800',
+          inputTokenBalanceNormalized: '100',
+          inputTokenBalanceNormalizedInUSD: '100',
+        }, // 01:00 - before
+        {
+          id: 'snap2',
+          timestamp: '1704078000',
+          inputTokenBalanceNormalized: '200',
+          inputTokenBalanceNormalizedInUSD: '200',
+        }, // 03:00 - in period
+        {
+          id: 'snap3',
+          timestamp: '1704085200',
+          inputTokenBalanceNormalized: '300',
+          inputTokenBalanceNormalizedInUSD: '300',
+        }, // 05:00 - after
       ]
 
       const result = (processor as any).getLatestSnapshot(snapshots, periodStart, periodEnd)

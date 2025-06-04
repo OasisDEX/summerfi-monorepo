@@ -39,9 +39,13 @@ export interface PointsConfig {
 
 export interface Positions {
   chain: string
+  currency_symbol: Generated<string>
+  current_deposit_asset: Generated<Numeric>
   current_deposit_usd: Generated<Numeric>
   fees_per_day_owner: Generated<Numeric>
+  fees_per_day_owner_usd: Generated<Numeric>
   fees_per_day_referrer: Generated<Numeric>
+  fees_per_day_referrer_usd: Generated<Numeric>
   id: string
   is_volatile: Generated<boolean>
   last_synced_at: Timestamp | null
@@ -58,30 +62,36 @@ export interface ReferralCodes {
   active_users_count: Generated<number>
   created_at: Generated<Timestamp | null>
   custom_code: string | null
-  fees_per_day: Generated<Numeric>
   id: string
   last_calculated_at: Timestamp | null
-  points_per_day: Generated<Numeric>
-  summer_per_day: Generated<Numeric>
-  total_deposits_usd: Generated<Numeric>
-  total_fees_claimed: Generated<Numeric>
-  total_fees_earned: Generated<Numeric>
-  total_points_claimed: Generated<Numeric>
-  total_points_earned: Generated<Numeric>
-  total_summer_claimed: Generated<Numeric>
-  total_summer_earned: Generated<Numeric>
+  total_deposits_referred_usd: Generated<Numeric>
   type: string
+  updated_at: Generated<Timestamp | null>
+}
+
+export interface RewardsBalances {
+  amount_per_day: Generated<Numeric>
+  amount_per_day_usd: Generated<Numeric | null>
+  balance: Generated<Numeric>
+  balance_usd: Generated<Numeric | null>
+  created_at: Generated<Timestamp | null>
+  currency: string
+  id: Generated<number>
+  referral_code_id: string
+  total_claimed: Generated<Numeric>
+  total_earned: Generated<Numeric>
   updated_at: Generated<Timestamp | null>
 }
 
 export interface RewardsDistributions {
   amount: Numeric
+  batch_id: string
   created_at: Generated<Timestamp | null>
+  currency: string
   description: string
   distribution_timestamp: Generated<Timestamp>
   id: Generated<number>
-  referral_id: string
-  type: string
+  referral_code_id: string
 }
 
 export interface Users {
@@ -103,6 +113,7 @@ export interface DB {
   positions: Positions
   processing_checkpoint: ProcessingCheckpoint
   referral_codes: ReferralCodes
+  rewards_balances: RewardsBalances
   rewards_distributions: RewardsDistributions
   users: Users
 }

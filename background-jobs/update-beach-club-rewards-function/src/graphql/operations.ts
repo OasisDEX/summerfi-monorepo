@@ -16,9 +16,6 @@ export const ACCOUNTS_QUERY = gql`
   query GetAccounts($where: Account_filter!, $first: Int!, $lastId: ID) {
     accounts(orderBy: id, first: $first, where: $where) {
       id
-      stakedSummerToken
-      stakedSummerTokenNormalized
-      lastUpdateBlock
       referralData {
         id
         amountOfReferred
@@ -57,6 +54,7 @@ export const POSITIONS_QUERY = `
       }
     }
       inputTokenBalanceNormalizedInUSD
+      inputTokenBalanceNormalized
       createdTimestamp
       createdBlockNumber
       referralData {
@@ -90,6 +88,7 @@ export const ACCOUNTS_WITH_POSITIONS_QUERY = gql`
           }
         }
         inputTokenBalanceNormalizedInUSD
+        inputTokenBalanceNormalized
         createdTimestamp
         createdBlockNumber
         referralData {
@@ -101,6 +100,7 @@ export const ACCOUNTS_WITH_POSITIONS_QUERY = gql`
           id
           timestamp
           inputTokenBalanceNormalizedInUSD
+          inputTokenBalanceNormalized
         }
       }
     }
@@ -166,6 +166,7 @@ export const ACCOUNTS_WITH_HOURLY_SNAPSHOTS_QUERY = gql`
           id
           timestamp
           inputTokenBalanceNormalizedInUSD
+          inputTokenBalanceNormalized
         }
       }
     }
@@ -204,6 +205,7 @@ export const POSITION_HOURLY_SNAPSHOTS_QUERY = gql`
         }
       }
       inputTokenBalanceNormalizedInUSD
+      inputTokenBalanceNormalized
       timestamp
     }
   }
