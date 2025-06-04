@@ -72,7 +72,6 @@ export const ArkHistoricalYieldChart = ({
       style={{
         marginTop: 'var(--spacing-space-medium)',
         flexDirection: 'column',
-        paddingBottom: 0,
         position: 'relative',
       }}
     >

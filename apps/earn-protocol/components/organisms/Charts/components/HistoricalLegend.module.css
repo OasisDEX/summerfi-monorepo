@@ -1,9 +1,16 @@
 .historicalLegendWrapper {
   margin-left: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--spacing-space-medium);
 }
 @media (min-width: 768px) {
   .historicalLegendWrapper {
-    margin-left: 80px;
+    flex-direction: column;
+    margin-left: 40px;
+    min-width: 190px;
   }
 }
 
