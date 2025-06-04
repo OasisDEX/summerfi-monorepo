@@ -1,19 +1,11 @@
 'use client'
-import {
-  Audits,
-  Button,
-  Emphasis,
-  FaqSection,
-  Icon,
-  INTERNAL_LINKS,
-  Text,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { Audits, Button, Emphasis, FaqSection, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -23,19 +15,6 @@ import institutionsPageStyles from './institutionsPage.module.css'
 
 import depositUiImage from '@/public/img/institution/deposit-ui.png'
 import securityAndComplianceImage from '@/public/img/institution/security-and-compliance.png'
-
-const StatsElement = ({ title, value }: { title: string; value: string | number }) => {
-  return (
-    <div>
-      <div className={institutionsPageStyles.statsHeader}>
-        <Text variant="p2semi">{title}</Text>
-      </div>
-      <div className={institutionsPageStyles.statsFigure}>
-        <Text variant="h2colorful">{value}</Text>
-      </div>
-    </div>
-  )
-}
 
 const FinalCTAElement = ({
   title,
@@ -79,7 +58,7 @@ const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
 
-  const institutionsEnabled = landingPageData?.systemConfig.features.BeachClub
+  const institutionsEnabled = landingPageData?.systemConfig.features.Institutions
 
   if (institutionsEnabled === false) {
     redirect('/')
@@ -181,25 +160,8 @@ export default function InstitutionsPage() {
         />
       </div>
       <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
-      <div className={institutionsPageStyles.buildBySummer}>
-        <div className={institutionsPageStyles.header}>
-          <Text as="h2" variant="h2">
-            Built by Summer.fi, DeFi’s most trusted&nbsp;frontend app.
-          </Text>
-          <Text as="p" variant="p1">
-            With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
-            automatically rebalance your assets to top protocols, maximizing your returns.
-          </Text>
-          <Link href={INTERNAL_LINKS.tempAbout}>
-            <WithArrow variant="p2semi">View leadership</WithArrow>
-          </Link>
-        </div>
-        <div className={institutionsPageStyles.stats}>
-          <StatsElement title="Summer.fi TVL" value="2.69B" />
-          <StatsElement title="Summer.fi 30D Volume" value="$837.99M" />
-          <StatsElement title="Capital Automated" value="$189.60M" />
-          <StatsElement title="Time Operating" value="7 years" />
-        </div>
+      <div className={institutionsPageStyles.buildBySummerSpacer}>
+        <BuildBySummerFi proAppStats={landingPageData.proAppStats} />
       </div>
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">
