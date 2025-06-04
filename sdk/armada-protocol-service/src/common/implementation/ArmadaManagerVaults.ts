@@ -152,7 +152,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
-    let swapToAmount: ITokenAmount | undefined = undefined
+    let swapToAmount: ITokenAmount | undefined = withdrawAmount
     let transactions: Awaited<ReturnType<IArmadaManagerVaults['getVaultSwitchTx']>>
 
     const [beforeFleetShares, beforeStakedShares, calculatedSharesToWithdraw] = await Promise.all([
