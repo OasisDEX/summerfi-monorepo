@@ -11,6 +11,22 @@
   background-color: var(--color-surface-subtler);
   border-radius: var(--general-radius-4);
 }
+
 .noPositionsWrapper p {
   color: var(--color-text-secondary);
+}
+
+.portfolioPositionsListWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+}
+
+.portfolioPositionsListHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-small);
 }

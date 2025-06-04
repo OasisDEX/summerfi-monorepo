@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Button,
   Card,
@@ -9,7 +10,9 @@ import {
   SUMR_CAP,
   Text,
   Timeframes,
+  ToggleButton,
   useLocalConfig,
+  useLocalStorage,
   useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
@@ -116,7 +119,31 @@ export const PortfolioOverview = ({
     state: { sumrNetApyConfig },
   } = useLocalConfig()
 
-  const hasPositions = !!positions.length
+  const [showEmptyPositions, setShowEmptyPositions] = useLocalStorage<boolean>(
+    'showEmptyPositions',
+    false,
+  )
+
+  const filteredPositions = useMemo(() => {
+    return showEmptyPositions
+      ? positions
+      : positions.filter((position) => {
+          const positionValues = getPositionValues(position)
+
+          return positionValues.netValueUSD.isGreaterThan(0)
+        })
+  }, [positions, showEmptyPositions])
+
+  const sortedPositions = useMemo(() => {
+    return [...filteredPositions].sort((a, b) => {
+      const aValues = getPositionValues(a)
+      const bValues = getPositionValues(b)
+
+      return bValues.netValueUSD.comparedTo(aValues.netValueUSD)
+    })
+  }, [filteredPositions])
+
+  const hasPositions = !!sortedPositions.length
 
   const {
     timeframe,
@@ -125,7 +152,7 @@ export const PortfolioOverview = ({
   } = useTimeframes({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     chartData: hasPositions
-      ? positionsHistoricalChartMap[getUniqueVaultId(positions[0].vault)].data
+      ? positionsHistoricalChartMap[getUniqueVaultId(sortedPositions[0].vault)].data
       : undefined,
   })
 
@@ -137,7 +164,7 @@ export const PortfolioOverview = ({
   const migrationsEnabled = !!features?.Migrations
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
-  const totalSummerPortfolioUSD = positions.reduce(
+  const totalSummerPortfolioUSD = sortedPositions.reduce(
     (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
 
     0,
@@ -152,14 +179,7 @@ export const PortfolioOverview = ({
 
   return (
     <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          gap: 'var(--general-space-16)',
-          flexWrap: 'wrap',
-        }}
-      >
+      <div className={portfolioOverviewStyles.portfolioPositionsListWrapper}>
         {getDatablocks({
           totalSummerPortfolioUSD,
           overallSumr,
@@ -182,26 +202,25 @@ export const PortfolioOverview = ({
           </Card>
         ))}
         <Card style={{ flexDirection: 'column' }} variant="cardSecondary">
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              flexWrap: 'wrap',
-              gap: 'var(--spacing-space-small)',
-            }}
-          >
+          <div className={portfolioOverviewStyles.portfolioPositionsListHeader}>
             <Text as="h5" variant="h5">
               Positions
             </Text>
-            <Timeframes
-              timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
-              setActiveTimeframe={setTimeframe}
-              activeTimeframe={timeframe}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-48)' }}>
+              <ToggleButton
+                checked={showEmptyPositions}
+                title="Show empty positions"
+                onChange={() => setShowEmptyPositions(!showEmptyPositions)}
+              />
+              <Timeframes
+                timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
+                setActiveTimeframe={setTimeframe}
+                activeTimeframe={timeframe}
+              />
+            </div>
           </div>
-          {positions.length > 0 ? (
-            positions.map((position) => (
+          {hasPositions ? (
+            sortedPositions.map((position) => (
               <PortfolioPosition
                 isMobile={isMobile || isTablet}
                 key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
