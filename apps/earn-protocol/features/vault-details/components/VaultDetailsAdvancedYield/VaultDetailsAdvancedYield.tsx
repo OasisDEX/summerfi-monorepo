@@ -85,7 +85,7 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
         variant="p2semi"
         style={{
           marginBottom: 'var(--spacing-space-medium)',
-          marginTop: 'var(--spacing-space-medium)',
+          marginTop: 'var(--spacing-space-x-large)',
         }}
       >
         Individual Yield Data
