@@ -439,7 +439,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               .join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             fromVault: params.sourceVaultId,
             toVault: params.destinationVaultId,
             slippage: params.slippage,
@@ -508,7 +508,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           unstakeWithdrawMulticallOperations.concat(depositMulticallOperations).join(', '),
         metadata: {
           fromAmount: withdrawAmount,
-          toAmount: swapToAmount,
+          toAmount: swapToAmount || withdrawAmount,
           fromVault: params.sourceVaultId,
           toVault: params.destinationVaultId,
           slippage: params.slippage,
