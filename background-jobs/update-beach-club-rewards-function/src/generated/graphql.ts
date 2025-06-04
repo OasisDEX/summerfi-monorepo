@@ -1,9 +1,3 @@
-// This file was automatically generated and should not be edited.
-// @ts-nocheck
-/* eslint-disable */
-import type { DocumentNode } from "graphql/language/ast";
-import { GraphQLClient, RequestOptions } from 'graphql-request';
-import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -11,7 +5,6 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -19,11 +12,19 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  BigDecimal: { input: string; output: string; }
-  BigInt: { input: bigint; output: bigint; }
-  Bytes: { input: string; output: string; }
-  Int8: { input: number; output: number; }
-  Timestamp: { input: number; output: number; }
+  BigDecimal: { input: any; output: any; }
+  BigInt: { input: any; output: any; }
+  Bytes: { input: any; output: any; }
+  /**
+   * 8 bytes signed integer
+   *
+   */
+  Int8: { input: any; output: any; }
+  /**
+   * A string representation of microseconds UNIX timestamp (16 digits)
+   *
+   */
+  Timestamp: { input: any; output: any; }
 };
 
 export type Account = {
@@ -11482,727 +11483,56 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAccountsQueryVariables = Exact<{
+  where: Account_Filter;
+  first: Scalars['Int']['input'];
+  lastId?: InputMaybe<Scalars['ID']['input']>;
+}>;
 
 
-export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
+export type GetAccountsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null }> };
 
-export type GetLatestActivityQueryVariables = Exact<{
-  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+export type GetReferredAccountsQueryVariables = Exact<{
+  timestampGt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestampLt?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type GetReferredAccountsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null }> };
+
+export type GetAccountsWithPositionsQueryVariables = Exact<{
+  accountIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  first: Scalars['Int']['input'];
+  lastId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type GetAccountsWithPositionsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, lastUpdateBlock: any, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, positions: Array<{ __typename?: 'Position', id: string, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any, createdTimestamp: any, createdBlockNumber: any, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } }, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, hourlySnapshots: Array<{ __typename?: 'PositionHourlySnapshot', id: string, timestamp: any, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any }> }> }> };
+
+export type ValidatePositionsQueryVariables = Exact<{
+  accountIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type ValidatePositionsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, positions: Array<{ __typename?: 'Position', id: string, createdTimestamp: any, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } } }> }> };
+
+export type GetAccountsWithHourlySnapshotsQueryVariables = Exact<{
+  accountIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  timestampGt: Scalars['BigInt']['input'];
+  timestampLt: Scalars['BigInt']['input'];
+  first: Scalars['Int']['input'];
+  lastId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type GetAccountsWithHourlySnapshotsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, positions: Array<{ __typename?: 'Position', id: string, createdTimestamp: any, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } }, referralData?: { __typename?: 'ReferralData', id: string, amountOfReferred: any } | null, hourlySnapshots: Array<{ __typename?: 'PositionHourlySnapshot', id: string, timestamp: any, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any }> }> }> };
+
+export type GetPositionHourlySnapshotsQueryVariables = Exact<{
+  timestampGt: Scalars['BigInt']['input'];
+  timestampLt: Scalars['BigInt']['input'];
   first: Scalars['Int']['input'];
   skip: Scalars['Int']['input'];
 }>;
 
 
-export type GetLatestActivityQuery = { __typename?: 'Query', deposits: Array<{ __typename?: 'Deposit', hash: string, timestamp: bigint, amount: bigint, amountUSD: string, position: { __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }>, withdraws: Array<{ __typename?: 'Withdraw', hash: string, timestamp: bigint, amount: bigint, amountUSD: string, position: { __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }> };
-
-export type GetUserPositionsQueryVariables = Exact<{
-  accountAddress: Scalars['String']['input'];
-}>;
-
-
-export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, claimedSummerTokenNormalized: string, claimableSummerTokenNormalized: string, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, rebalanceCount: bigint, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string }, rewards: Array<{ __typename?: 'PositionRewards', claimedNormalized: string, claimableNormalized: string, rewardToken: { __typename?: 'Token', symbol: string, lastPriceUSD?: string | null } }> }> };
-
-export type GetUserPositionQueryVariables = Exact<{
-  accountAddress: Scalars['String']['input'];
-  vaultId: Scalars['String']['input'];
-}>;
-
-
-export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, claimedSummerTokenNormalized: string, claimableSummerTokenNormalized: string, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string }, rewards: Array<{ __typename?: 'PositionRewards', claimedNormalized: string, claimableNormalized: string, rewardToken: { __typename?: 'Token', symbol: string, lastPriceUSD?: string | null } }> }> };
-
-export type GetPositionQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, claimedSummerTokenNormalized: string, claimableSummerTokenNormalized: string, deposits: Array<{ __typename?: 'Deposit', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', amount: bigint, amountUSD: string, inputTokenBalance: bigint, timestamp: bigint }>, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string }, rewards: Array<{ __typename?: 'PositionRewards', claimedNormalized: string, claimableNormalized: string, rewardToken: { __typename?: 'Token', symbol: string, lastPriceUSD?: string | null } }> }> };
-
-export type GetRebalancesQueryVariables = Exact<{
-  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
-}>;
-
-
-export type GetRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, hash: string, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, totalValueLockedUSD: string }, fromPostAction: { __typename?: 'PostActionArkSnapshot', depositLimit: bigint }, toPostAction: { __typename?: 'PostActionArkSnapshot', depositLimit: bigint }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetTopDepositorsQueryVariables = Exact<{
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
-}>;
-
-
-export type GetTopDepositorsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', name?: string | null, id: string, rebalanceCount: bigint, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetUserActivityQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-  accountId: Scalars['ID']['input'];
-}>;
-
-
-export type GetUserActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, outputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetUsersActivityQueryVariables = Exact<{
-  where?: InputMaybe<Position_Filter>;
-}>;
-
-
-export type GetUsersActivityQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', inputTokenBalance: bigint, account: { __typename?: 'Account', id: string }, deposits: Array<{ __typename?: 'Deposit', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, withdrawals: Array<{ __typename?: 'Withdraw', timestamp: bigint, amount: bigint, hash: string, inputTokenBalance: bigint }>, vault: { __typename?: 'Vault', id: string, name?: string | null, outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, apr365d: string, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
-
-export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager: { __typename?: 'RewardsManager', id: string }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
-
-export type GetVaultQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardsManager: { __typename?: 'RewardsManager', id: string }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
-
-
-export const GetGlobalRebalancesDocument = gql`
-    query GetGlobalRebalances {
-  rebalances(orderBy: timestamp, orderDirection: desc) {
-    id
-    amount
-    amountUSD
-    asset {
-      id
-      symbol
-      decimals
-    }
-    from {
-      name
-      depositLimit
-      calculatedApr
-      totalValueLockedUSD
-    }
-    to {
-      name
-      depositLimit
-      calculatedApr
-      totalValueLockedUSD
-    }
-    toPostAction {
-      totalValueLockedUSD
-      depositLimit
-    }
-    fromPostAction {
-      totalValueLockedUSD
-      depositLimit
-    }
-    protocol {
-      name
-      network
-    }
-    timestamp
-    vault {
-      outputTokenPriceUSD
-      inputTokenPriceUSD
-      id
-      name
-      inputToken {
-        id
-        symbol
-      }
-      protocol {
-        network
-      }
-    }
-  }
-}
-    `;
-export const GetLatestActivityDocument = gql`
-    query GetLatestActivity($timestamp: BigInt, $first: Int!, $skip: Int!) {
-  deposits(
-    where: {timestamp_gt: $timestamp}
-    first: $first
-    skip: $skip
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    hash
-    timestamp
-    amount
-    amountUSD
-    position {
-      account {
-        id
-      }
-      inputTokenBalance
-      inputTokenBalanceNormalized
-      inputTokenBalanceNormalizedInUSD
-      vault {
-        id
-        name
-        inputToken {
-          id
-          symbol
-          decimals
-        }
-        inputTokenPriceUSD
-        protocol {
-          network
-        }
-      }
-    }
-  }
-  withdraws(
-    where: {timestamp_gt: $timestamp}
-    first: $first
-    skip: $skip
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    hash
-    timestamp
-    amount
-    amountUSD
-    position {
-      account {
-        id
-      }
-      inputTokenBalance
-      inputTokenBalanceNormalized
-      inputTokenBalanceNormalizedInUSD
-      vault {
-        id
-        name
-        inputToken {
-          id
-          symbol
-          decimals
-        }
-        inputTokenPriceUSD
-        protocol {
-          network
-        }
-      }
-    }
-  }
-}
-    `;
-export const GetUserPositionsDocument = gql`
-    query GetUserPositions($accountAddress: String!) {
-  positions(where: {account_contains_nocase: $accountAddress}) {
-    id
-    inputTokenBalance
-    outputTokenBalance
-    stakedInputTokenBalance
-    stakedOutputTokenBalance
-    createdTimestamp
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    vault {
-      id
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      rebalanceCount
-      inputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      outputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      protocol {
-        id
-      }
-    }
-    account {
-      id
-    }
-    claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
-  }
-}
-    `;
-export const GetUserPositionDocument = gql`
-    query GetUserPosition($accountAddress: String!, $vaultId: String!) {
-  positions(where: {account_contains_nocase: $accountAddress, vault: $vaultId}) {
-    id
-    inputTokenBalance
-    outputTokenBalance
-    stakedInputTokenBalance
-    stakedOutputTokenBalance
-    createdTimestamp
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    vault {
-      id
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      outputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      protocol {
-        id
-      }
-    }
-    account {
-      id
-    }
-    claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
-  }
-}
-    `;
-export const GetPositionDocument = gql`
-    query GetPosition($id: ID!) {
-  positions(where: {id: $id}) {
-    id
-    inputTokenBalance
-    outputTokenBalance
-    stakedInputTokenBalance
-    stakedOutputTokenBalance
-    createdTimestamp
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    vault {
-      id
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      outputToken {
-        id
-        symbol
-        name
-        decimals
-      }
-      protocol {
-        id
-      }
-    }
-    account {
-      id
-    }
-    claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
-  }
-}
-    `;
-export const GetRebalancesDocument = gql`
-    query GetRebalances($timestamp: BigInt, $first: Int!, $skip: Int!) {
-  rebalances(
-    where: {timestamp_gt: $timestamp}
-    first: $first
-    skip: $skip
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    amount
-    amountUSD
-    from {
-      name
-      depositLimit
-      totalValueLockedUSD
-    }
-    to {
-      name
-      depositLimit
-      totalValueLockedUSD
-    }
-    fromPostAction {
-      depositLimit
-    }
-    toPostAction {
-      depositLimit
-    }
-    timestamp
-    vault {
-      id
-      name
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      inputTokenPriceUSD
-      protocol {
-        network
-      }
-    }
-    hash
-  }
-}
-    `;
-export const GetTopDepositorsDocument = gql`
-    query GetTopDepositors($first: Int!, $skip: Int!) {
-  positions(
-    first: $first
-    skip: $skip
-    orderBy: createdTimestamp
-    orderDirection: desc
-    where: {inputTokenBalance_gt: "0"}
-  ) {
-    account {
-      id
-    }
-    inputTokenBalance
-    inputTokenBalanceNormalized
-    inputTokenBalanceNormalizedInUSD
-    deposits {
-      timestamp
-      amount
-      inputTokenBalance
-    }
-    withdrawals {
-      timestamp
-      amount
-      inputTokenBalance
-    }
-    vault {
-      name
-      id
-      rebalanceCount
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      inputTokenPriceUSD
-      protocol {
-        network
-      }
-    }
-  }
-}
-    `;
-export const GetUserActivityDocument = gql`
-    query GetUserActivity($id: ID!, $accountId: ID!) {
-  positions(where: {vault_: {id: $id}, account_: {id: $accountId}}, first: 1000) {
-    account {
-      id
-    }
-    inputTokenBalance
-    outputTokenBalance
-    deposits {
-      timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    withdrawals {
-      timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    vault {
-      id
-      name
-      inputTokenBalance
-      inputTokenPriceUSD
-      outputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      protocol {
-        network
-      }
-      apr365d
-    }
-  }
-}
-    `;
-export const GetUsersActivityDocument = gql`
-    query GetUsersActivity($where: Position_filter) {
-  positions(where: $where, first: 1000) {
-    account {
-      id
-    }
-    inputTokenBalance
-    deposits {
-      timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    withdrawals {
-      timestamp
-      amount
-      hash
-      inputTokenBalance
-    }
-    vault {
-      id
-      name
-      outputTokenPriceUSD
-      inputTokenPriceUSD
-      inputToken {
-        id
-        symbol
-        decimals
-      }
-      protocol {
-        network
-      }
-      apr365d
-    }
-  }
-}
-    `;
-export const GetVaultsDocument = gql`
-    query GetVaults {
-  vaults {
-    protocol {
-      network
-    }
-    id
-    name
-    rewardsManager {
-      id
-    }
-    rewardTokens {
-      id
-      token {
-        id
-        symbol
-        decimals
-      }
-    }
-    rewardTokenEmissionsAmount
-    rewardTokenEmissionsFinish
-    rewardTokenEmissionsUSD
-    rebalanceCount
-    arks {
-      id
-      name
-      details
-      depositLimit
-      depositCap
-      cumulativeEarnings
-      inputTokenBalance
-      maxDepositPercentageOfTVL
-      inputToken {
-        id
-        name
-        symbol
-        decimals
-      }
-      createdTimestamp
-      lastUpdateTimestamp
-    }
-    inputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    outputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    inputTokenBalance
-    inputTokenPriceUSD
-    outputTokenPriceUSD
-    depositLimit
-    depositCap
-    createdTimestamp
-    totalValueLockedUSD
-    cumulativeTotalRevenueUSD
-    cumulativeSupplySideRevenueUSD
-    cumulativeProtocolSideRevenueUSD
-    lastUpdateTimestamp
-    withdrawableTotalAssets
-    withdrawableTotalAssetsUSD
-  }
-}
-    `;
-export const GetVaultDocument = gql`
-    query GetVault($id: ID!) {
-  vault(id: $id) {
-    protocol {
-      network
-    }
-    id
-    name
-    rewardsManager {
-      id
-    }
-    rewardTokens {
-      id
-      token {
-        id
-        symbol
-        decimals
-      }
-    }
-    rewardTokenEmissionsAmount
-    rewardTokenEmissionsFinish
-    rewardTokenEmissionsUSD
-    rebalanceCount
-    arks {
-      id
-      name
-      details
-      depositLimit
-      depositCap
-      cumulativeEarnings
-      inputTokenBalance
-      maxDepositPercentageOfTVL
-      inputToken {
-        id
-        name
-        symbol
-        decimals
-      }
-      createdTimestamp
-      lastUpdateTimestamp
-    }
-    inputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    outputToken {
-      id
-      name
-      symbol
-      decimals
-    }
-    inputTokenBalance
-    inputTokenPriceUSD
-    outputTokenPriceUSD
-    depositLimit
-    depositCap
-    createdTimestamp
-    totalValueLockedUSD
-    cumulativeTotalRevenueUSD
-    cumulativeSupplySideRevenueUSD
-    cumulativeProtocolSideRevenueUSD
-    lastUpdateTimestamp
-    withdrawableTotalAssets
-    withdrawableTotalAssetsUSD
-  }
-}
-    `;
-
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
-
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    GetGlobalRebalances(variables?: GetGlobalRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetGlobalRebalancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetGlobalRebalancesQuery>({ document: GetGlobalRebalancesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetGlobalRebalances', 'query', variables);
-    },
-    GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetLatestActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>({ document: GetLatestActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetLatestActivity', 'query', variables);
-    },
-    GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserPositionsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>({ document: GetUserPositionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserPositions', 'query', variables);
-    },
-    GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserPositionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>({ document: GetUserPositionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserPosition', 'query', variables);
-    },
-    GetPosition(variables: GetPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPositionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionQuery>({ document: GetPositionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPosition', 'query', variables);
-    },
-    GetRebalances(variables: GetRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRebalancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetRebalancesQuery>({ document: GetRebalancesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRebalances', 'query', variables);
-    },
-    GetTopDepositors(variables: GetTopDepositorsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetTopDepositorsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetTopDepositorsQuery>({ document: GetTopDepositorsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetTopDepositors', 'query', variables);
-    },
-    GetUserActivity(variables: GetUserActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserActivityQuery>({ document: GetUserActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserActivity', 'query', variables);
-    },
-    GetUsersActivity(variables?: GetUsersActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUsersActivityQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersActivityQuery>({ document: GetUsersActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUsersActivity', 'query', variables);
-    },
-    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>({ document: GetVaultsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaults', 'query', variables);
-    },
-    GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>({ document: GetVaultDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVault', 'query', variables);
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export type GetPositionHourlySnapshotsQuery = { __typename?: 'Query', positionHourlySnapshots: Array<{ __typename?: 'PositionHourlySnapshot', id: string, inputTokenBalanceNormalizedInUSD: any, inputTokenBalanceNormalized: any, timestamp: any, position: { __typename?: 'Position', id: string, account: { __typename?: 'Account', id: string, referralTimestamp?: any | null, referralData?: { __typename?: 'ReferralData', id: string } | null }, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', symbol: string } } } }> };

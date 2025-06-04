@@ -11534,8 +11534,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetPositionHistory(variables: GetPositionHistoryQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPositionHistoryQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionHistoryQuery>(GetPositionHistoryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetPositionHistory', 'query', variables);
+    GetPositionHistory(variables: GetPositionHistoryQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPositionHistoryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionHistoryQuery>({ document: GetPositionHistoryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPositionHistory', 'query', variables);
     }
   };
 }

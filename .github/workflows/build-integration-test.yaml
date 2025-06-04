@@ -12,6 +12,7 @@ jobs:
     name: Build and Integration Test
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/dev' && 'staging' || 'staging' }}
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
@@ -25,6 +26,7 @@ jobs:
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
     steps:
       - name: Check out code
@@ -122,6 +124,7 @@ jobs:
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           E2E_SDK_FORK_URL_MAINNET: ${{ secrets.MAINNET_RPC_URL }}
+          BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
       - name: Coverage
         run: pnpm coverage:total

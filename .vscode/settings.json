@@ -1,4 +1,15 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "eslint.workingDirectories": ["./packages/*", "./sdk/*", "./apps/*"],
+
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/build/**": true,
+      "**/.next/**": true,
+      "**/.turbo/**": true,
+      "**/coverage/**": true,
+      "**/*.tsbuildinfo": true
+    }
+
 }
