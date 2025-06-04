@@ -152,7 +152,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
-    let swapToAmount: ITokenAmount | undefined = withdrawAmount
+    let swapToAmount: ITokenAmount | undefined
     let transactions: Awaited<ReturnType<IArmadaManagerVaults['getVaultSwitchTx']>>
 
     const [beforeFleetShares, beforeStakedShares, calculatedSharesToWithdraw] = await Promise.all([
@@ -315,7 +315,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             exitWithdrawMulticall.multicallOperations.concat(depositMulticallOperations).join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             fromVault: params.sourceVaultId,
             toVault: params.destinationVaultId,
             slippage: params.slippage,
