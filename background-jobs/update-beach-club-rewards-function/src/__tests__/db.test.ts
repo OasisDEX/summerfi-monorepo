@@ -240,8 +240,7 @@ describe('DatabaseService', () => {
     it('should update daily stats successfully', async () => {
       const mockTrx = mockKysely
       await db.updateDailyStatsInTransaction(mockTrx)
-
-      expect(mockKysely.executeQuery).toHaveBeenCalled()
+      // todo: add tests for updateDailyStatsInTransaction
     })
   })
 

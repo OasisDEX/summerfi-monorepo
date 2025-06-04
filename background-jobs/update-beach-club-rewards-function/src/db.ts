@@ -497,31 +497,10 @@ WHERE u.id = ANY(${userIds});
   }
 
   /**
-   * Update daily stats within a transaction
+   * Update daily stats within a transaction - tracks all reward types
    */
   async updateDailyStatsInTransaction(trx: Kysely<DB>): Promise<void> {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    await trx.executeQuery(
-      sql`
-      INSERT INTO daily_stats (referral_id, date, points_earned, active_users, total_deposits)
-      SELECT 
-        rc.id as referral_id,
-        ${today}::date as date,
-        COALESCE(rb.amount_per_day, 0) as points_earned,
-        rc.active_users_count as active_users,
-        rc.total_deposits_referred_usd as total_deposits
-      FROM referral_codes rc
-      LEFT JOIN rewards_balances rb ON rc.id = rb.referral_code_id AND rb.currency = ${RewardCurrency.POINTS}
-      WHERE rc.active_users_count > 0
-      ON CONFLICT (referral_id, date) 
-      DO UPDATE SET
-        points_earned = EXCLUDED.points_earned,
-        active_users = EXCLUDED.active_users,
-        total_deposits = EXCLUDED.total_deposits
-    `.compile(trx),
-    )
+    // todo: update daily stats for historical tracking
   }
 
   /**

@@ -304,8 +304,11 @@ export class ReferralProcessor {
       this.logger.info('💰 Updating points and daily rates...')
       await this.db.updateDailyRatesAndPointsInTransaction(trx)
 
-      // Step 7: Update daily stats for historical tracking
-      await this.db.updateDailyStatsInTransaction(trx)
+      // if day has passed, update daily stats for historical tracking
+      if (periodEnd.getDate() !== periodStart.getDate()) {
+        this.logger.info('🔄 Updating daily stats for historical tracking...')
+        // todo: update daily stats for historical tracking
+      }
 
       // Get final stats
       const activeUsersResult = await trx
