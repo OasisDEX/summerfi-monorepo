@@ -182,7 +182,15 @@ export const PortfolioOverview = ({
           </Card>
         ))}
         <Card style={{ flexDirection: 'column' }} variant="cardSecondary">
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              flexWrap: 'wrap',
+              gap: 'var(--spacing-space-small)',
+            }}
+          >
             <Text as="h5" variant="h5">
               Positions
             </Text>

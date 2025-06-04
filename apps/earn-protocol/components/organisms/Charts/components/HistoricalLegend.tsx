@@ -1,17 +1,17 @@
-import { type ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { DefaultLegendContent, type LegendProps } from 'recharts'
 
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
 
 import historicalLegendStyles from './HistoricalLegend.module.css'
 
-type HistoricalLegendProps = LegendProps & {
+type HistoricalLegendProps = {
   tokenSymbol: TokenSymbolsList
   highlightedData: {
     [key in keyof typeof historicalPerformanceLabelMap]: string | number
   }
+  isMobile: boolean
 }
 
 const LegendBlock = ({
@@ -42,17 +42,39 @@ const LegendBlock = ({
   </div>
 )
 
-export const HistoricalLegend = ({
-  payload,
-  ref: _ref,
+export const HistoricalLegend: FC<HistoricalLegendProps> = ({
   tokenSymbol,
   highlightedData,
-  ...rest
-}: HistoricalLegendProps) => {
-  const emptyLegendIcon = <circle cx="0" cy="0" r="0" fill="transparent" />
-  const earningsBlock = {
-    legendIcon: emptyLegendIcon,
-    value: (
+  isMobile,
+}) => {
+  return (
+    <div
+      className={historicalLegendStyles.historicalLegendWrapper}
+      style={{
+        textAlign: isMobile ? 'center' : 'right',
+        marginTop: isMobile ? 'var(--general-space-32)' : '0',
+      }}
+    >
+      <LegendBlock
+        color="#FF80BF"
+        title={historicalPerformanceLabelMap.netValue}
+        value={
+          <>
+            <Icon tokenName={tokenSymbol} size={20} />
+            <Text variant="p1semi">{highlightedData.netValue}</Text>
+          </>
+        }
+      />
+      <LegendBlock
+        color="#FF49A4"
+        title={historicalPerformanceLabelMap.depositedValue}
+        value={
+          <>
+            <Icon tokenName={tokenSymbol} size={20} />
+            <Text variant="p1semi">{highlightedData.depositedValue}</Text>
+          </>
+        }
+      />
       <LegendBlock
         color="var(--color-background-interactive-disabled)"
         title={historicalPerformanceLabelMap.earnings}
@@ -63,11 +85,6 @@ export const HistoricalLegend = ({
           </>
         }
       />
-    ),
-  }
-  const sumrEarnedBlock = {
-    legendIcon: emptyLegendIcon,
-    value: (
       <LegendBlock
         color="white"
         title={historicalPerformanceLabelMap.sumrEarned}
@@ -78,34 +95,6 @@ export const HistoricalLegend = ({
           </>
         }
       />
-    ),
-  }
-  const nextPayload = [
-    ...(payload?.map(({ dataKey, inactive: _inactive, ...entry }) => ({
-      ...entry,
-      legendIcon: emptyLegendIcon,
-      value: (
-        <LegendBlock
-          color={entry.color as string}
-          title={historicalPerformanceLabelMap[entry.value as string] ?? entry.value}
-          value={
-            <>
-              <Icon tokenName={tokenSymbol} size={20} />
-              <Text variant="p1semi">
-                {highlightedData[dataKey as keyof typeof highlightedData] ?? entry.value}
-              </Text>
-            </>
-          }
-        />
-      ),
-    })) ?? []),
-    earningsBlock,
-    sumrEarnedBlock,
-  ]
-
-  return (
-    <div className={historicalLegendStyles.historicalLegendWrapper}>
-      <DefaultLegendContent payload={nextPayload} {...rest} />
     </div>
   )
 }

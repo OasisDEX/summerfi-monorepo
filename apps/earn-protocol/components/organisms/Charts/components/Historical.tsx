@@ -17,7 +17,6 @@ import dayjs from 'dayjs'
 import {
   ComposedChart,
   Customized,
-  Legend,
   Line,
   ResponsiveContainer,
   Tooltip,
@@ -35,6 +34,8 @@ import {
 } from '@/constants/charts'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
+
+import historicalChartStyles from './Historical.module.css'
 
 type HistoricalChartProps = {
   data?: unknown[]
@@ -73,145 +74,141 @@ export const HistoricalChart = ({
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
 
   return (
-    <RechartResponsiveWrapper height="340px">
-      {chartHidden && (
-        <NotEnoughData
-          style={{
-            width: '80%',
-            backgroundColor: 'var(--color-surface-subtle)',
-          }}
-        />
-      )}
-      <ResponsiveContainer
-        width={chartHidden ? '30%' : '100%'}
-        height="100%"
-        style={
-          chartHidden
-            ? {
-                marginLeft: '70%',
-              }
-            : {
-                marginLeft: '-50px',
-              }
-        }
-      >
-        <ComposedChart
-          data={data}
-          margin={{
-            top: chartHidden ? 0 : 20,
-            right: 0,
-            left: 10,
-            bottom: 10,
-          }}
-          onMouseMove={({ activePayload }) => {
-            if (activePayload && !chartHidden) {
-              setHighlightedData((prevData) => ({
-                ...prevData,
-                ...activePayload.reduce(
-                  (acc, { dataKey, value, payload: { timestamp } }) => ({
-                    ...acc,
-                    timestamp,
-                    timeframe,
-                    [dataKey]: `${formatCryptoBalance(value)} ${positionToken}`,
-                  }),
-                  {},
-                ),
-              }))
-            }
-          }}
-          onMouseLeave={() => {
-            setHighlightedData(legendBaseData)
-          }}
-          dataKey="netValue"
-        >
-          <XAxis
-            dataKey="timestampParsed"
-            fontSize={12}
-            tickMargin={10}
-            tickFormatter={(timestamp: string) => {
-              return timestamp.split(' ')[0]
-            }}
-            hide={chartHidden}
-          />
-          <YAxis
-            strokeWidth={0}
-            tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
-            interval="preserveStartEnd"
-            scale="linear"
-            width={65}
-            domain={[
-              (dataMin: number) => {
-                return Math.max(dataMin - Number(dataMin * 0.001), 0)
-              },
-              (dataMax: number) => {
-                return dataMax + Number(dataMax * 0.001)
-              },
-            ]}
-            hide={chartHidden}
-          />
-          {/* Tooltip is needed for the chart cross to work */}
-          <Tooltip
-            formatter={() => {
-              return ''
-            }}
-            itemStyle={{
-              display: 'none',
-            }}
-            labelStyle={{
-              color: 'white',
-              fontSize: '12px',
-            }}
-            labelFormatter={(label: string) => {
-              const parsedTimestamp = dayjs(label)
-              const formattedDate = parsedTimestamp.format(
-                ['7d', '30d'].includes(timeframe)
-                  ? CHART_TIMESTAMP_FORMAT_DETAILED
-                  : CHART_TIMESTAMP_FORMAT_SHORT,
-              )
-
-              return formattedDate
-            }}
-            contentStyle={{
-              borderRadius: '14px',
+    <div className={historicalChartStyles.historicalChartWrapper}>
+      <RechartResponsiveWrapper height="340px">
+        {chartHidden && (
+          <NotEnoughData
+            style={{
               backgroundColor: 'var(--color-surface-subtle)',
-              border: 'none',
             }}
           />
-          {!chartHidden ? <Customized component={<ChartCross />} /> : null}
-          <Line
-            dot={false}
-            type="monotone"
+        )}
+        <ResponsiveContainer
+          width={chartHidden ? '0' : '100%'}
+          height="100%"
+          style={
+            chartHidden
+              ? {
+                  marginLeft: '0',
+                }
+              : {
+                  marginLeft: '-20px',
+                }
+          }
+        >
+          <ComposedChart
+            data={data}
+            margin={{
+              top: chartHidden ? 0 : 20,
+              right: 0,
+              left: 10,
+              bottom: 10,
+            }}
+            onMouseMove={({ activePayload }) => {
+              if (activePayload && !chartHidden) {
+                setHighlightedData((prevData) => ({
+                  ...prevData,
+                  ...activePayload.reduce(
+                    (acc, { dataKey, value, payload: { timestamp } }) => ({
+                      ...acc,
+                      timestamp,
+                      timeframe,
+                      [dataKey]: `${formatCryptoBalance(value)} ${positionToken}`,
+                    }),
+                    {},
+                  ),
+                }))
+              }
+            }}
+            onMouseLeave={() => {
+              setHighlightedData(legendBaseData)
+            }}
             dataKey="netValue"
-            stroke="#FF80BF"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-            hide={chartHidden}
-          />
-          <Line
-            dot={false}
-            type="stepAfter"
-            dataKey="depositedValue"
-            stroke="#FF49A4"
-            activeDot={false}
-            connectNulls
-            animationDuration={400}
-            animateNewValues
-            hide={chartHidden}
-          />
-          <Legend
-            content={
-              <HistoricalLegend tokenSymbol={tokenSymbol} highlightedData={highlightedData} />
-            }
-            iconType="circle"
-            iconSize={10}
-            align={isMobile ? 'center' : 'right'}
-            verticalAlign={isMobile ? 'bottom' : 'top'}
-            layout="vertical"
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
-    </RechartResponsiveWrapper>
+          >
+            <XAxis
+              dataKey="timestampParsed"
+              fontSize={12}
+              tickMargin={10}
+              tickFormatter={(timestamp: string) => {
+                return timestamp.split(' ')[0]
+              }}
+              hide={chartHidden}
+            />
+            <YAxis
+              strokeWidth={0}
+              tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
+              interval="preserveStartEnd"
+              scale="linear"
+              width={65}
+              domain={[
+                (dataMin: number) => {
+                  return Math.max(dataMin - Number(dataMin * 0.001), 0)
+                },
+                (dataMax: number) => {
+                  return dataMax + Number(dataMax * 0.001)
+                },
+              ]}
+              hide={chartHidden}
+            />
+            {/* Tooltip is needed for the chart cross to work */}
+            <Tooltip
+              formatter={() => {
+                return ''
+              }}
+              itemStyle={{
+                display: 'none',
+              }}
+              labelStyle={{
+                color: 'white',
+                fontSize: '12px',
+              }}
+              labelFormatter={(label: string) => {
+                const parsedTimestamp = dayjs(label)
+                const formattedDate = parsedTimestamp.format(
+                  ['7d', '30d'].includes(timeframe)
+                    ? CHART_TIMESTAMP_FORMAT_DETAILED
+                    : CHART_TIMESTAMP_FORMAT_SHORT,
+                )
+
+                return formattedDate
+              }}
+              contentStyle={{
+                borderRadius: '14px',
+                backgroundColor: 'var(--color-surface-subtle)',
+                border: 'none',
+              }}
+            />
+            {!chartHidden ? <Customized component={<ChartCross />} /> : null}
+            <Line
+              dot={false}
+              type="monotone"
+              dataKey="netValue"
+              stroke="#FF80BF"
+              activeDot={false}
+              connectNulls
+              animationDuration={400}
+              animateNewValues
+              hide={chartHidden}
+            />
+            <Line
+              dot={false}
+              type="stepAfter"
+              dataKey="depositedValue"
+              stroke="#FF49A4"
+              activeDot={false}
+              connectNulls
+              animationDuration={400}
+              animateNewValues
+              hide={chartHidden}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </RechartResponsiveWrapper>
+      <HistoricalLegend
+        tokenSymbol={tokenSymbol}
+        highlightedData={highlightedData}
+        isMobile={isMobile}
+      />
+    </div>
   )
 }
