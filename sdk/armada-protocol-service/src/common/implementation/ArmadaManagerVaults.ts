@@ -152,7 +152,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const shouldSwap = !destinationFleetToken.equals(sourceFleetToken)
 
-    let swapToAmount: ITokenAmount | undefined = undefined
+    let swapToAmount: ITokenAmount | undefined
     let transactions: Awaited<ReturnType<IArmadaManagerVaults['getVaultSwitchTx']>>
 
     const [beforeFleetShares, beforeStakedShares, calculatedSharesToWithdraw] = await Promise.all([
@@ -315,7 +315,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             exitWithdrawMulticall.multicallOperations.concat(depositMulticallOperations).join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             fromVault: params.sourceVaultId,
             toVault: params.destinationVaultId,
             slippage: params.slippage,
@@ -439,7 +439,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               .join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             fromVault: params.sourceVaultId,
             toVault: params.destinationVaultId,
             slippage: params.slippage,
@@ -508,7 +508,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           unstakeWithdrawMulticallOperations.concat(depositMulticallOperations).join(', '),
         metadata: {
           fromAmount: withdrawAmount,
-          toAmount: swapToAmount,
+          toAmount: swapToAmount || withdrawAmount,
           fromVault: params.sourceVaultId,
           toVault: params.destinationVaultId,
           slippage: params.slippage,
@@ -681,7 +681,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       value: fromEth ? inAmount.toSolidityValue() : undefined,
       metadata: {
         fromAmount: inAmount,
-        toAmount: swapToAmount,
+        toAmount: swapToAmount || inAmount,
         slippage: params.slippage,
         priceImpact:
           swapToAmount &&
@@ -882,7 +882,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             'Withdraw Operations: ' + exitWithdrawMulticall.multicallOperations.join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             slippage: params.slippage,
             priceImpact,
           },
@@ -1031,7 +1031,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             multicallOperations.concat(unstakeWithdrawMulticallOperations).join(', '),
           metadata: {
             fromAmount: withdrawAmount,
-            toAmount: swapToAmount,
+            toAmount: swapToAmount || withdrawAmount,
             slippage: params.slippage,
             priceImpact,
           },
@@ -1127,7 +1127,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         description: 'Withdraw Operations: ' + unstakeWithdrawMulticallOperations.join(', '),
         metadata: {
           fromAmount: withdrawAmount,
-          toAmount: swapToAmount,
+          toAmount: swapToAmount || withdrawAmount,
           slippage: params.slippage,
           priceImpact,
         },
