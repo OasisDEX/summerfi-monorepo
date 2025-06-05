@@ -1,5 +1,3 @@
-export type { IToken as ITokenStanalone } from './common/interfaces/IToken'
-export type { QuoteData as QuoteDataStanalone } from './swap/implementation/QuoteData'
 export type { AddressValue } from './common/types/AddressValue'
 export { type ChainId, ChainIdSchema, isChainId } from './common/types/ChainId'
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
@@ -413,5 +411,3 @@ export type { IUser, IUserData } from './user/interfaces/IUser'
 
 export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
-
-export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'

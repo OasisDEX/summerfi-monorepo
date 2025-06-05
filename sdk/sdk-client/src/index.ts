@@ -134,6 +134,7 @@ export {
   type SwapData,
   type TokenSymbol,
   type Transaction,
+  type TransactionInfo,
   type TransactionPriceImpact,
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,

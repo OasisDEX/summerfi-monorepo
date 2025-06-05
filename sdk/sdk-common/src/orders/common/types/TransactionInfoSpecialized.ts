@@ -2,18 +2,13 @@ import type { ITokenAmount } from '../../../common/interfaces/ITokenAmount'
 import type { IAddress } from '../../../common/interfaces/IAddress'
 import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
-import type { Transaction } from './Transaction'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
 import type { TransactionType } from './TransactionType'
+import type { TransactionInfo } from './TransactionInfo'
 
 export type TransactionPriceImpact = {
   price: IPrice | null
   impact: IPercentage | null
-}
-
-type TransactionInfo = {
-  transaction: Transaction
-  description: string
 }
 
 export type ApproveTransactionInfo = TransactionInfo & {
