@@ -123,7 +123,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     }
   }, [displaySimulationGraph])
 
-  const { netDeposited, netEarnings, netValue } = getPositionValues({
+  const { netDeposited, netEarnings, netValue, netValueUSD, netEarningsUSD } = getPositionValues({
     position,
     vault,
   })
@@ -228,16 +228,33 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 titleSize="small"
                 title="Market Value"
                 value={
-                  <>
-                    {formatCryptoBalance(netValue)}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
-                  </>
+                  <Tooltip
+                    tooltip={
+                      <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatCryptoBalance(netValueUSD)}</>
+                    }
+                    tooltipWrapperStyles={{
+                      maxWidth: '455px',
+                    }}
+                  >
+                    <>
+                      {formatCryptoBalance(netValue)}&nbsp;
+                      {getDisplayToken(vault.inputToken.symbol)}
+                    </>
+                  </Tooltip>
                 }
                 subValue={
-                  <>
-                    Earned:&nbsp;
-                    {formatCryptoBalance(netEarnings)}&nbsp;
-                    {getDisplayToken(vault.inputToken.symbol)}
-                  </>
+                  <Tooltip
+                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatCryptoBalance(netEarningsUSD)}</>}
+                    tooltipWrapperStyles={{
+                      maxWidth: '455px',
+                    }}
+                  >
+                    <>
+                      Earned:&nbsp;
+                      {formatCryptoBalance(netEarnings)}&nbsp;
+                      {getDisplayToken(vault.inputToken.symbol)}
+                    </>
+                  </Tooltip>
                 }
                 subValueType={netEarnings.isPositive() ? 'positive' : 'negative'}
                 subValueSize="small"
