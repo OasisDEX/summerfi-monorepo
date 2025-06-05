@@ -38,7 +38,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
       }
 
       setIsLoading(true)
-      const response = await fetch(`/earn/api/beach-club/generate/${walletAddress}`, {
+      const response = await fetch(`/earn/api/beach-club/generate-code/${walletAddress}`, {
         method: 'POST',
       })
 
