@@ -290,7 +290,7 @@ export type {
   IPositionsManager,
   IPositionsManagerData,
 } from './orders/common/interfaces/IPositionsManager'
-export { TransactionType } from './orders/common/types/ExtendedTransactionInfo'
+export { TransactionType } from './orders/common/types/TransactionInfoSpecialized'
 export type {
   TransactionMetadataApproval,
   TransactionPriceImpact,
@@ -309,7 +309,7 @@ export type {
   UnstakeTransactionInfo,
   MigrationTransactionInfo,
   VaultSwitchTransactionInfo,
-} from './orders/common/types/ExtendedTransactionInfo'
+} from './orders/common/types/TransactionInfoSpecialized'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'
 export type { Transaction } from './orders/common/types/Transaction'

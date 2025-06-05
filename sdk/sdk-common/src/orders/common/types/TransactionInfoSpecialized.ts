@@ -4,24 +4,7 @@ import type { IPrice } from '../../../common/interfaces/IPrice'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { Transaction } from './Transaction'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
-
-/**
- * @enum TransactionType
- * @description Enum of all the transaction types that can be performed.
- */
-export enum TransactionType {
-  Approve = 'Approve',
-  Deposit = 'Deposit',
-  Withdraw = 'Withdraw',
-  Claim = 'Claim',
-  Delegate = 'Delegate',
-  Stake = 'Stake',
-  Unstake = 'Unstake',
-  Migration = 'Migration',
-  Bridge = 'Bridge',
-  Send = 'Send',
-  VaultSwitch = 'VaultSwitch',
-}
+import type { TransactionType } from './TransactionType'
 
 export type TransactionPriceImpact = {
   price: IPrice | null

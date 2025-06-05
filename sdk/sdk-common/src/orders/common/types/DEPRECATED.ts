@@ -2,11 +2,11 @@ import type {
   ApproveTransactionInfo,
   DepositTransactionInfo,
   WithdrawTransactionInfo,
-} from './ExtendedTransactionInfo'
+} from './TransactionInfoSpecialized'
 
 /**
  * @interface ExtendedTransactionInfo
- * @deprecated DONT TOUCH THIS!!!
+ * @deprecated WILL BE DELETED.We are deprecating this type in favor of more specific transaction info types for each transaction type.
  */
 export type ExtendedTransactionInfo =
   | ApproveTransactionInfo
