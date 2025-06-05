@@ -159,7 +159,8 @@ export type ArkDetailsType = {
   type: string
   asset: string
   marketAsset: string
-  pool: string
+  pool?: string
+  vault?: string
   chainId: number
 }
 
