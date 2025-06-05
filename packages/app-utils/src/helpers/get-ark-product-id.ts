@@ -8,7 +8,9 @@ export const getArkProductId = (
   }
   const parsedDetails = JSON.parse(ark.details as string) as ArkDetailsType
 
-  if (!('pool' in parsedDetails)) {
+  const resolvedPool = parsedDetails.pool || parsedDetails.vault
+
+  if (!resolvedPool) {
     return false
   }
 
@@ -22,7 +24,7 @@ export const getArkProductId = (
     protocol = 'Fluid'
   }
   const assetAddress = ark.inputToken.id.toLowerCase()
-  const poolAddress = parsedDetails.pool.toLowerCase()
+  const poolAddress = resolvedPool.toLowerCase()
   const chainId = String(parsedDetails.chainId).toLowerCase()
 
   return `${protocol}-${assetAddress}-${poolAddress}-${chainId}`
