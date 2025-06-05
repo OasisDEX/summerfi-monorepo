@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/summer-beach-club-db",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "prebuild": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
+    "codegen:kysely": "kysely-codegen --out-file src/database-types.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "migrate:latest": "tsx src/scripts/local-migrate-latest.ts && pnpm codegen:kysely",
+    "migrate:up": "tsx src/scripts/local-migrate-up.ts && pnpm codegen:kysely",
+    "migrate:down": "tsx src/scripts/local-migrate-down.ts && pnpm codegen:kysely",
+    "migrate:reset": "tsx src/scripts/local-reset.ts && pnpm codegen:kysely"
+  },
+  "dependencies": {
+    "kysely": "^0.28.2",
+    "pg": "^8.16.0",
+    "@summerfi/abstractions": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/pg": "^8.11.11",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "kysely-codegen": "^0.18.5",
+    "tsx": "^4.9.0"
+  }
+}

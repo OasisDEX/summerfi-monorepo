@@ -3,7 +3,6 @@ import { DB } from './database-types'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface PointsConfig {
-  processingIntervalHours: number
   activeUserThresholdUsd: number
   pointsFormulaBase: number
   pointsFormulaLogMultiplier: number
@@ -38,7 +37,6 @@ export class ConfigService {
     }
 
     return {
-      processingIntervalHours: parseFloat(config.processing_interval_hours || '1'),
       activeUserThresholdUsd: parseFloat(config.active_user_threshold_usd || '1'),
       pointsFormulaBase: parseFloat(config.points_formula_base || '0.00005'),
       pointsFormulaLogMultiplier: parseFloat(config.points_formula_log_multiplier || '0.0005'),
@@ -55,11 +53,6 @@ export class ConfigService {
       })
       .where('key', '=', key)
       .execute()
-  }
-
-  async getProcessingIntervalMs(): Promise<number> {
-    const config = await this.getConfig()
-    return config.processingIntervalHours * 60 * 60 * 1000
   }
 
   async setIsUpdating(isUpdating: boolean): Promise<void> {

@@ -68,7 +68,6 @@ describe('ReferralProcessor', () => {
 
     const mockConfig = {
       getConfig: jest.fn().mockResolvedValue({
-        processingIntervalHours: 1,
         activeUserThresholdUsd: 100,
         pointsFormulaBase: 0.00005,
         pointsFormulaLogMultiplier: 0.0005,
