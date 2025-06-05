@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   BeachClubSteps,
   Button,
@@ -12,6 +13,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './BeachClubHowItWorks.module.css'
@@ -43,6 +45,12 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
       })
 
       const data = await response.json()
+
+      if (data.error) {
+        toast.error(data.error, ERROR_TOAST_CONFIG)
+
+        return
+      }
 
       setRefCode(data.referralCode)
     } catch (error) {
