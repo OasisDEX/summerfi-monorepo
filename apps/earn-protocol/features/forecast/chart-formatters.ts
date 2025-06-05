@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 
 const PERCENTAGE_SHORTHAND_THRESHOLD = 1000
 
-export const formatChartCryptoValue = (amount: number, detailed: boolean = false) => {
+export const formatChartCryptoValue = (amount: number, detailed?: boolean) => {
   if (Number.isNaN(amount) || amount < 0) {
     return '0'
   }

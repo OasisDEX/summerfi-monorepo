@@ -41,7 +41,7 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             width={70}
             interval="preserveStartEnd"
             scale="linear"
-            tickFormatter={formatChartCryptoValue}
+            tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
             startOffset={20}
             domain={['dataMin', 'dataMax']}
             padding={{
