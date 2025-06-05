@@ -1,6 +1,6 @@
 import { ReferralClient } from './client'
-import { DatabaseService, PositionUpdate } from './db'
-import { Account, HourlySnapshot } from './types'
+import { DatabaseService } from './db'
+import { Account, HourlySnapshot, AssetVolatility, PositionUpdate, ReferralCodeType } from './types'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface ProcessingResult {
@@ -23,16 +23,60 @@ export class ReferralProcessor {
   private referralStartDate: Date
 
   // Fee configuration for vault types
-  private readonly FEE_CONFIG = {
-    volatile: {
-      feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
-      referrerRate: 0.00025, // 0.025% - 2.5bps for referrer per asset of TVL, annualised
-      ownerRate: 0.00015, // 0.015% - 1.5bps for receiver per asset of TVL, annualised
+  private readonly FEE_CONFIG: Record<
+    AssetVolatility,
+    Record<
+      ReferralCodeType,
+      {
+        feeTier: number
+        referrerRate: number
+        ownerRate: number
+      }
+    >
+  > = {
+    [AssetVolatility.VOLATILE]: {
+      [ReferralCodeType.USER]: {
+        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+        referrerRate: 0.00025, // 0.025% - 2.5bps for referrer per asset of TVL, annualised
+        ownerRate: 0.00015, // 0.015% - 1.5bps for owner per asset of TVL, annualised
+      },
+      [ReferralCodeType.INTEGRATOR]: {
+        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+        referrerRate: 0.0005, // 0.05% - referrer tier for integrator
+        ownerRate: 0, // 0% - owner tier for integrator
+      },
+      [ReferralCodeType.TEST]: {
+        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+        referrerRate: 0.0005, // 0.05% - referrer tier for integrator
+        ownerRate: 0, // 0% - owner tier for integrator
+      },
+      [ReferralCodeType.INVALID]: {
+        feeTier: 0,
+        referrerRate: 0,
+        ownerRate: 0,
+      },
     },
-    stable: {
-      feeTier: 0.01, // 1% - base fee tier for stable vaults (USDC, USDT, EURC etc)
-      referrerRate: 0.0005, // 0.05% - 5bps for referrer per asset of TVL, annualised
-      ownerRate: 0.00025, // 0.025% - 2.5bps for receiver per asset of TVL, annualised
+    [AssetVolatility.STABLE]: {
+      [ReferralCodeType.USER]: {
+        feeTier: 0.01, // 1% - base fee tier for stable vaults (USDC, USDT, EURC etc)
+        referrerRate: 0.0005, // 0.05% - 5bps for referrer per asset of TVL, annualised
+        ownerRate: 0.00025, // 0.025% - 2.5bps for owner per asset of TVL, annualised
+      },
+      [ReferralCodeType.INTEGRATOR]: {
+        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+        referrerRate: 0.001, // 0.1% - referrer tier for integrator
+        ownerRate: 0, // 0% - owner tier for integrator
+      },
+      [ReferralCodeType.TEST]: {
+        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
+        referrerRate: 0.05, // 0.05% - referrer tier for integrator
+        ownerRate: 0, // 0% - owner tier for integrator
+      },
+      [ReferralCodeType.INVALID]: {
+        feeTier: 0,
+        referrerRate: 0,
+        ownerRate: 0,
+      },
     },
   } as const
 
@@ -266,12 +310,18 @@ export class ReferralProcessor {
       // Step 2: Get all users that need position updates
       const allUsers = await trx
         .selectFrom('users')
+        .innerJoin('referral_codes', 'referral_codes.id', 'users.referrer_id')
         .where('referrer_id', 'is not', null)
         .where('referral_timestamp', '<=', periodEnd)
-        .select('id')
+        .select(['users.id as id', 'referral_codes.type as referralType'])
         .execute()
 
       const userIds = allUsers.map((u: any) => u.id)
+      const userToReferralTypeMap = new Map<string, string>()
+      for (const user of allUsers) {
+        userToReferralTypeMap.set(user.id, user.referralType)
+      }
+
       this.logger.info(`📊 Updating positions for ${userIds.length} users...`)
 
       // Step 3: Fetch and update positions
@@ -285,6 +335,7 @@ export class ReferralProcessor {
         positionsByChain,
         periodStart,
         periodEnd,
+        userToReferralTypeMap,
       )
 
       // Batch insert/update positions
@@ -347,6 +398,7 @@ export class ReferralProcessor {
     positionsByChain: { [chain: string]: Account[] },
     periodStart: Date,
     periodEnd: Date,
+    userToReferralTypeMap: Map<string, string>,
   ) {
     const positionUpdates: Array<PositionUpdate> = []
 
@@ -362,33 +414,33 @@ export class ReferralProcessor {
               periodEnd,
             )
             if (latestSnapshot) {
+              const maybeReferralType = userToReferralTypeMap.get(account.id)
+              if (!maybeReferralType) {
+                continue
+              }
+              if (Object.values(ReferralCodeType).includes(maybeReferralType as ReferralCodeType)) {
+                continue
+              }
+              const referralType = maybeReferralType as ReferralCodeType
+              const assetSymbol = position.vault.inputToken.symbol
+              const volatility =
+                assetSymbol === 'WETH' ? AssetVolatility.VOLATILE : AssetVolatility.STABLE
+
+              const feeConfig = this.FEE_CONFIG[volatility]
+              const typeConfig = feeConfig[referralType]
+
               const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
               const depositAsset = Number(latestSnapshot.inputTokenBalanceNormalized || 0)
-              const assetSymbol = position.vault.inputToken.symbol
-              const isVolatile = assetSymbol === 'WETH'
 
-              const feeTier = isVolatile
-                ? this.FEE_CONFIG.volatile.feeTier
-                : this.FEE_CONFIG.stable.feeTier
+              const feeTier = typeConfig.feeTier
               const dailyFeeGeneratedByThePositionUsd = (depositUsd * feeTier) / 365
               const dailyFeeGeneratedByThePosition = (depositAsset * feeTier) / 365
               const dailyReferrerFeesUsd =
-                dailyFeeGeneratedByThePositionUsd *
-                (isVolatile
-                  ? this.FEE_CONFIG.volatile.referrerRate
-                  : this.FEE_CONFIG.stable.referrerRate)
-              const dailyOwnerFeesUsd =
-                dailyFeeGeneratedByThePositionUsd *
-                (isVolatile ? this.FEE_CONFIG.volatile.ownerRate : this.FEE_CONFIG.stable.ownerRate)
+                dailyFeeGeneratedByThePositionUsd * typeConfig.referrerRate
+              const dailyOwnerFeesUsd = dailyFeeGeneratedByThePositionUsd * typeConfig.ownerRate
 
-              const dailyReferrerFees =
-                dailyFeeGeneratedByThePosition *
-                (isVolatile
-                  ? this.FEE_CONFIG.volatile.referrerRate
-                  : this.FEE_CONFIG.stable.referrerRate)
-              const dailyOwnerFees =
-                dailyFeeGeneratedByThePosition *
-                (isVolatile ? this.FEE_CONFIG.volatile.ownerRate : this.FEE_CONFIG.stable.ownerRate)
+              const dailyReferrerFees = dailyFeeGeneratedByThePosition * typeConfig.referrerRate
+              const dailyOwnerFees = dailyFeeGeneratedByThePosition * typeConfig.ownerRate
 
               positionUpdates.push({
                 id: position.id,
@@ -401,7 +453,7 @@ export class ReferralProcessor {
                 fees_per_day_owner: dailyOwnerFees.toString(),
                 fees_per_day_referrer_usd: dailyReferrerFeesUsd.toString(),
                 fees_per_day_owner_usd: dailyOwnerFeesUsd.toString(),
-                is_volatile: isVolatile,
+                is_volatile: volatility === 'volatile',
                 last_synced_at: new Date(),
               })
             }

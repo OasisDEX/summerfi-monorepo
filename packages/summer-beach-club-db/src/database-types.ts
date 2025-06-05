@@ -3,116 +3,115 @@
  * Please do not edit it manually.
  */
 
-import type { ColumnType } from 'kysely'
+import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U>
-    ? ColumnType<S, I | undefined, U>
-    : ColumnType<T, T | undefined, T>
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
-export type Numeric = ColumnType<string, number | string, number | string>
+export type Numeric = ColumnType<string, number | string, number | string>;
 
-export type Timestamp = ColumnType<Date, Date | string, Date | string>
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface DailyStats {
-  active_users: Generated<number>
-  date: Timestamp
-  points_earned: Generated<Numeric>
-  referral_id: string
-  total_deposits: Generated<Numeric>
+  active_users: Generated<number>;
+  date: Timestamp;
+  points_earned: Generated<Numeric>;
+  referral_id: string;
+  total_deposits: Generated<Numeric>;
 }
 
 export interface Migrations {
-  name: string
-  timestamp: string
+  name: string;
+  timestamp: string;
 }
 
 export interface PointsConfig {
-  created_at: Generated<Timestamp | null>
-  description: string | null
-  id: Generated<number>
-  key: string
-  updated_at: Generated<Timestamp | null>
-  value: string
+  created_at: Generated<Timestamp | null>;
+  description: string | null;
+  id: Generated<number>;
+  key: string;
+  updated_at: Generated<Timestamp | null>;
+  value: string;
 }
 
 export interface Positions {
-  chain: string
-  currency_symbol: Generated<string>
-  current_deposit_asset: Generated<Numeric>
-  current_deposit_usd: Generated<Numeric>
-  fees_per_day_owner: Generated<Numeric>
-  fees_per_day_owner_usd: Generated<Numeric>
-  fees_per_day_referrer: Generated<Numeric>
-  fees_per_day_referrer_usd: Generated<Numeric>
-  id: string
-  is_volatile: Generated<boolean>
-  last_synced_at: Timestamp | null
-  user_id: string
+  chain: string;
+  currency_symbol: Generated<string>;
+  current_deposit_asset: Generated<Numeric>;
+  current_deposit_usd: Generated<Numeric>;
+  fees_per_day_owner: Generated<Numeric>;
+  fees_per_day_owner_usd: Generated<Numeric>;
+  fees_per_day_referrer: Generated<Numeric>;
+  fees_per_day_referrer_usd: Generated<Numeric>;
+  id: string;
+  is_volatile: Generated<boolean>;
+  last_synced_at: Timestamp | null;
+  user_id: string;
 }
 
 export interface ProcessingCheckpoint {
-  created_at: Generated<Timestamp | null>
-  id: Generated<number>
-  last_processed_timestamp: Timestamp
+  created_at: Generated<Timestamp | null>;
+  id: Generated<number>;
+  last_processed_timestamp: Timestamp;
 }
 
 export interface ReferralCodes {
-  active_users_count: Generated<number>
-  created_at: Generated<Timestamp | null>
-  custom_code: string | null
-  id: string
-  last_calculated_at: Timestamp | null
-  total_deposits_referred_usd: Generated<Numeric>
-  type: string
-  updated_at: Generated<Timestamp | null>
+  active_users_count: Generated<number>;
+  created_at: Generated<Timestamp | null>;
+  custom_code: string | null;
+  id: string;
+  last_calculated_at: Timestamp | null;
+  total_deposits_referred_usd: Generated<Numeric>;
+  type: string;
+  updated_at: Generated<Timestamp | null>;
 }
 
 export interface RewardsBalances {
-  amount_per_day: Generated<Numeric>
-  amount_per_day_usd: Generated<Numeric | null>
-  balance: Generated<Numeric>
-  balance_usd: Generated<Numeric | null>
-  created_at: Generated<Timestamp | null>
-  currency: string
-  id: Generated<number>
-  referral_code_id: string
-  total_claimed: Generated<Numeric>
-  total_earned: Generated<Numeric>
-  updated_at: Generated<Timestamp | null>
+  amount_per_day: Generated<Numeric>;
+  amount_per_day_usd: Generated<Numeric | null>;
+  balance: Generated<Numeric>;
+  balance_usd: Generated<Numeric | null>;
+  created_at: Generated<Timestamp | null>;
+  currency: string;
+  id: Generated<number>;
+  referral_code_id: string;
+  total_claimed: Generated<Numeric>;
+  total_earned: Generated<Numeric>;
+  updated_at: Generated<Timestamp | null>;
 }
 
 export interface RewardsDistributions {
-  amount: Numeric
-  batch_id: string
-  created_at: Generated<Timestamp | null>
-  currency: string
-  description: string
-  distribution_timestamp: Generated<Timestamp>
-  id: Generated<number>
-  referral_code_id: string
+  amount: Numeric;
+  batch_id: string;
+  created_at: Generated<Timestamp | null>;
+  currency: string;
+  description: string;
+  distribution_timestamp: Generated<Timestamp>;
+  id: Generated<number>;
+  referral_code_id: string;
 }
 
 export interface Users {
-  created_at: Generated<Timestamp | null>
-  id: string
-  is_active: Generated<boolean>
-  last_activity_at: Timestamp | null
-  referral_chain: string | null
-  referral_code: string | null
-  referral_timestamp: Timestamp | null
-  referrer_id: string | null
-  updated_at: Generated<Timestamp | null>
+  created_at: Generated<Timestamp | null>;
+  id: string;
+  is_active: Generated<boolean>;
+  last_activity_at: Timestamp | null;
+  referral_chain: string | null;
+  referral_code: string | null;
+  referral_timestamp: Timestamp | null;
+  referrer_id: string | null;
+  updated_at: Generated<Timestamp | null>;
 }
 
 export interface DB {
-  daily_stats: DailyStats
-  migrations: Migrations
-  points_config: PointsConfig
-  positions: Positions
-  processing_checkpoint: ProcessingCheckpoint
-  referral_codes: ReferralCodes
-  rewards_balances: RewardsBalances
-  rewards_distributions: RewardsDistributions
-  users: Users
+  daily_stats: DailyStats;
+  migrations: Migrations;
+  points_config: PointsConfig;
+  positions: Positions;
+  processing_checkpoint: ProcessingCheckpoint;
+  referral_codes: ReferralCodes;
+  rewards_balances: RewardsBalances;
+  rewards_distributions: RewardsDistributions;
+  users: Users;
 }
