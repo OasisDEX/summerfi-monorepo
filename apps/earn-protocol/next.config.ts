@@ -33,6 +33,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       '@summerfi/armada-protocol-abis',
       '@summerfi/sdk-client-react',
       '@summerfi/subgraph-manager-common',
+      '@summerfi/summer-beach-club-db',
       '@summerfi/summer-protocol-db',
       '@tanstack/react-query',
       '@transak/transak-sdk',
@@ -47,10 +48,18 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   },
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {
-        webpack: (config) => ({
-          ...config,
-          externals: [...config.externals, 'pino-pretty', 'encoding'],
-        }),
+        webpack: (config, { webpack }) => {
+          config.plugins.push(
+            new webpack.IgnorePlugin({
+              resourceRegExp: /^pg-native$|^cloudflare:sockets$/,
+            }),
+          )
+
+          return {
+            ...config,
+            externals: [...config.externals, 'pino-pretty', 'encoding'],
+          }
+        },
       }
     : {}),
   headers: function () {

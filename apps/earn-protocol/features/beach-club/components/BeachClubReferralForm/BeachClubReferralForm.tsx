@@ -8,13 +8,21 @@ interface BeachClubReferralFormProps {
   onChange: (value: string) => void
 }
 
-// TO BE REPLACED WITH THE REAL API CALL
-const mockCheckReferralCode = (_code: string): Promise<{ isCorrectCode: boolean }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ isCorrectCode: true })
-    }, 500)
-  })
+const isValidReferralCode = async (
+  code: string,
+): Promise<{ valid: boolean; customCode: string | null; referralCode: string | null }> => {
+  try {
+    const response = await fetch(`/earn/api/beach-club/validate-code/${code}`)
+
+    const { valid, customCode, referralCode } = await response.json()
+
+    return { valid, customCode, referralCode }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error validating referral code', error)
+
+    return { valid: false, customCode: null, referralCode: null }
+  }
 }
 
 export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError, onChange }) => {
@@ -45,13 +53,16 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError,
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
       setIsLoading(true)
-      mockCheckReferralCode(value).then(({ isCorrectCode }) => {
-        if (!isCorrectCode) {
+
+      isValidReferralCode(value).then(({ valid, referralCode }) => {
+        if (!valid) {
           onError('Incorrect code')
           setIsValid(false)
+          onChange('')
         } else {
           onError(null)
           setIsValid(true)
+          onChange(referralCode ?? '')
         }
         setIsLoading(false)
       })

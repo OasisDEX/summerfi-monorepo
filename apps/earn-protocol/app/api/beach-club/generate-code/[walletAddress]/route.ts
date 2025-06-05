@@ -33,25 +33,26 @@ export async function POST(
       )
     }
 
-    let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+    let summerDbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+    let beachClubDbInstance: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
 
     try {
-      dbInstance = await getSummerProtocolDB({
+      summerDbInstance = await getSummerProtocolDB({
         connectionString: summerDbConnectionString,
       })
 
-      const beachClubDb = getBeachClubDb({
+      beachClubDbInstance = getBeachClubDb({
         connectionString: beachClubDbConnectionString,
       })
 
-      const existingUser = await dbInstance.db
+      const existingUser = await summerDbInstance.db
         .selectFrom('latestActivity')
         .select('userAddress')
         .where('userAddress', '=', walletAddress.toLowerCase())
         .executeTakeFirst()
 
       if (existingUser) {
-        const alreadyHaveReferralCode = await beachClubDb.db
+        const alreadyHaveReferralCode = await beachClubDbInstance.db
           .selectFrom('users')
           .select('referral_code')
           .where('id', '=', walletAddress.toLowerCase())
@@ -61,7 +62,7 @@ export async function POST(
           return NextResponse.json({ referralCode: alreadyHaveReferralCode.referral_code })
         }
 
-        const addRefferalCode = await beachClubDb.db
+        const addRefferalCode = await beachClubDbInstance.db
           .insertInto('users')
           .values({
             id: walletAddress.toLowerCase(),
@@ -90,7 +91,8 @@ export async function POST(
         { status: 500 },
       )
     } finally {
-      await dbInstance?.db.destroy()
+      await summerDbInstance?.db.destroy()
+      await beachClubDbInstance?.db.destroy()
     }
   } catch (error) {
     return NextResponse.json(

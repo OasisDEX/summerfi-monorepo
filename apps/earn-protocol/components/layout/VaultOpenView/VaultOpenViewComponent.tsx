@@ -104,7 +104,6 @@ export const VaultOpenViewComponent = ({
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
-  const beachClubEnabled = !!features?.BeachClub
 
   const { userWalletAddress } = useUserWallet()
 
@@ -122,6 +121,10 @@ export const VaultOpenViewComponent = ({
 
   const [referralCodeError, setReferralCodeError] = useState<string | null>(null)
   const [referralCode, setReferralCode] = useState<string>('')
+
+  const [isNewUser, setIsNewUser] = useState(false)
+
+  const beachClubEnabled = !!features?.BeachClub && !!userWalletAddress && isNewUser
 
   const handleReferralCodeError = useCallback((error: string | null) => {
     setReferralCodeError(error)
@@ -181,8 +184,23 @@ export const VaultOpenViewComponent = ({
       setMigrationBestVaultApy(mappedBestVaultApy)
     }
 
+    const fetchIfUserHasPositions = async (walletAddress: string) => {
+      try {
+        const response = await fetch(`/earn/api/beach-club/validate-if-new-user/${walletAddress}`)
+
+        const data = await response.json()
+
+        setIsNewUser(data.isNewUser)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching if user is new', error)
+        setIsNewUser(false)
+      }
+    }
+
     if (userWalletAddress) {
       fetchMigratablePositions(userWalletAddress)
+      fetchIfUserHasPositions(userWalletAddress)
     }
   }, [userWalletAddress, sdk, vaults, vaultsApyRaw])
 
