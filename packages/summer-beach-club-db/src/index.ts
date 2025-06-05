@@ -18,7 +18,6 @@ export interface BeachClubDB {
 
 export * from './database-types'
 
-
 export const getBeachClubDb = (config: PgBeachClubDbConfig): BeachClubDB => {
   const db = new Kysely<DB>({
     dialect: new PostgresDialect({
