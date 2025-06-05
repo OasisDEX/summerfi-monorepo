@@ -290,7 +290,7 @@ export type {
   IPositionsManager,
   IPositionsManagerData,
 } from './orders/common/interfaces/IPositionsManager'
-export { TransactionType } from './orders/common/types/TransactionInfoSpecialized'
+export { TransactionType } from './orders/common/types/TransactionType'
 export type {
   TransactionMetadataApproval,
   TransactionPriceImpact,
