@@ -15,6 +15,7 @@
     }
   }
 }
+
 .vaultOpenGridBreadcrumbsWrapper a {
   color: var(--earn-protocol-primary-100);
 }
@@ -24,20 +25,24 @@
   grid-template-columns: 1fr;
   margin-top: 20px;
 }
+
 @media screen and (min-width: 900px) {
   .vaultOpenGridPositionWrapper {
     grid-template-columns: 1fr 446px;
     grid-gap: var(--general-space-16);
   }
 }
+
 .vaultOpenGridPositionWrapper .leftBlock {
   display: grid;
   grid-gap: var(--general-space-16);
 }
+
 .vaultOpenGridPositionWrapper .rightBlockWrapper {
   height: 100%;
   display: none;
 }
+
 .vaultOpenGridPositionWrapper .rightBlockWrapper .rightBlock {
   position: sticky;
   top: var(--general-space-16);
@@ -45,11 +50,13 @@
   flex-direction: column;
   gap: var(--general-space-16);
 }
+
 @media screen and (min-width: 900px) {
   .vaultOpenGridPositionWrapper .rightBlockWrapper {
     display: block;
   }
 }
+
 .vaultOpenGridPositionWrapper .rightExtraBlockMobileWrapper {
   margin-bottom: var(--general-space-16);
 }
@@ -66,6 +73,7 @@
   justify-content: space-between;
   margin-bottom: var(--general-space-16);
 }
+
 .vaultOpenGridTopLeftWrapper .vaultBonusWrapper {
   display: flex;
   flex-direction: row;
@@ -78,10 +86,12 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
-    transform: rotate(360deg);
+    transform: rotate(-360deg);
   }
 }
+
 .refreshWrapper {
   display: flex;
   align-items: center;

@@ -6,6 +6,7 @@
   gap: var(--general-space-16);
   padding: 0 var(--general-space-16);
 }
+
 @media screen and (min-width: 600px) {
   .firstRowWrapper {
     gap: unset;
@@ -17,24 +18,29 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
-    transform: rotate(360deg);
+    transform: rotate(-360deg);
   }
 }
+
 .headerWrapper {
   display: inline-flex;
   align-items: center;
 }
-.headerWrapper > div {
+
+.headerWrapper>div {
   display: inline-flex;
   align-items: center;
 }
+
 .headerWrapper svg {
   opacity: 0.6;
   cursor: pointer;
   margin-left: 10px;
   transition: all 0.3s;
 }
+
 .headerWrapper:hover svg {
   opacity: 1;
   color: var(--earn-protocol-primary-100);
@@ -56,6 +62,7 @@
   margin-top: var(--general-space-40);
   margin-bottom: var(--general-space-40);
 }
+
 @media (min-width: 532px) {
   .secondRowWrapper {
     gap: unset;
@@ -63,11 +70,13 @@
     padding: unset;
   }
 }
+
 .secondRowWrapper .secondRowContainer {
   display: flex;
   gap: var(--spacing-space-x-small);
   align-items: center;
 }
+
 .secondRowWrapper .dataBlocksContainer {
   display: flex;
   gap: var(--spacing-space-large);
@@ -75,15 +84,18 @@
   flex-wrap: wrap;
   justify-content: flex-start;
 }
-.secondRowWrapper .dataBlocksContainer > div > span {
+
+.secondRowWrapper .dataBlocksContainer>div>span {
   text-align: left !important;
 }
+
 @media (min-width: 532px) {
   .secondRowWrapper .dataBlocksContainer {
     justify-content: center;
     gap: var(--spacing-space-large);
   }
-  .secondRowWrapper .dataBlocksContainer > div > span {
+
+  .secondRowWrapper .dataBlocksContainer>div>span {
     text-align: right !important;
   }
 }
