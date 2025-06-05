@@ -577,9 +577,6 @@ importers:
       '@graphql-tools/utils':
         specifier: 10.8.6
         version: 10.8.6(graphql@16.8.2)
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
       '@summerfi/summer-beach-club-db':
         specifier: workspace:*
         version: link:../../packages/summer-beach-club-db
