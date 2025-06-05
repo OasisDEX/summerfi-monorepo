@@ -1,9 +1,27 @@
 {
-  "extends": "@summerfi/typescript-config/tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist"
+    "target": "es2020",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/*": ["../../packages/*/src"]
+    },
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/**/*.ts", "sst-env.d.ts"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+  "ts-node": {
+    "transpileOnly": true,
+    "require": ["tsconfig-paths/register"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

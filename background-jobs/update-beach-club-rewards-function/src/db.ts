@@ -2,7 +2,7 @@ import { Kysely, sql } from 'kysely'
 
 import { ConfigService, PointsConfig } from './config'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getBeachClubDb, BeachClubDB } from '@summerfi/summer-beach-club-db'
+import { getBeachClubDb, DB } from '@summerfi/summer-beach-club-db'
 import * as dotenv from 'dotenv'
 import path from 'node:path'
 
@@ -87,7 +87,7 @@ enum RewardCurrency {
 }
 
 export class DatabaseService {
-  protected db: Kysely<BeachClubDB>
+  protected db: Kysely<DB>
   public config: ConfigService
   public logger: Logger
 
@@ -112,10 +112,8 @@ export class DatabaseService {
     }
 
     this.db = getBeachClubDb({
-      config: {
-        connectionString: BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
-      },
-    })
+      connectionString: BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
+    }).db
 
     this.config = new ConfigService(this.db, new Logger({ serviceName: 'config' }))
   }
@@ -133,7 +131,7 @@ export class DatabaseService {
   }
 
   async updatePositionsInTransaction(
-    trx: Kysely<BeachClubDB>,
+    trx: Kysely<DB>,
     positionUpdates: PositionUpdate[],
   ): Promise<void> {
     await trx
@@ -158,7 +156,7 @@ export class DatabaseService {
    * Update user activity status based on deposit threshold
    */
   async updateUsersIsActiveFlag(
-    trx: Kysely<BeachClubDB>,
+    trx: Kysely<DB>,
     userIds: string[],
     config: PointsConfig,
   ): Promise<void> {
@@ -184,7 +182,7 @@ WHERE u.id = ANY(${userIds});
   /**
    * Recalculate all referral stats within a transaction
    */
-  async recalculateReferralStatsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
+  async recalculateReferralStatsInTransaction(trx: Kysely<DB>): Promise<void> {
     await trx.executeQuery(
       sql`
       UPDATE referral_codes rc
@@ -210,7 +208,7 @@ WHERE u.id = ANY(${userIds});
   /**
    * Update daily rates and accumulate points within a transaction
    */
-  async updateDailyRatesAndPointsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
+  async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>): Promise<void> {
     const config = await this.config.getConfig()
 
     // Generate unique batch ID for this processing run
@@ -454,16 +452,14 @@ WHERE u.id = ANY(${userIds});
   /**
    * Update daily stats within a transaction - tracks all reward types
    */
-  async updateDailyStatsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
+  async updateDailyStatsInTransaction(trx: Kysely<DB>): Promise<void> {
     // todo: update daily stats for historical tracking
   }
 
   /**
    * Get processing checkpoint
    */
-  async getLastProcessedTimestampInTransaction(
-    trx: Kysely<BeachClubDB> | undefined,
-  ): Promise<Date | null> {
+  async getLastProcessedTimestampInTransaction(trx: Kysely<DB> | undefined): Promise<Date | null> {
     const result = await (trx || this.db)
       .selectFrom('processing_checkpoint')
       .select('last_processed_timestamp')
@@ -576,7 +572,7 @@ WHERE u.id = ANY(${userIds});
   /**
    * Execute operations within a transaction
    */
-  async executeInTransaction<T>(callback: (trx: Kysely<BeachClubDB>) => Promise<T>): Promise<T> {
+  async executeInTransaction<T>(callback: (trx: Kysely<DB>) => Promise<T>): Promise<T> {
     return await this.db.transaction().execute(callback)
   }
 
@@ -584,7 +580,7 @@ WHERE u.id = ANY(${userIds});
    * Validate referral code within a transaction
    */
   async validateReferralCodeInTransaction(
-    trx: Kysely<BeachClubDB>,
+    trx: Kysely<DB>,
     referralCodeId: string,
   ): Promise<string | null> {
     try {
@@ -611,7 +607,7 @@ WHERE u.id = ANY(${userIds});
    * Ensure referral code exists within a transaction
    */
   async ensureReferralCodeInTransaction(
-    trx: Kysely<BeachClubDB>,
+    trx: Kysely<DB>,
     id: string,
     type: ReferralCodeType,
     customCode?: string,

@@ -1,4 +1,3 @@
-import { sql } from 'kysely'
 import { Pool } from 'pg'
 import { ConfigService } from '../config'
 import { DatabaseService } from '../db'
@@ -6,7 +5,6 @@ import { DatabaseService } from '../db'
 // Mock dependencies
 jest.mock('pg')
 jest.mock('../config')
-jest.mock('../migrations/kysely-migrator')
 
 // Mock kysely sql template literals
 const mockCompiledQuery = {

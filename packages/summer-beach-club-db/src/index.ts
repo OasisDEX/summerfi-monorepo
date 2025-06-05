@@ -1,4 +1,4 @@
-import { DB } from './database-types'
+import { DB as DBType } from './database-types'
 import { Kysely, PostgresDialect, sql } from 'kysely'
 import { Pool } from 'pg'
 
@@ -11,7 +11,7 @@ export interface PgBeachClubDbConfig {
     acquireTimeoutMillis?: number
   }
 }
-
+export type DB = DBType
 export interface BeachClubDB {
   db: Kysely<DB>
 }
@@ -19,7 +19,7 @@ export interface BeachClubDB {
 export * from './database-types'
 export { mapDbNetworkToChainId, mapChainIdToDbNetwork, type DbNetworks } from './helpers'
 
-export const getBeachClubDb = async (config: PgBeachClubDbConfig): Promise<BeachClubDB> => {
+export const getBeachClubDb = (config: PgBeachClubDbConfig): BeachClubDB => {
   const db = new Kysely<DB>({
     dialect: new PostgresDialect({
       pool: new Pool({
@@ -30,14 +30,6 @@ export const getBeachClubDb = async (config: PgBeachClubDbConfig): Promise<Beach
       }),
     }),
   })
-
-  // Test the connection by executing a simple query
-  try {
-    await sql`SELECT 1`.execute(db)
-  } catch (error) {
-    await db.destroy()
-    throw new Error(`Failed to connect to earn app database`)
-  }
 
   return {
     db,

@@ -12,24 +12,20 @@
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "execute": "ts-node src/entry-point.ts",
-    "run": "ts-node src/entry-point.ts"
+    "execute": "tsx src/entry-point.ts",
+    "run": "tsx src/entry-point.ts"
   },
   "dependencies": {
-    "@graphql-mesh/cli": "0.100.4",
-    "@graphql-mesh/graphql": "0.104.3",
-    "@graphql-mesh/runtime": "0.106.3",
-    "@graphql-mesh/transform-prefix": "0.105.4",
-    "@graphql-tools/utils": "10.8.6",
-    "@summerfi/serverless-shared": "workspace:*",
     "@aws-lambda-powertools/logger": "^2.0.2",
     "@aws-lambda-powertools/metrics": "^2.0.2",
     "@aws-lambda-powertools/tracer": "^2.0.2",
+    "@graphql-tools/utils": "10.8.6",
+    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/summer-beach-club-db": "workspace:*",
     "graphql": "^16.8.1",
     "graphql-request": "^7.2.0",
     "graphql-tag": "^2.12.6",
-    "kysely": "^0.27.6",
+    "kysely": "^0.28.2",
     "pg": "^8.11.3"
   },
   "devDependencies": {
@@ -41,9 +37,9 @@
     "@types/node": "^20.11.19",
     "@types/pg": "^8.10.9",
     "jest": "^29.7.0",
-    "kysely-codegen": "^0.18.5",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.3.3"
   }
 }
