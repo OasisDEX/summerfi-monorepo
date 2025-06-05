@@ -48,6 +48,7 @@ interface PortfolioPageViewProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  referralCode: string | null
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -63,6 +64,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
+  referralCode,
 }) => {
   const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -157,7 +159,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             id: PortfolioTabs.BEACH_CLUB,
             label: 'Beach Club',
             icon: <Icon iconName="beach_club_icon" size={24} />,
-            content: <PortfolioBeachClub />,
+            content: (
+              <PortfolioBeachClub walletAddress={walletAddress} referralCode={referralCode} />
+            ),
             activeColor: 'var(--beach-club-tab-underline)',
           },
         ]

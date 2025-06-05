@@ -23,6 +23,7 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getUserBeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
@@ -71,6 +72,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
+    referralCode,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -92,6 +94,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       limit: 50,
       userAddress: walletAddress,
     }),
+    unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
   ])
 
   return {
@@ -108,6 +111,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
+    referralCode,
   }
 }
 
@@ -146,6 +150,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
+    referralCode,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -240,6 +245,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
       rebalanceActivity={rebalanceActivity}
+      referralCode={referralCode}
     />
   )
 }

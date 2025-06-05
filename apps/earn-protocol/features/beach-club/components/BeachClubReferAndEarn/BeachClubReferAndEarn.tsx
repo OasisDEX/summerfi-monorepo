@@ -1,3 +1,4 @@
+import { type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
 import { BeachClubHowItWorks } from '@/features/beach-club/components/BeachClubHowItWorks/BeachClubHowItWorks'
@@ -10,22 +11,33 @@ enum ReferAndEarnTab {
   TRACK_REFERRALS = 'track_referrals',
 }
 
-const tabsOptions = [
-  {
-    label: 'How it works',
-    id: ReferAndEarnTab.HOW_IT_WORKS,
-    content: <BeachClubHowItWorks />,
-    activeColor: 'var(--beach-club-tab-underline)',
-  },
-  {
-    label: 'Track referrals',
-    id: ReferAndEarnTab.TRACK_REFERRALS,
-    content: <BeachClubTrackReferrals />,
-    activeColor: 'var(--beach-club-tab-underline)',
-  },
-]
+interface BeachClubReferAndEarnProps {
+  walletAddress: string
+  referralCode: string | null
+}
 
-export const BeachClubReferAndEarn = () => {
+export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
+  walletAddress,
+  referralCode,
+}) => {
+  const tabsOptions = useMemo(
+    () => [
+      {
+        label: 'How it works',
+        id: ReferAndEarnTab.HOW_IT_WORKS,
+        content: <BeachClubHowItWorks walletAddress={walletAddress} referralCode={referralCode} />,
+        activeColor: 'var(--beach-club-tab-underline)',
+      },
+      {
+        label: 'Track referrals',
+        id: ReferAndEarnTab.TRACK_REFERRALS,
+        content: <BeachClubTrackReferrals />,
+        activeColor: 'var(--beach-club-tab-underline)',
+      },
+    ],
+    [walletAddress, referralCode],
+  )
+
   return (
     <div className={classNames.beachClubReferAndEarnWrapper}>
       <div className={classNames.header}>

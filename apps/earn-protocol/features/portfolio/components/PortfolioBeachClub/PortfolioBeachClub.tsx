@@ -1,3 +1,4 @@
+import { type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
 import { BeachClubBigBanner } from '@/features/beach-club/components/BeachClubBigBannner/BeachClubBigBanner'
@@ -6,7 +7,15 @@ import { BeachClubRewards } from '@/features/beach-club/components/BeachClubRewa
 
 import classNames from './PortfolioBeachClub.module.css'
 
-export const PortfolioBeachClub = () => {
+interface PortfolioBeachClubProps {
+  walletAddress: string
+  referralCode: string | null
+}
+
+export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
+  walletAddress,
+  referralCode,
+}) => {
   return (
     <div className={classNames.beachClubWrapper}>
       <Text as="h3" variant="h3" style={{ marginTop: 'var(--general-space-16)' }}>
@@ -16,7 +25,7 @@ export const PortfolioBeachClub = () => {
         The more you share the more you earn.
       </Text>
       <BeachClubBigBanner />
-      <BeachClubReferAndEarn />
+      <BeachClubReferAndEarn walletAddress={walletAddress} referralCode={referralCode} />
       <BeachClubRewards />
     </div>
   )

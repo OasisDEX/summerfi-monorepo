@@ -1,13 +1,6 @@
 import { useMemo, useState } from 'react'
-import {
-  AnimateHeight,
-  BeachClubRewardSimulation,
-  Icon,
-  Text,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { AnimateHeight, BeachClubRewardSimulation, Icon, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
-import Link from 'next/link'
 
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
 import { BeachClubVerticalDots } from '@/features/beach-club/components/BeachClubVerticalDots/BeachClubVerticalDots'
@@ -55,13 +48,13 @@ export const BeachClubTvlChallenge = () => {
           </div>
         ))}
       </div>
-      <div className={classNames.leaderboardLink}>
+      {/* <div className={classNames.leaderboardLink}>
         <Link href="/" target="_blank" style={{ textAlign: 'center' }}>
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
             See leaderboard
           </WithArrow>
         </Link>
-      </div>
+      </div> */}
       <div
         className={classNames.rewardCardsWrapper}
         style={{ marginTop: 'var(--general-space-32)' }}
