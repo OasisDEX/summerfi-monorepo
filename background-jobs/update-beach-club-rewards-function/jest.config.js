@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/../../packages'],
   testMatch: ['**/__tests__/**/*.test.ts'],
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   transform: {
@@ -12,6 +12,10 @@ module.exports = {
         tsconfig: {
           esModuleInterop: true,
           allowSyntheticDefaultImports: true,
+          baseUrl: '.',
+          paths: {
+            '@summerfi/*': ['../../packages/*/src'],
+          },
         },
       },
     ],
