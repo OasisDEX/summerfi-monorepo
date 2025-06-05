@@ -23,9 +23,8 @@ export interface DailyStats {
 }
 
 export interface Migrations {
-  applied_at: Generated<Timestamp | null>
-  filename: string
-  id: Generated<number>
+  name: string
+  timestamp: string
 }
 
 export interface PointsConfig {

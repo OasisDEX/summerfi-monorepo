@@ -4,6 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "sst-env.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.mts"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }

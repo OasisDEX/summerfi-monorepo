@@ -25,40 +25,15 @@ async function main() {
         }
         break
 
-      case 'migrate':
-        console.log('🔧 Running database migrations...')
-        await db.migrate()
-        console.log('✅ Migrations completed')
-        break
-
-      case 'reset':
-        console.log('⚠️  WARNING: This will delete all data!')
-        console.log('Press Ctrl+C to cancel, or wait 5 seconds to continue...')
-        await new Promise((resolve) => setTimeout(resolve, 5000))
-
-        const migrator = new (await import('./migrations/kysely-migrator')).KyselyMigrator(
-          db.rawPool,
-        )
-        await migrator.reset()
-        console.log('✅ Database reset completed')
-        break
-
       default:
         console.log(`
 Usage: pnpm execute-simplified <command>
 
 Commands:
   process    - Process latest referral points (default)
-  backfill   - Backfill historical data
-  stats      - Show system statistics
-  migrate    - Run database migrations
-  reset      - Reset database (WARNING: deletes all data)
 
 Examples:
-  pnpm execute-simplified                    # Process latest
-  pnpm execute-simplified backfill           # Backfill all history
-  pnpm execute-simplified backfill 2024-01-01 # Backfill from specific date
-  pnpm execute-simplified stats              # Show statistics
+  pnpm execute                    # Process latest
         `)
         process.exit(1)
     }

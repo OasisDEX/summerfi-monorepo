@@ -1,98 +1,24 @@
-import { Kysely, PostgresDialect, sql } from 'kysely'
-import { DB } from './database-types'
-import { Pool } from 'pg'
+import { Kysely, sql } from 'kysely'
+
 import { ConfigService, PointsConfig } from './config'
-import { KyselyMigrator } from './migrations/kysely-migrator'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { Network } from './types'
+import { getBeachClubDb, DB } from '@summerfi/summer-beach-club-db'
 import * as dotenv from 'dotenv'
 import path from 'node:path'
+import {
+  PositionUpdate,
+  RewardCurrency,
+  RewardDescription,
+  SimplifiedReferralCode,
+  RewardsBalance,
+  ReferralCodeType,
+} from './types'
 
 dotenv.config({ path: path.join(__dirname, '../../../.env') })
 
-export type PositionUpdate = {
-  id: string
-  chain: string
-  user_id: string
-  current_deposit_usd: string
-  current_deposit_asset: string
-  currency_symbol: string
-  fees_per_day_referrer: string
-  fees_per_day_owner: string
-  fees_per_day_referrer_usd: string
-  fees_per_day_owner_usd: string
-  is_volatile: boolean
-  last_synced_at: Date
-}
-
-export interface SimplifiedReferralCode {
-  id: string
-  custom_code: string | null
-  total_deposits_referred_usd: number
-  active_users_count: number
-  last_calculated_at: Date | null
-  created_at: Date
-  updated_at: Date
-}
-
-export interface RewardsBalance {
-  id: number
-  referral_code_id: string
-  currency: string
-  balance: number
-  balance_usd: number | null
-  amount_per_day: number
-  amount_per_day_usd: number | null
-  total_earned: number
-  total_claimed: number
-  created_at: Date | null
-  updated_at: Date | null
-}
-
-export interface SimplifiedUser {
-  id: string
-  referrer_id: string | null
-  referral_chain: string | null
-  referral_timestamp: Date | null
-  total_deposits_referred_usd: number
-  is_active: boolean
-  last_activity_at: Date | null
-  created_at: Date
-  updated_at: Date
-}
-
-export interface SimplifiedPosition {
-  id: string
-  chain: string
-  user_id: string
-  current_deposit_usd: number
-  current_deposit_asset: number
-  currency_symbol: string
-  last_synced_at: Date | null
-}
-enum ReferralCodeType {
-  USER = 'user',
-  INTEGRATOR = 'integrator',
-  INVALID = 'invalid',
-  TEST = 'test',
-}
-
-enum RewardDescription {
-  REGULAR = 'regular_distribution',
-  BONUS = 'bonus',
-  CLAIM = 'claim',
-}
-
-enum RewardCurrency {
-  POINTS = 'points',
-  SUMR = 'SUMR',
-}
-
 export class DatabaseService {
-  protected pool: Pool
   protected db: Kysely<DB>
   public config: ConfigService
-  public migrator: KyselyMigrator | null = null
   public logger: Logger
 
   // SUMR token price in USD
@@ -115,54 +41,11 @@ export class DatabaseService {
       throw new Error('BEACH_CLUB_REWARDS_DB_CONNECTION_STRING is not set')
     }
 
-    const url = new URL(BEACH_CLUB_REWARDS_DB_CONNECTION_STRING)
-    const host = url.hostname
-    const port = url.port
-    const database = url.pathname.slice(1)
-    const user = url.username
-    const password = url.password
-
-    this.pool = new Pool({
-      host,
-      port: parseInt(port),
-      database,
-      user,
-      password,
-    })
-
-    this.db = new Kysely<DB>({
-      dialect: new PostgresDialect({
-        pool: this.pool,
-      }),
-    })
+    this.db = getBeachClubDb({
+      connectionString: BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
+    }).db
 
     this.config = new ConfigService(this.db, new Logger({ serviceName: 'config' }))
-  }
-  async setMigrator(): Promise<void> {
-    if (!this.migrator) {
-      this.migrator = new KyselyMigrator(this.pool)
-    }
-  }
-
-  async migrate(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.runMigrations()
-  }
-
-  async resetMigrations(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.reset()
-  }
-
-  async rollbackMigrations(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.rollbackMigrations()
   }
 
   /**
@@ -614,10 +497,6 @@ WHERE u.id = ANY(${userIds});
 
   get rawDb() {
     return this.db
-  }
-
-  get rawPool() {
-    return this.pool
   }
 
   /**
