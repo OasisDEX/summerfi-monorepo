@@ -1,5 +1,5 @@
-import { DB } from './database-types'
-import { Kysely, PostgresDialect, sql } from 'kysely'
+import { DB as DBType } from './database-types'
+import { Kysely, PostgresDialect } from 'kysely'
 import { Pool } from 'pg'
 
 export interface PgBeachClubDbConfig {
@@ -11,13 +11,12 @@ export interface PgBeachClubDbConfig {
     acquireTimeoutMillis?: number
   }
 }
-
+export type DB = DBType
 export interface BeachClubDB {
   db: Kysely<DB>
 }
 
 export * from './database-types'
-export { mapDbNetworkToChainId, mapChainIdToDbNetwork, type DbNetworks } from './helpers'
 
 export const getBeachClubDb = (config: PgBeachClubDbConfig): BeachClubDB => {
   const db = new Kysely<DB>({

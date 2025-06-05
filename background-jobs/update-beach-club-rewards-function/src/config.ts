@@ -1,5 +1,5 @@
 import { Kysely } from 'kysely'
-import { DB } from './database-types'
+import { DB } from '@summerfi/summer-beach-club-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface PointsConfig {

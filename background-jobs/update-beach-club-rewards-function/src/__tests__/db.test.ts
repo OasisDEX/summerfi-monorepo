@@ -1,4 +1,3 @@
-import { sql } from 'kysely'
 import { Pool } from 'pg'
 import { ConfigService } from '../config'
 import { DatabaseService } from '../db'
@@ -6,7 +5,6 @@ import { DatabaseService } from '../db'
 // Mock dependencies
 jest.mock('pg')
 jest.mock('../config')
-jest.mock('../migrations/kysely-migrator')
 
 // Mock kysely sql template literals
 const mockCompiledQuery = {
@@ -340,27 +338,6 @@ describe('DatabaseService', () => {
   describe('getters', () => {
     it('should return raw database instance', () => {
       expect(db.rawDb).toBe(mockKysely)
-    })
-
-    it('should return raw pool instance', () => {
-      expect(db.rawPool).toBe(mockPool)
-    })
-  })
-
-  describe('migrate', () => {
-    it('should run migrations', async () => {
-      const mockMigrator = {
-        runMigrations: jest.fn().mockResolvedValue(undefined),
-      }
-
-      // Mock the KyselyMigrator
-      const { KyselyMigrator } = require('../migrations/kysely-migrator')
-      KyselyMigrator.mockImplementation(() => mockMigrator)
-
-      await db.migrate()
-
-      expect(KyselyMigrator).toHaveBeenCalledWith(mockPool)
-      expect(mockMigrator.runMigrations).toHaveBeenCalled()
     })
   })
 })

@@ -11,12 +11,6 @@ export const handler = async (
 ): Promise<void> => {
   logger.addContext(context)
   logger.debug('Handler started')
-  const db = new DatabaseService()
-  const requiresMigration = await db.requiresMigration()
-  if (requiresMigration) {
-    await db.migrate()
-    logger.info('Database migrated')
-  }
 
   const processor = new ReferralProcessor({ logger })
   const result = await processor.processLatest()

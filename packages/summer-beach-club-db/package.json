@@ -19,8 +19,7 @@
   "dependencies": {
     "kysely": "^0.28.2",
     "pg": "^8.16.0",
-    "@summerfi/abstractions": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*"
+    "@summerfi/abstractions": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

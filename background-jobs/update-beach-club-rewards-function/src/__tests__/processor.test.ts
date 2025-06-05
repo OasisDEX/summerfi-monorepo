@@ -42,13 +42,17 @@ describe('ReferralProcessor', () => {
       return callback({
         insertInto: jest.fn().mockReturnThis(),
         values: jest.fn().mockReturnThis(),
-        execute: jest.fn().mockResolvedValue([]),
+        execute: jest.fn().mockResolvedValue([
+          { id: 'user1', referralType: 'user' },
+          { id: 'user2', referralType: 'user' },
+        ]),
         selectFrom: jest.fn().mockReturnThis(),
+        innerJoin: jest.fn().mockReturnThis(),
         select: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
         orderBy: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
-        executeTakeFirst: jest.fn().mockResolvedValue(null),
+        executeTakeFirst: jest.fn().mockResolvedValue({ count: '2' }),
         onConflict: jest.fn().mockReturnThis(),
         doNothing: jest.fn().mockReturnThis(),
       })
@@ -100,7 +104,7 @@ describe('ReferralProcessor', () => {
           recalculateReferralStatsInTransaction: jest.fn(),
           updateDailyRatesAndPointsInTransaction: jest.fn(),
           updateDailyStatsInTransaction: jest.fn(),
-          validateReferralCodeInTransaction: jest.fn(),
+          validateReferralCodeInTransaction: jest.fn().mockResolvedValue('referrer1'),
           getReferralCode: jest.fn(),
           close: jest.fn(),
           migrate: jest.fn(),
@@ -140,7 +144,8 @@ describe('ReferralProcessor', () => {
         ],
       })
 
-      // Mock positions data
+      // Mock positions data - ensure snapshot is within the processing period
+      const snapshotTime = Math.floor((periodStart.getTime() + now.getTime()) / 2000) // midpoint between periodStart and now
       mockClient.getAllPositionsWithHourlySnapshots.mockResolvedValue({
         base: [
           {
@@ -160,9 +165,34 @@ describe('ReferralProcessor', () => {
                 hourlySnapshots: [
                   {
                     id: 'snapshot1',
-                    timestamp: Math.floor(now.getTime() / 1000).toString(),
+                    timestamp: snapshotTime.toString(),
                     inputTokenBalanceNormalized: '1000',
                     inputTokenBalanceNormalizedInUSD: '1000',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'user2',
+            positions: [
+              {
+                id: 'pos2',
+                createdTimestamp: '1704067200',
+                inputTokenBalanceNormalized: '500',
+                inputTokenBalanceNormalizedInUSD: '500',
+                vault: {
+                  id: 'vault2',
+                  inputToken: {
+                    symbol: 'USDC',
+                  },
+                },
+                hourlySnapshots: [
+                  {
+                    id: 'snapshot2',
+                    timestamp: snapshotTime.toString(),
+                    inputTokenBalanceNormalized: '500',
+                    inputTokenBalanceNormalizedInUSD: '500',
                   },
                 ],
               },
