@@ -40,22 +40,22 @@ describe('Armada Protocol Deposit', () => {
     const rpcUrl = process.env.E2E_SDK_FORK_URL_SONIC
     const chainId = ChainIds.Sonic
     const fleetAddress = usdcFleetSonic
+    const swapToSymbol = undefined
+    const amountValue = '1'
 
     await runTests({
-      swapToSymbol: undefined,
+      swapToSymbol,
       chainId,
       fleetAddress,
       rpcUrl,
-      stake: true,
-      amountValue: '1',
-      referralCode: '99',
+      amountValue,
     })
     // await runTests({
-    //   swapToSymbol: undefined,
+    //   swapToSymbol,
     //   chainId,
-    //   fleetAddress: usdcFleet,
+    //   fleetAddress,
     //   rpcUrl,
-    //   amountValue: '0.2',
+    //   amountValue,
     // })
   })
 
@@ -105,7 +105,7 @@ describe('Armada Protocol Deposit', () => {
       : undefined
 
     console.log(
-      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? 'and with swap to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
+      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
     )
 
     const amount = TokenAmount.createFrom({
