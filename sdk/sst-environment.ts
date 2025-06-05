@@ -1,6 +1,7 @@
 import { z } from 'zod/v4'
 
 import { config } from '@dotenvx/dotenvx'
+import { zCustom, zJsonString } from './z-custom'
 
 config({ path: ['../.env', '.env'], override: true, debug: false, ignore: ['MISSING_ENV_FILE'] })
 
@@ -27,7 +28,7 @@ const envSchema = z.object({
   SUMMER_DEPLOYMENT_CONFIG: z.string().nonempty(),
   FUNCTIONS_API_URL: z.string().nonempty(),
   SDK_RPC_GATEWAY: z.string().nonempty(),
-  SDK_SUBGRAPH_CONFIG: z.string().nonempty(),
+  SDK_SUBGRAPH_CONFIG: zCustom.jsonString(),
   SDK_LOGGING_ENABLED: z.string().default('false'),
   SDK_DEBUG_ENABLED: z.string().default('false'),
   SDK_DISTRIBUTIONS_BASE_URL: z.string().nonempty(),
@@ -35,7 +36,7 @@ const envSchema = z.object({
   SDK_NAMED_REFERRALS_FILE: z.string().nonempty(),
   SDK_USE_FORK: z.string().nonempty().default(''),
   SDK_FORK_CONFIG: z.string().default(''),
-  SDK_DEPLOYED_VERSIONS_MAP: z.string().nonempty(),
+  SDK_DEPLOYED_VERSIONS_MAP: zCustom.jsonString(),
 })
 
 // parse envs
@@ -47,31 +48,14 @@ if (!parsedEnv.success) {
 
 export const environmentVariables = parsedEnv.data
 
-const testJSON = z
-  .string()
-  .nonempty()
-  .check((ctx) => {
-    try {
-      return JSON.parse(ctx.value)
-    } catch (error: { message: string } | any) {
-      ctx.issues.push({
-        message: `Invalid JSON: ${error.message}`,
-        input: ctx.value,
-      })
-    }
-  })
-
-const a = testJSON.parse(parsedEnv.data.SDK_SUBGRAPH_CONFIG)
-
 export const sdkDeployedVersionsMap = z
   .string()
   .nonempty()
   .transform((str) => {
     try {
       return JSON.parse(str)
-    } catch (error) {
-      console.error('Error parsing SDK_DEPLOYED_VERSIONS_MAP:', str, error)
-      return false
+    } catch (error: { message: string } | any) {
+      throw new Error(`Invalid SDK_DEPLOYED_VERSIONS_MAP: ${error.message}`)
     }
   })
   .pipe(
