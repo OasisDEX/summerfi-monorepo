@@ -43,7 +43,6 @@ import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/n
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
-import { filterStablecoins } from '@/helpers/filter-stablecoins'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
