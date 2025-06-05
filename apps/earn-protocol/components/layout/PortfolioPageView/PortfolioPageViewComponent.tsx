@@ -33,6 +33,7 @@ interface PortfolioPageViewComponentProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  referralCode: string | null
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -48,6 +49,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
+  referralCode,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -64,6 +66,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
+        referralCode={referralCode}
       />
     </SDKContextProvider>
   )

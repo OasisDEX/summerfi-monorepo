@@ -9,6 +9,7 @@
     align-items: center;
     flex-wrap: wrap;
     margin-top: var(--general-space-16);
+    justify-content: center;
 
     .referralCode {
       display: flex;
@@ -42,6 +43,7 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         &:hover {
           background-color: rgba(94, 243, 151, 0.049);

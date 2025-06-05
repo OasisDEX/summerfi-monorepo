@@ -22,6 +22,7 @@ export function WithArrow({
   onClick,
   hideArrow = false,
   isLoading = false,
+  wrapperStyle,
 }: PropsWithChildren<{
   gap?: string | number
   style?: CSSProperties
@@ -35,6 +36,7 @@ export function WithArrow({
   onClick?: () => void
   hideArrow?: boolean
   isLoading?: boolean
+  wrapperStyle?: CSSProperties
 }>): React.ReactNode {
   return (
     <span
@@ -42,6 +44,7 @@ export function WithArrow({
         display: 'flex',
         alignItems: isLoading ? 'unset' : 'center',
         opacity: disabled ? 0.5 : 1,
+        ...wrapperStyle,
       }}
       onClick={onClick}
     >

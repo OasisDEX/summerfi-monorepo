@@ -1,6 +1,5 @@
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
-import Link from 'next/link'
 
 import {
   BeachClubBoatChallengeRewardCard,
@@ -69,13 +68,13 @@ export const BeachClubBoatChallenge = () => {
           </Text>
         </div>
       ))}
-      <div className={classNames.leaderboardLink}>
+      {/* <div className={classNames.leaderboardLink}>
         <Link href="/" target="_blank" style={{ textAlign: 'center' }}>
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
             See leaderboard
           </WithArrow>
         </Link>
-      </div>
+      </div> */}
       <div className={classNames.rewardCardsWrapper}>
         {cards.map((card) => (
           <BeachClubBoatChallengeRewardCard key={card.reward.type} {...card} />
