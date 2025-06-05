@@ -415,12 +415,17 @@ export class ReferralProcessor {
             )
             if (latestSnapshot) {
               const maybeReferralType = userToReferralTypeMap.get(account.id)
+
               if (!maybeReferralType) {
                 continue
               }
-              if (Object.values(ReferralCodeType).includes(maybeReferralType as ReferralCodeType)) {
+
+              if (
+                !Object.values(ReferralCodeType).includes(maybeReferralType as ReferralCodeType)
+              ) {
                 continue
               }
+
               const referralType = maybeReferralType as ReferralCodeType
               const assetSymbol = position.vault.inputToken.symbol
               const volatility =
