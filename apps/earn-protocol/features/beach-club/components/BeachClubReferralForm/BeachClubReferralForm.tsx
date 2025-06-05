@@ -8,18 +8,20 @@ interface BeachClubReferralFormProps {
   onChange: (value: string) => void
 }
 
-const isValidReferralCode = async (code: string): Promise<boolean> => {
+const isValidReferralCode = async (
+  code: string,
+): Promise<{ valid: boolean; customCode: string | null; referralCode: string | null }> => {
   try {
     const response = await fetch(`/earn/api/beach-club/validate-code/${code}`)
 
-    const isValidCode = await response.json()
+    const { valid, customCode, referralCode } = await response.json()
 
-    return isValidCode.valid
+    return { valid, customCode, referralCode }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error validating referral code', error)
 
-    return false
+    return { valid: false, customCode: null, referralCode: null }
   }
 }
 
@@ -52,13 +54,15 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError,
     debounceRef.current = setTimeout(() => {
       setIsLoading(true)
 
-      isValidReferralCode(value).then((isValidCode) => {
-        if (!isValidCode) {
+      isValidReferralCode(value).then(({ valid, referralCode }) => {
+        if (!valid) {
           onError('Incorrect code')
           setIsValid(false)
+          onChange('')
         } else {
           onError(null)
           setIsValid(true)
+          onChange(referralCode ?? '')
         }
         setIsLoading(false)
       })

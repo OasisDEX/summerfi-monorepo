@@ -26,15 +26,22 @@ export async function GET(_request: NextRequest, { params }: { params: { referra
   try {
     const referralCodeData = await beachClubDb.db
       .selectFrom('referral_codes')
-      .select('id')
+      .select(['id', 'custom_code'])
       .where((eb) => eb.or([eb('custom_code', '=', referralCode), eb('id', '=', referralCode)]))
       .executeTakeFirst()
 
     if (!referralCodeData) {
-      return NextResponse.json({ valid: false }, { status: 400 })
+      return NextResponse.json(
+        { valid: false, customCode: null, referralCode: null },
+        { status: 400 },
+      )
     }
 
-    return NextResponse.json({ valid: true })
+    return NextResponse.json({
+      valid: true,
+      customCode: referralCodeData.custom_code,
+      referralCode: referralCodeData.id,
+    })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error validating referral code', error)
