@@ -3,6 +3,7 @@ declare const styles: {
   readonly "graphWrapper": string;
   readonly "header": string;
   readonly "positionWrapper": string;
+  readonly "positionWrapperCard": string;
   readonly "strategyInfoTopWrapper": string;
   readonly "titleWithRisk": string;
   readonly "value": string;

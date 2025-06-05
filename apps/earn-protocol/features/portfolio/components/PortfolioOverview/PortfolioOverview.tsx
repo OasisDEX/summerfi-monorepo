@@ -201,12 +201,12 @@ export const PortfolioOverview = ({
             />
           </Card>
         ))}
-        <Card style={{ flexDirection: 'column' }} variant="cardSecondary">
+        <Card className={portfolioOverviewStyles.portfolioPositionsList} variant="cardSecondary">
           <div className={portfolioOverviewStyles.portfolioPositionsListHeader}>
             <Text as="h5" variant="h5">
               Positions
             </Text>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-48)' }}>
+            <div className={portfolioOverviewStyles.portfolioPositionsListOptions}>
               <ToggleButton
                 checked={showEmptyPositions}
                 title="Show empty positions"

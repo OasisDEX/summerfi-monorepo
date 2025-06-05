@@ -113,7 +113,7 @@ export const PortfolioPosition = ({
   )
 
   return (
-    <Card variant="cardPrimary" style={{ marginTop: 'var(--general-space-20)' }}>
+    <Card variant="cardPrimary" className={portfolioPositionStyles.positionWrapperCard}>
       <div className={portfolioPositionStyles.positionWrapper}>
         <div className={portfolioPositionStyles.basicInfoWrapper}>
           <div className={portfolioPositionStyles.titleWithRisk}>

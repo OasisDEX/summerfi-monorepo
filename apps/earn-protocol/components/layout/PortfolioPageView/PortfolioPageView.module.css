@@ -2,16 +2,20 @@
 .portfolioPageViewLoadingStateWrapper {
   display: flex;
   flex-direction: column;
-  padding: 0 var(--general-space-4);
+  padding: 0;
   width: 100%;
 }
+
 @media (min-width: 745px) {
+
   .portfolioPageViewWrapper,
   .portfolioPageViewLoadingStateWrapper {
     padding: 0 var(--general-space-16);
   }
 }
+
 @media (min-width: 1280px) {
+
   .portfolioPageViewWrapper,
   .portfolioPageViewLoadingStateWrapper {
     padding: 0;

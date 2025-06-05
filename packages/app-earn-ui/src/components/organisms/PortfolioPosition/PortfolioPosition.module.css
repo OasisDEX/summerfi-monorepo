@@ -1,7 +1,18 @@
+.positionWrapperCard {
+  margin-top: var(--general-space-20);
+}
+
+@media (max-width: 743px) {
+  .positionWrapperCard {
+    padding: var(--general-space-20);
+  }
+}
+
 .positionWrapper {
   width: 100%;
   padding: unset;
 }
+
 @media (min-width: 768px) {
   .positionWrapper {
     padding: var(--general-space-12);
@@ -15,11 +26,13 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 @media (min-width: 1279px) {
   .basicInfoWrapper {
     gap: var(--spacing-space-x-large);
   }
 }
+
 .basicInfoWrapper .titleWithRisk {
   display: flex;
   justify-content: space-between;
@@ -27,6 +40,7 @@
   width: 100%;
   margin-bottom: var(--general-space-16);
 }
+
 @media (min-width: 1024px) {
   .basicInfoWrapper .titleWithRisk {
     width: 30%;
@@ -38,12 +52,15 @@
   flex-direction: column;
   text-align: center;
 }
-.strategyInfoTopWrapper > * {
+
+.strategyInfoTopWrapper>* {
   white-space: nowrap;
 }
+
 .strategyInfoTopWrapper .header {
   color: var(--color-text-secondary);
 }
+
 .strategyInfoTopWrapper .value {
   color: var(--color-text-primary);
 }
@@ -53,6 +70,7 @@
   justify-content: center;
   gap: 100px;
 }
+
 @media (max-width: 531px) {
   .graphWrapper {
     flex-direction: column;
