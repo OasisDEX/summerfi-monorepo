@@ -341,26 +341,5 @@ describe('DatabaseService', () => {
     it('should return raw database instance', () => {
       expect(db.rawDb).toBe(mockKysely)
     })
-
-    it('should return raw pool instance', () => {
-      expect(db.rawPool).toBe(mockPool)
-    })
-  })
-
-  describe('migrate', () => {
-    it('should run migrations', async () => {
-      const mockMigrator = {
-        runMigrations: jest.fn().mockResolvedValue(undefined),
-      }
-
-      // Mock the KyselyMigrator
-      const { KyselyMigrator } = require('../migrations/kysely-migrator')
-      KyselyMigrator.mockImplementation(() => mockMigrator)
-
-      await db.migrate()
-
-      expect(KyselyMigrator).toHaveBeenCalledWith(mockPool)
-      expect(mockMigrator.runMigrations).toHaveBeenCalled()
-    })
   })
 })

@@ -1,5 +1,5 @@
 import { Kysely } from 'kysely'
-import { DB } from './database-types'
+import { BeachClubDB } from '@summerfi/summer-beach-club-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface PointsConfig {
@@ -11,7 +11,7 @@ export interface PointsConfig {
 
 export class ConfigService {
   constructor(
-    private db: Kysely<DB>,
+    private db: Kysely<BeachClubDB>,
     private logger: Logger,
   ) {}
 

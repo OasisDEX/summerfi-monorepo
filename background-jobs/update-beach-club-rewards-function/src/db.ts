@@ -1,10 +1,8 @@
-import { Kysely, PostgresDialect, sql } from 'kysely'
-import { DB } from './database-types'
-import { Pool } from 'pg'
+import { Kysely, sql } from 'kysely'
+
 import { ConfigService, PointsConfig } from './config'
-import { KyselyMigrator } from './migrations/kysely-migrator'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { Network } from './types'
+import { getBeachClubDb, BeachClubDB } from '@summerfi/summer-beach-club-db'
 import * as dotenv from 'dotenv'
 import path from 'node:path'
 
@@ -89,10 +87,8 @@ enum RewardCurrency {
 }
 
 export class DatabaseService {
-  protected pool: Pool
-  protected db: Kysely<DB>
+  protected db: Kysely<BeachClubDB>
   public config: ConfigService
-  public migrator: KyselyMigrator | null = null
   public logger: Logger
 
   // SUMR token price in USD
@@ -115,54 +111,13 @@ export class DatabaseService {
       throw new Error('BEACH_CLUB_REWARDS_DB_CONNECTION_STRING is not set')
     }
 
-    const url = new URL(BEACH_CLUB_REWARDS_DB_CONNECTION_STRING)
-    const host = url.hostname
-    const port = url.port
-    const database = url.pathname.slice(1)
-    const user = url.username
-    const password = url.password
-
-    this.pool = new Pool({
-      host,
-      port: parseInt(port),
-      database,
-      user,
-      password,
-    })
-
-    this.db = new Kysely<DB>({
-      dialect: new PostgresDialect({
-        pool: this.pool,
-      }),
+    this.db = getBeachClubDb({
+      config: {
+        connectionString: BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
+      },
     })
 
     this.config = new ConfigService(this.db, new Logger({ serviceName: 'config' }))
-  }
-  async setMigrator(): Promise<void> {
-    if (!this.migrator) {
-      this.migrator = new KyselyMigrator(this.pool)
-    }
-  }
-
-  async migrate(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.runMigrations()
-  }
-
-  async resetMigrations(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.reset()
-  }
-
-  async rollbackMigrations(): Promise<void> {
-    if (!this.migrator) {
-      await this.setMigrator()
-    }
-    await this.migrator!.rollbackMigrations()
   }
 
   /**
@@ -178,7 +133,7 @@ export class DatabaseService {
   }
 
   async updatePositionsInTransaction(
-    trx: Kysely<DB>,
+    trx: Kysely<BeachClubDB>,
     positionUpdates: PositionUpdate[],
   ): Promise<void> {
     await trx
@@ -203,7 +158,7 @@ export class DatabaseService {
    * Update user activity status based on deposit threshold
    */
   async updateUsersIsActiveFlag(
-    trx: Kysely<DB>,
+    trx: Kysely<BeachClubDB>,
     userIds: string[],
     config: PointsConfig,
   ): Promise<void> {
@@ -229,7 +184,7 @@ WHERE u.id = ANY(${userIds});
   /**
    * Recalculate all referral stats within a transaction
    */
-  async recalculateReferralStatsInTransaction(trx: Kysely<DB>): Promise<void> {
+  async recalculateReferralStatsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
     await trx.executeQuery(
       sql`
       UPDATE referral_codes rc
@@ -255,7 +210,7 @@ WHERE u.id = ANY(${userIds});
   /**
    * Update daily rates and accumulate points within a transaction
    */
-  async updateDailyRatesAndPointsInTransaction(trx: Kysely<DB>): Promise<void> {
+  async updateDailyRatesAndPointsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
     const config = await this.config.getConfig()
 
     // Generate unique batch ID for this processing run
@@ -499,14 +454,16 @@ WHERE u.id = ANY(${userIds});
   /**
    * Update daily stats within a transaction - tracks all reward types
    */
-  async updateDailyStatsInTransaction(trx: Kysely<DB>): Promise<void> {
+  async updateDailyStatsInTransaction(trx: Kysely<BeachClubDB>): Promise<void> {
     // todo: update daily stats for historical tracking
   }
 
   /**
    * Get processing checkpoint
    */
-  async getLastProcessedTimestampInTransaction(trx: Kysely<DB> | undefined): Promise<Date | null> {
+  async getLastProcessedTimestampInTransaction(
+    trx: Kysely<BeachClubDB> | undefined,
+  ): Promise<Date | null> {
     const result = await (trx || this.db)
       .selectFrom('processing_checkpoint')
       .select('last_processed_timestamp')
@@ -616,14 +573,10 @@ WHERE u.id = ANY(${userIds});
     return this.db
   }
 
-  get rawPool() {
-    return this.pool
-  }
-
   /**
    * Execute operations within a transaction
    */
-  async executeInTransaction<T>(callback: (trx: Kysely<DB>) => Promise<T>): Promise<T> {
+  async executeInTransaction<T>(callback: (trx: Kysely<BeachClubDB>) => Promise<T>): Promise<T> {
     return await this.db.transaction().execute(callback)
   }
 
@@ -631,7 +584,7 @@ WHERE u.id = ANY(${userIds});
    * Validate referral code within a transaction
    */
   async validateReferralCodeInTransaction(
-    trx: Kysely<DB>,
+    trx: Kysely<BeachClubDB>,
     referralCodeId: string,
   ): Promise<string | null> {
     try {
@@ -658,7 +611,7 @@ WHERE u.id = ANY(${userIds});
    * Ensure referral code exists within a transaction
    */
   async ensureReferralCodeInTransaction(
-    trx: Kysely<DB>,
+    trx: Kysely<BeachClubDB>,
     id: string,
     type: ReferralCodeType,
     customCode?: string,
