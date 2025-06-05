@@ -1,7 +1,7 @@
 import { z } from 'zod/v4'
 
 import { config } from '@dotenvx/dotenvx'
-import { zCustom, zJsonString } from './z-custom'
+import { zCustom } from './z-custom'
 
 config({ path: ['../.env', '.env'], override: true, debug: false, ignore: ['MISSING_ENV_FILE'] })
 
