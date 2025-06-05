@@ -23,7 +23,7 @@ import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { fontInter } from '@/helpers/fonts'
-import { getDeviceType } from '@/middleware'
+import { getDeviceType } from '@/helpers/get-device-type'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 
 export const metadata: Metadata = {
