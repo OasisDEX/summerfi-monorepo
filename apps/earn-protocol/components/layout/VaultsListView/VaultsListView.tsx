@@ -45,6 +45,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterStablecoins } from '@/helpers/filter-stablecoins'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
+import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
@@ -386,7 +387,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         iconStyle: {
           color: '#777576',
         },
-        options: assetsList.map(({ value }) => value).filter(filterStablecoins),
+        options: assetsList.map(({ value }) => value).filter(isStablecoin),
       },
     ],
     [assetsList],

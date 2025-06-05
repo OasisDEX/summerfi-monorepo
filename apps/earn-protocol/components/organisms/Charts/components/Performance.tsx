@@ -21,6 +21,7 @@ import {
   POINTS_REQUIRED_FOR_CHART,
 } from '@/constants/charts'
 import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
+import { isStablecoin } from '@/helpers/is-stablecoin'
 
 type PerformanceChartProps = {
   data?:
@@ -71,7 +72,9 @@ export const PerformanceChart = ({
           />
           <YAxis
             strokeWidth={0}
-            tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
+            tickFormatter={(label: string) =>
+              `${formatChartCryptoValue(Number(label), !isStablecoin(inputToken))}`
+            }
             scale="linear"
             width={80}
             domain={[

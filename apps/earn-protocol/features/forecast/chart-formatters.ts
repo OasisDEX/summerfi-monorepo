@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 
 const PERCENTAGE_SHORTHAND_THRESHOLD = 1000
 
-export const formatChartCryptoValue = (amount: number) => {
+export const formatChartCryptoValue = (amount: number, detailed: boolean = false) => {
   if (Number.isNaN(amount) || amount < 0) {
     return '0'
   }
@@ -21,22 +21,22 @@ export const formatChartCryptoValue = (amount: number) => {
 
   // Handle small values with minimal decimals
   if (amount < 0.01 && amount > 0) {
-    return amount.toFixed(3)
+    return amount.toFixed(detailed ? 5 : 3)
   }
 
   // Handle values < 1 with 2 decimals
   if (amount < 1) {
-    return amount.toFixed(2)
+    return amount.toFixed(detailed ? 4 : 2)
   }
 
   // Handle values 1-99 with 1 decimal
   if (amount < 100) {
-    return amount.toFixed(1)
+    return amount.toFixed(detailed ? 3 : 1)
   }
 
   // Handle values 100-999 with no decimals
   if (amount < 1000) {
-    return Math.round(amount).toString()
+    return detailed ? amount.toFixed(2) : Math.round(amount).toString()
   }
 
   // Handle values >= 1000 with K suffix
@@ -44,20 +44,20 @@ export const formatChartCryptoValue = (amount: number) => {
     const kValue = amount / 1000
 
     if (kValue < 10) {
-      return `${kValue.toFixed(1)}K`
+      return `${parseFloat(kValue.toFixed(detailed ? 3 : 1))}K`
     }
 
-    return `${Math.round(kValue)}K`
+    return `${detailed ? parseFloat(kValue.toFixed(2)) : Math.round(kValue)}K`
   }
 
   // Handle values >= 1M with M suffix
   const mValue = amount / 1000000
 
   if (mValue < 10) {
-    return `${mValue.toFixed(1)}M`
+    return `${parseFloat(mValue.toFixed(detailed ? 3 : 1))}M`
   }
 
-  return `${Math.round(mValue)}M`
+  return `${detailed ? parseFloat(mValue.toFixed(2)) : Math.round(mValue)}M`
 }
 
 export const formatChartPercentageValue = (amount: number, detailed: boolean = false) => {
