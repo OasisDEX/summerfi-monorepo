@@ -27,14 +27,14 @@ export function createDatabase() {
   const pool = new Pool({ connectionString })
 
   console.log('Initializing Kysely database instance...')
-  const db = new Kysely<any>({
+  const db = new Kysely<PostgresDialect>({
     dialect: new PostgresDialect({ pool }),
   })
 
   return { db, pool }
 }
 
-export function createMigrator(db: Kysely<any>) {
+export function createMigrator(db: Kysely<PostgresDialect>) {
   console.log('Setting up migrator...')
   const migrator = new Migrator({
     db,
@@ -52,7 +52,7 @@ export function createMigrator(db: Kysely<any>) {
   return migrator
 }
 
-export async function closeDatabase(db: Kysely<any>, pool: Pool) {
+export async function closeDatabase(db: Kysely<PostgresDialect>, pool: Pool) {
   await db.destroy()
   // Note: db.destroy() already closes the underlying pool, no need to call pool.end()
   console.log('Database connections closed.')
