@@ -29,7 +29,7 @@ export const SpotPriceInfoDataSchema = z.object({
  * @name SpotPricesInfo
  * @description Gives the current market price for a specific list of assets
  */
-export type SpotPricesInfo = {
+export type ISpotPricesInfo = {
   /** The oracle provider type */
   provider: OracleProviderType
   /** Price by addresses */

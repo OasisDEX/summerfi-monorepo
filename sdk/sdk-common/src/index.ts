@@ -280,7 +280,10 @@ export type { ILendingPositionTypeData } from './lending-protocols/types/Lending
 export { OracleProviderTypeSchema, isOracleProviderType } from './oracle/OracleProviderType'
 export { OracleProviderType } from './oracle/OracleProviderType'
 export { SpotPriceInfoDataSchema, SpotPricesInfoDataSchema } from './oracle/ISpotPriceInfo'
-export type { ISpotPriceInfo, SpotPricesInfo } from './oracle/ISpotPriceInfo'
+export type {
+  ISpotPriceInfo as ISpotPriceInfo,
+  ISpotPricesInfo as ISpotPricesInfo,
+} from './oracle/ISpotPriceInfo'
 export { PositionsManager } from './orders/common/implementation/PositionsManager'
 export {
   PositionsManagerDataSchema,

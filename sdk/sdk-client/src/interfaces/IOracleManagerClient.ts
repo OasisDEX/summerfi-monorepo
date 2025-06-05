@@ -1,6 +1,6 @@
 import type {
   ISpotPriceInfo,
-  SpotPricesInfo,
+  ISpotPricesInfo,
   IToken,
   Denomination,
   FiatCurrency,
@@ -32,5 +32,5 @@ export interface IOracleManagerClient {
     chainInfo: IChainInfo
     baseTokens: IToken[]
     quoteCurrency?: FiatCurrency
-  }): Promise<SpotPricesInfo>
+  }): Promise<ISpotPricesInfo>
 }

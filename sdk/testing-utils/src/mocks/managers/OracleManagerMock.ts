@@ -1,5 +1,5 @@
 import { IToken, OracleProviderType } from '@summerfi/sdk-common'
-import { ISpotPriceInfo, type SpotPricesInfo } from '@summerfi/sdk-common'
+import { ISpotPriceInfo, type ISpotPricesInfo } from '@summerfi/sdk-common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 
@@ -24,7 +24,7 @@ export class OracleManagerMock
     return this._spotDataReturnValue
   }
 
-  async getSpotPrices(): Promise<SpotPricesInfo> {
-    return {} as SpotPricesInfo
+  async getSpotPrices(): Promise<ISpotPricesInfo> {
+    return {} as ISpotPricesInfo
   }
 }
