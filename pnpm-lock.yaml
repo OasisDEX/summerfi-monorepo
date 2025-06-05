@@ -1955,9 +1955,6 @@ importers:
       '@summerfi/abstractions':
         specifier: workspace:*
         version: link:../abstractions
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../serverless-shared
       kysely:
         specifier: ^0.28.2
         version: 0.28.2

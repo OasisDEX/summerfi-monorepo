@@ -1,5 +1,5 @@
 import { DB as DBType } from './database-types'
-import { Kysely, PostgresDialect, sql } from 'kysely'
+import { Kysely, PostgresDialect } from 'kysely'
 import { Pool } from 'pg'
 
 export interface PgBeachClubDbConfig {
@@ -17,7 +17,7 @@ export interface BeachClubDB {
 }
 
 export * from './database-types'
-export { mapDbNetworkToChainId, mapChainIdToDbNetwork, type DbNetworks } from './helpers'
+
 
 export const getBeachClubDb = (config: PgBeachClubDbConfig): BeachClubDB => {
   const db = new Kysely<DB>({
