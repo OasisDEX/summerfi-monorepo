@@ -7,12 +7,12 @@ export const yourReferralsColumns = [
   {
     title: 'TVL',
     key: 'tvl',
-    sortable: true,
+    sortable: false,
   },
   {
     title: 'Earned to date',
     key: 'earnedToDate',
-    sortable: true,
+    sortable: false,
   },
   {
     title: 'Forecast annualised earnings',
@@ -21,4 +21,4 @@ export const yourReferralsColumns = [
   },
 ]
 
-export const yourReferralsColumnsHiddenOnMobile = ['tvl', 'forecastAnnualisedEarnings']
+export const yourReferralsColumnsHiddenOnMobile = ['earnedToDate', 'forecastAnnualisedEarnings']

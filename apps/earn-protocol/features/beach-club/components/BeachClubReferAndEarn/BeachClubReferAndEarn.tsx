@@ -34,7 +34,7 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
       {
         label: 'Track referrals',
         id: ReferAndEarnTab.TRACK_REFERRALS,
-        content: <BeachClubTrackReferrals />,
+        content: <BeachClubTrackReferrals beachClubData={beachClubData} />,
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],

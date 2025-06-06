@@ -4,6 +4,7 @@ import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 interface BeachClubRewardBalance {
   currency: string
   balance: string
+  balance_usd: string | null
   amount_per_day: string
   amount_per_day_usd: string | null
   total_earned: string
@@ -16,6 +17,14 @@ export interface BeachClubData {
   custom_code: string | null
   total_deposits_referred_usd: string | null
   rewards: BeachClubRewardBalance[]
+  recruitedUsersRewards: {
+    [key: string]: {
+      id: string
+      referral_code: string | null
+      tvl: string
+      rewards: BeachClubRewardBalance[]
+    }
+  }
 }
 
 const defaultBeachClubData: BeachClubData = {
@@ -24,6 +33,7 @@ const defaultBeachClubData: BeachClubData = {
   custom_code: null,
   total_deposits_referred_usd: null,
   rewards: [],
+  recruitedUsersRewards: {},
 }
 
 export const getUserBeachClubData = async (walletAddress: string): Promise<BeachClubData> => {
@@ -53,8 +63,10 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
     const rewardsData = await beachClubDb.db
       .selectFrom('rewards_balances')
       .select([
+        'referral_code_id',
         'currency',
         'balance',
+        'balance_usd',
         'amount_per_day',
         'amount_per_day_usd',
         'total_earned',
@@ -63,9 +75,64 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
       .where('referral_code_id', '=', basicData.referral_code)
       .execute()
 
+    const recruitedUsers = await beachClubDb.db
+      .selectFrom('users')
+      .select(['id', 'referral_code'])
+      .where('users.referrer_id', '=', basicData.referral_code)
+      .execute()
+
+    const recruitedUsersRewards = await beachClubDb.db
+      .selectFrom('rewards_balances')
+      .select([
+        'referral_code_id',
+        'currency',
+        'balance',
+        'balance_usd',
+        'amount_per_day',
+        'amount_per_day_usd',
+        'total_earned',
+        'total_claimed',
+      ])
+      .where(
+        'referral_code_id',
+        'in',
+        recruitedUsers.map((user) => user.referral_code),
+      )
+      .execute()
+
+    const recruitedUsersTvl = await beachClubDb.db
+      .selectFrom('positions')
+      .select(['user_id'])
+      .where(
+        'user_id',
+        'in',
+        recruitedUsers.map((user) => user.id),
+      )
+      .groupBy('user_id')
+      .select(({ fn }) => [fn.sum('current_deposit_usd').as('tvl')])
+      .execute()
+
+    const recruitedUsersWithRewards = recruitedUsers.reduce<{
+      [key: string]: (typeof recruitedUsers)[0] & {
+        rewards: BeachClubRewardBalance[]
+        tvl: string
+      }
+    }>((acc, user) => {
+      acc[user.id] = {
+        ...user,
+        rewards: recruitedUsersRewards.filter(
+          (reward) => reward.referral_code_id === user.referral_code,
+        ),
+        tvl: recruitedUsersTvl.find((tvl) => tvl.user_id === user.id)?.tvl.toString() ?? '0',
+      }
+
+      return acc
+    }, {})
+
     return {
       ...basicData,
       rewards: rewardsData,
+      recruitedUsersRewards: recruitedUsersWithRewards,
     }
   } catch (error) {
     // eslint-disable-next-line no-console

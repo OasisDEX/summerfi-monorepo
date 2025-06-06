@@ -5,10 +5,10 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type Referrals } from '@/features/beach-club/types'
 
 import { yourReferralsColumns, yourReferralsColumnsHiddenOnMobile } from './columns'
-import { referralActivityMapper } from './mapper'
+import { trackReferralsMapper } from './mapper'
 
 interface BeachClubYourReferralsTableProps {
-  referralActivityList: Referrals[]
+  trackReferralsList: Referrals[]
   hiddenColumns?: string[]
   rowsToDisplay?: number
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
@@ -21,7 +21,7 @@ interface BeachClubYourReferralsTableProps {
 }
 
 export const BeachClubYourReferralsTable: FC<BeachClubYourReferralsTableProps> = ({
-  referralActivityList,
+  trackReferralsList,
   hiddenColumns,
   rowsToDisplay,
   handleSort,
@@ -32,7 +32,7 @@ export const BeachClubYourReferralsTable: FC<BeachClubYourReferralsTableProps> =
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const rows = useMemo(() => referralActivityMapper(referralActivityList), [referralActivityList])
+  const rows = useMemo(() => trackReferralsMapper(trackReferralsList), [trackReferralsList])
 
   const resolvedHiddenColumns = isMobile ? yourReferralsColumnsHiddenOnMobile : hiddenColumns
 
