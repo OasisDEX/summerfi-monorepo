@@ -13,8 +13,8 @@ import classNames from './HeadingWithCards.module.css'
 interface HeadingWithSocialAndCardsProps {
   title: string
   description: string
-  cards: { title: ReactNode; value: string; description: string }[]
-  social: {
+  cards?: { title: ReactNode; value: string; description: string }[]
+  social?: {
     linkToCopy: string
     linkToShare: string
   }
@@ -32,24 +32,26 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
         <Text as="h2" variant="h2">
           {title}
         </Text>
-        <div className={classNames.headingIcons}>
-          <CopyToClipboard textToCopy={social.linkToCopy}>
-            <Icon iconName="social_link" variant="xl" />
-          </CopyToClipboard>
-          <Link
-            href={social.linkToShare}
-            style={{ display: 'flex', alignItems: 'center' }}
-            target="_blank"
-          >
-            <Icon iconName="social_x" variant="xl" />
-          </Link>
-        </div>
+        {social && (
+          <div className={classNames.headingIcons}>
+            <CopyToClipboard textToCopy={social.linkToCopy}>
+              <Icon iconName="social_link" variant="xl" />
+            </CopyToClipboard>
+            <Link
+              href={social.linkToShare}
+              style={{ display: 'flex', alignItems: 'center' }}
+              target="_blank"
+            >
+              <Icon iconName="social_x" variant="xl" />
+            </Link>
+          </div>
+        )}
       </div>
       <Text as="p" variant="p2" className={classNames.description}>
         {description}
       </Text>
       <div className={classNames.cardsWrapper}>
-        {cards.map((card) => (
+        {cards?.map((card) => (
           <Card key={card.value} className={classNames.card}>
             <DataBlock
               title={card.title}
