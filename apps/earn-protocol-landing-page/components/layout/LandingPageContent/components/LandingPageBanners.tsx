@@ -24,6 +24,7 @@ export const LandingPageBanners = () => {
               paddingLeft: 'var(--general-space-4)',
             }}
             target="_blank"
+            prefetch={false}
           >
             Read more
           </Link>

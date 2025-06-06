@@ -62,10 +62,11 @@ const HigherYieldsSection = ({
         {description}
       </Text>
       <div className={higherYieldsBlockStyles.higherYieldsSectionCTA}>
-        <Link href={ctaUrl}>
+        <Link href={ctaUrl} prefetch={false}>
           <Button variant="primarySmall">{ctaLabel}</Button>
         </Link>
         <Link
+          prefetch={false}
           href={secondaryCtaUrl}
           className={higherYieldsBlockStyles.higherYieldsSectionSecondaryButton}
         >

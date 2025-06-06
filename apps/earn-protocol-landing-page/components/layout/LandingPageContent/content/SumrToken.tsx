@@ -33,7 +33,7 @@ export const SumrToken = () => {
           Protocol, Stake & Delegate your voting power or be a Delegate and vote on behalf of
           others. Earn $SUMR and help contribute to the value created by the Lazy Summer Protocol.
         </Text>
-        <Link href="/earn/sumr">
+        <Link href="/earn/sumr" prefetch={false}>
           <Button variant="secondarySmall">Get $SUMR</Button>
         </Link>
       </div>

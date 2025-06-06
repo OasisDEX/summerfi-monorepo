@@ -54,7 +54,7 @@ export const BeachClubEarnBig = () => {
             >
               {paragraph.description}
             </Text>
-            <Link href={paragraph.link.href} target="_blank">
+            <Link href={paragraph.link.href} target="_blank" prefetch={false}>
               <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
                 {paragraph.link.label}
               </WithArrow>

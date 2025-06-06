@@ -3,7 +3,7 @@ import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 
 export const getNavigationItems = ({
   userWalletAddress,
-  isEarnApp,
+  isEarnApp = false,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
@@ -12,6 +12,7 @@ export const getNavigationItems = ({
     label: 'Earn',
     id: 'earn',
     link: !isEarnApp ? `/earn` : `/`,
+    prefetchDisabled: !isEarnApp,
   },
   ...(userWalletAddress
     ? [

@@ -35,7 +35,7 @@ const BuildBySummerFiHeader = () => {
         </Text>
       </div>
       <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-        <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank">
+        <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank" prefetch={false}>
           <WithArrow>
             <Text variant="p2semi">View leadership</Text>
           </WithArrow>

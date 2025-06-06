@@ -94,7 +94,7 @@ export const NavigationMenuMobile = ({
                 className={clsx({
                   [navigationMenuMobileStyles.activeLink]: currentPath === link.link,
                 })}
-                prefetch={Boolean(link.disabled)}
+                prefetch={Boolean(!link.disabled)}
               >
                 <Button
                   variant="textSecondaryLarge"

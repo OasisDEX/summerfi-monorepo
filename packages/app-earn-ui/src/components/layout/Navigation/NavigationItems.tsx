@@ -24,7 +24,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
   return (
     <div className={navigationItemsStyles.navigationItemsWrapper}>
       {items.map((item) => (
-        <Link href={item.url} key={`NavItems_${item.id}`} prefetch={item.prefetchDisabled}>
+        <Link href={item.url} key={`NavItems_${item.id}`} prefetch={!item.prefetchDisabled}>
           <div className={navigationItemsStyles.navigationItemsItem}>
             <div className={navigationItemsStyles.navigationItemsIconWrapper}>
               <Icon iconName={item.icon} size={item.iconSize ?? 32} />

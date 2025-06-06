@@ -95,7 +95,11 @@ const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScro
     return insides
   }
 
-  return <Link href={url}>{insides}</Link>
+  return (
+    <Link href={url} prefetch={false}>
+      {insides}
+    </Link>
+  )
 }
 
 export const ProtocolScroller = ({
