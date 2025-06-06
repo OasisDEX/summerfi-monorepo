@@ -28,6 +28,10 @@ import { million, one, zero } from '@/numbers'
 export const formatFiatBalance = (amount: BigNumber | string | number | bigint): string => {
   const resolvedAmount = formatToBigNumber(amount)
 
+  if (resolvedAmount.lt(new BigNumber('0.01')) && !resolvedAmount.eq(zero)) {
+    return '<0.01'
+  }
+
   const absAmount = resolvedAmount.absoluteValue()
 
   if (absAmount.eq(zero)) return formatAsShorthandNumbers(resolvedAmount, { precision: 2 })

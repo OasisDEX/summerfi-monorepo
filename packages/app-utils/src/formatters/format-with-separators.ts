@@ -1,5 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 
+import { zero } from '@/numbers'
+
 import { formatToBigNumber } from './format-to-big-number'
 
 /**
@@ -18,6 +20,8 @@ export const formatWithSeparators = (
   }: { precision?: number; roundMode?: BigNumber.RoundingMode } = {},
 ): string => {
   const resolvedAmount = formatToBigNumber(amount)
+
+  if (resolvedAmount.lt(new BigNumber('0.01')) && !resolvedAmount.eq(zero)) return '<0.01'
 
   return resolvedAmount.toFormat(precision, roundMode)
 }

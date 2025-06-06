@@ -1,5 +1,7 @@
+import { type FC } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubBoatChallenge } from '@/features/beach-club/components/BeachClubBoatChallenge/BeachClubBoatChallenge'
 import { BeachClubTvlChallenge } from '@/features/beach-club/components/BeachClubTvlChallenge/BeachClubTvlChallenge'
 
@@ -10,22 +12,26 @@ enum ReferAndEarnTab {
   BEACH_BOAT_CHALLENGE = 'beach_boat_challenge',
 }
 
-const tabsOptions = [
-  {
-    label: 'TVL Challenges',
-    id: ReferAndEarnTab.TVL_CHALLENGES,
-    content: <BeachClubTvlChallenge />,
-    activeColor: 'var(--beach-club-tab-underline)',
-  },
-  {
-    label: 'Beach Boat Challenge',
-    id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
-    content: <BeachClubBoatChallenge />,
-    activeColor: 'var(--beach-club-tab-underline)',
-  },
-]
+interface BeachClubRewardsProps {
+  beachClubData: BeachClubData
+}
 
-export const BeachClubRewards = () => {
+export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData }) => {
+  const tabsOptions = [
+    {
+      label: 'TVL Challenges',
+      id: ReferAndEarnTab.TVL_CHALLENGES,
+      content: <BeachClubTvlChallenge beachClubData={beachClubData} />,
+      activeColor: 'var(--beach-club-tab-underline)',
+    },
+    {
+      label: 'Beach Boat Challenge',
+      id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
+      content: <BeachClubBoatChallenge beachClubData={beachClubData} />,
+      activeColor: 'var(--beach-club-tab-underline)',
+    },
+  ]
+
   return (
     <div className={classNames.beachClubRewardsWrapper}>
       <div className={classNames.header}>

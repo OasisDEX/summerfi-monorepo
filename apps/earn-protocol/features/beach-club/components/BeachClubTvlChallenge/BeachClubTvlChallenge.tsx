@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import { AnimateHeight, BeachClubRewardSimulation, Icon, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
 import { BeachClubVerticalDots } from '@/features/beach-club/components/BeachClubVerticalDots/BeachClubVerticalDots'
 
@@ -9,10 +10,14 @@ import { getBeachClubTvlRewardsCards } from './cards'
 
 import classNames from './BeachClubTvlChallenge.module.css'
 
-export const BeachClubTvlChallenge = () => {
+interface BeachClubTvlChallengeProps {
+  beachClubData: BeachClubData
+}
+
+export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClubData }) => {
   const [seeAll, setSeeAll] = useState(false)
 
-  const currentGroupTvl = 200000
+  const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
 
   const stats = [
     {
@@ -20,11 +25,17 @@ export const BeachClubTvlChallenge = () => {
       description: 'Total TVL',
     },
     {
-      value: formatCryptoBalance(48323),
+      value: formatCryptoBalance(
+        beachClubData.rewards.find((reward) => reward.currency === 'SUMR')?.balance ?? 0,
+      ),
       description: 'Earned $SUMR',
     },
     {
-      value: `$${formatFiatBalance(8323)}`,
+      value: `$${formatFiatBalance(
+        beachClubData.rewards
+          .filter((reward) => reward.currency !== 'SUMR' && reward.currency !== 'points')
+          .reduce((acc, reward) => acc + Number(reward.balance), 0),
+      )}`,
       description: "Earned Fee's",
     },
   ]

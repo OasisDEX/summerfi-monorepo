@@ -1,64 +1,89 @@
+import { type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 
-import {
-  BeachClubBoatChallengeRewardCard,
-  BeachClubBoatChallengeRewardCardType,
-} from '@/features/beach-club/components/BeachClubBoatChallengeRewardCard/BeachClubBoatChallengeRewardCard'
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { BeachClubBoatChallengeRewardCard } from '@/features/beach-club/components/BeachClubBoatChallengeRewardCard/BeachClubBoatChallengeRewardCard'
+import { BeachClubBoatChallengeRewardCardType } from '@/features/beach-club/constants/reward-cards'
 
 import classNames from './BeachClubBoatChallenge.module.css'
 
-const currentPoints = 15000
-
-const stats = [
+const getStats = (currentPoints: number, earningPointsPerDay: number, accountReferred: number) => [
   {
     value: `${formatWithSeparators(currentPoints)}`,
     description: 'Speed Challenge Points',
   },
   {
-    value: formatCryptoBalance(2.33),
+    value: formatWithSeparators(earningPointsPerDay, { precision: 2 }),
     description: 'Earning points / Day',
   },
   {
-    value: `${formatWithSeparators(12323)}`,
+    value: `${formatWithSeparators(accountReferred)}`,
     description: 'Account Referred',
   },
 ]
 
-const cards = [
-  {
-    requiredPoints: 10000,
-    currentPoints,
-    left: 23,
-    unlocked: true,
-    reward: {
-      type: BeachClubBoatChallengeRewardCardType.T_SHIRT,
-    },
-  },
-  {
-    requiredPoints: 20000,
-    currentPoints,
-    left: 23,
-    unlocked: false,
-    reward: {
-      type: BeachClubBoatChallengeRewardCardType.HOODIE,
-    },
-  },
-  {
-    requiredPoints: 20000,
-    currentPoints,
-    left: 23,
-    unlocked: false,
-    reward: {
-      type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,
-    },
-  },
-]
+const getCards = (currentPoints: number, earningPointsPerDay: number) => {
+  const calculateDaysLeft = (requiredPoints: number) => {
+    if (earningPointsPerDay <= 0) return 0
+    const pointsNeeded = requiredPoints - currentPoints
 
-export const BeachClubBoatChallenge = () => {
+    if (pointsNeeded <= 0) return 0
+
+    return Math.ceil(pointsNeeded / earningPointsPerDay)
+  }
+
+  return [
+    {
+      requiredPoints: 10000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 10000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.T_SHIRT,
+      },
+    },
+    {
+      requiredPoints: 20000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 20000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.HOODIE,
+      },
+    },
+    {
+      requiredPoints: 20000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 20000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,
+      },
+    },
+  ].map((card) => ({
+    ...card,
+    daysToUnlock: calculateDaysLeft(card.requiredPoints),
+  }))
+}
+
+interface BeachClubBoatChallengeProps {
+  beachClubData: BeachClubData
+}
+
+export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({ beachClubData }) => {
+  const currentPoints = Number(
+    beachClubData.rewards.find((reward) => reward.currency === 'points')?.balance ?? 0,
+  )
+  const earningPointsPerDay = Number(
+    beachClubData.rewards.find((reward) => reward.currency === 'points')?.amount_per_day ?? 0,
+  )
+
+  const accountReferred = Number(beachClubData.active_users_count ?? 0)
+
   return (
     <div className={classNames.beachClubBoatChallengeWrapper}>
-      {stats.map((stat, idx) => (
+      {getStats(currentPoints, earningPointsPerDay, accountReferred).map((stat, idx) => (
         <div key={stat.description} className={classNames.textual}>
           <Text as="h2" variant={idx === 0 ? 'h2colorfulBeachClub' : 'h2'}>
             {stat.value}
@@ -76,7 +101,7 @@ export const BeachClubBoatChallenge = () => {
         </Link>
       </div> */}
       <div className={classNames.rewardCardsWrapper}>
-        {cards.map((card) => (
+        {getCards(currentPoints, earningPointsPerDay).map((card) => (
           <BeachClubBoatChallengeRewardCard key={card.reward.type} {...card} />
         ))}
       </div>

@@ -134,7 +134,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
                   marginLeft: 'var(--general-space-12)',
                 }}
               >
-                {formatAsShorthandNumbers(leftToBoost)} left!
+                {formatAsShorthandNumbers(leftToBoost, { precision: 2 })} left!
               </Text>
             )}
             <Link

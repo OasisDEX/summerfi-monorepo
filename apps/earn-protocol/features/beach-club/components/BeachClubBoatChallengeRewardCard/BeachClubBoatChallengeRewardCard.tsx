@@ -3,37 +3,22 @@ import { formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
-import hoodie from '@/public/img/beach_club/hoodie.svg'
-import nft from '@/public/img/beach_club/nft.svg'
-import tShirt from '@/public/img/beach_club/t_shirt.svg'
+import {
+  type BeachClubBoatChallengeRewardCardType,
+  rewardCardImages,
+  rewardDescriptions,
+} from '@/features/beach-club/constants/reward-cards'
 
 import classNames from './BeachClubBoatChallengeRewardCard.module.css'
 
 import waves from '@/public/img/beach_club/waves.png'
-
-export enum BeachClubBoatChallengeRewardCardType {
-  T_SHIRT = 't-shirt',
-  HOODIE = 'hoodie',
-  BEACH_CLUB_NFT = 'beach-club-nft',
-}
-
-const rewardCardImages = {
-  [BeachClubBoatChallengeRewardCardType.T_SHIRT]: tShirt,
-  [BeachClubBoatChallengeRewardCardType.HOODIE]: hoodie,
-  [BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT]: nft,
-}
-
-const rewardDescriptions = {
-  [BeachClubBoatChallengeRewardCardType.T_SHIRT]: 'T-shirt',
-  [BeachClubBoatChallengeRewardCardType.HOODIE]: 'Limited edition hoodie',
-  [BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT]: 'Summer.fi Beach Club NFT',
-}
 
 interface BeachClubBoatChallengeRewardCardProps {
   requiredPoints: number
   currentPoints: number
   left: number
   unlocked: boolean
+  daysToUnlock: number
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
@@ -44,10 +29,10 @@ export const BeachClubBoatChallengeRewardCard = ({
   currentPoints,
   left,
   unlocked,
+  daysToUnlock,
   reward,
 }: BeachClubBoatChallengeRewardCardProps) => {
   const { type } = reward
-  const daysToUnlock = 27
 
   return (
     <div className={classNames.beachClubBoatChallengeRewardCardWrapper}>
@@ -92,7 +77,7 @@ export const BeachClubBoatChallengeRewardCard = ({
           <div className={classNames.progress}>
             <BeachClubProgressBar max={requiredPoints} current={currentPoints} />
             <Text as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-              {daysToUnlock} Days to unlock
+              {formatWithSeparators(daysToUnlock)} Days to unlock
             </Text>
           </div>
         )}

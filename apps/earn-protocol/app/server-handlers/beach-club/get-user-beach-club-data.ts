@@ -1,6 +1,32 @@
+/* eslint-disable camelcase */
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 
-export const getUserBeachClubData = async (walletAddress: string) => {
+interface BeachClubRewardBalance {
+  currency: string
+  balance: string
+  amount_per_day: string
+  amount_per_day_usd: string | null
+  total_earned: string
+  total_claimed: string
+}
+
+export interface BeachClubData {
+  referral_code: string | null
+  active_users_count: number | null
+  custom_code: string | null
+  total_deposits_referred_usd: string | null
+  rewards: BeachClubRewardBalance[]
+}
+
+const defaultBeachClubData: BeachClubData = {
+  referral_code: null,
+  active_users_count: null,
+  custom_code: null,
+  total_deposits_referred_usd: null,
+  rewards: [],
+}
+
+export const getUserBeachClubData = async (walletAddress: string): Promise<BeachClubData> => {
   const beachClubDbConnectionString = process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
 
   if (!beachClubDbConnectionString) {
@@ -12,28 +38,40 @@ export const getUserBeachClubData = async (walletAddress: string) => {
   })
 
   try {
-    const referralCode = await beachClubDb.db
+    const basicData = await beachClubDb.db
       .selectFrom('users')
       .select('referral_code')
-      .where('id', '=', walletAddress.toLowerCase())
+      .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
+      .select(['custom_code', 'total_deposits_referred_usd', 'active_users_count'])
+      .where('users.id', '=', walletAddress.toLowerCase())
       .executeTakeFirst()
 
-    if (referralCode?.referral_code) {
-      const customReferralCode = await beachClubDb.db
-        .selectFrom('referral_codes')
-        .select('custom_code')
-        .where('id', '=', referralCode.referral_code)
-        .executeTakeFirst()
-
-      return customReferralCode?.custom_code ?? referralCode.referral_code
+    if (!basicData?.referral_code) {
+      return defaultBeachClubData
     }
 
-    return null
+    const rewardsData = await beachClubDb.db
+      .selectFrom('rewards_balances')
+      .select([
+        'currency',
+        'balance',
+        'amount_per_day',
+        'amount_per_day_usd',
+        'total_earned',
+        'total_claimed',
+      ])
+      .where('referral_code_id', '=', basicData.referral_code)
+      .execute()
+
+    return {
+      ...basicData,
+      rewards: rewardsData,
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error getting referral code', error)
 
-    return null
+    return defaultBeachClubData
   } finally {
     await beachClubDb.db.destroy()
   }

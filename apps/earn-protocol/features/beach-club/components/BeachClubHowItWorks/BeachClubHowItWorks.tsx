@@ -13,22 +13,24 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './BeachClubHowItWorks.module.css'
 
 interface BeachClubHowItWorksProps {
-  referralCode: string | null
+  beachClubData: BeachClubData
   walletAddress: string
 }
 
 export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
-  referralCode,
+  beachClubData,
   walletAddress,
 }) => {
+  const resolvedInitReferralCode = beachClubData.custom_code ?? beachClubData.referral_code
   const { userWalletAddress } = useUserWallet()
-  const [refCode, setRefCode] = useState(referralCode)
+  const [refCode, setRefCode] = useState(resolvedInitReferralCode)
   const [isLoading, setIsLoading] = useState(false)
 
   const isOwner = userWalletAddress?.toLowerCase() === walletAddress.toLowerCase()

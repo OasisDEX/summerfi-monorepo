@@ -1,6 +1,7 @@
 import { type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubHowItWorks } from '@/features/beach-club/components/BeachClubHowItWorks/BeachClubHowItWorks'
 import { BeachClubTrackReferrals } from '@/features/beach-club/components/BeachClubTrackReferrals/BeachClubTrackReferrals'
 
@@ -13,19 +14,21 @@ enum ReferAndEarnTab {
 
 interface BeachClubReferAndEarnProps {
   walletAddress: string
-  referralCode: string | null
+  beachClubData: BeachClubData
 }
 
 export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
   walletAddress,
-  referralCode,
+  beachClubData,
 }) => {
   const tabsOptions = useMemo(
     () => [
       {
         label: 'How it works',
         id: ReferAndEarnTab.HOW_IT_WORKS,
-        content: <BeachClubHowItWorks walletAddress={walletAddress} referralCode={referralCode} />,
+        content: (
+          <BeachClubHowItWorks walletAddress={walletAddress} beachClubData={beachClubData} />
+        ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
       {
@@ -35,7 +38,7 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
-    [walletAddress, referralCode],
+    [walletAddress, beachClubData],
   )
 
   return (
