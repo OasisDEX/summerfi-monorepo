@@ -39,7 +39,7 @@ const stringifyWithBigInt = (_: string, v: unknown) => (typeof v === 'bigint' ? 
 
 // Config
 const sdk = makeSDK({
-  apiURL: `${process.env.SDK_API_URL}/api/sdk`,
+  apiURL: `${process.env.SDK_API_URL}/sdk/trpc`,
 })
 
 const wallet = Wallet.createFrom({

@@ -14,7 +14,7 @@ export function makeSDK(params: MakeSDKParams) {
   let versionedURL: string
   if ('apiDomainUrl' in params) {
     // url based on direct url
-    versionedURL = new URL(`/api/sdk/${apiVersion}`, params.apiDomainUrl).toString()
+    versionedURL = new URL(`/sdk/trpc/${apiVersion}`, params.apiDomainUrl).toString()
   } else if ('apiURL' in params) {
     // url based on domain
     const apiUrlNormalized = params.apiURL.replace(/\/+$/, '')
