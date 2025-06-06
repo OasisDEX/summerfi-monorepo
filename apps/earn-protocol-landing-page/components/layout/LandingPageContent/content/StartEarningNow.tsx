@@ -69,7 +69,7 @@ export const StartEarningNow = () => {
             'Withdraw anytime',
           ]}
           cta={
-            <Link href="/earn">
+            <Link href="/earn" prefetch={false}>
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                 <Text variant="p3semi">Sign up</Text>
               </Button>
@@ -92,7 +92,7 @@ export const StartEarningNow = () => {
           ]}
           cta={
             migrationsEnabled ? (
-              <Link href="/earn">
+              <Link href="/earn" prefetch={false}>
                 <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                   <Text variant="p3semi">Migrate</Text>
                 </Button>

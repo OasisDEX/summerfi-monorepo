@@ -33,7 +33,7 @@ const SummerFiProSectionBlock = ({
         </div>
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionCardCta}>
-        <Link href={ctaUrl} target="_blank">
+        <Link href={ctaUrl} target="_blank" prefetch={false}>
           <WithArrow>
             <Text variant="p3semi">{ctaLabel}</Text>
           </WithArrow>
@@ -76,7 +76,7 @@ export const SummerFiProSection = () => {
         />
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionBottomLink}>
-        <Link href={INTERNAL_LINKS.summerPro} target="_blank">
+        <Link href={INTERNAL_LINKS.summerPro} target="_blank" prefetch={false}>
           <WithArrow>
             <Text variant="p2semi">Go to Summer.fi Pro</Text>
           </WithArrow>

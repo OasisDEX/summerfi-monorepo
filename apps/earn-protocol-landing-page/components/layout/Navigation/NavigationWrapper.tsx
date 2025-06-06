@@ -22,7 +22,7 @@ export const NavigationWrapper: FC = () => {
       logoSmall="/img/branding/dot-dark.svg"
       links={getNavigationItems({})}
       walletConnectionComponent={
-        <Link href="/earn">
+        <Link href="/earn" prefetch={false}>
           <Button
             variant={isBeachClub ? 'beachClubMedium' : 'primaryMedium'}
             onClick={() => {}}

@@ -53,7 +53,7 @@ export const LandingPageHero = ({
         <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
       </div>
       <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
-      <Link href="/earn">
+      <Link href="/earn" prefetch={false}>
         <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
           {vaultsList?.length ? (
             <WithArrow style={{ color: 'white' }}>

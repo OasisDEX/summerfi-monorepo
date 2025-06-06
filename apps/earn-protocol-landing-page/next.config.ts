@@ -25,7 +25,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       'zod',
     ],
   },
-  output: phase !== PHASE_DEVELOPMENT_SERVER ? 'export' : 'standalone',
+  output: phase !== PHASE_DEVELOPMENT_SERVER ? 'export' : 'export',
   reactStrictMode: false,
   ...(phase !== PHASE_DEVELOPMENT_SERVER
     ? {

@@ -16,15 +16,15 @@ export const SummerFiProBox = () => {
           </Text>
         </div>
         <Text variant="p3semi" className={summerFiProBoxStyles.summerProInfoBoxLinks}>
-          <Link href={`${INTERNAL_LINKS.summerPro}/multiply`} target="_blank">
+          <Link href={`${INTERNAL_LINKS.summerPro}/multiply`} target="_blank" prefetch={false}>
             Multiply
           </Link>
           &nbsp;・&nbsp;
-          <Link href={`${INTERNAL_LINKS.summerPro}/borrow`} target="_blank">
+          <Link href={`${INTERNAL_LINKS.summerPro}/borrow`} target="_blank" prefetch={false}>
             Borrow
           </Link>
           &nbsp;・&nbsp;
-          <Link href={`${INTERNAL_LINKS.summerPro}/earn`} target="_blank">
+          <Link href={`${INTERNAL_LINKS.summerPro}/earn`} target="_blank" prefetch={false}>
             Yield Loops
           </Link>
         </Text>
