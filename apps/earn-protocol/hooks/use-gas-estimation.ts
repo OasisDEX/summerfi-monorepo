@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import {
   type Address,
+  type ApproveTransactionInfo,
   type BridgeTransactionInfo,
   ChainIds,
-  type ExtendedTransactionInfo,
+  type DepositTransactionInfo,
   type HexData,
   type MigrationTransactionInfo,
+  type WithdrawTransactionInfo,
 } from '@summerfi/sdk-common'
 import { formatEther, type PublicClient } from 'viem'
 
@@ -23,7 +25,9 @@ type ClientTransaction = {
 type UseGasEstimationProps = {
   chainId: number
   transaction:
-    | ExtendedTransactionInfo
+    | DepositTransactionInfo
+    | WithdrawTransactionInfo
+    | ApproveTransactionInfo
     | BridgeTransactionInfo
     | MigrationTransactionInfo
     | ClientTransaction
@@ -64,7 +68,9 @@ export const useGasEstimation = ({
   useEffect(() => {
     const fetchGasEstimation = async (
       _transaction:
-        | ExtendedTransactionInfo
+        | DepositTransactionInfo
+        | WithdrawTransactionInfo
+        | ApproveTransactionInfo
         | BridgeTransactionInfo
         | MigrationTransactionInfo
         | ClientTransaction,

@@ -1,7 +1,7 @@
 import { SwapProviderType } from '../../swap/enums/SwapProviderType'
 import { ProtocolName } from '../../common/enums/ProtocolName'
 import { IPercentage } from '../../common/interfaces/IPercentage'
-import { IPrice } from '../../common/interfaces/IPrice'
+import { IPrice } from '../../common/interfaces/ITokenAmount'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { ILendingPool } from '../../lending-protocols/interfaces/ILendingPool'

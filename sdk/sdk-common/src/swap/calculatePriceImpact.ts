@@ -1,5 +1,5 @@
 import { Percentage } from '../common/implementation/Percentage'
-import { IPrice } from '../common/interfaces/IPrice'
+import { IPrice } from '../common/interfaces/ITokenAmount'
 import { IPercentage } from '../common/interfaces/IPercentage'
 
 /**

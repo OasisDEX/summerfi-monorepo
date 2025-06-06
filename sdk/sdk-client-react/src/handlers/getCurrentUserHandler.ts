@@ -1,4 +1,4 @@
-import { User, Wallet } from '@summerfi/sdk-common'
+import { User, Wallet } from '@summer_fi/sdk-client'
 import type { getChainInfoHandler } from './getChainInfoHandler'
 import type { getWalletAddressHandler } from '../factories/getWalletAddressHandler'
 

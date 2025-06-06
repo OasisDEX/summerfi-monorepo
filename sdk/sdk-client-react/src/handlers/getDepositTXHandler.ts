@@ -1,4 +1,4 @@
-import { type ISDKManager } from '@summerfi/sdk-client'
+import { type ISDKManager } from '@summer_fi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -8,7 +8,7 @@ import {
   type IAddress,
   type IChainInfo,
   type ITokenAmount,
-} from '@summerfi/sdk-common'
+} from '@summer_fi/sdk-client'
 
 export const getDepositTXHandler =
   (sdk: ISDKManager) =>

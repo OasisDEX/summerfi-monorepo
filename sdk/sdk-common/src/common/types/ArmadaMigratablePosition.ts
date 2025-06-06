@@ -1,5 +1,5 @@
 import type { ArmadaMigrationType } from '../enums/ArmadaMigrationType'
-import type { IFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import type { IFiatCurrencyAmount } from '../interfaces/ITokenAmount'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
 import type { AddressValue } from './AddressValue'
 

@@ -1,4 +1,4 @@
-import { Address } from '@summerfi/sdk-common'
+import { Address } from '@summer_fi/sdk-client'
 
 export const getWalletAddressHandler = (walletAddressString?: string) => () => {
   if (!walletAddressString) {

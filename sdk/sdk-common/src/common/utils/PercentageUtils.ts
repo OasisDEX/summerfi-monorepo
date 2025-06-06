@@ -1,6 +1,10 @@
-import { IFiatCurrencyAmount, IFiatCurrencyAmountData } from '../interfaces/IFiatCurrencyAmount'
 import { IPercentage } from '../interfaces/IPercentage'
-import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
+import {
+  ITokenAmount,
+  ITokenAmountData,
+  IFiatCurrencyAmount,
+  IFiatCurrencyAmountData,
+} from '../interfaces/ITokenAmount'
 import { BigNumber } from 'bignumber.js'
 
 /**

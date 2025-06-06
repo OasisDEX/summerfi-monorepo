@@ -1,4 +1,4 @@
-import { IPrice, PriceDataSchema } from '../common/interfaces/IPrice'
+import { IPrice, PriceDataSchema } from '../common/interfaces/ITokenAmount'
 import { IToken, TokenDataSchema } from '../common/interfaces/IToken'
 import { OracleProviderType, OracleProviderTypeSchema } from './OracleProviderType'
 import { z } from 'zod'

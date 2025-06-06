@@ -1,7 +1,7 @@
 import { QuoteData } from './QuoteData'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { IPercentage } from '../../common/interfaces/IPercentage'
-import { IPrice } from '../../common/interfaces/IPrice'
+import { IPrice } from '../../common/interfaces/ITokenAmount'
 
 /**
  * Represents the data returned for each Swap in simulation.

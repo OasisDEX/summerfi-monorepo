@@ -1,4 +1,4 @@
-import { makeSDK } from '@summerfi/sdk-client'
+import { makeSDK } from '@summer_fi/sdk-client'
 
 if (!process.env.SDK_API_URL) {
   throw new Error('SDK_API_URL is not set')

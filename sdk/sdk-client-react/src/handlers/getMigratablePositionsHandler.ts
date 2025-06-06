@@ -1,5 +1,5 @@
-import { ISDKManager } from '@summerfi/sdk-client'
-import { Address, Wallet, User, IChainInfo } from '@summerfi/sdk-common'
+import { ISDKManager } from '@summer_fi/sdk-client'
+import { Address, Wallet, User, IChainInfo } from '@summer_fi/sdk-client'
 
 /**
  * Creates a handler function that fetches migratable positions for a given wallet address.

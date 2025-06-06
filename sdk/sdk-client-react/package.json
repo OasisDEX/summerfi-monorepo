@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/sdk-client-react",
+  "name": "@summer_fi/sdk-client-react",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,9 +19,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/protocol-plugins": "workspace:*",
-    "@summerfi/sdk-client": "workspace:*",
-    "@summerfi/sdk-common": "workspace:*"
+    "@summerfi/protocol-plugins": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

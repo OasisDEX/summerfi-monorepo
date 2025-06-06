@@ -2,17 +2,19 @@ import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { Denomination } from '../types/Denomination'
 import { IPercentage, isPercentage } from '../interfaces/IPercentage'
-import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
   IPriceData,
   PriceMulParamType,
   PriceMulReturnType,
-  __signature__,
+  __signaturePrice__,
   isPrice,
   type IPrice,
-} from '../interfaces/IPrice'
+  ITokenAmount,
+  isTokenAmount,
+  isTokenAmountData,
+  isFiatCurrencyAmount,
+} from '../interfaces/ITokenAmount'
 import { isToken, isTokenData } from '../interfaces/IToken'
-import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
 import {
   dividePriceByPercentage,
   dividePriceByPrice,
@@ -36,7 +38,7 @@ export type PriceParameters = Omit<IPriceData, ''>
  */
 export class Price implements IPrice {
   /** SIGNATURE */
-  readonly [__signature__] = __signature__
+  readonly [__signaturePrice__] = __signaturePrice__
 
   /** CONSTANTS */
   static readonly PRICE_DECIMALS = 18

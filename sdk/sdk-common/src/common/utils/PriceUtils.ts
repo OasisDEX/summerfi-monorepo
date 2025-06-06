@@ -2,13 +2,16 @@ import { BigNumber } from 'bignumber.js'
 import { Denomination } from '../types/Denomination'
 import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
 import { IPercentage } from '../interfaces/IPercentage'
+
+import { isToken, type IToken } from '../interfaces/IToken'
 import {
+  type ITokenAmount,
+  type ITokenAmountData,
   type IFiatCurrencyAmount,
   type IFiatCurrencyAmountData,
-} from '../interfaces/IFiatCurrencyAmount'
-import { IPriceData, type IPrice } from '../interfaces/IPrice'
-import { isToken, type IToken } from '../interfaces/IToken'
-import { type ITokenAmount, type ITokenAmountData } from '../interfaces/ITokenAmount'
+  IPriceData,
+  type IPrice,
+} from '../interfaces/ITokenAmount'
 
 /**
  * Multiply a token amount by a price

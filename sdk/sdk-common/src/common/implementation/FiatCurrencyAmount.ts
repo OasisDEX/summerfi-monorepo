@@ -5,11 +5,11 @@ import {
   FiatCurrencyAmountMulDivParamType,
   FiatCurrencyAmountMulDivReturnType,
   IFiatCurrencyAmountData,
-  __signature__,
+  __signatureFiatCurrencyAmount__,
+  isPrice,
   type IFiatCurrencyAmount,
-} from '../interfaces/IFiatCurrencyAmount'
+} from '../interfaces/ITokenAmount'
 import { isPercentage } from '../interfaces/IPercentage'
-import { isPrice } from '../interfaces/IPrice'
 import {
   divideFiatCurrencyAmountByPercentage,
   multiplyFiatCurrencyAmountByPercentage,
@@ -26,7 +26,7 @@ export type FiatCurrencyAmountParameters = Omit<IFiatCurrencyAmountData, ''>
  */
 export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   /** SIGNATURE */
-  readonly [__signature__] = __signature__
+  readonly [__signatureFiatCurrencyAmount__] = __signatureFiatCurrencyAmount__
 
   readonly fiat: FiatCurrency
   readonly amount: string

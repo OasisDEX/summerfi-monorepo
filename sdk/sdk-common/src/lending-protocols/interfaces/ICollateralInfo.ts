@@ -1,9 +1,8 @@
 import { z } from 'zod'
 import { IPercentage, isPercentage } from '../../common/interfaces/IPercentage'
-import { IPrice, isPrice } from '../../common/interfaces/IPrice'
 import { IRiskRatio, isRiskRatio } from '../../common/interfaces/IRiskRatio'
 import { IToken, isToken } from '../../common/interfaces/IToken'
-import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
+import { IPrice, isPrice, ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 
 /**
  * Unique signature to provide branded types to the interface

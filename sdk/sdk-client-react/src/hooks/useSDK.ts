@@ -1,4 +1,4 @@
-import { makeSDK } from '@summerfi/sdk-client'
+import { makeSDK } from '@summer_fi/sdk-client'
 import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'

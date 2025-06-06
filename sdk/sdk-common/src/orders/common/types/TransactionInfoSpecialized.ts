@@ -1,6 +1,6 @@
 import type { ITokenAmount } from '../../../common/interfaces/ITokenAmount'
 import type { IAddress } from '../../../common/interfaces/IAddress'
-import type { IPrice } from '../../../common/interfaces/IPrice'
+import type { IPrice } from '../../../common/interfaces/ITokenAmount'
 import type { IPercentage } from '../../../common/interfaces/IPercentage'
 import type { IArmadaVaultId } from '../../../common/interfaces/IArmadaVaultId'
 import type { TransactionType } from './TransactionType'

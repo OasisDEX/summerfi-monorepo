@@ -1,14 +1,14 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { isPercentage } from '../interfaces/IPercentage'
-import { isPrice } from '../interfaces/IPrice'
 import { IToken } from '../interfaces/IToken'
 import {
   ITokenAmount,
   ITokenAmountData,
   TokenAmountMulDivParamType,
   TokenAmountMulDivReturnType,
-  __signature__,
+  __signatureTokenAmount__,
+  isPrice,
 } from '../interfaces/ITokenAmount'
 import {
   divideTokenAmountByPercentage,
@@ -27,7 +27,7 @@ export type TokenAmountParameters = Omit<ITokenAmountData, ''>
  */
 export class TokenAmount implements ITokenAmount {
   /** SIGNATURE */
-  readonly [__signature__] = __signature__
+  readonly [__signatureTokenAmount__] = __signatureTokenAmount__
 
   /** ATTRIBUTES */
   readonly token: IToken
