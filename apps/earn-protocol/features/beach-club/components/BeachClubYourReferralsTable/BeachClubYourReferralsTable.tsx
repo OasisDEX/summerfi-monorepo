@@ -12,8 +12,8 @@ interface BeachClubYourReferralsTableProps {
   hiddenColumns?: string[]
   rowsToDisplay?: number
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
-  isLoading?: boolean
   skeletonLines?: number
+  isLoading?: boolean
   customRow?: {
     idx: number
     content: ReactNode
