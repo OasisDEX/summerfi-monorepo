@@ -2,7 +2,7 @@ import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
-  const sdkApiUrl = process.env.SDK_API_URL
+  const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
 
   if (!sdkApiUrl) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const sdkApiUrl = process.env.SDK_API_URL
+  const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
 
   if (!sdkApiUrl) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
