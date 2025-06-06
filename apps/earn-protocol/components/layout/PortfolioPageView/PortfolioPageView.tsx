@@ -8,6 +8,7 @@ import {
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
+import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -48,7 +49,7 @@ interface PortfolioPageViewProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
-  referralCode: string | null
+  beachClubData: BeachClubData
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -64,7 +65,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   vaultsApyByNetworkMap,
   migratablePositions,
   migrationBestVaultApy,
-  referralCode,
+  beachClubData,
 }) => {
   const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -160,7 +161,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             label: 'Beach Club',
             icon: <Icon iconName="beach_club_icon" size={24} />,
             content: (
-              <PortfolioBeachClub walletAddress={walletAddress} referralCode={referralCode} />
+              <PortfolioBeachClub walletAddress={walletAddress} beachClubData={beachClubData} />
             ),
             activeColor: 'var(--beach-club-tab-underline)',
           },

@@ -72,7 +72,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
-    referralCode,
+    beachClubData,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -111,7 +111,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
-    referralCode,
+    beachClubData,
   }
 }
 
@@ -150,7 +150,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     systemConfig,
     migratablePositionsData,
     latestActivity,
-    referralCode,
+    beachClubData,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -245,7 +245,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
       rebalanceActivity={rebalanceActivity}
-      referralCode={referralCode}
+      beachClubData={beachClubData}
     />
   )
 }
