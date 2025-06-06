@@ -257,15 +257,19 @@ export class ReferralProcessor {
           )
         }
 
-        await trx.insertInto('users').values({
-          id: account.id,
-          referrer_id: validatedReferrerId,
-          referral_chain: validatedReferrerId ? account.referralChain : null,
-          referral_timestamp: validatedReferrerId
-            ? new Date(Number(account.referralTimestamp) * 1000)
-            : null,
-          is_active: false,
-        })
+        await trx
+          .insertInto('users')
+          .values({
+            id: account.id,
+            referrer_id: validatedReferrerId,
+            referral_chain: validatedReferrerId ? account.referralChain : null,
+            referral_timestamp: validatedReferrerId
+              ? new Date(Number(account.referralTimestamp) * 1000)
+              : null,
+            is_active: false,
+          })
+          .onConflict((oc: any) => oc.doNothing())
+          .execute()
       }
     }
 
