@@ -273,6 +273,8 @@ export class ReferralClient {
     }
 
     // Step 2: Get all referred accounts from all chains - keep only the earliest referral timestamp
+    allAccts.sort((a, b) => Number(a.referralTimestamp) - Number(b.referralTimestamp))
+
     const allReferredAccounts = allAccts.reduce(
       (acc, account) => {
         if (!acc[account.id]) {

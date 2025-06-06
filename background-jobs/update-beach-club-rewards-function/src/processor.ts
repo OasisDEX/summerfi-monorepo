@@ -244,9 +244,6 @@ export class ReferralProcessor {
 
     // Store new users - batch insert for better performance
     if (validAccounts.length > 0) {
-      // First, validate all referral codes and prepare user data
-      const userValues = []
-
       for (const account of validAccounts) {
         let validatedReferrerId: string | null = null
 
@@ -260,7 +257,7 @@ export class ReferralProcessor {
           )
         }
 
-        userValues.push({
+        await trx.insertInto('users').values({
           id: account.id,
           referrer_id: validatedReferrerId,
           referral_chain: validatedReferrerId ? account.referralChain : null,
@@ -270,12 +267,6 @@ export class ReferralProcessor {
           is_active: false,
         })
       }
-
-      await trx
-        .insertInto('users')
-        .values(userValues)
-        .onConflict((oc: any) => oc.doNothing())
-        .execute()
     }
 
     return {
