@@ -265,7 +265,8 @@ export class ReferralProcessor {
             ? new Date(Number(account.referralTimestamp) * 1000)
             : null,
           is_active: false,
-        })
+        }).onConflict((oc: any) => oc.doNothing())
+        .execute()
       }
     }
 
