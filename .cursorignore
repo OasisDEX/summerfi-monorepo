@@ -51,6 +51,7 @@ artifacts
 
 # other generated files
 /packages/**/src/generated/
+/**/*.d.ts
 
 # nx files
 .nx
