@@ -96,7 +96,11 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
       .where(
         'referral_code_id',
         'in',
-        recruitedUsers.map((user) => user.referral_code),
+        recruitedUsers.length > 0
+          ? recruitedUsers
+              .map((user) => user.referral_code)
+              .filter((code): code is string => code !== null)
+          : [''],
       )
       .execute()
 
@@ -106,7 +110,9 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
       .where(
         'user_id',
         'in',
-        recruitedUsers.map((user) => user.id),
+        recruitedUsers.length > 0
+          ? recruitedUsers.map((user) => user.id).filter((id): id is string => id !== null)
+          : [''],
       )
       .groupBy('user_id')
       .select(({ fn }) => [fn.sum('current_deposit_usd').as('tvl')])
@@ -118,6 +124,7 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
         tvl: string
       }
     }>((acc, user) => {
+      if (!user.id || !user.referral_code) return acc
       acc[user.id] = {
         ...user,
         rewards: recruitedUsersRewards.filter(
