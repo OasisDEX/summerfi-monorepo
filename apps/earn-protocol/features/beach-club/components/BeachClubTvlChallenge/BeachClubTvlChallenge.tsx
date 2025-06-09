@@ -22,7 +22,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
   const stats = [
     {
       value: `$${formatFiatBalance(currentGroupTvl)}`,
-      description: 'Total TVL',
+      description: 'Cumulative TVL from referrals',
     },
     {
       value: formatCryptoBalance(

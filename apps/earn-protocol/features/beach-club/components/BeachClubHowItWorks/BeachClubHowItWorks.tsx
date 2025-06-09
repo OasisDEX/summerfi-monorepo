@@ -75,8 +75,9 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
           textAlign: 'left',
         }}
       >
-        The Summer Earn Protocol is a permissionless passive lending product, which sets out to
-        offer effortless and secure optimised yield.
+        Lazy Summer Beach Club rewards users based on the amount of TVL and unique users that they
+        can onboard into the protocol - $SUMR, Revenue sharing based on fee’s and exclusive merch
+        can all be earned.
       </Text>
       <Link href="/" target="_blank" style={{ width: '100%', textAlign: 'left' }}>
         <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>

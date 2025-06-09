@@ -23,6 +23,7 @@ import classNames from './BeachClubTvlChallengeRewardCard.module.css'
 
 interface BeachClubTvlChallengeRewardCardProps {
   tvlGroup: string
+  customTitle?: string
   rawTvlGroup: number
   nextGroupTvl: number
   description: string
@@ -35,6 +36,7 @@ interface BeachClubTvlChallengeRewardCardProps {
 
 export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
   tvlGroup,
+  customTitle,
   rawTvlGroup,
   nextGroupTvl,
   description,
@@ -67,7 +69,13 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
       <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
-            {groupAchieved ? <>You reached a {tvlGroup} Group TVL</> : <>{tvlGroup} Group TVL</>}
+            {groupAchieved ? (
+              <>You reached a {tvlGroup} Group TVL</>
+            ) : customTitle ? (
+              <>{customTitle}</>
+            ) : (
+              <>{tvlGroup} Group TVL</>
+            )}
           </Text>
         </div>
         <div className={classNames.headerRightWrapper}>
