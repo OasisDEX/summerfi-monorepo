@@ -4,8 +4,9 @@ on:
     inputs:
       forceDeploy:
         description: 'Force deployment even if no changes'
+        type: boolean
         required: false
-        default: 'false'
+        default: false
   push:
     branches:
       - dev
@@ -43,8 +44,7 @@ jobs:
     environment: staging
     needs: changes
     if:
-      ${{ needs.changes.outputs.build-earn-protocol == 'true' || github.event.inputs.forceDeploy ==
-      'true' }}
+      ${{ needs.changes.outputs.build-earn-protocol == 'true' || github.event.inputs.forceDeploy }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
