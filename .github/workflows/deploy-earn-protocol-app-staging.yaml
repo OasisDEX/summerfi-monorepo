@@ -1,6 +1,11 @@
 name: Deploy Earn Protocol App Staging
 on:
   workflow_dispatch:
+    inputs:
+      forceDeploy:
+        description: 'Force deployment even if no changes'
+        required: false
+        default: 'false'
   push:
     branches:
       - dev
@@ -37,7 +42,9 @@ jobs:
       id-token: write
     environment: staging
     needs: changes
-    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
+    if:
+      ${{ needs.changes.outputs.build-earn-protocol == 'true' || github.event.inputs.forceDeploy ==
+      'true' }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
@@ -73,7 +80,8 @@ jobs:
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
-      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
+        ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
