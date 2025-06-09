@@ -54,7 +54,7 @@ import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEa
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
-import { pong } from './handlers/debugPong'
+import { pingHandler } from './handlers/pingHandler'
 import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
 import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
@@ -70,7 +70,7 @@ import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoL
  */
 export const sdkAppRouter = router({
   debug: {
-    ping: pong,
+    ping: pingHandler,
   },
   protocols: {
     getPosition: getPosition,

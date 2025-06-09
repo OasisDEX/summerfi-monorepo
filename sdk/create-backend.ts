@@ -44,8 +44,10 @@ export const createBackend = ({
   })
   sdkBackend.bind([sdkBucket])
 
+  const pathOld = `/api/sdk/${apiVersion}` // Old path for backward compatibility
   const path = `/sdk/trpc/${apiVersion}`
   sdkGateway.addRoutes(stack, {
+    [`ANY ${pathOld}/{proxy+}`]: sdkBackend,
     [`ANY ${path}/{proxy+}`]: sdkBackend,
   })
 

@@ -10,7 +10,7 @@ import classNames from './BeachClubBoatChallenge.module.css'
 
 const getStats = (currentPoints: number, earningPointsPerDay: number, accountReferred: number) => [
   {
-    value: `${formatWithSeparators(currentPoints)}`,
+    value: `${formatWithSeparators(currentPoints, { precision: 2 })}`,
     description: 'Speed Challenge Points',
   },
   {

@@ -1,4 +1,6 @@
-// @ts-ignore
-export type ReferralActivity = any
-// @ts-ignore
-export type Referrals = any
+export type BeachClubReferralList = {
+  address: string
+  tvl: string
+  earnedToDate: string
+  forecastAnnualisedEarnings: string
+}[]
