@@ -77,6 +77,7 @@ type VaultOpenViewComponentProps = {
   arksInterestRates: GetInterestRatesReturnType
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
+  referralCode?: string
 }
 
 export const VaultOpenViewComponent = ({
@@ -90,6 +91,7 @@ export const VaultOpenViewComponent = ({
   arksInterestRates,
   vaultApyData,
   vaultsApyRaw,
+  referralCode: referralCodeFromCookie,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -120,7 +122,7 @@ export const VaultOpenViewComponent = ({
     useState<MigrationEarningsDataByChainId>()
 
   const [referralCodeError, setReferralCodeError] = useState<string | null>(null)
-  const [referralCode, setReferralCode] = useState<string>('')
+  const [referralCode, setReferralCode] = useState<string>(referralCodeFromCookie ?? '')
 
   const [isNewUser, setIsNewUser] = useState(false)
 
@@ -190,7 +192,17 @@ export const VaultOpenViewComponent = ({
 
         const data = await response.json()
 
-        setIsNewUser(data.isNewUser)
+        const updatedIsNewUser = data.isNewUser
+
+        setIsNewUser(updatedIsNewUser)
+
+        // make sure that if referral exists in cookies, but user is not new, we clear it
+        // so code wont be used in transaction
+        if (!updatedIsNewUser) {
+          setReferralCode('')
+        }
+
+        return updatedIsNewUser
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching if user is new', error)
@@ -414,6 +426,7 @@ export const VaultOpenViewComponent = ({
           <BeachClubReferralForm
             onError={handleReferralCodeError}
             onChange={handleReferralCodeChange}
+            refferalCodeFromCookie={referralCodeFromCookie}
           />
         ) : undefined
       }

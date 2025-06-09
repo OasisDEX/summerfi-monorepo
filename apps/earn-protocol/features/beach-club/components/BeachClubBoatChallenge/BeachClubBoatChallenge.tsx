@@ -25,7 +25,7 @@ const getStats = (currentPoints: number, earningPointsPerDay: number, accountRef
 
 const getCards = (currentPoints: number, earningPointsPerDay: number) => {
   const calculateDaysLeft = (requiredPoints: number) => {
-    if (earningPointsPerDay <= 0) return 0
+    if (earningPointsPerDay <= 0) return '-'
     const pointsNeeded = requiredPoints - currentPoints
 
     if (pointsNeeded <= 0) return 0

@@ -32,6 +32,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: '0.002', // 0.2%
     sumrToEarn: BeachClubTvlGroup['10K'] * 0.002,
     currentGroupTvl,
+    colorfulBorder: currentGroupTvl <= BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['100K'],
   },
   {
@@ -41,7 +42,8 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: '0.003', // 0.2%
     sumrToEarn: BeachClubTvlGroup['100K'] * 0.003,
     currentGroupTvl,
-    colorfulBorder: true,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['100K'] && currentGroupTvl > BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['250K'],
   },
   {
@@ -51,6 +53,8 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: '0.004', // 0.4%
     sumrToEarn: BeachClubTvlGroup['250K'] * 0.004,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['250K'] && currentGroupTvl > BeachClubTvlGroup['100K'],
     nextGroupTvl: BeachClubTvlGroup['500K'],
   },
   {
@@ -60,6 +64,8 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['500K'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['500K'] && currentGroupTvl > BeachClubTvlGroup['250K'],
     nextGroupTvl: BeachClubTvlGroup['1M'],
   },
 ]
@@ -84,6 +90,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['1M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['1M'] && currentGroupTvl > BeachClubTvlGroup['500K'],
     nextGroupTvl: BeachClubTvlGroup['5M'],
   },
   {
@@ -93,6 +101,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['5M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['5M'] && currentGroupTvl > BeachClubTvlGroup['1M'],
     nextGroupTvl: BeachClubTvlGroup['10M'],
   },
   {
@@ -102,6 +112,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['10M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['10M'] && currentGroupTvl > BeachClubTvlGroup['5M'],
     nextGroupTvl: BeachClubTvlGroup['50M'],
   },
   {
@@ -111,6 +123,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['50M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['50M'] && currentGroupTvl > BeachClubTvlGroup['10M'],
     nextGroupTvl: BeachClubTvlGroup['100M'],
   },
   {
@@ -120,6 +134,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['100M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['100M'] && currentGroupTvl > BeachClubTvlGroup['50M'],
     nextGroupTvl: BeachClubTvlGroup['500M'],
   },
   {
@@ -129,6 +145,8 @@ const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['500M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['500M'] && currentGroupTvl > BeachClubTvlGroup['100M'],
     nextGroupTvl: BeachClubTvlGroup['1B'],
   },
   ...(seeAll ? [getOneBillionCard(currentGroupTvl)] : []),

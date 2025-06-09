@@ -28,6 +28,7 @@ export const VaultOpenView = ({
   arksInterestRates,
   vaultApyData,
   vaultsApyRaw,
+  referralCode,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -39,6 +40,7 @@ export const VaultOpenView = ({
   arksInterestRates: GetInterestRatesReturnType
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
+  referralCode?: string
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -53,6 +55,7 @@ export const VaultOpenView = ({
         arksInterestRates={arksInterestRates}
         vaultApyData={vaultApyData}
         vaultsApyRaw={vaultsApyRaw}
+        referralCode={referralCode}
       />
     </SDKContextProvider>
   )

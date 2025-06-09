@@ -18,7 +18,7 @@ interface BeachClubBoatChallengeRewardCardProps {
   currentPoints: number
   left: number
   unlocked: boolean
-  daysToUnlock: number
+  daysToUnlock: number | string
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
@@ -77,7 +77,8 @@ export const BeachClubBoatChallengeRewardCard = ({
           <div className={classNames.progress}>
             <BeachClubProgressBar max={requiredPoints} current={currentPoints} />
             <Text as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-              {formatWithSeparators(daysToUnlock)} Days to unlock
+              {typeof daysToUnlock === 'number' ? formatWithSeparators(daysToUnlock) : daysToUnlock}{' '}
+              Days to unlock
             </Text>
           </div>
         )}
