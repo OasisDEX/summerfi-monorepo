@@ -12,25 +12,31 @@ interface BeachClubRewardBalance {
   total_claimed: string
 }
 
+export type BeachClubReferralActivity = {
+  userAddress: string
+  actionType: string
+  timestamp: string
+  amountNormalized: string
+  inputTokenSymbol: string
+}
+
+export type BeachClubRecruitedUsersRewards = {
+  [key: string]: {
+    id: string
+    referral_code: string | null
+    tvl: string
+    rewards: BeachClubRewardBalance[]
+  }
+}
+
 export interface BeachClubData {
   referral_code: string | null
   active_users_count: number | null
   custom_code: string | null
   total_deposits_referred_usd: string | null
   rewards: BeachClubRewardBalance[]
-  recruitedUsersRewards: {
-    [key: string]: {
-      id: string
-      referral_code: string | null
-      tvl: string
-      rewards: BeachClubRewardBalance[]
-    }
-  }
-  recruitedUsersLatestActivity: {
-    userAddress: string
-    actionType: string
-    timestamp: string
-  }[]
+  recruitedUsersRewards: BeachClubRecruitedUsersRewards
+  recruitedUsersLatestActivity: BeachClubReferralActivity[]
 }
 
 const defaultBeachClubData: BeachClubData = {
@@ -139,13 +145,23 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
           .execute(),
         summerProtocolDB.db
           .selectFrom('latestActivity')
-          .select(['userAddress', 'actionType', 'timestamp'])
+          .select([
+            'userAddress',
+            'actionType',
+            'amountNormalized',
+            'inputTokenSymbol',
+            'timestamp',
+          ])
           .orderBy('timestamp', 'desc')
           .limit(10)
           .where(
             'userAddress',
             'in',
-            recruitedUsers.map((user) => user.id.toLowerCase()),
+            recruitedUsers.length > 0
+              ? recruitedUsers
+                  .map((user) => user.id.toLowerCase())
+                  .filter((id): id is string => id !== null)
+              : [''],
           )
           .execute(),
       ])

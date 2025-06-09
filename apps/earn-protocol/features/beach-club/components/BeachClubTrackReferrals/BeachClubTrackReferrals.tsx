@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubReferralActivityTable } from '@/features/beach-club/components/BeachClubReferralActivityTable/BeachClubReferralActivityTable'
 import { BeachClubYourReferralsTable } from '@/features/beach-club/components/BeachClubYourReferralsTable/BeachClubYourReferralsTable'
+import { type BeachClubReferralList } from '@/features/beach-club/types'
 
 import classNames from './BeachClubTrackReferrals.module.css'
 
@@ -31,7 +32,7 @@ interface BeachClubTrackReferralsProps {
 export const BeachClubTrackReferrals: FC<BeachClubTrackReferralsProps> = ({ beachClubData }) => {
   const [tab, setTab] = useState<TrackReferralsTab>(TrackReferralsTab.REFERRAL_ACTIVITY)
 
-  const trackReferralsList = useMemo(() => {
+  const trackReferralsList: BeachClubReferralList = useMemo(() => {
     return Object.values(beachClubData.recruitedUsersRewards).map((user) => ({
       address: user.id,
       tvl: user.tvl,
@@ -49,18 +50,11 @@ export const BeachClubTrackReferrals: FC<BeachClubTrackReferralsProps> = ({ beac
     }))
   }, [beachClubData])
 
-  const referralActivityList = useMemo(() => {
-    return beachClubData.recruitedUsersLatestActivity.map((activity) => ({
-      userAddress: activity.userAddress,
-      actionType: activity.actionType,
-      timestamp: activity.timestamp,
-      tvl: beachClubData.recruitedUsersRewards[activity.userAddress].tvl,
-    }))
-  }, [beachClubData])
-
   const tables = {
     [TrackReferralsTab.REFERRAL_ACTIVITY]: (
-      <BeachClubReferralActivityTable referralActivityList={referralActivityList} />
+      <BeachClubReferralActivityTable
+        referralActivityList={beachClubData.recruitedUsersLatestActivity}
+      />
     ),
     [TrackReferralsTab.YOUR_REFERRALS]: (
       <BeachClubYourReferralsTable trackReferralsList={trackReferralsList} />

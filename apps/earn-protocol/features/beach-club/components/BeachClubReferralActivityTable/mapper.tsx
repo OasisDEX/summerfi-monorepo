@@ -1,19 +1,20 @@
-import { TableCellText } from '@summerfi/app-earn-ui'
-import { formatAddress, formatFiatBalance, timeAgo } from '@summerfi/app-utils'
+import { Icon, TableCellText } from '@summerfi/app-earn-ui'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import { formatAddress, formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 
-import { type ReferralActivity } from '@/features/beach-club/types'
+import { type BeachClubReferralActivity } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 
-const actionLabelMap: { [key in ReferralActivity['actionType']]: string } = {
+const actionLabelMap: { [key in BeachClubReferralActivity['actionType']]: string } = {
   deposit: 'Deposit',
   withdraw: 'Withdraw',
 }
 
-const actionColorMap: { [key in ReferralActivity['actionType']]: string } = {
+const actionColorMap: { [key in BeachClubReferralActivity['actionType']]: string } = {
   deposit: 'var(--earn-protocol-success-100)',
   withdraw: 'var(--earn-protocol-warning-100)',
 }
 
-export const referralActivityMapper = (rawData: ReferralActivity[]) => {
+export const referralActivityMapper = (rawData: BeachClubReferralActivity[]) => {
   return rawData.map((item) => {
     return {
       id: item.userAddress,
@@ -24,7 +25,7 @@ export const referralActivityMapper = (rawData: ReferralActivity[]) => {
             {actionLabelMap[item.actionType]}
           </TableCellText>
         ),
-        tvl: (
+        amount: (
           <div
             style={{
               display: 'flex',
@@ -32,7 +33,8 @@ export const referralActivityMapper = (rawData: ReferralActivity[]) => {
               gap: 'var(--spacing-space-2x-small)',
             }}
           >
-            <TableCellText>${formatFiatBalance(item.tvl)}</TableCellText>
+            <Icon tokenName={item.inputTokenSymbol as TokenSymbolsList} variant="s" />
+            <TableCellText>{formatCryptoBalance(item.amountNormalized)}</TableCellText>
           </div>
         ),
         date: (

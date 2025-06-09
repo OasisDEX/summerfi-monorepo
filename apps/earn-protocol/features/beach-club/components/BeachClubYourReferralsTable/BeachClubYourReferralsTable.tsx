@@ -2,13 +2,13 @@ import { type FC, type ReactNode, useMemo } from 'react'
 import { Table, type TableSortedColumn, Text, useMobileCheck } from '@summerfi/app-earn-ui'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { type Referrals } from '@/features/beach-club/types'
+import { type BeachClubReferralList } from '@/features/beach-club/types'
 
 import { yourReferralsColumns, yourReferralsColumnsHiddenOnMobile } from './columns'
 import { trackReferralsMapper } from './mapper'
 
 interface BeachClubYourReferralsTableProps {
-  trackReferralsList: Referrals[]
+  trackReferralsList: BeachClubReferralList
   hiddenColumns?: string[]
   rowsToDisplay?: number
   handleSort?: (sortConfig: TableSortedColumn<string>) => void

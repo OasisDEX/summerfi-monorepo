@@ -1,9 +1,9 @@
 import { TableCellText } from '@summerfi/app-earn-ui'
 import { formatAddress, formatFiatBalance } from '@summerfi/app-utils'
 
-import { type Referrals } from '@/features/beach-club/types'
+import { type BeachClubReferralList } from '@/features/beach-club/types'
 
-export const trackReferralsMapper = (rawData: Referrals[]) => {
+export const trackReferralsMapper = (rawData: BeachClubReferralList) => {
   return rawData.map((item) => {
     return {
       content: {

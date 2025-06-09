@@ -10,8 +10,8 @@ export const referralActivityColumns = [
     sortable: false,
   },
   {
-    title: 'TVL',
-    key: 'tvl',
+    title: 'Amount',
+    key: 'amount',
     sortable: false,
   },
   {
