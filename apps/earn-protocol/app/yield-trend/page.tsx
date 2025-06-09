@@ -8,7 +8,7 @@ interface YieldTrendPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
 }
 
-const YieldTrendPage: FC<YieldTrendPageProps> = async ({ searchParams }) => {
+const YieldTrendPage: FC<YieldTrendPageProps> = ({ searchParams: _searchParams }) => {
   return <YieldTrendView />
 }
 
