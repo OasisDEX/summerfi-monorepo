@@ -12,13 +12,14 @@ export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | 
 export function makeSDK(params: MakeSDKParams) {
   const apiVersion = `v${sdkClientVersion.charAt(0)}`
   let versionedURL: string
+  // url based on domain
   if ('apiDomainUrl' in params) {
-    // url based on direct url
     versionedURL = new URL(`/sdk/trpc/${apiVersion}`, params.apiDomainUrl).toString()
-  } else if ('apiURL' in params) {
-    // url based on domain
-    const apiUrlNormalized = params.apiURL.replace(/\/+$/, '')
-    versionedURL = `${apiUrlNormalized}/${apiVersion}`
+  }
+  // url based on direct url
+  else if ('apiURL' in params) {
+    const normalizedUrlWithoutVersion = params.apiURL.replace(/\/+$/, '')
+    versionedURL = `${normalizedUrlWithoutVersion}/${apiVersion}`
   } else {
     throw new Error('Either apiDomainUrl or apiURL must be provided')
   }
