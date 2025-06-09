@@ -1,6 +1,13 @@
 import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
+// Rewrite the path to remove the /api/sdk/ prefix
+// This is necessary to use sdkApiUrl correctly
+// For example, /api/sdk/some/action will become /some/action
+function rewriteSdkPath(pathname: string): string {
+  return pathname.replace('/api/sdk/', '/')
+}
+
 export async function POST(req: NextRequest) {
   const sdkApiUrl = `${process.env.SDK_API_URL}/sdk/trpc`
 
@@ -8,7 +15,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
   }
 
-  const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search
+  const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
+  const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
+
   const headers = {}
   const response = await fetch(url, {
     headers,
@@ -36,7 +45,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
   }
 
-  const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search
+  const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
+  const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
   const headers = {}
   const response = await fetch(url, {
