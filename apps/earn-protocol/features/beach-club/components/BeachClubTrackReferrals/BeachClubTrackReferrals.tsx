@@ -49,9 +49,18 @@ export const BeachClubTrackReferrals: FC<BeachClubTrackReferralsProps> = ({ beac
     }))
   }, [beachClubData])
 
+  const referralActivityList = useMemo(() => {
+    return beachClubData.recruitedUsersLatestActivity.map((activity) => ({
+      userAddress: activity.userAddress,
+      actionType: activity.actionType,
+      timestamp: activity.timestamp,
+      tvl: beachClubData.recruitedUsersRewards[activity.userAddress].tvl,
+    }))
+  }, [beachClubData])
+
   const tables = {
     [TrackReferralsTab.REFERRAL_ACTIVITY]: (
-      <BeachClubReferralActivityTable referralActivityList={[]} />
+      <BeachClubReferralActivityTable referralActivityList={referralActivityList} />
     ),
     [TrackReferralsTab.YOUR_REFERRALS]: (
       <BeachClubYourReferralsTable trackReferralsList={trackReferralsList} />

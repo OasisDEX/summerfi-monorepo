@@ -5,18 +5,8 @@ export const referralActivityColumns = [
     sortable: false,
   },
   {
-    title: 'Date',
-    key: 'date',
-    sortable: true,
-  },
-  {
     title: 'Action',
     key: 'action',
-    sortable: false,
-  },
-  {
-    title: 'Amount',
-    key: 'amount',
     sortable: false,
   },
   {
@@ -24,6 +14,11 @@ export const referralActivityColumns = [
     key: 'tvl',
     sortable: false,
   },
+  {
+    title: 'Date',
+    key: 'date',
+    sortable: false,
+  },
 ]
 
-export const referralActivityColumnsHiddenOnMobile = ['date', 'amount']
+export const referralActivityColumnsHiddenOnMobile = ['tvl']
