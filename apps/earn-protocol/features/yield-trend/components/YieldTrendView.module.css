@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--spacing-space-medium);
+  gap: var(--general-space-4);
   padding: var(--spacing-space-x-large);
 }
 
@@ -43,6 +43,12 @@
 .headerCardGrid .headerCardRight {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+.headerCardGrid .headerCardRight .depositCard {
+  padding: var(--spacing-space-x-small) var(--spacing-space-medium);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-surface-light);
 }
 
 .divider {

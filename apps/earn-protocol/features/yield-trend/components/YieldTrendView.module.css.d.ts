@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "depositCard": string;
   readonly "divider": string;
   readonly "headerCardBrighter": string;
   readonly "headerCardCenter": string;

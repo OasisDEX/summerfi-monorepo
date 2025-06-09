@@ -127,7 +127,7 @@ export const Dropdown: FC<DropdownProps> = ({
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...dropdownChildrenStyle,
               }
-            : {}
+            : { ...dropdownChildrenStyle }
         }
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
