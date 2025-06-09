@@ -6,6 +6,25 @@ export function middleware(request: NextRequest) {
   const userAgent = request.headers.get('user-agent')
   const response = NextResponse.next()
 
+  const referrer = request.headers.get('referer')
+
+  if (referrer) {
+    const url = new URL(referrer)
+    const referralCode = url.searchParams.get('referralCode')
+
+    if (referralCode) {
+      response.cookies.set({
+        name: 'referralCode',
+        value: referralCode,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 12 * 60 * 60, // 12 hours
+        path: '/earn',
+      })
+    }
+  }
+
   // Only set device type if we have a user agent
   if (userAgent) {
     const deviceInfo = getDeviceType(userAgent)

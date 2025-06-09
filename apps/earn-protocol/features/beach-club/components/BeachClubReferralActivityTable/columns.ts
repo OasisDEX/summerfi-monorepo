@@ -21,4 +21,4 @@ export const referralActivityColumns = [
   },
 ]
 
-export const referralActivityColumnsHiddenOnMobile = ['tvl']
+export const referralActivityColumnsHiddenOnMobile = ['tvl', 'date']

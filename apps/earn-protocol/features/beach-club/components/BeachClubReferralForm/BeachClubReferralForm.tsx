@@ -6,6 +6,7 @@ import styles from './BeachClubReferralForm.module.css'
 interface BeachClubReferralFormProps {
   onError: (error: string | null) => void
   onChange: (value: string) => void
+  refferalCodeFromCookie?: string
 }
 
 const isValidReferralCode = async (
@@ -25,8 +26,12 @@ const isValidReferralCode = async (
   }
 }
 
-export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({ onError, onChange }) => {
-  const [value, setValue] = useState('')
+export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({
+  onError,
+  onChange,
+  refferalCodeFromCookie,
+}) => {
+  const [value, setValue] = useState(refferalCodeFromCookie ?? '')
   const [isValid, setIsValid] = useState(false)
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
   const [isLoading, setIsLoading] = useState(false)

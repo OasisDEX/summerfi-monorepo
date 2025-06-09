@@ -3,6 +3,7 @@ import { type SDKNetwork } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
@@ -12,7 +13,7 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -45,6 +46,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+
+  const referralCode = getServerSideCookies('referralCode', cookie)
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId.toLowerCase()
@@ -141,6 +147,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       arksInterestRates={arkInterestRatesMap}
       vaultApyData={vaultApyData}
       vaultsApyRaw={vaultsApyRaw}
+      referralCode={referralCode}
     />
   )
 }
