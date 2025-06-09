@@ -26,6 +26,7 @@ export const getVaultIdByVaultCustomName = (
   vaultCustomName: string,
   networkId: string,
   systemConfig: Partial<EarnAppConfigType>,
+  debug = false,
 ) => {
   const { fleetMap } = systemConfig
 
@@ -43,10 +44,12 @@ export const getVaultIdByVaultCustomName = (
   ) as EarnAppFleetCustomConfigType | undefined
 
   if (!customFields?.address) {
-    // eslint-disable-next-line no-console
-    console.log(
-      `No vault found with the name ${resovledVaultCustomName} on the network ${networkId}`,
-    )
+    if (debug) {
+      // eslint-disable-next-line no-console
+      console.log(
+        `No vault found with the name ${resovledVaultCustomName} on the network ${networkId}`,
+      )
+    }
 
     return ''
   }
