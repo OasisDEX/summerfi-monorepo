@@ -12,30 +12,30 @@ export const getBeachClubBoatCards = (currentPoints: number, earningPointsPerDay
 
   return [
     {
-      requiredPoints: 10000,
+      requiredPoints: 1000,
       currentPoints,
       left: 23,
-      unlocked: currentPoints >= 10000,
+      unlocked: currentPoints >= 1000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,
+      },
+    },
+    {
+      requiredPoints: 5000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 5000,
       reward: {
         type: BeachClubBoatChallengeRewardCardType.T_SHIRT,
       },
     },
     {
-      requiredPoints: 20000,
+      requiredPoints: 10000,
       currentPoints,
       left: 23,
-      unlocked: currentPoints >= 20000,
+      unlocked: currentPoints >= 10000,
       reward: {
         type: BeachClubBoatChallengeRewardCardType.HOODIE,
-      },
-    },
-    {
-      requiredPoints: 20000,
-      currentPoints,
-      left: 23,
-      unlocked: currentPoints >= 20000,
-      reward: {
-        type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,
       },
     },
   ].map((card) => ({
