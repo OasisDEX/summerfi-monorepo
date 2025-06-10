@@ -451,6 +451,7 @@ export const icons = {
   tbtc_circle_color: customLazy(
     () => import('./icons/tbtc_circle_color.svg?react'),
   ) as IconExportType,
+  term: customLazy(() => import('./icons/term.svg?react')) as IconExportType,
   tooltip: customLazy(() => import('./icons/tooltip.svg?react')) as IconExportType,
   trail_of_bits: customLazy(() => import('./icons/trail_of_bits.svg?react')) as IconExportType,
   trailingStopLoss: customLazy(() => import('./icons/stopLoss.svg?react')) as IconExportType,
