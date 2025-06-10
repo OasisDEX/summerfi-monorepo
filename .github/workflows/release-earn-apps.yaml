@@ -56,3 +56,16 @@ jobs:
           git rebase dev
           git push origin main
           git status
+      
+      - name: Trigger prod-release e2e tests in e2e-tests repository
+        env:
+          E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ env.E2E_TESTS_PAT }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/OasisDEX/e2e-tests/actions/workflows/ci_lazy_prod_release_trigger_sleep.yml/dispatches \
+            -d "{\"ref\":\"main\", \"inputs\":{\"run_id\":\"${{ github.run_id }}\", \"repository\":\"${{ github.repository }}\"}}"
+          echo 'See test results in https://github.com/OasisDEX/e2e-tests/actions/workflows/ci_lazy_prod_release_trigger_sleep.yml --> Job with RUN_ID ${{ github.run_id }} in the logs.'
