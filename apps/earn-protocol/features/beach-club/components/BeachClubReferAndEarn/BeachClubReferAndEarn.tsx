@@ -44,11 +44,7 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
   return (
     <div className={classNames.beachClubReferAndEarnWrapper}>
       <div className={classNames.header}>
-        <Text
-          as="div"
-          variant="h4"
-          style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-16)' }}
-        >
+        <Text as="div" variant="h4" className={classNames.title}>
           <Icon iconName="users_beach_club" size={48} /> Refer and earn
         </Text>
       </div>

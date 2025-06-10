@@ -77,6 +77,13 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
               <>{tvlGroup} Group TVL</>
             )}
           </Text>
+          <div className={classNames.chevronMobileWrapper}>
+            <Icon
+              iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
+              size={14}
+              color="var(--earn-protocol-secondary-70)"
+            />
+          </div>
         </div>
         <div className={classNames.headerRightWrapper}>
           <div className={classNames.boostWrapper}>
@@ -92,11 +99,13 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
               {formatFiatBalance(sumrToEarn * estimatedSumrPrice)})
             </Text>
           </div>
-          <Icon
-            iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
-            size={14}
-            color="var(--earn-protocol-secondary-70)"
-          />
+          <div className={classNames.chevronDesktopWrapper}>
+            <Icon
+              iconName={isExpanded ? 'chevron_up' : 'chevron_down'}
+              size={14}
+              color="var(--earn-protocol-secondary-70)"
+            />
+          </div>
         </div>
       </div>
       <AnimateHeight

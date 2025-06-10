@@ -1,8 +1,10 @@
-import { Icon, TableCellText } from '@summerfi/app-earn-ui'
+import { Button, Icon, TableCellText, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import Link from 'next/link'
 
 import { type BeachClubReferralActivity } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { PortfolioTabs } from '@/features/portfolio/types'
 
 const actionLabelMap: { [key in BeachClubReferralActivity['actionType']]: string } = {
   deposit: 'Deposit',
@@ -41,6 +43,18 @@ export const referralActivityMapper = (rawData: BeachClubReferralActivity[]) => 
           <TableCellText suppressHydrationWarning>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
           </TableCellText>
+        ),
+        link: (
+          <Link
+            href={`/portfolio/${item.userAddress}?tab=${PortfolioTabs.YOUR_ACTIVITY}`}
+            target="_blank"
+          >
+            <Button variant="textPrimaryMedium">
+              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+                View
+              </WithArrow>
+            </Button>
+          </Link>
         ),
       },
     }

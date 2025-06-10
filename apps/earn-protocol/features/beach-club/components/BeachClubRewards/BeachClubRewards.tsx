@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
@@ -17,20 +17,23 @@ interface BeachClubRewardsProps {
 }
 
 export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData }) => {
-  const tabsOptions = [
-    {
-      label: 'TVL Challenges',
-      id: ReferAndEarnTab.TVL_CHALLENGES,
-      content: <BeachClubTvlChallenge beachClubData={beachClubData} />,
-      activeColor: 'var(--beach-club-tab-underline)',
-    },
-    {
-      label: 'Beach Boat Challenge',
-      id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
-      content: <BeachClubBoatChallenge beachClubData={beachClubData} />,
-      activeColor: 'var(--beach-club-tab-underline)',
-    },
-  ]
+  const tabsOptions = useMemo(
+    () => [
+      {
+        label: 'TVL Challenges',
+        id: ReferAndEarnTab.TVL_CHALLENGES,
+        content: <BeachClubTvlChallenge beachClubData={beachClubData} />,
+        activeColor: 'var(--beach-club-tab-underline)',
+      },
+      {
+        label: 'Beach Boat Challenge',
+        id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
+        content: <BeachClubBoatChallenge beachClubData={beachClubData} />,
+        activeColor: 'var(--beach-club-tab-underline)',
+      },
+    ],
+    [beachClubData],
+  )
 
   return (
     <div className={classNames.beachClubRewardsWrapper}>

@@ -3,52 +3,87 @@
   flex-direction: column;
   align-items: center;
 
-  .referralWrapper {
+  .description {
+    color: var(--earn-protocol-secondary-60);
+    margin-bottom: var(--general-space-16);
+    width: 100%;
+    text-align: left;
+  }
+
+  .generateCode {
+    color: var(--earn-protocol-secondary-60);
+    text-align: center;
+    margin-bottom: var(--general-space-8);
+  }
+
+  .generateCodeDescription {
+    color: var(--earn-protocol-secondary-40);
+    text-align: center;
+    margin-bottom: var(--general-space-16);
+    max-width: 610px;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .stepsWrapper {
+    margin-top: var(--general-space-24);
+    margin-bottom: var(--general-space-32);
+    width: 100%;
+  }
+
+  .referralSection {
     display: flex;
-    gap: var(--general-space-24);
+    flex-direction: column;
     align-items: center;
-    flex-wrap: wrap;
-    margin-top: var(--general-space-16);
-    justify-content: center;
+    width: 100%;
 
-    .referralCode {
+    .referralWrapper {
       display: flex;
-      flex-direction: row;
+      gap: var(--general-space-24);
       align-items: center;
-      justify-content: space-between;
-      gap: var(--general-space-8);
-      background-color: var(--earn-protocol-neutral-85);
-      border: 1px solid var(--earn-protocol-neutral-70);
-      border-radius: var(--general-radius-16);
-      min-width: 300px;
-      padding: var(--general-space-12);
+      flex-wrap: wrap;
+      margin-top: var(--general-space-16);
+      justify-content: center;
 
-      .copyWrapper {
-        cursor: pointer;
-        color: var(--beach-club-link);
+      .referralCode {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--general-space-8);
+        background-color: var(--earn-protocol-neutral-85);
+        border: 1px solid var(--earn-protocol-neutral-70);
+        border-radius: var(--general-radius-16);
+        min-width: 300px;
+        padding: var(--general-space-12);
 
-        &:hover {
-          opacity: 0.6;
-          transition: opacity 0.2s ease-in;
+        .copyWrapper {
+          cursor: pointer;
+          color: var(--beach-club-link);
+
+          &:hover {
+            opacity: 0.6;
+            transition: opacity 0.2s ease-in;
+          }
         }
       }
-    }
 
-    .socialMediaWrapper {
-      display: flex;
-      align-items: center;
-      gap: var(--general-space-8);
-
-      .socialMediaLink {
-        cursor: pointer;
+      .socialMediaWrapper {
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: var(--general-space-8);
 
-        &:hover {
-          background-color: rgba(94, 243, 151, 0.049);
-          border-radius: var(--general-radius-50);
-          transition: background-color 0.2s ease-in;
+        .socialMediaLink {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: rgba(94, 243, 151, 0.049);
+            border-radius: var(--general-radius-50);
+            transition: background-color 0.2s ease-in;
+          }
         }
       }
     }

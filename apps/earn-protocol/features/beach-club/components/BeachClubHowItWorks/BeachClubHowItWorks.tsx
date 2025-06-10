@@ -58,6 +58,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error generating referral code', error)
+      toast.error('Error generating referral code, please contact support', ERROR_TOAST_CONFIG)
     } finally {
       setIsLoading(false)
     }
@@ -65,16 +66,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
 
   return (
     <div className={classNames.referralCodeWrapper}>
-      <Text
-        as="p"
-        variant="p2"
-        style={{
-          color: 'var(--earn-protocol-secondary-60)',
-          marginBottom: 'var(--general-space-16)',
-          width: '100%',
-          textAlign: 'left',
-        }}
-      >
+      <Text as="p" variant="p2" className={classNames.description}>
         Lazy Summer Beach Club rewards users based on the amount of TVL and unique users that they
         can onboard into the protocol - $SUMR, Revenue sharing based on fee’s and exclusive merch
         can all be earned.
@@ -84,40 +76,15 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
           Read the details
         </WithArrow>
       </Link>
-      <div
-        style={{
-          marginTop: 'var(--general-space-24)',
-          marginBottom: 'var(--general-space-32)',
-          width: '100%',
-        }}
-      >
+      <div className={classNames.stepsWrapper}>
         <BeachClubSteps />
       </div>
       {!refCode && (
         <>
-          <Text
-            as="h5"
-            variant="h5"
-            style={{
-              color: 'var(--earn-protocol-secondary-60)',
-              textAlign: 'center',
-              marginBottom: 'var(--general-space-8)',
-            }}
-          >
+          <Text as="h5" variant="h5" className={classNames.generateCode}>
             Generate your unique referral code
           </Text>
-          <Text
-            as="p"
-            variant="p3"
-            style={{
-              color: 'var(--earn-protocol-secondary-40)',
-              textAlign: 'center',
-              marginBottom: 'var(--general-space-16)',
-              maxWidth: '610px',
-              display: 'inline-block',
-              width: '100%',
-            }}
-          >
+          <Text as="p" variant="p3" className={classNames.generateCodeDescription}>
             By generating the code, you accept the{' '}
             <Link
               href={INTERNAL_LINKS.tempTerms}
@@ -150,9 +117,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
         </>
       )}
       {refCode ? (
-        <div
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
-        >
+        <div className={classNames.referralSection}>
           <div className={classNames.referralWrapper}>
             <div className={classNames.referralCode}>
               <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
