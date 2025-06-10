@@ -78,7 +78,7 @@ export const handler = async (
   const { campaign, questNumber, walletAddress } = pathParamsResult.data
 
   // Check if debug mode is enabled via query parameter or NODE_ENV
-  const isDebugMode = event.queryStringParameters?.debug === 'true'
+  const isDebugMode = typeof event.queryStringParameters?.debug !== 'undefined'
 
   try {
     logger.info(
