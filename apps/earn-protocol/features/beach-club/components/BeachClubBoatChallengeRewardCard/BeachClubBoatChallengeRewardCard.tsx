@@ -14,8 +14,8 @@ import classNames from './BeachClubBoatChallengeRewardCard.module.css'
 import waves from '@/public/img/beach_club/waves.png'
 
 interface BeachClubBoatChallengeRewardCardProps {
-  requiredPoints: number
   currentPoints: number
+  requiredPoints: number
   left: number
   unlocked: boolean
   daysToUnlock: number | string
@@ -25,8 +25,8 @@ interface BeachClubBoatChallengeRewardCardProps {
 }
 
 export const BeachClubBoatChallengeRewardCard = ({
-  requiredPoints,
   currentPoints,
+  requiredPoints,
   left,
   unlocked,
   daysToUnlock,
