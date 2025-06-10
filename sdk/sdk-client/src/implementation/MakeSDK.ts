@@ -24,6 +24,7 @@ export function makeSDK(params: MakeSDKParams) {
     throw new Error('Either apiDomainUrl or apiURL must be provided')
   }
 
+  console.log('MakeSDK versionedURL', versionedURL)
   const rpcClient = createMainRPCClient(versionedURL, params.logging)
 
   return new SDKManager({ rpcClient })

@@ -1,6 +1,8 @@
 declare const styles: {
   readonly "beachClubTvlChallengeRewardCardWrapper": string;
   readonly "boostWrapper": string;
+  readonly "chevronDesktopWrapper": string;
+  readonly "chevronMobileWrapper": string;
   readonly "colorfulBackground": string;
   readonly "colorfulBorder": string;
   readonly "contentWrapper": string;

@@ -19,9 +19,9 @@ const sectionTabs = [
     title: 'The Power of DeFi, made accessible to everyone',
     content: (
       <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
-        Earn DeFi’s best yields-automatically and effortlessly-with Summer’s AI-powered rebalancing
-        that continuously reallocates your deposits across top protocols, so you save time, skip gas
-        fees, and maximize returns, all for a simple 1% annual fee.
+        With Summer, your yield is transparent and traceable, your assets are always in your
+        control, and you can exit anytime - no lockups, no middlemen, just non-custodial DeFi the
+        way it should be.
       </Text>
     ),
   },
@@ -30,9 +30,9 @@ const sectionTabs = [
     title: 'Superior risk management by DeFi’s top risk team',
     content: (
       <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
-        Earn DeFi’s best yields-automatically and effortlessly-with Summer’s AI-powered rebalancing
-        that continuously reallocates your deposits across top protocols, so you save time, skip gas
-        fees, and maximize returns, all for a simple 1% annual fee.
+        Summer gives you higher yields with minimized risk through expert-managed, automatically
+        diversified strategies - powered by Block Analitica’s continuous risk oversight and built-in
+        safeguards that protect your capital while maximizing risk-adjusted returns.
       </Text>
     ),
   },

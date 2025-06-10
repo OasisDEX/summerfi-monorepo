@@ -22,7 +22,7 @@ export const PortfolioRewardsCountdown = () => {
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          Lazy Summer Protocol is launching soon, its the best way to earn $SUMR. Get notified.
+          Lazy Summer Protocol has launched - it&apos;s the best way to earn $SUMR. Get notified.
         </Text>
         <NewsletterWrapper
           wrapperClassName={classNames.customNewsletterSection}

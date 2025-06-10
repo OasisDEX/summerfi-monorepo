@@ -139,7 +139,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       positions: nonEmptyPositions,
     }
 
-    LoggingService.debug('res: ', JSON.stringify(res))
     return res
   }
 

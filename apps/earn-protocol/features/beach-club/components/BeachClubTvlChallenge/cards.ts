@@ -26,31 +26,36 @@ const getCardDescription = (currentGroupTvl: number, groupTvl: number) => {
 
 const getDefaultCards = (currentGroupTvl: number) => [
   {
-    tvlGroup: '10K',
+    tvlGroup: '10K+',
+    customTitle: 'Start Earning Now!',
     rawTvlGroup: BeachClubTvlGroup['10K'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['10K']),
     boost: '0.002', // 0.2%
     sumrToEarn: BeachClubTvlGroup['10K'] * 0.002,
     currentGroupTvl,
+    colorfulBorder: currentGroupTvl <= BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['100K'],
   },
   {
-    tvlGroup: '100K',
+    tvlGroup: '100K+',
     rawTvlGroup: BeachClubTvlGroup['100K'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['100K']),
     boost: '0.003', // 0.2%
     sumrToEarn: BeachClubTvlGroup['100K'] * 0.003,
     currentGroupTvl,
-    colorfulBorder: true,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['100K'] && currentGroupTvl > BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['250K'],
   },
   {
-    tvlGroup: '250K',
+    tvlGroup: '250K+',
     rawTvlGroup: BeachClubTvlGroup['250K'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['250K']),
     boost: '0.004', // 0.4%
     sumrToEarn: BeachClubTvlGroup['250K'] * 0.004,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['250K'] && currentGroupTvl > BeachClubTvlGroup['100K'],
     nextGroupTvl: BeachClubTvlGroup['500K'],
   },
   {
@@ -60,6 +65,8 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['500K'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['500K'] && currentGroupTvl > BeachClubTvlGroup['250K'],
     nextGroupTvl: BeachClubTvlGroup['1M'],
   },
 ]
@@ -78,57 +85,69 @@ const getOneBillionCard = (currentGroupTvl: number) => ({
 
 const getHiddenCards = (currentGroupTvl: number, seeAll: boolean) => [
   {
-    tvlGroup: '1M',
+    tvlGroup: '1M+',
     rawTvlGroup: BeachClubTvlGroup['1M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['1M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['1M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['1M'] && currentGroupTvl > BeachClubTvlGroup['500K'],
     nextGroupTvl: BeachClubTvlGroup['5M'],
   },
   {
-    tvlGroup: '5M',
+    tvlGroup: '5M+',
     rawTvlGroup: BeachClubTvlGroup['5M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['5M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['5M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['5M'] && currentGroupTvl > BeachClubTvlGroup['1M'],
     nextGroupTvl: BeachClubTvlGroup['10M'],
   },
   {
-    tvlGroup: '10M',
+    tvlGroup: '10M+',
     rawTvlGroup: BeachClubTvlGroup['10M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['10M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['10M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['10M'] && currentGroupTvl > BeachClubTvlGroup['5M'],
     nextGroupTvl: BeachClubTvlGroup['50M'],
   },
   {
-    tvlGroup: '50M',
+    tvlGroup: '50M+',
     rawTvlGroup: BeachClubTvlGroup['50M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['50M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['50M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['50M'] && currentGroupTvl > BeachClubTvlGroup['10M'],
     nextGroupTvl: BeachClubTvlGroup['100M'],
   },
   {
-    tvlGroup: '100M',
+    tvlGroup: '100M+',
     rawTvlGroup: BeachClubTvlGroup['100M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['100M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['100M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['100M'] && currentGroupTvl > BeachClubTvlGroup['50M'],
     nextGroupTvl: BeachClubTvlGroup['500M'],
   },
   {
-    tvlGroup: '500M',
+    tvlGroup: '500M+',
     rawTvlGroup: BeachClubTvlGroup['500M'],
     description: getCardDescription(currentGroupTvl, BeachClubTvlGroup['500M']),
     boost: '0.005', // 0.5%
     sumrToEarn: BeachClubTvlGroup['500M'] * 0.005,
     currentGroupTvl,
+    colorfulBorder:
+      currentGroupTvl <= BeachClubTvlGroup['500M'] && currentGroupTvl > BeachClubTvlGroup['100M'],
     nextGroupTvl: BeachClubTvlGroup['1B'],
   },
   ...(seeAll ? [getOneBillionCard(currentGroupTvl)] : []),

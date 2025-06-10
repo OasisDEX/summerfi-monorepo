@@ -8,13 +8,13 @@ export enum BeachClubBoatChallengeRewardCardType {
   BEACH_CLUB_NFT = 'beach_club_nft',
 }
 
-export const rewardCardImages = {
+export const beachClubRewardCardImages = {
   [BeachClubBoatChallengeRewardCardType.T_SHIRT]: tShirt,
   [BeachClubBoatChallengeRewardCardType.HOODIE]: hoodie,
   [BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT]: nft,
 }
 
-export const rewardDescriptions = {
+export const beachClubRewardDescriptions = {
   [BeachClubBoatChallengeRewardCardType.T_SHIRT]: 'T-shirt',
   [BeachClubBoatChallengeRewardCardType.HOODIE]: 'Limited edition hoodie',
   [BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT]: 'Summer.fi Beach Club NFT',

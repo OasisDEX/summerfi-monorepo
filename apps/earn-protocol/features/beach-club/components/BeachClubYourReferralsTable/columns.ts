@@ -19,6 +19,11 @@ export const yourReferralsColumns = [
     key: 'forecastAnnualisedEarnings',
     sortable: false,
   },
+  {
+    title: '',
+    key: 'link',
+    sortable: false,
+  },
 ]
 
 export const yourReferralsColumnsHiddenOnMobile = ['earnedToDate', 'forecastAnnualisedEarnings']

@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
 import {
   type BeachClubBoatChallengeRewardCardType,
-  rewardCardImages,
-  rewardDescriptions,
+  beachClubRewardCardImages,
+  beachClubRewardDescriptions,
 } from '@/features/beach-club/constants/reward-cards'
 
 import classNames from './BeachClubBoatChallengeRewardCard.module.css'
@@ -18,7 +18,7 @@ interface BeachClubBoatChallengeRewardCardProps {
   currentPoints: number
   left: number
   unlocked: boolean
-  daysToUnlock: number
+  daysToUnlock: number | string
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
@@ -50,7 +50,7 @@ export const BeachClubBoatChallengeRewardCard = ({
         </div>
         <Image src={waves} alt="waves" />
         <Image
-          src={rewardCardImages[type]}
+          src={beachClubRewardCardImages[type]}
           alt={type}
           style={{
             position: 'absolute',
@@ -66,18 +66,19 @@ export const BeachClubBoatChallengeRewardCard = ({
             Reward
           </Text>
           <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
-            {rewardDescriptions[type]}
+            {beachClubRewardDescriptions[type]}
           </Text>
         </div>
         {unlocked ? (
           <Button variant="beachClubMedium" style={{ width: '100%' }}>
-            Claim {rewardDescriptions[type]}
+            Claim {beachClubRewardDescriptions[type]}
           </Button>
         ) : (
           <div className={classNames.progress}>
             <BeachClubProgressBar max={requiredPoints} current={currentPoints} />
             <Text as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-              {formatWithSeparators(daysToUnlock)} Days to unlock
+              {typeof daysToUnlock === 'number' ? formatWithSeparators(daysToUnlock) : daysToUnlock}{' '}
+              Days to unlock
             </Text>
           </div>
         )}

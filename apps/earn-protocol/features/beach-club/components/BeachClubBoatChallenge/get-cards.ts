@@ -1,0 +1,45 @@
+import { BeachClubBoatChallengeRewardCardType } from '@/features/beach-club/constants/reward-cards'
+
+export const getBeachClubBoatCards = (currentPoints: number, earningPointsPerDay: number) => {
+  const calculateDaysLeft = (requiredPoints: number) => {
+    if (earningPointsPerDay <= 0) return '-'
+    const pointsNeeded = requiredPoints - currentPoints
+
+    if (pointsNeeded <= 0) return 0
+
+    return Math.ceil(pointsNeeded / earningPointsPerDay)
+  }
+
+  return [
+    {
+      requiredPoints: 10000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 10000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.T_SHIRT,
+      },
+    },
+    {
+      requiredPoints: 20000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 20000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.HOODIE,
+      },
+    },
+    {
+      requiredPoints: 20000,
+      currentPoints,
+      left: 23,
+      unlocked: currentPoints >= 20000,
+      reward: {
+        type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,
+      },
+    },
+  ].map((card) => ({
+    ...card,
+    daysToUnlock: calculateDaysLeft(card.requiredPoints),
+  }))
+}
