@@ -35,9 +35,15 @@ export const checkIfRisky = async ({
 
     return trmData.addressRiskIndicators.some((indicator) => Number(indicator.totalVolumeUsd) > 100)
   } catch (ex) {
-    console.error(`TRM_LOG ${address} check failed`)
-    console.error(ex)
+    // https://status.trmlabs.com/ Due to issues with TRM API, we are temporarily not able to check if an address is sanctioned.
+    // We are returning false for now as it will allow our existing users to continue using the app
+    // and potential new users will be eventually verified and restricted if they happen to be sanctioned.
+    console.info(`TRM_TO_BE_VERIFIED ${address}`)
 
-    throw ex
+    return false
+    // console.error(`TRM_LOG ${address} check failed`)
+    // console.error(ex)
+
+    // throw ex
   }
 }
