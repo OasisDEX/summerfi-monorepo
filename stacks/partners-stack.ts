@@ -1,7 +1,8 @@
-import { Api, Function, StackContext } from 'sst/constructs'
+import { Api, Function } from 'sst/constructs'
+import { SummerStackContext } from './summer-stack-context'
 
-export function ExternalAPI(stackContext: StackContext) {
-  const { stack } = stackContext
+export function ExternalAPI(stackContext: SummerStackContext) {
+  const { stack, vpc } = stackContext
   const apiForPartners = new Api(stack, 'for-partners', {
     defaults: {
       function: {},
@@ -69,6 +70,12 @@ export function ExternalAPI(stackContext: StackContext) {
     disableCloudWatchLogs: false,
     applicationLogLevel: 'INFO',
     systemLogLevel: 'INFO',
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+    }),
   })
 
   apiForPartners.addRoutes(stack, {
