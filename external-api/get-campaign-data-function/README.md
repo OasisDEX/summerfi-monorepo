@@ -1,74 +1,30 @@
-# Protocol Info API Endpoints
+# Campaign Data API Endpoints
 
-## Get All Users
-Retrieves all user addresses that have interacted with the protocol across all supported chains.
+## Get Campaign Quest Status
 
-**Endpoint:** `/all-users`  
+Retrieves quest completion status for specific campaigns. Quests must be completed sequentially -
+each quest depends on the completion of all previous quests.
+
+**Endpoint:** `/api/campaigns/{campaign}/{questNumber}/{walletAddress}`  
 **Method:** GET
 
-**Response:**
-```json
-{
-  "addresses": string[]  // Array of Ethereum addresses
-}
-```
+**Path Parameters:**
 
-## Get Users Details
-Retrieves detailed information about specific users including their positions, TVL, and rewards.
-
-**Endpoint:** `/users`  
-**Method:** POST (preferred) or GET (deprecated)
-
-**Request Body (POST):**
-```json
-{
-  "addresses": string[],  // Array of Ethereum addresses
-  "chainId": number      // Optional: Specific chain ID to query
-}
-```
-
-**Query Parameters (GET - deprecated):**
-- `addresses`: Comma-separated list of Ethereum addresses
-- `chainId`: (Optional) Specific chain ID to query
+- `campaign`: Campaign identifier (currently supported: `okx`)
+- `questNumber`: Quest number to check up to (1-4)
+- `walletAddress`: Ethereum wallet address to check
 
 **Response:**
+
 ```json
 {
-  "users": [
-    {
-      "address": string,
-      "totalValueLockedUSD": number,
-      "rewards": {
-        "unclaimed": number,
-        "claimed": number,
-        "total": number
-      }
-    }
-  ]
-}
-```
-
-## Get Protocol Stats
-Retrieves overall protocol statistics.
-
-**Endpoint:** `/`  
-**Method:** GET
-
-**Query Parameters:**
-- `chainId`: (Optional) Specific chain ID to query
-
-**Response:**
-```json
-{
-  "protocol": {
-    "totalValueLockedUSD": number,
-    "totalVaults": number
-  }
+  "code": 0,
+  "data": boolean  // true if ALL requested quests are completed
 }
 ```
 
 ## Notes
-- All monetary values are normalized and represented in USD
-- Rewards values are normalized (divided by 10^18)
-- The API supports multiple chains. If no chainId is specified, it will query all supported chains
-- Maximum page size for queries is 1000 items
+
+- Quests must be completed in sequential order (1 → 2 → 3 → 4)
+- If any quest is incomplete, all subsequent quests are automatically considered incomplete
+- The `data` field returns `true` only if ALL quests up to the specified number are completed
