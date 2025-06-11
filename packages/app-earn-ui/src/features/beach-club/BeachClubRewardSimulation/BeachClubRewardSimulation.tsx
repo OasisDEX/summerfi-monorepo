@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect, useRef, useState } from 'react'
-import { formatShorthandNumber } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
@@ -54,7 +54,7 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
       >
         <div className={classNames.textual}>
           <Text as="h1" variant="h1">
-            {formatShorthandNumber(getMultiplier(simulationValue) * simulationValue, {
+            {formatWithSeparators(getMultiplier(simulationValue) * simulationValue, {
               precision: 2,
             })}
           </Text>
