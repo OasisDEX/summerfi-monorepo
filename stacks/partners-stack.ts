@@ -1,14 +1,17 @@
-import { Api, Function } from 'sst/constructs'
-import { SummerStackContext } from './summer-stack-context'
+import { Api, Function, StackContext } from 'sst/constructs'
+import { attachVPC } from './vpc'
 
-export function ExternalAPI(stackContext: SummerStackContext) {
-  const { stack, vpc } = stackContext
+export function ExternalAPI(stackContext: StackContext) {
+  const { stack } = stackContext
   const apiForPartners = new Api(stack, 'for-partners', {
     defaults: {
       function: {},
     },
     routes: {},
   })
+
+  const isDev = stack.stage.startsWith('dev')
+  const vpc = attachVPC({ ...stackContext, isDev })
 
   const { SUBGRAPH_BASE } = process.env
   if (!SUBGRAPH_BASE) {
