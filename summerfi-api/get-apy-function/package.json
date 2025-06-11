@@ -19,7 +19,7 @@
     "@summerfi/defi-llama-client": "workspace:*",
     "@summerfi/abstractions": "workspace:*",
     "viem": "^1.19.11",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

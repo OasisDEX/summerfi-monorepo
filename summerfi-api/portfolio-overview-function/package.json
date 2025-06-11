@@ -13,7 +13,7 @@
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "node-fetch": "^3.3.2",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

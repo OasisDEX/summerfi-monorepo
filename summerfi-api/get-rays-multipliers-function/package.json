@@ -16,7 +16,7 @@
     "@summerfi/rays-db": "workspace:*",
     "kysely": "^0.27.3",
     "node-fetch": "^3.3.2",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

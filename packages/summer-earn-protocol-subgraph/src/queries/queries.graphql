@@ -84,3 +84,19 @@ query HistoricalVaults($blockNumber: Int!) {
     }
   }
 }
+
+query OkxQuestData($userAddressID: ID!, $userAddressString: String!) {
+  okxAccountData: accounts(where: { id: $userAddressID }) {
+    stakedSummerTokenNormalized
+    claimedSummerTokenNormalized
+  }
+  okxPositionsData: positions(where: { account_contains_nocase: $userAddressString }) {
+    vault {
+      inputToken {
+        symbol
+      }
+    }
+    createdTimestamp
+    inputTokenBalanceNormalized
+  }
+}

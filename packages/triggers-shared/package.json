@@ -12,7 +12,7 @@
   "dependencies": {
     "@oasisdex/addresses": "0.1.22-automation",
     "@summerfi/serverless-shared": "workspace:*",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

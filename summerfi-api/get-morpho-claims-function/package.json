@@ -13,7 +13,7 @@
     "@aws-lambda-powertools/tracer": "^2.0.4",
     "@summerfi/serverless-shared": "workspace:*",
     "node-fetch": "^3.3.2",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

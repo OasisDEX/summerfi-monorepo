@@ -16,7 +16,7 @@
     "abitype": "^1.0.2",
     "bignumber.js": "9.1.2",
     "viem": "2.29.2",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
