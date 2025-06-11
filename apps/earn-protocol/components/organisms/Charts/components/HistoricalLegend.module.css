@@ -34,4 +34,8 @@
   gap: 7px;
   margin-left: 15px;
   color: var(--color-text-primary);
+
+  > span {
+    text-align: left;
+  }
 }

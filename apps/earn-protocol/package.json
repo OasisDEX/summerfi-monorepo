@@ -17,10 +17,10 @@
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
-    "@account-kit/core": "^4.40.0",
-    "@account-kit/infra": "^4.40.0",
-    "@account-kit/react": "^4.40.0",
-    "@account-kit/signer": "^4.40.0",
+    "@account-kit/core": "^4.36.1",
+    "@account-kit/infra": "^4.36.1",
+    "@account-kit/react": "^4.36.1",
+    "@account-kit/signer": "^4.36.1",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
     "@safe-global/safe-apps-sdk": "^9.0.0",
@@ -61,9 +61,9 @@
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
     "viem": "2.29.2",
-    "wagmi": "^2.12.7",
+    "wagmi": "^2.10.9",
     "websocket": "^1.0.35",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",

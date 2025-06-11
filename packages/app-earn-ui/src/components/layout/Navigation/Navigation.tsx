@@ -17,6 +17,7 @@ import { useMobileCheck } from '@/hooks/use-mobile-check'
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.css'
 
 export interface EarnNavigationProps {
+  isEarnApp?: boolean
   currentPath: string
   logo: string
   logoSmall: string
@@ -40,9 +41,11 @@ export interface EarnNavigationProps {
   onLogoClick?: () => void
   startTheGame?: () => void
   featuresConfig?: EarnAppConfigType['features']
+  userWalletAddress?: string
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
+  isEarnApp = false,
   logo,
   logoSmall,
   links,
@@ -55,6 +58,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   onLogoClick,
   startTheGame,
   featuresConfig,
+  userWalletAddress,
 }) => {
   const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
@@ -105,6 +109,8 @@ export const Navigation: FC<EarnNavigationProps> = ({
           configComponent={configComponent}
           startTheGame={startTheGame}
           featuresConfig={featuresConfig}
+          userWalletAddress={userWalletAddress}
+          isEarnApp={isEarnApp}
         />
       </header>
       {(isMobile || isTablet) && (
@@ -130,6 +136,8 @@ export const Navigation: FC<EarnNavigationProps> = ({
                 mobileWalletConnectionComponents?.secondary ?? walletConnectionComponent
               }
               signUpComponent={signupComponent}
+              userWalletAddress={userWalletAddress}
+              isEarnApp={isEarnApp}
             />
           </MobileDrawerDefaultWrapper>
         </MobileDrawer>

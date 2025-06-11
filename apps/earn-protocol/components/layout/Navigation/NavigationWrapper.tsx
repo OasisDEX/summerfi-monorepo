@@ -38,6 +38,8 @@ export const NavigationWrapper: FC = () => {
   return (
     <>
       <Navigation
+        isEarnApp
+        userWalletAddress={userWalletAddress}
         currentPath={currentPath}
         logo="/earn/img/branding/logo-dark.svg"
         logoSmall="/earn/img/branding/dot-dark.svg"

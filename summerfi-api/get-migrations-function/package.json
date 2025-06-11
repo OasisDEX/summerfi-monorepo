@@ -14,7 +14,7 @@
     "@oasisdex/addresses": "^0.1.84",
     "@summerfi/serverless-shared": "workspace:*",
     "viem": "2.29.2",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

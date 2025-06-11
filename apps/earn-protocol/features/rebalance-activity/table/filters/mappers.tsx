@@ -61,6 +61,10 @@ const getProtocolIcon = (protocolLabel: string) => {
     return 'maple'
   }
 
+  if (lowerCasedProtocolLabel.includes('term')) {
+    return 'term'
+  }
+
   return 'not_supported_icon'
 }
 

@@ -33,6 +33,8 @@ export type Account = {
   id: Scalars['ID']['output'];
   lastUpdateBlock: Scalars['BigInt']['output'];
   positions: Array<Position>;
+  referralData?: Maybe<ReferralData>;
+  referralTimestamp?: Maybe<Scalars['BigInt']['output']>;
   rewards: Array<AccountRewards>;
   stakedSummerToken: Scalars['BigInt']['output'];
   stakedSummerTokenNormalized: Scalars['BigDecimal']['output'];
@@ -162,6 +164,7 @@ export enum AccountRewards_OrderBy {
   AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   AccountId = 'account__id',
   AccountLastUpdateBlock = 'account__lastUpdateBlock',
+  AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
   AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
   Claimable = 'claimable',
@@ -216,6 +219,35 @@ export type Account_Filter = {
   lastUpdateBlock_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<Account_Filter>>>;
   positions_?: InputMaybe<Position_Filter>;
+  referralData?: InputMaybe<Scalars['String']['input']>;
+  referralData_?: InputMaybe<ReferralData_Filter>;
+  referralData_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_gt?: InputMaybe<Scalars['String']['input']>;
+  referralData_gte?: InputMaybe<Scalars['String']['input']>;
+  referralData_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_lt?: InputMaybe<Scalars['String']['input']>;
+  referralData_lte?: InputMaybe<Scalars['String']['input']>;
+  referralData_not?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  referralTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  referralTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewards_?: InputMaybe<AccountRewards_Filter>;
   stakedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   stakedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -241,6 +273,10 @@ export enum Account_OrderBy {
   Id = 'id',
   LastUpdateBlock = 'lastUpdateBlock',
   Positions = 'positions',
+  ReferralData = 'referralData',
+  ReferralDataAmountOfReferred = 'referralData__amountOfReferred',
+  ReferralDataId = 'referralData__id',
+  ReferralTimestamp = 'referralTimestamp',
   Rewards = 'rewards',
   StakedSummerToken = 'stakedSummerToken',
   StakedSummerTokenNormalized = 'stakedSummerTokenNormalized'
@@ -1719,6 +1755,8 @@ export type Deposit = Event & {
   position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
+  /**  Referral data that this deposit belongs to  */
+  referralData?: Maybe<ReferralData>;
   /**  Timestamp of this event  */
   timestamp: Scalars['BigInt']['output'];
   /**  Address that received tokens  */
@@ -1891,6 +1929,27 @@ export type Deposit_Filter = {
   protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData?: InputMaybe<Scalars['String']['input']>;
+  referralData_?: InputMaybe<ReferralData_Filter>;
+  referralData_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_gt?: InputMaybe<Scalars['String']['input']>;
+  referralData_gte?: InputMaybe<Scalars['String']['input']>;
+  referralData_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_lt?: InputMaybe<Scalars['String']['input']>;
+  referralData_lte?: InputMaybe<Scalars['String']['input']>;
+  referralData_not?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   timestamp?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2004,6 +2063,9 @@ export enum Deposit_OrderBy {
   ProtocolTotalPoolCount = 'protocol__totalPoolCount',
   ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
   ProtocolType = 'protocol__type',
+  ReferralData = 'referralData',
+  ReferralDataAmountOfReferred = 'referralData__amountOfReferred',
+  ReferralDataId = 'referralData__id',
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
@@ -2547,13 +2609,13 @@ export type FinancialsDailySnapshot = {
   __typename?: 'FinancialsDailySnapshot';
   /**  Block number of this snapshot  */
   blockNumber: Scalars['BigInt']['output'];
-  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi’s 0.05%). OpenSea 10% sell fee.  */
+  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi's 0.05%). OpenSea 10% sell fee.  */
   cumulativeProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  Revenue claimed by suppliers to the protocol. LPs on DEXs (e.g. 0.25% of the swap fee in Sushiswap). Depositors on Lending Protocols. NFT sellers on OpenSea.  */
   cumulativeSupplySideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  All revenue generated by the protocol. e.g. 0.30% of swap fee in Sushiswap, all yield generated by Yearn.  */
   cumulativeTotalRevenueUSD: Scalars['BigDecimal']['output'];
-  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi’s 0.05%). OpenSea 10% sell fee.  */
+  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi's 0.05%). OpenSea 10% sell fee.  */
   dailyProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  Revenue claimed by suppliers to the protocol. LPs on DEXs (e.g. 0.25% of the swap fee in Sushiswap). Depositors on Lending Protocols. NFT sellers on OpenSea.  */
   dailySupplySideRevenueUSD: Scalars['BigDecimal']['output'];
@@ -3071,6 +3133,7 @@ export type Position = {
   inputTokenWithdrawalsNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Supply of the output token for the position  */
   outputTokenBalance: Scalars['BigInt']['output'];
+  referralData?: Maybe<ReferralData>;
   rewards: Array<PositionRewards>;
   stakedEvents: Array<Staked>;
   /**  Staked balance of the input token for the position  */
@@ -4059,6 +4122,27 @@ export type Position_Filter = {
   outputTokenBalance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_not?: InputMaybe<Scalars['BigInt']['input']>;
   outputTokenBalance_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  referralData?: InputMaybe<Scalars['String']['input']>;
+  referralData_?: InputMaybe<ReferralData_Filter>;
+  referralData_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_gt?: InputMaybe<Scalars['String']['input']>;
+  referralData_gte?: InputMaybe<Scalars['String']['input']>;
+  referralData_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_lt?: InputMaybe<Scalars['String']['input']>;
+  referralData_lte?: InputMaybe<Scalars['String']['input']>;
+  referralData_not?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   rewards_?: InputMaybe<PositionRewards_Filter>;
   stakedEvents_?: InputMaybe<Staked_Filter>;
   stakedInputTokenBalance?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4157,6 +4241,7 @@ export enum Position_OrderBy {
   AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   AccountId = 'account__id',
   AccountLastUpdateBlock = 'account__lastUpdateBlock',
+  AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
   AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
   ClaimableSummerToken = 'claimableSummerToken',
@@ -4179,6 +4264,9 @@ export enum Position_OrderBy {
   InputTokenWithdrawalsNormalized = 'inputTokenWithdrawalsNormalized',
   InputTokenWithdrawalsNormalizedInUsd = 'inputTokenWithdrawalsNormalizedInUSD',
   OutputTokenBalance = 'outputTokenBalance',
+  ReferralData = 'referralData',
+  ReferralDataAmountOfReferred = 'referralData__amountOfReferred',
+  ReferralDataId = 'referralData__id',
   Rewards = 'rewards',
   StakedEvents = 'stakedEvents',
   StakedInputTokenBalance = 'stakedInputTokenBalance',
@@ -4700,7 +4788,7 @@ export enum PostActionVaultSnapshot_OrderBy {
 }
 
 export type Protocol = {
-  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi’s 0.05%). OpenSea 10% sell fee.  */
+  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi's 0.05%). OpenSea 10% sell fee.  */
   cumulativeProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  Revenue claimed by suppliers to the protocol. LPs on DEXs (e.g. 0.25% of the swap fee in Sushiswap). Depositors on Lending Protocols. NFT sellers on OpenSea.  */
   cumulativeSupplySideRevenueUSD: Scalars['BigDecimal']['output'];
@@ -5028,6 +5116,8 @@ export type Query = {
   protocols: Array<Protocol>;
   rebalance?: Maybe<Rebalance>;
   rebalances: Array<Rebalance>;
+  referralData?: Maybe<ReferralData>;
+  referralDatas: Array<ReferralData>;
   rewardToken?: Maybe<RewardToken>;
   rewardTokens: Array<RewardToken>;
   rewardsManager?: Maybe<RewardsManager>;
@@ -5497,6 +5587,24 @@ export type QueryRebalancesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Rebalance_Filter>;
+};
+
+
+export type QueryReferralDataArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryReferralDatasArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ReferralData_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<ReferralData_Filter>;
 };
 
 
@@ -6175,6 +6283,129 @@ export enum Rebalance_OrderBy {
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
 
+export type ReferralData = {
+  __typename?: 'ReferralData';
+  amountOfReferred: Scalars['BigInt']['output'];
+  id: Scalars['ID']['output'];
+  protocol: YieldAggregator;
+  referredAccounts: Array<Account>;
+  referredDeposits: Array<Deposit>;
+  referredPositions: Array<Position>;
+  referredWithdraws: Array<Withdraw>;
+};
+
+
+export type ReferralDataReferredAccountsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Account_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Account_Filter>;
+};
+
+
+export type ReferralDataReferredDepositsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Deposit_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Deposit_Filter>;
+};
+
+
+export type ReferralDataReferredPositionsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Position_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Position_Filter>;
+};
+
+
+export type ReferralDataReferredWithdrawsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Withdraw_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Withdraw_Filter>;
+};
+
+export type ReferralData_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  amountOfReferred?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amountOfReferred_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_not?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfReferred_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  and?: InputMaybe<Array<InputMaybe<ReferralData_Filter>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<ReferralData_Filter>>>;
+  protocol?: InputMaybe<Scalars['String']['input']>;
+  protocol_?: InputMaybe<YieldAggregator_Filter>;
+  protocol_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_gt?: InputMaybe<Scalars['String']['input']>;
+  protocol_gte?: InputMaybe<Scalars['String']['input']>;
+  protocol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_lt?: InputMaybe<Scalars['String']['input']>;
+  protocol_lte?: InputMaybe<Scalars['String']['input']>;
+  protocol_not?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referredAccounts_?: InputMaybe<Account_Filter>;
+  referredDeposits_?: InputMaybe<Deposit_Filter>;
+  referredPositions_?: InputMaybe<Position_Filter>;
+  referredWithdraws_?: InputMaybe<Withdraw_Filter>;
+};
+
+export enum ReferralData_OrderBy {
+  AmountOfReferred = 'amountOfReferred',
+  Id = 'id',
+  Protocol = 'protocol',
+  ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
+  ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
+  ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
+  ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
+  ProtocolId = 'protocol__id',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
+  ProtocolLastWeeklyUpdateTimestamp = 'protocol__lastWeeklyUpdateTimestamp',
+  ProtocolMethodologyVersion = 'protocol__methodologyVersion',
+  ProtocolName = 'protocol__name',
+  ProtocolNetwork = 'protocol__network',
+  ProtocolProtocolControlledValueUsd = 'protocol__protocolControlledValueUSD',
+  ProtocolSchemaVersion = 'protocol__schemaVersion',
+  ProtocolSlug = 'protocol__slug',
+  ProtocolSubgraphVersion = 'protocol__subgraphVersion',
+  ProtocolTotalPoolCount = 'protocol__totalPoolCount',
+  ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
+  ProtocolType = 'protocol__type',
+  ReferredAccounts = 'referredAccounts',
+  ReferredDeposits = 'referredDeposits',
+  ReferredPositions = 'referredPositions',
+  ReferredWithdraws = 'referredWithdraws'
+}
+
 export type RewardToken = {
   __typename?: 'RewardToken';
   /**  { Reward token type }-{ Smart contract address of the reward token }  */
@@ -6725,6 +6956,8 @@ export type Subscription = {
   protocols: Array<Protocol>;
   rebalance?: Maybe<Rebalance>;
   rebalances: Array<Rebalance>;
+  referralData?: Maybe<ReferralData>;
+  referralDatas: Array<ReferralData>;
   rewardToken?: Maybe<RewardToken>;
   rewardTokens: Array<RewardToken>;
   rewardsManager?: Maybe<RewardsManager>;
@@ -7194,6 +7427,24 @@ export type SubscriptionRebalancesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Rebalance_Filter>;
+};
+
+
+export type SubscriptionReferralDataArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionReferralDatasArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ReferralData_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<ReferralData_Filter>;
 };
 
 
@@ -8426,9 +8677,9 @@ export type Vault = {
   /**  Vault weekly snapshots  */
   weeklySnapshots: Array<VaultWeeklySnapshot>;
   /**  Total withdrawable assets  */
-  withdrawableTotalAssets?: Maybe<Scalars['BigInt']['output']>;
+  withdrawableTotalAssets: Scalars['BigInt']['output'];
   /**  Total withdrawable assets in USD  */
-  withdrawableTotalAssetsUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  withdrawableTotalAssetsUSD: Scalars['BigDecimal']['output'];
   /**  All withdrawals made from this vault  */
   withdraws: Array<Withdraw>;
 };
@@ -8592,6 +8843,8 @@ export type VaultDailySnapshot = {
   inputTokenBalance: Scalars['BigInt']['output'];
   /**  Amount of input token in the pool normalized  */
   inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  /**  Amount of input token in the pool withdrawable normalized  */
+  inputTokenBalanceWithdrawableNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -8701,6 +8954,14 @@ export type VaultDailySnapshot_Filter = {
   inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -8833,6 +9094,7 @@ export enum VaultDailySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
+  InputTokenBalanceWithdrawableNormalized = 'inputTokenBalanceWithdrawableNormalized',
   InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
@@ -9117,6 +9379,7 @@ export type VaultHourlySnapshot = {
   inputTokenBalance: Scalars['BigInt']['output'];
   /**  Amount of input token in the position normalized  */
   inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  inputTokenBalanceWithdrawableNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -9226,6 +9489,14 @@ export type VaultHourlySnapshot_Filter = {
   inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -9358,6 +9629,7 @@ export enum VaultHourlySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
+  InputTokenBalanceWithdrawableNormalized = 'inputTokenBalanceWithdrawableNormalized',
   InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
@@ -9440,6 +9712,8 @@ export type VaultWeeklySnapshot = {
   inputTokenBalance: Scalars['BigInt']['output'];
   /**  Amount of input token in the pool normalized  */
   inputTokenBalanceNormalized: Scalars['BigDecimal']['output'];
+  /**  Amount of input token in the pool withdrawable normalized  */
+  inputTokenBalanceWithdrawableNormalized: Scalars['BigDecimal']['output'];
   /**  Price of input token in USD  */
   inputTokenPriceUSD?: Maybe<Scalars['BigDecimal']['output']>;
   /**  Price per share of output token in USD  */
@@ -9531,6 +9805,14 @@ export type VaultWeeklySnapshot_Filter = {
   inputTokenBalanceNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   inputTokenBalanceNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  inputTokenBalanceWithdrawableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  inputTokenBalanceWithdrawableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   inputTokenBalance_gt?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_gte?: InputMaybe<Scalars['BigInt']['input']>;
   inputTokenBalance_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
@@ -9684,6 +9966,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   InputTokenBalanceNormalized = 'inputTokenBalanceNormalized',
+  InputTokenBalanceWithdrawableNormalized = 'inputTokenBalanceWithdrawableNormalized',
   InputTokenPriceUsd = 'inputTokenPriceUSD',
   OutputTokenPriceUsd = 'outputTokenPriceUSD',
   OutputTokenSupply = 'outputTokenSupply',
@@ -10469,6 +10752,8 @@ export type Withdraw = Event & {
   position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
+  /**  Referral data that this withdraw belongs to  */
+  referralData?: Maybe<ReferralData>;
   /**  Timestamp of this event  */
   timestamp: Scalars['BigInt']['output'];
   /**  Address that received tokens  */
@@ -10641,6 +10926,27 @@ export type Withdraw_Filter = {
   protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData?: InputMaybe<Scalars['String']['input']>;
+  referralData_?: InputMaybe<ReferralData_Filter>;
+  referralData_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_gt?: InputMaybe<Scalars['String']['input']>;
+  referralData_gte?: InputMaybe<Scalars['String']['input']>;
+  referralData_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_lt?: InputMaybe<Scalars['String']['input']>;
+  referralData_lte?: InputMaybe<Scalars['String']['input']>;
+  referralData_not?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  referralData_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with?: InputMaybe<Scalars['String']['input']>;
+  referralData_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   timestamp?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -10754,6 +11060,9 @@ export enum Withdraw_OrderBy {
   ProtocolTotalPoolCount = 'protocol__totalPoolCount',
   ProtocolTotalValueLockedUsd = 'protocol__totalValueLockedUSD',
   ProtocolType = 'protocol__type',
+  ReferralData = 'referralData',
+  ReferralDataAmountOfReferred = 'referralData__amountOfReferred',
+  ReferralDataId = 'referralData__id',
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
@@ -10794,7 +11103,7 @@ export enum Withdraw_OrderBy {
 
 export type YieldAggregator = Protocol & {
   __typename?: 'YieldAggregator';
-  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi’s 0.05%). OpenSea 10% sell fee.  */
+  /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi's 0.05%). OpenSea 10% sell fee.  */
   cumulativeProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  Revenue claimed by suppliers to the protocol. LPs on DEXs (e.g. 0.25% of the swap fee in Sushiswap). Depositors on Lending Protocols. NFT sellers on OpenSea.  */
   cumulativeSupplySideRevenueUSD: Scalars['BigDecimal']['output'];
@@ -10821,6 +11130,7 @@ export type YieldAggregator = Protocol & {
   network: Network;
   /**  Current PCV (Protocol Controlled Value). Only relevant for protocols with PCV.  */
   protocolControlledValueUSD?: Maybe<Scalars['BigDecimal']['output']>;
+  referralDatas: Array<ReferralData>;
   /**  Version of the subgraph schema, in SemVer format (e.g. 1.0.0)  */
   schemaVersion: Scalars['String']['output'];
   /**  Slug of protocol, including version. e.g. yearn-v3  */
@@ -10863,6 +11173,15 @@ export type YieldAggregatorHourlyUsageMetricsArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<UsageMetricsHourlySnapshot_Filter>;
+};
+
+
+export type YieldAggregatorReferralDatasArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<ReferralData_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ReferralData_Filter>;
 };
 
 
@@ -11007,6 +11326,7 @@ export type YieldAggregator_Filter = {
   protocolControlledValueUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
   protocolControlledValueUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
   protocolControlledValueUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  referralDatas_?: InputMaybe<ReferralData_Filter>;
   schemaVersion?: InputMaybe<Scalars['String']['input']>;
   schemaVersion_contains?: InputMaybe<Scalars['String']['input']>;
   schemaVersion_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -11113,6 +11433,7 @@ export enum YieldAggregator_OrderBy {
   Name = 'name',
   Network = 'network',
   ProtocolControlledValueUsd = 'protocolControlledValueUSD',
+  ReferralDatas = 'referralDatas',
   SchemaVersion = 'schemaVersion',
   Slug = 'slug',
   SubgraphVersion = 'subgraphVersion',
@@ -11193,8 +11514,16 @@ export type HistoricalVaultsQueryVariables = Exact<{
 
 export type HistoricalVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, totalValueLockedUSD: number, rewardsManager: { __typename?: 'RewardsManager', id: string }, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, details?: string | null, productId: string, totalValueLockedUSD: number, vault: { __typename?: 'Vault', id: string } }> }> };
 
+export type OkxQuestDataQueryVariables = Exact<{
+  userAddressID: Scalars['ID']['input'];
+  userAddressString: Scalars['String']['input'];
+}>;
 
-export const UserPositionsDocument: DocumentNode = gql`
+
+export type OkxQuestDataQuery = { __typename?: 'Query', okxAccountData: Array<{ __typename?: 'Account', stakedSummerTokenNormalized: number, claimedSummerTokenNormalized: number }>, okxPositionsData: Array<{ __typename?: 'Position', createdTimestamp: number, inputTokenBalanceNormalized: number, vault: { __typename?: 'Vault', inputToken: { __typename?: 'Token', symbol: string } } }> };
+
+
+export const UserPositionsDocument = gql`
     query UserPositions($userAddress: String!) {
   positions(where: {account: $userAddress}) {
     id
@@ -11215,7 +11544,7 @@ export const UserPositionsDocument: DocumentNode = gql`
   }
 }
     `;
-export const UsersPositionsDocument: DocumentNode = gql`
+export const UsersPositionsDocument = gql`
     query UsersPositions($userAddresses: [String!]) {
   positions(where: {account_in: $userAddresses}, first: 5000) {
     id
@@ -11236,7 +11565,7 @@ export const UsersPositionsDocument: DocumentNode = gql`
   }
 }
     `;
-export const VaultsDocument: DocumentNode = gql`
+export const VaultsDocument = gql`
     query Vaults {
   vaults(first: 1000) {
     id
@@ -11258,7 +11587,7 @@ export const VaultsDocument: DocumentNode = gql`
   }
 }
     `;
-export const UsersDocument: DocumentNode = gql`
+export const UsersDocument = gql`
     query Users($first: Int, $skip: Int) {
   accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
     id
@@ -11266,7 +11595,7 @@ export const UsersDocument: DocumentNode = gql`
   }
 }
     `;
-export const HistoricalVaultsDocument: DocumentNode = gql`
+export const HistoricalVaultsDocument = gql`
     query HistoricalVaults($blockNumber: Int!) {
   vaults(block: {number: $blockNumber}, first: 1000) {
     id
@@ -11285,6 +11614,25 @@ export const HistoricalVaultsDocument: DocumentNode = gql`
         id
       }
     }
+  }
+}
+    `;
+export const OkxQuestDataDocument = gql`
+    query OkxQuestData($userAddressID: ID!, $userAddressString: String!) {
+  okxAccountData: accounts(where: {id: $userAddressID}) {
+    stakedSummerTokenNormalized
+    claimedSummerTokenNormalized
+  }
+  okxPositionsData: positions(
+    where: {account_contains_nocase: $userAddressString}
+  ) {
+    vault {
+      inputToken {
+        symbol
+      }
+    }
+    createdTimestamp
+    inputTokenBalanceNormalized
   }
 }
     `;
@@ -11310,6 +11658,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     HistoricalVaults(variables: HistoricalVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<HistoricalVaultsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<HistoricalVaultsQuery>(HistoricalVaultsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'HistoricalVaults', 'query', variables);
+    },
+    OkxQuestData(variables: OkxQuestDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<OkxQuestDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<OkxQuestDataQuery>(OkxQuestDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'OkxQuestData', 'query', variables);
     }
   };
 }

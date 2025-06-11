@@ -18,7 +18,7 @@
     "@summerfi/summer-protocol-db": "workspace:*",
     "graphql-tag": "^2.12.6",
     "kysely": "^0.27.3",
-    "zod": "^3.22.4"
+    "zod": "3.25.61"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

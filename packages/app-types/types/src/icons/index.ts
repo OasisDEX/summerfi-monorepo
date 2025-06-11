@@ -325,6 +325,7 @@ export type IconNamesList =
   | 'wallet'
   | 'users_beach_club'
   | 'beach_club_rewards'
+  | 'term'
 
 export type TokenSymbolsList =
   | 'AAVE'
