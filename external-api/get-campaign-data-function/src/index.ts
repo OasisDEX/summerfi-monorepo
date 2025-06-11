@@ -9,10 +9,11 @@ import type { CampaignResponse } from './types'
 import { getCampaignData } from '@summerfi/summer-earn-protocol-subgraph'
 import { base } from 'viem/chains'
 import { createPublicClient, http } from 'viem'
+import { isOkxCampaignWallet } from './db'
 
 const logger = new Logger({ serviceName: 'get-campaign-data-function' })
 
-export const pathParamsSchema = z.object({
+const pathParamsSchema = z.object({
   campaign: z.enum(['okx']),
   questNumber: z.coerce.number().int().min(1).max(4),
   walletAddress: addressSchema,
@@ -86,6 +87,18 @@ export const handler = async (
     )
 
     if (campaign === 'okx') {
+      // Check if the wallet is an OKX campaign wallet
+      const isOkxWallet = await isOkxCampaignWallet(walletAddress)
+      if (!isOkxWallet) {
+        logger.warn(`Wallet ${walletAddress} is not an OKX campaign wallet`)
+        return ResponseOk({
+          body: {
+            code: 0, // 1 indicates the wallet is not part of the OKX campaign
+            data: false,
+            ...(isDebugMode && { debug: { walletAddress, isOkxWallet } }),
+          },
+        })
+      }
       const client = createPublicClient({
         chain: getChainConfig(ChainId.BASE),
         transport: http(getRpcUrl(ChainId.BASE)),

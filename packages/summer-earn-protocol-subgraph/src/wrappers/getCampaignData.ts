@@ -11,9 +11,6 @@ export async function getCampaignData(
   params: GetCampaignDataParams,
   config: SubgraphClientConfig,
 ): Promise<OkxQuestDataQueryType> {
-  if (params.campaign !== 'okx') {
-    throw new Error(`Unsupported campaign: ${params.campaign}`)
-  }
   const client = createClient(config.chainId, config.urlBase)
   try {
     if (params.campaign === 'okx') {
@@ -24,7 +21,7 @@ export async function getCampaignData(
     }
     throw new Error(`Unsupported campaign: ${params.campaign}`)
   } catch (e) {
-    console.error('Failed to fetch user positions:', e)
+    console.error('Failed to fetch campaign data:', e)
     throw e
   }
 }
