@@ -93,7 +93,7 @@ export const handler = async (
         logger.warn(`Wallet ${walletAddress} is not an OKX campaign wallet`)
         return ResponseOk({
           body: {
-            code: 0, // 1 indicates the wallet is not part of the OKX campaign
+            code: 0,
             data: false,
             ...(isDebugMode && { debug: { walletAddress, isOkxWallet } }),
           },
