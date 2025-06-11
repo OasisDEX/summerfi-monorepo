@@ -17,6 +17,8 @@ interface NavigationActionsProps {
   toggleMobileMenu: () => void
   startTheGame?: () => void
   featuresConfig?: EarnAppConfigType['features']
+  userWalletAddress?: string
+  isEarnApp?: boolean
 }
 
 export const NavigationActions = ({
@@ -26,10 +28,17 @@ export const NavigationActions = ({
   configComponent,
   startTheGame,
   featuresConfig,
+  userWalletAddress,
+  isEarnApp,
 }: NavigationActionsProps): React.ReactNode => {
   const beachClubEnabled = !!featuresConfig?.BeachClub
 
   const host = typeof window !== 'undefined' ? window.location.origin : ''
+
+  const resolvedBeachClubLink =
+    isEarnApp && userWalletAddress
+      ? `${host}/earn/portfolio/${userWalletAddress}?tab=beach-club`
+      : `${host}${INTERNAL_LINKS.beachClub}`
 
   return (
     <div>
@@ -40,7 +49,7 @@ export const NavigationActions = ({
           </div>
         )}
         {beachClubEnabled && (
-          <Link href={`${host}${INTERNAL_LINKS.beachClub}`}>
+          <Link href={resolvedBeachClubLink}>
             <Text
               as="div"
               variant="p2semiColorfulBeachClub"
