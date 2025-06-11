@@ -128,7 +128,9 @@ export const OkxConnectButton = () => {
 
   const buttonHasAction = !isConnected && isOkxWalletAvailable
   const secondaryButtonHasAction =
-    (isConnected && !isSameWallet) || (isOkxWalletSetUp && isSameWallet)
+    Boolean(isConnected && !isSameWallet) ||
+    Boolean(isOkxWalletSetUp && isSameWallet) ||
+    Boolean(!isOkxWalletAvailable)
 
   const secondaryButtonAction = useCallback(() => {
     if (isConnected && !isSameWallet) {
