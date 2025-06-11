@@ -34,6 +34,17 @@ export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({ beachC
 
   return (
     <div className={classNames.beachClubBoatChallengeWrapper}>
+      <Text
+        as="p"
+        variant="p2"
+        style={{
+          color: 'var(--earn-protocol-secondary-60)',
+        }}
+      >
+        The Summer Beach Boat Challenge is a supplementary points-based program where you can earn
+        exclusive merch. Your points are calculated hourly based on the total TVL you refer and the
+        number of unique accounts you bring in that actively use the Lazy Summer Protocol.
+      </Text>
       {stats.map((stat, idx) => (
         <div key={stat.description} className={classNames.textual}>
           <Text as="h2" variant={idx === 0 ? 'h2colorfulBeachClub' : 'h2'}>

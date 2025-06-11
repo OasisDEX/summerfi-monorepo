@@ -19,6 +19,7 @@ interface BeachClubBoatChallengeRewardCardProps {
   left: number
   unlocked: boolean
   daysToUnlock: number | string
+  pointsToUnlock: number
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
@@ -29,7 +30,7 @@ export const BeachClubBoatChallengeRewardCard = ({
   requiredPoints,
   left,
   unlocked,
-  daysToUnlock,
+  pointsToUnlock,
   reward,
 }: BeachClubBoatChallengeRewardCardProps) => {
   const { type } = reward
@@ -39,8 +40,8 @@ export const BeachClubBoatChallengeRewardCard = ({
       <div className={classNames.top}>
         <div className={classNames.content}>
           <div className={classNames.header}>
-            <Text as="h5" variant="h5">
-              {unlocked ? 'Unlocked' : <>{formatWithSeparators(requiredPoints)} Points</>}
+            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
+              {beachClubRewardDescriptions[type]}
             </Text>
             <Icon iconName={unlocked ? 'lock_open_beach_colorful' : 'lock_beach_colorful'} />
           </div>
@@ -63,10 +64,10 @@ export const BeachClubBoatChallengeRewardCard = ({
       <div className={classNames.bottom}>
         <div className={classNames.textual}>
           <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-            Reward
+            Challenge
           </Text>
           <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
-            {beachClubRewardDescriptions[type]}
+            <>{formatWithSeparators(requiredPoints)} Points</>
           </Text>
         </div>
         {unlocked ? (
@@ -75,10 +76,25 @@ export const BeachClubBoatChallengeRewardCard = ({
           </Button>
         ) : (
           <div className={classNames.progress}>
-            <BeachClubProgressBar max={requiredPoints} current={currentPoints} />
-            <Text as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-              {typeof daysToUnlock === 'number' ? formatWithSeparators(daysToUnlock) : daysToUnlock}{' '}
-              Days to unlock
+            <div className={classNames.progressBarWrapper}>
+              <BeachClubProgressBar
+                max={requiredPoints}
+                current={currentPoints}
+                wrapperStyle={{ width: 'unset', flex: 1 }}
+              />
+              <Text as="p" variant="p4semi" style={{ color: 'var(--beach-club-tab-underline)' }}>
+                {formatWithSeparators(currentPoints, {
+                  precision: currentPoints < 1 ? 2 : 0,
+                })}
+                /{formatWithSeparators(requiredPoints, { precision: 0 })}
+              </Text>
+            </div>
+            <Text
+              as="p"
+              variant="p3semi"
+              style={{ color: 'var(--beach-club-link)', textAlign: 'center', width: '100%' }}
+            >
+              {formatWithSeparators(pointsToUnlock)} Points to unlock
             </Text>
           </div>
         )}

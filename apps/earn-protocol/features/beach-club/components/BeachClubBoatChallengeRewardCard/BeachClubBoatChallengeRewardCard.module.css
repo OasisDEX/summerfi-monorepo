@@ -56,6 +56,15 @@
       align-items: flex-start;
       justify-content: center;
       gap: var(--general-space-4);
+      width: 100%;
+
+      .progressBarWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--general-space-12);
+        width: 100%;
+      }
     }
   }
 }
