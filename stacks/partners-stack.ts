@@ -19,6 +19,13 @@ export function ExternalAPI(stackContext: StackContext) {
     throw new Error('RPC_GATEWAY is required to deploy the triggers functions')
   }
 
+  const { EARN_PROTOCOL_DB_CONNECTION_STRING } = process.env
+  if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
+    throw new Error(
+      'EARN_PROTOCOL_DB_CONNECTION_STRING is required to deploy the campaign data functions',
+    )
+  }
+
   const getLockedWeEth = new Function(stack, 'get-locked-weeth', {
     handler: 'external-api/get-collateral-locked-function/src/index.handler',
     runtime: 'nodejs20.x',
@@ -54,6 +61,7 @@ export function ExternalAPI(stackContext: StackContext) {
     logFormat: 'JSON',
     environment: {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
+      EARN_PROTOCOL_DB_CONNECTION_STRING: EARN_PROTOCOL_DB_CONNECTION_STRING,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       RPC_GATEWAY: RPC_GATEWAY,
     },
