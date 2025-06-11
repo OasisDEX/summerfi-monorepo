@@ -4,4 +4,5 @@
  */
 export enum SwapProviderType {
   OneInch = 'OneInch',
+  CowSwap = 'CowSwap',
 }
