@@ -42,7 +42,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
 }) => {
   const currentUrl = useCurrentUrl()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
-  const [isExpanded, setIsExpanded] = useState(!groupAchieved)
+  const [isExpanded, setIsExpanded] = useState(true)
 
   const leftToBoost = rawTvlGroup - currentGroupTvl
 
@@ -50,7 +50,6 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
     <Card
       className={`${classNames.beachClubTvlChallengeRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
       style={{
-        opacity: !groupAchieved ? 1 : 0.5,
         ...(colorfulBackground && {
           background: 'var(--gradient-earn-protocol-beach-club-5)',
         }),
