@@ -61,7 +61,9 @@ export const HistoricalLegend: FC<HistoricalLegendProps> = ({
         value={
           <>
             <Icon tokenName={tokenSymbol} size={20} />
-            <Text variant="p1semi">{highlightedData.netValue}</Text>
+            <Text as="span" variant="p1semi">
+              {highlightedData.netValue}
+            </Text>
           </>
         }
       />
@@ -71,7 +73,9 @@ export const HistoricalLegend: FC<HistoricalLegendProps> = ({
         value={
           <>
             <Icon tokenName={tokenSymbol} size={20} />
-            <Text variant="p1semi">{highlightedData.depositedValue}</Text>
+            <Text as="span" variant="p1semi">
+              {highlightedData.depositedValue}
+            </Text>
           </>
         }
       />
@@ -81,7 +85,9 @@ export const HistoricalLegend: FC<HistoricalLegendProps> = ({
         value={
           <>
             <Icon tokenName={tokenSymbol} size={20} />
-            <Text variant="p1semi">{highlightedData.earnings}</Text>
+            <Text as="span" variant="p1semi">
+              {highlightedData.earnings}
+            </Text>
           </>
         }
       />
@@ -91,7 +97,9 @@ export const HistoricalLegend: FC<HistoricalLegendProps> = ({
         value={
           <>
             <Icon tokenName="SUMR" size={20} />
-            <Text variant="p1semi">{highlightedData.sumrEarned}</Text>
+            <Text as="span" variant="p1semi">
+              {highlightedData.sumrEarned}
+            </Text>
           </>
         }
       />
