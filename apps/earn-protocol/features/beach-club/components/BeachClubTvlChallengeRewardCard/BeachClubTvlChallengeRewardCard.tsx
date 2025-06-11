@@ -4,17 +4,10 @@ import {
   Card,
   getTwitterShareUrl,
   Icon,
-  SUMR_CAP,
   Text,
   useCurrentUrl,
-  useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import {
-  formatAsShorthandNumbers,
-  formatCryptoBalance,
-  formatDecimalAsPercent,
-  formatFiatBalance,
-} from '@summerfi/app-utils'
+import { formatAsShorthandNumbers, formatDecimalAsPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
@@ -26,9 +19,10 @@ interface BeachClubTvlChallengeRewardCardProps {
   customTitle?: string
   rawTvlGroup: number
   nextGroupTvl: number
+  previousGroupTvl: number
   description: string
-  boost: string
-  sumrToEarn: number
+  boost?: number
+  sumrApy: number
   currentGroupTvl: number
   colorfulBackground?: boolean
   colorfulBorder?: boolean
@@ -41,15 +35,11 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
   nextGroupTvl,
   description,
   boost,
-  sumrToEarn,
+  sumrApy,
   currentGroupTvl,
   colorfulBackground,
   colorfulBorder,
 }) => {
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const currentUrl = useCurrentUrl()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
   const [isExpanded, setIsExpanded] = useState(!groupAchieved)
@@ -69,10 +59,10 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
       <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
-            {groupAchieved ? (
-              <>You reached a {tvlGroup} Group TVL</>
-            ) : customTitle ? (
+            {customTitle ? (
               <>{customTitle}</>
+            ) : groupAchieved ? (
+              <>You reached a {tvlGroup} Group TVL</>
             ) : (
               <>{tvlGroup} Group TVL</>
             )}
@@ -86,17 +76,18 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
           </div>
         </div>
         <div className={classNames.headerRightWrapper}>
-          <div className={classNames.boostWrapper}>
-            <Icon tokenName="SUMR" size={26} />
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Boost: {formatDecimalAsPercent(boost)}
-            </Text>
-          </div>
+          {boost && (
+            <div className={classNames.boostWrapper}>
+              <Icon tokenName="SUMR" size={26} />
+              <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                {formatDecimalAsPercent(boost, { precision: 0 })} boost
+              </Text>
+            </div>
+          )}
           <div className={classNames.earnPill}>
             <Icon iconName="stars" size={24} />
             <Text as="p" variant="p3semi">
-              Earn {formatCryptoBalance(sumrToEarn)} SUMR ($
-              {formatFiatBalance(sumrToEarn * estimatedSumrPrice)})
+              {formatDecimalAsPercent(sumrApy, { precision: 1 })} SUMR APY
             </Text>
           </div>
           <div className={classNames.chevronDesktopWrapper}>
