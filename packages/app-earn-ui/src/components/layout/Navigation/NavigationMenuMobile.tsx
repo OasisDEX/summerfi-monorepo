@@ -23,6 +23,8 @@ type NavigationMobileMenuType = {
   walletConnectionComponent?: ReactNode
   secondaryWalletConnectionComponent?: ReactNode
   featuresConfig?: EarnAppConfigType['features']
+  userWalletAddress?: string
+  isEarnApp?: boolean
 }
 
 export const NavigationMenuMobile = ({
@@ -34,9 +36,16 @@ export const NavigationMenuMobile = ({
   walletConnectionComponent,
   secondaryWalletConnectionComponent,
   featuresConfig,
+  userWalletAddress,
+  isEarnApp,
 }: NavigationMobileMenuType): React.ReactNode => {
   const beachClubEnabled = !!featuresConfig?.BeachClub
   const host = typeof window !== 'undefined' ? window.location.origin : ''
+
+  const resolvedBeachClubLink =
+    isEarnApp && userWalletAddress
+      ? `${host}/earn/portfolio/${userWalletAddress}?tab=beach-club`
+      : `${host}${INTERNAL_LINKS.beachClub}`
 
   return (
     <>
@@ -59,7 +68,7 @@ export const NavigationMenuMobile = ({
       <div className={navigationMenuMobileStyles.linksListWrapper}>
         <div className={navigationMenuMobileStyles.linksList}>
           {beachClubEnabled && (
-            <Link href={`${host}${INTERNAL_LINKS.beachClub}`}>
+            <Link href={resolvedBeachClubLink}>
               <Button
                 variant="textSecondaryLarge"
                 disabled={false}
