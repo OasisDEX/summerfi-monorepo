@@ -1,6 +1,11 @@
 import { formatAddress } from '@summerfi/app-utils'
 
-export const getDisplayToken = (tokenSymbol: string): string => {
+export const getDisplayToken = (
+  tokenSymbol: string,
+  config?: {
+    swapUSDT: boolean
+  },
+): string => {
   // MKR on arbitrum
   if (tokenSymbol === '4d4b520000000000000000000000000000000000000000000000000000000000') {
     return 'MKR'
@@ -14,5 +19,11 @@ export const getDisplayToken = (tokenSymbol: string): string => {
     return formatAddress(tokenSymbol, { first: 3, last: 3 })
   }
 
-  return tokenSymbol === 'WETH' ? 'ETH' : tokenSymbol
+  const token = tokenSymbol === 'WETH' ? 'ETH' : tokenSymbol
+
+  if (config?.swapUSDT && tokenSymbol === 'USD₮0') {
+    return token.replace('USD₮0', 'USDT')
+  }
+
+  return token
 }

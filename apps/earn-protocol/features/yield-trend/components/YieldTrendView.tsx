@@ -1,10 +1,11 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Card,
   Dropdown,
+  getDisplayToken,
   getTwitterShareUrl,
   HeadingWithCards,
   Input,
@@ -13,15 +14,35 @@ import {
   useCurrentUrl,
   VaultTitleDropdownContentBlock,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, type IToken, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  type GetVaultsApyResponse,
+  type IToken,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  subgraphNetworkToId,
+} from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { isStablecoin } from '@/helpers/is-stablecoin'
 
 import yieldTrendViewStyles from './YieldTrendView.module.css'
 
-export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
+type YieldTrendViewProps = {
+  vaults: SDKVaultishType[]
+  vaultsApyByNetworkMap: GetVaultsApyResponse
+}
+
+export const YieldTrendView = ({ vaults, vaultsApyByNetworkMap }: YieldTrendViewProps) => {
   const currentUrl = useCurrentUrl()
+
+  const medianDefiApy = 0.0331 // 4.31%
+  const medianDefiApy7d = 0.0322 // 3.22%
+  const medianDefiApy30d = 0.0391 // 3.91%
 
   const [selectedVault, setSelectedVault] = useState<SDKVaultishType>(() => {
     return vaults[0]
@@ -29,14 +50,20 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
 
   const selectedToken = useMemo<DropdownRawOption>(() => {
     return {
-      content: selectedVault.inputToken.symbol,
-      value: selectedVault.inputToken.symbol,
+      content: getDisplayToken(selectedVault.inputToken.symbol, { swapUSDT: true }),
+      value: getDisplayToken(selectedVault.inputToken.symbol, { swapUSDT: true }),
     }
   }, [selectedVault])
 
   const handleTokenSelection = useCallback(
     (dropdownToken: DropdownRawOption) => {
-      const vault = vaults.find((v) => v.inputToken.symbol === dropdownToken.value)
+      const vault = vaults.find((v) => {
+        if (dropdownToken.value === 'ETH') {
+          return v.inputToken.symbol === 'WETH'
+        }
+
+        return v.inputToken.symbol === dropdownToken.value
+      })
 
       if (vault) {
         setSelectedVault(vault)
@@ -56,7 +83,10 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
     [vaults],
   )
 
-  const selectedVaultToken = selectedVault.inputToken.symbol
+  const selectedVaultNetworkId = subgraphNetworkToId(selectedVault.protocol.network)
+  const selectedVaultApy = vaultsApyByNetworkMap[`${selectedVault.id}-${selectedVaultNetworkId}`]
+
+  const selectedVaultToken = getDisplayToken(selectedVault.inputToken.symbol, { swapUSDT: true })
   const selectedVaultTokenPriceUSD = selectedVault.inputTokenPriceUSD
   const selectedVaultTokenDecimals = selectedVault.inputToken.decimals
 
@@ -64,7 +94,7 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
     const uniqueTokens = new Map<string, { content: string; value: string }>()
 
     vaults.forEach((vault) => {
-      const tokenSymbol = vault.inputToken.symbol.replace('USD₮0', 'USDT')
+      const tokenSymbol = getDisplayToken(vault.inputToken.symbol, { swapUSDT: true })
 
       if (!uniqueTokens.has(tokenSymbol)) {
         uniqueTokens.set(tokenSymbol, { content: tokenSymbol, value: tokenSymbol })
@@ -90,11 +120,11 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
 
   const {
     amountDisplay: calculatorAmountDisplay,
-    amountRaw: calculatorAmountRaw,
     amountParsed: calculatorAmountParsed,
     onBlur: calculatorOnBlur,
     onFocus: calculatorOnFocus,
     handleAmountChange: calculatorHandleAmountChange,
+    manualSetAmount: calculatorManualSetAmount,
   } = useAmount({
     tokenDecimals: selectedVaultTokenDecimals,
     tokenPrice: selectedVaultTokenPriceUSD,
@@ -104,6 +134,29 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
     } as unknown as IToken,
     initialAmount: isStablecoin(selectedVaultToken) ? '1000' : '1',
   })
+
+  const earnDifference = useMemo(() => {
+    // the difference between the Lazy Summer yield and the median DeFi yield (yearly, in USD)
+    const medianDefi1yEarnings = new BigNumber(medianDefiApy)
+      .times(Number(selectedVaultTokenPriceUSD))
+      .times(calculatorAmountParsed)
+    const lazySummer1yEarnings = new BigNumber(selectedVaultApy.apy)
+      .times(Number(selectedVaultTokenPriceUSD))
+      .times(calculatorAmountParsed)
+
+    return lazySummer1yEarnings.minus(medianDefi1yEarnings)
+  }, [calculatorAmountParsed, selectedVaultApy.apy, selectedVaultTokenPriceUSD])
+
+  useEffect(() => {
+    // Update the calculator amount display when the selected vault token changes
+    if (isStablecoin(selectedVaultToken)) {
+      calculatorManualSetAmount('1000')
+    } else {
+      calculatorManualSetAmount('1')
+    }
+    // need to update the calculator amount display when the selected vault token changes (hook does not detect that)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isStablecoin(selectedVaultToken)])
 
   return (
     <div className={yieldTrendViewStyles.wrapper}>
@@ -130,7 +183,7 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
                 {selectedVaultToken} Median DeFi Yield
               </Text>
             </Dropdown>
-            <Text variant="h3">4.31%</Text>
+            <Text variant="h3">{formatDecimalAsPercent(medianDefiApy)}</Text>
             <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
               Median yield across markets for a specific asset, calculated for all protocols
               supported on DeFiLlama.
@@ -138,15 +191,15 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
             <div className={yieldTrendViewStyles.divider} />
             <div className={yieldTrendViewStyles.headerCardLeftAPY}>
               <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                30d APY
+                7d APY
               </Text>
-              <Text variant="p3semi">3.22%</Text>
+              <Text variant="p3semi">{formatDecimalAsPercent(medianDefiApy7d)}</Text>
             </div>
             <div className={yieldTrendViewStyles.headerCardLeftAPY}>
               <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                90d APY
+                30d APY
               </Text>
-              <Text variant="p3semi">3.91%</Text>
+              <Text variant="p3semi">{formatDecimalAsPercent(medianDefiApy30d)}</Text>
             </div>
           </div>
           <Card
@@ -158,7 +211,7 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
             <Text variant="p1semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Lazy Summer Yield
             </Text>
-            <Text variant="h3colorful">10.72%</Text>
+            <Text variant="h3colorful">{formatDecimalAsPercent(selectedVaultApy.apy)}</Text>
             <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
               Current yield for a specific asset on Summer.fi, continuously optimized across the top
               protocols by AI powered keepers.
@@ -166,15 +219,19 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
             <div className={yieldTrendViewStyles.divider} />
             <div className={yieldTrendViewStyles.headerCardLeftAPY}>
               <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                30d APY
+                7d APY
               </Text>
-              <Text variant="p3semi">10.22%</Text>
+              <Text variant="p3semi">
+                {selectedVaultApy.sma7d ? formatDecimalAsPercent(selectedVaultApy.sma7d) : 'n/a'}
+              </Text>
             </div>
             <div className={yieldTrendViewStyles.headerCardLeftAPY}>
               <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                90d APY
+                30d APY
               </Text>
-              <Text variant="p3semi">10.91%</Text>
+              <Text variant="p3semi">
+                {selectedVaultApy.sma30d ? formatDecimalAsPercent(selectedVaultApy.sma30d) : 'n/a'}
+              </Text>
             </div>
           </Card>
           <Card
@@ -227,7 +284,7 @@ export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
             >
               You would earn an extra (a year)
             </Text>
-            <Text variant="h3colorful">$6,411</Text>
+            <Text variant="h3colorful">${formatCryptoBalance(earnDifference)}</Text>
             <Button variant="primaryMedium" style={{ marginTop: 'var(--spacing-space-medium)' }}>
               Deposit
             </Button>
