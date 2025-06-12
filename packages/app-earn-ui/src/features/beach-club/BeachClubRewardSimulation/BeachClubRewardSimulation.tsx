@@ -28,7 +28,7 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
   cardBackgroundColor,
   tvl,
 }) => {
-  const [simulationValue, setSimulationValue] = useState(tvl ?? 500000)
+  const [simulationValue, setSimulationValue] = useState(tvl ? Math.min(tvl, max) : 500000)
   const sliderWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
