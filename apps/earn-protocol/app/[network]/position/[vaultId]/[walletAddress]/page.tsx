@@ -94,7 +94,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         page: 1,
         limit: 4,
         strategies: [strategy],
-        userAddress: walletAddress,
+        usersAddresses: [walletAddress],
       }),
       getPaginatedRebalanceActivity({
         page: 1,

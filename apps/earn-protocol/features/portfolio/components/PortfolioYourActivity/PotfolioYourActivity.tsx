@@ -36,7 +36,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       const nextPage = currentPage + 1
       const res = await getLatestActivity({
         page: nextPage,
-        userAddress: walletAddress,
+        usersAddresses: [walletAddress],
         sortBy: sortBy?.key,
         orderBy: sortBy?.direction,
       })
@@ -65,7 +65,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
 
     getLatestActivity({
       page: 1,
-      userAddress: walletAddress,
+      usersAddresses: [walletAddress],
       sortBy: sortBy?.key,
       orderBy: sortBy?.direction,
     })

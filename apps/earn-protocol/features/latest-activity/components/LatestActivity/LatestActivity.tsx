@@ -71,7 +71,7 @@ export const LatestActivity: FC<LatestActivityProps> = ({
       strategies: [vaultId],
       sortBy: latestActivitySorting?.key,
       orderBy: latestActivitySorting?.direction,
-      userAddress: walletAddress,
+      usersAddresses: walletAddress ? [walletAddress] : undefined,
     })
       .then((res) => {
         setLoadedLatestActivityList(res.data)

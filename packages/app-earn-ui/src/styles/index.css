@@ -156,6 +156,8 @@ body {
   --beach-club-primary-70: rgba(82, 154, 255, 1);
   --beach-club-primary-40: rgba(47, 90, 152, 1);
   --beach-club-link: rgba(254, 209, 73, 1);
+  --beach-club-link-hover: rgba(254, 209, 73, 0.8);
+  --beach-club-link-disabled: rgba(254, 209, 73, 0.5);
   --beach-club-tab-underline: rgba(110, 219, 152, 1);
 
   --gradient-earn-protocol-beach-club-1: linear-gradient(90deg, #ffe74a 0%, #2cecf2 98.56%);

@@ -28,7 +28,7 @@ export const getLatestActivitiesServerSide = async ({
   sortBy = 'timestamp',
   orderBy = 'desc',
   actionType,
-  userAddress,
+  usersAddresses = [],
   tokens,
   strategies,
   filterOutUsersAddresses = userAddresesToFilterOut,
@@ -38,7 +38,7 @@ export const getLatestActivitiesServerSide = async ({
   sortBy?: LatestActivitiesSortBy
   orderBy?: TableSortOrder
   actionType?: ActionType
-  userAddress?: string
+  usersAddresses?: string[]
   tokens?: string[]
   strategies?: string[]
   filterOutUsersAddresses?: string[]
@@ -67,15 +67,20 @@ export const getLatestActivitiesServerSide = async ({
     // If userAddress is provided, don't filter out any addresses
     // Testing wallets should display in the latest activity on thier position
     // page or portfolio page
-    const resolvedFilterOutUsersAddresses = userAddress
-      ? []
-      : filterOutUsersAddresses.map((address) => address.toLowerCase())
+    const resolvedFilterOutUsersAddresses =
+      usersAddresses.length > 0
+        ? []
+        : filterOutUsersAddresses.map((address) => address.toLowerCase())
 
     // Apply filters if provided
     const filteredQuery = baseQuery
       .$if(!!actionType, (qb) => qb.where('actionType', '=', actionType as ActionType))
-      .$if(!!userAddress, (qb) =>
-        qb.where('userAddress', '=', userAddress?.toLowerCase() as string),
+      .$if(usersAddresses.length > 0, (qb) =>
+        qb.where(
+          'userAddress',
+          'in',
+          usersAddresses.map((address) => address.toLowerCase()) as string[],
+        ),
       )
       .$if(!!tokens && tokens.length > 0, (qb) =>
         qb.where('inputTokenSymbol', 'in', resolvedTokens as string[]),
@@ -190,7 +195,7 @@ export const getPaginatedLatestActivity = async ({
   sortBy = 'timestamp',
   orderBy = 'desc',
   actionType,
-  userAddress,
+  usersAddresses,
   tokens,
   strategies,
   filterOutUsersAddresses,
@@ -200,7 +205,7 @@ export const getPaginatedLatestActivity = async ({
   sortBy?: LatestActivitiesSortBy
   orderBy?: TableSortOrder
   actionType?: ActionType
-  userAddress?: string
+  usersAddresses?: string[]
   tokens?: string[]
   strategies?: string[]
   filterOutUsersAddresses?: string[]
@@ -211,7 +216,7 @@ export const getPaginatedLatestActivity = async ({
     sortBy,
     orderBy,
     actionType,
-    userAddress,
+    usersAddresses,
     tokens,
     strategies,
     filterOutUsersAddresses,

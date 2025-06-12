@@ -18,6 +18,9 @@ declare const styles: {
   readonly "secondaryMediumActive": string;
   readonly "secondarySmall": string;
   readonly "secondarySmallActive": string;
+  readonly "textBeachClubLarge": string;
+  readonly "textBeachClubMedium": string;
+  readonly "textBeachClubSmall": string;
   readonly "textPrimaryLarge": string;
   readonly "textPrimaryMedium": string;
   readonly "textPrimarySmall": string;

@@ -2,32 +2,14 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-interface BeachClubRewardBalance {
-  currency: string
-  balance: string
-  balance_usd: string | null
-  amount_per_day: string
-  amount_per_day_usd: string | null
-  total_earned: string
-  total_claimed: string
-}
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import {
+  type BeachClubRecruitedUsersPagination,
+  type BeachClubRewardBalance,
+} from '@/features/beach-club/types'
 
-export type BeachClubReferralActivity = {
-  userAddress: string
-  actionType: string
-  timestamp: string
-  amountNormalized: string
-  inputTokenSymbol: string
-}
-
-export type BeachClubRecruitedUsersRewards = {
-  [key: string]: {
-    id: string
-    referral_code: string | null
-    tvl: string
-    rewards: BeachClubRewardBalance[]
-  }
-}
+import { getPaginatedBeachClubRecruitedUsers } from './api'
 
 export interface BeachClubData {
   referral_code: string | null
@@ -35,8 +17,8 @@ export interface BeachClubData {
   custom_code: string | null
   total_deposits_referred_usd: string | null
   rewards: BeachClubRewardBalance[]
-  recruitedUsersRewards: BeachClubRecruitedUsersRewards
-  recruitedUsersLatestActivity: BeachClubReferralActivity[]
+  recruitedUsersWithRewards: BeachClubRecruitedUsersPagination
+  recruitedUsersLatestActivity: LatestActivityPagination
 }
 
 const defaultBeachClubData: BeachClubData = {
@@ -45,8 +27,27 @@ const defaultBeachClubData: BeachClubData = {
   custom_code: null,
   total_deposits_referred_usd: null,
   rewards: [],
-  recruitedUsersRewards: {},
-  recruitedUsersLatestActivity: [],
+  recruitedUsersWithRewards: {
+    data: [],
+    pagination: {
+      currentPage: 1,
+      totalPages: 1,
+      totalItems: 0,
+      itemsPerPage: 10,
+    },
+  },
+  recruitedUsersLatestActivity: {
+    data: [],
+    pagination: {
+      currentPage: 1,
+      totalPages: 1,
+      totalItems: 0,
+      itemsPerPage: 10,
+    },
+    medianDeposit: 0,
+    totalDeposits: 0,
+    totalUniqueUsers: 0,
+  },
 }
 
 export const getUserBeachClubData = async (walletAddress: string): Promise<BeachClubData> => {
@@ -106,88 +107,23 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
         .execute(),
     ])
 
-    const [recruitedUsersRewards, recruitedUsersTvl, recruitedUsersLatestActivity] =
-      await Promise.all([
-        beachClubDb.db
-          .selectFrom('rewards_balances')
-          .select([
-            'referral_code_id',
-            'currency',
-            'balance',
-            'balance_usd',
-            'amount_per_day',
-            'amount_per_day_usd',
-            'total_earned',
-            'total_claimed',
-          ])
-          .where(
-            'referral_code_id',
-            'in',
-            recruitedUsers.length > 0
-              ? recruitedUsers
-                  .map((user) => user.referral_code)
-                  .filter((code): code is string => code !== null)
-              : [''],
-          )
-          .execute(),
-        beachClubDb.db
-          .selectFrom('positions')
-          .select(['user_id'])
-          .where(
-            'user_id',
-            'in',
-            recruitedUsers.length > 0
-              ? recruitedUsers.map((user) => user.id).filter((id): id is string => id !== null)
-              : [''],
-          )
-          .groupBy('user_id')
-          .select(({ fn }) => [fn.sum('current_deposit_usd').as('tvl')])
-          .execute(),
-        summerProtocolDB.db
-          .selectFrom('latestActivity')
-          .select([
-            'userAddress',
-            'actionType',
-            'amountNormalized',
-            'inputTokenSymbol',
-            'timestamp',
-          ])
-          .orderBy('timestamp', 'desc')
-          .limit(10)
-          .where(
-            'userAddress',
-            'in',
-            recruitedUsers.length > 0
-              ? recruitedUsers
-                  .map((user) => user.id.toLowerCase())
-                  .filter((id): id is string => id !== null)
-              : [''],
-          )
-          .execute(),
-      ])
-
-    const recruitedUsersWithRewards = recruitedUsers.reduce<{
-      [key: string]: (typeof recruitedUsers)[0] & {
-        rewards: BeachClubRewardBalance[]
-        tvl: string
-      }
-    }>((acc, user) => {
-      if (!user.id || !user.referral_code) return acc
-      acc[user.id] = {
-        ...user,
-        rewards: recruitedUsersRewards.filter(
-          (reward) => reward.referral_code_id === user.referral_code,
-        ),
-        tvl: recruitedUsersTvl.find((tvl) => tvl.user_id === user.id)?.tvl.toString() ?? '0',
-      }
-
-      return acc
-    }, {})
+    const [recruitedUsersWithRewards, recruitedUsersLatestActivity] = await Promise.all([
+      getPaginatedBeachClubRecruitedUsers({
+        page: 1,
+        limit: 10,
+        referralCode: basicData.referral_code,
+      }),
+      getPaginatedLatestActivity({
+        usersAddresses: recruitedUsers.map((user) => user.id.toLowerCase()),
+        page: 1,
+        limit: 10,
+      }),
+    ])
 
     return {
       ...basicData,
       rewards: rewardsData,
-      recruitedUsersRewards: recruitedUsersWithRewards,
+      recruitedUsersWithRewards,
       recruitedUsersLatestActivity,
     }
   } catch (error) {

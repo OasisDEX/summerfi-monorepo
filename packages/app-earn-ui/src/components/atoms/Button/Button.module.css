@@ -219,7 +219,10 @@
 .textPrimarySmall,
 .textSecondaryLarge,
 .textSecondaryMedium,
-.textSecondarySmall {
+.textSecondarySmall,
+.textBeachClubLarge,
+.textBeachClubMedium,
+.textBeachClubSmall {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -240,7 +243,10 @@
 .textPrimarySmall:disabled,
 .textSecondaryLarge:disabled,
 .textSecondaryMedium:disabled,
-.textSecondarySmall:disabled {
+.textSecondarySmall:disabled,
+.textBeachClubLarge:disabled,
+.textBeachClubMedium:disabled,
+.textBeachClubSmall:disabled {
   cursor: not-allowed;
 }
 
@@ -276,17 +282,36 @@
   color: var(--color-text-secondary-disabled);
 }
 
+.textBeachClubLarge,
+.textBeachClubMedium,
+.textBeachClubSmall {
+  color: var(--beach-club-link);
+}
+.textBeachClubLarge:enabled:hover,
+.textBeachClubMedium:enabled:hover,
+.textBeachClubSmall:enabled:hover {
+  color: var(--beach-club-link-hover);
+}
+.textBeachClubLarge:disabled,
+.textBeachClubMedium:disabled,
+.textBeachClubSmall:disabled {
+  color: var(--beach-club-link-disabled);
+}
+
 .textPrimaryLarge,
-.textSecondaryLarge {
+.textSecondaryLarge,
+.textBeachClubLarge {
   font-size: 16px;
 }
 
 .textPrimaryMedium,
-.textSecondaryMedium {
+.textSecondaryMedium,
+.textBeachClubMedium {
   font-size: 14px;
 }
 
 .textPrimarySmall,
-.textSecondarySmall {
+.textSecondarySmall,
+.textBeachClubSmall {
   font-size: 12px;
 }
