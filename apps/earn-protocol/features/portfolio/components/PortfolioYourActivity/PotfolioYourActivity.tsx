@@ -107,6 +107,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
           hiddenColumns={['strategy']}
           handleSort={handleSort}
           isLoading={isLoading}
+          noHighlight
         />
       </InfiniteScroll>
     </Card>
