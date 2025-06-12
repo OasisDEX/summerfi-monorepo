@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -8,72 +9,101 @@ import {
   HeadingWithCards,
   Input,
   Text,
+  useAmount,
   useCurrentUrl,
   VaultTitleDropdownContentBlock,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultType } from '@summerfi/app-types'
+import { type DropdownRawOption, type IToken, type SDKVaultishType } from '@summerfi/app-types'
 import clsx from 'clsx'
+
+import { isStablecoin } from '@/helpers/is-stablecoin'
 
 import yieldTrendViewStyles from './YieldTrendView.module.css'
 
-const mockedVault = {
-  id: 'usdc-vault',
-  inputToken: {
-    symbol: 'USDC',
-  },
-  protocol: {
-    network: 'MAINNET',
-  },
-  customFields: {
-    risk: 'lower',
-  },
-} as unknown as SDKVaultType
-
-const tokenDropdownOptions = [
-  {
-    content: (
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-        this
-      </Text>
-    ),
-    value: 'this',
-  },
-  {
-    content: (
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-        is
-      </Text>
-    ),
-    value: 'is',
-  },
-  {
-    content: (
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-        a
-      </Text>
-    ),
-    value: 'a',
-  },
-  {
-    content: (
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-        mock
-      </Text>
-    ),
-    value: 'mock',
-  },
-  {
-    content: (
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-        USDC Median DeFi Yield
-      </Text>
-    ),
-    value: 'usdc',
-  },
-]
-
-export const YieldTrendView = () => {
+export const YieldTrendView = ({ vaults }: { vaults: SDKVaultishType[] }) => {
   const currentUrl = useCurrentUrl()
+
+  const [selectedVault, setSelectedVault] = useState<SDKVaultishType>(() => {
+    return vaults[0]
+  })
+
+  const selectedToken = useMemo<DropdownRawOption>(() => {
+    return {
+      content: selectedVault.inputToken.symbol,
+      value: selectedVault.inputToken.symbol,
+    }
+  }, [selectedVault])
+
+  const handleTokenSelection = useCallback(
+    (dropdownToken: DropdownRawOption) => {
+      const vault = vaults.find((v) => v.inputToken.symbol === dropdownToken.value)
+
+      if (vault) {
+        setSelectedVault(vault)
+      }
+    },
+    [vaults],
+  )
+
+  const handleVaultSelection = useCallback(
+    (dropdownVault: DropdownRawOption) => {
+      const vault = vaults.find((v) => `${v.id}_${v.protocol.network}` === dropdownVault.value)
+
+      if (vault) {
+        setSelectedVault(vault)
+      }
+    },
+    [vaults],
+  )
+
+  const selectedVaultToken = selectedVault.inputToken.symbol
+  const selectedVaultTokenPriceUSD = selectedVault.inputTokenPriceUSD
+  const selectedVaultTokenDecimals = selectedVault.inputToken.decimals
+
+  const tokenDropdownOptions = useMemo(() => {
+    const uniqueTokens = new Map<string, { content: string; value: string }>()
+
+    vaults.forEach((vault) => {
+      const tokenSymbol = vault.inputToken.symbol.replace('USD₮0', 'USDT')
+
+      if (!uniqueTokens.has(tokenSymbol)) {
+        uniqueTokens.set(tokenSymbol, { content: tokenSymbol, value: tokenSymbol })
+      }
+    })
+
+    return Array.from(uniqueTokens.values())
+  }, [vaults])
+
+  const vaultsDropdownOptions = useMemo(() => {
+    return vaults.map((vault) => ({
+      content: (
+        <VaultTitleDropdownContentBlock
+          vault={vault}
+          style={{
+            minWidth: '250px',
+          }}
+        />
+      ),
+      value: `${vault.id}_${vault.protocol.network}`,
+    }))
+  }, [vaults])
+
+  const {
+    amountDisplay: calculatorAmountDisplay,
+    amountRaw: calculatorAmountRaw,
+    amountParsed: calculatorAmountParsed,
+    onBlur: calculatorOnBlur,
+    onFocus: calculatorOnFocus,
+    handleAmountChange: calculatorHandleAmountChange,
+  } = useAmount({
+    tokenDecimals: selectedVaultTokenDecimals,
+    tokenPrice: selectedVaultTokenPriceUSD,
+    selectedToken: {
+      decimals: selectedVaultTokenDecimals,
+      symbol: selectedVaultToken,
+    } as unknown as IToken,
+    initialAmount: isStablecoin(selectedVaultToken) ? '1000' : '1',
+  })
 
   return (
     <div className={yieldTrendViewStyles.wrapper}>
@@ -93,10 +123,11 @@ export const YieldTrendView = () => {
           <div className={yieldTrendViewStyles.headerCardLeft}>
             <Dropdown
               options={tokenDropdownOptions}
-              dropdownValue={{ content: 'All Assets', value: 'all' }}
+              dropdownValue={selectedToken}
+              onChange={handleTokenSelection}
             >
               <Text variant="p1semi" style={{ color: 'var(--color-text-secondary-disabled)' }}>
-                USDC Median DeFi Yield
+                {selectedVaultToken} Median DeFi Yield
               </Text>
             </Dropdown>
             <Text variant="h3">4.31%</Text>
@@ -157,11 +188,15 @@ export const YieldTrendView = () => {
             </Text>
             <Card className={yieldTrendViewStyles.depositCard}>
               <Dropdown
-                options={tokenDropdownOptions}
-                dropdownValue={{ content: 'All Assets', value: 'all' }}
+                options={vaultsDropdownOptions}
+                dropdownValue={{
+                  content: selectedVault.inputToken.symbol,
+                  value: selectedVault.id,
+                }}
+                onChange={handleVaultSelection}
               >
                 <VaultTitleDropdownContentBlock
-                  vault={mockedVault}
+                  vault={selectedVault}
                   style={{
                     minWidth: '250px',
                   }}
@@ -169,7 +204,19 @@ export const YieldTrendView = () => {
               </Dropdown>
             </Card>
             <Card className={yieldTrendViewStyles.depositCard}>
-              <Input width={250} placeholder="0.00" value="1000" variant="wrapper" />
+              <Input
+                width={250}
+                placeholder="1000.00"
+                value={calculatorAmountDisplay}
+                variant="wrapper"
+                onBlur={calculatorOnBlur}
+                onFocus={calculatorOnFocus}
+                onChange={calculatorHandleAmountChange}
+                className={yieldTrendViewStyles.depositCardInput}
+              />
+              <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+                {selectedVaultToken}
+              </Text>
             </Card>
             <Text
               variant="p2semi"

@@ -46,9 +46,21 @@
 }
 
 .headerCardGrid .headerCardRight .depositCard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--spacing-space-x-small) var(--spacing-space-medium);
   border-radius: var(--radius-medium);
   background-color: var(--color-surface-light);
+}
+
+.headerCardGrid .headerCardRight .depositCard .depositCardInput {
+  width: 100%;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 28px;
+  outline: none;
 }
 
 .divider {

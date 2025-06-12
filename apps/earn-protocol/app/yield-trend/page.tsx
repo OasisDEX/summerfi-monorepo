@@ -1,15 +1,28 @@
 import { type FC } from 'react'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import systemConfigHandler from '@/app/server-handlers/system-config'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
+import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface YieldTrendPageProps {
   searchParams: Promise<ReadonlyURLSearchParams>
 }
 
-const YieldTrendPage: FC<YieldTrendPageProps> = ({ searchParams: _searchParams }) => {
-  return <YieldTrendView />
+const YieldTrendPage: FC<YieldTrendPageProps> = async ({ searchParams: awaitableSearchParams }) => {
+  const _searchParams = await awaitableSearchParams
+  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    systemConfig,
+    vaults,
+  })
+
+  return <YieldTrendView vaults={vaultsWithConfig} />
 }
 
 export function generateMetadata(): Metadata {
