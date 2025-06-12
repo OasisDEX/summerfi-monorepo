@@ -92,6 +92,9 @@ export const icons = {
   checkmark_colorful: customLazy(
     () => import('./icons/checkmark_colorful.svg?react'),
   ) as IconExportType,
+  checkmark_colorful_beach_club: customLazy(
+    () => import('./icons/checkmark_colorful_beach_club.svg?react'),
+  ) as IconExportType,
   checkmark_circle: customLazy(
     () => import('./icons/checkmark_circle.svg?react'),
   ) as IconExportType,

@@ -48,8 +48,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     }),
     sumrApy: 0.001,
     currentGroupTvl,
-    colorfulBorder: currentGroupTvl <= BeachClubTvlGroup['10K'],
-    colorfulBackground: currentGroupTvl <= BeachClubTvlGroup['10K'],
+    youAreHere: currentGroupTvl <= BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['10K'],
     previousGroupTvl: BeachClubTvlGroup['0K'],
   },
@@ -65,9 +64,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: 1, // 100%
     sumrApy: 0.002,
     currentGroupTvl,
-    colorfulBorder:
-      currentGroupTvl <= BeachClubTvlGroup['100K'] && currentGroupTvl > BeachClubTvlGroup['10K'],
-    colorfulBackground:
+    youAreHere:
       currentGroupTvl <= BeachClubTvlGroup['100K'] && currentGroupTvl > BeachClubTvlGroup['10K'],
     nextGroupTvl: BeachClubTvlGroup['100K'],
     previousGroupTvl: BeachClubTvlGroup['0K'],
@@ -84,9 +81,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: 0.5, // 50%
     sumrApy: 0.003,
     currentGroupTvl,
-    colorfulBorder:
-      currentGroupTvl <= BeachClubTvlGroup['250K'] && currentGroupTvl > BeachClubTvlGroup['100K'],
-    colorfulBackground:
+    youAreHere:
       currentGroupTvl <= BeachClubTvlGroup['250K'] && currentGroupTvl > BeachClubTvlGroup['100K'],
     nextGroupTvl: BeachClubTvlGroup['250K'],
     previousGroupTvl: BeachClubTvlGroup['10K'],
@@ -103,9 +98,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: 0.33, // 33%
     sumrApy: 0.004,
     currentGroupTvl,
-    colorfulBorder:
-      currentGroupTvl <= BeachClubTvlGroup['500K'] && currentGroupTvl > BeachClubTvlGroup['250K'],
-    colorfulBackground:
+    youAreHere:
       currentGroupTvl <= BeachClubTvlGroup['500K'] && currentGroupTvl > BeachClubTvlGroup['250K'],
     nextGroupTvl: BeachClubTvlGroup['500K'],
     previousGroupTvl: BeachClubTvlGroup['250K'],
@@ -122,8 +115,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     boost: 0.25, // 25%
     sumrApy: 0.005,
     currentGroupTvl,
-    colorfulBorder: currentGroupTvl > BeachClubTvlGroup['500K'],
-    colorfulBackground: currentGroupTvl > BeachClubTvlGroup['500K'],
+    youAreHere: currentGroupTvl > BeachClubTvlGroup['500K'],
     nextGroupTvl: BeachClubTvlGroup['1M'],
     previousGroupTvl: BeachClubTvlGroup['250K'],
   },

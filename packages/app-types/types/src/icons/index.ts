@@ -223,6 +223,7 @@ export type IconNamesList =
   | 'bug'
   | 'chain_security'
   | 'checkmark_colorful'
+  | 'checkmark_colorful_beach_club'
   | 'checkmark_colorful_slim'
   | 'checkmark'
   | 'chevron_down'
