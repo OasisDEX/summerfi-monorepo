@@ -46,7 +46,7 @@ export const BeachClubBoatChallengeRewardCard = ({
             <Icon iconName={unlocked ? 'lock_open_beach_colorful' : 'lock_beach_colorful'} />
           </div>
           <Text as="p" variant="p4semiColorfulBeachClub">
-            Only {left} left
+            Only {left} left!
           </Text>
         </div>
         <Image src={waves} alt="waves" />

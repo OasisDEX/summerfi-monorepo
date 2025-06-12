@@ -11,7 +11,7 @@ export const getBeachClubBoatChallengeStats = ({
 }) => [
   {
     value: `${formatWithSeparators(currentPoints, { precision: 2 })}`,
-    description: 'Speed Challenge Points',
+    description: 'Beach Boat Points',
   },
   {
     value: formatWithSeparators(earningPointsPerDay, { precision: 2 }),
