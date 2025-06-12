@@ -92,7 +92,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     )({
       page: 1,
       limit: 50,
-      userAddress: walletAddress,
+      usersAddresses: [walletAddress],
     }),
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
   ])
