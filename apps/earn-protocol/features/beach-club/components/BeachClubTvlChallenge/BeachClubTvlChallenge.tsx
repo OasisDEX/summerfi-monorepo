@@ -71,7 +71,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
           <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
         ))}
       </div>
-      <BeachClubRewardSimulation />
+      <BeachClubRewardSimulation tvl={currentGroupTvl} />
     </div>
   )
 }

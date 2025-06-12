@@ -21,12 +21,14 @@ const max = 1000000
 
 interface BeachClubRewardSimulationProps {
   cardBackgroundColor?: string
+  tvl?: number
 }
 
 export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
   cardBackgroundColor,
+  tvl,
 }) => {
-  const [simulationValue, setSimulationValue] = useState(500000)
+  const [simulationValue, setSimulationValue] = useState(tvl ?? 500000)
   const sliderWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -49,8 +51,8 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
       <Card
         style={{
           backgroundColor: cardBackgroundColor ?? 'var(--earn-protocol-neutral-95)',
-          marginBottom: 'var(--general-space-24)',
         }}
+        className={classNames.cardWrapper}
       >
         <div className={classNames.textual}>
           <Text as="h1" variant="h1">
@@ -63,10 +65,31 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
             variant="h5"
             style={{
               color: 'var(--beach-club-link)',
-              marginBottom: 'var(--general-space-12)',
+              textAlign: 'center',
             }}
           >
             Projected Yearly SUMR Rewards
+          </Text>
+        </div>
+        <div className={classNames.textual}>
+          <Text as="h1" variant="h1">
+            <Text as="span" variant="p2semi">
+              up to{' '}
+            </Text>
+            $
+            {formatWithSeparators(0.001 * simulationValue, {
+              precision: 2,
+            })}
+          </Text>
+          <Text
+            as="h5"
+            variant="h5"
+            style={{
+              color: 'var(--beach-club-link)',
+              textAlign: 'center',
+            }}
+          >
+            Yearly Earned Fees
           </Text>
         </div>
       </Card>
