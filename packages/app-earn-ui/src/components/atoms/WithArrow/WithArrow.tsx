@@ -96,7 +96,7 @@ export function WithArrow({
           variant="xs"
           style={{
             marginLeft: 'var(--general-space-2)',
-            color: 'var(--earn-protocol-primary-100)',
+            color: style?.color ?? 'var(--earn-protocol-primary-100)',
           }}
         />
       )}

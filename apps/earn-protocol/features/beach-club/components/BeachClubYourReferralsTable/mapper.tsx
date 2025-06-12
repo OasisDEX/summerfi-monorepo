@@ -17,7 +17,12 @@ export const trackReferralsMapper = (rawData: BeachClubReferralList) => {
         link: (
           <Link href={`/portfolio/${item.address}`} target="_blank">
             <Button variant="textPrimaryMedium">
-              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+              <WithArrow
+                as="p"
+                variant="p3semi"
+                style={{ color: 'var(--beach-club-link)' }}
+                withStatic
+              >
                 View
               </WithArrow>
             </Button>

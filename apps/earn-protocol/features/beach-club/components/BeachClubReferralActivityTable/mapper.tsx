@@ -50,7 +50,12 @@ export const referralActivityMapper = (rawData: LatestActivity[]) => {
             target="_blank"
           >
             <Button variant="textPrimaryMedium">
-              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+              <WithArrow
+                as="p"
+                variant="p3semi"
+                style={{ color: 'var(--beach-club-link)' }}
+                withStatic
+              >
                 View
               </WithArrow>
             </Button>
