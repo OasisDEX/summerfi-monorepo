@@ -42,7 +42,11 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
 }) => {
   const currentUrl = useCurrentUrl()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
-  const [isExpanded, setIsExpanded] = useState(true)
+
+  // a special case where we want to show expanded both star earning and 10k card until user reaches 10k
+  const resolvedIsExpanded =
+    rawTvlGroup === 0 && currentGroupTvl < nextGroupTvl ? true : !groupAchieved
+  const [isExpanded, setIsExpanded] = useState(resolvedIsExpanded)
 
   const leftToBoost = rawTvlGroup - currentGroupTvl
 

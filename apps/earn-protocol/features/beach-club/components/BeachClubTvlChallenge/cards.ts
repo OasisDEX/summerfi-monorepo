@@ -50,7 +50,7 @@ const getDefaultCards = (currentGroupTvl: number) => [
     currentGroupTvl,
     colorfulBorder: currentGroupTvl <= BeachClubTvlGroup['10K'],
     colorfulBackground: currentGroupTvl <= BeachClubTvlGroup['10K'],
-    nextGroupTvl: BeachClubTvlGroup['100K'],
+    nextGroupTvl: BeachClubTvlGroup['10K'],
     previousGroupTvl: BeachClubTvlGroup['0K'],
   },
   {
