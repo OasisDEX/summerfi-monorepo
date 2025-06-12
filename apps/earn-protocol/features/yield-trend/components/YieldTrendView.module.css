@@ -1,0 +1,59 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--general-space-16);
+}
+
+.headerCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1px;
+  width: 100%;
+}
+
+.headerCardGrid .headerCardLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--general-space-4);
+  margin-right: var(--spacing-space-x-large);
+  padding: 0 var(--spacing-space-medium);
+}
+
+.headerCardGrid .headerCardLeftAPY {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerCardGrid .headerCardBrighter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--general-space-4);
+  padding: var(--spacing-space-x-large);
+}
+
+.headerCardGrid .headerCardCenter {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.headerCardGrid .headerCardRight {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.headerCardGrid .headerCardRight .depositCard {
+  padding: var(--spacing-space-x-small) var(--spacing-space-medium);
+  border-radius: var(--radius-medium);
+  background-color: var(--color-surface-light);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+  margin: var(--spacing-space-x-small) 0;
+}

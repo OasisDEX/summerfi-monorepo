@@ -30,10 +30,6 @@ export { LoadableAvatar } from './components/atoms/LoadableAvatar/LoadableAvatar
 export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
 export { RechartResponsiveWrapper } from './components/atoms/RechartResponsiveWrapper/RechartResponsiveWrapper'
 export { ChartBar } from './components/atoms/ChartBar/ChartBar'
-export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
-export { Alert } from './components/molecules/Alert/Alert.tsx'
-export { TagRow, type TagOption } from './components/molecules/TagRow/TagRow'
-export { InfoBox } from './components/molecules/InfoBox/InfoBox'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
@@ -116,6 +112,21 @@ export {
   TableCellAllocationCap,
   TableCellAllocationCapTooltipDataBlock,
 } from './components/molecules/TableCellCustomComponents/TableCellCustomComponents'
+export {
+  VaultTitleDropdownContent,
+  VaultTitleDropdownContentBlock,
+} from './components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
+export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
+export { Alert } from './components/molecules/Alert/Alert.tsx'
+export { TagRow, type TagOption } from './components/molecules/TagRow/TagRow'
+export { InfoBox } from './components/molecules/InfoBox/InfoBox'
+export {
+  analyticsCookieVersion,
+  analyticsCookieName,
+  type AnalyticsCookieName,
+  type SelectedAnalyticsCookies,
+  type SavedAnalyticsCookiesSettings,
+} from './components/molecules/CookieBanner/config'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -223,14 +234,6 @@ export {
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
-
-export {
-  analyticsCookieVersion,
-  analyticsCookieName,
-  type AnalyticsCookieName,
-  type SelectedAnalyticsCookies,
-  type SavedAnalyticsCookiesSettings,
-} from './components/molecules/CookieBanner/config'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
