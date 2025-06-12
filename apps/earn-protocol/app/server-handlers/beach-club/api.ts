@@ -57,7 +57,12 @@ export const getBeachClubRecruitedUsersServerSide = async ({
       .offset((page - 1) * limit)
       .execute()
 
-    const [recruitedUsersRewards, recruitedUsersTvl] = await Promise.all([
+    const [recruitedUsersCount, recruitedUsersRewards, recruitedUsersTvl] = await Promise.all([
+      beachClubDb.db
+        .selectFrom('users')
+        .select((eb) => eb.fn.countAll().as('count'))
+        .where('users.referrer_id', '=', referralCode)
+        .executeTakeFirst(),
       beachClubDb.db
         .selectFrom('rewards_balances')
         .select([
@@ -114,10 +119,11 @@ export const getBeachClubRecruitedUsersServerSide = async ({
       return acc
     }, {})
 
-    const totalItems = recruitedUsers.length
+    const totalItems = Number(recruitedUsersCount?.count ?? 0)
 
     return NextResponse.json({
       data: Object.values(recruitedUsersWithRewards).map((user) => ({
+        id: user.referral_code,
         address: user.id,
         tvl: user.tvl,
         earnedToDate: user.rewards

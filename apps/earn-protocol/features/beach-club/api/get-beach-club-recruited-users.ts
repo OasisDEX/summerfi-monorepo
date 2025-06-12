@@ -7,7 +7,7 @@ import { type BeachClubRecruitedUsersPagination } from '@/features/beach-club/ty
  * @param {number} params.page - The page number for pagination.
  * @param {number} [params.limit=50] - The number of records per page (default: 50).
  * @param {string} [params.orderBy] - Optional sorting order (`asc` or `desc`), converted to lowercase.
- * @param {string} [params.referralCode] - Optional referral code to filter activity for a specific user.
+ * @param {string} params.referralCode - Referral code to filter activity for a specific user.
  *
  * @returns {Promise<BeachClubRecruitedUsersPagination>} A promise resolving to the API response in JSON format.
  */
@@ -20,12 +20,12 @@ export const getBeachClubRecruitedUsers = async ({
   page: number
   limit?: number
   orderBy?: string
-  referralCode?: string
+  referralCode: string
 }): Promise<BeachClubRecruitedUsersPagination> => {
   const query = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    ...(referralCode && { referralCode }),
+    referralCode,
     ...(orderBy && { orderBy: orderBy.toLowerCase() }),
   })
 
