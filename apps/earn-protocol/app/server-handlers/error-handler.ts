@@ -23,6 +23,7 @@ ${JSON.stringify(
   null,
   2,
 )}`)
+  console.error(`Error in ${errorSource}: ${errorMessage}`)
 
   throw new Error(errorMessage)
 }
