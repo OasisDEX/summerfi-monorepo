@@ -3,11 +3,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 90px;
-  padding: var(--general-space-32);
 
   @media (min-width: 768px) {
-    padding: var(--general-space-64);
+    padding: var(--general-space-40);
   }
 
   .paragraphsWrapper {
