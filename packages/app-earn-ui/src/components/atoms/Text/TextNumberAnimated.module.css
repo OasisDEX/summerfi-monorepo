@@ -1,0 +1,380 @@
+/* NumberFlow number part styles */
+.h1::part(number),
+.h1::part(symbol),
+.h2::part(number),
+.h2::part(symbol),
+.h3::part(number),
+.h3::part(symbol),
+.h4::part(number),
+.h4::part(symbol),
+.h5::part(number),
+.h5::part(symbol),
+.h1colorful::part(number),
+.h1colorful::part(symbol),
+.h2colorful::part(number),
+.h2colorful::part(symbol),
+.h3colorful::part(number),
+.h3colorful::part(symbol),
+.h4colorful::part(number),
+.h4colorful::part(symbol),
+.h5colorful::part(number),
+.h5colorful::part(symbol),
+.h1colorfulBeachClub::part(number),
+.h1colorfulBeachClub::part(symbol),
+.h2colorfulBeachClub::part(number),
+.h2colorfulBeachClub::part(symbol),
+.h3colorfulBeachClub::part(number),
+.h3colorfulBeachClub::part(symbol),
+.h4colorfulBeachClub::part(number),
+.h4colorfulBeachClub::part(symbol),
+.h5colorfulBeachClub::part(number),
+.h5colorfulBeachClub::part(symbol),
+.p1::part(number),
+.p1::part(symbol),
+.p1semi::part(number),
+.p1semi::part(symbol),
+.p1colorful::part(number),
+.p1colorful::part(symbol),
+.p1semiColorful::part(number),
+.p1semiColorful::part(symbol),
+.p1semiColorfulBeachClub::part(number),
+.p1semiColorfulBeachClub::part(symbol),
+.p2::part(number),
+.p2::part(symbol),
+.p2semi::part(number),
+.p2semi::part(symbol),
+.p2colorful::part(number),
+.p2colorful::part(symbol),
+.p2semiColorful::part(number),
+.p2semiColorful::part(symbol),
+.p2semiColorfulBeachClub::part(number),
+.p2semiColorfulBeachClub::part(symbol),
+.p3::part(number),
+.p3::part(symbol),
+.p3semi::part(number),
+.p3semi::part(symbol),
+.p3colorful::part(number),
+.p3colorful::part(symbol),
+.p3semiColorful::part(number),
+.p3semiColorful::part(symbol),
+.p3semiColorfulBeachClub::part(number),
+.p3semiColorfulBeachClub::part(symbol),
+.p4::part(number),
+.p4::part(symbol),
+.p4semi::part(number),
+.p4semi::part(symbol),
+.p4colorful::part(number),
+.p4colorful::part(symbol),
+.p4semiColorful::part(number),
+.p4semiColorful::part(symbol),
+.p4semiColorfulBeachClub::part(number),
+.p4semiColorfulBeachClub::part(symbol) {
+  font-family: var(--font-inter);
+}
+
+.h1::part(number),
+.h1::part(symbol),
+.h1colorful::part(number),
+.h1colorful::part(symbol),
+.h1colorfulBeachClub::part(number),
+.h1colorfulBeachClub::part(symbol),
+.h1semi::part(number),
+.h1semi::part(symbol) {
+  font-size: 32px;
+  line-height: 44px;
+  font-weight: 600;
+}
+
+@media (min-width: 745px) {
+
+  .h1::part(number),
+  .h1::part(symbol),
+  .h1colorful::part(number),
+  .h1colorful::part(symbol),
+  .h1colorfulBeachClub::part(number),
+  .h1colorfulBeachClub::part(symbol),
+  .h1semi::part(number),
+  .h1semi::part(symbol) {
+    font-size: 52px;
+    line-height: 64px;
+  }
+}
+
+.h2::part(number),
+.h2::part(symbol),
+.h2colorful::part(number),
+.h2colorful::part(symbol),
+.h2colorfulBeachClub::part(number),
+.h2colorfulBeachClub::part(symbol),
+.h2semi::part(number),
+.h2semi::part(symbol) {
+  font-size: 28px;
+  line-height: 40px;
+  font-weight: 600;
+}
+
+@media (min-width: 745px) {
+
+  .h2::part(number),
+  .h2::part(symbol),
+  .h2colorful::part(number),
+  .h2colorful::part(symbol),
+  .h2colorfulBeachClub::part(number),
+  .h2colorfulBeachClub::part(symbol),
+  .h2semi::part(number),
+  .h2semi::part(symbol) {
+    font-size: 40px;
+    line-height: 54px;
+  }
+}
+
+.h3::part(number),
+.h3::part(symbol),
+.h3colorful::part(number),
+.h3colorful::part(symbol),
+.h3colorfulBeachClub::part(number),
+.h3colorfulBeachClub::part(symbol),
+.h3semi::part(number),
+.h3semi::part(symbol) {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 600;
+}
+
+@media (min-width: 745px) {
+
+  .h3::part(number),
+  .h3::part(symbol),
+  .h3colorful::part(number),
+  .h3colorful::part(symbol),
+  .h3colorfulBeachClub::part(number),
+  .h3colorfulBeachClub::part(symbol),
+  .h3semi::part(number),
+  .h3semi::part(symbol) {
+    font-size: 32px;
+    line-height: 44px;
+  }
+}
+
+.h4::part(number),
+.h4::part(symbol),
+.h4colorful::part(number),
+.h4colorful::part(symbol),
+.h4colorfulBeachClub::part(number),
+.h4colorfulBeachClub::part(symbol),
+.h4semi::part(number),
+.h4semi::part(symbol) {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+@media (min-width: 531px) {
+
+  .h4::part(number),
+  .h4::part(symbol),
+  .h4colorful::part(number),
+  .h4colorful::part(symbol),
+  .h4colorfulBeachClub::part(number),
+  .h4colorfulBeachClub::part(symbol),
+  .h4semi::part(number),
+  .h4semi::part(symbol) {
+    font-size: 28px;
+    line-height: 40px;
+  }
+}
+
+
+.h5::part(number),
+.h5::part(symbol),
+.h5colorful::part(number),
+.h5colorful::part(symbol),
+.h5colorfulBeachClub::part(number),
+.h5colorfulBeachClub::part(symbol) {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+
+.p1::part(number),
+.p1::part(symbol),
+.p1semi::part(number),
+.p1semi::part(symbol),
+.p1colorful::part(number),
+.p1colorful::part(symbol),
+.p1semiColorful::part(number),
+.p1semiColorful::part(symbol),
+.p1semiColorfulBeachClub::part(number),
+.p1semiColorfulBeachClub::part(symbol) {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.p2::part(number),
+.p2::part(symbol),
+.p2semi::part(number),
+.p2semi::part(symbol),
+.p2colorful::part(number),
+.p2colorful::part(symbol),
+.p2semiColorful::part(number),
+.p2semiColorful::part(symbol),
+.p2semiColorfulBeachClub::part(number),
+.p2semiColorfulBeachClub::part(symbol) {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.p2colorful::part(number),
+.p2colorful::part(symbol),
+.p2colorfulBeachClub::part(number),
+.p2colorfulBeachClub::part(symbol) {
+  font-weight: 400;
+}
+
+
+.p3::part(number),
+.p3::part(symbol),
+.p3semi::part(number),
+.p3semi::part(symbol),
+.p3colorful::part(number),
+.p3colorful::part(symbol),
+.p3semiColorful::part(number),
+.p3semiColorful::part(symbol),
+.p3semiColorfulBeachClub::part(number),
+.p3semiColorfulBeachClub::part(symbol) {
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.p3colorful::part(number),
+.p3colorful::part(symbol),
+.p3colorfulBeachClub::part(number),
+.p3colorfulBeachClub::part(symbol) {
+  font-weight: 400;
+}
+
+.p4::part(number),
+.p4::part(symbol),
+.p4semi::part(number),
+.p4semi::part(symbol),
+.p4colorful::part(number),
+.p4colorful::part(symbol),
+.p4semiColorful::part(number),
+.p4semiColorful::part(symbol),
+.p4semiColorfulBeachClub::part(number),
+.p4semiColorfulBeachClub::part(symbol) {
+  font-size: 10px;
+  line-height: 18px;
+}
+
+@media (min-width: 531px) {
+
+  .p4::part(number),
+  .p4::part(symbol),
+  .p4semi::part(number),
+  .p4semi::part(symbol),
+  .p4colorful::part(number),
+  .p4colorful::part(symbol),
+  .p4semiColorful::part(number),
+  .p4semiColorful::part(symbol),
+  .p4semiColorfulBeachClub::part(number),
+  .p4semiColorfulBeachClub::part(symbol) {
+    font-size: 12px;
+    line-height: 20px;
+  }
+}
+
+.p1semi::part(number),
+.p1semi::part(symbol),
+.p2semi::part(number),
+.p2semi::part(symbol),
+.p3semi::part(number),
+.p3semi::part(symbol),
+.p4semi::part(number),
+.p4semi::part(symbol),
+.p1semiColorful::part(number),
+.p1semiColorful::part(symbol),
+.p2semiColorful::part(number),
+.p2semiColorful::part(symbol),
+.p3semiColorful::part(number),
+.p3semiColorful::part(symbol),
+.p4semiColorful::part(number),
+.p4semiColorful::part(symbol),
+.p1colorfulBeachClub::part(number),
+.p1colorfulBeachClub::part(symbol),
+.p2colorfulBeachClub::part(number),
+.p2colorfulBeachClub::part(symbol),
+.p3colorfulBeachClub::part(number),
+.p3colorfulBeachClub::part(symbol),
+.p4colorfulBeachClub::part(number),
+.p4colorfulBeachClub::part(symbol),
+.p1semiColorfulBeachClub::part(number),
+.p1semiColorfulBeachClub::part(symbol),
+.p2semiColorfulBeachClub::part(number),
+.p2semiColorfulBeachClub::part(symbol),
+.p3semiColorfulBeachClub::part(number),
+.p3semiColorfulBeachClub::part(symbol),
+.p4semiColorfulBeachClub::part(number),
+.p4semiColorfulBeachClub::part(symbol) {
+  font-weight: 600;
+}
+
+.p1colorful::part(number),
+.p1colorful::part(symbol),
+.p2colorful::part(number),
+.p2colorful::part(symbol),
+.p3colorful::part(number),
+.p3colorful::part(symbol),
+.p4colorful::part(number),
+.p4colorful::part(symbol),
+.p1semiColorful::part(number),
+.p1semiColorful::part(symbol),
+.p2semiColorful::part(number),
+.p2semiColorful::part(symbol),
+.p3semiColorful::part(number),
+.p3semiColorful::part(symbol),
+.p4semiColorful::part(number),
+.p4semiColorful::part(symbol),
+.h1colorful::part(number),
+.h1colorful::part(symbol),
+.h2colorful::part(number),
+.h2colorful::part(symbol),
+.h3colorful::part(number),
+.h3colorful::part(symbol),
+.h4colorful::part(number),
+.h4colorful::part(symbol),
+.h5colorful::part(number),
+.h5colorful::part(symbol) {
+  color: var(--earn-protocol-primary-100);
+}
+
+
+.p1colorfulBeachClub::part(number),
+.p1colorfulBeachClub::part(symbol),
+.p2colorfulBeachClub::part(number),
+.p2colorfulBeachClub::part(symbol),
+.p3colorfulBeachClub::part(number),
+.p3colorfulBeachClub::part(symbol),
+.p4colorfulBeachClub::part(number),
+.p4colorfulBeachClub::part(symbol),
+.p1semiColorfulBeachClub::part(number),
+.p1semiColorfulBeachClub::part(symbol),
+.p2semiColorfulBeachClub::part(number),
+.p2semiColorfulBeachClub::part(symbol),
+.p3semiColorfulBeachClub::part(number),
+.p3semiColorfulBeachClub::part(symbol),
+.p4semiColorfulBeachClub::part(number),
+.p4semiColorfulBeachClub::part(symbol),
+.h1colorfulBeachClub::part(number),
+.h1colorfulBeachClub::part(symbol),
+.h2colorfulBeachClub::part(number),
+.h2colorfulBeachClub::part(symbol),
+.h3colorfulBeachClub::part(number),
+.h3colorfulBeachClub::part(symbol),
+.h4colorfulBeachClub::part(number),
+.h4colorfulBeachClub::part(symbol),
+.h5colorfulBeachClub::part(number),
+.h5colorfulBeachClub::part(symbol) {
+  color: #2cecf2;
+}
