@@ -12,9 +12,9 @@ export type QuoteData = {
   provider: SwapProviderType
   fromTokenAmount: ITokenAmount
   toTokenAmount: ITokenAmount
-  estimatedGas: string
   /* Providers can provide multiple routes */
-  routes: SwapRoute[]
+  routes?: SwapRoute[]
+  validTo?: number // timestamp
 }
 
 export type SwapRoute = SwapHop[]
