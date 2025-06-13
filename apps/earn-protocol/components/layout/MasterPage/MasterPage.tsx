@@ -1,6 +1,7 @@
 'use client'
 import { type FC, type PropsWithChildren } from 'react'
 import {
+  analyticsCookieVersion,
   CookieBanner,
   Footer,
   NewsletterWrapper,
@@ -87,7 +88,10 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         setValue={setCookieSettings}
         manageCookie={manageAnalyticsCookies}
       />
-      {beachClubEnabled && <BeachClubFloatingBanner />}
+      {/* Condition to show banner after cookie banner */}
+      {beachClubEnabled && cookieSettings?.version === analyticsCookieVersion && (
+        <BeachClubFloatingBanner />
+      )}
     </div>
   )
 }
