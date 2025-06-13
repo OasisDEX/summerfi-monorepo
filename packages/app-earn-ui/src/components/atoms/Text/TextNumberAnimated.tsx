@@ -1,5 +1,9 @@
 import { forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react'
-import NumberFlow, { type NumberFlowElement, type NumberFlowProps } from '@number-flow/react'
+import NumberFlow, {
+  continuous,
+  type NumberFlowElement,
+  type NumberFlowProps,
+} from '@number-flow/react'
 
 import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
@@ -29,6 +33,7 @@ export const TextNumberAnimated: ForwardRefExoticComponent<
           notation: 'compact',
           ...props.format,
         }}
+        plugins={[continuous]}
         locales="en-US"
         className={getAtomClassList({ className, variant: textNumberAnimatedStyles[variant] })}
       />
