@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FloatingBanner, Icon, INTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
@@ -19,11 +19,13 @@ export const BeachClubFloatingBanner = () => {
 
   const { userWalletAddress } = useUserWallet()
 
-  const cookieSettings = cookie
-    ? (JSON.parse(cookie) as SavedBeachClubBannerSettings)
-    : {
-        isClosed: false,
-      }
+  const cookieSettings = useMemo(() => {
+    try {
+      return cookie ? (JSON.parse(cookie) as SavedBeachClubBannerSettings) : { isClosed: false }
+    } catch {
+      return { isClosed: false }
+    }
+  }, [cookie])
 
   const setValue = (value: SavedBeachClubBannerSettings) => {
     setCookie(cookieName, JSON.stringify(value), 7, { secure: true })
