@@ -1,5 +1,3 @@
-import { formatFiatBalance } from '@summerfi/app-utils'
-
 enum BeachClubTvlGroup {
   '0K' = 0,
   '10K' = 10000,
@@ -24,12 +22,52 @@ const getCardDescription = ({
     return 'Congratulations, you’ve joined the Summer Beach Club and can now earn $SUMR and fee’s by referring others.'
   }
 
-  if (currentGroupTvl >= previousGroupTvl && currentGroupTvl < nextGroupTvl) {
+  if (
+    currentGroupTvl < groupTvl &&
+    currentGroupTvl > previousGroupTvl &&
+    groupTvl === BeachClubTvlGroup['100K']
+  ) {
     return `You’re on your way to the next milestone. Keep referring to increase your referral TVL to boost your SUMR rewards.`
   }
 
-  if (currentGroupTvl >= groupTvl) {
-    return `Congratulations, your groups TVL has reach $${formatFiatBalance(groupTvl)}. View and claim your $SUMR and Fee’s as they accrue daily.`
+  if (
+    currentGroupTvl < groupTvl &&
+    currentGroupTvl > previousGroupTvl &&
+    groupTvl === BeachClubTvlGroup['500K']
+  ) {
+    return `The final milestone is within reach. Claim the ultimate SUMR rewards, and the glory of ruling the Summer Beach Club.`
+  }
+
+  if (groupTvl === BeachClubTvlGroup['10K'] && currentGroupTvl >= BeachClubTvlGroup['100K']) {
+    return `Congratulations, you’ve reached your first milestone and boosted the SUMR rewards you are now earning. Keep going.`
+  }
+
+  if (groupTvl === BeachClubTvlGroup['100K'] && currentGroupTvl >= BeachClubTvlGroup['250K']) {
+    return `You’ve done it, you’ve reached another milestone and are earning even more SUMR. Just two more to go!`
+  }
+
+  if (groupTvl === BeachClubTvlGroup['250K'] && currentGroupTvl >= BeachClubTvlGroup['500K']) {
+    return `You’re unstoppable, another milestone reached and you keep on going. One more to go to reach an exclusive group.`
+  }
+
+  if (currentGroupTvl >= BeachClubTvlGroup['500K']) {
+    return `WOW! You’ve reached the top and are earning the maximum SUMR rewards. You’ve earned this, now go relax!`
+  }
+
+  if (currentGroupTvl >= groupTvl && groupTvl === BeachClubTvlGroup['10K']) {
+    return `Congratulations, you’ve reached your first milestone and boosted the SUMR rewards you are now earning. Keep going!`
+  }
+
+  if (currentGroupTvl >= groupTvl && groupTvl === BeachClubTvlGroup['100K']) {
+    return `You’ve done it, you’ve reached another milestone and are earning even more SUMR. Just two more to go!`
+  }
+
+  if (currentGroupTvl >= groupTvl && groupTvl === BeachClubTvlGroup['250K']) {
+    return `Wow, you’re flying and must be climbing near the top of that leaderboard now! Just one more step to go for max SUMR.`
+  }
+
+  if (currentGroupTvl >= previousGroupTvl && currentGroupTvl < nextGroupTvl) {
+    return `You’re on your way to the next milestone. Keep referring to increase your referral TVL to boost your SUMR rewards.`
   }
 
   return 'You’re making progress. Keep referring to hit the previous milestones first to unlock your extra SUMR boost.'
