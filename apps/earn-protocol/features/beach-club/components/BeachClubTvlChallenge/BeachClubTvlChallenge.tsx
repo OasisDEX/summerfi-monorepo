@@ -50,7 +50,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
             <Text as="h2" variant={idx === 0 ? 'h2colorfulBeachClub' : 'h2'}>
               {stat.value}
             </Text>
-            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+            <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {stat.description}
             </Text>
           </div>

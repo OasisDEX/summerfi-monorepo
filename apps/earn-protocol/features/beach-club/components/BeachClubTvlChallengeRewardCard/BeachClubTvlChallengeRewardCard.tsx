@@ -140,11 +140,11 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
               >
                 {youAreHere ? (
                   <>
-                    <Icon iconName="star_solid_beach_club" size={24} /> You are here!
+                    <Icon iconName="star_solid_beach_club" size={20} /> You are here!
                   </>
                 ) : (
                   <>
-                    <Icon iconName="checkmark_colorful_beach_club" size={24} /> You reached here
+                    <Icon iconName="checkmark_colorful_beach_club" size={20} /> You reached here
                   </>
                 )}
               </Text>

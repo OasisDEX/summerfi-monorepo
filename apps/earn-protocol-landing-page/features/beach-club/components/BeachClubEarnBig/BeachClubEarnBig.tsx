@@ -1,4 +1,4 @@
-import { Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import classNames from './BeachClubEarnBig.module.css'
@@ -26,7 +26,7 @@ const paragraphs = [
 
 export const BeachClubEarnBig = () => {
   return (
-    <div className={classNames.beachClubEarnBigWrapper}>
+    <Card className={classNames.beachClubEarnBigWrapper} variant="cardSecondary">
       <Text as="h2" variant="h2">
         Earn big $SUMR and token fee’s for sharing.
       </Text>
@@ -62,6 +62,6 @@ export const BeachClubEarnBig = () => {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }

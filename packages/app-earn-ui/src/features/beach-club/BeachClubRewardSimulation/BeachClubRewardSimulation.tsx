@@ -55,14 +55,14 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
         className={classNames.cardWrapper}
       >
         <div className={classNames.textual}>
-          <Text as="h1" variant="h1">
+          <Text as="h2" variant="h2">
             {formatWithSeparators(getMultiplier(simulationValue) * simulationValue, {
               precision: 2,
             })}
           </Text>
           <Text
-            as="h5"
-            variant="h5"
+            as="p"
+            variant="p1semi"
             style={{
               color: 'var(--beach-club-link)',
               textAlign: 'center',
@@ -72,7 +72,7 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
           </Text>
         </div>
         <div className={classNames.textual}>
-          <Text as="h1" variant="h1">
+          <Text as="h2" variant="h2">
             <Text as="span" variant="p2semi">
               up to{' '}
             </Text>
@@ -82,8 +82,8 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
             })}
           </Text>
           <Text
-            as="h5"
-            variant="h5"
+            as="p"
+            variant="p1semi"
             style={{
               color: 'var(--beach-club-link)',
               textAlign: 'center',
