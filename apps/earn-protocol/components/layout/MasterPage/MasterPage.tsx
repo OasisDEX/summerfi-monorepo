@@ -1,6 +1,7 @@
 'use client'
 import { type FC, type PropsWithChildren } from 'react'
 import {
+  analyticsCookieVersion,
   CookieBanner,
   Footer,
   NewsletterWrapper,
@@ -10,6 +11,8 @@ import {
 } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { BeachClubFloatingBanner } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 
 import './global.css'
@@ -27,6 +30,9 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   analyticsCookie,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
+  const { features } = useSystemConfig()
+
+  const beachClubEnabled = !!features?.BeachClub
 
   return (
     <div className={masterPageStyles.mainContainer}>
@@ -82,6 +88,10 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         setValue={setCookieSettings}
         manageCookie={manageAnalyticsCookies}
       />
+      {/* Condition to show banner after cookie banner */}
+      {beachClubEnabled && cookieSettings?.version === analyticsCookieVersion && (
+        <BeachClubFloatingBanner />
+      )}
     </div>
   )
 }
