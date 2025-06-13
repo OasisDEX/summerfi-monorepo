@@ -1,0 +1,64 @@
+.floatingBannerContainer {
+  display: flex;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  bottom: 0;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    padding: 0 var(--general-space-16);
+    width: 100%;
+    max-width: 1166px;
+    bottom: var(--general-space-16);
+  }
+
+  .floatingBannerWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border-top-left-radius: var(--general-radius-12);
+    border-top-right-radius: var(--general-radius-12);
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    gap: var(--general-space-16);
+
+    @media (min-width: 768px) {
+      border-radius: var(--general-radius-12);
+    }
+
+    .contentWrapper {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--general-space-16);
+      /* flex-wrap: wrap; */
+
+      .textualContent {
+        display: flex;
+        flex-direction: column;
+        gap: var(--general-space-4);
+        width: 100%;
+
+        @media (min-width: 768px) {
+          max-width: unset;
+        }
+      }
+    }
+
+    .buttonsWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--general-space-16);
+      width: 100%;
+
+      @media (min-width: 768px) {
+        justify-content: flex-end;
+        width: fit-content;
+      }
+    }
+  }
+}
