@@ -70,6 +70,8 @@ interface InputWithDropdownProps {
   onBlur?: () => void
   disabled?: boolean
   tagsRow?: ReactNode
+  withSearch?: boolean
+  inputPlaceholder?: string
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
@@ -86,6 +88,8 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   selectAllOnFocus,
   disabled,
   tagsRow,
+  withSearch = false,
+  inputPlaceholder = 'Search...',
 }) => {
   const handleFocus = (ev: React.FocusEvent<HTMLInputElement>) => {
     if (selectAllOnFocus) {
@@ -129,6 +133,8 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
               asPill
               onChange={handleDropdownChange}
               isDisabled={disabled}
+              withSearch={withSearch}
+              inputPlaceholder={inputPlaceholder}
             >
               <Content option={dropdownValue} />
             </Dropdown>

@@ -50,7 +50,8 @@ export const ControlsDepositWithdraw = ({
         secondaryValue={amountDisplayUSD}
         handleChange={handleAmountChange}
         handleDropdownChange={handleDropdownChange}
-        options={options}
+        options={options.sort((a, b) => a.label.localeCompare(b.label))}
+        withSearch={options.length > 8}
         dropdownValue={dropdownValue}
         onFocus={onFocus}
         onBlur={onBlur}
