@@ -50,7 +50,9 @@
   font-size: 32px;
   line-height: 44px;
 }
+
 @media (min-width: 745px) {
+
   .h1,
   .h1colorful,
   .h1colorfulBeachClub,
@@ -67,7 +69,9 @@
   font-size: 28px;
   line-height: 40px;
 }
+
 @media (min-width: 745px) {
+
   .h2,
   .h2colorful,
   .h2colorfulBeachClub,
@@ -84,7 +88,9 @@
   font-size: 24px;
   line-height: 36px;
 }
+
 @media (min-width: 745px) {
+
   .h3,
   .h3colorful,
   .h3colorfulBeachClub,
@@ -101,7 +107,9 @@
   font-size: 20px;
   line-height: 32px;
 }
+
 @media (min-width: 531px) {
+
   .h4,
   .h4colorful,
   .h1colorfulBeachClub,
@@ -165,7 +173,9 @@
   font-size: 10px;
   line-height: 18px;
 }
+
 @media (min-width: 531px) {
+
   .p4,
   .p4semi,
   .p4colorful,

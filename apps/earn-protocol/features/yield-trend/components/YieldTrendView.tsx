@@ -10,6 +10,7 @@ import {
   HeadingWithCards,
   Input,
   Text,
+  TextNumberAnimated,
   useAmount,
   useCurrentUrl,
   VaultTitleDropdownContentBlock,
@@ -20,11 +21,7 @@ import {
   type IToken,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import {
-  formatCryptoBalance,
-  formatDecimalAsPercent,
-  subgraphNetworkToId,
-} from '@summerfi/app-utils'
+import { formatDecimalAsPercent, subgraphNetworkToId } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -211,7 +208,11 @@ export const YieldTrendView = ({ vaults, vaultsApyByNetworkMap }: YieldTrendView
             <Text variant="p1semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
               Lazy Summer Yield
             </Text>
-            <Text variant="h3colorful">{formatDecimalAsPercent(selectedVaultApy.apy)}</Text>
+            <TextNumberAnimated
+              variant="h3colorful"
+              suffix="%"
+              value={Number(formatDecimalAsPercent(selectedVaultApy.apy, { noPercentSign: true }))}
+            />
             <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
               Current yield for a specific asset on Summer.fi, continuously optimized across the top
               protocols by AI powered keepers.
@@ -284,7 +285,7 @@ export const YieldTrendView = ({ vaults, vaultsApyByNetworkMap }: YieldTrendView
             >
               You would earn an extra (a year)
             </Text>
-            <Text variant="h3colorful">${formatCryptoBalance(earnDifference)}</Text>
+            <TextNumberAnimated variant="h3colorful" prefix="$" value={earnDifference.toNumber()} />
             <Button variant="primaryMedium" style={{ marginTop: 'var(--spacing-space-medium)' }}>
               Deposit
             </Button>

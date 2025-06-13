@@ -8,6 +8,7 @@ import type ButtonClassNames from './components/atoms/Button/Button.module.css'
 export { ButtonClassNames }
 
 export { Text } from './components/atoms/Text/Text'
+export { TextNumberAnimated } from './components/atoms/Text/TextNumberAnimated'
 export { Card, type CardVariant } from './components/atoms/Card/Card'
 import type TextClassNames from './components/atoms/Text/Text.module.css'
 
