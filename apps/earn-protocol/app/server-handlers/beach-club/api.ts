@@ -15,6 +15,16 @@ interface BeachClubRewardBalance {
   total_claimed: string
 }
 
+export const defaultBeachClubRecruitedUsersPagination: BeachClubRecruitedUsersPagination = {
+  data: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  },
+}
+
 /**
  * Retrieves paginated list of recruited users for a given referral code
  * @param {Object} params - The parameters object
@@ -149,15 +159,7 @@ export const getBeachClubRecruitedUsersServerSide = async ({
     // eslint-disable-next-line no-console
     console.error('Error getting recruited users', error)
 
-    return NextResponse.json({
-      data: [],
-      pagination: {
-        currentPage: page,
-        totalPages: 1,
-        totalItems: 0,
-        itemsPerPage: limit,
-      },
-    })
+    return NextResponse.json(defaultBeachClubRecruitedUsersPagination)
   } finally {
     await beachClubDb.db.destroy().catch((err) => {
       // eslint-disable-next-line no-console

@@ -2,14 +2,20 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import {
+  defaultLatestActivityPagination,
+  getPaginatedLatestActivity,
+} from '@/app/server-handlers/tables-data/latest-activity/api'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import {
   type BeachClubRecruitedUsersPagination,
   type BeachClubRewardBalance,
 } from '@/features/beach-club/types'
 
-import { getPaginatedBeachClubRecruitedUsers } from './api'
+import {
+  defaultBeachClubRecruitedUsersPagination,
+  getPaginatedBeachClubRecruitedUsers,
+} from './api'
 
 export interface BeachClubData {
   referral_code: string | null
@@ -108,16 +114,20 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
     ])
 
     const [recruitedUsersWithRewards, recruitedUsersLatestActivity] = await Promise.all([
-      getPaginatedBeachClubRecruitedUsers({
-        page: 1,
-        limit: 10,
-        referralCode: basicData.referral_code,
-      }),
-      getPaginatedLatestActivity({
-        usersAddresses: recruitedUsers.map((user) => user.id.toLowerCase()),
-        page: 1,
-        limit: 10,
-      }),
+      recruitedUsers.length > 0
+        ? getPaginatedBeachClubRecruitedUsers({
+            page: 1,
+            limit: 10,
+            referralCode: basicData.referral_code,
+          })
+        : defaultBeachClubRecruitedUsersPagination,
+      recruitedUsers.length > 0
+        ? getPaginatedLatestActivity({
+            usersAddresses: recruitedUsers.map((user) => user.id.toLowerCase()),
+            page: 1,
+            limit: 10,
+          })
+        : defaultLatestActivityPagination,
     ])
 
     return {

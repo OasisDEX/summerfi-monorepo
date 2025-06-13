@@ -6,6 +6,19 @@ import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
 
 import { type LatestActivitiesSortBy, type LatestActivityPagination } from './types'
 
+export const defaultLatestActivityPagination: LatestActivityPagination = {
+  data: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  },
+  totalDeposits: 0,
+  medianDeposit: 0,
+  totalUniqueUsers: 0,
+}
+
 /**
  * Fetches the latest activities from the database server-side with optional filters.
  *
@@ -162,7 +175,7 @@ export const getLatestActivitiesServerSide = async ({
     // eslint-disable-next-line no-console
     console.error('Error fetching latest activity:', error)
 
-    return NextResponse.json({ error: 'Failed to fetch latest activity' }, { status: 500 })
+    return NextResponse.json(defaultLatestActivityPagination)
   } finally {
     if (dbInstance) {
       await dbInstance.db.destroy().catch((err) => {
