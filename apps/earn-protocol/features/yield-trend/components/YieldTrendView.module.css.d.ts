@@ -2,6 +2,9 @@ declare const styles: {
   readonly "cardsVerticalWrapper": string;
   readonly "chartStrategiesFilter": string;
   readonly "chartTableHeader": string;
+  readonly "dataTabActive": string;
+  readonly "dataTabs": string;
+  readonly "dataTabsDescription": string;
   readonly "depositCard": string;
   readonly "depositCardInput": string;
   readonly "divider": string;

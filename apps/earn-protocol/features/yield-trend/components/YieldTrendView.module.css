@@ -89,3 +89,26 @@
   align-items: center;
   gap: var(--general-space-8);
 }
+
+.dataTabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-space-large);
+}
+
+.dataTabs span {
+  color: var(--color-text-primary-disabled);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.dataTabs .dataTabActive {
+  color: var(--color-text-primary);
+  pointer-events: none;
+}
+
+.dataTabsDescription {
+  color: var(--color-text-secondary);
+  margin: var(--spacing-space-medium) 0 var(--spacing-space-medium);
+}

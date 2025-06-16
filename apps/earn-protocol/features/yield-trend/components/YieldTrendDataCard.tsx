@@ -3,6 +3,8 @@ import { Button, Card, getDisplayToken, Text, VaultTitleWithRisk } from '@summer
 import { getArkNiceName } from '@summerfi/app-earn-ui/src/helpers/get-ark-nice-name'
 import { type SDKVaultishType } from '@summerfi/app-types'
 
+import { YieldTrendChart } from '@/features/yield-trend/components/YieldTrendChart'
+
 import yieldTrendViewStyles from './YieldTrendView.module.css'
 
 export const YieldTrendDataCard = ({ selectedVault }: { selectedVault: SDKVaultishType }) => {
@@ -11,8 +13,12 @@ export const YieldTrendDataCard = ({ selectedVault }: { selectedVault: SDKVaulti
   }, [selectedVault.arks])
 
   const [activeFilter, setActiveFilter] = useState<string[]>([
-    ...properArksList.map((ark) => ark.id),
+    ...properArksList.map(({ id }) => id),
   ])
+
+  const [dataTabActive, setDataTabActive] = useState<'currentAllocations' | 'rebalanceHistory'>(
+    'currentAllocations',
+  )
 
   return (
     <Card variant="cardSecondary" style={{ flexDirection: 'column' }}>
@@ -58,6 +64,32 @@ export const YieldTrendDataCard = ({ selectedVault }: { selectedVault: SDKVaulti
           </Button>
         ))}
       </div>
+      <YieldTrendChart />
+      <div className={yieldTrendViewStyles.dataTabs}>
+        <Text
+          variant="h5"
+          className={
+            dataTabActive === 'currentAllocations' ? yieldTrendViewStyles.dataTabActive : ''
+          }
+          onClick={() => setDataTabActive('currentAllocations')}
+        >
+          Current Allocations
+        </Text>
+        <Text
+          variant="h5"
+          className={dataTabActive === 'rebalanceHistory' ? yieldTrendViewStyles.dataTabActive : ''}
+          onClick={() => setDataTabActive('rebalanceHistory')}
+        >
+          Rebalance History
+        </Text>
+      </div>
+      <Text variant="p2" className={yieldTrendViewStyles.dataTabsDescription}>
+        The Summer Earn Protocol is a permissionless passive lending product, which sets out to
+        offer effortless and secure optimised yield, while diversifying risk.
+      </Text>
+      <Card>
+        <Text variant="p2semi">Sources of Lazy Summer Protocol Yield</Text>
+      </Card>
     </Card>
   )
 }
