@@ -17,6 +17,12 @@
   width: 100%;
 }
 
+@media (max-width: 743px) {
+  .headerCardGrid {
+    gap: var(--general-space-16);
+  }
+}
+
 .headerCardGrid .headerCardLeft {
   display: flex;
   flex-direction: column;
@@ -41,14 +47,16 @@
   padding: var(--spacing-space-x-large);
 }
 
-.headerCardGrid .headerCardCenter {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
+@media (min-width: 743px) {
+  .headerCardGrid .headerCardCenter {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
-.headerCardGrid .headerCardRight {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  .headerCardGrid .headerCardRight {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }
 
 .headerCardGrid .headerCardRight .depositCard {
