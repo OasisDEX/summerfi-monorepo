@@ -70,6 +70,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
             height: finalSize,
             backgroundColor: 'var(--earn-protocol-neutral-70)',
             borderRadius: '50%',
+            ...style,
           }}
         />
       }

@@ -26,7 +26,7 @@ export const NavigationWrapper: FC = () => {
           <Button
             variant={isBeachClub ? 'beachClubMedium' : 'primaryMedium'}
             onClick={() => {}}
-            className={(navigationWrapperStyles.actionButton, navigationWrapperStyles.gradient)}
+            className={navigationWrapperStyles.actionButton}
           >
             Launch app
           </Button>

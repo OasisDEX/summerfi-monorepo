@@ -146,7 +146,7 @@ const higherYieldsBlockSections = {
             description: 'Rebalance Transactions',
           },
           {
-            title: `${formatWithSeparators(savedTimeInHours)} hours`,
+            title: `${formatWithSeparators(savedTimeInHours, { precision: 1 })} hours`,
             colorful: true,
             description: 'User time saved',
           },
