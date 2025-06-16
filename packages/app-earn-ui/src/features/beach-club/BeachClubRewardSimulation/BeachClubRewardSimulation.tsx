@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect, useRef, useState } from 'react'
-import { formatShorthandNumber } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
@@ -21,12 +21,14 @@ const max = 1000000
 
 interface BeachClubRewardSimulationProps {
   cardBackgroundColor?: string
+  tvl?: number
 }
 
 export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
   cardBackgroundColor,
+  tvl,
 }) => {
-  const [simulationValue, setSimulationValue] = useState(500000)
+  const [simulationValue, setSimulationValue] = useState(tvl ? Math.min(tvl, max) : 500000)
   const sliderWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -49,24 +51,45 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
       <Card
         style={{
           backgroundColor: cardBackgroundColor ?? 'var(--earn-protocol-neutral-95)',
-          marginBottom: 'var(--general-space-24)',
         }}
+        className={classNames.cardWrapper}
       >
         <div className={classNames.textual}>
-          <Text as="h1" variant="h1">
-            {formatShorthandNumber(getMultiplier(simulationValue) * simulationValue, {
+          <Text as="h2" variant="h2">
+            {formatWithSeparators(getMultiplier(simulationValue) * simulationValue, {
               precision: 2,
             })}
           </Text>
           <Text
-            as="h5"
-            variant="h5"
+            as="p"
+            variant="p1semi"
             style={{
               color: 'var(--beach-club-link)',
-              marginBottom: 'var(--general-space-12)',
+              textAlign: 'center',
             }}
           >
             Projected Yearly SUMR Rewards
+          </Text>
+        </div>
+        <div className={classNames.textual}>
+          <Text as="h2" variant="h2">
+            <Text as="span" variant="p2semi">
+              up to{' '}
+            </Text>
+            $
+            {formatWithSeparators(0.001 * simulationValue, {
+              precision: 2,
+            })}
+          </Text>
+          <Text
+            as="p"
+            variant="p1semi"
+            style={{
+              color: 'var(--beach-club-link)',
+              textAlign: 'center',
+            }}
+          >
+            Yearly Earned Fees
           </Text>
         </div>
       </Card>

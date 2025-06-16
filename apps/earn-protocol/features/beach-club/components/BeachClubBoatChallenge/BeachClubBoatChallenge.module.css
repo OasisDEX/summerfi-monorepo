@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--general-space-4);
-    margin-top: var(--general-space-48);
+    margin-top: var(--general-space-24);
     margin-bottom: var(--general-space-32);
   }
 
@@ -23,11 +23,15 @@
 
   .rewardCardsWrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
     gap: var(--general-space-16);
     margin-top: var(--general-space-32);
     margin-bottom: var(--general-space-16);
     width: 100%;
+
+    @media (min-width: 768px) {
+      justify-content: space-between;
+    }
   }
 }

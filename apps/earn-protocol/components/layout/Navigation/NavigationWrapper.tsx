@@ -35,6 +35,8 @@ export const NavigationWrapper: FC = () => {
   const [runningGame, setRunningGame] = useState(false)
   const { features } = useSystemConfig()
 
+  const isCampaignPage = currentPath.startsWith('/campaigns')
+
   return (
     <>
       <Navigation
@@ -47,7 +49,7 @@ export const NavigationWrapper: FC = () => {
           userWalletAddress,
           isEarnApp: true,
         })}
-        walletConnectionComponent={<WalletLabel />}
+        walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
         mobileWalletConnectionComponents={{
           primary: <WalletLabel variant="logoutOnly" />,
           secondary: <WalletLabel variant="addressOnly" />,

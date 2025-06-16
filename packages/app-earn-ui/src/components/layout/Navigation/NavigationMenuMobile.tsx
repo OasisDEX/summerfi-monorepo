@@ -44,7 +44,7 @@ export const NavigationMenuMobile = ({
 
   const resolvedBeachClubLink =
     isEarnApp && userWalletAddress
-      ? `${host}/earn/portfolio/${userWalletAddress}?tab=beach-club`
+      ? `/portfolio/${userWalletAddress}?tab=beach-club`
       : `${host}${INTERNAL_LINKS.beachClub}`
 
   return (

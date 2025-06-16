@@ -1,10 +1,9 @@
-import { type FC, useMemo, useState } from 'react'
-import { AnimateHeight, BeachClubRewardSimulation, Icon, Text } from '@summerfi/app-earn-ui'
+import { type FC, useMemo } from 'react'
+import { BeachClubRewardSimulation, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
-import { BeachClubVerticalDots } from '@/features/beach-club/components/BeachClubVerticalDots/BeachClubVerticalDots'
 
 import { getBeachClubTvlRewardsCards } from './cards'
 
@@ -15,45 +14,56 @@ interface BeachClubTvlChallengeProps {
 }
 
 export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClubData }) => {
-  const [seeAll, setSeeAll] = useState(false)
-
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
 
   const stats = [
     {
+      id: 1,
       value: `$${formatFiatBalance(currentGroupTvl)}`,
       description: 'Cumulative TVL from referrals',
     },
     {
+      id: 2,
       value: formatCryptoBalance(
         beachClubData.rewards.find((reward) => reward.currency === 'SUMR')?.balance ?? 0,
       ),
       description: 'Earned $SUMR',
     },
     {
+      id: 3,
       value: `$${formatFiatBalance(
         beachClubData.rewards
           .filter((reward) => reward.currency !== 'SUMR' && reward.currency !== 'points')
           .reduce((acc, reward) => acc + Number(reward.balance), 0),
       )}`,
-      description: "Earned Fee's",
+      description: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
+          Earned Fee&apos;s{' '}
+          <Tooltip
+            tooltip="Earned fee's are the total accrued fee's from your Beach Club referrals to date, denominated in dollars."
+            tooltipWrapperStyles={{ minWidth: '200px' }}
+          >
+            <Icon iconName="info" size={24} />
+          </Tooltip>
+        </div>
+      ),
     },
   ]
 
-  const { defaultCards, hiddenCards, oneBillionCard } = useMemo(
-    () => getBeachClubTvlRewardsCards(currentGroupTvl, seeAll),
-    [currentGroupTvl, seeAll],
+  const { defaultCards } = useMemo(
+    () => getBeachClubTvlRewardsCards(currentGroupTvl),
+    [currentGroupTvl],
   )
 
   return (
     <div className={classNames.beachClubTvlChallengeWrapper}>
       <div className={classNames.statsWrapper}>
         {stats.map((stat, idx) => (
-          <div key={stat.description} className={classNames.textual}>
+          <div key={stat.id} className={classNames.textual}>
             <Text as="h2" variant={idx === 0 ? 'h2colorfulBeachClub' : 'h2'}>
               {stat.value}
             </Text>
-            <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+            <Text as="div" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
               {stat.description}
             </Text>
           </div>
@@ -74,45 +84,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
           <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
         ))}
       </div>
-      <AnimateHeight
-        id="reward-cards-wrapper"
-        show={seeAll}
-        fade={false}
-        contentClassName={classNames.rewardCardsWrapper}
-        className={classNames.animateHeightWrapper}
-      >
-        {hiddenCards.map((card) => (
-          <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
-        ))}
-      </AnimateHeight>
-
-      {!seeAll && (
-        <Text
-          as="div"
-          variant="p3semi"
-          onClick={() => setSeeAll(!seeAll)}
-          className={classNames.seeAllWrapper}
-        >
-          See all <Icon iconName="chevron_down" size={10} />
-        </Text>
-      )}
-      {!seeAll && (
-        <div className={classNames.verticalDotsWrapper}>
-          <BeachClubVerticalDots />
-        </div>
-      )}
-      {!seeAll && <BeachClubTvlChallengeRewardCard {...oneBillionCard} />}
-      {seeAll && (
-        <Text
-          as="div"
-          variant="p3semi"
-          onClick={() => setSeeAll(!seeAll)}
-          className={classNames.seeAllWrapper}
-        >
-          Hide all <Icon iconName="chevron_up" size={10} />
-        </Text>
-      )}
-      <BeachClubRewardSimulation />
+      <BeachClubRewardSimulation tvl={currentGroupTvl} />
     </div>
   )
 }

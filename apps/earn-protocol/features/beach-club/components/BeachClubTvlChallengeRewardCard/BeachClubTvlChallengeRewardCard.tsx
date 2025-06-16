@@ -4,17 +4,15 @@ import {
   Card,
   getTwitterShareUrl,
   Icon,
-  SUMR_CAP,
   Text,
   useCurrentUrl,
-  useLocalConfig,
 } from '@summerfi/app-earn-ui'
 import {
   formatAsShorthandNumbers,
-  formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
 } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
@@ -26,53 +24,54 @@ interface BeachClubTvlChallengeRewardCardProps {
   customTitle?: string
   rawTvlGroup: number
   nextGroupTvl: number
+  previousGroupTvl: number
   description: string
-  boost: string
-  sumrToEarn: number
+  boost?: number
+  sumrApy: number
   currentGroupTvl: number
-  colorfulBackground?: boolean
-  colorfulBorder?: boolean
+  youAreHere?: boolean
 }
 
 export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
   tvlGroup,
   customTitle,
   rawTvlGroup,
-  nextGroupTvl,
   description,
   boost,
-  sumrToEarn,
+  sumrApy,
   currentGroupTvl,
-  colorfulBackground,
-  colorfulBorder,
+  youAreHere,
 }) => {
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const currentUrl = useCurrentUrl()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
-  const [isExpanded, setIsExpanded] = useState(!groupAchieved)
+
+  // a special case where we want to show expanded both star earning and 10k card until user reaches 10k
+  const isTvlGroupZero = rawTvlGroup === 0
+  const resolvedIsExpanded = youAreHere ? true : !groupAchieved
+  const [isExpanded, setIsExpanded] = useState(resolvedIsExpanded)
 
   const leftToBoost = rawTvlGroup - currentGroupTvl
 
   return (
     <Card
-      className={`${classNames.beachClubTvlChallengeRewardCardWrapper} ${colorfulBorder ? classNames.colorfulBorder : ''} ${colorfulBackground ? classNames.colorfulBackground : ''}`}
+      className={clsx(
+        classNames.beachClubTvlChallengeRewardCardWrapper,
+        youAreHere && classNames.colorfulBorder,
+        youAreHere && classNames.colorfulBackground,
+      )}
       style={{
-        opacity: !groupAchieved ? 1 : 0.5,
-        ...(colorfulBackground && {
-          background: 'var(--gradient-earn-protocol-beach-club-5)',
+        ...(!resolvedIsExpanded && {
+          opacity: 0.5,
         }),
       }}
     >
       <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
-            {groupAchieved ? (
-              <>You reached a {tvlGroup} Group TVL</>
-            ) : customTitle ? (
+            {customTitle ? (
               <>{customTitle}</>
+            ) : groupAchieved ? (
+              <>You reached a {tvlGroup} Group TVL</>
             ) : (
               <>{tvlGroup} Group TVL</>
             )}
@@ -86,17 +85,18 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
           </div>
         </div>
         <div className={classNames.headerRightWrapper}>
-          <div className={classNames.boostWrapper}>
-            <Icon tokenName="SUMR" size={26} />
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Boost: {formatDecimalAsPercent(boost)}
-            </Text>
-          </div>
+          {boost && (
+            <div className={classNames.boostWrapper}>
+              <Icon tokenName="SUMR" size={26} />
+              <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                {formatDecimalAsPercent(boost, { precision: 0 })} boost
+              </Text>
+            </div>
+          )}
           <div className={classNames.earnPill}>
             <Icon iconName="stars" size={24} />
             <Text as="p" variant="p3semi">
-              Earn {formatCryptoBalance(sumrToEarn)} SUMR ($
-              {formatFiatBalance(sumrToEarn * estimatedSumrPrice)})
+              {formatDecimalAsPercent(sumrApy, { precision: 1 })} SUMR APY
             </Text>
           </div>
           <div className={classNames.chevronDesktopWrapper}>
@@ -127,7 +127,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
           <div className={classNames.footer}>
             {!groupAchieved ? (
               <BeachClubProgressBar max={rawTvlGroup} current={currentGroupTvl} />
-            ) : !(currentGroupTvl >= nextGroupTvl) ? (
+            ) : (
               <Text
                 as="div"
                 variant="p1semiColorfulBeachClub"
@@ -138,9 +138,17 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
                   gap: 'var(--general-space-4)',
                 }}
               >
-                <Icon iconName="star_solid_beach_club" size={24} /> You are here!
+                {youAreHere ? (
+                  <>
+                    <Icon iconName="star_solid_beach_club" size={20} /> You are here!
+                  </>
+                ) : (
+                  <>
+                    <Icon iconName="checkmark_colorful_beach_club" size={20} /> You reached here
+                  </>
+                )}
               </Text>
-            ) : null}
+            )}
             {leftToBoost > 0 && (
               <Text
                 as="p"
@@ -154,18 +162,20 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
                 {formatAsShorthandNumbers(leftToBoost, { precision: 2 })} left!
               </Text>
             )}
-            <Link
-              href={getTwitterShareUrl({
-                url: currentUrl,
-                text: groupAchieved
-                  ? `I've reached a ${tvlGroup} Group TVL! 🎉`
-                  : `I'm ${leftToBoost} Group TVL away from earning a ${boost} boost! 🎉`,
-              })}
-              className={classNames.shareWrapper}
-              target="_blank"
-            >
-              Share on <Icon iconName="x" size={20} />
-            </Link>
+            {youAreHere && (
+              <Link
+                href={getTwitterShareUrl({
+                  url: currentUrl,
+                  text: isTvlGroupZero
+                    ? `I'm $${formatFiatBalance(leftToBoost)} TVL away from earning a 100% boost! 🎉`
+                    : `I've reached a $${formatFiatBalance(rawTvlGroup)}+ Group TVL! 🎉`,
+                })}
+                className={classNames.shareWrapper}
+                target="_blank"
+              >
+                Share on <Icon iconName="x" size={20} />
+              </Link>
+            )}
           </div>
         </div>
       </AnimateHeight>

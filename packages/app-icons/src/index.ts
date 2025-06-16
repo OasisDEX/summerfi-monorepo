@@ -92,6 +92,9 @@ export const icons = {
   checkmark_colorful: customLazy(
     () => import('./icons/checkmark_colorful.svg?react'),
   ) as IconExportType,
+  checkmark_colorful_beach_club: customLazy(
+    () => import('./icons/checkmark_colorful_beach_club.svg?react'),
+  ) as IconExportType,
   checkmark_circle: customLazy(
     () => import('./icons/checkmark_circle.svg?react'),
   ) as IconExportType,
@@ -505,6 +508,8 @@ export const icons = {
   'usd₮0_circle_color': customLazy(
     () => import('./icons/usd₮0_circle_color.svg?react'),
   ) as IconExportType,
+  usd0: customLazy(() => import('./icons/usd0.svg?react')) as IconExportType,
+  'usd0++': customLazy(() => import('./icons/usd0++.svg?react')) as IconExportType,
   user: customLazy(() => import('./icons/user.svg?react')) as IconExportType,
   users_beach_club: customLazy(
     () => import('./icons/users_beach_club.svg?react'),
@@ -878,6 +883,8 @@ export const iconsSync: {
   usdt_color: import('./icons/usdt_color.svg?react'),
   usdt: import('./icons/usdt.svg?react'),
   'usd₮0_circle_color': import('./icons/usd₮0_circle_color.svg?react'),
+  usd0: import('./icons/usd0.svg?react'),
+  'usd0++': import('./icons/usd0++.svg?react'),
   user: import('./icons/user.svg?react'),
   vault_network_warning: import('./icons/vault_network_warning.svg?react'),
   wallet: import('./icons/wallet.svg?react'),

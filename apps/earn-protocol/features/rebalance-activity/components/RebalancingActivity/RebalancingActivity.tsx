@@ -60,7 +60,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
               </div>
             }
             size="small"
-            value={`${savedTimeInHours} Hours`}
+            value={`${formatWithSeparators(savedTimeInHours, { precision: 1 })} Hours`}
           />
           <DataBlock
             title={

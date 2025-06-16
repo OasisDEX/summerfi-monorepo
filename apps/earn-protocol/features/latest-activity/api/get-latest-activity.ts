@@ -21,7 +21,7 @@ export const getLatestActivity = async ({
   strategies,
   sortBy,
   orderBy,
-  userAddress,
+  usersAddresses,
 }: {
   page: number
   limit?: number
@@ -29,7 +29,7 @@ export const getLatestActivity = async ({
   strategies?: string[]
   sortBy?: string
   orderBy?: string
-  userAddress?: string
+  usersAddresses?: string[]
 }): Promise<LatestActivityPagination> => {
   const query = new URLSearchParams({
     page: page.toString(),
@@ -38,7 +38,8 @@ export const getLatestActivity = async ({
     ...(strategies && strategies.length > 0 && { strategies: strategies.join(',') }),
     ...(sortBy && { sortBy }),
     ...(orderBy && { orderBy: orderBy.toLowerCase() }),
-    ...(userAddress && { userAddress }),
+    ...(usersAddresses &&
+      usersAddresses.length > 0 && { usersAddresses: usersAddresses.join(',') }),
   })
 
   const response = await fetch(`/earn/api/latest-activity?${query.toString()}`)

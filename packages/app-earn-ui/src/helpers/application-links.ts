@@ -24,7 +24,7 @@ export const INTERNAL_LINKS = {
   tempSecurity: 'https://pro.summer.fi/security',
   tempAjnaRewards: 'https://pro.summer.fi/ajna/rewards',
   tempReferrals: 'https://pro.summer.fi/referrals',
-  tempBrand: 'https://pro.summer.fi/brand',
+  tempBrand: 'https://summerfi.notion.site/summer-brand-guidelines',
   tempBorrow: 'https://pro.summer.fi/earn/borrow',
   tempMultiply: 'https://pro.summer.fi/earn/multiply',
   tempEarn: 'https://pro.summer.fi/earn/earn',

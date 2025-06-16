@@ -1,81 +1,70 @@
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useState } from 'react'
 import { Button, Card } from '@summerfi/app-earn-ui'
-import BigNumber from 'bignumber.js'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { BeachClubReferralActivityTable } from '@/features/beach-club/components/BeachClubReferralActivityTable/BeachClubReferralActivityTable'
+import { getBeachClubRecruitedUsers } from '@/features/beach-club/api/get-beach-club-recruited-users'
 import { BeachClubYourReferralsTable } from '@/features/beach-club/components/BeachClubYourReferralsTable/BeachClubYourReferralsTable'
-import { type BeachClubReferralList } from '@/features/beach-club/types'
 
 import classNames from './BeachClubTrackReferrals.module.css'
-
-enum TrackReferralsTab {
-  REFERRAL_ACTIVITY = 'referral-activity',
-  YOUR_REFERRALS = 'your-referrals',
-}
-
-const tabsOptions = [
-  {
-    label: 'Referral Activity',
-    id: TrackReferralsTab.REFERRAL_ACTIVITY,
-  },
-  {
-    label: 'Your Referrals',
-    id: TrackReferralsTab.YOUR_REFERRALS,
-  },
-]
 
 interface BeachClubTrackReferralsProps {
   beachClubData: BeachClubData
 }
 
 export const BeachClubTrackReferrals: FC<BeachClubTrackReferralsProps> = ({ beachClubData }) => {
-  const [tab, setTab] = useState<TrackReferralsTab>(TrackReferralsTab.REFERRAL_ACTIVITY)
+  const [currentYourReferrals, setCurrentYourReferrals] = useState(
+    beachClubData.recruitedUsersWithRewards.data,
+  )
 
-  const trackReferralsList: BeachClubReferralList = useMemo(() => {
-    return Object.values(beachClubData.recruitedUsersRewards).map((user) => ({
-      address: user.id,
-      tvl: user.tvl,
-      earnedToDate: user.rewards
-        .filter((reward) => reward.currency !== 'points')
-        .reduce((acc, reward) => acc.plus(reward.balance_usd ?? '0'), new BigNumber(0))
-        .toString(),
-      forecastAnnualisedEarnings: user.rewards
-        .filter((reward) => reward.currency !== 'points')
-        .reduce(
-          (acc, reward) => acc.plus(Number(reward.amount_per_day_usd ?? 0) * 365),
-          new BigNumber(0),
-        )
-        .toString(),
-    }))
-  }, [beachClubData])
+  const [currentYourReferralsPage, setCurrentYourReferralsPage] = useState(1)
+  const [hasMoreYourReferralsItems, setHasMoreYourReferralsItems] = useState(
+    beachClubData.recruitedUsersWithRewards.pagination.totalPages > 1,
+  )
+  const [isLoadingYourReferrals, setIsLoadingYourReferrals] = useState(false)
 
-  const tables = {
-    [TrackReferralsTab.REFERRAL_ACTIVITY]: (
-      <BeachClubReferralActivityTable
-        referralActivityList={beachClubData.recruitedUsersLatestActivity}
-      />
-    ),
-    [TrackReferralsTab.YOUR_REFERRALS]: (
-      <BeachClubYourReferralsTable trackReferralsList={trackReferralsList} />
-    ),
+  const handleMoreYourReferralsItems = async () => {
+    if (!hasMoreYourReferralsItems || !beachClubData.referral_code) return
+
+    setIsLoadingYourReferrals(true)
+
+    try {
+      const nextPage = currentYourReferralsPage + 1
+      const res = await getBeachClubRecruitedUsers({
+        page: nextPage,
+        limit: 10,
+        referralCode: beachClubData.referral_code,
+      })
+
+      if (
+        res.data.length === 0 ||
+        nextPage >= beachClubData.recruitedUsersWithRewards.pagination.totalPages
+      ) {
+        setHasMoreYourReferralsItems(false)
+      } else {
+        setCurrentYourReferrals((prev) => [...prev, ...res.data])
+        setCurrentYourReferralsPage((prev) => prev + 1)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching more your referrals', error)
+      setHasMoreYourReferralsItems(false)
+    } finally {
+      setIsLoadingYourReferrals(false)
+    }
   }
 
   return (
     <Card className={classNames.beachClubTrackReferralsWrapper}>
-      <div className={classNames.buttons}>
-        {tabsOptions.map((item) => (
-          <Button
-            variant="beachClubMedium"
-            key={item.id}
-            onClick={() => setTab(item.id)}
-            className={tab === item.id ? classNames.tabActive : classNames.tab}
-          >
-            {item.label}
-          </Button>
-        ))}
-      </div>
-      {tables[tab]}
+      <BeachClubYourReferralsTable trackReferralsList={currentYourReferrals} />
+      {hasMoreYourReferralsItems && (
+        <Button
+          variant="textBeachClubMedium"
+          onClick={handleMoreYourReferralsItems}
+          disabled={isLoadingYourReferrals}
+        >
+          {isLoadingYourReferrals ? 'Loading...' : 'Load more'}
+        </Button>
+      )}
     </Card>
   )
 }

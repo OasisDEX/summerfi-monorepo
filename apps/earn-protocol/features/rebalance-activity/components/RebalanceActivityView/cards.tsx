@@ -1,5 +1,5 @@
 import { Icon, Tooltip } from '@summerfi/app-earn-ui'
-import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
+import { formatFiatBalance, formatWithSeparators } from '@summerfi/app-utils'
 
 export const rebalanceActivityHeading = {
   title: 'Lazy Summer Global Rebalance Activity',
@@ -34,7 +34,7 @@ export const getRebalanceActivityHeadingCards = ({
         </Tooltip>
       </div>
     ),
-    value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+    value: `${formatWithSeparators(savedTimeInHours, { precision: 1 })} hours`,
     description:
       'Total time users have saved by relying on our AI-Powered keeper network to optimize positions across strategies, instead of doing it manually.',
   },

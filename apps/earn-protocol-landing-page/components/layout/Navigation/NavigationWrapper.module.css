@@ -4,6 +4,3 @@
   padding: var(--spacing-space-x-small) var(--spacing-space-medium);
   height: 38px;
 }
-.actionButton.gradient {
-  background: var(--gradient-earn-protocol-dark);
-}

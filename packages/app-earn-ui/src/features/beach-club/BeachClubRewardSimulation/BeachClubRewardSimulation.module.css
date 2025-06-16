@@ -7,15 +7,26 @@
   width: 100%;
   margin-top: var(--general-space-32);
 
-  .textual {
+  .cardWrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-bottom: var(--general-space-24);
     justify-content: center;
-    gap: var(--general-space-4);
-    width: 100%;
-    margin-top: var(--general-space-32);
-    margin-bottom: var(--general-space-32);
+    flex-wrap: wrap;
+    gap: var(--general-space-24);
+    padding-top: 56px;
+    padding-bottom: 56px;
+
+    @media (min-width: 1024px) {
+      gap: var(--general-space-128);
+    }
+
+    .textual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--general-space-4);
+    }
   }
 
   .sliderWrapper {
@@ -109,6 +120,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
+      padding-left: var(--general-space-12);
     }
   }
 }

@@ -1,22 +1,22 @@
 import { Button, Icon, TableCellText, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatAddress, formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import { type LatestActivity } from '@summerfi/summer-protocol-db'
 import Link from 'next/link'
 
-import { type BeachClubReferralActivity } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
-const actionLabelMap: { [key in BeachClubReferralActivity['actionType']]: string } = {
+const actionLabelMap: { [key in LatestActivity['actionType']]: string } = {
   deposit: 'Deposit',
   withdraw: 'Withdraw',
 }
 
-const actionColorMap: { [key in BeachClubReferralActivity['actionType']]: string } = {
+const actionColorMap: { [key in LatestActivity['actionType']]: string } = {
   deposit: 'var(--earn-protocol-success-100)',
   withdraw: 'var(--earn-protocol-warning-100)',
 }
 
-export const referralActivityMapper = (rawData: BeachClubReferralActivity[]) => {
+export const referralActivityMapper = (rawData: LatestActivity[]) => {
   return rawData.map((item) => {
     return {
       id: item.userAddress,
@@ -36,7 +36,7 @@ export const referralActivityMapper = (rawData: BeachClubReferralActivity[]) => 
             }}
           >
             <Icon tokenName={item.inputTokenSymbol as TokenSymbolsList} variant="s" />
-            <TableCellText>{formatCryptoBalance(item.amountNormalized)}</TableCellText>
+            <TableCellText>{formatCryptoBalance(Number(item.amountNormalized))}</TableCellText>
           </div>
         ),
         date: (
@@ -50,7 +50,12 @@ export const referralActivityMapper = (rawData: BeachClubReferralActivity[]) => 
             target="_blank"
           >
             <Button variant="textPrimaryMedium">
-              <WithArrow as="p" variant="p3semi" style={{ color: 'inherit' }} withStatic>
+              <WithArrow
+                as="p"
+                variant="p3semi"
+                style={{ color: 'var(--beach-club-link)' }}
+                withStatic
+              >
                 View
               </WithArrow>
             </Button>

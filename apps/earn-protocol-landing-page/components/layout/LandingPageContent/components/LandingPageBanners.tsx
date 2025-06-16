@@ -2,11 +2,13 @@
 
 import { EXTERNAL_LINKS, HeaderDisclaimer } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
+import Script from 'next/script'
 
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { adRollPixelScript } from '@/helpers/adroll-pixel-script'
 
 export const LandingPageBanners = () => {
-  const { userConfig } = useLandingPageData()
+  const { userConfig, landingPageData } = useLandingPageData()
 
   const isGB = userConfig?.country === 'GB'
 
@@ -29,6 +31,11 @@ export const LandingPageBanners = () => {
             Read more
           </Link>
         </HeaderDisclaimer>
+      )}
+      {landingPageData?.systemConfig.features.AdrollPixelScript && userConfig?.analyticsCookie && (
+        <Script strategy="afterInteractive" id="adroll-pixel-script">
+          {adRollPixelScript}
+        </Script>
       )}
     </>
   )

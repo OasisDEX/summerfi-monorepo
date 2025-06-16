@@ -14,8 +14,8 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
@@ -47,7 +47,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     redirect('/not-found')
   }
 
-  const [vault, { vaults }, rebalanceActivity, topDepositors] = await Promise.all([
+  const [vault, { vaults }, rebalanceActivity, latestActivity] = await Promise.all([
     getVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
@@ -58,8 +58,8 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       page: 1,
       limit: 1,
     }),
-    // just to get info about total users
-    getPaginatedTopDepositors({
+    // just to get info about total unique users
+    getPaginatedLatestActivity({
       page: 1,
       limit: 1,
       filterOutUsersAddresses: userAddresesToFilterOut,
@@ -110,7 +110,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   const summerVaultName = getVaultNiceName({ vault: vaultWithConfig })
 
   const totalRebalanceActions = rebalanceActivity.pagination.totalItems
-  const totalUsers = topDepositors.pagination.totalItems
+  const totalUsers = latestActivity.totalUniqueUsers
   const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
 
   return (

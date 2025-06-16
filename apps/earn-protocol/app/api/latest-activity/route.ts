@@ -11,7 +11,7 @@ const LatestActivityQueryParamsSchema = z.object({
     .default('timestamp'),
   orderBy: z.enum(['asc', 'desc']).default('desc'),
   actionType: z.enum(['deposit', 'withdraw']).optional(),
-  userAddress: z.string().optional(),
+  usersAddresses: z.string().optional(),
   tokens: z.string().optional(),
   strategies: z.string().optional(),
 })
@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const { page, limit, sortBy, orderBy, actionType, userAddress, tokens, strategies } = result.data
+  const { page, limit, sortBy, orderBy, actionType, usersAddresses, tokens, strategies } =
+    result.data
 
   const parsedTokens = tokens ? tokens.split(',') : undefined
   const parsedStrategies = strategies ? strategies.split(',') : undefined
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
     sortBy,
     orderBy,
     actionType,
-    userAddress,
+    usersAddresses: usersAddresses ? usersAddresses.split(',') : undefined,
     tokens: parsedTokens,
     strategies: parsedStrategies,
   })

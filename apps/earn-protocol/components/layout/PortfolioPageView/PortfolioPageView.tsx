@@ -191,6 +191,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
           handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
+          useAsControlled
         />
       </div>
       <BeachClubPalmBackground />
