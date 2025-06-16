@@ -4,6 +4,12 @@
   padding: 0 var(--general-space-16);
 }
 
+.cardsVerticalWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+}
+
 .headerCardGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -68,4 +74,18 @@
   height: 1px;
   background-color: var(--color-border);
   margin: var(--spacing-space-x-small) 0;
+}
+
+.chartTableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-space-medium) 0;
+}
+
+.chartStrategiesFilter {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--general-space-8);
 }

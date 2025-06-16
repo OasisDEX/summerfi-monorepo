@@ -203,6 +203,7 @@ export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
 
 export { getTokenGuarded } from './tokens/helpers'
 export { networkIconByNetworkName, networkIconByChainId } from './helpers/network-icons'
+export { getArkNiceName } from './helpers/get-ark-nice-name'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'

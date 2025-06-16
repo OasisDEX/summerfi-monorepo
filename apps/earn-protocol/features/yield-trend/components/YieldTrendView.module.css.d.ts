@@ -1,4 +1,7 @@
 declare const styles: {
+  readonly "cardsVerticalWrapper": string;
+  readonly "chartStrategiesFilter": string;
+  readonly "chartTableHeader": string;
   readonly "depositCard": string;
   readonly "depositCardInput": string;
   readonly "divider": string;
