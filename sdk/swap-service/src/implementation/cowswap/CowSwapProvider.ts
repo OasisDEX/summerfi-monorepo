@@ -13,25 +13,30 @@ import {
   QuoteData,
   SwapData,
   SwapErrorType,
-  SwapProviderType,
   SwapRoute,
   LoggingService,
   isChainId,
+  IntentSwapProviderType,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
-import { type ISwapProvider } from '@summerfi/swap-common'
+import { type IIntentSwapProvider } from '@summerfi/swap-common'
 import {
   OrderBookApi,
   SupportedChainId,
   OrderQuoteRequest,
   OrderQuoteSideKindSell,
   ALL_SUPPORTED_CHAIN_IDS,
+  type UnsignedOrder,
+  OrderSigningUtils,
+  SigningScheme,
+  COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS,
 } from '@cowprotocol/cow-sdk'
 import type { SwapProviderConfig } from '../Types'
+import { encodeFunctionData } from 'viem'
 
 export class CowSwapProvider
-  extends ManagerProviderBase<SwapProviderType>
-  implements ISwapProvider
+  extends ManagerProviderBase<IntentSwapProviderType>
+  implements IIntentSwapProvider
 {
   /**
    * =============== WARNING ===============
@@ -50,7 +55,7 @@ export class CowSwapProvider
   /** CONSTRUCTOR */
 
   constructor(params: { configProvider: IConfigurationProvider }) {
-    super({ ...params, type: SwapProviderType.CowSwap })
+    super({ ...params, type: IntentSwapProviderType.CowSwap })
     // Use a config getter like OneInchSwapProvider
     const { config } = this._getConfig()
     this._apiUrl = config.apiUrl
@@ -61,53 +66,120 @@ export class CowSwapProvider
 
   /** PUBLIC */
 
-  /** @see ISwapProvider.getSwapQuoteExactInput */
-  async getSwapQuoteExactInput(params: {
-    fromAmount: ITokenAmount
-    toToken: IToken
-    from: IAddress
-    receiver?: IAddress
-  }): Promise<QuoteData> {
+  /** @see IIntentSwapProvider.getOrderFromAmount */
+  async getOrderFromAmount(
+    params: Parameters<IIntentSwapProvider['getOrderFromAmount']>[0],
+  ): ReturnType<IIntentSwapProvider['getOrderFromAmount']> {
     const chainId = params.fromAmount.token.chainInfo.chainId
+    const supportedChainId = this._assertSupportedChainId(chainId)
 
-    if (this.getSupportedChainIds().includes(chainId)) {
-      throw new Error(`Chain ID ${chainId} is not supported by CowSwapProvider`)
-    }
-    const orderBookApi = new OrderBookApi({ chainId: chainId as SupportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
 
     const sellToken = params.fromAmount.token.address.value
     const sellAmount = params.fromAmount.toSolidityValue().toString()
     const buyToken = params.toToken.address.value
+    const from = params.from.value
+    // If receiver is not provided, use the from address as the receiver
+    const receiver = params.receiver?.value ?? params.from.value
 
     const quoteRequest: OrderQuoteRequest = {
       sellToken,
       buyToken,
       sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
-      from: params.from.value,
+      from,
+      receiver,
     }
 
     const { quote } = await orderBookApi.getQuote(quoteRequest)
 
+    const order: UnsignedOrder = {
+      ...quote,
+      sellAmount,
+      feeAmount: '0', // CowSwap does not require feeAmount in the quote
+      receiver,
+    }
+    const orderDigest = OrderSigningUtils.getOrderDigest(order)
+
     return {
-      provider: SwapProviderType.CowSwap,
+      provider: IntentSwapProviderType.CowSwap,
       fromTokenAmount: params.fromAmount,
       toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
         amount: quote.buyAmount,
       }),
       validTo: quote.validTo,
+      order,
+      orderDigest,
     }
   }
 
-  /** @see ISwapProvider.getSwapDataExactInput */
-  async getSwapDataExactInput(params: {
-    fromAmount: ITokenAmount
-    toToken: IToken
-    recipient: IAddress
-    slippage: IPercentage
-  }): Promise<SwapData> {
-    throw new Error('Not implemented')
+  async sendOrder(
+    params: Parameters<IIntentSwapProvider['sendOrder']>[0],
+  ): ReturnType<IIntentSwapProvider['sendOrder']> {
+    const { order, signedOrderDigest, chainId } = params
+    const supportedChainId = this._assertSupportedChainId(chainId)
+
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+
+    const orderId = await orderBookApi.sendOrder({
+      ...order,
+      signature: signedOrderDigest,
+      signingScheme: SigningScheme.EIP712,
+    })
+
+    return {
+      orderId,
+    }
+  }
+
+  async cancelOrder(
+    params: Parameters<IIntentSwapProvider['cancelOrder']>[0],
+  ): ReturnType<IIntentSwapProvider['cancelOrder']> {
+    const { orderId, chainId } = params
+    const supportedChainId = this._assertSupportedChainId(chainId)
+
+    const settlementAddress = Address.createFromEthereum({
+      value: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[supportedChainId],
+    })
+
+    // encode invalidateOrder function call
+    const calldata = encodeFunctionData({
+      abi: invalidateOrderAbi,
+      functionName: 'invalidateOrder',
+      args: [orderId],
+    })
+
+    return {
+      description: `Cancel CowSwap order with ID ${orderId}`,
+      transaction: {
+        target: settlementAddress,
+        value: '0',
+        calldata,
+      },
+    }
+  }
+
+  async checkOrderById(
+    params: Parameters<IIntentSwapProvider['checkOrderById']>[0],
+  ): ReturnType<IIntentSwapProvider['checkOrderById']> {
+    const { orderId, chainId } = params
+    const supportedChainId = this._assertSupportedChainId(chainId)
+
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+
+    // fetch two promises in parallel
+    const [order, trades] = await Promise.all([
+      orderBookApi.getOrder(orderId),
+      orderBookApi.getTrades({ orderUid: orderId }),
+    ])
+
+    if (!order) {
+      return null
+    }
+    return {
+      order,
+    }
   }
 
   /** @see IManagerProvider.getSupportedChainIds */
@@ -168,4 +240,26 @@ export class CowSwapProvider
   private _parseErrorType(): SwapErrorType {
     return SwapErrorType.Unknown
   }
+
+  /**
+   * Maps a ChainId to a SupportedChainId
+   * @param chainId The ChainId to map
+   * @returns The SupportedChainId
+   */
+  private _assertSupportedChainId(chainId: ChainId): SupportedChainId {
+    if (!this.getSupportedChainIds().includes(chainId)) {
+      throw new Error(`Chain ID ${chainId} is not supported by CowSwapProvider`)
+    }
+    return chainId as SupportedChainId
+  }
 }
+
+const invalidateOrderAbi = [
+  {
+    inputs: [{ internalType: 'bytes', name: 'orderUid', type: 'bytes' }],
+    name: 'invalidateOrder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+]

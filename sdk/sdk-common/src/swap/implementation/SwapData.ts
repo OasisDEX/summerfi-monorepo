@@ -1,7 +1,7 @@
-import { ITokenAmount } from '../..//common/interfaces/ITokenAmount'
+import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { HexData } from '../../common/types/HexData'
 import type { SwapProviderType } from '../enums/SwapProviderType'
-import { IAddress } from '../..//common/interfaces/IAddress'
+import { IAddress } from '../../common/interfaces/IAddress'
 
 /**
  * @name SwapData
