@@ -65,7 +65,7 @@ const DataBlock = ({
           <Icon
             iconName={titleIcon}
             size={16}
-            style={{ color: 'var(--earn-protocol-secondary-40)', margin: '1.5px 0 0 1px' }}
+            style={{ color: 'var(--earn-protocol-secondary-40)', margin: '0 0 0 1px' }}
           />
         ) : null}
       </div>
