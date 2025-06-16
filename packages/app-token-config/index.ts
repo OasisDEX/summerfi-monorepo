@@ -118,6 +118,16 @@ export const tokenConfigs: TokenConfig[] = [
     iconName: 'usd₮0_circle_color',
   },
   {
+    symbol: 'USD0',
+    name: 'USD0',
+    iconName: 'usd0',
+  },
+  {
+    symbol: 'USD0++',
+    name: 'USD0++',
+    iconName: 'usd0++',
+  },
+  {
     symbol: 'COMP',
     name: 'Compound',
     iconName: 'compound_circle_color',

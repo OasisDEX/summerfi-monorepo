@@ -186,6 +186,8 @@ export type IconNamesList =
   | 'usdt_circle_color'
   | 'usdt_color'
   | 'usdt'
+  | 'usd0'
+  | 'usd0++'
   | 'wbtc_circle_color'
   | 'wbtc_color'
   | 'wbtc_usdc'
@@ -450,6 +452,8 @@ export type TokenSymbolsList =
   | 'MBASIS'
   | 'USD₮0'
   | 'S'
+  | 'USD0'
+  | 'USD0++'
   // deprecated ones
   | 'CRVV1ETHSTETH'
   | 'UNIV2AAVEETH'
