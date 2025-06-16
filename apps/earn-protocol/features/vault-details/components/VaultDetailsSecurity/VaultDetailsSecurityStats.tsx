@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance, zero } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatWithSeparators, zero } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -33,11 +33,11 @@ export const VaultDetailsSecurityStats = ({
     },
     {
       title: 'Total Users',
-      value: totalUsers,
+      value: formatWithSeparators(totalUsers),
     },
     {
       title: 'Rebalancing Actions',
-      value: totalRebalanceActions,
+      value: formatWithSeparators(totalRebalanceActions),
     },
     {
       title: 'Risk Curators',
