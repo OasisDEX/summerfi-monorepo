@@ -44,7 +44,7 @@ const DataBlock = ({
 }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <Text
           as="p"
           variant="p3semi"
@@ -120,7 +120,7 @@ const VaultCardLoading = ({
               title="Total assets"
               primary
               contentDesktop={
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', marginTop: '6px' }}>
                   <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                     <SkeletonLine height={20} width={100} />
                   </Text>
@@ -129,21 +129,21 @@ const VaultCardLoading = ({
                     variant="p4semi"
                     style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
                   >
-                    <SkeletonLine height={30} width={100} />
+                    <SkeletonLine height={12} width={50} />
                   </Text>
                 </div>
               }
               contentMobile={
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', marginTop: '4px' }}>
                   <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                    <SkeletonLine height={20} width={100} />
+                    <SkeletonLine height={18} width={100} />
                   </Text>
                   &nbsp;
                   <Text
                     variant="p4semi"
                     style={{ color: 'var(--earn-protocol-secondary-40)', marginTop: '3px' }}
                   >
-                    <SkeletonLine height={30} width={100} />
+                    <SkeletonLine height={12} width={50} />
                   </Text>
                 </div>
               }
@@ -153,15 +153,20 @@ const VaultCardLoading = ({
               titleIcon="stars"
               contentDesktop={
                 <Text
+                  as="p"
                   variant="p1semiColorful"
-                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                  style={{ color: 'var(--earn-protocol-secondary-100)', marginTop: '6px' }}
                 >
                   <SkeletonLine height={20} width={100} />
                 </Text>
               }
               contentMobile={
-                <Text variant="p2colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <SkeletonLine height={30} width={100} />
+                <Text
+                  as="p"
+                  variant="p2colorful"
+                  style={{ color: 'var(--earn-protocol-secondary-100)', marginTop: '4px' }}
+                >
+                  <SkeletonLine height={18} width={70} />
                 </Text>
               }
             />
@@ -171,21 +176,29 @@ const VaultCardLoading = ({
               title="Best for"
               primary
               contentDesktop={
-                <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                <Text
+                  as="p"
+                  variant="p1semi"
+                  style={{ color: 'var(--earn-protocol-secondary-100)', marginTop: '6px' }}
+                >
                   <SkeletonLine height={20} width={100} />
                 </Text>
               }
               contentMobile={
-                <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <SkeletonLine height={30} width={100} />
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{ color: 'var(--earn-protocol-secondary-100)', marginTop: '4px' }}
+                >
+                  <SkeletonLine height={18} width={80} />
                 </Text>
               }
             />
             <DataBlock
               title="Risk"
               titleIcon="clock"
-              contentDesktop={<SkeletonLine height={20} width={100} />}
-              contentMobile={<SkeletonLine height={30} width={100} />}
+              contentDesktop={<SkeletonLine height={20} width={100} style={{ marginTop: '6px' }} />}
+              contentMobile={<SkeletonLine height={18} width={85} style={{ marginTop: '4px' }} />}
             />
           </div>
         </div>
