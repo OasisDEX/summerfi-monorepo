@@ -14,6 +14,7 @@ export type QuoteData = {
   toTokenAmount: ITokenAmount
   /* Providers can provide multiple routes */
   routes: SwapRoute[]
+  estimatedGas: string
 }
 
 export type SwapRoute = SwapHop[]
