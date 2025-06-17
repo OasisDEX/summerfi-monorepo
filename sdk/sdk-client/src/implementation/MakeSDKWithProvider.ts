@@ -1,13 +1,13 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { version as sdkClientVersion } from '../../bundle/package.json'
-import { Web3Provider, type JsonRpcProvider } from '@ethersproject/providers'
+import { Signer } from '@ethersproject/abstract-signer'
 import { SDKManagerWithProvider } from './SDKManagerWithProvider'
 
-export type SDKProvider = Web3Provider | JsonRpcProvider
+export type Web3Signer = Signer
 
 export type MakeSDKParams = {
   logging?: boolean
-  provider: SDKProvider
+  signer: Web3Signer
 } & ({ apiDomainUrl: string } | { apiURL: string })
 
 /*
@@ -35,11 +35,11 @@ export function makeSDKWithProvider(params: MakeSDKParams) {
   }
   const rpcClient = createMainRPCClient(versionedURL, params.logging)
 
-  if (!params.provider) {
+  if (!params.signer) {
     throw new Error(
       'No web3 provider provided and no window.ethereum found. Please provide a web3 provider.',
     )
   }
 
-  return new SDKManagerWithProvider({ rpcClient, provider: params.provider })
+  return new SDKManagerWithProvider({ rpcClient, signer: params.signer })
 }

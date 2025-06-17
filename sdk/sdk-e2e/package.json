@@ -29,6 +29,6 @@
     "@summerfi/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "@ethersproject/providers": "^5.7.2"
+    "ethers": "^5.7.2"
   }
 }

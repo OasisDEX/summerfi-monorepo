@@ -6,9 +6,7 @@ export const intentSwapsSendOrder = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      order: z.custom<IntentQuoteData['order']>(
-        (val) => val && typeof val === 'object' && 'signature' in val && 'sender' in val,
-      ),
+      order: z.custom<IntentQuoteData['order']>((val) => val && typeof val === 'object'),
       signingResult: z.custom<{
         signature: string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

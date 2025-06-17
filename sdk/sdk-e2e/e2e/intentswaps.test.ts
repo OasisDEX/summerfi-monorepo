@@ -2,39 +2,31 @@
 import { makeSDKWithProvider } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, userAddress } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
 import assert from 'assert'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { Wallet } from 'ethers'
 
 jest.setTimeout(300000)
 
 const chainId = ChainIds.Base
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+if (!rpcUrl) {
+  throw new Error('Missing fork url')
+}
+const wallet = new Wallet(signerPrivateKey)
 
-describe('Armada Protocol Switch', () => {
-  it('should switch position', async () => {
+describe('Intent swaps', () => {
+  it('should test intent swap flow', async () => {
     await runTests({
       chainId,
-      rpcUrl,
       amountValue: '1',
     })
   })
 
-  async function runTests({
-    chainId,
-    rpcUrl,
-    amountValue,
-  }: {
-    chainId: ChainId
-    rpcUrl: string | undefined
-    amountValue: string
-  }) {
-    if (!rpcUrl) {
-      throw new Error('Missing fork url')
-    }
+  async function runTests({ chainId, amountValue }: { chainId: ChainId; amountValue: string }) {
     const sdk = makeSDKWithProvider({
-      apiURL: SDKApiUrl,
-      provider: new JsonRpcProvider(rpcUrl, chainId),
+      apiDomainUrl: SDKApiUrl,
+      signer: wallet,
     })
 
     const chainInfo = getChainInfoByChainId(chainId)
@@ -51,22 +43,20 @@ describe('Armada Protocol Switch', () => {
       fromAmount: fromAmount,
       toToken,
     })
+    console.log('Sell Order:', sellQuote.order)
 
     const orderId = await sdk.intentSwaps.sendOrder({
       chainId,
       order: sellQuote.order,
     })
-
     console.log('Order ID:', orderId)
 
     const orderInfo = await sdk.intentSwaps.checkOrder({
       chainId,
       orderId: orderId.orderId,
     })
-
-    console.log('Order Info:', orderInfo)
-
     assert(orderInfo, 'Order info should not be null')
+    console.log('Order Info:', orderInfo)
 
     const cancelResult = await sdk.intentSwaps.cancelOrder({
       chainId,

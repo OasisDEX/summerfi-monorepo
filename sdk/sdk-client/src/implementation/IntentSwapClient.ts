@@ -6,18 +6,18 @@ import {
   type SupportedChainId,
   ALL_SUPPORTED_CHAIN_IDS,
 } from '@cowprotocol/cow-sdk'
-import type { SDKProvider } from './MakeSDKWithProvider'
+import type { Web3Signer } from './MakeSDKWithProvider'
 
 /**
  * @name IntentSwapClient
  * @implements IIntentSwapClient
  */
 export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
-  private readonly _provider: SDKProvider
+  private readonly _signer: Web3Signer
 
-  public constructor(params: { rpcClient: RPCMainClientType; provider: SDKProvider }) {
+  public constructor(params: { rpcClient: RPCMainClientType; signer: Web3Signer }) {
     super(params)
-    this._provider = params.provider
+    this._signer = params.signer
   }
 
   /** @see IIntentSwapClient.getSellOrderQuote */
@@ -42,7 +42,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       throw new Error(`Unsupported chainId: ${params.chainId}`)
     }
 
-    const signer = this._provider.getSigner()
+    const signer = this._signer
 
     const signingResult = await OrderSigningUtils.signOrder(
       params.order,
@@ -66,7 +66,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       throw new Error(`Unsupported chainId: ${params.chainId}`)
     }
 
-    const signer = this._provider.getSigner()
+    const signer = this._signer
 
     const orderCancellationsSigningResult = await OrderSigningUtils.signOrderCancellation(
       params.orderId,

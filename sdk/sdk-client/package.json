@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@cowprotocol/cow-sdk": "^5.10.3",
-    "@ethersproject/providers": "^5.7.2",
+    "@ethersproject/abstract-signer": "^5.8.0",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",

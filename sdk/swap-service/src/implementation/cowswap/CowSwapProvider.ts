@@ -20,7 +20,6 @@ import {
   COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS,
   ETH_FLOW_ADDRESS,
 } from '@cowprotocol/cow-sdk'
-import type { SwapProviderConfig } from '../Types'
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 
@@ -36,9 +35,6 @@ export class CowSwapProvider
    *
    * https://docs.cow.fi/
    * */
-  private readonly _apiUrl: string
-  private readonly _apiKey: string
-  private readonly _version: string
 
   private readonly _supportedChainIds: SupportedChainId[]
 
@@ -47,10 +43,6 @@ export class CowSwapProvider
   constructor(params: { configProvider: IConfigurationProvider }) {
     super({ ...params, type: IntentSwapProviderType.CowSwap })
     // Use a config getter like OneInchSwapProvider
-    const { config } = this._getConfig()
-    this._apiUrl = config.apiUrl
-    this._apiKey = config.apiKey
-    this._version = config.version
 
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
@@ -138,16 +130,20 @@ export class CowSwapProvider
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
 
+    const orderUids = [orderId]
+
     try {
       const cancellationsResult = await orderBookApi.sendSignedOrderCancellations({
         ...signingResult,
-        orderUids: [orderId],
+        orderUids,
       })
 
-      return { result: cancellationsResult ?? 'success' }
+      const result = cancellationsResult + ' order(s) ' + orderUids.join(', ')
+
+      return { result }
     } catch (e) {
       throw new Error(
-        `Failed to cancel CowSwap order with ID ${orderId}: ${this._parseErrorType()}`,
+        `Failed to cancel order(s) ${orderUids.join(', ')}: ${this._parseErrorType()}`,
       )
     }
   }
@@ -200,44 +196,6 @@ export class CowSwapProvider
   }
 
   /** PRIVATE */
-
-  /**
-   * Gets the CowSwap configuration from the configuration provider
-   * @returns The CowSwap configuration
-   */
-  private _getConfig(): {
-    config: SwapProviderConfig
-  } {
-    const COW_SWAP_API_URL = this.configProvider.getConfigurationItem({ name: 'COW_SWAP_API_URL' })
-    const COW_SWAP_API_KEY = this.configProvider.getConfigurationItem({ name: 'COW_SWAP_API_KEY' })
-    const COW_SWAP_API_VERSION = this.configProvider.getConfigurationItem({
-      name: 'COW_SWAP_API_VERSION',
-    })
-
-    if (!COW_SWAP_API_URL || !COW_SWAP_API_KEY || !COW_SWAP_API_VERSION) {
-      console.error(
-        JSON.stringify(
-          Object.entries({
-            COW_SWAP_API_URL,
-            COW_SWAP_API_KEY,
-            COW_SWAP_API_VERSION,
-          }),
-          null,
-          2,
-        ),
-      )
-      throw new Error('CowSwap configuration is missing, check logs for more information')
-    }
-
-    return {
-      config: {
-        apiUrl: COW_SWAP_API_URL,
-        apiKey: COW_SWAP_API_KEY,
-        version: COW_SWAP_API_VERSION,
-        authHeader: `Bearer ${COW_SWAP_API_KEY}`,
-      },
-    }
-  }
 
   /**
    * @description Tries to parse the error message from CowSwap to provide a higher level error type
