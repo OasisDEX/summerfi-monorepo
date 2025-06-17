@@ -132,8 +132,12 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
             <div className={classNames.socialMediaWrapper}>
               <Link
                 href={getTwitterShareUrl({
-                  url: `${window.location.origin}/earn?referralCode=${refCode}`,
-                  text: `Here's my Summer Earn Protocol referral code: ${refCode} 🎉. Use it to earn more!`,
+                  url: '',
+                  text: `Chill this summer, don't chase yields.
+
+Join me over at the Summer Beach Club🏖️ and earn the best yields in DeFi with none of the effort.
+
+Open a position using my code below and earn even more https://staging.summer.fi/earn?referralCode=${refCode}`,
                 })}
                 target="_blank"
                 className={classNames.socialMediaLink}
