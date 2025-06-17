@@ -1,23 +1,91 @@
-import { useMemo, useState } from 'react'
-import { Button, Card, getDisplayToken, Text, VaultTitleWithRisk } from '@summerfi/app-earn-ui'
-import { getArkNiceName } from '@summerfi/app-earn-ui/src/helpers/get-ark-nice-name'
-import { type SDKVaultishType } from '@summerfi/app-types'
+'use client'
+
+import { useCallback, useMemo, useState } from 'react'
+import {
+  Card,
+  getDisplayToken,
+  InlineButtons,
+  LoadingSpinner,
+  Text,
+  VaultTitleWithRisk,
+} from '@summerfi/app-earn-ui'
+import {
+  type ArksHistoricalChartData,
+  type InlineButtonOption,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
+import { getVaultNiceName } from '@summerfi/app-utils'
 
 import { YieldTrendChart } from '@/features/yield-trend/components/YieldTrendChart'
 
 import yieldTrendViewStyles from './YieldTrendView.module.css'
 
-export const YieldTrendDataCard = ({ selectedVault }: { selectedVault: SDKVaultishType }) => {
-  const properArksList = useMemo(() => {
-    return selectedVault.arks.filter((ark) => !ark.name?.includes('Buffer'))
-  }, [selectedVault.arks])
+interface YieldTrendDataCardProps {
+  selectedVault: SDKVaultishType
+  arksHistoricalChartData: ArksHistoricalChartData
+  isLoading?: boolean
+}
 
-  const [activeFilter, setActiveFilter] = useState<string[]>([
-    ...properArksList.map(({ id }) => id),
+export const YieldTrendDataCard = ({
+  selectedVault,
+  arksHistoricalChartData,
+  isLoading = false,
+}: YieldTrendDataCardProps) => {
+  const [activeFilter, setActiveFilter] = useState<InlineButtonOption<string>[]>([
+    {
+      title: 'All',
+      key: 'all',
+    },
   ])
 
   const [dataTabActive, setDataTabActive] = useState<'currentAllocations' | 'rebalanceHistory'>(
     'currentAllocations',
+  )
+
+  const summerVaultName = getVaultNiceName({ vault: selectedVault })
+
+  const buttonOptions = useMemo(() => {
+    return [
+      {
+        title: 'All',
+        key: 'all',
+      },
+      {
+        title: 'DeFi Median',
+        key: 'defi-median',
+      },
+      {
+        title: 'Summer.fi',
+        key: summerVaultName,
+      },
+      ...arksHistoricalChartData.dataNames.map((arkNiceName) => ({
+        title: arkNiceName,
+        key: arkNiceName,
+      })),
+    ]
+  }, [arksHistoricalChartData, summerVaultName])
+
+  const handleButtonClick = useCallback(
+    (option: InlineButtonOption<string>) => {
+      setActiveFilter((prev) => {
+        const isSelected = prev.some((opt) => opt.key === option.key)
+
+        if (isSelected) {
+          const filteredOptions = prev.filter((opt) => opt.key !== option.key)
+
+          return filteredOptions.length === 0 ? [buttonOptions[0]] : filteredOptions
+        }
+
+        // If selecting a non-"All" option, remove "All" option and add the new option
+        if (option.key !== 'all') {
+          return [...prev.filter((opt) => opt.key !== 'all'), option]
+        }
+
+        // If selecting "All", remove all other options
+        return [option]
+      })
+    },
+    [buttonOptions],
   )
 
   return (
@@ -32,39 +100,27 @@ export const YieldTrendDataCard = ({ selectedVault }: { selectedVault: SDKVaulti
       <div className={yieldTrendViewStyles.chartTableHeader}>
         <Text variant="h5">Compare Historical DeFi Yield Performance</Text>
       </div>
-      <div className={yieldTrendViewStyles.chartStrategiesFilter}>
-        <Button
-          key="ArkFilterButtonAll"
-          variant={
-            activeFilter.length === properArksList.length ? 'primarySmall' : 'secondarySmall'
-          }
-          onClick={() => {
-            if (activeFilter.length === properArksList.length) {
-              setActiveFilter([])
-            } else {
-              setActiveFilter([...properArksList.map((ark) => ark.id)])
-            }
-          }}
-        >
-          All
-        </Button>
-        {properArksList.map((ark) => (
-          <Button
-            key={`ArkFilterButton-${ark.id}`}
-            variant={activeFilter.includes(ark.id) ? 'primarySmall' : 'secondarySmall'}
-            onClick={() => {
-              if (activeFilter.includes(ark.id)) {
-                setActiveFilter(activeFilter.filter((id) => id !== ark.id))
-              } else {
-                setActiveFilter([...activeFilter, ark.id])
-              }
-            }}
-          >
-            {getArkNiceName(ark)}
-          </Button>
-        ))}
+      <div style={{ position: isLoading ? 'relative' : 'static' }}>
+        <div className={yieldTrendViewStyles.chartStrategiesFilter}>
+          <InlineButtons
+            options={buttonOptions}
+            currentOptions={activeFilter}
+            handleOption={handleButtonClick}
+            asButtons
+            variant="p4semi"
+          />
+        </div>
+        {isLoading && (
+          <div className={yieldTrendViewStyles.loadingSpinnerOverlay}>
+            <LoadingSpinner size={32} />
+          </div>
+        )}
+        <YieldTrendChart
+          chartData={arksHistoricalChartData}
+          summerVaultName={summerVaultName}
+          filters={activeFilter}
+        />
       </div>
-      <YieldTrendChart />
       <div className={yieldTrendViewStyles.dataTabs}>
         <Text
           variant="h5"

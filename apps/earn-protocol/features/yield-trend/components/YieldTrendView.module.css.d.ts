@@ -14,6 +14,7 @@ declare const styles: {
   readonly "headerCardLeft": string;
   readonly "headerCardLeftAPY": string;
   readonly "headerCardRight": string;
+  readonly "loadingSpinnerOverlay": string;
   readonly "wrapper": string;
 };
 export = styles;
