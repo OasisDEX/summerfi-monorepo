@@ -3046,6 +3046,12 @@ importers:
 
   sdk/sdk-client:
     dependencies:
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.10.3
+        version: 5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@ethersproject/providers':
+        specifier: ^5.7.2
+        version: 5.7.2
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../armada-protocol-common
@@ -3114,6 +3120,9 @@ importers:
 
   sdk/sdk-common:
     dependencies:
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.10.3
+        version: 5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -3479,6 +3488,9 @@ importers:
 
   sdk/swap-common:
     dependencies:
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.10.3
+        version: 5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -3504,6 +3516,9 @@ importers:
 
   sdk/swap-service:
     dependencies:
+      '@cowprotocol/contracts':
+        specifier: ^1.8.0
+        version: 1.8.0(ethers@5.7.2)
       '@cowprotocol/cow-sdk':
         specifier: ^5.10.3
         version: 5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
@@ -26554,6 +26569,10 @@ packages:
   /bluebird@3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
+  /bn.js@4.11.6:
+    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
+    dev: true
+
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -30816,7 +30835,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       number-to-bn: 1.7.0
     dev: true
 
@@ -37301,7 +37320,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       strip-hex-prefix: 1.0.0
     dev: true
 
@@ -40485,7 +40504,7 @@ packages:
       bn.js: 4.12.1
       create-hash: 1.2.0
       drbg.js: 1.0.1
-      elliptic: 6.5.5
+      elliptic: 6.6.1
       nan: 2.19.0
       safe-buffer: 5.2.1
     dev: false

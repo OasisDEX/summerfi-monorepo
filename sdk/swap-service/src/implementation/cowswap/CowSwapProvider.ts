@@ -1,20 +1,9 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
   Address,
-  IAddress,
-  IChainInfo,
-  IPercentage,
-  IToken,
-  ITokenAmount,
-  Percentage,
   TokenAmount,
   ChainId,
-  HexData,
-  QuoteData,
-  SwapData,
   SwapErrorType,
-  SwapRoute,
-  LoggingService,
   isChainId,
   IntentSwapProviderType,
 } from '@summerfi/sdk-common'
@@ -27,12 +16,13 @@ import {
   OrderQuoteSideKindSell,
   ALL_SUPPORTED_CHAIN_IDS,
   type UnsignedOrder,
-  OrderSigningUtils,
   SigningScheme,
   COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS,
+  ETH_FLOW_ADDRESS,
 } from '@cowprotocol/cow-sdk'
 import type { SwapProviderConfig } from '../Types'
 import { encodeFunctionData } from 'viem'
+import { invalidateOrderAbi } from './invalidateOrderAbi'
 
 export class CowSwapProvider
   extends ManagerProviderBase<IntentSwapProviderType>
@@ -50,7 +40,7 @@ export class CowSwapProvider
   private readonly _apiKey: string
   private readonly _version: string
 
-  private readonly _supportedChainIds: SupportedChainId[] = ALL_SUPPORTED_CHAIN_IDS
+  private readonly _supportedChainIds: SupportedChainId[]
 
   /** CONSTRUCTOR */
 
@@ -61,10 +51,17 @@ export class CowSwapProvider
     this._apiUrl = config.apiUrl
     this._apiKey = config.apiKey
     this._version = config.version
-    throw new Error('Not implemented')
+
+    this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
+      isChainId(chainId),
+    ) as SupportedChainId[]
   }
 
   /** PUBLIC */
+  /** @see IManagerProvider.getSupportedChainIds */
+  getSupportedChainIds(): ChainId[] {
+    return this._supportedChainIds as ChainId[]
+  }
 
   /** @see IIntentSwapProvider.getOrderFromAmount */
   async getOrderFromAmount(
@@ -84,8 +81,8 @@ export class CowSwapProvider
 
     const quoteRequest: OrderQuoteRequest = {
       sellToken,
-      buyToken,
       sellAmountBeforeFee: sellAmount,
+      buyToken,
       kind: OrderQuoteSideKindSell.SELL,
       from,
       receiver,
@@ -96,13 +93,13 @@ export class CowSwapProvider
     const order: UnsignedOrder = {
       ...quote,
       sellAmount,
-      feeAmount: '0', // CowSwap does not require feeAmount in the quote
+      feeAmount: '0', // CowSwap does not require feeAmount
       receiver,
+      partiallyFillable: params.partiallyFillable ?? false,
     }
-    const orderDigest = OrderSigningUtils.getOrderDigest(order)
 
     return {
-      provider: IntentSwapProviderType.CowSwap,
+      providerType: IntentSwapProviderType.CowSwap,
       fromTokenAmount: params.fromAmount,
       toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
@@ -110,7 +107,6 @@ export class CowSwapProvider
       }),
       validTo: quote.validTo,
       order,
-      orderDigest,
     }
   }
 
@@ -129,19 +125,39 @@ export class CowSwapProvider
     })
 
     return {
-      orderId,
+      orderId: orderId,
     }
   }
 
   async cancelOrder(
     params: Parameters<IIntentSwapProvider['cancelOrder']>[0],
   ): ReturnType<IIntentSwapProvider['cancelOrder']> {
+    const { chainId, orderId, signingResult } = params
+    const supportedChainId = this._assertSupportedChainId(chainId)
+
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+
+    try {
+      const cancellationsResult = await orderBookApi.sendSignedOrderCancellations({
+        ...signingResult,
+        orderUids: [orderId],
+      })
+
+      return { result: cancellationsResult ?? 'success' }
+    } catch (e) {
+      throw new Error(
+        `Failed to cancel CowSwap order with ID ${orderId}: ${this._parseErrorType()}`,
+      )
+    }
+  }
+
+  async cancelOrderOnchain(
+    params: Parameters<IIntentSwapProvider['cancelOrderOnchain']>[0],
+  ): ReturnType<IIntentSwapProvider['cancelOrderOnchain']> {
     const { orderId, chainId } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
-    const settlementAddress = Address.createFromEthereum({
-      value: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[supportedChainId],
-    })
+    const settlementAddress = this._getCowAddress(supportedChainId, 'settlement')
 
     // encode invalidateOrder function call
     const calldata = encodeFunctionData({
@@ -160,16 +176,16 @@ export class CowSwapProvider
     }
   }
 
-  async checkOrderById(
-    params: Parameters<IIntentSwapProvider['checkOrderById']>[0],
-  ): ReturnType<IIntentSwapProvider['checkOrderById']> {
+  async checkOrder(
+    params: Parameters<IIntentSwapProvider['checkOrder']>[0],
+  ): ReturnType<IIntentSwapProvider['checkOrder']> {
     const { orderId, chainId } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
 
     // fetch two promises in parallel
-    const [order, trades] = await Promise.all([
+    const [order /**trades*/] = await Promise.all([
       orderBookApi.getOrder(orderId),
       orderBookApi.getTrades({ orderUid: orderId }),
     ])
@@ -180,16 +196,6 @@ export class CowSwapProvider
     return {
       order,
     }
-  }
-
-  /** @see IManagerProvider.getSupportedChainIds */
-  getSupportedChainIds(): ChainId[] {
-    return this._supportedChainIds.reduce<ChainId[]>((acc, id) => {
-      if (isChainId(id)) {
-        acc.push(id)
-      }
-      return acc
-    }, [])
   }
 
   /** PRIVATE */
@@ -252,14 +258,25 @@ export class CowSwapProvider
     }
     return chainId as SupportedChainId
   }
-}
 
-const invalidateOrderAbi = [
-  {
-    inputs: [{ internalType: 'bytes', name: 'orderUid', type: 'bytes' }],
-    name: 'invalidateOrder',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-]
+  // Add helper to centralize settlement‐address logic
+  private _getCowAddress(
+    supportedChainId: SupportedChainId,
+    type: 'settlement' | 'eth_flow',
+  ): Address {
+    let value: string
+    switch (type) {
+      case 'settlement':
+        value = COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[supportedChainId]
+        break
+      case 'eth_flow':
+        value = ETH_FLOW_ADDRESS[supportedChainId]
+        break
+      default:
+        throw new Error(`Unknown CowSwap address type: ${type}`)
+    }
+    return Address.createFromEthereum({
+      value,
+    })
+  }
+}

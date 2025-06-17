@@ -20,6 +20,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@cowprotocol/contracts": "^1.8.0",
     "@cowprotocol/cow-sdk": "^5.10.3",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",

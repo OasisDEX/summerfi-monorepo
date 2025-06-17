@@ -2,11 +2,12 @@ import { IAddress, IToken, ITokenAmount } from '@summerfi/sdk-common'
 import type {
   IntentSwapProviderType,
   IntentQuoteData,
-  IntentOrderData,
   ChainId,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
+import type { EnrichedOrder, SigningResult } from '@cowprotocol/cow-sdk'
+
 /**
  * @name IIntentSwapProvider
  * @description this is for implementing different swap provider plugins
@@ -25,6 +26,7 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
     toToken: IToken
     from: IAddress
     receiver?: IAddress
+    partiallyFillable?: boolean
   }): Promise<IntentQuoteData>
 
   /**
@@ -35,9 +37,8 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    */
   sendOrder(params: {
     chainId: ChainId
-    order: any
-    signedOrderDigest: string
-  }): Promise<IntentOrderData>
+    signingResult: SigningResult
+  }): Promise<{ orderId: string }>
 
   /**
    * @name cancelOrder
@@ -45,12 +46,27 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    * @param chainId The chain ID where the order exists
    * @param orderId The ID of the order to cancel
    */
-  cancelOrder(params: { chainId: ChainId; orderId: string }): Promise<TransactionInfo>
+  cancelOrder(params: {
+    chainId: ChainId
+    orderId: string
+    signingResult: SigningResult
+  }): Promise<{ result: string }>
+
+  /**
+   * @name cancelOrderOnchain
+   * @description Cancels an existing order by its ID
+   * @param chainId The chain ID where the order exists
+   * @param orderId The ID of the order to cancel
+   */
+  cancelOrderOnchain(params: { chainId: ChainId; orderId: string }): Promise<TransactionInfo>
 
   /**
    * @name checkOrderById
    * @description Checks the status of the order by its ID
    * @param orderId The ID of the order to check
    */
-  checkOrderById(params: { chainId: ChainId; orderId: string }): Promise<{ order: any } | null>
+  checkOrder(params: {
+    chainId: ChainId
+    orderId: string
+  }): Promise<{ order: EnrichedOrder } | null>
 }

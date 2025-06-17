@@ -394,7 +394,6 @@ export type { ReferenceableField, ValueReference } from './simulation/interfaces
 export { SwapProviderType } from './swap/enums/SwapProviderType'
 export { IntentSwapProviderType } from './swap/enums/IntentSwapProviderType'
 export { type IntentQuoteData } from './swap/implementation/IntentQuoteData'
-export { type IntentOrderData } from './swap/implementation/IntentOrderData'
 export { SwapErrorType } from './swap/enums/SwapErrorType'
 export type { SwapData } from './swap/implementation/SwapData'
 export type { QuoteData, SwapRoute } from './swap/implementation/QuoteData'
