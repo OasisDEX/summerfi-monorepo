@@ -36,6 +36,7 @@ export const TransakPaymentMethods: FC<TransakPaymentMethodsProps> = ({
           style={{
             color: 'var(--earn-protocol-secondary-100)',
             padding: '0 var(--general-space-4)',
+            textAlign: 'center',
           }}
         >
           {method.label}
