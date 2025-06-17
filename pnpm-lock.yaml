@@ -3048,7 +3048,7 @@ importers:
     dependencies:
       '@cowprotocol/cow-sdk':
         specifier: ^5.10.3
-        version: 5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+        version: 5.10.3(ethers@6.13.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
       '@ethersproject/providers':
         specifier: ^5.7.2
         version: 5.7.2
@@ -3073,6 +3073,9 @@ importers:
       '@trpc/client':
         specifier: 11.0.0-rc.844
         version: 11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.7.3)
+      ethers:
+        specifier: ^6.11.1
+        version: 6.13.2
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -9990,12 +9993,36 @@ packages:
       multiformats: 9.9.0
     dev: false
 
+  /@cowprotocol/app-data@2.5.1(cross-fetch@3.1.8)(ethers@6.13.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
+    resolution: {integrity: sha512-GvcLQ44ZUHKdSAXiZ+YCaIehtme/OIvbvL/4go1UqNLTj3jDTDkagPh7CH/z2IPwFWTADyNZO/RSzKrW5UDNaA==}
+    peerDependencies:
+      cross-fetch: ^3.x
+      ethers: ^5.0.0
+      ipfs-only-hash: ^4.x
+      multiformats: ^9.x
+    dependencies:
+      ajv: 8.13.0
+      cross-fetch: 3.1.8
+      ethers: 6.13.2
+      ipfs-only-hash: 4.0.0
+      json-stringify-deterministic: 1.0.12
+      multiformats: 9.9.0
+    dev: false
+
   /@cowprotocol/contracts@1.8.0(ethers@5.7.2):
     resolution: {integrity: sha512-rMEHo1UBB6k4kRoWejHZNGggg6IBVt7vAd8x0FhEvjxhbq3zlAex61f9HpAcDExJNuvfwwDjsOc/7UGztCzhSw==}
     peerDependencies:
       ethers: ^5.4.0
     dependencies:
       ethers: 5.7.2
+    dev: false
+
+  /@cowprotocol/contracts@1.8.0(ethers@6.13.2):
+    resolution: {integrity: sha512-rMEHo1UBB6k4kRoWejHZNGggg6IBVt7vAd8x0FhEvjxhbq3zlAex61f9HpAcDExJNuvfwwDjsOc/7UGztCzhSw==}
+    peerDependencies:
+      ethers: ^5.4.0
+    dependencies:
+      ethers: 6.13.2
     dev: false
 
   /@cowprotocol/cow-sdk@5.10.3(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
@@ -10009,6 +10036,28 @@ packages:
       '@openzeppelin/merkle-tree': 1.0.8
       cross-fetch: 3.1.8
       ethers: 5.7.2
+      exponential-backoff: 3.1.2
+      graphql: 16.8.2
+      graphql-request: 4.3.0(graphql@16.8.2)
+      limiter: 3.0.0
+    transitivePeerDependencies:
+      - encoding
+      - ipfs-only-hash
+      - multiformats
+      - supports-color
+    dev: false
+
+  /@cowprotocol/cow-sdk@5.10.3(ethers@6.13.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0):
+    resolution: {integrity: sha512-whnfufOmJqJWw7u2HqLt6k+rw8eMH+ywmB++oxG6U6zLBdQihk18mIMz1wrNwfTUk0FFtn8g8nhrQL14oV27rg==}
+    peerDependencies:
+      ethers: ^5.7.2
+    dependencies:
+      '@cowprotocol/app-data': 2.5.1(cross-fetch@3.1.8)(ethers@6.13.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@cowprotocol/contracts': 1.8.0(ethers@6.13.2)
+      '@ethersproject/abstract-signer': 5.7.0
+      '@openzeppelin/merkle-tree': 1.0.8
+      cross-fetch: 3.1.8
+      ethers: 6.13.2
       exponential-backoff: 3.1.2
       graphql: 16.8.2
       graphql-request: 4.3.0(graphql@16.8.2)
@@ -21853,7 +21902,6 @@ packages:
 
   /@types/node@18.15.13:
     resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
-    dev: true
 
   /@types/node@18.19.103:
     resolution: {integrity: sha512-hHTHp+sEz6SxFsp+SA+Tqrua3AbmlAw+Y//aEwdHrdZkYVRWdvWD3y5uPZ0flYOkgskaFWqZ/YGFm3FaFQ0pRw==}
@@ -25477,7 +25525,6 @@ packages:
 
   /aes-js@4.0.0-beta.5:
     resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
-    dev: true
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -30829,7 +30876,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    dev: true
 
   /ethjs-unit@0.1.6:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
@@ -33063,7 +33109,7 @@ packages:
       '@formatjs/ecma402-abstract': 1.11.4
       '@formatjs/fast-memoize': 1.2.1
       '@formatjs/icu-messageformat-parser': 2.1.0
-      tslib: 2.2.0
+      tslib: 2.8.1
     dev: false
 
   /invariant@2.2.4:
@@ -40350,7 +40396,7 @@ packages:
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
-      tslib: 2.2.0
+      tslib: 2.8.1
 
   /sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
@@ -41017,7 +41063,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.2.0
+      tslib: 2.8.1
 
   /socket.io-client@4.7.5:
     resolution: {integrity: sha512-sJ/tqHOCe7Z50JCBCXrsY3I2k03iOiUe+tj1OmKeD2lXPiGH/RUCdTZFoqVyN7l1MnpIzPrGtLcijffmeouNlQ==}
@@ -43074,12 +43120,8 @@ packages:
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  /tslib@2.2.0:
-    resolution: {integrity: sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==}
-
   /tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-    dev: true
 
   /tslib@2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
@@ -45129,7 +45171,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: true
 
   /ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
