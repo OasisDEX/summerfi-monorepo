@@ -25,5 +25,8 @@
     "@summerfi/tenderly-utils": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "@ethersproject/providers": "^5.7.2"
   }
 }

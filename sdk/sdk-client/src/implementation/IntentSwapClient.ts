@@ -20,11 +20,11 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     this._provider = params.provider
   }
 
-  /** @see IIntentSwapClient.getOrderFromAmount */
-  public async getOrderFromAmount(
-    params: Parameters<IIntentSwapClient['getOrderFromAmount']>[0],
-  ): ReturnType<IIntentSwapClient['getOrderFromAmount']> {
-    return this.rpcClient.intentSwaps.getOrderFromAmount.query({
+  /** @see IIntentSwapClient.getSellOrderQuote */
+  public async getSellOrderQuote(
+    params: Parameters<IIntentSwapClient['getSellOrderQuote']>[0],
+  ): ReturnType<IIntentSwapClient['getSellOrderQuote']> {
+    return this.rpcClient.intentSwaps.getSellOrderQuote.query({
       fromAmount: params.fromAmount,
       toToken: params.toToken,
       from: params.from,

@@ -10,7 +10,7 @@ export interface IIntentSwapClient {
   /**
    * Returns a quote data for the swap between two tokens, by providing the exact amount of input tokens to swap
    */
-  getOrderFromAmount(params: {
+  getSellOrderQuote(params: {
     fromAmount: ITokenAmount
     toToken: IToken
     from: IAddress

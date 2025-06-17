@@ -14,14 +14,14 @@ import type { EnrichedOrder, SigningResult, UnsignedOrder } from '@cowprotocol/c
  */
 export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProviderType> {
   /**
-   * @name getSwapQuoteFromAmount
+   * @name getSellOrderQuote
    * @description Returns a quote data for the swap between two tokens, by providing the exact amount of input tokens to swap
    * @param fromAmount The amount of tokens to swap
    * @param toToken The token to swap to
    * @param from The address that will send the tokens
    * @param receiver The address that will receive the tokens
    */
-  getOrderFromAmount(params: {
+  getSellOrderQuote(params: {
     fromAmount: ITokenAmount
     toToken: IToken
     from: IAddress

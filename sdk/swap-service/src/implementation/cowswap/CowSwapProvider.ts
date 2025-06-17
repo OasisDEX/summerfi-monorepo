@@ -63,10 +63,10 @@ export class CowSwapProvider
     return this._supportedChainIds as ChainId[]
   }
 
-  /** @see IIntentSwapProvider.getOrderFromAmount */
-  async getOrderFromAmount(
-    params: Parameters<IIntentSwapProvider['getOrderFromAmount']>[0],
-  ): ReturnType<IIntentSwapProvider['getOrderFromAmount']> {
+  /** @see IIntentSwapProvider.getSellOrderQuote */
+  async getSellOrderQuote(
+    params: Parameters<IIntentSwapProvider['getSellOrderQuote']>[0],
+  ): ReturnType<IIntentSwapProvider['getSellOrderQuote']> {
     const chainId = params.fromAmount.token.chainInfo.chainId
     const supportedChainId = this._assertSupportedChainId(chainId)
 

@@ -9,7 +9,7 @@ import {
   type IAddress,
 } from '@summerfi/sdk-common'
 
-export const intentSwapsGetOrderFromAmount = publicProcedure
+export const intentSwapsGetSellOrderQuote = publicProcedure
   .input(
     z.object({
       fromAmount: z.custom<ITokenAmount>(isTokenAmount),
@@ -20,5 +20,5 @@ export const intentSwapsGetOrderFromAmount = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.intentSwapsManager.getOrderFromAmount(opts.input)
+    return opts.ctx.intentSwapsManager.getSellOrderQuote(opts.input)
   })
