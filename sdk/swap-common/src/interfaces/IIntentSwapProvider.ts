@@ -6,7 +6,7 @@ import type {
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
-import type { EnrichedOrder, SigningResult } from '@cowprotocol/cow-sdk'
+import type { EnrichedOrder, SigningResult, UnsignedOrder } from '@cowprotocol/cow-sdk'
 
 /**
  * @name IIntentSwapProvider
@@ -37,6 +37,7 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    */
   sendOrder(params: {
     chainId: ChainId
+    order: UnsignedOrder
     signingResult: SigningResult
   }): Promise<{ orderId: string }>
 

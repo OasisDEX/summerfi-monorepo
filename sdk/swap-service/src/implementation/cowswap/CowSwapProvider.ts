@@ -113,15 +113,16 @@ export class CowSwapProvider
   async sendOrder(
     params: Parameters<IIntentSwapProvider['sendOrder']>[0],
   ): ReturnType<IIntentSwapProvider['sendOrder']> {
-    const { order, signedOrderDigest, chainId } = params
+    const { chainId, order, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
 
     const orderId = await orderBookApi.sendOrder({
       ...order,
-      signature: signedOrderDigest,
-      signingScheme: SigningScheme.EIP712,
+      ...signingResult,
+      signature: signingResult.signature,
+      signingScheme: signingResult.signingScheme as unknown as SigningScheme,
     })
 
     return {

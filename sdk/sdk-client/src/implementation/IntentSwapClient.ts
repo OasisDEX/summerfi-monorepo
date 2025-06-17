@@ -45,8 +45,9 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       signer,
     )
 
-    return this.rpcClient.intentSwaps.sendOrder.query({
+    return this.rpcClient.intentSwaps.sendOrder.mutate({
       chainId: params.chainId,
+      order: params.order,
       signingResult,
     })
   }
@@ -67,7 +68,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       signer,
     )
 
-    return this.rpcClient.intentSwaps.cancelOrder.query({
+    return this.rpcClient.intentSwaps.cancelOrder.mutate({
       chainId: params.chainId,
       orderId: params.orderId,
       signingResult: orderCancellationsSigningResult,
