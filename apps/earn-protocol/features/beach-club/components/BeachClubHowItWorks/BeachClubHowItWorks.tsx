@@ -141,7 +141,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
 
 Join me over at the Summer Beach Club🏖️ and earn the best yields in DeFi with none of the effort.
 
-Open a position using my code below and earn even more https://staging.summer.fi/earn?referralCode=${refCode}`,
+Open a position using my code below and earn even more https://summer.fi/earn?referralCode=${refCode}`,
                 })}
                 target="_blank"
                 className={classNames.socialMediaLink}
