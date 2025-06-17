@@ -71,7 +71,11 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
         can onboard into the protocol - $SUMR, Revenue sharing based on fee’s and exclusive merch
         can all be earned.
       </Text>
-      <Link href="/" target="_blank" style={{ width: '100%', textAlign: 'left' }}>
+      <Link
+        href="https://blog.summer.fi/introducing-summer-fi-beach-club-earn-big-rewards-for-sharing"
+        target="_blank"
+        style={{ width: '100%', textAlign: 'left' }}
+      >
         <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
           Read the details
         </WithArrow>

@@ -1,5 +1,4 @@
-import { Card, Text, WithArrow } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import classNames from './BeachClubEarnBig.module.css'
 
@@ -8,19 +7,11 @@ const paragraphs = [
     title: 'Get rewarded in $SUMR. The token that powers DeFi’s best yield optimizer',
     description:
       '$SUMR is the governance token for the Lazy Summer Protocol. A DeFi yield optimization protocol that earns DeFi’s highest quality yields, all of the time, for everyone.',
-    link: {
-      label: 'Link to table',
-      href: '/',
-    },
   },
   {
     title: 'Get rewarded in fees. Earn extra income on top of $SUMR rewards.',
     description:
-      'Every time someone uses your referral, you earn a share of the protocol fees—paid directly to you. This is extra income on top of the $SUMR rewards you already earn.',
-    link: {
-      label: 'Link to table',
-      href: '/',
-    },
+      'Every time someone uses your referral, you earn a share of the protocol fees paid directly to you. This is extra income on top of the $SUMR rewards you already earn.',
   },
 ]
 
@@ -55,11 +46,6 @@ export const BeachClubEarnBig = () => {
               >
                 {paragraph.description}
               </Text>
-              <Link href={paragraph.link.href} target="_blank" prefetch={false}>
-                <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-                  {paragraph.link.label}
-                </WithArrow>
-              </Link>
             </div>
           ))}
         </div>
