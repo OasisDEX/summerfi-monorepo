@@ -56,21 +56,21 @@ export const SummerFiProSection = () => {
         <SummerFiProSectionBlock
           tag="Multiply"
           title="The easiest way to Amplify Exposure (and your profits)"
-          pointsList={['Automation', 'Position swap', '$RAYS']}
+          pointsList={['Automation', 'Position swap']}
           ctaLabel="Multiply"
           ctaUrl={`${INTERNAL_LINKS.summerPro}/multiply`}
         />
         <SummerFiProSectionBlock
           tag="Borrow"
           title="Unlock liquidity from your favorite crypto assets with best protocols."
-          pointsList={['Automation', 'Position swap', '$RAYS']}
+          pointsList={['Automation', 'Position swap']}
           ctaLabel="Borrow"
           ctaUrl={`${INTERNAL_LINKS.summerPro}/borrow`}
         />
         <SummerFiProSectionBlock
           tag="Yield Loops"
           title="Unlock liquidity from your favorite crypto assets with best protocols."
-          pointsList={['$RAYS']}
+          pointsList={['Automation']}
           ctaLabel="Yield Loops"
           ctaUrl={`${INTERNAL_LINKS.summerPro}/earn`}
         />

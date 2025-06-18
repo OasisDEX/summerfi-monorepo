@@ -1,17 +1,6 @@
 import { type FC, useState } from 'react'
-import {
-  AnimateHeight,
-  Card,
-  getTwitterShareUrl,
-  Icon,
-  Text,
-  useCurrentUrl,
-} from '@summerfi/app-earn-ui'
-import {
-  formatAsShorthandNumbers,
-  formatDecimalAsPercent,
-  formatFiatBalance,
-} from '@summerfi/app-utils'
+import { AnimateHeight, Card, getTwitterShareUrl, Icon, Text } from '@summerfi/app-earn-ui'
+import { formatAsShorthandNumbers, formatDecimalAsPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -30,6 +19,7 @@ interface BeachClubTvlChallengeRewardCardProps {
   sumrApy: number
   currentGroupTvl: number
   youAreHere?: boolean
+  referralCode?: string
 }
 
 export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCardProps> = ({
@@ -41,12 +31,10 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
   sumrApy,
   currentGroupTvl,
   youAreHere,
+  referralCode,
 }) => {
-  const currentUrl = useCurrentUrl()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
 
-  // a special case where we want to show expanded both star earning and 10k card until user reaches 10k
-  const isTvlGroupZero = rawTvlGroup === 0
   const resolvedIsExpanded = youAreHere ? true : !groupAchieved
   const [isExpanded, setIsExpanded] = useState(resolvedIsExpanded)
 
@@ -162,13 +150,15 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
                 {formatAsShorthandNumbers(leftToBoost, { precision: 2 })} left!
               </Text>
             )}
-            {youAreHere && (
+            {youAreHere && referralCode && (
               <Link
                 href={getTwitterShareUrl({
-                  url: currentUrl,
-                  text: isTvlGroupZero
-                    ? `I'm $${formatFiatBalance(leftToBoost)} TVL away from earning a 100% boost! 🎉`
-                    : `I've reached a $${formatFiatBalance(rawTvlGroup)}+ Group TVL! 🎉`,
+                  url: '',
+                  text: `Chill this summer, don't chase yields.
+
+Join me over at the Summer Beach Club🏖️ and earn the best yields in DeFi with none of the effort.
+
+Open a position using my code below and earn even more https://summer.fi/earn?referralCode=${referralCode}`,
                 })}
                 className={classNames.shareWrapper}
                 target="_blank"

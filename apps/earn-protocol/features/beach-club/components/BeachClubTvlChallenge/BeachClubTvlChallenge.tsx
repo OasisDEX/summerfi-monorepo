@@ -81,7 +81,11 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
         style={{ marginTop: 'var(--general-space-32)' }}
       >
         {defaultCards.map((card) => (
-          <BeachClubTvlChallengeRewardCard key={card.tvlGroup} {...card} />
+          <BeachClubTvlChallengeRewardCard
+            key={card.tvlGroup}
+            {...card}
+            referralCode={beachClubData.custom_code ?? beachClubData.referral_code ?? undefined}
+          />
         ))}
       </div>
       <BeachClubRewardSimulation tvl={currentGroupTvl} />

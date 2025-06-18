@@ -52,7 +52,7 @@ export class Address implements IAddress {
   /** CONSTRUCTOR */
   private constructor(params: AddressParameters) {
     if (Address.isValid(params.value) === false) {
-      throw new Error('Address value is invalid')
+      throw new Error('Address value is invalid: ' + params.value)
     }
 
     this.value = params.value

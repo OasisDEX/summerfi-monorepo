@@ -77,7 +77,7 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
               up to{' '}
             </Text>
             $
-            {formatWithSeparators(0.001 * simulationValue, {
+            {formatWithSeparators(0.0005 * simulationValue, {
               precision: 2,
             })}
           </Text>

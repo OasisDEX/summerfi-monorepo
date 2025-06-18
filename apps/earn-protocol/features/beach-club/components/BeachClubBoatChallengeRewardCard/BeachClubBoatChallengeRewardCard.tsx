@@ -1,4 +1,4 @@
-import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
 
@@ -71,8 +71,11 @@ export const BeachClubBoatChallengeRewardCard = ({
           </Text>
         </div>
         {unlocked ? (
-          <Button variant="beachClubMedium" style={{ width: '100%' }}>
+          <Button variant="beachClubMedium" style={{ width: '100%' }} disabled>
             Claim {beachClubRewardDescriptions[type]}
+            <Tooltip tooltip="Available soon" tooltipWrapperStyles={{ minWidth: '140px' }}>
+              <Icon iconName="info" size={24} />
+            </Tooltip>
           </Button>
         ) : (
           <div className={classNames.progress}>

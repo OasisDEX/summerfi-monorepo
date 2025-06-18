@@ -132,7 +132,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
 
   new Cron(stack, 'update-rays-cron', {
     schedule: 'rate(2 hours)',
-    enabled: true,
+    enabled: false,
     job: updateRaysCronFunction,
   })
 
