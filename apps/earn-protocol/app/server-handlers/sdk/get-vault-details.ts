@@ -6,11 +6,11 @@ import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 export async function getVaultDetails({
-  network,
   vaultAddress,
+  network,
 }: {
-  network: SDKNetwork
   vaultAddress: string
+  network: SDKNetwork
 }) {
   try {
     const chainId = subgraphNetworkToId(network)
