@@ -1,14 +1,16 @@
-import { ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { safeParseBigInt, type ChainId } from '@summerfi/serverless-shared'
 import { type RewardsData, type SparkRewardsResponse } from './types'
-import type { FunctionParams } from '.'
 import { getClaimType } from './mappings'
 import type { Hex } from 'viem'
+import { supportedChainIds } from './supportedChainIds'
 
 export const fetchRewardsData = async ({
   account,
   chainId,
-}: FunctionParams): Promise<RewardsData[]> => {
-  const supportedChainIds = [ChainId.MAINNET]
+}: {
+  account: Hex
+  chainId: ChainId
+}): Promise<RewardsData[]> => {
   if (!supportedChainIds.includes(chainId)) {
     throw new Error(
       `Not supported chain id ${chainId}. Supported chain ids are: ${supportedChainIds.join(', ')}`,

@@ -5,12 +5,14 @@ import {
   ResponseInternalServerError,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
-import { addressSchema, chainIdSchema } from '@summerfi/serverless-shared/validators'
+import { addressSchema } from '@summerfi/serverless-shared/validators'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import { z } from 'zod'
 import { fetchRewardsData } from './fetchRewardsData'
 import type { RewardsData } from './types'
 import { rewardsAbi } from './abi/rewards'
+import { getRewardsContractAddressByClaimType } from './mappings'
+import { ChainId } from '@summerfi/serverless-shared'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -24,7 +26,6 @@ const logger = new Logger({ serviceName: 'spark-rewards-claim' })
 
 const paramsSchema = z.object({
   account: addressSchema,
-  chainId: chainIdSchema,
 })
 
 export type FunctionParams = z.infer<typeof paramsSchema>
@@ -51,12 +52,13 @@ export const handler = async (
     })
   }
   const params = parseResult.data
+  const chainId = ChainId.MAINNET // Hardcoded for now, can be extended later
 
   let rewardsData: RewardsData[]
   try {
     rewardsData = await fetchRewardsData({
       account: params.account,
-      chainId: params.chainId,
+      chainId,
     })
   } catch (error: unknown) {
     logger.error('Failed to fetch rewards data', { error })
@@ -65,7 +67,7 @@ export const handler = async (
 
   const multicallTxList = rewardsData.map((reward) => {
     return {
-      address: reward.claimArgs.tokenAddress,
+      address: getRewardsContractAddressByClaimType(reward.claimType, chainId),
       abi: rewardsAbi,
       functionName: 'claim',
       args: [
