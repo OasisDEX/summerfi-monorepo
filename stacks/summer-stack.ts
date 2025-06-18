@@ -11,6 +11,7 @@ import { addRedis } from './redis'
 import { addSummerProtocolConfig } from './summer-protocol'
 import { addSummerEarnAppTablesConfig } from './summer-earn-app-tables'
 import { addSummerProAppProductHubConfig } from './summer-pro-app-product-hub'
+import { addSparkRewardsClaim } from './spark-rewards-claim'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -51,6 +52,8 @@ export function API(stackContext: StackContext) {
   addSummerProtocolConfig(summerContext)
   addSummerEarnAppTablesConfig(summerContext)
   addSummerProAppProductHubConfig(summerContext)
+  addSparkRewardsClaim(summerContext)
+
   stack.addOutputs({
     ApiEndpoint: api.url,
   })
