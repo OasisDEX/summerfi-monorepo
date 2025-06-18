@@ -5,5 +5,5 @@ const sharedConfig = require('@summerfi/jest-config/jest.base')
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...sharedConfig(compilerOptions),
-  roots: ['<rootDir>/src', '<rootDir>/e2e'],
+  roots: ['<rootDir>/src'],
 }

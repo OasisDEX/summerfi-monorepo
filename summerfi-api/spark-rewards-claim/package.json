@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "e2e": "jest",
     "build": "tsc -b --preserveWatchOutput -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
