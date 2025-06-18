@@ -7,7 +7,7 @@ export function addSparkRewardsClaim({ stack, api }: StackContext & { api: Api }
   }
 
   const sparkRewardsClaims = new Function(stack, 'get-spark-rewards-claims-function', {
-    handler: 'summerfi-api/spark-rewards-claims-function/src/index.handler',
+    handler: 'summerfi-api/spark-rewards-claims/src/index.handler',
     runtime: 'nodejs20.x',
     logFormat: 'JSON',
     environment: {
