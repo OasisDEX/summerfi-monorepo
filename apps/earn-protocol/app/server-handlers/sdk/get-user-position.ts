@@ -11,10 +11,14 @@ export async function getUserPosition({
   walletAddress,
 }: {
   network: SDKNetwork
-  vaultAddress: string
+  vaultAddress?: string
   walletAddress: string
 }) {
   try {
+    if (!vaultAddress) {
+      return undefined
+    }
+
     const chainId = subgraphNetworkToId(network)
     const chainInfo = getChainInfoByChainId(chainId)
 

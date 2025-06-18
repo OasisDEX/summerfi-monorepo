@@ -31,7 +31,7 @@ export const getVaultIdByVaultCustomName = (
   const { fleetMap } = systemConfig
 
   if (!fleetMap) {
-    return ''
+    return undefined
   }
 
   // temporary fix for appended .txt like the one below
@@ -51,7 +51,7 @@ export const getVaultIdByVaultCustomName = (
       )
     }
 
-    return ''
+    return undefined
   }
 
   return customFields.address
