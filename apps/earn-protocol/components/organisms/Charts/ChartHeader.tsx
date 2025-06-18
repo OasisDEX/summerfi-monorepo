@@ -31,12 +31,14 @@ export const ChartHeader = ({
   return (
     <div className={classNames.wrapper} style={wrapperStyle}>
       {title && <Text variant="p2semi">{title}</Text>}
-      {setCheckboxValue && checkboxLabel && (
+      {setCheckboxValue && checkboxLabel ? (
         <ToggleButton
           checked={checkboxValue}
           title={checkboxLabel}
           onChange={() => setCheckboxValue(!checkboxValue)}
         />
+      ) : (
+        <div />
       )}
       {isZoomed ? (
         <Button onClick={onResetZoom} variant="neutralSmall" style={{ height: '24px' }}>

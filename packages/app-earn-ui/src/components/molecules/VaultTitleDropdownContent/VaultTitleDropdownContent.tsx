@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { CSSProperties, FC } from 'react'
 import { SDKNetwork, type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -13,6 +13,7 @@ interface VaultDropdownContentProps {
   vault: SDKVaultishType
   link: string
   isDisabled?: boolean
+  style?: CSSProperties
 }
 
 const networkNameIconMap = {
@@ -22,31 +23,43 @@ const networkNameIconMap = {
   [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={10} />,
 }
 
+export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 'link'>> = ({
+  vault,
+  isDisabled,
+  style,
+}) => (
+  <div
+    className={classNames.wrapper}
+    style={{
+      opacity: isDisabled ? 0.5 : 1,
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      ...style,
+    }}
+  >
+    <div className={classNames.iconWithSymbolWrapper}>
+      <Icon tokenName={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList} variant="m" />
+      <div className={classNames.networkIconWrapper}>
+        {networkNameIconMap[vault.protocol.network]}
+      </div>
+      <Text as="p" variant="p1semi">
+        {getDisplayToken(vault.inputToken.symbol)}
+      </Text>
+    </div>
+    <Risk risk={vault.customFields?.risk ?? 'lower'} variant="p4semi" />
+  </div>
+)
+
 export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({
   vault,
   link,
   isDisabled,
+  style = {},
 }) => {
-  const content = (
-    <div
-      className={classNames.wrapper}
-      style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-    >
-      <div className={classNames.iconWithSymbolWrapper}>
-        <Icon
-          tokenName={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList}
-          variant="m"
-        />
-        <div className={classNames.networkIconWrapper}>
-          {networkNameIconMap[vault.protocol.network]}
-        </div>
-        <Text as="p" variant="p1semi">
-          {getDisplayToken(vault.inputToken.symbol)}
-        </Text>
-      </div>
-      <Risk risk={vault.customFields?.risk ?? 'lower'} variant="p4semi" />
-    </div>
+  return isDisabled ? (
+    <VaultTitleDropdownContentBlock vault={vault} isDisabled={isDisabled} style={style} />
+  ) : (
+    <Link href={link}>
+      <VaultTitleDropdownContentBlock vault={vault} isDisabled={isDisabled} style={style} />
+    </Link>
   )
-
-  return isDisabled ? content : <Link href={link}>{content}</Link>
 }

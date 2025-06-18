@@ -105,6 +105,7 @@ export default defineConfig(({ mode }) => {
           '@summerfi/app-utils',
           'embla-carousel-react',
           'embla-carousel',
+          '@number-flow/react',
         ],
         input: Object.fromEntries(
           glob

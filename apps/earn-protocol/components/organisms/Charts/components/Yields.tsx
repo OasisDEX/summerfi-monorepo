@@ -19,6 +19,7 @@ import { YieldsLegend } from './YieldsLegend'
 type YieldsChartProps = {
   data: ArksHistoricalChartData['data'][TimeframesType]
   dataNames: string[]
+  filteredDataList?: string[]
   colors: { [key: string]: string }
   timeframe: TimeframesType
   summerVaultName: string
@@ -41,6 +42,7 @@ export const YieldsChart = ({
   selectionZoomStart = null,
   selectionZoomEnd = null,
   selectionHandlers,
+  filteredDataList,
 }: YieldsChartProps) => {
   const [highlightedProtocol, setHighlightedProtocol] = useState<string>()
 
@@ -117,6 +119,7 @@ export const YieldsChart = ({
                   animationBegin={dataIndex * 50}
                   animationEasing="ease-out"
                   connectNulls
+                  hide={filteredDataList && !filteredDataList.includes(dataName)}
                   dataKey={dataName}
                   strokeWidth={highlightedProtocol === dataName ? 2 : 1}
                   stroke={colors[dataName as keyof typeof colors]}
@@ -136,6 +139,7 @@ export const YieldsChart = ({
                   animationBegin={dataIndex * 50}
                   animationEasing="ease-out"
                   dataKey={dataName}
+                  hide={filteredDataList && !filteredDataList.includes(dataName)}
                   stroke={colors[dataName as keyof typeof colors]}
                   strokeWidth={highlightedProtocol === dataName ? 2 : 1}
                   style={{
