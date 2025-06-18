@@ -9,10 +9,14 @@ export async function getVaultDetails({
   vaultAddress,
   network,
 }: {
-  vaultAddress: string
+  vaultAddress?: string
   network: SDKNetwork
 }) {
   try {
+    if (!vaultAddress) {
+      return undefined
+    }
+
     const chainId = subgraphNetworkToId(network)
     const chainInfo = getChainInfoByChainId(chainId)
 
