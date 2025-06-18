@@ -70,7 +70,7 @@ export const handler = async (
 
   const multicallArgs = rewardsData.map((reward) => {
     return {
-      // allowFailure: false,
+      allowFailure: false,
       target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
       callData: encodeFunctionData({
         abi: claimAbi,
@@ -94,8 +94,8 @@ export const handler = async (
 
   const multicallData = encodeFunctionData({
     abi: multicall3Abi,
-    functionName: 'tryAggregate',
-    args: [true, multicallArgs],
+    functionName: 'aggregate3',
+    args: [multicallArgs],
   })
   const claimMulticallTransaction = {
     to: chain.contracts.multicall3.address,
@@ -106,6 +106,7 @@ export const handler = async (
   return ResponseOk({
     body: {
       claimMulticallTransaction,
+      calls: multicallArgs,
     },
   })
 }
