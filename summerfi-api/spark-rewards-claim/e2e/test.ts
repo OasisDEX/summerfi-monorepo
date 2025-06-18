@@ -22,9 +22,10 @@ const functionsUrl =
   process.env.FUNCTIONS_API_URL || 'https://v74m7d2hd6.execute-api.eu-central-1.amazonaws.com'
 
 // Ensure the environment variables are set or provide fallback values inline
-const rpcGatewayUrl = process.env.RPC_URL || 'YOUR_MAINNET_RPC_URL_HERE_INFURA_OR_ALCHEMY'
-const privateKey = process.env.USER_PRIVATE_KEY || '0xYOUR_PRIVATE_KEY_HERE_TO_SEND_TRANSACTION'
-const account = process.env.USER_ADDRESS || '0xDPM_ADDRESS_HERE'
+const rpcGatewayUrl =
+  process.env.E2E_SDK_FORK_URL_MAINNET || 'YOUR_MAINNET_RPC_URL_HERE_INFURA_OR_ALCHEMY'
+const privateKey = process.env.E2E_USER_PRIVATE_KEY || 'YOUR_PRIVATE_KEY_HERE_TO_SEND_TRANSACTION'
+const account = process.env.E2E_DPM_ADDRESS || 'DPM_ADDRESS_HERE'
 
 async function main() {
   if (!functionsUrl) {
