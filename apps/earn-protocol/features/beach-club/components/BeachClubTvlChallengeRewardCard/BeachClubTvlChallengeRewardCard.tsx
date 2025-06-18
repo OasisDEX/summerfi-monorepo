@@ -100,6 +100,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
         id={`Expander_${typeof tvlGroup === 'string' ? tvlGroup : ''}`}
         show={isExpanded}
         className={classNames.expander}
+        keepChildrenRendered
       >
         <div className={classNames.contentWrapper}>
           <Text
