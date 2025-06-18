@@ -10,9 +10,12 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import { z } from 'zod'
 import { fetchRewardsData } from './fetchRewardsData'
 import type { RewardsData } from './types'
-import { rewardsAbi } from './abi/rewards'
+import { claimAbi } from './abi/rewards'
 import { getRewardsContractAddressByClaimType } from './mappings'
 import { ChainId } from '@summerfi/serverless-shared'
+import { encodeFunctionData, extractChain } from 'viem'
+import { mainnet } from 'viem/chains'
+import { multicall3Abi } from './abi/multicall3'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -65,25 +68,44 @@ export const handler = async (
     return ResponseInternalServerError('Failed to fetch rewards data')
   }
 
-  const multicallTxList = rewardsData.map((reward) => {
+  const multicallArgs = rewardsData.map((reward) => {
     return {
-      address: getRewardsContractAddressByClaimType(reward.claimType, chainId),
-      abi: rewardsAbi,
-      functionName: 'claim',
-      args: [
-        reward.claimArgs.epoch,
-        reward.claimArgs.account,
-        reward.claimArgs.tokenAddress,
-        reward.claimArgs.amount,
-        reward.claimArgs.rootHash,
-        reward.claimArgs.proof,
-      ],
+      // allowFailure: false,
+      target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
+      callData: encodeFunctionData({
+        abi: claimAbi,
+        functionName: 'claim',
+        args: [
+          reward.claimArgs.epoch,
+          reward.claimArgs.account,
+          reward.claimArgs.tokenAddress,
+          reward.claimArgs.amount,
+          reward.claimArgs.rootHash,
+          reward.claimArgs.proof,
+        ],
+      }),
     }
   })
 
+  const chain = extractChain({
+    chains: [mainnet],
+    id: chainId,
+  })
+
+  const multicallData = encodeFunctionData({
+    abi: multicall3Abi,
+    functionName: 'tryAggregate',
+    args: [true, multicallArgs],
+  })
+  const claimMulticallTransaction = {
+    to: chain.contracts.multicall3.address,
+    data: multicallData,
+    value: 0,
+  }
+
   return ResponseOk({
     body: {
-      claimTxList: multicallTxList,
+      claimMulticallTransaction,
     },
   })
 }

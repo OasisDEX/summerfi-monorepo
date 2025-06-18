@@ -1,4 +1,3 @@
-const { resolve } = require('path')
 const { compilerOptions } = require('./tsconfig.test')
 const sharedConfig = require('@summerfi/jest-config/jest.base')
 

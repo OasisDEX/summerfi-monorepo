@@ -3,11 +3,10 @@
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
-    "outDir": "dist",
     "paths": {
       "@summerfi/serverless-shared": ["node_modules/@summerfi/serverless-shared/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+  "include": ["e2e/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

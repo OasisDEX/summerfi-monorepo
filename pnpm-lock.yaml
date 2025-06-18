@@ -4349,6 +4349,9 @@ importers:
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -12356,7 +12359,7 @@ packages:
       text-table: 0.2.0
       url-join: 4.0.0
       wrap-ansi: 7.0.0
-      ws: 8.18.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -13792,7 +13795,7 @@ packages:
       '@types/json-stable-stringify': 1.0.36
       '@whatwg-node/fetch': 0.9.17
       chalk: 4.1.2
-      debug: 4.4.0
+      debug: 4.3.4(supports-color@8.1.1)
       dotenv: 16.5.0
       graphql: 16.8.2
       graphql-request: 6.1.0(graphql@16.8.2)
