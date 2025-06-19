@@ -8,22 +8,14 @@ import {
 import { addressSchema } from '@summerfi/serverless-shared/validators'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import { z } from 'zod'
-import { fetchRewardsData } from './fetchRewardsData'
-import type { RewardsData } from './types'
-import { claimAbi } from './abi/rewards'
+import { fetchRewardsData as fetchRewardsRecords } from './fetchRewardsData'
+import type { RewardsData as RewardsRecord } from './types'
+import { sparkRewardsAbi } from './abi/rewards'
 import { getRewardsContractAddressByClaimType } from './mappings'
-import { ChainId } from '@summerfi/serverless-shared'
-import { encodeFunctionData, extractChain } from 'viem'
+import { ChainId, getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
+import { createPublicClient, encodeFunctionData, extractChain, http, type Hex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { multicall3Abi } from './abi/multicall3'
-
-export const rpcConfig: IRpcConfig = {
-  skipCache: false,
-  skipMulticall: false,
-  skipGraph: true,
-  stage: 'prod',
-  source: 'summerfi-api',
-}
 
 const logger = new Logger({ serviceName: 'spark-rewards-claim' })
 
@@ -38,14 +30,29 @@ export const handler = async (
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
   const RPC_GATEWAY = process.env.RPC_GATEWAY
+  const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+  const STAGE = process.env.STAGE
 
-  logger.addContext(context)
   if (!RPC_GATEWAY) {
-    logger.error('RPC_GATEWAY is not set')
     return ResponseInternalServerError('RPC_GATEWAY is not set')
   }
+  if (!SUBGRAPH_BASE) {
+    return ResponseInternalServerError('SUBGRAPH_BASE is not set')
+  }
+  if (!STAGE) {
+    return ResponseInternalServerError('NODE_ENV is not set')
+  }
 
+  logger.addContext(context)
   logger.info(`Query params`, { params: event.queryStringParameters })
+
+  const rpcConfig: IRpcConfig = {
+    skipCache: false,
+    skipMulticall: false,
+    skipGraph: true,
+    stage: STAGE,
+    source: 'summerfi-api',
+  }
 
   const parseResult = paramsSchema.safeParse(event.queryStringParameters)
   if (!parseResult.success) {
@@ -56,10 +63,29 @@ export const handler = async (
   }
   const params = parseResult.data
   const chainId = ChainId.MAINNET // Hardcoded for now, can be extended later
+  const chain = extractChain({
+    chains: [mainnet],
+    id: chainId,
+  })
 
-  let rewardsData: RewardsData[]
+  const rpcUrl = getRpcGatewayEndpoint(RPC_GATEWAY, chainId, rpcConfig)
+  const transport = http(rpcUrl, {
+    batch: true,
+    fetchOptions: {
+      method: 'POST',
+    },
+  })
+  const publicClient = createPublicClient({
+    chain,
+    transport,
+    batch: {
+      multicall: true,
+    },
+  })
+
+  let rewardsRecords: RewardsRecord[]
   try {
-    rewardsData = await fetchRewardsData({
+    rewardsRecords = await fetchRewardsRecords({
       account: params.account,
       chainId,
     })
@@ -68,45 +94,92 @@ export const handler = async (
     return ResponseInternalServerError('Failed to fetch rewards data')
   }
 
-  const multicallArgs = rewardsData.map((reward) => {
-    return {
-      allowFailure: false,
-      target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
-      callData: encodeFunctionData({
-        abi: claimAbi,
-        functionName: 'claim',
-        args: [
-          reward.claimArgs.epoch,
-          reward.claimArgs.account,
-          reward.claimArgs.tokenAddress,
-          reward.claimArgs.amount,
-          reward.claimArgs.rootHash,
-          reward.claimArgs.proof,
-        ],
-      }),
+  // const rewardsByType = rewardsRecordList.reduce(
+  //   (acc, reward) => {
+  //     if (!acc[reward.claimType]) {
+  //       acc[reward.claimType] = []
+  //     }
+  //     acc[reward.claimType].push(reward)
+  //     return acc
+  //   },
+  //   {} as Record<ClaimType, RewardsRecord[]>,
+  // )
+
+  // for (const [claimType, rewardsOfType] of Object.entries(rewardsByType)) {
+  //   if (rewardsOfType.length === 0) {
+  //     logger.info(`No rewards to claim for claim type: ${claimType}`)
+  //     continue
+  //   }
+
+  //   logger.info(`Processing rewards for claim type: ${claimType}`, {
+  //     count: rewardsOfType.length,
+  //   })
+
+  //   return
+  // }
+
+  // check if can claim
+  const cumulativeRewardAmount = rewardsRecords.reduce((acc, reward) => {
+    return acc + reward.claimArgs.amount
+  }, BigInt(0))
+  const claimedPerReward = await publicClient.multicall({
+    contracts: rewardsRecords.map((reward) => {
+      return {
+        address: getRewardsContractAddressByClaimType(reward.claimType, chainId),
+        abi: sparkRewardsAbi,
+        functionName: 'cumulativeClaimed',
+        args: [params.account, reward.claimArgs.tokenAddress, reward.claimArgs.epoch],
+      } as const
+    }),
+    allowFailure: false,
+  })
+  const cumulativeClaimed = claimedPerReward.reduce((acc, curr) => {
+    return acc + curr
+  }, BigInt(0))
+  const canClaim = cumulativeRewardAmount > cumulativeClaimed
+
+  let claimMulticallTransaction: { to: Hex; data: Hex; value: string } | undefined
+  let calls: { allowFailure: boolean; target: Hex; callData: Hex }[] | undefined
+
+  if (canClaim) {
+    calls = rewardsRecords.map((reward) => {
+      return {
+        allowFailure: true,
+        target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
+        callData: encodeFunctionData({
+          abi: sparkRewardsAbi,
+          functionName: 'claim',
+          args: [
+            reward.claimArgs.epoch,
+            reward.claimArgs.account,
+            reward.claimArgs.tokenAddress,
+            reward.claimArgs.amount,
+            reward.claimArgs.rootHash,
+            reward.claimArgs.proof,
+          ],
+        }),
+      }
+    })
+
+    const multicallData = encodeFunctionData({
+      abi: multicall3Abi,
+      functionName: 'aggregate3',
+      args: [calls],
+    })
+    claimMulticallTransaction = {
+      to: chain.contracts.multicall3.address,
+      data: multicallData,
+      value: '0',
     }
-  })
-
-  const chain = extractChain({
-    chains: [mainnet],
-    id: chainId,
-  })
-
-  const multicallData = encodeFunctionData({
-    abi: multicall3Abi,
-    functionName: 'aggregate3',
-    args: [multicallArgs],
-  })
-  const claimMulticallTransaction = {
-    to: chain.contracts.multicall3.address,
-    data: multicallData,
-    value: 0,
   }
 
   return ResponseOk({
     body: {
+      canClaim,
+      cumulativeToClaim: cumulativeRewardAmount.toString(),
+      cumulativeClaimed: cumulativeClaimed.toString(),
       claimMulticallTransaction,
-      calls: multicallArgs,
+      calls,
     },
   })
 }
