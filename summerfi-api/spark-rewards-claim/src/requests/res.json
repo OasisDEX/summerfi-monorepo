@@ -1,0 +1,43 @@
+[
+  {
+    "type": "pre-farming-and-social",
+    "root_hash": "0x07868156539f75ed321d1516389731e78b914305f8240c9e08bc473f485a8d53",
+    "epoch": 1,
+    "wallet_address": "0x705e65c617bdd31476ff3609a13a138a4100ae6c",
+    "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+    "amount": "133822451407200800",
+    "amount_normalized": "0.1338224514072008",
+    "proof": [
+      "0x2ff85cde3239969e5fa8567ae0384fb5d8f451efef7e792d92646157599c67bb",
+      "0x5fda61358e6825cdc086d56d3ad590b6ea6eb7ab4c877577e33eee497efe7ada",
+      "0x4a766ea07bce0d953a991f01e7a5f7a4610a499318cadd2df5395c4b47ae3f4e",
+      "0xa7e804b7dc54b42efdfc387371ef9e46e3d084ae76a0bdca7debcb02ed718a58",
+      "0x8c549d0242523a13b9ae713c47965118f5623cbc7629c70d0a49a3ff30877fe3",
+      "0x4bc2b8ff2ae83246c71c28e7af8201585362567f200be71c887b08dcc7b6f64e",
+      "0xfc1ec011b9032db9638c93950d3485b7b4ef6280112b5117a9178aca084d4adb",
+      "0x772409cf4380fff55b55d99f0efcde4bf5ead845b3a0ac43d1df3a48061d1de2",
+      "0x99cd9d356055b9f14cc2a7b7cab98ae5d2d2e8fe317de0adfc4c72e39ea8aace",
+      "0xa9c147def8c6f85a0319fb419b6a13ce008c5e72f1b5c061fdf69993f1717e6f",
+      "0xeb64c5ef3dc2e46c0bc5d57a5137553c72c4c16c1dfd0c2cdb5558c2b60ca27c",
+      "0xf7fbfc67b40d849fccff771628a96600c4f228291c39f65b9cabe8507cc06a68",
+      "0xb05c04c79563eaf75992a0567e0a8543f0283371bb5dcdec512832e7173d53a4",
+      "0x87672ea88fa2f710a195b0a25e1a9ec6018055aa19ddf11733307c796de733c2",
+      "0x3e2bcc2f4fe5855189be8e3373b720e56c8f12712709e65ddfa5a9450464a59a"
+    ],
+    "restricted_country_codes": [],
+    "groups": [
+      {
+        "tag": "aave_reward",
+        "value": "0"
+      },
+      {
+        "tag": "layer3_reward",
+        "value": "0"
+      },
+      {
+        "tag": "sparklend_reward",
+        "value": "0.1338224514072008"
+      }
+    ]
+  }
+]

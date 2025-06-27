@@ -1,0 +1,112 @@
+[
+  {
+    "type": "spark-ignition",
+    "root_hash": "0x200133a6af5486f9c3ae64366f19a65b0d8524ed57d2645254dfc90fb3299d73",
+    "epoch": 1,
+    "wallet_address": "0xe9c245293dac615c11a5bf26fcec91c3617645e4",
+    "token_address": "0xc20059e0317de91738d13af027dfc4a50781b066",
+    "amount": "5400000000000000000000",
+    "amount_normalized": "5400.000000000000000000",
+    "proof": [
+      "0x54ce52183c5d633c4bdaa4623beb5c250c70346494e56f3db7ee7e60f376bc58",
+      "0x56079e79ab29911743f57df33167140fdb69aa306fd74404dceb2b4fccf29428",
+      "0x7f7cee7f80156667cb1704601e1f5f00bac6982dcbe43fa5737c6a2aa5fce7b8",
+      "0xb906c64c5bc110c1a2a4115890eb575bf025747cacf5ebc157c5876fa3c902e1",
+      "0x0d182cce5dbc7e6ab7985b7a120019ebcd7138ef8ab442203c0456e04d9f3aff",
+      "0x213026656c0e5fecf8cddc9129b2f9884600f7affcd37f3c5c28f49c3af73930",
+      "0xc5c5b5ceaad22e52a4eea5379c90e44ff95d177b96ba9ce65bc308451b62a8ce",
+      "0x8696bf8c780a9847048fca8858231e3d60de339dcccd865bcf31168b09f76553",
+      "0x7518072d4940536dc798ecab1b0a78a35440244e75f416f86ca7db170befe00d",
+      "0xed34d88897318601edef77fb8655f22397a02fc5b6108780118d81b07da53962",
+      "0x9b87fb37222931df9e522f1a2f0aa52ccf41fa2926a5a5e6171c40f05e7afc7a",
+      "0x1714b1b7a5df04d9204cf81f16614c8934a6ce32045b676dae6362e3d7c1c76a",
+      "0xa77f7155fc0a88c44fffc6a9ff36a1090b4fbd270fd1c697e13240b442230a73",
+      "0x3a7e25c97846deb7cfbb11fba7e173c42e3cdb43810b7ea322baa94d24360c99",
+      "0xf7db012d938a5b10ed08d875a0f96fc19c7c5782bd03eb8cd7136debc767ed2a",
+      "0xb8af0634c33af97fc6f676c9ad02f3fd51999fe5ee205678f7ba246b2624a7f8"
+    ],
+    "restricted_country_codes": [],
+    "groups": [
+      {
+        "tag": "sDAI",
+        "title": "sDAI",
+        "value": "5400"
+      },
+      {
+        "tag": "sparklend",
+        "title": "sparklend",
+        "value": "0"
+      },
+      {
+        "tag": "USDS",
+        "title": "USDS",
+        "value": "0"
+      },
+      {
+        "tag": "SAI",
+        "title": "SAI",
+        "value": "0"
+      },
+      {
+        "tag": "sUSDS",
+        "title": "sUSDS",
+        "value": "0"
+      },
+      {
+        "tag": "curve",
+        "title": "curve",
+        "value": "0"
+      },
+      {
+        "tag": "aave",
+        "title": "aave",
+        "value": "0"
+      },
+      {
+        "tag": "usde",
+        "title": "usde",
+        "value": "0"
+      },
+      {
+        "tag": "sUSDC",
+        "title": "sUSDC",
+        "value": "0"
+      },
+      {
+        "tag": "xDAI",
+        "title": "xDAI",
+        "value": "0"
+      },
+      {
+        "tag": "pendle",
+        "title": "pendle",
+        "value": "0"
+      },
+      {
+        "tag": "susde",
+        "title": "susde",
+        "value": "0"
+      },
+      {
+        "tag": "morpho",
+        "title": "morpho",
+        "value": "0"
+      },
+      {
+        "tag": "DAI",
+        "title": "DAI",
+        "value": "0"
+      },
+      {
+        "tag": "fluid",
+        "title": "fluid",
+        "value": "0"
+      },
+      {
+        "tag": "vePendle",
+        "title": "vePendle",
+        "value": "0"
+      }
+    ]
+  }
+]

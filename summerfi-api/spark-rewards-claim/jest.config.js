@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { compilerOptions } = require('./tsconfig.test')
 const sharedConfig = require('@summerfi/jest-config/jest.base')
-
-require('@dotenvx/dotenvx').config({ path: ['../../.env', '../.env'], override: true })
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...sharedConfig(compilerOptions),
-  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  roots: ['<rootDir>/src'],
 }
