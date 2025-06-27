@@ -82,6 +82,7 @@ jobs:
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
       BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
         ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN: ${{ secrets.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -208,6 +209,7 @@ jobs:
                        --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
                        --build-arg ENVIRONMENT_TAG=${{ env.ENVIRONMENT_TAG }} \
                        --build-arg BEACH_CLUB_REWARDS_DB_CONNECTION_STRING=${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }} \
+                       --build-arg REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN=${{ secrets.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
