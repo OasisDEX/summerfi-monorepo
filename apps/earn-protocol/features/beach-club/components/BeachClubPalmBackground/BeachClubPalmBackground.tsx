@@ -37,6 +37,7 @@ export const BeachClubPalmBackground: FC<BeachClubPalmBackgroundProps> = ({
           transition: 'opacity 0.3s ease-in-out',
           opacity: isBeachClub ? 0.7 : 0,
           zIndex: -1,
+          pointerEvents: 'none',
           ...leftPalmSyles,
         }}
         className={classNames.palmHidden}
@@ -44,6 +45,7 @@ export const BeachClubPalmBackground: FC<BeachClubPalmBackgroundProps> = ({
       <BeachClubRadialGradient
         isBeachClub={isBeachClub}
         wrapperStyle={{
+          pointerEvents: 'none',
           ...topGradientStyles,
         }}
       />
@@ -58,6 +60,7 @@ export const BeachClubPalmBackground: FC<BeachClubPalmBackgroundProps> = ({
           transition: 'opacity 0.3s ease-in-out',
           opacity: isBeachClub ? 0.7 : 0,
           zIndex: -1,
+          pointerEvents: 'none',
           ...rightPalmSyles,
         }}
       />
@@ -66,6 +69,7 @@ export const BeachClubPalmBackground: FC<BeachClubPalmBackgroundProps> = ({
         wrapperStyle={{
           bottom: '0',
           transform: 'translate(-50%, 350px)',
+          pointerEvents: 'none',
           ...bottomGradientStyles,
         }}
         opacity={0.7}
