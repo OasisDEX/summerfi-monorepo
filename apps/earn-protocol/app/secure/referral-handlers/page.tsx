@@ -76,7 +76,10 @@ export default async function ReferralHandlersPage() {
         httpOnly: true,
       })
     } else {
-      throw new Error('Invalid authentication token')
+      const got = `${authToken?.slice(0, 3)}...${authToken?.slice(-3)}`
+      const expected = `${process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN?.slice(0, 3)}...${process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN?.slice(-3)}`
+
+      throw new Error(`Invalid authentication token. Got ${got}, expected ${expected}`)
     }
   }
 
