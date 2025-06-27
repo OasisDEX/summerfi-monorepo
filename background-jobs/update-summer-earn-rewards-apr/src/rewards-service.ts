@@ -106,6 +106,7 @@ export class RewardsService {
   }
   private readonly REWARD_RATIO_MAP = {
     reul: 0.7,
+    xsilo: 0.49,
     '*': 0.997,
   }
   private readonly ONE_HOUR_IN_SECONDS = 3600
@@ -553,6 +554,9 @@ export class RewardsService {
     const rate = parseFloat(_rate)
     if (symbol.toLowerCase() === 'reul') {
       return rate * this.REWARD_RATIO_MAP['reul']
+    }
+    if (symbol.toLowerCase() === 'xsilo') {
+      return rate * this.REWARD_RATIO_MAP['xsilo']
     }
     return rate * this.REWARD_RATIO_MAP['*']
   }
