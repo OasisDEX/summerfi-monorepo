@@ -18,23 +18,30 @@ const getReferralsListFunction = async () => {
   if (!beachClubDbConnectionString) {
     throw new Error('Beach Club Rewards DB Connection string is not set')
   }
-  const beachClubDb = getBeachClubDb({
-    connectionString: beachClubDbConnectionString,
-  })
 
-  return await beachClubDb.db
-    .selectFrom('users')
-    .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
-    .select([
-      'users.id',
-      'users.referral_code',
-      'referral_codes.custom_code',
-      'referral_codes.total_deposits_referred_usd',
-      'referral_codes.active_users_count',
-    ])
-    .where('users.referral_code', 'is not', null)
-    .orderBy('referral_codes.total_deposits_referred_usd', 'desc')
-    .execute()
+  let beachClubDbInstance: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
+
+  try {
+    beachClubDbInstance = getBeachClubDb({
+      connectionString: beachClubDbConnectionString,
+    })
+
+    return await beachClubDbInstance.db
+      .selectFrom('users')
+      .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
+      .select([
+        'users.id',
+        'users.referral_code',
+        'referral_codes.custom_code',
+        'referral_codes.total_deposits_referred_usd',
+        'referral_codes.active_users_count',
+      ])
+      .where('users.referral_code', 'is not', null)
+      .orderBy('referral_codes.total_deposits_referred_usd', 'desc')
+      .execute()
+  } finally {
+    await beachClubDbInstance?.db.destroy()
+  }
 }
 
 const getReferralsListCached = unstableCache(getReferralsListFunction, [], {

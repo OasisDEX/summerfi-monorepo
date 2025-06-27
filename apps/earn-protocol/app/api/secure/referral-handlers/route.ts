@@ -35,25 +35,31 @@ export async function POST(req: NextRequest) {
   if (!beachClubDbConnectionString) {
     throw new Error('Beach Club Rewards DB Connection string is not set')
   }
-  const beachClubDb = getBeachClubDb({
-    connectionString: beachClubDbConnectionString,
-  })
 
-  if (!referralCodeId || !newCustomCode) {
-    throw new Error('Missing required fields')
+  let beachClubDbInstance: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
+
+  try {
+    beachClubDbInstance = getBeachClubDb({
+      connectionString: beachClubDbConnectionString,
+    })
+    if (!referralCodeId || !newCustomCode) {
+      throw new Error('Missing required fields')
+    }
+
+    await beachClubDbInstance.db
+      .updateTable('referral_codes')
+      // eslint-disable-next-line camelcase
+      .set({ custom_code: newCustomCode })
+      .where('id', '=', referralCodeId)
+      .execute()
+
+    revalidatePath(REFERRAL_HANDLERS_COOKIE_PATH)
+
+    return NextResponse.json(
+      { success: true, message: 'Custom code updated successfully' },
+      { status: 200 },
+    )
+  } finally {
+    await beachClubDbInstance?.db.destroy()
   }
-
-  await beachClubDb.db
-    .updateTable('referral_codes')
-    // eslint-disable-next-line camelcase
-    .set({ custom_code: newCustomCode })
-    .where('id', '=', referralCodeId)
-    .execute()
-
-  revalidatePath(REFERRAL_HANDLERS_COOKIE_PATH)
-
-  return NextResponse.json(
-    { success: true, message: 'Custom code updated successfully' },
-    { status: 200 },
-  )
 }
