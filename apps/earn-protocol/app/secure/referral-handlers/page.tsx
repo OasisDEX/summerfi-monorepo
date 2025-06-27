@@ -71,8 +71,8 @@ export default async function ReferralHandlersPage() {
         name: REFERRAL_HANDLERS_COOKIE_NAME,
         value: authToken,
         maxAge: 60 * 60 * 24 * REFERRAL_HANDLERS_COOKIE_EXPIRATION_DAYS, // n days
-        secure: process.env.NODE_ENV === 'production',
         path: REFERRAL_HANDLERS_COOKIE_PATH,
+        secure: true,
         httpOnly: true,
       })
     } else {
