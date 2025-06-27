@@ -1,11 +1,7 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
-import { revalidatePath } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import {
-  REFERRAL_HANDLERS_COOKIE_NAME,
-  REFERRAL_HANDLERS_COOKIE_PATH,
-} from '@/app/secure/constants'
+import { REFERRAL_HANDLERS_COOKIE_NAME } from '@/app/secure/constants'
 
 export async function POST(req: NextRequest) {
   const cookieData = req.cookies
@@ -52,8 +48,6 @@ export async function POST(req: NextRequest) {
       .set({ custom_code: newCustomCode })
       .where('id', '=', referralCodeId)
       .execute()
-
-    revalidatePath(REFERRAL_HANDLERS_COOKIE_PATH)
 
     return NextResponse.json(
       { success: true, message: 'Custom code updated successfully' },
