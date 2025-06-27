@@ -2,6 +2,7 @@ import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { REFERRAL_HANDLERS_COOKIE_NAME } from '@/app/secure/constants'
+import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
 
 export async function POST(req: NextRequest) {
   const cookieData = req.cookies
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
     await beachClubDbInstance.db
       .updateTable('referral_codes')
       // eslint-disable-next-line camelcase
-      .set({ custom_code: newCustomCode })
+      .set({ custom_code: sanitizeReferralCode(newCustomCode) })
       .where('id', '=', referralCodeId)
       .execute()
 

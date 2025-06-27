@@ -21,12 +21,15 @@
  * sanitizeReferralCode('a@b.com')       // returns 'ab.com' (removes @)
  * sanitizeReferralCode('  test  ')      // returns 'test' (trims whitespace)
  */
-export const sanitizeReferralCode = (code: string): string | null => {
+export const sanitizeReferralCode = (
+  code: string,
+  ignoreLength: boolean = false,
+): string | null => {
   // Remove any whitespace
   const trimmed = code.trim()
 
   // Check length (adjust these limits based on your requirements)
-  if (trimmed.length < 3 || trimmed.length > 20) {
+  if ((trimmed.length < 3 || trimmed.length > 20) && !ignoreLength) {
     return null
   }
 
@@ -35,7 +38,7 @@ export const sanitizeReferralCode = (code: string): string | null => {
   const sanitized = trimmed.replace(/[^a-zA-Z0-9\-_.]/gu, '')
 
   // If after sanitization the code is empty or too short, return null
-  if (sanitized.length < 3) {
+  if (sanitized.length < 3 && !ignoreLength) {
     return null
   }
 

@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Button } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
+import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
+
 interface ReferralData {
   referral_code: string | null
   id: string
@@ -117,7 +119,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
                   <input
                     type="text"
                     value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
+                    onChange={(e) => setEditValue(sanitizeReferralCode(e.target.value, true) ?? '')}
                     style={{
                       padding: '4px 8px',
                       border: '1px solid #ccc',
