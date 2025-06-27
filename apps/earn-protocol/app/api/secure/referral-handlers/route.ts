@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     beachClubDbInstance = getBeachClubDb({
       connectionString: beachClubDbConnectionString,
     })
-    if (!referralCodeId || !newCustomCode) {
+    if (!referralCodeId) {
       throw new Error('Missing required fields')
     }
 

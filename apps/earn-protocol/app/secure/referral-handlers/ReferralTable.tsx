@@ -58,6 +58,11 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to update custom code:', error)
+      // eslint-disable-next-line no-alert
+      alert('Failed to update custom code. Please try again later.')
+      setIsUpdating(false)
+      setEditingId(null)
+      setEditValue('')
     }
   }
 
