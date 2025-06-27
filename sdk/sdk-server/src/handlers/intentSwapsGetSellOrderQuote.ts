@@ -7,6 +7,8 @@ import {
   type ITokenAmount,
   type IToken,
   type IAddress,
+  IPrice,
+  isPrice,
 } from '@summerfi/sdk-common'
 
 export const intentSwapsGetSellOrderQuote = publicProcedure
@@ -17,6 +19,7 @@ export const intentSwapsGetSellOrderQuote = publicProcedure
       from: z.custom<IAddress>(isAddress),
       receiver: z.custom<IAddress>(isAddress).optional(),
       partiallyFillable: z.boolean().optional(),
+      limitPrice: z.custom<IPrice>(isPrice).optional(),
     }),
   )
   .query(async (opts) => {

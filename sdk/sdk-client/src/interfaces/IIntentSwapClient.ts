@@ -16,6 +16,7 @@ export interface IIntentSwapClient {
     from: IAddress
     receiver?: IAddress
     partiallyFillable?: boolean
+    limitPrice?: string
   }): Promise<IntentQuoteData>
 
   /**

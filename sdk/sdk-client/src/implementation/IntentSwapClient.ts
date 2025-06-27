@@ -7,6 +7,7 @@ import {
   ALL_SUPPORTED_CHAIN_IDS,
 } from '@cowprotocol/cow-sdk'
 import type { Web3Signer } from './MakeSDKWithProvider'
+import { Price } from '@summerfi/sdk-common'
 
 /**
  * @name IntentSwapClient
@@ -24,12 +25,21 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   public async getSellOrderQuote(
     params: Parameters<IIntentSwapClient['getSellOrderQuote']>[0],
   ): ReturnType<IIntentSwapClient['getSellOrderQuote']> {
+    const limitPrice = params.limitPrice
+      ? Price.createFrom({
+          value: params.limitPrice,
+          base: params.toToken,
+          quote: params.fromAmount.token,
+        })
+      : undefined
+
     return this.rpcClient.intentSwaps.getSellOrderQuote.query({
       fromAmount: params.fromAmount,
       toToken: params.toToken,
       from: params.from,
       receiver: params.receiver,
       partiallyFillable: params.partiallyFillable,
+      limitPrice,
     })
   }
 

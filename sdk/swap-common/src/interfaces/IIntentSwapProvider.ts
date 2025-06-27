@@ -4,6 +4,7 @@ import type {
   IntentQuoteData,
   ChainId,
   TransactionInfo,
+  IPrice,
 } from '@summerfi/sdk-common'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
 import type { EnrichedOrder, SigningResult, UnsignedOrder } from '@cowprotocol/cow-sdk'
@@ -27,6 +28,7 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
     from: IAddress
     receiver?: IAddress
     partiallyFillable?: boolean
+    limitPrice?: IPrice
   }): Promise<IntentQuoteData>
 
   /**

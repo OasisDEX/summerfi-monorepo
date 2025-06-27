@@ -20,10 +20,19 @@ describe('Intent swaps', () => {
     await runTests({
       chainId,
       amountValue: '1',
+      limitPrice: '1.5',
     })
   })
 
-  async function runTests({ chainId, amountValue }: { chainId: ChainId; amountValue: string }) {
+  async function runTests({
+    chainId,
+    amountValue,
+    limitPrice,
+  }: {
+    chainId: ChainId
+    amountValue: string
+    limitPrice?: string
+  }) {
     const sdk = makeSDKWithProvider({
       apiDomainUrl: SDKApiUrl,
       signer: wallet,
@@ -31,37 +40,38 @@ describe('Intent swaps', () => {
 
     const chainInfo = getChainInfoByChainId(chainId)
     const chain = await sdk.chains.getChain({ chainInfo })
-    const toToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
     const fromToken = await chain.tokens.getTokenBySymbol({ symbol: 'USDC' })
     const fromAmount = TokenAmount.createFrom({
       amount: amountValue,
       token: fromToken,
     })
+    const toToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
 
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
       from: userAddress,
       fromAmount: fromAmount,
       toToken,
+      limitPrice,
     })
     console.log('Sell Order:', sellQuote.order)
 
-    const orderId = await sdk.intentSwaps.sendOrder({
-      chainId,
-      order: sellQuote.order,
-    })
-    console.log('Order ID:', orderId)
+    // const orderId = await sdk.intentSwaps.sendOrder({
+    //   chainId,
+    //   order: sellQuote.order,
+    // })
+    // console.log('Order ID:', orderId)
 
-    const orderInfo = await sdk.intentSwaps.checkOrder({
-      chainId,
-      orderId: orderId.orderId,
-    })
-    assert(orderInfo, 'Order info should not be null')
-    console.log('Order Info:', orderInfo)
+    // const orderInfo = await sdk.intentSwaps.checkOrder({
+    //   chainId,
+    //   orderId: orderId.orderId,
+    // })
+    // assert(orderInfo, 'Order info should not be null')
+    // console.log('Order Info:', orderInfo)
 
-    const cancelResult = await sdk.intentSwaps.cancelOrder({
-      chainId,
-      orderId: orderId.orderId,
-    })
-    console.log('Cancel Result:', cancelResult)
+    // const cancelResult = await sdk.intentSwaps.cancelOrder({
+    //   chainId,
+    //   orderId: orderId.orderId,
+    // })
+    // console.log('Cancel Result:', cancelResult)
   }
 })

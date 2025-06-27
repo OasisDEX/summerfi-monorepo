@@ -6,6 +6,7 @@ import {
   SwapErrorType,
   isChainId,
   IntentSwapProviderType,
+  Price,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -22,6 +23,7 @@ import {
 } from '@cowprotocol/cow-sdk'
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
+import { BigNumber } from 'bignumber.js'
 
 export class CowSwapProvider
   extends ManagerProviderBase<IntentSwapProviderType>
@@ -73,8 +75,8 @@ export class CowSwapProvider
 
     const quoteRequest: OrderQuoteRequest = {
       sellToken,
-      sellAmountBeforeFee: sellAmount,
       buyToken,
+      sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
       from,
       receiver,
@@ -88,6 +90,30 @@ export class CowSwapProvider
       feeAmount: '0', // CowSwap does not require feeAmount
       receiver,
       partiallyFillable: params.partiallyFillable ?? false,
+    }
+
+    if (params.limitPrice) {
+      const buyAmount = TokenAmount.createFromBaseUnit({
+        token: params.toToken,
+        amount: quote.buyAmount,
+      })
+
+      const quotePrice = Price.createFrom({
+        value: new BigNumber(params.fromAmount.amount).dividedBy(buyAmount.amount).toString(),
+        base: params.fromAmount.token,
+        quote: params.toToken,
+      })
+
+      console.log('Selling:', params.fromAmount.toString())
+      console.log('Quote Price:', quotePrice.toString())
+      console.log('Limit Price:', params.limitPrice.toString())
+      console.log('Old buy amount:', buyAmount.toString())
+
+      // Calculate new buy amount for the given limit price
+      // newBuyAmount = fromAmount / limitPrice
+      const newBuyAmount = buyAmount.multiply(params.limitPrice)
+      console.log('New buy amount for the limit price:', newBuyAmount.toString())
+      order.buyAmount = newBuyAmount.toSolidityValue().toString()
     }
 
     return {
