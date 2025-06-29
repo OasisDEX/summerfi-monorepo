@@ -11,10 +11,7 @@ import { z } from 'zod'
 import { fetchRewardsData as fetchRewardsRecords } from './fetchRewardsData'
 import type { RewardsData as RewardsRecord } from './types'
 import { sparkRewardsAbi } from './abi/rewards'
-import {
-  getRewardsContractAddressByClaimType,
-  getRewardsContractAddressByRootHash,
-} from './mappings'
+import { getRewardsContractAddressByClaimType, getRootHashByRewardsContract } from './mappings'
 import { ChainId, getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import { createPublicClient, encodeFunctionData, extractChain, http, type Hex } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -147,7 +144,10 @@ export const handler = async (
   if (canClaim) {
     try {
       calls = rewardsRecords.map((reward) => {
-        const target = getRewardsContractAddressByRootHash(reward.claimArgs.rootHash, chainId)
+        const target = getRewardsContractAddressByClaimType(reward.claimType, chainId)
+        // need to override root hash for spark ignition
+        // as it is wrong in the reward record
+        const rootHash = getRootHashByRewardsContract(target, chainId)
         return {
           allowFailure: true,
           target,
@@ -159,7 +159,7 @@ export const handler = async (
               reward.claimArgs.account,
               reward.claimArgs.tokenAddress,
               reward.claimArgs.amount,
-              reward.claimArgs.rootHash,
+              rootHash,
               reward.claimArgs.proof,
             ],
           }),
