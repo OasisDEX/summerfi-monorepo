@@ -145,24 +145,31 @@ export const handler = async (
   let calls: { allowFailure: boolean; target: Hex; callData: Hex }[] | undefined
 
   if (canClaim) {
-    calls = rewardsRecords.map((reward) => {
-      return {
-        allowFailure: true,
-        target: getRewardsContractAddressByRootHash(reward.claimArgs.rootHash, chainId),
-        callData: encodeFunctionData({
-          abi: sparkRewardsAbi,
-          functionName: 'claim',
-          args: [
-            reward.claimArgs.epoch,
-            reward.claimArgs.account,
-            reward.claimArgs.tokenAddress,
-            reward.claimArgs.amount,
-            reward.claimArgs.rootHash,
-            reward.claimArgs.proof,
-          ],
-        }),
-      }
-    })
+    try {
+      calls = rewardsRecords.map((reward) => {
+        const target = getRewardsContractAddressByRootHash(reward.claimArgs.rootHash, chainId)
+        return {
+          allowFailure: true,
+          target,
+          callData: encodeFunctionData({
+            abi: sparkRewardsAbi,
+            functionName: 'claim',
+            args: [
+              reward.claimArgs.epoch,
+              reward.claimArgs.account,
+              reward.claimArgs.tokenAddress,
+              reward.claimArgs.amount,
+              reward.claimArgs.rootHash,
+              reward.claimArgs.proof,
+            ],
+          }),
+        }
+      })
+    } catch (error: unknown) {
+      return ResponseInternalServerError(
+        'Failed to prepare claim calls: ' + (error as Error).message,
+      )
+    }
 
     const multicallData = encodeFunctionData({
       abi: multicall3Abi,
