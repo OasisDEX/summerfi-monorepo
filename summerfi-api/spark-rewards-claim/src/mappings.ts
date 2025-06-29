@@ -44,6 +44,9 @@ export function getRewardsContractAddressByRootHash(rootHash: string, chainId: 1
     ['0x0b90e54808c026feb46dabad594c8e2f6625091d82effa5119ea6059dcc5a979']: {
       1: '0xCBA0C0a2a0B6Bb11233ec4EA85C5bFfea33e724d',
     },
+    ['0xea342dc91900bfa2a8be6b46145dca41d3c708664bbc38bca223db34f83d9aeb']: {
+      1: '0x9107f5f940226a9f21433f373a4f938228d20e1a',
+    },
   }
 
   const rootHashRecord = contractAddresses[rootHash]
