@@ -11,7 +11,10 @@ import { z } from 'zod'
 import { fetchRewardsData as fetchRewardsRecords } from './fetchRewardsData'
 import type { RewardsData as RewardsRecord } from './types'
 import { sparkRewardsAbi } from './abi/rewards'
-import { getRewardsContractAddressByClaimType } from './mappings'
+import {
+  getRewardsContractAddressByClaimType,
+  getRewardsContractAddressByRootHash,
+} from './mappings'
 import { ChainId, getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import { createPublicClient, encodeFunctionData, extractChain, http, type Hex } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -145,7 +148,7 @@ export const handler = async (
     calls = rewardsRecords.map((reward) => {
       return {
         allowFailure: true,
-        target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
+        target: getRewardsContractAddressByRootHash(reward.claimArgs.rootHash, chainId),
         callData: encodeFunctionData({
           abi: sparkRewardsAbi,
           functionName: 'claim',

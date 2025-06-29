@@ -33,3 +33,29 @@ export function getRewardsContractAddressByClaimType(claimType: ClaimType, chain
   }
   return address
 }
+
+export function getRewardsContractAddressByRootHash(rootHash: string, chainId: 1): Hex {
+  const supportedChainIds = [1] as const
+
+  const contractAddresses: Record<string, Record<(typeof supportedChainIds)[number], Hex>> = {
+    ['0x07868156539f75ed321d1516389731e78b914305f8240c9e08bc473f485a8d53']: {
+      1: '0x7ac96180c4d6b2a328d3a19ac059d0e7fc3c6d41',
+    },
+    ['0x0b90e54808c026feb46dabad594c8e2f6625091d82effa5119ea6059dcc5a979']: {
+      1: '0xCBA0C0a2a0B6Bb11233ec4EA85C5bFfea33e724d',
+    },
+  }
+
+  const rootHashRecord = contractAddresses[rootHash]
+  if (!rootHashRecord) {
+    throw new Error(`Unknown root hash: ${rootHash}, need to add it to mappings.ts`)
+  }
+
+  const address = rootHashRecord[chainId]
+  if (!address) {
+    throw new Error(
+      `Unknown chain id ${chainId} for root hash ${rootHash}, need to add it to mappings.ts`,
+    )
+  }
+  return address
+}
