@@ -2,19 +2,11 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getRpcGatewayEndpoint, IRpcConfig, ChainId } from '@summerfi/serverless-shared'
-import { sparkRewardsAbi } from '../src/abi/rewards'
 
 import { config } from 'dotenv'
 config({ path: '../../.env' })
 
-import {
-  createPublicClient,
-  createWalletClient,
-  encodeFunctionData,
-  extractChain,
-  http,
-  type Hex,
-} from 'viem'
+import { createPublicClient, createWalletClient, extractChain, http } from 'viem'
 import { mainnet, base, optimism, arbitrum, sepolia, sonic } from 'viem/chains'
 import { privateKeyToAccount } from 'viem/accounts'
 
@@ -33,8 +25,6 @@ const functionsUrl =
 const rpcGatewayUrl =
   process.env.E2E_SDK_FORK_URL_MAINNET || 'YOUR_MAINNET_RPC_URL_HERE_INFURA_OR_ALCHEMY'
 const privateKey = process.env.E2E_USER_PRIVATE_KEY || 'YOUR_PRIVATE_KEY_HERE_TO_SEND_TRANSACTION'
-const account = (process.env.E2E_DPM_ADDRESS || 'DPM_ADDRESS_HERE') as Hex
-const cAddress: Hex = '0x9107f5f940226a9f21433f373a4f938228d20e1a'
 
 async function main() {
   if (!functionsUrl) {
