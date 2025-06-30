@@ -454,42 +454,52 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             closeAction={() => setAction(undefined)}
           />
         ) : (
-          <div className={classNames.delegates}>
-            {mappedSumrDelegatesData
-              .sort((a, b) => {
-                if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
-                  return b.sumrAmount - a.sumrAmount
-                }
-
-                return b.decayFactor - a.decayFactor
-              })
-              .map((delegate) => (
-                <ClaimDelegateCard
-                  key={delegate.address}
-                  {...delegate}
-                  isActive={state.delegatee === delegate.address}
-                  handleClick={() =>
-                    dispatch({ type: 'update-delegatee', payload: delegate.address })
+          <>
+            <div className={classNames.delegates}>
+              {mappedSumrDelegatesData
+                .sort((a, b) => {
+                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
+                    return b.sumrAmount - a.sumrAmount
                   }
-                  votingPower={delegate.decayFactor}
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  isFaded={getIsCardFaded({ address: delegate.address, state })}
-                />
-              ))}
-            {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (
-              <Text
-                as="p"
-                variant="p2semi"
-                style={{
-                  color: 'var(--earn-protocol-secondary-40)',
-                  textAlign: 'center',
-                  marginTop: 'var(--general-space-32)',
-                }}
+
+                  return b.decayFactor - a.decayFactor
+                })
+                .map((delegate) => (
+                  <ClaimDelegateCard
+                    key={delegate.address}
+                    {...delegate}
+                    isActive={state.delegatee === delegate.address}
+                    handleClick={() =>
+                      dispatch({ type: 'update-delegatee', payload: delegate.address })
+                    }
+                    votingPower={delegate.decayFactor}
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                    isFaded={getIsCardFaded({ address: delegate.address, state })}
+                  />
+                ))}
+              {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{
+                    color: 'var(--earn-protocol-secondary-40)',
+                    textAlign: 'center',
+                    marginTop: 'var(--general-space-32)',
+                  }}
+                >
+                  No delegates found
+                </Text>
+              )}
+            </div>
+            <WithArrow as="p" variant="p3" style={{ marginTop: 'var(--general-space-8)' }}>
+              <Link
+                href="https://www.tally.xyz/gov/lazy-summer-dao-official/delegates"
+                target="_blank"
               >
-                No delegates found
-              </Text>
-            )}
-          </div>
+                Can&apos;t find your delegate? Visit our DAO on Tally
+              </Link>
+            </WithArrow>
+          </>
         )}
 
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
