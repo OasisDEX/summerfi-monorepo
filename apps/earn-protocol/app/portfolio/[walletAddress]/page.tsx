@@ -32,7 +32,6 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-delegates-with-decay-factor'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -66,7 +65,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -80,7 +78,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
-    unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
@@ -104,8 +101,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
