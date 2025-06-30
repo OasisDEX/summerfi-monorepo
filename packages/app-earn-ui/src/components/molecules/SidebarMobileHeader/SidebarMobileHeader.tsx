@@ -3,9 +3,9 @@ import { type FC } from 'react'
 import { TransactionAction } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
-import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
+import { Button } from '@/components/atoms/Button/Button'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
+import { Text } from '@/components/atoms/Text/Text'
 
 type SidebarMobileHeaderProps =
   | {

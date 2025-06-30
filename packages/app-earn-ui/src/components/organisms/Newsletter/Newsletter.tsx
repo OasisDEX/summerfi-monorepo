@@ -4,9 +4,9 @@ import { type CSSProperties, type ReactNode, useState } from 'react'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { Input } from '@/components/atoms/Input/Input.tsx'
+import { Input } from '@/components/atoms/Input/Input'
 import { Text } from '@/components/atoms/Text/Text'
-import { WithArrow } from '@/components/atoms/WithArrow/WithArrow.tsx'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
 import newsletterStyles from '@/components/organisms/Newsletter/Newsletter.module.css'

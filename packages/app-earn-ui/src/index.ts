@@ -118,7 +118,7 @@ export {
   VaultTitleDropdownContentBlock,
 } from './components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 export { HeaderDisclaimer } from './components/molecules/HeaderDisclaimer/HeaderDisclaimer'
-export { Alert } from './components/molecules/Alert/Alert.tsx'
+export { Alert } from './components/molecules/Alert/Alert'
 export { TagRow, type TagOption } from './components/molecules/TagRow/TagRow'
 export { InfoBox } from './components/molecules/InfoBox/InfoBox'
 export {
