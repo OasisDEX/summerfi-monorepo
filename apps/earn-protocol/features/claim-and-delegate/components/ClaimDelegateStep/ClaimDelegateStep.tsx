@@ -474,12 +474,14 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               variant="p3"
               style={{
                 marginTop: 'var(--general-space-8)',
-                color: 'var(--earn-protocol-primary-100)',
               }}
             >
               <Link
                 href="https://www.tally.xyz/gov/lazy-summer-dao-official/delegates"
                 target="_blank"
+                style={{
+                  color: 'var(--earn-protocol-primary-100)',
+                }}
               >
                 Can&apos;t find your delegate? Visit Lazy Summer DAO on Tally
               </Link>
