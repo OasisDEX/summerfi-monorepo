@@ -157,153 +157,162 @@ export async function backfillFleetRates() {
     connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
   })
 
-  const startTimestamp = START_BACKFILL_TIMESTAMP
-  const endTimestamp = Math.floor(Date.now() / 1000)
+  try {
+    const startTimestamp = START_BACKFILL_TIMESTAMP
+    const endTimestamp = Math.floor(Date.now() / 1000)
 
-  logger.info('Starting backfill', { startTimestamp, endTimestamp })
+    logger.info('Starting backfill', { startTimestamp, endTimestamp })
 
-  const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-    (network) => network.network == 'mainnet',
-  )
-
-  const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
-  const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
-
-  for (const network of allNetworks) {
-    const chainId = mapDbNetworkToChainId(network.network)
-    const ratesClient = ratesSubgraphClients[chainId]
-    const protocolClient = protocolSubgraphClients[chainId]
-
-    const vaults = await retrySubgraphQuery<VaultsQuery>(() => protocolClient.Vaults(), {
-      logger,
-      context: { operation: 'GetVaults', network: network.network },
-    })
-    const productIds = vaults.vaults.flatMap((vault) => vault.arks.map((ark) => ark.productId))
-
-    // Get all historical rates for this network
-    const historicalRates = await retrySubgraphQuery<GetHistoricalArksRatesQuery>(
-      () =>
-        ratesClient.GetHistoricalArksRates({
-          productIds,
-          timestamp: startTimestamp,
-        }),
-      {
-        logger,
-        context: {
-          operation: 'GetHistoricalArksRates',
-          network: network.network,
-          startTimestamp,
-        },
-      },
+    const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
+      (network) => network.network == 'mainnet',
     )
-    const blockTimestampMap = historicalRates.products[0].interestRates.map((rate) => [
-      +rate.blockNumber,
-      +rate.timestamp,
-    ])
 
-    // Process each timestamp interval
-    for (const blockTimestamp of blockTimestampMap) {
-      try {
-        await db.transaction().execute(async (trx) => {
-          // Check for existing data
-          const existing = await trx
-            .selectFrom('fleetInterestRate')
-            .where('timestamp', '=', blockTimestamp[1].toString())
-            .where('network', '=', network.network)
-            .executeTakeFirst()
+    const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
+    const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
 
-          if (existing) {
-            logger.debug('Data exists, skipping', {
-              block: blockTimestamp[1],
-              network: network.network,
-            })
-            return
-          }
+    for (const network of allNetworks) {
+      const chainId = mapDbNetworkToChainId(network.network)
+      const ratesClient = ratesSubgraphClients[chainId]
+      const protocolClient = protocolSubgraphClients[chainId]
 
-          // Find closest rates before this timestamp
-          const timestamp = blockTimestamp[1]
-          const relevantRates = historicalRates.products
-            .map((product) => {
-              // Sort rates in descending order so first match is the closest one
-              const sortedRates = [...product.interestRates].sort(
-                (a, b) => +b.timestamp - +a.timestamp,
-              )
-              const closestRate = sortedRates.find((rate) => +rate.timestamp <= timestamp)
+      const vaults = await retrySubgraphQuery<VaultsQuery>(() => protocolClient.Vaults(), {
+        logger,
+        context: { operation: 'GetVaults', network: network.network },
+      })
+      const productIds = vaults.vaults.flatMap((vault) => vault.arks.map((ark) => ark.productId))
 
-              if (!closestRate) return null
+      // Get all historical rates for this network
+      const historicalRates = await retrySubgraphQuery<GetHistoricalArksRatesQuery>(
+        () =>
+          ratesClient.GetHistoricalArksRates({
+            productIds,
+            timestamp: startTimestamp,
+          }),
+        {
+          logger,
+          context: {
+            operation: 'GetHistoricalArksRates',
+            network: network.network,
+            startTimestamp,
+          },
+        },
+      )
+      const blockTimestampMap = historicalRates.products[0].interestRates.map((rate) => [
+        +rate.blockNumber,
+        +rate.timestamp,
+      ])
 
-              return {
-                id: product.id,
-                interestRates: [closestRate],
-              }
-            })
-            .filter((product): product is NonNullable<typeof product> => product !== null)
-          logger.info('Relevant rates', { network: network.network, relevantRates })
-          if (relevantRates.length === 0) {
-            logger.debug('No relevant rates found', {
-              block: blockTimestamp[1],
-              network: network.network,
-            })
-            return
-          }
+      // Process each timestamp interval
+      for (const blockTimestamp of blockTimestampMap) {
+        try {
+          await db.transaction().execute(async (trx) => {
+            // Check for existing data
+            const existing = await trx
+              .selectFrom('fleetInterestRate')
+              .where('timestamp', '=', blockTimestamp[1].toString())
+              .where('network', '=', network.network)
+              .executeTakeFirst()
 
-          // Get vault data using block number from rates
-          const blockNumber = blockTimestamp[0]
-          const vaultData = await getHistoricalVaultData(
-            protocolClient,
-            blockNumber,
-            network,
-            logger,
-          )
+            if (existing) {
+              logger.debug('Data exists, skipping', {
+                block: blockTimestamp[1],
+                network: network.network,
+              })
+              return
+            }
 
-          // Get reward rates for this timestamp
-          const rewardRates = await trx
-            .with('latest_timestamps', (qb) =>
-              qb
-                .selectFrom('rewardRate')
-                .select(['productId', 'network'])
-                .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
-                .where('network', '=', network.network)
-                .where('timestamp', '<=', blockTimestamp[1].toString())
-                .where(
-                  'productId',
-                  'in',
-                  relevantRates.map((p) => p.interestRates[0].productId),
+            // Find closest rates before this timestamp
+            const timestamp = blockTimestamp[1]
+            const relevantRates = historicalRates.products
+              .map((product) => {
+                // Sort rates in descending order so first match is the closest one
+                const sortedRates = [...product.interestRates].sort(
+                  (a, b) => +b.timestamp - +a.timestamp,
                 )
-                .groupBy(['productId', 'network']),
-            )
-            .selectFrom('rewardRate')
-            .innerJoin('latest_timestamps', (join) =>
-              join
-                .onRef('rewardRate.productId', '=', 'latest_timestamps.productId')
-                .onRef('rewardRate.network', '=', 'latest_timestamps.network')
-                .onRef('rewardRate.timestamp', '=', 'latest_timestamps.maxTimestamp'),
-            )
-            .selectAll('rewardRate')
-            .execute()
+                const closestRate = sortedRates.find((rate) => +rate.timestamp <= timestamp)
 
-          await calculateAndStoreFleetRates(
-            trx,
-            network,
-            blockTimestamp[1],
-            vaultData,
-            { products: relevantRates },
-            rewardRates,
-          )
+                if (!closestRate) return null
 
-          logger.info('Processed block', { block: blockTimestamp[0], network: network.network })
-        })
-      } catch (error) {
-        logger.error('Error processing block', {
-          block: blockTimestamp[0],
-          network: network.network,
-          error: error instanceof Error ? error.message : String(error),
-        })
+                return {
+                  id: product.id,
+                  interestRates: [closestRate],
+                }
+              })
+              .filter((product): product is NonNullable<typeof product> => product !== null)
+            logger.info('Relevant rates', { network: network.network, relevantRates })
+            if (relevantRates.length === 0) {
+              logger.debug('No relevant rates found', {
+                block: blockTimestamp[1],
+                network: network.network,
+              })
+              return
+            }
+
+            // Get vault data using block number from rates
+            const blockNumber = blockTimestamp[0]
+            const vaultData = await getHistoricalVaultData(
+              protocolClient,
+              blockNumber,
+              network,
+              logger,
+            )
+
+            // Get reward rates for this timestamp
+            const rewardRates = await trx
+              .with('latest_timestamps', (qb) =>
+                qb
+                  .selectFrom('rewardRate')
+                  .select(['productId', 'network'])
+                  .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
+                  .where('network', '=', network.network)
+                  .where('timestamp', '<=', blockTimestamp[1].toString())
+                  .where(
+                    'productId',
+                    'in',
+                    relevantRates.map((p) => p.interestRates[0].productId),
+                  )
+                  .groupBy(['productId', 'network']),
+              )
+              .selectFrom('rewardRate')
+              .innerJoin('latest_timestamps', (join) =>
+                join
+                  .onRef('rewardRate.productId', '=', 'latest_timestamps.productId')
+                  .onRef('rewardRate.network', '=', 'latest_timestamps.network')
+                  .onRef('rewardRate.timestamp', '=', 'latest_timestamps.maxTimestamp'),
+              )
+              .selectAll('rewardRate')
+              .execute()
+
+            await calculateAndStoreFleetRates(
+              trx,
+              network,
+              blockTimestamp[1],
+              vaultData,
+              { products: relevantRates },
+              rewardRates,
+            )
+
+            logger.info('Processed block', { block: blockTimestamp[0], network: network.network })
+          })
+        } catch (error) {
+          logger.error('Error processing block', {
+            block: blockTimestamp[0],
+            network: network.network,
+            error: error instanceof Error ? error.message : String(error),
+          })
+        }
       }
     }
-  }
 
-  logger.info('Backfill completed')
+    logger.info('Backfill completed')
+  } catch (error) {
+    logger.error('Error in backfillFleetRates', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+  } finally {
+    await db.destroy()
+  }
 }
 
 // backfillFleetRates().catch((error) => {

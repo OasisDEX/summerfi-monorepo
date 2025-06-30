@@ -43,6 +43,8 @@ export const isOkxCampaignWallet = async (address: string): Promise<boolean> => 
     console.error('Error fetching OKX wallet data:', error)
 
     return false
+  } finally {
+    await dbInstance.db.destroy()
   }
 }
 
@@ -80,5 +82,7 @@ export const saveOkxWallet: (address: string) => Promise<boolean> = async (addre
     console.error('Error saving OKX wallet data:', error)
 
     return false
+  } finally {
+    await dbInstance.db.destroy()
   }
 }
