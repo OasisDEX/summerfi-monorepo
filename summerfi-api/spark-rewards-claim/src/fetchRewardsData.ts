@@ -19,7 +19,7 @@ export const fetchRewardsData = async ({
 
   const [rewardsResponse] = await Promise.all([
     fetch(
-      `https://spark2-api.blockanalitica.com/api/v1/spk-airdrop/${account}/?demask_key=b559cbe0e7dd7281c`,
+      `https://spark2-api.blockanalitica.com/api/v1/spk-airdrop/${account}/?ignition_root=0x0b90e54808c026feb46dabad594c8e2f6625091d82effa5119ea6059dcc5a979&demask_key=580dfbc5609de875ae443c6467ca2539`,
     ),
   ])
 
