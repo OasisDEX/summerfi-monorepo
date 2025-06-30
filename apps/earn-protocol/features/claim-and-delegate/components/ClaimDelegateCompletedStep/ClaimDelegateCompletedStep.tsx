@@ -14,7 +14,6 @@ import {
 import { SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -22,6 +21,7 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import {
   type ClaimDelegateExternalData,
@@ -207,11 +207,10 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     (delegate) => delegate.userAddress.toLowerCase() === delegatee,
   )
 
-  const resolvedDelegateTitle = externalDelegatee
-    ? externalDelegatee.displayName || externalDelegatee.customTitle
-    : delegatee === ADDRESS_ZERO
-      ? 'No delegate'
-      : formatAddress(delegatee)
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: externalDelegatee,
+    currentDelegate: delegatee,
+  })
 
   // if delegatee is address zero it means that user removed delegatee
   // therefore fallback to 0

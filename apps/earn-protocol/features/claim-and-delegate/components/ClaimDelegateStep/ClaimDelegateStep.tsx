@@ -15,7 +15,6 @@ import {
 import { type DropdownRawOption, SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -29,6 +28,7 @@ import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import { useSumrDelegateTransaction } from '@/features/claim-and-delegate/hooks/use-sumr-delegate-transaction'
 import {
@@ -263,9 +263,10 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
 
-  const resolvedDelegateTitle = rewardsDataDelegatee
-    ? rewardsDataDelegatee.displayName || rewardsDataDelegatee.customTitle
-    : formatAddress(sumrDelegatedTo)
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegatee,
+    currentDelegate: sumrDelegatedTo,
+  })
 
   const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
 

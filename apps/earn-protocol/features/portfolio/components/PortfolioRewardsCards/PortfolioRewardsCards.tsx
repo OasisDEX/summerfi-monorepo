@@ -12,7 +12,6 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -21,6 +20,7 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -257,9 +257,10 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
 
-  const resolvedDelegateTitle = rewardsDataDelegatee
-    ? rewardsDataDelegatee.displayName || rewardsDataDelegatee.customTitle
-    : formatAddress(sumrDelegatedTo)
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegatee,
+    currentDelegate: sumrDelegatedTo,
+  })
 
   const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
 

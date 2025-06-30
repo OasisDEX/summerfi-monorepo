@@ -1,6 +1,8 @@
-import { formatAddress, isValidLink } from '@summerfi/app-utils'
+import { isValidLink } from '@summerfi/app-utils'
 
 import { type TallyDelegate } from '@/app/server-handlers/tally'
+
+import { getDelegateTitle } from './helpers'
 
 interface SumrDelegate {
   sumrAmount: number
@@ -33,10 +35,11 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
       sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
       ens: sumrDelegate.ens || '',
       address: sumrDelegate.userAddress,
-      title:
-        sumrDelegate.displayName ||
-        sumrDelegate.customTitle ||
-        formatAddress(sumrDelegate.userAddress),
+      title: getDelegateTitle({
+        tallyDelegate: sumrDelegate,
+        // just to meet type requirements
+        currentDelegate: sumrDelegate.userAddress,
+      }),
       description: sumrDelegate.bio || sumrDelegate.customBio || 'Description not available.',
       social: {
         x: isValidLink(sumrDelegate.x)
