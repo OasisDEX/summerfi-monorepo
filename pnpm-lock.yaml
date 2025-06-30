@@ -2044,9 +2044,6 @@ importers:
 
   packages/ssr-public-client:
     dependencies:
-      '@summerfi/app-types':
-        specifier: workspace:*
-        version: link:../app-types
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../app-utils
@@ -2054,6 +2051,9 @@ importers:
         specifier: 2.29.2
         version: 2.29.2(typescript@5.7.3)(zod@3.25.61)
     devDependencies:
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../app-types
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
