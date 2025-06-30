@@ -22,18 +22,24 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
     redirect('/not-found')
   }
 
-  const [sumrStakeDelegate, sumrBalances, sumrStakingInfo, sumrToClaim] = await Promise.all([
-    getSumrDelegateStake({
-      walletAddress,
-    }),
-    getSumrBalances({
-      walletAddress,
-    }),
-    getSumrStakingInfo(),
-    getSumrToClaim({ walletAddress }),
-  ])
+  const [{ sumrStakeDelegate, tallyDelegates }, sumrBalances, sumrStakingInfo, sumrToClaim] =
+    await Promise.all([
+      getSumrDelegateStake({
+        walletAddress,
+      }).then(async (res) => {
+        const delegates = await getTallyDelegates(res.delegatedTo)
 
-  const tallyDelegates = await getTallyDelegates(sumrStakeDelegate.delegatedTo)
+        return {
+          sumrStakeDelegate: res,
+          tallyDelegates: delegates,
+        }
+      }),
+      getSumrBalances({
+        walletAddress,
+      }),
+      getSumrStakingInfo(),
+      getSumrToClaim({ walletAddress }),
+    ])
 
   const externalData: ClaimDelegateExternalData = {
     sumrToClaim,
