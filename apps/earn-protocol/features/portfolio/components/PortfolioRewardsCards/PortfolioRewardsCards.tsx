@@ -21,7 +21,6 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -254,10 +253,6 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
 
-  const localDelegate = localSumrDelegates.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
-  )
-
   const rewardsDataDelegatee = rewardsData.tallyDelegates.find(
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
@@ -267,7 +262,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
       ? 'No delegate'
       : rewardsDataDelegatee?.displayName && rewardsDataDelegatee.displayName !== ''
         ? rewardsDataDelegatee.displayName
-        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
+        : formatAddress(sumrDelegatedTo)
 
   const votingPower = Number(
     rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)

@@ -12,6 +12,9 @@ export type TallyDelegate = {
   votesCount: string
   votesCountNormalized: string
   x: string
+  forumUrl: string
+  customTitle: string
+  customBio: string
 }
 
 export const getTallyDelegates = async (): Promise<TallyDelegate[]> => {

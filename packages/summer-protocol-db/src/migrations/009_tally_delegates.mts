@@ -8,6 +8,7 @@ export async function up(db: Kysely<never>): Promise<void> {
     .addColumn('ens', 'varchar(255)', (col) => col.notNull().defaultTo(''))
     .addColumn('x', 'varchar(255)', (col) => col.notNull().defaultTo(''))
     .addColumn('bio', 'varchar(600)', (col) => col.notNull().defaultTo(''))
+    .addColumn('custom_bio', 'varchar(600)', (col) => col.notNull().defaultTo(''))
     .addColumn('photo', 'varchar(255)', (col) => col.notNull().defaultTo(''))
     .addColumn('votes_count', 'numeric', (col) => col.notNull())
     .addColumn('votes_count_normalized', 'numeric', (col) => col.notNull())

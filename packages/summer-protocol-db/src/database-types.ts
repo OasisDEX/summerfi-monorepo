@@ -140,9 +140,12 @@ export interface RewardRate {
 
 export interface TallyDelegates {
   bio: Generated<string>;
+  customBio: Generated<string>;
+  customTitle: Generated<string>;
   delegatorsCount: Numeric;
   displayName: Generated<string>;
   ens: Generated<string>;
+  forumUrl: Generated<string>;
   photo: Generated<string>;
   updatedAt: Generated<Int8>;
   userAddress: string;

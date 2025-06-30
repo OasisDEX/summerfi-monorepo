@@ -29,7 +29,6 @@ import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import {
-  localSumrDelegates,
   mergeDelegatesData,
   type SumrDelegateWithDecayFactor,
 } from '@/features/claim-and-delegate/consts'
@@ -52,6 +51,7 @@ import {
   getChangeDelegateButtonLabel,
   getRemoveDelegateButtonLabel,
 } from './getDelegateButtonLabel'
+import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
 import { ClaimDelegateAction } from './types'
 
 import classNames from './ClaimDelegateStep.module.css'
@@ -72,75 +72,14 @@ const getIsCardFaded = ({ address, state }: { address: string; state: ClaimDeleg
   )
 }
 
-interface ClaimDelegateStepProps {
-  state: ClaimDelegateState
-  dispatch: Dispatch<ClaimDelegateReducerAction>
-  externalData: ClaimDelegateExternalData
-}
-
-enum DelegateSortOptions {
-  HIGHEST_VOTING_WEIGHT = 'highest-voting-weight',
-  HIGHEST_VOTE_REWARD_POWER = 'highest-vote-reward-power',
-}
-
-const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
-  {
-    value: DelegateSortOptions.HIGHEST_VOTING_WEIGHT,
-    content: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-        <Text
-          as="p"
-          variant="p4semi"
-          style={{
-            color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT
-                ? 'var(--earn-protocol-primary-100)'
-                : 'var(--earn-protocol-secondary-100)',
-          }}
-        >
-          Highest $SUMR voting weight
-        </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT && (
-          <Icon
-            iconName="checkmark"
-            size={14}
-            style={{ color: 'var(--earn-protocol-primary-100)' }}
-          />
-        )}
-      </div>
-    ),
-  },
-  {
-    value: DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER,
-    content: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-        <Text
-          as="p"
-          variant="p4semi"
-          style={{
-            color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER
-                ? 'var(--earn-protocol-primary-100)'
-                : 'var(--earn-protocol-secondary-100)',
-          }}
-        >
-          Highest Vote and Reward Power
-        </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER && (
-          <Icon
-            iconName="checkmark"
-            size={14}
-            style={{ color: 'var(--earn-protocol-primary-100)' }}
-          />
-        )}
-      </div>
-    ),
-  },
-]
-
-const fetchDelegatesBySearchValue = async (searchValue: string): Promise<TallyDelegate[]> => {
+const fetchDelegatesBySearchValue = async (
+  searchValue: string,
+  sortBy: DelegateSortOptions,
+): Promise<TallyDelegate[]> => {
   try {
-    const response = await fetch(`/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}`)
+    const response = await fetch(
+      `/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}&sortBy=${sortBy}`,
+    )
 
     return response.json()
   } catch (error) {
@@ -149,6 +88,12 @@ const fetchDelegatesBySearchValue = async (searchValue: string): Promise<TallyDe
 
     return []
   }
+}
+
+interface ClaimDelegateStepProps {
+  state: ClaimDelegateState
+  dispatch: Dispatch<ClaimDelegateReducerAction>
+  externalData: ClaimDelegateExternalData
 }
 
 export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
@@ -199,7 +144,10 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       }
 
       try {
-        const result = await fetchDelegatesBySearchValue(searchValue)
+        const result = await fetchDelegatesBySearchValue(
+          searchValue,
+          sortBy.value as DelegateSortOptions,
+        )
 
         setDelegates(result)
       } catch (error) {
@@ -225,10 +173,11 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       return
     }
 
-    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedTo).then((result) =>
-      setDelegatedTo(result[0]),
-    )
-  }, [externalData.sumrStakeDelegate.delegatedTo])
+    fetchDelegatesBySearchValue(
+      externalData.sumrStakeDelegate.delegatedTo,
+      sortBy.value as DelegateSortOptions,
+    ).then((result) => setDelegatedTo(result[0]))
+  }, [externalData.sumrStakeDelegate.delegatedTo, sortBy.value])
 
   const sumrToClaim =
     externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
@@ -332,10 +281,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasDelegatee = sumrDelegatedTo !== ADDRESS_ZERO
 
-  const localDelegate = localSumrDelegates.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
-  )
-
   const rewardsDataDelegatee = externalData.tallyDelegates.find(
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
@@ -344,7 +289,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       ? 'No delegate'
       : rewardsDataDelegatee?.displayName && rewardsDataDelegatee.displayName !== ''
         ? rewardsDataDelegatee.displayName
-        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
+        : formatAddress(sumrDelegatedTo)
 
   return (
     <div className={classNames.claimDelegateStepWrapper}>
@@ -370,7 +315,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }}
             >
               Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(delegatedTo.votePower)}
+              {formatCryptoBalance(delegatedTo.votesCountNormalized)}
             </Text>
           )}
         </Card>

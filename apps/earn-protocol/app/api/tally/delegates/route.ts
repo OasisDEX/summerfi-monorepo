@@ -2,8 +2,11 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+import { DelegateSortOptions } from '@/features/claim-and-delegate/components/ClaimDelegateStep/sort-options'
+
 const EnsOrAddressOrNameSchema = z.object({
   ensOrAddressOrName: z.string(),
+  sortBy: z.nativeEnum(DelegateSortOptions),
 })
 
 export async function GET(request: NextRequest) {
@@ -26,13 +29,15 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const result = EnsOrAddressOrNameSchema.safeParse({ ensOrAddressOrName })
+  const sortBy = searchParams.get('sortBy')
+
+  const result = EnsOrAddressOrNameSchema.safeParse({ ensOrAddressOrName, sortBy })
 
   if (!result.success) {
     return NextResponse.json({ error: 'Invalid ENS or address or name' }, { status: 400 })
   }
 
-  const { ensOrAddressOrName: validatedEnsOrAddressOrName } = result.data
+  const { ensOrAddressOrName: validatedEnsOrAddressOrName, sortBy: validatedSortBy } = result.data
 
   let database
 
@@ -41,15 +46,24 @@ export async function GET(request: NextRequest) {
       connectionString: EARN_PROTOCOL_DB_CONNECTION_STRING,
     })
 
+    const sanitizedInput = validatedEnsOrAddressOrName.replace(/[%_]/gu, '\\$&')
+
     const delegates = await database.db
       .selectFrom('tallyDelegates')
       .selectAll()
       .where((eb) =>
         eb.or([
-          eb('ens', 'ilike', `%${validatedEnsOrAddressOrName}%`),
-          eb('userAddress', 'ilike', `%${validatedEnsOrAddressOrName}%`),
-          eb('displayName', 'ilike', `%${validatedEnsOrAddressOrName}%`),
+          eb('ens', 'ilike', `%${sanitizedInput}%`),
+          eb('userAddress', 'ilike', `%${sanitizedInput}%`),
+          eb('displayName', 'ilike', `%${sanitizedInput}%`),
+          eb('customTitle', 'ilike', `%${sanitizedInput}%`),
         ]),
+      )
+      .orderBy(
+        validatedSortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT
+          ? 'votesCountNormalized'
+          : 'votePower',
+        'desc',
       )
       .limit(5)
       .execute()
