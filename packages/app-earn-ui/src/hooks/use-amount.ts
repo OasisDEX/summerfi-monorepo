@@ -13,8 +13,8 @@ import BigNumber from 'bignumber.js'
 
 type UseAmountProps = {
   tokenDecimals: number
-  tokenPrice: string | null | undefined
-  selectedToken: IToken | undefined
+  selectedToken?: IToken
+  tokenPrice?: string | null
   initialAmount?: string
 }
 

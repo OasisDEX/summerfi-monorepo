@@ -136,6 +136,9 @@ importers:
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@19.1.0)
+      '@number-flow/react':
+        specifier: ^0.5.10
+        version: 0.5.10(react-dom@19.1.0)(react@19.1.0)
       '@safe-global/safe-apps-sdk':
         specifier: ^9.0.0
         version: 9.1.0(typescript@5.7.3)(zod@3.25.61)
@@ -1008,6 +1011,9 @@ importers:
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@19.1.0)
+      '@number-flow/react':
+        specifier: ^0.5.10
+        version: 0.5.10(react-dom@19.1.0)(react@19.1.0)
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../../sdk/armada-protocol-common
@@ -16376,6 +16382,18 @@ packages:
       semver: 7.7.2
     dev: false
 
+  /@number-flow/react@0.5.10(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-a8Wh5eNITn7Km4xbddAH7QH8eNmnduR6k34ER1hkHSGO4H2yU1DDnuAWLQM99vciGInFODemSc0tdxrXkJEpbA==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+    dependencies:
+      esm-env: 1.2.2
+      number-flow: 0.5.8
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    dev: false
+
   /@oasisdex/addresses@0.1.22-automation:
     resolution: {integrity: sha512-WvADssWVjKQZVyowVIpfGfESdjow7pCV3Vy1iFhHZsihfwvWqhzk+PEmB34EyFfgeRn+ta7oHptlzBMP1vyA/g==}
     dev: false
@@ -30351,6 +30369,10 @@ packages:
       - supports-color
     dev: true
 
+  /esm-env@1.2.2:
+    resolution: {integrity: sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==}
+    dev: false
+
   /esniff@2.0.1:
     resolution: {integrity: sha512-kTUIGKQ/mDPFoJ0oVfcmyJn4iBDRptjNVIzwIFR7tqWXdVI9xfA2RMwY/gbSpJG3lkdWNEjLap/NqVHZiJsdfg==}
     engines: {node: '>=0.10'}
@@ -36967,6 +36989,12 @@ packages:
       js-sdsl: 4.3.0
     transitivePeerDependencies:
       - supports-color
+
+  /number-flow@0.5.8:
+    resolution: {integrity: sha512-FPr1DumWyGi5Nucoug14bC6xEz70A1TnhgSHhKyfqjgji2SOTz+iLJxKtv37N5JyJbteGYCm6NQ9p1O4KZ7iiA==}
+    dependencies:
+      esm-env: 1.2.2
+    dev: false
 
   /number-to-bn@1.7.0:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}

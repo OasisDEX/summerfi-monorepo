@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useState } from 'react'
+import { type FC, Suspense, useState } from 'react'
 import {
   Button,
   getNavigationItems,
@@ -62,7 +62,11 @@ export const NavigationWrapper: FC = () => {
         startTheGame={isHoldingAlt ? () => setRunningGame(true) : undefined}
         featuresConfig={features}
       />
-      {runningGame && <TheGame closeGame={() => setRunningGame(false)} />}
+      {runningGame && (
+        <Suspense>
+          <TheGame closeGame={() => setRunningGame(false)} />
+        </Suspense>
+      )}
     </>
   )
 }

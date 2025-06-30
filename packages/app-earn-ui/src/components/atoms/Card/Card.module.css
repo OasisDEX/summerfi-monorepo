@@ -16,7 +16,9 @@
   width: 100%;
   border-radius: var(--radius-large);
 }
+
 @media (min-width: 531px) {
+
   .cardPrimary,
   .cardPrimaryColorfulBorder,
   .cardPrimarySmallPaddingsColorfulBorder,
