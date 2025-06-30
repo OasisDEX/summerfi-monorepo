@@ -1,3 +1,5 @@
+import { Logger } from '@aws-lambda-powertools/logger'
+
 export interface SumrDelegates {
   id: string
   account: {
@@ -32,7 +34,38 @@ interface TallyResponse {
   }[]
 }
 
-export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
+/**
+ * Fetches all delegate data from the Tally API for the Summer Protocol governance
+ *
+ * This function retrieves delegate information from Tally's GraphQL API for the
+ * Summer Protocol organization. It handles pagination automatically to fetch all
+ * delegates, implementing rate limiting with 200ms delays between requests to
+ * respect API limits.
+ *
+ * The function queries for delegates in the Summer Protocol governance system
+ * (organization ID: 2439139313007462075) on Base network (governor ID: eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa).
+ *
+ * @param {Logger} logger - AWS Lambda Powertools logger instance for structured logging
+ *
+ * @returns {Promise<SumrDelegates[]>} Promise that resolves to an array of delegate data
+ *
+ * @throws {Error} When TALLY_API_KEY environment variable is not set
+ * @throws {Error} When the Tally API request fails (non-200 response)
+ * @throws {Error} When GraphQL errors are returned from the API
+ *
+ * @example
+ * ```typescript
+ * try {
+ *   const delegates = await getSumrDelegates()
+ *   console.log(`Fetched ${delegates.length} delegates`)
+ * } catch (error) {
+ *   console.error('Failed to fetch delegates:', error)
+ * }
+ * ```
+ *
+ * @see {@link SumrDelegates} for the structure of returned delegate data
+ */
+export const getSumrDelegates = async (logger: Logger): Promise<SumrDelegates[]> => {
   const apiKey = process.env.TALLY_API_KEY ?? ''
 
   if (!apiKey) {
@@ -120,6 +153,10 @@ export const getSumrDelegates = async (): Promise<SumrDelegates[]> => {
 
     // Continue if we got results and have a valid cursor
     hasMore = !!(result.data.delegates.nodes.length > 0 && cursor && cursor.length > 0)
+
+    logger.info('Fetched delegates', {
+      totalDelegates: allDelegates.length,
+    })
   }
 
   return allDelegates

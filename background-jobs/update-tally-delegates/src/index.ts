@@ -20,7 +20,7 @@ export const handler = async (context: Context): Promise<void> => {
 
   try {
     logger.debug('Getting SUMR delegates')
-    const sumrDelegates = await getSumrDelegates()
+    const sumrDelegates = await getSumrDelegates(logger)
     logger.debug(`Fetched ${sumrDelegates.length} SUMR delegates`)
 
     const addresses = sumrDelegates.map((delegate) => delegate.account.address)

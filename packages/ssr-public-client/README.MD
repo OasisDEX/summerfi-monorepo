@@ -16,16 +16,8 @@ networks with optimized RPC gateway integration.
 ## Installation
 
 ```bash
-npm install @summerfi/ssr-public-client
+pnpm install @summerfi/ssr-public-client
 ```
-
-## Peer Dependencies
-
-This package requires the following peer dependencies:
-
-- `@summerfi/app-utils`
-- `@summerfi/app-types`
-- `viem@2.29.2`
 
 ## Usage
 
@@ -99,30 +91,26 @@ The package uses Summer.fi's RPC gateway with the following default configuratio
 ### Building
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Development Mode
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### Linting
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ### Clean Build
 
 ```bash
-npm run clean
+pnpm run clean
 ```
-
-## License
-
-Apache-2.0
 
 ## Contributing
 

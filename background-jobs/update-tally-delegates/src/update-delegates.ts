@@ -3,6 +3,36 @@ import { SumrDelegates } from './get-sumr-delegates'
 import { SumrDecayFactorData } from './get-sumr-decay-factor'
 import { Logger } from '@aws-lambda-powertools/logger'
 
+/**
+ * Updates delegate information in the Summer Protocol database
+ *
+ * This function processes delegate data from Tally and updates the database with
+ * current delegate information including voting power, delegator counts, and profile data.
+ * It handles both insertions of new delegates and updates of existing ones using
+ * upsert operations.
+ *
+ * It doesn't update the delegate's custom_* fields. Which are dedicated to the delegate's custom data which we can update on demand.
+ *
+ * @param {Object} params - The parameters object
+ * @param {SumrDelegates[]} params.sumrDelegates - Array of delegate data from Tally
+ * @param {SumrDecayFactorData[]} params.sumrDecayFactors - Array of decay factor data for vote power calculation
+ * @param {Logger} params.logger - AWS Lambda Powertools logger instance for structured logging
+ *
+ * @returns {Promise<void>} Resolves when the database update is complete
+ *
+ * @throws {Error} When EARN_PROTOCOL_DB_CONNECTION_STRING environment variable is not set
+ * @throws {Error} When database connection fails
+ * @throws {Error} When delegate update operation fails
+ *
+ * @example
+ * ```typescript
+ * await updateDelegates({
+ *   sumrDelegates: delegateData,
+ *   sumrDecayFactors: decayFactorData,
+ *   logger: new Logger()
+ * })
+ * ```
+ */
 export const updateDelegates = async ({
   sumrDelegates,
   sumrDecayFactors,
