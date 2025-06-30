@@ -17,7 +17,7 @@ export type TallyDelegate = {
   customBio: string
 }
 
-export const getTallyDelegates = async (): Promise<TallyDelegate[]> => {
+export const getTallyDelegates = async (currentDelegate?: string): Promise<TallyDelegate[]> => {
   const { EARN_PROTOCOL_DB_CONNECTION_STRING } = process.env
 
   if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
@@ -37,6 +37,20 @@ export const getTallyDelegates = async (): Promise<TallyDelegate[]> => {
       .orderBy('votesCount', 'desc')
       .limit(40)
       .execute()
+
+    // fetch current delegate if provided to get access to displayName etc.
+    // without explicitly fetching it on the client side
+    if (currentDelegate) {
+      const delegate = await database.db
+        .selectFrom('tallyDelegates')
+        .selectAll()
+        .where('userAddress', '=', currentDelegate.toLowerCase())
+        .executeTakeFirst()
+
+      if (delegate) {
+        return [delegate, ...delegates]
+      }
+    }
 
     return delegates
   } catch (error) {

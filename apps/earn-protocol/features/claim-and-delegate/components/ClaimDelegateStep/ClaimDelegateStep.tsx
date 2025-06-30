@@ -284,12 +284,12 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const rewardsDataDelegatee = externalData.tallyDelegates.find(
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
-  const value =
-    sumrDelegatedTo === ADDRESS_ZERO
-      ? 'No delegate'
-      : rewardsDataDelegatee?.displayName && rewardsDataDelegatee.displayName !== ''
-        ? rewardsDataDelegatee.displayName
-        : formatAddress(sumrDelegatedTo)
+
+  const resolvedDelegateTitle = rewardsDataDelegatee
+    ? rewardsDataDelegatee.displayName || rewardsDataDelegatee.customTitle
+    : formatAddress(sumrDelegatedTo)
+
+  const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
 
   return (
     <div className={classNames.claimDelegateStepWrapper}>

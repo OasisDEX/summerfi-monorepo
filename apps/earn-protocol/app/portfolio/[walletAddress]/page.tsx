@@ -74,7 +74,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
-    tallyDelegates,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -97,7 +96,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       usersAddresses: [walletAddress],
     }),
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
-    unstableCache(getTallyDelegates, [walletAddress], cacheConfig)(),
   ])
 
   return {
@@ -115,7 +113,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
-    tallyDelegates,
   }
 }
 
@@ -153,7 +150,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
-    tallyDelegates,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -177,28 +173,30 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const userVaultsIds = positionsWithVault.map((position) => getUniqueVaultId(position.vault))
 
-  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity] = await Promise.all([
-    Promise.all(
-      vaultsWithConfig.map((vault) =>
-        getPositionHistory({
-          network: vault.protocol.network,
-          address: walletAddress.toLowerCase(),
-          vault,
-        }),
-      ),
-    ).then(mapPortfolioVaultsApy),
-    getVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
-      })),
-    }),
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 50,
-      strategies: userVaultsIds,
-    }),
-  ])
+  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity, tallyDelegates] =
+    await Promise.all([
+      Promise.all(
+        vaultsWithConfig.map((vault) =>
+          getPositionHistory({
+            network: vault.protocol.network,
+            address: walletAddress.toLowerCase(),
+            vault,
+          }),
+        ),
+      ).then(mapPortfolioVaultsApy),
+      getVaultsApy({
+        fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(network),
+        })),
+      }),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 50,
+        strategies: userVaultsIds,
+      }),
+      getTallyDelegates(sumrStakeDelegate.delegatedTo),
+    ])
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
