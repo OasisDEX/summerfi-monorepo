@@ -258,21 +258,21 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
     (item) => item.address.toLowerCase() === sumrDelegatedTo,
   )
 
-  const rewardsDataDelegatee = rewardsData.sumrDelegates.find(
-    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  const rewardsDataDelegatee = rewardsData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
 
   const value =
     sumrDelegatedTo === ADDRESS_ZERO
       ? 'No delegate'
-      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
-        ? rewardsDataDelegatee.account.name
+      : rewardsDataDelegatee?.displayName && rewardsDataDelegatee.displayName !== ''
+        ? rewardsDataDelegatee.displayName
         : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
 
-  const votingPower =
-    rewardsData.sumrDecayFactors.find(
-      (factor) => factor.address.toLowerCase() === state.delegatee?.toLowerCase(),
-    )?.decayFactor ?? 1
+  const votingPower = Number(
+    rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
+      ?.votePower ?? 1,
+  )
 
   const subValue =
     sumrDelegatedTo !== ADDRESS_ZERO ? (

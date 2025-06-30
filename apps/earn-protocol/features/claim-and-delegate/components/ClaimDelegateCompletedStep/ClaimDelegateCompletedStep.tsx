@@ -22,7 +22,6 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
-import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import {
   type ClaimDelegateExternalData,
@@ -204,17 +203,18 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     return null
   }
 
-  const externalDelegatee = externalData.sumrDelegates.find(
-    (delegate) => delegate.account.address.toLowerCase() === delegatee,
+  const externalDelegatee = externalData.tallyDelegates.find(
+    (delegate) => delegate.userAddress.toLowerCase() === delegatee,
   )
 
   // use name from tally api, if not fallback to local mapping
   // last resort is delegatee address
   const delegateeName =
-    externalDelegatee && externalDelegatee.account.name !== ''
-      ? externalDelegatee.account.name
-      : localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
-        (delegatee === ADDRESS_ZERO ? 'No delegate' : formatAddress(delegatee))
+    externalDelegatee && externalDelegatee.displayName !== ''
+      ? externalDelegatee.displayName
+      : delegatee === ADDRESS_ZERO
+        ? 'No delegate'
+        : formatAddress(delegatee)
 
   // if delegatee is address zero it means that user removed delegatee
   // therefore fallback to 0

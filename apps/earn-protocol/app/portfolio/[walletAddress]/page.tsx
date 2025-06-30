@@ -38,6 +38,7 @@ import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -73,6 +74,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    tallyDelegates,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -95,6 +97,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       usersAddresses: [walletAddress],
     }),
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
+    unstableCache(getTallyDelegates, [walletAddress], cacheConfig)(),
   ])
 
   return {
@@ -112,6 +115,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    tallyDelegates,
   }
 }
 
@@ -142,8 +146,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -151,6 +153,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    tallyDelegates,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -202,8 +205,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrBalances,
     sumrStakeDelegate,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
+    tallyDelegates,
   }
 
   const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)

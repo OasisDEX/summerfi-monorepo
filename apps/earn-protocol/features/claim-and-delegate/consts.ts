@@ -1,7 +1,6 @@
 import { formatAddress, isValidLink } from '@summerfi/app-utils'
 
-import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
-import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
+import { type TallyDelegate } from '@/app/server-handlers/tally'
 
 interface SumrDelegate {
   sumrAmount: number
@@ -104,52 +103,40 @@ export const localSumrDelegates: SumrDelegateWithDecayFactor[] = [
   },
 ]
 
-export function mergeDelegatesData(
-  sumrDelegates: SumrDelegates[],
-  sumrDecayFactors: SumrDecayFactorData[],
-): SumrDelegateWithDecayFactor[] {
+export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegateWithDecayFactor[] {
   const mergedDelegates = new Map<string, SumrDelegateWithDecayFactor>()
+  const localDelegates = new Map<string, SumrDelegateWithDecayFactor>()
 
   // First add all local delegates to the map
   localSumrDelegates.forEach((delegate) => {
-    mergedDelegates.set(delegate.address.toLowerCase(), delegate)
+    localDelegates.set(delegate.address.toLowerCase(), delegate)
   })
 
   // Process delegates from sumrDelegates, overwriting local values if they exist
   sumrDelegates.forEach((sumrDelegate) => {
-    const normalizedAddress = sumrDelegate.account.address.toLowerCase()
-    const localDelegate = mergedDelegates.get(normalizedAddress)
-    const decayFactor =
-      sumrDecayFactors.find((factor) => factor.address.toLowerCase() === normalizedAddress)
-        ?.decayFactor ?? 1
+    const normalizedAddress = sumrDelegate.userAddress.toLowerCase()
+    const localDelegate = localDelegates.get(normalizedAddress)
 
     mergedDelegates.set(normalizedAddress, {
       // eslint-disable-next-line no-mixed-operators
       sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
-      ens: sumrDelegate.account.ens || localDelegate?.ens || '',
-      address: sumrDelegate.account.address,
+      ens: sumrDelegate.ens || localDelegate?.ens || '',
+      address: sumrDelegate.userAddress,
       title:
-        sumrDelegate.account.name ||
-        localDelegate?.title ||
-        formatAddress(sumrDelegate.account.address),
-      description:
-        sumrDelegate.account.bio ||
-        sumrDelegate.statement?.statementSummary ||
-        '' ||
-        localDelegate?.description ||
-        'Description not available.',
+        sumrDelegate.displayName || localDelegate?.title || formatAddress(sumrDelegate.userAddress),
+      description: sumrDelegate.bio || localDelegate?.description || 'Description not available.',
       social: {
-        x: isValidLink(sumrDelegate.account.twitter)
-          ? sumrDelegate.account.twitter
-          : sumrDelegate.account.twitter
-            ? `https://x.com/${sumrDelegate.account.twitter}`
+        x: isValidLink(sumrDelegate.x)
+          ? sumrDelegate.x
+          : sumrDelegate.x
+            ? `https://x.com/${sumrDelegate.x}`
             : localDelegate?.social.x,
         linkedin: localDelegate?.social.linkedin,
-        etherscan: `https://basescan.org/address/${sumrDelegate.account.address}`,
+        etherscan: `https://basescan.org/address/${sumrDelegate.userAddress}`,
         link: localDelegate?.social.link,
       },
-      picture: sumrDelegate.account.picture ?? '',
-      decayFactor,
+      picture: sumrDelegate.photo ?? '',
+      decayFactor: Number(sumrDelegate.votePower),
     })
   })
 

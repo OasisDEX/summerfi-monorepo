@@ -1,4 +1,4 @@
-import { type ChangeEvent, type Dispatch, type FC, useState } from 'react'
+import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain, useUser } from '@account-kit/react'
 import {
@@ -25,6 +25,7 @@ import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import {
@@ -137,13 +138,27 @@ const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
   },
 ]
 
+const fetchDelegatesBySearchValue = async (searchValue: string): Promise<TallyDelegate[]> => {
+  try {
+    const response = await fetch(`/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}`)
+
+    return response.json()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching delegates by search value:', error)
+
+    return []
+  }
+}
+
 export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   state,
   dispatch,
   externalData,
 }) => {
   const { walletAddress } = useParams()
-
+  const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
+  const [delegatedTo, setDelegatedTo] = useState<TallyDelegate>()
   const [action, setAction] = useState<ClaimDelegateAction>()
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
@@ -163,9 +178,57 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const [searchValue, setSearchValue] = useState('')
 
+  // Simple debounce with ref
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
+
+  // Handle the actual search with debouncing
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (searchValue === '') {
+        setDelegates(externalData.tallyDelegates)
+
+        return
+      }
+
+      try {
+        const result = await fetchDelegatesBySearchValue(searchValue)
+
+        setDelegates(result)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Search failed:', error)
+      }
+    }, 300)
+  }, [searchValue, externalData.tallyDelegates])
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) {
+      setDelegatedTo(undefined)
+
+      return
+    }
+
+    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedTo).then((result) =>
+      setDelegatedTo(result[0]),
+    )
+  }, [externalData.sumrStakeDelegate.delegatedTo])
 
   const sumrToClaim =
     externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
@@ -248,10 +311,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       })
   }
 
-  const mappedSumrDelegatesData = mergeDelegatesData(
-    externalData.sumrDelegates,
-    externalData.sumrDecayFactors,
-  )
+  const mappedSumrDelegatesData = mergeDelegatesData(delegates)
 
   const isChangeDelegateLoading =
     state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
@@ -276,19 +336,15 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     (item) => item.address.toLowerCase() === sumrDelegatedTo,
   )
 
-  const rewardsDataDelegatee = externalData.sumrDelegates.find(
-    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  const rewardsDataDelegatee = externalData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
   const value =
     sumrDelegatedTo === ADDRESS_ZERO
       ? 'No delegate'
-      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
-        ? rewardsDataDelegatee.account.name
+      : rewardsDataDelegatee?.displayName && rewardsDataDelegatee.displayName !== ''
+        ? rewardsDataDelegatee.displayName
         : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
-
-  const votes = mappedSumrDelegatesData.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
-  )
 
   return (
     <div className={classNames.claimDelegateStepWrapper}>
@@ -302,7 +358,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               {value}
             </Text>
           </div>
-          {votes && (
+          {delegatedTo && (
             <Text
               as="div"
               variant="p3semi"
@@ -314,7 +370,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }}
             >
               Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(votes.sumrAmount)}
+              {formatCryptoBalance(delegatedTo.votePower)}
             </Text>
           )}
         </Card>
@@ -454,7 +510,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
           />
         ) : (
           <div className={classNames.delegates}>
-            {getFilteredDelegates(mappedSumrDelegatesData, searchValue)
+            {mappedSumrDelegatesData
               .sort((a, b) => {
                 if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
                   return b.sumrAmount - a.sumrAmount

@@ -2,11 +2,10 @@ import { type SDKChainId } from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
-import { type SumrDecayFactorData } from '@/app/server-handlers/sumr-decay-factor'
 import { type SumrDelegateStakeData } from '@/app/server-handlers/sumr-delegate-stake'
-import { type SumrDelegates } from '@/app/server-handlers/sumr-delegates'
 import { type SumrStakingInfoData } from '@/app/server-handlers/sumr-staking-info'
 import { type SumrToClaimData } from '@/app/server-handlers/sumr-to-claim'
+import { type TallyDelegate } from '@/app/server-handlers/tally'
 
 export enum ClaimDelegateSteps {
   TERMS = 'terms',
@@ -102,6 +101,5 @@ export type ClaimDelegateExternalData = {
   sumrStakeDelegate: SumrDelegateStakeData
   sumrBalances: SumrBalancesData
   sumrStakingInfo: SumrStakingInfoData
-  sumrDelegates: SumrDelegates[]
-  sumrDecayFactors: SumrDecayFactorData[]
+  tallyDelegates: TallyDelegate[]
 }
