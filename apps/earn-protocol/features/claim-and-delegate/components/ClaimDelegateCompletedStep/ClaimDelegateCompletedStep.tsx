@@ -207,14 +207,11 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     (delegate) => delegate.userAddress.toLowerCase() === delegatee,
   )
 
-  // use name from tally api, if not fallback to local mapping
-  // last resort is delegatee address
-  const delegateeName =
-    externalDelegatee && externalDelegatee.displayName !== ''
-      ? externalDelegatee.displayName
-      : delegatee === ADDRESS_ZERO
-        ? 'No delegate'
-        : formatAddress(delegatee)
+  const resolvedDelegateTitle = externalDelegatee
+    ? externalDelegatee.displayName || externalDelegatee.customTitle
+    : delegatee === ADDRESS_ZERO
+      ? 'No delegate'
+      : formatAddress(delegatee)
 
   // if delegatee is address zero it means that user removed delegatee
   // therefore fallback to 0
@@ -268,12 +265,12 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={30}
-                name={safeBTOA(delegateeName)}
+                name={safeBTOA(resolvedDelegateTitle)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />
               <Text as="h4" variant="h4">
-                {delegateeName}
+                {resolvedDelegateTitle}
               </Text>
             </div>
           </div>
