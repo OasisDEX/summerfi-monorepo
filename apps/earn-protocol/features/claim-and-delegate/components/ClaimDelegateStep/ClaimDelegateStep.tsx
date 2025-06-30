@@ -481,7 +481,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 href="https://www.tally.xyz/gov/lazy-summer-dao-official/delegates"
                 target="_blank"
               >
-                Can&apos;t find your delegate? Visit our DAO on Tally
+                Can&apos;t find your delegate? Visit Lazy Summer DAO on Tally
               </Link>
             </WithArrow>
           </>
