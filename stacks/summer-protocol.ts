@@ -94,7 +94,7 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
   })
 
   new Cron(stack, 'update-tally-delegates-cron', {
-    schedule: 'rate(1 hour)',
+    schedule: 'rate(24 hours)',
     enabled: true,
     job: updateTallyDelegatesFunction,
   })
