@@ -59,27 +59,27 @@ export const getRisk = async <DB extends RiskRequiredDB>({
       }
   >
 > => {
-  const { chainId, walletAddress, cookiePrefix } = inputSchema.parse(await req.json())
-
-  const resolvedDB = db as unknown as Kysely<RiskRequiredDB>
-
-  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
-
-  if (!token) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
-
-  const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
-
-  if (!decoded) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
-
-  if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
-
   try {
+    const { chainId, walletAddress, cookiePrefix } = inputSchema.parse(await req.json())
+
+    const resolvedDB = db as unknown as Kysely<RiskRequiredDB>
+
+    const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
+
+    if (!token) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
+
+    const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
+
+    if (!decoded) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
+
+    if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
+
     // check if record exists
     const risk = await selectRiskForAddress({ db: resolvedDB, address: walletAddress })
 

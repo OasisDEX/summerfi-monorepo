@@ -686,106 +686,28 @@ export const handler = async (
   // await backfillFleetRates()
   const { db } = await getSummerProtocolDB(dbConfig)
 
-  const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
-  const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
+  try {
+    const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
+    const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
 
-  // rounded to full minutes
-  const updateStartTimestamp = Math.floor(Date.now() / 1000 / 60) * 60
+    // rounded to full minutes
+    const updateStartTimestamp = Math.floor(Date.now() / 1000 / 60) * 60
 
-  // Get all potential networks
-  const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-    (network) =>
-      network.network === 'mainnet' ||
-      network.network === 'arbitrum' ||
-      network.network === 'base' ||
-      network.network === 'sonic',
-  )
+    // Get all potential networks
+    const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
+      (network) =>
+        network.network === 'mainnet' ||
+        network.network === 'arbitrum' ||
+        network.network === 'base' ||
+        network.network === 'sonic',
+    )
 
-  logger.debug('Starting network processing', { networkCount: allNetworks.length })
+    logger.debug('Starting network processing', { networkCount: allNetworks.length })
 
-  for (const network of allNetworks) {
-    logger.debug('Processing network', { network: network.network })
-    try {
-      // First transaction for reward rates
-      await db.transaction().execute(async (trx) => {
-        // Attempt to acquire lock within transaction
-        const updatedNetwork = await trx
-          .updateTable('networkStatus')
-          .set({ isUpdating: true })
-          .where('network', '=', network.network)
-          .where('isUpdating', '=', false)
-          .where((eb) =>
-            eb('lastUpdatedAt', '<=', (updateStartTimestamp - MIN_UPDATE_INTERVAL).toString()).or(
-              'lastUpdatedAt',
-              'is',
-              null,
-            ),
-          )
-          .returningAll()
-          .executeTakeFirst()
-
-        if (!updatedNetwork) {
-          logger.debug('Skipping network - lock not acquired or too soon to update', {
-            network: network.network,
-            lastUpdate: network.lastUpdatedAt,
-          })
-          return
-        }
-
-        // Main processing for rewards
-        const chainId = mapDbNetworkToChainId(updatedNetwork.network)
-        const ratesSubgraphClient = ratesSubgraphClients[chainId]
-        const products = await getSupportedProducts(ratesSubgraphClient, updatedNetwork.network)
-
-        logger.debug('Retrieved products', {
-          network: updatedNetwork.network,
-          productCount: products.length,
-        })
-
-        if (products.length > 0) {
-          // Token updates
-          await trx
-            .insertInto('token')
-            .values(
-              products.map((product) => ({
-                address: product.token.id,
-                symbol: product.token.symbol,
-                decimals: +product.token.decimals,
-                precision: product.token.precision.toString(),
-                network: updatedNetwork.network,
-              })),
-            )
-            .onConflict((oc) => oc.doNothing())
-            .execute()
-
-          await updateRewardRates(
-            trx,
-            updatedNetwork,
-            products,
-            updateStartTimestamp,
-            ratesSubgraphClient,
-          )
-
-          logger.debug('Updated reward rates', {
-            network: updatedNetwork.network,
-            timestamp: updateStartTimestamp,
-          })
-        }
-
-        // Update network status
-        await trx
-          .updateTable('networkStatus')
-          .set({
-            lastUpdatedAt: updateStartTimestamp,
-            lastBlockNumber: updatedNetwork.lastBlockNumber,
-            isUpdating: false,
-          })
-          .where('network', '=', network.network)
-          .execute()
-      })
-
-      // Second transaction for vault APRs
+    for (const network of allNetworks) {
+      logger.debug('Processing network', { network: network.network })
       try {
+        // First transaction for reward rates
         await db.transaction().execute(async (trx) => {
           // Attempt to acquire lock within transaction
           const updatedNetwork = await trx
@@ -793,70 +715,157 @@ export const handler = async (
             .set({ isUpdating: true })
             .where('network', '=', network.network)
             .where('isUpdating', '=', false)
+            .where((eb) =>
+              eb('lastUpdatedAt', '<=', (updateStartTimestamp - MIN_UPDATE_INTERVAL).toString()).or(
+                'lastUpdatedAt',
+                'is',
+                null,
+              ),
+            )
             .returningAll()
             .executeTakeFirst()
 
           if (!updatedNetwork) {
-            logger.debug('Skipping vault APR updates - lock not acquired', {
+            logger.debug('Skipping network - lock not acquired or too soon to update', {
               network: network.network,
+              lastUpdate: network.lastUpdatedAt,
             })
             return
           }
 
-          try {
-            const protocolSubgraphClient =
-              protocolSubgraphClients[mapDbNetworkToChainId(network.network)]
-            const vaults = await retrySubgraphQuery<VaultsQuery>(
-              () => protocolSubgraphClient.Vaults(),
-              {
-                logger,
-                context: {
-                  operation: 'GetVaults',
-                  network: network.network,
-                },
-              },
+          // Main processing for rewards
+          const chainId = mapDbNetworkToChainId(updatedNetwork.network)
+          const ratesSubgraphClient = ratesSubgraphClients[chainId]
+          const products = await getSupportedProducts(ratesSubgraphClient, updatedNetwork.network)
+
+          logger.debug('Retrieved products', {
+            network: updatedNetwork.network,
+            productCount: products.length,
+          })
+
+          if (products.length > 0) {
+            // Token updates
+            await trx
+              .insertInto('token')
+              .values(
+                products.map((product) => ({
+                  address: product.token.id,
+                  symbol: product.token.symbol,
+                  decimals: +product.token.decimals,
+                  precision: product.token.precision.toString(),
+                  network: updatedNetwork.network,
+                })),
+              )
+              .onConflict((oc) => oc.doNothing())
+              .execute()
+
+            await updateRewardRates(
+              trx,
+              updatedNetwork,
+              products,
+              updateStartTimestamp,
+              ratesSubgraphClient,
             )
 
-            if (vaults.vaults.length > 0) {
-              await updateVaultAprs(
-                trx,
-                network,
-                updateStartTimestamp,
-                vaults,
-                ratesSubgraphClients,
-              )
-              logger.debug('Updated vault APRs successfully', {
+            logger.debug('Updated reward rates', {
+              network: updatedNetwork.network,
+              timestamp: updateStartTimestamp,
+            })
+          }
+
+          // Update network status
+          await trx
+            .updateTable('networkStatus')
+            .set({
+              lastUpdatedAt: updateStartTimestamp,
+              lastBlockNumber: updatedNetwork.lastBlockNumber,
+              isUpdating: false,
+            })
+            .where('network', '=', network.network)
+            .execute()
+        })
+
+        // Second transaction for vault APRs
+        try {
+          await db.transaction().execute(async (trx) => {
+            // Attempt to acquire lock within transaction
+            const updatedNetwork = await trx
+              .updateTable('networkStatus')
+              .set({ isUpdating: true })
+              .where('network', '=', network.network)
+              .where('isUpdating', '=', false)
+              .returningAll()
+              .executeTakeFirst()
+
+            if (!updatedNetwork) {
+              logger.debug('Skipping vault APR updates - lock not acquired', {
                 network: network.network,
               })
+              return
             }
-          } finally {
-            // Always release the lock, even if there's an error
-            await trx
-              .updateTable('networkStatus')
-              .set({ isUpdating: false })
-              .where('network', '=', network.network)
-              .execute()
-          }
-        })
-      } catch (vaultError) {
-        logger.error(`Error updating vault APRs for network ${network.network}`, {
-          error: vaultError instanceof Error ? vaultError.message : String(vaultError),
-          stack: vaultError instanceof Error ? vaultError.stack : undefined,
+
+            try {
+              const protocolSubgraphClient =
+                protocolSubgraphClients[mapDbNetworkToChainId(network.network)]
+              const vaults = await retrySubgraphQuery<VaultsQuery>(
+                () => protocolSubgraphClient.Vaults(),
+                {
+                  logger,
+                  context: {
+                    operation: 'GetVaults',
+                    network: network.network,
+                  },
+                },
+              )
+
+              if (vaults.vaults.length > 0) {
+                await updateVaultAprs(
+                  trx,
+                  network,
+                  updateStartTimestamp,
+                  vaults,
+                  ratesSubgraphClients,
+                )
+                logger.debug('Updated vault APRs successfully', {
+                  network: network.network,
+                })
+              }
+            } finally {
+              // Always release the lock, even if there's an error
+              await trx
+                .updateTable('networkStatus')
+                .set({ isUpdating: false })
+                .where('network', '=', network.network)
+                .execute()
+            }
+          })
+        } catch (vaultError) {
+          logger.error(`Error updating vault APRs for network ${network.network}`, {
+            error: vaultError instanceof Error ? vaultError.message : String(vaultError),
+            stack: vaultError instanceof Error ? vaultError.stack : undefined,
+            network: network.network,
+            timestamp: updateStartTimestamp,
+          })
+        }
+      } catch (error) {
+        logger.error(`Error processing network ${network.network}`, {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
           network: network.network,
           timestamp: updateStartTimestamp,
         })
       }
-    } catch (error) {
-      logger.error(`Error processing network ${network.network}`, {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        network: network.network,
-        timestamp: updateStartTimestamp,
-      })
     }
-  }
 
-  logger.debug('Handler completed')
+    logger.debug('Handler completed')
+  } catch (error) {
+    logger.error('Error in update-summer-earn-rewards-apr handler', {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+  } finally {
+    await db.destroy()
+  }
 }
 
 export default handler

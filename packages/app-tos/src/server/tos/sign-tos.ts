@@ -39,83 +39,93 @@ export async function signTos<DB extends TOSRequiredDB>({
     | {
         docVersion: string
       }
+    | {
+        error: string
+      }
   >
 > {
-  const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
+  try {
+    const resolvedDB = db as unknown as Kysely<TOSRequiredDB>
 
-  const { docVersion, walletAddress, cookiePrefix } = tosSchema.parse(await req.json())
+    const { docVersion, walletAddress, cookiePrefix } = tosSchema.parse(await req.json())
 
-  const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
+    const token = req.cookies.get(`${cookiePrefix}-${walletAddress.toLowerCase()}`)
 
-  if (!token) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
+    if (!token) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
 
-  const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
+    const decoded = await verifyAccessToken({ token: token.value, jwtSecret })
 
-  if (!decoded) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
+    if (!decoded) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
 
-  if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
-    return NextResponse.json({ authenticated: false }, { status: 401 })
-  }
+    if (decoded.address.toLowerCase() !== walletAddress.toLowerCase()) {
+      return NextResponse.json({ authenticated: false }, { status: 401 })
+    }
 
-  const approvalData = {
-    address: decoded.address,
-    signature: decoded.signature,
-    message: decoded.challenge,
-    chainId: decoded.chainId,
-    docVersion,
-    signDate: new Date(),
-  }
+    const approvalData = {
+      address: decoded.address,
+      signature: decoded.signature,
+      message: decoded.challenge,
+      chainId: decoded.chainId,
+      docVersion,
+      signDate: new Date(),
+    }
 
-  const queryResult = await resolvedDB
-    .selectFrom('tosApproval')
-    .where(({ eb, and }) =>
-      and([eb('address', '=', decoded.address), eb('docVersion', '=', docVersion)]),
+    const queryResult = await resolvedDB
+      .selectFrom('tosApproval')
+      .where(({ eb, and }) =>
+        and([eb('address', '=', decoded.address), eb('docVersion', '=', docVersion)]),
+      )
+      .selectAll()
+      .execute()
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching ToS approval:', err)
+      })
+
+    const currentRecord = queryResult?.find(
+      (record) => record.docVersion === docVersion && record.chainId === decoded.chainId,
     )
-    .selectAll()
-    .execute()
-    .catch((err) => {
+
+    if (currentRecord) {
+      try {
+        await resolvedDB
+          .updateTable('tosApproval')
+          .where(({ eb, and }) =>
+            and([
+              eb('address', '=', currentRecord.address),
+              eb('docVersion', '=', currentRecord.docVersion),
+              eb('chainId', '=', currentRecord.chainId),
+            ]),
+          )
+          .set(approvalData)
+          .execute()
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error updating ToS approval:', error)
+      }
+    } else {
+      try {
+        await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error inserting ToS approval:', error)
+      }
+    }
+
+    return NextResponse.json({ docVersion })
+  } catch (error) {
+    return NextResponse.json(
+      { error: `Error signing ToS: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 500 },
+    )
+  } finally {
+    await db.destroy().catch((err) => {
       // eslint-disable-next-line no-console
-      console.error('Error fetching ToS approval:', err)
+      console.error('Error closing database connection:', err)
     })
-
-  const currentRecord = queryResult?.find(
-    (record) => record.docVersion === docVersion && record.chainId === decoded.chainId,
-  )
-
-  if (currentRecord) {
-    try {
-      await resolvedDB
-        .updateTable('tosApproval')
-        .where(({ eb, and }) =>
-          and([
-            eb('address', '=', currentRecord.address),
-            eb('docVersion', '=', currentRecord.docVersion),
-            eb('chainId', '=', currentRecord.chainId),
-          ]),
-        )
-        .set(approvalData)
-        .execute()
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error updating ToS approval:', error)
-    }
-  } else {
-    try {
-      await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error inserting ToS approval:', error)
-    }
   }
-
-  await resolvedDB.destroy().catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error('Error closing database connection:', err)
-  })
-
-  return NextResponse.json({ docVersion })
 }
