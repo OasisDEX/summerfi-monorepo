@@ -139,6 +139,23 @@ export interface RewardRate {
   timestamp: Int8
 }
 
+export interface TallyDelegates {
+  bio: Generated<string>
+  customBio: Generated<string>
+  customTitle: Generated<string>
+  delegatorsCount: Numeric
+  displayName: Generated<string>
+  ens: Generated<string>
+  forumUrl: Generated<string>
+  photo: Generated<string>
+  updatedAt: Generated<Int8>
+  userAddress: string
+  votePower: Numeric
+  votesCount: Numeric
+  votesCountNormalized: Numeric
+  x: Generated<string>
+}
+
 export interface Token {
   address: string
   decimals: number
@@ -217,6 +234,7 @@ export interface Database {
   networkStatus: NetworkStatus
   rebalanceActivity: RebalanceActivity
   rewardRate: RewardRate
+  tallyDelegates: TallyDelegates
   token: Token
   topDepositors: TopDepositors
   tosApproval: TosApproval

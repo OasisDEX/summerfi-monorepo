@@ -32,12 +32,12 @@ import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-delegates-with-decay-factor'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -65,7 +65,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -79,7 +78,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
-    unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
@@ -103,8 +101,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -142,8 +138,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -174,36 +168,37 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const userVaultsIds = positionsWithVault.map((position) => getUniqueVaultId(position.vault))
 
-  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity] = await Promise.all([
-    Promise.all(
-      vaultsWithConfig.map((vault) =>
-        getPositionHistory({
-          network: vault.protocol.network,
-          address: walletAddress.toLowerCase(),
-          vault,
-        }),
-      ),
-    ).then(mapPortfolioVaultsApy),
-    getVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
-      })),
-    }),
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 50,
-      strategies: userVaultsIds,
-    }),
-  ])
+  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity, tallyDelegates] =
+    await Promise.all([
+      Promise.all(
+        vaultsWithConfig.map((vault) =>
+          getPositionHistory({
+            network: vault.protocol.network,
+            address: walletAddress.toLowerCase(),
+            vault,
+          }),
+        ),
+      ).then(mapPortfolioVaultsApy),
+      getVaultsApy({
+        fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(network),
+        })),
+      }),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 50,
+        strategies: userVaultsIds,
+      }),
+      getTallyDelegates(sumrStakeDelegate.delegatedTo),
+    ])
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
     sumrBalances,
     sumrStakeDelegate,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
+    tallyDelegates,
   }
 
   const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)

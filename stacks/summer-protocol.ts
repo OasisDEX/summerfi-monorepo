@@ -7,6 +7,7 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
     EARN_PROTOCOL_DB_CONNECTION_STRING,
     SUBGRAPH_BASE,
     BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
+    TALLY_API_KEY,
   } = process.env
 
   if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
@@ -17,6 +18,10 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
   }
   if (!BEACH_CLUB_REWARDS_DB_CONNECTION_STRING) {
     throw new Error('BEACH_CLUB_REWARDS_DB_CONNECTION_STRING is not set')
+  }
+
+  if (!TALLY_API_KEY) {
+    throw new Error('TALLY_API_KEY is not set')
   }
 
   const updateEarnRewardsAprCronFunctionProps: FunctionProps = {
@@ -65,9 +70,32 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
     }),
   })
 
+  const updateTallyDelegatesFunction = new Function(stack, 'update-tally-delegates-function', {
+    handler: 'background-jobs/update-tally-delegates/src/index.handler',
+    runtime: 'nodejs20.x',
+    timeout: '500 seconds',
+    environment: {
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      EARN_PROTOCOL_DB_CONNECTION_STRING,
+      TALLY_API_KEY,
+    },
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+    }),
+  })
+
   new Cron(stack, 'update-beach-club-rewards-cron', {
     schedule: 'rate(1 hour)',
     enabled: true,
     job: updateBeachClubRewardsFunction,
+  })
+
+  new Cron(stack, 'update-tally-delegates-cron', {
+    schedule: 'rate(24 hours)',
+    enabled: true,
+    job: updateTallyDelegatesFunction,
   })
 }

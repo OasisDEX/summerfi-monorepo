@@ -1,0 +1,36 @@
+{
+  "name": "@summerfi/ssr-public-client",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint *.ts*",
+    "dev": "tsc -b --preserveWatchOutput -w",
+    "build": "tsc -b --preserveWatchOutput",
+    "prebuild": "tsc -b --preserveWatchOutput",
+    "clean": "rm -rf dist",
+    "knip": "knip"
+  },
+  "dependencies": {
+    "@summerfi/app-utils": "workspace:*",
+    "viem": "2.29.2"
+  },
+  "devDependencies": {
+    "@summerfi/app-types": "workspace:*",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^22.14.1",
+    "eslint": "8.57.0",
+    "glob": "^11.0.0",
+    "knip": "^5.50.4",
+    "typescript": "^5.7.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
