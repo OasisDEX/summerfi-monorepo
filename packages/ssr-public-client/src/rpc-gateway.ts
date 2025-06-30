@@ -67,10 +67,6 @@ export function getRpcGatewayUrl(networkName: NetworkNames): string | undefined 
   try {
     const rpcBase = getRpcGatewayBaseUrl()
 
-    if (!rpcConfig) {
-      throw new Error('Failed to retrieve RPC config or base URL')
-    }
-
     return resolveRpcGatewayUrl(networkName, rpcConfig, rpcBase)
   } catch (e) {
     return undefined

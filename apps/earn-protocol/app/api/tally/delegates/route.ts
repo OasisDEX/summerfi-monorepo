@@ -2,11 +2,8 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { DelegateSortOptions } from '@/features/claim-and-delegate/components/ClaimDelegateStep/sort-options'
-
 const EnsOrAddressOrNameSchema = z.object({
   ensOrAddressOrName: z.string(),
-  sortBy: z.nativeEnum(DelegateSortOptions),
 })
 
 export async function GET(request: NextRequest) {
@@ -37,7 +34,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid ENS or address or name' }, { status: 400 })
   }
 
-  const { ensOrAddressOrName: validatedEnsOrAddressOrName, sortBy: validatedSortBy } = result.data
+  const { ensOrAddressOrName: validatedEnsOrAddressOrName } = result.data
 
   let database
 
@@ -58,12 +55,6 @@ export async function GET(request: NextRequest) {
           eb('displayName', 'ilike', `%${sanitizedInput}%`),
           eb('customTitle', 'ilike', `%${sanitizedInput}%`),
         ]),
-      )
-      .orderBy(
-        validatedSortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT
-          ? 'votesCountNormalized'
-          : 'votePower',
-        'desc',
       )
       .limit(5)
       .execute()

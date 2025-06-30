@@ -28,10 +28,7 @@ import { AccountKitAccountType } from '@/account-kit/types'
 import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
-import {
-  mergeDelegatesData,
-  type SumrDelegateWithDecayFactor,
-} from '@/features/claim-and-delegate/consts'
+import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import { useSumrDelegateTransaction } from '@/features/claim-and-delegate/hooks/use-sumr-delegate-transaction'
 import {
@@ -56,30 +53,15 @@ import { ClaimDelegateAction } from './types'
 
 import classNames from './ClaimDelegateStep.module.css'
 
-const getFilteredDelegates = (delegates: SumrDelegateWithDecayFactor[], searchValue: string) => {
-  return delegates.filter((delegate) => {
-    return (
-      delegate.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      delegate.ens.toLowerCase().includes(searchValue.toLowerCase()) ||
-      delegate.address.toLowerCase().includes(searchValue.toLowerCase())
-    )
-  })
-}
-
 const getIsCardFaded = ({ address, state }: { address: string; state: ClaimDelegateState }) => {
   return (
     state.delegatee !== ADDRESS_ZERO && state.delegatee?.toLowerCase() !== address.toLowerCase()
   )
 }
 
-const fetchDelegatesBySearchValue = async (
-  searchValue: string,
-  sortBy: DelegateSortOptions,
-): Promise<TallyDelegate[]> => {
+const fetchDelegatesBySearchValue = async (searchValue: string): Promise<TallyDelegate[]> => {
   try {
-    const response = await fetch(
-      `/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}&sortBy=${sortBy}`,
-    )
+    const response = await fetch(`/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}`)
 
     return response.json()
   } catch (error) {
@@ -144,10 +126,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       }
 
       try {
-        const result = await fetchDelegatesBySearchValue(
-          searchValue,
-          sortBy.value as DelegateSortOptions,
-        )
+        const result = await fetchDelegatesBySearchValue(searchValue)
 
         setDelegates(result)
       } catch (error) {
@@ -173,11 +152,10 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       return
     }
 
-    fetchDelegatesBySearchValue(
-      externalData.sumrStakeDelegate.delegatedTo,
-      sortBy.value as DelegateSortOptions,
-    ).then((result) => setDelegatedTo(result[0]))
-  }, [externalData.sumrStakeDelegate.delegatedTo, sortBy.value])
+    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedTo).then((result) =>
+      setDelegatedTo(result[0]),
+    )
+  }, [externalData.sumrStakeDelegate.delegatedTo])
 
   const sumrToClaim =
     externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
@@ -477,7 +455,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                     isFaded={getIsCardFaded({ address: delegate.address, state })}
                   />
                 ))}
-              {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (
+              {mappedSumrDelegatesData.length === 0 && (
                 <Text
                   as="p"
                   variant="p2semi"

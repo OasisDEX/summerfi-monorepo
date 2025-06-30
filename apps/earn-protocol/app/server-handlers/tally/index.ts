@@ -48,7 +48,11 @@ export const getTallyDelegates = async (currentDelegate?: string): Promise<Tally
         .executeTakeFirst()
 
       if (delegate) {
-        return [delegate, ...delegates]
+        const filteredDelegates = delegates.filter(
+          (d) => d.userAddress.toLowerCase() !== currentDelegate.toLowerCase(),
+        )
+
+        return [delegate, ...filteredDelegates]
       }
     }
 
