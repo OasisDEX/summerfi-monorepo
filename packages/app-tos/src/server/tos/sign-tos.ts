@@ -82,11 +82,10 @@ export async function signTos<DB extends TOSRequiredDB>({
       .selectAll()
       .execute()
       .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching ToS approval:', err)
+        throw new Error(`Error fetching ToS approval: ${err}`)
       })
 
-    const currentRecord = queryResult?.find(
+    const currentRecord = queryResult.find(
       (record) => record.docVersion === docVersion && record.chainId === decoded.chainId,
     )
 
@@ -104,15 +103,13 @@ export async function signTos<DB extends TOSRequiredDB>({
           .set(approvalData)
           .execute()
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error updating ToS approval:', error)
+        throw new Error(`Error updating ToS approval: ${error}`)
       }
     } else {
       try {
         await resolvedDB.insertInto('tosApproval').values(approvalData).execute()
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error inserting ToS approval:', error)
+        throw new Error(`Error inserting ToS approval: ${error}`)
       }
     }
 
