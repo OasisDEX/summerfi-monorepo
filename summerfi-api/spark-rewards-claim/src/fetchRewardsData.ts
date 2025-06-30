@@ -1,15 +1,15 @@
-import { safeParseBigInt, type ChainId } from '@summerfi/serverless-shared'
+import { safeParseBigInt } from '@summerfi/serverless-shared'
 import { type RewardsData, type SparkRewardsResponse } from './types'
 import { getClaimType } from './mappings'
 import type { Hex } from 'viem'
-import { supportedChainIds } from './supportedChainIds'
+import { supportedChainIds, type SupportedChainIds } from './supportedChainIds'
 
 export const fetchRewardsData = async ({
   account,
   chainId,
 }: {
   account: Hex
-  chainId: ChainId
+  chainId: SupportedChainIds
 }): Promise<RewardsData[]> => {
   if (!supportedChainIds.includes(chainId)) {
     throw new Error(

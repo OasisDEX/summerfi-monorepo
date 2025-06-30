@@ -2,11 +2,19 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getRpcGatewayEndpoint, IRpcConfig, ChainId } from '@summerfi/serverless-shared'
+import { sparkRewardsAbi } from '../src/abi/rewards'
 
 import { config } from 'dotenv'
 config({ path: '../../.env' })
 
-import { createPublicClient, createWalletClient, extractChain, http } from 'viem'
+import {
+  createPublicClient,
+  createWalletClient,
+  encodeFunctionData,
+  extractChain,
+  http,
+  type Hex,
+} from 'viem'
 import { mainnet, base, optimism, arbitrum, sepolia, sonic } from 'viem/chains'
 import { privateKeyToAccount } from 'viem/accounts'
 
@@ -25,6 +33,7 @@ const functionsUrl =
 const rpcGatewayUrl =
   process.env.E2E_SDK_FORK_URL_MAINNET || 'YOUR_MAINNET_RPC_URL_HERE_INFURA_OR_ALCHEMY'
 const privateKey = process.env.E2E_USER_PRIVATE_KEY || 'YOUR_PRIVATE_KEY_HERE_TO_SEND_TRANSACTION'
+const userAccount = (process.env.E2E_DPM_ADDRESS || 'DPM_ADDRESS_HERE') as Hex
 
 async function main() {
   if (!functionsUrl) {
@@ -37,7 +46,7 @@ async function main() {
     throw new Error('E2E_USER_PRIVATE_KEY environment variable is not set')
   }
 
-  const viemAccount = privateKeyToAccount(privateKey as `0x${string}`)
+  const signerAccount = privateKeyToAccount(privateKey as `0x${string}`)
   const chainId = ChainId.MAINNET // Hardcoded for now, can be extended later
   const rpcUrl = getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
   const transport = http(rpcUrl, {
@@ -58,30 +67,55 @@ async function main() {
     },
   })
 
-  const data =
-    '0xef98231e000000000000000000000000000000000000000000000000000000000000000100000000000000000000000005e5de48a965fef85e50921d2fa7ebaa35ae3797000000000000000000000000c20059e0317de91738d13af027dfc4a50781b066000000000000000000000000000000000000000000000124bc0ddd92e56000000b90e54808c026feb46dabad594c8e2f6625091d82effa5119ea6059dcc5a97900000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000104a7be0795d8101aa5cd46e489d5e488b7c60bf9ce759eaf3ea263b6e256700186688b0bed82c2543781b937ef30db31491952c60861b4308fdfd0d9cbb5b498ef06f78ff8fd61b5ea33127726d1ed03f9b0d6f4dd896fb2d4a058dbf4104d415f020d853cdea0b92a4b81cfa3c74f2a89fc551ec7c0bf11fb18e81051cf8e53cd0ad8560842918ea9296898783fd9cc5ebd2f067d416b75d8f316e7eadc8a0dc07e0a3641f7bbac30b97aaca0a86b74898e01ac2278ed21563f9662ead51571759538a844541b716e0e782f81aa73b019c555086a670108d394ffa9569681be4dbe2b184ea6f1ee0e7b6526b0b18a0658f8fd7ecc37946f59180e4caaaa96f715768d8656bf197f5afcee518cd4db235fd956fd225423d1b13606d8f9e43127b0a1bcf00f9b820e3c30ca18c23c905e3e0f0857bc49a01b89307188774b9415f166767682f00863c993c32d49eb05b531f83640a2e787e75d08bfe8332e5b514bd2e66e8af83ab63717fa7438cb499ace9a08592f7400f04dca31b152b450a7a4ba440d26592d8f727e94d518ec625b9a06d43b1addd61616b1c476cf1e39dc1bd45a57f5ad072ce4a153f2bd11b1db79b3231f8d665c9fa5306648c1f61bec60721aee7309a3d1fd57188d5d4a2b4b95e79f6b984057f024fa113535dc615fc95c5db1af0922f78a9846d19badd56639b5c1aa461fcda52ba8ae3574848bea0'
-
   // run simulation to check if the claim is already claimed
   // will fail with Multicall3: call failed.
   const tx = await client.call({
-    account: '0x05E5De48A965Fef85E50921d2Fa7eBAa35ae3797',
+    account: signerAccount.address,
     to: '0xCBA0C0a2a0B6Bb11233ec4EA85C5bFfea33e724d',
-    data,
+    data: encodeFunctionData({
+      abi: sparkRewardsAbi,
+      functionName: 'claim',
+      args: [
+        1n,
+        userAccount,
+        '0xc20059e0317de91738d13af027dfc4a50781b066', // token
+        5400000000000000000000n,
+        '0x0b90e54808c026feb46dabad594c8e2f6625091d82effa5119ea6059dcc5a979',
+        [
+          '0xe3abe68b4dcf6ae3847b506224b2f2799c13e1c76b05631b785c32e050345c49',
+          '0x414c6d1870575a171f16e83c0e865066cb5e3b0db058c450fd647f6c6ba2c93b',
+          '0xdcaaedafb7e521350e6c31a6458d964ed0f97626bc703765d2890bca111d6f91',
+          '0x41bdb1f613806012efc4912895b5aceb8997db1e498a59a8703df9cb111d2705',
+          '0x61f0d5466ba07da7ea112f9c5308c0bbdc06e590a458cc692f572b8f2f2fe1e7',
+          '0xcb483ae4b66ecdbdacaaa595b3d3b82ebf9cea4dc5042084b85ab5839ff0892e',
+          '0xf7dd75db050a6a1a3890265ee1e4139dbdfe0a9592b21cc98d5ee4f15f2d7cac',
+          '0xb6f2f0ee72d24f399de14795bb8823f474e6f42af1024f839707cae884998d2b',
+          '0x7099a0701fcce605db6daf3765947631a975f56902018a21b7dbf4b47275fcf2',
+          '0xcf6617e06b6d902c3830e89a2984d10e909b9389e712bd8c45ed728d2bccdbd3',
+          '0xe11e1171dd5628d7944922a3c36cc8fde6f7eba717eb2b1bca56895aa753d250',
+          '0x1b3146ef9838d8be4ece83b8a2fc6e2bee145000d4b86efcd325d2aa86d985b0',
+          '0xb2b87f2b9823b03552ce1566a82025b9960fdde30c40866904ec2daedb3e6e29',
+          '0xba87f471dfa9f63f897bbaaf0f50a1e35b189b5d8f08e78bad3e5630efc41e9f',
+          '0x08146e9e13a234a0b58c3f10e5c62fe700b1d1e39c4167f5449d52f4d41c3a95',
+        ],
+      ],
+    }),
     value: BigInt(0n),
   })
   console.log('Transaction success:', tx.data)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
   const wallet = createWalletClient({
-    account: viemAccount,
+    account: signerAccount,
     chain,
     transport,
   })
-  const txHash = await wallet.sendTransaction({
-    to: '0xCBA0C0a2a0B6Bb11233ec4EA85C5bFfea33e724d',
-    data,
-    value: BigInt(0n),
-  })
-  console.log('Transaction sent:', txHash)
+  // const txHash = await wallet.sendTransaction({
+  //   to: claim.to,
+  //   data: claim.data,
+  //   value: BigInt(claim.value),
+  // })
+  // console.log('Transaction sent:', txHash)
 }
 
 main().catch((err) => {

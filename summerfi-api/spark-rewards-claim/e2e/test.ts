@@ -25,7 +25,7 @@ const functionsUrl =
 const rpcGatewayUrl =
   process.env.E2E_SDK_FORK_URL_MAINNET || 'YOUR_MAINNET_RPC_URL_HERE_INFURA_OR_ALCHEMY'
 const privateKey = process.env.E2E_USER_PRIVATE_KEY || 'YOUR_PRIVATE_KEY_HERE_TO_SEND_TRANSACTION'
-const account = process.env.E2E_DPM_ADDRESS || 'DPM_ADDRESS_HERE'
+const userAccount = process.env.E2E_DPM_ADDRESS || 'DPM_ADDRESS_HERE'
 
 async function main() {
   if (!functionsUrl) {
@@ -38,7 +38,7 @@ async function main() {
     throw new Error('E2E_USER_PRIVATE_KEY environment variable is not set')
   }
 
-  const viemAccount = privateKeyToAccount(privateKey as `0x${string}`)
+  const signerAccount = privateKeyToAccount(privateKey as `0x${string}`)
   const chainId = ChainId.MAINNET // Hardcoded for now, can be extended later
   const rpcUrl = getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
   const transport = http(rpcUrl, {
@@ -51,11 +51,7 @@ async function main() {
     chains: [mainnet, base, optimism, arbitrum, sepolia, sonic],
     id: chainId,
   })
-  const wallet = createWalletClient({
-    account: viemAccount,
-    chain,
-    transport,
-  })
+
   const client = createPublicClient({
     chain,
     transport,
@@ -64,10 +60,10 @@ async function main() {
     },
   })
 
-  const res = await fetch(functionsUrl + '/api/spark-rewards-claim?account=' + account)
+  const res = await fetch(functionsUrl + '/api/spark-rewards-claim?account=' + userAccount)
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch data: ${res.statusText}`)
+    throw new Error(`Failed to fetch data: ${await res.text()}`)
   }
 
   const json: any = await res.json()
@@ -79,20 +75,25 @@ async function main() {
   // run simulation to check if the claim is already claimed
   // will fail with Multicall3: call failed.
   const tx = await client.call({
-    account: viemAccount.address,
+    account: signerAccount.address,
     to: claim.to,
     data: claim.data,
     value: BigInt(claim.value),
   })
   console.log('Transaction success:', tx.data)
 
-  // not failed so we can send the transaction
-  const txHash = await wallet.sendTransaction({
-    to: claim.to,
-    data: claim.data,
-    value: BigInt(claim.value),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+  const wallet = createWalletClient({
+    account: signerAccount,
+    chain,
+    transport,
   })
-  console.log('Transaction sent:', txHash)
+  // const txHash = await wallet.sendTransaction({
+  //   to: claim.to,
+  //   data: claim.data,
+  //   value: BigInt(claim.value),
+  // })
+  // console.log('Transaction sent:', txHash)
 }
 
 main().catch((err) => {
