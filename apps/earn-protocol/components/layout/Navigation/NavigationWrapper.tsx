@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, Suspense } from 'react'
+import { type FC } from 'react'
 import { Button, getNavigationItems, Navigation, SkeletonLine } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
@@ -18,46 +18,40 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
   ),
 })
 
-const TheGame = dynamic(() => import('../../../features/game/components/MainGameView'), {
-  ssr: false,
-})
-
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
-  const { features, runningGame, setRunningGame } = useSystemConfig()
+  const { features, setRunningGame } = useSystemConfig()
+
+  const startGame = () => {
+    setRunningGame?.(true)
+  }
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
 
   return (
-    <>
-      <Navigation
-        isEarnApp
-        userWalletAddress={userWalletAddress}
-        currentPath={currentPath}
-        logo="/earn/img/branding/logo-dark.svg"
-        logoSmall="/earn/img/branding/dot-dark.svg"
-        links={getNavigationItems({
-          userWalletAddress,
-          isEarnApp: true,
-        })}
-        walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
-        mobileWalletConnectionComponents={{
-          primary: <WalletLabel variant="logoutOnly" />,
-          secondary: <WalletLabel variant="addressOnly" />,
-        }}
-        configComponent={<NavConfig />}
-        onLogoClick={() => {
-          // because router will use base path...
-          window.location.replace('/')
-        }}
-        featuresConfig={features}
-      />
-      {runningGame && (
-        <Suspense>
-          <TheGame closeGame={() => setRunningGame?.(false)} />
-        </Suspense>
-      )}
-    </>
+    <Navigation
+      isEarnApp
+      userWalletAddress={userWalletAddress}
+      currentPath={currentPath}
+      logo="/earn/img/branding/logo-dark.svg"
+      logoSmall="/earn/img/branding/dot-dark.svg"
+      links={getNavigationItems({
+        userWalletAddress,
+        isEarnApp: true,
+      })}
+      walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
+      mobileWalletConnectionComponents={{
+        primary: <WalletLabel variant="logoutOnly" />,
+        secondary: <WalletLabel variant="addressOnly" />,
+      }}
+      configComponent={<NavConfig />}
+      onLogoClick={() => {
+        // because router will use base path...
+        window.location.replace('/')
+      }}
+      startTheGame={startGame}
+      featuresConfig={features}
+    />
   )
 }

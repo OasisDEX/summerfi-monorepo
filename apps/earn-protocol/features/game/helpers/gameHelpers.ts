@@ -16,17 +16,27 @@ export function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
   })
 }
 
+export function getRandomToken(): string {
+  const tokens = ['ETH', 'USDC', 'USDT', 'EURC']
+
+  return tokens[Math.floor(Math.random() * tokens.length)]
+}
+
 export function generateCards(round: number): CardData[] {
   const roundBasedCardCount = round <= 15 ? 3 : round <= 30 ? 6 : 9
-  const apys: number[] = []
+  const cards: CardData[] = []
 
-  while (apys.length < roundBasedCardCount) {
-    const newApy = Number((Number(Math.random() * 18) + 2).toFixed(2))
+  while (cards.length < roundBasedCardCount) {
+    const apy = Number((Number(Math.random() * 18) + 2).toFixed(2))
 
-    if (apys.every((apy) => Math.abs(apy - newApy) >= 0.01)) {
-      apys.push(newApy)
+    if (cards.every((card) => Math.abs(card.apy - apy) >= 0.01)) {
+      cards.push({
+        apy,
+        trendData: getTrendDataForAPY(apy),
+        token: getRandomToken(),
+      })
     }
   }
 
-  return apys.map((apy) => ({ apy, trendData: getTrendDataForAPY(apy) }))
+  return cards
 }

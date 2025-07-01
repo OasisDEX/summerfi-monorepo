@@ -726,7 +726,9 @@ function scheduleNote(noteTime: number) {
       // Stereo panning for width
       const pan = audioContext.createStereoPanner()
 
-      pan.pan.setValueAtTime(-0.5 + Number(i * 0.5), noteTime) // spread voices
+      const panValue = Math.max(-1, Math.min(1, -0.5 + Number(i * 0.5))) // Clamp to [-1, 1]
+
+      pan.pan.setValueAtTime(panValue, noteTime) // spread voices
 
       // Filter sweep for movement - more pronounced in higher intensities
       const filter = audioContext.createBiquadFilter()

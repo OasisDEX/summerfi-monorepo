@@ -4,6 +4,7 @@ import { startMusic, stopMusic } from '@/features/game/helpers/musicHelper'
 import { type CardData } from '@/features/game/types'
 
 export function useHomeState() {
+  const [startingGame, setStartingGame] = useState(false)
   const [screenName, setScreenName] = useState<'start' | 'game' | 'ai' | 'over'>('start')
   const [lastScore, setLastScore] = useState(0)
   const [lastStreak, setLastStreak] = useState(0)
@@ -64,5 +65,7 @@ export function useHomeState() {
     timedOut,
     setTimedOut,
     handleGameOver,
+    startingGame,
+    setStartingGame,
   }
 }

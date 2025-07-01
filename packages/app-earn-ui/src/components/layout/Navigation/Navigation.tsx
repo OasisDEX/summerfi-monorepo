@@ -39,6 +39,7 @@ export interface EarnNavigationProps {
   signupComponent?: ReactNode
   noNavMargin?: boolean
   onLogoClick?: () => void
+  startTheGame?: () => void
   featuresConfig?: EarnAppConfigType['features']
   userWalletAddress?: string
 }
@@ -55,6 +56,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   signupComponent,
   noNavMargin = false,
   onLogoClick,
+  startTheGame,
   featuresConfig,
   userWalletAddress,
 }) => {
@@ -105,6 +107,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           signUpComponent={signupComponent}
           toggleMobileMenu={toggleMobileMenu}
           configComponent={configComponent}
+          startTheGame={startTheGame}
           featuresConfig={featuresConfig}
           userWalletAddress={userWalletAddress}
           isEarnApp={isEarnApp}

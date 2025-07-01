@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from 'react'
 
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import GameOverScreen from '@/features/game/components/GameOverScreen'
 import GameScreen from '@/features/game/components/GameScreen'
 import HowToPlayModal from '@/features/game/components/HowToPlayModal'
@@ -12,8 +13,15 @@ import { useHomeState } from '@/features/game/hooks/useHomeState'
 
 import mainGameViewStyles from './MainGameView.module.css'
 
-export default function MainGameView({ closeGame }: { closeGame: () => void }) {
+export default function MainGameView() {
   const home = useHomeState()
+  const { setRunningGame, runningGame } = useSystemConfig()
+
+  const closeGame = useCallback(() => {
+    setRunningGame?.(false) // Close game by setting runningGame to false
+    home.setScreenName('start') // Reset to start screen
+    home.setShowHow(false) // Hide how-to-play modal if open
+  }, [home, setRunningGame])
 
   const handleEscape = useCallback(
     (ev: KeyboardEvent) => {
@@ -44,9 +52,17 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
   }, [home.screenName])
 
   const startGame = (isAI: boolean) => {
-    playGameStartSound() // Play sound on game start
-    home.setScreenName(isAI ? 'ai' : 'game')
-    home.setLastWasAI(isAI)
+    playGameStartSound() // Play sound when starting the game
+    home.setStartingGame(true)
+    setTimeout(() => {
+      home.setStartingGame(false)
+      home.setScreenName(isAI ? 'ai' : 'game')
+      home.setLastWasAI(isAI)
+    }, 1000)
+  }
+
+  if (!runningGame) {
+    return null // Do not render anything if the game is not running
   }
 
   return (
@@ -56,6 +72,7 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
           onStart={() => startGame(false)} // Use startGame function
           onAI={() => startGame(true)}
           onHowToPlay={() => home.setShowHow(true)}
+          startingGame={home.startingGame}
           closeGame={closeGame} // Close game function
         />
       )}
@@ -83,6 +100,7 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
           lastSelected={home.lastSelected}
           avgResponse={home.lastAvgResponse}
           timedOut={home.timedOut}
+          startingGame={home.startingGame}
           onRestart={() => startGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => startGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}

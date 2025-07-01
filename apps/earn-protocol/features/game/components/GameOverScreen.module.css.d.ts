@@ -3,10 +3,12 @@ declare const styles: {
   readonly "buttonsRow": string;
   readonly "buttonsRowOptions": string;
   readonly "container": string;
+  readonly "fadeOut": string;
   readonly "lastCardCol": string;
   readonly "lastCardsRow": string;
   readonly "score": string;
   readonly "selectedLabel": string;
+  readonly "starting": string;
   readonly "statBox": string;
   readonly "statLabel": string;
   readonly "statValue": string;

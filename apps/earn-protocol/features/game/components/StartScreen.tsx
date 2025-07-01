@@ -10,9 +10,16 @@ interface StartScreenProps {
   onHowToPlay: () => void
   onAI: () => void
   closeGame: () => void
+  startingGame?: boolean // Optional prop to indicate if the game is starting
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStart, onHowToPlay, onAI, closeGame }) => {
+const StartScreen: React.FC<StartScreenProps> = ({
+  onStart,
+  onHowToPlay,
+  onAI,
+  closeGame,
+  startingGame,
+}) => {
   const handleStartClick = () => {
     onStart()
   }
@@ -22,9 +29,13 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, onHowToPlay, onAI, c
   }
 
   return (
-    <div className={styles.container}>
+    <div
+      className={clsx(styles.container, {
+        [styles.starting]: startingGame,
+      })}
+    >
       <h1 className={clsx(styles.title, styles.animated)} style={{ animationDelay: '0.3s' }}>
-        APY GAME
+        Yield Race 🏎️
       </h1>
       <div className={clsx(styles.description, styles.animated)} style={{ animationDelay: '0.4s' }}>
         Click the card with the highest APY before time runs out!

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 
 import { type CardData } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'
@@ -24,6 +25,7 @@ interface GameOverScreenProps {
   timedOut?: boolean
   closeGame: () => void
   onReturnToMenu: () => void
+  startingGame?: boolean // Optional prop to indicate if the game is starting
 }
 
 const GameOverScreen: React.FC<GameOverScreenProps> = ({
@@ -39,6 +41,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   timedOut,
   closeGame,
   onReturnToMenu,
+  startingGame,
 }) => {
   // Find the correct card index
   const correctIdx =
@@ -63,7 +66,11 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   }, [])
 
   return (
-    <div className={styles.container}>
+    <div
+      className={clsx(styles.container, {
+        [styles.starting]: startingGame,
+      })}
+    >
       <h2 className={styles.title}>Game Over</h2>
       {timedOut === true ? <div className={styles.timedOut}>you ran out of time!</div> : null}
       <div className={styles.score}>
@@ -98,6 +105,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
                 trendData={card.trendData}
                 selected={lastSelected === i}
                 highlight={i === correctIdx}
+                token={card.token}
                 apyColor={(() => {
                   if (card.apy >= 10) return '#1db954'
                   if (card.apy <= 3) return '#d7263d'

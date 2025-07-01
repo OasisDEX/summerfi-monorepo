@@ -145,3 +145,21 @@
     height: auto;
   }
 }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    /* Fade in to full opacity */
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    /* Start with opacity 0 */
+    transform: translateY(20px);
+  }
+}
+
+.starting {
+  animation: fadeOut 1s ease-in-out;
+}
