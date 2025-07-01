@@ -3,6 +3,8 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+
 import styles from './StartScreen.module.css'
 
 interface StartScreenProps {
@@ -20,6 +22,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
   closeGame,
   startingGame,
 }) => {
+  const { isGameByInvite } = useSystemConfig()
   const handleStartClick = () => {
     onStart()
   }
@@ -37,6 +40,15 @@ const StartScreen: React.FC<StartScreenProps> = ({
       <h1 className={clsx(styles.title, styles.animated)} style={{ animationDelay: '0.3s' }}>
         Yield Race 🏎️
       </h1>
+      {isGameByInvite && (
+        <Text
+          variant="p1semiColorful"
+          className={clsx(styles.inviteText, styles.animated)}
+          style={{ animationDelay: '0.3s' }}
+        >
+          You have been challenged to play the Yield Race!
+        </Text>
+      )}
       <div className={clsx(styles.description, styles.animated)} style={{ animationDelay: '0.4s' }}>
         Click the card with the highest APY before time runs out!
         <br />

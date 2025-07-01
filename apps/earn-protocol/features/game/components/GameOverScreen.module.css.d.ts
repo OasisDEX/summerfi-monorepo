@@ -8,11 +8,8 @@ declare const styles: {
   readonly "lastCardsRow": string;
   readonly "score": string;
   readonly "selectedLabel": string;
+  readonly "shareScoreBox": string;
   readonly "starting": string;
-  readonly "statBox": string;
-  readonly "statLabel": string;
-  readonly "statValue": string;
-  readonly "statsRow": string;
   readonly "timedOut": string;
   readonly "title": string;
 };

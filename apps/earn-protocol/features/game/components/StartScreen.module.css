@@ -31,6 +31,13 @@
   margin-bottom: 16px;
 }
 
+.inviteText {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #ff4f64;
+  font-weight: 700;
+}
+
 .description {
   font-size: 22px;
   max-width: 620px;

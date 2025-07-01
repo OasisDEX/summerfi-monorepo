@@ -1,7 +1,13 @@
 'use client'
 
-import { type FC } from 'react'
-import { Button, getNavigationItems, Navigation, SkeletonLine } from '@summerfi/app-earn-ui'
+import { type FC, useEffect } from 'react'
+import {
+  Button,
+  getNavigationItems,
+  Navigation,
+  SkeletonLine,
+  useCurrentUrl,
+} from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -20,14 +26,32 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
+  const currentFullUrl = useCurrentUrl()
   const { userWalletAddress } = useUserWallet()
-  const { features, setRunningGame } = useSystemConfig()
+  const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
 
   const startGame = () => {
     setRunningGame?.(true)
   }
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
+
+  // check if `#game` is in the URL hash
+  const isLinkedToGame = currentFullUrl.includes('#game')
+
+  useEffect(() => {
+    if (isLinkedToGame) {
+      setRunningGame?.(true)
+      setIsGameByInvite?.(true) // Set the game as being started by an invite link
+      // remove the `#game` from the URL hash
+      if (typeof window !== 'undefined') {
+        const url = new URL(currentFullUrl)
+
+        url.hash = ''
+        window.history.replaceState({}, '', url.toString())
+      }
+    }
+  }, [isLinkedToGame, setRunningGame, setIsGameByInvite, currentFullUrl])
 
   return (
     <Navigation
@@ -50,7 +74,7 @@ export const NavigationWrapper: FC = () => {
         // because router will use base path...
         window.location.replace('/')
       }}
-      startTheGame={startGame}
+      startTheGame={features?.Game ? startGame : undefined}
       featuresConfig={features}
     />
   )

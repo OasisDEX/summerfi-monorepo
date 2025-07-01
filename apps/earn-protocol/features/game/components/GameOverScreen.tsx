@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Card as UiCard, getTwitterShareUrl, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { type CardData } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'
@@ -22,6 +23,7 @@ interface GameOverScreenProps {
   lastCards?: CardData[]
   lastSelected?: number | null
   avgResponse?: number
+  responseTimes?: number[]
   timedOut?: boolean
   closeGame: () => void
   onReturnToMenu: () => void
@@ -30,7 +32,6 @@ interface GameOverScreenProps {
 
 const GameOverScreen: React.FC<GameOverScreenProps> = ({
   score,
-  streak,
   rounds,
   isAI,
   onRestart,
@@ -38,6 +39,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   lastCards,
   lastSelected,
   avgResponse,
+  responseTimes,
   timedOut,
   closeGame,
   onReturnToMenu,
@@ -76,26 +78,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       <div className={styles.score}>
         {isAI ? 'AI Score' : 'Your Score'}: <b>{score}</b>
       </div>
-      <div className={styles.statsRow}>
-        <div className={styles.statBox}>
-          <div className={styles.statLabel}>Rounds</div>
-          <div className={styles.statValue}>{rounds}</div>
-        </div>
-        <div className={styles.statBox}>
-          <div className={styles.statLabel}>Best Streak</div>
-          <div className={styles.statValue}>{streak}</div>
-        </div>
-        {typeof avgResponse === 'number' && avgResponse > 0 && (
-          <div className={styles.statBox}>
-            <div className={styles.statLabel}>Avg. Response</div>
-            <div className={styles.statValue}>
-              {avgResponse < 1
-                ? `${Math.round(avgResponse * 1000)}ms`
-                : `${avgResponse.toFixed(2)}s`}
-            </div>
-          </div>
-        )}
-      </div>
       {lastCards && lastCards.length > 0 && lastSelected !== null && lastSelected !== undefined ? (
         <div className={styles.lastCardsRow}>
           {lastCards.map((card, i) => (
@@ -120,6 +102,43 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           ))}
         </div>
       ) : null}
+      <div className={styles.shareScoreBox}>
+        <Text variant="p1semiColorful" style={{ marginBottom: '20px' }}>
+          Challenge everyone to beat your score!
+        </Text>
+        <UiCard style={{ flexDirection: 'column' }}>
+          I&apos;ve scored {score} points with an average response time of {avgResponse}s in the
+          Summer.fi Yield Racer Game!
+          <br />
+          <br />
+          Can you beat my score?
+          <br />
+          https://summer.fi/earn#game
+          <br />
+          #SummerFi #YieldRacer
+        </UiCard>
+        <Link
+          href={getTwitterShareUrl({
+            url: '',
+            text: `I've scored ${score} points with an average response time of ${avgResponse}s in Yield Racer 🏎️💨!
+
+Can you beat my score?
+https://summer.fi/earn#game
+#SummerFi #YieldRacer
+`,
+          })}
+          style={{
+            marginTop: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            textDecoration: 'none',
+          }}
+          target="_blank"
+        >
+          <Icon iconName="social_x_beach_club" size={45} /> Share on X
+        </Link>
+      </div>
       <div className={styles.buttonsRow}>
         <Button variant="primaryLarge" onClick={onRestart}>
           Try getting a better score

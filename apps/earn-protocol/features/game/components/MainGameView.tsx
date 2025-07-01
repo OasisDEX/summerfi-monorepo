@@ -101,6 +101,7 @@ export default function MainGameView() {
           avgResponse={home.lastAvgResponse}
           timedOut={home.timedOut}
           startingGame={home.startingGame}
+          responseTimes={home.lastResponseTimes}
           onRestart={() => startGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => startGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}

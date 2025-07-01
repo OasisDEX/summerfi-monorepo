@@ -11,6 +11,7 @@ export function useHomeState() {
   const [lastRounds, setLastRounds] = useState(0)
   const [lastWasAI, setLastWasAI] = useState(false)
   const [showHow, setShowHow] = useState(false)
+  const [lastResponseTimes, setLastResponseTimes] = useState<number[]>([])
   const [lastCards, setLastCards] = useState<CardData[] | undefined>(undefined)
   const [lastSelected, setLastSelected] = useState<number | null>(null)
   const [lastAvgResponse, setLastAvgResponse] = useState<number | undefined>(undefined)
@@ -31,6 +32,7 @@ export function useHomeState() {
     lastCards?: CardData[]
     lastSelected?: number | null
     avgResponse?: number
+    responseTimes?: number[]
     timedOut?: boolean
   }) => {
     setLastScore(params.score)
@@ -41,6 +43,7 @@ export function useHomeState() {
     setLastAvgResponse(params.avgResponse)
     setTimedOut(!!params.timedOut)
     setScreenName('over')
+    setLastResponseTimes(params.responseTimes ?? [])
   }
 
   return {
@@ -61,6 +64,7 @@ export function useHomeState() {
     lastSelected,
     setLastSelected,
     lastAvgResponse,
+    lastResponseTimes,
     setLastAvgResponse,
     timedOut,
     setTimedOut,

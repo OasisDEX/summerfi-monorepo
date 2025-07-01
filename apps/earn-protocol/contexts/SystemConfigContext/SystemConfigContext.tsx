@@ -5,7 +5,9 @@ import { type EarnAppConfigType } from '@summerfi/app-types'
 const SystemConfigContext = createContext<Partial<
   EarnAppConfigType & {
     runningGame: boolean
+    isGameByInvite: boolean
     setRunningGame: (running: boolean) => void
+    setIsGameByInvite: (isInvite: boolean) => void
   }
 > | null>(null)
 
@@ -15,10 +17,13 @@ export const SystemConfigProvider: FC<{
 }> = ({ value, children }) => {
   // used for the Yield Race game
   const [runningGame, setRunningGame] = useState(false)
+  const [isGameByInvite, setIsGameByInvite] = useState(false)
 
   const contextValue = {
     ...value,
     runningGame,
+    isGameByInvite,
+    setIsGameByInvite,
     setRunningGame,
   }
 

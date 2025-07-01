@@ -14,6 +14,7 @@ interface UseGameLogicProps {
     streak: number
     rounds: number
     lastCards?: CardData[]
+    responseTimes?: number[]
     lastSelected?: number | null
     avgResponse?: number
     timedOut?: boolean
@@ -212,6 +213,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
           score,
           streak: bestStreak,
           rounds: round,
+          responseTimes,
           lastCards: currentCards,
           lastSelected: idx === -1 ? null : idx,
           avgResponse,
@@ -232,6 +234,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       streak,
       bestStreak,
       round,
+      responseTimes,
       score,
       nextRound,
       onGameOver,
