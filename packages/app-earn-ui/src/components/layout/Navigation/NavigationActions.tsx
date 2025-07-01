@@ -15,7 +15,6 @@ interface NavigationActionsProps {
   walletConnectionComponent?: ReactNode
   configComponent?: ReactNode
   toggleMobileMenu: () => void
-  startTheGame?: () => void
   featuresConfig?: EarnAppConfigType['features']
   userWalletAddress?: string
   isEarnApp?: boolean
@@ -26,7 +25,6 @@ export const NavigationActions = ({
   signUpComponent,
   toggleMobileMenu,
   configComponent,
-  startTheGame,
   featuresConfig,
   userWalletAddress,
   isEarnApp,
@@ -43,11 +41,6 @@ export const NavigationActions = ({
   return (
     <div>
       <div className={navigationActionsStyles.navigationActionsWrapper}>
-        {startTheGame && (
-          <div onClick={startTheGame} className={navigationActionsStyles.theGameButton}>
-            <Icon iconName="gamepad" size={22} />
-          </div>
-        )}
         {beachClubEnabled && (
           <Link href={resolvedBeachClubLink}>
             <Text

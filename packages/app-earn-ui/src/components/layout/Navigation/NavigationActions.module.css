@@ -4,21 +4,11 @@
   align-items: center;
   column-gap: var(--general-space-8);
 }
+
 @media (min-width: 1025px) {
   .navigationActionsWrapper {
     display: flex;
   }
-}
-
-.theGameButton {
-  color: var(--color-text-link-hover);
-  padding: 8px 10px 10px 10px;
-  margin-right: 30px;
-  cursor: pointer;
-  height: 36px;
-}
-.theGameButton:hover {
-  color: var(--color-text-link);
 }
 
 .walletButtonMock {
@@ -32,6 +22,7 @@
 .mobileMenuButton {
   display: none;
 }
+
 .mobileMenuButton .gradientOuterCircle {
   position: relative;
   width: 34px;
@@ -40,6 +31,7 @@
   padding: 0;
   background-color: var(--earn-protocol-neutral-100);
 }
+
 .mobileMenuButton .gradientInnerCircle {
   background-image: var(--gradient-earn-protocol-dark);
   content: "";
@@ -52,6 +44,7 @@
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 1025px) {
   .mobileMenuButton {
     display: flex;
@@ -64,6 +57,7 @@
   color: var(--color-text-primary-disabled);
   margin-right: var(--general-space-24);
 }
+
 .summerProButton:hover {
   color: var(--color-text-primary);
 }

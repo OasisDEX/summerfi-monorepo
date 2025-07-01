@@ -1,14 +1,30 @@
 'use client'
-import { createContext, type FC, type ReactNode, useContext } from 'react'
+import { createContext, type FC, type ReactNode, useContext, useState } from 'react'
 import { type EarnAppConfigType } from '@summerfi/app-types'
 
-const SystemConfigContext = createContext<Partial<EarnAppConfigType> | null>(null)
+const SystemConfigContext = createContext<Partial<
+  EarnAppConfigType & {
+    runningGame: boolean
+    setRunningGame: (running: boolean) => void
+  }
+> | null>(null)
 
 export const SystemConfigProvider: FC<{
   value: Partial<EarnAppConfigType>
   children: ReactNode
 }> = ({ value, children }) => {
-  return <SystemConfigContext.Provider value={value}>{children}</SystemConfigContext.Provider>
+  // used for the Yield Race game
+  const [runningGame, setRunningGame] = useState(false)
+
+  const contextValue = {
+    ...value,
+    runningGame,
+    setRunningGame,
+  }
+
+  return (
+    <SystemConfigContext.Provider value={contextValue}>{children}</SystemConfigContext.Provider>
+  )
 }
 
 /**
