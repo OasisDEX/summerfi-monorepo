@@ -24,6 +24,9 @@ export class SiloRewardFetcher implements IRewardFetcher {
   private readonly logger: Logger
   private readonly chainIdToSiloNetworkName: Partial<Record<ChainId, string>> = {
     [ChainId.SONIC]: 'sonic',
+    [ChainId.ARBITRUM]: 'arbitrum',
+    [ChainId.MAINNET]: 'ethereum',
+    [ChainId.BASE]: 'base',
   }
   private readonly REQUEST_DELAY_MS = 100 // Delay between requests to be gentle on the API
 
