@@ -24,6 +24,7 @@ export const SumrTransferabilityCounter: FC<SumrTransferabilityCounterProps> = (
           <Link
             href="https://forum.summer.fi/t/rfc-when-and-under-what-circumstances-should-sumr-transfers-be-enabled/242"
             target="_blank"
+            style={{ color: 'var(--earn-protocol-primary-100)' }}
           >
             Transferability discussion
           </Link>
