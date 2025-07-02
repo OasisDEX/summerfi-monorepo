@@ -60,22 +60,21 @@
   letter-spacing: 0.2px;
 }
 
-.buttonsRow {
-  display: flex;
-  height: 50px;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  margin-top: 24px;
-}
-
-.buttonsRowOptions {
+.buttonsColumn {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 18px;
   margin-top: 24px;
+}
+
+.actionables {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
 }
 
 @media (max-width: 600px) {
@@ -132,5 +131,4 @@
   justify-content: center;
   width: 100%;
   max-width: 480px;
-  margin-top: 24px;
 }

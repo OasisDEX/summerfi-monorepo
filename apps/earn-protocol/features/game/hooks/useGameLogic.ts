@@ -180,7 +180,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
 
       if (idx === correctIdx) {
         playCorrectSound(actualRemainingTime, timer)
-        points = Math.floor(Number(100 * (actualRemainingTime / timer)) + 10)
+        points = Math.floor(Number(100 * (2 - responseTime)) + 10)
         nextRound(
           true,
           round + 1, // Cap at round 30
@@ -221,7 +221,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
         })
       }
 
-      setScore((s) => Math.max(0, s + points + (perfect && streak >= 2 ? 5 : 0)))
+      setScore((s) => Math.max(0, s + points))
       setStreak((s) => (perfect ? s + 1 : 0))
       setBestStreak((s) => (perfect ? Math.max(s, streak + 1) : s))
     },

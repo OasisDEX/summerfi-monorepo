@@ -1,7 +1,8 @@
 declare const styles: {
+  readonly "actionables": string;
   readonly "bestApyLabel": string;
+  readonly "buttonsColumn": string;
   readonly "buttonsRow": string;
-  readonly "buttonsRowOptions": string;
   readonly "container": string;
   readonly "fadeOut": string;
   readonly "lastCardCol": string;

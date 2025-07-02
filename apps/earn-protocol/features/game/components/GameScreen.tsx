@@ -21,7 +21,6 @@ interface GameScreenProps {
   isAI: boolean
   onGameOver: (params: {
     score: number
-    streak: number
     rounds: number
     lastCards?: CardData[]
     lastSelected?: number | null

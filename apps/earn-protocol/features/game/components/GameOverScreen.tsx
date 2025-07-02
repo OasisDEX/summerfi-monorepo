@@ -15,7 +15,6 @@ import styles from './GameOverScreen.module.css'
 
 interface GameOverScreenProps {
   score: number
-  streak: number
   rounds: number
   isAI: boolean
   onRestart: () => void
@@ -25,9 +24,17 @@ interface GameOverScreenProps {
   avgResponse?: number
   responseTimes?: number[]
   timedOut?: boolean
-  closeGame: () => void
   onReturnToMenu: () => void
   startingGame?: boolean // Optional prop to indicate if the game is starting
+}
+
+const getShareMessage = (score: number, avgResponse: number) => {
+  return `I've scored ${score} points with an average response time of ${Math.floor(Number(avgResponse) * 1000) / 1000}s in Yield Racer 🏎️💨!
+
+Can you beat my score?
+https://summer.fi/earn#game
+#SummerFi #YieldRacer
+`
 }
 
 const GameOverScreen: React.FC<GameOverScreenProps> = ({
@@ -41,7 +48,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   avgResponse,
   responseTimes,
   timedOut,
-  closeGame,
   onReturnToMenu,
   startingGame,
 }) => {
@@ -102,63 +108,46 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           ))}
         </div>
       ) : null}
-      <div className={styles.shareScoreBox}>
-        <Text variant="p1semiColorful" style={{ marginBottom: '20px' }}>
-          Challenge everyone to beat your score!
-        </Text>
-        <UiCard style={{ flexDirection: 'column' }}>
-          I&apos;ve scored {score} points with an average response time of {avgResponse}s in the
-          Summer.fi Yield Racer Game!
-          <br />
-          <br />
-          Can you beat my score?
-          <br />
-          https://summer.fi/earn#game
-          <br />
-          #SummerFi #YieldRacer
-        </UiCard>
-        <Link
-          href={getTwitterShareUrl({
-            url: '',
-            text: `I've scored ${score} points with an average response time of ${avgResponse}s in Yield Racer 🏎️💨!
-
-Can you beat my score?
-https://summer.fi/earn#game
-#SummerFi #YieldRacer
-`,
-          })}
-          style={{
-            marginTop: '32px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            textDecoration: 'none',
-          }}
-          target="_blank"
-        >
-          <Icon iconName="social_x_beach_club" size={45} /> Share on X
-        </Link>
-      </div>
-      <div className={styles.buttonsRow}>
-        <Button variant="primaryLarge" onClick={onRestart}>
-          Try getting a better score
-          <Icon iconName="arrow_forward" size={16} />
-        </Button>
-        <Text variant="p1semiColorful">or</Text>
-        <Button variant="primaryLargeColorful" onClick={onAI}>
-          let the AI do the work
-          <Icon iconName="arrow_increase" size={16} />
-        </Button>
-      </div>
-      <div className={styles.buttonsRowOptions}>
-        <Button variant="secondaryLarge" onClick={onReturnToMenu}>
-          Return to Menu
-          <Icon iconName="arrow_backward" size={16} />
-        </Button>
-        <Button variant="textPrimaryLarge" onClick={closeGame}>
-          <span>Exit</span>
-          <Icon iconName="close" size={16} />
-        </Button>
+      <Text variant="p1semiColorful" style={{ marginBottom: '20px' }}>
+        Challenge others to beat your score!
+      </Text>
+      <div className={styles.actionables}>
+        <div className={styles.shareScoreBox}>
+          <UiCard style={{ flexDirection: 'column', whiteSpace: 'pre-wrap' }}>
+            {getShareMessage(score, avgResponse ?? 0)}
+          </UiCard>
+          <Link
+            href={getTwitterShareUrl({
+              url: '',
+              text: getShareMessage(score, avgResponse ?? 0),
+            })}
+            style={{
+              marginTop: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              textDecoration: 'none',
+            }}
+            target="_blank"
+          >
+            <Icon iconName="social_x_beach_club" size={45} /> Share on X
+          </Link>
+        </div>
+        <div className={styles.buttonsColumn}>
+          <Button variant="primaryLarge" onClick={onRestart}>
+            Try again
+            <Icon iconName="arrow_forward" size={16} />
+          </Button>
+          <Text variant="p1semiColorful">or</Text>
+          <Button variant="primaryLargeColorful" onClick={onAI}>
+            let the AI do the work
+            <Icon iconName="arrow_increase" size={16} />
+          </Button>
+          <Button variant="secondaryLarge" onClick={onReturnToMenu}>
+            Return to Menu
+            <Icon iconName="arrow_backward" size={16} />
+          </Button>
+        </div>
       </div>
     </div>
   )
