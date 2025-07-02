@@ -63,17 +63,13 @@
 .buttonsColumn {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 18px;
-  margin-top: 24px;
 }
 
 .actionables {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
   gap: 32px;
 }
 

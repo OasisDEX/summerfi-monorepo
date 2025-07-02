@@ -1,7 +1,14 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Button, Card as UiCard, getTwitterShareUrl, Icon, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card as UiCard,
+  getTwitterShareUrl,
+  Icon,
+  Text,
+  Tooltip,
+} from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -29,7 +36,7 @@ interface GameOverScreenProps {
 }
 
 const getShareMessage = (score: number, avgResponse: number) => {
-  return `I've scored ${score} points with an average response time of ${Math.floor(Number(avgResponse) * 1000) / 1000}s in Yield Racer 🏎️💨!
+  return `I've scored ${score} points with an average response time of ${Math.floor(Number(avgResponse) * 1000) / 1000}s in Yield Racer! 🏎️💨
 
 Can you beat my score?
 https://summer.fi/earn#game
@@ -108,45 +115,62 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           ))}
         </div>
       ) : null}
-      <Text variant="p1semiColorful" style={{ marginBottom: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+        <Button variant="primaryLarge" onClick={onRestart} disabled={startingGame}>
+          Try again
+          <Icon iconName="user" size={16} />
+        </Button>
+        <Button variant="primaryLargeColorful" onClick={onAI} disabled={startingGame}>
+          Try again, but with AI
+          <Icon iconName="checkmark" size={16} />
+        </Button>
+      </div>
+      <Text variant="h3colorful" style={{ margin: '60px 0 30px 0' }}>
         Challenge others to beat your score!
       </Text>
       <div className={styles.actionables}>
-        <div className={styles.shareScoreBox}>
-          <UiCard style={{ flexDirection: 'column', whiteSpace: 'pre-wrap' }}>
-            {getShareMessage(score, avgResponse ?? 0)}
-          </UiCard>
+        <div className={styles.buttonsColumn}>
+          <Tooltip
+            showAbove
+            tooltipId="submit-leaderboard-tooltip"
+            tooltipWrapperStyles={{
+              zIndex: 1000,
+              width: '300px',
+              top: '-80px',
+              padding: 0,
+            }}
+            tooltip={
+              <Text variant="p4semi">
+                You will need to sign a message containing the response times (base of your score).
+              </Text>
+            }
+          >
+            <Button variant="secondaryLarge">
+              Submit to the leaderboard
+              <Icon iconName="rays" size={24} />
+            </Button>
+          </Tooltip>
           <Link
             href={getTwitterShareUrl({
               url: '',
               text: getShareMessage(score, avgResponse ?? 0),
             })}
-            style={{
-              marginTop: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              textDecoration: 'none',
-            }}
             target="_blank"
           >
-            <Icon iconName="social_x_beach_club" size={45} /> Share on X
+            <Button variant="secondaryLarge">
+              Share your score
+              <Icon iconName="social_x_beach_club" size={24} />
+            </Button>
           </Link>
-        </div>
-        <div className={styles.buttonsColumn}>
-          <Button variant="primaryLarge" onClick={onRestart}>
-            Try again
-            <Icon iconName="arrow_forward" size={16} />
-          </Button>
-          <Text variant="p1semiColorful">or</Text>
-          <Button variant="primaryLargeColorful" onClick={onAI}>
-            let the AI do the work
-            <Icon iconName="arrow_increase" size={16} />
-          </Button>
-          <Button variant="secondaryLarge" onClick={onReturnToMenu}>
-            Return to Menu
+          <Button variant="secondaryLarge" onClick={onReturnToMenu} disabled={startingGame}>
+            Return
             <Icon iconName="arrow_backward" size={16} />
           </Button>
+        </div>
+        <div className={styles.shareScoreBox}>
+          <UiCard style={{ flexDirection: 'column', whiteSpace: 'pre-wrap' }}>
+            {getShareMessage(score, avgResponse ?? 0)}
+          </UiCard>
         </div>
       </div>
     </div>
