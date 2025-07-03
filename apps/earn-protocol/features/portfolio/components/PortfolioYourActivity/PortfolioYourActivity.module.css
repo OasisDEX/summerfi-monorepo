@@ -4,5 +4,20 @@
 }
 
 .header {
-  margin-bottom: var(--general-space-40);
+  margin-bottom: var(--general-space-32);
+}
+
+.filtersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+  margin-bottom: var(--general-space-24);
+  margin-top: var(--general-space-12);
+}
+@media screen and (min-width: 768px) {
+  .filtersWrapper {
+    margin-top: unset;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 }
