@@ -1,18 +1,19 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Card as UiCard,
   getTwitterShareUrl,
   Icon,
+  LoadingSpinner,
   Text,
   Tooltip,
 } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { type CardData } from '@/features/game/types'
+import { type GameOverParams } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -20,26 +21,23 @@ import Card from './Card'
 
 import styles from './GameOverScreen.module.css'
 
-interface GameOverScreenProps {
-  score: number
-  rounds: number
+interface GameOverScreenProps extends GameOverParams {
   isAI: boolean
   onRestart: () => void
   onAI?: () => void
-  lastCards?: CardData[]
-  lastSelected?: number | null
-  avgResponse?: number
-  responseTimes?: number[]
-  timedOut?: boolean
   onReturnToMenu: () => void
   startingGame?: boolean // Optional prop to indicate if the game is starting
+  gameId?: string
+  onShowLeaderboard?: () => void // Optional prop to show leaderboard
 }
 
 const getShareMessage = (score: number, avgResponse: number) => {
   return `I've scored ${score} points with an average response time of ${Math.floor(Number(avgResponse) * 1000) / 1000}s in Yield Racer! 🏎️💨
 
 Can you beat my score?
+
 https://summer.fi/earn#game
+
 #SummerFi #YieldRacer
 `
 }
@@ -57,7 +55,12 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   timedOut,
   onReturnToMenu,
   startingGame,
+  gameId,
+  onShowLeaderboard,
 }) => {
+  const [submittingToLeaderboard, setSubmittingToLeaderboard] = useState(false)
+  const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
   // Find the correct card index
   const correctIdx =
     lastCards && lastCards.length > 0
@@ -75,10 +78,71 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       userAddress: userWalletAddress,
       score,
       rounds,
+      responseTimes,
       avgResponse,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const submitToLeaderboard = () => {
+    setSubmittingToLeaderboard(true)
+    fetch(`/earn/api/game/${userWalletAddress}/leaderboard`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gameId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSubmittingToLeaderboard(false)
+        if (data.errorCode) {
+          // eslint-disable-next-line no-console
+          console.error('Error submitting to leaderboard:', data.errorCode)
+          setLeaderboardError(`Error ${data.errorCode}`)
+
+          return
+        }
+        // eslint-disable-next-line no-console
+        console.log('Successfully submitted to leaderboard:', data)
+        setSubmitSuccess(true)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error submitting to leaderboard:', error)
+        setLeaderboardError(`CODE_${error.code || 'UNKNOWN'}`)
+        setSubmitSuccess(false)
+        setSubmittingToLeaderboard(false)
+      })
+  }
+  const getLeaderboardIcon = () => {
+    if (submittingToLeaderboard) {
+      return <LoadingSpinner size={16} />
+    }
+    if (submitSuccess) {
+      return <Icon iconName="checkmark" size={16} />
+    }
+    if (leaderboardError) {
+      return <Icon iconName="warning" size={16} />
+    }
+
+    return <Icon iconName="trophy" size={16} />
+  }
+  const getLeaderboardLabel = () => {
+    if (submittingToLeaderboard) {
+      return 'Submitting...'
+    }
+    if (submitSuccess) {
+      return 'Submitted to Leaderboard'
+    }
+    if (leaderboardError) {
+      return `Error: ${leaderboardError}`
+    }
+
+    return 'Submit to Leaderboard'
+  }
 
   return (
     <div
@@ -125,10 +189,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           <Icon iconName="checkmark" size={16} />
         </Button>
       </div>
-      <Text variant="h3colorful" style={{ margin: '60px 0 30px 0' }}>
+      <Text variant="h3colorful" style={{ margin: '60px 0 10px 0' }}>
         Challenge others to beat your score!
       </Text>
-      <div className={styles.actionables}>
+      <UiCard className={styles.actionables} variant="cardSecondary">
         <div className={styles.buttonsColumn}>
           <Tooltip
             showAbove
@@ -145,11 +209,19 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
               </Text>
             }
           >
-            <Button variant="secondaryLarge">
-              Submit to the leaderboard
-              <Icon iconName="rays" size={24} />
+            <Button
+              variant="primaryLarge"
+              disabled={!gameId || !!submittingToLeaderboard || !!submitSuccess}
+              onClick={submitToLeaderboard}
+            >
+              {getLeaderboardLabel()}
+              {getLeaderboardIcon()}
             </Button>
           </Tooltip>
+          <Button variant="secondaryLarge" onClick={onShowLeaderboard}>
+            Check the leaderboard
+            <Icon iconName="trophy" size={16} />
+          </Button>
           <Link
             href={getTwitterShareUrl({
               url: '',
@@ -172,7 +244,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
             {getShareMessage(score, avgResponse ?? 0)}
           </UiCard>
         </div>
-      </div>
+      </UiCard>
     </div>
   )
 }

@@ -2,23 +2,15 @@
 import { createRef, useCallback, useEffect, useRef, useState } from 'react' // Import createRef
 
 import { playCorrectSound, playIncorrectSound } from '@/features/game/helpers/audioHelpers'
-import { generateCards } from '@/features/game/helpers/gameHelpers'
-import { type CardData } from '@/features/game/types'
+import { STARTING_ROUND_TIME } from '@/features/game/helpers/constants'
+import { generateCards, getRoundTime } from '@/features/game/helpers/gameHelpers'
+import { type CardData, type GameOverParams } from '@/features/game/types'
 
 import { useAIPlayer } from './useAIPlayer'
 
 interface UseGameLogicProps {
   isAI: boolean
-  onGameOver: (params: {
-    score: number
-    streak: number
-    rounds: number
-    lastCards?: CardData[]
-    responseTimes?: number[]
-    lastSelected?: number | null
-    avgResponse?: number
-    timedOut?: boolean
-  }) => void
+  onGameOver: (params: GameOverParams) => void
 }
 
 // Helper for random label
@@ -67,8 +59,8 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   const [streak, setStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
   const [round, setRound] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(5)
-  const [timer, setTimer] = useState(5)
+  const [timeLeft, setTimeLeft] = useState(STARTING_ROUND_TIME)
+  const [timer, setTimer] = useState(STARTING_ROUND_TIME)
   const [gameOver, setGameOver] = useState(false)
   const [scoreAnim, setScoreAnim] = useState(false)
   const [streakAnim, setStreakAnim] = useState(false)
@@ -99,7 +91,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
     setCards(() => generateCards(nextRoundNumber))
     setRound(nextRoundNumber)
     setTimer((t) => {
-      const newTime = decreaseTime ? Math.max(1.2, t - 0.1) : t
+      const newTime = decreaseTime ? getRoundTime(nextRoundNumber) : t
 
       setTimeLeft(newTime)
 

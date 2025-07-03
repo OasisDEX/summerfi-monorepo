@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useGameLogic } from '@/features/game/hooks/useGameLogic'
-import { type CardData } from '@/features/game/types'
+import { type GameOverParams } from '@/features/game/types'
 
 import AIStatus from './AIStatus'
 import AvgResponse from './AvgResponse'
@@ -19,14 +19,7 @@ import styles from './GameScreen.module.css'
 
 interface GameScreenProps {
   isAI: boolean
-  onGameOver: (params: {
-    score: number
-    rounds: number
-    lastCards?: CardData[]
-    lastSelected?: number | null
-    avgResponse?: number
-    timedOut?: boolean
-  }) => void
+  onGameOver: (params: GameOverParams) => void
   onReturnToMenu: () => void
 }
 
