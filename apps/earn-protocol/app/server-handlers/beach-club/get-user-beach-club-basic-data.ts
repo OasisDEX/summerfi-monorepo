@@ -2,11 +2,6 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
-import { type BeachClubRewardBalance } from '@/features/beach-club/types'
-
-import { getPaginatedBeachClubRecruitedUsers } from './api'
-
 export interface BeachClubBasicData {
   referral_code: string | null
   active_users_count: number | null

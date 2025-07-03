@@ -25,6 +25,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
         setLeaderboardData(leaderboard || [])
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.error('Error fetching leaderboard data:', error)
       })
   }, [])
