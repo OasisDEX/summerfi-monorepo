@@ -6,6 +6,7 @@ import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
 import { Newsletter, type NewsletterPropsType } from '@/components/organisms/Newsletter/Newsletter'
+import { INTERNAL_LINKS } from '@/helpers/application-links'
 
 const errorMessagesList = {
   emailIsInvalid: 'Please enter a valid email address',
@@ -91,7 +92,7 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
             By entering your email address, you acknowledge that Oazo Apps Limited will collect and
             process your personal data for marketing purposes (e.g. newsletter, updates). For more
             information please refer to our{' '}
-            <Link prefetch={false} href="/privacy" target="_blank">
+            <Link prefetch={false} href={`${INTERNAL_LINKS.summerPro}/privacy`} target="_blank">
               <Text as="span" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
                 Privacy Policy
               </Text>
