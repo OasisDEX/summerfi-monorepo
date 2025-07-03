@@ -37,8 +37,8 @@
 
 .mobileMenuButton .gradientOuterCircle {
   position: relative;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   padding: 0;
   background-color: var(--earn-protocol-neutral-100);
@@ -46,15 +46,27 @@
 
 .mobileMenuButton .gradientInnerCircle {
   background-image: var(--gradient-earn-protocol-dark);
-  content: "";
+  border: solid 1px transparent;
+  background-clip: padding-box;
+  box-sizing: border-box;
+}
+
+.mobileMenuButton .gradientOuterCircle::before {
+  content: '';
   position: absolute;
-  width: 36px;
-  height: 36px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  transform: translate(1px, 1px);
   border-radius: 50%;
-  z-index: -1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: var(--earn-protocol-neutral-100);
+}
+
+.mobileMenuButton .gradientOuterCircle:hover::before {
+  background-color: var(--earn-protocol-neutral-80);
 }
 
 @media (max-width: 1025px) {

@@ -1,29 +1,45 @@
-import { type FC, useEffect, useRef, useState } from 'react'
+import { type FC, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
-import { Card, LoadingSpinner, type TableSortedColumn, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  GenericMultiselect,
+  LoadingSpinner,
+  type TableSortedColumn,
+  Text,
+  useMobileCheck,
+} from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
+import { mapMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 
 import classNames from './PortfolioYourActivity.module.css'
 
 interface PortfolioYourActivityProps {
   latestActivity: LatestActivityPagination
   walletAddress: string
+  vaultsList: SDKVaultsListType
 }
 
 export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   latestActivity,
   walletAddress,
+  vaultsList,
 }) => {
   const isFirstRender = useRef(true)
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const [sortBy, setSortBy] = useState<TableSortedColumn<string> | undefined>()
   const [currentlyLoadedList, setCurrentlyLoadedList] = useState(latestActivity.data)
   const [currentPage, setCurrentPage] = useState(latestActivity.pagination.currentPage)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMoreItems, setHasMoreItems] = useState(true)
+  const [strategyFilter, setStrategyFilter] = useState<string[]>([])
+  const [tokenFilter, setTokenFilter] = useState<string[]>([])
 
   const handleSort = (sortConfig: TableSortedColumn<string>) => {
     setSortBy(sortConfig)
@@ -39,6 +55,8 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         usersAddresses: [walletAddress],
         sortBy: sortBy?.key,
         orderBy: sortBy?.direction,
+        strategies: strategyFilter,
+        tokens: tokenFilter,
       })
 
       if (res.data.length === 0 || nextPage >= latestActivity.pagination.totalPages) {
@@ -52,6 +70,45 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       setHasMoreItems(false)
     }
   }
+
+  const { strategiesOptions, tokensOptions } = useMemo(
+    () => mapMultiselectOptions(vaultsList),
+    [vaultsList],
+  )
+
+  const genericMultiSelectFilters = [
+    {
+      options: strategiesOptions,
+      label: 'Strategies',
+      onChange: (strategies: string[]) => {
+        setStrategyFilter(strategies)
+      },
+      initialValues: strategyFilter,
+    },
+    {
+      options: tokensOptions,
+      label: 'Tokens',
+      onChange: (tokens: string[]) => {
+        setTokenFilter(tokens)
+      },
+      initialValues: tokenFilter,
+    },
+  ]
+
+  const filters = (
+    <div className={classNames.filtersWrapper}>
+      {genericMultiSelectFilters.map((filter) => (
+        <GenericMultiselect
+          key={filter.label}
+          options={filter.options}
+          label={filter.label}
+          onChange={filter.onChange}
+          initialValues={filter.initialValues}
+          style={{ width: isMobile ? '100%' : 'fit-content' }}
+        />
+      ))}
+    </div>
+  )
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -68,6 +125,8 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       usersAddresses: [walletAddress],
       sortBy: sortBy?.key,
       orderBy: sortBy?.direction,
+      strategies: strategyFilter,
+      tokens: tokenFilter,
     })
       .then((res) => {
         setCurrentlyLoadedList(res.data)
@@ -82,7 +141,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         console.error('Error fetching users activity', error)
       })
       .finally(() => setIsLoading(false))
-  }, [sortBy?.key, sortBy?.direction, walletAddress])
+  }, [sortBy?.key, sortBy?.direction, walletAddress, strategyFilter, tokenFilter])
 
   return (
     <Card className={classNames.wrapper} variant="cardSecondary">
@@ -102,6 +161,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
           ) : undefined
         }
       >
+        {filters}
         <LatestActivityTable
           latestActivityList={currentlyLoadedList}
           hiddenColumns={['strategy']}

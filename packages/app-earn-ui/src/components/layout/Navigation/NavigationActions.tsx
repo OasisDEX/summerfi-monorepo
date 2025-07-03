@@ -75,8 +75,12 @@ export const NavigationActions = ({
           onClick={toggleMobileMenu}
           className={navigationActionsStyles.gradientOuterCircle}
         >
-          <div className={navigationActionsStyles.gradientInnerCircle} />
-          <Icon iconName="menu" size={28} color="var(--earn-protocol-secondary-70)" />
+          <Icon
+            iconName="menu"
+            size={26}
+            color="var(--earn-protocol-secondary-70)"
+            style={{ zIndex: 1 }}
+          />
         </Button>
         {configComponent}
       </div>
