@@ -104,6 +104,10 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
           backgroundColor: 'var(--earn-protocol-neutral-80)',
           boxShadow: '0px 0px 8px 0px rgba(0, 0, 0, 0.1)',
           borderRadius: '8px',
+          color: 'var(--earn-protocol-secondary-70)',
+          fontWeight: 400,
+          fontSize: '14px',
+          lineHeight: '22px',
         }}
       >
         {children}

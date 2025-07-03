@@ -19,7 +19,14 @@ export const SidebarFootnote: FC<SidebarFootnoteProps> = ({ title, list, tooltip
     <Tooltip
       tooltip={
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-medium)' }}>
+          <Text
+            as="p"
+            variant="p2semi"
+            style={{
+              marginBottom: 'var(--spacing-space-medium)',
+              color: 'var(--color-text-primary)',
+            }}
+          >
             {title}
           </Text>
           <List list={list} itemIcon="checkmark" />

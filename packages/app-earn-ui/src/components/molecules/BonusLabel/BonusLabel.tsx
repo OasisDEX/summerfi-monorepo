@@ -56,7 +56,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
           )}
           {tokenBonus && withTokenBonus && (
             <div>
-              <Text as="p" variant="p3semi" style={{ color: '#d2d2d2' }}>
+              <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
                 $SUMR Token Rewards:
               </Text>
               <div
@@ -75,7 +75,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
           )}
           {tokenBonus && withTokenBonus && totalSumrEarned && (
             <div>
-              <Text as="p" variant="p3semi" style={{ color: '#d2d2d2' }}>
+              <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
                 Total SUMR Earned to Date:
               </Text>
               <div

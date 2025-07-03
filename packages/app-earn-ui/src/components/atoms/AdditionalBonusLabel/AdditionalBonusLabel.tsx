@@ -29,11 +29,18 @@ export const AdditionalBonusLabel = ({
           <div className={additionalBonusLabelStyles.additionalBonusTooltipWrapper}>
             <div className={additionalBonusLabelStyles.additionalBonusTooltipTitle}>
               <Icon iconName={externalTokenBonus.icon as IconNamesList} size={16} />
-              <Text variant="p3semi" style={{ color: 'var(--color-text-primary-hover)' }}>
+              <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
                 {externalTokenBonus.label}
               </Text>
             </div>
-            <Text variant="p1semi" style={{ width: '270px', marginTop: 'var(--general-space-8)' }}>
+            <Text
+              variant="p3"
+              style={{
+                width: '270px',
+                marginTop: 'var(--general-space-8)',
+                color: 'var(--earn-protocol-secondary-60)',
+              }}
+            >
               {externalTokenBonus.description}
             </Text>
           </div>

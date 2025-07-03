@@ -43,10 +43,10 @@ export const TableCellAllocationCapTooltipDataBlock = ({
 }): ReactNode => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-2x-small)' }}>
-      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+      <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
         {title}
       </Text>
-      <Text variant="p3semi" style={{ color: 'var(--color-text-primary)' }}>
+      <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
         {value}
       </Text>
     </div>
