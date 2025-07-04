@@ -127,11 +127,15 @@ export async function POST(
       transport,
     })
     const messageToSign = getMessageToSign({ score: savedGame.score, gameId })
-    const signatureWalletAddress = savedGame.userAddress as `0x${string}`
+    const savedGameWalletAddress = savedGame.userAddress as `0x${string}`
     const isSignatureValid = await client.verifyMessage({
-      address: signatureWalletAddress,
+      address: savedGameWalletAddress,
       message: messageToSign,
       signature: signature as `0x${string}`,
+    })
+
+    const ensName = await client.getEnsName({
+      address: savedGameWalletAddress,
     })
 
     if (!isSignatureValid) {
@@ -217,16 +221,18 @@ export async function POST(
         gameId: savedGame.gameId,
         userAddress: savedGame.userAddress.toLowerCase(),
         score: savedGame.score,
-        signedMessage: '',
+        signedMessage: signature,
         responseTimes: responseTimesJson,
+        ens: ensName ?? '',
         updatedAt: dayjs().unix(),
       })
       .onConflict((oc) =>
         oc.column('userAddress').doUpdateSet({
           gameId: savedGame.gameId,
           score: savedGame.score,
-          signedMessage: '',
+          signedMessage: signature,
           responseTimes: responseTimesJson,
+          ens: ensName ?? '',
           updatedAt: dayjs().unix(),
         }),
       )
