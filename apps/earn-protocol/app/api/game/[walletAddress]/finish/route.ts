@@ -59,14 +59,14 @@ export async function POST(
 
   const parsedGameData = unhashGameData(gameData, gameId)
 
-  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+  let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
   try {
-    dbInstance = await getSummerProtocolDB({
+    summerProtocolDb = await getSummerProtocolDB({
       connectionString,
     })
     // Check if the game exists
-    const game = await dbInstance.db
+    const game = await summerProtocolDb.db
       .selectFrom('yieldRaceGames')
       .where('userAddress', '=', walletAddress.toLowerCase())
       .orderBy('timestampStart', 'desc')
@@ -107,7 +107,7 @@ export async function POST(
     // Update the game with the end timestamp
     const timestampEnd = dayjs().unix()
 
-    await dbInstance.db
+    await summerProtocolDb.db
       .updateTable('yieldRaceGames')
       .set({
         timestampEnd,
@@ -131,8 +131,8 @@ export async function POST(
     return NextResponse.json({ error: 'Error finishing a game' }, { status: 500 })
   } finally {
     // Always clean up the database connection
-    if (dbInstance) {
-      await dbInstance.db.destroy().catch((err) => {
+    if (summerProtocolDb) {
+      await summerProtocolDb.db.destroy().catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error closing database connection (game):', err)
       })

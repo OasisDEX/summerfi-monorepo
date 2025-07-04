@@ -48,16 +48,16 @@ export async function GET(
 
   const { walletAddress } = validatedParams
 
-  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+  let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
   let beachClubDb: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
 
   try {
-    dbInstance = await getSummerProtocolDB({
+    summerProtocolDb = await getSummerProtocolDB({
       connectionString: summerProtocolDbConnectionString,
     })
 
     // Check for db spamming - one game per [GAME_TIMEOUT_SECONDS] seconds
-    const lastGame = await dbInstance.db
+    const lastGame = await summerProtocolDb.db
       .selectFrom('yieldRaceGames')
       .where('userAddress', '=', walletAddress.toLowerCase())
       .orderBy('timestampStart', 'desc')
@@ -95,7 +95,7 @@ export async function GET(
 
     if (lastGame) {
       // Update the existing game with the new start timestamp
-      await dbInstance.db
+      await summerProtocolDb.db
         .updateTable('yieldRaceGames')
         .set({
           gameId,
@@ -111,7 +111,7 @@ export async function GET(
       })
     } else {
       // Insert the game into the database
-      await dbInstance.db
+      await summerProtocolDb.db
         .insertInto('yieldRaceGames')
         .values({
           userAddress: walletAddress.toLowerCase(),
@@ -132,10 +132,16 @@ export async function GET(
     return NextResponse.json({ error: 'Error creating a game' }, { status: 500 })
   } finally {
     // Always clean up the database connection
-    if (dbInstance) {
-      await dbInstance.db.destroy().catch((err) => {
+    if (summerProtocolDb) {
+      await summerProtocolDb.db.destroy().catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error closing database connection (game):', err)
+      })
+    }
+    if (beachClubDb) {
+      await beachClubDb.db.destroy().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error closing database connection (beach club):', err)
       })
     }
   }

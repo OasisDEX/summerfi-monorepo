@@ -39,8 +39,8 @@ const EarnAllVaultsPage = async () => {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [{ vaults }] = await Promise.all([getVaultsList(), systemConfigHandler()])
-  const prodHost = (await headers()).get('host')
+  const [{ vaults }, headersList] = await Promise.all([getVaultsList(), headers()])
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const tvl = formatCryptoBalance(

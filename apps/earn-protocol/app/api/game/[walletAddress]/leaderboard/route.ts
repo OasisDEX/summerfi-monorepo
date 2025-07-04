@@ -80,14 +80,14 @@ export async function POST(
   const { walletAddress } = validatedPathParams
   const { gameId, signature, chainId } = validatedPostBody
 
-  let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+  let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
   try {
-    dbInstance = await getSummerProtocolDB({
+    summerProtocolDb = await getSummerProtocolDB({
       connectionString,
     })
     // Get the current game for the user
-    const savedGame = await dbInstance.db
+    const savedGame = await summerProtocolDb.db
       .selectFrom('yieldRaceGames')
       .where('userAddress', '=', walletAddress.toLowerCase())
       .orderBy('timestampStart', 'desc')
@@ -139,7 +139,7 @@ export async function POST(
     }
 
     // check if the new score is higher than the existing one
-    const existingScore = await dbInstance.db
+    const existingScore = await summerProtocolDb.db
       .selectFrom('yieldRaceLeaderboard')
       .where('userAddress', '=', walletAddress.toLowerCase())
       .selectAll()
@@ -153,7 +153,7 @@ export async function POST(
     }
 
     // check if the game was already submitted
-    const existingGame = await dbInstance.db
+    const existingGame = await summerProtocolDb.db
       .selectFrom('yieldRaceLeaderboard')
       .where('gameId', '=', savedGame.gameId)
       .selectAll()
@@ -216,7 +216,7 @@ export async function POST(
         : JSON.stringify([])
 
     // Upsert leaderboard entry: update if userAddress exists, otherwise insert
-    const upsertQuery = dbInstance.db
+    const upsertQuery = summerProtocolDb.db
       .insertInto('yieldRaceLeaderboard')
       .values({
         gameId: savedGame.gameId,
@@ -258,8 +258,8 @@ export async function POST(
     )
   } finally {
     // Always clean up the database connection
-    if (dbInstance) {
-      await dbInstance.db.destroy().catch((err) => {
+    if (summerProtocolDb) {
+      await summerProtocolDb.db.destroy().catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error closing database connection (game):', err)
       })

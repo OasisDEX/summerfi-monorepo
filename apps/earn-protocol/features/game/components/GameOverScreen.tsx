@@ -63,8 +63,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   onShowLeaderboard,
   referralCode,
 }) => {
-  console.log('referralCode', referralCode)
-
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
     client,

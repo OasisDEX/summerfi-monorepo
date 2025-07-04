@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable no-mixed-operators */
 import { memo, type RefObject, useEffect, useMemo, useState } from 'react'
 
@@ -71,6 +72,7 @@ const CardList: React.FC<CardListProps> = memo(({ cards, selected, isAI, onSelec
     }
 
     requestAnimationFrame(animate)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAI, cards, cardRefs, selected])
 
   // Hide cursor when not in AI mode
