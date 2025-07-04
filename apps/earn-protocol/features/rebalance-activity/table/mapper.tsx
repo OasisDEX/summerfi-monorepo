@@ -129,7 +129,6 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[], walletAd
           ? {
               position: (
                 <Link
-                  as="div"
                   href={getVaultPositionUrl({
                     network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
                     vaultId: item.vaultId,
