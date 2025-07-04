@@ -13,6 +13,17 @@ import {
   type RebalanceActivitySortBy,
 } from './types'
 
+const defaultRebalanceActivityPagination = {
+  data: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  },
+  totalItemsPerStrategyId: [],
+}
+
 /**
  * Fetches rebalance activity data from the database with pagination and optional filtering.
  *
@@ -48,6 +59,11 @@ export const getRebalanceActivityServerSide = async ({
   startTimestamp?: number
   periods?: PositionsActivePeriods
 }) => {
+  // make sure that if strategies defined as [] then return default response
+  if (!!strategies && strategies.length === 0) {
+    return NextResponse.json(defaultRebalanceActivityPagination)
+  }
+
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
   if (!connectionString) {
@@ -158,9 +174,9 @@ export const getRebalanceActivityServerSide = async ({
     })
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching latest activity:', error)
+    console.error('Error fetching rebalance activity:', error)
 
-    return NextResponse.json({ error: 'Failed to fetch latest activity' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch rebalance activity' }, { status: 500 })
   } finally {
     // Always clean up the database connection
     if (dbInstance) {

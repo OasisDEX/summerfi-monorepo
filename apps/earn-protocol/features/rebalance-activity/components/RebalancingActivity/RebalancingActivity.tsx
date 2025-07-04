@@ -93,7 +93,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
         </Text>
         <RebalanceActivityTable
           rebalanceActivityList={rebalanceActivity.data}
-          hiddenColumns={['strategy', 'provider']}
+          hiddenColumns={['strategy', 'provider', 'position']}
           skeletonLines={4}
         />
         <Link

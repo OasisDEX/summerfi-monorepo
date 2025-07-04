@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroller'
 import {
   Card,
   GenericMultiselect,
+  getUniqueVaultId,
   LoadingSpinner,
   type TableSortedColumn,
   Text,
@@ -15,6 +16,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 import { mapMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
+import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 
 import classNames from './PortfolioYourActivity.module.css'
 
@@ -22,12 +24,14 @@ interface PortfolioYourActivityProps {
   latestActivity: LatestActivityPagination
   walletAddress: string
   vaultsList: SDKVaultsListType
+  positions: PositionWithVault[]
 }
 
 export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   latestActivity,
   walletAddress,
   vaultsList,
+  positions,
 }) => {
   const isFirstRender = useRef(true)
   const { deviceType } = useDeviceType()
@@ -71,9 +75,15 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
     }
   }
 
+  const resolvedVaultsList = useMemo(() => {
+    const userVaults = positions.map(({ vault }) => getUniqueVaultId(vault))
+
+    return vaultsList.filter((vault) => userVaults.includes(getUniqueVaultId(vault)))
+  }, [vaultsList, positions])
+
   const { strategiesOptions, tokensOptions } = useMemo(
-    () => mapMultiselectOptions(vaultsList),
-    [vaultsList],
+    () => mapMultiselectOptions(resolvedVaultsList),
+    [resolvedVaultsList],
   )
 
   const genericMultiSelectFilters = [

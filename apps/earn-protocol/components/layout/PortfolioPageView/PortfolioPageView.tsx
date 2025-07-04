@@ -131,6 +131,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           latestActivity={latestActivity}
           walletAddress={walletAddress}
           vaultsList={vaultsList}
+          positions={positions}
         />
       ),
     },
@@ -142,6 +143,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           rebalanceActivity={rebalanceActivity}
           walletAddress={walletAddress}
           positions={positions}
+          vaultsList={vaultsList}
         />
       ),
     },

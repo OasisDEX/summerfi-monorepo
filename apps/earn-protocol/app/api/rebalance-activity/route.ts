@@ -11,6 +11,7 @@ const RebalanceActivityQueryParamsSchema = z.object({
   tokens: z.string().optional(),
   strategies: z.string().optional(),
   protocols: z.string().optional(),
+  userAddress: z.string().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -27,11 +28,15 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  const { page, limit, sortBy, orderBy, tokens, strategies, protocols } = result.data
+  const { page, limit, sortBy, orderBy, tokens, strategies, protocols, userAddress } = result.data
 
   const parsedTokens = tokens ? tokens.split(',') : undefined
   const parsedStrategies = strategies ? strategies.split(',') : undefined
   const parsedProtocols = protocols ? protocols.split(',') : undefined
+
+  // condition to make sure that we pass empty array if userAddress is provided and strategies are not
+  // it's needed for case when we want to get rebalance activity per user positions
+  const reoslvedStrategies = userAddress && !parsedStrategies ? [] : parsedStrategies
 
   return await getRebalanceActivityServerSide({
     page,
@@ -39,7 +44,7 @@ export async function GET(request: NextRequest) {
     sortBy,
     orderBy,
     tokens: parsedTokens,
-    strategies: parsedStrategies,
+    strategies: reoslvedStrategies,
     protocols: parsedProtocols,
   })
 }

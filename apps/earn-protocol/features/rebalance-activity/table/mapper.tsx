@@ -1,5 +1,6 @@
 import {
   getScannerUrl,
+  getVaultPositionUrl,
   Icon,
   TableCellNodes,
   TableCellText,
@@ -7,7 +8,12 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, mapDbNetworkToChainId, timeAgo } from '@summerfi/app-utils'
+import {
+  chainIdToSDKNetwork,
+  formatCryptoBalance,
+  mapDbNetworkToChainId,
+  timeAgo,
+} from '@summerfi/app-utils'
 import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -32,7 +38,7 @@ export const rebalanceActivityPurposeMapper = (
   return actionTypeMap[item.actionType]
 }
 
-export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
+export const rebalancingActivityMapper = (rawData: RebalanceActivity[], walletAddress?: string) => {
   return rawData.map((item) => {
     const asset = item.inputTokenSymbol as TokenSymbolsList
 
@@ -119,6 +125,29 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[]) => {
           </TableCellNodes>
         ),
         strategy: <TableCellText>{item.vaultName}</TableCellText>,
+        ...(walletAddress
+          ? {
+              position: (
+                <Link
+                  as="div"
+                  href={getVaultPositionUrl({
+                    network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
+                    vaultId: item.vaultId,
+                    walletAddress,
+                  })}
+                >
+                  <WithArrow
+                    as="div"
+                    variant="p3"
+                    style={{ color: 'var(--earn-protocol-primary-100)' }}
+                    withStatic
+                  >
+                    Go to position
+                  </WithArrow>
+                </Link>
+              ),
+            }
+          : {}),
       },
     }
   })
