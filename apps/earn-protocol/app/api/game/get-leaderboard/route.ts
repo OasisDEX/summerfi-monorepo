@@ -25,13 +25,13 @@ export async function GET() {
 
     const leaderboard = await dbInstance.db
       .selectFrom('yieldRaceLeaderboard')
-      .select(['responseTimes', 'score', 'userAddress', 'updatedAt'])
+      .select(['responseTimes', 'score', 'userAddress', 'updatedAt', 'ens'])
       .orderBy('score', 'desc')
       .limit(50)
       .execute()
 
     const parsedLeaderboard: LeaderboardResponse = leaderboard.map((entry) => {
-      const { responseTimes, score, userAddress, updatedAt } = entry
+      const { responseTimes, score, userAddress, updatedAt, ens } = entry
       const parsedResponseTimes = Array.isArray(responseTimes)
         ? responseTimes.map((time) => Number(time))
         : []
@@ -41,6 +41,7 @@ export async function GET() {
       const response = {
         score: Number(score),
         userAddress,
+        ens,
         updatedAt,
         avgResponseTime: Number.isNaN(responseTimesMedian) ? 0 : responseTimesMedian,
       }

@@ -52,7 +52,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
           <thead>
             <tr>
               <th>Rank</th>
-              <th>Address</th>
+              <th>Wallet</th>
               <th>Score</th>
               <th>Avg. Response</th>
             </tr>
@@ -80,7 +80,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
                 leaderboardData.map((entry, index) => (
                   <tr key={entry.userAddress} className={getRankClassName(index)}>
                     <td>{index + 1}</td>
-                    <td>{formatAddress(entry.userAddress)}</td>
+                    <td>{entry.ens ? entry.ens : formatAddress(entry.userAddress)}</td>
                     <td>{entry.score}</td>
                     <td>{formatCryptoBalance(entry.avgResponseTime)}s</td>
                   </tr>

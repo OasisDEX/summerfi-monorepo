@@ -20,4 +20,5 @@ export type LeaderboardResponse = {
   userAddress: string
   updatedAt: string
   avgResponseTime: number
+  ens?: string
 }[]
