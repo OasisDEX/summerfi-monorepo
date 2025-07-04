@@ -137,7 +137,7 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[], walletAd
                 >
                   <WithArrow
                     as="div"
-                    variant="p3"
+                    variant="p3semi"
                     style={{ color: 'var(--earn-protocol-primary-100)' }}
                     withStatic
                   >
