@@ -41,6 +41,8 @@ export const NavigationWrapper: FC = () => {
 
   useEffect(() => {
     if (isLinkedToGame) {
+      // scroll to the top of the page
+      window.scrollTo(0, 0)
       setRunningGame?.(true)
       setIsGameByInvite?.(true) // Set the game as being started by an invite link
       // remove the `#game` from the URL hash
