@@ -1,6 +1,5 @@
 import { type FC, useMemo } from 'react'
 import { Card, DataBlock, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
   formatWithSeparators,
@@ -15,18 +14,19 @@ import { RebalanceActivityTable } from '@/features/rebalance-activity/components
 interface RebalancingActivityProps {
   rebalanceActivity: RebalanceActivityPagination
   vaultId: string
-  vault: SDKVaultishType
 }
 
 export const RebalancingActivity: FC<RebalancingActivityProps> = ({
   rebalanceActivity,
   vaultId,
-  vault,
 }) => {
   const { totalItems } = rebalanceActivity.pagination
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost([vault]), [vault])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
+    [rebalanceActivity.totalItemsPerStrategyId],
+  )
 
   return (
     <Card style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -93,7 +93,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({
         </Text>
         <RebalanceActivityTable
           rebalanceActivityList={rebalanceActivity.data}
-          hiddenColumns={['strategy', 'provider']}
+          hiddenColumns={['strategy', 'provider', 'position']}
           skeletonLines={4}
         />
         <Link

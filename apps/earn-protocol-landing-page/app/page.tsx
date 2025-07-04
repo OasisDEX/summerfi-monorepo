@@ -73,7 +73,7 @@ export default function HomePage() {
       <MarketingPoints>
         <HigherYieldsBlock
           vaultsList={landingPageData?.vaultsWithConfig}
-          totalRebalances={landingPageData?.totalRebalances}
+          totalRebalanceItemsPerStrategyId={landingPageData?.totalRebalanceItemsPerStrategyId}
         />
         <EnhancedRiskManagement
           protectedCapital="$10B+"

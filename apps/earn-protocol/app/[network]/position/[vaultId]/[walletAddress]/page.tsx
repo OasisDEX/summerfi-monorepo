@@ -28,6 +28,7 @@ import { isAddress } from 'viem'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
+import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -96,11 +97,14 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         strategies: [strategy],
         usersAddresses: [walletAddress],
       }),
-      getPaginatedRebalanceActivity({
-        page: 1,
-        limit: 4,
-        strategies: [strategy],
-        startTimestamp: dayjs().subtract(30, 'days').unix(),
+      getPositionsActivePeriods(walletAddress).then((periods) => {
+        return getPaginatedRebalanceActivity({
+          page: 1,
+          limit: 4,
+          strategies: [strategy],
+          startTimestamp: dayjs().subtract(30, 'days').unix(),
+          periods,
+        })
       }),
     ])
 

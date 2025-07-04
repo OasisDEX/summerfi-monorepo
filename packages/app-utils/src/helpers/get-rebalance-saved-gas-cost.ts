@@ -1,11 +1,11 @@
-import { type SDKNetwork, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKNetwork, type TotalRebalanceItemsPerStrategyId } from '@summerfi/app-types'
 
 import { sdkNetworkToHumanNetwork } from './earn-network-tools'
 
 const NETWORK_GAS_SAVINGS: { [key: string]: number } = {
   base: 0.05, // $0.05
   arbitrum: 0.05, // $0.05
-  mainnet: 20.0, // $20.00
+  mainnet: 12.0, // $12.00
   sonic: 0.05, // $0.05
   optimism: 0.05, // $0.05
 }
@@ -14,14 +14,22 @@ type RebalanceCountsType = { total: number } & Partial<{ [key in SDKNetwork]: nu
 
 /**
  * Calculates the total gas cost savings from rebalances across all vaults
- * @param vaultsList - List of vaults with their rebalance counts and network information
+ * @param totalItemsPerStrategyId - List of vaults with their rebalance counts and network information
  * @returns Total USD value of gas saved across all networks
  */
-export const getRebalanceSavedGasCost = (vaultsList: SDKVaultsListType): number => {
-  const rebalanceCounts = vaultsList.reduce<RebalanceCountsType>(
+export const getRebalanceSavedGasCost = (
+  totalItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[],
+): number => {
+  const rebalanceCounts = totalItemsPerStrategyId.reduce<RebalanceCountsType>(
     (acc, vault) => {
-      const { network } = vault.protocol
-      const count = Number(vault.rebalanceCount)
+      const parts = vault.strategyId.split('-')
+
+      if (parts.length < 2) {
+        throw new Error(`Invalid strategyId format: ${vault.strategyId}`)
+      }
+      const network = parts[1] as SDKNetwork
+
+      const count = Number(vault.count)
 
       acc.total += count
       acc[network] = (acc[network] ?? 0) + count
@@ -34,9 +42,9 @@ export const getRebalanceSavedGasCost = (vaultsList: SDKVaultsListType): number 
   return Object.entries(rebalanceCounts)
     .filter(([key]) => key !== 'total')
     .reduce(
-      (total, [network, count]) =>
+      (acc, [network, count]) =>
         // eslint-disable-next-line no-mixed-operators
-        total + count * (NETWORK_GAS_SAVINGS[sdkNetworkToHumanNetwork(network as SDKNetwork)] || 0),
+        acc + count * (NETWORK_GAS_SAVINGS[sdkNetworkToHumanNetwork(network as SDKNetwork)] || 0),
       0,
     )
 }

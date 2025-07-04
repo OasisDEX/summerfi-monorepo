@@ -149,7 +149,10 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const { totalItems } = rebalanceActivity.pagination
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
+    [rebalanceActivity.totalItemsPerStrategyId],
+  )
 
   const cards = useMemo(
     () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),

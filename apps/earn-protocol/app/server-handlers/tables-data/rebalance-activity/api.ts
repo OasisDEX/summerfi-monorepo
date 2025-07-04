@@ -1,9 +1,28 @@
-import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
+import {
+  type Database,
+  type ExpressionBuilder,
+  getSummerProtocolDB,
+} from '@summerfi/summer-protocol-db'
 import { NextResponse } from 'next/server'
 
 import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
 
-import { type RebalanceActivityPagination, type RebalanceActivitySortBy } from './types'
+import {
+  type PositionsActivePeriods,
+  type RebalanceActivityPagination,
+  type RebalanceActivitySortBy,
+} from './types'
+
+const defaultRebalanceActivityPagination = {
+  data: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+  },
+  totalItemsPerStrategyId: [],
+}
 
 /**
  * Fetches rebalance activity data from the database with pagination and optional filtering.
@@ -16,6 +35,7 @@ import { type RebalanceActivityPagination, type RebalanceActivitySortBy } from '
  * @param {string[]} [strategies] - Optional filter for specific strategies.
  * @param {string[]} [protocols] - Optional filter for specific protocols.
  * @param {number} [startTimestamp] - Optional filter for activities after a certain timestamp.
+ * @param {PositionsActivePeriods} [periods] - Optional filter for activities within provided periods.
  * @returns {Promise<NextResponse>} - A JSON response containing paginated rebalance activity data.
  */
 export const getRebalanceActivityServerSide = async ({
@@ -27,6 +47,7 @@ export const getRebalanceActivityServerSide = async ({
   strategies,
   protocols,
   startTimestamp,
+  periods,
 }: {
   page: number
   limit: number
@@ -36,7 +57,13 @@ export const getRebalanceActivityServerSide = async ({
   strategies?: string[]
   protocols?: string[]
   startTimestamp?: number
+  periods?: PositionsActivePeriods
 }) => {
+  // make sure that if strategies defined as [] then return default response
+  if (!!strategies && strategies.length === 0) {
+    return NextResponse.json(defaultRebalanceActivityPagination)
+  }
+
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
   if (!connectionString) {
@@ -76,20 +103,61 @@ export const getRebalanceActivityServerSide = async ({
       )
       .$if(!!startTimestamp, (qb) => qb.where('timestamp', '>=', startTimestamp?.toString() ?? '0'))
 
+    // Apply active periods filter if provided
+    let finalQuery = filteredQuery
+
+    if (periods && Object.keys(periods).length > 0) {
+      // Create conditions for each vault's active periods
+      const activePeriodConditions = Object.entries(periods).flatMap(([vaultId, activePeriods]) =>
+        activePeriods.map((period) => ({
+          vaultId,
+          openTimestamp: period.openTimestamp,
+          closeTimestamp: period.closeTimestamp,
+        })),
+      )
+
+      // Build OR conditions for each active period
+      const periodConditions = activePeriodConditions.map((period) => {
+        const baseCondition = (eb: ExpressionBuilder<Database, 'rebalanceActivity'>) =>
+          eb.and([eb('vaultId', '=', period.vaultId), eb('timestamp', '>=', period.openTimestamp)])
+
+        // If closeTimestamp is defined, add upper bound
+        if (period.closeTimestamp) {
+          return (eb: ExpressionBuilder<Database, 'rebalanceActivity'>) =>
+            baseCondition(eb).and(
+              eb('timestamp', '<=', period.closeTimestamp ?? Date.now().toString()),
+            )
+        }
+
+        // If closeTimestamp is undefined, no upper bound
+        return baseCondition
+      })
+
+      // Apply the OR conditions
+      finalQuery = filteredQuery.$if(periodConditions.length > 0, (qb) =>
+        qb.where((eb) => eb.or(periodConditions.map((condition) => condition(eb)))),
+      )
+    }
+
     // Apply pagination and sorting
-    const finalQuery = filteredQuery
+    const paginatedQuery = finalQuery
       .orderBy(sortBy, orderBy)
       .limit(limit)
       .offset((page - 1) * limit)
-      .execute()
+
+    const totalItemsPerStrategyIdQuery = finalQuery
+      .clearSelect()
+      .select(['strategyId', (eb) => eb.fn.countAll().as('count')])
+      .groupBy('strategyId')
 
     // Execute query and get total count using the same filters
-    const [activities, countResult] = await Promise.all([
-      finalQuery,
-      filteredQuery
+    const [activities, countResult, totalItemsPerStrategyId] = await Promise.all([
+      paginatedQuery.execute(),
+      finalQuery
         .clearSelect() // Clear the previous selectAll()
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst(),
+      totalItemsPerStrategyIdQuery.execute(),
     ])
 
     const totalItems = Number(countResult?.count ?? 0)
@@ -102,12 +170,13 @@ export const getRebalanceActivityServerSide = async ({
         totalItems,
         itemsPerPage: limit,
       },
+      totalItemsPerStrategyId,
     })
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching latest activity:', error)
+    console.error('Error fetching rebalance activity:', error)
 
-    return NextResponse.json({ error: 'Failed to fetch latest activity' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch rebalance activity' }, { status: 500 })
   } finally {
     // Always clean up the database connection
     if (dbInstance) {
@@ -130,6 +199,7 @@ export const getRebalanceActivityServerSide = async ({
  * @param {string[]} [strategies] - Optional filter for specific strategies.
  * @param {string[]} [protocols] - Optional filter for specific protocols.
  * @param {number} [startTimestamp] - Optional filter for activities after a certain timestamp.
+ * @param {PositionsActivePeriods} [periods] - Optional filter for activities within provided periods.
  * @returns {Promise<RebalanceActivityPagination>} - A promise resolving to paginated rebalance activity data.
  */
 export const getPaginatedRebalanceActivity = async ({
@@ -141,6 +211,7 @@ export const getPaginatedRebalanceActivity = async ({
   strategies,
   protocols,
   startTimestamp,
+  periods,
 }: {
   page: number
   limit: number
@@ -151,6 +222,7 @@ export const getPaginatedRebalanceActivity = async ({
   strategies?: string[]
   protocols?: string[]
   startTimestamp?: number
+  periods?: PositionsActivePeriods
 }): Promise<RebalanceActivityPagination> => {
   return await getRebalanceActivityServerSide({
     page,
@@ -161,5 +233,6 @@ export const getPaginatedRebalanceActivity = async ({
     strategies,
     protocols,
     startTimestamp,
+    periods,
   }).then((res) => res.json())
 }
