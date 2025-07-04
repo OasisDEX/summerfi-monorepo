@@ -22,7 +22,12 @@ export const getRebalanceSavedGasCost = (
 ): number => {
   const rebalanceCounts = totalItemsPerStrategyId.reduce<RebalanceCountsType>(
     (acc, vault) => {
-      const network = vault.strategyId.split('-')[1] as SDKNetwork
+      const parts = vault.strategyId.split('-')
+
+      if (parts.length < 2) {
+        throw new Error(`Invalid strategyId format: ${vault.strategyId}`)
+      }
+      const network = parts[1] as SDKNetwork
 
       const count = Number(vault.count)
 

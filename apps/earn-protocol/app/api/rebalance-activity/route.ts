@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   // condition to make sure that we pass empty array if userAddress is provided and strategies are not
   // it's needed for case when we want to get rebalance activity per user positions
-  const reoslvedStrategies = userAddress && !parsedStrategies ? [] : parsedStrategies
+  const resolvedStrategies = userAddress && !parsedStrategies ? [] : parsedStrategies
 
   return await getRebalanceActivityServerSide({
     page,
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     sortBy,
     orderBy,
     tokens: parsedTokens,
-    strategies: reoslvedStrategies,
+    strategies: resolvedStrategies,
     protocols: parsedProtocols,
   })
 }
