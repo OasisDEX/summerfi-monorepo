@@ -44,7 +44,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
       })}
     >
       <h1 className={clsx(styles.title, styles.animated)} style={{ animationDelay: '0.3s' }}>
-        Yield Race 🏎️
+        Yield Racer 🏎️
       </h1>
       {isGameByInvite && (
         <Text
@@ -52,7 +52,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
           className={clsx(styles.inviteText, styles.animated)}
           style={{ animationDelay: '0.3s' }}
         >
-          You have been challenged to play the Yield Race!
+          You have been challenged to play the Yield Racer!
         </Text>
       )}
       <div className={clsx(styles.description, styles.animated)} style={{ animationDelay: '0.4s' }}>

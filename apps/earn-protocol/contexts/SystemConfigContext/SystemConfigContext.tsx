@@ -15,7 +15,7 @@ export const SystemConfigProvider: FC<{
   value: Partial<EarnAppConfigType>
   children: ReactNode
 }> = ({ value, children }) => {
-  // used for the Yield Race game
+  // used for the Yield Racer game
   const [runningGame, setRunningGame] = useState(false)
   const [isGameByInvite, setIsGameByInvite] = useState(false)
 

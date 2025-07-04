@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 
 import { type LeaderboardResponse } from '@/features/game/types'
 
@@ -49,7 +49,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
                 <td>{index + 1}</td>
                 <td>{formatAddress(entry.userAddress)}</td>
                 <td>{entry.score}</td>
-                <td>{entry.avgResponseTime}s</td>
+                <td>{formatCryptoBalance(entry.avgResponseTime)}s</td>
               </tr>
             ))}
           </tbody>

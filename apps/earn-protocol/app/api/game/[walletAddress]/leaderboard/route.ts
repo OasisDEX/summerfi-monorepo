@@ -1,15 +1,36 @@
-import { addressSchema } from '@summerfi/serverless-shared'
+import { SDKChainId } from '@summerfi/app-types'
+import { addressSchema, getRpcGatewayEndpoint, type IRpcConfig } from '@summerfi/serverless-shared'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
 import { type NextRequest, NextResponse } from 'next/server'
+import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
+import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { z } from 'zod'
 
 import {
   calculateFinalScore,
+  getMessageToSign,
   medianScoreMakesSenseCheck,
   roundsMakeSenseCheck,
   scoreMakesSenseCheck,
 } from '@/features/game/helpers/gameHelpers'
+
+const domainChainIdToViemChain: { [key in SDKChainId]: Chain } = {
+  [SDKChainId.MAINNET]: mainnet,
+  [SDKChainId.ARBITRUM]: arbitrum,
+  [SDKChainId.OPTIMISM]: optimism,
+  [SDKChainId.BASE]: base,
+  [SDKChainId.SEPOLIA]: sepolia,
+  [SDKChainId.SONIC]: sonic,
+}
+
+const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'summer-protocol-prod',
+}
 
 const pathParamsSchema = z.object({
   walletAddress: addressSchema,
@@ -17,6 +38,8 @@ const pathParamsSchema = z.object({
 
 const postBodyParamsSchema = z.object({
   gameId: z.string().length(64),
+  signature: z.string(),
+  chainId: z.string().or(z.number()), // Optional, can be used for future enhancements
 })
 
 /*
@@ -26,6 +49,7 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ walletAddress: string }> },
 ) {
+  const rpcGateway = process.env.RPC_GATEWAY
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
   if (!connectionString) {
@@ -33,6 +57,9 @@ export async function POST(
       { error: 'Summer Protocol DB Connection string is not set' },
       { status: 500 },
     )
+  }
+  if (!rpcGateway) {
+    return NextResponse.json({ error: 'RPC_GATEWAY is not set' }, { status: 500 })
   }
   let validatedPathParams
   let validatedPostBody
@@ -51,7 +78,7 @@ export async function POST(
   }
 
   const { walletAddress } = validatedPathParams
-  const { gameId } = validatedPostBody
+  const { gameId, signature, chainId } = validatedPostBody
 
   let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
@@ -76,10 +103,53 @@ export async function POST(
      * 005 - Invalid response times for the game
      * 006 - Invalid score for the game
      * 007 - Response time exceeds round time
+     * 008 - Game has not been signed or signature is invalid
+     * 009 - New score is not higher than the existing one
      */
 
     if (!savedGame) {
       return NextResponse.json({ errorCode: '001' }, { status: 404 })
+    }
+
+    // check the signature
+    const viemChain: Chain = domainChainIdToViemChain[Number(chainId) as SDKChainId]
+    const rpcUrl = getRpcGatewayEndpoint(rpcGateway, Number(chainId), rpcConfig)
+
+    const transport = http(rpcUrl, {
+      batch: false,
+      fetchOptions: {
+        method: 'POST',
+      },
+    })
+
+    const client: PublicClient = createPublicClient({
+      chain: viemChain,
+      transport,
+    })
+    const messageToSign = getMessageToSign({ score: savedGame.score, gameId })
+    const signatureWalletAddress = savedGame.userAddress as `0x${string}`
+    const isSignatureValid = await client.verifyMessage({
+      address: signatureWalletAddress,
+      message: messageToSign,
+      signature: signature as `0x${string}`,
+    })
+
+    if (!isSignatureValid) {
+      return NextResponse.json({ errorCode: '008' }, { status: 400 })
+    }
+
+    // check if the new score is higher than the existing one
+    const existingScore = await dbInstance.db
+      .selectFrom('yieldRaceLeaderboard')
+      .where('userAddress', '=', walletAddress.toLowerCase())
+      .selectAll()
+      .executeTakeFirst()
+
+    if (existingScore && Number(existingScore.score) >= Number(savedGame.score)) {
+      return NextResponse.json(
+        { errorCode: '009', existingScore: existingScore.score },
+        { status: 400 },
+      )
     }
 
     // check if the game was already submitted
@@ -127,7 +197,7 @@ export async function POST(
 
     const backendScore = calculateFinalScore(castedResponseTimes)
 
-    if (scoreMakesSenseCheck({ score: savedGame.score, backendScore })) {
+    if (!scoreMakesSenseCheck({ score: savedGame.score, backendScore })) {
       return NextResponse.json({ errorCode: '006' }, { status: 400 })
     }
 

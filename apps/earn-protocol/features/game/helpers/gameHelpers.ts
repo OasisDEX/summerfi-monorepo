@@ -116,7 +116,7 @@ export const hashGameData = (responseTimes: number[], gameId: string): string =>
 export const unhashGameData = (hashed: string, gameId: string): number[] => {
   const [digest, encoded] = hashed.split(':')
 
-  if (!digest || !encoded) throw new Error('Invalid hash format')
+  if (!digest || !encoded) throw new Error(`Invalid hash format: ${hashed}`)
   const data = Buffer.from(encoded, 'base64').toString()
   const hmac = createHmac('sha256', gameId)
 
@@ -132,7 +132,10 @@ export const prepareBackendGameData = (params: GameOverParams, gameId: string) =
   if (!params.responseTimes) {
     throw new Error('Response times are required to prepare game data')
   }
-  const hashedGameData = hashGameData(params.responseTimes, gameId)
+  const hashedGameData = hashGameData(
+    params.responseTimes.length ? params.responseTimes : [4],
+    gameId,
+  )
 
   return hashedGameData
 }
@@ -175,12 +178,27 @@ export const scoreMakesSenseCheck = ({
   score: number | string
   backendScore: number
 }) => {
-  return Number(score) <= 0 || backendScore !== Number(score)
+  if (Number(score) < 0) {
+    // If the score is negative, it doesn't make sense
+    return false
+  }
+
+  if (backendScore !== Number(score)) {
+    // If the backend score doesn't match the provided score, it doesn't make sense
+    return false
+  }
+
+  return true
 }
 
 export const roundsMakeSenseCheck = (responseTimes: number[]): boolean => {
   const roundsCount = responseTimes.length
   const roundTimes = Array.from({ length: roundsCount }, (_, i) => getRoundTime(i + 1))
+
+  if (roundsCount === 0) {
+    // If there are no rounds we assume the game is lost immediately
+    return true
+  }
 
   for (let i = 0; i < roundsCount; i++) {
     if (responseTimes[i] > roundTimes[i]) {
@@ -191,3 +209,6 @@ export const roundsMakeSenseCheck = (responseTimes: number[]): boolean => {
 
   return true
 }
+
+export const getMessageToSign = ({ score, gameId }: { score: number | string; gameId: string }) =>
+  `Yield Racer - Submitting my score of ${score} points - ${gameId}`

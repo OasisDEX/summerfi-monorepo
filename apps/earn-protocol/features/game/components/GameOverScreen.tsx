@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import {
   Button,
   Card as UiCard,
@@ -13,6 +14,8 @@ import {
 import clsx from 'clsx'
 import Link from 'next/link'
 
+import { accountType } from '@/account-kit/config'
+import { getMessageToSign } from '@/features/game/helpers/gameHelpers'
 import { type GameOverParams } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'
 import { useUserWallet } from '@/hooks/use-user-wallet'
@@ -58,8 +61,15 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   gameId,
   onShowLeaderboard,
 }) => {
+  const { client } = useSmartAccountClient({ type: accountType })
+  const { signMessageAsync } = useSignMessage({
+    client,
+  })
+  const { chain } = useChain()
+
   const [submittingToLeaderboard, setSubmittingToLeaderboard] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
+  const [leaderboardErrorDetails, setLeaderboardErrorDetails] = useState('')
   const [submitSuccess, setSubmitSuccess] = useState(false)
   // Find the correct card index
   const correctIdx =
@@ -84,40 +94,61 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const submitToLeaderboard = () => {
+  const submitToLeaderboard = useCallback(() => {
+    if (!gameId) {
+      return
+    }
     setSubmittingToLeaderboard(true)
-    fetch(`/earn/api/game/${userWalletAddress}/leaderboard`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        gameId,
-      }),
+    signMessageAsync({
+      message: getMessageToSign({ score, gameId }),
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then((signature) => {
         setSubmittingToLeaderboard(false)
-        if (data.errorCode) {
-          // eslint-disable-next-line no-console
-          console.error('Error submitting to leaderboard:', data.errorCode)
-          setLeaderboardError(`Error ${data.errorCode}`)
+        fetch(`/earn/api/game/${userWalletAddress}/leaderboard`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            gameId,
+            signature,
+            chainId: chain.id,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setSubmittingToLeaderboard(false)
+            if (data.errorCode) {
+              // eslint-disable-next-line no-console
+              console.error('Error submitting to leaderboard:', data.errorCode)
+              if (data.errorCode === '009') {
+                setLeaderboardErrorDetails(
+                  `New score ${score} is not higher than existing score ${data.existingScore}`,
+                )
+              }
+              setLeaderboardError(`Error ${data.errorCode}`)
 
-          return
-        }
-        // eslint-disable-next-line no-console
-        console.log('Successfully submitted to leaderboard:', data)
-        setSubmitSuccess(true)
+              return
+            }
+            setSubmitSuccess(true)
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Error submitting to leaderboard:', error)
+            setLeaderboardError(`CODE_${error.code || 'UNKNOWN'}`)
+            setSubmitSuccess(false)
+            setSubmittingToLeaderboard(false)
+          })
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
-        console.error('Error submitting to leaderboard:', error)
+        console.error('Error signing message:', error)
         setLeaderboardError(`CODE_${error.code || 'UNKNOWN'}`)
-        setSubmitSuccess(false)
         setSubmittingToLeaderboard(false)
       })
-  }
-  const getLeaderboardIcon = () => {
+  }, [gameId, userWalletAddress, chain.id, score, signMessageAsync])
+
+  const getLeaderboardIcon = useCallback(() => {
     if (submittingToLeaderboard) {
       return <LoadingSpinner size={16} />
     }
@@ -129,8 +160,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     }
 
     return <Icon iconName="trophy" size={16} />
-  }
-  const getLeaderboardLabel = () => {
+  }, [submittingToLeaderboard, submitSuccess, leaderboardError])
+
+  const getLeaderboardLabel = useCallback(() => {
     if (submittingToLeaderboard) {
       return 'Submitting...'
     }
@@ -142,7 +174,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     }
 
     return 'Submit to Leaderboard'
-  }
+  }, [submittingToLeaderboard, submitSuccess, leaderboardError])
 
   return (
     <div
@@ -194,30 +226,41 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       </Text>
       <UiCard className={styles.actionables} variant="cardSecondary">
         <div className={styles.buttonsColumn}>
-          <Tooltip
-            showAbove
-            tooltipId="submit-leaderboard-tooltip"
-            tooltipWrapperStyles={{
-              zIndex: 1000,
-              width: '300px',
-              top: '-80px',
-              padding: 0,
-            }}
-            tooltip={
-              <Text variant="p4semi">
-                You will need to sign a message containing the response times (base of your score).
-              </Text>
-            }
-          >
-            <Button
-              variant="primaryLarge"
-              disabled={!gameId || !!submittingToLeaderboard || !!submitSuccess}
-              onClick={submitToLeaderboard}
+          {userWalletAddress ? (
+            <Tooltip
+              showAbove
+              tooltipId="submit-leaderboard-tooltip"
+              tooltipWrapperStyles={{
+                zIndex: 1000,
+                width: '300px',
+                top: '-80px',
+                padding: 0,
+              }}
+              tooltip={
+                <Text variant="p4semi">
+                  You will need to sign a message containing the response times (base of your
+                  score).
+                </Text>
+              }
             >
-              {getLeaderboardLabel()}
-              {getLeaderboardIcon()}
+              <Button
+                variant="primaryLarge"
+                disabled={!gameId || !!submittingToLeaderboard || !!submitSuccess}
+                onClick={submitToLeaderboard}
+              >
+                {getLeaderboardLabel()}
+                {getLeaderboardIcon()}
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button variant="primaryLarge" disabled>
+              Connect wallet to submit score
+              <Icon iconName="wallet" size={16} />
             </Button>
-          </Tooltip>
+          )}
+          {leaderboardError && leaderboardErrorDetails && (
+            <Text variant="p4">{leaderboardErrorDetails}</Text>
+          )}
           <Button variant="secondaryLarge" onClick={onShowLeaderboard}>
             Check the leaderboard
             <Icon iconName="trophy" size={16} />

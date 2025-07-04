@@ -93,7 +93,7 @@ export async function POST(
 
     const backendScore = calculateFinalScore(castedResponseTimes)
 
-    if (scoreMakesSenseCheck({ score, backendScore })) {
+    if (!scoreMakesSenseCheck({ score, backendScore })) {
       return NextResponse.json({ errorCode: '006' }, { status: 400 })
     }
 
