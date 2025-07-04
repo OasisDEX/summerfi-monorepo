@@ -98,6 +98,7 @@ export default function MainGameView() {
           timedOut={home.timedOut}
           startingGame={home.startingGame}
           responseTimes={home.lastResponseTimes}
+          referralCode={home.referralCode} // Pass referral code to GameOverScreen
           onRestart={() => home.handleStartGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => home.handleStartGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}

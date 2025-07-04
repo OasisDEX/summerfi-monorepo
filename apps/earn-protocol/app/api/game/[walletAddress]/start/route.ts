@@ -1,4 +1,5 @@
 import { addressSchema } from '@summerfi/serverless-shared'
+import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { createHash } from 'crypto'
 import dayjs from 'dayjs'
@@ -20,14 +21,16 @@ const GAME_TIMEOUT_SECONDS = 5
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ walletAddress: string }> },
-) {
-  const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
+): Promise<NextResponse> {
+  const beachClubDbConnectionString = process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
+  const summerProtocolDbConnectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
-  if (!connectionString) {
-    return NextResponse.json(
-      { error: 'Summer Protocol DB Connection string is not set' },
-      { status: 500 },
-    )
+  if (!beachClubDbConnectionString) {
+    throw new Error('Beach Club Rewards DB Connection string is not set')
+  }
+
+  if (!summerProtocolDbConnectionString) {
+    throw new Error('Summer Protocol DB Connection string is not set')
   }
   let validatedParams
 
@@ -46,11 +49,13 @@ export async function GET(
   const { walletAddress } = validatedParams
 
   let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+  let beachClubDb: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
 
   try {
     dbInstance = await getSummerProtocolDB({
-      connectionString,
+      connectionString: summerProtocolDbConnectionString,
     })
+
     // Check for db spamming - one game per [GAME_TIMEOUT_SECONDS] seconds
     const lastGame = await dbInstance.db
       .selectFrom('yieldRaceGames')
@@ -72,6 +77,19 @@ export async function GET(
       }
     }
 
+    beachClubDb = getBeachClubDb({
+      connectionString: beachClubDbConnectionString,
+    })
+
+    // Get the users referral ID
+    const userRefCode = await beachClubDb.db
+      .selectFrom('users')
+      .select('referral_code')
+      .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
+      .select(['custom_code'])
+      .where('users.id', '=', walletAddress.toLowerCase())
+      .executeTakeFirst()
+
     const timestamp = dayjs().unix()
     const gameId = createHash('sha256')
       .update(`${walletAddress}-${timestamp}-${process.env.GAME_SECRET}`)
@@ -91,6 +109,7 @@ export async function GET(
 
       return NextResponse.json({
         gameId,
+        ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
       })
     } else {
       // Insert the game into the database
@@ -105,6 +124,7 @@ export async function GET(
 
       return NextResponse.json({
         gameId,
+        ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
       })
     }
   } catch (error) {

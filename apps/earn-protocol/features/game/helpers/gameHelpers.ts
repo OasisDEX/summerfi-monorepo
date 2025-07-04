@@ -53,7 +53,10 @@ export const startGameBackend = async (walletAddress: string) => {
     }
     const data = await response.json()
 
-    return data.gameId
+    return {
+      gameId: data.gameId,
+      referralCode: data.ref, // Assuming the backend returns a referral code
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to fetch game ID:', error)

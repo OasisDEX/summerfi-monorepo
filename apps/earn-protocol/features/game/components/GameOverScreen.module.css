@@ -10,8 +10,6 @@
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 800;
   margin-bottom: 12px;
 }
 
@@ -127,5 +125,5 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
 }

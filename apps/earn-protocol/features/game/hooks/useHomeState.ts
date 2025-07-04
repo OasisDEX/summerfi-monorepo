@@ -15,6 +15,7 @@ export function useHomeState() {
   const { setRunningGame } = useSystemConfig()
   const { userWalletAddress } = useUserWallet()
   const [gameId, setGameId] = useState<string | undefined>(undefined)
+  const [referralCode, setReferralCode] = useState<string | undefined>(undefined)
   const [startingGame, setStartingGame] = useState(false)
   const [screenName, setScreenName] = useState<'start' | 'game' | 'ai' | 'over'>('start')
   const [lastScore, setLastScore] = useState(0)
@@ -50,10 +51,11 @@ export function useHomeState() {
       return null
     }
     startGameBackend(userWalletAddress)
-      .then((backendGameId) => {
-        if (backendGameId) {
+      .then((backendGameData) => {
+        if (backendGameData.gameId) {
           setStartingGame(false)
-          setGameId(backendGameId)
+          setGameId(backendGameData.gameId)
+          setReferralCode(backendGameData.referralCode)
           setScreenName('game')
           setLastWasAI(isAI)
           setRunningGame?.(true) // Set running game to true
@@ -138,5 +140,6 @@ export function useHomeState() {
     setStartingGame,
     gameId,
     setGameId,
+    referralCode,
   }
 }

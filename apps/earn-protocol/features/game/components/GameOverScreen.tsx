@@ -32,14 +32,15 @@ interface GameOverScreenProps extends GameOverParams {
   startingGame?: boolean // Optional prop to indicate if the game is starting
   gameId?: string
   onShowLeaderboard?: () => void // Optional prop to show leaderboard
+  referralCode?: string // Optional prop for referral code
 }
 
-const getShareMessage = (score: number, avgResponse: number) => {
+const getShareMessage = (score: number, avgResponse: number, referralCode?: string) => {
   return `I've scored ${score} points with an average response time of ${Math.floor(Number(avgResponse) * 1000) / 1000}s in Yield Racer! 🏎️💨
 
 Can you beat my score?
 
-https://summer.fi/earn#game
+https://summer.fi/earn#game${referralCode ? `?referralCode=${referralCode}` : ''}
 
 #SummerFi #YieldRacer
 `
@@ -60,7 +61,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   startingGame,
   gameId,
   onShowLeaderboard,
+  referralCode,
 }) => {
+  console.log('referralCode', referralCode)
+
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
     client,
@@ -90,6 +94,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       rounds,
       responseTimes,
       avgResponse,
+      referralCode,
+      gameId,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -182,10 +188,12 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
         [styles.starting]: startingGame,
       })}
     >
-      <h2 className={styles.title}>Game Over</h2>
+      <Text variant="h1" className={styles.title}>
+        Game Over
+      </Text>
       {timedOut === true ? <div className={styles.timedOut}>you ran out of time!</div> : null}
       <div className={styles.score}>
-        {isAI ? 'AI Score' : 'Your Score'}: <b>{score}</b>
+        {isAI ? 'AI Score' : 'You scored'} <b>{score}</b> points
       </div>
       {lastCards && lastCards.length > 0 && lastSelected !== null && lastSelected !== undefined ? (
         <div className={styles.lastCardsRow}>
@@ -268,7 +276,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           <Link
             href={getTwitterShareUrl({
               url: '',
-              text: getShareMessage(score, avgResponse ?? 0),
+              text: getShareMessage(score, avgResponse ?? 0, referralCode),
             })}
             target="_blank"
           >
@@ -284,7 +292,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
         </div>
         <div className={styles.shareScoreBox}>
           <UiCard style={{ flexDirection: 'column', whiteSpace: 'pre-wrap' }}>
-            {getShareMessage(score, avgResponse ?? 0)}
+            {getShareMessage(score, avgResponse ?? 0, referralCode)}
           </UiCard>
         </div>
       </UiCard>
