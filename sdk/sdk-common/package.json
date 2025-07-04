@@ -27,6 +27,7 @@
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
+    "@cowprotocol/cow-sdk": "^5.10.3",
     "@summerfi/common": "workspace:*",
     "superjson": "^1.13.3"
   },
