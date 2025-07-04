@@ -91,9 +91,7 @@ export async function GET(
       .executeTakeFirst()
 
     const timestamp = dayjs().unix()
-    const gameId = createHash('sha256')
-      .update(`${walletAddress}-${timestamp}-${process.env.GAME_SECRET}`)
-      .digest('hex')
+    const gameId = createHash('sha256').update(`${walletAddress}-${timestamp}`).digest('hex')
 
     if (lastGame) {
       // Update the existing game with the new start timestamp
