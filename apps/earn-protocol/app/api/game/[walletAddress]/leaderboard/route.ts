@@ -122,6 +122,10 @@ export async function POST(
       },
     })
 
+    const clientMainnet: PublicClient = createPublicClient({
+      chain: mainnet,
+      transport,
+    })
     const client: PublicClient = createPublicClient({
       chain: viemChain,
       transport,
@@ -132,10 +136,6 @@ export async function POST(
       address: savedGameWalletAddress,
       message: messageToSign,
       signature: signature as `0x${string}`,
-    })
-
-    const ensName = await client.getEnsName({
-      address: savedGameWalletAddress,
     })
 
     if (!isSignatureValid) {
@@ -213,6 +213,18 @@ export async function POST(
       : typeof savedGame.responseTimes === 'string'
         ? savedGame.responseTimes
         : JSON.stringify([])
+
+    let ensName: string | null = null
+
+    try {
+      ensName = await clientMainnet.getEnsName({
+        address: savedGameWalletAddress,
+        strict: false,
+      })
+    } catch (error) {
+      // If there's an error fetching ENS, we can just skip it
+      ensName = null
+    }
 
     // Upsert leaderboard entry: update if userAddress exists, otherwise insert
     const upsertQuery = summerProtocolDb.db
