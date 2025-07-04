@@ -9,7 +9,6 @@ import {
   Text,
   Tooltip,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
 import {
   formatFiatBalance,
   formatWithSeparators,
@@ -27,14 +26,12 @@ import classNames from './PortfolioRebalanceActivity.module.css'
 interface PortfolioRebalanceActivityProps {
   rebalanceActivity: RebalanceActivityPagination
   walletAddress: string
-  vaultsList: SDKVaultsListType
   positions: PositionWithVault[]
 }
 
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
   rebalanceActivity,
   walletAddress,
-  vaultsList,
   positions,
 }) => {
   const { totalItems } = rebalanceActivity.pagination
@@ -42,7 +39,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
   const [hasMoreItems, setHasMoreItems] = useState(true)
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList), [vaultsList])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
+    [rebalanceActivity.totalItemsPerStrategyId],
+  )
 
   const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
 

@@ -18,6 +18,7 @@ export interface SummerProtocolDB {
 
 export * from './database-types'
 export { mapDbNetworkToChainId, mapChainIdToDbNetwork, type DbNetworks } from './helpers'
+export type { ExpressionBuilder } from 'kysely'
 
 export const getSummerProtocolDB = async (
   config: PgSummerProtocolDbConfig,

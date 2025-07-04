@@ -189,7 +189,6 @@ export const VaultManageViewDetails = ({
         <RebalancingActivity
           rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
-          vault={vault}
         />
       </Expander>
       <Expander

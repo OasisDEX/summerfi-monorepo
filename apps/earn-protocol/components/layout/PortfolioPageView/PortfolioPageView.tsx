@@ -141,7 +141,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         <PortfolioRebalanceActivity
           rebalanceActivity={rebalanceActivity}
           walletAddress={walletAddress}
-          vaultsList={vaultsList}
           positions={positions}
         />
       ),

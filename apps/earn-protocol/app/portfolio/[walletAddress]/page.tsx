@@ -28,6 +28,7 @@ import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
+import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
@@ -72,6 +73,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -93,6 +95,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       usersAddresses: [walletAddress],
     }),
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
+    unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
   ])
 
   return {
@@ -108,6 +111,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   }
 }
 
@@ -145,6 +149,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -189,6 +194,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
         page: 1,
         limit: 50,
         strategies: userVaultsIds,
+        periods: positionsActivePeriods,
       }),
       getTallyDelegates(sumrStakeDelegate.delegatedTo),
     ])

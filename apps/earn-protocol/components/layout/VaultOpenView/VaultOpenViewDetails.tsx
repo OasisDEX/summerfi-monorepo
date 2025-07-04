@@ -92,7 +92,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         <RebalancingActivity
           rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
-          vault={vault}
         />
       </Expander>
       <Expander
