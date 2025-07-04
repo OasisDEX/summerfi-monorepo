@@ -81,14 +81,24 @@ export async function GET(
       connectionString: beachClubDbConnectionString,
     })
 
+    // Get the current high score for the user
     // Get the users referral ID
-    const userRefCode = await beachClubDb.db
-      .selectFrom('users')
-      .select('referral_code')
-      .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
-      .select(['custom_code'])
-      .where('users.id', '=', walletAddress.toLowerCase())
-      .executeTakeFirst()
+    const [userRefCode, currentHighScore] = await Promise.all([
+      beachClubDb.db
+        .selectFrom('users')
+        .select('referral_code')
+        .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
+        .select(['custom_code'])
+        .where('users.id', '=', walletAddress.toLowerCase())
+        .executeTakeFirst(),
+      await summerProtocolDb.db
+        .selectFrom('yieldRaceLeaderboard')
+        .where('userAddress', '=', walletAddress.toLowerCase())
+        .select(['score'])
+        .orderBy('score', 'desc')
+        .limit(1)
+        .executeTakeFirst(),
+    ])
 
     const timestamp = dayjs().unix()
     const gameId = createHash('sha256').update(`${walletAddress}-${timestamp}`).digest('hex')
@@ -104,11 +114,6 @@ export async function GET(
         })
         .where('gameId', '=', lastGame.gameId)
         .execute()
-
-      return NextResponse.json({
-        gameId,
-        ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
-      })
     } else {
       // Insert the game into the database
       await summerProtocolDb.db
@@ -119,12 +124,13 @@ export async function GET(
           timestampStart: timestamp,
         })
         .execute()
-
-      return NextResponse.json({
-        gameId,
-        ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
-      })
     }
+
+    return NextResponse.json({
+      gameId,
+      ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
+      currentHighScore: currentHighScore?.score,
+    })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error creating a game:', error)

@@ -33,6 +33,7 @@ interface GameOverScreenProps extends GameOverParams {
   gameId?: string
   onShowLeaderboard?: () => void // Optional prop to show leaderboard
   referralCode?: string // Optional prop for referral code
+  currentHighScore?: number // Optional prop for current high score
 }
 
 const getShareMessage = (score: number, avgResponse: number, referralCode?: string) => {
@@ -62,6 +63,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   gameId,
   onShowLeaderboard,
   referralCode,
+  currentHighScore,
 }) => {
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
@@ -71,7 +73,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
 
   const [submittingToLeaderboard, setSubmittingToLeaderboard] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
-  const [leaderboardErrorDetails, setLeaderboardErrorDetails] = useState('')
   const [submitSuccess, setSubmitSuccess] = useState(false)
   // Find the correct card index
   const correctIdx =
@@ -125,11 +126,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
             if (data.errorCode) {
               // eslint-disable-next-line no-console
               console.error('Error submitting to leaderboard:', data.errorCode)
-              if (data.errorCode === '009') {
-                setLeaderboardErrorDetails(
-                  `New score ${score} is not higher than existing score ${data.existingScore}`,
-                )
-              }
               setLeaderboardError(`Error ${data.errorCode}`)
 
               return
@@ -167,6 +163,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   }, [submittingToLeaderboard, submitSuccess, leaderboardError])
 
   const getLeaderboardLabel = useCallback(() => {
+    if (currentHighScore && currentHighScore >= score) {
+      return `Your High Score: ${currentHighScore}`
+    }
     if (submittingToLeaderboard) {
       return 'Submitting...'
     }
@@ -178,7 +177,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     }
 
     return 'Submit to Leaderboard'
-  }, [submittingToLeaderboard, submitSuccess, leaderboardError])
+  }, [submittingToLeaderboard, submitSuccess, leaderboardError, currentHighScore, score])
 
   return (
     <div
@@ -243,15 +242,28 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
                 padding: 0,
               }}
               tooltip={
-                <Text variant="p4semi">
-                  You will need to sign a message containing the response times (base of your
-                  score).
-                </Text>
+                currentHighScore && currentHighScore >= score ? (
+                  <Text variant="p4semi">
+                    Score {score} is below your current
+                    <br />
+                    high score of {currentHighScore} points.
+                  </Text>
+                ) : (
+                  <Text variant="p4semi">
+                    You will need to sign a message containing the response times (base of your
+                    score).
+                  </Text>
+                )
               }
             >
               <Button
                 variant="primaryLarge"
-                disabled={!gameId || !!submittingToLeaderboard || !!submitSuccess}
+                disabled={
+                  !gameId ||
+                  !!submittingToLeaderboard ||
+                  !!submitSuccess ||
+                  (!!currentHighScore && currentHighScore >= score)
+                }
                 onClick={submitToLeaderboard}
               >
                 {getLeaderboardLabel()}
@@ -263,9 +275,6 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
               Connect wallet to submit score
               <Icon iconName="wallet" size={16} />
             </Button>
-          )}
-          {leaderboardError && leaderboardErrorDetails && (
-            <Text variant="p4">{leaderboardErrorDetails}</Text>
           )}
           <Button variant="secondaryLarge" onClick={onShowLeaderboard}>
             Check the leaderboard

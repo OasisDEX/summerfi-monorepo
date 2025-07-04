@@ -56,6 +56,7 @@ export const startGameBackend = async (walletAddress: string) => {
     return {
       gameId: data.gameId,
       referralCode: data.ref, // Assuming the backend returns a referral code
+      currentHighScore: data.currentHighScore, // Assuming the backend returns the current high score
     }
   } catch (error) {
     // eslint-disable-next-line no-console
