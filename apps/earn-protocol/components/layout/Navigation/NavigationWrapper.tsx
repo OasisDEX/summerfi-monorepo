@@ -26,7 +26,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
-  const currentFullUrl = useCurrentUrl()
+  const path = useCurrentUrl()
   const { userWalletAddress } = useUserWallet()
   const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
 
@@ -36,24 +36,25 @@ export const NavigationWrapper: FC = () => {
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
 
-  // check if `#game` is in the URL hash
-  const isLinkedToGame = currentFullUrl.includes('#game')
+  // check if the current URL has a `game` query parameter
 
   useEffect(() => {
+    const url = new URL(`${path.startsWith('/') ? window.location.origin : ''}${path}`)
+
+    const isLinkedToGame = url.searchParams.has('game')
+
     if (isLinkedToGame) {
       // scroll to the top of the page
       window.scrollTo(0, 0)
       setRunningGame?.(true)
       setIsGameByInvite?.(true) // Set the game as being started by an invite link
-      // remove the `#game` from the URL hash
+      // remove the `game` from the URL search params
       if (typeof window !== 'undefined') {
-        const url = new URL(currentFullUrl)
-
-        url.hash = ''
+        url.searchParams.delete('game')
         window.history.replaceState({}, '', url.toString())
       }
     }
-  }, [isLinkedToGame, setRunningGame, setIsGameByInvite, currentFullUrl])
+  }, [setRunningGame, setIsGameByInvite, path])
 
   return (
     <Navigation

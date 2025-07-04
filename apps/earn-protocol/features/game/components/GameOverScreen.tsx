@@ -41,7 +41,7 @@ const getShareMessage = (score: number, avgResponse: number, referralCode?: stri
 
 Can you beat my score?
 
-https://summer.fi/earn#game${referralCode ? `?referralCode=${referralCode}` : ''}
+https://summer.fi/earn?game${referralCode ? `&referralCode=${referralCode}` : ''}
 
 #SummerFi #YieldRacer
 `

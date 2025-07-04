@@ -38,8 +38,16 @@ const EarnAllVaultsPage = async () => {
   )
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [{ vaults }, headersList] = await Promise.all([getVaultsList(), headers()])
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [{ vaults }, headersList, params] = await Promise.all([
+    getVaultsList(),
+    headers(),
+    searchParams,
+  ])
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
@@ -48,13 +56,19 @@ export async function generateMetadata(): Promise<Metadata> {
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
 
+  let ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`
+
+  if (typeof params.game !== 'undefined') {
+    ogImageUrl += `${baseUrl}earn/api/og/game`
+  }
+
   return {
     title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
+      images: ogImageUrl,
     },
   }
 }
