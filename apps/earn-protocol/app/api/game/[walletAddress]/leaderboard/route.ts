@@ -175,15 +175,10 @@ export async function POST(
 
     const { responseTimes } = savedGame
 
-    // check if the game.responseTimes is an array
-    if (!Array.isArray(savedGame.responseTimes)) {
-      return NextResponse.json({ errorCode: '005' }, { status: 400 })
-    }
-
     // check if the score makes sense
-
     const castedResponseTimes = responseTimes as number[]
 
+    // check if the game.responseTimes is an array
     if (!Array.isArray(castedResponseTimes)) {
       return NextResponse.json({ errorCode: '005' }, { status: 400 })
     }
