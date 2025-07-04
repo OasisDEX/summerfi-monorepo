@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { SkeletonLine } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 
 import { type LeaderboardResponse } from '@/features/game/types'
@@ -11,8 +12,10 @@ interface LeaderboardModalProps {
 
 const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
     fetch('/earn/api/game/get-leaderboard')
       .then((response) => {
         if (!response.ok) {
@@ -28,7 +31,18 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching leaderboard data:', error)
       })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [])
+
+  const getRankClassName = (index: number) => {
+    if (index === 0) return styles.gold
+    if (index === 1) return styles.silver
+    if (index === 2) return styles.bronze
+
+    return ''
+  }
 
   return (
     <div className={styles.overlay}>
@@ -44,14 +58,33 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
             </tr>
           </thead>
           <tbody>
-            {leaderboardData.map((entry, index) => (
-              <tr key={entry.userAddress}>
-                <td>{index + 1}</td>
-                <td>{formatAddress(entry.userAddress)}</td>
-                <td>{entry.score}</td>
-                <td>{formatCryptoBalance(entry.avgResponseTime)}s</td>
-              </tr>
-            ))}
+            {isLoading
+              ? // Skeleton Loader
+                [...Array(5)].map((_, i) => (
+                  <tr key={i}>
+                    <td>
+                      <SkeletonLine height={15} width={20} />
+                    </td>
+                    <td>
+                      <SkeletonLine height={15} width={120} />
+                    </td>
+                    <td>
+                      <SkeletonLine height={15} width={50} />
+                    </td>
+                    <td>
+                      <SkeletonLine height={15} width={80} />
+                    </td>
+                  </tr>
+                ))
+              : // Actual Data
+                leaderboardData.map((entry, index) => (
+                  <tr key={entry.userAddress} className={getRankClassName(index)}>
+                    <td>{index + 1}</td>
+                    <td>{formatAddress(entry.userAddress)}</td>
+                    <td>{entry.score}</td>
+                    <td>{formatCryptoBalance(entry.avgResponseTime)}s</td>
+                  </tr>
+                ))}
           </tbody>
         </table>
         <button className={styles.closeBtn} onClick={onClose}>

@@ -90,3 +90,21 @@
 .leaderboardTable td:first-child {
   font-weight: 600;
 }
+
+.gold td {
+  background-color: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.silver td {
+  background-color: rgba(192, 192, 192, 0.1);
+  color: #c0c0c0;
+  font-weight: bold;
+}
+
+.bronze td {
+  background-color: rgba(205, 127, 50, 0.1);
+  color: #cd7f32;
+  font-weight: bold;
+}
