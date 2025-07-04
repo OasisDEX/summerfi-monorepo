@@ -17,10 +17,25 @@
   animation-fill-mode: both;
 }
 
+.starting {
+  animation-name: fadeInGameStartScreen;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: both;
+  animation-direction: reverse;
+}
+
 .title {
   font-size: 64px;
   font-weight: 800;
   margin-bottom: 16px;
+}
+
+.inviteText {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #ff4f64;
+  font-weight: 700;
 }
 
 .description {

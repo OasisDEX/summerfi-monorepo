@@ -246,8 +246,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 }
 
 export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
-  const { walletAddress: walletAddressRaw } = await params
-  const prodHost = (await headers()).get('host')
+  const [{ walletAddress: walletAddressRaw }, headersList] = await Promise.all([params, headers()])
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()

@@ -14,6 +14,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
       <div className={styles.cardContainer}>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={21.37}
             trendData={[
               { x: 1, y: 2 },
@@ -27,6 +28,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
         </div>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={2.04}
             trendData={[
               { x: 1, y: 1 },
@@ -40,6 +42,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
         </div>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={7.35}
             trendData={[
               { x: 1, y: 7 },

@@ -11,6 +11,18 @@ export type Generated<T> =
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
 
+export type Json = JsonValue
+
+export type JsonArray = JsonValue[]
+
+export type JsonObject = {
+  [K in string]?: JsonValue
+}
+
+export type JsonPrimitive = boolean | number | string | null
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive
+
 export type Network = 'arbitrum' | 'base' | 'mainnet' | 'optimism' | 'sonic'
 
 export type Numeric = ColumnType<string, number | string, number | string>
@@ -223,6 +235,25 @@ export interface WeeklyRewardRate {
   weekTimestamp: Int8
 }
 
+export interface YieldRaceGames {
+  gameId: string
+  responseTimes: Json | null
+  score: Generated<Int8>
+  timestampEnd: Generated<Int8>
+  timestampStart: Generated<Int8>
+  updatedAt: Generated<Int8>
+  userAddress: string
+}
+
+export interface YieldRaceLeaderboard {
+  gameId: string
+  responseTimes: Json
+  score: Generated<Int8>
+  signedMessage: string
+  updatedAt: Generated<Int8>
+  userAddress: string
+}
+
 export interface Database {
   campaigns: Campaigns
   dailyFleetInterestRate: DailyFleetInterestRate
@@ -241,4 +272,6 @@ export interface Database {
   walletRisk: WalletRisk
   weeklyFleetInterestRate: WeeklyFleetInterestRate
   weeklyRewardRate: WeeklyRewardRate
+  yieldRaceGames: YieldRaceGames
+  yieldRaceLeaderboard: YieldRaceLeaderboard
 }

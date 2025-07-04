@@ -12,6 +12,7 @@ export interface CardProps {
   highlight?: boolean
   apyColor?: string
   'data-card-index'?: number // Keep data attribute
+  token: string
 }
 
 // Use React.memo to wrap the Card component and forwardRef to pass the ref to the underlying div

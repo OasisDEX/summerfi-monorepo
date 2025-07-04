@@ -31,6 +31,10 @@ const AlchemyAccountsProvider = dynamic(
   },
 )
 
+const TheGame = dynamic(() => import('../../../features/game/components/MainGameView'), {
+  ssr: false,
+})
+
 export const GlobalProvider = ({
   children,
   accountKitInitializedState,
@@ -47,6 +51,7 @@ export const GlobalProvider = ({
             <AlchemyAccountsProvider initialState={accountKitInitializedState}>
               <GlobalEventTracker />
               <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              <TheGame />
             </AlchemyAccountsProvider>
           </LocalConfigContextProvider>
         </DeviceProvider>

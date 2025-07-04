@@ -2,18 +2,26 @@
 
 import { useCallback, useEffect } from 'react'
 
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import GameOverScreen from '@/features/game/components/GameOverScreen'
 import GameScreen from '@/features/game/components/GameScreen'
 import HowToPlayModal from '@/features/game/components/HowToPlayModal'
+import LeaderboardModal from '@/features/game/components/LeaderboardModal'
 import StartScreen from '@/features/game/components/StartScreen'
-import { playGameStartSound } from '@/features/game/helpers/audioHelpers'
 import { setMusicVolume, stopMusic } from '@/features/game/helpers/musicHelper'
 import { useHomeState } from '@/features/game/hooks/useHomeState'
 
 import mainGameViewStyles from './MainGameView.module.css'
 
-export default function MainGameView({ closeGame }: { closeGame: () => void }) {
+export default function MainGameView() {
   const home = useHomeState()
+  const { setRunningGame, runningGame } = useSystemConfig()
+
+  const closeGame = useCallback(() => {
+    setRunningGame?.(false) // Close game by setting runningGame to false
+    home.setScreenName('start') // Reset to start screen
+    home.setShowHow(false) // Hide how-to-play modal if open
+  }, [home, setRunningGame])
 
   const handleEscape = useCallback(
     (ev: KeyboardEvent) => {
@@ -25,15 +33,19 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
   )
 
   useEffect(() => {
-    document.querySelectorAll('body')[0].classList.add('no-scroll') // Prevent body scroll when modal is open
-    window.addEventListener('keydown', handleEscape)
+    if (runningGame) {
+      document.querySelectorAll('body')[0].classList.add('no-scroll') // Prevent body scroll when modal is open
+      window.addEventListener('keydown', handleEscape)
+    }
 
     return () => {
-      stopMusic() // Stop music when component unmounts
-      document.querySelectorAll('body')[0].classList.remove('no-scroll') // Re-enable body scroll
-      window.removeEventListener('keydown', handleEscape)
+      if (runningGame) {
+        stopMusic() // Stop music when component unmounts
+        document.querySelectorAll('body')[0].classList.remove('no-scroll') // Re-enable body scroll
+        window.removeEventListener('keydown', handleEscape)
+      }
     }
-  }, [handleEscape])
+  }, [handleEscape, runningGame])
 
   useEffect(() => {
     if (home.screenName === 'game' || home.screenName === 'ai') {
@@ -43,19 +55,19 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
     }
   }, [home.screenName])
 
-  const startGame = (isAI: boolean) => {
-    playGameStartSound() // Play sound on game start
-    home.setScreenName(isAI ? 'ai' : 'game')
-    home.setLastWasAI(isAI)
+  if (!runningGame) {
+    return null // Do not render anything if the game is not running
   }
 
   return (
     <div className={mainGameViewStyles.mainGameWrapper}>
       {home.screenName === 'start' && (
         <StartScreen
-          onStart={() => startGame(false)} // Use startGame function
-          onAI={() => startGame(true)}
+          onStart={() => home.handleStartGame(false)} // Use startGame function
+          onAI={() => home.handleStartGame(true)}
           onHowToPlay={() => home.setShowHow(true)}
+          onShowLeaderboard={() => home.setShowLeaderboard(true)} // Use handleGoToLeaderboard
+          startingGame={home.startingGame}
           closeGame={closeGame} // Close game function
         />
       )}
@@ -78,18 +90,23 @@ export default function MainGameView({ closeGame }: { closeGame: () => void }) {
           score={home.lastScore}
           streak={home.lastStreak}
           rounds={home.lastRounds}
+          gameId={home.gameId}
           isAI={home.lastWasAI}
           lastCards={home.lastCards}
           lastSelected={home.lastSelected}
           avgResponse={home.lastAvgResponse}
           timedOut={home.timedOut}
-          onRestart={() => startGame(home.lastWasAI)} // Use startGame for restart
-          onAI={() => startGame(true)} // Use startGame for starting AI game
+          startingGame={home.startingGame}
+          responseTimes={home.lastResponseTimes}
+          referralCode={home.referralCode} // Pass referral code to GameOverScreen
+          onRestart={() => home.handleStartGame(home.lastWasAI)} // Use startGame for restart
+          onAI={() => home.handleStartGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}
-          closeGame={closeGame} // Close game function
+          onShowLeaderboard={() => home.setShowLeaderboard(true)} // Use handleGoToLeaderboard
         />
       )}
       {home.showHow && <HowToPlayModal onClose={() => home.setShowHow(false)} />}
+      {home.showLeaderboard && <LeaderboardModal onClose={() => home.setShowLeaderboard(false)} />}
     </div>
   )
 }

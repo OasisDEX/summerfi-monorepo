@@ -222,11 +222,12 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 }
 
 export async function generateMetadata({ params }: EarnVaultManagePageProps): Promise<Metadata> {
-  const { network: paramsNetwork, vaultId, walletAddress } = await params
+  const [{ network: paramsNetwork, vaultId, walletAddress }, config, headersList] =
+    await Promise.all([params, systemConfigHandler(), headers()])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
-  const prodHost = (await headers()).get('host')
+  const { config: systemConfig } = parseServerResponseToClient(config)
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)

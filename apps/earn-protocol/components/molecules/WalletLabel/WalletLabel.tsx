@@ -27,6 +27,7 @@ interface WalletLabelProps {
   className?: string
   maxAddressChars?: number
   hideNetworkIcon?: boolean
+  customLoginLabel?: string // Optional custom label for the login button
 }
 
 // Types for internal components
@@ -178,6 +179,7 @@ export default function WalletLabel({
   className = '',
   maxAddressChars,
   hideNetworkIcon = false,
+  customLoginLabel,
 }: WalletLabelProps) {
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
@@ -227,7 +229,7 @@ export default function WalletLabel({
         onClick={openAuthModal}
         className={walletLabelStyles.wrapper}
       >
-        Log in
+        {customLoginLabel ?? 'Log in'}
       </Button>
     )
   }

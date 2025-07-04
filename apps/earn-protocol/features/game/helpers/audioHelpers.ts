@@ -53,99 +53,99 @@ export const playGameStartSound = () => {
   const now = context.currentTime
   const masterGain = context.createGain()
 
-  masterGain.gain.value = 0.35 // Reduced overall volume
+  masterGain.gain.value = 0.32
   masterGain.connect(context.destination)
 
-  // Create gentle reverb for softness
-  const reverb = createQuickReverb(context, 1.2) // Slightly longer reverb for smoothness
+  // Gentle reverb for "airy" feel
+  const reverb = createQuickReverb(context, 1.4)
   const reverbGain = context.createGain()
 
-  reverbGain.gain.value = 0.18
+  reverbGain.gain.value = 0.16
   reverb.connect(reverbGain)
   reverbGain.connect(context.destination)
 
-  // Create the main "coin" sound with softer tone
-  const coinOsc = context.createOscillator()
-  const coinGain = context.createGain()
+  // --- Nintendo-style "arpeggio" chime (C-E-G) ---
+  // 1. First note: C5
+  const osc1 = context.createOscillator()
+  const gain1 = context.createGain()
 
-  // Change from square to triangle wave for less harshness
-  coinOsc.type = 'triangle'
-  coinOsc.frequency.setValueAtTime(988, now) // B5
-  // Smoother transition between frequency changes
-  coinOsc.frequency.linearRampToValueAtTime(1319, now + 0.11) // E6 - smooth transition
+  osc1.type = 'triangle'
+  osc1.frequency.setValueAtTime(523.25, now) // C5
+  gain1.gain.setValueAtTime(0, now)
+  gain1.gain.linearRampToValueAtTime(0.18, now + 0.03)
+  gain1.gain.linearRampToValueAtTime(0.13, now + 0.13)
+  gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.32)
+  osc1.connect(gain1)
+  gain1.connect(masterGain)
+  gain1.connect(reverb)
 
-  // Filter for warmer tone
-  const coinFilter = context.createBiquadFilter()
+  // 2. Second note: E5 (slightly after)
+  const osc2 = context.createOscillator()
+  const gain2 = context.createGain()
 
-  coinFilter.type = 'lowpass' // Changed from bandpass to lowpass for less harshness
-  coinFilter.frequency.value = 1800 // Higher cutoff for smoother sound
-  coinFilter.Q.value = 0.7 // Less resonant for gentler sound
+  osc2.type = 'triangle'
+  osc2.frequency.setValueAtTime(659.25, now + 0.08) // E5
+  gain2.gain.setValueAtTime(0, now + 0.08)
+  gain2.gain.linearRampToValueAtTime(0.15, now + 0.11)
+  gain2.gain.linearRampToValueAtTime(0.11, now + 0.19)
+  gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.36)
+  osc2.connect(gain2)
+  gain2.connect(masterGain)
+  gain2.connect(reverb)
 
-  // Connect and shape envelope
-  coinOsc.connect(coinFilter)
-  coinFilter.connect(coinGain)
-  coinGain.connect(masterGain)
-  coinGain.connect(reverb) // Add reverb
+  // 3. Third note: G5 (slightly after E5)
+  const osc3 = context.createOscillator()
+  const gain3 = context.createGain()
 
-  // Envelope for coin sound - softer attack and release
-  coinGain.gain.setValueAtTime(0, now)
-  coinGain.gain.linearRampToValueAtTime(0.16, now + 0.04) // Slower attack, lower volume
-  coinGain.gain.linearRampToValueAtTime(0.12, now + 0.12)
-  coinGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25)
+  osc3.type = 'triangle'
+  osc3.frequency.setValueAtTime(783.99, now + 0.16) // G5
+  gain3.gain.setValueAtTime(0, now + 0.16)
+  gain3.gain.linearRampToValueAtTime(0.13, now + 0.19)
+  gain3.gain.linearRampToValueAtTime(0.09, now + 0.27)
+  gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.41)
+  osc3.connect(gain3)
+  gain3.connect(masterGain)
+  gain3.connect(reverb)
 
-  // Create a second "fanfare" sound with gentler character
-  const fanfareOsc = context.createOscillator()
-  const fanfareGain = context.createGain()
+  // 4. Add a soft "sparkle" high note (C6) for extra chime
+  const osc4 = context.createOscillator()
+  const gain4 = context.createGain()
 
-  // Triangle waves are much gentler than square
-  fanfareOsc.type = 'triangle'
-  fanfareOsc.frequency.setValueAtTime(659.25, now + 0.15) // E5
-  fanfareOsc.frequency.linearRampToValueAtTime(783.99, now + 0.28) // G5 - smooth transition
+  osc4.type = 'sine'
+  osc4.frequency.setValueAtTime(1046.5, now + 0.22) // C6
+  gain4.gain.setValueAtTime(0, now + 0.22)
+  gain4.gain.linearRampToValueAtTime(0.07, now + 0.25)
+  gain4.gain.linearRampToValueAtTime(0.03, now + 0.32)
+  gain4.gain.exponentialRampToValueAtTime(0.001, now + 0.45)
+  osc4.connect(gain4)
+  gain4.connect(masterGain)
+  gain4.connect(reverb)
 
-  // Instead of harsh waveshaper, use a gentle filter
-  const fanfareFilter = context.createBiquadFilter()
-
-  fanfareFilter.type = 'lowpass'
-  fanfareFilter.frequency.value = 2200
-  fanfareFilter.Q.value = 0.5
-
-  // Connect fanfare
-  fanfareOsc.connect(fanfareFilter)
-  fanfareFilter.connect(fanfareGain)
-  fanfareGain.connect(masterGain)
-  fanfareGain.connect(reverb) // Add reverb
-
-  // Envelope for fanfare - gentler transitions
-  fanfareGain.gain.setValueAtTime(0, now + 0.15)
-  fanfareGain.gain.linearRampToValueAtTime(0.12, now + 0.18)
-  fanfareGain.gain.linearRampToValueAtTime(0.15, now + 0.28)
-  fanfareGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45)
-
-  // Create a bass note for depth - keep this as sine (already gentle)
+  // 5. Add a soft bass for warmth (C3)
   const bassOsc = context.createOscillator()
   const bassGain = context.createGain()
 
   bassOsc.type = 'sine'
-  bassOsc.frequency.setValueAtTime(196, now + 0.15) // G3
-
-  // Connect bass
+  bassOsc.frequency.setValueAtTime(130.81, now) // C3
+  bassGain.gain.setValueAtTime(0, now)
+  bassGain.gain.linearRampToValueAtTime(0.12, now + 0.04)
+  bassGain.gain.linearRampToValueAtTime(0.08, now + 0.18)
+  bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38)
   bassOsc.connect(bassGain)
   bassGain.connect(masterGain)
+  bassGain.connect(reverb)
 
-  // Envelope for bass - smoother transitions
-  bassGain.gain.setValueAtTime(0, now + 0.15)
-  bassGain.gain.linearRampToValueAtTime(0.18, now + 0.2) // Gentler attack
-  bassGain.gain.linearRampToValueAtTime(0.001, now + 0.45) // Smooth fade out
-
-  // Start and stop all the sounds
-  coinOsc.start(now)
-  coinOsc.stop(now + 0.25)
-
-  fanfareOsc.start(now + 0.15)
-  fanfareOsc.stop(now + 0.45)
-
-  bassOsc.start(now + 0.15)
-  bassOsc.stop(now + 0.45)
+  // Start/stop all oscillators
+  osc1.start(now)
+  osc1.stop(now + 0.32)
+  osc2.start(now + 0.08)
+  osc2.stop(now + 0.36)
+  osc3.start(now + 0.16)
+  osc3.stop(now + 0.41)
+  osc4.start(now + 0.22)
+  osc4.stop(now + 0.45)
+  bassOsc.start(now)
+  bassOsc.stop(now + 0.38)
 }
 
 // Helper function for linear interpolation
@@ -156,7 +156,7 @@ const ensureFinite = (value: number, defaultValue: number): number => {
   return Number.isFinite(value) ? value : defaultValue
 }
 
-// Correct Selection Sound - Gentle Nintendo-style happy sound with subtle variations
+// Correct Selection Sound - Gentle [redacted]-style happy sound with subtle variations
 export const playCorrectSound = (timeLeft: number, timerDuration: number) => {
   const context = getAudioContext()
 
