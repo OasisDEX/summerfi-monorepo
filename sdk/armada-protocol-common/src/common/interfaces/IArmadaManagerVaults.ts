@@ -47,7 +47,7 @@ export interface IArmadaManagerVaults {
    * @param slippage Maximum slippage allowed for the operation
    * @param shouldStake Whether the user wants to stake the deposit
    *
-   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns An array of transactions that must be executed
    */
   getUpdateDepositTx(params: {
     vaultId: IArmadaVaultId
@@ -66,7 +66,7 @@ export interface IArmadaManagerVaults {
    * @param amount Token amount to be withdrawn
    * @param slippage Maximum slippage allowed for the operation
    *
-   * @returns ExtendedTransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns An array of transactions that must be executed
    */
   getWithdrawTx(params: {
     vaultId: IArmadaVaultId

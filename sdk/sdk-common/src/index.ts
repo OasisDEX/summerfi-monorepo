@@ -1,5 +1,3 @@
-export type { IToken as ITokenStanalone } from './common/interfaces/IToken'
-export type { QuoteData as QuoteDataStanalone } from './swap/implementation/QuoteData'
 export type { AddressValue } from './common/types/AddressValue'
 export { type ChainId, ChainIdSchema, isChainId } from './common/types/ChainId'
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
@@ -280,7 +278,10 @@ export type { ILendingPositionTypeData } from './lending-protocols/types/Lending
 export { OracleProviderTypeSchema, isOracleProviderType } from './oracle/OracleProviderType'
 export { OracleProviderType } from './oracle/OracleProviderType'
 export { SpotPriceInfoDataSchema, SpotPricesInfoDataSchema } from './oracle/ISpotPriceInfo'
-export type { ISpotPriceInfo, SpotPricesInfo } from './oracle/ISpotPriceInfo'
+export type {
+  ISpotPriceInfo as ISpotPriceInfo,
+  ISpotPricesInfo as ISpotPricesInfo,
+} from './oracle/ISpotPriceInfo'
 export { PositionsManager } from './orders/common/implementation/PositionsManager'
 export {
   PositionsManagerDataSchema,
@@ -290,7 +291,7 @@ export type {
   IPositionsManager,
   IPositionsManagerData,
 } from './orders/common/interfaces/IPositionsManager'
-export { TransactionType } from './orders/common/types/ExtendedTransactionInfo'
+export { TransactionType } from './orders/common/types/TransactionType'
 export type {
   TransactionMetadataApproval,
   TransactionPriceImpact,
@@ -309,7 +310,7 @@ export type {
   UnstakeTransactionInfo,
   MigrationTransactionInfo,
   VaultSwitchTransactionInfo,
-} from './orders/common/types/ExtendedTransactionInfo'
+} from './orders/common/types/TransactionInfoSpecialized'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'
 export type { Transaction } from './orders/common/types/Transaction'
@@ -410,5 +411,3 @@ export type { IUser, IUserData } from './user/interfaces/IUser'
 
 export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
-
-export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
