@@ -1,5 +1,5 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
-import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
+import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { revalidateTag, unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 
@@ -9,47 +9,34 @@ import {
   SECURE_PAGE_COOKIE_NAME,
   SECURE_PAGE_COOKIE_PATH,
 } from '@/app/secure/constants'
+import { GameLeaderboard } from '@/app/secure/game-leaderboard/GameLeaderboard'
 
-import { ReferralTable } from './ReferralTable'
+const getGameLeaderboard = async () => {
+  const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
-const getReferralsListFunction = async () => {
-  const beachClubDbConnectionString = process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
-
-  if (!beachClubDbConnectionString) {
-    throw new Error('Beach Club Rewards DB Connection string is not set')
+  if (!connectionString) {
+    throw new Error('Summer Protocol DB Connection string is not set')
   }
 
-  let beachClubDbInstance: Awaited<ReturnType<typeof getBeachClubDb>> | undefined
+  let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
   try {
-    beachClubDbInstance = getBeachClubDb({
-      connectionString: beachClubDbConnectionString,
+    summerProtocolDb = await getSummerProtocolDB({
+      connectionString,
     })
 
-    return await beachClubDbInstance.db
-      .selectFrom('users')
-      .leftJoin('referral_codes', 'referral_codes.id', 'users.referral_code')
-      .select([
-        'users.id',
-        'users.referral_code',
-        'referral_codes.custom_code',
-        'referral_codes.total_deposits_referred_usd',
-        'referral_codes.active_users_count',
-      ])
-      .where('users.referral_code', 'is not', null)
-      .orderBy('referral_codes.total_deposits_referred_usd', 'desc')
-      .execute()
+    return await summerProtocolDb.db.selectFrom('yieldRaceLeaderboard').selectAll().execute()
   } finally {
-    await beachClubDbInstance?.db.destroy()
+    await summerProtocolDb?.db.destroy()
   }
 }
 
-const getReferralsListCached = unstableCache(getReferralsListFunction, [], {
+const getGameLeaderboardCached = unstableCache(getGameLeaderboard, [], {
   tags: [SECURE_PAGE_CACHE_TAG],
   revalidate: 60 * 60, // 1 hour
 })
 
-export default async function ReferralHandlersPage() {
+export default async function GameLeaderboardPage() {
   const cookieData = await cookies()
 
   const isAuthenticated =
@@ -79,6 +66,61 @@ export default async function ReferralHandlersPage() {
     }
   }
 
+  async function banUnbanUser(formData: FormData) {
+    'use server'
+    const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
+
+    if (!connectionString) {
+      throw new Error('Summer Protocol DB Connection string is not set')
+    }
+    if (!isAuthenticated) {
+      throw new Error('You are not authenticated to perform this action')
+    }
+    // ban or unban user by address
+    const isBanning = formData.get('isBanning') === 'true'
+    const userAddress = formData.get('userAddress')
+    const summerProtocolDb = await getSummerProtocolDB({
+      connectionString,
+    })
+
+    if (typeof userAddress !== 'string') {
+      throw new Error('Invalid user address')
+    }
+    await summerProtocolDb.db
+      .updateTable('yieldRaceLeaderboard')
+      .set({ isBanned: isBanning })
+      .where('userAddress', '=', userAddress)
+      .execute()
+    revalidateTag(SECURE_PAGE_CACHE_TAG)
+    await summerProtocolDb.db.destroy()
+  }
+
+  async function deleteScore(formData: FormData) {
+    'use server'
+    const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
+
+    if (!connectionString) {
+      throw new Error('Summer Protocol DB Connection string is not set')
+    }
+    if (!isAuthenticated) {
+      throw new Error('You are not authenticated to perform this action')
+    }
+    const userAddress = formData.get('userAddress')
+    const summerProtocolDb = await getSummerProtocolDB({
+      connectionString,
+    })
+
+    if (typeof userAddress !== 'string') {
+      throw new Error('Invalid user address')
+    }
+    await summerProtocolDb.db
+      .deleteFrom('yieldRaceLeaderboard')
+      .where('userAddress', '=', userAddress)
+      .execute()
+    revalidateTag(SECURE_PAGE_CACHE_TAG)
+    await summerProtocolDb.db.destroy()
+  }
+
   if (!isAuthenticated) {
     return (
       <div
@@ -91,7 +133,7 @@ export default async function ReferralHandlersPage() {
           textAlign: 'center',
         }}
       >
-        <Text variant="h1">Referral Handlers</Text>
+        <Text variant="h1">Game leaderboard</Text>
         <Text variant="p1semi">You are not authorized to view this page</Text>
         <form
           action={authenticate}
@@ -129,7 +171,7 @@ export default async function ReferralHandlersPage() {
     )
   }
 
-  const referralsList = await getReferralsListCached()
+  const gameLeaderboard = await getGameLeaderboardCached()
 
   const refreshView = async () => {
     'use server'
@@ -164,12 +206,16 @@ export default async function ReferralHandlersPage() {
           marginBottom: '20px',
         }}
       >
-        Referral Handlers
+        Game leaderboard
         <div onClick={refreshView} style={{ cursor: 'pointer', marginLeft: '8px' }}>
           <Icon iconName="refresh" size={24} />
         </div>
       </Text>
-      <ReferralTable referralsList={referralsList} refreshView={refreshView} />
+      <GameLeaderboard
+        gameLeaderboard={gameLeaderboard}
+        banUnbanUser={banUnbanUser}
+        deleteScore={deleteScore}
+      />
     </div>
   )
 }

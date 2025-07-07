@@ -29,11 +29,12 @@ interface GameOverScreenProps extends GameOverParams {
   onRestart: () => void
   onAI?: () => void
   onReturnToMenu: () => void
-  startingGame?: boolean // Optional prop to indicate if the game is starting
+  startingGame?: boolean
   gameId?: string
-  onShowLeaderboard?: () => void // Optional prop to show leaderboard
-  referralCode?: string // Optional prop for referral code
-  currentHighScore?: number // Optional prop for current high score
+  onShowLeaderboard?: () => void
+  referralCode?: string
+  currentHighScore?: number
+  isBanned?: boolean
 }
 
 const getShareMessage = (score: number, avgResponse: number, referralCode?: string) => {
@@ -64,6 +65,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   onShowLeaderboard,
   referralCode,
   currentHighScore,
+  isBanned = false,
 }) => {
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
@@ -163,6 +165,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   }, [submittingToLeaderboard, submitSuccess, leaderboardError])
 
   const getLeaderboardLabel = useCallback(() => {
+    if (isBanned) {
+      return 'You are banned from leaderboard'
+    }
     if (currentHighScore && currentHighScore >= score) {
       return `Your High Score: ${currentHighScore}`
     }
@@ -177,7 +182,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     }
 
     return 'Submit to Leaderboard'
-  }, [submittingToLeaderboard, submitSuccess, leaderboardError, currentHighScore, score])
+  }, [submittingToLeaderboard, submitSuccess, leaderboardError, currentHighScore, score, isBanned])
 
   return (
     <div
@@ -262,6 +267,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
                   !gameId ||
                   !!submittingToLeaderboard ||
                   !!submitSuccess ||
+                  isBanned ||
                   (!!currentHighScore && currentHighScore >= score)
                 }
                 onClick={submitToLeaderboard}

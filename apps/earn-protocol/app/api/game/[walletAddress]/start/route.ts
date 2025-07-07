@@ -83,7 +83,7 @@ export async function GET(
 
     // Get the current high score for the user
     // Get the users referral ID
-    const [userRefCode, currentHighScore] = await Promise.all([
+    const [userRefCode, currentLeaderboardEntry] = await Promise.all([
       beachClubDb.db
         .selectFrom('users')
         .select('referral_code')
@@ -94,7 +94,7 @@ export async function GET(
       await summerProtocolDb.db
         .selectFrom('yieldRaceLeaderboard')
         .where('userAddress', '=', walletAddress.toLowerCase())
-        .select(['score'])
+        .select(['score', 'isBanned'])
         .orderBy('score', 'desc')
         .limit(1)
         .executeTakeFirst(),
@@ -129,7 +129,8 @@ export async function GET(
     return NextResponse.json({
       gameId,
       ref: userRefCode?.custom_code ?? userRefCode?.custom_code,
-      currentHighScore: currentHighScore?.score,
+      currentHighScore: currentLeaderboardEntry?.score,
+      isBanned: currentLeaderboardEntry?.isBanned ?? false,
     })
   } catch (error) {
     // eslint-disable-next-line no-console

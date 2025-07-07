@@ -98,8 +98,9 @@ export default function MainGameView() {
           timedOut={home.timedOut}
           startingGame={home.startingGame}
           responseTimes={home.lastResponseTimes}
-          currentHighScore={home.currentHighScore} // Pass current high score to GameOverScreen
-          referralCode={home.referralCode} // Pass referral code to GameOverScreen
+          isBanned={home.isBanned}
+          currentHighScore={home.currentHighScore}
+          referralCode={home.referralCode}
           onRestart={() => home.handleStartGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => home.handleStartGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}
