@@ -207,7 +207,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   totalRebalanceItemsPerStrategyId = [],
 }) => {
   const totalRebalances = useMemo(
-    () => totalRebalanceItemsPerStrategyId.reduce((acc, item) => acc + item.count, 0),
+    () => totalRebalanceItemsPerStrategyId.reduce((acc, item) => acc + Number(item.count), 0),
     [totalRebalanceItemsPerStrategyId],
   )
 
