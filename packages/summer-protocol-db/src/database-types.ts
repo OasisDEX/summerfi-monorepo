@@ -237,6 +237,7 @@ export interface WeeklyRewardRate {
 
 export interface YieldRaceGames {
   gameId: string
+  gamesPlayed: Generated<number>
   responseTimes: Json | null
   score: Generated<Int8>
   timestampEnd: Generated<Int8>
@@ -248,6 +249,7 @@ export interface YieldRaceGames {
 export interface YieldRaceLeaderboard {
   ens: Generated<string>
   gameId: string
+  isBanned: Generated<boolean>
   responseTimes: Json
   score: Generated<Int8>
   signedMessage: string

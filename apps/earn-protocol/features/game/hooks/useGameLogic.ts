@@ -3,7 +3,11 @@ import { createRef, useCallback, useEffect, useRef, useState } from 'react' // I
 
 import { playCorrectSound, playIncorrectSound } from '@/features/game/helpers/audioHelpers'
 import { STARTING_ROUND_TIME } from '@/features/game/helpers/constants'
-import { generateCards, getRoundTime } from '@/features/game/helpers/gameHelpers'
+import {
+  calculateFinalScore,
+  generateCards,
+  getRoundTime,
+} from '@/features/game/helpers/gameHelpers'
 import { type CardData, type GameOverParams } from '@/features/game/types'
 
 import { useAIPlayer } from './useAIPlayer'
@@ -163,20 +167,14 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       const responseTime = (now - roundStartTime) / 1000
       const actualRemainingTime = Math.max(0, timer - responseTime)
 
-      if (idx !== -1) {
-        setResponseTimes((times) => [...times, responseTime])
-      }
-
-      let points = 0
       const perfect = responseTime > 1 ? actualRemainingTime > 1 : true
 
       if (idx === correctIdx) {
         playCorrectSound(actualRemainingTime, timer)
-        points = Math.floor(Number(100 * (2 - responseTime)) + 10)
-        nextRound(
-          true,
-          round + 1, // Cap at round 30
-        )
+        const nextResponseTimes = [...responseTimes, responseTime]
+        const nextScore = calculateFinalScore(nextResponseTimes)
+
+        nextRound(true, round + 1)
 
         if (startX !== null && startY !== null && cardDataForAnim !== null) {
           const newId = flyingApyIdCounter.current++
@@ -197,6 +195,8 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
             },
           ])
         }
+        setResponseTimes(nextResponseTimes)
+        setScore(nextScore)
       } else {
         playIncorrectSound()
 
@@ -213,7 +213,6 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
         })
       }
 
-      setScore((s) => Math.max(0, s + points))
       setStreak((s) => (perfect ? s + 1 : 0))
       setBestStreak((s) => (perfect ? Math.max(s, streak + 1) : s))
     },

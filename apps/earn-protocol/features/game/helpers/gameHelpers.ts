@@ -148,7 +148,7 @@ export function calculateFinalScore(responseTimes: number[]): number {
   let totalScore = 0
 
   for (const responseTime of responseTimes) {
-    const points = Math.floor(Number(100 * (2 - responseTime)) + 10)
+    const points = Math.floor(200 / (responseTime + 0.1)) + 10
 
     totalScore += points
   }
@@ -182,6 +182,7 @@ export const scoreMakesSenseCheck = ({
   score: number | string
   backendScore: number
 }) => {
+  console.log(`Score check: score=${score}, backendScore=${backendScore}`)
   if (Number(score) < 0) {
     // If the score is negative, it doesn't make sense
     return false

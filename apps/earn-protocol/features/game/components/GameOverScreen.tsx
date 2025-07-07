@@ -65,6 +65,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   referralCode,
   currentHighScore,
 }) => {
+  console.log('responseTimes', responseTimes)
+
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
     client,

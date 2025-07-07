@@ -70,7 +70,7 @@ export async function POST(
       .selectFrom('yieldRaceGames')
       .where('userAddress', '=', walletAddress.toLowerCase())
       .orderBy('timestampStart', 'desc')
-      .select(['gameId', 'timestampStart'])
+      .select(['gameId', 'timestampStart', 'gamesPlayed'])
       .limit(1)
       .executeTakeFirst()
 
@@ -90,6 +90,8 @@ export async function POST(
     if (!medianResponseTimeCheck) {
       return NextResponse.json({ errorCode: '005' }, { status: 400 })
     }
+
+    console.log('castedResponseTimes', castedResponseTimes)
 
     const backendScore = calculateFinalScore(castedResponseTimes)
 
@@ -117,6 +119,7 @@ export async function POST(
           typeof parsedGameData === 'string' ? parsedGameData : JSON.stringify(parsedGameData),
         score,
         userAddress: walletAddress.toLowerCase(),
+        gamesPlayed: game.gamesPlayed + 1,
       })
       .where('gameId', '=', game.gameId)
       .execute()
