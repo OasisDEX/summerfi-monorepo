@@ -76,6 +76,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   const [submittingToLeaderboard, setSubmittingToLeaderboard] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [errorSigning, setErrorSigning] = useState(false)
   // Find the correct card index
   const correctIdx =
     lastCards && lastCards.length > 0
@@ -106,11 +107,11 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       return
     }
     setSubmittingToLeaderboard(true)
+    setErrorSigning(false)
     signMessageAsync({
       message: getMessageToSign({ score, gameId }),
     })
       .then((signature) => {
-        setSubmittingToLeaderboard(false)
         fetch(`/earn/api/game/${userWalletAddress}/leaderboard`, {
           method: 'POST',
           headers: {
@@ -145,8 +146,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.error('Error signing message:', error)
-        setLeaderboardError(`CODE_${error.code || 'UNKNOWN'}`)
         setSubmittingToLeaderboard(false)
+        setErrorSigning(true)
       })
   }, [gameId, userWalletAddress, chain.id, score, signMessageAsync])
 
@@ -165,6 +166,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   }, [submittingToLeaderboard, submitSuccess, leaderboardError])
 
   const getLeaderboardLabel = useCallback(() => {
+    if (errorSigning) {
+      return 'Error signing message'
+    }
     if (isBanned) {
       return 'You are banned from leaderboard'
     }
@@ -182,7 +186,15 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     }
 
     return 'Submit to Leaderboard'
-  }, [submittingToLeaderboard, submitSuccess, leaderboardError, currentHighScore, score, isBanned])
+  }, [
+    submittingToLeaderboard,
+    submitSuccess,
+    leaderboardError,
+    currentHighScore,
+    score,
+    isBanned,
+    errorSigning,
+  ])
 
   return (
     <div
