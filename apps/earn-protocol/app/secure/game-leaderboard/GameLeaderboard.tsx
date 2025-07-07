@@ -64,6 +64,7 @@ export function GameLeaderboard({
     signedMessage: string
     updatedAt: string
     userAddress: string
+    gamesPlayed: number
   }[]
   banUnbanUser: (formData: FormData) => Promise<void>
   deleteScore: (formData: FormData) => Promise<void>
@@ -73,6 +74,7 @@ export function GameLeaderboard({
       <thead>
         <tr>
           <th>Name</th>
+          <th>Games played</th>
           <th>Score</th>
           <th>Rounds</th>
           <th title="Summer Anti Cheat Score">SAC Score</th>
@@ -86,6 +88,7 @@ export function GameLeaderboard({
         {gameLeaderboard.map((entry) => (
           <tr key={entry.gameId}>
             <td>{entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}</td>
+            <td>{entry.gamesPlayed}</td>
             <td>{entry.score}</td>
             <td>{((entry.responseTimes ?? []) as number[] | undefined)?.length ?? 'n/a'}</td>
             <td>

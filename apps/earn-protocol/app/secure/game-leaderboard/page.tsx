@@ -25,11 +25,38 @@ const getGameLeaderboard = async () => {
       connectionString,
     })
 
-    return await summerProtocolDb.db
+    const leaderboard = await summerProtocolDb.db
       .selectFrom('yieldRaceLeaderboard')
       .selectAll()
       .orderBy('score', 'desc')
       .execute()
+
+    // select games from the leaderboard wallets
+    const gamesPlayed = await summerProtocolDb.db
+      .selectFrom('yieldRaceGames')
+      .selectAll()
+      .where(
+        'userAddress',
+        'in',
+        leaderboard.map((l) => l.userAddress),
+      )
+      .select(['userAddress', 'gamesPlayed'])
+      .execute()
+
+    if (!Array.isArray(leaderboard) || leaderboard.length === 0) {
+      return []
+    }
+
+    const gamesLeaderboard = leaderboard.map((entry) => {
+      const gameEntry = gamesPlayed.find((g) => g.userAddress === entry.userAddress)
+
+      return {
+        ...entry,
+        gamesPlayed: gameEntry ? gameEntry.gamesPlayed : 0,
+      }
+    })
+
+    return gamesLeaderboard
   } finally {
     await summerProtocolDb?.db.destroy()
   }
