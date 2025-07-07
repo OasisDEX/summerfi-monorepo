@@ -69,11 +69,16 @@ export default async function GameLeaderboardPage() {
   async function banUnbanUser(formData: FormData) {
     'use server'
     const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
+    const currentCookieData = await cookies()
+    const isCurrentlyAuthenticated =
+      currentCookieData.has(SECURE_PAGE_COOKIE_NAME) &&
+      currentCookieData.get(SECURE_PAGE_COOKIE_NAME)?.value ===
+        process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN
 
     if (!connectionString) {
       throw new Error('Summer Protocol DB Connection string is not set')
     }
-    if (!isAuthenticated) {
+    if (!isCurrentlyAuthenticated) {
       throw new Error('You are not authenticated to perform this action')
     }
     // ban or unban user by address
@@ -112,11 +117,16 @@ export default async function GameLeaderboardPage() {
   async function deleteScore(formData: FormData) {
     'use server'
     const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
+    const currentCookieData = await cookies()
+    const isCurrentlyAuthenticated =
+      currentCookieData.has(SECURE_PAGE_COOKIE_NAME) &&
+      currentCookieData.get(SECURE_PAGE_COOKIE_NAME)?.value ===
+        process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN
 
     if (!connectionString) {
       throw new Error('Summer Protocol DB Connection string is not set')
     }
-    if (!isAuthenticated) {
+    if (!isCurrentlyAuthenticated) {
       throw new Error('You are not authenticated to perform this action')
     }
     const userAddress = formData.get('userAddress')
