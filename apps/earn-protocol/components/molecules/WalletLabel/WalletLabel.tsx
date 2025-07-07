@@ -28,6 +28,7 @@ interface WalletLabelProps {
   maxAddressChars?: number
   hideNetworkIcon?: boolean
   customLoginLabel?: string // Optional custom label for the login button
+  buttonVariant?: keyof typeof ButtonClassNames
 }
 
 // Types for internal components
@@ -180,6 +181,7 @@ export default function WalletLabel({
   maxAddressChars,
   hideNetworkIcon = false,
   customLoginLabel,
+  buttonVariant = 'secondaryMedium',
 }: WalletLabelProps) {
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
@@ -214,7 +216,7 @@ export default function WalletLabel({
   // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
   if ((isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) && !isIframe) {
     return (
-      <Button variant="secondaryMedium">
+      <Button variant={buttonVariant}>
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
       </Button>
     )
@@ -224,11 +226,7 @@ export default function WalletLabel({
     if (variant === 'addressOnly') return null
 
     return (
-      <Button
-        variant="secondaryMedium"
-        onClick={openAuthModal}
-        className={walletLabelStyles.wrapper}
-      >
+      <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
         {customLoginLabel ?? 'Log in'}
       </Button>
     )
@@ -249,7 +247,7 @@ export default function WalletLabel({
           )}
 
           <Button
-            variant="secondaryMedium"
+            variant={buttonVariant}
             className={walletLabelStyles.addressOnlyButton}
             onClick={() => handleCopyAddress(userWalletAddress)}
             style={{ height: '34px' }}

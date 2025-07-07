@@ -9,7 +9,7 @@ export function ResponseTimesChart({ responseTimes }: { responseTimes?: JsonValu
   return (
     <div style={{ width: '250px', height: '50px', padding: '0 10px' }}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data.map((y, index) => ({ x: index, y }))}>
+        <LineChart data={data.map((y, index) => ({ x: index, y: Number(y) }))}>
           <Line type="monotone" dataKey="y" dot strokeWidth={2} animationDuration={100} />
           <Tooltip
             contentStyle={{

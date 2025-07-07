@@ -205,7 +205,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ isAI, onGameOver, onReturnToMen
             }}
             onClick={onReturnToMenu}
           >
-            Return to Main Menu
+            Go back
           </button>
         </div>
       )}

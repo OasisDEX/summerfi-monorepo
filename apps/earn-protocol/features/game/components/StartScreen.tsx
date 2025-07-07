@@ -104,8 +104,8 @@ const StartScreen: React.FC<StartScreenProps> = ({
             className={clsx(styles.animated, styles.wrapperCard)}
             style={{ animationDelay: '0.7s' }}
           >
-            <Text variant="p3semi">To save your score on the leaderboard</Text>{' '}
-            <WalletLabel customLoginLabel="Connect your wallet" />
+            <Text variant="p2semi">To save your score on the leaderboard</Text>
+            <WalletLabel customLoginLabel="Connect your wallet" buttonVariant="primaryLarge" />
           </Card>
         ) : (
           <Card
@@ -113,7 +113,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
             variant="cardSecondary"
             style={{ animationDelay: '0.7s' }}
           >
-            <Text variant="p3semi" as="span">
+            <Text variant="p2semiColorful" as="span">
               You&#39;re connected.
             </Text>
             <Text variant="p3" as="span">

@@ -31,6 +31,10 @@ const getGameLeaderboard = async () => {
       .orderBy('score', 'desc')
       .execute()
 
+    if (!Array.isArray(leaderboard) || leaderboard.length === 0) {
+      return []
+    }
+
     // select games from the leaderboard wallets
     const gamesPlayed = await summerProtocolDb.db
       .selectFrom('yieldRaceGames')

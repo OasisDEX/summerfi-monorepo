@@ -292,10 +292,29 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
               </Button>
             </Tooltip>
           ) : (
-            <Button variant="primaryLarge" disabled>
-              Connect wallet to submit score
-              <Icon iconName="wallet" size={16} />
-            </Button>
+            <Tooltip
+              showAbove
+              hideDrawerOnMobile
+              tooltipId="connect-leaderboard-tooltip"
+              tooltipWrapperStyles={{
+                zIndex: 1000,
+                width: '300px',
+                top: '-80px',
+                padding: 0,
+              }}
+              tooltip={
+                <Text variant="p4semi">
+                  Go back to the main menu and connect
+                  <br />
+                  your wallet first, then play the game again.
+                </Text>
+              }
+            >
+              <Button variant="primaryLarge" disabled>
+                Connect wallet to submit score
+                <Icon iconName="wallet" size={16} />
+              </Button>
+            </Tooltip>
           )}
           <Button variant="secondaryLarge" onClick={onShowLeaderboard}>
             Check the leaderboard
@@ -314,7 +333,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
             </Button>
           </Link>
           <Button variant="secondaryLarge" onClick={onReturnToMenu} disabled={startingGame}>
-            Return
+            Go back
             <Icon iconName="arrow_backward" size={16} />
           </Button>
         </div>
