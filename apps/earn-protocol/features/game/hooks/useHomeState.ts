@@ -17,6 +17,7 @@ export function useHomeState() {
   const [gameId, setGameId] = useState<string | undefined>(undefined)
   const [referralCode, setReferralCode] = useState<string | undefined>(undefined)
   const [currentHighScore, setCurrentHighScore] = useState<number | undefined>(undefined)
+  const [isBanned, setIsBanned] = useState<boolean>(false)
   const [startingGame, setStartingGame] = useState(false)
   const [screenName, setScreenName] = useState<'start' | 'game' | 'ai' | 'over'>('start')
   const [lastScore, setLastScore] = useState(0)
@@ -58,6 +59,7 @@ export function useHomeState() {
           setGameId(backendGameData.gameId)
           setReferralCode(backendGameData.referralCode)
           setCurrentHighScore(backendGameData.currentHighScore)
+          setIsBanned(backendGameData.isBanned ?? false)
           setScreenName('game')
           setLastWasAI(isAI)
           setRunningGame?.(true) // Set running game to true
@@ -144,5 +146,6 @@ export function useHomeState() {
     setGameId,
     referralCode,
     currentHighScore,
+    isBanned,
   }
 }

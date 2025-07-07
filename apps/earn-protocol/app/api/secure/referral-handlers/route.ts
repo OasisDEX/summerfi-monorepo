@@ -1,16 +1,15 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { REFERRAL_HANDLERS_COOKIE_NAME } from '@/app/secure/constants'
+import { SECURE_PAGE_COOKIE_NAME } from '@/app/secure/constants'
 import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
 
 export async function POST(req: NextRequest) {
   const cookieData = req.cookies
 
   const isAuthenticated =
-    cookieData.has(REFERRAL_HANDLERS_COOKIE_NAME) &&
-    cookieData.get(REFERRAL_HANDLERS_COOKIE_NAME)?.value ===
-      process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN
+    cookieData.has(SECURE_PAGE_COOKIE_NAME) &&
+    cookieData.get(SECURE_PAGE_COOKIE_NAME)?.value === process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN
 
   if (!isAuthenticated) {
     return NextResponse.json(

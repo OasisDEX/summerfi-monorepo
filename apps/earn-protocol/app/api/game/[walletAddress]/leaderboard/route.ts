@@ -105,6 +105,7 @@ export async function POST(
      * 007 - Response time exceeds round time
      * 008 - Game has not been signed or signature is invalid
      * 009 - New score is not higher than the existing one
+     * 010 - User is banned from the leaderboard
      */
 
     if (!savedGame) {
@@ -148,6 +149,10 @@ export async function POST(
       .where('userAddress', '=', walletAddress.toLowerCase())
       .selectAll()
       .executeTakeFirst()
+
+    if (existingScore && existingScore.isBanned) {
+      return NextResponse.json({ errorCode: '010' }, { status: 400 })
+    }
 
     if (existingScore && Number(existingScore.score) >= Number(savedGame.score)) {
       return NextResponse.json(

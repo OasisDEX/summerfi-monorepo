@@ -26,6 +26,7 @@ export async function GET() {
     const leaderboard = await dbInstance.db
       .selectFrom('yieldRaceLeaderboard')
       .select(['responseTimes', 'score', 'userAddress', 'updatedAt', 'ens'])
+      .where('isBanned', '=', false) // Exclude banned users from the leaderboard
       .orderBy('score', 'desc')
       .limit(50)
       .execute()

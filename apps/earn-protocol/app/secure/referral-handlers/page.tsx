@@ -4,10 +4,10 @@ import { revalidateTag, unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import {
-  REFERRAL_HANDLERS_CACHE_TAG,
-  REFERRAL_HANDLERS_COOKIE_EXPIRATION_DAYS,
-  REFERRAL_HANDLERS_COOKIE_NAME,
-  REFERRAL_HANDLERS_COOKIE_PATH,
+  SECURE_PAGE_CACHE_TAG,
+  SECURE_PAGE_COOKIE_EXPIRATION_DAYS,
+  SECURE_PAGE_COOKIE_NAME,
+  SECURE_PAGE_COOKIE_PATH,
 } from '@/app/secure/constants'
 
 import { ReferralTable } from './ReferralTable'
@@ -45,7 +45,7 @@ const getReferralsListFunction = async () => {
 }
 
 const getReferralsListCached = unstableCache(getReferralsListFunction, [], {
-  tags: [REFERRAL_HANDLERS_CACHE_TAG],
+  tags: [SECURE_PAGE_CACHE_TAG],
   revalidate: 60 * 60, // 1 hour
 })
 
@@ -53,9 +53,8 @@ export default async function ReferralHandlersPage() {
   const cookieData = await cookies()
 
   const isAuthenticated =
-    cookieData.has(REFERRAL_HANDLERS_COOKIE_NAME) &&
-    cookieData.get(REFERRAL_HANDLERS_COOKIE_NAME)?.value ===
-      process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN
+    cookieData.has(SECURE_PAGE_COOKIE_NAME) &&
+    cookieData.get(SECURE_PAGE_COOKIE_NAME)?.value === process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN
 
   async function authenticate(formData: FormData) {
     'use server'
@@ -63,21 +62,18 @@ export default async function ReferralHandlersPage() {
     const nextCookieData = await cookies()
     const authToken = formData.get('authToken')
 
-    if (
-      typeof authToken === 'string' &&
-      authToken === process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN
-    ) {
+    if (typeof authToken === 'string' && authToken === process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN) {
       nextCookieData.set({
-        name: REFERRAL_HANDLERS_COOKIE_NAME,
+        name: SECURE_PAGE_COOKIE_NAME,
         value: authToken,
-        maxAge: 60 * 60 * 24 * REFERRAL_HANDLERS_COOKIE_EXPIRATION_DAYS, // n days
-        path: REFERRAL_HANDLERS_COOKIE_PATH,
+        maxAge: 60 * 60 * 24 * SECURE_PAGE_COOKIE_EXPIRATION_DAYS, // n days
+        path: SECURE_PAGE_COOKIE_PATH,
         secure: true,
         httpOnly: true,
       })
     } else {
       const got = `${authToken?.slice(0, 3)}...${authToken?.slice(-3)}`
-      const expected = `${process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN?.slice(0, 3)}...${process.env.REFERRAL_HANDLERS_COOKIE_AUTH_TOKEN?.slice(-3)}`
+      const expected = `${process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN?.slice(0, 3)}...${process.env.SECURE_PAGE_COOKIE_AUTH_TOKEN?.slice(-3)}`
 
       throw new Error(`Invalid authentication token. Got ${got}, expected ${expected}`)
     }
@@ -138,7 +134,7 @@ export default async function ReferralHandlersPage() {
   const refreshView = async () => {
     'use server'
 
-    revalidateTag(REFERRAL_HANDLERS_CACHE_TAG)
+    revalidateTag(SECURE_PAGE_CACHE_TAG)
 
     // arbitrary delay
     await new Promise((resolve) => {
