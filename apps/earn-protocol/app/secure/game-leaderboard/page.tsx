@@ -25,7 +25,11 @@ const getGameLeaderboard = async () => {
       connectionString,
     })
 
-    return await summerProtocolDb.db.selectFrom('yieldRaceLeaderboard').selectAll().execute()
+    return await summerProtocolDb.db
+      .selectFrom('yieldRaceLeaderboard')
+      .selectAll()
+      .orderBy('score', 'desc')
+      .execute()
   } finally {
     await summerProtocolDb?.db.destroy()
   }
