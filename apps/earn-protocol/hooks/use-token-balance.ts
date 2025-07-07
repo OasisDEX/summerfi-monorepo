@@ -13,6 +13,7 @@ export interface TokenBalanceData {
   token: IToken | undefined
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
+  handleSetTokenBalanceLoading: (loading: boolean) => void
 }
 
 /**
@@ -92,13 +93,14 @@ export const useTokenBalance = ({
             if (skip) {
               return
             }
-            setTokenBalanceLoading(false)
             setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
           })
           .catch((err) => {
-            setTokenBalanceLoading(false)
             // eslint-disable-next-line no-console
             console.error('Error reading ETH balance', err)
+          })
+          .finally(() => {
+            setTokenBalanceLoading(false)
           })
       } else {
         const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
@@ -121,12 +123,13 @@ export const useTokenBalance = ({
                 new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
               ),
             )
-            setTokenBalanceLoading(false)
           })
           .catch((err) => {
-            setTokenBalanceLoading(false)
             // eslint-disable-next-line no-console
             console.error('Error reading token balance', err)
+          })
+          .finally(() => {
+            setTokenBalanceLoading(false)
           })
       }
     },
@@ -141,8 +144,6 @@ export const useTokenBalance = ({
         setTokenBalance(undefined)
         setTokenBalanceLoading(false)
       })
-    } else {
-      setTokenBalanceLoading(false)
     }
   }, [
     sdk,
@@ -155,10 +156,15 @@ export const useTokenBalance = ({
     fetchTokenBalance,
   ])
 
+  const handleSetTokenBalanceLoading = useCallback((loading: boolean) => {
+    setTokenBalanceLoading(loading)
+  }, [])
+
   return {
     vaultToken,
     token,
     tokenBalance,
     tokenBalanceLoading,
+    handleSetTokenBalanceLoading,
   }
 }

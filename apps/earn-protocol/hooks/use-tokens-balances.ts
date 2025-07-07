@@ -83,6 +83,7 @@ export const useTokenBalances = ({
       vaultToken: balance.vaultToken,
       tokenBalance: new BigNumber(0),
       tokenBalanceLoading: false,
+      handleSetTokenBalanceLoading: () => null,
     }
   }
 

@@ -22,6 +22,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  type DropdownRawOption,
   type GetVaultsApyResponse,
   sdkSupportedChains,
   type SDKVaultishType,
@@ -235,12 +236,19 @@ export const VaultOpenViewComponent = ({
     token: selectedToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
+    handleSetTokenBalanceLoading,
   } = useTokenBalance({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
     chainId: vaultChainId,
   })
+
+  // wrapper to show skeleton immediately when changing token
+  const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    handleTokenSelectionChange(option)
+    handleSetTokenBalanceLoading(true)
+  }
 
   const {
     amountParsed,
@@ -411,7 +419,7 @@ export const VaultOpenViewComponent = ({
       amountDisplay={amountDisplay}
       amountDisplayUSD={amountDisplayUSDWithSwap}
       handleAmountChange={handleAmountChange}
-      handleDropdownChange={handleTokenSelectionChange}
+      handleDropdownChange={handleTokenSelectionChangeWrapper}
       options={tokenOptions}
       dropdownValue={selectedTokenOption}
       onFocus={onFocus}
