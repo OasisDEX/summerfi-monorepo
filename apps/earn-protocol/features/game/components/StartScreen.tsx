@@ -18,14 +18,6 @@ interface StartScreenProps {
   onShowLeaderboard?: () => void // Optional prop to show leaderboard
 }
 
-const wrapperCardStyles: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '24px',
-}
-
 const StartScreen: React.FC<StartScreenProps> = ({
   onStart,
   onHowToPlay,
@@ -60,18 +52,12 @@ const StartScreen: React.FC<StartScreenProps> = ({
         <br />
         Can you beat the AI?
       </div>
-      <div style={wrapperCardStyles}>
-        <Card className={styles.animated} style={{ ...wrapperCardStyles, animationDelay: '0.6s' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              gap: '12px',
-            }}
-          >
+      <div className={styles.wrapperCard}>
+        <Card
+          className={clsx(styles.animated, styles.wrapperCard)}
+          style={{ animationDelay: '0.6s' }}
+        >
+          <div className={styles.wrapperCardButtons}>
             <Button
               variant="primaryLarge"
               onClick={onStart}
@@ -90,16 +76,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
               <Icon iconName="arrow_increase" size={16} />
             </Button>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              gap: '12px',
-            }}
-          >
+          <div className={styles.wrapperCardButtons}>
             <Button
               variant="secondaryLarge"
               onClick={onHowToPlay}
@@ -120,17 +97,17 @@ const StartScreen: React.FC<StartScreenProps> = ({
         </Card>
         {!userWalletAddress ? (
           <Card
-            className={styles.animated}
-            style={{ ...wrapperCardStyles, animationDelay: '0.7s' }}
+            className={clsx(styles.animated, styles.wrapperCard)}
+            style={{ animationDelay: '0.7s' }}
           >
             <Text variant="p3semi">To save your score on the leaderboard</Text>{' '}
             <WalletLabel customLoginLabel="Connect your wallet" />
           </Card>
         ) : (
           <Card
-            className={styles.animated}
+            className={clsx(styles.animated, styles.wrapperCard)}
             variant="cardSecondary"
-            style={{ ...wrapperCardStyles, animationDelay: '0.7s' }}
+            style={{ animationDelay: '0.7s' }}
           >
             <Text variant="p3semi" as="span">
               You&#39;re connected.

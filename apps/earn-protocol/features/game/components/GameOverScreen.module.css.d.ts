@@ -13,6 +13,7 @@ declare const styles: {
   readonly "starting": string;
   readonly "timedOut": string;
   readonly "title": string;
+  readonly "tryAgainButtons": string;
 };
 export = styles;
 

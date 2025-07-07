@@ -72,33 +72,10 @@
   max-width: fit-content;
 }
 
-@media (max-width: 600px) {
-  .container {
-    padding: 8px;
-  }
-
-  .title {
-    font-size: 20px;
-  }
-
-  .score {
-    font-size: 16px;
-  }
-
-  .lastCardsRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    flex-direction: unset;
-    margin: 16px 0 12px 0;
-    max-width: 98vw;
-  }
-
-  .buttonsRow {
-    flex-direction: column;
-    gap: 10px;
-    height: auto;
-  }
+.tryAgainButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 @keyframes fadeOut {
@@ -126,4 +103,41 @@
   justify-content: center;
   width: 100%;
   max-width: 500px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 8px;
+  }
+
+  .title {
+    font-size: 44px;
+  }
+
+  .score {
+    font-size: 16px;
+  }
+
+  .lastCardsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    flex-direction: unset;
+    margin: 16px 0 12px 0;
+    max-width: 98vw;
+  }
+
+  .buttonsRow {
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+  }
+
+  .tryAgainButtons {
+    flex-direction: column;
+  }
+
+  .shareScoreBox {
+    display: none;
+  }
 }

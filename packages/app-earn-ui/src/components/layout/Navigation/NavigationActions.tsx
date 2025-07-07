@@ -70,6 +70,11 @@ export const NavigationActions = ({
         {configComponent}
       </div>
       <div className={navigationActionsStyles.mobileMenuButton}>
+        {startTheGame && (
+          <div onClick={startTheGame} className={navigationActionsStyles.theGameButton}>
+            <Icon iconName="gamepad" size={22} />
+          </div>
+        )}
         <Button
           variant="secondaryMedium"
           onClick={toggleMobileMenu}

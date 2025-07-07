@@ -19,6 +19,12 @@
   height: 36px;
 }
 
+@media (max-width: 1025px) {
+  .theGameButton {
+    margin-right: 0;
+  }
+}
+
 .theGameButton:hover {
   color: var(--color-text-link);
 }

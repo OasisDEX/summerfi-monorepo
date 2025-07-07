@@ -221,7 +221,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           ))}
         </div>
       ) : null}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+      <div className={styles.tryAgainButtons}>
         <Button variant="primaryLarge" onClick={onRestart} disabled={startingGame}>
           Try again
           <Icon iconName="user" size={16} />
@@ -231,7 +231,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           <Icon iconName="checkmark" size={16} />
         </Button>
       </div>
-      <Text variant="h3colorful" style={{ margin: '60px 0 10px 0' }}>
+      <Text variant="h3colorful" style={{ margin: '60px 0 10px 0', textAlign: 'center' }}>
         Challenge others to beat your score!
       </Text>
       <UiCard className={styles.actionables} variant="cardSecondary">

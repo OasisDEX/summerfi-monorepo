@@ -60,17 +60,34 @@
   }
 }
 
+.wrapperCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.wrapperCardButtons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 8px;
   }
 
   .title {
-    font-size: 22px;
+    font-size: 34px;
   }
 
   .description {
-    font-size: 15px;
+    font-size: 24px;
     margin-bottom: 18px;
   }
 
@@ -79,5 +96,10 @@
     width: 100%;
     font-size: 16px;
     padding: 12px 0;
+  }
+
+  .wrapperCardButtons {
+    gap: 4px;
+    flex-direction: column;
   }
 }

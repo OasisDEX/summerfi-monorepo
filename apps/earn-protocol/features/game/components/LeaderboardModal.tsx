@@ -62,16 +62,16 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
               ? // Skeleton Loader
                 [...Array(5)].map((_, i) => (
                   <tr key={i}>
-                    <td>
+                    <td data-label="Rank">
                       <SkeletonLine height={15} width={20} />
                     </td>
-                    <td>
+                    <td data-label="Wallet">
                       <SkeletonLine height={15} width={120} />
                     </td>
-                    <td>
+                    <td data-label="Score">
                       <SkeletonLine height={15} width={50} />
                     </td>
-                    <td>
+                    <td data-label="Avg. Response">
                       <SkeletonLine height={15} width={80} />
                     </td>
                   </tr>
@@ -79,10 +79,14 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ onClose }) => {
               : // Actual Data
                 leaderboardData.map((entry, index) => (
                   <tr key={entry.userAddress} className={getRankClassName(index)}>
-                    <td>{index + 1}</td>
-                    <td>{entry.ens ? entry.ens : formatAddress(entry.userAddress)}</td>
-                    <td>{entry.score}</td>
-                    <td>{formatCryptoBalance(entry.avgResponseTime)}s</td>
+                    <td data-label="Rank">{index + 1}</td>
+                    <td data-label="Wallet">
+                      {entry.ens ? entry.ens : formatAddress(entry.userAddress)}
+                    </td>
+                    <td data-label="Score">{entry.score}</td>
+                    <td data-label="Avg. Response">
+                      {formatCryptoBalance(entry.avgResponseTime)}s
+                    </td>
                   </tr>
                 ))}
           </tbody>

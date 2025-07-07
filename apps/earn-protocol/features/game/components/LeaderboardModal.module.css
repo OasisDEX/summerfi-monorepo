@@ -108,3 +108,44 @@
   color: #cd7f32;
   font-weight: bold;
 }
+
+@media screen and (max-width: 600px) {
+  .leaderboardTable thead {
+    display: none;
+  }
+
+  .leaderboardTable tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .leaderboardTable td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border-bottom: 1px solid #3a3a3a;
+    white-space: normal;
+  }
+
+  .leaderboardTable td:last-child {
+    border-bottom: none;
+  }
+
+  .leaderboardTable td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: calc(50% - 30px);
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    color: #9e9e9e;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+}
