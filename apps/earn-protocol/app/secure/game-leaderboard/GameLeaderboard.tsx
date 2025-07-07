@@ -1,6 +1,7 @@
 import { Button, Icon } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
+import { formatAddress, timeAgo } from '@summerfi/app-utils'
 import { type JsonValue } from '@summerfi/summer-protocol-db'
+import dayjs from 'dayjs'
 
 import { ResponseTimesChart } from '@/app/secure/game-leaderboard/ResponseTimesChart'
 import { getRoundTime } from '@/features/game/helpers/gameHelpers'
@@ -103,10 +104,8 @@ export function GameLeaderboard({
     <table className={styles.table}>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Games played</th>
+          <th>Name/Address</th>
           <th>Score</th>
-          <th>Rounds</th>
           <th title="Summer Anti Cheat Score">SAC Score</th>
           <th>Avg. Response</th>
           <th>Response Times</th>
@@ -121,10 +120,26 @@ export function GameLeaderboard({
 
           return (
             <tr key={entry.gameId}>
-              <td>{entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}</td>
-              <td>{entry.gamesPlayed}</td>
-              <td>{entry.score}</td>
-              <td>{((entry.responseTimes ?? []) as number[] | undefined)?.length ?? 'n/a'}</td>
+              <td>
+                {entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}
+                <br />
+                <span style={{ fontSize: '0.8em', color: '#666' }}>
+                  {entry.gamesPlayed} games in total
+                </span>
+              </td>
+              <td>
+                {entry.score}
+                <br />
+                <span
+                  style={{ fontSize: '0.8em', color: '#666' }}
+                  title={timeAgo({
+                    from: new Date(),
+                    to: new Date(dayjs(Number(entry.updatedAt) * 1000).toDate()),
+                  })}
+                >
+                  {dayjs(Number(entry.updatedAt) * 1000).format('DD-MM-YYYY HH:mm:ss')}
+                </span>
+              </td>
               <td>
                 <span
                   style={{
@@ -134,6 +149,10 @@ export function GameLeaderboard({
                   title={sacScore.explanation}
                 >
                   {sacScore.score}
+                </span>
+                <br />
+                <span style={{ fontSize: '0.8em', color: '#666' }}>
+                  {((entry.responseTimes ?? []) as number[] | undefined)?.length ?? 'n/a'} rounds
                 </span>
               </td>
               <td>{averageResponseTime}</td>
