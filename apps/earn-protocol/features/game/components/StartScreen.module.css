@@ -26,9 +26,10 @@
 }
 
 .title {
-  font-size: 64px;
+  display: block;
+  font-size: 80px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin: 24px 0;
 }
 
 .inviteText {
@@ -80,6 +81,8 @@
 @media (max-width: 600px) {
   .container {
     padding: 8px;
+    height: fit-content;
+    max-height: max-content;
   }
 
   .title {

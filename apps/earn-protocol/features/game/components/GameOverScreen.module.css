@@ -1,6 +1,4 @@
 .container {
-  min-height: 100vh;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,6 +8,7 @@
 }
 
 .title {
+  display: block;
   margin-bottom: 12px;
 }
 
@@ -108,6 +107,8 @@
 @media (max-width: 600px) {
   .container {
     padding: 8px;
+    height: fit-content;
+    max-height: max-content;
   }
 
   .title {

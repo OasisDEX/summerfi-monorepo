@@ -239,6 +239,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           {userWalletAddress ? (
             <Tooltip
               showAbove
+              hideDrawerOnMobile
               tooltipId="submit-leaderboard-tooltip"
               tooltipWrapperStyles={{
                 zIndex: 1000,

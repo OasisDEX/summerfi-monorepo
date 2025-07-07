@@ -6,7 +6,7 @@
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vercel/style-guide": "^6.0.0",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "15.3.5",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "2.5.2",
     "eslint-import-resolver-typescript": "^3.6.1",

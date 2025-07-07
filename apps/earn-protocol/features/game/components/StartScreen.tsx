@@ -35,9 +35,13 @@ const StartScreen: React.FC<StartScreenProps> = ({
         [styles.starting]: startingGame,
       })}
     >
-      <h1 className={clsx(styles.title, styles.animated)} style={{ animationDelay: '0.3s' }}>
+      <Text
+        variant="h1"
+        className={clsx(styles.title, styles.animated)}
+        style={{ animationDelay: '0.3s' }}
+      >
         Yield Racer 🏎️
-      </h1>
+      </Text>
       {isGameByInvite && (
         <Text
           variant="p1semiColorful"
