@@ -35,6 +35,7 @@ interface GameOverScreenProps extends GameOverParams {
   referralCode?: string
   currentHighScore?: number
   isBanned?: boolean
+  closeGame: () => void
 }
 
 const getShareMessage = (score: number, avgResponse: number, referralCode?: string) => {
@@ -66,6 +67,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   referralCode,
   currentHighScore,
   isBanned = false,
+  closeGame,
 }) => {
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
@@ -322,6 +324,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
           </UiCard>
         </div>
       </UiCard>
+      <Button variant="textPrimaryLarge" onClick={closeGame} style={{ marginTop: '20px' }}>
+        <span>Close</span>
+        <Icon iconName="close" size={16} />
+      </Button>
     </div>
   )
 }

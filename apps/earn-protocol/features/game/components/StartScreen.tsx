@@ -127,7 +127,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
           className={styles.animated}
           style={{ animationDelay: '0.8s' }}
         >
-          <span>Exit</span>
+          <span>Close</span>
           <Icon iconName="close" size={16} />
         </Button>
       </div>

@@ -101,6 +101,7 @@ export default function MainGameView() {
           isBanned={home.isBanned}
           currentHighScore={home.currentHighScore}
           referralCode={home.referralCode}
+          closeGame={closeGame} // Close game function
           onRestart={() => home.handleStartGame(home.lastWasAI)} // Use startGame for restart
           onAI={() => home.handleStartGame(true)} // Use startGame for starting AI game
           onReturnToMenu={() => home.setScreenName('start')}
