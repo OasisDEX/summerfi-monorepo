@@ -124,7 +124,7 @@ export async function POST(
 
     const clientMainnet: PublicClient = createPublicClient({
       chain: mainnet,
-      transport,
+      transport: http(),
     })
     const client: PublicClient = createPublicClient({
       chain: viemChain,
