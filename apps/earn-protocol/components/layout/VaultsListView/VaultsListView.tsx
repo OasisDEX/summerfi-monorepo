@@ -29,9 +29,11 @@ import {
   type SDKNetwork,
   type SDKVaultishType,
   type SDKVaultsListType,
+  type TokenSymbolsList,
   TransactionAction,
 } from '@summerfi/app-types'
 import {
+  convertWethToEth,
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
@@ -279,16 +281,23 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     onlyActive: true,
   })
 
-  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions } = useTokenSelector({
-    vault: resolvedVaultData,
-    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
-  })
+  const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, setSelectedTokenOption } =
+    useTokenSelector({
+      vault: resolvedVaultData,
+      chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+    })
 
   const tokenBalances = useTokenBalances({
     tokenSymbol: selectedTokenOption.value,
     network: resolvedVaultData.protocol.network,
     vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
   })
+
+  // wrapper to show skeleton immediately when changing token
+  const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    tokenBalances.handleSetTokenBalanceLoading(true)
+    handleTokenSelectionChange(option)
+  }
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
@@ -519,7 +528,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                   selectedVaultId === getUniqueVaultId(vault) ||
                   (!selectedVaultId && vaultIndex === 0)
                 }
-                onClick={handleChangeVault}
+                onClick={(id) => {
+                  handleChangeVault(id)
+                  // we want to use ETH as native deposit token for WETH vaults
+                  const resolvedTokenSymbol = convertWethToEth(
+                    vault.inputToken.symbol,
+                  ) as TokenSymbolsList
+
+                  setSelectedTokenOption({
+                    value: resolvedTokenSymbol,
+                    label: resolvedTokenSymbol,
+                    tokenSymbol: resolvedTokenSymbol,
+                  })
+                  tokenBalances.handleSetTokenBalanceLoading(true)
+                }}
                 withTokenBonus={sumrNetApyConfig.withSumr}
                 sumrPrice={estimatedSumrPrice}
                 vaultApyData={
@@ -560,7 +582,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     selectedVaultId === getUniqueVaultId(vault) ||
                     (!selectedVaultId && vaultIndex === 0)
                   }
-                  onClick={handleChangeVault}
+                  onClick={(id) => {
+                    handleChangeVault(id)
+                    // we want to use ETH as native deposit token for WETH vaults
+                    const resolvedTokenSymbol = convertWethToEth(
+                      vault.inputToken.symbol,
+                    ) as TokenSymbolsList
+
+                    setSelectedTokenOption({
+                      value: resolvedTokenSymbol,
+                      label: resolvedTokenSymbol,
+                      tokenSymbol: resolvedTokenSymbol,
+                    })
+                    tokenBalances.handleSetTokenBalanceLoading(true)
+                  }}
                   withTokenBonus={sumrNetApyConfig.withSumr}
                   sumrPrice={estimatedSumrPrice}
                   vaultApyData={
@@ -581,7 +616,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
           tokenBalance={tokenBalances.tokenBalance}
           isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
           selectedTokenOption={selectedTokenOption}
-          handleTokenSelectionChange={handleTokenSelectionChange}
+          handleTokenSelectionChange={handleTokenSelectionChangeWrapper}
           tokenOptions={tokenOptions}
           handleAmountChange={handleAmountChange}
           inputProps={{

@@ -83,17 +83,6 @@ export const useTokenSelector = ({
     })
   }, [tokenOptions])
 
-  // when changing vaults on the vaults list update the token
-  useEffect(() => {
-    const nextVaultToken = tokenOptions.find(
-      (option) => option.value === getDisplayToken(vault.inputToken.symbol),
-    )
-
-    if (nextVaultToken) {
-      setSelectedTokenOption(nextVaultToken)
-    }
-  }, [tokenOptions, vault.inputToken.symbol])
-
   const handleTokenSelectionChange = (option: DropdownRawOption): void => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]
 
