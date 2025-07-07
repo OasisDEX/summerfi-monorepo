@@ -79,20 +79,34 @@ export default async function GameLeaderboardPage() {
     // ban or unban user by address
     const isBanning = formData.get('isBanning') === 'true'
     const userAddress = formData.get('userAddress')
-    const summerProtocolDb = await getSummerProtocolDB({
-      connectionString,
-    })
 
     if (typeof userAddress !== 'string') {
       throw new Error('Invalid user address')
     }
-    await summerProtocolDb.db
-      .updateTable('yieldRaceLeaderboard')
-      .set({ isBanned: isBanning })
-      .where('userAddress', '=', userAddress)
-      .execute()
-    revalidateTag(SECURE_PAGE_CACHE_TAG)
-    await summerProtocolDb.db.destroy()
+    let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+
+    try {
+      summerProtocolDb = await getSummerProtocolDB({
+        connectionString,
+      })
+      await summerProtocolDb.db
+        .updateTable('yieldRaceLeaderboard')
+        .set({ isBanned: isBanning })
+        .where('userAddress', '=', userAddress)
+        .execute()
+      revalidateTag(SECURE_PAGE_CACHE_TAG)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      throw new Error('Error connecting to the database')
+    } finally {
+      // Always clean up the database connection
+      if (summerProtocolDb) {
+        await summerProtocolDb.db.destroy().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error closing database connection (game panel):', err)
+        })
+      }
+    }
   }
 
   async function deleteScore(formData: FormData) {
@@ -106,19 +120,33 @@ export default async function GameLeaderboardPage() {
       throw new Error('You are not authenticated to perform this action')
     }
     const userAddress = formData.get('userAddress')
-    const summerProtocolDb = await getSummerProtocolDB({
-      connectionString,
-    })
 
     if (typeof userAddress !== 'string') {
       throw new Error('Invalid user address')
     }
-    await summerProtocolDb.db
-      .deleteFrom('yieldRaceLeaderboard')
-      .where('userAddress', '=', userAddress)
-      .execute()
-    revalidateTag(SECURE_PAGE_CACHE_TAG)
-    await summerProtocolDb.db.destroy()
+    let summerProtocolDb: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
+
+    try {
+      summerProtocolDb = await getSummerProtocolDB({
+        connectionString,
+      })
+      await summerProtocolDb.db
+        .deleteFrom('yieldRaceLeaderboard')
+        .where('userAddress', '=', userAddress)
+        .execute()
+      revalidateTag(SECURE_PAGE_CACHE_TAG)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      throw new Error('Error connecting to the database')
+    } finally {
+      // Always clean up the database connection
+      if (summerProtocolDb) {
+        await summerProtocolDb.db.destroy().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error closing database connection (game panel):', err)
+        })
+      }
+    }
   }
 
   if (!isAuthenticated) {
