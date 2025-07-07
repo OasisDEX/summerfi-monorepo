@@ -91,8 +91,6 @@ export async function POST(
       return NextResponse.json({ errorCode: '005' }, { status: 400 })
     }
 
-    console.log('castedResponseTimes', castedResponseTimes)
-
     const backendScore = calculateFinalScore(castedResponseTimes)
 
     if (!scoreMakesSenseCheck({ score, backendScore })) {

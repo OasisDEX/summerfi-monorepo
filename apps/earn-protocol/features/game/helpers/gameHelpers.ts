@@ -182,7 +182,6 @@ export const scoreMakesSenseCheck = ({
   score: number | string
   backendScore: number
 }) => {
-  console.log(`Score check: score=${score}, backendScore=${backendScore}`)
   if (Number(score) < 0) {
     // If the score is negative, it doesn't make sense
     return false
