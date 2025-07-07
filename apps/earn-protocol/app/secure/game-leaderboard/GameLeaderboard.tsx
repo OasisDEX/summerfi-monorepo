@@ -1,4 +1,4 @@
-import { Button, Icon } from '@summerfi/app-earn-ui'
+import { Button, Icon, Tooltip } from '@summerfi/app-earn-ui'
 import { formatAddress, timeAgo } from '@summerfi/app-utils'
 import { type JsonValue } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
@@ -13,21 +13,36 @@ const getResponseTimesScore = (
 ): {
   score: number
   explanation: string
+  mean?: number
+  stdDev?: number
 } => {
-  if (!Array.isArray(responseTimes) || responseTimes.length < 3)
-    return { score: 0, explanation: '' }
+  if (!Array.isArray(responseTimes) || responseTimes.length === 0) {
+    return { score: 0, explanation: 'No response times' }
+  }
+
+  if (responseTimes.length < 3) {
+    return {
+      score: 100,
+      explanation: 'Not enough rounds to assess (less than 3)',
+    }
+  }
 
   // Convert to numbers and filter out invalid values
   const times = responseTimes
     .map(Number)
     .filter((t, i) => !isNaN(t) && t > 0 && t < 5 && t < getRoundTime(i))
 
-  if (times.length < 3) return { score: 0, explanation: '' }
+  if (times.length < 3) {
+    return {
+      score: 100,
+      explanation: 'Not enough valid rounds to assess',
+    }
+  }
 
   // Calculate mean and standard deviation
   const mean = times.reduce((a, b) => a + b, 0) / times.length
   const stdDev = Math.sqrt(
-    times.reduce((sum, t) => Number(sum + Number(t - mean)) ** 2, 0) / times.length,
+    times.reduce((sum, t) => sum + Number((t - mean) ** 2), 0) / times.length,
   )
 
   // Human reaction times: mean ~0.25-0.7s, stdDev usually >0.05s
@@ -37,18 +52,18 @@ const getResponseTimesScore = (
 
   if (mean < 0.2 || mean > 1.5) {
     score -= 40
-    explanation += 'Mean is too low/high. '
-  } else if (mean < 0.3 || mean > 1.0) {
+    explanation += `Mean (${mean.toFixed(4)}) is too low/high. `
+  } else if (mean < 0.3 || mean > 1.1) {
     score -= 20
-    explanation += 'Mean is slightly off. '
+    explanation += `Mean (${mean.toFixed(4)}) is slightly off. `
   }
 
   if (stdDev < 0.03) {
     score -= 40
-    explanation += 'Standard deviation is too low. '
+    explanation += `Standard deviation (${stdDev.toFixed(4)}) is too low. `
   } else if (stdDev < 0.07) {
     score -= 20
-    explanation += 'Standard deviation is slightly off. '
+    explanation += `Standard deviation (${stdDev.toFixed(4)}) is slightly off. `
   }
 
   // Penalize if too many identical or near-identical times (bots)
@@ -62,6 +77,8 @@ const getResponseTimesScore = (
   return {
     score: Math.max(0, Math.min(100, Math.round(score))),
     explanation: explanation.trim() || 'No issues detected',
+    mean: Number(mean.toFixed(4)),
+    stdDev: Number(stdDev.toFixed(4)),
   }
 }
 
@@ -140,16 +157,39 @@ export function GameLeaderboard({
                   {dayjs(Number(entry.updatedAt) * 1000).format('DD-MM-YYYY HH:mm:ss')}
                 </span>
               </td>
-              <td>
-                <span
+              <td
+                style={{
+                  textAlign: 'center',
+                }}
+              >
+                <Tooltip
+                  tooltip={
+                    <div>
+                      <strong>Summer Anti Cheat Score:</strong>
+                      <p>{sacScore.explanation}</p>
+                      {sacScore.mean && (
+                        <p>
+                          Mean: {sacScore.mean} ms, StdDev: {sacScore.stdDev} ms
+                        </p>
+                      )}
+                    </div>
+                  }
                   style={{
-                    color: sacScore.score < 50 ? 'red' : 'inherit',
-                    fontWeight: sacScore.score < 50 ? 'bold' : 'normal',
+                    display: 'inline-block',
                   }}
-                  title={sacScore.explanation}
+                  tooltipWrapperStyles={{
+                    width: '300px',
+                  }}
                 >
-                  {sacScore.score}
-                </span>
+                  <span
+                    style={{
+                      color: sacScore.score < 50 ? 'red' : 'inherit',
+                      fontWeight: sacScore.score < 50 ? 'bold' : 'normal',
+                    }}
+                  >
+                    {sacScore.score}
+                  </span>
+                </Tooltip>
                 <br />
                 <span style={{ fontSize: '0.8em', color: '#666' }}>
                   {((entry.responseTimes ?? []) as number[] | undefined)?.length ?? 'n/a'} rounds
