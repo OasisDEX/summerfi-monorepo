@@ -251,8 +251,15 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 }
 
-export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
-  const [{ walletAddress: walletAddressRaw }, headersList] = await Promise.all([params, headers()])
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PortfolioPageProps & {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited] = await Promise.all(
+    [params, headers(), searchParams],
+  )
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
@@ -297,13 +304,21 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
     )
   }, zero)
 
+  let ogImageUrl = ''
+
+  if (typeof searchParamsAwaited.game !== 'undefined') {
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
+  }
+
   return {
     title: `Lazy Summer Protocol - ${formatAddress(walletAddress, { first: 6 })} - $${formatFiatBalance(totalSummerPortfolioUSD)} in Lazy Summer`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`,
+      images: ogImageUrl,
     },
   }
 }

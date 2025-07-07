@@ -56,10 +56,12 @@ export async function generateMetadata({
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
 
-  let ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`
+  let ogImageUrl = ''
 
   if (typeof params.game !== 'undefined') {
-    ogImageUrl += `${baseUrl}earn/api/og/game`
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`
   }
 
   return {
