@@ -331,7 +331,7 @@ export const useTransaction = ({
           data,
           value,
         },
-        overrides,
+        overrides: { ...overrides, callGasLimit: 2.0 },
       })
     },
     [sendUserOperation],
