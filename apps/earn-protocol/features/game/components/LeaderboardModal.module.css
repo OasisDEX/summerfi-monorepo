@@ -15,7 +15,7 @@
 .modal {
   background: var(--color-surface);
   border-radius: 12px;
-  max-width: 680px;
+  max-width: 780px;
   padding: 32px 40px;
   width: 90vw;
   text-align: center;
@@ -86,7 +86,6 @@
 .leaderboardTable tbody {
   display: block;
   max-height: 80vh;
-  overflow-y: auto;
 }
 
 .leaderboardTable thead,
@@ -94,14 +93,6 @@
   display: table;
   width: 100%;
   table-layout: fixed;
-}
-
-.leaderboardTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.leaderboardTable td:first-child {
-  font-weight: 600;
 }
 
 .gold td {
@@ -122,7 +113,47 @@
   font-weight: bold;
 }
 
+@media screen and (min-width: 601px) {
+
+  .leaderboardTable tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .leaderboardTable td:first-child {
+    font-weight: 600;
+  }
+
+  .leaderboardTable th:nth-child(1),
+  .leaderboardTable td:nth-child(1) {
+    width: 70px;
+    text-align: center;
+  }
+
+  .leaderboardTable th:nth-child(3),
+  .leaderboardTable td:nth-child(3) {
+    width: 100px;
+    text-align: center;
+  }
+
+  .leaderboardTable th:nth-child(5),
+  .leaderboardTable td:nth-child(5) {
+    width: 140px;
+    text-align: right;
+  }
+}
+
 @media screen and (max-width: 600px) {
+
+  .tableContainer {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .modal {
+    max-height: 90vh;
+    padding: 16px 20px;
+  }
+
   .leaderboardTable thead {
     display: none;
   }

@@ -7,6 +7,7 @@ declare const styles: {
   readonly "modalPopIn": string;
   readonly "overlay": string;
   readonly "silver": string;
+  readonly "tableContainer": string;
   readonly "title": string;
 };
 export = styles;
