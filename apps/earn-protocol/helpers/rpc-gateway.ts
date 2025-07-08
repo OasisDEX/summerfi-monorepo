@@ -111,6 +111,9 @@ export async function getRpcGatewayUrl(networkName: NetworkNames) {
 
     return resolveRpcGatewayUrl(networkName, rpcConfig, rpcBase)
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching RPC gateway URL', e)
+
     return undefined
   }
 }
