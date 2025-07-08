@@ -147,14 +147,14 @@ export function GameLeaderboard({
               <td>
                 {entry.score}
                 <br />
-                <span
-                  style={{ fontSize: '0.8em', color: '#666' }}
-                  title={timeAgo({
+                <span style={{ fontSize: '0.8em', color: '#666' }}>
+                  {dayjs(Number(entry.updatedAt) * 1000).format('DD-MM-YYYY HH:mm:ss')}
+                  <br />(
+                  {timeAgo({
                     from: new Date(),
                     to: new Date(dayjs(Number(entry.updatedAt) * 1000).toDate()),
                   })}
-                >
-                  {dayjs(Number(entry.updatedAt) * 1000).format('DD-MM-YYYY HH:mm:ss')}
+                  )
                 </span>
               </td>
               <td
