@@ -44,10 +44,9 @@ export const useTokenBalance = ({
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
   const [tokenBalance, setTokenBalance] = useState<BigNumber>()
-  const [tokenBalanceLoading, setTokenBalanceLoading] = useState(true)
   const { userWalletAddress } = useUserWallet()
-
   const walletAddress = overwriteWalletAddress ?? userWalletAddress
+  const [tokenBalanceLoading, setTokenBalanceLoading] = useState(!!walletAddress)
 
   const sdk = useAppSDK()
   const getTokenRequest = useCallback(
@@ -156,9 +155,14 @@ export const useTokenBalance = ({
     fetchTokenBalance,
   ])
 
-  const handleSetTokenBalanceLoading = useCallback((loading: boolean) => {
-    setTokenBalanceLoading(loading)
-  }, [])
+  const handleSetTokenBalanceLoading = useCallback(
+    (loading: boolean) => {
+      if (walletAddress) {
+        setTokenBalanceLoading(loading)
+      }
+    },
+    [walletAddress],
+  )
 
   return {
     vaultToken,

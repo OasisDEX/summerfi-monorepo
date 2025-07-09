@@ -246,8 +246,8 @@ export const VaultOpenViewComponent = ({
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
-    handleTokenSelectionChange(option)
     handleSetTokenBalanceLoading(true)
+    handleTokenSelectionChange(option)
   }
 
   const {
