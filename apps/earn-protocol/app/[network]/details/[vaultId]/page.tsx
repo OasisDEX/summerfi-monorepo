@@ -1,4 +1,4 @@
-import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
+import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import {
   getVaultNiceName,
@@ -6,6 +6,8 @@ import {
   parseServerResponseToClient,
   subgraphNetworkToId,
 } from '@summerfi/app-utils'
+import capitalize from 'lodash-es/capitalize'
+import { type Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -20,6 +22,7 @@ import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-a
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -127,6 +130,35 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       />
     </VaultGridDetails>
   )
+}
+
+export async function generateMetadata({ params }: EarnVaultDetailsPageProps): Promise<Metadata> {
+  const [{ network: paramsNetwork, vaultId }, config] = await Promise.all([
+    params,
+    systemConfigHandler(),
+  ])
+  const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
+  const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
+  const { config: systemConfig } = parseServerResponseToClient(config)
+
+  const parsedVaultId = isAddress(vaultId)
+    ? vaultId.toLowerCase()
+    : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  const [vault] = await Promise.all([
+    getVaultDetails({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
+  ])
+
+  const tokenSymbol = vault ? getDisplayToken(vault.inputToken.symbol) : ''
+
+  return {
+    title: `Automated ${tokenSymbol} Strategy Details on ${capitalize(paramsNetwork)}`,
+    description: `Maximize your DeFi yield with Summer.fi's ${tokenSymbol} automated earning strategy`,
+    keywords: getSeoKeywords(tokenSymbol),
+  }
 }
 
 export default EarnVaultDetailsPage
