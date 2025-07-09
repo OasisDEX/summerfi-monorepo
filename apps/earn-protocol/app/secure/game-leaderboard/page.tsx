@@ -31,12 +31,27 @@ const getGameLeaderboard = async () => {
       .orderBy('score', 'desc')
       .execute()
 
+    const allGamesPlayed = await summerProtocolDb.db
+      .selectFrom('yieldRaceGames')
+      .selectAll()
+      .orderBy('timestampStart', 'desc')
+      .execute()
+
     if (!Array.isArray(leaderboard) || leaderboard.length === 0) {
-      return []
+      return {
+        gameLeaderboard: [],
+        allGamesPlayed: allGamesPlayed.map((game) => ({
+          ...game,
+          ens: '',
+          isBanned: false,
+          signedMessage: '',
+          gamesPlayed: 0,
+        })),
+      }
     }
 
     // select games from the leaderboard wallets
-    const gamesPlayed = await summerProtocolDb.db
+    const leaderboardGamesPlayed = await summerProtocolDb.db
       .selectFrom('yieldRaceGames')
       .selectAll()
       .where(
@@ -48,11 +63,20 @@ const getGameLeaderboard = async () => {
       .execute()
 
     if (!Array.isArray(leaderboard) || leaderboard.length === 0) {
-      return []
+      return {
+        gameLeaderboard: [],
+        allGamesPlayed: allGamesPlayed.map((game) => ({
+          ...game,
+          ens: '',
+          isBanned: false,
+          signedMessage: '',
+          gamesPlayed: 0,
+        })),
+      }
     }
 
     const gamesLeaderboard = leaderboard.map((entry) => {
-      const gameEntry = gamesPlayed.find((g) => g.userAddress === entry.userAddress)
+      const gameEntry = leaderboardGamesPlayed.find((g) => g.userAddress === entry.userAddress)
 
       return {
         ...entry,
@@ -60,7 +84,16 @@ const getGameLeaderboard = async () => {
       }
     })
 
-    return gamesLeaderboard
+    return {
+      gameLeaderboard: gamesLeaderboard,
+      allGamesPlayed: allGamesPlayed.map((game) => ({
+        ...game,
+        ens: '',
+        isBanned: false,
+        signedMessage: '',
+        gamesPlayed: 0,
+      })),
+    }
   } finally {
     await summerProtocolDb?.db.destroy()
   }
@@ -244,7 +277,7 @@ export default async function GameLeaderboardPage() {
     )
   }
 
-  const gameLeaderboard = await getGameLeaderboardCached()
+  const { gameLeaderboard, allGamesPlayed } = await getGameLeaderboardCached()
 
   const refreshView = async () => {
     'use server'
@@ -267,6 +300,7 @@ export default async function GameLeaderboardPage() {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
+        gap: '40px',
       }}
     >
       <Text
@@ -284,11 +318,28 @@ export default async function GameLeaderboardPage() {
           <Icon iconName="refresh" size={24} />
         </div>
       </Text>
-      <GameLeaderboard
-        gameLeaderboard={gameLeaderboard}
-        banUnbanUser={banUnbanUser}
-        deleteScore={deleteScore}
-      />
+
+      <div style={{ width: '100%' }}>
+        <Text variant="h2" style={{ marginBottom: '20px' }}>
+          Leaderboard
+        </Text>
+        <GameLeaderboard
+          gameLeaderboard={gameLeaderboard}
+          banUnbanUser={banUnbanUser}
+          deleteScore={deleteScore}
+        />
+      </div>
+
+      <div style={{ width: '100%' }}>
+        <Text variant="h2" style={{ marginBottom: '20px' }}>
+          All Games Played
+        </Text>
+        <GameLeaderboard
+          gameLeaderboard={allGamesPlayed}
+          banUnbanUser={banUnbanUser}
+          deleteScore={deleteScore}
+        />
+      </div>
     </div>
   )
 }
