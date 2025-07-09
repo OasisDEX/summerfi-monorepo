@@ -332,7 +332,7 @@ export const VaultOpenViewComponent = ({
     rawToTokenAmount,
   })
 
-  const { forecast, isLoadingForecast, oneYearEarningsForecast } = useForecast({
+  const { forecast, isLoadingForecast, oneYearEarningsForecast, forecastSummaryMap } = useForecast({
     fleetAddress: vault.id,
     chainId: vaultChainId,
     amount: resolvedAmountParsed.toString(),
@@ -464,6 +464,7 @@ export const VaultOpenViewComponent = ({
             amountDisplay={amountDisplay}
             estimatedEarnings={estimatedEarnings}
             isLoadingForecast={isLoadingForecast}
+            forecastSummaryMap={forecastSummaryMap}
             isOpen
           />
         ) : null}
