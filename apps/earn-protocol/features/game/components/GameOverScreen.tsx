@@ -45,7 +45,7 @@ Can you beat my score?
 
 https://summer.fi/earn?game${referralCode ? `&referralCode=${referralCode}` : ''}
 
-#SummerFi #YieldRacer
+#SummerYieldRacer
 `
 }
 
