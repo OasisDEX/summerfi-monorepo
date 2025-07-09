@@ -12,6 +12,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
@@ -72,6 +73,7 @@ export async function generateMetadata({
       siteName: 'Lazy Summer Protocol',
       images: ogImageUrl,
     },
+    keywords: getSeoKeywords(),
   }
 }
 

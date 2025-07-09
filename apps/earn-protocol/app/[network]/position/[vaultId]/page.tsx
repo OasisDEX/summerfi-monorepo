@@ -29,6 +29,7 @@ import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-a
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -224,6 +225,7 @@ export async function generateMetadata({
       siteName: 'Lazy Summer Protocol',
       images: ogImageUrl,
     },
+    keywords: getSeoKeywords(),
   }
 }
 
