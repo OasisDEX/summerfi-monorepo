@@ -91,7 +91,6 @@ const getGameLeaderboard = async () => {
         ens: '',
         isBanned: false,
         signedMessage: '',
-        gamesPlayed: 0,
       })),
     }
   } finally {
