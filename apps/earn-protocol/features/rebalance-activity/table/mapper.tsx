@@ -1,4 +1,5 @@
 import {
+  getDisplayToken,
   getScannerUrl,
   getVaultPositionUrl,
   Icon,
@@ -58,6 +59,17 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[], walletAd
     const actionToLabel = getProtocolLabel(actionToRawName, true)
 
     const purpose = rebalanceActivityPurposeMapper(item)
+
+    const [risk, vaultToken] = item.vaultName
+      .replace('LazyVault', '')
+      .split('_')
+      .filter((it) => it)
+
+    const resovledRisk = {
+      lowerrisk: 'Lower Risk',
+      mediumrisk: 'Medium Risk',
+      higherrisk: 'Higher Risk',
+    }[risk.toLowerCase()]
 
     return {
       content: {
@@ -124,7 +136,11 @@ export const rebalancingActivityMapper = (rawData: RebalanceActivity[], walletAd
             </TableCellNodes>
           </TableCellNodes>
         ),
-        strategy: <TableCellText>{item.vaultName}</TableCellText>,
+        strategy: (
+          <TableCellText>
+            {resovledRisk} {getDisplayToken(vaultToken).toUpperCase()}
+          </TableCellText>
+        ),
         ...(walletAddress
           ? {
               position: (
