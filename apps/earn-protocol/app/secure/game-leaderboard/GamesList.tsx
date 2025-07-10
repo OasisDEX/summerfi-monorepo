@@ -141,7 +141,7 @@ export function GamesList({
           return (
             <tr key={entry.gameId}>
               <td>
-                <Link href={`/earn/portfolio/${entry.userAddress}`} target="_blank">
+                <Link href={`/portfolio/${entry.userAddress}`} target="_blank">
                   {entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}
                 </Link>
                 <br />
