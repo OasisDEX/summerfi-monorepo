@@ -141,9 +141,8 @@ export function GamesList({
           return (
             <tr key={entry.gameId}>
               <td>
-                {entry.ens !== '' ? entry.ens : null}
                 <Link href={`/earn/portfolio/${entry.userAddress}`} target="_blank">
-                  {formatAddress(entry.userAddress)}
+                  {entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}
                 </Link>
                 <br />
                 <span style={{ fontSize: '0.8em', color: '#666' }}>
