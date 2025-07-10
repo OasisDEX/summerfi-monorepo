@@ -39,15 +39,15 @@ jobs:
 
       - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v2.2.0
-        env:
-          # Turbo Repo Cache Configuration
-          PROVIDER: s3
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-          AWS_REGION: eu-central-1
-          AWS_ENDPOINT_URL_S3: https://s3.amazonaws.com
-          S3_BUCKET: staging-turbo-monorepo
-          S3_PREFIX: turbogha/
+        with:
+          cache-prefix: turbogha_
+          provider: s3
+          s3-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          s3-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          s3-bucket: staging-turbo-monorepo
+          s3-region: eu-central-1
+          s3-endpoint: https://s3.amazonaws.com
+          s3-prefix: turbogha/
 
       - uses: pnpm/action-setup@v2.0.1
         with:
