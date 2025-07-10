@@ -12,6 +12,8 @@ jobs:
     name: Build and Unit Test
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     environment: >-
       ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/dev' && 'staging'
       || 'staging' }}
