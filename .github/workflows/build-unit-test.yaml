@@ -12,7 +12,9 @@ jobs:
     name: Build and Unit Test
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/dev' && 'staging' || 'staging' }}
+    environment: >-
+      ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/dev' && 'staging'
+      || 'staging' }}
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
@@ -26,7 +28,8 @@ jobs:
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
+        ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
     steps:
       - name: Check out code
@@ -35,7 +38,16 @@ jobs:
           fetch-depth: 2
 
       - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.8
+        uses: rharkor/caching-for-turbo@v2.2.0
+        with:
+          cache-prefix: turbogha_
+          provider: s3
+          s3-access-key-id: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+          s3-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+          s3-bucket: staging-turbo-monorepo
+          s3-region: eu-central-1
+          s3-endpoint: https://s3.amazonaws.com
+          s3-prefix: turbogha/
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -124,7 +136,8 @@ jobs:
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           E2E_SDK_FORK_URL_MAINNET: ${{ secrets.MAINNET_RPC_URL }}
-          BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+          BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
+            ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
       - name: Lint
         run: pnpm lint
