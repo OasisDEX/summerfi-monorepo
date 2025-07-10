@@ -9,7 +9,7 @@ import {
   SECURE_PAGE_COOKIE_NAME,
   SECURE_PAGE_COOKIE_PATH,
 } from '@/app/secure/constants'
-import { GameLeaderboard } from '@/app/secure/game-leaderboard/GameLeaderboard'
+import { GamesList } from '@/app/secure/game-leaderboard/GamesList'
 
 const getGameLeaderboard = async () => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
@@ -197,6 +197,7 @@ export default async function GameLeaderboardPage() {
       throw new Error('You are not authenticated to perform this action')
     }
     const userAddress = formData.get('userAddress')
+    const isLeaderboard = formData.get('isLeaderboard') === 'true'
 
     if (typeof userAddress !== 'string') {
       throw new Error('Invalid user address')
@@ -207,10 +208,19 @@ export default async function GameLeaderboardPage() {
       summerProtocolDb = await getSummerProtocolDB({
         connectionString,
       })
-      await summerProtocolDb.db
-        .deleteFrom('yieldRaceLeaderboard')
-        .where('userAddress', '=', userAddress)
-        .execute()
+      if (isLeaderboard) {
+        // delete score from leaderboard
+        await summerProtocolDb.db
+          .deleteFrom('yieldRaceLeaderboard')
+          .where('userAddress', '=', userAddress)
+          .execute()
+      } else {
+        // delete game from all games played
+        await summerProtocolDb.db
+          .deleteFrom('yieldRaceGames')
+          .where('userAddress', '=', userAddress)
+          .execute()
+      }
       revalidateTag(SECURE_PAGE_CACHE_TAG)
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -322,8 +332,9 @@ export default async function GameLeaderboardPage() {
         <Text variant="h2" style={{ marginBottom: '20px' }}>
           Leaderboard
         </Text>
-        <GameLeaderboard
-          gameLeaderboard={gameLeaderboard}
+        <GamesList
+          isLeaderboard
+          gamesList={gameLeaderboard}
           banUnbanUser={banUnbanUser}
           deleteScore={deleteScore}
         />
@@ -333,12 +344,15 @@ export default async function GameLeaderboardPage() {
         <Text variant="h2" style={{ marginBottom: '20px' }}>
           All Games Played
         </Text>
-        <GameLeaderboard
-          gameLeaderboard={allGamesPlayed}
+        <GamesList
+          gamesList={allGamesPlayed}
           banUnbanUser={banUnbanUser}
           deleteScore={deleteScore}
         />
       </div>
+      <Text variant="p3semi">
+        Sum of all games played: {allGamesPlayed.reduce((acc, game) => acc + game.gamesPlayed, 0)}
+      </Text>
     </div>
   )
 }

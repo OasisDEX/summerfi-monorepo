@@ -198,6 +198,8 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
     errorSigning,
   ])
 
+  const isSubmitToLeaderboard = getLeaderboardLabel() === 'Submit to Leaderboard'
+
   return (
     <div
       className={clsx(styles.container, {
@@ -285,6 +287,9 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
                   isBanned ||
                   (!!currentHighScore && currentHighScore >= score)
                 }
+                className={clsx({
+                  [styles.submitButtonAnimation]: isSubmitToLeaderboard,
+                })}
                 onClick={submitToLeaderboard}
               >
                 {getLeaderboardLabel()}

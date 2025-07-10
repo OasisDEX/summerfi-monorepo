@@ -2,11 +2,12 @@ import { Button, Icon, Tooltip } from '@summerfi/app-earn-ui'
 import { formatAddress, timeAgo } from '@summerfi/app-utils'
 import { type JsonValue } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 
 import { ResponseTimesChart } from '@/app/secure/game-leaderboard/ResponseTimesChart'
 import { getRoundTime } from '@/features/game/helpers/gameHelpers'
 
-import styles from './GameLeaderboard.module.css'
+import styles from './GamesList.module.css'
 
 const getResponseTimesScore = (
   responseTimes: JsonValue,
@@ -98,12 +99,13 @@ const getAverageResponseTime = (responseTimes: JsonValue): string => {
   return `${Math.round(mean)} ms`
 }
 
-export function GameLeaderboard({
-  gameLeaderboard,
+export function GamesList({
+  gamesList,
+  isLeaderboard = false,
   banUnbanUser,
   deleteScore,
 }: {
-  gameLeaderboard: {
+  gamesList: {
     ens: string
     gameId: string
     isBanned: boolean
@@ -114,6 +116,7 @@ export function GameLeaderboard({
     userAddress: string
     gamesPlayed: number
   }[]
+  isLeaderboard?: boolean
   banUnbanUser: (formData: FormData) => Promise<void>
   deleteScore: (formData: FormData) => Promise<void>
 }) {
@@ -131,14 +134,17 @@ export function GameLeaderboard({
         </tr>
       </thead>
       <tbody>
-        {gameLeaderboard.map((entry) => {
+        {gamesList.map((entry) => {
           const sacScore = getResponseTimesScore(entry.responseTimes)
           const averageResponseTime = getAverageResponseTime(entry.responseTimes)
 
           return (
             <tr key={entry.gameId}>
               <td>
-                {entry.ens !== '' ? entry.ens : formatAddress(entry.userAddress)}
+                {entry.ens !== '' ? entry.ens : null}
+                <Link href={`/earn/portfolio/${entry.userAddress}`} target="_blank">
+                  {formatAddress(entry.userAddress)}
+                </Link>
                 <br />
                 <span style={{ fontSize: '0.8em', color: '#666' }}>
                   {entry.gamesPlayed} games in total
@@ -202,21 +208,28 @@ export function GameLeaderboard({
               <td>{entry.isBanned ? <Icon iconName="checkmark" size={14} /> : '-'}</td>
               <td>
                 <div className={styles.actions}>
-                  <form action={banUnbanUser}>
+                  {isLeaderboard && (
+                    <form action={banUnbanUser}>
+                      <input type="hidden" name="userAddress" value={entry.userAddress} />
+                      <input
+                        type="hidden"
+                        name="isBanning"
+                        value={!entry.isBanned ? 'true' : 'false'}
+                      />
+                      <Button type="submit" variant="primarySmall">
+                        {entry.isBanned ? 'Unban' : 'Ban'}
+                      </Button>
+                    </form>
+                  )}
+                  <form action={deleteScore}>
                     <input type="hidden" name="userAddress" value={entry.userAddress} />
                     <input
                       type="hidden"
-                      name="isBanning"
-                      value={!entry.isBanned ? 'true' : 'false'}
+                      name="isLeaderboard"
+                      value={isLeaderboard ? 'true' : 'false'}
                     />
-                    <Button type="submit" variant="primarySmall">
-                      {entry.isBanned ? 'Unban' : 'Ban'}
-                    </Button>
-                  </form>
-                  <form action={deleteScore}>
-                    <input type="hidden" name="userAddress" value={entry.userAddress} />
                     <Button type="submit" variant="secondarySmall">
-                      Delete Score
+                      {isLeaderboard ? 'Delete Score' : 'Delete Game'}
                     </Button>
                   </form>
                 </div>

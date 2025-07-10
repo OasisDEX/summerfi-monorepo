@@ -142,3 +142,29 @@
     display: none;
   }
 }
+
+@keyframes bounce {
+  0% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+
+  5% {
+    box-shadow: 0px 0px 20px 0px var(--color-background-primary);
+    transform: scale(1.05);
+  }
+
+  10% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+
+  100% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.submitButtonAnimation {
+  animation: bounce 4s ease-in-out infinite;
+}
