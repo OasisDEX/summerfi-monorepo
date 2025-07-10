@@ -16,6 +16,7 @@ jobs:
       ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/dev' && 'staging'
       || 'staging' }}
     env:
+      AWS_REGION: eu-central-1
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
@@ -37,16 +38,18 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.2.1
+        with:
+          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v2.2.0
         with:
           cache-prefix: turbogha_
           provider: s3
-          s3-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          s3-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
           s3-bucket: staging-turbo-monorepo
-          s3-region: eu-central-1
-          s3-endpoint: https://s3.amazonaws.com
 
       - uses: pnpm/action-setup@v2.0.1
         with:
