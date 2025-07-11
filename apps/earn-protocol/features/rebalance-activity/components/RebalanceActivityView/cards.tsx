@@ -27,7 +27,7 @@ export const getRebalanceActivityHeadingCards = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
         User saved time
         <Tooltip
-          tooltip="Time users avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates"
+          tooltip="Time users avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates."
           tooltipWrapperStyles={{ minWidth: '230px' }}
         >
           <Icon iconName="info" size={18} />
