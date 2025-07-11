@@ -40,18 +40,17 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.2.1
-        with:
-          role-to-assume: ${{ secrets.BUILD_DEPLOY_OIDC_ROLE_STAGING }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v2.2.0
         with:
           cache-prefix: turbogha_
           provider: s3
           s3-bucket: staging-turbo-monorepo
+          s3-region: eu-central-1
+          s3-prefix: monorepo-cache/
+          s3-endpoint: https://s3.amazonaws.com
+          s3-access-key-id: ${{ secrets.TURBOREPO_S3_BUCKET_ACCESS_KEY_ID }}
+          s3-secret-access-key: ${{ secrets.TURBOREPO_S3_BUCKET_SECRET_ACCESS_KEY }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:
