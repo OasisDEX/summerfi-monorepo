@@ -17,7 +17,7 @@ import {
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
 } from '@summerfi/app-types'
-import { formatAsShorthandNumbers } from '@summerfi/app-utils'
+import { formatAsShorthandNumbers, formatPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { useScreenSize } from '@/hooks/use-screen-size'
@@ -35,11 +35,13 @@ type BigProtocolScrollerItemProps = {
   tvl: bigint
   url: string
   strategy: string
+  apy: [number, number]
   asset: string[]
 }
 
 type BigProtocolScrollerProps = {
   protocolTvls?: LandingPageData['protocolTvls']
+  protocolApys?: LandingPageData['protocolApys']
   animationPixelPerSecond?: number
 }
 
@@ -69,6 +71,7 @@ const BigProtocolScrollerItem = ({
   url,
   strategy,
   asset,
+  apy,
 }: BigProtocolScrollerItemProps) => {
   const insides = (
     <Card className={bigProtocolScrollerStyles.bigProtocolScrollerItem}>
@@ -108,7 +111,7 @@ const BigProtocolScrollerItem = ({
             30d APY Range 24/25
           </Text>
           <Text variant="p2semi" as="span">
-            n/a
+            {apy.map((apyValue) => formatPercent(apyValue, { precision: 2 })).join(' - ')}
           </Text>
         </div>
       </div>
@@ -128,6 +131,7 @@ const BigProtocolScrollerItem = ({
 
 export const BigProtocolScroller = ({
   protocolTvls,
+  protocolApys,
   animationPixelPerSecond = 20,
 }: BigProtocolScrollerProps) => {
   const { screenSize } = useScreenSize()
@@ -144,10 +148,11 @@ export const BigProtocolScroller = ({
         strategy: protocolConfig.strategy,
         asset: protocolConfig.asset,
         tvl: BigInt(protocolTvls?.[protocol] ?? 0),
+        apy: protocolApys?.[protocol] ?? [0, 0],
         url: '',
       }
     })
-  }, [protocolTvls])
+  }, [protocolTvls, protocolApys])
 
   // 570 is the width of the item, 16 is the gap
   const singleProtocolListWidth = protocolsList.length * (570 + 16)
@@ -196,7 +201,7 @@ export const BigProtocolScroller = ({
         }}
       >
         {protocolsListToDisplay.map(
-          ({ protocol, protocolIcon, tvl, url, strategy, asset }, index) => (
+          ({ protocol, protocolIcon, tvl, url, strategy, asset, apy }, index) => (
             <BigProtocolScrollerItem
               key={`${protocol}-${index}`}
               protocol={protocol}
@@ -205,6 +210,7 @@ export const BigProtocolScroller = ({
               url={url}
               strategy={strategy}
               asset={asset}
+              apy={apy}
             />
           ),
         )}

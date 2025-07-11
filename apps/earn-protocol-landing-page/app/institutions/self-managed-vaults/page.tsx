@@ -98,7 +98,10 @@ export default function SelfManagedVaults() {
           of June 2025.
         </Text>
       </div>
-      <BigProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
+      <BigProtocolScroller
+        protocolTvls={landingPageData?.protocolTvls}
+        protocolApys={landingPageData?.protocolApys}
+      />
     </div>
   )
 }
