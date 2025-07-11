@@ -179,6 +179,10 @@
   stroke-width: 3px;
 }
 
+.enhancedRiskManagementBlock {
+  margin: var(--spacing-space-3x-large) auto;
+}
+
 .buildBySummerSpacer {
   margin: var(--spacing-space-3x-large) auto;
 }
