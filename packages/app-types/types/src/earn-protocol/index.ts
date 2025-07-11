@@ -235,20 +235,20 @@ export const supportedDefillamaProtocolsConfig: {
     displayName: string
     defillamaProtocolName: string
     icon: IconNamesList
-    asset?: TokenSymbolsList[]
-    strategy?: string
+    asset: TokenSymbolsList[]
+    strategy: string
   }
 } = {
   aave: {
     displayName: 'Aave',
-    defillamaProtocolName: 'aave',
+    defillamaProtocolName: 'aave-v3',
     icon: 'scroller_aave',
     asset: ['USDC', 'ETH'],
     strategy: 'Lending',
   },
   sky: {
     displayName: 'Sky',
-    defillamaProtocolName: 'sky',
+    defillamaProtocolName: 'sky-lending',
     icon: 'scroller_sky',
     asset: ['USDC', 'ETH'],
     strategy: 'Lending',
@@ -340,6 +340,9 @@ export type LandingPageData = {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   protocolTvls: {
     [key in SupportedDefillamaTvlProtocols]: bigint
+  }
+  protocolApys: {
+    [key in SupportedDefillamaTvlProtocols]: [number, number]
   }
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
