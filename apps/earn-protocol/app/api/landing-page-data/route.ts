@@ -7,6 +7,7 @@ import {
 import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
 import { NextResponse } from 'next/server'
 
+import { getMedianDefiProjectYield } from '@/app/server-handlers/defillama/get-median-defi-project-yield'
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-stats'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -27,8 +28,58 @@ const emptyTvls = {
   fluid: 0n,
 }
 
+const getProtocolsTvl = async (): Promise<{
+  [key in SupportedDefillamaTvlProtocols]: bigint
+}> => {
+  const protocolTvlsArray = await Promise.all(
+    supportedDefillamaProtocols.map((protocol) => {
+      return getProtocolTvl(
+        supportedDefillamaProtocolsConfig[
+          protocol as keyof typeof supportedDefillamaProtocolsConfig
+        ].defillamaProtocolName,
+        protocol,
+      )
+    }),
+  )
+
+  return protocolTvlsArray.reduce<{
+    [key in SupportedDefillamaTvlProtocols]: bigint
+  }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
+}
+
+const getProtocolsApy = async (): Promise<{
+  [key in SupportedDefillamaTvlProtocols]: [number, number]
+}> => {
+  const emptyApys = Object.fromEntries(
+    supportedDefillamaProtocols.map((protocol) => [protocol, [0, 0]]),
+  ) as {
+    [key in SupportedDefillamaTvlProtocols]: [number, number]
+  }
+
+  const protocolApysArray = await Promise.all(
+    supportedDefillamaProtocols.map((protocol) => {
+      return getMedianDefiProjectYield({
+        project:
+          supportedDefillamaProtocolsConfig[
+            protocol as keyof typeof supportedDefillamaProtocolsConfig
+          ].defillamaProtocolName,
+      })
+    }),
+  )
+
+  const filteredProtocolApysArray = protocolApysArray.filter((apy) => apy[0] !== 0 || apy[1] !== 0)
+
+  return filteredProtocolApysArray.reduce<{
+    [key in SupportedDefillamaTvlProtocols]: [number, number]
+  }>((acc, curr, index) => {
+    const protocol = supportedDefillamaProtocols[index]
+
+    return { ...acc, [protocol]: curr }
+  }, emptyApys)
+}
+
 export async function GET() {
-  const [{ vaults }, configRaw, rebalanceActivity, proAppStats, ...protocolTvlsArray] =
+  const [{ vaults }, configRaw, rebalanceActivity, proAppStats, protocolTvls, protocolApys] =
     await Promise.all([
       getVaultsList(),
       systemConfigHandler(),
@@ -37,14 +88,8 @@ export async function GET() {
         limit: 1,
       }),
       getProAppStats(),
-      ...supportedDefillamaProtocols.map((protocol) => {
-        return getProtocolTvl(
-          supportedDefillamaProtocolsConfig[
-            protocol as keyof typeof supportedDefillamaProtocolsConfig
-          ].defillamaProtocolName,
-          protocol,
-        )
-      }),
+      getProtocolsTvl(),
+      getProtocolsApy(),
     ])
   const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
@@ -62,18 +107,12 @@ export async function GET() {
 
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
 
-  const protocolTvls = protocolTvlsArray
-    // filter zero TVL protocols (set to zero because of an error)
-    .filter((protocolTVL) => Object.values(protocolTVL).some((tvl) => tvl !== '0'))
-    .reduce<{
-      [key in SupportedDefillamaTvlProtocols]: bigint
-    }>((acc, curr) => ({ ...acc, ...curr }), emptyTvls)
-
   return NextResponse.json({
     systemConfig,
     vaultsWithConfig,
     vaultsApyByNetworkMap,
     protocolTvls,
+    protocolApys,
     totalRebalanceItemsPerStrategyId,
     proAppStats,
   } as LandingPageData)
