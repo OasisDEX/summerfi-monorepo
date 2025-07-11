@@ -64,3 +64,30 @@
 .integrationsBlock p {
   color: var(--color-text-secondary)
 }
+
+.benefitsHeaderWrapper {
+  text-align: center;
+  padding: var(--spacing-space-small);
+  margin-bottom: var(--spacing-space-medium);
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+.benefitsDescriptionAndPoints {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  color: var(--color-text-primary-hover);
+}
+
+.benefitsDescriptionAndPoints ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
+}
+
+.benefitsDescriptionAndPoints ul li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-medium);
+}
