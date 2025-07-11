@@ -167,7 +167,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           User saved time
           <Tooltip
-            tooltip="Time users have saved by relying on our AI-Powered keeper network to optimize positions"
+            tooltip="Time user avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates"
             tooltipWrapperStyles={{ minWidth: '230px' }}
           >
             <Icon iconName="info" size={18} />
@@ -181,7 +181,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           Gas cost savings
           <Tooltip
-            tooltip="Gas cost savings achieved by users relying on our AI-Powered keeper network to optimize their positions, instead of manual management."
+            tooltip="Gas fees user sidestep when the keeper handles trades, using typical mainnet-dollar and L2-cent costs for each transaction."
             tooltipWrapperStyles={{ minWidth: '230px' }}
           >
             <Icon iconName="info" size={18} />
