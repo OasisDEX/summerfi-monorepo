@@ -43,6 +43,7 @@ jobs:
       - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v2.2.0
         with:
+          max-age: 2mo
           cache-prefix: turbogha_
           provider: s3
           s3-bucket: staging-turbo-monorepo
