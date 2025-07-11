@@ -124,6 +124,7 @@ export default function InstitutionsPage() {
             'Simple SDK ready integration',
             '24-h exit guarantee',
           ]}
+          ctaUrl="/institutions/self-managed-vaults"
         />
         <InstitutionsPromoBlock
           title="Large Capital deployment into Public Access Vaults"
@@ -136,6 +137,7 @@ export default function InstitutionsPage() {
             'Built-in diversification across venues',
             '24-h exit guarantee',
           ]}
+          ctaUrl="/institutions/public-access-vaults"
         />
       </div>
       <div className={institutionsPageStyles.onboardingBlock}>

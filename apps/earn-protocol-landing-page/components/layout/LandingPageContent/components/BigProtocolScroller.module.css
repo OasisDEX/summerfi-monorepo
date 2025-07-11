@@ -1,42 +1,16 @@
-.protocolScrollerWrapper {
+.bigProtocolScrollerWrapper {
   margin-top: var(--spacing-space-3x-large);
 }
 
 @media (max-width: 531px) {
-  .protocolScrollerWrapper {
+  .bigProtocolScrollerWrapper {
     margin-top: var(--spacing-space-2x-large);
   }
 }
 
-.protocolScrollerHeader {
-  font-weight: 600;
-  text-align: center;
-  padding: 0 var(--spacing-space-medium);
-  max-width: 1057px;
-  margin: 0 auto;
-}
-
-@media (min-width: 532px) {
-  .protocolScrollerHeader {
-    padding: 0 var(--spacing-space-2x-large);
-  }
-}
-
-.protocolScrollerHeader>span>span {
-  font-weight: 600;
-}
-
-.headerLine {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.25rem;
-}
-
-.protocolScrollerTrackWrapper {
+.bigProtocolScrollerTrackWrapper {
   position: absolute;
-  height: 82px;
+  height: 270px;
   width: 100vw;
   left: 0;
   z-index: 1;
@@ -53,10 +27,10 @@
   }
 }
 
-.protocolScrollerOverflowWrapper {
+.bigProtocolScrollerOverflowWrapper {
   position: relative;
   left: 0;
-  height: 82px;
+  height: 270px;
   width: 100vw;
   overflow: hidden;
   margin-top: var(--spacing-space-2x-large);
@@ -64,22 +38,22 @@
 }
 
 @media (min-width: 532px) {
-  .protocolScrollerOverflowWrapper {
+  .bigProtocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
     margin-bottom: var(--spacing-space-3x-large);
   }
 }
 
 @media (min-width: 1026px) {
-  .protocolScrollerOverflowWrapper {
+  .bigProtocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
     margin-bottom: var(--spacing-space-4x-large);
   }
 }
 
-.protocolScrollerTrack {
+.bigProtocolScrollerTrack {
   position: absolute;
-  height: 82px;
+  height: 270px;
   left: 0;
   z-index: 2;
   display: flex;
@@ -91,51 +65,61 @@
   animation-iteration-count: infinite;
 }
 
-.protocolScrollerOverlay {
+.bigProtocolScrollerOverlay {
   left: 0;
   position: absolute;
   width: 100%;
-  height: 82px;
+  height: 270px;
   pointer-events: none;
   z-index: 3;
   background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(28, 28, 28) 100%);
 }
 
-.protocolScrollerItemGradient {
+.bigProtocolScrollerItemGradient {
   cursor: auto !important;
 }
 
-.protocolScrollerItemGradient::before {
+.bigProtocolScrollerItemGradient::before {
   border-radius: var(--radius-large) !important;
 }
 
-.protocolScrollerItem {
-  border-radius: var(--radius-large);
-  background-color: var(--color-surface-subtle);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 80px;
-  min-width: 280px;
-  max-width: 280px;
-  padding: var(--spacing-space-medium) var(--spacing-space-large);
-  transition: background-color 0.2s ease;
+.bigProtocolScrollerItem {
+  width: 570px;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
 }
 
-.protocolScrollerItem:hover {
-  background-color: var(--color-surface-subtler);
-}
-
-.protocolScrollerItemNameIcon {
+.bigProtocolScrollerItemNameIcon {
   display: flex;
   flex-direction: row;
   align-content: center;
-  flex-wrap: wrap;
   gap: var(--spacing-space-medium);
+  background-color: var(--color-surface-light);
+  padding: 24px;
 }
 
-.protocolScrollerItemTvl {
+.bigProtocolScrollerItemNameIcon span {
+  line-height: 44px;
+}
+
+.bigProtocolScrollerItemDataGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: var(--spacing-space-medium);
+  padding: 32px;
+}
+
+.bigProtocolScrollerItemDataBlock {
   display: flex;
   flex-direction: column;
-  text-align: right;
+}
+
+.bigProtocolScrollerItemDataBlock p {
+  color: var(--color-text-secondary);
+}
+
+.bigProtocolScrollerItemDataBlock span {
+  color: var(--color-text-primary);
 }
