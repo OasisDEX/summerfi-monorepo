@@ -279,7 +279,7 @@ export const ControlsSwitchTransactionView = ({
   const { fromAmount, slippage, priceImpact, toAmount } = vaultSwitchTransaction.metadata
 
   const priceImpactPrice = priceImpact?.price?.value.toString()
-  const priceImpactPercentage = priceImpact?.impact?.value.toString()
+  const priceImpactPercentage = priceImpact?.impact?.toProportion()
 
   return (
     <div className={controlsSwitchTransactionViewStyles.controlsSwitchTransactionView}>
