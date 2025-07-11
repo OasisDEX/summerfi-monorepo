@@ -105,9 +105,9 @@ export class RewardsService {
     backoffFactor: 2,
   }
   private readonly REWARD_RATIO_MAP = {
-    reul: 0.7,
+    reul: 0.5,
     xsilo: 0.49,
-    '*': 0.997,
+    '*': 0.97,
   }
   private readonly ONE_HOUR_IN_SECONDS = 3600
   private readonly logger: Logger
