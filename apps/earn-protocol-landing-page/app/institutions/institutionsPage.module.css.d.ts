@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "buildBySummerSpacer": string;
+  readonly "enhancedRiskManagementBlock": string;
   readonly "faqWrapper": string;
   readonly "finalCTAElement": string;
   readonly "finalCTAElementsList": string;

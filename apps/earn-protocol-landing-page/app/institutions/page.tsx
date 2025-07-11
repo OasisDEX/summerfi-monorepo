@@ -1,5 +1,14 @@
 'use client'
-import { Audits, Button, Emphasis, FaqSection, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Audits,
+  Button,
+  Emphasis,
+  EnhancedRiskManagement,
+  FaqSection,
+  Icon,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,11 +19,18 @@ import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
+import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
+import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
+import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
 
 import institutionsPageStyles from './institutionsPage.module.css'
 
 import depositUiImage from '@/public/img/institution/deposit-ui.png'
 import securityAndComplianceImage from '@/public/img/institution/security-and-compliance.png'
+import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
+import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
 
 const FinalCTAElement = ({
   title,
@@ -157,6 +173,21 @@ export default function InstitutionsPage() {
             'Available to Qualified Purchasers in supported jurisdiction',
             'Minimize counterparty risk with a customizable whielists',
           ]}
+        />
+      </div>
+      <div className={institutionsPageStyles.enhancedRiskManagementBlock}>
+        <EnhancedRiskManagement
+          protectedCapital="$10B+"
+          imagesMap={{
+            rebalanceActivityImage,
+            strategyExposureImage,
+            blockAnalyticaLogo,
+            aaveLogo,
+            morphoBlueLogo,
+            skyLogo,
+            sparkLogo,
+          }}
+          bottomBoxes={false}
         />
       </div>
       <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />

@@ -22,6 +22,7 @@ const EnhancedRiskManagementProtocolIcon = ({
 export const EnhancedRiskManagement = ({
   protectedCapital,
   imagesMap,
+  bottomBoxes = true,
 }: {
   protectedCapital: string
   imagesMap: {
@@ -33,6 +34,7 @@ export const EnhancedRiskManagement = ({
     skyLogo: StaticImageData
     sparkLogo: StaticImageData
   }
+  bottomBoxes?: boolean
 }): ReactNode => {
   return (
     <div className={enhancedRiskManagementStyles.enhancedRiskManagementWrapper}>
@@ -77,44 +79,46 @@ export const EnhancedRiskManagement = ({
           </div>
         </div>
       </BigGradientBox>
-      <div className={enhancedRiskManagementStyles.bottomBoxes}>
-        <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxLeftGradient}>
-          <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
-            <Text variant="h5" as="h5">
-              Highest yields with minimum risk of ruin
-            </Text>
-            <Text variant="p2" as="p">
-              The Risk Curator will set and continually manage all Vault parameters to prevent over
-              exposure risk to any single protocol or collateral paired assets. Through their own
-              models and experience, they will monitor and manage the risk ensuring the best risk
-              adjusted yields.
-            </Text>
-          </div>
-          <Image
-            src={imagesMap.rebalanceActivityImage}
-            alt="Highest yields with minimum risk of ruin"
-            placeholder="blur"
-          />
-        </BigGradientBox>
-        <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxRightGradient}>
-          <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
-            <Text variant="h5" as="h5">
-              Automatic Diversified Exposure
-            </Text>
-            <Text variant="p2" as="p">
-              Lazy Summer Protocol requires no management from users after they have deposited. All
-              risk management, yield optimizing and strategy rebalancing is handled automatically
-              within the parameters set by the Risk Curator. No chance of fat fingering a trade
-              again.
-            </Text>
-          </div>
-          <Image
-            src={imagesMap.strategyExposureImage}
-            alt="Automatic Diversified Exposure"
-            placeholder="blur"
-          />
-        </BigGradientBox>
-      </div>
+      {bottomBoxes && (
+        <div className={enhancedRiskManagementStyles.bottomBoxes}>
+          <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxLeftGradient}>
+            <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
+              <Text variant="h5" as="h5">
+                Highest yields with minimum risk of ruin
+              </Text>
+              <Text variant="p2" as="p">
+                The Risk Curator will set and continually manage all Vault parameters to prevent
+                over exposure risk to any single protocol or collateral paired assets. Through their
+                own models and experience, they will monitor and manage the risk ensuring the best
+                risk adjusted yields.
+              </Text>
+            </div>
+            <Image
+              src={imagesMap.rebalanceActivityImage}
+              alt="Highest yields with minimum risk of ruin"
+              placeholder="blur"
+            />
+          </BigGradientBox>
+          <BigGradientBox className={enhancedRiskManagementStyles.bottomBoxRightGradient}>
+            <div className={enhancedRiskManagementStyles.bottomBoxDescription}>
+              <Text variant="h5" as="h5">
+                Automatic Diversified Exposure
+              </Text>
+              <Text variant="p2" as="p">
+                Lazy Summer Protocol requires no management from users after they have deposited.
+                All risk management, yield optimizing and strategy rebalancing is handled
+                automatically within the parameters set by the Risk Curator. No chance of fat
+                fingering a trade again.
+              </Text>
+            </div>
+            <Image
+              src={imagesMap.strategyExposureImage}
+              alt="Automatic Diversified Exposure"
+              placeholder="blur"
+            />
+          </BigGradientBox>
+        </div>
+      )}
     </div>
   )
 }
