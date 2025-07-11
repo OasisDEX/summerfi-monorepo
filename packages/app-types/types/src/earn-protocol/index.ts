@@ -14,7 +14,7 @@ import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
 import { TimeframesType } from '../components'
 import { DeviceType } from '../device-type'
-import { IconNamesList } from '../icons'
+import { IconNamesList, TokenSymbolsList } from '../icons'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
@@ -235,52 +235,72 @@ export const supportedDefillamaProtocolsConfig: {
     displayName: string
     defillamaProtocolName: string
     icon: IconNamesList
+    asset?: TokenSymbolsList[]
+    strategy?: string
   }
 } = {
   aave: {
     displayName: 'Aave',
     defillamaProtocolName: 'aave',
     icon: 'scroller_aave',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   sky: {
     displayName: 'Sky',
     defillamaProtocolName: 'sky',
     icon: 'scroller_sky',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   spark: {
     displayName: 'Spark',
     defillamaProtocolName: 'spark',
     icon: 'scroller_spark',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   pendle: {
     displayName: 'Pendle',
     defillamaProtocolName: 'pendle',
     icon: 'scroller_pendle',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   gearbox: {
     displayName: 'Gearbox',
     defillamaProtocolName: 'gearbox',
     icon: 'scroller_gearbox',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   euler: {
     displayName: 'Euler',
     defillamaProtocolName: 'euler',
     icon: 'scroller_euler',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   compound: {
     displayName: 'Compound',
     defillamaProtocolName: 'compound-v3',
     icon: 'scroller_compound',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   ethena: {
     displayName: 'Ethena',
     defillamaProtocolName: 'ethena',
     icon: 'scroller_ethena',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
   },
   fluid: {
     displayName: 'Fluid',
     defillamaProtocolName: 'fluid-lending',
     icon: 'scroller_fluid',
+    asset: ['USDC', 'ETH', 'EURC'],
+    strategy: 'Lending',
   },
 }
 
