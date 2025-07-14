@@ -1,0 +1,16 @@
+.merchandiseHeadingWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-width: 250px;
+  margin-bottom: var(--general-space-24);
+  width: 100%;
+
+  .arrowBackIcon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
