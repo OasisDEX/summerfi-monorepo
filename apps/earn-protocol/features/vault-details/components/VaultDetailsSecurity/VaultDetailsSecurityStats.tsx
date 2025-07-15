@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
-import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
+import { Card, DataBlock } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatWithSeparators, zero } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import blockAnalyticaLogo from '@/public/img/misc/block-analytica.svg'
+
+import { VaultDetailsSecurityStatsHeader } from './VaultDetailsSecurityStatsHeader'
 
 import classNames from './VaultDetailsSecurity.module.css'
 
@@ -20,16 +22,15 @@ export const VaultDetailsSecurityStats = ({
   totalRebalanceActions,
   totalUsers,
 }: VaultDetailsSecurityStatsProps) => {
-  const formattedTotalAssets = useMemo(() => {
-    return formatCryptoBalance(
-      vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
-    )
-  }, [vaults])
+  const totalAssets = useMemo(
+    () => vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
+    [vaults],
+  )
 
   const dataBlocks = [
     {
       title: 'Lazy Summer Protocol TVL',
-      value: formattedTotalAssets,
+      value: formatCryptoBalance(totalAssets),
     },
     {
       title: 'Total Users',
@@ -51,20 +52,7 @@ export const VaultDetailsSecurityStats = ({
 
   return (
     <>
-      <Text as="h5" variant="h5" style={{ marginBottom: 'var(--spacing-space-x-small)' }}>
-        Security
-      </Text>
-      <Text
-        as="p"
-        variant="p2"
-        style={{
-          marginBottom: 'var(--spacing-space-large)',
-          color: 'var(--earn-protocol-secondary-60)',
-        }}
-      >
-        The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
-        offer effortless and secure optimised yield, while diversifying risk.
-      </Text>
+      <VaultDetailsSecurityStatsHeader />
       <div
         style={{
           display: 'flex',

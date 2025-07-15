@@ -4,7 +4,7 @@ import { type EarnAppConfigType } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
+import { Button } from '@/components/atoms/Button/Button'
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'

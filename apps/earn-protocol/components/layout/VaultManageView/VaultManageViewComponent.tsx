@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   ControlsDepositWithdraw,
@@ -27,6 +27,7 @@ import {
 import { useTermsOfService } from '@summerfi/app-tos'
 import {
   type ArksHistoricalChartData,
+  type DropdownRawOption,
   type EarnAppConfigType,
   type GetVaultsApyResponse,
   type IArmadaPosition,
@@ -181,12 +182,22 @@ export const VaultManageViewComponent = ({
     token: selectedToken,
     tokenBalance: selectedTokenBalance,
     tokenBalanceLoading: selectedTokenBalanceLoading,
+    handleSetTokenBalanceLoading,
   } = useTokenBalance({
     publicClient,
     vaultTokenSymbol: vault.inputToken.symbol,
     tokenSymbol: selectedTokenOption.value,
     chainId: vaultChainId,
   })
+
+  // wrapper to show skeleton immediately when changing token
+  const handleTokenSelectionChangeWrapper = useCallback(
+    (option: DropdownRawOption) => {
+      handleTokenSelectionChange(option)
+      handleSetTokenBalanceLoading(true)
+    },
+    [handleTokenSelectionChange, handleSetTokenBalanceLoading],
+  )
 
   const { netValue, netValueUSD } = getPositionValues({
     position,
@@ -457,7 +468,7 @@ export const VaultManageViewComponent = ({
             amountDisplay={amountDisplay}
             amountDisplayUSD={amountDisplayUSDWithSwap}
             handleAmountChange={handleAmountChange}
-            handleDropdownChange={handleTokenSelectionChange}
+            handleDropdownChange={handleTokenSelectionChangeWrapper}
             transactionType={sidebarTransactionType}
             options={
               sidebarTransactionType === TransactionAction.WITHDRAW
@@ -567,7 +578,7 @@ export const VaultManageViewComponent = ({
     amountDisplay,
     amountDisplayUSDWithSwap,
     handleAmountChange,
-    handleTokenSelectionChange,
+    handleTokenSelectionChangeWrapper,
     sidebarTransactionType,
     baseTokenOptions,
     tokenOptions,

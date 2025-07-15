@@ -14,7 +14,6 @@ import {
 import { SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -22,7 +21,7 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 
-import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import {
   type ClaimDelegateExternalData,
@@ -204,17 +203,14 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     return null
   }
 
-  const externalDelegatee = externalData.sumrDelegates.find(
-    (delegate) => delegate.account.address.toLowerCase() === delegatee,
+  const externalDelegatee = externalData.tallyDelegates.find(
+    (delegate) => delegate.userAddress.toLowerCase() === delegatee,
   )
 
-  // use name from tally api, if not fallback to local mapping
-  // last resort is delegatee address
-  const delegateeName =
-    externalDelegatee && externalDelegatee.account.name !== ''
-      ? externalDelegatee.account.name
-      : localSumrDelegates.find((item) => item.address === state.delegatee)?.title ??
-        (delegatee === ADDRESS_ZERO ? 'No delegate' : formatAddress(delegatee))
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: externalDelegatee,
+    currentDelegate: delegatee,
+  })
 
   // if delegatee is address zero it means that user removed delegatee
   // therefore fallback to 0
@@ -268,12 +264,12 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
             <div className={classNames.withIcon}>
               <LoadableAvatar
                 size={30}
-                name={safeBTOA(delegateeName)}
+                name={safeBTOA(resolvedDelegateTitle)}
                 variant="pixel"
                 colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
               />
               <Text as="h4" variant="h4">
-                {delegateeName}
+                {resolvedDelegateTitle}
               </Text>
             </div>
           </div>

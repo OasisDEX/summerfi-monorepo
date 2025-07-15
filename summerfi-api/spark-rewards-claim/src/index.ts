@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { fetchRewardsData as fetchRewardsRecords } from './fetchRewardsData'
 import type { RewardsData as RewardsRecord } from './types'
 import { sparkRewardsAbi } from './abi/rewards'
-import { getRewardsContractAddressByClaimType } from './mappings'
+import { getRewardsContractAddressByClaimType, assertValidRootHash } from './mappings'
 import { ChainId, getRpcGatewayEndpoint } from '@summerfi/serverless-shared'
 import { createPublicClient, encodeFunctionData, extractChain, http, type Hex } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -142,24 +142,33 @@ export const handler = async (
   let calls: { allowFailure: boolean; target: Hex; callData: Hex }[] | undefined
 
   if (canClaim) {
-    calls = rewardsRecords.map((reward) => {
-      return {
-        allowFailure: true,
-        target: getRewardsContractAddressByClaimType(reward.claimType, chainId),
-        callData: encodeFunctionData({
-          abi: sparkRewardsAbi,
-          functionName: 'claim',
-          args: [
-            reward.claimArgs.epoch,
-            reward.claimArgs.account,
-            reward.claimArgs.tokenAddress,
-            reward.claimArgs.amount,
-            reward.claimArgs.rootHash,
-            reward.claimArgs.proof,
-          ],
-        }),
-      }
-    })
+    try {
+      calls = rewardsRecords.map((reward) => {
+        const target = getRewardsContractAddressByClaimType(reward.claimType, chainId)
+        assertValidRootHash(reward.claimArgs.rootHash, chainId)
+
+        return {
+          allowFailure: true,
+          target,
+          callData: encodeFunctionData({
+            abi: sparkRewardsAbi,
+            functionName: 'claim',
+            args: [
+              reward.claimArgs.epoch,
+              reward.claimArgs.account,
+              reward.claimArgs.tokenAddress,
+              reward.claimArgs.amount,
+              reward.claimArgs.rootHash,
+              reward.claimArgs.proof,
+            ],
+          }),
+        }
+      })
+    } catch (error: unknown) {
+      return ResponseInternalServerError(
+        'Failed to prepare claim calls: ' + (error as Error).message,
+      )
+    }
 
     const multicallData = encodeFunctionData({
       abi: multicall3Abi,

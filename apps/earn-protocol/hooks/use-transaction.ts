@@ -15,6 +15,7 @@ import {
   useSmartAccountClient,
   useUser,
 } from '@account-kit/react'
+import Safe from '@safe-global/safe-apps-sdk'
 import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
@@ -337,6 +338,60 @@ export const useTransaction = ({
     [sendUserOperation],
   )
 
+  const sendSafeWalletTransaction = useCallback(
+    ({
+      target,
+      data,
+      value = 0n,
+    }: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint
+    }) => {
+      const safeWallet = new Safe()
+
+      safeWallet.txs
+        .send({
+          txs: [
+            {
+              to: target,
+              data,
+              value: value.toString(),
+            },
+          ],
+        })
+        .then(({ safeTxHash }) => {
+          setTxStatus('txInProgress')
+          getSafeTxHash(safeTxHash, vault.protocol.network)
+            .then((safeTransactionData) => {
+              if (safeTransactionData.transactionHash) {
+                setWaitingForTx(safeTransactionData.transactionHash)
+              }
+              if (nextTransaction) {
+                setTransactions((prev) =>
+                  prev?.map((tx) =>
+                    !tx.executed && !tx.txHash && tx.type === nextTransaction.type
+                      ? { ...tx, txHash: safeTransactionData.transactionHash }
+                      : tx,
+                  ),
+                )
+              }
+            })
+            .catch((err) => {
+              // eslint-disable-next-line no-console
+              console.error('Error getting the safe tx hash:', err)
+            })
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error sending transaction (safe wallet)', err)
+          setTxStatus('txError')
+          setSidebarTransactionError(`${errorsMap.transactionExecutionError}`)
+        })
+    },
+    [nextTransaction, vault.protocol.network],
+  )
+
   const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
@@ -380,13 +435,19 @@ export const useTransaction = ({
       txParams,
     })
 
-    sendTransaction(txParams, resolvedOverrides)
+    if (isIframe) {
+      sendSafeWalletTransaction(txParams)
+    } else {
+      sendTransaction(txParams, resolvedOverrides)
+    }
   }, [
+    isIframe,
     token,
     approvalCustomValue,
     approvalType,
     nextTransaction,
     publicClient,
+    sendSafeWalletTransaction,
     sendTransaction,
     setTxStatus,
     user,

@@ -11,6 +11,18 @@ export type Generated<T> =
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
 
+export type Json = JsonValue
+
+export type JsonArray = JsonValue[]
+
+export type JsonObject = {
+  [K in string]?: JsonValue
+}
+
+export type JsonPrimitive = boolean | number | string | null
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive
+
 export type Network = 'arbitrum' | 'base' | 'mainnet' | 'optimism' | 'sonic'
 
 export type Numeric = ColumnType<string, number | string, number | string>
@@ -139,6 +151,23 @@ export interface RewardRate {
   timestamp: Int8
 }
 
+export interface TallyDelegates {
+  bio: Generated<string>
+  customBio: Generated<string>
+  customTitle: Generated<string>
+  delegatorsCount: Numeric
+  displayName: Generated<string>
+  ens: Generated<string>
+  forumUrl: Generated<string>
+  photo: Generated<string>
+  updatedAt: Generated<Int8>
+  userAddress: string
+  votePower: Numeric
+  votesCount: Numeric
+  votesCountNormalized: Numeric
+  x: Generated<string>
+}
+
 export interface Token {
   address: string
   decimals: number
@@ -206,6 +235,28 @@ export interface WeeklyRewardRate {
   weekTimestamp: Int8
 }
 
+export interface YieldRaceGames {
+  gameId: string
+  gamesPlayed: Generated<number>
+  responseTimes: Json | null
+  score: Generated<Int8>
+  timestampEnd: Generated<Int8>
+  timestampStart: Generated<Int8>
+  updatedAt: Generated<Int8>
+  userAddress: string
+}
+
+export interface YieldRaceLeaderboard {
+  ens: Generated<string>
+  gameId: string
+  isBanned: Generated<boolean>
+  responseTimes: Json
+  score: Generated<Int8>
+  signedMessage: string
+  updatedAt: Generated<Int8>
+  userAddress: string
+}
+
 export interface Database {
   campaigns: Campaigns
   dailyFleetInterestRate: DailyFleetInterestRate
@@ -217,10 +268,13 @@ export interface Database {
   networkStatus: NetworkStatus
   rebalanceActivity: RebalanceActivity
   rewardRate: RewardRate
+  tallyDelegates: TallyDelegates
   token: Token
   topDepositors: TopDepositors
   tosApproval: TosApproval
   walletRisk: WalletRisk
   weeklyFleetInterestRate: WeeklyFleetInterestRate
   weeklyRewardRate: WeeklyRewardRate
+  yieldRaceGames: YieldRaceGames
+  yieldRaceLeaderboard: YieldRaceLeaderboard
 }

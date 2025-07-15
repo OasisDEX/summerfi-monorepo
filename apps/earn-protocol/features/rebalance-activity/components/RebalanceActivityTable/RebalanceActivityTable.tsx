@@ -21,6 +21,7 @@ interface RebalanceActivityTableProps {
   handleSort?: (sortConfig: TableSortedColumn<string>) => void
   isLoading?: boolean
   skeletonLines?: number
+  walletAddress?: string
 }
 
 export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
@@ -31,13 +32,14 @@ export const RebalanceActivityTable: FC<RebalanceActivityTableProps> = ({
   handleSort,
   isLoading,
   skeletonLines,
+  walletAddress,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const rows = useMemo(
-    () => rebalancingActivityMapper(rebalanceActivityList),
-    [rebalanceActivityList],
+    () => rebalancingActivityMapper(rebalanceActivityList, walletAddress),
+    [rebalanceActivityList, walletAddress],
   )
 
   const resolvedHiddenColumns = isMobile ? rebalancingActivityColumnsHiddenOnMobile : hiddenColumns

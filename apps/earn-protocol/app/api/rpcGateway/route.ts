@@ -40,17 +40,25 @@ export async function POST(req: NextRequest) {
       'Content-Length': body.length.toString(),
     },
   })
-  const response = await fetch(request, {
-    cache: 'no-store',
-    next: {
-      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
-    },
-  })
 
-  if (response.status !== 200) {
-    return NextResponse.json({ error: response.statusText }, { status: response.status })
+  try {
+    const response = await fetch(request, {
+      cache: 'no-store',
+      next: {
+        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      },
+    })
+
+    if (response.status !== 200) {
+      return NextResponse.json({ error: response.statusText }, { status: response.status })
+    }
+    const resolvedResponse = await response.json()
+
+    return NextResponse.json(resolvedResponse, { status: 200 })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('RPC Gateway Error', e)
+
+    return NextResponse.json({ error: 'RPC Gateway Error' }, { status: 500 })
   }
-  const resolvedResponse = await response.json()
-
-  return NextResponse.json(resolvedResponse, { status: 200 })
 }

@@ -1,8 +1,8 @@
 'use client'
 import { type FC, type ReactNode, Suspense, useEffect, useMemo, useRef } from 'react'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
-import { Icon } from '@/components/atoms/Icon/Icon.tsx'
+import { Button } from '@/components/atoms/Button/Button'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 
 import modalStyles from '@/components/atoms/Modal/Modal.module.css'

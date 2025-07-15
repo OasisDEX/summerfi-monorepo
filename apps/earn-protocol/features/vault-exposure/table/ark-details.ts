@@ -84,6 +84,10 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0xeb60a8e747d73c58ccc320bcdabb166f8a0c0d9d': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
     '0x5982d78ab5f7ed0e7d3feb08fddd1daab15212cc': {
       description:
         'An advanced ETH strategy, leveraging algorithmic efficiency to enhance returns while maintaining risk-conscious exposure.',
@@ -241,6 +245,101 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0x0f9da4b515fdab1aec67cfa6a66c24625543f495': {
+      description:
+        'Dedicated Maple pools accessed via Syrup’s router give direct, ring-fenced exposure to Maple yields; separate smart-contract and legal wrappers keep proceeds and risks fully isolated from Maple’s other lending markets.',
+      link: 'https://app.maple.finance/earn',
+    },
+    '0xf285361059b2c17e4f3c562bd8a1868ce22ae826': {
+      description:
+        'Built on the fully audited codebase of Origin Dollar, it relies on distributed validator technology and permissionless one-to-one withdrawals to blend beacon-chain staking rewards with additional validator incentives, boosting risk-adjusted yield. At the same time, deep, instant liquidity keeps the token trading virtually one-for-one with Ether, delivering secure, high-return staking with almost no slippage.',
+      link: 'https://docs.originprotocol.com/yield-bearing-tokens/oeth',
+    },
+    '0x60390d9493008153b32fffa4765d21d84875d90e': {
+      description:
+        'Behind the scenes, Fluid automatically puts your ETH to work in several lending apps (Aave, Compound, Spark, Morpho), borrowing a little extra ETH each time to “loop” the position. This boosts the normal staking yield by roughly 1.5–3×. Everything is bundled into one low-gas transaction, and you can swap your iToken back for your stETH (plus the extra yield) whenever you like.',
+      link: 'https://lite.guides.instadapp.io/getting-started/vault-features',
+    },
+    '0x235dd2d3cfcd5476bd0b9217e9a4839e709a00f6': {
+      description:
+        "The Summer.fi vault is intended to seamlessly allocate USDC liquidity to blue-chip markets on Term and allocate idle liquidity on Summer.fi's USDC Lower Risk Lazy Summer vault",
+      link: 'https://app.term.finance/vaults/0xa9ca4909700505585b1ad2a1579da3b670ffa9c4/1',
+    },
+    '0xfc53cd3bd3e700ca3154d620c8d8806178dcc166': {
+      description:
+        'The Smokehouse ETH vault aims to optimize for yield on a wide range of collaterals. Built and curated by one of DeFi’s top risk teams.',
+      link: 'https://app.morpho.org/ethereum/vault/0xbEEF36A5C1372F8D7d211527FCE9f83FE02d8A73/smokehouse-eth?subTab=performance',
+    },
+    '0xd84247a3e0ee8480214a0472d6fbc5c04251404d': {
+      description:
+        'Bluechip ETH yield on Base; competitive APR with transparent mechanics. Powered by Distributed Validator Technology.',
+      link: 'https://docs.originprotocol.com/yield-bearing-tokens/oeth',
+    },
+    '0x3f9e195a8ee39ed7b4a14a919f4a165c872976e5': {
+      description:
+        'Dedicated Maple pools accessed via Syrup’s router give direct, ring-fenced exposure to Maple yields; separate smart-contract and legal wrappers keep proceeds and risks fully isolated from Maple’s other lending markets.',
+      link: 'https://app.maple.finance/earn',
+    },
+    '0xd3facda7ed0356f2439f96c3dc378042864f14c6': {
+      description:
+        'The Gauntlet USDC Frontier Vault targets maximum yield by allocating to potentially higher volatility markets that may face liquidity risks in exchange for greater supplier returns.',
+      link: 'https://app.morpho.org/ethereum/vault/0xc582F04d8a82795aa2Ff9c8bb4c1c889fe7b754e/gauntlet-usdc-frontier',
+    },
+    '0xb9a97499c3a400e70a99ee62babce2b7a6f8fd6d': {
+      description:
+        'The Relend Boosted USDC vault serves as a Global Liquidity Vault for Relend Network. Users who supply USDC will collect RELEND units and receive additional relending yield. Collateral markets are selected for competitive yield and long term partner alignment.',
+      link: 'https://app.morpho.org/ethereum/vault/0x0F359FD18BDa75e9c49bC027E7da59a4b01BF32a/relend-usdc',
+    },
+    '0x40087b15127791ff55746c4e87e4e4afb88a8aeb': {
+      description:
+        'The MEV Capital Usual USDC provides a set of liquid collateral markets with an optimized risk-adjusted return through an active rebalancing strategy.',
+      link: 'https://app.morpho.org/ethereum/vault/0xd63070114470f685b75B74D60EEc7c1113d33a3D/mev-capital-usdc',
+    },
+    '0x1bf7ef7ed5ac8285dfe6e538b92364ad095dd1a3': {
+      description:
+        'Dedicated Maple pools accessed via Syrup’s router give direct, ring-fenced exposure to Maple yields; separate smart-contract and legal wrappers keep proceeds and risks fully isolated from Maple’s other lending markets.',
+      link: 'https://app.maple.finance/earn',
+    },
+    '0x2e890e54495361aa78ada62084478b7c65f88721': {
+      description:
+        'A USDC vault collateralized by other vaults in the Euler Yield and Euler Prime cluster. Secured by Euler’s blue chip DeFi protocols smart contract code.',
+      link: 'https://app.euler.finance/vault/0xe0a80d35bB6618CBA260120b279d357978c42BCE?network=ethereum',
+    },
+    '0x3d8c278f05f655f26dcbf828c084e5182fd8d409': {
+      description:
+        'Sky Token Rewards module allows your to earn SKY governance tokens—soon Sky Star tokens, too. It’s non-custodial, so you keep full control of your funds while supporting the Sky ecosystem.',
+      link: 'https://sky.money/features#rewards',
+    },
+    '0x3f289b064cd07e42210a57819908a937bec859e8': {
+      description:
+        'Wraps USDC into real-yield sUSDC; diversifies protocol risk while earning extra spread.',
+      link: 'https://sky.money/features#savings',
+    },
+    '0x827d166823d9372bb8573fcbb0ee776d82289a28': {
+      description:
+        'A USDC vault collateralized by other vaults. Secured by Euler’s blue chip DeFi protocols smart contract code.',
+      link: 'https://app.euler.finance/vault/0xcBC9B61177444A793B85442D3a953B90f6170b7D?network=ethereum',
+    },
+    '0x9ad7ea2b4eeb732339b19c5eabf087c6164e80eb': {
+      description:
+        'Deposits USDC into the Liquidity Layer, pooling and redeploying it across Fluid for maximum capital efficiency and yield under rigorous on-chain risk controls.',
+      link: 'https://fluid.io/lending/1',
+    },
+    '0xb2de822f840a9f1ec160212e14e08749783e0f29': {
+      description:
+        'A USDC vault collateralized by other vaults in the Euler Yield and Euler Prime cluster. Secured by Euler’s blue chip DeFi protocols smart contract code.',
+      link: 'https://app.euler.finance/vault/0xce45EF0414dE3516cAF1BCf937bF7F2Cf67873De?network=ethereum',
+    },
+    '0xd7038e29f353cc6ac601cfe56af3e1affa80a170': {
+      description:
+        'Mainnet Silo market with risk curated by Apostro. Collateralized against diverse collateral.',
+      link: 'https://v2.silo.finance/vaults/ethereum/0xed9278c5188f37670b33ef3B00729E38260cd5D5?action=deposit',
+    },
+    '0xfd899321b1fd8d75e255119766d9097c98568519': {
+      description:
+        'USDC goes into a Silo market backed by restaking tokens, staked-stable LPs, yield stables, treasury PTs, and a small WBTC sleeve. Separate caps and oracles fence off each asset, keeping risk isolated while spare capacity preserves stable yields. All curated by Apostro.',
+      link: 'https://app.term.finance/vaults/0xa9ca4909700505585b1ad2a1579da3b670ffa9c4/1',
+    },
   },
   [SDKNetwork.ArbitrumOne]: {
     '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
@@ -285,6 +384,11 @@ export const arkDetailsMap: {
       description:
         'A proven USDC strategy, engineered for consistent performance and structured to reduce exposure to inefficiencies.',
       link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0xaf88d065e77c8cc2239327c5edb3a432268e5831&marketName=proto_arbitrum_v3',
+    },
+    '0x4ef91e09adb31cc7ec9b663b6827155d6a103b74': {
+      description:
+        'Converts USDC to interest-bearing sUSDC, powered by Sky, a blue chip DeFi protocol.',
+      link: 'https://app.sky.money',
     },
   },
   [SDKNetwork.Base]: {
@@ -366,6 +470,66 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
+    '0xd9755f1541103333132e2c90c67f7e513060dc0e': {
+      description:
+        'Bluechip ETH yield on Base; competitive APR with transparent mechanics. Powered by Distributed Validator Technology.',
+      link: 'https://docs.originprotocol.com/yield-bearing-tokens/oeth',
+    },
+    '0x7d3607937fac84aa6d41beb67e252098e52ecd6b': {
+      description:
+        'The Seamless WETH Vault curated by Gauntlet is intended to optimize risk-adjusted yield across high-demand collateral markets on Base.',
+      link: 'https://app.morpho.org/base/vault/0x27D8c7273fd3fcC6956a0B370cE5Fd4A7fc65c18/seamless-weth-vault',
+    },
+    '0xa510f65c0a1e12ec5b8067f6d614f92cd62e6744': {
+      description:
+        'The Moonwell Flagship ETH Morpho vault curated by B.Protocol and Block Analitica is intended to optimize risk-adjusted interest earned from blue-chip collateral markets.',
+      link: 'https://app.morpho.org/base/vault/0xa0E430870c4604CcfC7B38Ca7845B1FF653D0ff1/moonwell-flagship-eth',
+    },
+    '0x03b0a0168b51839614f6fb333480d572b754fd56': {
+      description:
+        'Blue-chip ETH market with deep liquidity and proven risk parameters; core yield anchor.',
+      link: 'https://app.aave.com/reserve-overview/?underlyingAsset=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&marketName=proto_base_v3',
+    },
+    '0xadeb60e50e7bc5e012ddc985b83f8bb24857a002': {
+      description:
+        'A conservative WETH vault collateralized by other vaults in the Euler Base cluster. Captures variable rates for modest extra volatility.',
+      link: 'https://app.euler.finance/vault/0x859160DB5841E5cfB8D3f144C6b3381A85A4b410?network=base',
+    },
+    '0xb9ac2f768f2adaa65a45988a095988153565a228': {
+      description:
+        'The Steakhouse ETH vault aims to optimize yields by lending ETH against blue chip crypto and real world asset (RWA) collateral markets.',
+      link: 'https://app.morpho.org/ethereum/vault/0xBEEf050ecd6a16c4e7bfFbB52Ebba7846C4b8cD4/steakhouse-eth',
+    },
+    '0xcc725b576a9570f710e1934e7bf3395bf3250442': {
+      description:
+        'Battle tested ETH market that balances safety and utilisation-driven yield; low-maintenance position.',
+      link: 'https://app.compound.finance/markets/weth-mainnet',
+    },
+    '0xd29235aed4366c03951cd7dfff1cc77f365ee60f': {
+      description:
+        'Deposits ETH into the Liquidity Layer, pooling and redeploying it across Fluid for maximum capital efficiency and yield under rigorous on-chain risk controls.',
+      link: 'https://fluid.io/lending/1',
+    },
+    '0xe2ad084b9639ccc689217704577e538ca2c251e5': {
+      description:
+        'Diversifies into euro-stable; thinner lender base keeps EURC supply rates structurally high.',
+      link: 'https://moonwell.fi/markets/borrow/base/eurc',
+    },
+    '0x78db8603b03337d3c1f53d20283294efa8e7337a': {
+      description:
+        'The Moonwell Flagship USDC Morpho vault curated by B.Protocol and Block Analitica is intended to optimize risk-adjusted interest earned from blue-chip collateral markets.',
+      link: 'https://app.morpho.org/base/vault/0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca/moonwell-flagship-usdc',
+    },
+    '0xa5d42cf398bd3076ec26da93a8270b8e75b8062c': {
+      description:
+        'The Seamless USDC Vault curated by Gauntlet is intended to optimize risk-adjusted yield across high-demand collateral markets on Base.',
+      link: 'https://app.morpho.org/base/vault/0x616a4E1db48e22028f6bbf20444Cd3b8e3273738/seamless-usdc-vault',
+    },
+    '0x07e33789cf837b52821c7cded1247938969008ef': {
+      description:
+        'Large-TVL core pool provides liquidity ballast and steady base rate when peer matches exhaust.',
+      link: 'https://moonwell.fi/markets/supply/base/usdc',
+    },
   },
   [SDKNetwork.SonicMainnet]: {
     '0x809a0c98fac68a0c4319f3a3e864540c772562af': {
@@ -396,6 +560,21 @@ export const arkDetailsMap: {
       description:
         'Engineered for isolated USDC.E deployment on Sonic, balancing yield opportunities with siloed risk controls to protect capital.',
       link: 'https://v2.silo.finance/markets/sonic/s-usdc-8?action=deposit',
+    },
+    '0x39c5d327ff8b12649a0a8056ca4499cb27f82fa0': {
+      description:
+        'Isolated Silo market + Apostro risk oracle for stable USDC-E yield with zero cross asset contagion.',
+      link: 'https://v2.silo.finance/earn',
+    },
+    '0xf67e17c4627e9d9c150b247b6a4e82c01bf36c5f': {
+      description:
+        'Adds manager diversification inside Sonic; captures incremental lending spread while keeping risk is siloed.',
+      link: 'https://v2.silo.finance/earn',
+    },
+    '0x4c62fc0393393f3a5e455576bda95ccb3e284b19': {
+      description:
+        'RE7 Labs automates pool rebalancing, boosting capital efficiency for passive USDC-E yield.',
+      link: 'https://v2.silo.finance/earn',
     },
   },
 }

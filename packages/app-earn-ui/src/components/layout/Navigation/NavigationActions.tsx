@@ -70,13 +70,22 @@ export const NavigationActions = ({
         {configComponent}
       </div>
       <div className={navigationActionsStyles.mobileMenuButton}>
+        {startTheGame && (
+          <div onClick={startTheGame} className={navigationActionsStyles.theGameButton}>
+            <Icon iconName="gamepad" size={22} />
+          </div>
+        )}
         <Button
           variant="secondaryMedium"
           onClick={toggleMobileMenu}
           className={navigationActionsStyles.gradientOuterCircle}
         >
-          <div className={navigationActionsStyles.gradientInnerCircle} />
-          <Icon iconName="menu" size={28} color="var(--earn-protocol-secondary-70)" />
+          <Icon
+            iconName="menu"
+            size={26}
+            color="var(--earn-protocol-secondary-70)"
+            style={{ zIndex: 1 }}
+          />
         </Button>
         {configComponent}
       </div>

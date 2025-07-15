@@ -14,6 +14,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
       <div className={styles.cardContainer}>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={21.37}
             trendData={[
               { x: 1, y: 2 },
@@ -27,6 +28,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
         </div>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={2.04}
             trendData={[
               { x: 1, y: 1 },
@@ -40,6 +42,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
         </div>
         <div className={styles.cardExample}>
           <Card
+            token="ETH"
             apy={7.35}
             trendData={[
               { x: 1, y: 7 },
@@ -55,8 +58,7 @@ const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose }) => (
       <p>Correct answers earn points.</p>
       <p>Select faster = more points.</p>
       <p>Wrong answers end the game.</p>
-      <p>Streaks of 2+ correct answers give bonus points.</p>
-      <p>Game gets faster each round.</p>
+      <p>You have less time each round.</p>
       <button className={styles.closeBtn} onClick={onClose}>
         Close
       </button>

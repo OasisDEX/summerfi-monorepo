@@ -28,16 +28,17 @@ import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
+import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getSumrDelegatesWithDecayFactor } from '@/app/server-handlers/sumr-delegates-with-decay-factor'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -65,7 +66,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    { sumrDelegates, sumrDecayFactors },
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -73,13 +73,13 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
-    unstableCache(getSumrDelegatesWithDecayFactor, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
@@ -95,6 +95,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       usersAddresses: [walletAddress],
     }),
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
+    unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
   ])
 
   return {
@@ -103,8 +104,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -112,6 +111,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   }
 }
 
@@ -142,8 +142,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
     sumrToClaim,
     userPositions,
     vaultsList,
@@ -151,6 +149,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     migratablePositionsData,
     latestActivity,
     beachClubData,
+    positionsActivePeriods,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -174,36 +173,38 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const userVaultsIds = positionsWithVault.map((position) => getUniqueVaultId(position.vault))
 
-  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity] = await Promise.all([
-    Promise.all(
-      vaultsWithConfig.map((vault) =>
-        getPositionHistory({
-          network: vault.protocol.network,
-          address: walletAddress.toLowerCase(),
-          vault,
-        }),
-      ),
-    ).then(mapPortfolioVaultsApy),
-    getVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
-      })),
-    }),
-    getPaginatedRebalanceActivity({
-      page: 1,
-      limit: 50,
-      strategies: userVaultsIds,
-    }),
-  ])
+  const [positionHistoryMap, vaultsApyByNetworkMap, rebalanceActivity, tallyDelegates] =
+    await Promise.all([
+      Promise.all(
+        vaultsWithConfig.map((vault) =>
+          getPositionHistory({
+            network: vault.protocol.network,
+            address: walletAddress.toLowerCase(),
+            vault,
+          }),
+        ),
+      ).then(mapPortfolioVaultsApy),
+      getVaultsApy({
+        fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(network),
+        })),
+      }),
+      getPaginatedRebalanceActivity({
+        page: 1,
+        limit: 50,
+        strategies: userVaultsIds,
+        periods: positionsActivePeriods,
+      }),
+      getTallyDelegates(sumrStakeDelegate.delegatedTo),
+    ])
 
   const rewardsData: ClaimDelegateExternalData = {
     sumrToClaim,
     sumrBalances,
     sumrStakeDelegate,
     sumrStakingInfo,
-    sumrDelegates,
-    sumrDecayFactors,
+    tallyDelegates,
   }
 
   const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
@@ -250,9 +251,16 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   )
 }
 
-export async function generateMetadata({ params }: PortfolioPageProps): Promise<Metadata> {
-  const { walletAddress: walletAddressRaw } = await params
-  const prodHost = (await headers()).get('host')
+export async function generateMetadata({
+  params,
+  searchParams,
+}: PortfolioPageProps & {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited] = await Promise.all(
+    [params, headers(), searchParams],
+  )
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()
@@ -296,13 +304,21 @@ export async function generateMetadata({ params }: PortfolioPageProps): Promise<
     )
   }, zero)
 
+  let ogImageUrl = ''
+
+  if (typeof searchParamsAwaited.game !== 'undefined') {
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
+  }
+
   return {
     title: `Lazy Summer Protocol - ${formatAddress(walletAddress, { first: 6 })} - $${formatFiatBalance(totalSummerPortfolioUSD)} in Lazy Summer`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/portfolio?amount=$${formatFiatBalance(totalSummerPortfolioUSD)}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`,
+      images: ogImageUrl,
     },
   }
 }

@@ -166,10 +166,12 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             &nbsp;/&nbsp;
           </Text>
           <Text as="span" variant="p3" color="white">
-            {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
-              ? 'Your'
-              : viewWalletAddress}{' '}
-            Position
+            <Link href={`/portfolio/${viewWalletAddress}`} style={{ color: 'white' }}>
+              {viewWalletAddress.toLowerCase() === connectedWalletAddress?.toLowerCase()
+                ? 'Your'
+                : viewWalletAddress}{' '}
+              Position
+            </Link>
             <div
               onClick={handleUserRefresh}
               className={clsx(vaultManageGridStyles.refreshManageWrapper, {

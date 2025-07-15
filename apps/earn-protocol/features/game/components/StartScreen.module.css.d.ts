@@ -5,7 +5,11 @@ declare const styles: {
   readonly "container": string;
   readonly "description": string;
   readonly "fadeInGameStartScreen": string;
+  readonly "inviteText": string;
+  readonly "starting": string;
   readonly "title": string;
+  readonly "wrapperCard": string;
+  readonly "wrapperCardButtons": string;
 };
 export = styles;
 

@@ -5,7 +5,7 @@ import { type DropdownRawOption } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { Input } from '@/components/atoms/Input/Input.tsx'
+import { Input } from '@/components/atoms/Input/Input'
 import { Text } from '@/components/atoms/Text/Text'
 import {
   MobileDrawer,
@@ -127,7 +127,7 @@ export const Dropdown: FC<DropdownProps> = ({
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...dropdownChildrenStyle,
               }
-            : {}
+            : { ...dropdownChildrenStyle }
         }
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}

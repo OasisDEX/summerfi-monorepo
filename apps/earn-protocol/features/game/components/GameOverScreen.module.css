@@ -1,6 +1,4 @@
 .container {
-  min-height: 100vh;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,42 +8,13 @@
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 800;
+  display: block;
   margin-bottom: 12px;
 }
 
 .score {
   font-size: 20px;
   margin-bottom: 16px;
-}
-
-.statsRow {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 28px;
-}
-
-.statBox {
-  background: #000;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  padding: 18px 28px;
-  min-width: 110px;
-  text-align: center;
-}
-
-.statLabel {
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 2px;
-}
-
-.statValue {
-  font-size: 26px;
-  font-weight: 800;
-  color: #dadada;
 }
 
 .timedOut {
@@ -88,46 +57,66 @@
   letter-spacing: 0.2px;
 }
 
-.buttonsRow {
-  display: flex;
-  height: 50px;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  margin-top: 24px;
-}
-
-.buttonsRowOptions {
+.buttonsColumn {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 18px;
-  margin-top: 24px;
+}
+
+.actionables {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  max-width: fit-content;
+}
+
+.tryAgainButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    /* Fade in to full opacity */
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    /* Start with opacity 0 */
+    transform: translateY(20px);
+  }
+}
+
+.starting {
+  animation: fadeOut 1s ease-in-out;
+}
+
+.shareScoreBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
 }
 
 @media (max-width: 600px) {
   .container {
     padding: 8px;
+    height: fit-content;
+    max-height: max-content;
   }
 
   .title {
-    font-size: 20px;
+    font-size: 44px;
   }
 
   .score {
     font-size: 16px;
-  }
-
-  .statsRow {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .statBox {
-    min-width: 80px;
-    padding: 10px 18px;
-    font-size: 14px;
   }
 
   .lastCardsRow {
@@ -144,4 +133,38 @@
     gap: 10px;
     height: auto;
   }
+
+  .tryAgainButtons {
+    flex-direction: column;
+  }
+
+  .shareScoreBox {
+    display: none;
+  }
+}
+
+@keyframes bounce {
+  0% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+
+  5% {
+    box-shadow: 0px 0px 20px 0px var(--color-background-primary);
+    transform: scale(1.05);
+  }
+
+  10% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+
+  100% {
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
+.submitButtonAnimation {
+  animation: bounce 4s ease-in-out infinite;
 }

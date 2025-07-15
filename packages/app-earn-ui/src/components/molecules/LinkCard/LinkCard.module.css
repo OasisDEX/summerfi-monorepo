@@ -6,7 +6,16 @@
   border: 1px solid;
   border-color: var(--earn-protocol-neutral-85);
   transition: border-color ease-out 0.2s;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-small);
 }
+
+@media (min-width: 768px) {
+  .wrapper {
+    gap: unset;
+  }
+}
+
 .wrapper:hover {
   border-color: var(--earn-protocol-neutral-60);
   transition: border-color ease-out 0.2s;

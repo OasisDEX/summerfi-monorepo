@@ -12,7 +12,6 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -21,7 +20,7 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { localSumrDelegates } from '@/features/claim-and-delegate/consts'
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -254,25 +253,21 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
 
-  const localDelegate = localSumrDelegates.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
+  const rewardsDataDelegatee = rewardsData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
 
-  const rewardsDataDelegatee = rewardsData.sumrDelegates.find(
-    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegatee,
+    currentDelegate: sumrDelegatedTo,
+  })
+
+  const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
+
+  const votingPower = Number(
+    rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
+      ?.votePower ?? 1,
   )
-
-  const value =
-    sumrDelegatedTo === ADDRESS_ZERO
-      ? 'No delegate'
-      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
-        ? rewardsDataDelegatee.account.name
-        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
-
-  const votingPower =
-    rewardsData.sumrDecayFactors.find(
-      (factor) => factor.address.toLowerCase() === state.delegatee?.toLowerCase(),
-    )?.decayFactor ?? 1
 
   const subValue =
     sumrDelegatedTo !== ADDRESS_ZERO ? (

@@ -193,6 +193,7 @@ export type {
   LandingPageData,
   SupportedDefillamaTvlProtocols,
   ProAppStats,
+  TotalRebalanceItemsPerStrategyId,
 } from './src/earn-protocol'
 export { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'

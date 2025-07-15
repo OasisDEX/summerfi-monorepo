@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
     "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
-    "get-config-types": "node scripts/get-config-types.js && node scripts/get-rays-config-types.js && node scripts/get-earn-config-types.js"
+    "get-config-types": "concurrently \"node scripts/get-config-types.js\" \"node scripts/get-rays-config-types.js\" \"node scripts/get-earn-config-types.js\""
   },
   "dependencies": {
     "@summerfi/armada-protocol-service": "workspace:*",
@@ -25,6 +25,7 @@
     "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
     "@types/react": "19.0.8",
+    "concurrently": "^9.0.1",
     "json-to-ts": "^1.7.0",
     "node-fetch": "^2.7.0"
   },

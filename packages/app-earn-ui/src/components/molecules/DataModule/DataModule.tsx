@@ -1,8 +1,8 @@
 import { type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 
-import { Card, type CardVariant } from '@/components/atoms/Card/Card.tsx'
-import { DataBlock, type DataBlockProps } from '@/components/molecules/DataBlock/DataBlock.tsx'
+import { Card, type CardVariant } from '@/components/atoms/Card/Card'
+import { DataBlock, type DataBlockProps } from '@/components/molecules/DataBlock/DataBlock'
 
 import classNames from './DataModule.module.css'
 

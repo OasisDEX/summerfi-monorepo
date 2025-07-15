@@ -1,4 +1,4 @@
-import { type ChangeEvent, type Dispatch, type FC, useState } from 'react'
+import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain, useUser } from '@account-kit/react'
 import {
@@ -15,7 +15,6 @@ import {
 import { type DropdownRawOption, SDKChainId } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
-  formatAddress,
   formatCryptoBalance,
   formatDecimalAsPercent,
   formatFiatBalance,
@@ -25,13 +24,11 @@ import { useParams } from 'next/navigation'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { AccountKitAccountType } from '@/account-kit/types'
+import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
-import {
-  localSumrDelegates,
-  mergeDelegatesData,
-  type SumrDelegateWithDecayFactor,
-} from '@/features/claim-and-delegate/consts'
+import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
+import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import { useSumrDelegateTransaction } from '@/features/claim-and-delegate/hooks/use-sumr-delegate-transaction'
 import {
@@ -51,24 +48,28 @@ import {
   getChangeDelegateButtonLabel,
   getRemoveDelegateButtonLabel,
 } from './getDelegateButtonLabel'
+import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
 import { ClaimDelegateAction } from './types'
 
 import classNames from './ClaimDelegateStep.module.css'
-
-const getFilteredDelegates = (delegates: SumrDelegateWithDecayFactor[], searchValue: string) => {
-  return delegates.filter((delegate) => {
-    return (
-      delegate.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-      delegate.ens.toLowerCase().includes(searchValue.toLowerCase()) ||
-      delegate.address.toLowerCase().includes(searchValue.toLowerCase())
-    )
-  })
-}
 
 const getIsCardFaded = ({ address, state }: { address: string; state: ClaimDelegateState }) => {
   return (
     state.delegatee !== ADDRESS_ZERO && state.delegatee?.toLowerCase() !== address.toLowerCase()
   )
+}
+
+const fetchDelegatesBySearchValue = async (searchValue: string): Promise<TallyDelegate[]> => {
+  try {
+    const response = await fetch(`/earn/api/tally/delegates?ensOrAddressOrName=${searchValue}`)
+
+    return response.json()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching delegates by search value:', error)
+
+    return []
+  }
 }
 
 interface ClaimDelegateStepProps {
@@ -77,73 +78,14 @@ interface ClaimDelegateStepProps {
   externalData: ClaimDelegateExternalData
 }
 
-enum DelegateSortOptions {
-  HIGHEST_VOTING_WEIGHT = 'highest-voting-weight',
-  HIGHEST_VOTE_REWARD_POWER = 'highest-vote-reward-power',
-}
-
-const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
-  {
-    value: DelegateSortOptions.HIGHEST_VOTING_WEIGHT,
-    content: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-        <Text
-          as="p"
-          variant="p4semi"
-          style={{
-            color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT
-                ? 'var(--earn-protocol-primary-100)'
-                : 'var(--earn-protocol-secondary-100)',
-          }}
-        >
-          Highest $SUMR voting weight
-        </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT && (
-          <Icon
-            iconName="checkmark"
-            size={14}
-            style={{ color: 'var(--earn-protocol-primary-100)' }}
-          />
-        )}
-      </div>
-    ),
-  },
-  {
-    value: DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER,
-    content: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
-        <Text
-          as="p"
-          variant="p4semi"
-          style={{
-            color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER
-                ? 'var(--earn-protocol-primary-100)'
-                : 'var(--earn-protocol-secondary-100)',
-          }}
-        >
-          Highest Vote and Reward Power
-        </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER && (
-          <Icon
-            iconName="checkmark"
-            size={14}
-            style={{ color: 'var(--earn-protocol-primary-100)' }}
-          />
-        )}
-      </div>
-    ),
-  },
-]
-
 export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   state,
   dispatch,
   externalData,
 }) => {
   const { walletAddress } = useParams()
-
+  const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
+  const [delegatedTo, setDelegatedTo] = useState<TallyDelegate>()
   const [action, setAction] = useState<ClaimDelegateAction>()
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
@@ -163,9 +105,57 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const [searchValue, setSearchValue] = useState('')
 
+  // Simple debounce with ref
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
+
+  // Handle the actual search with debouncing
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (searchValue === '') {
+        setDelegates(externalData.tallyDelegates)
+
+        return
+      }
+
+      try {
+        const result = await fetchDelegatesBySearchValue(searchValue)
+
+        setDelegates(result)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Search failed:', error)
+      }
+    }, 300)
+  }, [searchValue, externalData.tallyDelegates])
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) {
+      setDelegatedTo(undefined)
+
+      return
+    }
+
+    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedTo).then((result) =>
+      setDelegatedTo(result[0]),
+    )
+  }, [externalData.sumrStakeDelegate.delegatedTo])
 
   const sumrToClaim =
     externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
@@ -248,10 +238,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       })
   }
 
-  const mappedSumrDelegatesData = mergeDelegatesData(
-    externalData.sumrDelegates,
-    externalData.sumrDecayFactors,
-  )
+  const mappedSumrDelegatesData = mergeDelegatesData(delegates)
 
   const isChangeDelegateLoading =
     state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
@@ -272,23 +259,16 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasDelegatee = sumrDelegatedTo !== ADDRESS_ZERO
 
-  const localDelegate = localSumrDelegates.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
+  const rewardsDataDelegatee = externalData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
   )
 
-  const rewardsDataDelegatee = externalData.sumrDelegates.find(
-    (item) => item.account.address.toLowerCase() === sumrDelegatedTo,
-  )
-  const value =
-    sumrDelegatedTo === ADDRESS_ZERO
-      ? 'No delegate'
-      : rewardsDataDelegatee?.account.name && rewardsDataDelegatee.account.name !== ''
-        ? rewardsDataDelegatee.account.name
-        : localDelegate?.title ?? formatAddress(sumrDelegatedTo)
+  const resolvedDelegateTitle = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegatee,
+    currentDelegate: sumrDelegatedTo,
+  })
 
-  const votes = mappedSumrDelegatesData.find(
-    (item) => item.address.toLowerCase() === sumrDelegatedTo,
-  )
+  const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
 
   return (
     <div className={classNames.claimDelegateStepWrapper}>
@@ -302,7 +282,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               {value}
             </Text>
           </div>
-          {votes && (
+          {delegatedTo && (
             <Text
               as="div"
               variant="p3semi"
@@ -314,7 +294,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }}
             >
               Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(votes.sumrAmount)}
+              {formatCryptoBalance(delegatedTo.votesCountNormalized)}
             </Text>
           )}
         </Card>
@@ -453,42 +433,61 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             closeAction={() => setAction(undefined)}
           />
         ) : (
-          <div className={classNames.delegates}>
-            {getFilteredDelegates(mappedSumrDelegatesData, searchValue)
-              .sort((a, b) => {
-                if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
-                  return b.sumrAmount - a.sumrAmount
-                }
-
-                return b.decayFactor - a.decayFactor
-              })
-              .map((delegate) => (
-                <ClaimDelegateCard
-                  key={delegate.address}
-                  {...delegate}
-                  isActive={state.delegatee === delegate.address}
-                  handleClick={() =>
-                    dispatch({ type: 'update-delegatee', payload: delegate.address })
+          <>
+            <div className={classNames.delegates}>
+              {mappedSumrDelegatesData
+                .sort((a, b) => {
+                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
+                    return b.sumrAmount - a.sumrAmount
                   }
-                  votingPower={delegate.decayFactor}
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  isFaded={getIsCardFaded({ address: delegate.address, state })}
-                />
-              ))}
-            {getFilteredDelegates(mappedSumrDelegatesData, searchValue).length === 0 && (
-              <Text
-                as="p"
-                variant="p2semi"
+
+                  return b.decayFactor - a.decayFactor
+                })
+                .map((delegate) => (
+                  <ClaimDelegateCard
+                    key={delegate.address}
+                    {...delegate}
+                    isActive={state.delegatee === delegate.address}
+                    handleClick={() =>
+                      dispatch({ type: 'update-delegatee', payload: delegate.address })
+                    }
+                    votingPower={delegate.decayFactor}
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                    isFaded={getIsCardFaded({ address: delegate.address, state })}
+                  />
+                ))}
+              {mappedSumrDelegatesData.length === 0 && (
+                <Text
+                  as="p"
+                  variant="p2semi"
+                  style={{
+                    color: 'var(--earn-protocol-secondary-40)',
+                    textAlign: 'center',
+                    marginTop: 'var(--general-space-32)',
+                  }}
+                >
+                  No delegates found
+                </Text>
+              )}
+            </div>
+            <WithArrow
+              as="p"
+              variant="p3"
+              style={{
+                marginTop: 'var(--general-space-8)',
+              }}
+            >
+              <Link
+                href="https://www.tally.xyz/gov/lazy-summer-dao-official/delegates"
+                target="_blank"
                 style={{
-                  color: 'var(--earn-protocol-secondary-40)',
-                  textAlign: 'center',
-                  marginTop: 'var(--general-space-32)',
+                  color: 'var(--earn-protocol-primary-100)',
                 }}
               >
-                No delegates found
-              </Text>
-            )}
-          </div>
+                Can&apos;t find your delegate? Visit Lazy Summer DAO on Tally
+              </Link>
+            </WithArrow>
+          </>
         )}
 
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (

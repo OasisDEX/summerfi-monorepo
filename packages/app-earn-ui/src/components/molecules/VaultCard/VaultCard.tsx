@@ -138,39 +138,40 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Total assets
+              Total Assets
             </Text>
             <div className={vaultCardStyles.totalAssetsDisplay}>
-              <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
                 {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
               </Text>
-              <Text variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                (${parsedTotalValueLockedUSD})
+              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                ${parsedTotalValueLockedUSD}
               </Text>
             </div>
-            <Text
-              variant="p4semi"
-              style={{
-                margin: 0,
-                color: 'var(--color-text-primary-disabled)',
-              }}
-            >
-              of {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol} cap (
-              {formatDecimalAsPercent(depositCapUsed)} used)
-            </Text>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Best for
+              Best For
             </Text>
             <Text
-              variant="p1semi"
+              variant="p2semi"
               style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
             >
               {customFields?.bestFor ?? 'Optimized lending yield'}
             </Text>
           </div>
         </div>
+        <div className={vaultCardStyles.depositCapSpacer} />
+        <Text
+          variant="p4semi"
+          style={{
+            margin: 0,
+            color: 'var(--color-text-primary-hover)',
+          }}
+        >
+          Deposit cap: {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol} (
+          {formatDecimalAsPercent(depositCapUsed)} used)
+        </Text>
       </Card>
     </GradientBox>
   )

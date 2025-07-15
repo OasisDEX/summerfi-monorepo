@@ -34,7 +34,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({ beachClu
       value: `$${formatFiatBalance(
         beachClubData.rewards
           .filter((reward) => reward.currency !== 'SUMR' && reward.currency !== 'points')
-          .reduce((acc, reward) => acc + Number(reward.balance), 0),
+          .reduce((acc, reward) => acc + Number(reward.balance_usd), 0),
       )}`,
       description: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>

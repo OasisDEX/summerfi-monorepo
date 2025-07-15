@@ -48,7 +48,7 @@ export const ProjectedEarningsCombined = ({
       <AnimateHeight
         id="earnings-expanded"
         show={
-          amountDisplay !== '0' && !isOpen && ownerView && !isSimulation && !!forecastSummaryMap
+          amountDisplay !== '0' && !isSimulation && !!forecastSummaryMap && (isOpen ?? ownerView)
         }
       >
         {forecastSummaryMap && (

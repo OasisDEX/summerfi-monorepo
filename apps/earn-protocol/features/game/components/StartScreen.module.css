@@ -17,10 +17,26 @@
   animation-fill-mode: both;
 }
 
+.starting {
+  animation-name: fadeInGameStartScreen;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: both;
+  animation-direction: reverse;
+}
+
 .title {
-  font-size: 64px;
+  display: block;
+  font-size: 80px;
   font-weight: 800;
+  margin: 24px 0;
+}
+
+.inviteText {
+  font-size: 20px;
   margin-bottom: 16px;
+  color: #ff4f64;
+  font-weight: 700;
 }
 
 .description {
@@ -45,17 +61,36 @@
   }
 }
 
+.wrapperCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.wrapperCardButtons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 8px;
+    height: fit-content;
+    max-height: max-content;
   }
 
   .title {
-    font-size: 22px;
+    font-size: 34px;
   }
 
   .description {
-    font-size: 15px;
+    font-size: 24px;
     margin-bottom: 18px;
   }
 
@@ -64,5 +99,10 @@
     width: 100%;
     font-size: 16px;
     padding: 12px 0;
+  }
+
+  .wrapperCardButtons {
+    gap: 4px;
+    flex-direction: column;
   }
 }

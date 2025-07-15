@@ -97,9 +97,9 @@ export async function getRpcGatewayUrl(networkName: NetworkNames) {
     const startTime = Date.now()
     const { rpcConfig } = await getRemoteConfigWithCache(1000 * configCacheTime.backend)
 
-    if (Math.random() > 0.9) {
+    if (Math.random() < 0.01) {
       // Checking how long it takes to fetch the RPC config
-      // in 10% of the cases
+      // in 1% of the cases
       // eslint-disable-next-line no-console
       console.log(`RPC Gateway URL fetch took ${Date.now() - startTime}ms`)
     }
@@ -111,6 +111,9 @@ export async function getRpcGatewayUrl(networkName: NetworkNames) {
 
     return resolveRpcGatewayUrl(networkName, rpcConfig, rpcBase)
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching RPC gateway URL', e)
+
     return undefined
   }
 }

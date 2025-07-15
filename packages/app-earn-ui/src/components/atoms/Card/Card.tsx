@@ -20,12 +20,14 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
   style,
   onClick,
   disabled,
+  id,
 }) => {
   return (
     <div
       className={getAtomClassList({ className, variant: cardStyles[variant] })}
       style={{ ...(disabled ? { opacity: 0.5, cursor: 'not-allowed' } : {}), ...style }}
       onClick={disabled ? undefined : onClick}
+      id={id}
     >
       {children}
     </div>

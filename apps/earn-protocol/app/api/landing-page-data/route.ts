@@ -60,7 +60,7 @@ export async function GET() {
     })),
   })
 
-  const totalRebalances = rebalanceActivity.pagination.totalItems
+  const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
 
   const protocolTvls = protocolTvlsArray
     // filter zero TVL protocols (set to zero because of an error)
@@ -74,7 +74,7 @@ export async function GET() {
     vaultsWithConfig,
     vaultsApyByNetworkMap,
     protocolTvls,
-    totalRebalances,
+    totalRebalanceItemsPerStrategyId,
     proAppStats,
   } as LandingPageData)
 }

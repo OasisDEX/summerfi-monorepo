@@ -4,10 +4,13 @@
   column-gap: var(--spacing-space-x-large);
   row-gap: var(--general-space-32);
   padding: var(--general-space-64) var(--general-space-40);
+  /* Higher padding bottom to ensure that drawer is not overlapping with footer */
+  padding-bottom: 100px;
 }
 @media (min-width: 1026px) {
   .container {
     padding: var(--general-space-64) var(--general-space-32);
+    padding-bottom: unset;
   }
 }
 @media (min-width: 1280px) {
@@ -30,7 +33,7 @@
 @media (min-width: 532px) {
   .container {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: "top top" "left-1 right-1" "left-2 right-2";
+    grid-template-areas: 'top top' 'left-1 right-1' 'left-2 right-2';
   }
   .container > div:nth-child(1) {
     grid-area: top;
@@ -51,7 +54,7 @@
 @media (min-width: 1026px) {
   .container {
     grid-template-columns: repeat(4, 1fr);
-    grid-template-areas: "one two three four" "full full full full";
+    grid-template-areas: 'one two three four' 'full full full full';
   }
   .container > div:nth-child(1) {
     grid-area: one;
@@ -73,7 +76,7 @@
 @media (min-width: 1280px) {
   .container {
     grid-template-columns: repeat(4, 1fr) auto;
-    grid-template-areas: "one two three four five";
+    grid-template-areas: 'one two three four five';
     max-width: 1400px;
     margin: 0 auto;
   }

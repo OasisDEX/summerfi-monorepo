@@ -6,7 +6,7 @@
   margin-top: var(--general-space-24);
 }
 .sumrTransferabilityCounterWrapper .heading {
-  margin-bottom: var(--general-space-16);
+  margin-bottom: var(--general-space-4);
   text-align: center;
 }
 .sumrTransferabilityCounterWrapper .dialsWrapper {
@@ -49,5 +49,18 @@
 @media (min-width: 532px) {
   .sumrTransferabilityCounterWrapper .dialsWrapper .dialWrapper h5 {
     font-size: var(--font-size-h5);
+  }
+}
+
+.textualWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--general-space-8);
+  color: var(--earn-protocol-secondary-60);
+
+  @media (min-width: 745px) {
+    align-items: center;
   }
 }

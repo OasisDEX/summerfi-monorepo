@@ -2,8 +2,8 @@
 import { type FC, type ReactNode, useCallback, useState } from 'react'
 import clsx from 'clsx'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
-import { Text } from '@/components/atoms/Text/Text.tsx'
+import { Button } from '@/components/atoms/Button/Button'
+import { Text } from '@/components/atoms/Text/Text'
 
 import classNames from './MarketingPointsList.module.css'
 

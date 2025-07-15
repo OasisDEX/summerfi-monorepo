@@ -23,27 +23,25 @@ export const updateTablesData = async ({
   tablesToUpdate: UpdateTables[]
   db: SummerProtocolDB['db']
 }) => {
-  // reusable
-
-  const baseUrl = process.env.SUBGRAPH_BASE
-
-  if (!baseUrl) {
-    throw new Error('SUBGRAPH_BASE is not set')
-  }
-
-  const subgraphsMap = {
-    [SDKNetwork.Mainnet]: `${baseUrl}/summer-protocol`,
-    [SDKNetwork.Base]: `${baseUrl}/summer-protocol-base`,
-    [SDKNetwork.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
-    [SDKNetwork.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
-  }
-
-  const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet])
-  const baseGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Base])
-  const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
-  const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.SonicMainnet])
-
   try {
+    const baseUrl = process.env.SUBGRAPH_BASE
+
+    if (!baseUrl) {
+      throw new Error('SUBGRAPH_BASE is not set')
+    }
+
+    const subgraphsMap = {
+      [SDKNetwork.Mainnet]: `${baseUrl}/summer-protocol`,
+      [SDKNetwork.Base]: `${baseUrl}/summer-protocol-base`,
+      [SDKNetwork.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
+      [SDKNetwork.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
+    }
+
+    const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet])
+    const baseGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Base])
+    const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
+    const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.SonicMainnet])
+
     let updatedLatestActivities
     let updatedTopDepositors
     let updatedRebalanceActivity

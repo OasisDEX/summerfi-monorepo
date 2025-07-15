@@ -32,6 +32,13 @@ export const NavigationWrapper: FC = () => {
           </Button>
         </Link>
       }
+      startTheGame={
+        features?.Game
+          ? () => {
+              window.location.href = '/earn?game'
+            }
+          : undefined
+      }
       onLogoClick={() => {
         // because router will use base path...
         window.location.href = '/'

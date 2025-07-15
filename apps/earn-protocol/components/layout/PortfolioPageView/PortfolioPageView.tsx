@@ -127,7 +127,12 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       id: PortfolioTabs.YOUR_ACTIVITY,
       label: 'Your Activity',
       content: (
-        <PortfolioYourActivity latestActivity={latestActivity} walletAddress={walletAddress} />
+        <PortfolioYourActivity
+          latestActivity={latestActivity}
+          walletAddress={walletAddress}
+          vaultsList={vaultsList}
+          positions={positions}
+        />
       ),
     },
     {
@@ -137,8 +142,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         <PortfolioRebalanceActivity
           rebalanceActivity={rebalanceActivity}
           walletAddress={walletAddress}
-          vaultsList={vaultsList}
           positions={positions}
+          vaultsList={vaultsList}
         />
       ),
     },

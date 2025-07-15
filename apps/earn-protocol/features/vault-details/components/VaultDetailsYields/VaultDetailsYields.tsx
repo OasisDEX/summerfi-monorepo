@@ -1,6 +1,6 @@
 'use client'
 import { type FC } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type SDKVaultishType,
@@ -10,6 +10,8 @@ import { capitalize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
+
+import { VaultDetailsYieldsHeader } from './VaultDetailsYieldsHeader'
 
 interface VaultDetailsYieldsProps {
   arksHistoricalChartData: ArksHistoricalChartData
@@ -37,27 +39,10 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
           width: '100%',
         }}
       >
-        <Text
-          as="h5"
-          variant="h5"
-          style={{
-            marginBottom: 'var(--general-space-16)',
-          }}
-        >
-          {vault.inputToken.symbol} {capitalize(vault.customFields?.risk ?? 'Lower')} Risk
-          Historical Yields
-        </Text>
-        <Text
-          as="p"
-          variant="p2"
-          style={{
-            marginBottom: 'var(--spacing-space-x-large)',
-            color: 'var(--earn-protocol-secondary-60)',
-          }}
-        >
-          The Lazy Summer Protocol is a permissionless passive lending product, which sets out to
-          offer effortless and secure optimised yield, while diversifying risk.
-        </Text>
+        <VaultDetailsYieldsHeader
+          tokenSymbol={vault.inputToken.symbol}
+          risk={capitalize(vault.customFields?.risk ?? 'Lower')}
+        />
         <VaultDetailsAdvancedYield
           chartData={arksHistoricalChartData}
           summerVaultName={summerVaultName}

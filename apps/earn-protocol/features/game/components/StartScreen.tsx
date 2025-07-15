@@ -1,7 +1,11 @@
 'use client'
 
-import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+
+import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import styles from './StartScreen.module.css'
 
@@ -10,77 +14,120 @@ interface StartScreenProps {
   onHowToPlay: () => void
   onAI: () => void
   closeGame: () => void
+  startingGame?: boolean // Optional prop to indicate if the game is starting
+  onShowLeaderboard?: () => void // Optional prop to show leaderboard
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStart, onHowToPlay, onAI, closeGame }) => {
-  const handleStartClick = () => {
-    onStart()
-  }
-
-  const handleHowToPlayClick = () => {
-    onHowToPlay()
-  }
+const StartScreen: React.FC<StartScreenProps> = ({
+  onStart,
+  onHowToPlay,
+  onShowLeaderboard,
+  onAI,
+  closeGame,
+  startingGame,
+}) => {
+  const { userWalletAddress } = useUserWallet()
+  const { isGameByInvite } = useSystemConfig()
 
   return (
-    <div className={styles.container}>
-      <h1 className={clsx(styles.title, styles.animated)} style={{ animationDelay: '0.3s' }}>
-        APY GAME
-      </h1>
+    <div
+      className={clsx(styles.container, {
+        [styles.starting]: startingGame,
+      })}
+    >
+      <Text
+        variant="h1"
+        className={clsx(styles.title, styles.animated)}
+        style={{ animationDelay: '0.3s' }}
+      >
+        Yield Racer 🏎️
+      </Text>
+      {isGameByInvite && (
+        <Text
+          variant="p1semiColorful"
+          className={clsx(styles.inviteText, styles.animated)}
+          style={{ animationDelay: '0.3s' }}
+        >
+          You have been challenged to play the Yield Racer!
+        </Text>
+      )}
       <div className={clsx(styles.description, styles.animated)} style={{ animationDelay: '0.4s' }}>
         Click the card with the highest APY before time runs out!
         <br />
         Can you beat the AI?
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 12,
-        }}
-      >
-        <Button
-          variant="primaryLarge"
-          onClick={handleStartClick}
-          className={styles.animated}
-          style={{ animationDelay: '0.5s' }}
-        >
-          <span>Play</span>
-          <Icon iconName="arrow_forward" size={16} />
-        </Button>
-        <Text
-          variant="p1semiColorful"
-          className={styles.animated}
+      <div className={styles.wrapperCard}>
+        <Card
+          className={clsx(styles.animated, styles.wrapperCard)}
           style={{ animationDelay: '0.6s' }}
         >
-          or
-        </Text>
-        <Button
-          variant="primaryLargeColorful"
-          onClick={onAI}
-          className={styles.animated}
-          style={{ animationDelay: '0.7s' }}
-        >
-          <span>let the AI play it for you</span>
-          <Icon iconName="arrow_increase" size={16} />
-        </Button>
-        <Button
-          variant="secondaryLarge"
-          onClick={handleHowToPlayClick}
-          className={styles.animated}
-          style={{ animationDelay: '0.8s' }}
-        >
-          <span>How to Play</span>
-          <Icon iconName="question_mark" size={16} />
-        </Button>
+          <div className={styles.wrapperCardButtons}>
+            <Button
+              variant="primaryLarge"
+              onClick={onStart}
+              style={{ maxWidth: 200, minWidth: 200 }}
+            >
+              <span>Play</span>
+              <Icon iconName="arrow_forward" size={16} />
+            </Button>
+            <Text variant="p1semiColorful">or</Text>
+            <Button
+              variant="primaryLargeColorful"
+              onClick={onAI}
+              style={{ maxWidth: 200, minWidth: 200 }}
+            >
+              <span>Play with AI</span>
+              <Icon iconName="arrow_increase" size={16} />
+            </Button>
+          </div>
+          <div className={styles.wrapperCardButtons}>
+            <Button
+              variant="secondaryLarge"
+              onClick={onHowToPlay}
+              style={{ maxWidth: 200, minWidth: 200 }}
+            >
+              <span>How to Play</span>
+              <Icon iconName="question_mark" size={16} />
+            </Button>
+            <Button
+              variant="secondaryLarge"
+              onClick={onShowLeaderboard}
+              style={{ maxWidth: 200, minWidth: 200 }}
+            >
+              <span>Leaderboard</span>
+              <Icon iconName="trophy" size={16} />
+            </Button>
+          </div>
+        </Card>
+        {!userWalletAddress ? (
+          <Card
+            className={clsx(styles.animated, styles.wrapperCard)}
+            style={{ animationDelay: '0.7s' }}
+          >
+            <Text variant="p2semi">To save your score on the leaderboard</Text>
+            <WalletLabel customLoginLabel="Connect your wallet" buttonVariant="primaryLarge" />
+          </Card>
+        ) : (
+          <Card
+            className={clsx(styles.animated, styles.wrapperCard)}
+            variant="cardSecondary"
+            style={{ animationDelay: '0.7s' }}
+          >
+            <Text variant="p2semiColorful" as="span">
+              You&#39;re connected.
+            </Text>
+            <Text variant="p3" as="span">
+              You will be able to save your score on the leaderboard.
+            </Text>
+          </Card>
+        )}
         <Button
           variant="textPrimaryLarge"
           onClick={closeGame}
           className={styles.animated}
-          style={{ animationDelay: '0.9s' }}
+          style={{ animationDelay: '0.8s' }}
         >
-          <span>Exit</span>
+          <span>Close</span>
           <Icon iconName="close" size={16} />
         </Button>
       </div>

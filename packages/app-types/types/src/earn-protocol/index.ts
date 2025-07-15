@@ -309,6 +309,11 @@ export type ProAppStats = {
   triggersSuccessRate: number
 }
 
+export type TotalRebalanceItemsPerStrategyId = {
+  strategyId: string
+  count: number
+}
+
 export type LandingPageData = {
   systemConfig: EarnAppConfigType
   vaultsWithConfig: SDKVaultishType[]
@@ -316,6 +321,6 @@ export type LandingPageData = {
   protocolTvls: {
     [key in SupportedDefillamaTvlProtocols]: bigint
   }
-  totalRebalances: number
+  totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
 }

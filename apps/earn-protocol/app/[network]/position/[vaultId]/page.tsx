@@ -29,6 +29,7 @@ import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-a
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -152,12 +153,18 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   )
 }
 
-export async function generateMetadata({ params }: EarnVaultOpenPageProps): Promise<Metadata> {
-  const { network: paramsNetwork, vaultId } = await params
+export async function generateMetadata({
+  params,
+  searchParams,
+}: EarnVaultOpenPageProps & {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [{ network: paramsNetwork, vaultId }, config, headersList, searchParamsAwaited] =
+    await Promise.all([params, systemConfigHandler(), headers(), searchParams])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
-  const prodHost = (await headers()).get('host')
+  const { config: systemConfig } = parseServerResponseToClient(config)
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)
@@ -204,12 +211,21 @@ export async function generateMetadata({ params }: EarnVaultOpenPageProps): Prom
       : 'n/a'
     : 'New'
 
+  let ogImageUrl = ''
+
+  if (typeof searchParamsAwaited.game !== 'undefined') {
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/vault?tvl=${totalValueLockedTokenParsed}&apy30d=${apy30d}&token=${vaultWithConfig.inputToken.symbol}`
+  }
+
   return {
     title: `Lazy Summer Protocol - ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/vault?tvl=${totalValueLockedTokenParsed}&apy30d=${apy30d}&token=${vaultWithConfig.inputToken.symbol}`,
+      images: ogImageUrl,
     },
+    keywords: getSeoKeywords(),
   }
 }
 

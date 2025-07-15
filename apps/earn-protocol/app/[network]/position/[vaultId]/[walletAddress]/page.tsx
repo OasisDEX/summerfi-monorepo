@@ -28,6 +28,7 @@ import { isAddress } from 'viem'
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
+import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -96,11 +97,14 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         strategies: [strategy],
         usersAddresses: [walletAddress],
       }),
-      getPaginatedRebalanceActivity({
-        page: 1,
-        limit: 4,
-        strategies: [strategy],
-        startTimestamp: dayjs().subtract(30, 'days').unix(),
+      getPositionsActivePeriods(walletAddress).then((periods) => {
+        return getPaginatedRebalanceActivity({
+          page: 1,
+          limit: 4,
+          strategies: [strategy],
+          startTimestamp: dayjs().subtract(30, 'days').unix(),
+          periods,
+        })
       }),
     ])
 
@@ -221,12 +225,22 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   )
 }
 
-export async function generateMetadata({ params }: EarnVaultManagePageProps): Promise<Metadata> {
-  const { network: paramsNetwork, vaultId, walletAddress } = await params
+export async function generateMetadata({
+  params,
+  searchParams,
+}: EarnVaultManagePageProps & {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [
+    { network: paramsNetwork, vaultId, walletAddress },
+    config,
+    headersList,
+    searchParamsAwaited,
+  ] = await Promise.all([params, systemConfigHandler(), headers(), searchParams])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
-  const prodHost = (await headers()).get('host')
+  const { config: systemConfig } = parseServerResponseToClient(config)
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const parsedVaultId = isAddress(vaultId)
@@ -261,11 +275,19 @@ export async function generateMetadata({ params }: EarnVaultManagePageProps): Pr
     ? new BigNumber(sumrReward.claimable.amount).plus(new BigNumber(sumrReward.claimed.amount))
     : zero
 
+  let ogImageUrl = ''
+
+  if (typeof searchParamsAwaited.game !== 'undefined') {
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`
+  }
+
   return {
     title: `Lazy Summer Protocol - ${formatCryptoBalance(netValue)} ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} position on ${capitalize(paramsNetwork)}`,
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/vault-position?amount=${formatCryptoBalance(netValue)}&token=${vault ? getDisplayToken(vault.inputToken.symbol) : ''}&address=${walletAddress}&sumrEarned=${formatCryptoBalance(totalSUMREarned)}`,
+      images: ogImageUrl,
     },
   }
 }

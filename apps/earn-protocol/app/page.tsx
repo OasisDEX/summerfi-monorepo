@@ -12,6 +12,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
@@ -38,9 +39,17 @@ const EarnAllVaultsPage = async () => {
   )
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [{ vaults }] = await Promise.all([getVaultsList(), systemConfigHandler()])
-  const prodHost = (await headers()).get('host')
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}): Promise<Metadata> {
+  const [{ vaults }, headersList, params] = await Promise.all([
+    getVaultsList(),
+    headers(),
+    searchParams,
+  ])
+  const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const tvl = formatCryptoBalance(
@@ -48,14 +57,23 @@ export async function generateMetadata(): Promise<Metadata> {
   )
   const protocolsSupported = getVaultsProtocolsList(vaults)
 
+  let ogImageUrl = ''
+
+  if (typeof params.game !== 'undefined') {
+    ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
+  } else {
+    ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`
+  }
+
   return {
     title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
       siteName: 'Lazy Summer Protocol',
-      images: `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`,
+      images: ogImageUrl,
     },
+    keywords: getSeoKeywords(),
   }
 }
 

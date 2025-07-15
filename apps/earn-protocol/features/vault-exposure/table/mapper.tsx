@@ -145,13 +145,13 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
                       gap: 'var(--spacing-space-2x-small)',
                     }}
                   >
-                    <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+                    <Text variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
                       Allocation cap
                     </Text>
                     <Text variant="p3semiColorful" style={{ color: 'var(--color-text-secondary)' }}>
                       {formatCryptoBalance(item.mainAllocationCap)} {arkTokenSymbol}
                     </Text>
-                    <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+                    <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
                       This is the maximum allocation for this strategy in the Vault - it’s set to
                       the lower value between the absolute cap and the TVL based cap (see below).
                     </Text>

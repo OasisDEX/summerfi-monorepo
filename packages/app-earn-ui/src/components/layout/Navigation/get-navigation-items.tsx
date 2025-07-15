@@ -52,7 +52,7 @@ export const getNavigationItems = ({
         prefetchDisabled: !isEarnApp,
       },
       // {
-      //   url: '/yield-trend',
+      //   url: `${!isEarnApp ? `/earn` : ``}/yield-trend`,
       //   id: 'yield-trend',
       //   title: 'Yield Trend',
       //   description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',

@@ -82,6 +82,7 @@ jobs:
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
       BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
         ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      SECURE_PAGE_COOKIE_AUTH_TOKEN: ${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -89,7 +90,17 @@ jobs:
           fetch-depth: 2
 
       - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.8
+        uses: rharkor/caching-for-turbo@v2.2.0
+        with:
+          max-age: 2mo
+          cache-prefix: turbogha_
+          provider: s3
+          s3-bucket: staging-turbo-monorepo
+          s3-region: eu-central-1
+          s3-prefix: monorepo-cache/
+          s3-endpoint: https://s3.amazonaws.com
+          s3-access-key-id: ${{ secrets.TURBOREPO_S3_BUCKET_ACCESS_KEY_ID }}
+          s3-secret-access-key: ${{ secrets.TURBOREPO_S3_BUCKET_SECRET_ACCESS_KEY }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -208,6 +219,7 @@ jobs:
                        --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
                        --build-arg ENVIRONMENT_TAG=${{ env.ENVIRONMENT_TAG }} \
                        --build-arg BEACH_CLUB_REWARDS_DB_CONNECTION_STRING=${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }} \
+                       --build-arg SECURE_PAGE_COOKIE_AUTH_TOKEN=${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \

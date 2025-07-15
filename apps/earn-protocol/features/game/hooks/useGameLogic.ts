@@ -2,22 +2,19 @@
 import { createRef, useCallback, useEffect, useRef, useState } from 'react' // Import createRef
 
 import { playCorrectSound, playIncorrectSound } from '@/features/game/helpers/audioHelpers'
-import { generateCards } from '@/features/game/helpers/gameHelpers'
-import { type CardData } from '@/features/game/types'
+import { STARTING_ROUND_TIME } from '@/features/game/helpers/constants'
+import {
+  calculateFinalScore,
+  generateCards,
+  getRoundTime,
+} from '@/features/game/helpers/gameHelpers'
+import { type CardData, type GameOverParams } from '@/features/game/types'
 
 import { useAIPlayer } from './useAIPlayer'
 
 interface UseGameLogicProps {
   isAI: boolean
-  onGameOver: (params: {
-    score: number
-    streak: number
-    rounds: number
-    lastCards?: CardData[]
-    lastSelected?: number | null
-    avgResponse?: number
-    timedOut?: boolean
-  }) => void
+  onGameOver: (params: GameOverParams) => void
 }
 
 // Helper for random label
@@ -66,8 +63,8 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   const [streak, setStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
   const [round, setRound] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(5)
-  const [timer, setTimer] = useState(5)
+  const [timeLeft, setTimeLeft] = useState(STARTING_ROUND_TIME)
+  const [timer, setTimer] = useState(STARTING_ROUND_TIME)
   const [gameOver, setGameOver] = useState(false)
   const [scoreAnim, setScoreAnim] = useState(false)
   const [streakAnim, setStreakAnim] = useState(false)
@@ -81,9 +78,9 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
   })
   const [responseTimes, setResponseTimes] = useState<number[]>([])
   const [roundStartTime, setRoundStartTime] = useState<number>(Date.now())
+  const [flyingApys, setFlyingApys] = useState<FlyingApyState[]>([])
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const prevStreakRef = useRef(streak)
-  const [flyingApys, setFlyingApys] = useState<FlyingApyState[]>([])
   const flyingApyIdCounter = useRef(0)
   const cardRefs = useRef<HTMLDivElement[]>([]) // Ref to hold card DOM elements
 
@@ -98,7 +95,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
     setCards(() => generateCards(nextRoundNumber))
     setRound(nextRoundNumber)
     setTimer((t) => {
-      const newTime = decreaseTime ? Math.max(1.2, t - 0.1) : t
+      const newTime = decreaseTime ? getRoundTime(nextRoundNumber) : t
 
       setTimeLeft(newTime)
 
@@ -170,20 +167,14 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       const responseTime = (now - roundStartTime) / 1000
       const actualRemainingTime = Math.max(0, timer - responseTime)
 
-      if (idx !== -1) {
-        setResponseTimes((times) => [...times, responseTime])
-      }
-
-      let points = 0
       const perfect = responseTime > 1 ? actualRemainingTime > 1 : true
 
       if (idx === correctIdx) {
         playCorrectSound(actualRemainingTime, timer)
-        points = Math.floor(Number(100 * (actualRemainingTime / timer)) + 10)
-        nextRound(
-          true,
-          round + 1, // Cap at round 30
-        )
+        const nextResponseTimes = [...responseTimes, responseTime]
+        const nextScore = calculateFinalScore(nextResponseTimes)
+
+        nextRound(true, round + 1)
 
         if (startX !== null && startY !== null && cardDataForAnim !== null) {
           const newId = flyingApyIdCounter.current++
@@ -204,6 +195,8 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
             },
           ])
         }
+        setResponseTimes(nextResponseTimes)
+        setScore(nextScore)
       } else {
         playIncorrectSound()
 
@@ -212,6 +205,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
           score,
           streak: bestStreak,
           rounds: round,
+          responseTimes,
           lastCards: currentCards,
           lastSelected: idx === -1 ? null : idx,
           avgResponse,
@@ -219,7 +213,6 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
         })
       }
 
-      setScore((s) => Math.max(0, s + points + (perfect && streak >= 2 ? 5 : 0)))
       setStreak((s) => (perfect ? s + 1 : 0))
       setBestStreak((s) => (perfect ? Math.max(s, streak + 1) : s))
     },
@@ -232,6 +225,7 @@ export function useGameLogic({ isAI, onGameOver }: Omit<UseGameLogicProps, 'hand
       streak,
       bestStreak,
       round,
+      responseTimes,
       score,
       nextRound,
       onGameOver,

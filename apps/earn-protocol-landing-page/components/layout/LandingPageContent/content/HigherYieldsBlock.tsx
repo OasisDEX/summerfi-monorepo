@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import { Button, getVaultsProtocolsList, SectionTabs, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultsListType, type TotalRebalanceItemsPerStrategyId } from '@summerfi/app-types'
 import {
   formatFiatBalance,
   formatWithSeparators,
@@ -199,13 +199,18 @@ const higherYieldsBlockSectionsKeys = Object.keys(
 
 interface HigherYieldsBlockProps {
   vaultsList?: SDKVaultsListType
-  totalRebalances?: number
+  totalRebalanceItemsPerStrategyId?: TotalRebalanceItemsPerStrategyId[]
 }
 
 export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   vaultsList,
-  totalRebalances,
+  totalRebalanceItemsPerStrategyId = [],
 }) => {
+  const totalRebalances = useMemo(
+    () => totalRebalanceItemsPerStrategyId.reduce((acc, item) => acc + Number(item.count), 0),
+    [totalRebalanceItemsPerStrategyId],
+  )
+
   const totalLiquidity = useMemo(() => {
     return vaultsList?.reduce((acc, vault) => acc + Number(vault.withdrawableTotalAssetsUSD), 0)
   }, [vaultsList])
@@ -213,10 +218,13 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   const totalVaultsCount = vaultsList?.length
 
   const savedTimeInHours = useMemo(
-    () => getRebalanceSavedTimeInHours(totalRebalances ?? 0),
+    () => getRebalanceSavedTimeInHours(totalRebalances),
     [totalRebalances],
   )
-  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(vaultsList ?? []), [vaultsList])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(totalRebalanceItemsPerStrategyId),
+    [totalRebalanceItemsPerStrategyId],
+  )
 
   const totalAssets = useMemo(() => {
     return vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)

@@ -2,12 +2,18 @@ import {
   Button,
   getDisplayToken,
   getScannerUrl,
+  getVaultPositionUrl,
   Icon,
   TableCellText,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, mapDbNetworkToChainId, timeAgo } from '@summerfi/app-utils'
+import {
+  chainIdToSDKNetwork,
+  formatCryptoBalance,
+  mapDbNetworkToChainId,
+  timeAgo,
+} from '@summerfi/app-utils'
 import { type LatestActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -81,7 +87,18 @@ export const latestActivityMapper = (rawData: LatestActivity[]) => {
             }}
           >
             <Icon tokenName={asset} variant="s" />
-            <TableCellText>{formatCryptoBalance(balance)}</TableCellText>
+            <TableCellText>
+              <Link
+                href={getVaultPositionUrl({
+                  network: chainIdToSDKNetwork(mapDbNetworkToChainId(item.network)),
+                  vaultId: item.vaultId,
+                  walletAddress: item.userAddress,
+                })}
+                style={{ cursor: 'pointer' }}
+              >
+                {formatCryptoBalance(balance)}
+              </Link>
+            </TableCellText>
           </div>
         ),
         link: (
