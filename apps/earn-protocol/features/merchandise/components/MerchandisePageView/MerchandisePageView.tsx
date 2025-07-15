@@ -18,7 +18,7 @@ export const MerchandisePageView = ({ type, walletAddress }: MerchandisePageView
       <div className={classNames.merchandisePageViewMainContent}>
         <div className={classNames.merchandisePageViewMainContentLeft}>
           <MerchandiseHeading type={type} walletAddress={walletAddress} />
-          <MerchandiseForm type={type} />
+          <MerchandiseForm type={type} walletAddress={walletAddress} />
         </div>
         <Card variant="cardSecondary" className={classNames.merchandisePageViewMainContentRight}>
           <Card>TBD</Card>

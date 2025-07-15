@@ -27,7 +27,7 @@ export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
       </Text>
       <BeachClubBigBanner />
       <BeachClubReferAndEarn walletAddress={walletAddress} beachClubData={beachClubData} />
-      <BeachClubRewards beachClubData={beachClubData} />
+      <BeachClubRewards beachClubData={beachClubData} walletAddress={walletAddress} />
     </div>
   )
 }

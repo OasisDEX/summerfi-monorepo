@@ -14,9 +14,10 @@ enum ReferAndEarnTab {
 
 interface BeachClubRewardsProps {
   beachClubData: BeachClubData
+  walletAddress: string
 }
 
-export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData }) => {
+export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData, walletAddress }) => {
   const tabsOptions = useMemo(
     () => [
       {
@@ -28,11 +29,13 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData }) =
       {
         label: 'Beach Boat Challenge',
         id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
-        content: <BeachClubBoatChallenge beachClubData={beachClubData} />,
+        content: (
+          <BeachClubBoatChallenge beachClubData={beachClubData} walletAddress={walletAddress} />
+        ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
-    [beachClubData],
+    [beachClubData, walletAddress],
   )
 
   return (

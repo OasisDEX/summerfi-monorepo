@@ -11,3 +11,10 @@ export type MerchandiseFormValues = {
   zip: string
   size: string
 }
+
+export enum MerchandiseFormStatus {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}

@@ -1,11 +1,23 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
+import { toast } from 'react-toastify'
+import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import { Button, Input, INTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 
-import { type MerchandiseFormValues } from '@/features/merchandise/types'
+import { accountType } from '@/account-kit/config'
+import { getMerchandiseButtonLabel } from '@/features/merchandise/helpers/get-button-label'
+import { getMerchandiseMessageToSign } from '@/features/merchandise/helpers/get-messageToSign'
+import {
+  MerchandiseFormStatus,
+  type MerchandiseFormValues,
+  type MerchandiseType,
+} from '@/features/merchandise/types'
+import { PortfolioTabs } from '@/features/portfolio/types'
+import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { merchandiseFormFields } from './fields'
 import { areAllMerchandiseFormFieldsFilled } from './helpers'
@@ -81,10 +93,17 @@ const FormSelect: FC<FormSelectProps> = ({ options, label, name, handleChange, v
 }
 
 interface MerchandiseFormProps {
-  type: string
+  type: MerchandiseType
+  walletAddress: string
 }
 
-export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type }) => {
+export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress }) => {
+  const { client } = useSmartAccountClient({ type: accountType })
+  const { signMessageAsync } = useSignMessage({
+    client,
+  })
+  const { userWalletAddress } = useUserWallet()
+  const [status, setStatus] = useState<MerchandiseFormStatus>(MerchandiseFormStatus.IDLE)
   const [formValues, setFormValues] = useState<MerchandiseFormValues>({
     name: '',
     email: '',
@@ -94,13 +113,59 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type }) => {
     size: '',
   })
 
+  const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
+
   const areAllFieldsFilled = areAllMerchandiseFormFieldsFilled(formValues)
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // eslint-disable-next-line no-console
-    console.log('submit', formValues)
+    setStatus(MerchandiseFormStatus.LOADING)
+
+    const messageToSign = getMerchandiseMessageToSign({
+      walletAddress,
+      type,
+    })
+
+    signMessageAsync({
+      message: messageToSign,
+    }).then((signature) => {
+      // eslint-disable-next-line no-console
+      console.log('signature', signature)
+
+      fetch(`/earn/api/merchandise/${walletAddress}/claim`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          signature,
+          formValues,
+          type,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            toast.error(data.error, ERROR_TOAST_CONFIG)
+            setStatus(MerchandiseFormStatus.ERROR)
+
+            return
+          }
+
+          toast.success(`${capitalize(type)} claimed successfully`, SUCCESS_TOAST_CONFIG)
+          setStatus(MerchandiseFormStatus.SUCCESS)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log('Failed to claim merchandise', err)
+          toast.error(
+            'Failed to claim merchandise, please try again or contact with Summer support',
+            ERROR_TOAST_CONFIG,
+          )
+          setStatus(MerchandiseFormStatus.ERROR)
+        })
+    })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -140,19 +205,36 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type }) => {
         handleChange={handleSelectChange}
         value={formValues.size}
       />
-      <Button variant="beachClubLarge" type="submit" disabled={!areAllFieldsFilled}>
-        Claim {capitalize(type)}
+      <Button
+        variant="beachClubLarge"
+        type="submit"
+        disabled={
+          !areAllFieldsFilled ||
+          !isOwner ||
+          status === MerchandiseFormStatus.LOADING ||
+          status === MerchandiseFormStatus.SUCCESS
+        }
+      >
+        {getMerchandiseButtonLabel({ status, type })}
       </Button>
-      <Text variant="p3" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-        Read the full{' '}
-        <Link
-          href={INTERNAL_LINKS.tempTerms}
-          className={classNames.termsOfConditions}
-          target="_blank"
-        >
-          terms of conditions
+      {status === MerchandiseFormStatus.SUCCESS ? (
+        <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.BEACH_CLUB}`}>
+          <Text variant="p3" as="p" style={{ color: 'var(--beach-club-link)' }}>
+            Go back to the Beach Club
+          </Text>
         </Link>
-      </Text>
+      ) : (
+        <Text variant="p3" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
+          Read the full{' '}
+          <Link
+            href={INTERNAL_LINKS.tempTerms}
+            className={classNames.termsOfConditions}
+            target="_blank"
+          >
+            terms of conditions
+          </Link>
+        </Text>
+      )}
     </form>
   )
 }

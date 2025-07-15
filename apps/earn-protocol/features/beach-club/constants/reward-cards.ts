@@ -3,9 +3,9 @@ import nft from '@/public/img/beach_club/nft.svg'
 import tShirt from '@/public/img/beach_club/t_shirt.svg'
 
 export enum BeachClubBoatChallengeRewardCardType {
-  T_SHIRT = 't_shirt',
+  T_SHIRT = 't-shirt',
   HOODIE = 'hoodie',
-  BEACH_CLUB_NFT = 'beach_club_nft',
+  BEACH_CLUB_NFT = 'beach-club-nft',
 }
 
 export const beachClubRewardCardImages = {
