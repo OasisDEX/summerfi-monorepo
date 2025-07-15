@@ -22,7 +22,7 @@
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --format=cjs --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:zlib --external:bignumber.js --external:@trpc/client --external:@summerfi/sdk-common && tsc --declaration --emitDeclarationOnly -p tsconfig.bundle.json && if [ -f bundle/dist/index.js ]; then sed -i.bak 's#\"@summerfi/sdk-common\"#\"@summer_fi/sdk-common\"#g' bundle/dist/index.js; fi",
+    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --format=cjs --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:tty --external:zlib --external:bignumber.js --external:@trpc/client --external:@summerfi/sdk-common && tsc --declaration --emitDeclarationOnly -p tsconfig.bundle.json && if [ -f bundle/dist/index.js ]; then sed -i.bak 's#\"@summerfi/sdk-common\"#\"@summer_fi/sdk-common\"#g' bundle/dist/index.js; fi",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
