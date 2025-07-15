@@ -153,9 +153,9 @@ export async function POST(
           err,
         )
 
-        return NextResponse.json(
-          { error: 'Failed to update rewards distributions or balances' },
-          { status: 500 },
+        throw new Error(
+          `Failed to update rewards distributions or balances for user ${walletAddress}`,
+          err,
         )
       })
 

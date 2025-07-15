@@ -144,7 +144,13 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           type,
         }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            return res.json()
+          }
+
+          throw new Error('Response is not ok')
+        })
         .then((data) => {
           if (data.error) {
             toast.error(data.error, ERROR_TOAST_CONFIG)
