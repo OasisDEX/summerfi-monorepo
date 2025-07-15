@@ -24,17 +24,23 @@
       line-height: 24px;
       text-align: left;
       background: unset;
+      color: var(--earn-protocol-secondary-100);
 
       &::placeholder {
         color: var(--earn-protocol-neutral-40);
       }
 
+      &:autofill,
+      &:autofill:hover,
+      &:autofill:focus,
+      &:autofill:active,
+      &:-internal-autofill-selected,
+      &:-internal-autofill-previewed,
       &:-webkit-autofill,
       &:-webkit-autofill:hover,
       &:-webkit-autofill:focus,
       &:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 30px transparent inset !important;
-        -webkit-text-fill-color: var(--earn-protocol-secondary-100) !important;
+        -webkit-box-shadow: 0 0 0 30px var(--earn-protocol-secondary-70) inset !important;
         background: transparent !important;
         background-color: transparent !important;
         transition: background-color 5000s ease-in-out 0s;
