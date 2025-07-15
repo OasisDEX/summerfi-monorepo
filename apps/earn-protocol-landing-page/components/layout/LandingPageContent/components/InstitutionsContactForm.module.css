@@ -69,8 +69,17 @@
 .errorText {
   color: var(--earn-protocol-critical-100);
   font-size: 14px;
-  line-height: 20px;
+  line-height: 14px;
   margin-top: 4px;
+  text-align: center;
+}
+
+.successMessage {
+  color: var(--earn-protocol-success-100);
+  font-size: 14px;
+  line-height: 14px;
+  margin-top: 4px;
+  text-align: center;
 }
 
 .formActions {

@@ -7,6 +7,7 @@ declare const styles: {
   readonly "formField": string;
   readonly "formInput": string;
   readonly "orContactusDirectly": string;
+  readonly "successMessage": string;
 };
 export = styles;
 
