@@ -91,3 +91,8 @@
   align-items: center;
   gap: var(--spacing-space-medium);
 }
+
+.faqWrapper {
+  margin-bottom: var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-3x-large);
+}

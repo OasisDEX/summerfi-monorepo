@@ -4,6 +4,7 @@ declare const styles: {
   readonly "descriptionBlock": string;
   readonly "descriptionCard": string;
   readonly "descriptionText": string;
+  readonly "faqWrapper": string;
   readonly "integrationsBlock": string;
   readonly "wrapper": string;
 };

@@ -1,10 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use client'
-import { Button, Card, Emphasis, Icon, SectionTabs, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Audits,
+  Button,
+  Card,
+  Emphasis,
+  FaqSection,
+  Icon,
+  SectionTabs,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { redirect } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
+import { InstitutionsContactForm } from '@/components/layout/LandingPageContent/components/InstitutionsContactForm'
+import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
+import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
 import selfManagedVaultsStyles from './selfManagedVaults.module.css'
 import institutionsPageStyles from '@/app/institutions/institutionsPage.module.css'
@@ -184,6 +198,63 @@ export default function SelfManagedVaults() {
           ]}
         />
       </div>
+      <InstitutionsContactForm />
+      <div>
+        <div className={institutionsPageStyles.securityAndCompliance}>
+          <Text variant="p1semiColorful" as="div">
+            Best in class regulatory structure
+          </Text>
+          <Text variant="h2" as="h2">
+            Security and compliance first
+          </Text>
+          <Text variant="p1semi" as="p">
+            We’re focused on compliance, so you can focus on utility and yield.
+          </Text>
+        </div>
+        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+      </div>
+      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+      <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
+      <FaqSection
+        customTitle="Frequently Asked Questions"
+        wrapperClassName={selfManagedVaultsStyles.faqWrapper}
+        expanderButtonStyles={{
+          padding: 'var(--spacing-space-large) 0',
+        }}
+        data={[
+          {
+            title: 'What are Closed Access Vaults?',
+            content: (
+              <Text variant="p1" as="p">
+                Closed Access Vaults are a feature of the Lazy Summer Protocol that allows
+                institutions to create private, permissioned environments for their digital assets.
+                This ensures that only authorized users can access and manage the assets within the
+                vault.
+              </Text>
+            ),
+          },
+          {
+            title: 'Can you customize strategy allocation and limits?',
+            content: (
+              <Text variant="p1" as="p">
+                Yes, Lazy Summer Protocol allows you to customize strategy allocation and limits
+                based on your institutional requirements. You can define specific strategies and set
+                limits for each vault.
+              </Text>
+            ),
+          },
+          {
+            title: 'What yield strategies are available?',
+            content: (
+              <Text variant="p1" as="p">
+                Lazy Summer Protocol offers a range of yield strategies, including lending, staking,
+                and yield farming. You can choose the strategies that align with your investment
+                goals and risk tolerance.
+              </Text>
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

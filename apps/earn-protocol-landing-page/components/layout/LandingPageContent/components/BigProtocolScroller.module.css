@@ -34,20 +34,17 @@
   width: 100vw;
   overflow: hidden;
   margin-top: var(--spacing-space-2x-large);
-  margin-bottom: var(--spacing-space-3x-large);
 }
 
 @media (min-width: 532px) {
   .bigProtocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
-    margin-bottom: var(--spacing-space-3x-large);
   }
 }
 
 @media (min-width: 1026px) {
   .bigProtocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
-    margin-bottom: var(--spacing-space-4x-large);
   }
 }
 

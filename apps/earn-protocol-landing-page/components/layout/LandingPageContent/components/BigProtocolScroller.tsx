@@ -132,7 +132,7 @@ const BigProtocolScrollerItem = ({
 export const BigProtocolScroller = ({
   protocolTvls,
   protocolApys,
-  animationPixelPerSecond = 20,
+  animationPixelPerSecond = 30,
 }: BigProtocolScrollerProps) => {
   const { screenSize } = useScreenSize()
   const [hovered, setHovered] = useState(false)
