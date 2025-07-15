@@ -245,3 +245,54 @@
     padding: 0 var(--spacing-space-large);
   }
 }
+
+
+.subpageDescriptionBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  max-width: 950px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.subpageDescriptionText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.subpageDescriptionText h5 {
+  color: var(--color-text-primary-hover)
+}
+
+.subpageDescriptionText p {
+  color: var(--color-text-secondary)
+}
+
+.subpageDescriptionCard {
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subpageDescriptionCard ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subpageDescriptionCard ul li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 16px;
+}
+
+.subpageDescriptionCard ul li p {
+  color: var(--color-text-secondary)
+}

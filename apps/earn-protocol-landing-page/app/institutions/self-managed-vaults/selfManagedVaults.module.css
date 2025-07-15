@@ -5,54 +5,6 @@
   gap: 128px
 }
 
-.descriptionBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 64px;
-  max-width: 950px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.descriptionText {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.descriptionText h5 {
-  color: var(--color-text-primary-hover)
-}
-
-.descriptionText p {
-  color: var(--color-text-secondary)
-}
-
-.descriptionCard {
-  padding: 64px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.descriptionCard ul {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.descriptionCard ul li {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.descriptionCard ul li p {
-  color: var(--color-text-secondary)
-}
-
 .integrationsBlock {
   display: flex;
   flex-direction: column;

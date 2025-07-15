@@ -9,11 +9,10 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
 import Image from 'next/image'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
@@ -31,30 +30,6 @@ import depositUiImage from '@/public/img/institution/deposit-ui.png'
 import securityAndComplianceImage from '@/public/img/institution/security-and-compliance.png'
 import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
 import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
-
-const FinalCTAElement = ({
-  title,
-  icon,
-  url,
-  urlLabel,
-}: {
-  title: string
-  icon: IconNamesList
-  url: string
-  urlLabel: string
-}) => {
-  return (
-    <div className={institutionsPageStyles.finalCTAElement}>
-      <Icon iconName={icon} size={32} />
-      <Text variant="p2semi" as="p">
-        {title}
-      </Text>
-      <Link href={url} prefetch={false}>
-        <WithArrow variant="p2semi">{urlLabel}</WithArrow>
-      </Link>
-    </div>
-  )
-}
 
 const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
   return (

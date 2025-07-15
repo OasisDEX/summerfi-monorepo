@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use client'
+import { useMemo } from 'react'
 import {
   Audits,
   Button,
@@ -11,6 +12,8 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
+import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import { redirect } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
@@ -26,10 +29,44 @@ import institutionsPageStyles from '@/app/institutions/institutionsPage.module.c
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
 
-  const institutionsEnabled = landingPageData?.systemConfig.features.Institutions
-
-  if (institutionsEnabled === false) {
+  if (!landingPageData?.systemConfig.features.Institutions) {
     redirect('/')
+  }
+
+  const protocolsList = useMemo(() => {
+    return supportedDefillamaProtocols.map((protocol) => {
+      const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
+      const { strategy, asset, displayName } = protocolConfig
+      const protocolIcon = protocolConfig.icon
+      const tvl = BigInt(landingPageData?.protocolTvls?.[protocol] ?? 0)
+      const apy = landingPageData?.protocolApys?.[protocol] ?? [0, 0]
+
+      return {
+        protocolIcon,
+        protocol: displayName,
+        blocks: [
+          ['TVL', tvl ? `$${formatCryptoBalance(tvl)}` : 'N/A'],
+          ['Strategy', strategy],
+          ['Asset', asset.join(', ')],
+          [
+            '30d APY Range 24/25',
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            apy
+              ? `${formatPercent(apy[0], {
+                  precision: 2,
+                })} - ${formatPercent(apy[1], {
+                  precision: 2,
+                })}`
+              : 'N/A',
+          ],
+        ] as [string, string][],
+        url: '',
+      }
+    })
+  }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
+
+  if (!landingPageData) {
+    return null
   }
 
   return (
@@ -58,8 +95,8 @@ export default function SelfManagedVaults() {
           </WithArrow>
         </div>
       </div>
-      <div className={selfManagedVaultsStyles.descriptionBlock}>
-        <div className={selfManagedVaultsStyles.descriptionText}>
+      <div className={institutionsPageStyles.subpageDescriptionBlock}>
+        <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
             Closed Access Vaults by Lazy Summer Protocol
           </Text>
@@ -73,7 +110,7 @@ export default function SelfManagedVaults() {
             mandates.
           </Text>
         </div>
-        <Card className={selfManagedVaultsStyles.descriptionCard}>
+        <Card className={institutionsPageStyles.subpageDescriptionCard}>
           <Text as="h5" variant="h5colorful">
             Features
           </Text>
@@ -112,10 +149,7 @@ export default function SelfManagedVaults() {
           of June 2025.
         </Text>
       </div>
-      <BigProtocolScroller
-        protocolTvls={landingPageData?.protocolTvls}
-        protocolApys={landingPageData?.protocolApys}
-      />
+      <BigProtocolScroller itemsList={protocolsList} />
       <div>
         <div className={selfManagedVaultsStyles.benefitsHeaderWrapper}>
           <Text variant="h2">What are the benefits?</Text>

@@ -11,13 +11,7 @@ import {
   useState,
 } from 'react'
 import { Card, Icon, Text } from '@summerfi/app-earn-ui'
-import {
-  type IconNamesList,
-  type LandingPageData,
-  supportedDefillamaProtocols,
-  supportedDefillamaProtocolsConfig,
-} from '@summerfi/app-types'
-import { formatAsShorthandNumbers, formatPercent } from '@summerfi/app-utils'
+import { type IconNamesList } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { useScreenSize } from '@/hooks/use-screen-size'
@@ -29,19 +23,21 @@ type BigProtocolScrollerTrackProps = {
   ref: RefObject<HTMLDivElement | null>
   style: CSSProperties
 }
+
 type BigProtocolScrollerItemProps = {
-  protocol: string
-  protocolIcon: ReactNode
-  tvl: bigint
-  url: string
-  strategy: string
-  apy: [number, number]
-  asset: string[]
+  label: string
+  labelIcon: ReactNode
+  value: [string, string][]
+  url?: string
 }
 
 type BigProtocolScrollerProps = {
-  protocolTvls?: LandingPageData['protocolTvls']
-  protocolApys?: LandingPageData['protocolApys']
+  itemsList: {
+    protocolIcon: IconNamesList
+    protocol: string
+    blocks: [string, string][]
+    url?: string
+  }[]
   animationPixelPerSecond?: number
 }
 
@@ -65,56 +61,31 @@ const BigProtocolScrollerTrack = forwardRef<HTMLDivElement, BigProtocolScrollerT
 )
 
 const BigProtocolScrollerItem = ({
-  protocolIcon,
-  protocol,
-  tvl,
+  labelIcon,
+  label,
+  value,
   url,
-  strategy,
-  asset,
-  apy,
 }: BigProtocolScrollerItemProps) => {
+  const grid = useMemo(() => {
+    return value.map(([key, value]) => (
+      <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock} key={key}>
+        <Text variant="p4semi" as="p">
+          {key}
+        </Text>
+        <Text variant="p2semi" as="span">
+          {value}
+        </Text>
+      </div>
+    ))
+  }, [value])
+
   const insides = (
     <Card className={bigProtocolScrollerStyles.bigProtocolScrollerItem}>
       <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemNameIcon}>
-        <Icon iconName={protocolIcon as IconNamesList} size={44} />
-        <Text variant="p1semi">{protocol}</Text>
+        <Icon iconName={labelIcon as IconNamesList} size={44} />
+        <Text variant="p1semi">{label}</Text>
       </div>
-      <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataGrid}>
-        <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock}>
-          <Text variant="p4semi" as="p">
-            TVL
-          </Text>
-          <Text variant="p2semi" as="span">
-            {formatAsShorthandNumbers(tvl, {
-              precision: 2,
-            })}
-          </Text>
-        </div>
-        <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock}>
-          <Text variant="p4semi" as="p">
-            Strategy
-          </Text>
-          <Text variant="p2semi" as="span">
-            {strategy}
-          </Text>
-        </div>
-        <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock}>
-          <Text variant="p4semi" as="p">
-            Asset
-          </Text>
-          <Text variant="p2semi" as="span">
-            {asset.join(', ')}
-          </Text>
-        </div>
-        <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock}>
-          <Text variant="p4semi" as="p">
-            30d APY Range 24/25
-          </Text>
-          <Text variant="p2semi" as="span">
-            {apy.map((apyValue) => formatPercent(apyValue, { precision: 2 })).join(' - ')}
-          </Text>
-        </div>
-      </div>
+      <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataGrid}>{grid}</div>
     </Card>
   )
 
@@ -130,40 +101,23 @@ const BigProtocolScrollerItem = ({
 }
 
 export const BigProtocolScroller = ({
-  protocolTvls,
-  protocolApys,
+  itemsList,
   animationPixelPerSecond = 30,
 }: BigProtocolScrollerProps) => {
   const { screenSize } = useScreenSize()
   const [hovered, setHovered] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
 
-  const protocolsList = useMemo(() => {
-    return supportedDefillamaProtocols.map((protocol) => {
-      const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
-
-      return {
-        protocol: protocolConfig.displayName,
-        protocolIcon: protocolConfig.icon,
-        strategy: protocolConfig.strategy,
-        asset: protocolConfig.asset,
-        tvl: BigInt(protocolTvls?.[protocol] ?? 0),
-        apy: protocolApys?.[protocol] ?? [0, 0],
-        url: '',
-      }
-    })
-  }, [protocolTvls, protocolApys])
-
   // 570 is the width of the item, 16 is the gap
-  const singleProtocolListWidth = protocolsList.length * (570 + 16)
+  const singleProtocolListWidth = itemsList.length * (570 + 16)
 
   const protocolsListToDisplay = useMemo(() => {
     // we need to get a list that will fill the whole screen horizontally
     // as the items in the scroller are fixed width + fixed gap we dont need to measure them
     const itemsListMultiplier = Math.ceil(screenSize.width / singleProtocolListWidth) * 2 // always at least two lists
 
-    return Array.from({ length: itemsListMultiplier }).flatMap(() => protocolsList)
-  }, [protocolsList, screenSize.width, singleProtocolListWidth])
+    return Array.from({ length: itemsListMultiplier }).flatMap(() => itemsList)
+  }, [itemsList, screenSize.width, singleProtocolListWidth])
 
   const animationSpeedInSeconds = useMemo(() => {
     return Math.ceil(singleProtocolListWidth / animationPixelPerSecond)
@@ -200,20 +154,15 @@ export const BigProtocolScroller = ({
           animationPlayState: hovered ? 'paused' : 'running',
         }}
       >
-        {protocolsListToDisplay.map(
-          ({ protocol, protocolIcon, tvl, url, strategy, asset, apy }, index) => (
-            <BigProtocolScrollerItem
-              key={`${protocol}-${index}`}
-              protocol={protocol}
-              protocolIcon={protocolIcon}
-              tvl={tvl}
-              url={url}
-              strategy={strategy}
-              asset={asset}
-              apy={apy}
-            />
-          ),
-        )}
+        {protocolsListToDisplay.map(({ protocol, protocolIcon, url, blocks }, index) => (
+          <BigProtocolScrollerItem
+            key={`${protocol}-${index}`}
+            label={protocol}
+            url={url}
+            labelIcon={protocolIcon}
+            value={blocks}
+          />
+        ))}
       </BigProtocolScrollerTrack>
     </div>
   )
