@@ -2,13 +2,6 @@ import { MerchandiseSizes } from '@/features/merchandise/types'
 
 export const merchandiseFormSizes = [
   {
-    label: 'Size',
-    value: '',
-    icon: '',
-    disabled: true,
-    hidden: true,
-  },
-  {
     label: MerchandiseSizes.S,
     value: MerchandiseSizes.S,
     icon: '',

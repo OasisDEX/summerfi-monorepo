@@ -2,10 +2,12 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
-import { Button, Input, Text } from '@summerfi/app-earn-ui'
-import clsx from 'clsx'
+import { Button, Dropdown, Icon, Input, RECAPTCHA_SITE_KEY, Text } from '@summerfi/app-earn-ui'
+import { type DropdownRawOption } from '@summerfi/app-types'
 import capitalize from 'lodash-es/capitalize'
+import isBoolean from 'lodash-es/isBoolean'
 import Link from 'next/link'
+import Script from 'next/script'
 
 import { accountType } from '@/account-kit/config'
 import { merchandiseFormValuesSchema } from '@/features/merchandise/helpers/form-schema'
@@ -27,14 +29,23 @@ import { merchandiseFormSizes } from './sizes'
 
 import classNames from './MerchandiseForm.module.css'
 
+declare global {
+  const grecaptcha: {
+    ready: (cb: () => void) => void
+    execute: (siteKey: string, options: { action: string }) => Promise<string>
+  }
+}
+
 interface FormFieldProps {
   label: string
   name: string
   type: string
   placeholder: string
+  value: string
   error?: string[]
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void
   disabled?: boolean
+  isOpen?: boolean
 }
 
 const FormField: FC<FormFieldProps> = ({
@@ -43,8 +54,10 @@ const FormField: FC<FormFieldProps> = ({
   type,
   placeholder,
   handleChange,
+  value,
   error,
   disabled,
+  isOpen,
 }) => {
   return (
     <div className={classNames.formField}>
@@ -53,19 +66,36 @@ const FormField: FC<FormFieldProps> = ({
           {label}
         </Text>
       </label>
-      <Input
-        type={type}
-        id={name}
-        name={name}
-        className={classNames.formInput}
-        placeholder={placeholder}
-        required
-        onChange={handleChange}
-        disabled={disabled}
-        inputWrapperStyles={{
-          cursor: disabled ? 'not-allowed' : 'auto',
-        }}
-      />
+      <div style={{ position: 'relative' }}>
+        <Input
+          type={type}
+          id={name}
+          name={name}
+          className={classNames.formInput}
+          placeholder={placeholder}
+          required
+          onChange={handleChange}
+          disabled={disabled}
+          value={value}
+          inputWrapperStyles={{
+            cursor: disabled ? 'not-allowed' : isBoolean(isOpen) ? 'pointer' : 'auto',
+            caretColor: isBoolean(isOpen) ? 'transparent' : 'var(--earn-protocol-neutral-40)',
+          }}
+        />
+        {isBoolean(isOpen) && (
+          <Icon
+            iconName={isOpen ? 'chevron_up' : 'chevron_down'}
+            size={13}
+            style={{
+              position: 'absolute',
+              right: 'var(--general-space-8)',
+              top: '50%',
+              transform: 'translateY(-50%)',
+            }}
+            color="var(--earn-protocol-neutral-40)"
+          />
+        )}
+      </div>
       {error && (
         <Text variant="p3" as="p" style={{ color: 'var(--earn-protocol-critical-100)' }}>
           {error.join(', ')}
@@ -75,50 +105,24 @@ const FormField: FC<FormFieldProps> = ({
   )
 }
 
-interface FormSelectProps {
-  options: { label: string; value: string; icon: string; disabled?: boolean; hidden?: boolean }[]
-  label: string
-  name: string
-  handleChange: (e: ChangeEvent<HTMLSelectElement>) => void
-  value: string
-  disabled?: boolean
+interface DropdownTriggerProps {
+  isDisabled?: boolean
+  isOpen: boolean
+  dropdownValue?: DropdownRawOption
 }
 
-const FormSelect: FC<FormSelectProps> = ({
-  options,
-  label,
-  name,
-  handleChange,
-  value,
-  disabled,
-}) => {
+const DropdownTrigger = ({ isOpen, isDisabled, dropdownValue }: DropdownTriggerProps) => {
   return (
-    <div className={classNames.formSelectWrapper}>
-      <label htmlFor={name}>
-        <Text variant="p4semi" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-          {label}
-        </Text>
-      </label>
-      <select
-        name={name}
-        id={name}
-        className={clsx(classNames.formSelect)}
-        required
-        onChange={handleChange}
-        value={value}
-        style={{
-          color:
-            value === '' ? 'var(--earn-protocol-neutral-40)' : 'var(--earn-protocol-secondary-100)',
-        }}
-        disabled={disabled}
-      >
-        {options.map((size) => (
-          <option key={size.value} value={size.value} disabled={size.disabled} hidden={size.hidden}>
-            {size.label}
-          </option>
-        ))}
-      </select>
-    </div>
+    <FormField
+      label="Size"
+      name="size"
+      type="select"
+      placeholder="Size"
+      handleChange={() => {}}
+      disabled={isDisabled}
+      value={dropdownValue?.value ?? ''}
+      isOpen={isOpen}
+    />
   )
 }
 
@@ -170,7 +174,24 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     signMessageAsync({
       message: messageToSign,
     })
-      .then((signature) => {
+      .then(async (signature) => {
+        let token
+
+        try {
+          token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'submit' })
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.log('Failed to get reCAPTCHA token', err)
+
+          toast.error(
+            'Failed to get reCAPTCHA token, please try again or contact with Summer support',
+            ERROR_TOAST_CONFIG,
+          )
+          setStatus(MerchandiseFormStatus.ERROR)
+
+          return
+        }
+
         fetch(`/earn/api/beach-club/merchandise/${walletAddress}/claim`, {
           method: 'POST',
           headers: {
@@ -180,6 +201,7 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
             signature,
             formValues,
             type,
+            token,
           }),
         })
           .then((res) => {
@@ -237,20 +259,15 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     }))
   }
 
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target
-
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
   const inputsDisabled =
     status === MerchandiseFormStatus.LOADING || status === MerchandiseFormStatus.SUCCESS
 
   return (
     <form className={classNames.merchandiseFormWrapper} onSubmit={onSubmit}>
+      <Script
+        src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`}
+        strategy="afterInteractive"
+      />
       {merchandiseFormFields.map((field) => (
         <FormField
           key={field.name}
@@ -261,16 +278,32 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           handleChange={handleChange}
           error={errors[field.name as keyof MerchandiseFormErrors]}
           disabled={inputsDisabled}
+          value={formValues[field.name as keyof MerchandiseFormValues]}
         />
       ))}
-      <FormSelect
-        options={merchandiseFormSizes}
-        label="Size"
-        name="size"
-        handleChange={handleSelectChange}
-        value={formValues.size}
-        disabled={inputsDisabled}
-      />
+      <Dropdown
+        options={merchandiseFormSizes.map((size) => ({
+          label: size.label,
+          value: size.value,
+          content: size.label,
+        }))}
+        dropdownValue={{
+          value: formValues.size,
+          content: formValues.size,
+        }}
+        dropdownWrapperStyle={{ width: '100%' }}
+        dropdownChildrenStyle={{ width: '100%' }}
+        onChange={(option) => {
+          setFormValues((prev) => ({
+            ...prev,
+            size: option.value,
+          }))
+        }}
+        isDisabled={inputsDisabled}
+        trigger={DropdownTrigger}
+      >
+        {null}
+      </Dropdown>
       <Button
         variant="beachClubLarge"
         type="submit"

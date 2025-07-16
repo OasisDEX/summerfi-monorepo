@@ -5,6 +5,7 @@ import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { type NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 
+import { validateCaptcha } from '@/features/captcha/validate-captcha'
 import { merchandiseFormValuesSchema } from '@/features/merchandise/helpers/form-schema'
 import { getMerchandiseMessageToSign } from '@/features/merchandise/helpers/get-messageToSign'
 import { MerchandiseType } from '@/features/merchandise/types'
@@ -23,12 +24,12 @@ const postBodyParamsSchema = z.object({
   signature: z.string().nonempty('Signature is required'),
   formValues: merchandiseFormValuesSchema,
   type: z.nativeEnum(MerchandiseType),
-  // token: z
-  //   .string()
-  //   .nonempty('reCAPTCHA token is required')
-  //   .refine((token) => token.length > 0, {
-  //     message: 'reCAPTCHA token must not be empty',
-  //   }),
+  token: z
+    .string()
+    .nonempty('reCAPTCHA token is required')
+    .refine((token) => token.length > 0, {
+      message: 'reCAPTCHA token must not be empty',
+    }),
 })
 
 export async function POST(
@@ -66,7 +67,16 @@ export async function POST(
   }
 
   const { walletAddress } = validatedPathParams
-  const { formValues, signature, type } = validatedPostBody
+  const { formValues, signature, type, token } = validatedPostBody
+
+  const recaptchaData = await validateCaptcha(token)
+
+  if (!recaptchaData) {
+    // eslint-disable-next-line no-console
+    console.log('Invalid reCAPTCHA token when claiming merchandise for user', walletAddress)
+
+    return NextResponse.json({ error: 'Invalid reCAPTCHA token' }, { status: 400 })
+  }
 
   const messageToSign = getMerchandiseMessageToSign({
     walletAddress,
