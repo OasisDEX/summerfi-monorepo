@@ -194,7 +194,7 @@ export async function POST(
         )
       })
 
-    return NextResponse.json({ message: 'Merchandise claimed successfully' }, { status: 200 })
+    return NextResponse.json({ success: 'Merchandise claimed successfully' }, { status: 200 })
   } catch (err) {
     return NextResponse.json({ error: `Error while processing request: ${err}` }, { status: 500 })
   } finally {
