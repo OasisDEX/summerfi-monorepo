@@ -66,6 +66,7 @@ export const NavigationWrapper: FC = () => {
       links={getNavigationItems({
         userWalletAddress,
         isEarnApp: true,
+        features,
       })}
       walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
       mobileWalletConnectionComponents={{

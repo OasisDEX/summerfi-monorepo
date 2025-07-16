@@ -161,6 +161,9 @@ export const icons = {
   earn_network_sonic: customLazy(
     () => import('./icons/earn_network_sonic.svg?react'),
   ) as IconExportType,
+  earn_institution: customLazy(
+    () => import('./icons/earn_institution.svg?react'),
+  ) as IconExportType,
   edit: customLazy(() => import('./icons/edit.svg?react')) as IconExportType,
   ena: customLazy(() => import('./icons/ena.svg?react')) as IconExportType,
   eth_circle_color: customLazy(
@@ -714,6 +717,7 @@ export const iconsSync: {
   earn_network_ethereum: import('./icons/earn_network_ethereum.svg?react'),
   earn_network_optimism: import('./icons/earn_network_optimism.svg?react'),
   earn_network_sonic: import('./icons/earn_network_sonic.svg?react'),
+  earn_institution: import('./icons/earn_institution.svg?react'),
   earn_rebalance_activities: import('./icons/earn_rebalance_activities.svg?react'),
   earn_user_activities: import('./icons/earn_user_activities.svg?react'),
   earn_yield_trend: import('./icons/earn_yield_trend.svg?react'),
