@@ -8,20 +8,14 @@ import {
   Emphasis,
   Input,
   LoadingSpinner,
-  RECAPTCHA_SITE_KEY,
   Text,
 } from '@summerfi/app-earn-ui'
+import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
+import Link from 'next/link'
 import Script from 'next/script'
 import { z } from 'zod'
 
 import institutionsContactFormStyles from './InstitutionsContactForm.module.css'
-
-declare global {
-  const grecaptcha: {
-    ready: (cb: () => void) => void
-    execute: (siteKey: string, options: { action: string }) => Promise<string>
-  }
-}
 
 const institutionsFormSchema = z.object({
   companyName: z
@@ -150,73 +144,31 @@ export const InstitutionsContactForm = () => {
       setFormErrors(errors)
       setIsSubmitting(false)
     } else {
-      grecaptcha.ready(() => {
-        try {
-          grecaptcha
-            .execute(RECAPTCHA_SITE_KEY, { action: 'submit' })
-            .then((token) => {
-              const isDev = process.env.NODE_ENV !== 'production'
-              const backendFormPath = '/earn/api/institutions/form'
-              let backendUrl = ''
+      const isDev = process.env.NODE_ENV !== 'production'
+      const backendFormPath = '/earn/api/campaigns/institutions/form'
+      let formEndpoint = ''
 
-              if (isDev) {
-                backendUrl = `http://localhost:3002${backendFormPath}`
-              } else {
-                backendUrl = `${window.location.origin}${backendFormPath}`
-              }
-              fetch(backendUrl, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...formValues, token }),
-              })
-                .then((response) => {
-                  if (!response.ok) {
-                    throw new Error('Network response was not ok')
-                  }
-
-                  return response.json()
-                })
-                .then((data) => {
-                  resetForm()
-                  if (data.success) {
-                    setIsSubmitted(true)
-                    setFormErrors({})
-                  } else {
-                    setFormErrors({
-                      global: data.errors || [
-                        'An unexpected error occurred. Please try again later.',
-                      ],
-                    })
-                    // eslint-disable-next-line no-console
-                    console.error('Form submission failed:', data.errors)
-                  }
-                })
-                .catch((error) => {
-                  // eslint-disable-next-line no-console
-                  console.error('Error submitting form:', error)
-                })
-            })
-            .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.error('Error executing reCAPTCHA:', error)
-              setFormErrors({
-                global: ['Failed to verify reCAPTCHA. Please try again later.'],
-              })
-            })
-            .finally(() => {
-              setIsSubmitting(false)
-              setIsSubmitted(true)
-              resetForm()
-            })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Unexpected error during form submission:', error)
-          setFormErrors({
-            global: ['An unexpected error occurred. Please try again later.'],
-          })
-          setIsSubmitting(false)
+      if (isDev) {
+        formEndpoint = `http://localhost:3002${backendFormPath}`
+      } else {
+        formEndpoint = `${window.location.origin}${backendFormPath}`
+      }
+      void handleCaptcha({
+        formValues,
+        formEndpoint,
+        resetForm,
+        setIsSubmitting,
+        setIsSubmitted,
+        setFormErrors,
+      }).then((success) => {
+        if (success) {
+          // Reset form and show success message
+          setTimeout(() => {
+            setIsSubmitted(false)
+          }, 5000) // Reset success message after 5 seconds
+        } else {
+          // Handle failure case
+          setIsSubmitted(false)
         }
       })
     }
@@ -283,7 +235,6 @@ export const InstitutionsContactForm = () => {
           </Text>
         </AnimateHeight>
       </div>
-
       <div className={institutionsContactFormStyles.formActions}>
         <Button variant="primaryLarge" onClick={handleSubmit} disabled={isSubmitting}>
           {isSubmitting ? <LoadingSpinner size={14} /> : 'Submit'}
@@ -300,6 +251,23 @@ export const InstitutionsContactForm = () => {
           or email us <Emphasis variant="p2semiColorful">@lazysummer.fi</Emphasis>
         </Text>
       </div>
+      <Text variant="p4" style={{ textAlign: 'center', color: 'var(--earn-protocol-neutral-60)' }}>
+        This site is protected by reCAPTCHA and the Google{' '}
+        <Link
+          href="https://policies.google.com/privacy"
+          style={{ color: 'var(--earn-protocol-neutral-40)' }}
+        >
+          Privacy Policy
+        </Link>{' '}
+        and{' '}
+        <Link
+          href="https://policies.google.com/terms"
+          style={{ color: 'var(--earn-protocol-neutral-40)' }}
+        >
+          Terms of Service
+        </Link>{' '}
+        apply.
+      </Text>
     </Card>
   )
 }

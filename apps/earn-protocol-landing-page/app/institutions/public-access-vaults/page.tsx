@@ -22,6 +22,7 @@ import { BigProtocolScroller } from '@/components/layout/LandingPageContent/comp
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import blueChipsImage from '@/public/img/institution/blue-chips.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
@@ -65,12 +66,12 @@ export default function PublicAccessVaults() {
     })
   }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
 
-  if (!landingPageData) {
-    return null
+  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
+    redirect('/')
   }
 
-  if (!landingPageData.systemConfig.features.Institutions) {
-    redirect('/')
+  if (!landingPageData) {
+    return null
   }
 
   const totalProtocolTvl = Object.values(landingPageData.protocolTvls).reduce(
@@ -230,7 +231,7 @@ export default function PublicAccessVaults() {
         </Card>
       </div>
       <div className={publicAccessVaultsStyles.blueChipsBlock}>
-        <div className={publicAccessVaultsStyles.blueChipsBlockImage} />
+        <Image src={blueChipsImage} alt="Blue Chip Digital Assets" />
         <div className={publicAccessVaultsStyles.blueChipsBlockDescription}>
           <Text as="h2" variant="h2">
             The best risk-adjusted yields for Blue-Chip Digital Assets
