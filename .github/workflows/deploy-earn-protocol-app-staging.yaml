@@ -69,6 +69,7 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       SDK_API_URL: ${{ vars.SDK_API_URL }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
+      RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
       TRM_API_KEY: ${{ secrets.TRM_API_KEY }}
@@ -204,6 +205,7 @@ jobs:
                        --build-arg NEXT_PUBLIC_TRANSAK_API_KEY=${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }} \
                        --build-arg TRANSAK_SECRET=${{ secrets.TRANSAK_SECRET }} \
                        --build-arg EARN_PROTOCOL_JWT_SECRET=${{ secrets.EARN_PROTOCOL_JWT_SECRET }} \
+                       --build-arg RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }} \
                        --build-arg EARN_PROTOCOL_JWT_CHALLENGE_SECRET=${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }} \
                        --build-arg RPC_GATEWAY=${{ secrets.RPC_GATEWAY }} \
