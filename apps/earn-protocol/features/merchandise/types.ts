@@ -26,6 +26,7 @@ export type MerchandiseFormErrors = {
   email?: string[]
   country?: string[]
   zip?: string[]
+  global?: string[]
 }
 
 export enum MerchandiseSizes {

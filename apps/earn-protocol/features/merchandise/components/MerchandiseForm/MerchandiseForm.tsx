@@ -2,9 +2,9 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
-import { Button, Dropdown, Icon, Input, RECAPTCHA_SITE_KEY, Text } from '@summerfi/app-earn-ui'
+import { Button, Dropdown, Icon, Input, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
-import capitalize from 'lodash-es/capitalize'
+import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
 import isBoolean from 'lodash-es/isBoolean'
 import Link from 'next/link'
 import Script from 'next/script'
@@ -20,7 +20,7 @@ import {
   type MerchandiseType,
 } from '@/features/merchandise/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { merchandiseFormFields } from './fields'
@@ -28,13 +28,6 @@ import { areAllMerchandiseFormFieldsFilled } from './helpers'
 import { merchandiseFormSizes } from './sizes'
 
 import classNames from './MerchandiseForm.module.css'
-
-declare global {
-  const grecaptcha: {
-    ready: (cb: () => void) => void
-    execute: (siteKey: string, options: { action: string }) => Promise<string>
-  }
-}
 
 interface FormFieldProps {
   label: string
@@ -173,81 +166,103 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
 
     signMessageAsync({
       message: messageToSign,
-    })
-      .then(async (signature) => {
-        let token
-
-        try {
-          token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'submit' })
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.log('Failed to get reCAPTCHA token', err)
-
-          toast.error(
-            'Failed to get reCAPTCHA token, please try again or contact with Summer support',
-            ERROR_TOAST_CONFIG,
-          )
-          setStatus(MerchandiseFormStatus.ERROR)
-
-          return
-        }
-
-        fetch(`/earn/api/beach-club/merchandise/${walletAddress}/claim`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            signature,
-            formValues,
-            type,
-            token,
-          }),
-        })
-          .then((res) => {
-            if (res.ok) {
-              return res.json()
-            }
-
-            throw new Error('Response is not ok')
-          })
-          .then((data) => {
-            if (data.error) {
-              toast.error(data.error, ERROR_TOAST_CONFIG)
-              setStatus(MerchandiseFormStatus.ERROR)
-
-              return
-            }
-
-            toast.success(`${capitalize(type)} claimed successfully`, SUCCESS_TOAST_CONFIG)
+    }).then(async (signature) => {
+      await handleCaptcha({
+        formValues: { ...formValues, signature, type },
+        formEndpoint: `/earn/api/beach-club/merchandise/${walletAddress}/claim`,
+        resetForm: () => {},
+        setIsSubmitting: (isSubmitting) => {
+          if (isSubmitting) {
+            setStatus(MerchandiseFormStatus.LOADING)
+          }
+        },
+        setIsSubmitted: (isSubmitted) => {
+          if (isSubmitted) {
             setStatus(MerchandiseFormStatus.SUCCESS)
-          })
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.log('Failed to claim merchandise', err)
-            toast.error(
-              'Failed to claim merchandise, please try again or contact with Summer support',
-              ERROR_TOAST_CONFIG,
-            )
+          }
+        },
+        setFormErrors: (errors) => {
+          if (errors.global) {
             setStatus(MerchandiseFormStatus.ERROR)
-          })
+            toast.error(errors.global.join(', '), ERROR_TOAST_CONFIG)
+          }
+        },
       })
-      .catch((err) => {
-        if (err.message.includes('User rejected the request')) {
-          toast.error('User rejected the request', ERROR_TOAST_CONFIG)
-          setStatus(MerchandiseFormStatus.ERROR)
 
-          return
-        }
+      // let token
 
-        // eslint-disable-next-line no-console
-        console.log('Unknown error occurred', err)
-        toast.error(
-          'Unknown error occurred, please try again or contact with Summer support',
-          ERROR_TOAST_CONFIG,
-        )
-        setStatus(MerchandiseFormStatus.ERROR)
-      })
+      // try {
+      //   token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'submit' })
+      // } catch (err) {
+      //   // eslint-disable-next-line no-console
+      //   console.log('Failed to get reCAPTCHA token', err)
+
+      //   toast.error(
+      //     'Failed to get reCAPTCHA token, please try again or contact with Summer support',
+      //     ERROR_TOAST_CONFIG,
+      //   )
+      //   setStatus(MerchandiseFormStatus.ERROR)
+
+      //   return
+      // }
+
+      //   fetch(`/earn/api/beach-club/merchandise/${walletAddress}/claim`, {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({
+      //       signature,
+      //       formValues,
+      //       type,
+      //       token,
+      //     }),
+      //   })
+      //     .then((res) => {
+      //       if (res.ok) {
+      //         return res.json()
+      //       }
+
+      //       throw new Error('Response is not ok')
+      //     })
+      //     .then((data) => {
+      //       if (data.error) {
+      //         toast.error(data.error, ERROR_TOAST_CONFIG)
+      //         setStatus(MerchandiseFormStatus.ERROR)
+
+      //         return
+      //       }
+
+      //       toast.success(`${capitalize(type)} claimed successfully`, SUCCESS_TOAST_CONFIG)
+      //       setStatus(MerchandiseFormStatus.SUCCESS)
+      //     })
+      //     .catch((err) => {
+      //       // eslint-disable-next-line no-console
+      //       console.log('Failed to claim merchandise', err)
+      //       toast.error(
+      //         'Failed to claim merchandise, please try again or contact with Summer support',
+      //         ERROR_TOAST_CONFIG,
+      //       )
+      //       setStatus(MerchandiseFormStatus.ERROR)
+      //     })
+      // })
+      // .catch((err) => {
+      //   if (err.message.includes('User rejected the request')) {
+      //     toast.error('User rejected the request', ERROR_TOAST_CONFIG)
+      //     setStatus(MerchandiseFormStatus.ERROR)
+
+      //     return
+      //   }
+
+      //   // eslint-disable-next-line no-console
+      //   console.log('Unknown error occurred', err)
+      //   toast.error(
+      //     'Unknown error occurred, please try again or contact with Summer support',
+      //     ERROR_TOAST_CONFIG,
+      //   )
+      //   setStatus(MerchandiseFormStatus.ERROR)
+      // })
+    })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
