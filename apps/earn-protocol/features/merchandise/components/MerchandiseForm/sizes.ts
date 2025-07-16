@@ -1,3 +1,5 @@
+import { MerchandiseSizes } from '@/features/merchandise/types'
+
 export const merchandiseFormSizes = [
   {
     label: 'Size',
@@ -7,23 +9,23 @@ export const merchandiseFormSizes = [
     hidden: true,
   },
   {
-    label: 'S',
-    value: 's',
+    label: MerchandiseSizes.S,
+    value: MerchandiseSizes.S,
     icon: '',
   },
   {
-    label: 'M',
-    value: 'm',
+    label: MerchandiseSizes.M,
+    value: MerchandiseSizes.M,
     icon: '',
   },
   {
-    label: 'L',
-    value: 'l',
+    label: MerchandiseSizes.L,
+    value: MerchandiseSizes.L,
     icon: '',
   },
   {
-    label: 'XL',
-    value: 'xl',
+    label: MerchandiseSizes.XL,
+    value: MerchandiseSizes.XL,
     icon: '',
   },
 ]

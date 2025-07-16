@@ -2,15 +2,17 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
-import { Button, Input, INTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
+import { Button, Input, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 
 import { accountType } from '@/account-kit/config'
+import { merchandiseFormValuesSchema } from '@/features/merchandise/helpers/form-schema'
 import { getMerchandiseButtonLabel } from '@/features/merchandise/helpers/get-button-label'
 import { getMerchandiseMessageToSign } from '@/features/merchandise/helpers/get-messageToSign'
 import {
+  type MerchandiseFormErrors,
   MerchandiseFormStatus,
   type MerchandiseFormValues,
   type MerchandiseType,
@@ -30,10 +32,20 @@ interface FormFieldProps {
   name: string
   type: string
   placeholder: string
+  error?: string[]
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void
+  disabled?: boolean
 }
 
-const FormField: FC<FormFieldProps> = ({ label, name, type, placeholder, handleChange }) => {
+const FormField: FC<FormFieldProps> = ({
+  label,
+  name,
+  type,
+  placeholder,
+  handleChange,
+  error,
+  disabled,
+}) => {
   return (
     <div className={classNames.formField}>
       <label htmlFor={name}>
@@ -49,7 +61,16 @@ const FormField: FC<FormFieldProps> = ({ label, name, type, placeholder, handleC
         placeholder={placeholder}
         required
         onChange={handleChange}
+        disabled={disabled}
+        inputWrapperStyles={{
+          cursor: disabled ? 'not-allowed' : 'auto',
+        }}
       />
+      {error && (
+        <Text variant="p3" as="p" style={{ color: 'var(--earn-protocol-critical-100)' }}>
+          {error.join(', ')}
+        </Text>
+      )}
     </div>
   )
 }
@@ -60,9 +81,17 @@ interface FormSelectProps {
   name: string
   handleChange: (e: ChangeEvent<HTMLSelectElement>) => void
   value: string
+  disabled?: boolean
 }
 
-const FormSelect: FC<FormSelectProps> = ({ options, label, name, handleChange, value }) => {
+const FormSelect: FC<FormSelectProps> = ({
+  options,
+  label,
+  name,
+  handleChange,
+  value,
+  disabled,
+}) => {
   return (
     <div className={classNames.formSelectWrapper}>
       <label htmlFor={name}>
@@ -81,6 +110,7 @@ const FormSelect: FC<FormSelectProps> = ({ options, label, name, handleChange, v
           color:
             value === '' ? 'var(--earn-protocol-neutral-40)' : 'var(--earn-protocol-secondary-100)',
         }}
+        disabled={disabled}
       >
         {options.map((size) => (
           <option key={size.value} value={size.value} disabled={size.disabled} hidden={size.hidden}>
@@ -113,13 +143,23 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     size: '',
   })
 
+  const [errors, setErrors] = useState<MerchandiseFormErrors>({})
+
   const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
   const areAllFieldsFilled = areAllMerchandiseFormFieldsFilled(formValues)
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const validatedFormResult = merchandiseFormValuesSchema.safeParse(formValues)
 
+    if (!validatedFormResult.success) {
+      setErrors(validatedFormResult.error.flatten().fieldErrors)
+
+      return
+    }
+
+    setErrors({})
     setStatus(MerchandiseFormStatus.LOADING)
 
     const messageToSign = getMerchandiseMessageToSign({
@@ -129,49 +169,63 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
 
     signMessageAsync({
       message: messageToSign,
-    }).then((signature) => {
-      // eslint-disable-next-line no-console
-      console.log('signature', signature)
-
-      fetch(`/earn/api/merchandise/${walletAddress}/claim`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          signature,
-          formValues,
-          type,
-        }),
-      })
-        .then((res) => {
-          if (res.ok) {
-            return res.json()
-          }
-
-          throw new Error('Response is not ok')
-        })
-        .then((data) => {
-          if (data.error) {
-            toast.error(data.error, ERROR_TOAST_CONFIG)
-            setStatus(MerchandiseFormStatus.ERROR)
-
-            return
-          }
-
-          toast.success(`${capitalize(type)} claimed successfully`, SUCCESS_TOAST_CONFIG)
-          setStatus(MerchandiseFormStatus.SUCCESS)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log('Failed to claim merchandise', err)
-          toast.error(
-            'Failed to claim merchandise, please try again or contact with Summer support',
-            ERROR_TOAST_CONFIG,
-          )
-          setStatus(MerchandiseFormStatus.ERROR)
-        })
     })
+      .then((signature) => {
+        fetch(`/earn/api/beach-club/merchandise/${walletAddress}/claim`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            signature,
+            formValues,
+            type,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              return res.json()
+            }
+
+            throw new Error('Response is not ok')
+          })
+          .then((data) => {
+            if (data.error) {
+              toast.error(data.error, ERROR_TOAST_CONFIG)
+              setStatus(MerchandiseFormStatus.ERROR)
+
+              return
+            }
+
+            toast.success(`${capitalize(type)} claimed successfully`, SUCCESS_TOAST_CONFIG)
+            setStatus(MerchandiseFormStatus.SUCCESS)
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.log('Failed to claim merchandise', err)
+            toast.error(
+              'Failed to claim merchandise, please try again or contact with Summer support',
+              ERROR_TOAST_CONFIG,
+            )
+            setStatus(MerchandiseFormStatus.ERROR)
+          })
+      })
+      .catch((err) => {
+        if (err.message.includes('User rejected the request')) {
+          toast.error('User rejected the request', ERROR_TOAST_CONFIG)
+          setStatus(MerchandiseFormStatus.ERROR)
+
+          return
+        }
+
+        // eslint-disable-next-line no-console
+        console.log('Unknown error occurred', err)
+        toast.error(
+          'Unknown error occurred, please try again or contact with Summer support',
+          ERROR_TOAST_CONFIG,
+        )
+        setStatus(MerchandiseFormStatus.ERROR)
+      })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -192,6 +246,9 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     }))
   }
 
+  const inputsDisabled =
+    status === MerchandiseFormStatus.LOADING || status === MerchandiseFormStatus.SUCCESS
+
   return (
     <form className={classNames.merchandiseFormWrapper} onSubmit={onSubmit}>
       {merchandiseFormFields.map((field) => (
@@ -202,6 +259,8 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           type={field.type}
           placeholder={field.placeholder}
           handleChange={handleChange}
+          error={errors[field.name as keyof MerchandiseFormErrors]}
+          disabled={inputsDisabled}
         />
       ))}
       <FormSelect
@@ -210,6 +269,7 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
         name="size"
         handleChange={handleSelectChange}
         value={formValues.size}
+        disabled={inputsDisabled}
       />
       <Button
         variant="beachClubLarge"
@@ -230,16 +290,39 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           </Text>
         </Link>
       ) : (
-        <Text variant="p3" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-          Read the full{' '}
-          <Link
-            href={INTERNAL_LINKS.tempTerms}
-            className={classNames.termsOfConditions}
-            target="_blank"
+        <div>
+          <Text
+            variant="p3"
+            as="p"
+            style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
           >
-            terms of conditions
-          </Link>
-        </Text>
+            We use{' '}
+            <Link
+              href="https://getform.io"
+              target="_blank"
+              rel="noreferrer"
+              className={classNames.termsOfConditions}
+            >
+              GetForm
+            </Link>{' '}
+            to collect your data.
+          </Text>
+          <Text
+            variant="p3"
+            as="p"
+            style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
+          >
+            Read the full{' '}
+            <Link
+              href="https://getform.io/legal/privacy-policy"
+              className={classNames.termsOfConditions}
+              target="_blank"
+              rel="noreferrer"
+            >
+              terms of conditions.
+            </Link>
+          </Text>
+        </div>
       )}
     </form>
   )

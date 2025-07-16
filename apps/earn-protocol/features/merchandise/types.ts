@@ -18,3 +18,19 @@ export enum MerchandiseFormStatus {
   SUCCESS = 'success',
   ERROR = 'error',
 }
+
+export type MerchandiseFormErrors = {
+  name?: string[]
+  address?: string[]
+  size?: string[]
+  email?: string[]
+  country?: string[]
+  zip?: string[]
+}
+
+export enum MerchandiseSizes {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+}

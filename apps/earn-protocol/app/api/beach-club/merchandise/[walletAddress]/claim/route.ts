@@ -5,6 +5,7 @@ import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { type NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 
+import { merchandiseFormValuesSchema } from '@/features/merchandise/helpers/form-schema'
 import { getMerchandiseMessageToSign } from '@/features/merchandise/helpers/get-messageToSign'
 import { MerchandiseType } from '@/features/merchandise/types'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
@@ -19,16 +20,15 @@ const pathParamsSchema = z.object({
 })
 
 const postBodyParamsSchema = z.object({
-  signature: z.string(),
-  formValues: z.object({
-    name: z.string(),
-    email: z.string(),
-    address: z.string(),
-    country: z.string(),
-    zip: z.string(),
-    size: z.string(),
-  }),
+  signature: z.string().nonempty('Signature is required'),
+  formValues: merchandiseFormValuesSchema,
   type: z.nativeEnum(MerchandiseType),
+  // token: z
+  //   .string()
+  //   .nonempty('reCAPTCHA token is required')
+  //   .refine((token) => token.length > 0, {
+  //     message: 'reCAPTCHA token must not be empty',
+  //   }),
 })
 
 export async function POST(
@@ -115,6 +115,26 @@ export async function POST(
 
     if (Number(balance) < pointsRequired[type]) {
       return NextResponse.json({ error: 'Not enough points' }, { status: 400 })
+    }
+
+    // Convert to URLSearchParams to match getForm expectations
+    const encoded = new URLSearchParams()
+
+    for (const [key, value] of Object.entries({ ...formValues, walletAddress, type })) {
+      encoded.append(key, value)
+    }
+
+    // send to getForm endpoint
+    const getFormResponse = await fetch('https://getform.io/f/xyz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: encoded.toString(),
+    })
+
+    if (!getFormResponse.ok) {
+      return NextResponse.json({ error: 'Failed to send form data' }, { status: 500 })
     }
 
     await beachClubDb.db
