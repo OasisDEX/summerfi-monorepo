@@ -106,6 +106,8 @@ export const EXTERNAL_LINKS = {
     WHY_MULTIPLY_ON_SUMMER: 'https://blog.summer.fi/why-multiply-on-summer',
     WHY_EARN_ON_SUMMER: 'https://blog.summer.fi/why-earn-on-summer',
     INTRODUCING_SUMR_TOKEN: 'https://blog.summer.fi/introducing-sumr-token',
+    WHY_AI_MATTERS:
+      'https://blog.summer.fi/ever-wondered-how-summers-ai-agents-monitor-the-market-24-7/',
   },
   DOCS: {
     FAQ: {

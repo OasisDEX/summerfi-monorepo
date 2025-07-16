@@ -242,7 +242,10 @@ export const InstitutionsContactForm = () => {
       </div>
       <div className={institutionsContactFormStyles.orContactusDirectly}>
         <Text variant="p2semi">
-          or email us <Emphasis variant="p2semiColorful">@lazysummer.fi</Emphasis>
+          or email us{' '}
+          <Link href="mailto:sales@summer.fi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+            <Emphasis variant="p2semiColorful">@summer.fi</Emphasis>
+          </Link>
         </Text>
       </div>
       <Text variant="p4" style={{ textAlign: 'center', color: 'var(--earn-protocol-neutral-60)' }}>

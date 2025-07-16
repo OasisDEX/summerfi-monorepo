@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   Emphasis,
+  EXTERNAL_LINKS,
   FaqSection,
   Icon,
   SectionTabs,
@@ -300,7 +301,7 @@ export default function PublicAccessVaults() {
                       </Text>
                     </li>
                   </ul>
-                  <Link href="">
+                  <Link href={EXTERNAL_LINKS.BLOG.WHY_AI_MATTERS} target="_blank">
                     <WithArrow variant="p3semi">Learn how we use AI to works</WithArrow>
                   </Link>
                 </Card>
