@@ -60,6 +60,11 @@
   transition: background 0.2s, transform 0.15s;
 }
 
+.tableContainer {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
 .leaderboardTable {
   width: 100%;
   border-collapse: collapse;
@@ -143,11 +148,6 @@
 }
 
 @media screen and (max-width: 600px) {
-
-  .tableContainer {
-    max-height: 70vh;
-    overflow-y: auto;
-  }
 
   .modal {
     max-height: 90vh;

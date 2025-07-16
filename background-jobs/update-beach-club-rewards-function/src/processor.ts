@@ -28,7 +28,6 @@ export class ReferralProcessor {
     Record<
       ReferralCodeType,
       {
-        feeTier: number
         referrerRate: number
         ownerRate: number
       }
@@ -36,44 +35,36 @@ export class ReferralProcessor {
   > = {
     [AssetVolatility.VOLATILE]: {
       [ReferralCodeType.USER]: {
-        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
         referrerRate: 0.00025, // 0.025% - 2.5bps for referrer per asset of TVL, annualised
         ownerRate: 0.00015, // 0.015% - 1.5bps for owner per asset of TVL, annualised
       },
       [ReferralCodeType.INTEGRATOR]: {
-        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
         referrerRate: 0.0005, // 0.05% - referrer tier for integrator
         ownerRate: 0, // 0% - owner tier for integrator
       },
       [ReferralCodeType.TEST]: {
-        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
         referrerRate: 0.0005, // 0.05% - referrer tier for integrator
         ownerRate: 0, // 0% - owner tier for integrator
       },
       [ReferralCodeType.INVALID]: {
-        feeTier: 0,
         referrerRate: 0,
         ownerRate: 0,
       },
     },
     [AssetVolatility.STABLE]: {
       [ReferralCodeType.USER]: {
-        feeTier: 0.01, // 1% - base fee tier for stable vaults (USDC, USDT, EURC etc)
         referrerRate: 0.0005, // 0.05% - 5bps for referrer per asset of TVL, annualised
         ownerRate: 0.00025, // 0.025% - 2.5bps for owner per asset of TVL, annualised
       },
       [ReferralCodeType.INTEGRATOR]: {
-        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
         referrerRate: 0.001, // 0.1% - referrer tier for integrator
         ownerRate: 0, // 0% - owner tier for integrator
       },
       [ReferralCodeType.TEST]: {
-        feeTier: 0.003, // 0.3% - base fee tier for volatile vaults (ETH etc)
-        referrerRate: 0.05, // 0.05% - referrer tier for integrator
+        referrerRate: 0.0005, // 0.05% - referrer tier for integrator
         ownerRate: 0, // 0% - owner tier for integrator
       },
       [ReferralCodeType.INVALID]: {
-        feeTier: 0,
         referrerRate: 0,
         ownerRate: 0,
       },
@@ -432,15 +423,11 @@ export class ReferralProcessor {
               const depositUsd = Number(latestSnapshot.inputTokenBalanceNormalizedInUSD || 0)
               const depositAsset = Number(latestSnapshot.inputTokenBalanceNormalized || 0)
 
-              const feeTier = typeConfig.feeTier
-              const dailyFeeGeneratedByThePositionUsd = (depositUsd * feeTier) / 365
-              const dailyFeeGeneratedByThePosition = (depositAsset * feeTier) / 365
-              const dailyReferrerFeesUsd =
-                dailyFeeGeneratedByThePositionUsd * typeConfig.referrerRate
-              const dailyOwnerFeesUsd = dailyFeeGeneratedByThePositionUsd * typeConfig.ownerRate
+              const dailyReferrerFeesUsd = (depositUsd * typeConfig.referrerRate) / 365
+              const dailyOwnerFeesUsd = (depositUsd * typeConfig.ownerRate) / 365
 
-              const dailyReferrerFees = dailyFeeGeneratedByThePosition * typeConfig.referrerRate
-              const dailyOwnerFees = dailyFeeGeneratedByThePosition * typeConfig.ownerRate
+              const dailyReferrerFees = (depositAsset * typeConfig.referrerRate) / 365
+              const dailyOwnerFees = (depositAsset * typeConfig.ownerRate) / 365
 
               positionUpdates.push({
                 id: position.id,

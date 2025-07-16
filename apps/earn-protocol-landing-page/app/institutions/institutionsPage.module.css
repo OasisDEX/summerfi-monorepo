@@ -121,6 +121,7 @@
   .securityAndCompliance {
     width: 80%;
     text-align: center;
+    margin: 0 auto;
   }
 }
 
@@ -177,6 +178,10 @@
 
 .securityAndComplianceBlock ul li svg path {
   stroke-width: 3px;
+}
+
+.enhancedRiskManagementBlock {
+  margin: var(--spacing-space-3x-large) auto;
 }
 
 .buildBySummerSpacer {
@@ -236,8 +241,71 @@
   padding: 0 var(--spacing-space-3x-large);
 }
 
+
+.subpageDescriptionBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  max-width: 950px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+.subpageDescriptionText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.subpageDescriptionText h5 {
+  color: var(--color-text-primary-hover)
+}
+
+.subpageDescriptionText p {
+  color: var(--color-text-secondary)
+}
+
+.subpageDescriptionCard {
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subpageDescriptionCard ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.subpageDescriptionCard ul li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 16px;
+}
+
+.subpageDescriptionCard ul li p {
+  color: var(--color-text-secondary)
+}
+
 @media (max-width: 531px) {
-  .faqWrapper {
+
+  .faqWrapper,
+  .subpageDescriptionBlock {
     padding: 0 var(--spacing-space-large);
+  }
+
+  .subpageDescriptionCard {
+    padding: 24px 32px;
+  }
+
+  .subpageDescriptionCard ul li p {
+    font-size: 16px;
+    line-height: 20px;
   }
 }
