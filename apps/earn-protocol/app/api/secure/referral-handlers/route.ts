@@ -31,11 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid form data' }, { status: 400 })
   }
 
-  if (
-    manualWalletAddress &&
-    typeof manualWalletAddress !== 'string' &&
-    !isAddress(manualWalletAddress)
-  ) {
+  if (manualWalletAddress && !isAddress(manualWalletAddress)) {
     return NextResponse.json({ error: 'Invalid manual wallet address' }, { status: 400 })
   }
 

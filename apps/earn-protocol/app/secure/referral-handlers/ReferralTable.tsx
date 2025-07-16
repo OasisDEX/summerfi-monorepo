@@ -47,9 +47,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
     await refreshView()
   }
 
-  const handleManualWalletAddressCodeSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault()
-
+  const handleManualWalletAddressCodeSubmit = async () => {
     if (!manualWalletAddress) {
       // eslint-disable-next-line no-alert
       alert('Please enter a wallet address')
@@ -57,7 +55,9 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
       return
     }
 
-    const alreadyExists = referralsList.filter((referral) => referral.id === manualWalletAddress)
+    const alreadyExists = referralsList.filter(
+      (referral) => referral.id === manualWalletAddress.toLowerCase(),
+    )
 
     if (alreadyExists.length > 0) {
       // eslint-disable-next-line no-alert
@@ -130,6 +130,9 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
               alignContent: 'center',
               gap: '1rem',
             }}
+            onSubmit={(e) => {
+              e.preventDefault()
+            }}
           >
             <input
               type="text"
@@ -145,7 +148,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
               }}
             />
             <Button
-              onClick={handleManualWalletAddressCodeSubmit}
+              onClick={() => handleManualWalletAddressCodeSubmit()}
               variant="primarySmall"
               style={{ padding: '8px 16px' }}
               disabled={isUpdating || !manualWalletAddress}
