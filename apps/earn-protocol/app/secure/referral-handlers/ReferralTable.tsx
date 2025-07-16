@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Button } from '@summerfi/app-earn-ui'
+import { Button, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
@@ -23,6 +23,8 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
   const [editValue, setEditValue] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
 
+  const [manualWalletAddress, setManualWalletAddress] = useState('')
+
   const handleEdit = (id: string, currentValue: string | null) => {
     setEditingId(id)
     setEditValue(currentValue ?? '')
@@ -33,7 +35,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
     setEditValue('')
   }
 
-  const updateCustomCode = async (formData: FormData) => {
+  const submitReferralHandler = async (formData: FormData) => {
     const response = await fetch('/earn/api/secure/referral-handlers', {
       method: 'POST',
       body: formData,
@@ -45,7 +47,48 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
     await refreshView()
   }
 
-  const handleSubmit = async (referralCodeId: string) => {
+  const handleManualWalletAddressCodeSubmit = async () => {
+    if (!manualWalletAddress) {
+      // eslint-disable-next-line no-alert
+      alert('Please enter a wallet address')
+
+      return
+    }
+
+    const alreadyExists = referralsList.filter(
+      (referral) => referral.id === manualWalletAddress.toLowerCase(),
+    )
+
+    if (alreadyExists.length > 0) {
+      // eslint-disable-next-line no-alert
+      alert(
+        `This wallet address already has a referral code associated with it - ${alreadyExists[0].referral_code}`,
+      )
+
+      setManualWalletAddress('')
+
+      return
+    }
+
+    const formData = new FormData()
+
+    formData.append('manualWalletAddress', manualWalletAddress)
+
+    try {
+      setIsUpdating(true)
+      await submitReferralHandler(formData)
+      setManualWalletAddress('')
+      setIsUpdating(false)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add referral code to wallet:', error)
+      // eslint-disable-next-line no-alert
+      alert('Failed to add referral code to wallet. Please try again later.')
+      setIsUpdating(false)
+    }
+  }
+
+  const handleCustomCodeSubmit = async (referralCodeId: string) => {
     const formData = new FormData()
 
     formData.append('referralCodeId', referralCodeId.toString())
@@ -53,7 +96,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
 
     try {
       setIsUpdating(true)
-      await updateCustomCode(formData)
+      await submitReferralHandler(formData)
       setEditingId(null)
       setEditValue('')
       setIsUpdating(false)
@@ -69,7 +112,52 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
   }
 
   return (
-    <div style={{ margin: '2rem 0', width: '100%', maxWidth: '1200px' }}>
+    <div style={{ width: '100%', maxWidth: '1200px' }}>
+      <div
+        style={{
+          margin: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text variant="p2semi">Manually add ref. code to a wallet</Text>
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem' }}>
+          <form
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignContent: 'center',
+              gap: '1rem',
+            }}
+            onSubmit={(e) => {
+              e.preventDefault()
+            }}
+          >
+            <input
+              type="text"
+              value={manualWalletAddress}
+              onChange={(e) => setManualWalletAddress(e.target.value)}
+              placeholder="Enter wallet address"
+              disabled={isUpdating}
+              style={{
+                padding: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                width: '300px',
+              }}
+            />
+            <Button
+              onClick={() => handleManualWalletAddressCodeSubmit()}
+              variant="primarySmall"
+              style={{ padding: '8px 16px' }}
+              disabled={isUpdating || !manualWalletAddress}
+            >
+              Submit
+            </Button>
+          </form>
+        </div>
+      </div>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
         <thead>
           <tr style={{ backgroundColor: '#0f0f0f' }}>
@@ -156,7 +244,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
                   </Button>
                   <Button
                     onClick={() =>
-                      referral.referral_code ? handleSubmit(referral.referral_code) : null
+                      referral.referral_code ? handleCustomCodeSubmit(referral.referral_code) : null
                     }
                     variant="textPrimarySmall"
                     style={{ fontSize: '12px', padding: '4px 8px' }}
