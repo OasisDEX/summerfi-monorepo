@@ -38,6 +38,7 @@ interface FormFieldProps {
   error?: string[]
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void
   disabled?: boolean
+  // isOpen determines that the input is used as a dropdown
   isOpen?: boolean
 }
 
@@ -74,6 +75,9 @@ const FormField: FC<FormFieldProps> = ({
             cursor: disabled ? 'not-allowed' : isBoolean(isOpen) ? 'pointer' : 'auto',
             caretColor: isBoolean(isOpen) ? 'transparent' : 'var(--earn-protocol-neutral-40)',
           }}
+          // don't autocomplete if the input is used as a dropdown
+          // to not interfere with custom options dropdown
+          autoComplete={isBoolean(isOpen) ? 'off' : 'on'}
         />
         {isBoolean(isOpen) && (
           <Icon
