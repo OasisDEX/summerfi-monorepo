@@ -8,14 +8,12 @@ import {
   Emphasis,
   Input,
   LoadingSpinner,
-  RECAPTCHA_SITE_KEY,
   Text,
 } from '@summerfi/app-earn-ui'
+import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
 import Link from 'next/link'
 import Script from 'next/script'
 import { z } from 'zod'
-
-import { handleCaptcha } from '@/helpers/handle-captcha'
 
 import institutionsContactFormStyles from './InstitutionsContactForm.module.css'
 

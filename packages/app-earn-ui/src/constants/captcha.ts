@@ -1,1 +1,0 @@
-export const RECAPTCHA_SITE_KEY = '6LcOJoUrAAAAAF-qJ5HGvjSgZFdFXUB9Geo-DpRU'

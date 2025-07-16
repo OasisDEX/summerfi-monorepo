@@ -237,7 +237,6 @@ export {
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
-export { RECAPTCHA_SITE_KEY } from './constants/captcha'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'

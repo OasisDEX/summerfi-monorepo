@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { RECAPTCHA_SITE_KEY } from '@summerfi/app-earn-ui'
+export const RECAPTCHA_SITE_KEY = '6LcOJoUrAAAAAF-qJ5HGvjSgZFdFXUB9Geo-DpRU'
 
 declare global {
   const grecaptcha: {
