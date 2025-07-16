@@ -26,26 +26,16 @@ const institutionsFormSchema = z.object({
     }),
 })
 
-export async function POST(
-  req: Request,
-  {
-    params,
-  }: {
-    params: Promise<{
-      companyName: string
-      phoneNumber: string
-      businessEmail: string
-      token: string
-    }>
-  },
-) {
-  const awaitedParams = await params
+export async function POST(req: Request) {
+  const awaitedParams = await req.json().catch(() => {
+    return NextResponse.json({ error: 'Invalid JSON format', success: false }, { status: 400 })
+  })
 
   const parsedData = institutionsFormSchema.safeParse(awaitedParams)
 
   if (!parsedData.success) {
     return NextResponse.json(
-      { error: parsedData.error.errors.map((err) => err.message) },
+      { error: parsedData.error.errors.map((err) => err.message), success: false },
       { status: 400 },
     )
   }
@@ -53,8 +43,11 @@ export async function POST(
   const recaptchaData = await validateCaptcha(parsedData.data.token)
 
   if (!recaptchaData) {
-    return NextResponse.json({ error: 'Invalid reCAPTCHA token' }, { status: 400 })
+    return NextResponse.json({ error: 'Invalid reCAPTCHA token', success: false }, { status: 400 })
   }
 
-  return NextResponse.json({ message: 'Form submitted successfully' }, { status: 200 })
+  return NextResponse.json(
+    { message: 'Form submitted successfully', success: true },
+    { status: 200 },
+  )
 }
