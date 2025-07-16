@@ -1,5 +1,6 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import institutionsPromoBlockStyles from './InstitutionsPromoBlock.module.css'
 
@@ -8,6 +9,7 @@ type InstitutionsPromoBlockProps = {
   description: string
   bestFor: string
   coreFeatures: string[]
+  ctaUrl: string
 }
 
 export const InstitutionsPromoBlock = ({
@@ -15,6 +17,7 @@ export const InstitutionsPromoBlock = ({
   description,
   bestFor,
   coreFeatures,
+  ctaUrl,
 }: InstitutionsPromoBlockProps) => {
   return (
     <div className={institutionsPromoBlockStyles.institutionsPromoBlockWrapper}>
@@ -38,7 +41,9 @@ export const InstitutionsPromoBlock = ({
             {bestFor}
           </Text>
         </div>
-        <Button variant="primaryMediumColorful">Get started</Button>
+        <Link href={ctaUrl}>
+          <Button variant="primaryMediumColorful">Get started</Button>
+        </Link>
       </div>
       <div
         className={clsx(institutionsPromoBlockStyles.part, institutionsPromoBlockStyles.darkSide)}
