@@ -89,3 +89,39 @@
   margin-bottom: var(--spacing-space-3x-large);
   padding: 0 var(--spacing-space-3x-large);
 }
+
+.blueChipsBlockImage {
+  width: 380px;
+  min-width: 380px;
+  height: 320px;
+  border-radius: 20px;
+  background-color: var(--color-background-secondary);
+}
+
+@media (max-width: 531px) {
+
+  .totalLiquidityBlock,
+  .strategiesBlockSubtitle,
+  .strategiesBlock,
+  .faqWrapper {
+    padding: 0 var(--spacing-space-large);
+  }
+
+  .strategiesBlock {
+    margin-bottom: -230px;
+  }
+
+  .blueChipsBlock {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--spacing-space-x-large);
+  }
+
+  .blueChipsBlockImage {
+    width: 100%;
+    min-width: 100%;
+    height: 320px;
+    border-radius: 20px;
+    background-color: var(--color-background-secondary);
+  }
+}

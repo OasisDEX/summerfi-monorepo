@@ -121,6 +121,7 @@
   .securityAndCompliance {
     width: 80%;
     text-align: center;
+    margin: 0 auto;
   }
 }
 
@@ -240,12 +241,6 @@
   padding: 0 var(--spacing-space-3x-large);
 }
 
-@media (max-width: 531px) {
-  .faqWrapper {
-    padding: 0 var(--spacing-space-large);
-  }
-}
-
 
 .subpageDescriptionBlock {
   display: flex;
@@ -256,6 +251,7 @@
   margin: 0 auto;
   text-align: center;
 }
+
 
 .subpageDescriptionText {
   display: flex;
@@ -295,4 +291,21 @@
 
 .subpageDescriptionCard ul li p {
   color: var(--color-text-secondary)
+}
+
+@media (max-width: 531px) {
+
+  .faqWrapper,
+  .subpageDescriptionBlock {
+    padding: 0 var(--spacing-space-large);
+  }
+
+  .subpageDescriptionCard {
+    padding: 24px 32px;
+  }
+
+  .subpageDescriptionCard ul li p {
+    font-size: 16px;
+    line-height: 20px;
+  }
 }

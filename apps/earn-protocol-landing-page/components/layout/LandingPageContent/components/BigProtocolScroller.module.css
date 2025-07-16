@@ -87,6 +87,12 @@
   overflow: hidden;
 }
 
+@media (max-width: 531px) {
+  .bigProtocolScrollerItem {
+    width: 370px;
+  }
+}
+
 .bigProtocolScrollerItemNameIcon {
   display: flex;
   flex-direction: row;

@@ -113,17 +113,20 @@ export default function PublicAccessVaults() {
         </Text>
       </div>
       <BigProtocolScroller itemsList={protocolsList} />
-      <Text
-        as="p"
-        variant="p1"
-        className={publicAccessVaultsStyles.secondaryParagraph}
-        style={{ marginTop: '-70px' }}
-      >
-        All vaults interact only with tier-one liquidity venues that together hold more than &nbsp;
-        <strong>{formatCryptoBalance(totalProtocolTvl, '$')} of total value</strong> and are
-        <br />
-        independently risk-rated.
-      </Text>
+      <div className={publicAccessVaultsStyles.strategiesBlockSubtitle}>
+        <Text
+          as="p"
+          variant="p1"
+          className={publicAccessVaultsStyles.secondaryParagraph}
+          style={{ marginTop: '-70px' }}
+        >
+          All vaults interact only with tier-one liquidity venues that together hold more than
+          &nbsp;
+          <strong>{formatCryptoBalance(totalProtocolTvl, '$')} of total value</strong> and are
+          <br />
+          independently risk-rated.
+        </Text>
+      </div>
       <div className={institutionsPageStyles.subpageDescriptionBlock}>
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
@@ -227,15 +230,7 @@ export default function PublicAccessVaults() {
         </Card>
       </div>
       <div className={publicAccessVaultsStyles.blueChipsBlock}>
-        <div
-          style={{
-            width: '380px',
-            minWidth: '380px',
-            height: '320px',
-            borderRadius: '20px',
-            backgroundColor: 'gray',
-          }}
-        />
+        <div className={publicAccessVaultsStyles.blueChipsBlockImage} />
         <div className={publicAccessVaultsStyles.blueChipsBlockDescription}>
           <Text as="h2" variant="h2">
             The best risk-adjusted yields for Blue-Chip Digital Assets

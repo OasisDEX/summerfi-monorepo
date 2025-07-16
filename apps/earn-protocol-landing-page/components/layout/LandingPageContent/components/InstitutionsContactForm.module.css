@@ -25,6 +25,13 @@
   }
 }
 
+@media (max-width: 531px) {
+  .cardStyles {
+    padding: var(--spacing-space-large);
+  }
+}
+
+
 
 .formField {
   display: flex;

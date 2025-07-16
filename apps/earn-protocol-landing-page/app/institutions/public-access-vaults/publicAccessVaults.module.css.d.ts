@@ -3,10 +3,12 @@ declare const styles: {
   readonly "blueChipsBlock": string;
   readonly "blueChipsBlockButtons": string;
   readonly "blueChipsBlockDescription": string;
+  readonly "blueChipsBlockImage": string;
   readonly "buttonsBlock": string;
   readonly "faqWrapper": string;
   readonly "secondaryParagraph": string;
   readonly "strategiesBlock": string;
+  readonly "strategiesBlockSubtitle": string;
   readonly "totalLiquidityBlock": string;
   readonly "transparentFlowsBlock": string;
   readonly "transparentFlowsTopRiskTeam": string;
