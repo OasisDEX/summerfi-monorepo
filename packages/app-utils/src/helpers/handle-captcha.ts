@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-export const RECAPTCHA_SITE_KEY = '6LcOJoUrAAAAAF-qJ5HGvjSgZFdFXUB9Geo-DpRU'
+export const RECAPTCHA_SITE_KEY = '6LclS4UrAAAAAO40QI5fdqonhbNUpepJ77HWfaNd'
 
 declare global {
   const grecaptcha: {
@@ -40,7 +40,6 @@ export const handleCaptcha = async ({
           .execute(RECAPTCHA_SITE_KEY, { action: 'submit' })
           // eslint-disable-next-line consistent-return
           .then(async (token) => {
-            console.log('reCAPTCHA token:', token)
             if (!token) {
               setFormErrors({
                 global: ['reCAPTCHA verification failed. Please try again.'],
@@ -58,7 +57,7 @@ export const handleCaptcha = async ({
               body: JSON.stringify({ ...formValues, token }),
             })
 
-            if (!response.ok) {
+            if (response.status !== 200) {
               setFormErrors({
                 global: ['An unexpected error occurred. Please try again later.'],
               })
