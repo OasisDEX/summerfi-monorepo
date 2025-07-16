@@ -29,7 +29,7 @@ import institutionsPageStyles from '@/app/institutions/institutionsPage.module.c
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
 
-  if (!landingPageData?.systemConfig.features.Institutions) {
+  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
     redirect('/')
   }
 

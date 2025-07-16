@@ -49,9 +49,7 @@ const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
 
-  const institutionsEnabled = landingPageData?.systemConfig.features.Institutions
-
-  if (institutionsEnabled === false) {
+  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
     redirect('/')
   }
 

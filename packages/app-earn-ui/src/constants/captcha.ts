@@ -1,1 +1,1 @@
-export const RECAPTCHA_SITE_KEY = 'reCAPTCHA_site_key'
+export const RECAPTCHA_SITE_KEY = '6LcOJoUrAAAAAF-qJ5HGvjSgZFdFXUB9Geo-DpRU'
