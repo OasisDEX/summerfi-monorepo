@@ -36,12 +36,17 @@ export async function POST(
   { params }: { params: Promise<{ walletAddress: string }> },
 ) {
   const connectionString = process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
+  const getFormIoKey = process.env.GET_FORM_IO_KEY
 
   if (!connectionString) {
     return NextResponse.json(
       { error: 'Beach Club DB Connection string is not set' },
       { status: 500 },
     )
+  }
+
+  if (!getFormIoKey) {
+    return NextResponse.json({ error: 'Get Form key is not set' }, { status: 500 })
   }
 
   let validatedPathParams
@@ -125,7 +130,7 @@ export async function POST(
     }
 
     // send to getForm endpoint
-    const getFormResponse = await fetch('https://getform.io/f/xyz', {
+    const getFormResponse = await fetch(`https://getform.io/f/${getFormIoKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -149,7 +154,7 @@ export async function POST(
             referral_code_id,
             currency: 'points',
             amount: pointsRequired[type] * -1,
-            description: `Merchandise claim: ${type}`,
+            description: `merchandise_claim_${type}`,
             batch_id: batchId,
           })
           .execute()
