@@ -4,12 +4,14 @@ import {
   Button,
   Emphasis,
   EnhancedRiskManagement,
+  EXTERNAL_LINKS,
   FaqSection,
   Icon,
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
@@ -53,6 +55,14 @@ export default function InstitutionsPage() {
     redirect('/')
   }
 
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className={institutionsPageStyles.wrapper}>
       <div className={institutionsPageStyles.pageHeader}>
@@ -69,7 +79,7 @@ export default function InstitutionsPage() {
             Lazy Summer Protocol gives professional allocators a single entry point to on-chain
             yield. Institutions can now access DeFi’s highest quality protocols, all in one.
           </Text>
-          <Button variant="primaryLargeColorful">
+          <Button variant="primaryLargeColorful" onClick={smoothScrollToId('institutions-cta')}>
             <WithArrow variant="p2semi">Get started</WithArrow>
           </Button>
         </div>
@@ -84,7 +94,7 @@ export default function InstitutionsPage() {
           vaults or public access optimized for scale and best in class risk adjusted return.
         </Text>
       </div>
-      <div className={institutionsPageStyles.promoBlocks}>
+      <div className={institutionsPageStyles.promoBlocks} id="institutions-cta">
         <InstitutionsPromoBlock
           title="Self managed Vaults"
           description="Institutional-grade access to DeFi—fully customizable, fully compliant, and composable by design."
@@ -122,7 +132,9 @@ export default function InstitutionsPage() {
             Get started quickly with our streamlined, self serve onboarding process or our hands on
             technical support for custom integrations.
           </Text>
-          <Button variant="primaryLarge">Set up a call</Button>
+          <Link href={EXTERNAL_LINKS.BD_CONTACT} target="_blank">
+            <Button variant="primaryLarge">Set up a call</Button>
+          </Link>
         </div>
         <div>
           <Image src={depositUiImage} alt="Deposit UI" />

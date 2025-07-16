@@ -162,4 +162,5 @@ export const EXTERNAL_LINKS = {
     FORUM: 'https://forum.summer.fi',
   },
   OKX: 'https://web3.okx.com/',
+  BD_CONTACT: 'https://calendly.com/anthonyfernandez-oazoapps/30min',
 }

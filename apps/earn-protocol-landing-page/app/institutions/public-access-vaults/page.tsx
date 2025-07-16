@@ -96,12 +96,13 @@ export default function PublicAccessVaults() {
             yield. Capital is rotated automatically into the highest quality strategies, cutting
             operational complexity while targeting superior risk-adjusted returns.
           </Text>
-          <Button variant="primaryLargeColorful">
-            <WithArrow variant="p2semi">Get started now</WithArrow>
-          </Button>
-          <WithArrow variant="p2semi" style={{ color: 'white', margin: '20px 10px 0 0' }}>
-            Contact us
-          </WithArrow>
+          <Link href="/earn" target="_blank">
+            <Button variant="primaryLargeColorful" style={{ minWidth: '240px' }}>
+              <WithArrow variant="p2semi" style={{ color: 'white' }}>
+                Get started now
+              </WithArrow>
+            </Button>
+          </Link>
         </div>
       </div>
       <div className={publicAccessVaultsStyles.strategiesBlock}>
@@ -244,12 +245,12 @@ export default function PublicAccessVaults() {
             across the top protocols, ensuring you are earning the best available yields.
           </Text>
           <div className={publicAccessVaultsStyles.blueChipsBlockButtons}>
-            <Link href="">
+            <Link href="/earn" target="_blank">
               <WithArrow variant="p3semi">Get started</WithArrow>
             </Link>
-            <Link href="">
+            {/* <Link href="">
               <WithArrow variant="p3semi">View Yields</WithArrow>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
@@ -326,8 +327,10 @@ export default function PublicAccessVaults() {
           capital touches is vetted for technical excellence and financial soundness.
         </Text>
         <div className={publicAccessVaultsStyles.buttonsBlock}>
-          <Button variant="primaryLarge">Get started</Button>
-          <Button variant="secondaryLarge">View yields</Button>
+          <Link href="/earn" target="_blank">
+            <Button variant="primaryLarge">Get started</Button>
+          </Link>
+          {/* <Button variant="secondaryLarge">View yields</Button> */}
         </div>
       </div>
       <div className={publicAccessVaultsStyles.transparentFlowsBlock}>

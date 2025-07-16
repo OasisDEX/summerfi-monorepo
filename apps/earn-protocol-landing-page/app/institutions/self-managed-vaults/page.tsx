@@ -69,6 +69,14 @@ export default function SelfManagedVaults() {
     return null
   }
 
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className={selfManagedVaultsStyles.wrapper}>
       <div
@@ -87,10 +95,17 @@ export default function SelfManagedVaults() {
             crypto’s highest quality yields, without compromising on security, transparency, or risk
             oversight.
           </Text>
-          <Button variant="primaryLargeColorful">
+          <Button
+            variant="primaryLargeColorful"
+            onClick={smoothScrollToId('institutions-self-managed-vaults-cta')}
+          >
             <WithArrow variant="p2semi">Get started</WithArrow>
           </Button>
-          <WithArrow variant="p2semi" style={{ color: 'white', margin: '20px 10px 0 0' }}>
+          <WithArrow
+            variant="p2semi"
+            style={{ color: 'white', margin: '20px 10px 0 0', cursor: 'pointer' }}
+            onClick={smoothScrollToId('institutions-self-managed-vaults-contact-form')}
+          >
             Contact us
           </WithArrow>
         </div>
@@ -136,7 +151,10 @@ export default function SelfManagedVaults() {
           </ul>
         </Card>
       </div>
-      <div className={selfManagedVaultsStyles.integrationsBlock}>
+      <div
+        className={selfManagedVaultsStyles.integrationsBlock}
+        id="institutions-self-managed-vaults-cta"
+      >
         <Text as="h2" variant="h2">
           One integration, seamless access to the crypto’s highest quality yield sources
         </Text>
@@ -232,7 +250,9 @@ export default function SelfManagedVaults() {
           ]}
         />
       </div>
-      <InstitutionsContactForm />
+      <div id="institutions-self-managed-vaults-contact-form">
+        <InstitutionsContactForm />
+      </div>
       <div>
         <div className={institutionsPageStyles.securityAndCompliance}>
           <Text variant="p1semiColorful" as="div">

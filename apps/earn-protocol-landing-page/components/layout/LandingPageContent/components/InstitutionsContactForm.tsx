@@ -239,12 +239,6 @@ export const InstitutionsContactForm = () => {
         <Button variant="primaryLarge" onClick={handleSubmit} disabled={isSubmitting}>
           {isSubmitting ? <LoadingSpinner size={14} /> : 'Submit'}
         </Button>
-        <Button
-          variant="secondaryLarge"
-          className={institutionsContactFormStyles.formActionsSecondaryButton}
-        >
-          Contact us
-        </Button>
       </div>
       <div className={institutionsContactFormStyles.orContactusDirectly}>
         <Text variant="p2semi">
