@@ -173,28 +173,33 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     }).then(async (signature) => {
       const captchaInput = { formValues, signature, type }
 
-      await handleCaptcha({
-        formValues: captchaInput,
-        formEndpoint: `/earn/api/beach-club/merchandise/${walletAddress}/claim`,
-        resetForm: () => {},
-        setIsSubmitting: (isSubmitting) => {
-          if (isSubmitting) {
-            setStatus(MerchandiseFormStatus.LOADING)
-          }
-        },
-        setIsSubmitted: (isSubmitted) => {
-          if (isSubmitted) {
-            setStatus(MerchandiseFormStatus.SUCCESS)
-            toast.success('Merchandise claimed successfully', SUCCESS_TOAST_CONFIG)
-          }
-        },
-        setFormErrors: (errors) => {
-          if (errors.global) {
-            setStatus(MerchandiseFormStatus.ERROR)
-            toast.error(errors.global.join(', '), ERROR_TOAST_CONFIG)
-          }
-        },
-      })
+      try {
+        await handleCaptcha({
+          formValues: captchaInput,
+          formEndpoint: `/earn/api/beach-club/merchandise/${walletAddress}/claim`,
+          resetForm: () => {},
+          setIsSubmitting: (isSubmitting) => {
+            if (isSubmitting) {
+              setStatus(MerchandiseFormStatus.LOADING)
+            }
+          },
+          setIsSubmitted: (isSubmitted) => {
+            if (isSubmitted) {
+              setStatus(MerchandiseFormStatus.SUCCESS)
+              toast.success('Merchandise claimed successfully', SUCCESS_TOAST_CONFIG)
+            }
+          },
+          setFormErrors: (errors) => {
+            if (errors.global) {
+              setStatus(MerchandiseFormStatus.ERROR)
+              toast.error(errors.global.join(', '), ERROR_TOAST_CONFIG)
+            }
+          },
+        })
+      } catch (err) {
+        setStatus(MerchandiseFormStatus.ERROR)
+        toast.error('Unexpected error', ERROR_TOAST_CONFIG)
+      }
     })
   }
 

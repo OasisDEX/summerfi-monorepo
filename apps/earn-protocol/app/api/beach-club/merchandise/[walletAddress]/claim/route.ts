@@ -196,7 +196,10 @@ export async function POST(
 
     return NextResponse.json({ success: 'Merchandise claimed successfully' }, { status: 200 })
   } catch (err) {
-    return NextResponse.json({ error: `Error while processing request: ${err}` }, { status: 500 })
+    // eslint-disable-next-line no-console
+    console.log('Error while claiming merchandise for user', walletAddress, err)
+
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   } finally {
     await beachClubDb.db.destroy()
   }

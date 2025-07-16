@@ -3,6 +3,13 @@ export enum MerchandiseType {
   HOODIE = 'hoodie',
 }
 
+export enum MerchandiseSizes {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+}
+
 export type MerchandiseFormValues = {
   name: string
   email: string
@@ -27,11 +34,4 @@ export type MerchandiseFormErrors = {
   country?: string[]
   zip?: string[]
   global?: string[]
-}
-
-export enum MerchandiseSizes {
-  S = 'S',
-  M = 'M',
-  L = 'L',
-  XL = 'XL',
 }
