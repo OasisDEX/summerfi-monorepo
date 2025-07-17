@@ -26,7 +26,7 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { getMulticall3Address } from './utils/getMulticall3Address'
-import { multicall3Abi } from './abi/multicall3abi'
+import { multicall3Abi } from './abi/multicall3Abi'
 
 /**
  * @name ArmadaManager
