@@ -18,7 +18,9 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  canClaimDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
+  canClaimDistributions: (params: {
+    user: IUser
+  }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
    * @name hasClaimedDistributions
@@ -27,7 +29,9 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  hasClaimedDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
+  hasClaimedDistributions: (params: {
+    user: IUser
+  }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
    * @name getAggregatedRewards
@@ -77,7 +81,7 @@ export interface IArmadaManagerClaims {
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimDistributionTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo] | []>
+  getClaimDistributionTx: (params: { user: IUser }) => Promise<ClaimTransactionInfo[] | undefined>
 
   /**
    * @name getClaimVoteDelegationRewardsTx

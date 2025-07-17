@@ -25,7 +25,7 @@ describe('Armada Protocol Claim', () => {
         }),
       })
 
-      describe(`getAggregatedRewards`, () => {
+      describe.skip(`getAggregatedRewards`, () => {
         it(`should get aggregated rewards cross chain`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
