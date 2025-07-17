@@ -454,13 +454,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
 
-    const requests: Promise<void>[] = []
+    const gatherMulticallArgsFromRequests: Promise<void>[] = []
 
     if (isHubChain) {
-      requests.push(
+      gatherMulticallArgsFromRequests.push(
         this.getMerkleDistributionRewards(params.user).then((merkleDistributionRewards) => {
           if (merkleDistributionRewards > 0n) {
             return this.getClaimDistributionTx({ user: params.user }).then((claimMerkleRewards) => {
+              if (claimMerkleRewards.length === 0) {
+                return
+              }
               multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
               multicallOperations.push('merkle rewards: ' + merkleDistributionRewards)
             })
@@ -474,7 +477,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         contractName: 'summerToken',
       })
 
-      requests.push(
+      gatherMulticallArgsFromRequests.push(
         this.getVoteDelegationRewards(params.user).then((voteDelegationRewards) => {
           if (voteDelegationRewards > 0n) {
             return this.getClaimVoteDelegationRewardsTx({
@@ -495,7 +498,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'summerToken',
     })
 
-    requests.push(
+    gatherMulticallArgsFromRequests.push(
       this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
         if (protocolUsageRewards.total > 0n) {
           const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
@@ -519,8 +522,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       }),
     )
 
-    await Promise.all(requests)
+    // fetch and parse multicall args from the async requests results
+    await Promise.all(gatherMulticallArgsFromRequests)
 
+    // results are in multicallArgs
     if (multicallArgs.length === 0) {
       return undefined
     }
