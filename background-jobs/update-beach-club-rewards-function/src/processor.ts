@@ -122,11 +122,11 @@ export class ReferralProcessor {
         } else {
           periodStart = lastProcessed
         }
-        // process week at a time, to avoid processing too much data at once (lambda time outs)
-        // if periodStart is now or in the future, set periodEnd to now
-        const periodEnd =
-          periodStart >= now ? now : new Date(periodStart.getTime() + 7 * 24 * 60 * 60 * 1000)
-
+        // Process maximum 7 days at a time to avoid timeouts
+        const maxProcessingWindow = 7 * 24 * 60 * 60 * 1000 // 7 days
+        const periodEnd = new Date(
+          Math.min(now.getTime(), periodStart.getTime() + maxProcessingWindow),
+        )
         this.logger.info(`📅 Processing Period:`)
         this.logger.info(`   From: ${periodStart.toISOString()}`)
         this.logger.info(`   To:   ${periodEnd.toISOString()}`)
