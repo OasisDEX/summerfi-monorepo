@@ -7,9 +7,9 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-describe.skip('Armada Protocol Claim', () => {
+describe('Armada Protocol Claim', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
 
   for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
