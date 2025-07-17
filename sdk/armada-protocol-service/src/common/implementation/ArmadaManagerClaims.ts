@@ -89,7 +89,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
-          address: this._rewardsRedeemerAddress.value,
+          address: claim.contractAddress,
           functionName: 'canClaim',
           args: [params.user.wallet.address.value, claim.index, claim.amount, claim.proof],
         }) as const,
@@ -127,7 +127,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
-          address: this._rewardsRedeemerAddress.value,
+          address: claim.contractAddress,
           functionName: 'hasClaimed',
           args: [params.user.wallet.address.value, claim.index],
         }) as const,
