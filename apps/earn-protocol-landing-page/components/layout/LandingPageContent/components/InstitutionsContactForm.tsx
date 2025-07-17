@@ -243,7 +243,10 @@ export const InstitutionsContactForm = () => {
       <div className={institutionsContactFormStyles.orContactusDirectly}>
         <Text variant="p2semi">
           or email us{' '}
-          <Link href="mailto:sales@summer.fi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+          <Link
+            href="mailto:institutions@summer.fi"
+            style={{ color: 'var(--earn-protocol-primary-100)' }}
+          >
             <Emphasis variant="p2semiColorful">@summer.fi</Emphasis>
           </Link>
         </Text>
