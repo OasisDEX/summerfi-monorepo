@@ -14,6 +14,7 @@ import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 const pointsRequired = {
   [MerchandiseType.T_SHIRT]: 5000,
   [MerchandiseType.HOODIE]: 10000,
+  [MerchandiseType.NFT]: 1000,
 }
 
 const pathParamsSchema = z.object({
@@ -139,17 +140,21 @@ export async function POST(
       encoded.append(key, value)
     }
 
-    // send to getForm endpoint
-    const getFormResponse = await fetch(`https://getform.io/f/${getFormIoKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: encoded.toString(),
-    })
+    // NFTs are not sent to getForm endpoint as this is digital merchandise
+    // that can be claimed without any additional information
+    if (type !== MerchandiseType.NFT) {
+      // send to getForm endpoint
+      const getFormResponse = await fetch(`https://getform.io/f/${getFormIoKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: encoded.toString(),
+      })
 
-    if (!getFormResponse.ok) {
-      return NextResponse.json({ error: 'Failed to send form data' }, { status: 500 })
+      if (!getFormResponse.ok) {
+        return NextResponse.json({ error: 'Failed to send form data' }, { status: 500 })
+      }
     }
 
     await beachClubDb.db

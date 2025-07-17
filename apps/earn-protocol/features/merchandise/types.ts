@@ -1,6 +1,7 @@
 export enum MerchandiseType {
   T_SHIRT = 't-shirt',
   HOODIE = 'hoodie',
+  NFT = 'nft',
 }
 
 export enum MerchandiseSizes {
