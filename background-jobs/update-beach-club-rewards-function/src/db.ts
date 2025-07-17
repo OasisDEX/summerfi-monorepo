@@ -393,7 +393,7 @@ WHERE u.id = ANY(${userIds});
     const result = await (trx || this.db)
       .selectFrom('processing_checkpoint')
       .select('last_processed_timestamp')
-      .orderBy('id', 'desc')
+      .orderBy('last_processed_timestamp', 'desc')
       .limit(1)
       .executeTakeFirst()
 
