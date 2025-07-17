@@ -29,9 +29,11 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   const pathname = usePathname()
 
   const isBeachClub = pathname.includes('beach-club')
+  const isLegal =
+    pathname.includes('privacy') || pathname.includes('terms') || pathname.includes('cookies')
   const isInstitutions = pathname.includes('institutions')
 
-  const showBubbles = !isBeachClub
+  const showBubbles = !isBeachClub && !isLegal
   const showPalms = isBeachClub
 
   useEffect(() => {
