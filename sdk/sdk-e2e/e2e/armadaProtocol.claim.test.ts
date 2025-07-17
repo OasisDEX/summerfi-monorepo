@@ -37,7 +37,7 @@ describe('Armada Protocol Claim', () => {
         })
       })
 
-      describe.skip(`claimRewards`, () => {
+      describe(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
@@ -64,6 +64,7 @@ describe('Armada Protocol Claim', () => {
             transactions: tx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
+            simulateOnly: true,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')
