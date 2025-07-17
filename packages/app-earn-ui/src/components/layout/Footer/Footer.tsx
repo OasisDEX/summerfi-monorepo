@@ -35,15 +35,15 @@ const linksList = [
       },
       {
         label: 'Privacy',
-        url: INTERNAL_LINKS.privacy,
+        url: INTERNAL_LINKS.tempPrivacy,
       },
       {
         label: 'Cookie Policy',
-        url: INTERNAL_LINKS.cookie,
+        url: INTERNAL_LINKS.tempCookie,
       },
       {
         label: 'Terms',
-        url: INTERNAL_LINKS.terms,
+        url: INTERNAL_LINKS.tempTerms,
       },
       {
         label: 'Security',
