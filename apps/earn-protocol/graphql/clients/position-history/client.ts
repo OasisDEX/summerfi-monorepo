@@ -11494,7 +11494,7 @@ export const GetPositionHistoryDocument = /*#__PURE__*/ gql`
     query GetPositionHistory($positionId: ID!) {
   position(id: $positionId) {
     hourlyPositionHistory: hourlySnapshots(
-      first: 480
+      first: 721
       orderBy: timestamp
       orderDirection: desc
     ) {
@@ -11504,7 +11504,7 @@ export const GetPositionHistoryDocument = /*#__PURE__*/ gql`
       timestamp
     }
     dailyPositionHistory: dailySnapshots(
-      first: 243
+      first: 366
       orderBy: timestamp
       orderDirection: desc
     ) {
@@ -11514,7 +11514,7 @@ export const GetPositionHistoryDocument = /*#__PURE__*/ gql`
       timestamp
     }
     weeklyPositionHistory: weeklySnapshots(
-      first: 104
+      first: 157
       orderBy: timestamp
       orderDirection: desc
     ) {
