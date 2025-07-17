@@ -12,7 +12,7 @@ export const getNavigationItems = ({
   isEarnApp?: boolean
   features?: EarnAppConfigType['features']
 }): EarnNavigationProps['links'] => {
-  const prefix = isEarnApp ? `/earn` : ``
+  const prefix = !isEarnApp ? `/earn` : ``
   const institutionsEnabled = features?.Institutions
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
