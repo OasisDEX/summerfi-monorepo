@@ -60,12 +60,12 @@ export interface IArmadaManagerClaims {
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimDistributionTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo]>
+  getClaimDistributionTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo] | []>
 
   /**
    * @name getClaimVoteDelegationRewardsTx
    * @description Claims governance rewards for a user
-   * @param params.r;ewardToken The reward token
+   * @param params.rewardToken The reward token
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */

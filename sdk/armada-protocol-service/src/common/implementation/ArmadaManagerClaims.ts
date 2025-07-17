@@ -25,6 +25,8 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { getMulticall3Address } from './utils/getMulticall3Address'
+import { multicall3Abi } from './abi/multicall3abi'
 
 /**
  * @name ArmadaManager
@@ -314,21 +316,24 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       filteredClaims.map(({ amount, index }) => ({ amount, index })),
     )
 
-    const indices = filteredClaims.map((claim) => claim.index)
-    const amounts = filteredClaims.map((claim) => claim.amount)
-    const proofs = filteredClaims.map((claim) => claim.proof)
+    // if no claims to process, return empty array
+    if (filteredClaims.length === 0) {
+      LoggingService.debug('No claims to process for user: ' + params.user.toString())
+      return []
+    }
 
-    const calldata = encodeFunctionData({
-      abi: AdmiralsQuartersAbi,
-      functionName: 'claimMerkleRewards',
-      args: [
-        params.user.wallet.address.value,
-        indices,
-        amounts,
-        proofs,
-        this._rewardsRedeemerAddress.value,
-      ],
-    })
+    // group claims by claim.contractAddress as key
+    const rewardsRecords = filteredClaims.reduce(
+      (acc, claim) => {
+        const key = claim.contractAddress.toLowerCase() as HexData
+        if (!acc[key]) {
+          acc[key] = []
+        }
+        acc[key].push(claim)
+        return acc
+      },
+      {} as Record<HexData, typeof filteredClaims>,
+    )
 
     const admiralsQuartersAddress = getDeployedContractAddress({
       chainInfo: this._hubChainInfo,
@@ -336,13 +341,47 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       contractName: 'admiralsQuarters',
     })
 
+    const calls: { target: HexData; callData: HexData; allowFailure: boolean }[] = []
+    for (const [contractAddress, claims] of Object.entries(rewardsRecords)) {
+      LoggingService.debug(
+        `Processing ${claims.length} claims for contract: ${contractAddress}`,
+        claims.map(({ amount, index }) => ({ amount, index })),
+      )
+      const indices = claims.map((claim) => claim.index)
+      const amounts = claims.map((claim) => claim.amount)
+      const proofs = claims.map((claim) => claim.proof)
+
+      const calldata = encodeFunctionData({
+        abi: AdmiralsQuartersAbi,
+        functionName: 'claimMerkleRewards',
+        args: [
+          params.user.wallet.address.value,
+          indices,
+          amounts,
+          proofs,
+          contractAddress as HexData,
+        ],
+      })
+      calls.push({
+        target: admiralsQuartersAddress.value,
+        callData: calldata,
+        allowFailure: true,
+      })
+    }
+
+    const multicallData = encodeFunctionData({
+      abi: multicall3Abi,
+      functionName: 'aggregate3',
+      args: [calls],
+    })
+
     return [
       {
         type: TransactionType.Claim,
         description: 'Claiming merkle rewards',
         transaction: {
-          target: admiralsQuartersAddress,
-          calldata: calldata,
+          target: getMulticall3Address(params.user.chainInfo.chainId),
+          calldata: multicallData,
           value: '0',
         },
       },
