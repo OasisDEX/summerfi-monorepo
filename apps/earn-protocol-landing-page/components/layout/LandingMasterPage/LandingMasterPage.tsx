@@ -30,7 +30,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 
   const isBeachClub = pathname.includes('beach-club')
   const isLegal =
-    pathname.includes('privacy') || pathname.includes('terms') || pathname.includes('cookies')
+    pathname.includes('privacy') || pathname.includes('terms') || pathname.includes('cookie')
   const isInstitutions = pathname.includes('institutions')
 
   const showBubbles = !isBeachClub && !isLegal
