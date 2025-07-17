@@ -286,6 +286,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     return {
       total,
       perChain,
+      vaultUsagePerChain: perChain,
+      vaultUsage: totalUsageRewards,
+      merkleDistribution: merkleDistributionRewards,
+      voteDelegation: voteDelegationRewards,
     }
   }
 
