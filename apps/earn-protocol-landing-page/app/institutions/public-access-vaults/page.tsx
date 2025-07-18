@@ -72,14 +72,9 @@ export default function PublicAccessVaults() {
     redirect('/')
   }
 
-  if (!landingPageData) {
-    return null
-  }
-
-  const totalProtocolTvl = Object.values(landingPageData.protocolTvls).reduce(
-    (acc, tvl) => acc + BigInt(tvl),
-    BigInt(0),
-  )
+  const totalProtocolTvl = landingPageData
+    ? Object.values(landingPageData.protocolTvls).reduce((acc, tvl) => acc + BigInt(tvl), BigInt(0))
+    : BigInt(0)
 
   return (
     <div className={publicAccessVaultsStyles.wrapper}>

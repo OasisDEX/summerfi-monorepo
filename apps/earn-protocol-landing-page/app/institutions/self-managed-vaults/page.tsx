@@ -65,10 +65,6 @@ export default function SelfManagedVaults() {
     })
   }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
 
-  if (!landingPageData) {
-    return null
-  }
-
   const smoothScrollToId = (id: string) => () => {
     const element = document.getElementById(id)
 
