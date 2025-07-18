@@ -67,13 +67,13 @@ const BigProtocolScrollerItem = ({
   url,
 }: BigProtocolScrollerItemProps) => {
   const grid = useMemo(() => {
-    return value.map(([key, value]) => (
+    return value.map(([key, val]) => (
       <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataBlock} key={key}>
         <Text variant="p4semi" as="p">
           {key}
         </Text>
         <Text variant="p2semi" as="span">
-          {value}
+          {val}
         </Text>
       </div>
     ))
