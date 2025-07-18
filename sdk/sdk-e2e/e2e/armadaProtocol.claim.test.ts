@@ -7,9 +7,9 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-describe.skip('Armada Protocol Claim', () => {
+describe('Armada Protocol Claim', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
 
   for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
@@ -25,7 +25,7 @@ describe.skip('Armada Protocol Claim', () => {
         }),
       })
 
-      describe(`getAggregatedRewards`, () => {
+      describe.skip(`getAggregatedRewards`, () => {
         it(`should get aggregated rewards cross chain`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
@@ -37,7 +37,7 @@ describe.skip('Armada Protocol Claim', () => {
         })
       })
 
-      describe.skip(`claimRewards`, () => {
+      describe(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
@@ -64,6 +64,7 @@ describe.skip('Armada Protocol Claim', () => {
             transactions: tx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
+            simulateOnly: true,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')

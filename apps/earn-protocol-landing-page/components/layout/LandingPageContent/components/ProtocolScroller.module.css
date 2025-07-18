@@ -1,6 +1,7 @@
 .protocolScrollerWrapper {
   margin-top: var(--spacing-space-3x-large);
 }
+
 @media (max-width: 531px) {
   .protocolScrollerWrapper {
     margin-top: var(--spacing-space-2x-large);
@@ -14,12 +15,14 @@
   max-width: 1057px;
   margin: 0 auto;
 }
+
 @media (min-width: 532px) {
   .protocolScrollerHeader {
     padding: 0 var(--spacing-space-2x-large);
   }
 }
-.protocolScrollerHeader > span > span {
+
+.protocolScrollerHeader>span>span {
   font-weight: 600;
 }
 
@@ -44,10 +47,12 @@
   0% {
     transform: translate(0, 0);
   }
+
   100% {
     transform: translate(-50%, 0);
   }
 }
+
 .protocolScrollerOverflowWrapper {
   position: relative;
   left: 0;
@@ -57,12 +62,14 @@
   margin-top: var(--spacing-space-2x-large);
   margin-bottom: var(--spacing-space-3x-large);
 }
+
 @media (min-width: 532px) {
   .protocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
     margin-bottom: var(--spacing-space-3x-large);
   }
 }
+
 @media (min-width: 1026px) {
   .protocolScrollerOverflowWrapper {
     margin-top: var(--spacing-space-2x-large);
@@ -91,12 +98,13 @@
   height: 82px;
   pointer-events: none;
   z-index: 3;
-  background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 48.5%, rgb(28, 28, 28) 100%);
+  background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(28, 28, 28) 100%);
 }
 
 .protocolScrollerItemGradient {
   cursor: auto !important;
 }
+
 .protocolScrollerItemGradient::before {
   border-radius: var(--radius-large) !important;
 }
@@ -113,6 +121,7 @@
   padding: var(--spacing-space-medium) var(--spacing-space-large);
   transition: background-color 0.2s ease;
 }
+
 .protocolScrollerItem:hover {
   background-color: var(--color-surface-subtler);
 }

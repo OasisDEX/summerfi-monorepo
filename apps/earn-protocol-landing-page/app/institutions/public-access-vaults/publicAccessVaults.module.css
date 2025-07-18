@@ -1,0 +1,111 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 128px
+}
+
+.strategiesBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 950px;
+  margin-bottom: -256px;
+}
+
+.secondaryParagraph {
+  color: var(--color-text-secondary)
+}
+
+.secondaryParagraph strong {
+  color: var(--color-text-primary)
+}
+
+.blueChipsBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 64px;
+  max-width: 1000px;
+
+  .blueChipsBlockDescription {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .blueChipsBlockButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+  }
+}
+
+.aiPoweredRebalancingBlock {
+  text-align: center;
+  max-width: 950px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.totalLiquidityBlock {
+  max-width: 950px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  .buttonsBlock {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    button {
+      min-width: auto;
+    }
+  }
+}
+
+.transparentFlowsBlock {
+  max-width: 950px;
+  margin: 0 auto;
+  margin-bottom: -128px;
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    text-align: center;
+  }
+}
+
+.transparentFlowsTopRiskTeam {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faqWrapper {
+  margin-bottom: var(--spacing-space-3x-large);
+  padding: 0 var(--spacing-space-3x-large);
+}
+
+@media (max-width: 531px) {
+
+  .totalLiquidityBlock,
+  .strategiesBlockSubtitle,
+  .strategiesBlock,
+  .faqWrapper {
+    padding: 0 var(--spacing-space-large);
+  }
+
+  .strategiesBlock {
+    margin-bottom: -230px;
+  }
+
+  .blueChipsBlock {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--spacing-space-x-large);
+  }
+}

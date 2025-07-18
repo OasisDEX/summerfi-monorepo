@@ -18,7 +18,9 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  canClaimDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
+  canClaimDistributions: (params: {
+    user: IUser
+  }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
    * @name hasClaimedDistributions
@@ -27,25 +29,44 @@ export interface IArmadaManagerClaims {
    * @returns Promise<boolean>
    * @throws Error
    */
-  hasClaimedDistributions: (params: { user: IUser }) => Promise<Record<string, boolean>>
+  hasClaimedDistributions: (params: {
+    user: IUser
+  }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
    * @name getAggregatedRewards
-   * @description Returns the total amount a user is eligible to claim cross-chain
+   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain
    * @param params.user The user
-   * @returns Promise<number>
+   * @returns Promise<{
+   *  total: bigint
+   *  vaultUsagePerChain: Record<number, bigint>
+   *  vaultUsage: bigint
+   *  merkleDistribution: bigint
+   *  voteDelegation: bigint
+   * }>
    * @throws Error
    */
   getAggregatedRewards: (params: { user: IUser }) => Promise<{
     total: bigint
+    vaultUsagePerChain: Record<number, bigint>
+    vaultUsage: bigint
+    merkleDistribution: bigint
+    voteDelegation: bigint
+    /**
+     * @deprecated use `vaultUsagePerChain` instead
+     */
     perChain: Record<number, bigint>
   }>
 
   /**
+   * @deprecated use getAggregatedRewards instead
    * @name getClaimableAggregatedRewards
    * @description Returns the claimable amount a user is eligible to claim cross-chain
    * @param params.user The user
-   * @returns Promise<number>
+   * @returns Promise<{
+   *   total: bigint
+   *   perChain: Record<number, bigint>
+   * }>
    * @throws Error
    */
   getClaimableAggregatedRewards: (params: { user: IUser }) => Promise<{
@@ -60,12 +81,12 @@ export interface IArmadaManagerClaims {
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */
-  getClaimDistributionTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo]>
+  getClaimDistributionTx: (params: { user: IUser }) => Promise<ClaimTransactionInfo[] | undefined>
 
   /**
    * @name getClaimVoteDelegationRewardsTx
    * @description Claims governance rewards for a user
-   * @param params.r;ewardToken The reward token
+   * @param params.rewardToken The reward token
    * @returns Promise<TransactionInfoClaim>
    * @throws Error
    */

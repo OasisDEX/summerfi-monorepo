@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 
 require('@dotenvx/dotenvx').config({ path: ['../../.env', '../.env'], override: true })
 
+const profile = process.env.SDK_PROFILE
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -23,8 +24,8 @@ if (!bucketUrl) {
 
 async function uploadToBucket(fileNames: string[]) {
   console.log('starting uploadDistributions')
-  // Create an S3 client to get the bucket location
-  const s3Client = new S3({})
+  // Create an S3 client. If credentials are in the environment, the SDK will use them automatically.
+  const s3Client = new S3({ profile })
   const bucketName = bucketUrl?.split('://')[1].split('.')[0]
   console.log('bucketName', bucketName)
 
@@ -37,7 +38,7 @@ async function uploadToBucket(fileNames: string[]) {
   console.log('bucketRegion', bucketRegion)
 
   // Create an S3 client with the correct region
-  const s3ClientWithRegion = new S3({ region: bucketRegion })
+  const s3ClientWithRegion = new S3({ profile, region: bucketRegion })
 
   for await (const fileName of fileNames) {
     const filePath = path.join(__dirname, fileName)

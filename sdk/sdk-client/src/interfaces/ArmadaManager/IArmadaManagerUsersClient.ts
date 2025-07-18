@@ -253,15 +253,27 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getAggregatedRewards
-   * @description Returns the total aggregated rewards of a user in a Fleet
-   *
-   * @param user Address of the user to check the rewards for
-   *
-   * @returns The aggregated rewards of the user in the Fleet
+   * @name getAggregatedRewards
+   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain
+   * @param params.user The user
+   * @returns Promise<{
+   *  total: bigint
+   *  vaultUsagePerChain: Record<number, bigint>
+   *  vaultUsage: bigint
+   *  merkleDistribution: bigint
+   *  voteDelegation: bigint
+   * }>
+   * @throws Error
    */
-  getAggregatedRewards(params: { user: IUser }): Promise<{
+  getAggregatedRewards: (params: { user: IUser }) => Promise<{
     total: bigint
+    vaultUsagePerChain: Record<number, bigint>
+    vaultUsage: bigint
+    merkleDistribution: bigint
+    voteDelegation: bigint
+    /**
+     * @deprecated use `usagePerChain` instead
+     */
     perChain: Record<number, bigint>
   }>
 

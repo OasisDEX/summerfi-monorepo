@@ -5,6 +5,7 @@ interface Distribution {
   chainId: string
   distributionId: string
   merkleRoot: string
+  contractAddress: HexData
   claims: {
     [walletAddress: string]: { amount: string; proof: string[] }
   }
@@ -33,6 +34,7 @@ export interface Claim {
   merkleRoot: string
   amount: bigint
   proof: HexData[]
+  contractAddress: HexData
 }
 export const getAllMerkleClaims = async (params: {
   walletAddress: string
@@ -51,6 +53,7 @@ export const getAllMerkleClaims = async (params: {
         merkleRoot: distribution.merkleRoot,
         amount: BigInt(claim.amount),
         proof: claim.proof as HexData[],
+        contractAddress: distribution.contractAddress,
       })
     }
   })

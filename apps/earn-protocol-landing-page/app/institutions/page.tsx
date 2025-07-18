@@ -1,44 +1,37 @@
 'use client'
-import { Audits, Button, Emphasis, FaqSection, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
+import {
+  Audits,
+  Button,
+  Emphasis,
+  EnhancedRiskManagement,
+  EXTERNAL_LINKS,
+  FaqSection,
+  Icon,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
+import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
+import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
+import aaveLogo from '@/public/img/landing-page/protocols/aave.svg'
+import morphoBlueLogo from '@/public/img/landing-page/protocols/morpho-blue.svg'
+import skyLogo from '@/public/img/landing-page/protocols/sky.svg'
+import sparkLogo from '@/public/img/landing-page/protocols/spark.svg'
 
 import institutionsPageStyles from './institutionsPage.module.css'
 
 import depositUiImage from '@/public/img/institution/deposit-ui.png'
 import securityAndComplianceImage from '@/public/img/institution/security-and-compliance.png'
-
-const FinalCTAElement = ({
-  title,
-  icon,
-  url,
-  urlLabel,
-}: {
-  title: string
-  icon: IconNamesList
-  url: string
-  urlLabel: string
-}) => {
-  return (
-    <div className={institutionsPageStyles.finalCTAElement}>
-      <Icon iconName={icon} size={32} />
-      <Text variant="p2semi" as="p">
-        {title}
-      </Text>
-      <Link href={url} prefetch={false}>
-        <WithArrow variant="p2semi">{urlLabel}</WithArrow>
-      </Link>
-    </div>
-  )
-}
+import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
+import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
 
 const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
   return (
@@ -58,10 +51,17 @@ const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
 
-  const institutionsEnabled = landingPageData?.systemConfig.features.Institutions
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Institutions',
+  })
 
-  if (institutionsEnabled === false) {
-    redirect('/')
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -80,7 +80,7 @@ export default function InstitutionsPage() {
             Lazy Summer Protocol gives professional allocators a single entry point to on-chain
             yield. Institutions can now access DeFi’s highest quality protocols, all in one.
           </Text>
-          <Button variant="primaryLargeColorful">
+          <Button variant="primaryLargeColorful" onClick={smoothScrollToId('institutions-cta')}>
             <WithArrow variant="p2semi">Get started</WithArrow>
           </Button>
         </div>
@@ -95,7 +95,7 @@ export default function InstitutionsPage() {
           vaults or public access optimized for scale and best in class risk adjusted return.
         </Text>
       </div>
-      <div className={institutionsPageStyles.promoBlocks}>
+      <div className={institutionsPageStyles.promoBlocks} id="institutions-cta">
         <InstitutionsPromoBlock
           title="Self managed Vaults"
           description="Institutional-grade access to DeFi—fully customizable, fully compliant, and composable by design."
@@ -108,6 +108,7 @@ export default function InstitutionsPage() {
             'Simple SDK ready integration',
             '24-h exit guarantee',
           ]}
+          ctaUrl="/institutions/self-managed-vaults"
         />
         <InstitutionsPromoBlock
           title="Large Capital deployment into Public Access Vaults"
@@ -120,6 +121,7 @@ export default function InstitutionsPage() {
             'Built-in diversification across venues',
             '24-h exit guarantee',
           ]}
+          ctaUrl="/institutions/public-access-vaults"
         />
       </div>
       <div className={institutionsPageStyles.onboardingBlock}>
@@ -131,7 +133,9 @@ export default function InstitutionsPage() {
             Get started quickly with our streamlined, self serve onboarding process or our hands on
             technical support for custom integrations.
           </Text>
-          <Button variant="primaryLarge">Set up a call</Button>
+          <Link href={EXTERNAL_LINKS.BD_CONTACT} target="_blank">
+            <Button variant="primaryLarge">Set up a call</Button>
+          </Link>
         </div>
         <div>
           <Image src={depositUiImage} alt="Deposit UI" />
@@ -152,11 +156,26 @@ export default function InstitutionsPage() {
         <Image src={securityAndComplianceImage} alt="Security and Compliance" />
         <SecurityAndComplianceList
           items={[
-            'Headquartered in the U.K. . with a Bankruptcy-Remote Trust Structure',
+            'Headquartered in the U.K. with a Bankruptcy-Remote Trust Structure',
             'Assets are managed and segregated by established service providers',
             'Available to Qualified Purchasers in supported jurisdiction',
-            'Minimize counterparty risk with a customizable whielists',
+            'Minimize counterparty risk with a customizable whitelists',
           ]}
+        />
+      </div>
+      <div className={institutionsPageStyles.enhancedRiskManagementBlock}>
+        <EnhancedRiskManagement
+          protectedCapital="$10B+"
+          imagesMap={{
+            rebalanceActivityImage,
+            strategyExposureImage,
+            blockAnalyticaLogo,
+            aaveLogo,
+            morphoBlueLogo,
+            skyLogo,
+            sparkLogo,
+          }}
+          bottomBoxes={false}
         />
       </div>
       <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />

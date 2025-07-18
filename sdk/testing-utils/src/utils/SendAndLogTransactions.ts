@@ -7,6 +7,7 @@ export async function sendAndLogTransactions(params: {
   transactions: TransactionInfo[]
   rpcUrl: string
   privateKey: string
+  simulateOnly?: boolean
 }) {
   const privateKey = params.privateKey
   if (!privateKey) {
@@ -40,11 +41,24 @@ export async function sendAndLogTransactions(params: {
       useFork: useFork ? true : false,
     })
 
-    const receipt = await transactionUtils.sendTransactionWithReceipt({
-      transaction: transaction.transaction,
-    })
-    console.log('Transaction ' + receipt.status, receipt.transactionHash)
-    statuses.push(receipt.status)
+    if (params.simulateOnly) {
+      try {
+        const res = await transactionUtils.sendSimulation({
+          transaction: transaction.transaction,
+        })
+        console.log('Simulated transaction ' + res.data)
+        statuses.push('success')
+      } catch (error) {
+        console.error('Error simulating transaction:', error)
+        statuses.push('failed')
+      }
+    } else {
+      const receipt = await transactionUtils.sendTransactionWithReceipt({
+        transaction: transaction.transaction,
+      })
+      console.log('Transaction ' + receipt.status, receipt.transactionHash)
+      statuses.push(receipt.status)
+    }
   }
 
   console.log('Statuses ready', statuses)
