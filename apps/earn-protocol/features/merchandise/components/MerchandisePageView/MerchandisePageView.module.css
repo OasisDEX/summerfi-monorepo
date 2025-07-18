@@ -1,0 +1,38 @@
+.merchandisePageViewWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @media (min-width: 1200px) {
+    width: 1007px;
+  }
+
+  .merchandisePageViewMainContent {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: var(--general-space-64);
+    gap: 83px;
+    flex-wrap: wrap-reverse;
+
+    .merchandisePageViewMainContentLeft {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 398px;
+      width: 100%;
+    }
+
+    .merchandisePageViewMainContentRight {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 526px;
+      min-width: 300px;
+    }
+  }
+}

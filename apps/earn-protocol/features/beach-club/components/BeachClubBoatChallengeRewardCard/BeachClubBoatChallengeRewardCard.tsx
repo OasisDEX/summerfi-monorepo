@@ -1,10 +1,11 @@
 import { Button, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
 import {
-  type BeachClubBoatChallengeRewardCardType,
+  BeachClubBoatChallengeRewardCardType,
   beachClubRewardCardImages,
   beachClubRewardDescriptions,
 } from '@/features/beach-club/constants/reward-cards'
@@ -23,6 +24,7 @@ interface BeachClubBoatChallengeRewardCardProps {
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
+  walletAddress: string
 }
 
 export const BeachClubBoatChallengeRewardCard = ({
@@ -32,8 +34,20 @@ export const BeachClubBoatChallengeRewardCard = ({
   unlocked,
   pointsToUnlock,
   reward,
+  walletAddress,
 }: BeachClubBoatChallengeRewardCardProps) => {
   const { type } = reward
+
+  const { push } = useRouter()
+
+  const handleClaim = () => {
+    if (reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT) {
+      // TODO: implement NFT claim
+      return
+    }
+
+    push(`/merchandise/${reward.type}/${walletAddress}`)
+  }
 
   return (
     <div className={classNames.beachClubBoatChallengeRewardCardWrapper}>
@@ -71,11 +85,18 @@ export const BeachClubBoatChallengeRewardCard = ({
           </Text>
         </div>
         {unlocked ? (
-          <Button variant="beachClubMedium" style={{ width: '100%' }} disabled>
+          <Button
+            variant="beachClubMedium"
+            style={{ width: '100%' }}
+            disabled={reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT}
+            onClick={handleClaim}
+          >
             Claim {beachClubRewardDescriptions[type]}
-            <Tooltip tooltip="Available soon" tooltipWrapperStyles={{ minWidth: '140px' }}>
-              <Icon iconName="info" size={24} />
-            </Tooltip>
+            {reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT && (
+              <Tooltip tooltip="Available soon" tooltipWrapperStyles={{ minWidth: '140px' }}>
+                <Icon iconName="info" size={24} />
+              </Tooltip>
+            )}
           </Button>
         ) : (
           <div className={classNames.progress}>

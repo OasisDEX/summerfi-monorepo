@@ -15,7 +15,7 @@ import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.css'
 
-type TriggerProps = { isOpen: boolean; isDisabled?: boolean }
+type TriggerProps = { isOpen: boolean; isDisabled?: boolean; dropdownValue?: DropdownRawOption }
 
 interface DropdownProps {
   options: DropdownRawOption[]
@@ -27,6 +27,7 @@ interface DropdownProps {
   isDisabled?: boolean
   dropdownOptionsStyle?: CSSProperties
   dropdownChildrenStyle?: CSSProperties
+  dropdownWrapperStyle?: CSSProperties
   trigger?: (props: TriggerProps) => ReactNode
   onChange?: (option: DropdownRawOption) => void
 }
@@ -41,6 +42,7 @@ export const Dropdown: FC<DropdownProps> = ({
   isDisabled,
   dropdownOptionsStyle,
   dropdownChildrenStyle,
+  dropdownWrapperStyle,
   onChange,
   trigger,
 }) => {
@@ -106,7 +108,7 @@ export const Dropdown: FC<DropdownProps> = ({
   const hasMultipleOptions = optionsMapped.length > 1
 
   return (
-    <div className={dropdownStyles.dropdown} ref={dropdownRef}>
+    <div className={dropdownStyles.dropdown} ref={dropdownRef} style={dropdownWrapperStyle}>
       <div
         className={clsx(dropdownStyles.dropdownSelected, {
           [dropdownStyles.disabled]: isDisabled,
@@ -132,7 +134,7 @@ export const Dropdown: FC<DropdownProps> = ({
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
       >
-        {trigger ? trigger({ isOpen, isDisabled }) : children}
+        {trigger ? trigger({ isOpen, isDisabled, dropdownValue }) : children}
         {!trigger && hasMultipleOptions && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
