@@ -14,12 +14,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
-import { redirect } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { InstitutionsContactForm } from '@/components/layout/LandingPageContent/components/InstitutionsContactForm'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
@@ -29,9 +29,10 @@ import institutionsPageStyles from '@/app/institutions/institutionsPage.module.c
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
 
-  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Institutions',
+  })
 
   const protocolsList = useMemo(() => {
     return supportedDefillamaProtocols.map((protocol) => {
@@ -64,10 +65,6 @@ export default function SelfManagedVaults() {
       }
     })
   }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
-
-  if (!landingPageData) {
-    return null
-  }
 
   const smoothScrollToId = (id: string) => () => {
     const element = document.getElementById(id)

@@ -1,0 +1,33 @@
+'use client'
+import { Emphasis, Text } from '@summerfi/app-earn-ui'
+
+import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
+
+import teamPageStyles from './teamPage.module.css'
+
+export default function TeamPage() {
+  const { landingPageData } = useLandingPageData()
+
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Team',
+  })
+
+  return (
+    <div className={teamPageStyles.wrapper}>
+      <div className={teamPageStyles.pageHeader}>
+        <Text as="h1" variant="h1">
+          Making the best of DeFi
+          <br />
+          <Emphasis variant="h1colorful">simple and safe </Emphasis>
+        </Text>
+        <div className={teamPageStyles.pageHeaderDetails}>
+          <Text as="p" variant="p1">
+            Summer.fi is the best place to borrow and earn in DeFi
+          </Text>
+        </div>
+      </div>
+    </div>
+  )
+}
