@@ -3,6 +3,8 @@ import { z } from 'zod'
 
 import { validateCaptcha } from '@/features/captcha/validate-captcha'
 
+const institutionsFormServiceurl = 'https://getform.io/f/byvyrpna'
+
 const institutionsFormSchema = z.object({
   companyName: z
     .string()
@@ -47,10 +49,42 @@ export async function POST(req: Request) {
     )
   }
 
-  const recaptchaData = await validateCaptcha(parsedData.data.token)
+  const { token, ...submittedData } = parsedData.data
+
+  const recaptchaData = await validateCaptcha(token)
 
   if (!recaptchaData) {
     return NextResponse.json({ error: 'Invalid reCAPTCHA token', success: false }, { status: 400 })
+  }
+
+  try {
+    const formData = new FormData()
+
+    Object.entries(submittedData).forEach(([key, value]) => {
+      formData.append(key, value)
+    })
+
+    const getFormResponse = await fetch(institutionsFormServiceurl, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    })
+
+    if (!getFormResponse.ok) {
+      console.log('Debug:', {
+        status: getFormResponse.status,
+        statusText: getFormResponse.statusText,
+        url: getFormResponse.url,
+        body: await getFormResponse.text(),
+      })
+
+      return NextResponse.json({ errors: ['Failed to send form data'] }, { status: 500 })
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { errors: ['Failed to send form data'], success: false },
+      { status: 500 },
+    )
   }
 
   return NextResponse.json(
