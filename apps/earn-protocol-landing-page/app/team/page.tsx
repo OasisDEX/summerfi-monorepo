@@ -1,16 +1,88 @@
 'use client'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
+import {
+  type IconNamesList,
+  supportedDefillamaProtocols,
+  supportedDefillamaProtocolsConfig,
+} from '@summerfi/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { teamList } from '@/app/team/constants'
 import { type TeamListItem } from '@/app/team/types'
+import { HistoryScroller } from '@/components/layout/LandingPageContent/components/HistoryScroller'
+import { ProtocolScrollerItem } from '@/components/layout/LandingPageContent/components/ProtocolScroller'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
+import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import sumrTokenBubbles from '@/public/img/landing-page/sumr-token_bubbles.svg'
 
 import teamPageStyles from './teamPage.module.css'
+
+type ProtocolItemType = {
+  protocol: string
+  protocolIcon: IconNamesList
+  tvl: bigint
+  url: string
+}
+
+function VerticalProtocolScroller({ protocols }: { protocols: ProtocolItemType[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  useEffect(() => {
+    if (protocols.length <= 4) {
+      return
+    }
+    const interval = setInterval(() => {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % protocols.length)
+        setIsAnimating(false)
+      }, 500) // Corresponds to animation duration
+    }, 3000)
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      clearInterval(interval)
+    }
+  }, [protocols.length])
+
+  const visibleProtocols = useMemo(() => {
+    if (protocols.length === 0) {
+      return []
+    }
+    const extendedProtocols = [...protocols, ...protocols, ...protocols, ...protocols]
+
+    return extendedProtocols.slice(currentIndex, currentIndex + 5) // Get 5 to show the next one coming in
+  }, [currentIndex, protocols])
+
+  if (protocols.length === 0) {
+    return null
+  }
+
+  const trackStyle = {
+    transform: isAnimating ? 'translateY(-98px)' : 'translateY(0)', // 64px item + 16px gap
+    transition: isAnimating ? 'transform 0.5s ease-in-out' : 'none',
+  }
+
+  return (
+    <div className={teamPageStyles.protocolsVerticalScroller}>
+      <div className={teamPageStyles.scrollerTrack} style={trackStyle}>
+        {visibleProtocols.map((protocol, index) => (
+          <div key={`${protocol.protocol}-${currentIndex + index}`}>
+            <ProtocolScrollerItem
+              {...protocol}
+              protocolIcon={<Icon iconName={protocol.protocolIcon} />}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 function TeamMember({ member }: { member: TeamListItem }) {
   return (
@@ -51,6 +123,23 @@ export default function TeamPage() {
     featureName: 'Team',
   })
 
+  const protocolsList = useMemo(() => {
+    if (!landingPageData?.protocolTvls) {
+      return []
+    }
+
+    return supportedDefillamaProtocols.map((protocol) => {
+      const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
+
+      return {
+        protocol: protocolConfig.displayName,
+        protocolIcon: supportedDefillamaProtocolsConfig[protocol].icon,
+        tvl: BigInt(landingPageData.protocolTvls[protocol]),
+        url: '',
+      }
+    })
+  }, [landingPageData?.protocolTvls])
+
   return (
     <div className={teamPageStyles.wrapper}>
       <div className={teamPageStyles.pageHeader}>
@@ -88,7 +177,7 @@ export default function TeamPage() {
         <Image src={sumrTokenBubbles} alt="$SUMR Token Bubbles" />
       </div>
       <div className={teamPageStyles.teamMembers}>
-        <Text as="h1" variant="h1">
+        <Text as="h2" variant="h2">
           Leadership that’s helped shape
           <br />
           DeFi from day 1
@@ -99,7 +188,63 @@ export default function TeamPage() {
           ))}
         </div>
       </div>
+      <div>
+        <Text as="h2" variant="h2" style={{ textAlign: 'center', marginBottom: '-64px' }}>
+          DeFi’s original frontend
+        </Text>
+        <HistoryScroller
+          itemsList={[
+            {
+              date: '2016',
+              title: 'Launched OasisDEX',
+              description:
+                'Launched as OasisDEX, one of the first projects by MakerDAO, serving as a front-end platform for the Maker Protocol.',
+            },
+            {
+              date: '2018',
+              title: 'Transitioned to Oasis.app',
+              description:
+                'Transitioned to Oasis.app, offering a more user-friendly interface and additional features, including borrowing and lending services, to cater to a broader audience.',
+            },
+            {
+              date: '2021',
+              title: 'Independence from MakerDAO',
+              description:
+                'Following the full decentralization of MakerDAO, Oasis.app became a standalone entity, operating independently while continuing to integrate with the Maker Protocol',
+            },
+            {
+              date: '2023',
+              title: 'Rebrand to Summer.fi',
+              description:
+                "Oasis.app rebrands to Summer.fi, shedding its “MakerDAO only” image and rolling out one transaction feature and stop loss automation support for Aave, Morpho, Compound, and other protocols. Solidifying it's best in class access to all DeFi protocol positioning.",
+            },
+            {
+              date: '2025',
+              title: 'Lazy Summer protocol launch',
+              description:
+                'Summer.fi debuts Lazy Summer Protocol, its debut yield protocol. Vaults automatically rebalance across protocols to give users top risk adjusted returns, while a permissionless SDK/API lets wallets, neobanks, and treasuries embed the strategies too. $SUMR was also introduced, the token that powers Lazy Summer Protocol.',
+            },
+          ]}
+        />
+      </div>
+      <div className={teamPageStyles.ecosystemCutAbove}>
+        <div className={teamPageStyles.ecosystemCutAboveDescription}>
+          <Text as="h2" variant="h2">
+            An ecosystem a cut above
+            <br />
+            the rest of DeFi
+          </Text>
+          <Text as="p" variant="p1">
+            Lazy Summer gives effortless access to crypto&apos;s best DeFi yields. Instead of adding
+            one more protocol to pick from, it removes complexity by funneling your deposit into the
+            highest quality yield sources across the entire DeFi ecosystem so you get the best of
+            everything without the endless choice.
+          </Text>
+        </div>
+        <VerticalProtocolScroller protocols={protocolsList} />
+      </div>
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} noHeaderDescription />
+      <StartEarningNow />
     </div>
   )
 }

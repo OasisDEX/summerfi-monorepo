@@ -39,7 +39,7 @@ export const teamList: TeamListItem[] = [
   {
     image: anthonyImage,
     name: 'Anthony Fernandez',
-    role: 'BD',
+    role: 'Head of business development',
     description: (
       <>Business development native specializing in DeFi partnerships and growth initiatives.</>
     ),
@@ -63,7 +63,7 @@ export const teamList: TeamListItem[] = [
   {
     image: jordanImage,
     name: 'Jordan Jackson',
-    role: 'PM',
+    role: 'Product Lead',
     description: (
       <>Product manager with a focus on user experience and product innovation in DeFi.</>
     ),

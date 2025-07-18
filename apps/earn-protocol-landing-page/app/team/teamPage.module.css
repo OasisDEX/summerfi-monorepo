@@ -98,3 +98,39 @@
     width: 100%;
   }
 }
+
+.ecosystemCutAbove {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-space-2x-large);
+  max-width: 850px;
+  margin: 0 auto;
+
+  .ecosystemCutAboveDescription {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+.protocolsVerticalScroller {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: calc((4 * (82px + 16px)) - 16px);
+  /* Assuming each item is around 64px + gap */
+  overflow: hidden;
+  position: relative;
+  width: 280px;
+  min-width: 280px;
+}
+
+.scrollerTrack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
