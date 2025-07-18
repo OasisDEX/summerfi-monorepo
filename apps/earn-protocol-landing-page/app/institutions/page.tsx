@@ -155,10 +155,10 @@ export default function InstitutionsPage() {
         <Image src={securityAndComplianceImage} alt="Security and Compliance" />
         <SecurityAndComplianceList
           items={[
-            'Headquartered in the U.K. . with a Bankruptcy-Remote Trust Structure',
+            'Headquartered in the U.K. with a Bankruptcy-Remote Trust Structure',
             'Assets are managed and segregated by established service providers',
             'Available to Qualified Purchasers in supported jurisdiction',
-            'Minimize counterparty risk with a customizable whielists',
+            'Minimize counterparty risk with a customizable whitelists',
           ]}
         />
       </div>

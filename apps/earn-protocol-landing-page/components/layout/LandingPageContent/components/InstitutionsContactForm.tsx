@@ -255,6 +255,7 @@ export const InstitutionsContactForm = () => {
         This site is protected by reCAPTCHA and the Google{' '}
         <Link
           href="https://policies.google.com/privacy"
+          target="_blank"
           style={{ color: 'var(--earn-protocol-neutral-40)' }}
         >
           Privacy Policy
@@ -262,6 +263,7 @@ export const InstitutionsContactForm = () => {
         and{' '}
         <Link
           href="https://policies.google.com/terms"
+          target="_blank"
           style={{ color: 'var(--earn-protocol-neutral-40)' }}
         >
           Terms of Service
