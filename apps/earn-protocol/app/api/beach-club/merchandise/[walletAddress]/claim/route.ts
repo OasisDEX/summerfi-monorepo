@@ -42,13 +42,13 @@ export async function POST(
 
   if (!connectionString) {
     return NextResponse.json(
-      { error: 'Beach Club DB Connection string is not set' },
+      { errors: ['Beach Club DB Connection string is not set'] },
       { status: 500 },
     )
   }
 
   if (!getFormIoKey) {
-    return NextResponse.json({ error: 'Get Form key is not set' }, { status: 500 })
+    return NextResponse.json({ errors: ['Get Form key is not set'] }, { status: 500 })
   }
 
   let validatedPathParams
@@ -76,7 +76,7 @@ export async function POST(
     // eslint-disable-next-line no-console
     console.log('Invalid reCAPTCHA token when claiming merchandise for user', walletAddress)
 
-    return NextResponse.json({ error: 'Invalid reCAPTCHA token' }, { status: 400 })
+    return NextResponse.json({ errors: ['Invalid reCAPTCHA token'] }, { status: 400 })
   }
 
   const messageToSign = getMerchandiseMessageToSign({
@@ -93,7 +93,7 @@ export async function POST(
     const client = await getSSRPublicClient(SDKChainId.BASE)
 
     if (!client) {
-      return NextResponse.json({ error: 'Error while getting client' }, { status: 500 })
+      return NextResponse.json({ errors: ['Error while getting client'] }, { status: 500 })
     }
 
     const isSignatureValid = await client.verifyMessage({
@@ -103,7 +103,7 @@ export async function POST(
     })
 
     if (!isSignatureValid) {
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+      return NextResponse.json({ errors: ['Invalid signature'] }, { status: 400 })
     }
 
     // fetch current points balances
@@ -120,13 +120,13 @@ export async function POST(
       .executeTakeFirst()
 
     if (!beachClubPoints) {
-      return NextResponse.json({ error: 'No points found' }, { status: 404 })
+      return NextResponse.json({ errors: ['No points found'] }, { status: 404 })
     }
 
     const { balance, referral_code_id, total_claimed } = beachClubPoints
 
     if (!balance || !referral_code_id || !total_claimed) {
-      return NextResponse.json({ error: 'No points found' }, { status: 404 })
+      return NextResponse.json({ errors: ['No points found'] }, { status: 404 })
     }
 
     const lastTimeClaimed = await beachClubDb.db
@@ -163,12 +163,12 @@ export async function POST(
           'but already claimed today',
         )
 
-        return NextResponse.json({ error: 'You can only claim once per day' }, { status: 400 })
+        return NextResponse.json({ errors: ['You can only claim once per day'] }, { status: 200 })
       }
     }
 
     if (Number(balance) < pointsRequired[type]) {
-      return NextResponse.json({ error: 'Not enough points' }, { status: 400 })
+      return NextResponse.json({ errors: ['Not enough points'] }, { status: 200 })
     }
 
     // Convert to URLSearchParams to match getForm expectations
@@ -191,7 +191,7 @@ export async function POST(
       })
 
       if (!getFormResponse.ok) {
-        return NextResponse.json({ error: 'Failed to send form data' }, { status: 500 })
+        return NextResponse.json({ errors: ['Failed to send form data'] }, { status: 500 })
       }
     }
 
@@ -242,7 +242,7 @@ export async function POST(
     // eslint-disable-next-line no-console
     console.log('Error while claiming merchandise for user', walletAddress, err)
 
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ errors: ['Internal server error'] }, { status: 500 })
   } finally {
     await beachClubDb.db.destroy()
   }

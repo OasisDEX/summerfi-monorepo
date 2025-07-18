@@ -6,4 +6,4 @@ export const getMerchandiseMessageToSign = ({
 }: {
   walletAddress: string
   type: MerchandiseType
-}) => `I'm claiming my ${type} Beach Club reward as ${walletAddress}`
+}) => `I'm claiming my ${type} Beach Club reward as ${walletAddress.toLowerCase()}`
