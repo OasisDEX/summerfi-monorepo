@@ -14,6 +14,7 @@ export const getNavigationItems = ({
 }): EarnNavigationProps['links'] => {
   const prefix = !isEarnApp ? `/earn` : ``
   const institutionsEnabled = features?.Institutions
+  const teamPageEnabled = features?.Team
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
   const portfolioLink = userWalletAddress
@@ -71,6 +72,19 @@ export const getNavigationItems = ({
                 title: 'Institutions',
                 description: 'Crypto native yield, for forward thinking institutions',
                 icon: 'earn_institution' as IconNamesList,
+                prefetchDisabled: !isEarnApp,
+              },
+            ]
+          : []),
+        ...(teamPageEnabled
+          ? [
+              {
+                // `currentOrigin` is special case for institutions - it is always on the main domain (LP)
+                url: `${currentOrigin}/team`,
+                id: 'team',
+                title: 'Team',
+                description: 'Leadership that’s helped shape DeFi from day 1',
+                icon: 'earn_1_on_1' as IconNamesList,
                 prefetchDisabled: !isEarnApp,
               },
             ]

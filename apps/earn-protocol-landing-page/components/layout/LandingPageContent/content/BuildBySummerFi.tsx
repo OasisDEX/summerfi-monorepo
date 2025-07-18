@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { Emphasis, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Emphasis, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type ProAppStats } from '@summerfi/app-types'
 import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
@@ -40,7 +40,7 @@ const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: 
             </Text>
           </div>
           <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-            <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank" prefetch={false}>
+            <Link href="/team" prefetch={false}>
               <WithArrow>
                 <Text variant="p2semi">View leadership</Text>
               </WithArrow>

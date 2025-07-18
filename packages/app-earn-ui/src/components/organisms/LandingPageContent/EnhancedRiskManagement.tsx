@@ -60,6 +60,7 @@ export const EnhancedRiskManagement = ({
             </Text>
             <Link
               href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
+              target="_blank"
               style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
             >
               <WithArrow>
@@ -181,6 +182,7 @@ export const EnhancedRiskManagementCampaign = ({
             </Text>
             <Link
               href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
+              target="_blank"
               style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
             >
               <WithArrow>

@@ -163,7 +163,7 @@ export default function InstitutionsPage() {
             'Assets are fully self custodial with your preffered wallet solution ',
             'Assets are managed and segregated by established service providers',
             'Available to Qualified Purchasers in supported jurisdiction',
-            'Minimize counterparty risk with a customizable whielists}',
+            'Minimize counterparty risk with a customizable whitelists',
           ]}
         />
       </div>
