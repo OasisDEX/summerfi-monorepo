@@ -12,6 +12,7 @@ declare const styles: {
   readonly "whoAreWe": string;
   readonly "whoAreWeButtons": string;
   readonly "whoAreWeDescription": string;
+  readonly "whoAreWeImageVideo": string;
   readonly "wrapper": string;
 };
 export = styles;

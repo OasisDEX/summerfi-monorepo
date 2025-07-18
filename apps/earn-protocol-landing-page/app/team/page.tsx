@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { createRef, useEffect, useMemo, useState } from 'react'
 import { Button, Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
 import {
   type IconNamesList,
@@ -41,7 +41,7 @@ function VerticalProtocolScroller({ protocols }: { protocols: ProtocolItemType[]
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % protocols.length)
         setIsAnimating(false)
-      }, 500) // Corresponds to animation duration
+      }, 800) // Corresponds to animation duration
     }, 3000)
 
     // eslint-disable-next-line consistent-return
@@ -65,7 +65,7 @@ function VerticalProtocolScroller({ protocols }: { protocols: ProtocolItemType[]
 
   const trackStyle = {
     transform: isAnimating ? 'translateY(-98px)' : 'translateY(0)', // 64px item + 16px gap
-    transition: isAnimating ? 'transform 0.5s ease-in-out' : 'none',
+    transition: isAnimating ? 'transform 0.8s cubic-bezier(.21,.6,.5,.99)' : 'none',
   }
 
   return (
@@ -117,6 +117,9 @@ function TeamMember({ member }: { member: TeamListItem }) {
 
 export default function TeamPage() {
   const { landingPageData } = useLandingPageData()
+  const videoRef = useMemo(() => createRef<HTMLVideoElement>(), [])
+  const [isWatchingVideo, setIsWatchingVideo] = useState(false)
+  const [isVideoFullScreen, setIsVideoFullScreen] = useState(false)
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -139,6 +142,46 @@ export default function TeamPage() {
       }
     })
   }, [landingPageData?.protocolTvls])
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = 0 // Mute the video by default
+    }
+  }, [videoRef])
+
+  const setFullscreen = () => {
+    if (videoRef.current) {
+      videoRef.current.requestFullscreen()
+      setIsVideoFullScreen(true)
+      videoRef.current.onfullscreenchange = () => {
+        if (document.fullscreenElement === null) {
+          setIsVideoFullScreen(false)
+        }
+      }
+    }
+  }
+
+  const playVideo = () => {
+    if (videoRef.current) {
+      setIsWatchingVideo(true)
+      videoRef.current.play()
+      videoRef.current.volume = 1 // Set volume to 100% when playing the video
+      videoRef.current.onended = () => {
+        setIsWatchingVideo(false)
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0 // Reset video to the start
+        }
+      }
+    }
+  }
+
+  const stopVideo = () => {
+    if (videoRef.current) {
+      setIsWatchingVideo(false)
+      videoRef.current.currentTime = 0 // Reset video to the start
+      videoRef.current.pause()
+    }
+  }
 
   return (
     <div className={teamPageStyles.wrapper}>
@@ -166,15 +209,55 @@ export default function TeamPage() {
             quality assets, protocols and networks.
           </Text>
           <div className={teamPageStyles.whoAreWeButtons}>
-            <Link href="https://x.com/summerfinance_/status/1889329049647886494" target="_blank">
-              <Button variant="primaryLarge">
-                <Icon iconName="play" size={20} />
-                Watch the video
-              </Button>
-            </Link>
+            <Button variant="primaryLarge" onClick={playVideo}>
+              <Icon iconName="play" size={20} />
+              Watch the video
+            </Button>
           </div>
         </div>
-        <Image src={sumrTokenBubbles} alt="$SUMR Token Bubbles" />
+        <div className={teamPageStyles.whoAreWeImageVideo}>
+          <video
+            ref={videoRef}
+            width="100%"
+            playsInline
+            preload="auto"
+            onClick={isVideoFullScreen ? stopVideo : setFullscreen}
+            style={{
+              opacity: isWatchingVideo ? 1 : 0,
+              transition: 'opacity 0.8s ease-in-out',
+              borderRadius: '24px',
+            }}
+          >
+            <source src="/img/landing-page/who-are-we-video.mp4" type="video/mp4" />
+          </video>
+          <Image
+            src={sumrTokenBubbles}
+            alt="$SUMR Token Bubbles"
+            style={{
+              opacity: isWatchingVideo ? 0 : 1,
+              pointerEvents: isWatchingVideo ? 'none' : 'auto',
+              transition: 'opacity 0.8s ease-in-out',
+            }}
+          />
+          <Text
+            variant="p3semi"
+            onClick={stopVideo}
+            style={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              margin: '-40px auto',
+              opacity: isWatchingVideo ? 1 : 0,
+              transition: 'opacity 0.8s ease-in-out',
+              pointerEvents: isWatchingVideo ? 'auto' : 'none',
+            }}
+          >
+            <Icon iconName="close" size={14} />
+            Close video
+          </Text>
+        </div>
       </div>
       <div className={teamPageStyles.teamMembers}>
         <Text as="h2" variant="h2">
