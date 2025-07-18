@@ -23,6 +23,7 @@ const institutionsFormSchema = z.object({
     .nonempty('Company name is required')
     .min(2, 'Company name must be at least 2 characters')
     .max(100, 'Company name must be less than 100 characters'),
+  personalName: z.string().max(30, 'Personal name must be less than 30 characters').optional(),
   phoneNumber: z
     .string()
     .nonempty('Phone number is required')
@@ -32,9 +33,17 @@ const institutionsFormSchema = z.object({
     .string()
     .nonempty('Email is required')
     .email('Please enter a valid email address'),
+  jobRole: z
+    .string()
+    .nonempty('Job role is required')
+    .min(2, 'Job role must be at least 2 characters')
+    .max(50, 'Job role must be less than 50 characters'),
+  comments: z.string().max(500, 'Comments must be less than 500 characters').optional(),
 })
 
 type FormData = z.infer<typeof institutionsFormSchema>
+
+type FormChangeEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
 interface FormFieldProps {
   label: string
@@ -44,19 +53,26 @@ interface FormFieldProps {
   placeholder: string
   errors?: string[]
   disabled?: boolean
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void
+  textArea?: boolean
+  handleChange: (e: FormChangeEvent) => void
 }
 
 type InstitutionsContactFormValues = {
   companyName: string
+  personalName?: string
   phoneNumber: string
   businessEmail: string
+  jobRole: string
+  comments?: string
 }
 
 type InstitutionsContactFormErrors = {
   companyName: string[]
+  personalName?: string[]
   phoneNumber: string[]
   businessEmail: string[]
+  jobRole: string[]
+  comments?: string[]
   global?: string[]
 }
 
@@ -69,6 +85,7 @@ const FormField: FC<FormFieldProps> = ({
   errors,
   value = '',
   disabled,
+  textArea = false,
 }) => {
   return (
     <div className={institutionsContactFormStyles.formField}>
@@ -77,17 +94,31 @@ const FormField: FC<FormFieldProps> = ({
           {label}
         </Text>
       </label>
-      <Input
-        type={type}
-        id={inputName}
-        name={inputName}
-        className={institutionsContactFormStyles.formInput}
-        placeholder={placeholder}
-        value={value}
-        required
-        onChange={handleChange}
-        disabled={disabled}
-      />
+      {textArea ? (
+        <textarea
+          id={inputName}
+          name={inputName}
+          className={institutionsContactFormStyles.formInputTextarea}
+          placeholder={placeholder}
+          value={value}
+          required
+          onChange={handleChange}
+          disabled={disabled}
+          rows={4}
+        />
+      ) : (
+        <Input
+          type={type}
+          id={inputName}
+          name={inputName}
+          className={institutionsContactFormStyles.formInput}
+          placeholder={placeholder}
+          value={value}
+          required
+          onChange={handleChange}
+          disabled={disabled}
+        />
+      )}
       <Text variant="p4semi" as="p" className={institutionsContactFormStyles.errorText}>
         {errors?.[0] ?? <>&nbsp;</>} {/* Display the first error message if any */}
       </Text>
@@ -98,15 +129,18 @@ const FormField: FC<FormFieldProps> = ({
 export const InstitutionsContactForm = () => {
   const [formValues, setFormValues] = useState<InstitutionsContactFormValues>({
     companyName: '',
+    personalName: '',
     phoneNumber: '',
     businessEmail: '',
+    jobRole: '',
+    comments: '',
   })
 
   const [formErrors, setFormErrors] = useState<Partial<InstitutionsContactFormErrors>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: FormChangeEvent) => {
     const { name: key, value } = e.target
 
     // remove this field from errors
@@ -124,8 +158,11 @@ export const InstitutionsContactForm = () => {
   const resetForm = () => {
     setFormValues({
       companyName: '',
+      personalName: '',
       phoneNumber: '',
       businessEmail: '',
+      jobRole: '',
+      comments: '',
     })
     setFormErrors({})
   }
@@ -190,39 +227,74 @@ export const InstitutionsContactForm = () => {
           Schedule a call
         </Text>
         <Text variant="p3" as="span">
-          Once you submit this form we will [NEEDS TO BE FILLED]
+          Once you submit this form a sales person will reach out
+          <br />
+          to you to discuss your requirements and how we can help you.
         </Text>
       </div>
-      <FormField
-        label="Company Name"
-        inputName="companyName"
-        type="text"
-        placeholder="Crypto Corp LLC"
-        value={formValues.companyName}
-        handleChange={handleChange}
-        errors={formErrors.companyName}
-        disabled={isSubmitting}
-      />
-      <FormField
-        label="Phone Number"
-        inputName="phoneNumber"
-        type="tel"
-        placeholder="+XX XXX XXX XXXX"
-        value={formValues.phoneNumber}
-        handleChange={handleChange}
-        errors={formErrors.phoneNumber}
-        disabled={isSubmitting}
-      />
-      <FormField
-        label="Business Email"
-        inputName="businessEmail"
-        type="email"
-        placeholder="business@example.com"
-        value={formValues.businessEmail}
-        handleChange={handleChange}
-        errors={formErrors.businessEmail}
-        disabled={isSubmitting}
-      />
+      <div>
+        <FormField
+          label="Company Name"
+          inputName="companyName"
+          type="text"
+          placeholder="Crypto Corp LLC"
+          value={formValues.companyName}
+          handleChange={handleChange}
+          errors={formErrors.companyName}
+          disabled={isSubmitting}
+        />
+        <FormField
+          label="Personal Name"
+          inputName="personalName"
+          type="text"
+          placeholder="John Doe"
+          value={formValues.personalName}
+          handleChange={handleChange}
+          errors={formErrors.personalName}
+          disabled={isSubmitting}
+        />
+        <FormField
+          label="Phone Number"
+          inputName="phoneNumber"
+          type="tel"
+          placeholder="+XX XXX XXX XXXX"
+          value={formValues.phoneNumber}
+          handleChange={handleChange}
+          errors={formErrors.phoneNumber}
+          disabled={isSubmitting}
+        />
+        <FormField
+          label="Business Email"
+          inputName="businessEmail"
+          type="email"
+          placeholder="business@example.com"
+          value={formValues.businessEmail}
+          handleChange={handleChange}
+          errors={formErrors.businessEmail}
+          disabled={isSubmitting}
+        />
+        <FormField
+          label="Job Role"
+          inputName="jobRole"
+          type="text"
+          placeholder="e.g. Head of Trading, Portfolio Manager"
+          value={formValues.jobRole}
+          handleChange={handleChange}
+          errors={formErrors.jobRole}
+          disabled={isSubmitting}
+        />
+        <FormField
+          label="Comments"
+          inputName="comments"
+          type="text"
+          placeholder="Any additional information you want to share"
+          value={formValues.comments}
+          handleChange={handleChange}
+          errors={formErrors.comments}
+          disabled={isSubmitting}
+          textArea
+        />
+      </div>
       <div>
         <AnimateHeight id="error-message" keepChildrenRendered show={!!formErrors.global}>
           <Text variant="p4semi" as="p" className={institutionsContactFormStyles.errorText}>

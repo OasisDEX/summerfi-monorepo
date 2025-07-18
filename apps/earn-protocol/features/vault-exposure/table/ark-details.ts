@@ -307,7 +307,7 @@ export const arkDetailsMap: {
     },
     '0x3d8c278f05f655f26dcbf828c084e5182fd8d409': {
       description:
-        'Sky Token Rewards module allows your to earn SKY governance tokens—soon Sky Star tokens, too. It’s non-custodial, so you keep full control of your funds while supporting the Sky ecosystem.',
+        'Sky Token Rewards module allows your to earn SKY governance tokens - soon Sky Star tokens, too. It’s non-custodial, so you keep full control of your funds while supporting the Sky ecosystem.',
       link: 'https://sky.money/features#rewards',
     },
     '0x3f289b064cd07e42210a57819908a937bec859e8': {

@@ -162,6 +162,8 @@ export const EXTERNAL_LINKS = {
   EARN: {
     GOVERNANCE: 'https://gov.summer.fi',
     FORUM: 'https://forum.summer.fi',
+    FORUM_BA_POST:
+      'https://forum.summer.fi/t/summerfi-lazy-summer-protocol-initial-fleet-and-ark-parameters-by-block-analitica/76',
   },
   OKX: 'https://web3.okx.com/',
   BD_CONTACT: 'https://calendly.com/anthonyfernandez-oazoapps/30min',

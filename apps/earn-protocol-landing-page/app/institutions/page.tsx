@@ -7,6 +7,7 @@ import {
   EXTERNAL_LINKS,
   FaqSection,
   Icon,
+  INTERNAL_LINKS,
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
@@ -33,7 +34,7 @@ import securityAndComplianceImage from '@/public/img/institution/security-and-co
 import rebalanceActivityImage from '@/public/img/landing-page/enhanced-risk-management_rebalance-activity.png'
 import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-management_strategy-exposure.png'
 
-const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
+export const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
   return (
     <ul>
       {items.map((item) => (
@@ -98,25 +99,28 @@ export default function InstitutionsPage() {
       <div className={institutionsPageStyles.promoBlocks} id="institutions-cta">
         <InstitutionsPromoBlock
           title="Self managed Vaults"
-          description="Institutional-grade access to DeFi—fully customizable, fully compliant, and composable by design."
-          bestFor="Banks, Hedge funds and Asset managers"
+          description="Institutional-grade vault infrastructure to access the best of DeFi - fully customizable, inherently composable, and built for future compliance and regulatory needs."
+          bestFor="Banks, Hedge funds, Centralized exchanges and Asset managers"
           coreFeatures={[
             'Ring-fence deposits to pre-approved addresses; zero mingling.',
             'Separately Managed Accounts (SMA)',
+            'Option for third party risk management by Block Analitica ',
             'Fully customizable yield sources and venues',
             'Daily NAV file (CSV / XML)',
             'Simple SDK ready integration',
             '24-h exit guarantee',
           ]}
           ctaUrl="/institutions/self-managed-vaults"
+          secondaryCtaUrl={EXTERNAL_LINKS.BD_CONTACT}
+          secondaryCtaLabel="Speak with a specialist"
         />
         <InstitutionsPromoBlock
-          title="Large Capital deployment into Public Access Vaults"
-          description="Effortless access to crypto’s  best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and costs."
-          bestFor="Banks, Hedge funds and Asset managers"
+          title="Large capital deployment into public access vaults"
+          description="Effortless access to crypto’s best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and costs."
+          bestFor="Crypto native funds, Family offices, and Large individual allocators"
           coreFeatures={[
             'Best in class risk adjusted yield',
-            'Separately Managed Accounts (SMA)',
+            'Built-in third party risk management by Block Analitica ',
             'SUMR rewards stream block-by-block',
             'Built-in diversification across venues',
             '24-h exit guarantee',
@@ -156,10 +160,10 @@ export default function InstitutionsPage() {
         <Image src={securityAndComplianceImage} alt="Security and Compliance" />
         <SecurityAndComplianceList
           items={[
-            'Headquartered in the U.K. with a Bankruptcy-Remote Trust Structure',
+            'Assets are fully self custodial with your preffered wallet solution ',
             'Assets are managed and segregated by established service providers',
             'Available to Qualified Purchasers in supported jurisdiction',
-            'Minimize counterparty risk with a customizable whitelists',
+            'Minimize counterparty risk with a customizable whielists}',
           ]}
         />
       </div>
@@ -191,20 +195,20 @@ export default function InstitutionsPage() {
           <FinalCTAElement
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
-            url=""
+            url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
-            url=""
+            url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
-            url=""
-            urlLabel="Download docs"
+            url={EXTERNAL_LINKS.KB.HELP}
+            urlLabel="View docs"
           />
         </div>
       </div>
@@ -225,7 +229,8 @@ export default function InstitutionsPage() {
             ),
           },
           {
-            title: 'Our SDK is designed for simplicity—most developers can integrate within hours?',
+            title:
+              'Our SDK is designed for simplicity - most developers can integrate within hours?',
             content: (
               <Text variant="p1" as="p">
                 Yes, our SDK is designed for simplicity, allowing most developers to integrate

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 128px
 }
 
 .pageHeader {
@@ -29,4 +30,71 @@
 .pageHeaderDetails>p {
   color: var(--color-text-primary-hover);
   margin-bottom: 12px;
+}
+
+.whoAreWe {
+  display: flex;
+  align-items: center;
+  max-width: 1130px;
+  margin: 0 auto;
+  gap: 32px;
+
+  .whoAreWeDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 24px;
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .whoAreWeButtons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    button {
+      min-width: auto;
+    }
+  }
+}
+
+.teamMembers {
+  h1 {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.teamMembersList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: var(--spacing-space-x-large);
+  margin: 64px var(--spacing-space-3x-large) 0;
+}
+
+.teamMember {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .teamMemberDescription {
+    color: var(--color-text-secondary);
+
+    a {
+      color: var(--color-text-link);
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--color-text-link-hover);
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+  }
 }

@@ -108,8 +108,8 @@ export default function PublicAccessVaults() {
           DeFi’s highest quality strategies continuously optimised
         </Text>
         <Text as="p" variant="p1" className={publicAccessVaultsStyles.secondaryParagraph}>
-          Effortless access to crypto’s best DeFi, continually rebalanced with AI powered automation
-          for best in class risk adjusted return.
+          Effortless access to crypto’s best DeFi yields, continually rebalanced with AI powered
+          automation for best in class risk adjusted return.
         </Text>
       </div>
       <BigProtocolScroller itemsList={protocolsList} />
@@ -130,9 +130,9 @@ export default function PublicAccessVaults() {
       <div className={institutionsPageStyles.subpageDescriptionBlock}>
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
-            Institutional-Grade Automation, Whatever Your
+            Institutional-grade automation, whatever your
             <br />
-            Structure
+            structure
           </Text>
         </div>
         <Card className={institutionsPageStyles.subpageDescriptionCard}>
@@ -203,7 +203,7 @@ export default function PublicAccessVaults() {
                   Intuitive UX
                 </Text>
                 <Text variant="p1" as="p">
-                  Simple, compliant interfaces—ideal for teams new to DeFi and expert large
+                  Simple, compliant interfaces - ideal for teams new to DeFi and expert large
                   allocators alike.
                 </Text>
               </div>
@@ -225,7 +225,7 @@ export default function PublicAccessVaults() {
               color: 'var(--color-text-primary-hover)',
             }}
           >
-            Crypto native funds + Crypto native treasuries
+            Crypto native funds, Family offices, and Large individual allocators
           </Text>
         </Card>
       </div>
@@ -233,7 +233,7 @@ export default function PublicAccessVaults() {
         <Image src={blueChipsImage} alt="Blue Chip Digital Assets" />
         <div className={publicAccessVaultsStyles.blueChipsBlockDescription}>
           <Text as="h2" variant="h2">
-            The best risk-adjusted yields for Blue-Chip Digital Assets
+            The best risk-adjusted yields for blue-chip digital assets
           </Text>
           <Text as="p" variant="p1semiColorful">
             Sustainably higher yields, optimized with AI.
@@ -246,9 +246,6 @@ export default function PublicAccessVaults() {
             <Link href="/earn" target="_blank">
               <WithArrow variant="p3semi">Get started</WithArrow>
             </Link>
-            {/* <Link href="">
-              <WithArrow variant="p3semi">View Yields</WithArrow>
-            </Link> */}
           </div>
         </div>
       </div>
@@ -262,7 +259,7 @@ export default function PublicAccessVaults() {
           className={publicAccessVaultsStyles.secondaryParagraph}
           style={{ marginBottom: '40px' }}
         >
-          How & Why we use AI to outperform and improve efficiency
+          How & why we use AI to outperform and improve efficiency
         </Text>
         <TabBar
           tabs={[
@@ -391,7 +388,6 @@ export default function PublicAccessVaults() {
         </div>
         <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">
@@ -414,7 +410,7 @@ export default function PublicAccessVaults() {
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
             url={EXTERNAL_LINKS.KB.HELP}
-            urlLabel="Download docs"
+            urlLabel="View docs"
           />
         </div>
       </div>
@@ -426,10 +422,10 @@ export default function PublicAccessVaults() {
         }}
         data={[
           {
-            title: 'What are Closed Access Vaults?',
+            title: 'What are Closed access vaults?',
             content: (
               <Text variant="p1" as="p">
-                Closed Access Vaults are a feature of the Lazy Summer Protocol that allows
+                Closed access vaults are a feature of the Lazy Summer Protocol that allows
                 institutions to create private, permissioned environments for their digital assets.
                 This ensures that only authorized users can access and manage the assets within the
                 vault.
