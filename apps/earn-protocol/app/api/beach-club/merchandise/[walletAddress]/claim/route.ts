@@ -129,6 +129,44 @@ export async function POST(
       return NextResponse.json({ error: 'No points found' }, { status: 404 })
     }
 
+    const lastTimeClaimed = await beachClubDb.db
+      .selectFrom('rewards_distributions')
+      .select('created_at')
+      .where('referral_code_id', '=', referral_code_id)
+      .where('currency', '=', 'points')
+      .where('description', '=', `merchandise_claim_${type}`)
+      .orderBy('created_at', 'desc')
+      .executeTakeFirst()
+
+    const lastTimeClaimedDate = lastTimeClaimed?.created_at
+      ? new Date(lastTimeClaimed.created_at)
+      : null
+
+    // Check if user has already claimed today (same calendar day)
+    if (lastTimeClaimedDate) {
+      const now = new Date()
+      const lastClaim = new Date(lastTimeClaimedDate)
+
+      // Check if both dates are on the same calendar day
+      const isSameDay =
+        lastClaim.getFullYear() === now.getFullYear() &&
+        lastClaim.getMonth() === now.getMonth() &&
+        lastClaim.getDate() === now.getDate()
+
+      if (isSameDay) {
+        // eslint-disable-next-line no-console
+        console.log(
+          'User',
+          walletAddress,
+          'tried to claim merchandise',
+          type,
+          'but already claimed today',
+        )
+
+        return NextResponse.json({ error: 'You can only claim once per day' }, { status: 400 })
+      }
+    }
+
     if (Number(balance) < pointsRequired[type]) {
       return NextResponse.json({ error: 'Not enough points' }, { status: 400 })
     }
