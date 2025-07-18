@@ -151,8 +151,8 @@ WHERE u.id = ANY(${userIds});
         SELECT 
           rc.id as referral_code_id,
           ${RewardCurrency.POINTS} as currency,
-          (rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1))) / 24 as hourly_amount,
-          rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * ln(COALESCE(rc.active_users_count, 0) + 1)) as daily_amount
+          (rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * log(COALESCE(rc.active_users_count, 0) + 1))) / 24 as hourly_amount,
+          rc.total_deposits_referred_usd * (${config.pointsFormulaBase} + ${config.pointsFormulaLogMultiplier} * log(COALESCE(rc.active_users_count, 0) + 1)) as daily_amount
         FROM referral_codes rc
         WHERE rc.active_users_count > 0
       )

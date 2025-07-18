@@ -122,8 +122,8 @@ export class ReferralProcessor {
         } else {
           periodStart = lastProcessed
         }
-        // Process maximum 7 days at a time to avoid timeouts
-        const maxProcessingWindow = 7 * 24 * 60 * 60 * 1000 // 7 days
+        // Process maximum 10 days at a time to avoid timeouts
+        const maxProcessingWindow = 10 * 24 * 60 * 60 * 1000 // 10 days
         const periodEnd = new Date(
           Math.min(now.getTime(), periodStart.getTime() + maxProcessingWindow),
         )
