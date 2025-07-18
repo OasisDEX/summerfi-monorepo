@@ -220,31 +220,64 @@ export default function InstitutionsPage() {
         }}
         data={[
           {
-            title: 'How quickly can I integrate Lazy Summer Protocol?',
+            title: 'What institutional solutions does Summer.fi offer?',
             content: (
               <Text variant="p1" as="p">
-                Very quickly! Our SDK is designed for simplicity, allowing most developers to
-                integrate within hours. We also offer hands-on support for custom integrations.
+                Summer.fi gives institutions access to best in class DeFi yield infrastructure.
+                Specifically self managed vaults give institutional users access to DeFi’s highest
+                quality yield sources in a single integration. Public access vaults give users
+                continuously optimized yields for DeFi’s best risk adjusted return. All powered by
+                Lazy Summer Protocol.
               </Text>
             ),
           },
           {
-            title:
-              'Our SDK is designed for simplicity - most developers can integrate within hours?',
+            title: 'Why is it “institutional grade”?',
             content: (
               <Text variant="p1" as="p">
-                Yes, our SDK is designed for simplicity, allowing most developers to integrate
-                within hours. We also offer hands-on support for custom integrations.
+                Lazy Summer is a DeFi protocol with fully audited smart contracts and it was built
+                with hyper scale and modularity in mind. Making it a perfect solution for large
+                capital allocators and institutions who need security first bespoke solutions.
               </Text>
             ),
           },
           {
-            title: 'Can I customize fees or revenue shares?',
+            title: 'How does Summer.fi manage risk?',
             content: (
               <Text variant="p1" as="p">
-                Yes, Lazy Summer Protocol allows you to customize fees and revenue shares to suit
-                your institutional needs. You can set up your own fee structure and revenue sharing
-                model.
+                The main risk that Lazy Summer takes accountability for is technical and smart
+                contract risk via SDK integration. In terms of financial risks, one of the key
+                features is that institutions can define their own risk criteria or plug into third
+                party risk managers.
+              </Text>
+            ),
+          },
+          {
+            title: 'What security measures protect our assets?',
+            content: (
+              <Text variant="p1" as="p">
+                Lazy Summer is fully non-custodial by design. Assets always remain fully in your
+                control, the protocol is also increasingly available through highly reputable
+                blockchain custodian solutions (eg. Fireblocks, Copper)
+              </Text>
+            ),
+          },
+          {
+            title: 'Can anyone use the institutional product offering?',
+            content: (
+              <Text variant="p1" as="p">
+                Public access vaults are open to all and quality enough for 1 to over 1b of capital
+                to be deployed. Closed access or Self managed vaults are also open to all but a
+                minimum deposit of 10m USD + is generally recommended.
+              </Text>
+            ),
+          },
+          {
+            title: 'What support is available?',
+            content: (
+              <Text variant="p1" as="p">
+                For Closed access of self managed vaults, a dedicated account manager, will be given
+                to you for seamless onboarding and management of your account.
               </Text>
             ),
           },

@@ -273,33 +273,55 @@ export default function SelfManagedVaults() {
         }}
         data={[
           {
-            title: 'What are Closed access vaults?',
+            title: 'What is a Self-Managed Vault?',
             content: (
               <Text variant="p1" as="p">
-                Closed access vaults are a feature of the Lazy Summer Protocol that allows
-                institutions to create private, permissioned environments for their digital assets.
-                This ensures that only authorized users can access and manage the assets within the
-                vault.
+                A non custodial vault shell powered by Lazy Summer Protocol where you define assets,
+                risk criteria, and rebalancing logic, all executed on-chain.
               </Text>
             ),
           },
           {
-            title: 'Can you customize strategy allocation and limits?',
+            title: 'What security measures protect our assets?',
             content: (
               <Text variant="p1" as="p">
-                Yes, Lazy Summer Protocol allows you to customize strategy allocation and limits
-                based on your institutional requirements. You can define specific strategies and set
-                limits for each vault.
+                Vaults are non-custodial; funds stay in wallets you control.
               </Text>
             ),
           },
           {
-            title: 'What yield strategies are available?',
+            title: 'Can anyone use self-managed vaults?',
             content: (
               <Text variant="p1" as="p">
-                Lazy Summer Protocol offers a range of yield strategies, including lending, staking,
-                and yield farming. You can choose the strategies that align with your investment
-                goals and risk tolerance.
+                Yes, but we recommend a $10 M+ starting deposit to justify customization and
+                dedicated support.
+              </Text>
+            ),
+          },
+          {
+            title: 'What support is available?',
+            content: (
+              <Text variant="p1" as="p">
+                You’ll have a account manager who will provide both technical and non technical
+                onboarding and management support.
+              </Text>
+            ),
+          },
+          {
+            title: 'Why choose this over building in house?',
+            content: (
+              <Text variant="p1" as="p">
+                One seamless integration integration to access Maker, Aave, Morpho and all the other
+                best in class DeFi yield sources.
+              </Text>
+            ),
+          },
+          {
+            title: 'Who controls the funds?',
+            content: (
+              <Text variant="p1" as="p">
+                You do. Vaults are non-custodial; deposits/withdrawals require your multisig or MPC
+                signature (Fireblocks/Copper integrations available).
               </Text>
             ),
           },

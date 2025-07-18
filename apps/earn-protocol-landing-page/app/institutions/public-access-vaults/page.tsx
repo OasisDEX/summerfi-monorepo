@@ -422,33 +422,70 @@ export default function PublicAccessVaults() {
         }}
         data={[
           {
-            title: 'What are Closed access vaults?',
+            title: 'What is a Public access vault?',
             content: (
               <Text variant="p1" as="p">
-                Closed access vaults are a feature of the Lazy Summer Protocol that allows
-                institutions to create private, permissioned environments for their digital assets.
-                This ensures that only authorized users can access and manage the assets within the
-                vault.
+                A pre curated, risk managed deposit once, set and forget vault where Lazy Summer
+                automatically rebalances across top protocols for the best risk-adjusted yield.
               </Text>
             ),
           },
           {
-            title: 'Can you customize strategy allocation and limits?',
+            title: 'Who can deposit?',
             content: (
               <Text variant="p1" as="p">
-                Yes, Lazy Summer Protocol allows you to customize strategy allocation and limits
-                based on your institutional requirements. You can define specific strategies and set
-                limits for each vault.
+                Any verified wallet outside sanctioned regions can deposit. Users can deposit as
+                little as 1$ to over 1B$.
               </Text>
             ),
           },
           {
-            title: 'What yield strategies are available?',
+            title: 'How is the yield generated?',
             content: (
               <Text variant="p1" as="p">
-                Lazy Summer Protocol offers a range of yield strategies, including lending, staking,
-                and yield farming. You can choose the strategies that align with your investment
-                goals and risk tolerance.
+                Strategies vary, but generally yield is generated from top tier DeFi lending
+                protocols. Other strategies are also included which have slightly different yield
+                generated mechanics, but all are presented transparently in the Summer.fi app.
+              </Text>
+            ),
+          },
+          {
+            title: 'How often are vaults rebalanced?',
+            content: (
+              <Text variant="p1" as="p">
+                Yield and risk metrics are checked constantly throughout the day; rebalances trigger
+                automatically when a preset benefit threshold is hit. These can all be seen
+                transparently under “rebalance activity”.
+              </Text>
+            ),
+          },
+          {
+            title: 'Can I withdraw anytime?',
+            content: (
+              <Text variant="p1" as="p">
+                There are no explicit lock ups and users can withdraw anytime so long as their
+                withdrawal is under the “Instant liquidity amount”. This exists simply because some
+                supported protocols have withdrawal delays, but 100% of capital is never deployed
+                into one of those.
+              </Text>
+            ),
+          },
+          {
+            title: 'What fees apply?',
+            content: (
+              <Text variant="p1" as="p">
+                A 1% management fee is applied to stablecoin vaults and a 0.3% fee is applied to non
+                stablecoin vaults (ETH).
+              </Text>
+            ),
+          },
+          {
+            title: 'How is risk managed?',
+            content: (
+              <Text variant="p1" as="p">
+                Risk is managed by a third party risk curator who sets and manages deposit caps.
+                These are the max amount of user funds that can be deployed into any one protocol at
+                a given time.
               </Text>
             ),
           },
