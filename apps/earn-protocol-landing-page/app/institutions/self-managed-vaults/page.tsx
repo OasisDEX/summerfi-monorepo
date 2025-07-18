@@ -87,8 +87,8 @@ export default function SelfManagedVaults() {
         </Text>
         <div className={institutionsPageStyles.pageHeaderDetails}>
           <Text as="span" variant="p1">
-            Get access to DeFi’s most trusted yield sources—customized, compliant, and built for
-            scale. Lazy Summer’s Closed Access Vaults give institutions seamless exposure to
+            Get access to DeFi’s most trusted yield sources - customized, compliant, and built for
+            scale. Lazy Summer’s Closed access vaults give institutions seamless exposure to
             crypto’s highest quality yields, without compromising on security, transparency, or risk
             oversight.
           </Text>
@@ -110,13 +110,13 @@ export default function SelfManagedVaults() {
       <div className={institutionsPageStyles.subpageDescriptionBlock}>
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
-            Closed Access Vaults by Lazy Summer Protocol
+            Closed access vaults by Lazy Summer Protocol
           </Text>
           <Text as="h5" variant="h5">
             Bespoke DeFi vaults designed for institutions.
           </Text>
           <Text as="p" variant="p1">
-            Lazy Summer’s Closed Access Vaults are ring-fenced strategies—deployed only to
+            Lazy Summer’s Closed access vaults are ring-fenced strategies deployed only to
             whitelisted addresses and governed by institutional permissions. Funds remain
             segregated, strategies are auditable, and vaults can be tailored to your specific
             mandates.
@@ -153,7 +153,7 @@ export default function SelfManagedVaults() {
         id="institutions-self-managed-vaults-cta"
       >
         <Text as="h2" variant="h2">
-          One integration, seamless access to the crypto’s highest quality yield sources
+          One integration, seamless access to crypto’s highest quality yield sources
         </Text>
         <Text as="p" variant="p1">
           Lazy Summer connects you to the most proven DeFi protocols through a single SDK
@@ -273,10 +273,10 @@ export default function SelfManagedVaults() {
         }}
         data={[
           {
-            title: 'What are Closed Access Vaults?',
+            title: 'What are Closed access vaults?',
             content: (
               <Text variant="p1" as="p">
-                Closed Access Vaults are a feature of the Lazy Summer Protocol that allows
+                Closed access vaults are a feature of the Lazy Summer Protocol that allows
                 institutions to create private, permissioned environments for their digital assets.
                 This ensures that only authorized users can access and manage the assets within the
                 vault.

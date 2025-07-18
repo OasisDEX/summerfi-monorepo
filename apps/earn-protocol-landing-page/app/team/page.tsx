@@ -1,5 +1,5 @@
 'use client'
-import { Button, Emphasis, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Button, Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -77,12 +77,11 @@ export default function TeamPage() {
             quality assets, protocols and networks. 
           </Text>
           <div className={teamPageStyles.whoAreWeButtons}>
-            <Button variant="primaryLarge">
-              <Icon iconName="play" size={20} />
-              Watch the video
-            </Button>
-            <Link href="">
-              <WithArrow>How we&apos;ve got here</WithArrow>
+            <Link href="https://x.com/summerfinance_/status/1889329049647886494" target="_blank">
+              <Button variant="primaryLarge">
+                <Icon iconName="play" size={20} />
+                Watch the video
+              </Button>
             </Link>
           </div>
         </div>

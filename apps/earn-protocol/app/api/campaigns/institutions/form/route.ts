@@ -9,6 +9,7 @@ const institutionsFormSchema = z.object({
     .nonempty('Company name is required')
     .min(2, 'Company name must be at least 2 characters')
     .max(100, 'Company name must be less than 100 characters'),
+  personalName: z.string().max(30, 'Personal name must be less than 30 characters').optional(),
   phoneNumber: z
     .string()
     .nonempty('Phone number is required')
@@ -18,6 +19,12 @@ const institutionsFormSchema = z.object({
     .string()
     .nonempty('Email is required')
     .email('Please enter a valid email address'),
+  jobRole: z
+    .string()
+    .nonempty('Job role is required')
+    .min(2, 'Job role must be at least 2 characters')
+    .max(50, 'Job role must be less than 50 characters'),
+  comments: z.string().max(500, 'Comments must be less than 500 characters').optional(),
   token: z
     .string()
     .nonempty('reCAPTCHA token is required')

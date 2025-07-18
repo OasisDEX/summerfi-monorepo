@@ -20,8 +20,8 @@ export const teamList: TeamListItem[] = [
       </>
     ),
     socialLinks: {
-      twitter: '',
-      linkedin: '',
+      twitter: '#',
+      linkedin: '#',
     },
   },
   {
@@ -43,6 +43,10 @@ export const teamList: TeamListItem[] = [
     description: (
       <>Business development native specializing in DeFi partnerships and growth initiatives.</>
     ),
+    socialLinks: {
+      twitter: '#',
+      linkedin: '#',
+    },
   },
   {
     image: joeImage,
@@ -51,6 +55,10 @@ export const teamList: TeamListItem[] = [
     description: (
       <>Financial expert with a deep understanding of DeFi markets and investment strategies.</>
     ),
+    socialLinks: {
+      twitter: '#',
+      linkedin: '#',
+    },
   },
   {
     image: jordanImage,
@@ -59,11 +67,19 @@ export const teamList: TeamListItem[] = [
     description: (
       <>Product manager with a focus on user experience and product innovation in DeFi.</>
     ),
+    socialLinks: {
+      twitter: '#',
+      linkedin: '#',
+    },
   },
   {
     image: konradImage,
     name: 'Konrad Kloch',
     role: 'Smart Contract Engineer',
     description: <>Smart contract engineer building secure blockchain solutions.</>,
+    socialLinks: {
+      twitter: '#',
+      linkedin: '#',
+    },
   },
 ]

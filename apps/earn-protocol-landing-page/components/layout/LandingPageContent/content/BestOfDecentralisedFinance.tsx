@@ -86,7 +86,7 @@ export const BestOfDecentralizedFinance = () => {
           <BestOfDecentralizedFinanceBlock
             tag="Permissionless"
             title="Always Non-Custodial, Always in Your Control"
-            description="Built entirely on-chain, Summer.fi gives you unrestricted access and complete control over your assets—no middle-men and no opaque third parties with control over your capital."
+            description="Built entirely on-chain, Summer.fi gives you unrestricted access and complete control over your assets - no middle-men and no opaque third parties with control over your capital."
             content={
               <div className={bestOfDecentralizedFinanceStyles.protocols}>
                 <Image
