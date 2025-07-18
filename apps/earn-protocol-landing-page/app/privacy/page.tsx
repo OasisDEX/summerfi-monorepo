@@ -39,56 +39,38 @@ export default function PrivacyPage() {
           we have grouped together as follows:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Identity Data</strong> includes first name, last name, any previous names,
-              username or similar identifier, date of birth and gender.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Contact Data</strong> includes email address and delivery address.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Financial Data</strong> includes information on your cryptocurrency wallet
-              account balance and virtual currencies.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Transaction Data</strong> includes details about your blockchain transaction
-              history and information relating to your use of the services on our website.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Technical Data</strong> includes internet protocol (IP) address, your login
-              data, browser type and version, Ethereum blockchain data, wallet address, time zone
-              setting and location, browser plug-in types and versions, operating system and
-              platform, device ID and other technology on the devices you use to access this
-              website.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Profile Data</strong> includes your preferences, feedback and survey
-              responses.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Usage Data</strong> includes information about how you interact with and use
-              our website, products and services.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Marketing and Communications Data</strong> includes your preferences in
-              receiving marketing from us and our third parties and your communication preferences.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Identity Data</strong> includes first name, last name, any previous names,
+            username or similar identifier, date of birth and gender.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Contact Data</strong> includes email address and delivery address.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Financial Data</strong> includes information on your cryptocurrency wallet
+            account balance and virtual currencies.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Transaction Data</strong> includes details about your blockchain transaction
+            history and information relating to your use of the services on our website.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Technical Data</strong> includes internet protocol (IP) address, your login
+            data, browser type and version, Ethereum blockchain data, wallet address, time zone
+            setting and location, browser plug-in types and versions, operating system and platform,
+            device ID and other technology on the devices you use to access this website.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Profile Data</strong> includes your preferences, feedback and survey responses.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Usage Data</strong> includes information about how you interact with and use our
+            website, products and services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Marketing and Communications Data</strong> includes your preferences in
+            receiving marketing from us and our third parties and your communication preferences.
+          </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           We also collect, use and share <strong>aggregated data</strong> such as statistical data
@@ -104,61 +86,45 @@ export default function PrivacyPage() {
           We use different methods to collect data from and about you including through:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Your interactions with us.</strong> You may give us your personal data by
-              filling in online forms or by corresponding with us by email or otherwise. This
-              includes personal data you provide when you:
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Your interactions with us.</strong> You may give us your personal data by
+            filling in online forms or by corresponding with us by email or otherwise. This includes
+            personal data you provide when you:
+          </Text>
           <ul className={styles.list} style={{ listStyleType: 'circle' }}>
-            <li>
-              <Text as="li" variant="p2" className={styles.p2}>
-                apply for our products or services;
-              </Text>
-            </li>
-            <li>
-              <Text as="li" variant="p2" className={styles.p2}>
-                subscribe to our service or publications;
-              </Text>
-            </li>
-            <li>
-              <Text as="li" variant="p2" className={styles.p2}>
-                request marketing to be sent to you;
-              </Text>
-            </li>
-            <li>
-              <Text as="li" variant="p2" className={styles.p2}>
-                enter a referral programme; or
-              </Text>
-            </li>
-            <li>
-              <Text as="li" variant="p2" className={styles.p2}>
-                give us feedback or contact us.
-              </Text>
-            </li>
+            <Text as="li" variant="p2" className={styles.p2}>
+              apply for our products or services;
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              subscribe to our service or publications;
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              request marketing to be sent to you;
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              enter a referral programme; or
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              give us feedback or contact us.
+            </Text>
           </ul>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Automated technologies or interactions.</strong> As you interact with our
-              website, we will automatically collect Technical Data about your equipment, Browse
-              actions and patterns. We collect this personal data by using cookies, server logs and
-              other similar technologies. Please see our cookie policy{' '}
-              <Link href="https://summer.fi/cookie" target="_blank" rel="noopener noreferrer">
-                https://summer.fi/cookie
-              </Link>{' '}
-              for further details.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Third parties or publicly available sources.</strong> We will receive personal
-              data about you from various third party sources including third parties we provide
-              services to, analytics providers and the Ethereum blockchain where we may collect
-              public Ethereum addresses and email addresses to identify and document a user’s
-              journey through our products.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Automated technologies or interactions.</strong> As you interact with our
+            website, we will automatically collect Technical Data about your equipment, Browse
+            actions and patterns. We collect this personal data by using cookies, server logs and
+            other similar technologies. Please see our cookie policy{' '}
+            <Link href="https://summer.fi/cookie" target="_blank" rel="noopener noreferrer">
+              https://summer.fi/cookie
+            </Link>{' '}
+            for further details.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Third parties or publicly available sources.</strong> We will receive personal
+            data about you from various third party sources including third parties we provide
+            services to, analytics providers and the Ethereum blockchain where we may collect public
+            Ethereum addresses and email addresses to identify and document a user’s journey through
+            our products.
+          </Text>
         </ul>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
           How we use your personal data
@@ -171,38 +137,30 @@ export default function PrivacyPage() {
           rely on one or more of the following legal bases:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Performance of a contract with you:</strong> Where we need to perform the
-              contract we are about to enter into or have entered into with you.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Legitimate interests:</strong> We may use your personal data where it is
-              necessary to conduct our business and pursue our legitimate interests, for example to
-              prevent fraud and enable us to give you the best and most secure customer experience.
-              We make sure we consider and balance any potential impact on you and your rights (both
-              positive and negative) before we process your personal data for our legitimate
-              interests. We do not use your personal data for activities where our interests are
-              overridden by the impact on you (unless we have your consent or are otherwise required
-              or permitted to by law).
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Legal obligation:</strong> We may use your personal data where it is necessary
-              for compliance with a legal obligation that we are subject to. We will identify the
-              relevant legal obligation when we rely on this legal basis.
-            </Text>
-          </li>
-          <li>
-            <Text as="p" variant="p2" className={styles.p2}>
-              <strong>Consent:</strong> We rely on consent only where we have obtained your active
-              agreement to use your personal data for a specified purpose, for example if you
-              subscribe to an email newsletter.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Performance of a contract with you:</strong> Where we need to perform the
+            contract we are about to enter into or have entered into with you.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Legitimate interests:</strong> We may use your personal data where it is
+            necessary to conduct our business and pursue our legitimate interests, for example to
+            prevent fraud and enable us to give you the best and most secure customer experience. We
+            make sure we consider and balance any potential impact on you and your rights (both
+            positive and negative) before we process your personal data for our legitimate
+            interests. We do not use your personal data for activities where our interests are
+            overridden by the impact on you (unless we have your consent or are otherwise required
+            or permitted to by law).
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Legal obligation:</strong> We may use your personal data where it is necessary
+            for compliance with a legal obligation that we are subject to. We will identify the
+            relevant legal obligation when we rely on this legal basis.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Consent:</strong> We rely on consent only where we have obtained your active
+            agreement to use your personal data for a specified purpose, for example if you
+            subscribe to an email newsletter.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Purposes for which we will use your personal data
@@ -460,31 +418,25 @@ export default function PrivacyPage() {
           We may share your personal data where necessary with the parties set out below.
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Service providers acting as processors</strong> who provide services including
-              IT and system administration services, online form management, hosting services,
-              payment processing, fraud and identity verification providers, service support, email
-              delivery and administration, and data storage and analysis.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Our <strong>professional advisors</strong> including lawyers, auditors, insurers,
-              consultants and who provide legal, accounting and insurance services.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              <strong>
-                Third parties to whom we may choose to sell, transfer or merge parts of our business
-                or our assets.
-              </strong>{' '}
-              Alternatively, we may seek to acquire other businesses or merge with them. If a change
-              happens to our business, then the new owners may use your personal data in the same
-              way as set out in this privacy policy.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Service providers acting as processors</strong> who provide services including
+            IT and system administration services, online form management, hosting services, payment
+            processing, fraud and identity verification providers, service support, email delivery
+            and administration, and data storage and analysis.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Our <strong>professional advisors</strong> including lawyers, auditors, insurers,
+            consultants and who provide legal, accounting and insurance services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>
+              Third parties to whom we may choose to sell, transfer or merge parts of our business
+              or our assets.
+            </strong>{' '}
+            Alternatively, we may seek to acquire other businesses or merge with them. If a change
+            happens to our business, then the new owners may use your personal data in the same way
+            as set out in this privacy policy.
+          </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           We require all third parties to respect the security of your personal data and to treat it
@@ -589,34 +541,24 @@ export default function PrivacyPage() {
           where required by the law, including when:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data is no longer necessary in relation to the purposes for which they
-              were collected or otherwise processed;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              there is no longer a legal ground for the processing;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              you object to the processing and there are no overriding legitimate grounds for the
-              processing;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data has been unlawfully processed;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data must be erased for compliance with a legal obligation in accordance
-              with the applicable law to which we are subject.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data is no longer necessary in relation to the purposes for which they were
+            collected or otherwise processed;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            there is no longer a legal ground for the processing;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            you object to the processing and there are no overriding legitimate grounds for the
+            processing;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data has been unlawfully processed;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data must be erased for compliance with a legal obligation in accordance
+            with the applicable law to which we are subject.
+          </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           Note, however, that we may not always be able to comply with your request of erasure for
@@ -631,29 +573,21 @@ export default function PrivacyPage() {
           following applies:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the accuracy of the personal data is contested by you, for a period enabling us to
-              verify the accuracy of the personal data;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the processing is unlawful and you oppose the erasure of the personal data and request
-              the restriction of their use instead;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              we no longer need the personal data for the purposes of the processing, but they are
-              required by you for the establishment, exercise or defense of legal claims; and/or
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              you have objected to processing pursuant to applicable laws.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the accuracy of the personal data is contested by you, for a period enabling us to
+            verify the accuracy of the personal data;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the processing is unlawful and you oppose the erasure of the personal data and request
+            the restriction of their use instead;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            we no longer need the personal data for the purposes of the processing, but they are
+            required by you for the establishment, exercise or defense of legal claims; and/or
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            you have objected to processing pursuant to applicable laws.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Right to object

@@ -55,43 +55,30 @@ export default function CookiePolicyPage() {
           information may include:
         </Text>
         <ul className={styles.list}>
-          <li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Computer or mobile device information,
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Website usage information, such as:
+          </Text>
+          <ul className={styles.list} style={{ listStyleType: 'circle' }}>
             <Text as="li" variant="p2" className={styles.p2}>
-              Computer or mobile device information,
+              Page views,
             </Text>
-          </li>
-          <li>
             <Text as="li" variant="p2" className={styles.p2}>
-              Website usage information, such as:
+              Account changes (i.e. connecting a wallet)
             </Text>
-            <ul className={styles.list} style={{ listStyleType: 'circle' }}>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Page views,
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Account changes (i.e. connecting a wallet)
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Button clicks,
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Input form changes,
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Errors.
-                </Text>
-              </li>
-            </ul>
-          </li>
+            <Text as="li" variant="p2" className={styles.p2}>
+              Button clicks,
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              Input form changes,
+            </Text>
+            <Text as="li" variant="p2" className={styles.p2}>
+              Errors.
+            </Text>
+          </ul>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           Our service providers analyses this information and provides us with aggregate reports.
@@ -142,34 +129,24 @@ export default function CookiePolicyPage() {
           where required by the law, including when:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data is no longer necessary in relation to the purposes for which they
-              were collected or otherwise processed;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              there is no longer a legal ground for the processing;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              you object to the processing and there are no overriding legitimate grounds for the
-              processing;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data has been unlawfully processed;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the personal data must be erased for compliance with a legal obligation in accordance
-              with the applicable law to which we are subject.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data is no longer necessary in relation to the purposes for which they were
+            collected or otherwise processed;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            there is no longer a legal ground for the processing;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            you object to the processing and there are no overriding legitimate grounds for the
+            processing;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data has been unlawfully processed;
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the personal data must be erased for compliance with a legal obligation in accordance
+            with the applicable law to which we are subject.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Right to restriction of processing
@@ -179,29 +156,24 @@ export default function CookiePolicyPage() {
           following applies:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the accuracy of the personal data is contested by you, for a period enabling us to
-              verify the accuracy of the personal data;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              the processing is unlawful and you oppose the erasure of the personal data and
-              requests instead the restriction of their use instead;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              we no longer needs the personal data for the purposes of the processing, but they are
-              required by you for the establishment, exercise or defense of legal claims; and/o
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              you have objected to processing pursuant to applicable laws.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            the accuracy of the personal data is contested by you, for a period enabling us to
+            verify the accuracy of the personal data;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            the processing is unlawful and you oppose the erasure of the personal data and requests
+            instead the restriction of their use instead;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            we no longer needs the personal data for the purposes of the processing, but they are
+            required by you for the establishment, exercise or defense of legal claims; and/o
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            you have objected to processing pursuant to applicable laws.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Right to object
@@ -258,21 +230,15 @@ export default function CookiePolicyPage() {
           they obtain from your use of their cookies:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              to track your browser across multiple websites
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              to build a profile of your web surfing
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              to target advertisements which may be of particular interest to you.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            to track your browser across multiple websites
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            to build a profile of your web surfing
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            to target advertisements which may be of particular interest to you.
+          </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           In addition to the information we provide in this Cookie Policy, you can find out more
@@ -307,72 +273,60 @@ export default function CookiePolicyPage() {
           You can find out how to manage cookies on popular browsers by following these links:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Link
-              href="https://support.google.com/chrome/answer/95647?hl=en"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Google Chrome
-              </Text>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40c9-933e-0c7f-d5e1d2e6de1c"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Microsoft Edge
-              </Text>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Mozilla Firefox
-              </Text>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="https://support.microsoft.com/en-us/topic/how-to-delete-cookie-files-in-internet-explorer-b593ae4d-93d3-9874-1234-a034293910c5"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Microsoft Internet Explorer
-              </Text>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="https://help.opera.com/en/latest/security-and-privacy/#clearBrowseData"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Opera
-              </Text>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="https://support.apple.com/en-gb/guide/safari/sfri11471/mac"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text as="li" variant="p2" className={styles.p2}>
-                Apple Safari
-              </Text>
-            </Link>
-          </li>
+          <Link
+            href="https://support.google.com/chrome/answer/95647?hl=en"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Google Chrome
+            </Text>
+          </Link>
+          <Link
+            href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40c9-933e-0c7f-d5e1d2e6de1c"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Microsoft Edge
+            </Text>
+          </Link>
+          <Link
+            href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Mozilla Firefox
+            </Text>
+          </Link>
+          <Link
+            href="https://support.microsoft.com/en-us/topic/how-to-delete-cookie-files-in-internet-explorer-b593ae4d-93d3-9874-1234-a034293910c5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Microsoft Internet Explorer
+            </Text>
+          </Link>
+          <Link
+            href="https://help.opera.com/en/latest/security-and-privacy/#clearBrowseData"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Opera
+            </Text>
+          </Link>
+          <Link
+            href="https://support.apple.com/en-gb/guide/safari/sfri11471/mac"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text as="li" variant="p2" className={styles.p2}>
+              Apple Safari
+            </Text>
+          </Link>
         </ul>
         <Text as="h5" variant="h5">
           Mobile Device Cookies

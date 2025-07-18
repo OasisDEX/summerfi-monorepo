@@ -87,199 +87,157 @@ export default function TermsOfServicePage() {
           As a condition to using the Site and Services, You represent and warrant to Company that:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You are eligible to enter into the Agreement and use the Services in accordance with
-              Section 2, below.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              This Agreement is valid, binding on you, and enforceable against you.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You will comply with all terms and conditions of this Agreement.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You are not entering into the Agreement and using the Services in your capacity as a
-              consumer.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You will ensure that all information that you provide on the Site is current,
-              complete, and accurate;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You will maintain the security and confidentiality of access to your cryptocurrency
-              wallet address via private keys, access credentials, or otherwise;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and agree that access to the Site is provided on an &quot;as is&quot;
-              and &quot;as available&quot; basis, only. You acknowledge and agree that from time to
-              time the Site may be inaccessible or inoperable for any reason, including, without
-              limitation: (i) equipment malfunctions; (ii) periodic maintenance procedures or
-              repairs which Company may undertake from time to time; (iii) causes beyond the control
-              of Company or which are not reasonably foreseeable by Company; (iv) disruptions and
-              temporary or permanent unavailability of the underlying blockchain infrastructure,
-              including of the supported protocols or any staking-related infrastructure; (v)
-              unavailability of third party service providers or external partners for any reason.
-              In such a case, you may be prevented from accessing or using the Site and the
-              Services.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and agree that the Site and the Services may evolve or change over
-              time. This means the Company may alter, replace, or discontinue (temporarily or
-              permanently) the Site and Services at any time in the Company&apos;s sole discretion.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge that the Site is provided as a tool for you to interact with third
-              party DeFi protocols on your own initiative, without any endorsement or recommendation
-              of cryptoasset trading activities. In doing so, the Company is not recommending that
-              You engage in cryptoasset trading activity, and You should not regard the Site or any
-              Company communications as involving any form of recommendation, invitation or
-              inducement to deal in cryptoassets.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and agree that the Company does not act as an agent for any User, or
-              for any party or parties who may otherwise use any underlying blockchain
-              infrastructure that is involved in any of the Services.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge that the Site is provided as a tool for you to interact with third
-              party DeFi protocols. To the extent third party DeFi protocols offer Digital Assets
-              rewards to you for using their services, if Company distributes these rewards to you
-              then it will solely be acting as agent for the third party service provider (disclosed
-              agency relationship).
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You are solely responsible for your use of the Site and Services, including all
-              transactions of Digital Assets you make.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              In connection with using the Services, you will only transact legally obtained Digital
-              Assets that belong to you.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You will obey all applicable domestic and international laws in connection with using
-              the Services. You will not use the Site or the Services if the laws of your country,
-              or any other applicable law, prohibits you from doing so in accordance with this
-              Agreement.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You are solely responsible for reporting and paying any taxes applicable to your use
-              of the Services or any other transactions of Digital Assets or rights thereto.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You are responsible for complying with any applicable export controls or embargoes
-              that may apply to you or your digital assets.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Any Digital Assets used by You in connection with the Services are either owned by You
-              or You are validly authorized to carry out actions using such Digital Assets.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and agree that the Company has no control over, or liability for, the
-              delivery, quality, safety, legality or any other aspect of any Digital Assets that you
-              may transfer to or from a third party, and that the Company is not responsible for
-              ensuring that an entity with whom you transact actually completes the transaction or
-              is authorized to do so. If you experience a problem with any Digital Assets purchased
-              from or sold to a third party through the Services, you bear the entire risk. You
-              acknowledge that Company does not in any way control the Digital Assets or the
-              underlying networks and protocols and that the Company cannot be held liable in any
-              way for any deficiency, malfunctioning, exploit or other issue with the Digital Assets
-              and underlying networks and protocols or any errors you make interacting with them.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You covenant that all activity and conduct in connection with your use of the Site and
-              Services, including any resultant transactions of the Digital Assets, will be in
-              compliance with all applicable law, rules, regulations, requirements, guidelines and
-              policies of any governmental or quasi-governmental body or regulatory agency, any
-              self-regulatory organization and that you will not use the Site or Services for any
-              illegal or unlawful purpose, including but not limited to any Prohibited Use noted in
-              Section 13, below. You will not violate any applicable law, including, without
-              limitation, any relevant and applicable anti-money laundering and anti-terrorist
-              financing laws and any relevant and applicable privacy and data collection laws.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and affirm that You are not and have not been (a) the subject of
-              economic or trade sanctions administered or enforced by any governmental authority,
-              (b) otherwise designated on any list of prohibited or restricted parties (including
-              but not limited to the list maintained by the Office of Foreign Assets Control of the
-              U.S. Department of the Treasury, the Office of Financial Sanctions Implementation of
-              the UK’s HM Treasury, the EU’s Financial Sanctions Database or United Nations
-              sanctions), or (c) a citizen, resident, or organized in a jurisdiction or territory
-              that is the subject of comprehensive country-wide, territory-wide, or regional
-              economic sanctions by the United States, (d) placed on any excluded or denied persons
-              lists by any authority, and or a resident of any of the following countries or
-              regions: Belarus, Burma (Myanmar), Burundi, Central African Republic, Congo, Côte
-              d&apos;Ivoire, Cuba, Iran, Iraq, Lebanon, Liberia, Libya, Mali, Nicaragua, North
-              Korea, Somalia, South Sudan, Sudan, Syria, Crimea (Ukraine/Russia), Venezuela, Yemen,
-              Zimbabwe (&quot;Non-Supported Countries&quot;).
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You do not and will not use Virtual Private Network software, proxy server, or any
-              other privacy or anonymization tools or techniques in order to circumvent any
-              restrictions that apply to the Services, especially those which restrict the
-              geographical availability of the Services.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge and waive any claim against Company based on changes in law,
-              regulatory inquiries, regulatory actions, or claims that limit the Company&apos;s
-              ability to provide access to the Site or Services. You acknowledge that at any time,
-              your access to your cryptocurrency assets may be suspended or terminated, or there may
-              be a delay in your access or use of your cryptocurrency assets which may result in the
-              cryptocurrency assets diminishing in value or you being unable to complete a
-              transaction.
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              You acknowledge that we use data you submit using our Site through your wallet to
-              detect, prevent and mitigate illicit or harmful activity and that we may share that
-              data with blockchain analytics providers. We share this information with these service
-              providers only so that they can help us promote the safety, security and integrity of
-              the Services.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You are eligible to enter into the Agreement and use the Services in accordance with
+            Section 2, below.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            This Agreement is valid, binding on you, and enforceable against you.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You will comply with all terms and conditions of this Agreement.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You are not entering into the Agreement and using the Services in your capacity as a
+            consumer.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You will ensure that all information that you provide on the Site is current, complete,
+            and accurate;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You will maintain the security and confidentiality of access to your cryptocurrency
+            wallet address via private keys, access credentials, or otherwise;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and agree that access to the Site is provided on an &quot;as is&quot;
+            and &quot;as available&quot; basis, only. You acknowledge and agree that from time to
+            time the Site may be inaccessible or inoperable for any reason, including, without
+            limitation: (i) equipment malfunctions; (ii) periodic maintenance procedures or repairs
+            which Company may undertake from time to time; (iii) causes beyond the control of
+            Company or which are not reasonably foreseeable by Company; (iv) disruptions and
+            temporary or permanent unavailability of the underlying blockchain infrastructure,
+            including of the supported protocols or any staking-related infrastructure; (v)
+            unavailability of third party service providers or external partners for any reason. In
+            such a case, you may be prevented from accessing or using the Site and the Services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and agree that the Site and the Services may evolve or change over time.
+            This means the Company may alter, replace, or discontinue (temporarily or permanently)
+            the Site and Services at any time in the Company&apos;s sole discretion.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge that the Site is provided as a tool for you to interact with third party
+            DeFi protocols on your own initiative, without any endorsement or recommendation of
+            cryptoasset trading activities. In doing so, the Company is not recommending that You
+            engage in cryptoasset trading activity, and You should not regard the Site or any
+            Company communications as involving any form of recommendation, invitation or inducement
+            to deal in cryptoassets.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and agree that the Company does not act as an agent for any User, or for
+            any party or parties who may otherwise use any underlying blockchain infrastructure that
+            is involved in any of the Services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge that the Site is provided as a tool for you to interact with third party
+            DeFi protocols. To the extent third party DeFi protocols offer Digital Assets rewards to
+            you for using their services, if Company distributes these rewards to you then it will
+            solely be acting as agent for the third party service provider (disclosed agency
+            relationship).
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            You are solely responsible for your use of the Site and Services, including all
+            transactions of Digital Assets you make.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            In connection with using the Services, you will only transact legally obtained Digital
+            Assets that belong to you.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You will obey all applicable domestic and international laws in connection with using
+            the Services. You will not use the Site or the Services if the laws of your country, or
+            any other applicable law, prohibits you from doing so in accordance with this Agreement.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You are solely responsible for reporting and paying any taxes applicable to your use of
+            the Services or any other transactions of Digital Assets or rights thereto.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You are responsible for complying with any applicable export controls or embargoes that
+            may apply to you or your digital assets.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Any Digital Assets used by You in connection with the Services are either owned by You
+            or You are validly authorized to carry out actions using such Digital Assets.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and agree that the Company has no control over, or liability for, the
+            delivery, quality, safety, legality or any other aspect of any Digital Assets that you
+            may transfer to or from a third party, and that the Company is not responsible for
+            ensuring that an entity with whom you transact actually completes the transaction or is
+            authorized to do so. If you experience a problem with any Digital Assets purchased from
+            or sold to a third party through the Services, you bear the entire risk. You acknowledge
+            that Company does not in any way control the Digital Assets or the underlying networks
+            and protocols and that the Company cannot be held liable in any way for any deficiency,
+            malfunctioning, exploit or other issue with the Digital Assets and underlying networks
+            and protocols or any errors you make interacting with them.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You covenant that all activity and conduct in connection with your use of the Site and
+            Services, including any resultant transactions of the Digital Assets, will be in
+            compliance with all applicable law, rules, regulations, requirements, guidelines and
+            policies of any governmental or quasi-governmental body or regulatory agency, any
+            self-regulatory organization and that you will not use the Site or Services for any
+            illegal or unlawful purpose, including but not limited to any Prohibited Use noted in
+            Section 13, below. You will not violate any applicable law, including, without
+            limitation, any relevant and applicable anti-money laundering and anti-terrorist
+            financing laws and any relevant and applicable privacy and data collection laws.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and affirm that You are not and have not been (a) the subject of
+            economic or trade sanctions administered or enforced by any governmental authority, (b)
+            otherwise designated on any list of prohibited or restricted parties (including but not
+            limited to the list maintained by the Office of Foreign Assets Control of the U.S.
+            Department of the Treasury, the Office of Financial Sanctions Implementation of the UK’s
+            HM Treasury, the EU’s Financial Sanctions Database or United Nations sanctions), or (c)
+            a citizen, resident, or organized in a jurisdiction or territory that is the subject of
+            comprehensive country-wide, territory-wide, or regional economic sanctions by the United
+            States, (d) placed on any excluded or denied persons lists by any authority, and or a
+            resident of any of the following countries or regions: Belarus, Burma (Myanmar),
+            Burundi, Central African Republic, Congo, Côte d&apos;Ivoire, Cuba, Iran, Iraq, Lebanon,
+            Liberia, Libya, Mali, Nicaragua, North Korea, Somalia, South Sudan, Sudan, Syria, Crimea
+            (Ukraine/Russia), Venezuela, Yemen, Zimbabwe (&quot;Non-Supported Countries&quot;).
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You do not and will not use Virtual Private Network software, proxy server, or any other
+            privacy or anonymization tools or techniques in order to circumvent any restrictions
+            that apply to the Services, especially those which restrict the geographical
+            availability of the Services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge and waive any claim against Company based on changes in law, regulatory
+            inquiries, regulatory actions, or claims that limit the Company&apos;s ability to
+            provide access to the Site or Services. You acknowledge that at any time, your access to
+            your cryptocurrency assets may be suspended or terminated, or there may be a delay in
+            your access or use of your cryptocurrency assets which may result in the cryptocurrency
+            assets diminishing in value or you being unable to complete a transaction.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You acknowledge that we use data you submit using our Site through your wallet to
+            detect, prevent and mitigate illicit or harmful activity and that we may share that data
+            with blockchain analytics providers. We share this information with these service
+            providers only so that they can help us promote the safety, security and integrity of
+            the Services.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           1.3. Fees
@@ -563,57 +521,46 @@ export default function TermsOfServicePage() {
           Users. Users agree not to use the Program to:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Violate the intellectual property rights of the Company or any other party;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Spam or otherwise create bulk distributions of the referral link;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Collect or attempting to collect personal data about Users;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Engage in any actions that are designed to disrupt or undermine the Program, the
-              Company, or the use of the Site and Services by any other User;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Make attempts to gain unauthorized access to any software or the Program for any
-              reason;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Transmit files that contain bots, viruses, works, Trojan horses, exploits, or any
-              other code or file that could contaminate or otherwise destroy the Company
-              intellectual property or stop the function of the Site and Services, or otherwise harm
-              any third party;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Engage in illegal or improper activities;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Engage in behavior designed to annoy or harass others; and or
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              Engage in actions that disparage or malign or call into question the reputation of the
-              Company, as determined in the Company&apos;s sole discretion.
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Violate the intellectual property rights of the Company or any other party;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Spam or otherwise create bulk distributions of the referral link;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Collect or attempting to collect personal data about Users;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Engage in any actions that are designed to disrupt or undermine the Program, the
+            Company, or the use of the Site and Services by any other User;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Make attempts to gain unauthorized access to any software or the Program for any reason;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Transmit files that contain bots, viruses, works, Trojan horses, exploits, or any other
+            code or file that could contaminate or otherwise destroy the Company intellectual
+            property or stop the function of the Site and Services, or otherwise harm any third
+            party;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Engage in illegal or improper activities;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Engage in behavior designed to annoy or harass others; and or
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Engage in actions that disparage or malign or call into question the reputation of the
+            Company, as determined in the Company&apos;s sole discretion.
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Inappropriate Behavior
@@ -988,22 +935,18 @@ export default function TermsOfServicePage() {
           liability for:
         </Text>
         <ul className={styles.list}>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              (a) death or personal injury caused by negligence;
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              (b) fraud or fraudulent misrepresentation; and
-            </Text>
-          </li>
-          <li>
-            <Text as="li" variant="p2" className={styles.p2}>
-              (c) breach of the terms implied by section 2 of the UK&apos;s Supply of Goods and
-              Services Act 1982 (title and quiet possession).
-            </Text>
-          </li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            (a) death or personal injury caused by negligence;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            (b) fraud or fraudulent misrepresentation; and
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            (c) breach of the terms implied by section 2 of the UK&apos;s Supply of Goods and
+            Services Act 1982 (title and quiet possession).
+          </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
           Recognizing such, You understand and agree that, to the fullest extent permitted by
@@ -1236,120 +1179,104 @@ export default function TermsOfServicePage() {
           the following:
         </Text>
         <ul className={styles.list}>
-          <li>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Unlawful Activity:</strong> Activity which would violate, or assist in violation
+            of, any domestic or international law, statute, ordinance, or regulation, sanctions
+            programs administered in any relevant country, including but not limited to the U.S.
+            Department of Treasury&apos;s Office of Foreign Assets Control (&quot;OFAC&quot;), the
+            UK HM Treasury&apos;s Office of Financial Sanctions Implementation (OFSI), or the
+            EU&apos;s Financial Sanctions Database (FSB), or which would involve proceeds of any
+            unlawful activity; publish, distribute or disseminate any unlawful material or
+            information;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            Engage in any transactions that would violate any applicable law regarding securities,
+            commodities, derivatives, or any applicable law, rule, or regulation concerning the
+            integrity of trading markets, including but not limited to market manipulation,
+            &quot;spoofing&quot; and &quot;wash trading.&quot;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Abuse Other Users:</strong> Interfere with another individual&apos;s or
+            entity&apos;s access to the Site or use of any Services; defame, abuse, extort, harass,
+            stalk, threaten or otherwise violate or infringe the legal rights (such as, but not
+            limited to, rights of privacy, publicity and intellectual property) of others; incite,
+            threaten, facilitate, promote, or encourage hate, racial intolerance, or violent acts
+            against others; harvest or otherwise collect information from the Site about others,
+            including without limitation email addresses, without proper consent;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Fraud or misrepresentation:</strong> Activity which operates to defraud Company,
+            other Users, or any other person; provide any false, inaccurate, or misleading
+            information, or misrepresent the truthfulness of any content on the Site or of the
+            Services;
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Intellectual Property Infringement:</strong> Engage in transactions involving
+            items that infringe or violate any copyright, trademark, right of publicity or privacy
+            or any other proprietary right under the law, including but not limited to sales,
+            distribution, or access to counterfeit music, movies, software, or other licensed
+            materials without the appropriate authorization from the rights holder; use of Company
+            intellectual property, name, or logo, including use of Company trade or service marks,
+            without express consent from Company or in a manner that otherwise harms Company; any
+            action that implies an untrue endorsement by or affiliation with Company.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Illegal Source of Funds:</strong> Use or accessing the Site or Services to
+            transmit or exchange Digital Assets that are the direct or indirect proceeds of any
+            criminal or fraudulent activity, including terrorism or tax evasion.
+          </Text>
+
+          <Text as="li" variant="p2" className={styles.p2}>
+            <strong>Other Prohibited Activities:</strong> Additionally, you confirm that you may
+            not, nor may you assist other parties to:
+          </Text>
+          <ul className={styles.list} style={{ listStyleType: 'circle' }}>
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Unlawful Activity:</strong> Activity which would violate, or assist in
-              violation of, any domestic or international law, statute, ordinance, or regulation,
-              sanctions programs administered in any relevant country, including but not limited to
-              the U.S. Department of Treasury&apos;s Office of Foreign Assets Control
-              (&quot;OFAC&quot;), the UK HM Treasury&apos;s Office of Financial Sanctions
-              Implementation (OFSI), or the EU&apos;s Financial Sanctions Database (FSB), or which
-              would involve proceeds of any unlawful activity; publish, distribute or disseminate
-              any unlawful material or information;
+              attempt to disable or circumvent any security or access control mechanism of the Site
+              or Services, where applicable;
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              Engage in any transactions that would violate any applicable law regarding securities,
-              commodities, derivatives, or any applicable law, rule, or regulation concerning the
-              integrity of trading markets, including but not limited to market manipulation,
-              &quot;spoofing&quot; and &quot;wash trading.&quot;
+              design or assist in designing cheats, exploits, hacks, modes or any other unauthorized
+              third-party software to modify or interfere with the Services, with the exception of
+              automation software and bots, provided that such automation software and bots operate
+              in the ordinary course of using the Services and do not cause disruption or harm to
+              the Services;
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Abuse Other Users:</strong> Interfere with another individual&apos;s or
-              entity&apos;s access to the Site or use of any Services; defame, abuse, extort,
-              harass, stalk, threaten or otherwise violate or infringe the legal rights (such as,
-              but not limited to, rights of privacy, publicity and intellectual property) of others;
-              incite, threaten, facilitate, promote, or encourage hate, racial intolerance, or
-              violent acts against others; harvest or otherwise collect information from the Site
-              about others, including without limitation email addresses, without proper consent;
+              institute, assist or become involved in any type of attack, including distribution of
+              a virus, attacks upon the Services or the Site, that prevent access to or use of any
+              of the above, other attempts to disrupt any of the above, gain unauthorized access to
+              any of the above, or disrupt any other person&apos;s use or enjoyment of any of the
+              above;
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Fraud or misrepresentation:</strong> Activity which operates to defraud
-              Company, other Users, or any other person; provide any false, inaccurate, or
-              misleading information, or misrepresent the truthfulness of any content on the Site or
-              of the Services;
+              attempt to, or harass, abuse, or harm of another person or entity, including our
+              employees and service providers;
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Intellectual Property Infringement:</strong> Engage in transactions involving
-              items that infringe or violate any copyright, trademark, right of publicity or privacy
-              or any other proprietary right under the law, including but not limited to sales,
-              distribution, or access to counterfeit music, movies, software, or other licensed
-              materials without the appropriate authorization from the rights holder; use of Company
-              intellectual property, name, or logo, including use of Company trade or service marks,
-              without express consent from Company or in a manner that otherwise harms Company; any
-              action that implies an untrue endorsement by or affiliation with Company.
+              impersonate another user or otherwise misrepresent yourself;
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Illegal Source of Funds:</strong> Use or accessing the Site or Services to
-              transmit or exchange Digital Assets that are the direct or indirect proceeds of any
-              criminal or fraudulent activity, including terrorism or tax evasion.
+              take any action that imposes an unreasonable or disproportionately large load on our
+              infrastructure; or detrimentally interfere with, intercept, or expropriate any system,
+              data, or information.
             </Text>
-          </li>
-          <li>
+
             <Text as="li" variant="p2" className={styles.p2}>
-              <strong>Other Prohibited Activities:</strong> Additionally, you confirm that you may
-              not, nor may you assist other parties to:
+              Induce or encourage any third party to engage in any conduct prohibited by this
+              Agreement.
             </Text>
-            <ul className={styles.list} style={{ listStyleType: 'circle' }}>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  attempt to disable or circumvent any security or access control mechanism of the
-                  Site or Services, where applicable;
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  design or assist in designing cheats, exploits, hacks, modes or any other
-                  unauthorized third-party software to modify or interfere with the Services, with
-                  the exception of automation software and bots, provided that such automation
-                  software and bots operate in the ordinary course of using the Services and do not
-                  cause disruption or harm to the Services;
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  institute, assist or become involved in any type of attack, including distribution
-                  of a virus, attacks upon the Services or the Site, that prevent access to or use
-                  of any of the above, other attempts to disrupt any of the above, gain unauthorized
-                  access to any of the above, or disrupt any other person&apos;s use or enjoyment of
-                  any of the above;
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  attempt to, or harass, abuse, or harm of another person or entity, including our
-                  employees and service providers;
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  impersonate another user or otherwise misrepresent yourself;
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  take any action that imposes an unreasonable or disproportionately large load on
-                  our infrastructure; or detrimentally interfere with, intercept, or expropriate any
-                  system, data, or information.
-                </Text>
-              </li>
-              <li>
-                <Text as="li" variant="p2" className={styles.p2}>
-                  Induce or encourage any third party to engage in any conduct prohibited by this
-                  Agreement.
-                </Text>
-              </li>
-            </ul>
-          </li>
+          </ul>
         </ul>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
           14. General Information
