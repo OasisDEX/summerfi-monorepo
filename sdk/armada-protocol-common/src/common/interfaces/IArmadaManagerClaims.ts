@@ -53,7 +53,7 @@ export interface IArmadaManagerClaims {
     merkleDistribution: bigint
     voteDelegation: bigint
     /**
-     * @deprecated use `usagePerChain` instead
+     * @deprecated use `vaultUsagePerChain` instead
      */
     perChain: Record<number, bigint>
   }>
