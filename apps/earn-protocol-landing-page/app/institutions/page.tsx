@@ -12,12 +12,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
@@ -51,9 +51,10 @@ const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
 
-  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Institutions',
+  })
 
   const smoothScrollToId = (id: string) => () => {
     const element = document.getElementById(id)

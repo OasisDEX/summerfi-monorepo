@@ -1,5 +1,4 @@
 'use client'
-import { redirect } from 'next/navigation'
 
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { BeachClubAutomatedExposure } from '@/features/beach-club/components/BeachClubAutomatedExposure/BeachClubAutomatedExposure'
@@ -9,17 +8,17 @@ import { BeachClubGetRewarded } from '@/features/beach-club/components/BeachClub
 import { BeachClubHeading } from '@/features/beach-club/components/BeachClubHeading/BeachClubHeading'
 import { BeachClubHowMuchCouldEarn } from '@/features/beach-club/components/BeachClubHowMuchCouldEarn/BeachClubHowMuchCouldEarn'
 import { BeachClubHowToShare } from '@/features/beach-club/components/BeachClubHowToShare/BeachClubHowToShare'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 
 import beachClubPageStyles from './beach-club-page.module.css'
 
 export default function BeachClubPage() {
   const { landingPageData } = useLandingPageData()
 
-  const beachClubEnabled = landingPageData?.systemConfig.features.BeachClub
-
-  if (beachClubEnabled === false) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'BeachClub',
+  })
 
   return (
     <div className={beachClubPageStyles.beachClubPage}>

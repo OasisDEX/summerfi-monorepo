@@ -1,17 +1,18 @@
 'use client'
 import { Emphasis, Text } from '@summerfi/app-earn-ui'
-import { redirect } from 'next/navigation'
 
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 
 import teamPageStyles from './teamPage.module.css'
 
 export default function TeamPage() {
   const { landingPageData } = useLandingPageData()
 
-  if (landingPageData && !landingPageData.systemConfig.features.Team) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Team',
+  })
 
   return (
     <div className={teamPageStyles.wrapper}>

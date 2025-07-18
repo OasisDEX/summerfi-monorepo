@@ -18,12 +18,12 @@ import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
@@ -68,9 +68,10 @@ export default function PublicAccessVaults() {
     })
   }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
 
-  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Institutions',
+  })
 
   const totalProtocolTvl = landingPageData
     ? Object.values(landingPageData.protocolTvls).reduce((acc, tvl) => acc + BigInt(tvl), BigInt(0))
