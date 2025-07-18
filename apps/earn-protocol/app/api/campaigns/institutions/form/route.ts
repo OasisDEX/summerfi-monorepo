@@ -71,13 +71,6 @@ export async function POST(req: Request) {
     })
 
     if (!getFormResponse.ok) {
-      console.log('Debug:', {
-        status: getFormResponse.status,
-        statusText: getFormResponse.statusText,
-        url: getFormResponse.url,
-        body: await getFormResponse.text(),
-      })
-
       return NextResponse.json({ errors: ['Failed to send form data'] }, { status: 500 })
     }
   } catch (error) {
