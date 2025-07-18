@@ -38,17 +38,12 @@ export async function POST(
   { params }: { params: Promise<{ walletAddress: string }> },
 ) {
   const connectionString = process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
-  const getFormIoKey = process.env.GET_FORM_IO_KEY
 
   if (!connectionString) {
     return NextResponse.json(
       { errors: ['Beach Club DB Connection string is not set'] },
       { status: 500 },
     )
-  }
-
-  if (!getFormIoKey) {
-    return NextResponse.json({ errors: ['Get Form key is not set'] }, { status: 500 })
   }
 
   let validatedPathParams
@@ -182,7 +177,7 @@ export async function POST(
     // that can be claimed without any additional information
     if (type !== MerchandiseType.NFT) {
       // send to getForm endpoint
-      const getFormResponse = await fetch(`https://getform.io/f/${getFormIoKey}`, {
+      const getFormResponse = await fetch(`https://getform.io/f/bxoyqjka`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
