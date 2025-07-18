@@ -8,6 +8,7 @@ import {
   EXTERNAL_LINKS,
   FaqSection,
   Icon,
+  INTERNAL_LINKS,
   SectionTabs,
   TabBar,
   Text,
@@ -404,19 +405,19 @@ export default function PublicAccessVaults() {
           <FinalCTAElement
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
-            url=""
+            url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
-            url=""
+            url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
-            url=""
+            url={EXTERNAL_LINKS.KB.HELP}
             urlLabel="Download docs"
           />
         </div>

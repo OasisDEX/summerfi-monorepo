@@ -22,7 +22,7 @@ export const FinalCTAElement = ({
       <Text variant="p2semi" as="p">
         {title}
       </Text>
-      <Link href={url} prefetch={false}>
+      <Link href={url} prefetch={false} target="_blank">
         <WithArrow variant="p2semi">{urlLabel}</WithArrow>
       </Link>
     </div>
