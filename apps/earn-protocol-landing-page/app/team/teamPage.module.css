@@ -106,6 +106,12 @@
 
 @media (max-width: 531px) {
   .teamMembersList {
+    margin: 64px var(--spacing-space-large) 0;
+  }
+}
+
+@media (max-width: 531px) {
+  .teamMembersList {
     grid-template-columns: repeat(1, minmax(300px, 1fr));
   }
 }

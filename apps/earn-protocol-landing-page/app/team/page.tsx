@@ -209,9 +209,18 @@ export default function TeamPage() {
             quality assets, protocols and networks.
           </Text>
           <div className={teamPageStyles.whoAreWeButtons}>
-            <Button variant="primaryLarge" onClick={playVideo}>
-              <Icon iconName="play" size={20} />
-              Watch the video
+            <Button variant="primaryLarge" onClick={isWatchingVideo ? stopVideo : playVideo}>
+              {isWatchingVideo ? (
+                <>
+                  <Icon iconName="close" size={10} />
+                  Stop the video
+                </>
+              ) : (
+                <>
+                  <Icon iconName="play" size={20} />
+                  Watch the video
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -239,24 +248,6 @@ export default function TeamPage() {
               transition: 'opacity 0.8s ease-in-out',
             }}
           />
-          <Text
-            variant="p3semi"
-            onClick={stopVideo}
-            style={{
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              margin: '-40px auto',
-              opacity: isWatchingVideo ? 1 : 0,
-              transition: 'opacity 0.8s ease-in-out',
-              pointerEvents: isWatchingVideo ? 'auto' : 'none',
-            }}
-          >
-            <Icon iconName="close" size={14} />
-            Close video
-          </Text>
         </div>
       </div>
       <div className={teamPageStyles.teamMembers}>
