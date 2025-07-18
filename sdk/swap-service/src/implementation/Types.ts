@@ -1,5 +1,5 @@
 /** Oracle provider configuration */
-export type OracleProviderConfig = {
+export type SwapProviderConfig = {
   /** provider API URL */
   apiUrl: string
   /** provider API key */
