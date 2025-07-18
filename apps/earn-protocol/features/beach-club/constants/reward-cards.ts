@@ -16,6 +16,6 @@ export const beachClubRewardCardImages = {
 
 export const beachClubRewardDescriptions = {
   [BeachClubBoatChallengeRewardCardType.T_SHIRT]: 'Beach Club T-shirt',
-  [BeachClubBoatChallengeRewardCardType.HOODIE]: 'Limited edition hoodie',
+  [BeachClubBoatChallengeRewardCardType.HOODIE]: 'Limited edition Hoodie',
   [BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT]: 'Summer.fi Beach Club NFT',
 }
