@@ -61,6 +61,13 @@
   }
 }
 
+@media (max-width: 531px) {
+  .whoAreWe {
+    flex-direction: column;
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
 .teamMembers {
   h2 {
     text-align: center;
@@ -73,6 +80,12 @@
   grid-template-columns: repeat(3, minmax(300px, 1fr));
   gap: var(--spacing-space-x-large);
   margin: 64px var(--spacing-space-3x-large) 0;
+}
+
+@media (max-width: 531px) {
+  .teamMembersList {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+  }
 }
 
 .teamMember {
@@ -117,6 +130,13 @@
   }
 }
 
+@media (max-width: 531px) {
+  .ecosystemCutAbove {
+    flex-direction: column;
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
 .protocolsVerticalScroller {
   display: flex;
   flex-direction: column;
@@ -128,6 +148,13 @@
   width: 280px;
   min-width: 280px;
 }
+
+@media (max-width: 531px) {
+  .protocolsVerticalScroller {
+    margin: 0 auto;
+  }
+}
+
 
 .scrollerTrack {
   display: flex;
