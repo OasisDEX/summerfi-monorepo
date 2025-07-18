@@ -74,7 +74,7 @@ export default function TeamPage() {
             Summer.fi is a decentralized finance (DeFi) app that enables uses to borrow, lend and
             multiply their crypto assets including ETH, WBTC, DAI, and USDC. Our aim is to focus on
             best in class security and reduced complexity to interact with crypto&apos;s highest
-            quality assets, protocols and networks. 
+            quality assets, protocols and networks.
           </Text>
           <div className={teamPageStyles.whoAreWeButtons}>
             <Link href="https://x.com/summerfinance_/status/1889329049647886494" target="_blank">
