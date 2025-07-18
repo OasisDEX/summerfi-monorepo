@@ -1,5 +1,5 @@
 import { type EarnAppConfigType } from '@summerfi/app-types'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export const useFeatureFlagRedirect = ({
   config,
@@ -10,6 +10,8 @@ export const useFeatureFlagRedirect = ({
   featureName: keyof EarnAppConfigType['features']
   customRedirect?: string
 }) => {
+  const router = useRouter()
+
   if (!config) {
     return
   }
@@ -17,6 +19,6 @@ export const useFeatureFlagRedirect = ({
   const { features } = config
 
   if (!features[featureName]) {
-    redirect(customRedirect ?? '/')
+    router.replace(customRedirect ?? '/')
   }
 }
