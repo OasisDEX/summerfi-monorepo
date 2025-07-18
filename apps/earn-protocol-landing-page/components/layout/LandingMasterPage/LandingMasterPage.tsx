@@ -30,6 +30,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 
   const isBeachClub = pathname.includes('beach-club')
   const isInstitutions = pathname.includes('institutions')
+  const isTeam = pathname.includes('team')
 
   const showBubbles = !isBeachClub
   const showPalms = isBeachClub
@@ -47,7 +48,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   }, [])
 
   const scrollAction = useMemo(() => {
-    if (isInstitutions) {
+    if (isInstitutions || isTeam) {
       return {
         offset: Number(scrolledAmount * 0.2) - 100,
         opacity: 1 - Number(scrolledAmount * 0.0015),
@@ -55,7 +56,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     }
 
     return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
-  }, [scrolledAmount, isInstitutions])
+  }, [scrolledAmount, isInstitutions, isTeam])
 
   return (
     <div className={landingMasterPageStyles.mainContainer}>

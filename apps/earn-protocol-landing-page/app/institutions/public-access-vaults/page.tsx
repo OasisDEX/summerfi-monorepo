@@ -391,7 +391,6 @@ export default function PublicAccessVaults() {
         </div>
         <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">

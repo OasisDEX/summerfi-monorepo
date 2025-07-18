@@ -264,7 +264,6 @@ export default function SelfManagedVaults() {
         </div>
         <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <FaqSection
         customTitle="Frequently Asked Questions"

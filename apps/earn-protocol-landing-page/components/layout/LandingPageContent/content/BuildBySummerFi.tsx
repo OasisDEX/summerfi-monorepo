@@ -19,41 +19,52 @@ const StatBlock = ({ title, value }: { title: string; value: string }) => {
   )
 }
 
-const BuildBySummerFiHeader = () => {
+const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: boolean }) => {
   return (
     <>
-      <div className={buildBySummerFiStyles.buildBySummerFiHeaderWrapper}>
+      <div
+        className={buildBySummerFiStyles.buildBySummerFiHeaderWrapper}
+        style={{ marginBottom: !noHeaderDescription ? 0 : '32px' }}
+      >
         <Text variant="h2" className={buildBySummerFiStyles.buildBySummerFiHeader}>
           Built by <Emphasis variant="h2colorful">Summer.fi</Emphasis>,{' '}
           <Emphasis variant="h2colorful">DeFi’s most trusted frontend app</Emphasis>.
         </Text>
       </div>
-      <div className={buildBySummerFiStyles.buildBySummerFiDescription}>
-        <Text variant="p1" as="p">
-          With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
-          automatically rebalance your assets to top protocols, maximizing your returns.
-        </Text>
-      </div>
-      <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-        <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank" prefetch={false}>
-          <WithArrow>
-            <Text variant="p2semi">View leadership</Text>
-          </WithArrow>
-        </Link>
-      </div>
+      {!noHeaderDescription && (
+        <>
+          <div className={buildBySummerFiStyles.buildBySummerFiDescription}>
+            <Text variant="p1" as="p">
+              With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
+              automatically rebalance your assets to top protocols, maximizing your returns.
+            </Text>
+          </div>
+          <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
+            <Link href={`${INTERNAL_LINKS.summerPro}/about`} target="_blank" prefetch={false}>
+              <WithArrow>
+                <Text variant="p2semi">View leadership</Text>
+              </WithArrow>
+            </Link>
+          </div>
+        </>
+      )}
     </>
   )
 }
 
 interface BuildBySummerFiProps {
   proAppStats?: ProAppStats
+  noHeaderDescription?: boolean
 }
 
-export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({ proAppStats }) => {
+export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({
+  proAppStats,
+  noHeaderDescription = false,
+}) => {
   if (!proAppStats) {
     return (
       <div>
-        <BuildBySummerFiHeader />
+        <BuildBySummerFiHeader noHeaderDescription={noHeaderDescription} />
       </div>
     )
   }
@@ -61,8 +72,8 @@ export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({ proAppStats }) => {
   const { monthlyVolume, managedOnOasis, lockedCollateralActiveTrigger } = proAppStats
 
   return (
-    <div>
-      <BuildBySummerFiHeader />
+    <div style={{ width: '100%' }}>
+      <BuildBySummerFiHeader noHeaderDescription={noHeaderDescription} />
       <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
         <StatBlock title="Summer.fi TVL" value={`$${formatFiatBalance(managedOnOasis)}`} />
         <StatBlock title="Summer.fi 30D Volume" value={`$${formatFiatBalance(monthlyVolume)}`} />
