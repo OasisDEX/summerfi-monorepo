@@ -8,6 +8,7 @@ import {
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -35,6 +36,7 @@ interface PortfolioPageViewComponentProps {
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   beachClubData: BeachClubData
+  blogPosts: BlogPosts
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -51,6 +53,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   migratablePositions,
   migrationBestVaultApy,
   beachClubData,
+  blogPosts,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -68,6 +71,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
         beachClubData={beachClubData}
+        blogPosts={blogPosts}
       />
     </SDKContextProvider>
   )
