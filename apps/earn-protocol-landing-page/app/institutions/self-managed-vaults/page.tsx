@@ -130,19 +130,19 @@ export default function SelfManagedVaults() {
             <li>
               <Icon iconName="checkmark_colorful" size={16} />
               <Text variant="h5" as="p">
-                Whitelisted access only – full control over who allocates
+                Whitelisted access only - full control over who allocates
               </Text>
             </li>
             <li>
               <Icon iconName="checkmark_colorful" size={16} />
               <Text variant="h5" as="p">
-                No co-mingling – assets stay isolated from other users
+                No co-mingling - assets stay isolated from other users
               </Text>
             </li>
             <li>
               <Icon iconName="checkmark_colorful" size={16} />
               <Text variant="h5" as="p">
-                Regulatory-ready – supports internal and external compliance requirements
+                Regulatory-ready - supports internal and external compliance requirements
               </Text>
             </li>
           </ul>

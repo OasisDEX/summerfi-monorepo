@@ -257,7 +257,7 @@ export const arkDetailsMap: {
     },
     '0x60390d9493008153b32fffa4765d21d84875d90e': {
       description:
-        'Behind the scenes, Fluid automatically puts your ETH to work in several lending apps (Aave, Compound, Spark, Morpho), borrowing a little extra ETH each time to “loop” the position. This boosts the normal staking yield by roughly 1.5–3×. Everything is bundled into one low-gas transaction, and you can swap your iToken back for your stETH (plus the extra yield) whenever you like.',
+        'Behind the scenes, Fluid automatically puts your ETH to work in several lending apps (Aave, Compound, Spark, Morpho), borrowing a little extra ETH each time to “loop” the position. This boosts the normal staking yield by roughly 1.5-3×. Everything is bundled into one low-gas transaction, and you can swap your iToken back for your stETH (plus the extra yield) whenever you like.',
       link: 'https://lite.guides.instadapp.io/getting-started/vault-features',
     },
     '0x235dd2d3cfcd5476bd0b9217e9a4839e709a00f6': {

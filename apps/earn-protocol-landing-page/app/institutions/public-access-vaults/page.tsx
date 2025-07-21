@@ -277,20 +277,20 @@ export default function PublicAccessVaults() {
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Reduced costs</strong> – 0 manual gas, no duplicated research.
+                        <strong>Reduced costs</strong> - 0 manual gas, no duplicated research.
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Reduced complexity</strong> – One vault token replaces dozens of
+                        <strong>Reduced complexity</strong> - One vault token replaces dozens of
                         wallets.
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Improved efficiency</strong> – Capital moves only when the expected
+                        <strong>Improved efficiency</strong> - Capital moves only when the expected
                         gain beats cost + risk.
                       </Text>
                     </li>
