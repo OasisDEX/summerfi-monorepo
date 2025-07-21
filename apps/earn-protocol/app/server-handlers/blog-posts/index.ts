@@ -40,12 +40,28 @@ export const getBlogPosts = async (): Promise<BlogPosts> => {
   const blogPostNewsRequest = fetch(
     `${blogPostsFetchUrl}&limit=4&filter=visibility:public`,
     blogPostsFetchOptions,
-  ).then((res) => res.json().then((data) => data.posts.map(parseBlogPost)))
+  )
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch blog posts')
+      }
+
+      return res.json()
+    })
+    .then((data) => data.posts.map(parseBlogPost))
 
   const blogPostLearnRequest = fetch(
     `${blogPostsFetchUrl}&filter=tag:learn%2Bvisibility:public`,
     blogPostsFetchOptions,
-  ).then((res) => res.json().then((data) => data.posts.map(parseBlogPost)))
+  )
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch learn blog posts')
+      }
+
+      return res.json()
+    })
+    .then((data) => data.posts.map(parseBlogPost))
 
   try {
     const [blogPostNewsResponse, blogPostLearnResponse] = await Promise.all([
@@ -59,7 +75,7 @@ export const getBlogPosts = async (): Promise<BlogPosts> => {
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to fetch blog posts', error)
+    console.error('Blog posts request failed', error)
 
     return emptyFallback
   }

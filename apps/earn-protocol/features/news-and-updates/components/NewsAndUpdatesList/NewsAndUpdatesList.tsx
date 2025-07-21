@@ -10,7 +10,12 @@ interface NewsAndUpdatesListProps {
 
 export const NewsAndUpdatesList: FC<NewsAndUpdatesListProps> = ({ items }) => {
   return items.map((item) => (
-    <Link href={item.link} key={item.title + item.timestamp} target="_blank">
+    <Link
+      href={item.link}
+      key={item.title + item.timestamp}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div className={classNames.wrapper}>
         <div className={classNames.dot} />
         <div className={classNames.content}>
