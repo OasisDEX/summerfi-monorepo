@@ -23,7 +23,6 @@ import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
-import selfManagedVaultDiagram from '@/public/img/institution/self-managed-vault-diagram.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
@@ -31,6 +30,7 @@ import selfManagedVaultsStyles from './selfManagedVaults.module.css'
 import institutionsPageStyles from '@/app/institutions/institutionsPage.module.css'
 
 import customVaultsUI from '@/public/img/institution/custom-vaults-ui.png'
+import selfManagedVaultDiagram from '@/public/img/institution/self-managed-vault-diagram.png'
 
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
