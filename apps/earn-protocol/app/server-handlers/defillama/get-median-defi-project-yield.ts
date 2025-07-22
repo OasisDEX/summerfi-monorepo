@@ -44,7 +44,7 @@ const getDefillamaPoolYield = async (poolId: string): Promise<[number, number]> 
     const apyLatest = sortedData[sortedData.length - 1].apy
     const apy30d = sortedData[sortedData.length - 30]?.apy || 0
 
-    return [apy30d, apyLatest].sort((a, b) => b - a) as [number, number] // Sort to ensure its a [smallest, largest] tuple
+    return [apy30d, apyLatest].sort((a, b) => a - b) as [number, number] // Sort to ensure its a [smallest, largest] tuple
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error fetching pool yield`, error)
@@ -84,7 +84,7 @@ export const getMedianDefiProjectYield = async ({
     const apyLatest = medianDataSorted[medianDataSorted.length - 1].medianAPY
     const apy30d = medianDataSorted[medianDataSorted.length - 30]?.medianAPY || 0
 
-    return [apy30d, apyLatest].sort((a, b) => b - a) as [number, number] // Sort to ensure its a [smallest, largest] tuple
+    return [apy30d, apyLatest].sort((a, b) => a - b) as [number, number] // Sort to ensure its a [smallest, largest] tuple
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error fetching median DeFi yield`, error)
