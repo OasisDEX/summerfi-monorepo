@@ -30,20 +30,20 @@ interface MerchandiseImagesProps {
 export const MerchandiseImages: FC<MerchandiseImagesProps> = ({ type }) => {
   const [slideIndex, setSlideIndex] = useState(0)
 
+  if (type === MerchandiseType.NFT) {
+    return null
+  }
+
   const handleSlide = (direction: 'prev' | 'next') => {
     if (direction === 'prev' && slideIndex > 0) {
       setSlideIndex(slideIndex - 1)
-    } else if (direction === 'next' && slideIndex < 1) {
+    } else if (direction === 'next' && slideIndex < merchImagesMap[type].length - 1) {
       setSlideIndex(slideIndex + 1)
     }
   }
 
   const isPrevDisabled = slideIndex === 0
-  const isNextDisabled = slideIndex === 1
-
-  if (type === MerchandiseType.NFT) {
-    return null
-  }
+  const isNextDisabled = slideIndex === merchImagesMap[type].length - 1
 
   const controls = (
     <div className={classNames.merchandiseControlsWrapper}>

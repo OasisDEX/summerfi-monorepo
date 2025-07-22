@@ -35,7 +35,7 @@ export const ZoomableImage: FC<ZoomableImageProps> = ({ children, style, classNa
   )
 
   const handleKeyDown = useCallback(
-    (ev) => {
+    (ev: KeyboardEvent) => {
       if (ev.key === 'Escape') {
         closeModal()
       }
