@@ -51,14 +51,14 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     if (isTeam) {
       return {
         offset: Number(scrolledAmount * 0.2) - 100,
-        opacity: 0.2 - Number(scrolledAmount * 0.0015),
+        opacity: 0.2 - Number(scrolledAmount * 0.0003),
       }
     }
 
     if (isInstitutions) {
       return {
         offset: Number(scrolledAmount * 0.2) - 100,
-        opacity: 1 - Number(scrolledAmount * 0.0015),
+        opacity: 0.6 - Number(scrolledAmount * 0.001),
       }
     }
 
