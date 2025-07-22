@@ -70,7 +70,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-  const { publicClient } = useNetworkAlignedClient()
+
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
@@ -87,6 +87,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const { clientChainId } = useClientChainId() as {
     clientChainId: SDKSupportedChain
   }
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+  })
 
   const handleClaimError = useCallback(() => {
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
