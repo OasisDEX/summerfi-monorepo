@@ -16,6 +16,7 @@
     margin-bottom: var(--general-space-64);
     gap: 83px;
     flex-wrap: wrap-reverse;
+    align-items: flex-end;
 
     .merchandisePageViewMainContentLeft {
       display: flex;
@@ -24,15 +25,6 @@
       justify-content: center;
       max-width: 398px;
       width: 100%;
-    }
-
-    .merchandisePageViewMainContentRight {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      max-width: 526px;
-      min-width: 300px;
     }
   }
 }

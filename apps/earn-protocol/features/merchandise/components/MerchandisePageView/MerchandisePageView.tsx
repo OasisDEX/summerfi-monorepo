@@ -1,8 +1,7 @@
-import { Card } from '@summerfi/app-earn-ui'
-
 import { MerchandiseFaq } from '@/features/merchandise/components/MerchandiseFaq/MerchandiseFaq'
 import { MerchandiseForm } from '@/features/merchandise/components/MerchandiseForm/MerchandiseForm'
 import { MerchandiseHeading } from '@/features/merchandise/components/MerchandiseHeading/MerchandiseHeading'
+import { MerchandiseImages } from '@/features/merchandise/components/MerchandiseImages/MerchandiseImages'
 import { type MerchandiseType } from '@/features/merchandise/types'
 
 import classNames from './MerchandisePageView.module.css'
@@ -20,9 +19,7 @@ export const MerchandisePageView = ({ type, walletAddress }: MerchandisePageView
           <MerchandiseHeading type={type} walletAddress={walletAddress} />
           <MerchandiseForm type={type} walletAddress={walletAddress} />
         </div>
-        <Card variant="cardSecondary" className={classNames.merchandisePageViewMainContentRight}>
-          <Card>TBD</Card>
-        </Card>
+        <MerchandiseImages type={type} />
       </div>
       <MerchandiseFaq />
     </div>
