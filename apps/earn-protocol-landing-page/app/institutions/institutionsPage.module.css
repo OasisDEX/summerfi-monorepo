@@ -11,7 +11,8 @@
   justify-content: center;
   padding: 0 var(--spacing-space-4x-large);
   text-align: center;
-  min-height: calc(100vh - calc(102px + 56px));
+  min-height: calc(calc(100vh - calc(102px + 56px)) - calc(calc(102px + 56px) / 2));
+  margin-bottom: calc(calc(102px + 56px) / 2);
   /** Minus the header height + margin, will probably break when nav is updated, so keep in mind */
 }
 
