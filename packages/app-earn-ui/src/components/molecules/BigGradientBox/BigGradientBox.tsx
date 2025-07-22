@@ -8,7 +8,8 @@ export const BigGradientBox: FC<{
   children: ReactNode
   color?: 'purple' | 'red'
   className?: string
-}> = ({ children, reversed = false, color = 'purple', className }) => {
+  style?: React.CSSProperties
+}> = ({ children, reversed = false, color = 'purple', className, style }) => {
   return (
     <div
       className={clsx(bigGradientBoxStyles.bigGradientBox, className, {
@@ -16,6 +17,7 @@ export const BigGradientBox: FC<{
         [bigGradientBoxStyles.bigGradientBoxRed]: !className && color === 'red',
         [bigGradientBoxStyles.reversed]: !className && reversed,
       })}
+      style={style}
     >
       {children}
     </div>

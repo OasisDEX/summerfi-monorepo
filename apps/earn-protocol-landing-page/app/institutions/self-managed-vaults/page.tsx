@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import {
   Audits,
+  BigGradientBox,
   Button,
   Emphasis,
   FaqSection,
@@ -28,6 +29,8 @@ import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech
 
 import selfManagedVaultsStyles from './selfManagedVaults.module.css'
 import institutionsPageStyles from '@/app/institutions/institutionsPage.module.css'
+
+import customVaultsUI from '@/public/img/institution/custom-vaults-ui.png'
 
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
@@ -126,12 +129,14 @@ export default function SelfManagedVaults() {
             and have no co-mingling of funds from non approved addresses.
           </Text>
         </div>
-        <div style={{ textAlign: 'center', color: 'gray' }}>
-          <Text as="h2" variant="h2">
-            diagram 1
-          </Text>
-        </div>
       </div>
+      <BigGradientBox color="red" style={{ padding: '64px' }}>
+        <Image
+          src={customVaultsUI}
+          alt="Custom vaults UI"
+          id="institutions-self-managed-vaults-ui"
+        />
+      </BigGradientBox>
       <div
         className={selfManagedVaultsStyles.integrationsBlock}
         id="institutions-self-managed-vaults-cta"
@@ -145,11 +150,12 @@ export default function SelfManagedVaults() {
           including Lending, DEX LPs, RWA&apos;s, Yield Looping and more. Construct the yield
           portfolio of your choosing with ease.
         </Text>
-        <div style={{ textAlign: 'center', color: 'gray', margin: '40px 0' }}>
-          <Text as="h2" variant="h2">
-            diagram 2
-          </Text>
-        </div>
+        <Image
+          src={selfManagedVaultDiagram}
+          alt="Self-managed vaults diagram"
+          id="institutions-self-managed-vaults-diagram"
+          style={{ margin: '64px 0' }}
+        />
         <Text as="h2" variant="h2" style={{ textAlign: 'center' }}>
           Just some of the yield markets you can access
         </Text>
@@ -161,6 +167,79 @@ export default function SelfManagedVaults() {
         </div>
         <SectionTabs
           sections={[
+            {
+              title: 'Fully customizable to meet any institutional mandate',
+              content: (
+                <div className={selfManagedVaultsStyles.benefitsDescriptionAndPoints}>
+                  <Text variant="p1">
+                    For institutions with conservative to opportunistic approaches, Lazy Summer
+                    vaults can be configured to define portfolio behaviour that suits your needs
+                    with ability to:
+                  </Text>
+                  <ul>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Set yield strategy preferences
+                      </Text>
+                    </li>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Define risk parameters
+                      </Text>
+                    </li>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Enforce reallocation logic & diversification rules
+                      </Text>
+                    </li>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Control access by team or entity
+                      </Text>
+                    </li>
+                  </ul>
+                </div>
+              ),
+              id: 'customizable',
+            },
+            {
+              title: 'Corporate governance, compliance & institutional scale in mind',
+              content: (
+                <div className={selfManagedVaultsStyles.benefitsDescriptionAndPoints}>
+                  <Text variant="p1">
+                    Closed access vaults on Lazy Summer enable institutions to isolate
+                    decision-making and meet reporting requirements with ease.
+                  </Text>
+                  <Text variant="p1">Advanced access controls and role-based permissions.</Text>
+                  <ul>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Role based Access: segment control across departments
+                      </Text>
+                    </li>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Audit ready transaction logs: complete and accounting ready transaction
+                        level visibility
+                      </Text>
+                    </li>
+                    <li>
+                      <Icon iconName="checkmark" size={16} />
+                      <Text variant="p1" as="p">
+                        Compliance alignment: suited for internal & external audits
+                      </Text>
+                    </li>
+                  </ul>
+                </div>
+              ),
+              id: 'corporate-governance',
+            },
             {
               title: 'Manage the risk in-house, or outsource to a third party risk manager',
               content: (
@@ -187,7 +266,7 @@ export default function SelfManagedVaults() {
                   </ul>
                 </div>
               ),
-              id: 'customizable',
+              id: 'third-party-risk-manager',
             },
             {
               title: 'Game changing operational efficiency',
@@ -220,16 +299,11 @@ export default function SelfManagedVaults() {
                   </ul>
                 </div>
               ),
-              id: 'corporate-governance',
+              id: 'operational-efficiency',
             },
           ]}
         />
       </div>
-      <Image
-        src={selfManagedVaultDiagram}
-        alt="Self-managed vaults diagram"
-        id="institutions-self-managed-vaults-diagram"
-      />
       <div id="institutions-self-managed-vaults-contact-form">
         <InstitutionsContactForm />
       </div>
