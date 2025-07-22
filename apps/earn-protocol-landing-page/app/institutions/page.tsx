@@ -11,6 +11,7 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -19,6 +20,7 @@ import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
+import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
@@ -51,6 +53,7 @@ export const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
+  const { isScrolledToTop } = useScrolled()
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -86,7 +89,17 @@ export default function InstitutionsPage() {
           </Button>
         </div>
       </div>
-      <div className={institutionsPageStyles.pageSubHeader}>
+      <div
+        className={clsx(institutionsPageStyles.scrollDownButton, {
+          [institutionsPageStyles.scrollDownButtonHidden]: !isScrolledToTop,
+        })}
+        onClick={smoothScrollToId('institutions-cta')}
+      >
+        <Text variant="p3semi">
+          Read more <Icon iconName="arrow_forward" size={20} />
+        </Text>
+      </div>
+      <div className={institutionsPageStyles.pageSubHeader} id="institutions-cta">
         <Text as="h2" variant="h2">
           DeFi’s Highest-Quality Strategies&nbsp;
           <Emphasis variant="h2colorful">-&nbsp;on your terms.</Emphasis>
@@ -96,7 +109,7 @@ export default function InstitutionsPage() {
           vaults or public access optimized for scale and best in class risk adjusted return.
         </Text>
       </div>
-      <div className={institutionsPageStyles.promoBlocks} id="institutions-cta">
+      <div className={institutionsPageStyles.promoBlocks}>
         <InstitutionsPromoBlock
           title="Self managed Vaults"
           description="Institutional-grade vault infrastructure to access the best of DeFi - fully customizable, inherently composable, and built for future compliance and regulatory needs."

@@ -16,6 +16,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -24,6 +25,7 @@ import { FinalCTAElement } from '@/components/layout/LandingPageContent/componen
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
+import { useScrolled } from '@/hooks/use-scrolled'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
@@ -35,11 +37,19 @@ import howItWorksImage from '@/public/img/institution/how-it-works-diagram.png'
 
 export default function PublicAccessVaults() {
   const { landingPageData } = useLandingPageData()
+  const { isScrolledToTop } = useScrolled()
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   const protocolsList = useMemo(() => {
     return supportedDefillamaProtocols.map((protocol) => {
       const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
-      const { asset, displayName } = protocolConfig
+      const { displayName } = protocolConfig
       const protocolIcon = protocolConfig.icon
       const tvl = BigInt(landingPageData?.protocolTvls[protocol] ?? 0)
       const apy = landingPageData?.protocolApys[protocol] ?? [0, 0]
@@ -49,10 +59,8 @@ export default function PublicAccessVaults() {
         protocol: displayName,
         blocks: [
           ['TVL', tvl ? `$${formatCryptoBalance(tvl)}` : 'N/A'],
-          ['Live APY', formatPercent(apy[1], { precision: 2 })],
-          ['Asset', asset.join(', ')],
           [
-            '30d APY Range 24/25',
+            '30d APY Range',
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             apy
               ? `${formatPercent(apy[0], {
@@ -103,7 +111,20 @@ export default function PublicAccessVaults() {
           </Link>
         </div>
       </div>
-      <div className={publicAccessVaultsStyles.strategiesBlock}>
+      <div
+        className={clsx(institutionsPageStyles.scrollDownButton, {
+          [institutionsPageStyles.scrollDownButtonHidden]: !isScrolledToTop,
+        })}
+        onClick={smoothScrollToId('institutions-public-access-vaults-cta')}
+      >
+        <Text variant="p3semi">
+          Read more <Icon iconName="arrow_forward" size={20} />
+        </Text>
+      </div>
+      <div
+        className={publicAccessVaultsStyles.strategiesBlock}
+        id="institutions-public-access-vaults-cta"
+      >
         <Text as="h2" variant="h2">
           DeFi’s highest quality strategies continuously optimised
         </Text>

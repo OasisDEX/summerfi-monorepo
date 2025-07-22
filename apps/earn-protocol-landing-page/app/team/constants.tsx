@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import { type TeamListItem } from '@/app/team/types'
 
 import andreiImage from '@/public/img/team/andrei.png'
@@ -14,11 +12,6 @@ export const teamList: TeamListItem[] = [
     image: chrisImage,
     name: 'Chris Bradbury',
     role: 'CEO',
-    description: (
-      <>
-        Founder and CEO with a passion for making DeFi <Link href="">accessible to everyone</Link>.
-      </>
-    ),
     socialLinks: {
       twitter: '#',
       linkedin: '#',
@@ -28,9 +21,6 @@ export const teamList: TeamListItem[] = [
     image: andreiImage,
     name: 'Andrei David',
     role: 'CTO',
-    description: (
-      <>Blockchain guy with years of experience in building decentralized applications.</>
-    ),
     socialLinks: {
       twitter: '#',
       linkedin: '#',
@@ -40,9 +30,6 @@ export const teamList: TeamListItem[] = [
     image: anthonyImage,
     name: 'Anthony Fernandez',
     role: 'Head of business development',
-    description: (
-      <>Business development native specializing in DeFi partnerships and growth initiatives.</>
-    ),
     socialLinks: {
       twitter: '#',
       linkedin: '#',
@@ -52,9 +39,6 @@ export const teamList: TeamListItem[] = [
     image: joeImage,
     name: 'Joe Clark',
     role: 'CFO',
-    description: (
-      <>Financial expert with a deep understanding of DeFi markets and investment strategies.</>
-    ),
     socialLinks: {
       twitter: '#',
       linkedin: '#',
@@ -64,9 +48,6 @@ export const teamList: TeamListItem[] = [
     image: jordanImage,
     name: 'Jordan Jackson',
     role: 'Product Lead',
-    description: (
-      <>Product manager with a focus on user experience and product innovation in DeFi.</>
-    ),
     socialLinks: {
       twitter: '#',
       linkedin: '#',
@@ -76,7 +57,6 @@ export const teamList: TeamListItem[] = [
     image: konradImage,
     name: 'Konrad Kloch',
     role: 'Smart Contract Engineer',
-    description: <>Smart contract engineer building secure blockchain solutions.</>,
     socialLinks: {
       twitter: '#',
       linkedin: '#',

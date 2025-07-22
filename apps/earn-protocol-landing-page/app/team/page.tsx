@@ -1,6 +1,6 @@
 'use client'
 import { createRef, useEffect, useMemo, useState } from 'react'
-import { Button, Emphasis, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Icon, Text } from '@summerfi/app-earn-ui'
 import {
   type IconNamesList,
   supportedDefillamaProtocols,
@@ -95,9 +95,6 @@ function TeamMember({ member }: { member: TeamListItem }) {
         <Text variant="p2" as="p">
           {member.role}
         </Text>
-        <Text variant="p2" as="p" className={teamPageStyles.teamMemberDescription}>
-          {member.description}
-        </Text>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         {member.socialLinks?.linkedin && (
@@ -185,7 +182,7 @@ export default function TeamPage() {
 
   return (
     <div className={teamPageStyles.wrapper}>
-      <div className={teamPageStyles.pageHeader}>
+      {/* <div className={teamPageStyles.pageHeader}>
         <Text as="h1" variant="h1">
           Making the best of DeFi
           <br />
@@ -196,17 +193,21 @@ export default function TeamPage() {
             Summer.fi is the best place to borrow and earn in DeFi
           </Text>
         </div>
-      </div>
+      </div> */}
       <div className={teamPageStyles.whoAreWe}>
         <div className={teamPageStyles.whoAreWeDescription}>
           <Text as="h2" variant="h2">
             Who are we?
           </Text>
           <Text as="p" variant="p1">
-            Summer.fi is a decentralized finance (DeFi) app that enables uses to borrow, lend and
-            multiply their crypto assets including ETH, WBTC, DAI, and USDC. Our aim is to focus on
-            best in class security and reduced complexity to interact with crypto&apos;s highest
-            quality assets, protocols and networks.
+            Summer.fi is a team of builders responsible for the Lazy Summer Protocol. A DeFi yield
+            protocol that gives effortless access to crypto’s best DeFi yields. Continually
+            rebalanced by AI powered Keepers to earn you more while saving you time and reducing
+            costs.
+          </Text>
+          <Text as="p" variant="p1">
+            Our aim is to focus on best in class security and reduced complexity to enable DeFi
+            natives, and institutions to crypto’s highest quality yields sources.
           </Text>
           <div className={teamPageStyles.whoAreWeButtons}>
             <Button variant="primaryLarge" onClick={isWatchingVideo ? stopVideo : playVideo}>

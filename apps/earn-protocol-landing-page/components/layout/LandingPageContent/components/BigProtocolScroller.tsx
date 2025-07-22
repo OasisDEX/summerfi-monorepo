@@ -82,7 +82,7 @@ const BigProtocolScrollerItem = ({
   const insides = (
     <Card className={bigProtocolScrollerStyles.bigProtocolScrollerItem}>
       <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemNameIcon}>
-        <Icon iconName={labelIcon as IconNamesList} size={44} />
+        <Icon iconName={labelIcon as IconNamesList} size={32} />
         <Text variant="p1semi">{label}</Text>
       </div>
       <div className={bigProtocolScrollerStyles.bigProtocolScrollerItemDataGrid}>{grid}</div>
@@ -108,8 +108,8 @@ export const BigProtocolScroller = ({
   const [hovered, setHovered] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
 
-  // 570 is the width of the item, 16 is the gap
-  const singleProtocolListWidth = itemsList.length * (570 + 16)
+  // 370 is the width of the item, 16 is the gap
+  const singleProtocolListWidth = itemsList.length * (370 + 16)
 
   const protocolsListToDisplay = useMemo(() => {
     // we need to get a list that will fill the whole screen horizontally

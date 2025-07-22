@@ -48,7 +48,14 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   }, [])
 
   const scrollAction = useMemo(() => {
-    if (isInstitutions || isTeam) {
+    if (isTeam) {
+      return {
+        offset: Number(scrolledAmount * 0.2) - 100,
+        opacity: 0.2 - Number(scrolledAmount * 0.0015),
+      }
+    }
+
+    if (isInstitutions) {
       return {
         offset: Number(scrolledAmount * 0.2) - 100,
         opacity: 1 - Number(scrolledAmount * 0.0015),

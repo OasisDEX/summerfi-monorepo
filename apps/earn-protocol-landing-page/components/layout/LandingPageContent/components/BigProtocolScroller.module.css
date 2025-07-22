@@ -10,7 +10,7 @@
 
 .bigProtocolScrollerTrackWrapper {
   position: absolute;
-  height: 270px;
+  height: 150px;
   width: 100vw;
   left: 0;
   z-index: 1;
@@ -30,7 +30,7 @@
 .bigProtocolScrollerOverflowWrapper {
   position: relative;
   left: 0;
-  height: 270px;
+  height: 150px;
   width: 100vw;
   overflow: hidden;
   margin-top: var(--spacing-space-2x-large);
@@ -50,7 +50,7 @@
 
 .bigProtocolScrollerTrack {
   position: absolute;
-  height: 270px;
+  height: 150px;
   left: 0;
   z-index: 2;
   display: flex;
@@ -66,7 +66,7 @@
   left: 0;
   position: absolute;
   width: 100%;
-  height: 270px;
+  height: 150px;
   pointer-events: none;
   z-index: 3;
   background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(28, 28, 28) 100%);
@@ -81,7 +81,7 @@
 }
 
 .bigProtocolScrollerItem {
-  width: 570px;
+  width: 350px;
   flex-direction: column;
   padding: 0;
   overflow: hidden;
@@ -89,7 +89,7 @@
 
 @media (max-width: 531px) {
   .bigProtocolScrollerItem {
-    width: 370px;
+    width: 270px;
   }
 }
 
@@ -98,20 +98,18 @@
   flex-direction: row;
   align-content: center;
   gap: var(--spacing-space-medium);
-  background-color: var(--color-surface-light);
-  padding: 24px;
+  padding: 24px 24px 0 24px;
 }
 
 .bigProtocolScrollerItemNameIcon span {
-  line-height: 44px;
+  line-height: 32px;
 }
 
 .bigProtocolScrollerItemDataGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, auto);
-  gap: var(--spacing-space-medium);
-  padding: 32px;
+  padding: 24px 24px 0 24px;
 }
 
 .bigProtocolScrollerItemDataBlock {

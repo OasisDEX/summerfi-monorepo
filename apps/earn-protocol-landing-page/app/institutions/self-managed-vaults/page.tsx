@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import {
   Audits,
   Button,
-  Card,
   Emphasis,
   FaqSection,
   Icon,
@@ -14,12 +13,16 @@ import {
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import clsx from 'clsx'
+import Image from 'next/image'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { InstitutionsContactForm } from '@/components/layout/LandingPageContent/components/InstitutionsContactForm'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
+import { useScrolled } from '@/hooks/use-scrolled'
+import selfManagedVaultDiagram from '@/public/img/institution/self-managed-vault-diagram.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 
@@ -28,6 +31,7 @@ import institutionsPageStyles from '@/app/institutions/institutionsPage.module.c
 
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
+  const { isScrolledToTop } = useScrolled()
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -37,7 +41,7 @@ export default function SelfManagedVaults() {
   const protocolsList = useMemo(() => {
     return supportedDefillamaProtocols.map((protocol) => {
       const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
-      const { strategy, asset, displayName } = protocolConfig
+      const { displayName } = protocolConfig
       const protocolIcon = protocolConfig.icon
       const tvl = BigInt(landingPageData?.protocolTvls?.[protocol] ?? 0)
       const apy = landingPageData?.protocolApys?.[protocol] ?? [0, 0]
@@ -47,10 +51,8 @@ export default function SelfManagedVaults() {
         protocol: displayName,
         blocks: [
           ['TVL', tvl ? `$${formatCryptoBalance(tvl)}` : 'N/A'],
-          ['Strategy', strategy],
-          ['Asset', asset.join(', ')],
           [
-            '30d APY Range 24/25',
+            '30d APY Range',
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             apy
               ? `${formatPercent(apy[0], {
@@ -81,128 +83,105 @@ export default function SelfManagedVaults() {
         style={{ marginBottom: '0', paddingBottom: '0' }}
       >
         <Text as="h1" variant="h1">
-          Crypto native yield with
+          Get better access to crypto yield
           <br />
-          <Emphasis variant="h1colorful">full institutional controls</Emphasis>
+          with&nbsp;
+          <Emphasis variant="h1colorful">self-managed Vaults</Emphasis>
         </Text>
         <div className={institutionsPageStyles.pageHeaderDetails}>
           <Text as="span" variant="p1">
-            Get access to DeFi’s most trusted yield sources - customized, compliant, and built for
-            scale. Lazy Summer’s Closed access vaults give institutions seamless exposure to
-            crypto’s highest quality yields, without compromising on security, transparency, or risk
-            oversight.
+            With just a single integration, you can get access to all of crypto&apos;s most trusted
+            yield sources. Customized, compliant and built for scale. Summer.fi self-managed vaults
+            give institutions seamless exposure without compromising on security or risk.
           </Text>
           <Button
             variant="primaryLargeColorful"
             onClick={smoothScrollToId('institutions-self-managed-vaults-cta')}
           >
-            <WithArrow variant="p2semi">Get started</WithArrow>
+            <WithArrow variant="p2semi">Get in touch</WithArrow>
           </Button>
-          <WithArrow
-            variant="p2semi"
-            style={{ color: 'white', margin: '20px 10px 0 0', cursor: 'pointer' }}
-            onClick={smoothScrollToId('institutions-self-managed-vaults-contact-form')}
-          >
-            Contact us
-          </WithArrow>
         </div>
       </div>
-      <div className={institutionsPageStyles.subpageDescriptionBlock}>
+      <div
+        className={clsx(institutionsPageStyles.scrollDownButton, {
+          [institutionsPageStyles.scrollDownButtonHidden]: !isScrolledToTop,
+        })}
+        onClick={smoothScrollToId('institutions-self-managed-vaults-description')}
+      >
+        <Text variant="p3semi">
+          Read more <Icon iconName="arrow_forward" size={20} />
+        </Text>
+      </div>
+      <div
+        className={institutionsPageStyles.subpageDescriptionBlock}
+        id="institutions-self-managed-vaults-description"
+      >
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
-            Closed access vaults by Lazy Summer Protocol
-          </Text>
-          <Text as="h5" variant="h5">
-            Bespoke DeFi vaults designed for institutions.
+            Know where every dollar comes from with our closed-access functionality
           </Text>
           <Text as="p" variant="p1">
-            Lazy Summer’s Closed access vaults are ring-fenced strategies deployed only to
-            whitelisted addresses and governed by institutional permissions. Funds remain
-            segregated, strategies are auditable, and vaults can be tailored to your specific
-            mandates.
+            Every Self-managed vault from Summer.fi has the option to restrict access to only
+            approved users and addresses. This means you maintain an even higher degree of control
+            and have no co-mingling of funds from non approved addresses.
           </Text>
         </div>
-        <Card className={institutionsPageStyles.subpageDescriptionCard}>
-          <Text as="h5" variant="h5colorful">
-            Features
+        <div style={{ textAlign: 'center', color: 'gray' }}>
+          <Text as="h2" variant="h2">
+            diagram 1
           </Text>
-          <ul>
-            <li>
-              <Icon iconName="checkmark_colorful" size={16} />
-              <Text variant="h5" as="p">
-                Whitelisted access only - full control over who allocates
-              </Text>
-            </li>
-            <li>
-              <Icon iconName="checkmark_colorful" size={16} />
-              <Text variant="h5" as="p">
-                No co-mingling - assets stay isolated from other users
-              </Text>
-            </li>
-            <li>
-              <Icon iconName="checkmark_colorful" size={16} />
-              <Text variant="h5" as="p">
-                Regulatory-ready - supports internal and external compliance requirements
-              </Text>
-            </li>
-          </ul>
-        </Card>
+        </div>
       </div>
       <div
         className={selfManagedVaultsStyles.integrationsBlock}
         id="institutions-self-managed-vaults-cta"
       >
         <Text as="h2" variant="h2">
-          One integration, seamless access to crypto’s highest quality yield sources
+          One integration for all of crypto&apos;s onchain yield
         </Text>
         <Text as="p" variant="p1">
-          Lazy Summer connects you to the most proven DeFi protocols through a single SDK
-          integration.
+          Self-managed Vaults can you give you access to any onchain yield. This includes public or
+          private markets across all EVM based blockchains with support for all types of yield
+          including Lending, DEX LPs, RWA&apos;s, Yield Looping and more. Construct the yield
+          portfolio of your choosing with ease.
         </Text>
-        <Text as="p" variant="p1">
-          List of protocols and strategies available to institutional integrators via Lazy Summer as
-          of June 2025.
+        <div style={{ textAlign: 'center', color: 'gray', margin: '40px 0' }}>
+          <Text as="h2" variant="h2">
+            diagram 2
+          </Text>
+        </div>
+        <Text as="h2" variant="h2" style={{ textAlign: 'center' }}>
+          Just some of the yield markets you can access
         </Text>
       </div>
       <BigProtocolScroller itemsList={protocolsList} />
       <div>
         <div className={selfManagedVaultsStyles.benefitsHeaderWrapper}>
-          <Text variant="h2">What are the benefits?</Text>
+          <Text variant="h2">Key benefits of a self-managed Vault</Text>
         </div>
         <SectionTabs
           sections={[
             {
-              title: 'Fully customizable to meet any institutional mandate',
+              title: 'Manage the risk in-house, or outsource to a third party risk manager',
               content: (
                 <div className={selfManagedVaultsStyles.benefitsDescriptionAndPoints}>
                   <Text variant="p1">
-                    For institutions with conservative to opportunistic approaches, Lazy Summer
-                    vaults can be configured to define portfolio behaviour that suits your needs
-                    with ability to:
+                    Get the best of both worlds when it comes to risk, with self managed vaults.
+                    Institutions can set risk parameters that best fit compliance and or risk
+                    threshold requirements in a self directed or third party defined manner for
+                    maximum convenience and control.
                   </Text>
                   <ul>
                     <li>
                       <Icon iconName="checkmark" size={16} />
                       <Text variant="p1" as="p">
-                        Set yield strategy preferences
+                        Set self defined risk parameters
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark" size={16} />
                       <Text variant="p1" as="p">
-                        Define risk parameters
-                      </Text>
-                    </li>
-                    <li>
-                      <Icon iconName="checkmark" size={16} />
-                      <Text variant="p1" as="p">
-                        Enforce reallocation logic & diversification rules
-                      </Text>
-                    </li>
-                    <li>
-                      <Icon iconName="checkmark" size={16} />
-                      <Text variant="p1" as="p">
-                        Control access by team or entity
+                        Opt-in third party risk manager (Block Analitica)
                       </Text>
                     </li>
                   </ul>
@@ -211,32 +190,31 @@ export default function SelfManagedVaults() {
               id: 'customizable',
             },
             {
-              title: 'Corporate governance, compliance & institutional scale in mind',
+              title: 'Game changing operational efficiency',
               content: (
                 <div className={selfManagedVaultsStyles.benefitsDescriptionAndPoints}>
                   <Text variant="p1">
-                    Closed access vaults on Lazy Summer enable institutions to isolate
-                    decision-making and meet reporting requirements with ease.
+                    Institutions can now streamline DeFi operations to what matters most,
+                    identifying and understanding underlying DeFi protocols and strategies.
+                    Ultimately saving time, cutting costs and leading to top performance.
                   </Text>
-                  <Text variant="p1">Advanced access controls and role-based permissions.</Text>
                   <ul>
                     <li>
                       <Icon iconName="checkmark" size={16} />
                       <Text variant="p1" as="p">
-                        Role based Access: segment control across departments
+                        Single point access to all of DeFi
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark" size={16} />
                       <Text variant="p1" as="p">
-                        Audit ready transaction logs: complete and accounting ready transaction
-                        level visibility
+                        One time integration
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark" size={16} />
                       <Text variant="p1" as="p">
-                        Compliance alignment: suited for internal & external audits
+                        Reduced position management
                       </Text>
                     </li>
                   </ul>
@@ -247,6 +225,11 @@ export default function SelfManagedVaults() {
           ]}
         />
       </div>
+      <Image
+        src={selfManagedVaultDiagram}
+        alt="Self-managed vaults diagram"
+        id="institutions-self-managed-vaults-diagram"
+      />
       <div id="institutions-self-managed-vaults-contact-form">
         <InstitutionsContactForm />
       </div>

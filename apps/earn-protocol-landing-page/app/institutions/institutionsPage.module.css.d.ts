@@ -10,6 +10,8 @@ declare const styles: {
   readonly "pageHeaderDetails": string;
   readonly "pageSubHeader": string;
   readonly "promoBlocks": string;
+  readonly "scrollDownButton": string;
+  readonly "scrollDownButtonHidden": string;
   readonly "securityAndCompliance": string;
   readonly "securityAndComplianceBlock": string;
   readonly "subpageDescriptionBlock": string;
