@@ -429,9 +429,6 @@ importers:
         specifier: 3.25.61
         version: 3.25.61
     devDependencies:
-      '@graphql-codegen/cli':
-        specifier: ^5.0.2
-        version: 5.0.6(@types/node@20.14.2)(graphql@16.8.2)(typescript@5.7.3)
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
