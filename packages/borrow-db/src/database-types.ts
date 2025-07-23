@@ -30,7 +30,7 @@ export type Numeric = ColumnType<string, number | string, number | string>
 
 export type Product = 'borrow' | 'earn' | 'multiply'
 
-export type Protocol = 'aavev2' | 'aavev3' | 'ajna' | 'maker' | 'morphoblue' | 'sparkv3'
+export type Protocol = 'aavev2' | 'aavev3' | 'ajna' | 'maker' | 'morphoblue' | 'sky' | 'sparkv3'
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
@@ -275,6 +275,12 @@ export interface ProductHubItems {
   weeklyNetApy: string | null
 }
 
+export interface RaysDailyChallenge {
+  address: string
+  claimedDates: string[] | null
+  id: Generated<number>
+}
+
 export interface Tokens {
   address: string
   chainId: number
@@ -358,6 +364,7 @@ export interface DB {
   migrations: Migrations
   mostYield: MostYield
   productHubItems: ProductHubItems
+  raysDailyChallenge: RaysDailyChallenge
   tokens: Tokens
   tosApproval: TosApproval
   user: User
