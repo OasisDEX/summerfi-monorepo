@@ -221,18 +221,15 @@ export const InstitutionsContactForm = () => {
         strategy="afterInteractive"
       />
       <Text variant="h3" as="h3">
-        Ready to deploy capital into onchain
-        <br />
-        markets?
+        Want to learn more about Summer.fi&apos;s Self Managed Vaults?
       </Text>
       <div className={institutionsContactFormStyles.formDescription}>
         <Text variant="p2semi" as="p">
-          Schedule a call
+          Request more information:
         </Text>
         <Text variant="p3" as="span">
-          Once you submit this form a sales person will reach out
-          <br />
-          to you to discuss your requirements and how we can help you.
+          Once you submit this form, an integration and DeFi specialist will reach out to you to
+          discuss your specifications and questions.
         </Text>
       </div>
       <div>
