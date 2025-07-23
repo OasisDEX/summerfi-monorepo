@@ -54,6 +54,7 @@ interface FormFieldProps {
   errors?: string[]
   disabled?: boolean
   textArea?: boolean
+  required?: boolean
   handleChange: (e: FormChangeEvent) => void
 }
 
@@ -86,12 +87,14 @@ const FormField: FC<FormFieldProps> = ({
   value = '',
   disabled,
   textArea = false,
+  required = false,
 }) => {
   return (
     <div className={institutionsContactFormStyles.formField}>
       <label htmlFor={inputName}>
         <Text variant="p4semi" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-          {label}
+          {label}{' '}
+          {required && <span style={{ color: 'var(--earn-protocol-critical-100)' }}>*</span>}
         </Text>
       </label>
       {textArea ? (
@@ -242,6 +245,7 @@ export const InstitutionsContactForm = () => {
           handleChange={handleChange}
           errors={formErrors.companyName}
           disabled={isSubmitting}
+          required
         />
         <FormField
           label="Personal Name"
@@ -262,6 +266,7 @@ export const InstitutionsContactForm = () => {
           handleChange={handleChange}
           errors={formErrors.phoneNumber}
           disabled={isSubmitting}
+          required
         />
         <FormField
           label="Business Email"
@@ -272,6 +277,7 @@ export const InstitutionsContactForm = () => {
           handleChange={handleChange}
           errors={formErrors.businessEmail}
           disabled={isSubmitting}
+          required
         />
         <FormField
           label="Job Role"
@@ -282,6 +288,7 @@ export const InstitutionsContactForm = () => {
           handleChange={handleChange}
           errors={formErrors.jobRole}
           disabled={isSubmitting}
+          required
         />
         <FormField
           label="Comments"

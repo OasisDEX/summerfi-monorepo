@@ -99,7 +99,7 @@ export default function SelfManagedVaults() {
           </Text>
           <Button
             variant="primaryLargeColorful"
-            onClick={smoothScrollToId('institutions-self-managed-vaults-cta')}
+            onClick={smoothScrollToId('institutions-self-managed-vaults-contact-form')}
           >
             <WithArrow variant="p2semi">Get in touch</WithArrow>
           </Button>
@@ -145,7 +145,7 @@ export default function SelfManagedVaults() {
           One integration for all of crypto&apos;s onchain yield
         </Text>
         <Text as="p" variant="p1">
-          Self-managed Vaults can you give you access to any onchain yield. This includes public or
+          Self-managed Vaults can give you access to any onchain yield. This includes public or
           private markets across all EVM based blockchains with support for all types of yield
           including Lending, DEX LPs, RWA&apos;s, Yield Looping and more. Construct the yield
           portfolio of your choosing with ease.
@@ -359,7 +359,7 @@ export default function SelfManagedVaults() {
             title: 'What support is available?',
             content: (
               <Text variant="p1" as="p">
-                You’ll have a account manager who will provide both technical and non technical
+                You’ll have an account manager who will provide both technical and non technical
                 onboarding and management support.
               </Text>
             ),
@@ -368,8 +368,8 @@ export default function SelfManagedVaults() {
             title: 'Why choose this over building in house?',
             content: (
               <Text variant="p1" as="p">
-                One seamless integration integration to access Maker, Aave, Morpho and all the other
-                best in class DeFi yield sources.
+                One seamless integration to access Maker, Aave, Morpho and all the other best in
+                class DeFi yield sources.
               </Text>
             ),
           },

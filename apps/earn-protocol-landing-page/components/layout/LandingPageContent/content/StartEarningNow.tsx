@@ -92,7 +92,7 @@ export const StartEarningNow = () => {
           ]}
           cta={
             migrationsEnabled ? (
-              <Link href="/earn" prefetch={false}>
+              <Link href="/earn/migrate/user" prefetch={false}>
                 <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                   <Text variant="p3semi">Migrate</Text>
                 </Button>
