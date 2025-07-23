@@ -87,6 +87,7 @@ export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'
 export { safeATOB, safeBTOA } from './helpers/safe-b64'
 export { toUriSafe } from './helpers/uri-encode'
+export { getDeviceType } from './helpers/get-device-type'
 
 export { ADDRESS_ZERO } from './address-zero'
 
