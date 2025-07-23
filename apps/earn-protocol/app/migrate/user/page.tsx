@@ -1,8 +1,9 @@
 'use client'
 
-import { useUserWallet } from '@/hooks/use-user-wallet'
-import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
+import { redirect } from 'next/navigation'
+
+import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const MigrationRedirectUserPage = () => {
   /**
