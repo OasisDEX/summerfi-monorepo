@@ -40,11 +40,11 @@ const getDefillamaPoolYield = async (poolId: string): Promise<[number, number]> 
     const sortedData = data.data.sort(
       (a, b) => dayjs(a.timestamp).unix() - dayjs(b.timestamp).unix(),
     )
+    const last30ApyData = sortedData.slice(-30).map((d) => d.apy)
+    const apyMax = Math.max(...last30ApyData)
+    const apyMin = Math.min(...last30ApyData)
 
-    const apyLatest = sortedData[sortedData.length - 1].apy
-    const apy30d = sortedData[sortedData.length - 30]?.apy || 0
-
-    return [apy30d, apyLatest].sort((a, b) => a - b) as [number, number] // Sort to ensure its a [smallest, largest] tuple
+    return [apyMin, apyMax]
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error fetching pool yield`, error)
@@ -81,10 +81,12 @@ export const getMedianDefiProjectYield = async ({
       (a, b) => dayjs(a.timestamp).unix() - dayjs(b.timestamp).unix(),
     )
 
-    const apyLatest = medianDataSorted[medianDataSorted.length - 1].medianAPY
-    const apy30d = medianDataSorted[medianDataSorted.length - 30]?.medianAPY || 0
+    const last30ApyData = medianDataSorted.slice(-30).map((d) => d.medianAPY)
 
-    return [apy30d, apyLatest].sort((a, b) => a - b) as [number, number] // Sort to ensure its a [smallest, largest] tuple
+    const apyMax = Math.max(...last30ApyData)
+    const apyMin = Math.min(...last30ApyData)
+
+    return [apyMin, apyMax]
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error fetching median DeFi yield`, error)
