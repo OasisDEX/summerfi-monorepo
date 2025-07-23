@@ -16,7 +16,7 @@ const MigrationRedirectUserPage = () => {
       redirect(`/migrate/user/${userWalletAddress}`)
     }
     if (!isLoadingAccount && !userWalletAddress) {
-      redirect('/not-found')
+      redirect('/')
     }
   }, [isLoadingAccount, userWalletAddress])
 
