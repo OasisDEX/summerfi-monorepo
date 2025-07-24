@@ -1,5 +1,4 @@
 import { ToastContainer } from 'react-toastify'
-import { cookieToInitialState } from '@account-kit/core'
 import {
   analyticsCookieName,
   GlobalIssueBanner,
@@ -16,21 +15,15 @@ import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 import Script from 'next/script'
 
-import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
-import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
-import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
-import { forksCookieName } from '@/constants/forks-cookie-name'
+import { GlobalProvider } from '@/components/organisms/GlobalProvider/GlobalProvider'
 import { fontInter } from '@/helpers/fonts'
-import { getSeoKeywords } from '@/helpers/seo-keywords'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 
 export const metadata: Metadata = {
-  title: 'The home of the Lazy Summer Protocol',
-  description:
-    "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
-  keywords: getSeoKeywords(),
+  title: 'The home of the Lazy Summer Protocol for Institutions',
+  description: 'Institutional DeFi vaults',
 }
 
 const reactScanDebug = false
@@ -85,18 +78,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     )
   }
 
-  const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
-  const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
-
-  const chainId: number | undefined = accountKitState.state?.chainId
-  const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
-
-  const accountKitInitializedState = cookieToInitialState(
-    getAccountKitConfig({ forkRpcUrl, chainId }),
-    (await headers()).get('cookie') ?? undefined,
-  )
 
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
@@ -115,7 +98,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <GlobalProvider
-          accountKitInitializedState={accountKitInitializedState}
           config={config}
           analyticsCookie={analyticsCookie}
           deviceType={resolvedDeviceType}
