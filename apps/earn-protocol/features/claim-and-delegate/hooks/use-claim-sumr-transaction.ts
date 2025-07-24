@@ -1,16 +1,13 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import Safe from '@safe-global/safe-apps-sdk'
 import { useIsIframe } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
-import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
 /**
  * Hook to handle claiming SUMR tokens through a user operation transaction
@@ -37,10 +34,16 @@ export const useClaimSumrTransaction = ({
   isLoading: boolean
   error: Error | null
 } => {
-  const [waitingForTx, setWaitingForTx] = useState<`0x${string}` | undefined>(undefined)
   const { getAggregatedClaimsForChainTx, getCurrentUser, getChainInfo } = useAppSDK()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+
+  const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
+    network,
+    onSuccess,
+    onError,
+    publicClient,
+  })
 
   const isIframe = useIsIframe()
 
@@ -54,49 +57,6 @@ export const useClaimSumrTransaction = ({
     onSuccess,
     onError,
   })
-
-  const sendSafeWalletTransaction = useCallback(
-    ({
-      target,
-      data,
-      value = 0n,
-    }: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint
-    }) => {
-      const safeWallet = new Safe()
-
-      safeWallet.txs
-        .send({
-          txs: [
-            {
-              to: target,
-              data,
-              value: value.toString(),
-            },
-          ],
-        })
-        .then(({ safeTxHash }) => {
-          getSafeTxHash(safeTxHash, network)
-            .then((safeTransactionData) => {
-              if (safeTransactionData.transactionHash) {
-                setWaitingForTx(safeTransactionData.transactionHash)
-              }
-            })
-            .catch((err) => {
-              // eslint-disable-next-line no-console
-              console.error('Error getting the safe tx hash:', err)
-            })
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error('Error sending transaction (safe wallet)', err)
-          onError()
-        })
-    },
-    [network, onError],
-  )
 
   const claimSumrTransaction = async () => {
     const user = getCurrentUser()
@@ -128,22 +88,6 @@ export const useClaimSumrTransaction = ({
       overrides: resolvedOverrides,
     })
   }
-
-  useEffect(() => {
-    if (waitingForTx && publicClient) {
-      waitForTransaction({ publicClient, hash: waitingForTx })
-        .then((receipt) => {
-          if (receipt.status === 'success') {
-            onSuccess()
-          } else {
-            onError()
-          }
-        })
-        .finally(() => {
-          setWaitingForTx(undefined)
-        })
-    }
-  }, [waitingForTx, publicClient, onSuccess, onError])
 
   return {
     claimSumrTransaction,
