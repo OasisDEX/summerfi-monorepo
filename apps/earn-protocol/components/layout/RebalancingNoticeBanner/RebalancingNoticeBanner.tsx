@@ -45,11 +45,19 @@ export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType
           <br />
           Withdrawals may be unavailable until instant liquidity is restored. For details keep an
           eye out on the rebalancing tab and contact us on{' '}
-          <Link href={EXTERNAL_LINKS.DISCORD} style={{ textDecoration: 'underline' }}>
+          <Link
+            href={EXTERNAL_LINKS.DISCORD}
+            style={{ textDecoration: 'underline' }}
+            target="_blank"
+          >
             Discord
           </Link>{' '}
           or{' '}
-          <Link href="mailto:support@summer.fi" style={{ textDecoration: 'underline' }}>
+          <Link
+            href="mailto:support@summer.fi"
+            style={{ textDecoration: 'underline' }}
+            target="_blank"
+          >
             support@summer.fi
           </Link>
           .
