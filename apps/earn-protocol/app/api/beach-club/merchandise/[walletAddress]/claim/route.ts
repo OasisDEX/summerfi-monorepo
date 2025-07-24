@@ -76,7 +76,6 @@ export async function POST(
 
   const messageToSign = getMerchandiseMessageToSign({
     walletAddress,
-    type,
   })
 
   const beachClubDb = getBeachClubDb({
@@ -172,6 +171,16 @@ export async function POST(
     for (const [key, value] of Object.entries({ ...formValues, walletAddress, type })) {
       encoded.append(key, value)
     }
+
+    // save signature as acceptance proof to database before sending request to 3rd party
+    await beachClubDb.db
+      .insertInto('merchandise_signatures')
+      .values({
+        user_id: walletAddress.toLowerCase(),
+        merchandise_type: type,
+        signature,
+      })
+      .execute()
 
     // NFTs are not sent to getForm endpoint as this is digital merchandise
     // that can be claimed without any additional information

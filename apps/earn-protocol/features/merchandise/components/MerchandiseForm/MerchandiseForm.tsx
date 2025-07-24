@@ -165,7 +165,6 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
 
     const messageToSign = getMerchandiseMessageToSign({
       walletAddress,
-      type,
     })
 
     signMessageAsync({
