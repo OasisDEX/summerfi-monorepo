@@ -5,6 +5,7 @@ declare const styles: {
   readonly "bannerWrapperVisible": string;
   readonly "bannerWrapperWarning": string;
   readonly "globalIssueBannerWrapper": string;
+  readonly "globalNoticeBannerWrapper": string;
 };
 export = styles;
 

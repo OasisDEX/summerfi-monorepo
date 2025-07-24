@@ -52,6 +52,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -727,6 +728,7 @@ export const VaultManageViewComponent = ({
   return (
     <>
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
+      <RebalancingNoticeBanner vault={vault} />
       <VaultManageGrid
         vault={vault}
         vaultApyData={vaultApyData}

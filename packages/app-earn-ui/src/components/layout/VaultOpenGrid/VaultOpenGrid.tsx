@@ -119,6 +119,16 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   const totalValueLockedTokenParsed = formatCryptoBalance(
     new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
   )
+  const withdrawableTotalAssetsUSDParsed = formatCryptoBalance(
+    new BigNumber(vault.withdrawableTotalAssetsUSD.toString()),
+  )
+  const withdrawableTotalAssetsParsed = formatCryptoBalance(
+    new BigNumber(vault.withdrawableTotalAssets.toString()).div(ten.pow(vault.inputToken.decimals)),
+  )
+
+  const withdrawablePercentage = new BigNumber(vault.withdrawableTotalAssets.toString())
+    .div(vault.inputTokenBalance.toString())
+    .toFixed(8)
 
   const medianBN = medianDefiYield ? new BigNumber(medianDefiYield) : null
   const medianDefiYield30DDifference =
@@ -242,8 +252,62 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             {simulationGraph}
           </AnimateHeight>
           <SimpleGrid
+            columns={isMobileOrTablet ? 1 : 3}
+            rows={isMobileOrTablet ? 2 : 1}
+            gap="var(--general-space-16)"
+            style={{ marginBottom: 'var(--general-space-16)' }}
+          >
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Assets in vault"
+                value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
+                subValue={`$${totalValueLockedUSDParsed}`}
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Instant liquidity"
+                value={`${withdrawableTotalAssetsParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
+                subValue={`$${withdrawableTotalAssetsUSDParsed} (${formatDecimalAsPercent(
+                  withdrawablePercentage,
+                  {
+                    plus: false,
+                  },
+                )})`}
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Deposit Cap"
+                value={`${formatCryptoBalance(depositCapInToken)} ${getDisplayToken(vault.inputToken.symbol)}`}
+                subValue={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--general-space-20)',
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    {formatDecimalAsPercent(depositCapUsed)} filled
+                    <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
+                  </div>
+                }
+                subValueSize="small"
+              />
+            </Box>
+          </SimpleGrid>
+          <SimpleGrid
             columns={isMobileOrTablet ? 1 : 2}
-            rows={isMobileOrTablet ? 4 : 2}
+            rows={isMobileOrTablet ? 2 : 1}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -333,38 +397,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   ) : null
                 }
                 subValueType={medianDefiYieldLiveDifference?.gt(0) ? 'positive' : 'neutral'}
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Assets in vault"
-                value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
-                subValue={`$${totalValueLockedUSDParsed}`}
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Deposit Cap"
-                value={`${formatCryptoBalance(depositCapInToken)} ${getDisplayToken(vault.inputToken.symbol)} cap`}
-                subValue={
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--general-space-20)',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    {formatDecimalAsPercent(depositCapUsed)} filled
-                    <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
-                  </div>
-                }
                 subValueSize="small"
               />
             </Box>

@@ -83,8 +83,8 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
             </Text>
           </div>
           <SimpleGrid
-            columns={isMobile ? 1 : 3}
-            rows={isMobile ? 3 : 1}
+            columns={isMobile ? 1 : 2}
+            rows={isMobile ? 4 : 2}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -103,7 +103,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                 }
                 subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
                 subValueType="neutral"
-                subValueSize="medium"
+                subValueSize="small"
               />
             </Box>
             <Box>
@@ -121,7 +121,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                 }
                 subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
                 subValueType="neutral"
-                subValueSize="medium"
+                subValueSize="small"
               />
             </Box>
             <Box>
@@ -139,7 +139,25 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                 }
                 subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
                 subValueType="neutral"
-                subValueSize="medium"
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Instant liquidity"
+                value={
+                  <SkeletonLine
+                    radius="16px"
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    height={30}
+                    width={100}
+                  />
+                }
+                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
+                subValueType="neutral"
+                subValueSize="small"
               />
             </Box>
           </SimpleGrid>
