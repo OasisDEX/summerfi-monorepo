@@ -34,6 +34,8 @@ export { ChartBar } from './components/atoms/ChartBar/ChartBar'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
+export { NavigationConfig } from './components/layout/Navigation/NavigationConfig'
+export { NavigationExtraComponents } from './components/layout/Navigation/NavigationExtraComponents'
 export { VaultGrid } from './components/layout/VaultGrid/VaultGrid'
 export { VaultOpenGrid } from './components/layout/VaultOpenGrid/VaultOpenGrid'
 export { VaultOpenLoadingGrid } from './components/layout/VaultOpenGrid/VaultOpenLoadingGrid'

@@ -47,7 +47,6 @@
   transition: opacity 0.3s;
 }
 .logoWrapper img {
-  height: 22px;
   display: none;
 }
 .logoWrapper .logo {

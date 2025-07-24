@@ -9,6 +9,7 @@ import {
   useAnalyticsCookies,
 } from '@summerfi/app-earn-ui'
 
+import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 
 import masterPageStyles from './MasterPage.module.css'
@@ -21,13 +22,14 @@ interface MasterPageProps {
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   children,
+  skipNavigation = false,
   analyticsCookie,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
 
   return (
     <div className={masterPageStyles.mainContainer}>
-      {/* {!skipNavigation && <NavigationWrapper />} */}
+      {!skipNavigation && <NavigationWrapper />}
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{
