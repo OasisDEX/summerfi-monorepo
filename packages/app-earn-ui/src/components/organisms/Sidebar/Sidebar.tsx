@@ -216,13 +216,18 @@ export const Sidebar: FC<SidebarProps> = ({
             <br />
             <Text variant="p4semi" style={{ color: 'var(--earn-protocol-warning-100)' }}>
               If you continue to experience issues, please contact support{' '}
-              <Link href={EXTERNAL_LINKS.DISCORD} style={{ textDecoration: 'underline' }}>
+              <Link
+                href={EXTERNAL_LINKS.DISCORD}
+                style={{ textDecoration: 'underline' }}
+                target="_blank"
+              >
                 on discord
               </Link>
               ,{' '}
               <Link
                 href="https://docs.summer.fi/get-in-touch/contact-us"
                 style={{ textDecoration: 'underline' }}
+                target="_blank"
               >
                 via email
               </Link>
@@ -230,6 +235,7 @@ export const Sidebar: FC<SidebarProps> = ({
               <Link
                 href="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
                 style={{ textDecoration: 'underline' }}
+                target="_blank"
               >
                 or on a call
               </Link>
