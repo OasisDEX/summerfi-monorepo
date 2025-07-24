@@ -174,7 +174,7 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: MixpanelEve
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
+    console.error('Error tracking input change', error)
   }
 }
 
@@ -240,6 +240,6 @@ export const trackError = ({ id, page, message, digest, ...rest }: AppError) => 
     trackEvent(MixpanelEventTypes.AppError, eventBody)
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
+    console.error('Error tracking app error', error)
   }
 }
