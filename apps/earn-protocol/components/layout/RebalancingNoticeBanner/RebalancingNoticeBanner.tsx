@@ -69,8 +69,8 @@ export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType
           Funds are currently being rebalanced from some protocols which have a withdrawal queue (
           {arkNames.length ? arkNames.join(', ') : 'such as Fluid Lite and Origin'}).
           <br />
-          Some withdrawals may be temporarily unavailable until liquidity is restored. For details
-          keep an eye out on the rebalancing tab and contact us on{' '}
+          Withdrawals may be unavailable until instant liquidity is restored. For details keep an
+          eye out on the rebalancing tab and contact us on{' '}
           <Link href={EXTERNAL_LINKS.DISCORD} style={{ textDecoration: 'underline' }}>
             Discord
           </Link>{' '}
