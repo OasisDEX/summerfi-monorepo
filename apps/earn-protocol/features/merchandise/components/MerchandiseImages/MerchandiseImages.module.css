@@ -1,0 +1,22 @@
+.merchandisePageViewMainContentRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 526px;
+  min-width: 300px;
+  height: fit-content;
+
+  .imageWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    border-radius: var(--radius-roundish);
+  }
+
+  .merchandiseControlsWrapper {
+    margin-top: var(--general-space-24);
+    display: flex;
+    gap: var(--general-space-12);
+  }
+}

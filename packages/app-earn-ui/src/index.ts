@@ -129,6 +129,7 @@ export {
   type SelectedAnalyticsCookies,
   type SavedAnalyticsCookiesSettings,
 } from './components/molecules/CookieBanner/config'
+export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'

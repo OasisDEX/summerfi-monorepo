@@ -11,9 +11,13 @@ import classNames from './BeachClubBoatChallenge.module.css'
 
 interface BeachClubBoatChallengeProps {
   beachClubData: BeachClubData
+  walletAddress: string
 }
 
-export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({ beachClubData }) => {
+export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({
+  beachClubData,
+  walletAddress,
+}) => {
   const currentPoints = Number(
     beachClubData.rewards.find((reward) => reward.currency === 'points')?.balance ?? 0,
   )
@@ -64,7 +68,11 @@ export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({ beachC
       </div> */}
       <div className={classNames.rewardCardsWrapper}>
         {cards.map((card) => (
-          <BeachClubBoatChallengeRewardCard key={card.reward.type} {...card} />
+          <BeachClubBoatChallengeRewardCard
+            key={card.reward.type}
+            walletAddress={walletAddress}
+            {...card}
+          />
         ))}
       </div>
     </div>
