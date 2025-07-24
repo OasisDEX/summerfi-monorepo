@@ -27,6 +27,9 @@ const institutionsFormSchema = z.object({
     .min(2, 'Job role must be at least 2 characters')
     .max(50, 'Job role must be less than 50 characters'),
   comments: z.string().max(500, 'Comments must be less than 500 characters').optional(),
+  consent: z.boolean().refine((val) => val, {
+    message: 'You must consent to the processing of your personal data',
+  }),
   token: z
     .string()
     .nonempty('reCAPTCHA token is required')
@@ -61,7 +64,7 @@ export async function POST(req: Request) {
     const formData = new FormData()
 
     Object.entries(submittedData).forEach(([key, value]) => {
-      formData.append(key, value)
+      formData.append(key, String(value))
     })
 
     const getFormResponse = await fetch(institutionsFormServiceurl, {

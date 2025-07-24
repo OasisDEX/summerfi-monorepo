@@ -9,6 +9,7 @@ import {
   Input,
   LoadingSpinner,
   Text,
+  ToggleButton,
 } from '@summerfi/app-earn-ui'
 import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
 import Link from 'next/link'
@@ -38,6 +39,9 @@ const institutionsFormSchema = z.object({
     .nonempty('Job role is required')
     .min(2, 'Job role must be at least 2 characters')
     .max(50, 'Job role must be less than 50 characters'),
+  consent: z.boolean().refine((val) => val, {
+    message: 'You must consent to the processing of your personal data',
+  }),
   comments: z.string().max(500, 'Comments must be less than 500 characters').optional(),
 })
 
@@ -49,11 +53,13 @@ interface FormFieldProps {
   label: string
   inputName: keyof FormData
   type: string
-  value?: string
-  placeholder: string
+  value?: string | boolean
+  placeholder?: string
   errors?: string[]
   disabled?: boolean
   textArea?: boolean
+  textInput?: boolean
+  checkbox?: boolean
   required?: boolean
   handleChange: (e: FormChangeEvent) => void
 }
@@ -65,6 +71,7 @@ type InstitutionsContactFormValues = {
   businessEmail: string
   jobRole: string
   comments?: string
+  consent?: boolean
 }
 
 type InstitutionsContactFormErrors = {
@@ -75,6 +82,7 @@ type InstitutionsContactFormErrors = {
   jobRole: string[]
   comments?: string[]
   global?: string[]
+  consent?: string[]
 }
 
 const FormField: FC<FormFieldProps> = ({
@@ -84,39 +92,60 @@ const FormField: FC<FormFieldProps> = ({
   placeholder,
   handleChange,
   errors,
-  value = '',
+  value,
   disabled,
   textArea = false,
+  checkbox = false,
   required = false,
 }) => {
+  const isTextField = !textArea && !checkbox
+  const isCheckbox = checkbox && !textArea
+  const isTextArea = textArea && !checkbox
+
   return (
     <div className={institutionsContactFormStyles.formField}>
-      <label htmlFor={inputName}>
-        <Text variant="p4semi" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
-          {label}{' '}
-          {required && <span style={{ color: 'var(--earn-protocol-critical-100)' }}>*</span>}
-        </Text>
-      </label>
-      {textArea ? (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/** Special case for the checkbox which should be in line with the label */}
+        {isCheckbox && (
+          <ToggleButton
+            checked={value as boolean}
+            title=""
+            id={inputName}
+            onChange={handleChange}
+            wrapperStyle={{
+              marginRight: '8px',
+              marginLeft: '-16px',
+            }}
+          />
+        )}
+        <label htmlFor={inputName}>
+          <Text variant="p4semi" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
+            {label}{' '}
+            {required && <span style={{ color: 'var(--earn-protocol-critical-100)' }}>*</span>}
+          </Text>
+        </label>
+      </div>
+      {isTextArea && (
         <textarea
           id={inputName}
           name={inputName}
           className={institutionsContactFormStyles.formInputTextarea}
           placeholder={placeholder}
-          value={value}
+          value={value as string}
           required
           onChange={handleChange}
           disabled={disabled}
           rows={4}
         />
-      ) : (
+      )}
+      {isTextField && (
         <Input
           type={type}
           id={inputName}
           name={inputName}
           className={institutionsContactFormStyles.formInput}
           placeholder={placeholder}
-          value={value}
+          value={value as string}
           required
           onChange={handleChange}
           disabled={disabled}
@@ -137,11 +166,25 @@ export const InstitutionsContactForm = () => {
     businessEmail: '',
     jobRole: '',
     comments: '',
+    consent: false,
   })
 
   const [formErrors, setFormErrors] = useState<Partial<InstitutionsContactFormErrors>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const handleToggleChange = (field: keyof typeof formValues) => () => {
+    // remove this field from errors
+    setFormErrors((prev) => ({
+      ...prev,
+      [field]: [],
+    }))
+
+    setFormValues((prev) => ({
+      ...prev,
+      [field]: !prev[field], // Toggle the boolean value
+    }))
+  }
 
   const handleChange = (e: FormChangeEvent) => {
     const { name: key, value } = e.target
@@ -166,6 +209,7 @@ export const InstitutionsContactForm = () => {
       businessEmail: '',
       jobRole: '',
       comments: '',
+      consent: false,
     })
     setFormErrors({})
   }
@@ -297,6 +341,17 @@ export const InstitutionsContactForm = () => {
           errors={formErrors.comments}
           disabled={isSubmitting}
           textArea
+        />
+        <FormField
+          label="I consent to the processing of my personal data by OAZO APPS LIMITED collect through Getform for the purposes of receiving information about Summer.fi’s programmes, products and services."
+          inputName="consent"
+          type="checkbox"
+          value={formValues.consent}
+          handleChange={handleToggleChange('consent')}
+          errors={formErrors.consent}
+          disabled={isSubmitting}
+          checkbox
+          required
         />
       </div>
       <div>

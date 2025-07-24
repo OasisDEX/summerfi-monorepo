@@ -39,6 +39,12 @@
   gap: var(--general-space-8);
   width: 100%;
 
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .formInputTextarea {
     border: 1px solid var(--earn-protocol-neutral-70);
     border-radius: var(--general-radius-8);
