@@ -64,6 +64,7 @@ import { getSpotPrice } from './handlers/getSpotPrice'
 import { getSpotPrices } from './handlers/getSpotPrices'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
+import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 
 /**
  * Server
@@ -134,6 +135,7 @@ export const sdkAppRouter = router({
       getMigratablePositionsApy: getMigratablePositionsApy,
       getMigrationTx: getMigrationTX,
       getVaultSwitchTx: getVaultSwitchTx,
+      getUserMerklRewards: getUserMerklRewards,
     },
     keepers: {
       rebalance: rebalance,

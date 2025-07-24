@@ -4,6 +4,7 @@ import {
   type GetGlobalRebalancesQuery,
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
+  type MerklReward,
 } from '@summerfi/armada-protocol-common'
 import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
@@ -507,4 +508,15 @@ export interface IArmadaManagerUsersClient {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
   >
+
+  /**
+   * @method getUserMerklRewards
+   * @description Gets Merkl rewards for a user across specified chains
+   *
+   * @param user The user to get rewards for
+   * @param chainIds Optional chain IDs to filter by (default: 1,8453,42161,146)
+   *
+   * @returns Promise<MerklReward[]> Array of Merkl rewards
+   */
+  getUserMerklRewards(params: { user: IUser; chainIds?: number[] }): Promise<MerklReward[]>
 }
