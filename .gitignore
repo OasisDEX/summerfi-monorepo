@@ -70,6 +70,8 @@ sdk/.sst
 
 # editors configs
 .vscode
+.github/instructions
+.github/prompts
 
 # private http envs
 *.private.env.json
