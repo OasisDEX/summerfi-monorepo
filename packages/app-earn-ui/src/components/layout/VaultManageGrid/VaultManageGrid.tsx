@@ -11,7 +11,9 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  ten,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -79,6 +81,17 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     useState(displaySimulationGraph)
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
+
+  const withdrawableTotalAssetsUSDParsed = formatCryptoBalance(
+    new BigNumber(vault.withdrawableTotalAssetsUSD.toString()),
+  )
+  const withdrawableTotalAssetsParsed = formatCryptoBalance(
+    new BigNumber(vault.withdrawableTotalAssets.toString()).div(ten.pow(vault.inputToken.decimals)),
+  )
+
+  const withdrawablePercentage = new BigNumber(vault.withdrawableTotalAssets.toString())
+    .div(vault.inputTokenBalance.toString())
+    .toFixed(8)
 
   const apy30d = isVaultAtLeast30dOld ? (
     vaultApyData.sma30d ? (
@@ -219,8 +232,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
             {simulationGraph}
           </AnimateHeight>
           <SimpleGrid
-            columns={isMobile ? 1 : 3}
-            rows={isMobile ? 3 : 1}
+            columns={isMobile ? 1 : 2}
+            rows={isMobile ? 4 : 2}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -319,6 +332,21 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                     </div>
                   </Tooltip>
                 }
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Instant liquidity"
+                value={`${withdrawableTotalAssetsParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
+                subValue={`$${withdrawableTotalAssetsUSDParsed} (${formatDecimalAsPercent(
+                  withdrawablePercentage,
+                  {
+                    plus: false,
+                  },
+                )})`}
                 subValueSize="small"
               />
             </Box>
