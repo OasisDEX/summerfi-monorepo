@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { EXTERNAL_LINKS, getArkNiceName, GlobalNoticeBanner } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
 import { ten } from '@summerfi/app-utils'
@@ -9,7 +9,9 @@ const REBALANCING_NOTICE_THRESHOLDS = {
   liquidityPercentage: 5, // 5%
 }
 
-export const RebalancingNoticeBanner = ({ vault }: { vault: SDKVaultType | SDKVaultishType }) => {
+export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }> = ({
+  vault,
+}) => {
   const { liquidityPercentage } = useMemo(() => {
     if (!vault.inputTokenPriceUSD) {
       return {
