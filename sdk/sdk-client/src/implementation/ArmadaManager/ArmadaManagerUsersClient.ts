@@ -1,14 +1,4 @@
-import {
-  BridgeTransactionInfo,
-  ITokenAmount,
-  type ApproveTransactionInfo,
-  type IArmadaPosition,
-  type IArmadaVaultId,
-  type IArmadaVaultInfo,
-  type IPercentage,
-  type IUser,
-  type VaultSwitchTransactionInfo,
-} from '@summerfi/sdk-common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
