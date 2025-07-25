@@ -1197,13 +1197,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
 
+    // we need to compensate for the tip eating during unstake-withdraw,
+    // so the amount user get from the vault can be a tiny bit lower
+    const depositAmount = this._compensateAmount(params.fromAmount, 'decrease')
+
     const depositTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'depositTokens',
-      args: [params.fromAmount.token.address.value, params.fromAmount.toSolidityValue()],
+      args: [depositAmount.token.address.value, depositAmount.toSolidityValue()],
     })
     multicallArgs.push(depositTokensCalldata)
-    multicallOperations.push('depositTokens ' + params.fromAmount.toString())
+    multicallOperations.push('depositTokens ' + depositAmount.toString())
 
     let outToken = params.toToken
     // if the out token is ETH, we need to use wrapped ETH to withdraw
@@ -1222,17 +1226,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           toAmount: ITokenAmount
         }
 
-    // do not swap from WETH to ETH
-    if (params.fromAmount.token.symbol !== 'WETH' || !params.toEth) {
+    // do not swap from WETH to ETH, it will be unwrapped and transferred on withdraw instead
+    if (depositAmount.token.symbol !== 'WETH' || !params.toEth) {
       swapCall = await this._utils.getSwapCall({
         vaultId: params.vaultId,
-        fromAmount: params.fromAmount,
+        fromAmount: depositAmount,
         toToken: outToken,
         slippage: params.slippage,
       })
       multicallArgs.push(swapCall.calldata)
       multicallOperations.push(
-        `swap ${params.fromAmount.toString()} to min ${swapCall.minAmount.toString()}`,
+        `swap ${depositAmount.toString()} to min ${swapCall.minAmount.toString()}`,
       )
     }
 
@@ -1247,7 +1251,14 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       args: [outAmount.token.address.value, outAmount.toSolidityValue()],
     })
     multicallArgs.push(withdrawTokensCalldata)
-    multicallOperations.push('withdrawTokens ' + outAmount.toString())
+    if (depositAmount.token.symbol === 'WETH' && params.toEth) {
+      // if we are withdrawing WETH to ETH, we'll unwrap and transfer WETH
+      multicallOperations.push(
+        `unwrap ${outAmount.toString()} and send as ETH ${outAmount.token.address.value}`,
+      )
+    } else {
+      multicallOperations.push('withdrawTokens ' + outAmount.toString())
+    }
 
     return {
       multicallArgs: multicallArgs,
@@ -1402,25 +1413,26 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
   private async _calculateUnstakeWithdrawData(params: {
     vaultId: IArmadaVaultId
-    amount: ITokenAmount
     shares: ITokenAmount
     stakedShares: ITokenAmount
+    amount: ITokenAmount
   }): Promise<{
     shouldWithdrawAll: boolean
     calculatedUnstakeWithdrawAssets: ITokenAmount
     unstakeWithdrawSharesValue: bigint
   }> {
     // if the requested amount is close to all staked shares, we make assumption to withdraw all
-    // withdraw all assumption threshold is set to 0.9999
-    const withdrawAllThreshold = 0.9999
+    // withdraw all assumption threshold is set to 0.998
+    const withdrawAllThreshold = 0.998
 
-    const staked = params.stakedShares.toSolidityValue()
+    const sharesToWithdraw = params.shares.toSolidityValue()
+    const stakedShares = params.stakedShares.toSolidityValue()
     const shouldWithdrawAll =
-      staked === 0n ||
-      new BigNumber(params.shares.toSolidityValue().toString())
-        .div(staked.toString())
+      stakedShares === 0n ||
+      new BigNumber(sharesToWithdraw.toString())
+        .div(stakedShares.toString())
         .gte(withdrawAllThreshold)
-    const unstakeWithdrawSharesValue = shouldWithdrawAll ? 0n : params.shares.toSolidityValue()
+    const unstakeWithdrawSharesValue = shouldWithdrawAll ? 0n : sharesToWithdraw
 
     let calculatedUnstakeWithdrawAssets: ITokenAmount | undefined
     if (shouldWithdrawAll) {
