@@ -15964,7 +15964,7 @@ packages:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.2.1
       '@noble/hashes': 1.8.0
-      '@scure/base': 1.2.4
+      '@scure/base': 1.2.6
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
@@ -26990,6 +26990,10 @@ packages:
   /bluebird@3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
+  /bn.js@4.11.6:
+    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
+    dev: true
+
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -31252,7 +31256,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       number-to-bn: 1.7.0
     dev: true
 
@@ -37768,7 +37772,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       strip-hex-prefix: 1.0.0
     dev: true
 
