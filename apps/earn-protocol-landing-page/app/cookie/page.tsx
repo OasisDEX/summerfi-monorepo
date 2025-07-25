@@ -11,7 +11,7 @@ export default function CookiePolicyPage() {
           Cookie Policy
         </Text>
         <Text as="p" variant="p2semi">
-          Last Updated: 17 July 2025
+          Last Updated: 28 August 2024
         </Text>{' '}
         <Text as="p" variant="p2" className={styles.p2}>
           This Policy provides our Cookie Policy regarding the nature, purpose, use, and sharing of

@@ -11,14 +11,15 @@ export default function TermsOfServicePage() {
           Terms of Service
         </Text>
         <Text as="p" variant="p2semi">
-          Last Revised: 17 July 2025
+          Last Revised: 25 July 2025
         </Text>{' '}
         <Text as="p" variant="p2" className={styles.p2}>
           Please read these Terms of Service (this &quot;Agreement&quot;) carefully. Your use or
-          access of the Site or the Services (as defined below) constitutes your consent to this
-          Agreement. If you do not agree to this Agreement, and all of the terms herein, you must
-          immediately discontinue using the Site and the Services. Your continued use of the Site
-          and Services is your ongoing acceptance of this Agreement.
+          access of the Site, the Services or the Programs (as defined below) constitutes your
+          consent to this Agreement. If you do not agree to this Agreement, and all of the terms
+          herein, you must immediately discontinue using the Site, the Services and the Programs.
+          Your continued use of the Site, the Services and the Programs is your ongoing acceptance
+          of this Agreement.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           This Agreement is between you (the &quot;User&quot; or &quot;You&quot;, and collectively
@@ -36,16 +37,16 @@ export default function TermsOfServicePage() {
         <Text as="p" variant="p2" className={styles.p2}>
           <strong>IMPORTANT:</strong> This Agreement contains a mandatory individual Arbitration
           clause and class action and jury trial waivers that require the use of arbitration by
-          Users on an individual basis to resolve Disputes, rather than jury trials or class actions
-          or similar group actions. The Site and Services are only available to you and should only
-          be used by you if you agree to these waivers.
+          Users on an individual basis to resolve Disputes (as defined below), rather than jury
+          trials or class actions or similar group actions. The Site, the Services and the Programs
+          are only available to you and should only be used by you if you agree to these waivers.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          By clicking or tapping any button or box marked &quot;accept&quot; or &quot;agree&quot;
-          (or a similar term) in connection with this Agreement, or by accessing or using the Site
-          or the Services (as defined below), you agree to be bound by this Agreement, a current
-          version of which is available at the Site, and which may be modified from time to time at
-          our sole discretion in accordance with section 3 below.
+          By clicking or tapping any button or box marked &quot;accept&quot;, &quot;agree&quot; or
+          &quot;consent&quot; (or a similar term) in connection with this Agreement, or by accessing
+          or using the Site, the Services or the Programs, you agree to be bound by this Agreement,
+          a current version of which is available at the Site, and which may be modified from time
+          to time at our sole discretion in accordance with section 3 below.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
           1. Use of Services
@@ -55,18 +56,17 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The Company has developed Summer.fi – an online, decentralized and autonomous environment
-          that displays price information and provides to Users access to use autonomous smart
+          that displays certain information and provides to Users access to use autonomous smart
           contracts and access to transactions of digital tokens and digital assets (&quot;Digital
-          Assets&quot;) – and provides the user-interface that guides your access to Summer.fi; the
-          Site is used to provide Users with access to certain decentralized technology services and
-          products on the Ethereum blockchain and other blockchains as may be available from time to
-          time through Summer.fi (the &quot;Services&quot;). The Services may require users to pay
-          fees, such as gas charges on the Ethereum network, to perform a transaction. You
-          acknowledge and agree that the Company has no control over User transactions, User digital
-          assets, the method or amount of payment required for any User to engage in any
-          transaction, or any payments of fees for any transactions. You must ensure that you have a
-          sufficient balance to complete any transaction using the Site or Services before
-          initiating such transaction.
+          Assets&quot;).–The Site is used to provide Users with access to certain decentralized
+          technology services,products and protocols on the Ethereum blockchain and other
+          blockchains as may be available from time to time through Summer.fi (the
+          &quot;Services&quot;). The Services may require users to pay fees, such as gas charges on
+          the Ethereum network, to perform a transaction. You acknowledge and agree that the Company
+          has no control over User transactions, User digital assets, the method or amount of
+          payment required for any User to engage in any transaction, or any payments of fees for
+          any transactions. You must ensure that you have a sufficient balance to complete any
+          transaction using the Site or Services before initiating such transaction.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           User affirms that the User is aware and acknowledges that Company is a noncustodial
@@ -75,10 +75,21 @@ export default function TermsOfServicePage() {
           decentralized environment wherein the Services can be autonomously and directly accessed
           by the Users without any involvement or actions taken by Company or any third-party. The
           User acknowledges that Company does not in any way control any of the assets or protocols
-          displayed on the Site, including but not limited to ETH, WSTETH, DAI, USDC, Ajna, Spark,
-          Maker, Aave, Arbitrum, Optimism, Base or Ethereum. The User acknowledges that the Company
-          and its Services are entirely unaffiliated with any of these protocols, other service
-          provider or other DeFi platform upon which Users may transact.
+          displayed on the Site, including but not limited to ETH, WSTETH, DAI, USDC, Lazy Summer,
+          Ajna, Spark, Maker, Aave, Arbitrum, Optimism, Base or Ethereum. The User acknowledges that
+          the Company and its Services are entirely unaffiliated with any of these protocols, other
+          service provider or other DeFi platform upon which Users may transact.
+        </Text>
+        <Text as="p" variant="p2" className={styles.p2}>
+          Notwithstanding the above, the code which forms the basis of the Lazy Summer Protocol was
+          initially developed by the Company and was licensed to a third party, which is the sole
+          responsible for the launch and operation of the Lazy Summer Protocol. The Company provides
+          certain support services in relation to the ongoing development and maintenance of the
+          Lazy Summer Protocol and is a holder of SUMR Tokens that confer the power to participate
+          in the decentralized autonomous organization in charge of the governance of the Lazy
+          Summer Protocol. There is no corporate connection or common ownership or control between
+          the Company and the third party responsible for the launch and operation of the Lazy
+          Summer Protocol.
         </Text>
         <Text as="h5" variant="h5">
           1.2. Your Use of Services
@@ -299,86 +310,99 @@ export default function TermsOfServicePage() {
           modifications will be effective immediately upon posting the revisions to the Site. You
           shall be responsible for reviewing and becoming familiar with any such modifications. You
           waive any right you may have to receive specific notice of such changes or modifications.
-          Use of the Site or the Services by you after any modification to the Agreement constitutes
-          your acceptance of the Agreement as modified. If you do not agree to the Agreement in
-          effect when you access or use the Services, you must stop using the Services. We may, at
-          any time and without liability or prior notice, modify or discontinue all or part of the
-          Site (including access to the Site via any third-party links). Neither party may assign or
-          transfer any rights or obligations under this Agreement, provided that Company may assign
-          this Agreement without your prior consent to any of Company&apos;s affiliates, or to its
-          successors in interest of any business associated with the Services provided by Company.
-          This Agreement shall be binding upon the permitted assigns or transferees of each party.
+          Use of the Site, the Services or the Programs by You after any modification to the
+          Agreement constitutes your acceptance of the Agreement as modified. If you do not agree to
+          the Agreement in effect when you access or use the Site, the Services or the Program, you
+          must stop using the them. We may, at any time and without liability or prior notice,
+          modify or discontinue all or part of the Site (including access to the Site via any
+          third-party links). Neither party may assign or transfer any rights or obligations under
+          this Agreement, provided that Company may assign this Agreement without your prior consent
+          to any of Company&apos;s affiliates, or to its successors in interest of any business
+          associated with the Services provided by Company. This Agreement shall be binding upon the
+          permitted assigns or transferees of each party.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
           4. Rewards Program Terms:
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          The Company offers its eligible Users the opportunity to earn Rewards by referring other
-          Users to enter into qualified transactions using the Services. The Rewards are for
-          promotional purposes only, as part of the Company Rewards Program (&quot;Rewards
-          Program&quot; or &quot;Program&quot;). By joining the Program, you and Users you refer can
-          earn Rewards payable in DAI.
+          The Company offers its eligible Users the opportunity to earn Rewards by: (i) referring
+          other Users to enter into qualified transactions using the Services, (ii) answering
+          surveys or in any way providing information to the Company in connection to the Services
+          or, more generally, to the Company&apos;s business or industry and (iii) any other . The
+          Rewards are for promotional and informational purposes only, as part of the Company
+          Rewards Programs (&quot;Rewards Programs&quot; or &quot;Programs&quot;). By joining the
+          Programs, you and Users you refer can earn Rewards payable in DAI, SUMR, or other Digital
+          Assets. You may also receive physical items, including but not limited to merchandise such
+          as t-shirts, caps, mugs, and other promotional materials, as may be specified from time to
+          time in connection with each specific Program.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           These Rewards Program Terms (&quot;Program Terms&quot;) apply to a User&apos;s
           participation in the Program. By participating in the Program, Users agree to use the
           Program as outlined herein, and consistent with any other terms we may apply to the
-          Program. If you do not agree to these Rewards Program Terms in their entirety, then you
-          cannot participate in the Program. Users also cannot participate where, by so doing, they
-          would violate any applicable law or regulations that may apply to that User.
+          Program, as informed or made available to You through any suitable means. If you do not
+          agree to these Rewards Program Terms in their entirety, then you cannot participate in the
+          Program. Users also cannot participate where (i) by so doing, they would violate any
+          applicable law or regulations that may apply to that User and (ii) the User or the
+          Refferred User (as defined below) do not comply with the eligibility requirements set
+          forth in Section 2. By participating in the Program, the User repeats the representations
+          and warranties made to the Company pursuant to Section 1.2.
         </Text>
         <Text as="h5" variant="h5">
           Eligibility
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          This Program is void where such programs are prohibited. Users who refer other users who
+          This Pogram is void where such programs are prohibited. Users who refer other users who
           join the Program are &quot;Referrers&quot;; those who are referred to the Program are
           &quot;Referred Users.&quot; Referrers may be eligible to receive Rewards for every
-          qualified transaction by a Referred User. Referrers must speak and read English, must be
-          legally able to participate in the Program, and must be 1) at least the age of majority
-          where they reside and 2) be an existing User of the Services.
+          qualified transaction by a Referred User, in accordance to the specific terms of the
+          Program. Referrers must speak and read English, must be legally able to participate in the
+          Program, and must be 1) at least the age of majority where they reside and 2) be an
+          existing User of the Services.
+        </Text>
+        <Text as="h5" variant="h5">
+          Privacy and Personal Data
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          Please see the Company&apos;s Privacy Policy for further details on your privacy rights.
+          You may be required to shared certain information about yourself in order to be able to
+          participate in the Programs or to receive the Rewards. If you do not wish to share that
+          information you may not participate in Program. Please refer to the Company’s Privacy
+          Policy for details on your privacy rights and information on how the Company colelcts and
+          processes personal data.
         </Text>
         <Text as="h5" variant="h5">
           How It Works
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          To participate, a User generates a referral code by Browse to the Summer.fi web site and
-          clicking the &quot;copy referral link&quot; button. Once that User generates and
-          distributes that referral code to another User that accepts to be referred after they have
-          accepted the Program Terms via wallet transaction, that second User becomes a Referred
-          User, and that User who distributed the referral code becomes a Referrer. Referrers can
-          share their referral code with other Users who may use that code to receive Services from
-          the Company using their self-custodial wallet by visiting Summer.fi and inserting the
-          referral code when prompted at the appropriate URL (currently{' '}
-          <Link href="https://summer.fi/referrals" target="_blank" rel="noopener noreferrer">
-            https://summer.fi/referrals
-          </Link>
-          ). The User who receives the referral code and clicks it or otherwise manually enters the
-          URL will be prompted to access, review, and accept these Program Terms by signing a
-          transaction through that User&apos;s wallet. After that User clicks to accept the Program
-          Terms, that User will be a Referred User. Both a Referrer, and a Referred User may be able
-          to claim Rewards in an amount equal to 5% of all fees thereafter generated by the Referred
-          User for Multiply or Earn transactions or any of the Summer.fi automated trigger
-          executions (hereinafter a &quot;qualified transaction.&quot;).
+          To participate, a User shall usually be able to generate a referral code by Browse to the
+          Site (or the specific URL of the Program) and clicking a &quot;copy referral link&quot;
+          button or similar. Once a User generates and distributes that referral code to another
+          User that accepts to be referred after they have accepted the Program Terms via – usually
+          – a wallet transaction, that second User becomes a Referred User, and that User who
+          distributed the referral code becomes a Referrer. Referrers may be able share their
+          referral code with other Users who may use that code to receive Services from the Company
+          using their self-custodial wallet by visiting the Site (or the specific URL of the
+          Program) and inserting the referral code when prompted at the appropriate URL. The User
+          who receives the referral code and clicks it or otherwise manually enters the URL will be
+          prompted to access, review, and accept these Program Terms by signing a transaction
+          through that User’s wallet. After that User clicks to accept the Program Terms, that User
+          will be a Referred User. Both a Referrer, and a Referred User may be able to claim the
+          Rewards relevant for the specific Program.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          Once the Referred User has performed a qualified transaction, both Referrer and the
-          Referred User will see on the Summer.fi referral page (
-          <Link href="https://summer.fi/referrals" target="_blank" rel="noopener noreferrer">
-            https://summer.fi/referrals
-          </Link>
-          ) balance accumulating that they are able to &apos;Claim&apos; each week. The Summer.fi
-          Referral page will update the Rewards balance that is available to be claimed by Referrers
-          and Referred Users. A Referrer or Referred User may claim their outstanding Rewards
-          balance by Browse to the Summer.fi referral page and clicking the Claim button, and
-          interacting with the smart contract using their wallet to claim the Rewards available to
-          them.
+          Both the Referrer and the Referred User shall be informed of the Rewards to which they are
+          elible, in accordance to the specific terms of each Program. A Referrer or Referred User
+          may claim their Rewards balance as precribed in the specific Program’s terms.
+        </Text>
+        <Text as="p" variant="p2" className={styles.p2}>
+          Each Program is subject to its own specific terms and conditions, which shall be
+          communicated to the User and may supersede or supplement the general description set forth
+          above. Please note that participation in certain Programs may not involve or require the
+          generation or use of a referral code. You must always refer to the specific terms of the
+          Program.
         </Text>
         <Text as="h5" variant="h5">
-          Conditions for Receiving Rewards
+          Conditions for Receiving Rewards on Referral Code-based Programs
         </Text>
         <ol className={styles.list} style={{ listStyleType: 'decimal', marginLeft: 'unset' }}>
           <Text as="li" variant="p2" className={styles.p2}>
@@ -387,7 +411,7 @@ export default function TermsOfServicePage() {
           </Text>
           <Text as="li" variant="p2" className={styles.p2}>
             The Referred User may not combine the referral code received from the Referrer with any
-            other offer that resolts in the payment of Rewards.
+            other offer that results in the payment of Rewards.
           </Text>
           <Text as="li" variant="p2" className={styles.p2}>
             The Referred User must be qualified to use the Services provided by the Company under
@@ -408,47 +432,57 @@ export default function TermsOfServicePage() {
           How Rewards Work
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          Users who participate in the Program are able to earn and accumulate Rewards that can be
-          redeemed for DAI. Referrers and Referred Users are eligible to begin to receive Rewards as
-          long as this Program is offered by the Company and as long as Referrers and Referred Users
-          otherwise qualify for the Program. Referrers may refer an unlimited number of Users to the
-          Program.
+          Users who participate in the Program are able to earn Rewards. Referrers and Referred
+          Users are eligible to begin to receive Rewards as long as this Program is offered by the
+          Company and as long as Referrers and Referred Users otherwise qualify for the Program.
         </Text>
         <Text as="h5" variant="h5">
-          Use of Rewards
+          Claim of Rewards
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          Referrers and Referred Users will have 6 months to redeem their Rewards by claiming any
-          Rewards. Unclaimed Rewards will be voided and returned to the Company. Expiration dates
-          cannot be modified or extended.
+          Referrers and Referred Users may be subject to a redemption deadline, by which any Rewards
+          must be claimed, failing which such Rewards may be forfeited. Unclaimed Rewards will be
+          voided and returned to the Company. Expiration dates shall be communicated to the Users.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           If a Referrer&apos;s or Referred User&apos;s participation in the Rewards Program is
-          terminated for any reason, unclaimed Rewards are void. Prior to redemption, Rewards may
-          not be sold, transferred or assigned to, or shared with, any other person. Rewards have no
-          value until claimed. Rewards have no cash value and may not be redeemed for cash, goods or
-          services. Rewards are intended for the User&apos;s use only. Commercial use of Rewards is
-          prohibited. Your Rewards are personal to you and may not be sold, transferred or assigned
-          to, or shared with, any other person. You may have only one Rewards account per wallet
-          address for the Rewards Program.
+          terminated for any reason, unclaimed Rewards are void. Rewards are intended for the
+          User&apos;s use only. Commercial use of Rewards is prohibited. Your Rewards are personal
+          to you and may not be sold, transferred or assigned to, or shared with, any other person.
         </Text>
+        <Text as="p" variant="p2" className={styles.p2}>
+          When a Reward is a Digital Asset:
+        </Text>
+        <ul className={styles.list}>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Prior to redemption, Rewards may not be sold, transferred or assigned to, or shared
+            with, any other person. Rewards have no value until claimed.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            Rewards have no cash value and may not be redeemed for cash, goods or services.
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            You may have only one Rewards account per wallet address for the Rewards Program.
+          </Text>
+        </ul>
         <Text as="h5" variant="h5">
           Liability Release
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Except where prohibited, Users who have accepted these Program Terms agree that by
-          participating in the Program, they agree: (1) to be bound by these Program Terms and to
-          the decisions of the Company and/or its designees, its other Terms of Service and its
-          privacy policies; and (2) to release and hold harmless the Company and its owners,
-          affiliates, and subsidiaries, together with its respective employees, directors, officers,
-          licensees, licensors, shareholders, attorneys and agents including, without limitation,
-          their respective advertising and promotion entities and any person or entity associated
-          with the production, operation or administration of the Program (collectively, the
-          &quot;Released Parties&quot;), from any and all claims, demands, damages, losses,
-          liabilities, costs or expenses caused by, arising out of, in connection with, or related
-          to their participation in the Program (including, without limitation, any property loss,
-          damage, personal injury or death caused to any person(s) and/or the awarding, receipt
-          and/or use or misuse of the Program or any Reward).
+          participating in the Program, they agree: (1) to be bound by these Program Terms, any
+          applicable terms and condition specifc to a certain Program and to the decisions of the
+          Company and/or its designees, its other Terms of Service and its privacy policies; and (2)
+          to release and hold harmless the Company and its owners, affiliates, and subsidiaries,
+          together with its respective employees, directors, officers, licensees, licensors,
+          shareholders, attorneys and agents including, without limitation, their respective
+          advertising and promotion entities and any person or entity associated with the
+          production, operation or administration of the Program (collectively, the &quot;Released
+          Parties&quot;), from any and all claims, demands, damages, losses, liabilities, costs or
+          expenses caused by, arising out of, in connection with, or related to their participation
+          in the Program (including, without limitation, any property loss, damage, personal injury
+          or death caused to any person(s) and/or the awarding, receipt and/or use or misuse of the
+          Program or any Reward).
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Except where prohibited by law, the Company and its owners, affiliates, and subsidiaries,
@@ -470,15 +504,15 @@ export default function TermsOfServicePage() {
         <Text as="p" variant="p2" className={styles.p2}>
           The Company disclaims any liability for damage to any computer system resulting from
           participating in, or accessing, or downloading information in connection with this
-          Program, to the extent that You could have avoided such damage by following the
-          Company&apos;s advice to apply an update offered to You free of charge or for damage that
-          was caused by You failing to correctly follow installation instructions or to have in
-          place the minimum system requirements advised by the Company, and reserves the right, in
-          its sole discretion, to cancel, modify or suspend the Program should a virus, bug,
-          computer problem, unauthorized intervention, technical fault, hack, attack, exploit, or
-          other causes beyond the Company&apos;s control, corrupt the administration, security, or
-          proper play of the Program, or any system, product, service, or protocol upon which the
-          Program relies.
+          Program, to the extent that You could have avoided such damage by following the Company’s
+          advice to apply an update offered to You free of charge or for damage that was caused by
+          You failing to correctly follow installation instructions or to have in place the minimum
+          system requirements advised by the Company, and reserves the right, in its sole
+          discretion, to cancel, modify or suspend the Program should a virus, bug, computer
+          problem, unauthorized intervention, technical fault, hack, attack, exploit, or other
+          causes beyond the Company’s control, corrupt the administration, security, or proper play
+          of the Program, or any system, product, service, or protocol upon which the Program
+          relies.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Except where prohibited, the Released Parties shall not be liable to any Users for failure
@@ -516,9 +550,9 @@ export default function TermsOfServicePage() {
           Program Participant Code of Conduct
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          Users who participate in the Program agree that they will not violate any of these Program
-          Terms, or otherwise engage in activity that could be considered harassment toward other
-          Users. Users agree not to use the Program to:
+          Users who participate in the Programs agree that they will not violate any of these
+          Program Terms, or otherwise engage in activity that could be considered harassment toward
+          other Users. Users agree not to use the Program to:
         </Text>
         <ul className={styles.list}>
           <Text as="li" variant="p2" className={styles.p2}>
@@ -583,9 +617,9 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The Company may withhold or invalidate a Reward if it reasonably believes that any Reward
-          would violate any law or legal requirement, or if the Company believes any use of the Site
-          or the Services by any Referrer or Referred User is fraudulent, suspect, or in violation
-          of these Program Terms.
+          would violate any law or legal requirement, or if the Company believes any use of the
+          Site, the Services or the Program by any Referrer or Referred User is fraudulent, suspect,
+          or in violation of these Program Terms.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           If the Company, in its sole discretion, believes that to award Rewards will impose
@@ -603,12 +637,18 @@ export default function TermsOfServicePage() {
         <Text as="p" variant="p2" className={styles.p2}>
           These Reward Program Terms, any aspect of the Reward Program, any Reward (including, but
           not limited to, how Rewards may be earned, redeemed or expired) may be amended, modified
-          or changed at the sole discretion of the Company. Any changes to the Program will be noted
-          in these Terms as they may be updated from time to time, and, except where prohibited,
-          will become effective as of the date the Terms are updated. Please check these Terms
-          frequently. If a Referrer has Rewards pending at the time that the Program is updated or
-          changed, those pending Rewards shall be honored under the Terms that were valid at the
-          time of the qualified transaction giving rise to the Rewards.
+          or changed at the sole discretion of the Company. Any changes to the Program will be made
+          available to the Users. Please check these Terms frequently. If a Referrer has Rewards
+          pending at the time that the Program is updated or changed, those pending Rewards shall be
+          honored under the terms and conditions (including but not limited to these Terms) that
+          were valid at the time of the qualified transaction giving rise to the Rewards.
+        </Text>
+        <Text as="p" variant="p2" className={styles.p2}>
+          To the extent permitted under law, the Company may modify, terminate, discontinue, end or
+          revoke Rewards or the Reward Program at any time in its sole discretion for any reason
+          without any liability or obligation to you. The Company reserves the right to cancel or
+          suspend this Program should it determine, in its sole discretion, that the administration,
+          security or fairness of the Program has been compromised in any way.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           To the extent permitted under law, the Company may modify, terminate, discontinue, end or
@@ -618,18 +658,12 @@ export default function TermsOfServicePage() {
           security or fairness of this Program has been compromised in any way.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          To the extent permitted under law, the Company may modify, terminate, discontinue, end or
-          revoke Rewards or the Reward Program at any time in its sole discretion for any reason
-          without any liability or obligation to you. The Company reserves the right to cancel or
-          suspend this Program should it determine, in its sole discretion, that the administration,
-          security or fairness of this Program has been compromised in any way.
-        </Text>
-        <Text as="p" variant="p2" className={styles.p2}>
-          We reserve the right to modify or amend at any time these Program Terms and the methods
-          through which Rewards are distributed. We reserve the right to disqualify any User at any
-          time from participation in the Program if he/she does not comply with any of these Terms.
-          The Company&apos;s failure to enforce any term of these Terms shall not constitute a
-          waiver of that provision.
+          We reserve the right to modify or amend at any time these Program Terms and any other
+          terms and conditions applicable to the Programs and the methods through which Rewards are
+          distributed. We reserve the right to disqualify any User at any time from participation in
+          the Program if he/she does not comply with any of these Terms or other terms and
+          conditions applicable to the Program. The Company&apos;s failure to enforce any term of
+          these Terms shall not constitute a waiver of that provision.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           ANY ATTEMPT TO DELIBERATELY DAMAGE OR UNDERMINE THE LEGITIMATE OPERATION OF THE PROGRAM
@@ -650,19 +684,19 @@ export default function TermsOfServicePage() {
           AND OTHER ASPECTS OF THE SITE ARE FUNCTIONAL.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
-          5. Representations, Warranties, and Risks
+          5. No Representations andWarranties. Risks
         </Text>
         <Text as="h5" variant="h5">
           5.1. No Representation or Warranty
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          You expressly understand and agree that your use of the Site and Services is at your sole
-          risk. WE MAKE AND EXPRESSLY DISCLAIM ALL REPRESENTATIONS AND WARRANTIES, EXPRESS, IMPLIED
-          OR STATUTORY, AND WITH RESPECT TO THE SERVICES AND THE CODE, WHETHER PROPRIETARY OR OPEN
-          SOURCE, TO THE EXTENT PERMITTED BY APPLICABLE LAW, WE SPECIFICALLY DO NOT REPRESENT AND
-          WARRANT AND EXPRESSLY DISCLAIM ANY REPRESENTATION OR WARRANTY, EXPRESS, IMPLIED OR
-          STATUTORY, INCLUDING WITHOUT LIMITATION, ANY REPRESENTATIONS OR WARRANTIES OF TITLE,
-          NONINFRINGEMENT, MERCHANTABILITY, USAGE, SECURITY, SUITABILITY OR FITNESS FOR ANY
+          You expressly understand and agree that your use of the Site, the Services and the Program
+          is at your sole risk. WE MAKE AND EXPRESSLY DISCLAIM ALL REPRESENTATIONS AND WARRANTIES,
+          EXPRESS, IMPLIED OR STATUTORY, AND WITH RESPECT TO THE SERVICES AND THE CODE, WHETHER
+          PROPRIETARY OR OPEN SOURCE, TO THE EXTENT PERMITTED BY APPLICABLE LAW, WE SPECIFICALLY DO
+          NOT REPRESENT AND WARRANT AND EXPRESSLY DISCLAIM ANY REPRESENTATION OR WARRANTY, EXPRESS,
+          IMPLIED OR STATUTORY, INCLUDING WITHOUT LIMITATION, ANY REPRESENTATIONS OR WARRANTIES OF
+          TITLE, NONINFRINGEMENT, MERCHANTABILITY, USAGE, SECURITY, SUITABILITY OR FITNESS FOR ANY
           PARTICULAR PURPOSE, OR AS TO THE WORKMANSHIP OR TECHNICAL CODING THEREOF, OR THE ABSENCE
           OF ANY DEFECTS THEREIN, WHETHER LATENT OR PATENT. WE DO NOT REPRESENT OR WARRANT THAT THE
           SITE, SERVICES, CODE AND ANY RELATED INFORMATION ARE ACCURATE, COMPLETE, RELIABLE, CURRENT
@@ -685,20 +719,20 @@ export default function TermsOfServicePage() {
           equity or otherwise, the parties hereto hereby agree to eliminate any and all fiduciary
           duties Company may have to the User, its affiliates, or the end Users of the Services, the
           Site or its content, provided that such exclusion or limitation of liability shall not
-          extend to the Company&apos;s misappropriation of assets or funds of its users or its
-          affiliates, or the end Users of the Services, Site or content provided by Company or other
-          acts or omissions that constitute a bad faith violation of the implied contractual
-          covenant of good faith and fair dealing.
+          extend to the Company’s misappropriation of assets or funds of its users or its
+          affiliates, or the end Users of the Services, Site, Programs or content provided by
+          Company or other acts or omissions that constitute a bad faith violation of the implied
+          contractual covenant of good faith and fair dealing.
         </Text>
         <Text as="h5" variant="h5">
           5.3. Sophistication and Risk of Cryptographic Systems
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          By utilizing the Services or interacting with the Site in any way, you represent that you
-          understand the inherent risks associated with cryptographic systems and warrant that you
-          have an understanding of the usage and intricacies of native cryptographic tokens, like
-          Ether (ETH) and Bitcoin (BTC), smart contract based tokens such as those that follow the
-          Ethereum Token Standard known as ERC-20 (
+          By utilizing the Services or the Programs or interacting with the Site in any way, you
+          represent that you understand the inherent risks associated with cryptographic systems and
+          warrant that you have an understanding of the usage and intricacies of native
+          cryptographic tokens, like Ether (ETH) and Bitcoin (BTC), smart contract based tokens such
+          as those that follow the Ethereum Token Standard known as ERC-20 (
           <Link
             href="https://github.com/ethereum/EIPs/issues/20"
             target="_blank"
@@ -923,12 +957,12 @@ export default function TermsOfServicePage() {
           7. Limitation on Liability
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          You acknowledge and agree that you assume full responsibility for Your use of the Site and
-          Services. You acknowledge and agree that any information You send or receive during your
-          use of the Site and Services may not be secure and may be intercepted or later acquired by
-          unauthorized parties. You acknowledge and agree that Your use of the Site and Services,
-          including any Smart Contracts with which you interact, are Your responsibility and are at
-          Your own risk.
+          You acknowledge and agree that you assume full responsibility for Your use of the Site,the
+          Services and the Programs. You acknowledge and agree that any information You send or
+          receive during your use of the Site and Services may not be secure and may be intercepted
+          or later acquired by unauthorized parties. You acknowledge and agree that Your use of the
+          Site, the Services, including any Smart Contracts with which you interact, are Your
+          responsibility and are at Your own risk.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Nothing in this Agreement limits any liability which cannot legally be limited, including
@@ -944,8 +978,8 @@ export default function TermsOfServicePage() {
           </Text>
 
           <Text as="li" variant="p2" className={styles.p2}>
-            (c) breach of the terms implied by section 2 of the UK&apos;s Supply of Goods and
-            Services Act 1982 (title and quiet possession).
+            (c) breach of the terms implied by section 2 of the UK’s Supply of Goods and Services
+            Act 1982 (title and quiet possession).
           </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -967,9 +1001,9 @@ export default function TermsOfServicePage() {
           device or network, providers, or software (including, but not limited to, those that do
           not permit participation in the service); (i) any injury or damage to persons or property,
           including to computer equipment (to the extent that You could have avoided such damage by
-          following the Company&apos;s advice to apply an update offered to You free of charge or
-          for damage that was caused by You failing to correctly follow installation instructions or
-          to have in place the minimum system requirements advised by the Company); (j) inability to
+          following the Company’s advice to apply an update offered to You free of charge or for
+          damage that was caused by You failing to correctly follow installation instructions or to
+          have in place the minimum system requirements advised by the Company); (j) inability to
           fully access the site or service or any other website; (k) theft, tampering, destruction,
           or unauthorized access to, images or other content of any kind; data that is processed
           late or incorrectly or is incomplete or lost; (l) typographical, printing or other errors,
@@ -1149,7 +1183,7 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The rules of, and additional information about, the LCIA are available on the LCIA website
-          at{' '}
+          at
           <Link href="https://www.lcia.org" target="_blank" rel="noopener noreferrer">
             https://www.lcia.org
           </Link>
@@ -1171,12 +1205,12 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           You may not use the Site and Services to engage in the following categories of activity
-          (&quot;Prohibited Uses&quot;). The specific types of uses listed below are representative,
-          but not exhaustive. If You are uncertain as to whether or not Your use of the Services
-          involves a Prohibited Use, or have questions about how these requirements apply to You,
-          please contact us at <Link href="mailto:legal@summer.fi">legal@summer.fi</Link>. By using
-          the Site or Services, you confirm that You will not use the Site or Services to do any of
-          the following:
+          (&quot;Prohibited Uses &quot;). The specific types of uses listed below are
+          representative, but not exhaustive. If You are uncertain as to whether or not Your use of
+          the Services involves a Prohibited Use, or have questions about how these requirements
+          apply to You, please contact us at{' '}
+          <Link href="mailto:legal@summer.fi">legal@summer.fi</Link>. By using the Site or Services,
+          you confirm that You will not use the Site or Services to do any of the following:
         </Text>
         <ul className={styles.list}>
           <Text as="li" variant="p2" className={styles.p2}>
@@ -1184,10 +1218,9 @@ export default function TermsOfServicePage() {
             of, any domestic or international law, statute, ordinance, or regulation, sanctions
             programs administered in any relevant country, including but not limited to the U.S.
             Department of Treasury&apos;s Office of Foreign Assets Control (&quot;OFAC&quot;), the
-            UK HM Treasury&apos;s Office of Financial Sanctions Implementation (OFSI), or the
-            EU&apos;s Financial Sanctions Database (FSB), or which would involve proceeds of any
-            unlawful activity; publish, distribute or disseminate any unlawful material or
-            information;
+            UK HM Treasury’s Office of Financial Sanctions Implementation (OFSI), or the EU’s
+            Financial Sanctions Database (FSB), or which would involve proceeds of any unlawful
+            activity; publish, distribute or disseminate any unlawful material or information;
           </Text>
 
           <Text as="li" variant="p2" className={styles.p2}>
@@ -1286,13 +1319,13 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           This Agreement (and any additional terms, rules and conditions of participation, and the
-          Privacy Policy that may be posted on the Site) constitute the entire agreement with
-          respect to the Services and supersedes any prior agreements, oral or written. In the event
-          of a conflict between this Agreement and the additional terms, rules and conditions of
-          participation, the latter will prevail over the Agreement to the extent of the conflict,
-          except for the following provisions: INDEMNITY; REPRESENTATIONS, WARRANTIES AND RISKS;
-          LIMITATION ON LIABILITY; OUR PROPRIETARY RIGHTS; LINKS; TERMINATION; NO THIRD-PARTY
-          BENEFICIARIES; ARBITRATION AND CLASS ACTION WAIVER; USE OF SERVICES.
+          Privacy Policy and the Cookies Policy that may be posted on the Site) constitute the
+          entire agreement with respect to the Services and supersedes any prior agreements, oral or
+          written. In the event of a conflict between this Agreement and the additional terms, rules
+          and conditions of participation, the latter will prevail over the Agreement to the extent
+          of the conflict, except for the following provisions: INDEMNITY; REPRESENTATIONS,
+          WARRANTIES AND RISKS; LIMITATION ON LIABILITY; OUR PROPRIETARY RIGHTS; LINKS; TERMINATION;
+          NO THIRD-PARTY BENEFICIARIES; ARBITRATION AND CLASS ACTION WAIVER; USE OF SERVICES.
         </Text>
         <Text as="h5" variant="h5">
           14.2 Waiver and Severability of the Agreement
@@ -1310,9 +1343,9 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           You agree that regardless of any statute or law to the contrary, any claim or cause of
-          action arising out of or related to the use of the Services or the Site must be filed in
-          arbitration consistent with section 12, above, within one (1) year after such claim or
-          cause of action arose or be forever barred.
+          action arising out of or related to the use of the Services, the Program or the Site must
+          be filed in arbitration consistent with section 12, above, within one (1) year after such
+          claim or cause of action arose or be forever barred.
         </Text>
         <Text as="h5" variant="h5">
           14.4 Section Titles
@@ -1340,9 +1373,10 @@ export default function TermsOfServicePage() {
           agreeing to these Terms of Service.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          You are asked to read the Privacy Policy before you use the Site or Services. If you are
-          unwilling to accept the terms and conditions of the Privacy Policy, please do not use or
-          immediately discontinue use of the Site and the Services.
+          You are asked to read the Privacy Policy before you use the Site or Services or
+          aprticipate in the Programs. If you are unwilling to accept the terms and conditions of
+          the Privacy Policy, please do not use or immediately discontinue use of the Site and the
+          Services.
         </Text>
         <Text as="h5" variant="h5">
           14.6 Conflict or Inconsistencies

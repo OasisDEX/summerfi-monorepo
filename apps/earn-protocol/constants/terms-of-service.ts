@@ -4,6 +4,6 @@ export enum TermsOfServiceCookiePrefix {
 }
 
 export enum TermsOfServiceVersion {
-  APP_VERSION = 'app_version-17.07.2025',
+  APP_VERSION = 'app_version-25.07.2025',
   SUMR_CLAIM_TOKEN_VERSION = 'sumr_version-27.01.2025',
 }
