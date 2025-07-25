@@ -100,6 +100,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
       data.forEach((item) => {
         const chainId = item.chain.id
+        if (!isChainId(chainId)) {
+          throw new Error(`Invalid chain ID: ${chainId}`)
+        }
+
         const rewards: MerklReward[] = item.rewards.map((reward) => ({
           token: reward.token,
           root: reward.root,
@@ -110,9 +114,6 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           proofs: reward.proofs,
         }))
 
-        if (!isChainId(chainId)) {
-          throw new Error(`Invalid chain ID: ${chainId}`)
-        }
         if (!merklRewardsPerChain[chainId]) {
           merklRewardsPerChain[chainId] = []
         }
