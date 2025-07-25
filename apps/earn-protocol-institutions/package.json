@@ -17,6 +17,8 @@
   "dependencies": {
     "@loadable/component": "^5.16.4",
     "@number-flow/react": "^0.5.10",
+    "@reown/appkit": "^1.7.16",
+    "@reown/appkit-adapter-wagmi": "^1.7.16",
     "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-risk": "workspace:*",
