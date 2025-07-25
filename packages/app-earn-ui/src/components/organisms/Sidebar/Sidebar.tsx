@@ -11,6 +11,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/LoadingSpinner/LoadingSpinner'
 import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
+import { EXTERNAL_LINKS } from '@/helpers/application-links'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.css'
 
@@ -212,6 +213,34 @@ export const Sidebar: FC<SidebarProps> = ({
             ) : (
               error
             )}
+            <br />
+            <Text variant="p4semi" style={{ color: 'var(--earn-protocol-warning-100)' }}>
+              If you continue to experience issues, please contact support{' '}
+              <Link
+                href={EXTERNAL_LINKS.DISCORD}
+                style={{ textDecoration: 'underline' }}
+                target="_blank"
+              >
+                on discord
+              </Link>
+              ,{' '}
+              <Link
+                href="https://docs.summer.fi/get-in-touch/contact-us"
+                style={{ textDecoration: 'underline' }}
+                target="_blank"
+              >
+                via email
+              </Link>
+              ,{' '}
+              <Link
+                href="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
+                style={{ textDecoration: 'underline' }}
+                target="_blank"
+              >
+                or on a call
+              </Link>
+              .
+            </Text>
           </div>
         </AnimateHeight>
       </div>

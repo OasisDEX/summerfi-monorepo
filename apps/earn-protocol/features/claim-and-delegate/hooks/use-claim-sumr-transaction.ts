@@ -1,9 +1,13 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { useIsIframe } from '@summerfi/app-earn-ui'
+import { type SDKNetwork } from '@summerfi/app-types'
+import { type PublicClient } from 'viem'
 
 import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
 /**
  * Hook to handle claiming SUMR tokens through a user operation transaction
@@ -18,9 +22,13 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 export const useClaimSumrTransaction = ({
   onSuccess,
   onError,
+  network,
+  publicClient,
 }: {
   onSuccess: () => void
   onError: () => void
+  network: SDKNetwork
+  publicClient?: PublicClient
 }): {
   claimSumrTransaction: () => Promise<unknown>
   isLoading: boolean
@@ -29,6 +37,15 @@ export const useClaimSumrTransaction = ({
   const { getAggregatedClaimsForChainTx, getCurrentUser, getChainInfo } = useAppSDK()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+
+  const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
+    network,
+    onSuccess,
+    onError,
+    publicClient,
+  })
+
+  const isIframe = useIsIframe()
 
   const {
     sendUserOperationAsync,
@@ -62,6 +79,10 @@ export const useClaimSumrTransaction = ({
       txParams,
     })
 
+    if (isIframe) {
+      return sendSafeWalletTransaction(txParams)
+    }
+
     return await sendUserOperationAsync({
       uo: txParams,
       overrides: resolvedOverrides,
@@ -70,7 +91,7 @@ export const useClaimSumrTransaction = ({
 
   return {
     claimSumrTransaction,
-    isLoading: isSendingUserOperation,
+    isLoading: isSendingUserOperation || !!waitingForTx,
     error: sendUserOperationError,
   }
 }

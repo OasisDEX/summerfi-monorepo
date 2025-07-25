@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { isUser, type IUser } from '@summerfi/sdk-common'
-import { TRPCError } from '@trpc/server'
 
 export const getUserDelegatee = publicProcedure
   .input(
@@ -10,13 +9,5 @@ export const getUserDelegatee = publicProcedure
     }),
   )
   .query(async (opts) => {
-    try {
-      return await opts.ctx.armadaManager.governance.getUserDelegatee(opts.input)
-    } catch (error) {
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to call getUserDelegatee',
-        cause: error,
-      })
-    }
+    return await opts.ctx.armadaManager.governance.getUserDelegatee(opts.input)
   })

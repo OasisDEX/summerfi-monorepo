@@ -72,6 +72,17 @@ jobs:
             hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
           restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
+      - name: Setup Earn Protocol Institutions App Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/apps/earn-protocol-institutions/.next/cache
+          key:
+            ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+            hashFiles('apps/earn-protocol-institutions/**/*.ts',
+            'apps/earn-protocol-institutions/**/*.tsx') }}
+          restore-keys:
+            ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-
+
       - name: Setup Earn Protocol LP App Next.js Cache
         uses: actions/cache@v4
         with:

@@ -10,6 +10,9 @@ type InstitutionsPromoBlockProps = {
   bestFor: string
   coreFeatures: string[]
   ctaUrl: string
+  ctaLabel?: string
+  secondaryCtaUrl?: string
+  secondaryCtaLabel?: string
 }
 
 export const InstitutionsPromoBlock = ({
@@ -18,6 +21,9 @@ export const InstitutionsPromoBlock = ({
   bestFor,
   coreFeatures,
   ctaUrl,
+  ctaLabel = 'Learn more',
+  secondaryCtaUrl,
+  secondaryCtaLabel = 'Learn more',
 }: InstitutionsPromoBlockProps) => {
   return (
     <div className={institutionsPromoBlockStyles.institutionsPromoBlockWrapper}>
@@ -41,9 +47,16 @@ export const InstitutionsPromoBlock = ({
             {bestFor}
           </Text>
         </div>
-        <Link href={ctaUrl}>
-          <Button variant="primaryMediumColorful">Get started</Button>
-        </Link>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Link href={ctaUrl}>
+            <Button variant="primaryMediumColorful">{ctaLabel}</Button>
+          </Link>
+          {secondaryCtaUrl && (
+            <Link href={secondaryCtaUrl} target="_blank">
+              <Button variant="secondaryMedium">{secondaryCtaLabel}</Button>
+            </Link>
+          )}
+        </div>
       </div>
       <div
         className={clsx(institutionsPromoBlockStyles.part, institutionsPromoBlockStyles.darkSide)}

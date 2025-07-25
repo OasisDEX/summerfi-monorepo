@@ -55,7 +55,12 @@ const ProtocolScrollerTrack = forwardRef<HTMLDivElement, ProtocolScrollerTrackPr
   },
 )
 
-const ProtocolScrollerItem = ({ protocolIcon, protocol, tvl, url }: ProtocolScrollerItemProps) => {
+export const ProtocolScrollerItem = ({
+  protocolIcon,
+  protocol,
+  tvl,
+  url,
+}: ProtocolScrollerItemProps) => {
   const [itemHovered, setItemHovered] = useState(false)
 
   const handleMouseOver = () => {

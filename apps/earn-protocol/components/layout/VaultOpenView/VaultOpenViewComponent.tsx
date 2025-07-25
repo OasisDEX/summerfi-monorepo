@@ -41,6 +41,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
@@ -491,67 +492,70 @@ export const VaultOpenViewComponent = ({
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   return (
-    <VaultOpenGrid
-      isMobileOrTablet={isMobileOrTablet}
-      vault={vault}
-      vaults={vaults}
-      medianDefiYield={medianDefiYield}
-      displaySimulationGraph={displaySimulationGraph}
-      sumrPrice={estimatedSumrPrice}
-      onRefresh={revalidatePositionData}
-      vaultApyData={vaultApyData}
-      simulationGraph={
-        <VaultSimulationGraph
-          vault={vault}
-          forecast={forecast}
-          isLoadingForecast={isLoadingForecast}
-          amount={amountParsed}
-        />
-      }
-      detailsContent={
-        <VaultOpenViewDetails
-          vault={vault}
-          latestActivity={latestActivity}
-          topDepositors={topDepositors}
-          rebalanceActivity={rebalanceActivity}
-          arksHistoricalChartData={arksHistoricalChartData}
-          arksInterestRates={arksInterestRates}
-          vaultApyData={vaultApyData}
-        />
-      }
-      sidebarContent={
-        <>
-          <Sidebar {...resovledSidebarProps} />
-          {userWalletAddress && (
-            <TransakWidget
-              cryptoCurrency={vault.inputToken.symbol}
-              walletAddress={userWalletAddress}
-              email={user?.email}
-              isOpen={isTransakOpen}
-              onClose={() => setIsTransakOpen(false)}
-            />
-          )}
-        </>
-      }
-      rightExtraContent={
-        migrationsEnabled &&
-        migratablePositions.length > 0 &&
-        migrationBestVaultApy && (
-          <MigrationBox
-            migratablePositions={migratablePositions}
-            selectedPosition={selectedPosition}
-            onSelectPosition={handleSelectPosition}
-            cta={{
-              link: getMigrationLandingPageUrl({
-                walletAddress: userWalletAddress,
-                selectedPosition,
-              }),
-              disabled: !selectedPosition,
-            }}
-            migrationBestVaultApy={migrationBestVaultApy}
+    <>
+      <RebalancingNoticeBanner vault={vault} />
+      <VaultOpenGrid
+        isMobileOrTablet={isMobileOrTablet}
+        vault={vault}
+        vaults={vaults}
+        medianDefiYield={medianDefiYield}
+        displaySimulationGraph={displaySimulationGraph}
+        sumrPrice={estimatedSumrPrice}
+        onRefresh={revalidatePositionData}
+        vaultApyData={vaultApyData}
+        simulationGraph={
+          <VaultSimulationGraph
+            vault={vault}
+            forecast={forecast}
+            isLoadingForecast={isLoadingForecast}
+            amount={amountParsed}
           />
-        )
-      }
-    />
+        }
+        detailsContent={
+          <VaultOpenViewDetails
+            vault={vault}
+            latestActivity={latestActivity}
+            topDepositors={topDepositors}
+            rebalanceActivity={rebalanceActivity}
+            arksHistoricalChartData={arksHistoricalChartData}
+            arksInterestRates={arksInterestRates}
+            vaultApyData={vaultApyData}
+          />
+        }
+        sidebarContent={
+          <>
+            <Sidebar {...resovledSidebarProps} />
+            {userWalletAddress && (
+              <TransakWidget
+                cryptoCurrency={vault.inputToken.symbol}
+                walletAddress={userWalletAddress}
+                email={user?.email}
+                isOpen={isTransakOpen}
+                onClose={() => setIsTransakOpen(false)}
+              />
+            )}
+          </>
+        }
+        rightExtraContent={
+          migrationsEnabled &&
+          migratablePositions.length > 0 &&
+          migrationBestVaultApy && (
+            <MigrationBox
+              migratablePositions={migratablePositions}
+              selectedPosition={selectedPosition}
+              onSelectPosition={handleSelectPosition}
+              cta={{
+                link: getMigrationLandingPageUrl({
+                  walletAddress: userWalletAddress,
+                  selectedPosition,
+                }),
+                disabled: !selectedPosition,
+              }}
+              migrationBestVaultApy={migrationBestVaultApy}
+            />
+          )
+        }
+      />
+    </>
   )
 }

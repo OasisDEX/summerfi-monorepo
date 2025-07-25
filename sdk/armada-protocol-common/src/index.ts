@@ -56,3 +56,7 @@ export {
   getDeployedGovRewardsManagerAddress,
   getLayerZeroConfig,
 } from './deployments/index'
+export type {
+  IArmadaManagerMerklRewards,
+  MerklReward,
+} from './common/interfaces/IArmadaManagerMerklRewards'

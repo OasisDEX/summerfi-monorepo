@@ -11,13 +11,13 @@ export const vaultExposureFilter = ({
 }) => ({
   ...vault,
   arks: vault.arks.filter(
-    (item) =>
+    (ark) =>
       // First check if depositCap is greater than 0
-      Number(item.depositCap) > 0 &&
+      (Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0) &&
       (allocationType === VaultExposureFilterType.ALL
         ? true
         : allocationType === VaultExposureFilterType.UNALLOCATED
-          ? Number(item.inputTokenBalance) === 0
-          : Number(item.inputTokenBalance) > 0),
+          ? Number(ark.inputTokenBalance) === 0
+          : Number(ark.inputTokenBalance) > 0),
   ),
 })

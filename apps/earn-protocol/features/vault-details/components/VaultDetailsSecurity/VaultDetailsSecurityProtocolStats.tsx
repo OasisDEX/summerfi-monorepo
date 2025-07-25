@@ -61,8 +61,8 @@ const optionDescriptions: { [key: string]: React.ReactNode } = {
       <Text as="span" variant="p3">
         Unlike traditional lending protocols that pool assets and require governance approval to
         list new assets or adjust parameters, Morpho lets anyone create a market without permission.
-        Each market selects its own parameters—like loan-to-value ratio and interest rate model—from
-        options approved by Morpho Governance, but once chosen, these settings are locked in
+        Each market selects its own parameters - like loan-to-value ratio and interest rate model -
+        from options approved by Morpho Governance, but once chosen, these settings are locked in
         forever.
       </Text>
       <Text as="span" variant="p3">

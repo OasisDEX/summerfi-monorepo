@@ -260,13 +260,6 @@ export const supportedDefillamaProtocolsConfig: {
     asset: ['USDC', 'ETH'],
     strategy: 'Lending',
   },
-  pendle: {
-    displayName: 'Pendle',
-    defillamaProtocolName: 'pendle',
-    icon: 'scroller_pendle',
-    asset: ['USDC', 'ETH'],
-    strategy: 'Lending',
-  },
   gearbox: {
     displayName: 'Gearbox',
     defillamaProtocolName: 'gearbox',
@@ -312,7 +305,6 @@ export type SupportedDefillamaTvlProtocols =
   | 'aave'
   | 'sky'
   | 'spark'
-  | 'pendle'
   | 'gearbox'
   | 'euler'
   | 'compound'

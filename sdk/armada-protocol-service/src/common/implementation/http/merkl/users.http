@@ -1,0 +1,6 @@
+@address = 0x38233654FB0843c8024527682352A5d41E7f7324
+@chain_id = 1,8453,42161,146
+
+https://api.merkl.xyz/v4/users/{{address}}/rewards
+  ?chainId={{chain_id}}
+  &claimableOnly=true

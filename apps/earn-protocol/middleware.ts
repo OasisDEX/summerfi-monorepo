@@ -1,6 +1,6 @@
+import { getDeviceType } from '@summerfi/app-utils'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { getDeviceType } from '@/helpers/get-device-type'
 import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
 
 export function middleware(request: NextRequest) {

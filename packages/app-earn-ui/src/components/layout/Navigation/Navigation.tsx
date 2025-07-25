@@ -37,6 +37,7 @@ export interface EarnNavigationProps {
   }
   configComponent?: ReactNode
   signupComponent?: ReactNode
+  extraComponents?: ReactNode
   noNavMargin?: boolean
   onLogoClick?: () => void
   startTheGame?: () => void
@@ -54,6 +55,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
   mobileWalletConnectionComponents,
   configComponent,
   signupComponent,
+  extraComponents,
   noNavMargin = false,
   onLogoClick,
   startTheGame,
@@ -108,9 +110,7 @@ export const Navigation: FC<EarnNavigationProps> = ({
           toggleMobileMenu={toggleMobileMenu}
           configComponent={configComponent}
           startTheGame={startTheGame}
-          featuresConfig={featuresConfig}
-          userWalletAddress={userWalletAddress}
-          isEarnApp={isEarnApp}
+          extraComponents={extraComponents}
         />
       </header>
       {(isMobile || isTablet) && (

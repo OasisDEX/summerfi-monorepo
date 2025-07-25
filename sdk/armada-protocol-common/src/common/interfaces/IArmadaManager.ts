@@ -8,6 +8,8 @@ import type { IArmadaManagerUtils } from './IArmadaManagerUtils'
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
+import type { IArmadaManagerMerklRewards } from './IArmadaManagerMerklRewards'
+
 export interface IArmadaManager {
   claims: IArmadaManagerClaims
   governance: IArmadaManagerGovernance
@@ -15,4 +17,5 @@ export interface IArmadaManager {
   bridge: IArmadaManagerBridge
   vaults: IArmadaManagerVaults
   utils: IArmadaManagerUtils
+  merklRewards: IArmadaManagerMerklRewards
 }

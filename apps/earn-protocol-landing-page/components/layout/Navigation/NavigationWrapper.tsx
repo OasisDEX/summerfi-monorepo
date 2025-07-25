@@ -1,7 +1,12 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, getNavigationItems, Navigation } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  getNavigationItems,
+  Navigation,
+  NavigationExtraComponents,
+} from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -44,6 +49,7 @@ export const NavigationWrapper: FC = () => {
         window.location.href = '/'
       }}
       featuresConfig={features}
+      extraComponents={<NavigationExtraComponents beachClubEnabled={!!features?.BeachClub} />}
     />
   )
 }

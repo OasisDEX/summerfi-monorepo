@@ -1,0 +1,103 @@
+.historyScrollerWrapper {
+  margin-top: var(--spacing-space-3x-large);
+}
+
+@media (max-width: 531px) {
+  .historyScrollerWrapper {
+    margin-top: var(--spacing-space-2x-large);
+  }
+}
+
+.historyScrollerTrackWrapper {
+  position: absolute;
+  height: 300px;
+  width: 100vw;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+@keyframes tickerAnimation {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
+.historyScrollerOverflowWrapper {
+  position: relative;
+  left: 0;
+  height: 300px;
+  width: 100vw;
+  overflow: hidden;
+  margin-top: var(--spacing-space-2x-large);
+}
+
+@media (min-width: 532px) {
+  .historyScrollerOverflowWrapper {
+    margin-top: var(--spacing-space-2x-large);
+  }
+}
+
+@media (min-width: 1026px) {
+  .historyScrollerOverflowWrapper {
+    margin-top: var(--spacing-space-2x-large);
+  }
+}
+
+.historyScrollerTrack {
+  position: absolute;
+  height: 300px;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-space-medium);
+  animation-name: tickerAnimation;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.historyScrollerOverlay {
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(28, 28, 28) 100%);
+}
+
+.historyScrollerItemGradient {
+  cursor: auto !important;
+}
+
+.historyScrollerItemGradient::before {
+  border-radius: var(--radius-large) !important;
+}
+
+.historyScrollerItem {
+  width: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--spacing-space-2x-large);
+  gap: var(--spacing-space-x-small);
+  overflow: hidden;
+  background: linear-gradient(318deg, rgba(28, 28, 28, 0.20) 0%, rgba(174.93, 20.20, 92.41, 0.10) 50%, rgba(190.17, 0, 88.74, 0.20) 100%), var(--color-surface, #1C1C1C);
+  border-radius: var(--radius-rounder);
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+@media (max-width: 531px) {
+  .historyScrollerItem {
+    width: 370px;
+  }
+}

@@ -21,7 +21,7 @@ export const handleCaptcha = async ({
   setIsSubmitted,
   setFormErrors,
 }: {
-  formValues: { [key: string]: string[] | string | number }
+  formValues: { [key: string]: string[] | string | number | boolean }
   formEndpoint: string
   resetForm: () => void
   setIsSubmitting: (isSubmitting: boolean) => void

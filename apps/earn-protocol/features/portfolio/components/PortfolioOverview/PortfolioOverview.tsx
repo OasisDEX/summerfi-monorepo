@@ -25,12 +25,14 @@ import {
 import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
 import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSummerPro/PortfolioSummerPro'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -103,6 +105,7 @@ type PortfolioOverviewProps = {
   migratablePositions: MigratablePosition[]
   walletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  blogPosts: BlogPosts
 }
 
 export const PortfolioOverview = ({
@@ -114,6 +117,7 @@ export const PortfolioOverview = ({
   migratablePositions,
   walletAddress,
   migrationBestVaultApy,
+  blogPosts,
 }: PortfolioOverviewProps) => {
   const {
     state: { sumrNetApyConfig },
@@ -271,7 +275,7 @@ export const PortfolioOverview = ({
             migrationBestVaultApy={migrationBestVaultApy}
           />
         )}
-        {/* <NewsAndUpdates items={dummyNewsAndUpdatesItems} /> */}
+        <NewsAndUpdates blogPosts={blogPosts} />
         {/* <CryptoUtilities /> */}
       </div>
     </div>
