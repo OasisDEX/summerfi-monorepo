@@ -51,8 +51,8 @@ export interface IArmadaManagerMerklRewards {
    * @param params.chainId The chain ID to claim rewards on
    * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
    */
-  getUserMerklClaimTx: (params: { 
-    address: AddressValue; 
-    chainId: ChainId 
+  getUserMerklClaimTx: (params: {
+    address: AddressValue
+    chainId: ChainId
   }) => Promise<[MerklClaimTransactionInfo] | undefined>
 }
