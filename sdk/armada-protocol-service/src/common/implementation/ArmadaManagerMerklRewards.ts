@@ -57,7 +57,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   async getUserMerklRewards(
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
   ): ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']> {
-    const { address, chainIds = [this._supportedChainIds] } = params
+    const { address, chainIds = this._supportedChainIds } = params
     const userAddress = address
 
     LoggingService.log('Fetching Merkl rewards for user', {
