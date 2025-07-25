@@ -1,9 +1,17 @@
 import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
-import { LoggingService } from '@summerfi/sdk-common'
+import { isChainId, LoggingService, type ChainId, type IChainInfo } from '@summerfi/sdk-common'
 
 /**
  * Response type from Merkl API for user rewards
  */
+
+interface MerklApiChain {
+  id: number
+  name: string
+  icon: string
+  liveCampaigns: number
+}
+
 interface MerklApiReward {
   token: {
     chainId: number
@@ -17,27 +25,30 @@ interface MerklApiReward {
   amount: string
   claimed: string
   pending: string
-  proofs?: string[]
+  proofs: string[]
 }
 
-interface MerklApiResponse {
+type MerklApiResponse = {
+  chain: MerklApiChain
   rewards: MerklApiReward[]
-}
+}[]
 
 /**
  * @name ArmadaManagerMerklRewards
  * @description Implementation of the IArmadaManagerMerklRewards interface for managing Merkl rewards
  */
 export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
-  constructor() {
-    // No dependencies needed for this implementation
+  private _supportedChainIds: number[]
+
+  constructor(params: { supportedChains: IChainInfo[] }) {
+    this._supportedChainIds = params.supportedChains.map((chain) => chain.chainId)
   }
 
   async getUserMerklRewards(
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
-  ): Promise<MerklReward[]> {
-    const { user, chainIds = [1, 8453, 42161, 146] } = params
-    const userAddress = user.wallet.address.value
+  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']> {
+    const { address, chainIds = [this._supportedChainIds] } = params
+    const userAddress = address
 
     LoggingService.log('Fetching Merkl rewards for user', {
       address: userAddress,
@@ -59,33 +70,51 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       })
 
       if (!response.ok) {
+        LoggingService.log('Merkl API request failed', {
+          status: response.status,
+          statusText: response.statusText,
+          url,
+        })
         throw new Error(`Merkl API request failed: ${response.status} ${response.statusText}`)
       }
 
       const data = (await response.json()) as MerklApiResponse
 
-      if (!data.rewards || !Array.isArray(data.rewards)) {
+      if (!data || !Array.isArray(data)) {
         LoggingService.log('Invalid response from Merkl API', { data })
-        return []
+        throw new Error('Invalid response from Merkl API')
       }
 
       // Map response to our interface, picking only required properties
-      const merklRewards: MerklReward[] = data.rewards.map((reward: MerklApiReward) => ({
-        token: reward.token,
-        root: reward.root,
-        recipient: reward.recipient,
-        amount: reward.amount,
-        claimed: reward.claimed,
-        pending: reward.pending,
-        proofs: reward.proofs || [],
-      }))
+      const merklRewardsPerChain: Partial<Record<ChainId, MerklReward[]>> = {}
+
+      data.forEach((item) => {
+        const chainId = item.chain.id
+        const rewards: MerklReward[] = item.rewards.map((reward) => ({
+          token: reward.token,
+          root: reward.root,
+          recipient: reward.recipient,
+          amount: reward.amount,
+          claimed: reward.claimed,
+          pending: reward.pending,
+          proofs: reward.proofs,
+        }))
+
+        if (!isChainId(chainId)) {
+          throw new Error(`Invalid chain ID: ${chainId}`)
+        }
+        if (!merklRewardsPerChain[chainId]) {
+          merklRewardsPerChain[chainId] = []
+        }
+        merklRewardsPerChain[chainId].push(...rewards)
+      })
 
       LoggingService.log('Successfully fetched Merkl rewards', {
         address: userAddress,
-        rewardsCount: merklRewards.length,
+        merklRewardsPerChain: merklRewardsPerChain,
       })
 
-      return merklRewards
+      return { perChain: merklRewardsPerChain }
     } catch (error) {
       LoggingService.log('Failed to fetch Merkl rewards', {
         address: userAddress,

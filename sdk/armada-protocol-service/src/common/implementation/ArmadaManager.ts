@@ -137,6 +137,8 @@ export class ArmadaManager implements IArmadaManager {
       utils: this.utils,
       subgraphManager: this._subgraphManager,
     })
-    this.merklRewards = new ArmadaManagerMerklRewards()
+    this.merklRewards = new ArmadaManagerMerklRewards({
+      supportedChains: this._supportedChains,
+    })
   }
 }

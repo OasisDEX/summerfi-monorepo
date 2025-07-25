@@ -1,4 +1,4 @@
-import type { IUser } from '@summerfi/sdk-common'
+import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 /**
  * @name MerklReward
@@ -35,10 +35,11 @@ export interface IArmadaManagerMerklRewards {
   /**
    * @name getUserMerklRewards
    * @description Gets Merkl rewards for a user across specified chains
-   * @param params.user The user to get rewards for
-   * @param params.chainIds Optional chain IDs to filter by (default: 1,8453,42161,146)
+   * @param params.address The user's address
+   * @param params.chainIds Optional chain IDs to filter by (default: supported chains)
    * @returns Promise<MerklReward[]> Array of Merkl rewards
-   * @throws Error
    */
-  getUserMerklRewards: (params: { user: IUser; chainIds?: number[] }) => Promise<MerklReward[]>
+  getUserMerklRewards: (params: { address: AddressValue; chainIds?: ChainId[] }) => Promise<{
+    perChain: Partial<Record<ChainId, MerklReward[]>>
+  }>
 }

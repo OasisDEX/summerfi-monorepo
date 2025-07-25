@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { isUser, type IUser } from '@summerfi/sdk-common'
+import { AddressValue, isAddressValue } from '@summerfi/sdk-common'
 
 export const getUserMerklRewards = publicProcedure
   .input(
     z.object({
-      user: z.custom<IUser>(isUser),
+      address: z.custom<AddressValue>(isAddressValue),
       chainIds: z.array(z.number()).optional(),
     }),
   )

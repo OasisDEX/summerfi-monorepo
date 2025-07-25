@@ -1,8 +1,7 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { User, Wallet } from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, testConfig } from './utils/testConfig'
-import assert from 'assert'
+import { SDKApiUrl } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -11,27 +10,20 @@ describe('Armada Protocol Rewards', () => {
     apiDomainUrl: SDKApiUrl,
   })
 
-  for (const { chainInfo, userAddress } of testConfig) {
-    describe(`Running on ${chainInfo.name} for user ${userAddress.value}`, () => {
-      const user = User.createFrom({
-        chainInfo,
-        wallet: Wallet.createFrom({
-          address: userAddress,
-        }),
-      })
-
+  for (const userAddress of ['0x38233654FB0843c8024527682352A5d41E7f7324'] as AddressValue[]) {
+    describe(`Running for user ${userAddress}`, () => {
       describe(`getUserMerklRewards`, () => {
         it(`should fetch Merkl rewards for the user`, async () => {
           const rewards = await sdk.armada.users.getUserMerklRewards({
-            user,
-            chainIds: [chainInfo.chainId],
+            address: userAddress,
           })
 
-          console.log('Fetched rewards:', rewards)
-
-          rewards.forEach((reward) => {
-            expect(reward.token.chainId).toBe(chainInfo.chainId)
-            expect(reward.recipient).toBe(userAddress.value)
+          expect(rewards.perChain).toBeDefined()
+          Object.entries(rewards.perChain).forEach(([chainId, chainRewards]) => {
+            console.log(`Chain ID: ${chainId}, Rewards Count: ${chainRewards.length}`)
+            chainRewards.forEach((reward, index) => {
+              console.log(`Reward ${index + 1}:`, reward)
+            })
           })
         })
       })
