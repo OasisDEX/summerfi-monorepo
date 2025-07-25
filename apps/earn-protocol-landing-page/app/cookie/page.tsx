@@ -273,60 +273,60 @@ export default function CookiePolicyPage() {
           You can find out how to manage cookies on popular browsers by following these links:
         </Text>
         <ul className={styles.list}>
-          <Link
-            href="https://support.google.com/chrome/answer/95647?hl=en"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://support.google.com/chrome/answer/95647?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Google Chrome
-            </Text>
-          </Link>
-          <Link
-            href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40c9-933e-0c7f-d5e1d2e6de1c"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+            </Link>
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40c9-933e-0c7f-d5e1d2e6de1c"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Microsoft Edge
-            </Text>
-          </Link>
-          <Link
-            href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+            </Link>
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://support.mozilla.org/en-US/kb/enable-and-disable-cookies-website-preferences"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Mozilla Firefox
-            </Text>
-          </Link>
-          <Link
-            href="https://support.microsoft.com/en-us/topic/how-to-delete-cookie-files-in-internet-explorer-b593ae4d-93d3-9874-1234-a034293910c5"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+            </Link>
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://support.microsoft.com/en-us/topic/how-to-delete-cookie-files-in-internet-explorer-b593ae4d-93d3-9874-1234-a034293910c5"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Microsoft Internet Explorer
-            </Text>
-          </Link>
-          <Link
-            href="https://help.opera.com/en/latest/security-and-privacy/#clearBrowseData"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+            </Link>
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://help.opera.com/en/latest/security-and-privacy/#clearBrowseData"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Opera
-            </Text>
-          </Link>
-          <Link
-            href="https://support.apple.com/en-gb/guide/safari/sfri11471/mac"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text as="li" variant="p2" className={styles.p2}>
+            </Link>
+          </Text>
+          <Text as="li" variant="p2" className={styles.p2}>
+            <Link
+              href="https://support.apple.com/en-gb/guide/safari/sfri11471/mac"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Apple Safari
-            </Text>
-          </Link>
+            </Link>
+          </Text>
         </ul>
         <Text as="h5" variant="h5">
           Mobile Device Cookies
