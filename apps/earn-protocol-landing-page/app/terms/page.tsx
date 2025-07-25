@@ -684,7 +684,7 @@ export default function TermsOfServicePage() {
           AND OTHER ASPECTS OF THE SITE ARE FUNCTIONAL.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
-          5. No Representations andWarranties. Risks
+          5. No Representations and Warranties. Risks
         </Text>
         <Text as="h5" variant="h5">
           5.1. No Representation or Warranty
