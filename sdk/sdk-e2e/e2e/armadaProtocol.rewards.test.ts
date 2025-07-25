@@ -6,6 +6,9 @@ import { SDKApiUrl } from './utils/testConfig'
 jest.setTimeout(10_000)
 
 describe('Armada Protocol Rewards', () => {
+  if (!SDKApiUrl) {
+    throw new Error('E2E_SDK_API_URL environment variable not set')
+  }
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
   })
@@ -76,7 +79,13 @@ describe('Armada Protocol Rewards', () => {
             address: userAddress,
           })
 
-          const allChainIds = [1, 10, 8453, 42161, 146] as ChainId[] // Ethereum, Optimism, Base, Arbitrum, Sonic
+          const allChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Optimism,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[] // Ethereum, Optimism, Base, Arbitrum, Sonic
           const chainsWithRewards = Object.entries(rewards.perChain)
             .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
             .map(([chainId]) => parseInt(chainId) as ChainId)

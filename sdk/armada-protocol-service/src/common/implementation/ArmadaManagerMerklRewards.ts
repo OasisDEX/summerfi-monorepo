@@ -10,6 +10,7 @@ import {
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import { merklClaimAbi } from './abi/merklClaimAbi'
+import { MERKL_DISTRIBUTOR_ADDRESSES } from './configs/merkl-distributor-addresses'
 
 /**
  * Response type from Merkl API for user rewards
@@ -147,15 +148,6 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       address,
       chainId,
     })
-
-    // Contract addresses for Merkl distributor on supported chains
-    const MERKL_DISTRIBUTOR_ADDRESSES: Partial<Record<ChainId, string>> = {
-      1: '0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae', // Ethereum
-      10: '0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae', // Optimism
-      8453: '0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae', // Base
-      42161: '0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae', // Arbitrum
-      146: '0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae', // Sonic
-    }
 
     // Validate chain ID is supported
     const distributorAddress = MERKL_DISTRIBUTOR_ADDRESSES[chainId]
