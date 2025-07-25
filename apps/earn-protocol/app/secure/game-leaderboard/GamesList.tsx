@@ -1,4 +1,4 @@
-import { Button, Icon, Tooltip } from '@summerfi/app-earn-ui'
+import { Button, Icon } from '@summerfi/app-earn-ui'
 import { formatAddress, timeAgo } from '@summerfi/app-utils'
 import { type JsonValue } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
@@ -7,16 +7,12 @@ import Link from 'next/link'
 import { ResponseTimesChart } from '@/app/secure/game-leaderboard/ResponseTimesChart'
 import { getRoundTime } from '@/features/game/helpers/gameHelpers'
 
+import { AntiCheatScore } from './AntiCheatScore'
+import { type GameEntry, type SacScore } from './types'
+
 import styles from './GamesList.module.css'
 
-const getResponseTimesScore = (
-  responseTimes: JsonValue,
-): {
-  score: number
-  explanation: string
-  mean?: number
-  stdDev?: number
-} => {
+const getResponseTimesScore = (responseTimes: JsonValue): SacScore => {
   if (!Array.isArray(responseTimes) || responseTimes.length === 0) {
     return { score: 0, explanation: 'No response times' }
   }
@@ -105,17 +101,7 @@ export function GamesList({
   banUnbanUser,
   deleteScore,
 }: {
-  gamesList: {
-    ens: string
-    gameId: string
-    isBanned: boolean
-    responseTimes: JsonValue
-    score: string
-    signedMessage: string
-    updatedAt: string
-    userAddress: string
-    gamesPlayed: number
-  }[]
+  gamesList: GameEntry[]
   isLeaderboard?: boolean
   banUnbanUser: (formData: FormData) => Promise<void>
   deleteScore: (formData: FormData) => Promise<void>
@@ -167,40 +153,7 @@ export function GamesList({
                   textAlign: 'center',
                 }}
               >
-                <div>
-                  <Tooltip
-                    tooltip={
-                      <div>
-                        <strong>Summer Anti Cheat Score:</strong>
-                        <p>{sacScore.explanation}</p>
-                        {sacScore.mean && (
-                          <p>
-                            Mean: {sacScore.mean} ms, StdDev: {sacScore.stdDev} ms
-                          </p>
-                        )}
-                      </div>
-                    }
-                    style={{
-                      display: 'inline-block',
-                    }}
-                    tooltipWrapperStyles={{
-                      width: '300px',
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: sacScore.score < 50 ? 'red' : 'inherit',
-                        fontWeight: sacScore.score < 50 ? 'bold' : 'normal',
-                      }}
-                    >
-                      {sacScore.score}
-                    </span>
-                  </Tooltip>
-                  <br />
-                  <span style={{ fontSize: '0.8em', color: '#666' }}>
-                    {((entry.responseTimes ?? []) as number[] | undefined)?.length ?? 'n/a'} rounds
-                  </span>
-                </div>
+                <AntiCheatScore sacScore={sacScore} entry={entry} />
               </td>
               <td>{averageResponseTime}</td>
               <td>
