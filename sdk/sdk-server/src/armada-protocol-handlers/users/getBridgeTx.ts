@@ -10,7 +10,6 @@ import {
   isTokenAmount,
   type ITokenAmount,
 } from '@summerfi/sdk-common'
-import { TRPCError } from '@trpc/server'
 
 export const getBridgeTx = publicProcedure
   .input(
@@ -23,16 +22,5 @@ export const getBridgeTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    try {
-      return await opts.ctx.armadaManager.bridge.getBridgeTx(opts.input)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to call getBridgeTx', error)
-
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to call getBridgeTx`,
-        cause: error,
-      })
-    }
+    return await opts.ctx.armadaManager.bridge.getBridgeTx(opts.input)
   })

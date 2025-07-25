@@ -4,6 +4,7 @@ import {
   type GetGlobalRebalancesQuery,
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
+  type MerklReward,
 } from '@summerfi/armada-protocol-common'
 import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
@@ -27,6 +28,7 @@ import {
   type IArmadaVaultInfo,
   type IChainInfo,
   type IPercentage,
+  type MerklClaimTransactionInfo,
   type IToken,
   type MigrationTransactionInfo,
   type StakeTransactionInfo,
@@ -507,4 +509,28 @@ export interface IArmadaManagerUsersClient {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
   >
+
+  /**
+   * @name getUserMerklRewards
+   * @description Gets Merkl rewards for a user across specified chains
+   * @param params.address The user's address
+   * @param params.chainIds Optional chain IDs to filter by (default: supported chains)
+   * @returns Promise<MerklReward[]> Array of Merkl rewards
+   */
+  getUserMerklRewards(params: {
+    address: AddressValue
+    chainIds?: ChainId[]
+  }): Promise<{ perChain: Partial<Record<ChainId, MerklReward[]>> }>
+
+  /**
+   * @name getUserMerklClaimTx
+   * @description Generates a transaction to claim Merkl rewards for a user on a specific chain
+   * @param params.address The user's address
+   * @param params.chainId The chain ID to claim rewards on
+   * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
+   */
+  getUserMerklClaimTx(params: {
+    address: AddressValue
+    chainId: ChainId
+  }): Promise<[MerklClaimTransactionInfo] | undefined>
 }
