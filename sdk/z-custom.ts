@@ -11,6 +11,7 @@ const jsonString = () =>
         ctx.issues.push({
           message: `JSON Parse Error: ${error.message}`,
           input: ctx.value,
+          code: 'custom',
         })
       }
     })
