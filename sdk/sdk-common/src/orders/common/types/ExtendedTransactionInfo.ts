@@ -21,6 +21,7 @@ export enum TransactionType {
   Bridge = 'Bridge',
   Send = 'Send',
   VaultSwitch = 'VaultSwitch',
+  MerklClaim = 'MerklClaim',
 }
 
 export type TransactionPriceImpact = {
@@ -110,4 +111,8 @@ export type StakeTransactionInfo = TransactionInfo & {
 
 export type UnstakeTransactionInfo = TransactionInfo & {
   type: TransactionType.Unstake
+}
+
+export type MerklClaimTransactionInfo = TransactionInfo & {
+  type: TransactionType.MerklClaim
 }

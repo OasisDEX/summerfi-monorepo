@@ -28,6 +28,7 @@ import {
   type IArmadaVaultInfo,
   type IChainInfo,
   type IPercentage,
+  type MerklClaimTransactionInfo,
   type IToken,
   type MigrationTransactionInfo,
   type StakeTransactionInfo,
@@ -520,4 +521,16 @@ export interface IArmadaManagerUsersClient {
     address: AddressValue
     chainIds?: ChainId[]
   }): Promise<{ perChain: Partial<Record<ChainId, MerklReward[]>> }>
+
+  /**
+   * @name getUserMerklClaimTx
+   * @description Generates a transaction to claim Merkl rewards for a user on a specific chain
+   * @param params.address The user's address
+   * @param params.chainId The chain ID to claim rewards on
+   * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
+   */
+  getUserMerklClaimTx(params: {
+    address: AddressValue
+    chainId: ChainId
+  }): Promise<[MerklClaimTransactionInfo] | undefined>
 }
