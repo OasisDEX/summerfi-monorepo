@@ -144,7 +144,7 @@ jobs:
         run: pnpm prebuild
 
       - name: Build
-        run: pnpm build-earn-institutions-frontend
+        run: pnpm build-earn-frontend
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
