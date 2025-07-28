@@ -1,4 +1,4 @@
-import type { AddressValue, ChainId } from '@summerfi/sdk-common/index'
+import type { AddressValue, ChainId } from '@summerfi/sdk-common'
 
 // Contract addresses for Merkl distributor on supported chains
 export const MERKL_DISTRIBUTOR_ADDRESSES: Partial<Record<ChainId, AddressValue>> = {
