@@ -4,7 +4,7 @@ import {
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
-import { subgraphNetworkToId } from '@/helpers/earn-network-tools'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@/helpers/earn-network-tools'
 
 /**
  * Decorates vault objects with additional configuration from the fleet map
@@ -19,7 +19,7 @@ export const decorateWithFleetConfig = (
 ): SDKVaultishType[] =>
   vaults
     .map((vault) => {
-      const vaultNetworkId = subgraphNetworkToId(vault.protocol.network)
+      const vaultNetworkId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
       const vaultNetworkConfig =
         systemConfig.fleetMap?.[String(vaultNetworkId) as keyof typeof systemConfig.fleetMap]
       const configCustomFields = vaultNetworkConfig?.[vault.id.toLowerCase() as '0x']

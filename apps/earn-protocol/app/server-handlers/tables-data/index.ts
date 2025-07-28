@@ -1,4 +1,4 @@
-import { SDKNetwork } from '@summerfi/app-types'
+import { SupportedSDKNetworks } from '@summerfi/app-types'
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { NextResponse } from 'next/server'
@@ -31,16 +31,16 @@ export const updateTablesData = async ({
     }
 
     const subgraphsMap = {
-      [SDKNetwork.Mainnet]: `${baseUrl}/summer-protocol`,
-      [SDKNetwork.Base]: `${baseUrl}/summer-protocol-base`,
-      [SDKNetwork.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
-      [SDKNetwork.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
+      [SupportedSDKNetworks.Mainnet]: `${baseUrl}/summer-protocol`,
+      [SupportedSDKNetworks.Base]: `${baseUrl}/summer-protocol-base`,
+      [SupportedSDKNetworks.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
+      [SupportedSDKNetworks.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
     }
 
-    const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Mainnet])
-    const baseGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.Base])
-    const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.ArbitrumOne])
-    const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SDKNetwork.SonicMainnet])
+    const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Mainnet])
+    const baseGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Base])
+    const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.ArbitrumOne])
+    const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.SonicMainnet])
 
     let updatedLatestActivities
     let updatedTopDepositors

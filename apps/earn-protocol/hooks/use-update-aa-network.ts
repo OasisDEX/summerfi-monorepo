@@ -2,18 +2,28 @@
 import { useEffect } from 'react'
 import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { useChain } from '@account-kit/react'
-import { humanNetworktoSDKNetwork, subgraphNetworkToId } from '@summerfi/app-utils'
+import { customAAKitSonicConfig } from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds } from '@summerfi/app-types'
+import {
+  humanNetworktoSDKNetwork,
+  subgraphNetworkToId,
+  supportedNetworkId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
+import { type Chain } from 'viem'
+import { optimism } from 'viem/chains'
 
-import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
-import { NetworkIds } from '@/constants/networks-list'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
-const networkIdsToAccountKitChainsMap = {
-  [NetworkIds.BASEMAINNET]: base,
-  [NetworkIds.ARBITRUMMAINNET]: arbitrum,
-  [NetworkIds.MAINNET]: mainnet,
-  [NetworkIds.SONICMAINNET]: sonic,
+const networkIdsToAccountKitChainsMap: {
+  [key in SupportedNetworkIds]: Chain
+} = {
+  [SupportedNetworkIds.Base]: base,
+  [SupportedNetworkIds.ArbitrumOne]: arbitrum,
+  [SupportedNetworkIds.Mainnet]: mainnet,
+  [SupportedNetworkIds.Optimism]: optimism,
+  [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
 }
 
 // Update account kit network based on app network derived from currently displayed strategy
@@ -38,11 +48,7 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
   const { setChain } = useChain()
 
   const sdkNetwork = humanNetworktoSDKNetwork(network as string)
-  const appChainId = subgraphNetworkToId(sdkNetwork) as
-    | NetworkIds.BASEMAINNET
-    | NetworkIds.ARBITRUMMAINNET
-    | NetworkIds.MAINNET
-    | NetworkIds.SONICMAINNET
+  const appChainId = supportedNetworkId(subgraphNetworkToId(supportedSDKNetwork(sdkNetwork)))
 
   const appChain = networkIdsToAccountKitChainsMap[appChainId]
 

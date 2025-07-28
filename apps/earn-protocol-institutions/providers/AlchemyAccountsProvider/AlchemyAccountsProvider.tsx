@@ -2,8 +2,8 @@
 import { type FC, type PropsWithChildren, Suspense, useRef } from 'react'
 import { type AlchemyClientState } from '@account-kit/core'
 import { AlchemyAccountProvider, type AlchemyAccountsConfigWithUI } from '@account-kit/react'
+import { getAccountKitConfig, queryClient } from '@summerfi/app-earn-ui'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { getAccountKitConfig, queryClient } from 'account-kit/config'
 
 const AlchemyAccountsProvider: FC<
   PropsWithChildren<{

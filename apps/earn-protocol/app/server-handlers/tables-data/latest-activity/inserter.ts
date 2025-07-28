@@ -2,6 +2,7 @@ import {
   getHumanReadableFleetName,
   mapChainIdToDbNetwork,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type Network, type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
@@ -51,7 +52,7 @@ export async function insertLatestActivitiesInBatches(
           vaultName: activity.position.vault.name ?? 'n/a',
           strategy: activity.position.vault.name
             ? getHumanReadableFleetName(
-                activity.position.vault.protocol.network,
+                supportedSDKNetwork(activity.position.vault.protocol.network),
                 activity.position.vault.name,
               )
             : 'n/a',
@@ -60,7 +61,7 @@ export async function insertLatestActivitiesInBatches(
           balanceNormalized: activity.position.inputTokenBalanceNormalized,
           balanceUsd: activity.position.inputTokenBalanceNormalizedInUSD,
           network: mapChainIdToDbNetwork(
-            subgraphNetworkToSDKId(activity.position.vault.protocol.network),
+            subgraphNetworkToSDKId(supportedSDKNetwork(activity.position.vault.protocol.network)),
           ) as Network,
           inputTokenPriceUsd: activity.position.vault.inputTokenPriceUSD ?? '0',
           inputTokenSymbol: activity.position.vault.inputToken.symbol,

@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-operators */
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -28,7 +28,7 @@ export const getSumrToClaim = async ({
 }): Promise<SumrToClaimData> => {
   const { user } = await backendSDK.users.getUserClient({
     walletAddress: Address.createFromEthereum({ value: walletAddress }),
-    chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+    chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
   })
 
   const [aggregatedRewards, claimableAggregatedRewards] = await Promise.all([

@@ -11,7 +11,7 @@ import {
   useLocalConfig,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -35,7 +35,7 @@ import classNames from './ClaimDelegateCompletedStep.module.css'
 interface ClaimedCardProps {
   hasClaimed: boolean
   externalData: ClaimDelegateExternalData
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   estimatedSumrPrice: number
 }
 
@@ -45,6 +45,7 @@ const ClaimedCard: FC<ClaimedCardProps> = ({
   chainId,
   estimatedSumrPrice,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const claimedSumrRaw = externalData.sumrToClaim.claimableAggregatedRewards.perChain[chainId] ?? 0
 
   if (!hasClaimed) {
@@ -189,7 +190,8 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
 
   const sumrClaimedStepBefore =
     state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
-      ? externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
+      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
       : 0
 
   const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated

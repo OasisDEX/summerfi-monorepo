@@ -51,17 +51,20 @@
     "@account-kit/signer": "^4.36.1",
     "@loadable/component": "^5.16.4",
     "@summerfi/armada-protocol-common": "workspace:*",
+    "@tanstack/react-query": "^5.51.1",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.12",
-    "embla-carousel": "8.3.0",
     "embla-carousel-react": "8.3.0",
+    "embla-carousel": "8.3.0",
     "lodash-es": "^4.17.1",
     "next": "15.4.4",
-    "react": "19.1.0",
     "react-dom": "19.1.0",
-    "usehooks-ts": "^3.1.0"
+    "react": "19.1.0",
+    "usehooks-ts": "^3.1.0",
+    "viem": "2.29.2",
+    "wagmi": "2.10.9"
   },
   "publishConfig": {
     "access": "public"

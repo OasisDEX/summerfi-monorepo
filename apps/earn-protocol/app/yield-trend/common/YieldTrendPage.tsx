@@ -1,6 +1,9 @@
 import { type FC } from 'react'
-import { type SDKNetwork } from '@summerfi/app-types'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 
 import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -29,7 +32,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
 
   const selectedVaultId =
     vaultIdWithNetwork?.split('-')[0] ??
-    `${vaultsWithConfig[0].id}-${subgraphNetworkToId(vaultsWithConfig[0].protocol.network)}`
+    `${vaultsWithConfig[0].id}-${subgraphNetworkToId(supportedSDKNetwork(vaultsWithConfig[0].protocol.network))}`
 
   const selectedVault = vaultIdWithNetwork
     ? vaultsWithConfig.find(
@@ -41,7 +44,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
     throw new Error(`Vault with ID ${selectedVaultId} not found`)
   }
 
-  const parsedNetwork = selectedVault.protocol.network as SDKNetwork
+  const parsedNetwork = supportedSDKNetwork(selectedVault.protocol.network)
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyByNetworkMap] = await Promise.all([
     getInterestRates({
@@ -52,13 +55,13 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
       // just the vault displayed
       fleets: [selectedVault].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(protocolNetwork),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
       })),
     }),
     getVaultsApy({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
   ])

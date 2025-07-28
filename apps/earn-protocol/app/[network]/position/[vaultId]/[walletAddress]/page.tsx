@@ -8,13 +8,14 @@ import {
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
-  type SDKNetwork,
+  type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -50,7 +51,7 @@ import {
 type EarnVaultManagePageProps = {
   params: Promise<{
     vaultId: string
-    network: SDKNetwork
+    network: SupportedSDKNetworks
     walletAddress: string
   }>
 }
@@ -152,7 +153,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
     getPositionHistory({
@@ -168,7 +169,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getVaultsApy({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
     getMigratablePositions({

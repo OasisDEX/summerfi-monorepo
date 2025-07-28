@@ -8,7 +8,7 @@ import {
   useAmount,
   useLocalConfig,
 } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   formatCryptoBalance,
@@ -240,14 +240,14 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     toast.success('Bridge transaction submitted successfully', SUCCESS_TOAST_CONFIG)
   }
 
-  const handleDestinationChainChange = (newDestination: SDKNetwork) => {
+  const handleDestinationChainChange = (newDestination: SupportedSDKNetworks) => {
     dispatch({ type: 'update-destination-chain', payload: sdkNetworkToAAChain(newDestination) })
     if (amountParsed.gt(0)) {
       prepareTransaction()
     }
   }
 
-  const handleSourceChainChange = (network: SDKNetwork) => {
+  const handleSourceChainChange = (network: SupportedSDKNetworks) => {
     const nextSourceChain = sdkNetworkToAAChain(network)
 
     setSourceChain({ chain: nextSourceChain })

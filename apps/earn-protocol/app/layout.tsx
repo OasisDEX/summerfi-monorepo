@@ -4,6 +4,7 @@ import {
   accountKitCookieStateName,
   analyticsCookieName,
   forksCookieName,
+  getAccountKitConfig,
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
@@ -18,7 +19,6 @@ import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 import Script from 'next/script'
 
-import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'

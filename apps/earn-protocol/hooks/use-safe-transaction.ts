@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import Safe from '@safe-global/safe-apps-sdk'
-import { type Address, type SDKNetwork, type TxData } from '@summerfi/app-types'
+import { type Address, type SupportedSDKNetworks, type TxData } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
@@ -22,7 +22,7 @@ export const useSafeTransaction = ({
   onError,
   publicClient,
 }: {
-  network: SDKNetwork
+  network: SupportedSDKNetworks
   onSuccess: () => void
   onError: () => void
   publicClient?: PublicClient

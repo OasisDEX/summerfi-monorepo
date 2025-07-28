@@ -1,5 +1,5 @@
 'use client'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { ADDRESS_ZERO } from '@summerfi/app-utils'
 import { SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
@@ -35,7 +35,7 @@ export const useDecayFactor = (delegatedAddress?: string): DecayFactorResponse =
     try {
       const sumrToken = await sdk
         .getSummerToken({
-          chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+          chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
         })
         .catch((getSummerTokenError) => {
           throw new Error(`Failed to fetch SUMMER token: ${getSummerTokenError.message}`)

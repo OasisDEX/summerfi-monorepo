@@ -1,4 +1,4 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { GovernanceRewardsManagerAbi } from '@summerfi/armada-protocol-abis'
 import BigNumber from 'bignumber.js'
 
@@ -25,10 +25,10 @@ export const getSumrDecayFactor = async (addresses: string[]): Promise<SumrDecay
       return []
     }
 
-    const publicClient = await getSSRPublicClient(SDKChainId.BASE)
+    const publicClient = await getSSRPublicClient(SupportedNetworkIds.Base)
 
     if (!publicClient) {
-      throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
+      throw new Error(`Public client for chain ${SupportedNetworkIds.Base} not found`)
     }
 
     try {

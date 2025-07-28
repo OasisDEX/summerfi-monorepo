@@ -1,10 +1,9 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
-import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
@@ -27,7 +26,7 @@ export const useClaimSumrTransaction = ({
 }: {
   onSuccess: () => void
   onError: () => void
-  network: SDKNetwork
+  network: SupportedSDKNetworks
   publicClient?: PublicClient
 }): {
   claimSumrTransaction: () => Promise<unknown>

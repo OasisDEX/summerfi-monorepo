@@ -1,21 +1,22 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
 import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 
 import { SDKChainIdToSSRRpcGatewayMap } from './rpc-gateway-ssr'
 
-export const SSRChainConfigs: { chain: Chain; chainId: SDKChainId; chainName: string }[] = [
-  { chain: base, chainId: SDKChainId.BASE, chainName: 'base' },
-  { chain: mainnet, chainId: SDKChainId.MAINNET, chainName: 'mainnet' },
-  { chain: arbitrum, chainId: SDKChainId.ARBITRUM, chainName: 'arbitrum' },
-  { chain: sonic, chainId: SDKChainId.SONIC, chainName: 'sonic' },
-]
+export const SSRChainConfigs: { chain: Chain; chainId: SupportedNetworkIds; chainName: string }[] =
+  [
+    { chain: base, chainId: SupportedNetworkIds.Base, chainName: 'base' },
+    { chain: mainnet, chainId: SupportedNetworkIds.Mainnet, chainName: 'mainnet' },
+    { chain: arbitrum, chainId: SupportedNetworkIds.ArbitrumOne, chainName: 'arbitrum' },
+    { chain: sonic, chainId: SupportedNetworkIds.SonicMainnet, chainName: 'sonic' },
+  ]
 
-const publicClientsMap = new Map<SDKChainId, PublicClient>()
+const publicClientsMap = new Map<SupportedNetworkIds, PublicClient>()
 
 export const getSSRPublicClient: (
-  chainId: SDKChainId,
-) => Promise<PublicClient | undefined> = async (chainId: SDKChainId) => {
+  chainId: SupportedNetworkIds,
+) => Promise<PublicClient | undefined> = async (chainId: SupportedNetworkIds) => {
   if (publicClientsMap.has(chainId)) {
     return publicClientsMap.get(chainId)
   }

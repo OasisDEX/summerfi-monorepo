@@ -1,12 +1,18 @@
 import { type Dispatch, type FC, useEffect } from 'react'
 import { useUser } from '@account-kit/react'
-import { Button, Card, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  AccountKitAccountType,
+  Button,
+  Card,
+  SDKChainIdToAAChainMap,
+  Text,
+  useMobileCheck,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
-import { TOSStatus } from '@summerfi/app-types'
+import { type SupportedNetworkIds, TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { AccountKitAccountType } from '@/account-kit/types'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
@@ -46,7 +52,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const signTosMessage = useTermsOfServiceSigner()
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[clientChainId as AccountKitSupportedNetworks],
+    chain: SDKChainIdToAAChainMap[clientChainId as SupportedNetworkIds],
   })
 
   const tosState = useTermsOfService({

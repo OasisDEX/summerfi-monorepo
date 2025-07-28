@@ -3,6 +3,7 @@ import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import {
+  accountType,
   Button,
   Dropdown,
   Icon,
@@ -17,7 +18,6 @@ import isBoolean from 'lodash-es/isBoolean'
 import Link from 'next/link'
 import Script from 'next/script'
 
-import { accountType } from '@/account-kit/config'
 import { merchandiseFormValuesSchema } from '@/features/merchandise/helpers/form-schema'
 import { getMerchandiseButtonLabel } from '@/features/merchandise/helpers/get-button-label'
 import { getMerchandiseMessageToSign } from '@/features/merchandise/helpers/get-messageToSign'
@@ -39,7 +39,7 @@ import classNames from './MerchandiseForm.module.css'
 
 interface FormFieldProps {
   label: string
-  name: string
+  fieldName: string
   type: string
   placeholder: string
   value: string
@@ -52,7 +52,7 @@ interface FormFieldProps {
 
 const FormField: FC<FormFieldProps> = ({
   label,
-  name,
+  fieldName,
   type,
   placeholder,
   handleChange,
@@ -63,7 +63,7 @@ const FormField: FC<FormFieldProps> = ({
 }) => {
   return (
     <div className={classNames.formField}>
-      <label htmlFor={name}>
+      <label htmlFor={fieldName}>
         <Text variant="p4semi" as="p" style={{ color: 'var(--earn-protocol-neutral-40)' }}>
           {label}
         </Text>
@@ -71,8 +71,8 @@ const FormField: FC<FormFieldProps> = ({
       <div style={{ position: 'relative' }}>
         <Input
           type={type}
-          id={name}
-          name={name}
+          id={fieldName}
+          name={fieldName}
           className={classNames.formInput}
           placeholder={placeholder}
           required
@@ -120,7 +120,7 @@ const DropdownTrigger = ({ isOpen, isDisabled, dropdownValue }: DropdownTriggerP
   return (
     <FormField
       label="Size"
-      name="size"
+      fieldName="size"
       type="select"
       placeholder="Size"
       handleChange={() => {}}
@@ -142,7 +142,9 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     client,
   })
   const { userWalletAddress } = useUserWallet()
-  const [status, setStatus] = useState<MerchandiseFormStatus>(MerchandiseFormStatus.IDLE)
+  const [merchFormStatus, setMerchFormStatus] = useState<MerchandiseFormStatus>(
+    MerchandiseFormStatus.IDLE,
+  )
   const [formValues, setFormValues] = useState<MerchandiseFormValues>({
     name: '',
     email: '',
@@ -169,7 +171,7 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
     }
 
     setErrors({})
-    setStatus(MerchandiseFormStatus.LOADING)
+    setMerchFormStatus(MerchandiseFormStatus.LOADING)
 
     const messageToSign = getMerchandiseMessageToSign({
       walletAddress,
@@ -187,40 +189,41 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           resetForm: () => {},
           setIsSubmitting: (isSubmitting) => {
             if (isSubmitting) {
-              setStatus(MerchandiseFormStatus.LOADING)
+              setMerchFormStatus(MerchandiseFormStatus.LOADING)
             }
           },
           setIsSubmitted: (isSubmitted) => {
             if (isSubmitted) {
-              setStatus(MerchandiseFormStatus.SUCCESS)
+              setMerchFormStatus(MerchandiseFormStatus.SUCCESS)
               toast.success('Merchandise claimed successfully', SUCCESS_TOAST_CONFIG)
             }
           },
-          setFormErrors: (errors) => {
-            if (errors.global) {
-              setStatus(MerchandiseFormStatus.ERROR)
-              toast.error(errors.global.join(', '), ERROR_TOAST_CONFIG)
+          setFormErrors: (formError) => {
+            if (formError.global) {
+              setMerchFormStatus(MerchandiseFormStatus.ERROR)
+              toast.error(formError.global.join(', '), ERROR_TOAST_CONFIG)
             }
           },
         })
       } catch (err) {
-        setStatus(MerchandiseFormStatus.ERROR)
+        setMerchFormStatus(MerchandiseFormStatus.ERROR)
         toast.error('Unexpected error', ERROR_TOAST_CONFIG)
       }
     })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name: fieldName, value } = e.target
 
     setFormValues((prev) => ({
       ...prev,
-      [name]: value,
+      [fieldName]: value,
     }))
   }
 
   const inputsDisabled =
-    status === MerchandiseFormStatus.LOADING || status === MerchandiseFormStatus.SUCCESS
+    merchFormStatus === MerchandiseFormStatus.LOADING ||
+    merchFormStatus === MerchandiseFormStatus.SUCCESS
 
   return (
     <form className={classNames.merchandiseFormWrapper} onSubmit={onSubmit}>
@@ -232,7 +235,7 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
         <FormField
           key={field.name}
           label={field.label}
-          name={field.name}
+          fieldName={field.name}
           type={field.type}
           placeholder={field.placeholder}
           handleChange={handleChange}
@@ -270,14 +273,14 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
         disabled={
           !areAllFieldsFilled ||
           !isOwner ||
-          status === MerchandiseFormStatus.LOADING ||
-          status === MerchandiseFormStatus.SUCCESS
+          merchFormStatus === MerchandiseFormStatus.LOADING ||
+          merchFormStatus === MerchandiseFormStatus.SUCCESS
         }
       >
-        {status === MerchandiseFormStatus.LOADING && <LoadingSpinner size={24} />}
-        {getMerchandiseButtonLabel({ status, type })}
+        {merchFormStatus === MerchandiseFormStatus.LOADING && <LoadingSpinner size={24} />}
+        {getMerchandiseButtonLabel({ merchFormStatus, type })}
       </Button>
-      {status === MerchandiseFormStatus.SUCCESS ? (
+      {merchFormStatus === MerchandiseFormStatus.SUCCESS ? (
         <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.BEACH_CLUB}`}>
           <Text variant="p3" as="p" style={{ color: 'var(--beach-club-link)' }}>
             Go back to the Beach Club

@@ -1,9 +1,8 @@
 import {
   type IconNamesList,
   NetworkIds,
-  SDKNetwork,
   type SupportedNetworkIds,
-  type SupportedSDKNetworks,
+  SupportedSDKNetworks,
 } from '@summerfi/app-types'
 
 export const networkIdIconNameMap: {
@@ -19,9 +18,9 @@ export const networkIdIconNameMap: {
 export const networkNameIconNameMap: {
   [key in SupportedSDKNetworks]: IconNamesList
 } = {
-  [SDKNetwork.Mainnet]: 'earn_network_ethereum',
-  [SDKNetwork.Base]: 'earn_network_base',
-  [SDKNetwork.ArbitrumOne]: 'earn_network_arbitrum',
-  [SDKNetwork.Optimism]: 'earn_network_optimism',
-  [SDKNetwork.SonicMainnet]: 'earn_network_sonic',
+  [SupportedSDKNetworks.Mainnet]: 'earn_network_ethereum',
+  [SupportedSDKNetworks.Base]: 'earn_network_base',
+  [SupportedSDKNetworks.ArbitrumOne]: 'earn_network_arbitrum',
+  [SupportedSDKNetworks.Optimism]: 'earn_network_optimism',
+  [SupportedSDKNetworks.SonicMainnet]: 'earn_network_sonic',
 }

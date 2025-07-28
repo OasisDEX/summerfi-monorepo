@@ -3,7 +3,7 @@
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, supportedSDKNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
@@ -100,7 +100,9 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
   const resolvedRowsToDisplay = seeAll ? 20 : rowsToDisplay
 
-  const humanReadableNetwork = capitalize(sdkNetworkToHumanNetwork(vault.protocol.network))
+  const humanReadableNetwork = capitalize(
+    sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+  )
 
   const tabs = [
     {

@@ -1,4 +1,4 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -12,6 +12,7 @@ import { getSSRPublicClient, SSRChainConfigs } from '@/helpers/get-ssr-public-cl
 export interface SumrBalancesData {
   mainnet: string
   arbitrum: string
+  optimism: string
   base: string
   sonic: string
   total: string // without vesting
@@ -20,6 +21,7 @@ export interface SumrBalancesData {
     mainnet: string
     arbitrum: string
     base: string
+    optimism: string
     sonic: string
     total: string
     vested: string
@@ -73,7 +75,7 @@ export const getSumrBalances = async ({
 
           let vestingBalanceOnBase = 0n
 
-          if (chainId === SDKChainId.BASE) {
+          if (chainId === SupportedNetworkIds.Base) {
             const vestingWallet = await publicClient.readContract({
               abi: SummerVestingWalletFactoryAbi,
               address: VESTING_WALLET_FACTORY_ADDRESS,
@@ -128,6 +130,7 @@ export const getSumrBalances = async ({
       arbitrum: '0',
       base: '0',
       sonic: '0',
+      optimism: '0',
       total: '0',
       vested: '0',
       raw: {
@@ -135,6 +138,7 @@ export const getSumrBalances = async ({
         arbitrum: '0',
         base: '0',
         sonic: '0',
+        optimism: '0',
         total: '0',
         vested: '0',
       },

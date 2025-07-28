@@ -15,6 +15,7 @@ import {
   formatFiatBalance,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -183,7 +184,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       Promise.all(
         vaultsWithConfig.map((vault) =>
           getPositionHistory({
-            network: vault.protocol.network,
+            network: supportedSDKNetwork(vault.protocol.network),
             address: walletAddress.toLowerCase(),
             vault,
           }),
@@ -192,7 +193,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       getVaultsApy({
         fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
           fleetAddress: id,
-          chainId: subgraphNetworkToId(network),
+          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
         })),
       }),
       getPaginatedRebalanceActivity({

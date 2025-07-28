@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { Alert, Button, Card, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKSupportedChain } from '@summerfi/app-types'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -12,7 +12,7 @@ import classNames from './ClaimDelegateClaimStep.module.css'
 interface ClaimDelegateToBridgeProps {
   balance: string
   balanceInUSD: string
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
   walletAddress: string
 }
 

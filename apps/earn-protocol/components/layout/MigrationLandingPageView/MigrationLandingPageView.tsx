@@ -9,7 +9,7 @@ import {
   Icon,
   MobileDrawer,
   Modal,
-  networkIconByNetworkName,
+  networkNameIconNameMap,
   SlideCarousel,
   SliderCarouselDotsPosition,
   SUMR_CAP,
@@ -25,14 +25,15 @@ import {
   type DropdownRawOption,
   type GetVaultsApyResponse,
   type IconNamesList,
-  type SDKNetwork,
   type SDKVaultsListType,
+  type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
@@ -82,7 +83,7 @@ const allNetworksOption: DropdownOption = {
 
 interface MigrationLandingPageViewProps {
   vaultsList: SDKVaultsListType
-  selectedNetwork?: SDKNetwork | 'all-networks'
+  selectedNetwork?: SupportedSDKNetworks | 'all-networks'
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   walletAddress: string
@@ -121,7 +122,9 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   }
   const networkFilteredVaults = useMemo(() => {
     return localVaultNetwork && localVaultNetwork !== 'all-networks'
-      ? vaultsList.filter(({ protocol }) => protocol.network === localVaultNetwork)
+      ? vaultsList.filter(
+          ({ protocol }) => supportedSDKNetwork(protocol.network) === localVaultNetwork,
+        )
       : vaultsList
   }, [localVaultNetwork, vaultsList])
 
@@ -129,10 +132,12 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
 
   const vaultsNetworksList = useMemo(
     () => [
-      ...Array.from(new Set(vaultsList.map(({ protocol }) => protocol.network)))
+      ...Array.from(
+        new Set(vaultsList.map(({ protocol }) => supportedSDKNetwork(protocol.network))),
+      )
         .sort() // Ensure consistent ordering to avoid hydration errors
         .map((network) => ({
-          iconName: networkIconByNetworkName[network] as IconNamesList,
+          iconName: networkNameIconNameMap[network as SupportedSDKNetworks] as IconNamesList,
           value: network,
           label: capitalize(sdkNetworkToHumanNetwork(network)),
         })),
@@ -150,7 +155,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     () =>
       localVaultNetwork && localVaultNetwork !== 'all-networks'
         ? {
-            iconName: networkIconByNetworkName[localVaultNetwork] as IconNamesList,
+            iconName: networkNameIconNameMap[localVaultNetwork] as IconNamesList,
             value: localVaultNetwork,
             label: capitalize(sdkNetworkToHumanNetwork(localVaultNetwork)),
           }
@@ -176,7 +181,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     const [vaultId, vaultNetwork] = selectedVaultId.split('-')
 
     return getMigrationVaultUrl({
-      network: vaultNetwork as SDKNetwork,
+      network: vaultNetwork as SupportedSDKNetworks,
       vaultId,
       walletAddress,
       selectedPosition,
@@ -365,11 +370,12 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                       sumrPrice={estimatedSumrPrice}
                       vaultApyData={
                         vaultsApyByNetworkMap[
-                          `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                          `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                         ]
                       }
                       disabled={
-                        selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
+                        selectedPositionChainId !==
+                        subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
                       }
                     />
                   ))}
@@ -389,11 +395,12 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     }}
                     vaultApyData={
                       vaultsApyByNetworkMap[
-                        `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                        `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                       ]
                     }
                     disabled={
-                      selectedPositionChainId !== subgraphNetworkToSDKId(vault.protocol.network)
+                      selectedPositionChainId !==
+                      subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
                     }
                   />
                 ))

@@ -1,11 +1,11 @@
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { redirect } from 'next/navigation'
 
 const RedirectToVaultDetails = async ({
   params,
 }: {
   params: Promise<{
-    network: SDKNetwork
+    network: SupportedSDKNetworks
     vaultId: string
   }>
 }) => {

@@ -1,4 +1,4 @@
-import { type SDKNetwork, type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultType, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
@@ -10,7 +10,7 @@ export async function getVaultDetails({
   network,
 }: {
   vaultAddress?: string
-  network: SDKNetwork
+  network: SupportedSDKNetworks
 }) {
   try {
     if (!vaultAddress) {

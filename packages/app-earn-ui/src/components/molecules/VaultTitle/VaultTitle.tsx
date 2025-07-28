@@ -1,8 +1,8 @@
 import { type FC, type ReactNode } from 'react'
 import {
   type NetworkIds,
-  type SDKNetwork,
   type SDKVaultType,
+  type SupportedSDKNetworks,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
@@ -20,7 +20,7 @@ import { getTokenGuarded } from '@/tokens/helpers'
 interface VaultTitleProps {
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: SDKNetwork
+  networkName?: SupportedSDKNetworks
   value?: ReactNode
   selected?: boolean
   titleVariant?: keyof typeof TextVariants

@@ -2,17 +2,19 @@ import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState }
 import { toast } from 'react-toastify'
 import { useChain, useUser } from '@account-kit/react'
 import {
+  AccountKitAccountType,
   Button,
   Card,
   DataBlock,
   Dropdown,
   Icon,
   Input,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, SDKChainId } from '@summerfi/app-types'
+import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -22,8 +24,6 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { AccountKitAccountType } from '@/account-kit/types'
 import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
@@ -158,7 +158,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   }, [externalData.sumrStakeDelegate.delegatedTo])
 
   const sumrToClaim =
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
   const apy = (
     <Text as="h5" variant="h5">
@@ -195,7 +196,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasStake = Number(externalData.sumrStakeDelegate.stakedAmount) > 0
 
-  const isBase = clientChainId === SDKChainId.BASE
+  const isBase = clientChainId === SupportedNetworkIds.Base
 
   const handleDelegate = async (updateDelegatee?: string) => {
     const isDelegateUnchanged =
@@ -205,7 +206,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     // delegation is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
 
       return
     }

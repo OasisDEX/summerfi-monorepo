@@ -1,10 +1,12 @@
 import type { CSSProperties, FC } from 'react'
-import { SDKNetwork, type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
+import { networkNameIconNameMap } from '@/constants/icon-maps'
 import { getDisplayToken } from '@/helpers/get-display-token'
 
 import classNames from './VaultTitleDropdownContent.module.css'
@@ -14,13 +16,6 @@ interface VaultDropdownContentProps {
   link: string
   isDisabled?: boolean
   style?: CSSProperties
-}
-
-const networkNameIconMap = {
-  [SDKNetwork.Mainnet]: <Icon iconName="earn_network_ethereum" size={10} />,
-  [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={10} />,
-  [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={10} />,
-  [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={10} />,
 }
 
 export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 'link'>> = ({
@@ -39,7 +34,10 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
     <div className={classNames.iconWithSymbolWrapper}>
       <Icon tokenName={getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList} variant="m" />
       <div className={classNames.networkIconWrapper}>
-        {networkNameIconMap[vault.protocol.network]}
+        <Icon
+          iconName={networkNameIconNameMap[supportedSDKNetwork(vault.protocol.network)]}
+          size={10}
+        />
       </div>
       <Text as="p" variant="p1semi">
         {getDisplayToken(vault.inputToken.symbol)}

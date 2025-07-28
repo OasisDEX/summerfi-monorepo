@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
-import { type Address, type SDKChainId, type TransactionHash } from '@summerfi/app-types'
-import { chainIdToSDKNetwork } from '@summerfi/app-utils'
+import { accountType, SDKChainIdToAAChainMap, useIsIframe } from '@summerfi/app-earn-ui'
+import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
+import { chainIdToSDKNetwork, supportedNetworkId } from '@summerfi/app-utils'
 import {
   type ApproveTransactionInfo,
   getChainInfoByChainId,
@@ -10,11 +10,6 @@ import {
   TransactionType,
 } from '@summerfi/sdk-common'
 
-import {
-  type AccountKitSupportedNetworks,
-  accountType,
-  SDKChainIdToAAChainMap,
-} from '@/account-kit/config'
 import { MigrationSteps } from '@/features/migration/types'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
@@ -66,10 +61,10 @@ export const useMigrationTransaction = ({
   positionId: Address
   slippage: number
   step: MigrationSteps
-  vaultChainId: SDKChainId
+  vaultChainId: SupportedNetworkIds
 }) => {
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[vaultChainId as AccountKitSupportedNetworks],
+    chain: SDKChainIdToAAChainMap[supportedNetworkId(vaultChainId)],
   })
   const isIframe = useIsIframe()
   const { getMigrateTx } = useAppSDK()
@@ -198,6 +193,7 @@ export const useMigrationTransaction = ({
         slippage,
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (tx === undefined) {
         throw new Error('migrate tx is undefined')
       }

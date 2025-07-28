@@ -22,7 +22,12 @@ import {
   type SDKVaultsListType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatFiatBalance,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
@@ -241,7 +246,7 @@ export const PortfolioOverview = ({
                 }
                 vaultApyData={
                   vaultsApyByNetworkMap[
-                    `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`
+                    `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
                   ]
                 }
                 sumrPrice={estimatedSumrPrice}

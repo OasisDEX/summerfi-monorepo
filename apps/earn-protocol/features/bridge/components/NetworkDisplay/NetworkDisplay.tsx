@@ -1,4 +1,4 @@
-import { Icon, networkIconByNetworkName, Text } from '@summerfi/app-earn-ui'
+import { Icon, networkNameIconNameMap, Text } from '@summerfi/app-earn-ui'
 import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
@@ -12,7 +12,7 @@ interface NetworkDisplayProps {
 export const NetworkDisplay: React.FC<NetworkDisplayProps> = ({ chainId, amount }) => {
   const network = chainIdToSDKNetwork(chainId)
   const networkName = sdkNetworkToHumanNetwork(network)
-  const networkIcon = networkIconByNetworkName[network]
+  const networkIcon = networkNameIconNameMap[network]
 
   return (
     <div className={styles.networkDisplay}>

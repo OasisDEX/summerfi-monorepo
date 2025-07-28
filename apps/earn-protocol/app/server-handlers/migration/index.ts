@@ -1,11 +1,11 @@
-import { type SDKChainId, sdkSupportedChains } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, type ArmadaMigratablePosition, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 
 export type MigratablePosition = ArmadaMigratablePosition & {
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   apy: number | undefined
   apy7d: number | undefined
 }
@@ -31,8 +31,8 @@ export const getMigratablePositions = async ({
 }): Promise<MigratablePosition[]> => {
   const address = Address.createFromEthereum({ value: walletAddress })
 
-  const positionsPromises = sdkSupportedChains.map(async (chainId) => {
-    const chainInfo = getChainInfoByChainId(chainId)
+  const positionsPromises = Object.values(SupportedNetworkIds).map(async (chainId) => {
+    const chainInfo = getChainInfoByChainId(Number(chainId))
     let positionsData
     let apyData
 
@@ -84,5 +84,5 @@ export const getMigratablePositions = async ({
 
   const results = await Promise.all(positionsPromises)
 
-  return mapMigrationResponse(results)
+  return mapMigrationResponse(results) as MigratablePosition[]
 }

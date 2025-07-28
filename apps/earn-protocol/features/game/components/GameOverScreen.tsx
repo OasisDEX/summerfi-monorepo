@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import {
+  accountType,
   Button,
   Card as UiCard,
   getTwitterShareUrl,
@@ -14,7 +15,6 @@ import {
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { accountType } from '@/account-kit/config'
 import { getMessageToSign } from '@/features/game/helpers/gameHelpers'
 import { type GameOverParams } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'

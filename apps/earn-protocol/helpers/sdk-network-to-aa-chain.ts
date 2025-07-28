@@ -1,29 +1,30 @@
 import { arbitrum, base, mainnet } from '@account-kit/infra'
-import { SDKNetwork, type SDKSupportedNetwork, sdkSupportedNetworks } from '@summerfi/app-types'
+import { customAAKitSonicConfig } from '@summerfi/app-earn-ui'
+import { SupportedSDKNetworks } from '@summerfi/app-types'
 import { type Chain } from 'viem'
-
-import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
+import { optimism } from 'viem/chains'
 
 /**
- * Converts a SDKNetwork to an AccountKit Chain
+ * Converts a SupportedSDKNetworks to an AccountKit Chain
  * IMPORTANT: SONIC is currently not reexported from @account-kit/infra, so we need to import it from viem
  * ALSO AccountKit usually uses different viem version internally, so we use chains directly from viem to
  * perform some AA logic (i.e. setChain) it may not work as expected
  * ADDITIONALY for time being sonic doesn't support smart accounts
- * @param network - The SDKNetwork to convert
+ * @param network - The SupportedSDKNetworks to convert
  * @returns The AccountKit Chain
  */
-export const sdkNetworkToAAChain = (network: SDKNetwork): Chain => {
-  if (!sdkSupportedNetworks.includes(network as SDKSupportedNetwork)) {
+export const sdkNetworkToAAChain = (network: SupportedSDKNetworks): Chain => {
+  if (!Object.values(SupportedSDKNetworks).includes(network as SupportedSDKNetworks)) {
     throw new Error(`Unsupported network: ${network}`)
   }
 
-  const chainMap: { [K in SDKSupportedNetwork]: Chain } = {
-    [SDKNetwork.ArbitrumOne]: arbitrum,
-    [SDKNetwork.Base]: base,
-    [SDKNetwork.Mainnet]: mainnet,
-    [SDKNetwork.SonicMainnet]: sonic,
+  const chainMap: { [K in SupportedSDKNetworks]: Chain } = {
+    [SupportedSDKNetworks.ArbitrumOne]: arbitrum,
+    [SupportedSDKNetworks.Base]: base,
+    [SupportedSDKNetworks.Mainnet]: mainnet,
+    [SupportedSDKNetworks.Optimism]: optimism,
+    [SupportedSDKNetworks.SonicMainnet]: customAAKitSonicConfig,
   }
 
-  return chainMap[network as SDKSupportedNetwork]
+  return chainMap[network as SupportedSDKNetworks]
 }

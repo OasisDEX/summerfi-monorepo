@@ -2,6 +2,7 @@ import {
   getHumanReadableFleetName,
   mapChainIdToDbNetwork,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 
@@ -45,7 +46,7 @@ export async function insertTopDepositorsInBatches(
     topDepositors.map(
       (depositor) =>
         `${depositor.vault.id}-${depositor.account.id.toLowerCase()}-${mapChainIdToDbNetwork(
-          subgraphNetworkToSDKId(depositor.vault.protocol.network),
+          subgraphNetworkToSDKId(supportedSDKNetwork(depositor.vault.protocol.network)),
         )}`,
     ),
   )
@@ -94,7 +95,7 @@ export async function insertTopDepositorsInBatches(
             vaultName: topDepositor.vault.name ?? 'n/a',
             strategy: topDepositor.vault.name
               ? getHumanReadableFleetName(
-                  topDepositor.vault.protocol.network,
+                  supportedSDKNetwork(topDepositor.vault.protocol.network),
                   topDepositor.vault.name,
                 )
               : 'n/a',
@@ -103,7 +104,7 @@ export async function insertTopDepositorsInBatches(
             balanceNormalized: topDepositor.inputTokenBalanceNormalized,
             balanceUsd: topDepositor.inputTokenBalanceNormalizedInUSD,
             network: mapChainIdToDbNetwork(
-              subgraphNetworkToSDKId(topDepositor.vault.protocol.network),
+              subgraphNetworkToSDKId(supportedSDKNetwork(topDepositor.vault.protocol.network)),
             ),
             changeSevenDays: topDepositor.changeSevenDays,
             noOfDeposits: topDepositor.deposits.length,

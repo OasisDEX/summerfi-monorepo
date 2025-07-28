@@ -1,6 +1,6 @@
 import { Icon, OrderInformation, Text } from '@summerfi/app-earn-ui'
 import {
-  type SDKChainId,
+  type SupportedNetworkIds,
   type TokenSymbolsList,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
@@ -15,7 +15,7 @@ type OrderInfoDepositProps = {
   amountParsed: BigNumber
   amountDisplayUSD: string
   transactionFee?: string
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   transactionFeeLoading: boolean
 }
 

@@ -25,19 +25,19 @@ pnpm install @summerfi/ssr-public-client
 
 ```typescript
 import { getSSRPublicClient } from '@summerfi/ssr-public-client'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 
 // Get a public client for Ethereum Mainnet
-const mainnetClient = await getSSRPublicClient(SDKChainId.MAINNET)
+const mainnetClient = await getSSRPublicClient(SupportedNetworkIds.Mainnet)
 
 // Get a public client for Base
-const baseClient = await getSSRPublicClient(SDKChainId.BASE)
+const baseClient = await getSSRPublicClient(SupportedNetworkIds.Base)
 
 // Get a public client for Arbitrum
-const arbitrumClient = await getSSRPublicClient(SDKChainId.ARBITRUM)
+const arbitrumClient = await getSSRPublicClient(SupportedNetworkIds.ArbitrumOne)
 
 // Get a public client for Sonic
-const sonicClient = await getSSRPublicClient(SDKChainId.SONIC)
+const sonicClient = await getSSRPublicClient(SupportedNetworkIds.SonicMainnet)
 ```
 
 ### Environment Configuration
@@ -50,16 +50,16 @@ RPC_GATEWAY=https://your-rpc-gateway-url.com
 
 ### Supported Networks
 
-| Network          | Chain ID              | Description             |
-| ---------------- | --------------------- | ----------------------- |
-| Ethereum Mainnet | `SDKChainId.MAINNET`  | Ethereum main network   |
-| Base             | `SDKChainId.BASE`     | Base L2 network         |
-| Arbitrum         | `SDKChainId.ARBITRUM` | Arbitrum One L2 network |
-| Sonic            | `SDKChainId.SONIC`    | Sonic network           |
+| Network          | Chain ID                           | Description             |
+| ---------------- | ---------------------------------- | ----------------------- |
+| Ethereum Mainnet | `SupportedNetworkIds.Mainnet`      | Ethereum main network   |
+| Base             | `SupportedNetworkIds.Base`         | Base L2 network         |
+| Arbitrum         | `SupportedNetworkIds.ArbitrumOne`  | Arbitrum One L2 network |
+| Sonic            | `SupportedNetworkIds.SonicMainnet` | Sonic network           |
 
 ## API Reference
 
-### `getSSRPublicClient(chainId: SDKChainId): Promise<PublicClient | undefined>`
+### `getSSRPublicClient(chainId: SupportedNetworkIds): Promise<PublicClient | undefined>`
 
 Returns a cached Viem public client for the specified blockchain network.
 

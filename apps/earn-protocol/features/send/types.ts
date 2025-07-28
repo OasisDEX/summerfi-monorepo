@@ -1,4 +1,4 @@
-import { type SDKSupportedChain, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SupportedNetworkIds, type TokenSymbolsList } from '@summerfi/app-types'
 
 export enum SendStep {
   INIT = 'init',
@@ -16,7 +16,7 @@ export type SendTokenDropdown = {
   label: string
   value: string
   tokenSymbol: TokenSymbolsList
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
 }
 
 export type SendState = {

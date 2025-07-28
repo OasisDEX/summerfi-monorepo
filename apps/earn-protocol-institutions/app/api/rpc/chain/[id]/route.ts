@@ -1,14 +1,13 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { REVALIDATION_TIMES, SDKChainIdToAAChainMap } from '@summerfi/app-earn-ui'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 import type { Chain } from 'viem'
-
-import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
 
 export async function POST(req: Request) {
   const id = req.url.split('/').pop()
   let chain: Chain
 
   try {
-    chain = SDKChainIdToAAChainMap[parseInt(id as string, 10) as AccountKitSupportedNetworks]
+    chain = SDKChainIdToAAChainMap[parseInt(id as string, 10) as SupportedNetworkIds]
   } catch (error) {
     return new Response(`Chain with id ${id} not found.`, {
       status: 404,

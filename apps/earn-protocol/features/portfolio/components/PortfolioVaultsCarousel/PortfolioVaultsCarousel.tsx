@@ -11,7 +11,7 @@ import {
   VaultCard,
 } from '@summerfi/app-earn-ui'
 import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
 
 interface PortfolioVaultsCarouselProps {
@@ -51,7 +51,9 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             withTokenBonus={sumrNetApyConfig.withSumr}
             sumrPrice={estimatedSumrPrice}
             vaultApyData={
-              vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+              vaultsApyByNetworkMap[
+                `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+              ]
             }
           />
         ))}

@@ -12,7 +12,7 @@ import {
   type GetVaultsApyResponse,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
 
 import { YieldTrendDataCard } from '@/features/yield-trend/components/YieldTrendDataCard'
@@ -48,7 +48,9 @@ export const YieldTrendView = ({
   // This value is passed down to the graph to let the spinner animate
   const selectedVaultLocal = tempSelectedVault ?? selectedVault
 
-  const selectedVaultNetworkId = subgraphNetworkToId(selectedVaultLocal.protocol.network)
+  const selectedVaultNetworkId = subgraphNetworkToId(
+    supportedSDKNetwork(selectedVaultLocal.protocol.network),
+  )
   const selectedVaultApy =
     vaultsApyByNetworkMap[`${selectedVaultLocal.id}-${selectedVaultNetworkId}`]
 
@@ -61,9 +63,12 @@ export const YieldTrendView = ({
   const setSelectedVault = (vault: SDKVaultishType) => {
     setTempSelectedVault(vault)
     if (vault.id !== selectedVault.id) {
-      push(`/yield-trend/${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`, {
-        scroll: false,
-      })
+      push(
+        `/yield-trend/${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`,
+        {
+          scroll: false,
+        },
+      )
     }
   }
 

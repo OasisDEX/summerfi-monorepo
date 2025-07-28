@@ -14,7 +14,7 @@ import {
   type InlineButtonOption,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { getVaultNiceName } from '@summerfi/app-utils'
+import { getVaultNiceName, supportedSDKNetwork } from '@summerfi/app-utils'
 
 import { YieldTrendChart } from '@/features/yield-trend/components/YieldTrendChart'
 
@@ -93,7 +93,7 @@ export const YieldTrendDataCard = ({
       <VaultTitleWithRisk
         symbol={getDisplayToken(selectedVault.inputToken.symbol)}
         risk={selectedVault.customFields?.risk ?? 'lower'}
-        networkName={selectedVault.protocol.network}
+        networkName={supportedSDKNetwork(selectedVault.protocol.network)}
         titleVariant="h4"
       />
       <div className={yieldTrendViewStyles.divider} style={{ marginTop: '32px' }} />

@@ -1,7 +1,7 @@
 'use server'
 
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { SDKNetwork, type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultType, SupportedSDKNetworks } from '@summerfi/app-types'
 import { GraphQLClient } from 'graphql-request'
 
 import {
@@ -10,7 +10,7 @@ import {
 } from '@/graphql/clients/position-history/client'
 
 type GetPositionHistoryParams = {
-  network: SDKNetwork
+  network: SupportedSDKNetworks
   address: string
   vault: SDKVaultishType | SDKVaultType
 }
@@ -29,10 +29,10 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     })
 
   const subgraphsMap = {
-    [SDKNetwork.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
-    [SDKNetwork.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
-    [SDKNetwork.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
-    [SDKNetwork.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
+    [SupportedSDKNetworks.Mainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol`,
+    [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
+    [SupportedSDKNetworks.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
+    [SupportedSDKNetworks.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
   }
 
   const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap

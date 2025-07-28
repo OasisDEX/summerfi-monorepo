@@ -11,6 +11,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -149,7 +150,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault.rewardTokenEmissionsFinish,
   )
   const handleUserRefresh = () => {
-    onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id, viewWalletAddress)
+    onRefresh?.(
+      sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+      vault.id,
+      viewWalletAddress,
+    )
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)
@@ -212,7 +217,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <VaultTitleWithRisk
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 risk={vault.customFields?.risk ?? 'lower'}
-                networkName={vault.protocol.network}
+                networkName={supportedSDKNetwork(vault.protocol.network)}
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>

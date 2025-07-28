@@ -4,7 +4,11 @@ import {
   supportedDefillamaProtocolsConfig,
   type SupportedDefillamaTvlProtocols,
 } from '@summerfi/app-types'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import { NextResponse } from 'next/server'
 
 import { getMedianDefiProjectYield } from '@/app/server-handlers/defillama/get-median-defi-project-yield'
@@ -100,7 +104,7 @@ export async function GET() {
   const vaultsApyByNetworkMap = await getVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
     })),
   })
 

@@ -5,6 +5,7 @@ import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
   getVaultPositionUrl,
+  SDKChainIdToAAChainMap,
   Sidebar,
   SidebarMobileHeader,
   type SidebarProps,
@@ -23,12 +24,11 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -83,7 +83,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const { setChain, isSettingChain } = useChain()
 
   const { clientChainId } = useClientChainId()
@@ -226,7 +226,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
     if (state.step === MigrationSteps.COMPLETED) {
       push(
         getVaultPositionUrl({
-          network: vault.protocol.network,
+          network: supportedSDKNetwork(vault.protocol.network),
           vaultId: vault.customFields?.slug ?? vault.id,
           walletAddress,
         }),

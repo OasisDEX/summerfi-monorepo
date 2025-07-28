@@ -2,7 +2,7 @@
 import { type FC, useEffect, useReducer, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Transak } from '@transak/transak-sdk'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -58,7 +58,9 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
 
   const { step, fiatAmount, fiatCurrency, paymentMethod, eventOrderData } = state
 
-  const resolvedChainId = injectedNetwork ? injectedNetwork.chainId : chain.id
+  const resolvedChainId = (
+    injectedNetwork ? injectedNetwork.chainId : chain.id
+  ) as SupportedNetworkIds
 
   useEffect(() => {
     if (isOpen) {
@@ -134,9 +136,11 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
         walletAddress,
         disableWalletAddressForm: true,
         network: {
-          [SDKChainId.MAINNET]: 'ethereum',
-          [SDKChainId.BASE]: 'base',
-          [SDKChainId.ARBITRUM]: 'arbitrum',
+          [SupportedNetworkIds.Mainnet]: 'ethereum',
+          [SupportedNetworkIds.Base]: 'base',
+          [SupportedNetworkIds.SonicMainnet]: 'sonic',
+          [SupportedNetworkIds.ArbitrumOne]: 'arbitrum',
+          [SupportedNetworkIds.Optimism]: 'optimism',
         }[resolvedChainId],
         email,
         ...getTransakConfigInitData({
@@ -168,7 +172,7 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           case TransakSteps.INITIAL:
             return dispatch({ type: 'update-step', payload: TransakSteps.ABOUT_KYC })
           case TransakSteps.ABOUT_KYC:
-            if (chain.id === SDKChainId.MAINNET && !injectedNetwork) {
+            if (chain.id === SupportedNetworkIds.Mainnet && !injectedNetwork) {
               return dispatch({ type: 'update-step', payload: TransakSteps.SWITCH_TO_L2 })
             }
 
