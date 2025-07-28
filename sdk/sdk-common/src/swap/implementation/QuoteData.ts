@@ -1,7 +1,7 @@
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import type { SwapProviderType } from '../enums/SwapProviderType'
-import { IPercentage } from '../..//common/interfaces/IPercentage'
-import { IAddress } from '../..//common/interfaces/IAddress'
+import { IPercentage } from '../../common/interfaces/IPercentage'
+import { IAddress } from '../../common/interfaces/IAddress'
 
 /**
  * @name QuoteData
@@ -12,9 +12,9 @@ export type QuoteData = {
   provider: SwapProviderType
   fromTokenAmount: ITokenAmount
   toTokenAmount: ITokenAmount
-  estimatedGas: string
   /* Providers can provide multiple routes */
   routes: SwapRoute[]
+  estimatedGas: string
 }
 
 export type SwapRoute = SwapHop[]
