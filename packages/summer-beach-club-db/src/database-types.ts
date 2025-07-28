@@ -22,9 +22,17 @@ export interface DailyStats {
   total_deposits: Generated<Numeric>
 }
 
+export interface MerchandiseSignatures {
+  created_at: Generated<Timestamp | null>
+  id: Generated<number>
+  merchandise_type: string
+  signature: string
+  user_id: string
+}
+
 export interface Migrations {
   name: string
-  timestamp: string
+  timestamp: Generated<Timestamp | null>
 }
 
 export interface PointsConfig {
@@ -107,6 +115,7 @@ export interface Users {
 
 export interface DB {
   daily_stats: DailyStats
+  merchandise_signatures: MerchandiseSignatures
   migrations: Migrations
   points_config: PointsConfig
   positions: Positions
