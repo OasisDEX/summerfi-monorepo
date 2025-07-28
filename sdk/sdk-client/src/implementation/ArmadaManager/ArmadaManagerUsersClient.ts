@@ -1,14 +1,4 @@
-import {
-  BridgeTransactionInfo,
-  ITokenAmount,
-  type ApproveTransactionInfo,
-  type IArmadaPosition,
-  type IArmadaVaultId,
-  type IArmadaVaultInfo,
-  type IPercentage,
-  type IUser,
-  type VaultSwitchTransactionInfo,
-} from '@summerfi/sdk-common'
+import { ITokenAmount } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -227,5 +217,19 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getVaultSwitchTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getVaultSwitchTx']> {
     return this.rpcClient.armada.users.getVaultSwitchTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getUserMerklRewards */
+  async getUserMerklRewards(
+    params: Parameters<IArmadaManagerUsersClient['getUserMerklRewards']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserMerklRewards']> {
+    return this.rpcClient.armada.users.getUserMerklRewards.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getUserMerklClaimTx */
+  async getUserMerklClaimTx(
+    params: Parameters<IArmadaManagerUsersClient['getUserMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserMerklClaimTx']> {
+    return this.rpcClient.armada.users.getUserMerklClaimTx.query(params)
   }
 }

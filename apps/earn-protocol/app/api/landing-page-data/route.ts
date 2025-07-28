@@ -20,7 +20,6 @@ const emptyTvls = {
   aave: 0n,
   sky: 0n,
   spark: 0n,
-  pendle: 0n,
   euler: 0n,
   gearbox: 0n,
   compound: 0n,

@@ -4,6 +4,7 @@ import {
   type GetGlobalRebalancesQuery,
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
+  type MerklReward,
 } from '@summerfi/armada-protocol-common'
 import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
@@ -27,6 +28,7 @@ import {
   type IArmadaVaultInfo,
   type IChainInfo,
   type IPercentage,
+  type MerklClaimTransactionInfo,
   type IToken,
   type MigrationTransactionInfo,
   type StakeTransactionInfo,
@@ -253,15 +255,27 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
-   * @method getAggregatedRewards
-   * @description Returns the total aggregated rewards of a user in a Fleet
-   *
-   * @param user Address of the user to check the rewards for
-   *
-   * @returns The aggregated rewards of the user in the Fleet
+   * @name getAggregatedRewards
+   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain
+   * @param params.user The user
+   * @returns Promise<{
+   *  total: bigint
+   *  vaultUsagePerChain: Record<number, bigint>
+   *  vaultUsage: bigint
+   *  merkleDistribution: bigint
+   *  voteDelegation: bigint
+   * }>
+   * @throws Error
    */
-  getAggregatedRewards(params: { user: IUser }): Promise<{
+  getAggregatedRewards: (params: { user: IUser }) => Promise<{
     total: bigint
+    vaultUsagePerChain: Record<number, bigint>
+    vaultUsage: bigint
+    merkleDistribution: bigint
+    voteDelegation: bigint
+    /**
+     * @deprecated use `usagePerChain` instead
+     */
     perChain: Record<number, bigint>
   }>
 
@@ -495,4 +509,28 @@ export interface IArmadaManagerUsersClient {
     | [ApproveTransactionInfo, VaultSwitchTransactionInfo]
     | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
   >
+
+  /**
+   * @name getUserMerklRewards
+   * @description Gets Merkl rewards for a user across specified chains
+   * @param params.address The user's address
+   * @param params.chainIds Optional chain IDs to filter by (default: supported chains)
+   * @returns Promise<MerklReward[]> Array of Merkl rewards
+   */
+  getUserMerklRewards(params: {
+    address: AddressValue
+    chainIds?: ChainId[]
+  }): Promise<{ perChain: Partial<Record<ChainId, MerklReward[]>> }>
+
+  /**
+   * @name getUserMerklClaimTx
+   * @description Generates a transaction to claim Merkl rewards for a user on a specific chain
+   * @param params.address The user's address
+   * @param params.chainId The chain ID to claim rewards on
+   * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
+   */
+  getUserMerklClaimTx(params: {
+    address: AddressValue
+    chainId: ChainId
+  }): Promise<[MerklClaimTransactionInfo] | undefined>
 }

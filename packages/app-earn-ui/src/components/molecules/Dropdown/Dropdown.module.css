@@ -43,9 +43,12 @@
   pointer-events: all;
 }
 .dropdownHide {
-  max-height: 280px;
+  height: 0;
+  width: 0;
   opacity: 0;
-  visibility: hidden;
+  padding: 0;
+  visibility: visible;
+  border: none;
   pointer-events: none;
   transition:
     opacity 0.2s ease-out,

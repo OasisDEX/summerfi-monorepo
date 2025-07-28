@@ -9,6 +9,7 @@ import {
 } from '@summerfi/app-types'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -50,6 +51,7 @@ interface PortfolioPageViewProps {
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   beachClubData: BeachClubData
+  blogPosts: BlogPosts
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -66,6 +68,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   migratablePositions,
   migrationBestVaultApy,
   beachClubData,
+  blogPosts,
 }) => {
   const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
@@ -109,6 +112,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           migratablePositions={migratablePositions}
           walletAddress={walletAddress}
           migrationBestVaultApy={migrationBestVaultApy}
+          blogPosts={blogPosts}
         />
       ),
     },

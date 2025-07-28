@@ -23,6 +23,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 
 import { ClaimDelegateError, ClaimDelegateNoBalances } from './ClaimDelegateError'
@@ -69,6 +70,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
@@ -85,6 +87,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const { clientChainId } = useClientChainId() as {
     clientChainId: SDKSupportedChain
   }
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+  })
 
   const handleClaimError = useCallback(() => {
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
@@ -130,6 +135,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     onError: () => {
       handleClaimError()
     },
+    network: chainIdToSDKNetwork(clientChainId),
+    publicClient,
   })
 
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP

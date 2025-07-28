@@ -1,0 +1,191 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 128px
+}
+
+.pageHeader {
+  padding: var(--spacing-space-2x-large) var(--spacing-space-4x-large);
+  text-align: center;
+  margin-bottom: var(--spacing-space-3x-large);
+}
+
+@media (max-width: 531px) {
+  .pageHeader {
+    padding: var(--spacing-space-small) var(--spacing-space-large);
+  }
+}
+
+.pageHeader>h1 {
+  margin-bottom: var(--general-space-32);
+}
+
+.pageHeaderDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pageHeaderDetails>p {
+  color: var(--color-text-primary-hover);
+  margin-bottom: 12px;
+}
+
+.whoAreWe {
+  display: flex;
+  align-items: center;
+  max-width: 1130px;
+  margin: 0 auto;
+  gap: 32px;
+
+  .whoAreWeDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 24px;
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .whoAreWeImageVideo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      position: absolute;
+    }
+  }
+
+  .whoAreWeButtons {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    button {
+      min-width: auto;
+    }
+  }
+}
+
+@media (max-width: 531px) {
+  .whoAreWe {
+    flex-direction: column;
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+.teamMembers {
+  h2 {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.teamMembersList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: var(--spacing-space-x-large);
+  margin: 64px var(--spacing-space-3x-large) 0;
+}
+
+@media (max-width: 531px) {
+  .teamMembersList {
+    margin: 64px var(--spacing-space-large) 0;
+  }
+}
+
+@media (max-width: 531px) {
+  .teamMembersList {
+    grid-template-columns: repeat(1, minmax(300px, 1fr));
+  }
+}
+
+.teamMember {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .teamMemberDescription {
+    color: var(--color-text-secondary);
+
+    a {
+      color: var(--color-text-link);
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--color-text-link-hover);
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+.ecosystemCutAbove {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-space-2x-large);
+  max-width: 850px;
+  margin: 0 auto;
+
+  .ecosystemCutAboveDescription {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+@media (max-width: 531px) {
+  .ecosystemCutAbove {
+    flex-direction: column;
+    padding: 0 var(--spacing-space-large);
+  }
+}
+
+.protocolsVerticalScroller {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: calc((4 * (82px + 16px)) - 16px);
+  /* Assuming each item is around 64px + gap */
+  overflow: hidden;
+  position: relative;
+  width: 280px;
+  min-width: 280px;
+}
+
+@media (max-width: 531px) {
+  .protocolsVerticalScroller {
+    margin: 0 auto;
+  }
+}
+
+
+.scrollerTrack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

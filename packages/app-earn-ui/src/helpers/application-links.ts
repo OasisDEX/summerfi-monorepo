@@ -6,9 +6,9 @@ export const INTERNAL_LINKS = {
   beachClub: '/beach-club',
   homepage: '/earn/',
   about: '/earn/about',
-  privacy: '/earn/privacy',
-  cookie: '/earn/cookie',
-  terms: '/earn/terms',
+  privacy: '/privacy',
+  cookie: '/cookie',
+  terms: '/terms',
   security: '/earn/security',
   ajnaRewards: '/earn/ajna/rewards',
   referrals: '/earn/referrals',
@@ -18,9 +18,9 @@ export const INTERNAL_LINKS = {
   earn: '/earn/earn',
   // temporary links
   tempAbout: 'https://pro.summer.fi/about',
-  tempPrivacy: 'https://pro.summer.fi/privacy',
-  tempCookie: 'https://pro.summer.fi/cookie',
-  tempTerms: 'https://pro.summer.fi/terms',
+  tempPrivacy: 'https://summer.fi/privacy',
+  tempCookie: 'https://summer.fi/cookie',
+  tempTerms: 'https://summer.fi/terms',
   tempSecurity: 'https://pro.summer.fi/security',
   tempAjnaRewards: 'https://pro.summer.fi/ajna/rewards',
   tempReferrals: 'https://pro.summer.fi/referrals',
@@ -106,6 +106,8 @@ export const EXTERNAL_LINKS = {
     WHY_MULTIPLY_ON_SUMMER: 'https://blog.summer.fi/why-multiply-on-summer',
     WHY_EARN_ON_SUMMER: 'https://blog.summer.fi/why-earn-on-summer',
     INTRODUCING_SUMR_TOKEN: 'https://blog.summer.fi/introducing-sumr-token',
+    WHY_AI_MATTERS:
+      'https://blog.summer.fi/ever-wondered-how-summers-ai-agents-monitor-the-market-24-7/',
   },
   DOCS: {
     FAQ: {
@@ -160,6 +162,9 @@ export const EXTERNAL_LINKS = {
   EARN: {
     GOVERNANCE: 'https://gov.summer.fi',
     FORUM: 'https://forum.summer.fi',
+    FORUM_BA_POST:
+      'https://forum.summer.fi/t/summerfi-lazy-summer-protocol-initial-fleet-and-ark-parameters-by-block-analitica/76',
   },
   OKX: 'https://web3.okx.com/',
+  BD_CONTACT: 'https://calendly.com/anthonyfernandez-oazoapps/30min',
 }

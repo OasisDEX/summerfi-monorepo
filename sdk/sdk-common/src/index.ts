@@ -1,6 +1,6 @@
 export type { IToken as ITokenStanalone } from './common/interfaces/IToken'
 export type { QuoteData as QuoteDataStanalone } from './swap/implementation/QuoteData'
-export type { AddressValue } from './common/types/AddressValue'
+export { type AddressValue, isAddressValue } from './common/types/AddressValue'
 export { type ChainId, ChainIdSchema, isChainId } from './common/types/ChainId'
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
 export type { DenominationData, Denomination } from './common/types/Denomination'
@@ -309,6 +309,7 @@ export type {
   UnstakeTransactionInfo,
   MigrationTransactionInfo,
   VaultSwitchTransactionInfo,
+  MerklClaimTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'

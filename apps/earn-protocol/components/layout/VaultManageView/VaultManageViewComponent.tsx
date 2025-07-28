@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  Card,
   ControlsDepositWithdraw,
   ControlsSwitch,
   getDisplayToken,
   getMigrationLandingPageUrl,
   getPositionValues,
+  Icon,
   NonOwnerPositionBanner,
   ProjectedEarningsCombined,
   Sidebar,
@@ -15,6 +17,7 @@ import {
   type SidebarProps,
   SkeletonLine,
   SUMR_CAP,
+  Text,
   useAmount,
   useAmountWithSwap,
   useForecast,
@@ -49,6 +52,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -412,6 +416,26 @@ export const VaultManageViewComponent = ({
       })
   }, [vault.id, vaultChainId, vaults, vaultsApyByNetworkMap])
 
+  const potentialVaultsToSwitchToTokens = useMemo(() => {
+    return [
+      ...new Set(
+        potentialVaultsToSwitchTo.map((aultsToSwitchTo) => aultsToSwitchTo.inputToken.symbol),
+      ),
+    ].sort()
+  }, [potentialVaultsToSwitchTo])
+
+  const considerSwitchingContent = useMemo(() => {
+    return potentialVaultsToSwitchToTokens.length > 0 &&
+      sidebarTransactionType === TransactionAction.WITHDRAW ? (
+      <Card onClick={() => setSidebarTransactionType(TransactionAction.SWITCH)}>
+        <Text variant="p4semi" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+          <Icon iconName="summer_illustration_switch" style={{ marginRight: '8px' }} />
+          Consider switching to another vault: {potentialVaultsToSwitchToTokens.join(', ')}
+        </Text>
+      </Card>
+    ) : null
+  }, [potentialVaultsToSwitchToTokens, sidebarTransactionType])
+
   const sidebarTabsList = useMemo(() => {
     return [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH].filter(
       (action) => {
@@ -493,6 +517,7 @@ export const VaultManageViewComponent = ({
             }
             tokenBalanceLoading={selectedTokenBalanceLoading}
             manualSetAmount={manualSetAmount}
+            contentAfterInput={considerSwitchingContent}
           />
         )
       } else {
@@ -563,52 +588,53 @@ export const VaultManageViewComponent = ({
       return <div>Transaction type ({nextTransaction.type}) not supported</div>
     }
   }, [
-    nextTransaction,
-    isSwitch,
-    selectedSwitchVault,
-    isDepositOrWithdraw,
-    txStatus,
-    position,
-    vault,
-    potentialVaultsToSwitchTo,
-    vaultChainId,
-    vaultsApyByNetworkMap,
-    setSelectedSwitchVault,
-    transactions,
     amountDisplay,
     amountDisplayUSDWithSwap,
-    handleAmountChange,
-    handleTokenSelectionChangeWrapper,
-    sidebarTransactionType,
-    baseTokenOptions,
-    tokenOptions,
-    selectedTokenOption,
-    onFocus,
-    onBlur,
-    ownerView,
-    selectedTokenBalance,
-    netValue,
-    selectedTokenBalanceLoading,
-    manualSetAmount,
-    switchAmountDisplay,
-    switchManualSetAmount,
-    sidebar.primaryButton.loading,
-    switchOnBlur,
-    switchOnFocus,
-    transactionFee,
-    transactionFeeLoading,
-    switchResetToInitialAmount,
-    isEditingSwitchAmount,
-    setIsEditingSwitchAmount,
-    approvalTokenSymbol,
-    approvalType,
-    setApprovalType,
-    approvalHandleAmountChange,
+    amountParsed,
     approvalCustomAmount,
+    approvalHandleAmountChange,
     approvalManualSetAmount,
     approvalOnBlur,
     approvalOnFocus,
-    amountParsed,
+    approvalTokenSymbol,
+    approvalType,
+    baseTokenOptions,
+    considerSwitchingContent,
+    handleAmountChange,
+    handleTokenSelectionChangeWrapper,
+    isDepositOrWithdraw,
+    isEditingSwitchAmount,
+    isSwitch,
+    manualSetAmount,
+    netValue,
+    nextTransaction,
+    onBlur,
+    onFocus,
+    ownerView,
+    position,
+    potentialVaultsToSwitchTo,
+    selectedSwitchVault,
+    selectedTokenBalance,
+    selectedTokenBalanceLoading,
+    selectedTokenOption,
+    setApprovalType,
+    setIsEditingSwitchAmount,
+    setSelectedSwitchVault,
+    sidebar.primaryButton.loading,
+    sidebarTransactionType,
+    switchAmountDisplay,
+    switchManualSetAmount,
+    switchOnBlur,
+    switchOnFocus,
+    switchResetToInitialAmount,
+    tokenOptions,
+    transactionFee,
+    transactionFeeLoading,
+    transactions,
+    txStatus,
+    vault,
+    vaultChainId,
+    vaultsApyByNetworkMap,
   ])
 
   const sidebarTitle = useMemo(() => {
@@ -702,6 +728,7 @@ export const VaultManageViewComponent = ({
   return (
     <>
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
+      <RebalancingNoticeBanner vault={vault} />
       <VaultManageGrid
         vault={vault}
         vaultApyData={vaultApyData}

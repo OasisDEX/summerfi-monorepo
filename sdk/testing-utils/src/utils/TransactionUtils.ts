@@ -15,6 +15,7 @@ import {
   createWalletClient,
   defineChain,
   http,
+  type CallReturnType,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 
@@ -110,6 +111,23 @@ export class TransactionUtils {
     const transactionHash = await this._sendTransaction(params)
 
     return this._waitForReceipt({ hash: transactionHash })
+  }
+
+  async sendSimulation(params: { transaction: Transaction }): Promise<CallReturnType> {
+    const account = this.account
+
+    if (!account) {
+      throw new Error(
+        'No account provided at fork construction and no private key provided to send transaction',
+      )
+    }
+
+    return this.publicClient.call({
+      account: account,
+      to: params.transaction.target.value,
+      value: BigInt(params.transaction.value),
+      data: params.transaction.calldata,
+    })
   }
 
   private async _sendTransaction(params: {

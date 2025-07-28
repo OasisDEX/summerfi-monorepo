@@ -2,9 +2,10 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev --concurrency=100",
-    "dev-earn-frontend": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page...",
+    "dev-earn-frontend": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol... --filter=@summerfi/earn-protocol-landing-page... --filter=@summerfi/earn-protocol-institutions...",
     "dev-earn-app": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol...",
     "dev-earn-landing": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol-landing-page...",
+    "dev-earn-institutions": "turbo run dev --concurrency=100 --filter=@summerfi/earn-protocol-institutions...",
     "dev-rays-frontend": "turbo run dev --concurrency=100 --filter=@summerfi/rays-dashboard...",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
@@ -15,6 +16,7 @@
     "build:sdk": "turbo run build --cache-dir=.turbo --filter=./sdk/*",
     "test:sdk": "turbo run test --cache-dir=.turbo --filter=./sdk/*",
     "lint:sdk": "turbo run lint --cache-dir=.turbo --filter=./sdk/*",
+    "sst:sdk": "cd sdk && pnpm run sst:dev",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
@@ -69,7 +71,7 @@
     "ts-jest": "^29.1.2",
     "tsc-alias": "^1.8.8",
     "tsx": "^4.16.5",
-    "turbo": "^2.5.3",
+    "turbo": "^2.5.5",
     "typescript": "^5.7.3",
     "zx": "^8.3.0"
   },

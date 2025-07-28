@@ -13,15 +13,14 @@ export const validateCaptcha = async (token: string): Promise<boolean> => {
     throw new Error('RECAPTCHA_SECRET_KEY is not defined')
   }
 
+  const formBody = new FormData()
+
+  formBody.append('secret', captchaSecretkey)
+  formBody.append('response', token)
+
   const recaptchaResponse = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      secret: captchaSecretkey,
-      response: token,
-    }),
+    body: formBody,
   })
 
   const recaptchaData = await recaptchaResponse.json()

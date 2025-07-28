@@ -10,7 +10,7 @@ import {
   Text,
 } from '@summerfi/app-earn-ui'
 import { DeviceType } from '@summerfi/app-types'
-import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
+import { getDeviceType, getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
@@ -23,7 +23,6 @@ import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { fontInter } from '@/helpers/fonts'
-import { getDeviceType } from '@/helpers/get-device-type'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 

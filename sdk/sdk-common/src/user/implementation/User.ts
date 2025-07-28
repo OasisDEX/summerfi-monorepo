@@ -1,5 +1,9 @@
+import { Address } from '../../common/implementation/Address'
+import { getChainInfoByChainId } from '../../common/implementation/ChainFamilies'
+import { Wallet } from '../../common/implementation/Wallet'
 import { IChainInfo } from '../../common/interfaces/IChainInfo'
 import { IWallet } from '../../common/interfaces/IWallet'
+import type { AddressValue } from '../../common/types/AddressValue'
 import { SerializationService } from '../../services/SerializationService'
 import { IUser, IUserData, __signature__ } from '../interfaces/IUser'
 
@@ -23,6 +27,15 @@ export class User implements IUser {
   /** FACTORY */
   public static createFrom(params: UserParameters): User {
     return new User(params)
+  }
+
+  public static createFromEthereum(chainId: number, address: AddressValue): User {
+    return new User({
+      chainInfo: getChainInfoByChainId(chainId),
+      wallet: Wallet.createFrom({
+        address: Address.createFromEthereum({ value: address }),
+      }),
+    })
   }
 
   /** SEALED CONSTRUCTOR */

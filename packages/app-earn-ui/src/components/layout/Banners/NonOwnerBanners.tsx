@@ -1,3 +1,4 @@
+import { type FC } from 'react'
 import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -5,13 +6,10 @@ import { Text } from '@/components/atoms/Text/Text'
 
 import bannerStyles from './Banners.module.css'
 
-export const NonOwnerPositionBanner = ({
-  isOwner,
-  walletStateLoaded,
-}: {
+export const NonOwnerPositionBanner: FC<{
   isOwner: boolean
   walletStateLoaded: boolean
-}): React.ReactNode => {
+}> = ({ isOwner, walletStateLoaded }): React.ReactNode => {
   return (
     <div
       suppressHydrationWarning
@@ -27,13 +25,10 @@ export const NonOwnerPositionBanner = ({
   )
 }
 
-export const NonOwnerPortfolioBanner = ({
-  isOwner,
-  walletStateLoaded,
-}: {
+export const NonOwnerPortfolioBanner: FC<{
   isOwner: boolean
   walletStateLoaded: boolean
-}): React.ReactNode => {
+}> = ({ isOwner, walletStateLoaded }): React.ReactNode => {
   return (
     <div
       suppressHydrationWarning

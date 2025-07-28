@@ -1,9 +1,12 @@
 import { type ReactNode } from 'react'
 import clsx from 'clsx'
 import Image, { type StaticImageData } from 'next/image'
+import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { BigGradientBox } from '@/components/molecules/BigGradientBox/BigGradientBox'
+import { EXTERNAL_LINKS } from '@/helpers/application-links'
 
 import enhancedRiskManagementStyles from './EnhancedRiskManagement.module.css'
 
@@ -55,6 +58,15 @@ export const EnhancedRiskManagement = ({
               of experience, using sophisticated models to simulate market conditions and their own
               knowledge to prevent any unnecessary risks taken to the protocol.
             </Text>
+            <Link
+              href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
+              target="_blank"
+              style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+            >
+              <WithArrow>
+                <Text variant="p2">Learn more</Text>
+              </WithArrow>
+            </Link>
           </div>
           <div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
@@ -168,6 +180,15 @@ export const EnhancedRiskManagementCampaign = ({
               of experience, using sophisticated models to simulate market conditions and their own
               knowledge to prevent any unnecessary risks taken to the protocol.
             </Text>
+            <Link
+              href={EXTERNAL_LINKS.EARN.FORUM_BA_POST}
+              target="_blank"
+              style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+            >
+              <WithArrow>
+                <Text variant="p2">Learn more</Text>
+              </WithArrow>
+            </Link>
           </div>
           <div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
@@ -248,7 +269,7 @@ export const EnhancedRiskManagementCampaign = ({
             </Text>
             <Text variant="p2" as="p">
               Built entirely on-chain, Summer gives you unrestricted access and complete control
-              over your assets—no middle-men and no opaque third parties with control over your
+              over your assets - no middle-men and no opaque third parties with control over your
               capital.
             </Text>
           </div>

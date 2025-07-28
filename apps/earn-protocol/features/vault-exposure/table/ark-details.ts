@@ -257,7 +257,7 @@ export const arkDetailsMap: {
     },
     '0x60390d9493008153b32fffa4765d21d84875d90e': {
       description:
-        'Behind the scenes, Fluid automatically puts your ETH to work in several lending apps (Aave, Compound, Spark, Morpho), borrowing a little extra ETH each time to “loop” the position. This boosts the normal staking yield by roughly 1.5–3×. Everything is bundled into one low-gas transaction, and you can swap your iToken back for your stETH (plus the extra yield) whenever you like.',
+        'Behind the scenes, Fluid automatically puts your ETH to work in several lending apps (Aave, Compound, Spark, Morpho), borrowing a little extra ETH each time to “loop” the position. This boosts the normal staking yield by roughly 1.5-3×. Everything is bundled into one low-gas transaction, and you can swap your iToken back for your stETH (plus the extra yield) whenever you like.',
       link: 'https://lite.guides.instadapp.io/getting-started/vault-features',
     },
     '0x235dd2d3cfcd5476bd0b9217e9a4839e709a00f6': {
@@ -307,7 +307,7 @@ export const arkDetailsMap: {
     },
     '0x3d8c278f05f655f26dcbf828c084e5182fd8d409': {
       description:
-        'Sky Token Rewards module allows your to earn SKY governance tokens—soon Sky Star tokens, too. It’s non-custodial, so you keep full control of your funds while supporting the Sky ecosystem.',
+        'Sky Token Rewards module allows your to earn SKY governance tokens - soon Sky Star tokens, too. It’s non-custodial, so you keep full control of your funds while supporting the Sky ecosystem.',
       link: 'https://sky.money/features#rewards',
     },
     '0x3f289b064cd07e42210a57819908a937bec859e8': {

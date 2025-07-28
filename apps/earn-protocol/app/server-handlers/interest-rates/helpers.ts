@@ -39,7 +39,8 @@ type ArkType = GetInterestRatesParams['arksList'][number]
 export const isProperInterestRatesNetwork = (network: string): network is keyof typeof clients =>
   network in clients
 
-export const filterArksWithCapHigherThanZero = (ark: ArkType) => Number(ark.depositCap) > 0
+export const filterArksWithCapHigherThanZero = (ark: ArkType) =>
+  Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0
 
 export const interestRatesMapArkName = (ark: ArkType) =>
   ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND'

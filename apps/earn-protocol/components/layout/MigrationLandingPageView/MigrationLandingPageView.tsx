@@ -69,7 +69,7 @@ const contentCards: {
   {
     title: 'Automated Rebalancing',
     description:
-      'Take the hassle out of yield hunting by automatically rebalancing your capital across top-tier strategies and protocols—so you never miss evolving market opportunities.',
+      'Take the hassle out of yield hunting by automatically rebalancing your capital across top-tier strategies and protocols - so you never miss evolving market opportunities.',
     iconName: 'migrate_colorful',
   },
 ]

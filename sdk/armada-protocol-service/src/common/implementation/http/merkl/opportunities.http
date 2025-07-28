@@ -1,0 +1,17 @@
+### by Protocol Name
+@name = morpho
+
+https://api.merkl.xyz/v4/opportunities?name={{name}}
+
+### by Tag
+@tags = summerfi
+
+https://api.merkl.xyz/v4/opportunities?tags={{tags}}
+
+### by Id
+@opportunityId = 17697067541467596262
+
+https://api.merkl.xyz/v4/opportunities/{{opportunityId}}
+
+
+

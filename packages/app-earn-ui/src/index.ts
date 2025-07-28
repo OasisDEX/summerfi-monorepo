@@ -34,6 +34,8 @@ export { ChartBar } from './components/atoms/ChartBar/ChartBar'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
+export { NavigationConfig } from './components/layout/Navigation/NavigationConfig'
+export { NavigationExtraComponents } from './components/layout/Navigation/NavigationExtraComponents'
 export { VaultGrid } from './components/layout/VaultGrid/VaultGrid'
 export { VaultOpenGrid } from './components/layout/VaultOpenGrid/VaultOpenGrid'
 export { VaultOpenLoadingGrid } from './components/layout/VaultOpenGrid/VaultOpenLoadingGrid'
@@ -48,6 +50,7 @@ export {
   NonOwnerPortfolioBanner,
 } from './components/layout/Banners/NonOwnerBanners'
 export { GlobalIssueBanner } from './components/layout/Banners/GlobalIssueBanner'
+export { GlobalNoticeBanner } from './components/layout/Banners/GlobalNoticeBanner'
 export { FloatingBanner } from './components/layout/Banners/FloatingBanner'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'

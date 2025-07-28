@@ -7,7 +7,7 @@ import { Api, Bucket } from 'sst/constructs'
 import { RemovalPolicy } from 'aws-cdk-lib'
 import { config } from '@dotenvx/dotenvx'
 
-config({ path: ['../.env', '.env'], override: true, debug: true, ignore: ['MISSING_ENV_FILE'] })
+config({ path: ['../.env', '.env'], override: true, debug: false, ignore: ['MISSING_ENV_FILE'] })
 
 export default {
   config(input) {

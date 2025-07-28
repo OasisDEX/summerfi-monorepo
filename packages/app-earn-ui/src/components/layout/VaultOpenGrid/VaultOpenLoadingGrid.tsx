@@ -79,8 +79,68 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
             </Text>
           </div>
           <SimpleGrid
+            columns={isMobile ? 1 : 3}
+            rows={isMobile ? 2 : 1}
+            gap="var(--general-space-16)"
+            style={{ marginBottom: 'var(--general-space-16)' }}
+          >
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Assets in vault"
+                value={
+                  <SkeletonLine
+                    radius="16px"
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    height={30}
+                    width={100}
+                  />
+                }
+                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
+                subValueType="neutral"
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Instant liquidity"
+                value={
+                  <SkeletonLine
+                    radius="16px"
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    height={30}
+                    width={100}
+                  />
+                }
+                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
+                subValueType="neutral"
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Deposit Cap"
+                value={
+                  <SkeletonLine
+                    radius="16px"
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    height={30}
+                    width={100}
+                  />
+                }
+                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
+                subValueSize="small"
+              />
+            </Box>
+          </SimpleGrid>
+          <SimpleGrid
             columns={isMobile ? 1 : 2}
-            rows={isMobile ? 4 : 2}
+            rows={isMobile ? 2 : 1}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -99,7 +159,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
                 }
                 subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
                 subValueType="neutral"
-                subValueSize="medium"
+                subValueSize="small"
               />
             </Box>
             <Box>
@@ -117,41 +177,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
                 }
                 subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
                 subValueType="neutral"
-                subValueSize="medium"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Assets in vault"
-                value={
-                  <SkeletonLine
-                    radius="16px"
-                    style={{ marginTop: '5px', marginBottom: '5px' }}
-                    height={30}
-                    width={100}
-                  />
-                }
-                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
-                subValueSize="medium"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Deposit cap"
-                value={
-                  <SkeletonLine
-                    radius="16px"
-                    style={{ marginTop: '5px', marginBottom: '5px' }}
-                    height={30}
-                    width={100}
-                  />
-                }
-                subValue={<SkeletonLine style={{ marginTop: '4px' }} height={24} width={70} />}
-                subValueSize="medium"
+                subValueSize="small"
               />
             </Box>
           </SimpleGrid>

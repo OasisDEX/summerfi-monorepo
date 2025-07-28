@@ -5,8 +5,10 @@ import {
   Button,
   Card,
   Emphasis,
+  EXTERNAL_LINKS,
   FaqSection,
   Icon,
+  INTERNAL_LINKS,
   SectionTabs,
   TabBar,
   Text,
@@ -14,14 +16,16 @@ import {
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
+import { useScrolled } from '@/hooks/use-scrolled'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
@@ -33,11 +37,19 @@ import howItWorksImage from '@/public/img/institution/how-it-works-diagram.png'
 
 export default function PublicAccessVaults() {
   const { landingPageData } = useLandingPageData()
+  const { isScrolledToTop } = useScrolled()
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   const protocolsList = useMemo(() => {
     return supportedDefillamaProtocols.map((protocol) => {
       const protocolConfig = supportedDefillamaProtocolsConfig[protocol]
-      const { asset, displayName } = protocolConfig
+      const { displayName } = protocolConfig
       const protocolIcon = protocolConfig.icon
       const tvl = BigInt(landingPageData?.protocolTvls[protocol] ?? 0)
       const apy = landingPageData?.protocolApys[protocol] ?? [0, 0]
@@ -47,10 +59,8 @@ export default function PublicAccessVaults() {
         protocol: displayName,
         blocks: [
           ['TVL', tvl ? `$${formatCryptoBalance(tvl)}` : 'N/A'],
-          ['Live APY', formatPercent(apy[1], { precision: 2 })],
-          ['Asset', asset.join(', ')],
           [
-            '30d APY Range 24/25',
+            '30d APY Range',
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             apy
               ? `${formatPercent(apy[0], {
@@ -66,18 +76,14 @@ export default function PublicAccessVaults() {
     })
   }, [landingPageData?.protocolTvls, landingPageData?.protocolApys])
 
-  if (landingPageData && !landingPageData.systemConfig.features.Institutions) {
-    redirect('/')
-  }
+  useFeatureFlagRedirect({
+    config: landingPageData?.systemConfig,
+    featureName: 'Institutions',
+  })
 
-  if (!landingPageData) {
-    return null
-  }
-
-  const totalProtocolTvl = Object.values(landingPageData.protocolTvls).reduce(
-    (acc, tvl) => acc + BigInt(tvl),
-    BigInt(0),
-  )
+  const totalProtocolTvl = landingPageData
+    ? Object.values(landingPageData.protocolTvls).reduce((acc, tvl) => acc + BigInt(tvl), BigInt(0))
+    : BigInt(0)
 
   return (
     <div className={publicAccessVaultsStyles.wrapper}>
@@ -96,21 +102,35 @@ export default function PublicAccessVaults() {
             yield. Capital is rotated automatically into the highest quality strategies, cutting
             operational complexity while targeting superior risk-adjusted returns.
           </Text>
-          <Button variant="primaryLargeColorful">
-            <WithArrow variant="p2semi">Get started now</WithArrow>
-          </Button>
-          <WithArrow variant="p2semi" style={{ color: 'white', margin: '20px 10px 0 0' }}>
-            Contact us
-          </WithArrow>
+          <Link href="/earn" target="_blank">
+            <Button variant="primaryLargeColorful" style={{ minWidth: '240px' }}>
+              <WithArrow variant="p2semi" style={{ color: 'white' }}>
+                Get started now
+              </WithArrow>
+            </Button>
+          </Link>
         </div>
       </div>
-      <div className={publicAccessVaultsStyles.strategiesBlock}>
+      <div
+        className={clsx(institutionsPageStyles.scrollDownButton, {
+          [institutionsPageStyles.scrollDownButtonHidden]: !isScrolledToTop,
+        })}
+        onClick={smoothScrollToId('institutions-public-access-vaults-cta')}
+      >
+        <Text variant="p3semi">
+          Read more <Icon iconName="arrow_forward" size={20} />
+        </Text>
+      </div>
+      <div
+        className={publicAccessVaultsStyles.strategiesBlock}
+        id="institutions-public-access-vaults-cta"
+      >
         <Text as="h2" variant="h2">
           DeFi’s highest quality strategies continuously optimised
         </Text>
         <Text as="p" variant="p1" className={publicAccessVaultsStyles.secondaryParagraph}>
-          Effortless access to crypto’s best DeFi, continually rebalanced with AI powered automation
-          for best in class risk adjusted return.
+          Effortless access to crypto’s best DeFi yields, continually rebalanced with AI powered
+          automation for best in class risk adjusted return.
         </Text>
       </div>
       <BigProtocolScroller itemsList={protocolsList} />
@@ -131,9 +151,9 @@ export default function PublicAccessVaults() {
       <div className={institutionsPageStyles.subpageDescriptionBlock}>
         <div className={institutionsPageStyles.subpageDescriptionText}>
           <Text as="h2" variant="h2">
-            Institutional-Grade Automation, Whatever Your
+            Institutional-grade automation, whatever your
             <br />
-            Structure
+            structure
           </Text>
         </div>
         <Card className={institutionsPageStyles.subpageDescriptionCard}>
@@ -204,7 +224,7 @@ export default function PublicAccessVaults() {
                   Intuitive UX
                 </Text>
                 <Text variant="p1" as="p">
-                  Simple, compliant interfaces—ideal for teams new to DeFi and expert large
+                  Simple, compliant interfaces - ideal for teams new to DeFi and expert large
                   allocators alike.
                 </Text>
               </div>
@@ -226,7 +246,7 @@ export default function PublicAccessVaults() {
               color: 'var(--color-text-primary-hover)',
             }}
           >
-            Crypto native funds + Crypto native treasuries
+            Crypto native funds, Family offices, and Large individual allocators
           </Text>
         </Card>
       </div>
@@ -234,7 +254,7 @@ export default function PublicAccessVaults() {
         <Image src={blueChipsImage} alt="Blue Chip Digital Assets" />
         <div className={publicAccessVaultsStyles.blueChipsBlockDescription}>
           <Text as="h2" variant="h2">
-            The best risk-adjusted yields for Blue-Chip Digital Assets
+            The best risk-adjusted yields for blue-chip digital assets
           </Text>
           <Text as="p" variant="p1semiColorful">
             Sustainably higher yields, optimized with AI.
@@ -244,11 +264,8 @@ export default function PublicAccessVaults() {
             across the top protocols, ensuring you are earning the best available yields.
           </Text>
           <div className={publicAccessVaultsStyles.blueChipsBlockButtons}>
-            <Link href="">
+            <Link href="/earn" target="_blank">
               <WithArrow variant="p3semi">Get started</WithArrow>
-            </Link>
-            <Link href="">
-              <WithArrow variant="p3semi">View Yields</WithArrow>
             </Link>
           </div>
         </div>
@@ -263,7 +280,7 @@ export default function PublicAccessVaults() {
           className={publicAccessVaultsStyles.secondaryParagraph}
           style={{ marginBottom: '40px' }}
         >
-          How & Why we use AI to outperform and improve efficiency
+          How & why we use AI to outperform and improve efficiency
         </Text>
         <TabBar
           tabs={[
@@ -281,25 +298,25 @@ export default function PublicAccessVaults() {
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Reduced costs</strong> – 0 manual gas, no duplicated research.
+                        <strong>Reduced costs</strong> - 0 manual gas, no duplicated research.
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Reduced complexity</strong> – One vault token replaces dozens of
+                        <strong>Reduced complexity</strong> - One vault token replaces dozens of
                         wallets.
                       </Text>
                     </li>
                     <li>
                       <Icon iconName="checkmark_colorful" size={16} />
                       <Text variant="p1" as="p">
-                        <strong>Improved efficiency</strong> – Capital moves only when the expected
+                        <strong>Improved efficiency</strong> - Capital moves only when the expected
                         gain beats cost + risk.
                       </Text>
                     </li>
                   </ul>
-                  <Link href="">
+                  <Link href={EXTERNAL_LINKS.BLOG.WHY_AI_MATTERS} target="_blank">
                     <WithArrow variant="p3semi">Learn how we use AI to works</WithArrow>
                   </Link>
                 </Card>
@@ -326,8 +343,10 @@ export default function PublicAccessVaults() {
           capital touches is vetted for technical excellence and financial soundness.
         </Text>
         <div className={publicAccessVaultsStyles.buttonsBlock}>
-          <Button variant="primaryLarge">Get started</Button>
-          <Button variant="secondaryLarge">View yields</Button>
+          <Link href="/earn" target="_blank">
+            <Button variant="primaryLarge">Get started</Button>
+          </Link>
+          {/* <Button variant="secondaryLarge">View yields</Button> */}
         </div>
       </div>
       <div className={publicAccessVaultsStyles.transparentFlowsBlock}>
@@ -390,7 +409,6 @@ export default function PublicAccessVaults() {
         </div>
         <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
       </div>
-      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">
@@ -400,20 +418,20 @@ export default function PublicAccessVaults() {
           <FinalCTAElement
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
-            url=""
+            url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
-            url=""
+            url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
-            url=""
-            urlLabel="Download docs"
+            url={EXTERNAL_LINKS.KB.HELP}
+            urlLabel="View docs"
           />
         </div>
       </div>
@@ -425,33 +443,70 @@ export default function PublicAccessVaults() {
         }}
         data={[
           {
-            title: 'What are Closed Access Vaults?',
+            title: 'What is a Public access vault?',
             content: (
               <Text variant="p1" as="p">
-                Closed Access Vaults are a feature of the Lazy Summer Protocol that allows
-                institutions to create private, permissioned environments for their digital assets.
-                This ensures that only authorized users can access and manage the assets within the
-                vault.
+                A pre curated, risk managed deposit once, set and forget vault where Lazy Summer
+                automatically rebalances across top protocols for the best risk-adjusted yield.
               </Text>
             ),
           },
           {
-            title: 'Can you customize strategy allocation and limits?',
+            title: 'Who can deposit?',
             content: (
               <Text variant="p1" as="p">
-                Yes, Lazy Summer Protocol allows you to customize strategy allocation and limits
-                based on your institutional requirements. You can define specific strategies and set
-                limits for each vault.
+                Any verified wallet outside sanctioned regions can deposit. Users can deposit as
+                little as 1$ to over 1B$.
               </Text>
             ),
           },
           {
-            title: 'What yield strategies are available?',
+            title: 'How is the yield generated?',
             content: (
               <Text variant="p1" as="p">
-                Lazy Summer Protocol offers a range of yield strategies, including lending, staking,
-                and yield farming. You can choose the strategies that align with your investment
-                goals and risk tolerance.
+                Strategies vary, but generally yield is generated from top tier DeFi lending
+                protocols. Other strategies are also included which have slightly different yield
+                generated mechanics, but all are presented transparently in the Summer.fi app.
+              </Text>
+            ),
+          },
+          {
+            title: 'How often are vaults rebalanced?',
+            content: (
+              <Text variant="p1" as="p">
+                Yield and risk metrics are checked constantly throughout the day; rebalances trigger
+                automatically when a preset benefit threshold is hit. These can all be seen
+                transparently under “rebalance activity”.
+              </Text>
+            ),
+          },
+          {
+            title: 'Can I withdraw anytime?',
+            content: (
+              <Text variant="p1" as="p">
+                There are no explicit lock ups and users can withdraw anytime so long as their
+                withdrawal is under the “Instant liquidity amount”. This exists simply because some
+                supported protocols have withdrawal delays, but 100% of capital is never deployed
+                into one of those.
+              </Text>
+            ),
+          },
+          {
+            title: 'What fees apply?',
+            content: (
+              <Text variant="p1" as="p">
+                A 1% management fee is applied to stablecoin vaults and a 0.3% fee is applied to non
+                stablecoin vaults (ETH).
+              </Text>
+            ),
+          },
+          {
+            title: 'How is risk managed?',
+            content: (
+              <Text variant="p1" as="p">
+                Risk is managed by a third party risk curator who sets and manages deposit caps.
+                These are the max amount of user funds that can be deployed into any one protocol at
+                a given time.
               </Text>
             ),
           },
