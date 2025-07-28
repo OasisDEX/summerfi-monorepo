@@ -140,7 +140,6 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           [SupportedNetworkIds.Base]: 'base',
           [SupportedNetworkIds.SonicMainnet]: 'sonic',
           [SupportedNetworkIds.ArbitrumOne]: 'arbitrum',
-          [SupportedNetworkIds.Optimism]: 'optimism',
         }[resolvedChainId],
         email,
         ...getTransakConfigInitData({

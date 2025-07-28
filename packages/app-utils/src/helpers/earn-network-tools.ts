@@ -6,7 +6,7 @@ import {
   SupportedNetworkIds,
   SupportedSDKNetworks,
 } from '@summerfi/app-types'
-import { arbitrum, base, type Chain, mainnet, optimism, sonic } from 'viem/chains'
+import { arbitrum, base, type Chain, mainnet, sonic } from 'viem/chains'
 
 /**
  * Type guard to check if a chain ID is a supported SDK chain.
@@ -21,7 +21,6 @@ export const isSupportedSDKChain = (
   | SupportedNetworkIds.ArbitrumOne
   | SupportedNetworkIds.Base
   | SupportedNetworkIds.SonicMainnet
-  | SupportedNetworkIds.Optimism
   | SupportedNetworkIds.Mainnet =>
   typeof chainId === 'number' &&
   Object.values(SupportedNetworkIds)
@@ -36,13 +35,11 @@ const humanReadableNetworkMap: {
   readonly BASE: 'base'
   readonly MAINNET: 'mainnet'
   readonly SONIC_MAINNET: 'sonic'
-  readonly OPTIMISM: 'optimism'
 } = {
   [SupportedSDKNetworks.ArbitrumOne]: 'arbitrum',
   [SupportedSDKNetworks.Base]: 'base',
   [SupportedSDKNetworks.Mainnet]: 'mainnet',
   [SupportedSDKNetworks.SonicMainnet]: 'sonic',
-  [SupportedSDKNetworks.Optimism]: 'optimism',
 } as const
 
 /**
@@ -53,13 +50,11 @@ export const humanReadableChainToLabelMap: {
   readonly 42161: 'Arbitrum'
   readonly 1: 'Ethereum'
   readonly 146: 'Sonic'
-  readonly 10: 'Optimism'
 } = {
   [SupportedNetworkIds.Base]: 'Base',
   [SupportedNetworkIds.ArbitrumOne]: 'Arbitrum',
   [SupportedNetworkIds.Mainnet]: 'Ethereum',
   [SupportedNetworkIds.SonicMainnet]: 'Sonic',
-  [SupportedNetworkIds.Optimism]: 'Optimism',
 } as const
 
 /**
@@ -158,7 +153,6 @@ export const chainIdToSDKNetwork = (chainId: SupportedNetworkIds): SupportedSDKN
       [SupportedNetworkIds.Base]: SupportedSDKNetworks.Base,
       [SupportedNetworkIds.Mainnet]: SupportedSDKNetworks.Mainnet,
       [SupportedNetworkIds.SonicMainnet]: SupportedSDKNetworks.SonicMainnet,
-      [SupportedNetworkIds.Optimism]: SupportedSDKNetworks.Optimism,
     }[chainId]
 
     return mappedResponse
@@ -186,7 +180,6 @@ export const networkNameToSDKNetwork = (network: NetworkNames): SupportedSDKNetw
     [NetworkNames.baseMainnet.toLowerCase()]: SupportedSDKNetworks.Base,
     [NetworkNames.ethereumMainnet.toLowerCase()]: SupportedSDKNetworks.Mainnet,
     [NetworkNames.sonicMainnet.toLowerCase()]: SupportedSDKNetworks.SonicMainnet,
-    [NetworkNames.optimismMainnet.toLowerCase()]: SupportedSDKNetworks.Optimism,
   }[network.toLowerCase()]
 }
 
@@ -196,7 +189,6 @@ export const networkNameToSDKId = (network: NetworkNames): SupportedNetworkIds =
     [NetworkNames.baseMainnet.toLowerCase()]: SupportedNetworkIds.Base,
     [NetworkNames.ethereumMainnet.toLowerCase()]: SupportedNetworkIds.Mainnet,
     [NetworkNames.sonicMainnet.toLowerCase()]: SupportedNetworkIds.SonicMainnet,
-    [NetworkNames.optimismMainnet.toLowerCase()]: SupportedNetworkIds.Optimism,
   }[network.toLowerCase()]
 }
 
@@ -206,7 +198,6 @@ export const subgraphNetworkToId = (network: SupportedSDKNetworks): NetworkIds =
     [SupportedSDKNetworks.Base.toLowerCase()]: NetworkIds.BASEMAINNET,
     [SupportedSDKNetworks.Mainnet.toLowerCase()]: NetworkIds.MAINNET,
     [SupportedSDKNetworks.SonicMainnet.toLowerCase()]: NetworkIds.SONICMAINNET,
-    [SupportedSDKNetworks.Optimism.toLowerCase()]: NetworkIds.OPTIMISMMAINNET,
   }[network.toLowerCase()]
 }
 
@@ -216,7 +207,6 @@ export const subgraphNetworkToSDKId = (network: SupportedSDKNetworks): Supported
     [SupportedSDKNetworks.Base.toLowerCase()]: SupportedNetworkIds.Base,
     [SupportedSDKNetworks.Mainnet.toLowerCase()]: SupportedNetworkIds.Mainnet,
     [SupportedSDKNetworks.SonicMainnet.toLowerCase()]: SupportedNetworkIds.SonicMainnet,
-    [SupportedSDKNetworks.Optimism.toLowerCase()]: SupportedNetworkIds.Optimism,
   }[network.toLowerCase()]
 }
 
@@ -230,7 +220,6 @@ export const sdkNetworkToChain = (network: SupportedSDKNetworks): Chain => {
     [SupportedSDKNetworks.Base]: base,
     [SupportedSDKNetworks.Mainnet]: mainnet,
     [SupportedSDKNetworks.SonicMainnet]: sonic,
-    [SupportedSDKNetworks.Optimism]: optimism,
   }
 
   return chainMap[network]

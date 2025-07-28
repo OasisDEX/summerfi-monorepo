@@ -318,7 +318,6 @@ export enum SupportedNetworkIds {
   Mainnet = NetworkIds.MAINNET,
   Base = NetworkIds.BASEMAINNET,
   ArbitrumOne = NetworkIds.ARBITRUMMAINNET,
-  Optimism = NetworkIds.OPTIMISMMAINNET,
   SonicMainnet = NetworkIds.SONICMAINNET,
 }
 
@@ -326,6 +325,5 @@ export enum SupportedSDKNetworks {
   Mainnet = Network.Mainnet,
   Base = Network.Base,
   ArbitrumOne = Network.ArbitrumOne,
-  Optimism = Network.Optimism,
   SonicMainnet = Network.SonicMainnet,
 }

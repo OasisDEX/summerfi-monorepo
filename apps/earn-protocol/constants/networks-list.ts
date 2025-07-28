@@ -40,12 +40,10 @@ const mainnetRpc = getRpc(NetworkNames.ethereumMainnet)
 const arbitrumMainnetRpc = getRpc(NetworkNames.arbitrumMainnet)
 const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
 const sonicMainnetRpc = getRpc(NetworkNames.sonicMainnet)
-const optimismMainnetRpc = getRpc(NetworkNames.optimismMainnet)
 
 export const SDKChainIdToRpcGatewayMap = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrumMainnetRpc,
   [SupportedNetworkIds.Base]: baseMainnetRpc,
   [SupportedNetworkIds.Mainnet]: mainnetRpc,
   [SupportedNetworkIds.SonicMainnet]: sonicMainnetRpc,
-  [SupportedNetworkIds.Optimism]: optimismMainnetRpc,
 }

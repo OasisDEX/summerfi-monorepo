@@ -36,7 +36,6 @@ const delayPerNetwork = {
   [SupportedNetworkIds.ArbitrumOne]: 4000,
   [SupportedNetworkIds.Mainnet]: 13000,
   [SupportedNetworkIds.SonicMainnet]: 4000,
-  [SupportedNetworkIds.Optimism]: 4000,
 } as const
 
 const claimItems = [

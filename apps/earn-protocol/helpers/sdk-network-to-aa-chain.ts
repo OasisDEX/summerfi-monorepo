@@ -2,7 +2,6 @@ import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { customAAKitSonicConfig } from '@summerfi/app-earn-ui'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import { type Chain } from 'viem'
-import { optimism } from 'viem/chains'
 
 /**
  * Converts a SupportedSDKNetworks to an AccountKit Chain
@@ -22,7 +21,6 @@ export const sdkNetworkToAAChain = (network: SupportedSDKNetworks): Chain => {
     [SupportedSDKNetworks.ArbitrumOne]: arbitrum,
     [SupportedSDKNetworks.Base]: base,
     [SupportedSDKNetworks.Mainnet]: mainnet,
-    [SupportedSDKNetworks.Optimism]: optimism,
     [SupportedSDKNetworks.SonicMainnet]: customAAKitSonicConfig,
   }
 

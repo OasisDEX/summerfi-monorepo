@@ -12,7 +12,6 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 import { type Chain } from 'viem'
-import { optimism } from 'viem/chains'
 
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 
@@ -22,7 +21,6 @@ const networkIdsToAccountKitChainsMap: {
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Mainnet]: mainnet,
-  [SupportedNetworkIds.Optimism]: optimism,
   [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
 }
 

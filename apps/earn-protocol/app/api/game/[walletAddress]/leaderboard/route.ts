@@ -4,7 +4,7 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
 import { type NextRequest, NextResponse } from 'next/server'
 import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
-import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
+import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 import { z } from 'zod'
 
 import {
@@ -20,7 +20,6 @@ const domainChainIdToViemChain: { [key in SupportedNetworkIds]: Chain } = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.SonicMainnet]: sonic,
-  [SupportedNetworkIds.Optimism]: optimism,
 }
 
 const rpcConfig: IRpcConfig = {
