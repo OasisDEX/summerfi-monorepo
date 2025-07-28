@@ -1,5 +1,6 @@
 'use client'
 import { type CSSProperties, type FC, type ReactNode, useCallback, useState } from 'react'
+import clsx from 'clsx'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Icon, type IconVariant } from '@/components/atoms/Icon/Icon'
@@ -14,6 +15,8 @@ interface ExpanderProps {
   expanderChevronStyles?: CSSProperties
   disabled?: boolean
   expanderWrapperStyles?: CSSProperties
+  expanderWrapperClassName?: string
+  expanderButtonClassName?: string
   iconVariant?: IconVariant
   onExpand?: (isExpanded: boolean) => void
 }
@@ -23,9 +26,11 @@ export const Expander: FC<ExpanderProps> = ({
   defaultExpanded = false,
   children,
   expanderButtonStyles = {},
+  expanderButtonClassName,
   expanderChevronStyles = {},
   disabled = false,
   expanderWrapperStyles = {},
+  expanderWrapperClassName,
   iconVariant = 'xxs',
   onExpand,
 }) => {
@@ -37,15 +42,13 @@ export const Expander: FC<ExpanderProps> = ({
   }, [isExpanded, onExpand])
 
   return (
-    <div className={styles.expander} style={expanderWrapperStyles}>
+    <div className={clsx(styles.expander, expanderWrapperClassName)} style={expanderWrapperStyles}>
       <button
-        className={styles.expanderButton}
+        className={clsx(styles.expanderButton, expanderButtonClassName)}
         onClick={toggleExpand}
         style={{
           textAlign: 'left',
           fontWeight: 600,
-          // Used to align padding between landing and earn app
-          padding: '.25em .375em',
           ...expanderButtonStyles,
         }}
         disabled={disabled}
