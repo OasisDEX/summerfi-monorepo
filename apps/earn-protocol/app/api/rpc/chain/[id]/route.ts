@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const apiKey = process.env.ACCOUNT_KIT_API_KEY
 
   if (!apiKey) {
-    return new Response('ALCHEMY_API_KEY is not set', {
+    return new Response('ACCOUNT_KIT_API_KEY is not set', {
       status: 500,
     })
   }
