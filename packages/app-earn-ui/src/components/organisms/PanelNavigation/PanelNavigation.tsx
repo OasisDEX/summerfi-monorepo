@@ -77,7 +77,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
                 {expandable.items.map((item) => (
                   <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
                     <Text
-                      as="p"
+                      as="div"
                       variant="p1semi"
                       className={clsx(styles.buttonText, {
                         [styles.activeButtonText]: item.isActive,
@@ -94,7 +94,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
               {expandable.items.map((item) => (
                 <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
                   <Text
-                    as="p"
+                    as="div"
                     variant="p1semi"
                     className={clsx(styles.buttonText, {
                       [styles.activeButtonText]: item.isActive,
@@ -114,7 +114,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
             {staticItems.map((item) => (
               <ButtonOrLink key={item.id} link={item.link} onClick={item.action}>
                 <Text
-                  as="p"
+                  as="div"
                   variant="p1semi"
                   className={clsx(styles.buttonText, {
                     [styles.activeButtonText]: item.isActive,

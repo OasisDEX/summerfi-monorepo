@@ -2,23 +2,30 @@
 
 import { type FC } from 'react'
 import { Icon, PanelNavigation } from '@summerfi/app-earn-ui'
+import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
+
+interface IconWithTextProps {
+  iconName?: IconNamesList
+  tokenName?: TokenSymbolsList
+  text: string
+  size: number
+}
+
+const IconWithText: FC<IconWithTextProps> = ({ iconName, tokenName, text, size }) => {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}>
+      {iconName && <Icon iconName={iconName} size={size} />}
+      {tokenName && <Icon tokenName={tokenName} size={size} />}
+      {text}
+    </div>
+  )
+}
 
 export const DashboardOverview: FC = () => {
   const navigation = [
     {
       id: '1',
-      label: (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--spacing-space-x-small)',
-          }}
-        >
-          <Icon tokenName="USDC" size={24} />
-          USDC-1
-        </div>
-      ),
+      label: <IconWithText tokenName="USDC" text="USDC-1" size={24} />,
       items: [
         { id: '1', label: 'Overview', action: () => {}, isActive: true },
         { id: '2', label: 'Vault exposure', action: () => {} },
@@ -46,34 +53,12 @@ export const DashboardOverview: FC = () => {
         staticItems={[
           {
             id: '1',
-            label: (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--spacing-space-x-small)',
-                }}
-              >
-                <Icon iconName="plus" size={20} />
-                Request a new market
-              </div>
-            ),
+            label: <IconWithText iconName="plus" text="Request a new market" size={20} />,
             action: () => {},
           },
           {
             id: '2',
-            label: (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--spacing-space-x-small)',
-                }}
-              >
-                <Icon iconName="question_o" size={20} />
-                Help & Support
-              </div>
-            ),
+            label: <IconWithText iconName="question_o" text="Help & Support" size={20} />,
             link: { href: '/', target: '_blank' },
           },
         ]}
