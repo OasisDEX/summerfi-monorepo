@@ -90,7 +90,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
               </div>
             </Expander>
           ) : (
-            <div key={expandable.id} className={clsx(styles.itemsList, styles.itemsList)}>
+            <div key={expandable.id} className={styles.itemsList}>
               {expandable.items.map((item) => (
                 <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
                   <Text
