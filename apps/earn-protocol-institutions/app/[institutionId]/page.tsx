@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { InsitutionPageView } from '@/components/layout/InsitutionPageView/InsitutionPageView'
+import { InstitutionPageView } from '@/components/layout/InstitutionPageView/InstitutionPageView'
 
 // dummy interface for now
 // we will most likely split it depends on data source
@@ -25,7 +25,7 @@ const InstitutionPage = async ({ params }: { params: { institutionId: string } }
   }
 
   return (
-    <InsitutionPageView
+    <InstitutionPageView
       institutionName={institution.name}
       totalValue={institution.totalValue}
       numberOfVaults={institution.numberOfVaults}

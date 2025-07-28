@@ -92,7 +92,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Setup Earn Protocol Insitutions App Next.js Cache
+      - name: Setup Earn Protocol Institutions App Next.js Cache
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/apps/earn-protocol-institutions/.next/cache

@@ -8,9 +8,9 @@ import {
 
 import { MainHeader } from '@/components/layout/MainHeader/MainHeader'
 
-import styles from './InsitutionPageView.module.css'
+import styles from './InstitutionPageView.module.css'
 
-interface InsitutionPageViewProps {
+interface InstitutionPageViewProps {
   institutionName: string
   totalValue: number
   numberOfVaults: number
@@ -18,7 +18,7 @@ interface InsitutionPageViewProps {
   allTimePerformance: number
 }
 
-export const InsitutionPageView: FC<InsitutionPageViewProps> = ({
+export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
   institutionName,
   totalValue,
   numberOfVaults,
@@ -67,17 +67,17 @@ export const InsitutionPageView: FC<InsitutionPageViewProps> = ({
       content: <div>Risk</div>,
     },
     {
-      id: '3',
+      id: '4',
       label: 'Fees & Revenue',
-      content: <div>Risk</div>,
+      content: <div>Fees & Revenue</div>,
     },
     {
-      id: '4',
+      id: '5',
       label: 'Reports',
       content: <div>Reports</div>,
     },
     {
-      id: '5',
+      id: '6',
       label: 'News',
       content: <div>News</div>,
     },

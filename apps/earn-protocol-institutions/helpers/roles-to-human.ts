@@ -11,7 +11,7 @@ export const rolesToHuman = (role: InstitutionRoles): string => {
       return 'General Admin'
     case InstitutionRoles.RISK_MANAGER:
       return 'Risk Manager'
-    case InstitutionRoles.MARTKET_ALLOCATOR:
+    case InstitutionRoles.MARKET_ALLOCATOR:
       return 'Market Allocator'
     default:
       return 'Unknown role'
