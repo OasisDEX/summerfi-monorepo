@@ -2,7 +2,15 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
-import { Button, Dropdown, Icon, Input, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Dropdown,
+  Icon,
+  Input,
+  INTERNAL_LINKS,
+  LoadingSpinner,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
 import isBoolean from 'lodash-es/isBoolean'
@@ -276,39 +284,21 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
           </Text>
         </Link>
       ) : (
-        <div>
-          <Text
-            variant="p3"
-            as="p"
-            style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
+        <Text
+          variant="p3"
+          as="p"
+          style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
+        >
+          Read the full{' '}
+          <Link
+            href={`${INTERNAL_LINKS.tempTerms}`}
+            className={classNames.termsOfConditions}
+            target="_blank"
+            rel="noreferrer"
           >
-            We use{' '}
-            <Link
-              href="https://getform.io"
-              target="_blank"
-              rel="noreferrer"
-              className={classNames.termsOfConditions}
-            >
-              GetForm
-            </Link>{' '}
-            to collect your data.
-          </Text>
-          <Text
-            variant="p3"
-            as="p"
-            style={{ color: 'var(--earn-protocol-neutral-40)', textAlign: 'center' }}
-          >
-            Read the full{' '}
-            <Link
-              href="https://getform.io/legal/privacy-policy"
-              className={classNames.termsOfConditions}
-              target="_blank"
-              rel="noreferrer"
-            >
-              terms of conditions.
-            </Link>
-          </Text>
-        </div>
+            terms of conditions.
+          </Link>
+        </Text>
       )}
     </form>
   )
