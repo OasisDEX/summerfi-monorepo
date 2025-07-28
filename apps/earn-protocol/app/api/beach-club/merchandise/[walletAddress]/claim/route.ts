@@ -46,6 +46,12 @@ export async function POST(
     )
   }
 
+  const merchandiseFormKey = process.env.MERCHANDISE_FORM_KEY
+
+  if (!merchandiseFormKey) {
+    return NextResponse.json({ errors: ['Merchandise form key is not set'] }, { status: 500 })
+  }
+
   let validatedPathParams
   let validatedPostBody
 
@@ -186,7 +192,7 @@ export async function POST(
     // that can be claimed without any additional information
     if (type !== MerchandiseType.NFT) {
       // send to getForm endpoint
-      const getFormResponse = await fetch(`https://getform.io/f/bxoyqjka`, {
+      const getFormResponse = await fetch(`https://getform.io/f/${merchandiseFormKey}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
