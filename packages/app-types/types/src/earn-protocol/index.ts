@@ -15,6 +15,7 @@ import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/ea
 import { TimeframesType } from '../components'
 import { DeviceType } from '../device-type'
 import { IconNamesList, TokenSymbolsList } from '../icons'
+import { NetworkIds } from '../networks'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
@@ -339,3 +340,17 @@ export type LandingPageData = {
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
 }
+
+export type SupportedNetworkIds =
+  | NetworkIds.MAINNET
+  | NetworkIds.BASEMAINNET
+  | NetworkIds.ARBITRUMMAINNET
+  | NetworkIds.OPTIMISMMAINNET
+  | NetworkIds.SONICMAINNET
+
+export type SupportedSDKNetworks =
+  | Network.Mainnet
+  | Network.Base
+  | Network.ArbitrumOne
+  | Network.Optimism
+  | Network.SonicMainnet

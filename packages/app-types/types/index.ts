@@ -194,6 +194,8 @@ export type {
   SupportedDefillamaTvlProtocols,
   ProAppStats,
   TotalRebalanceItemsPerStrategyId,
+  SupportedNetworkIds,
+  SupportedSDKNetworks,
 } from './src/earn-protocol'
 export { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'

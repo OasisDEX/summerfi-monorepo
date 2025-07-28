@@ -317,6 +317,18 @@ importers:
 
   apps/earn-protocol-institutions:
     dependencies:
+      '@account-kit/core':
+        specifier: ^4.36.1
+        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
+      '@account-kit/infra':
+        specifier: ^4.36.1
+        version: 4.40.0(typescript@5.7.3)(viem@2.29.2)
+      '@account-kit/react':
+        specifier: ^4.36.1
+        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.17.3)(immer@9.0.21)(react-dom@19.1.0)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
+      '@account-kit/signer':
+        specifier: ^4.36.1
+        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@19.1.0)
@@ -465,6 +477,9 @@ importers:
       postcss:
         specifier: ^8
         version: 8.5.6
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.13
       typed-css-modules:
         specifier: 0.9.1
         version: 0.9.1
@@ -21491,7 +21506,7 @@ packages:
     dependencies:
       commander: 10.0.1
       execa: 5.1.1
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       fs-extra: 10.1.0
       gradient-string: 2.0.2
       inquirer: 8.2.6
@@ -26739,6 +26754,10 @@ packages:
   /bluebird@3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
+  /bn.js@4.11.6:
+    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
+    dev: true
+
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -30969,7 +30988,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       number-to-bn: 1.7.0
     dev: true
 
@@ -32239,7 +32258,7 @@ packages:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.3.2
+      fast-glob: 3.3.3
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
@@ -37259,7 +37278,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 5.2.1
+      bn.js: 4.11.6
       strip-hex-prefix: 1.0.0
     dev: true
 
@@ -39982,7 +40001,7 @@ packages:
   /resolve@1.19.0:
     resolution: {integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==}
     dependencies:
-      is-core-module: 2.13.1
+      is-core-module: 2.16.1
       path-parse: 1.0.7
     dev: true
 
@@ -42292,7 +42311,7 @@ packages:
       css-tree: 2.3.1
       css-what: 6.1.0
       csso: 5.0.5
-      picocolors: 1.1.0
+      picocolors: 1.1.1
     dev: false
 
   /swap-case@1.1.2:

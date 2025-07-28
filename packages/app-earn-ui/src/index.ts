@@ -241,6 +241,7 @@ export {
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
+export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
