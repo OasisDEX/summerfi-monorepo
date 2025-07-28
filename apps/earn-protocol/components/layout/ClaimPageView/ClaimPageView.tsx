@@ -26,7 +26,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
     delegatee: externalData.sumrStakeDelegate.delegatedTo,
     walletAddress,
     claimableBalances: Object.values(SupportedNetworkIds)
-      .filter((id) => typeof id === 'number')
+      .filter((networkId): networkId is number => typeof networkId === 'number')
       .reduce<ClaimableBalances>((acc, chainId) => {
         const numericChainId = chainId as SupportedNetworkIds
 

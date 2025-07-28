@@ -7,11 +7,13 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 const getVaultsListRaw = async () => {
   const vaultsListByNetwork = await Promise.all(
-    Object.values(SupportedNetworkIds).map((networkId) =>
-      backendSDK.armada.users.getVaultsRaw({
-        chainInfo: getChainInfoByChainId(Number(networkId)),
-      }),
-    ),
+    Object.values(SupportedNetworkIds)
+      .filter((networkId): networkId is number => typeof networkId === 'number')
+      .map((networkId) =>
+        backendSDK.armada.users.getVaultsRaw({
+          chainInfo: getChainInfoByChainId(Number(networkId)),
+        }),
+      ),
   )
 
   return {

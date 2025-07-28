@@ -21,8 +21,12 @@ export const isSupportedSDKChain = (
   | SupportedNetworkIds.ArbitrumOne
   | SupportedNetworkIds.Base
   | SupportedNetworkIds.SonicMainnet
+  | SupportedNetworkIds.Optimism
   | SupportedNetworkIds.Mainnet =>
-  typeof chainId === 'number' && Object.values(SupportedNetworkIds).includes(chainId)
+  typeof chainId === 'number' &&
+  Object.values(SupportedNetworkIds)
+    .filter((networkId): networkId is number => typeof networkId === 'number')
+    .includes(chainId)
 
 /**
  * Maps SDK network identifiers to human readable network names.
@@ -87,7 +91,14 @@ export const isSupportedHumanNetwork = (network: unknown): network is HumanReada
 }
 
 export const supportedNetworkId = (networkId: unknown): SupportedNetworkIds => {
-  if (!Object.values(SupportedNetworkIds).includes(networkId as unknown as SupportedNetworkIds)) {
+  if (
+    !Object.values(SupportedNetworkIds)
+      .filter(
+        (potentialNetworkId): potentialNetworkId is number =>
+          typeof potentialNetworkId === 'number',
+      )
+      .includes(networkId as unknown as SupportedNetworkIds)
+  ) {
     throw new Error(`Unsupported network ID: ${networkId}`)
   }
 

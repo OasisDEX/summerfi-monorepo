@@ -140,39 +140,41 @@ export const VaultOpenViewComponent = ({
 
   useEffect(() => {
     const fetchMigratablePositions = async (walletAddress: string) => {
-      const promises = Object.values(SupportedNetworkIds).map(async (chainId) => {
-        const chainInfo = getChainInfoByChainId(Number(chainId))
+      const promises = Object.values(SupportedNetworkIds)
+        .filter((networkId): networkId is number => typeof networkId === 'number')
+        .map(async (chainId) => {
+          const chainInfo = getChainInfoByChainId(Number(chainId))
 
-        let positionsData
-        let apyData
+          let positionsData
+          let apyData
 
-        try {
-          positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-          positionsData = {
-            chainInfo,
-            positions: [],
+          try {
+            positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+            positionsData = {
+              chainInfo,
+              positions: [],
+            }
           }
-        }
 
-        try {
-          apyData = await sdk.getMigratablePositionsApy({
-            chainInfo,
-            positionIds: positionsData.positions.map((p) => p.id),
-          })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
-          apyData = {
-            chainInfo,
-            apyByPositionId: {},
+          try {
+            apyData = await sdk.getMigratablePositionsApy({
+              chainInfo,
+              positionIds: positionsData.positions.map((p) => p.id),
+            })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+            apyData = {
+              chainInfo,
+              apyByPositionId: {},
+            }
           }
-        }
 
-        return { positionsData, apyData }
-      })
+          return { positionsData, apyData }
+        })
 
       const positions = await Promise.all(promises)
 
