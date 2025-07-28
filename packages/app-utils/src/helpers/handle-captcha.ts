@@ -22,7 +22,12 @@ export const handleCaptcha = async ({
   setFormErrors,
 }: {
   formValues: {
-    [key: string]: string[] | string | number | { [key: string]: string[] | string | number }
+    [key: string]:
+      | string[]
+      | string
+      | number
+      | boolean
+      | { [key: string]: string[] | string | number | boolean }
   }
   formEndpoint: string
   resetForm: () => void
