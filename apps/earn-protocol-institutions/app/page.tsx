@@ -1,5 +1,5 @@
 const InstitutionsPage = () => {
-  return <div>Institutions</div>
+  return <div>Auth to do</div>
 }
 
 export default InstitutionsPage
