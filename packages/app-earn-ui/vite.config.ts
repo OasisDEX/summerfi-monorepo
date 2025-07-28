@@ -86,6 +86,10 @@ export default defineConfig(({ mode }) => {
       },
       rollupOptions: {
         external: [
+          '@account-kit/core',
+          '@account-kit/infra',
+          '@account-kit/react',
+          '@account-kit/signer',
           '@loadable/component',
           '@summerfi/app-icons',
           '@summerfi/armada-protocol-common',

@@ -75,7 +75,7 @@ export const getAccountKitConfig = ({
     {
       signerConnection: {
         // this is for Alchemy Signer requests
-        rpcUrl: '/earn/api/rpc',
+        rpcUrl: '/api/rpc',
       },
       enablePopupOauth: true,
       connectors: [safe()],
@@ -90,7 +90,7 @@ export const getAccountKitConfig = ({
         chain,
         policyId: GasSponsorshipIdMap[chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE],
         transport: alchemy({
-          rpcUrl: forkRpcUrl ?? `/earn/api/rpc/chain/${chain.id}`,
+          rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chain.id}`,
         }),
       })),
       ssr: true,

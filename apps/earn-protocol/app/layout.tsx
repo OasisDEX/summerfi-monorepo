@@ -1,7 +1,9 @@
 import { ToastContainer } from 'react-toastify'
 import { cookieToInitialState } from '@account-kit/core'
 import {
+  accountKitCookieStateName,
   analyticsCookieName,
+  forksCookieName,
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
@@ -20,8 +22,6 @@ import { getAccountKitConfig } from '@/account-kit/config'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
-import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
-import { forksCookieName } from '@/constants/forks-cookie-name'
 import { fontInter } from '@/helpers/fonts'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'

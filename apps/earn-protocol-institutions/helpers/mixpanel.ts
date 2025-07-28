@@ -7,8 +7,6 @@ import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
-const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
-
 const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.TURBOPACK) {
@@ -36,7 +34,7 @@ const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) =>
       : new URL(initialReferrer).hostname
     : ''
 
-  void fetch(`/earn/api/t`, {
+  void fetch(`/api/t`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -72,7 +70,7 @@ const trackPageView = ({ path, userAddress }: PageViewType) => {
   try {
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
-      id: includeBasePath(path),
+      id: path,
       userAddress,
     }
 
@@ -137,7 +135,7 @@ export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClick
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
       id,
-      page: includeBasePath(page),
+      page,
       userAddress,
       ...rest,
     }
@@ -164,7 +162,7 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: MixpanelEve
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
       id,
-      page: includeBasePath(page),
+      page,
       userAddress,
       ...rest,
     }
@@ -184,7 +182,7 @@ export const trackGameFinished = ({ id, page, userAddress, ...rest }: MixpanelEv
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
       id,
-      page: includeBasePath(page),
+      page,
       userAddress,
       ...rest,
     }
@@ -203,7 +201,7 @@ export const trackVaultSwitched = ({ id, page, userAddress, ...rest }: MixpanelE
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
       id,
-      page: includeBasePath(page),
+      page,
       userAddress,
       ...rest,
     }
@@ -231,7 +229,7 @@ export const trackError = ({ id, page, message, digest, ...rest }: AppError) => 
     const eventBody = {
       product: MixpanelEventProduct.EarnProtocol,
       id,
-      page: includeBasePath(page),
+      page,
       digest,
       message,
       ...rest,

@@ -242,6 +242,7 @@ export {
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
 export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
+export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'

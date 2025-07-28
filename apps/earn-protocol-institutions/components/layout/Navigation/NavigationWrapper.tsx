@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC } from 'react'
+import { type FC, useEffect } from 'react'
 import {
   Button,
   Card,
@@ -34,6 +34,14 @@ export const NavigationWrapper: FC = () => {
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
 
+  const isLoginPage = currentPath === '/'
+
+  useEffect(() => {
+    if (!isLoginPage && userWalletAddress) {
+      router.replace('/')
+    }
+  }, [isLoginPage, userWalletAddress, router])
+
   return (
     <Navigation
       isEarnApp
@@ -41,21 +49,27 @@ export const NavigationWrapper: FC = () => {
       currentPath={currentPath}
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
-      walletConnectionComponent={<WalletLabel />}
-      mobileWalletConnectionComponents={{
-        primary: <WalletLabel variant="logoutOnly" />,
-        secondary: <WalletLabel variant="addressOnly" />,
-      }}
+      walletConnectionComponent={!isLoginPage ? <WalletLabel /> : undefined}
+      mobileWalletConnectionComponents={
+        !isLoginPage
+          ? {
+              primary: <WalletLabel variant="logoutOnly" />,
+              secondary: <WalletLabel variant="addressOnly" />,
+            }
+          : undefined
+      }
       configComponent={
-        <NavigationConfig isMobileOrTablet={isMobileOrTablet}>
-          {() => (
-            <Card style={{ minWidth: '200px' }}>
-              <Text as="p" variant="p2semi">
-                TBD
-              </Text>
-            </Card>
-          )}
-        </NavigationConfig>
+        !isLoginPage ? (
+          <NavigationConfig isMobileOrTablet={isMobileOrTablet}>
+            {() => (
+              <Card style={{ minWidth: '200px' }}>
+                <Text as="p" variant="p2semi">
+                  TBD
+                </Text>
+              </Card>
+            )}
+          </NavigationConfig>
+        ) : undefined
       }
       onLogoClick={() => router.push('/')}
       featuresConfig={features}
