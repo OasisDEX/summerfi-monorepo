@@ -65,16 +65,16 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
     <Card variant="cardSecondary" className={styles.panelNavigationWrapper}>
       {navigation &&
         navigation.length > 0 &&
-        navigation.map((expandable) =>
-          expandable.label ? (
+        navigation.map((navItem) =>
+          navItem.label ? (
             <Expander
-              key={expandable.id}
-              title={expandable.label}
+              key={navItem.id}
+              title={navItem.label}
               expanderWrapperClassName={styles.navigationWrapper}
               expanderButtonClassName={styles.navigationButton}
             >
               <div className={clsx(styles.itemsList, styles.navigationList)}>
-                {expandable.items.map((item) => (
+                {navItem.items.map((item) => (
                   <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
                     <Text
                       as="div"
@@ -90,8 +90,8 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
               </div>
             </Expander>
           ) : (
-            <div key={expandable.id} className={styles.itemsList}>
-              {expandable.items.map((item) => (
+            <div key={navItem.id} className={styles.itemsList}>
+              {navItem.items.map((item) => (
                 <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
                   <Text
                     as="div"

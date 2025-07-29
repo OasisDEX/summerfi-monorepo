@@ -1,0 +1,25 @@
+.dashboardContentLayout {
+  display: flex;
+  gap: var(--spacing-space-medium-large);
+  width: 100%;
+
+  .panel {
+    max-width: 300px;
+    width: 100%;
+  }
+
+  .content {
+    max-width: 880px;
+    flex: 1;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-space-x-large);
+      padding-right: var(--spacing-space-x-large);
+    }
+  }
+}

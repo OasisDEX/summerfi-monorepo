@@ -15,7 +15,7 @@ export type DataBlockProps = {
   titleStyle?: CSSProperties
   titleWrapperStyles?: CSSProperties
   subValueSize?: 'small' | 'medium' | 'large'
-  valueSize?: 'small' | 'large' | 'largeColorful'
+  valueSize?: 'small' | 'medium' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
   value: ReactNode
   subValue?: ReactNode
@@ -52,6 +52,7 @@ export const DataBlock = ({
 
   const valueVariant = {
     small: 'p1semi' as const,
+    medium: 'h5' as const,
     large: 'h4' as const,
     largeColorful: 'h4colorful' as const,
   }[valueSize ?? size]

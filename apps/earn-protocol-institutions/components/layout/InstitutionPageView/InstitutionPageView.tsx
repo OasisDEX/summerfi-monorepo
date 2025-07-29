@@ -17,6 +17,14 @@ interface InstitutionPageViewProps {
   numberOfVaults: number
   thirtyDayAvgApy: number
   allTimePerformance: number
+  vaultData: {
+    name: string
+    asset: string
+    nav: number
+    aum: number
+    fee: number
+    inception: number
+  }
 }
 
 export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
@@ -25,6 +33,7 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
   numberOfVaults,
   thirtyDayAvgApy,
   allTimePerformance,
+  vaultData,
 }) => {
   const dataBlocks = [
     {
@@ -55,7 +64,7 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
     {
       id: '1',
       label: 'Overview',
-      content: <DashboardOverview />,
+      content: <DashboardOverview vaultData={vaultData} />,
     },
     {
       id: '2',

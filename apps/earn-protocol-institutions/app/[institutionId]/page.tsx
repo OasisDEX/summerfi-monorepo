@@ -12,6 +12,14 @@ const mockInstitutions = [
     numberOfVaults: 4,
     thirtyDayAvgApy: 0.078,
     allTimePerformance: 0.0112,
+    vaultData: {
+      name: 'USDC-1',
+      asset: 'USDC',
+      nav: 1.153,
+      aum: 1792000000,
+      fee: 0.005,
+      inception: 1735689600000,
+    },
   },
 ]
 
@@ -31,6 +39,7 @@ const InstitutionPage = async ({ params }: { params: { institutionId: string } }
       numberOfVaults={institution.numberOfVaults}
       thirtyDayAvgApy={institution.thirtyDayAvgApy}
       allTimePerformance={institution.allTimePerformance}
+      vaultData={institution.vaultData}
     />
   )
 }

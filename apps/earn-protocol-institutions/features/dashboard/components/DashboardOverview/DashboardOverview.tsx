@@ -4,6 +4,9 @@ import { type FC } from 'react'
 import { Icon, PanelNavigation } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 
+import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
+import { DashboardVaultHeader } from '@/features/dashboard/components/DashboardVaultHeader/DashboardVaultHeader'
+
 interface IconWithTextProps {
   iconName?: IconNamesList
   tokenName?: TokenSymbolsList
@@ -21,7 +24,18 @@ const IconWithText: FC<IconWithTextProps> = ({ iconName, tokenName, text, size }
   )
 }
 
-export const DashboardOverview: FC = () => {
+interface DashboardOverviewProps {
+  vaultData: {
+    name: string
+    asset: string
+    nav: number
+    aum: number
+    fee: number
+    inception: number
+  }
+}
+
+export const DashboardOverview: FC<DashboardOverviewProps> = ({ vaultData }) => {
   const navigation = [
     {
       id: '1',
@@ -47,22 +61,36 @@ export const DashboardOverview: FC = () => {
   ]
 
   return (
-    <div>
-      <PanelNavigation
-        navigation={navigation}
-        staticItems={[
-          {
-            id: '1',
-            label: <IconWithText iconName="plus" text="Request a new market" size={20} />,
-            action: () => {},
-          },
-          {
-            id: '2',
-            label: <IconWithText iconName="question_o" text="Help & Support" size={20} />,
-            link: { href: '/', target: '_blank' },
-          },
-        ]}
-      />
-    </div>
+    <DashboardContentLayout
+      panel={
+        <PanelNavigation
+          navigation={navigation}
+          staticItems={[
+            {
+              id: '1',
+              label: <IconWithText iconName="plus" text="Request a new market" size={20} />,
+              action: () => {},
+            },
+            {
+              id: '2',
+              label: <IconWithText iconName="question_o" text="Help & Support" size={20} />,
+              link: { href: '/', target: '_blank' },
+            },
+          ]}
+        />
+      }
+      header={
+        <DashboardVaultHeader
+          name={vaultData.name}
+          asset={vaultData.asset}
+          nav={vaultData.nav}
+          aum={vaultData.aum}
+          fee={vaultData.fee}
+          inception={vaultData.inception}
+        />
+      }
+    >
+      <PanelNavigation navigation={navigation} />
+    </DashboardContentLayout>
   )
 }
