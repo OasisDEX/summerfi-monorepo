@@ -56,6 +56,7 @@ interface PanelNavigationProps {
     id: string
     label?: ReactNode
     items: PanelNavigationItem[]
+    expanded?: boolean
   }[]
   staticItems?: PanelNavigationItem[]
 }
@@ -72,6 +73,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
               title={navItem.label}
               expanderWrapperClassName={styles.navigationWrapper}
               expanderButtonClassName={styles.navigationButton}
+              defaultExpanded={navItem.expanded ?? false}
             >
               <div className={clsx(styles.itemsList, styles.navigationList)}>
                 {navItem.items.map((item) => (
