@@ -5,20 +5,20 @@ import { InstitutionRoles } from '@summerfi/app-types'
 
 import { rolesToHuman } from '@/helpers/roles-to-human'
 
-import styles from './MainHeader.module.css'
+import styles from './InstitutionPageHeader.module.css'
 
-interface MainHeaderProps {
+interface InstitutionPageHeaderProps {
   institutionName: string
 }
 
 // todo to be replaced with the actual connected role & mapping from backend per wallet address
 const connectedRole = InstitutionRoles.GENERAL_ADMIN
 
-export const MainHeader: FC<MainHeaderProps> = ({ institutionName }) => {
+export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({ institutionName }) => {
   const roleResolved = connectedRole ? rolesToHuman(connectedRole) : 'No role connected'
 
   return (
-    <div className={styles.mainHeaderWrapper}>
+    <div className={styles.institutionPageHeaderWrapper}>
       <div className={styles.leftWrapper}>
         <Icon iconName="earn_institution" size={54} />
         <Text as="h2" variant="h2">

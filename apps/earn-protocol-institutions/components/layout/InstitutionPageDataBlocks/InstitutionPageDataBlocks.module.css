@@ -1,0 +1,6 @@
+.institutionPageDataBlocksWrapper {
+  display: flex;
+  gap: var(--spacing-space-medium);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-space-medium-large);
+}

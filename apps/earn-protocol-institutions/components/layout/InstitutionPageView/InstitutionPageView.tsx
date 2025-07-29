@@ -1,13 +1,14 @@
 import { type FC } from 'react'
-import { Card, DataBlock, TabBar } from '@summerfi/app-earn-ui'
-import {
-  formatDecimalAsPercent,
-  formatFiatBalance,
-  formatWithSeparators,
-} from '@summerfi/app-utils'
+import { TabBar } from '@summerfi/app-earn-ui'
 
-import { MainHeader } from '@/components/layout/MainHeader/MainHeader'
+import { InstitutionPageDataBlocks } from '@/components/layout/InstitutionPageDataBlocks/InstitutionPageDataBlocks'
+import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
+import { DashboardFeesRevenue } from '@/features/dashboard/components/DashboardFeesRevenue/DashboardFeesRevenue'
+import { DashboardNews } from '@/features/dashboard/components/DashboardNews/DashboardNews'
 import { DashboardOverview } from '@/features/dashboard/components/DashboardOverview/DashboardOverview'
+import { DashboardReports } from '@/features/dashboard/components/DashboardReports/DashboardReports'
+import { DashboardRisk } from '@/features/dashboard/components/DashboardRisk/DashboardRisk'
+import { DashboardVaults } from '@/features/dashboard/components/DashboardVaults/DashboardVaults'
 
 import styles from './InstitutionPageView.module.css'
 
@@ -35,31 +36,6 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
   allTimePerformance,
   vaultData,
 }) => {
-  const dataBlocks = [
-    {
-      id: '1',
-      title: 'Total value',
-      value: `$${formatFiatBalance(totalValue)}`,
-      gradient: 'var(--gradient-earn-protocol-light)',
-      titleColor: 'var(--earn-protocol-secondary-60)',
-    },
-    {
-      id: '2',
-      title: 'Number of vaults',
-      value: formatWithSeparators(numberOfVaults),
-    },
-    {
-      id: '3',
-      title: '30d avg APY',
-      value: formatDecimalAsPercent(thirtyDayAvgApy),
-    },
-    {
-      id: '4',
-      title: 'All time performance',
-      value: formatDecimalAsPercent(allTimePerformance, { plus: true }),
-    },
-  ]
-
   const tabs = [
     {
       id: '1',
@@ -69,51 +45,39 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
     {
       id: '2',
       label: 'Vaults',
-      content: <div>Vaults</div>,
+      content: <DashboardVaults />,
     },
     {
       id: '3',
       label: 'Risk',
-      content: <div>Risk</div>,
+      content: <DashboardRisk />,
     },
     {
       id: '4',
       label: 'Fees & Revenue',
-      content: <div>Fees & Revenue</div>,
+      content: <DashboardFeesRevenue />,
     },
     {
       id: '5',
       label: 'Reports',
-      content: <div>Reports</div>,
+      content: <DashboardReports />,
     },
     {
       id: '6',
       label: 'News',
-      content: <div>News</div>,
+      content: <DashboardNews />,
     },
   ]
 
   return (
     <div className={styles.institutionPageView}>
-      <MainHeader institutionName={institutionName} />
-      <div className={styles.dataBlocks}>
-        {dataBlocks.map((block) => (
-          <Card
-            variant="cardSecondary"
-            key={block.id}
-            style={{ background: block.gradient, minHeight: '116px', flex: 1 }}
-          >
-            <DataBlock
-              title={block.title}
-              value={block.value}
-              valueSize="large"
-              titleSize="medium"
-              titleStyle={{ color: block.titleColor }}
-            />
-          </Card>
-        ))}
-      </div>
-
+      <InstitutionPageHeader institutionName={institutionName} />
+      <InstitutionPageDataBlocks
+        totalValue={totalValue}
+        numberOfVaults={numberOfVaults}
+        thirtyDayAvgApy={thirtyDayAvgApy}
+        allTimePerformance={allTimePerformance}
+      />
       <TabBar tabs={tabs} />
     </div>
   )
