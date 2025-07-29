@@ -88,8 +88,6 @@ export const getAccountKitConfig = ({
   basePath?: string
   isInstitutions?: boolean
 }): AlchemyAccountsConfigWithUI => {
-  console.log('isInstitutions', isInstitutions)
-
   return createConfig(
     {
       signerConnection: {
