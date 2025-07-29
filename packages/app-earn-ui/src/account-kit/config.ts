@@ -63,15 +63,17 @@ const defaultChain = base
 export const getAccountKitConfig = ({
   forkRpcUrl,
   chainId,
+  basePath,
 }: {
   forkRpcUrl?: string
   chainId?: SupportedNetworkIds
+  basePath?: string
 }): AlchemyAccountsConfigWithUI => {
   return createConfig(
     {
       signerConnection: {
         // this is for Alchemy Signer requests
-        rpcUrl: '/api/rpc',
+        rpcUrl: `${basePath}/api/rpc`,
       },
       enablePopupOauth: true,
       connectors: [safe()],
