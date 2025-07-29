@@ -10,6 +10,7 @@
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "build-rays-frontend": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/rays-dashboard",
+    "build-earn-institutions": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol-institutions",
     "build-earn-frontend": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol",
     "build-earn-frontend-landing": "turbo run build:apps --cache-dir=.turbo --filter=@summerfi/earn-protocol-landing-page",
     "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./sdk/*",
