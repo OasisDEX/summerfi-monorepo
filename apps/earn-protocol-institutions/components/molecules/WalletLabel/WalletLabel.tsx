@@ -6,7 +6,7 @@ import {
   type ButtonClassNames,
   Icon,
   LoadableAvatar,
-  networkNameIconNameMap,
+  networkIdIconNameMap,
   SkeletonLine,
   Text,
   type TextClassNames,
@@ -17,7 +17,7 @@ import {
   formatAddress,
   safeBTOA,
   sdkChainIdToHumanNetwork,
-  supportedSDKNetwork,
+  supportedNetworkId,
 } from '@summerfi/app-utils'
 
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -95,7 +95,7 @@ const WalletAvatar = ({
           left: size * 0.9,
         }}
       >
-        <Icon iconName={networkNameIconNameMap[supportedSDKNetwork(chainId)]} size={iconSize} />
+        <Icon iconName={networkIdIconNameMap[supportedNetworkId(chainId)]} size={iconSize} />
       </div>
     )}
   </>
@@ -203,6 +203,18 @@ export default function WalletLabel({
   const handleLogout = () => {
     logout()
   }
+
+  console.log('DEBUG', {
+    userWalletAddress,
+    clientChainId,
+    isSignerInitializing,
+    isAuthModalOpen,
+    isSignerAuthenticating,
+    variant,
+    buttonVariant,
+    hideNetworkIcon,
+    customLoginLabel,
+  })
 
   // removes dark mode from the document
   // to ensure that account-kit modal is always in light mode

@@ -6,15 +6,20 @@ import {
   type ButtonClassNames,
   Icon,
   LoadableAvatar,
+  networkIdIconNameMap,
   SkeletonLine,
   Text,
   type TextClassNames,
   Tooltip,
   useIsIframe,
 } from '@summerfi/app-earn-ui'
-import { formatAddress, safeBTOA, sdkChainIdToHumanNetwork } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  safeBTOA,
+  sdkChainIdToHumanNetwork,
+  supportedNetworkId,
+} from '@summerfi/app-utils'
 
-import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -90,7 +95,7 @@ const WalletAvatar = ({
           left: size * 0.9,
         }}
       >
-        {networkSDKChainIdIconMap(chainId, iconSize)}
+        <Icon iconName={networkIdIconNameMap[supportedNetworkId(chainId)]} size={iconSize} />
       </div>
     )}
   </>

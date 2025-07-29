@@ -31,16 +31,16 @@ export const NavigationWrapper: FC = () => {
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const router = useRouter()
   const currentPath = usePathname()
-  const { userWalletAddress } = useUserWallet()
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const { features } = useSystemConfig()
 
   const isLoginPage = currentPath === '/'
 
   useEffect(() => {
-    if (!isLoginPage && userWalletAddress) {
+    if (!isLoginPage && !isLoadingAccount && !userWalletAddress) {
       router.replace('/')
     }
-  }, [isLoginPage, userWalletAddress, router])
+  }, [isLoginPage, userWalletAddress, isLoadingAccount, router])
 
   return (
     <Navigation

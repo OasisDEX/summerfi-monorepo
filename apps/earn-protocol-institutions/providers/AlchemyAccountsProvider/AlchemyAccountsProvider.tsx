@@ -10,7 +10,7 @@ const AlchemyAccountsProvider: FC<
     initialState?: AlchemyClientState
   }>
 > = ({ initialState, children }) => {
-  const ref = useRef<AlchemyAccountsConfigWithUI>(getAccountKitConfig({}))
+  const ref = useRef<AlchemyAccountsConfigWithUI>(getAccountKitConfig({ isInstitutions: true }))
 
   return (
     <Suspense>

@@ -37,7 +37,7 @@ const GasSponsorshipIdMap = {
   [SupportedNetworkIds.SonicMainnet]: undefined,
 }
 
-const uiConfig: AlchemyAccountsUIConfig = {
+const uiConfigDefault: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
   auth: {
     sections: [
@@ -58,17 +58,38 @@ const uiConfig: AlchemyAccountsUIConfig = {
   },
 }
 
+const uiConfigInstitutions: AlchemyAccountsUIConfig = {
+  illustrationStyle: 'outline',
+  uiMode: 'embedded',
+  auth: {
+    sections: [
+      [
+        {
+          type: 'external_wallets',
+          walletConnect: { projectId: '832580820193ff6bae62a15dc0feff03' },
+        },
+      ],
+    ],
+    hideSignInText: true,
+    addPasskeyOnSignup: false,
+  },
+}
+
 const defaultChain = base
 
 export const getAccountKitConfig = ({
   forkRpcUrl,
   chainId,
   basePath,
+  isInstitutions = false,
 }: {
   forkRpcUrl?: string
   chainId?: SupportedNetworkIds
   basePath?: string
+  isInstitutions?: boolean
 }): AlchemyAccountsConfigWithUI => {
+  console.log('isInstitutions', isInstitutions)
+
   return createConfig(
     {
       signerConnection: {
@@ -99,7 +120,7 @@ export const getAccountKitConfig = ({
         expirationTimeMs: 1000 * 60 * 90, // 90 minutes,
       },
     },
-    uiConfig,
+    isInstitutions ? uiConfigInstitutions : uiConfigDefault,
   )
 }
 
