@@ -88,11 +88,13 @@ export const getAccountKitConfig = ({
   basePath?: string
   isInstitutions?: boolean
 }): AlchemyAccountsConfigWithUI => {
+  const resolvedBasePath = basePath ?? ''
+
   return createConfig(
     {
       signerConnection: {
         // this is for Alchemy Signer requests
-        rpcUrl: `${basePath}/api/rpc`,
+        rpcUrl: `${resolvedBasePath}/api/rpc`,
       },
       enablePopupOauth: true,
       connectors: [safe()],
@@ -109,7 +111,7 @@ export const getAccountKitConfig = ({
             chain.id as SupportedNetworkIds.ArbitrumOne | SupportedNetworkIds.Base
           ],
         transport: alchemy({
-          rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chain.id}`,
+          rpcUrl: forkRpcUrl ?? `${resolvedBasePath}/api/rpc/chain/${chain.id}`,
         }),
       })),
       ssr: true,
