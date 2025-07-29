@@ -139,6 +139,7 @@ export class ArmadaManager implements IArmadaManager {
     })
     this.merklRewards = new ArmadaManagerMerklRewards({
       supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
     })
   }
 }

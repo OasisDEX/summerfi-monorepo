@@ -546,4 +546,16 @@ export interface IArmadaManagerUsersClient {
     chainId: ChainId
     user: AddressValue
   }): Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
+
+  /**
+   * @name isAuthorizedAsMerklRewardsOperatorTx
+   * @description Checks if AdmiralsQuarters is authorized as a Merkl rewards operator for a user
+   * @param params.chainId The chain ID to check authorization on
+   * @param params.user The user's address
+   * @returns Promise<boolean> True if AdmiralsQuarters is authorized as operator, false otherwise
+   */
+  isAuthorizedAsMerklRewardsOperatorTx(params: {
+    chainId: ChainId
+    user: AddressValue
+  }): Promise<boolean>
 }
