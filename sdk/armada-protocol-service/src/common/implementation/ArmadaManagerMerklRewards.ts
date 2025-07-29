@@ -265,9 +265,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     return [toggleTx]
   }
 
-  async isAuthorizedAsMerklRewardsOperatorTx(
-    params: Parameters<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperatorTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperatorTx']> {
+  async isAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']> {
     const { chainId, user } = params
 
     LoggingService.log('Checking AdmiralsQuarters authorization as Merkl rewards operator', {

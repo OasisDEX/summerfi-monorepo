@@ -240,10 +240,10 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.authorizeAsMerklRewardsOperatorTx.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.isAuthorizedAsMerklRewardsOperatorTx */
-  async isAuthorizedAsMerklRewardsOperatorTx(
-    params: Parameters<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperatorTx']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperatorTx']> {
-    return this.rpcClient.armada.users.isAuthorizedAsMerklRewardsOperatorTx.query(params)
+  /** @see IArmadaManagerUsersClient.isAuthorizedAsMerklRewardsOperator */
+  async isAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperator']> {
+    return this.rpcClient.armada.users.isAuthorizedAsMerklRewardsOperator.query(params)
   }
 }

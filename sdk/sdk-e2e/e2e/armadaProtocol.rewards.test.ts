@@ -202,7 +202,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`isAuthorizedAsMerklRewardsOperatorTx`, () => {
+      describe(`isAuthorizedAsMerklRewardsOperator`, () => {
         it(`should check authorization status for supported chains`, async () => {
           const supportedChainIds = [
             ChainIds.Mainnet,
@@ -214,7 +214,7 @@ describe('Armada Protocol Rewards', () => {
           for (const chainId of supportedChainIds) {
             console.log(`Testing authorization status for chain ${chainId}`)
 
-            const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperatorTx({
+            const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
               chainId,
               user: userAddress,
             })
@@ -229,7 +229,7 @@ describe('Armada Protocol Rewards', () => {
           const unauthorizedUser = '0x0000000000000000000000000000000000000001' as AddressValue
           const testChainId = ChainIds.Base
 
-          const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperatorTx({
+          const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
             chainId: testChainId,
             user: unauthorizedUser,
           })
@@ -243,7 +243,7 @@ describe('Armada Protocol Rewards', () => {
           const unsupportedChainId = 999999 as ChainId
 
           await expect(
-            sdk.armada.users.isAuthorizedAsMerklRewardsOperatorTx({
+            sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
               chainId: unsupportedChainId,
               user: userAddress,
             }),
@@ -257,7 +257,7 @@ describe('Armada Protocol Rewards', () => {
 
           // Step 1: Check initial authorization status
           console.log('Step 1: Checking initial authorization status...')
-          const initialAuthStatus = await sdk.armada.users.isAuthorizedAsMerklRewardsOperatorTx({
+          const initialAuthStatus = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
             chainId: testChainId,
             user: userAddress,
           })

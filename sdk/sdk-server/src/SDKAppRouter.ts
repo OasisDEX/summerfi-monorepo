@@ -67,7 +67,7 @@ import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoL
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { authorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/authorizeAsMerklRewardsOperatorTx'
-import { isAuthorizedAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperatorTx'
+import { isAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperator'
 
 /**
  * Server
@@ -141,7 +141,7 @@ export const sdkAppRouter = router({
       getUserMerklRewards: getUserMerklRewards,
       getUserMerklClaimTx: getUserMerklClaimTx,
       authorizeAsMerklRewardsOperatorTx: authorizeAsMerklRewardsOperatorTx,
-      isAuthorizedAsMerklRewardsOperatorTx: isAuthorizedAsMerklRewardsOperatorTx,
+      isAuthorizedAsMerklRewardsOperator: isAuthorizedAsMerklRewardsOperator,
     },
     keepers: {
       rebalance: rebalance,
