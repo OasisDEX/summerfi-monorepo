@@ -157,6 +157,7 @@ export {
   EnhancedRiskManagementCampaign,
 } from './components/organisms/LandingPageContent/EnhancedRiskManagement'
 export { Audits } from './components/organisms/LandingPageContent/Audits'
+export { PanelNavigation } from './components/organisms/PanelNavigation/PanelNavigation'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'

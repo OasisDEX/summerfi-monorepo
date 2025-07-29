@@ -7,6 +7,7 @@ import {
 } from '@summerfi/app-utils'
 
 import { MainHeader } from '@/components/layout/MainHeader/MainHeader'
+import { DashboardOverview } from '@/features/dashboard/components/DashboardOverview/DashboardOverview'
 
 import styles from './InstitutionPageView.module.css'
 
@@ -46,7 +47,7 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
     {
       id: '4',
       title: 'All time performance',
-      value: formatDecimalAsPercent(allTimePerformance),
+      value: formatDecimalAsPercent(allTimePerformance, { plus: true }),
     },
   ]
 
@@ -54,7 +55,7 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
     {
       id: '1',
       label: 'Overview',
-      content: <div>Overview</div>,
+      content: <DashboardOverview />,
     },
     {
       id: '2',

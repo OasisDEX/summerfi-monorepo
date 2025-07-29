@@ -131,6 +131,7 @@ export type IconNamesList =
   | 'prime'
   | 'pyusd'
   | 'play'
+  | 'plus'
   | 'question_mark'
   | 'question_o'
   | 'question'
