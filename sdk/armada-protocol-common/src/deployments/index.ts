@@ -4,7 +4,9 @@ import {
   BaseChainNames,
   ChainFamilyName,
   EthereumChainNames,
+  getChainInfoByChainId,
   SonicChainNames,
+  type ChainId,
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
@@ -65,13 +67,20 @@ export const getDeployedContractAddress = <
   TKey extends ChainKey,
   TChainInfo extends ChainInfo,
   TCategory extends ContractCategoryKey,
->(params: {
-  chainInfo: TChainInfo
-  contractCategory: TCategory
-  contractName: keyof Config[TKey]['deployedContracts'][TCategory]
-}): IAddress => {
+>(
+  params: (
+    | {
+        chainInfo: TChainInfo
+      }
+    | { chainId: ChainId }
+  ) & {
+    contractCategory: TCategory
+    contractName: keyof Config[TKey]['deployedContracts'][TCategory]
+  },
+): IAddress => {
   const config = getConfig()
-  const chainKey = getChainKey(params.chainInfo.name) as TKey
+  const chainInfo = 'chainId' in params ? getChainInfoByChainId(params.chainId) : params.chainInfo
+  const chainKey: ChainKey = getChainKey(chainInfo.name)
 
   const contract = config[chainKey].deployedContracts[params.contractCategory][
     params.contractName
