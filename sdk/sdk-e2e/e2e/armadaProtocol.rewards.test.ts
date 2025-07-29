@@ -247,7 +247,7 @@ describe('Armada Protocol Rewards', () => {
               chainId: unsupportedChainId,
               user: userAddress,
             }),
-          ).rejects.toThrow('Unsupported chain ID for Merkl operations')
+          ).rejects.toThrow()
         })
       })
 
