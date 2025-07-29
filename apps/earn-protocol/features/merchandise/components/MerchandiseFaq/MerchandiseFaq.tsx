@@ -15,12 +15,8 @@ const merchandiseFaqData = [
   {
     title: 'Tell me more about the merch',
     content:
-      'The Summer.fi Beach Club - Beach Boat challenge merch is more than anything, unique. You will be on of the few people on planet earth with this merch. ',
+      'The Summer.fi Beach Club - Beach Boat challenge merch is more than anything, unique. You will be one of the few people on planet earth with this merch. ',
   },
-  // {
-  //   title: 'How will you handle my information?',
-  //   content: 'TBD',
-  // },
 ]
 
 export const MerchandiseFaq = () => {
