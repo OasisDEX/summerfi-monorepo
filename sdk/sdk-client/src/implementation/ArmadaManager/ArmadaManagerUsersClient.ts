@@ -232,4 +232,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getUserMerklClaimTx']> {
     return this.rpcClient.armada.users.getUserMerklClaimTx.query(params)
   }
+
+  /** @see IArmadaManagerUsersClient.authorizeAsMerklRewardsOperatorTx */
+  async authorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerUsersClient['authorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['authorizeAsMerklRewardsOperatorTx']> {
+    return this.rpcClient.armada.users.authorizeAsMerklRewardsOperatorTx.query(params)
+  }
 }

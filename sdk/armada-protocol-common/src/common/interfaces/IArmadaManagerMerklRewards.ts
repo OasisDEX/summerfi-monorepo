@@ -1,5 +1,5 @@
 import type { AddressValue, ChainId } from '@summerfi/sdk-common'
-import type { MerklClaimTransactionInfo } from '@summerfi/sdk-common'
+import type { MerklClaimTransactionInfo, ToggleAQasMerklRewardsOperatorTransactionInfo } from '@summerfi/sdk-common'
 
 /**
  * @name MerklReward
@@ -55,4 +55,16 @@ export interface IArmadaManagerMerklRewards {
     address: AddressValue
     chainId: ChainId
   }) => Promise<[MerklClaimTransactionInfo] | undefined>
+
+  /**
+   * @name authorizeAsMerklRewardsOperatorTx
+   * @description Generates a transaction to toggle AdmiralsQuarters as a Merkl rewards operator for a user
+   * @param params.chainId The chain ID to perform the operation on
+   * @param params.user The user's address
+   * @returns Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]> Array containing the toggle transaction
+   */
+  authorizeAsMerklRewardsOperatorTx: (params: {
+    chainId: ChainId
+    user: AddressValue
+  }) => Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
 }

@@ -1,15 +1,18 @@
 import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
+import { getDeployedContractAddress } from '@summerfi/armada-protocol-common'
 import {
   isChainId,
   LoggingService,
   type ChainId,
   type IChainInfo,
   type MerklClaimTransactionInfo,
+  type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData } from 'viem'
 import { merklClaimAbi } from './abi/merklClaimAbi'
+import { merklToggleAbi } from './abi/merklToggleAbi'
 import { MERKL_DISTRIBUTOR_ADDRESSES } from './configs/merkl-distributor-addresses'
 
 /**
@@ -206,5 +209,57 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     })
 
     return [merklClaimTx]
+  }
+
+  async authorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']> {
+    const { chainId, user } = params
+
+    LoggingService.log('Generating authorize AQ as Merkl rewards operator transaction', {
+      chainId,
+      user,
+    })
+
+    // Validate chain ID is supported
+    const distributorAddress = MERKL_DISTRIBUTOR_ADDRESSES[chainId]
+    if (!distributorAddress) {
+      throw new Error(`Unsupported chain ID for Merkl operations: ${chainId}`)
+    }
+
+    // Get AdmiralsQuarters contract address
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainId,
+      contractName: 'admiralsQuarters',
+      contractCategory: 'core',
+    })
+
+    if (!admiralsQuartersAddress) {
+      throw new Error(`AdmiralsQuarters contract not found for chain ID: ${chainId}`)
+    }
+
+    // Encode the toggleOperator function call
+    const calldata = encodeFunctionData({
+      abi: merklToggleAbi,
+      functionName: 'toggleOperator',
+      args: [user, admiralsQuartersAddress.value],
+    })
+
+    const toggleTx: ToggleAQasMerklRewardsOperatorTransactionInfo = {
+      type: TransactionType.ToggleAQasMerklRewardsOperator,
+      description: 'Authorize AdmiralsQuarters as Merkl rewards operator',
+      transaction: {
+        target: Address.createFromEthereum({ value: distributorAddress }),
+        calldata: calldata,
+        value: '0',
+      },
+    }
+
+    LoggingService.log('Generated authorize AQ as Merkl rewards operator transaction', {
+      target: distributorAddress,
+      operator: admiralsQuartersAddress.value,
+    })
+
+    return [toggleTx]
   }
 }
