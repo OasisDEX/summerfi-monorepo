@@ -18,8 +18,8 @@ import {
   Text,
 } from '@summerfi/app-earn-ui'
 import {
-  type SDKChainId,
   type SDKVaultishType,
+  type SupportedNetworkIds,
   type TokenSymbolsList,
   type TransactionWithStatus,
   type VaultApyData,
@@ -30,6 +30,7 @@ import {
   formatFiatBalance,
   formatPercent,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { TransactionType, type VaultSwitchTransactionInfo } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -51,7 +52,7 @@ const VaultBoxContent = ({
 }: {
   title: string
   tokenName: TokenSymbolsList
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   risk: string
   apy?: number
   amount?: string
@@ -151,7 +152,7 @@ export const ControlsSwitchTransactionView = ({
 }: ControlsSwitchTransactionViewProps) => {
   const [switchAmountTempValue, setSwitchAmountTempValue] = useState(switchingAmount)
 
-  const vaultChainId = subgraphNetworkToSDKId(currentVault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(currentVault.protocol.network))
 
   const nextVault = useMemo(() => {
     const [nextVaultId] = selectedSwitchVault.split('-')

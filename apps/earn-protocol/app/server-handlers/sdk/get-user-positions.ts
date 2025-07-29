@@ -1,4 +1,4 @@
-import { type IArmadaPosition, sdkSupportedChains } from '@summerfi/app-types'
+import { type IArmadaPosition, SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { serverOnlyErrorHandler } from '@/app/server-handlers/error-handler'
@@ -7,23 +7,25 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 export async function getUserPositions({ walletAddress }: { walletAddress: string }) {
   try {
     const userPositionsAllNetworksCalls = await Promise.all(
-      sdkSupportedChains.map(async (chainId) => {
-        const chainInfo = getChainInfoByChainId(chainId)
+      Object.values(SupportedNetworkIds)
+        .filter((networkId): networkId is number => typeof networkId === 'number')
+        .map(async (chainId) => {
+          const chainInfo = getChainInfoByChainId(Number(chainId))
 
-        const wallet = Wallet.createFrom({
-          address: Address.createFromEthereum({
-            value: walletAddress.toLowerCase(),
-          }),
-        })
-        const user = User.createFrom({
-          chainInfo,
-          wallet,
-        })
+          const wallet = Wallet.createFrom({
+            address: Address.createFromEthereum({
+              value: walletAddress.toLowerCase(),
+            }),
+          })
+          const user = User.createFrom({
+            chainInfo,
+            wallet,
+          })
 
-        return await backendSDK.armada.users.getUserPositions({
-          user,
-        })
-      }),
+          return await backendSDK.armada.users.getUserPositions({
+            user,
+          })
+        }),
     )
 
     const positionsList = userPositionsAllNetworksCalls

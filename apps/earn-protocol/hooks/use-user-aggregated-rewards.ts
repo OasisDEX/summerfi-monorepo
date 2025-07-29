@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -7,7 +7,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 const getUser = (address: string) =>
   User.createFrom({
     // chainId doesn't matter here since aggregated rewards are fetched from all chains
-    chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+    chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
     wallet: Wallet.createFrom({
       address: Address.createFromEthereum({ value: address }),
     }),

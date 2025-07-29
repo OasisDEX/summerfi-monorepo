@@ -1,6 +1,8 @@
-import { type SDKNetwork, type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKVaultishType, type SupportedSDKNetworks } from '@summerfi/app-types'
 
-type ArksAggregatedByNetwork = { [key in SDKNetwork]: { arks: SDKVaultishType['arks'] } }
+import { supportedSDKNetwork } from '@/helpers/earn-network-tools'
+
+type ArksAggregatedByNetwork = { [key in SupportedSDKNetworks]: { arks: SDKVaultishType['arks'] } }
 
 /**
  * Aggregates arks from multiple vaults by their network, ensuring uniqueness of arks within each network
@@ -10,12 +12,14 @@ type ArksAggregatedByNetwork = { [key in SDKNetwork]: { arks: SDKVaultishType['a
 export const aggregateArksPerNetwork = (vaults: SDKVaultishType[]): ArksAggregatedByNetwork => {
   return vaults.reduce<ArksAggregatedByNetwork>((acc, vault) => {
     const { network } = vault.protocol
+    const castedNetwork = supportedSDKNetwork(network)
 
-    if (!acc[network]) {
-      acc[network] = { arks: [] }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!acc[castedNetwork]) {
+      acc[castedNetwork] = { arks: [] }
     }
     // Use Set to ensure uniqueness when adding new arks
-    acc[network].arks = [...new Set([...acc[network].arks, ...vault.arks])]
+    acc[castedNetwork].arks = [...new Set([...acc[castedNetwork].arks, ...vault.arks])]
 
     return acc
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter

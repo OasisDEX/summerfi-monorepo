@@ -1,5 +1,9 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -48,7 +52,7 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const vaultsApyByNetworkMap = await getVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
     })),
   })
 

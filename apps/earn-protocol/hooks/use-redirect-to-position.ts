@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -36,7 +37,7 @@ export const useRedirectToPositionView = ({
 
     const vaultUrl = getVaultUrl(vault)
     const vaultPositionUrl = getVaultPositionUrl({
-      network: vault.protocol.network,
+      network: supportedSDKNetwork(vault.protocol.network),
       vaultId: vault.customFields?.slug ?? vault.id,
       walletAddress: userWalletAddress,
     })

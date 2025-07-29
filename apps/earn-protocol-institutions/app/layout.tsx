@@ -1,6 +1,10 @@
 import { ToastContainer } from 'react-toastify'
+import { cookieToInitialState } from '@account-kit/core'
 import {
+  accountKitCookieStateName,
   analyticsCookieName,
+  forksCookieName,
+  getAccountKitConfig,
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
@@ -78,6 +82,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     )
   }
 
+  const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
+  const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
+  const chainId: number | undefined = accountKitState.state?.chainId
+  const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
+
+  const accountKitInitializedState = cookieToInitialState(
+    getAccountKitConfig({ forkRpcUrl, chainId }),
+    (await headers()).get('cookie') ?? undefined,
+  )
+
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
 
@@ -98,6 +112,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
         <GoogleTagManager />
         <GlobalProvider
+          accountKitInitializedState={accountKitInitializedState}
           config={config}
           analyticsCookie={analyticsCookie}
           deviceType={resolvedDeviceType}

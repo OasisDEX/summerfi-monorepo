@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 import {
   type IconNamesList,
-  SDKNetwork,
   type SDKVaultishType,
+  SupportedSDKNetworks,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -112,7 +112,7 @@ const VaultCardLoading = ({
         })}
       >
         <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
-          <VaultTitle symbol="" networkName={SDKNetwork.Mainnet} isVaultCard isLoading />
+          <VaultTitle symbol="" networkName={SupportedSDKNetworks.Mainnet} isVaultCard isLoading />
         </div>
         <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
           <div className={vaultCardHomepageStyles.vaultCardHomepageDataRow}>

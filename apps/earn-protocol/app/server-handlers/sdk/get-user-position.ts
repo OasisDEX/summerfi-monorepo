@@ -1,4 +1,4 @@
-import { type IArmadaPosition, type SDKNetwork } from '@summerfi/app-types'
+import { type IArmadaPosition, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
@@ -10,7 +10,7 @@ export async function getUserPosition({
   vaultAddress,
   walletAddress,
 }: {
-  network: SDKNetwork
+  network: SupportedSDKNetworks
   vaultAddress?: string
   walletAddress: string
 }) {

@@ -1,4 +1,4 @@
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
 import { sdkNetworkToHumanNetwork } from './earn-network-tools'
@@ -8,7 +8,7 @@ import { sdkNetworkToHumanNetwork } from './earn-network-tools'
  * Example: "LazyVault_LowerRisk_USDT" -> "USDT Ethereum Lower Risk"
  */
 export function getHumanReadableFleetName(
-  network: SDKNetwork,
+  network: SupportedSDKNetworks,
   fleetName: string | undefined | null,
 ): string {
   if (!fleetName) return ''

@@ -1,4 +1,4 @@
-import { type SDKNetwork, type SDKChainId } from '../earn-protocol'
+import { type SupportedSDKNetworks, type SupportedNetworkIds } from '../earn-protocol'
 import type { IconNamesList, TokenSymbolsList } from '../icons'
 
 import { ReactNode } from 'react'
@@ -8,13 +8,13 @@ export type DropdownOption =
       label: string
       value: string
       tokenSymbol: TokenSymbolsList
-      chainId?: SDKChainId
-      network?: SDKNetwork
+      chainId?: SupportedNetworkIds
+      network?: SupportedSDKNetworks
     }
   | {
       label: string
       value: string
-      iconName: IconNamesList
+      iconName?: IconNamesList
     }
   | {
       label: string

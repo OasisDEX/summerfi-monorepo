@@ -1,4 +1,4 @@
-import { type GetInterestRatesParams, SDKNetwork } from '@summerfi/app-types'
+import { type GetInterestRatesParams, SupportedSDKNetworks } from '@summerfi/app-types'
 import { getArkHistoricalRatesUrl, getArkProductId, getArkRatesUrl } from '@summerfi/app-utils'
 import { GraphQLClient } from 'graphql-request'
 
@@ -20,16 +20,16 @@ const noInterestRates: GetInterestRatesQuery = {
 }
 
 const clients = {
-  [SDKNetwork.Mainnet]: new GraphQLClient(
+  [SupportedSDKNetworks.Mainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates`,
   ),
-  [SDKNetwork.Base]: new GraphQLClient(
+  [SupportedSDKNetworks.Base]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-base`,
   ),
-  [SDKNetwork.ArbitrumOne]: new GraphQLClient(
+  [SupportedSDKNetworks.ArbitrumOne]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-arbitrum`,
   ),
-  [SDKNetwork.SonicMainnet]: new GraphQLClient(
+  [SupportedSDKNetworks.SonicMainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-sonic`,
   ),
 }

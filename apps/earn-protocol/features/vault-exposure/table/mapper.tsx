@@ -11,7 +11,11 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type SDKNetwork, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type SDKVaultType,
+  type SupportedSDKNetworks,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
@@ -82,7 +86,10 @@ const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[
   }
 }
 
-type MapperVaultNetwork = SDKNetwork.Mainnet | SDKNetwork.ArbitrumOne | SDKNetwork.Base
+type MapperVaultNetwork =
+  | SupportedSDKNetworks.Mainnet
+  | SupportedSDKNetworks.ArbitrumOne
+  | SupportedSDKNetworks.Base
 
 const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
   return memoize((item: ExtendedArk) => {
@@ -277,7 +284,7 @@ export const vaultExposureMapper = (
 
   const sortedArks = vaultExposureSorter({ extendedArks, sortConfig })
 
-  const vaultNetwork = vault.protocol.network as MapperVaultNetwork
+  const vaultNetwork = vault.protocol.network as unknown as MapperVaultNetwork
 
   return sortedArks.map(sortedArksMapper(vaultNetwork))
 }

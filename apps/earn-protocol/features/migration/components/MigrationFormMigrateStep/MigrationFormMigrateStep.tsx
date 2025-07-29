@@ -20,6 +20,7 @@ import {
   formatDecimalAsPercent,
   formatFiatBalance,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { type BigNumber } from 'bignumber.js'
@@ -117,7 +118,7 @@ export const MigrationFormMigrateStep: FC<MigrationFormMigrateStepProps> = ({
           change={apyDiff ? formatDecimalAsPercent(apyDiff, { plus: true }) : undefined}
           token={vault.inputToken.symbol as TokenSymbolsList}
           type={MigrationMiniCardType.TO}
-          chainId={subgraphNetworkToSDKId(vault.protocol.network)}
+          chainId={subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))}
           platformLogo="summer"
           isLoading={isLoadingForecast || isQuoteLoading}
         />

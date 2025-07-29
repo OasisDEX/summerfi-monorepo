@@ -1,8 +1,8 @@
 import { type FC, type ReactNode } from 'react'
 import {
-  NetworkIds,
-  SDKNetwork,
+  type NetworkIds,
   type SDKVaultType,
+  type SupportedSDKNetworks,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
@@ -13,29 +13,14 @@ import { Text } from '@/components/atoms/Text/Text'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { networkWarnings } from '@/constants/earn-protocol'
+import { networkIdIconNameMap, networkNameIconNameMap } from '@/constants/icon-maps'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
-
-const networkIdIconMap = {
-  [NetworkIds.MAINNET]: <Icon iconName="earn_network_ethereum" size={16} />,
-  [NetworkIds.BASEMAINNET]: <Icon iconName="earn_network_base" size={16} />,
-  [NetworkIds.ARBITRUMMAINNET]: <Icon iconName="earn_network_arbitrum" size={16} />,
-  [NetworkIds.OPTIMISMMAINNET]: <Icon iconName="earn_network_optimism" size={16} />,
-  [NetworkIds.SONICMAINNET]: <Icon iconName="earn_network_sonic" size={16} />,
-}
-
-const networkNameIconMap = {
-  [SDKNetwork.Mainnet]: <Icon iconName="earn_network_ethereum" size={16} />,
-  [SDKNetwork.Base]: <Icon iconName="earn_network_base" size={16} />,
-  [SDKNetwork.ArbitrumOne]: <Icon iconName="earn_network_arbitrum" size={16} />,
-  [SDKNetwork.Optimism]: <Icon iconName="earn_network_optimism" size={16} />,
-  [SDKNetwork.SonicMainnet]: <Icon iconName="earn_network_sonic" size={16} />,
-}
 
 interface VaultTitleProps {
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: SDKNetwork
+  networkName?: SupportedSDKNetworks
   value?: ReactNode
   selected?: boolean
   titleVariant?: keyof typeof TextVariants
@@ -74,8 +59,12 @@ export const VaultTitle: FC<VaultTitleProps> = ({
             style={{ position: 'absolute', top: '-3px', left: '-3px' }}
             data-testid="vault-network"
           >
-            {networkId && networkIdIconMap[networkId]}
-            {networkName && networkNameIconMap[networkName]}
+            {networkId && networkIdIconNameMap[networkId] && (
+              <Icon iconName={networkIdIconNameMap[networkId]} size={16} />
+            )}
+            {networkName && networkNameIconNameMap[networkName] && (
+              <Icon iconName={networkNameIconNameMap[networkName]} size={16} />
+            )}
           </div>
         )}
       </div>

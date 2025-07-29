@@ -9,7 +9,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
@@ -29,7 +29,10 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
 
     return {
       title: label,
-      link: getScannerAddressUrl(subgraphNetworkToSDKId(vault.protocol.network), ark.id),
+      link: getScannerAddressUrl(
+        subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
+        ark.id,
+      ),
     }
   })
 

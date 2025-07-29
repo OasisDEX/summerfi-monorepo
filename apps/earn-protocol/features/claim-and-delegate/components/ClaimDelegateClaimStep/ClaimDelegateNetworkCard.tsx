@@ -1,12 +1,12 @@
 import { type FC } from 'react'
-import { SDKChainId, type SDKSupportedChain } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 
 import { ClaimDelegateToBridge } from './ClaimDelegateToBridge'
 import { ClaimDelegateToClaim } from './ClaimDelegateToClaim'
 
 interface ClaimDelegateNetworkCardProps {
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
   claimableAmount: number
   balance: number
   estimatedSumrPrice: number
@@ -14,7 +14,7 @@ interface ClaimDelegateNetworkCardProps {
   onClaim: () => void
   isLoading?: boolean
   isChangingNetwork?: boolean
-  isChangingNetworkTo?: SDKChainId
+  isChangingNetworkTo?: SupportedNetworkIds
   isOnlyStep?: boolean
 }
 
@@ -30,7 +30,8 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   isChangingNetworkTo,
   isOnlyStep,
 }) => {
-  const isReadyToBridge = claimableAmount === 0 && balance > 0 && chainId !== SDKChainId.BASE
+  const isReadyToBridge =
+    claimableAmount === 0 && balance > 0 && chainId !== SupportedNetworkIds.Base
   const canClaim = claimableAmount > 0
   const formattedClaimable = formatCryptoBalance(claimableAmount)
   const formattedBalance = formatCryptoBalance(balance)

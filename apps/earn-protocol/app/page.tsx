@@ -3,6 +3,7 @@ import {
   formatCryptoBalance,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
@@ -27,7 +28,7 @@ const EarnAllVaultsPage = async () => {
   const vaultsApyByNetworkMap = await getVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
     })),
   })
 

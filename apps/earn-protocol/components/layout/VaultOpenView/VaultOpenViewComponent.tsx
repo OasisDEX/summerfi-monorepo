@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
+  AccountKitAccountType,
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
@@ -24,18 +25,17 @@ import {
   type ArksHistoricalChartData,
   type DropdownRawOption,
   type GetVaultsApyResponse,
-  sdkSupportedChains,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
-import { AccountKitAccountType } from '@/account-kit/types'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -111,7 +111,7 @@ export const VaultOpenViewComponent = ({
 
   const { userWalletAddress } = useUserWallet()
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -140,39 +140,41 @@ export const VaultOpenViewComponent = ({
 
   useEffect(() => {
     const fetchMigratablePositions = async (walletAddress: string) => {
-      const promises = sdkSupportedChains.map(async (chainId) => {
-        const chainInfo = getChainInfoByChainId(chainId)
+      const promises = Object.values(SupportedNetworkIds)
+        .filter((networkId): networkId is number => typeof networkId === 'number')
+        .map(async (chainId) => {
+          const chainInfo = getChainInfoByChainId(Number(chainId))
 
-        let positionsData
-        let apyData
+          let positionsData
+          let apyData
 
-        try {
-          positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-          positionsData = {
-            chainInfo,
-            positions: [],
+          try {
+            positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+            positionsData = {
+              chainInfo,
+              positions: [],
+            }
           }
-        }
 
-        try {
-          apyData = await sdk.getMigratablePositionsApy({
-            chainInfo,
-            positionIds: positionsData.positions.map((p) => p.id),
-          })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
-          apyData = {
-            chainInfo,
-            apyByPositionId: {},
+          try {
+            apyData = await sdk.getMigratablePositionsApy({
+              chainInfo,
+              positionIds: positionsData.positions.map((p) => p.id),
+            })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+            apyData = {
+              chainInfo,
+              apyByPositionId: {},
+            }
           }
-        }
 
-        return { positionsData, apyData }
-      })
+          return { positionsData, apyData }
+        })
 
       const positions = await Promise.all(promises)
 

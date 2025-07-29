@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { type SDKChainId } from '@summerfi/app-types'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { type Chain } from 'viem'
 
 import { publicClientMap } from '@/helpers/get-fe-public-client'
@@ -12,7 +12,11 @@ import { publicClientMap } from '@/helpers/get-fe-public-client'
 export const usePublicClient = ({ chain }: { chain: Chain }) => {
   const publicClient = useMemo(() => {
     return publicClientMap[
-      chain.id as SDKChainId.ARBITRUM | SDKChainId.BASE | SDKChainId.MAINNET | SDKChainId.SONIC
+      chain.id as
+        | SupportedNetworkIds.ArbitrumOne
+        | SupportedNetworkIds.Base
+        | SupportedNetworkIds.Mainnet
+        | SupportedNetworkIds.SonicMainnet
     ]
   }, [chain])
 

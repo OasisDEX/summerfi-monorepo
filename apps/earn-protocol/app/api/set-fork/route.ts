@@ -1,7 +1,7 @@
+import { forksCookieName } from '@summerfi/app-earn-ui'
 import { cookies } from 'next/headers'
 import { type NextRequest } from 'next/server'
 
-import { forksCookieName } from '@/constants/forks-cookie-name'
 import { NetworkIds } from '@/constants/networks-list'
 
 export type SetForkRequest = {

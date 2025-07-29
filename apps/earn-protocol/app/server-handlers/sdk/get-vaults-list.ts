@@ -1,5 +1,5 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { sdkSupportedChains } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { unstable_cache as unstableCache } from 'next/cache'
 
@@ -7,11 +7,13 @@ import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
 const getVaultsListRaw = async () => {
   const vaultsListByNetwork = await Promise.all(
-    sdkSupportedChains.map((networkId) =>
-      backendSDK.armada.users.getVaultsRaw({
-        chainInfo: getChainInfoByChainId(networkId),
-      }),
-    ),
+    Object.values(SupportedNetworkIds)
+      .filter((networkId): networkId is number => typeof networkId === 'number')
+      .map((networkId) =>
+        backendSDK.armada.users.getVaultsRaw({
+          chainInfo: getChainInfoByChainId(Number(networkId)),
+        }),
+      ),
   )
 
   return {

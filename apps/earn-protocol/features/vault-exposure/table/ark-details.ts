@@ -1,15 +1,15 @@
-import { SDKNetwork } from '@summerfi/app-types'
+import { SupportedSDKNetworks } from '@summerfi/app-types'
 
 export const arkDetailsMap: {
   [key in
-    | SDKNetwork.ArbitrumOne
-    | SDKNetwork.Base
-    | SDKNetwork.Mainnet
-    | SDKNetwork.SonicMainnet]: {
+    | SupportedSDKNetworks.ArbitrumOne
+    | SupportedSDKNetworks.Base
+    | SupportedSDKNetworks.Mainnet
+    | SupportedSDKNetworks.SonicMainnet]: {
     [key: string]: { description: string; link?: string }
   }
 } = {
-  [SDKNetwork.Mainnet]: {
+  [SupportedSDKNetworks.Mainnet]: {
     // ETH Strategies
     '0x1a91e4bc8b5dc910bc58c3ddf35405edb9c2022e': {
       description:
@@ -341,7 +341,7 @@ export const arkDetailsMap: {
       link: 'https://app.term.finance/vaults/0xa9ca4909700505585b1ad2a1579da3b670ffa9c4/1',
     },
   },
-  [SDKNetwork.ArbitrumOne]: {
+  [SupportedSDKNetworks.ArbitrumOne]: {
     '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
       description:
         'A stable and transparent USDT strategy, built for efficiency and optimized to deliver long-term, sustainable yield.',
@@ -391,7 +391,7 @@ export const arkDetailsMap: {
       link: 'https://app.sky.money',
     },
   },
-  [SDKNetwork.Base]: {
+  [SupportedSDKNetworks.Base]: {
     '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
       description:
         'A high-efficiency USDC strategy, leveraging tested methodologies to maximize yield while minimizing inefficiencies.',
@@ -531,7 +531,7 @@ export const arkDetailsMap: {
       link: 'https://moonwell.fi/markets/supply/base/usdc',
     },
   },
-  [SDKNetwork.SonicMainnet]: {
+  [SupportedSDKNetworks.SonicMainnet]: {
     '0x809a0c98fac68a0c4319f3a3e864540c772562af': {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',

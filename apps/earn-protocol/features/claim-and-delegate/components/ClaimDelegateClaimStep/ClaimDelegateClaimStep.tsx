@@ -1,8 +1,8 @@
 import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
-import { SDKChainId, type SDKSupportedChain } from '@summerfi/app-types'
+import { SDKChainIdToAAChainMap, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -11,7 +11,6 @@ import {
 } from '@summerfi/app-utils'
 import { redirect, useParams, useSearchParams } from 'next/navigation'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
 import {
@@ -33,26 +32,24 @@ import { ClaimDelegateNetworkCard } from './ClaimDelegateNetworkCard'
 import classNames from './ClaimDelegateClaimStep.module.css'
 
 const delayPerNetwork = {
-  [SDKChainId.BASE]: 4000,
-  [SDKChainId.ARBITRUM]: 4000,
-  [SDKChainId.MAINNET]: 13000,
-  [SDKChainId.SONIC]: 4000,
+  [SupportedNetworkIds.Base]: 4000,
+  [SupportedNetworkIds.ArbitrumOne]: 4000,
+  [SupportedNetworkIds.Mainnet]: 13000,
+  [SupportedNetworkIds.SonicMainnet]: 4000,
 } as const
 
-const claimItems: {
-  chainId: SDKSupportedChain
-}[] = [
+const claimItems = [
   {
-    chainId: SDKChainId.BASE,
+    chainId: SupportedNetworkIds.Base,
   },
   {
-    chainId: SDKChainId.ARBITRUM,
+    chainId: SupportedNetworkIds.ArbitrumOne,
   },
   {
-    chainId: SDKChainId.MAINNET,
+    chainId: SupportedNetworkIds.Mainnet,
   },
   {
-    chainId: SDKChainId.SONIC,
+    chainId: SupportedNetworkIds.SonicMainnet,
   },
 ]
 
@@ -84,9 +81,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   })
 
   const { setChain, isSettingChain } = useChain()
-  const { clientChainId } = useClientChainId() as {
-    clientChainId: SDKSupportedChain
-  }
+  const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
@@ -203,13 +198,13 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 
-  const handleClaimClick = (chainId: SDKSupportedChain) => {
+  const handleClaimClick = (chainId: SupportedNetworkIds) => {
     // Prevent multiple simultaneous claims
     if (state.claimStatus === ClaimDelegateTxStatuses.PENDING || isSettingChain) {
       return
     }
 
-    if (clientChainId !== chainId) {
+    if (Number(clientChainId) !== Number(chainId)) {
       dispatch({ type: 'set-pending-claim', payload: chainId })
       setChain({ chain: SDKChainIdToAAChainMap[chainId] })
 
@@ -218,7 +213,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     handleClaim()
   }
 
-  const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SDKChainId.BASE)
+  const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SupportedNetworkIds.Base)
 
   // Check if there are any claimable balances using the global state
   const hasClaimableBalance = Object.values(state.claimableBalances).some((amount) => amount > 0)
@@ -263,17 +258,18 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     <div className={classNames.claimDelegateClaimStepWrapper}>
       {/* Base network card */}
       <ClaimDelegateNetworkCard
-        chainId={SDKChainId.BASE}
-        claimableAmount={state.claimableBalances[SDKChainId.BASE] || 0}
+        chainId={SupportedNetworkIds.Base}
+        claimableAmount={state.claimableBalances[SupportedNetworkIds.Base] || 0}
         balance={state.walletBalances.base || 0}
         estimatedSumrPrice={estimatedSumrPrice}
         walletAddress={resolvedWalletAddress}
-        onClaim={() => handleClaimClick(SDKChainId.BASE)}
+        onClaim={() => handleClaimClick(SupportedNetworkIds.Base)}
         isLoading={
           state.claimStatus === ClaimDelegateTxStatuses.PENDING &&
-          (state.pendingClaimChainId === SDKChainId.BASE || clientChainId === SDKChainId.BASE)
+          (state.pendingClaimChainId === SupportedNetworkIds.Base ||
+            clientChainId === SupportedNetworkIds.Base)
         }
-        isChangingNetwork={isSettingChain && state.pendingClaimChainId === SDKChainId.BASE}
+        isChangingNetwork={isSettingChain && state.pendingClaimChainId === SupportedNetworkIds.Base}
         isChangingNetworkTo={state.pendingClaimChainId}
         isOnlyStep
       />

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { addressSchema } from '@summerfi/serverless-shared'
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { type NextRequest, NextResponse } from 'next/server'
@@ -90,7 +90,7 @@ export async function POST(
 
   try {
     // chain id is not relevant for signature verification
-    const client = await getSSRPublicClient(SDKChainId.BASE)
+    const client = await getSSRPublicClient(SupportedNetworkIds.Base)
 
     if (!client) {
       return NextResponse.json({ errors: ['Error while getting client'] }, { status: 500 })

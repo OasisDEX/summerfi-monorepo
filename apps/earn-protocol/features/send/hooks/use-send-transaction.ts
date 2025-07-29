@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { useIsIframe } from '@summerfi/app-earn-ui'
-import { type SDKChainId, type TransactionHash } from '@summerfi/app-types'
+import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
 import { encodeFunctionData, type PublicClient } from 'viem'
 
-import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -26,7 +25,7 @@ export const useSendTransaction = ({
   amount: string | undefined
   token: IToken | undefined
   recipient: string | undefined
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   publicClient: PublicClient
 }) => {
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })

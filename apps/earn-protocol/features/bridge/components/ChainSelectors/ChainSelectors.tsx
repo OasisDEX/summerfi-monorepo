@@ -1,5 +1,5 @@
 'use client'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { type Chain } from 'viem'
 
 import { ArrowSplitter } from '@/features/bridge/components/ArrowSplitter/ArrowSplitter'
@@ -10,8 +10,8 @@ import styles from './ChainSelectors.module.css'
 interface ChainSelectorsProps {
   sourceChain: Chain
   destinationChain: Chain
-  onSourceChainChange: (network: SDKNetwork) => void
-  onDestinationChainChange: (network: SDKNetwork) => void
+  onSourceChainChange: (network: SupportedSDKNetworks) => void
+  onDestinationChainChange: (network: SupportedSDKNetworks) => void
 }
 
 export const ChainSelectors = ({

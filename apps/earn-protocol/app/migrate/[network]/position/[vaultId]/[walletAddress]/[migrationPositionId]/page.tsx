@@ -1,9 +1,10 @@
 import { Text } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import { redirect } from 'next/navigation'
@@ -30,7 +31,7 @@ import {
 type MigrationVaultPageProps = {
   params: Promise<{
     vaultId: string // could be vault address or the vault name
-    network: SDKNetwork
+    network: SupportedSDKNetworks
     walletAddress: string
     migrationPositionId: string
   }>
@@ -115,13 +116,13 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
     getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
   ])
@@ -142,7 +143,8 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     vaultInterestRates,
   })
 
-  const vaultApyData = vaultApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApyData =
+    vaultApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
   return (
     <MigrationVaultPageView

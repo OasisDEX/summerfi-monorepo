@@ -17,6 +17,7 @@ export const bridgeState: BridgeState = {
     total: '0',
     vested: '0',
     sonic: '0',
+    optimism: '0',
   },
 }
 

@@ -7,6 +7,7 @@ import {
   DataBlock,
   Icon,
   InputWithDropdown,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
   SUMR_CAP,
   TabBar,
@@ -16,7 +17,7 @@ import {
   useMobileCheck,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -29,7 +30,6 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
@@ -133,7 +133,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     publicClient,
     vaultTokenSymbol: 'SUMMER',
     tokenSymbol: 'SUMMER',
-    chainId: SDKChainId.BASE,
+    chainId: SupportedNetworkIds.Base,
   })
 
   const {
@@ -210,12 +210,12 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     },
   })
 
-  const isBase = clientChainId === SDKChainId.BASE
+  const isBase = clientChainId === SupportedNetworkIds.Base
 
   const handleStake = async () => {
     // staking is only supported on base
     if (!isBase) {
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
 
       return
     }
@@ -276,7 +276,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     // unstaking is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
 
       return
     }
@@ -312,7 +312,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   )
 
   const sumrToClaim =
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
+    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`
 

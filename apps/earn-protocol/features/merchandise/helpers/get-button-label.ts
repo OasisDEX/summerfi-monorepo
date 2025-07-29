@@ -3,13 +3,13 @@ import capitalize from 'lodash-es/capitalize'
 import { MerchandiseFormStatus, type MerchandiseType } from '@/features/merchandise/types'
 
 export const getMerchandiseButtonLabel = ({
-  status,
+  merchFormStatus,
   type,
 }: {
-  status: MerchandiseFormStatus
+  merchFormStatus: MerchandiseFormStatus
   type: MerchandiseType
 }) => {
-  switch (status) {
+  switch (merchFormStatus) {
     case MerchandiseFormStatus.IDLE:
       return `Claim ${capitalize(type)}`
     case MerchandiseFormStatus.LOADING:
@@ -18,5 +18,8 @@ export const getMerchandiseButtonLabel = ({
       return `Claimed ${capitalize(type)}`
     case MerchandiseFormStatus.ERROR:
       return `Retry to claim ${capitalize(type)}`
+    default:
+      // Fallback case, should not happen
+      return `Claim ${capitalize(type)}`
   }
 }

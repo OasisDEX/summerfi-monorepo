@@ -1,4 +1,4 @@
-import { type SDKChainId } from '@summerfi/app-types'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
@@ -28,7 +28,7 @@ export enum ClaimDelegateStakeType {
 
 // Define types for balance tracking
 export type ClaimableBalances = {
-  [key in SDKChainId]: number
+  [key in SupportedNetworkIds]: number
 }
 export type WalletBalances = {
   [key in HumanReadableNetwork]: number
@@ -44,7 +44,7 @@ export type ClaimDelegateState = {
   stakeType: ClaimDelegateStakeType
   stakeChangeAmount: string | undefined
   walletAddress: string
-  pendingClaimChainId: SDKChainId | undefined
+  pendingClaimChainId: SupportedNetworkIds | undefined
   // Add balance tracking
   claimableBalances: ClaimableBalances
   walletBalances: WalletBalances
@@ -85,7 +85,7 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'set-pending-claim'
-      payload: SDKChainId | undefined
+      payload: SupportedNetworkIds | undefined
     }
   | {
       type: 'update-claimable-balances'

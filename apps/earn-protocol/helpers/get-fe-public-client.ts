@@ -1,8 +1,8 @@
 import { arbitrum, base, mainnet } from '@account-kit/infra'
-import { SDKChainId } from '@summerfi/app-types'
+import { customAAKitSonicConfig } from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { createPublicClient, http, type PublicClient } from 'viem'
 
-import { customAAKitSonicConfig as sonic } from '@/account-kit/config'
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 
 /**
@@ -10,33 +10,29 @@ import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
  */
 export const arbitrumPublicClient = createPublicClient({
   chain: arbitrum,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.ARBITRUM]),
+  transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.ArbitrumOne]),
 })
 
 export const basePublicClient = createPublicClient({
   chain: base,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.BASE]),
+  transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.Base]),
 })
 
 export const sonicPublicClient = createPublicClient({
-  chain: sonic,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.SONIC]),
+  chain: customAAKitSonicConfig,
+  transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.SonicMainnet]),
 })
 
 export const mainnetPublicClient = createPublicClient({
   chain: mainnet,
-  transport: http(SDKChainIdToRpcGatewayMap[SDKChainId.MAINNET]),
+  transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.Mainnet]),
 })
 
 export const publicClientMap: {
-  [key in
-    | SDKChainId.ARBITRUM
-    | SDKChainId.BASE
-    | SDKChainId.MAINNET
-    | SDKChainId.SONIC]: PublicClient
+  [key in SupportedNetworkIds]: PublicClient
 } = {
-  [SDKChainId.ARBITRUM]: arbitrumPublicClient,
-  [SDKChainId.BASE]: basePublicClient,
-  [SDKChainId.MAINNET]: mainnetPublicClient,
-  [SDKChainId.SONIC]: sonicPublicClient,
+  [SupportedNetworkIds.ArbitrumOne]: arbitrumPublicClient,
+  [SupportedNetworkIds.Base]: basePublicClient,
+  [SupportedNetworkIds.Mainnet]: mainnetPublicClient,
+  [SupportedNetworkIds.SonicMainnet]: sonicPublicClient,
 }

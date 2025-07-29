@@ -1,4 +1,4 @@
-import { SDKNetwork } from '@summerfi/app-types'
+import { SupportedSDKNetworks } from '@summerfi/app-types'
 
 type SafeTransactionDataType = {
   safe: string
@@ -41,17 +41,18 @@ type SafeTransactionDataType = {
   signatures: unknown
 }
 
-const subgraphNetworkToSafeSDKAPI = (network: SDKNetwork) => {
+const subgraphNetworkToSafeSDKAPI = (network: SupportedSDKNetworks) => {
   return {
-    [SDKNetwork.Mainnet.toLowerCase()]: 'https://safe-transaction-mainnet.safe.global',
-    [SDKNetwork.ArbitrumOne.toLowerCase()]: 'https://safe-transaction-arbitrum.safe.global',
-    [SDKNetwork.Base.toLowerCase()]: 'https://safe-transaction-base.safe.global',
+    [SupportedSDKNetworks.Mainnet.toLowerCase()]: 'https://safe-transaction-mainnet.safe.global',
+    [SupportedSDKNetworks.ArbitrumOne.toLowerCase()]:
+      'https://safe-transaction-arbitrum.safe.global',
+    [SupportedSDKNetworks.Base.toLowerCase()]: 'https://safe-transaction-base.safe.global',
   }[network.toLowerCase()]
 }
 
 export const getSafeTxHash = async (
   safeTxHash: string,
-  network: SDKNetwork,
+  network: SupportedSDKNetworks,
 ): Promise<SafeTransactionDataType> => {
   let safeTransactionData: SafeTransactionDataType
   let retries = 0

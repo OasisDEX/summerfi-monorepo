@@ -5,7 +5,8 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
-import { SDKChainId } from '@summerfi/app-types'
+import { accountType } from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   type BridgeTransactionInfo,
   type Denomination,
@@ -19,24 +20,23 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
-import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 // Mapping for USDC token symbols by chain ID
 const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
-  [SDKChainId.SONIC]: 'USDC.e',
-  [SDKChainId.MAINNET]: 'USDC',
-  [SDKChainId.ARBITRUM]: 'USDC',
-  [SDKChainId.BASE]: 'USDC',
+  [SupportedNetworkIds.SonicMainnet]: 'USDC.e',
+  [SupportedNetworkIds.Mainnet]: 'USDC',
+  [SupportedNetworkIds.ArbitrumOne]: 'USDC',
+  [SupportedNetworkIds.Base]: 'USDC',
 }
 
 // Mapping for native gas tokens by chain ID
 const NATIVE_GAS_TOKEN_BY_CHAIN_ID: { [key: number]: string } = {
-  [SDKChainId.SONIC]: 'WS',
-  [SDKChainId.MAINNET]: 'WETH',
-  [SDKChainId.ARBITRUM]: 'WETH',
-  [SDKChainId.BASE]: 'WETH',
+  [SupportedNetworkIds.SonicMainnet]: 'WS',
+  [SupportedNetworkIds.Mainnet]: 'WETH',
+  [SupportedNetworkIds.ArbitrumOne]: 'WETH',
+  [SupportedNetworkIds.Base]: 'WETH',
 }
 
 /**
@@ -87,7 +87,7 @@ const getLzFeeUsdValue = async (
   }) => Promise<ISpotPriceInfo>,
 ): Promise<string> => {
   // For Sonic chain, we use getSpotPrice to get the ETH/USDC price
-  if (chainId === SDKChainId.SONIC) {
+  if (chainId === SupportedNetworkIds.SonicMainnet) {
     const spotPrice = await getSpotPrice({
       baseToken: nativeGasToken,
     })

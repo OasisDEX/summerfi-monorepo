@@ -15,9 +15,8 @@ import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/ea
 import { TimeframesType } from '../components'
 import { DeviceType } from '../device-type'
 import { IconNamesList, TokenSymbolsList } from '../icons'
+import { NetworkIds } from '../networks'
 
-export { Network as SDKNetwork }
-export { ChainId as SDKChainId }
 export type { IArmadaPosition as IArmadaPosition }
 
 export type ChartDataPoints = {
@@ -58,31 +57,6 @@ export type SDKUserActivityType = SDKUsersActivityType[0]
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields
-
-export const sdkSupportedNetworks = [
-  Network.ArbitrumOne,
-  Network.Base,
-  Network.Mainnet,
-  Network.SonicMainnet,
-] as const
-
-export const sdkSupportedChains = [
-  ChainId.ARBITRUM,
-  ChainId.BASE,
-  ChainId.MAINNET,
-  ChainId.SONIC,
-] as const
-
-export type SDKSupportedNetwork = (typeof sdkSupportedNetworks)[number]
-export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
-
-export enum SDKSupportedNetworkIdsEnum {
-  ARBITRUM = ChainId.ARBITRUM,
-  BASE = ChainId.BASE,
-  OPTIMISM = ChainId.OPTIMISM,
-  MAINNET = ChainId.MAINNET,
-  SONIC = ChainId.SONIC,
-}
 
 export type EarnTransactionViewStates =
   | 'idle'
@@ -165,7 +139,7 @@ export type ArkDetailsType = {
 }
 
 export type GetInterestRatesParams = {
-  network: Network
+  network: SupportedSDKNetworks
   dailyCount?: number
   hourlyCount?: number
   weeklyCount?: number
@@ -338,4 +312,18 @@ export type LandingPageData = {
   }
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
+}
+
+export enum SupportedNetworkIds {
+  Mainnet = NetworkIds.MAINNET,
+  Base = NetworkIds.BASEMAINNET,
+  ArbitrumOne = NetworkIds.ARBITRUMMAINNET,
+  SonicMainnet = NetworkIds.SONICMAINNET,
+}
+
+export enum SupportedSDKNetworks {
+  Mainnet = Network.Mainnet,
+  Base = Network.Base,
+  ArbitrumOne = Network.ArbitrumOne,
+  SonicMainnet = Network.SonicMainnet,
 }

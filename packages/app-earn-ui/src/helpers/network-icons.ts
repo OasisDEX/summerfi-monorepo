@@ -1,15 +1,15 @@
-import { type IconNamesList, SDKChainId, SDKNetwork } from '@summerfi/app-types'
+import { type IconNamesList, SupportedNetworkIds, SupportedSDKNetworks } from '@summerfi/app-types'
 
-export const networkIconByNetworkName: Partial<{ [key in SDKNetwork]: IconNamesList }> = {
-  [SDKNetwork.ArbitrumOne]: 'earn_network_arbitrum',
-  [SDKNetwork.Base]: 'earn_network_base',
-  [SDKNetwork.Mainnet]: 'earn_network_ethereum',
-  [SDKNetwork.SonicMainnet]: 'earn_network_sonic',
+export const networkNameIconNameMap: Partial<{ [key in SupportedSDKNetworks]: IconNamesList }> = {
+  [SupportedSDKNetworks.ArbitrumOne]: 'earn_network_arbitrum',
+  [SupportedSDKNetworks.Base]: 'earn_network_base',
+  [SupportedSDKNetworks.Mainnet]: 'earn_network_ethereum',
+  [SupportedSDKNetworks.SonicMainnet]: 'earn_network_sonic',
 }
 
-export const networkIconByChainId: Partial<{ [key in SDKChainId]: IconNamesList }> = {
-  [SDKChainId.ARBITRUM]: 'earn_network_arbitrum',
-  [SDKChainId.BASE]: 'earn_network_base',
-  [SDKChainId.MAINNET]: 'earn_network_ethereum',
-  [SDKChainId.SONIC]: 'earn_network_sonic',
+export const networkIdIconNameMap: Partial<{ [key in SupportedNetworkIds]: IconNamesList }> = {
+  [SupportedNetworkIds.ArbitrumOne]: 'earn_network_arbitrum',
+  [SupportedNetworkIds.Base]: 'earn_network_base',
+  [SupportedNetworkIds.Mainnet]: 'earn_network_ethereum',
+  [SupportedNetworkIds.SonicMainnet]: 'earn_network_sonic',
 }

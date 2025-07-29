@@ -1,11 +1,11 @@
-import { type SDKChainId, sdkSupportedChains } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, type ArmadaMigratablePosition, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 
 export type MigratablePosition = ArmadaMigratablePosition & {
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   apy: number | undefined
   apy7d: number | undefined
 }
@@ -31,58 +31,60 @@ export const getMigratablePositions = async ({
 }): Promise<MigratablePosition[]> => {
   const address = Address.createFromEthereum({ value: walletAddress })
 
-  const positionsPromises = sdkSupportedChains.map(async (chainId) => {
-    const chainInfo = getChainInfoByChainId(chainId)
-    let positionsData
-    let apyData
+  const positionsPromises = Object.values(SupportedNetworkIds)
+    .filter((networkId): networkId is number => typeof networkId === 'number')
+    .map(async (chainId) => {
+      const chainInfo = getChainInfoByChainId(Number(chainId))
+      let positionsData
+      let apyData
 
-    try {
-      const { user } = await backendSDK.users.getUserClient({
-        walletAddress: address,
-        chainInfo,
-      })
+      try {
+        const { user } = await backendSDK.users.getUserClient({
+          walletAddress: address,
+          chainInfo,
+        })
 
-      positionsData = await backendSDK.armada.users.getMigratablePositions({
-        user,
-        chainInfo,
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-      positionsData = {
-        chainInfo,
-        positions: [],
+        positionsData = await backendSDK.armada.users.getMigratablePositions({
+          user,
+          chainInfo,
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+        positionsData = {
+          chainInfo,
+          positions: [],
+        }
       }
-    }
 
-    if (positionsData.positions.length === 0) {
-      return {
-        positionsData,
-        apyData: {
+      if (positionsData.positions.length === 0) {
+        return {
+          positionsData,
+          apyData: {
+            chainInfo,
+            apyByPositionId: {},
+          },
+        }
+      }
+
+      try {
+        apyData = await backendSDK.armada.users.getMigratablePositionsApy({
+          chainInfo,
+          positionIds: positionsData.positions.map((p) => p.id),
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+        apyData = {
           chainInfo,
           apyByPositionId: {},
-        },
+        }
       }
-    }
 
-    try {
-      apyData = await backendSDK.armada.users.getMigratablePositionsApy({
-        chainInfo,
-        positionIds: positionsData.positions.map((p) => p.id),
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
-      apyData = {
-        chainInfo,
-        apyByPositionId: {},
-      }
-    }
-
-    return { positionsData, apyData }
-  })
+      return { positionsData, apyData }
+    })
 
   const results = await Promise.all(positionsPromises)
 
-  return mapMigrationResponse(results)
+  return mapMigrationResponse(results) as MigratablePosition[]
 }

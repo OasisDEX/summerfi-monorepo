@@ -2,6 +2,7 @@
 
 import { type ReactNode } from 'react'
 import { type SDKVaultsListType, type SDKVaultType } from '@summerfi/app-types'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -60,7 +61,7 @@ export const VaultGridDetails = ({
             <VaultTitleWithRisk
               symbol={getDisplayToken(vault.inputToken.symbol)}
               risk={vault.customFields?.risk ?? 'lower'}
-              networkName={vault.protocol.network}
+              networkName={supportedSDKNetwork(vault.protocol.network)}
             />
           </Dropdown>
           <Button

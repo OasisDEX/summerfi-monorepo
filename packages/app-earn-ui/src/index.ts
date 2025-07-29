@@ -207,7 +207,6 @@ export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
 
 export { getTokenGuarded } from './tokens/helpers'
-export { networkIconByNetworkName, networkIconByChainId } from './helpers/network-icons'
 export { getArkNiceName } from './helpers/get-ark-nice-name'
 
 // forecast stuff
@@ -241,8 +240,21 @@ export {
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
+export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
+export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
 export { BeachClubRewardSimulation } from './features/beach-club/BeachClubRewardSimulation/BeachClubRewardSimulation'
 export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGradient/BeachClubRadialGradient'
+
+// aa kit
+export {
+  queryClient,
+  customAAKitSonicConfig,
+  SDKChainIdToAAChainMap,
+  getAccountKitConfig,
+  accountType,
+  overridesGasSponsorship,
+} from './account-kit/config'
+export { AccountKitAccountType } from './account-kit/types'

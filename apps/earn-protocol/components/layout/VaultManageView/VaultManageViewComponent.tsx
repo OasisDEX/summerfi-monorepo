@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  AccountKitAccountType,
   Card,
   ControlsDepositWithdraw,
   ControlsSwitch,
@@ -42,11 +43,15 @@ import {
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import {
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+  zero,
+} from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
-import { AccountKitAccountType } from '@/account-kit/types'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -157,14 +162,16 @@ export const VaultManageViewComponent = ({
     TransactionAction.DEPOSIT,
   )
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
   const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
     migratablePositions[0]?.id,
   )
 
   const vaultApyData =
-    vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`] ?? {}
+    vaultsApyByNetworkMap[
+      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+    ] ?? {}
 
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
@@ -399,8 +406,8 @@ export const VaultManageViewComponent = ({
     return vaults
       .filter((potentialVault) => {
         return (
-          subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
-          potentialVault.id !== vault.id
+          subgraphNetworkToSDKId(supportedSDKNetwork(potentialVault.protocol.network)) ===
+            vaultChainId && potentialVault.id !== vault.id
         )
       })
       .sort((a, b) => {

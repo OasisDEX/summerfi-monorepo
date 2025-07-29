@@ -1,4 +1,4 @@
-import { type SDKChainId } from '@summerfi/app-types'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 
 export enum MigrationSteps {
   INIT = 'init',
@@ -43,5 +43,5 @@ export interface MigrationEarningsData {
 }
 
 export type MigrationEarningsDataByChainId = {
-  [key in SDKChainId]: MigrationEarningsData
+  [key in SupportedNetworkIds]: MigrationEarningsData
 }

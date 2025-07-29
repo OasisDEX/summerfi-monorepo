@@ -1,5 +1,9 @@
 import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
-import { subgraphNetworkToId, subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import {
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -30,10 +34,12 @@ export const getMigrationBestVaultApy = ({
     (acc, position) => {
       const { chainId } = position
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[chainId]) {
         // Find all vaults for this network
         const networkVaults = vaultsWithConfig.filter(
-          (vault) => subgraphNetworkToSDKId(vault.protocol.network) === chainId,
+          (vault) =>
+            subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)) === chainId,
         )
 
         // Find the best current APY and 7d and 30d APY for this network
@@ -43,10 +49,12 @@ export const getMigrationBestVaultApy = ({
 
         networkVaults.forEach((vault) => {
           const { apy, sma7d, sma30d } =
-            vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+            vaultsApyByNetworkMap[
+              `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+            ]
           const currentApy = apy || 0
-          const apy30d = sma30d || 0
-          const apy7d = sma7d || 0
+          const apy30d = sma30d ?? 0
+          const apy7d = sma7d ?? 0
 
           if (currentApy > bestCurrentApy) {
             bestCurrentApy = currentApy

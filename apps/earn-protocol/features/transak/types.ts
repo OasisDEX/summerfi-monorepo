@@ -1,4 +1,4 @@
-import { type IconNamesList, type SDKChainId } from '@summerfi/app-types'
+import { type IconNamesList, type SupportedNetworkIds } from '@summerfi/app-types'
 import { type Transak } from '@transak/transak-sdk'
 
 import { type NetworkNames } from '@/constants/networks-list'
@@ -209,5 +209,5 @@ export interface TransakNetworkOption {
   label: string
   value: string
   iconName: IconNamesList
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
 }

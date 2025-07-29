@@ -1,22 +1,22 @@
-import { SDKNetwork } from '@summerfi/app-types'
+import { SupportedSDKNetworks } from '@summerfi/app-types'
 
 /**
  * Checks if the provided network is supported.
  *
- * @param {SDKNetwork} network - The network to check.
+ * @param {SupportedSDKNetworks} network - The network to check.
  * @returns {boolean} - Returns true if the network is ArbitrumOne or Base, otherwise false.
  */
 export const supportedNetworkGuard = (
-  network: SDKNetwork,
+  network: SupportedSDKNetworks,
 ): network is
-  | SDKNetwork.ArbitrumOne
-  | SDKNetwork.Base
-  | SDKNetwork.Mainnet
-  | SDKNetwork.SonicMainnet => {
+  | SupportedSDKNetworks.ArbitrumOne
+  | SupportedSDKNetworks.Base
+  | SupportedSDKNetworks.Mainnet
+  | SupportedSDKNetworks.SonicMainnet => {
   return [
-    SDKNetwork.ArbitrumOne,
-    SDKNetwork.Base,
-    SDKNetwork.Mainnet,
-    SDKNetwork.SonicMainnet,
+    SupportedSDKNetworks.ArbitrumOne,
+    SupportedSDKNetworks.Base,
+    SupportedSDKNetworks.Mainnet,
+    SupportedSDKNetworks.SonicMainnet,
   ].includes(network)
 }

@@ -1,5 +1,5 @@
 import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -7,6 +7,7 @@ import {
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -38,7 +39,7 @@ import {
 type EarnVaultOpenPageProps = {
   params: Promise<{
     vaultId: string // could be vault address or the vault name
-    network: SDKNetwork
+    network: SupportedSDKNetworks
   }>
 }
 
@@ -109,13 +110,13 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
     getVaultsApy({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
   ])
@@ -134,7 +135,8 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     vaultInterestRates,
   })
 
-  const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApyData =
+    vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
   return (
     <VaultOpenView
@@ -189,13 +191,15 @@ export async function generateMetadata({
     getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(network),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
   ])
 
   const vaultApyData =
-    vaultsApyRaw[`${vaultWithConfig.id}-${subgraphNetworkToId(vaultWithConfig.protocol.network)}`]
+    vaultsApyRaw[
+      `${vaultWithConfig.id}-${subgraphNetworkToId(supportedSDKNetwork(vaultWithConfig.protocol.network))}`
+    ]
 
   const totalValueLockedTokenParsed = vault
     ? formatCryptoBalance(

@@ -7,7 +7,11 @@ import {
   Text,
   TokenWithNetworkIcon,
 } from '@summerfi/app-earn-ui'
-import { type PlatformLogo, type SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type PlatformLogo,
+  type SupportedNetworkIds,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Image from 'next/image'
 
@@ -25,7 +29,7 @@ interface MigrationMiniCardProps {
   amount?: string
   change?: string
   token: TokenSymbolsList
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   type: MigrationMiniCardType
   platformLogo: PlatformLogo
   isLoading?: boolean

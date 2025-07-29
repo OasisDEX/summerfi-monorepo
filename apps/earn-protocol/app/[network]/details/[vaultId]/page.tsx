@@ -1,10 +1,11 @@
 import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { type SDKNetwork } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   getVaultNiceName,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import capitalize from 'lodash-es/capitalize'
 import { type Metadata } from 'next'
@@ -30,7 +31,7 @@ import {
 
 type EarnVaultDetailsPageProps = {
   params: Promise<{
-    network: SDKNetwork
+    network: SupportedSDKNetworks
     vaultId: string
   }>
 }
@@ -93,13 +94,13 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(protocolNetwork),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
       })),
     }),
     getVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(protocolNetwork),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
       })),
     }),
   ])
@@ -114,7 +115,8 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 
   const totalRebalanceActions = rebalanceActivity.pagination.totalItems
   const totalUsers = latestActivity.totalUniqueUsers
-  const vaultApyData = vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+  const vaultApyData =
+    vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
   return (
     <VaultGridDetails vault={vaultWithConfig} vaults={allVaultsWithConfig}>

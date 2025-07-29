@@ -7,11 +7,11 @@ import {
   Icon,
   InfoBox,
   LoadingSpinner,
-  networkIconByNetworkName,
+  networkNameIconNameMap,
   Sidebar,
   Text,
 } from '@summerfi/app-earn-ui'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -43,8 +43,8 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
   const sourceHumanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const destinationHumanNetworkName = sdkNetworkToHumanNetwork(destinationNetwork)
 
-  const sourceNetworkIcon = networkIconByNetworkName[sourceNetwork]
-  const destinationNetworkIcon = networkIconByNetworkName[destinationNetwork]
+  const sourceNetworkIcon = networkNameIconNameMap[sourceNetwork]
+  const destinationNetworkIcon = networkNameIconNameMap[destinationNetwork]
 
   const handleSuccess = useCallback(() => {
     dispatch({
@@ -108,7 +108,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
   )
 
   const isClaim = viaParam === 'claim'
-  const isBridgeToBase = state.destinationChain.id === SDKChainId.BASE
+  const isBridgeToBase = state.destinationChain.id === SupportedNetworkIds.Base
 
   return (
     <Sidebar
@@ -186,7 +186,7 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
         isClaim && isBridgeToBase
           ? {
               url: `/claim/${state.walletAddress}${
-                state.destinationChain.id === SDKChainId.BASE ? '?via=bridge' : ''
+                state.destinationChain.id === SupportedNetworkIds.Base ? '?via=bridge' : ''
               }`,
               label: 'Return to claim',
               disabled: true,
