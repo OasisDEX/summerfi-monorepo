@@ -13,7 +13,10 @@ describe('Armada Protocol Rewards', () => {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const addresses = ['0x38233654FB0843c8024527682352A5d41E7f7324'] as AddressValue[]
+  const addresses = [
+    '0x38233654FB0843c8024527682352A5d41E7f7324',
+    '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  ] as AddressValue[]
 
   for (const userAddress of addresses) {
     describe(`Running for user ${userAddress}`, () => {
