@@ -204,18 +204,6 @@ export default function WalletLabel({
     logout()
   }
 
-  console.log('DEBUG', {
-    userWalletAddress,
-    clientChainId,
-    isSignerInitializing,
-    isAuthModalOpen,
-    isSignerAuthenticating,
-    variant,
-    buttonVariant,
-    hideNetworkIcon,
-    customLoginLabel,
-  })
-
   // removes dark mode from the document
   // to ensure that account-kit modal is always in light mode
   useEffect(() => {
