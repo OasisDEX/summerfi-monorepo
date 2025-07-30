@@ -17,6 +17,7 @@ import { merklClaimAbi } from './abi/merklClaimAbi'
 import { merklToggleAbi } from './abi/merklToggleAbi'
 import { merklOperatorsAbi } from './abi/merklOperatorsAbi'
 import { getMerklDistributorContractAddress } from './configs/merkl-distributor-addresses'
+import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 
 /**
  * Response type from Merkl API for user rewards
@@ -160,8 +161,15 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       chainId,
     })
 
-    // Validate chain ID is supported and get distributor address
-    const distributorAddress = getMerklDistributorContractAddress(chainId)
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainId,
+      contractName: 'admiralsQuarters',
+      contractCategory: 'core',
+    })
+
+    const claimTarget = params.useMerklDistributorDirectly
+      ? getMerklDistributorContractAddress(chainId)
+      : admiralsQuartersAddress.value
 
     // Get user's Merkl rewards for this specific chain
     const rewardsData = await this.getUserMerklRewards({
@@ -192,17 +200,23 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
 
     // Encode the claim function call
-    const calldata = encodeFunctionData({
-      abi: merklClaimAbi,
-      functionName: 'claim',
-      args: [users, tokens, amounts, proofs],
-    })
+    const calldata = params.useMerklDistributorDirectly
+      ? encodeFunctionData({
+          abi: merklClaimAbi,
+          functionName: 'claim',
+          args: [users, tokens, amounts, proofs],
+        })
+      : encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'claimFromMerklDistributor',
+          args: [users, tokens, amounts, proofs],
+        })
 
     const merklClaimTx: MerklClaimTransactionInfo = {
       type: TransactionType.MerklClaim,
       description: 'Claiming Merkle rewards',
       transaction: {
-        target: Address.createFromEthereum({ value: distributorAddress }),
+        target: Address.createFromEthereum({ value: claimTarget }),
         calldata: calldata,
         value: '0',
       },
@@ -210,7 +224,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
     LoggingService.log('Generated Merkl claim transaction', {
       rewardsCount: chainRewards.length,
-      target: distributorAddress,
+      target: claimTarget,
     })
 
     return [merklClaimTx]
