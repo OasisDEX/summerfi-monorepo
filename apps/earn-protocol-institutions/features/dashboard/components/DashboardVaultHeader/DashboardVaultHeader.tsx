@@ -56,7 +56,13 @@ export const DashboardVaultHeader: FC<DashboardVaultHeaderProps> = ({
   return (
     <div className={styles.dashboardVaultHeaderWrapper}>
       {blocks.map((block) => (
-        <DataBlock key={block.title} title={block.title} value={block.value} valueSize="medium" />
+        <DataBlock
+          key={block.title}
+          title={block.title}
+          value={block.value}
+          valueSize="medium"
+          wrapperClassName={styles.dataBlockWrapper}
+        />
       ))}
     </div>
   )

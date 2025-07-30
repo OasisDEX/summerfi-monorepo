@@ -60,6 +60,7 @@ export const InstitutionPageDataBlocks: FC<InstitutionPageDataBlocksProps> = ({
             valueSize="large"
             titleSize="medium"
             titleStyle={{ color: block.titleColor }}
+            wrapperClassName={styles.dataBlockWrapper}
           />
         </Card>
       ))}

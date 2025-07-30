@@ -3,7 +3,8 @@
   flex-direction: column;
   width: 100%;
 
-  .itemsList {
+  .itemsList,
+  .staticItemsList {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-space-x-large);
@@ -23,6 +24,10 @@
     .activeButtonText {
       color: var(--color-text-primary);
     }
+  }
+
+  .staticItemsList {
+    margin-bottom: 0;
   }
 
   .navigationWrapper {

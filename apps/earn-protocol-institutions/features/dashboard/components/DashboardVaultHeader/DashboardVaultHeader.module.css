@@ -4,4 +4,8 @@
   align-items: center;
   width: 100%;
   flex-wrap: wrap;
+
+  .dataBlockWrapper {
+    gap: var(--spacing-space-2x-small);
+  }
 }

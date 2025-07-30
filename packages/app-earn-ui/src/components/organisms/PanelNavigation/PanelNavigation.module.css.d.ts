@@ -7,6 +7,7 @@ declare const styles: {
   readonly "navigationWrapper": string;
   readonly "panelNavigationSeparator": string;
   readonly "panelNavigationWrapper": string;
+  readonly "staticItemsList": string;
 };
 export = styles;
 

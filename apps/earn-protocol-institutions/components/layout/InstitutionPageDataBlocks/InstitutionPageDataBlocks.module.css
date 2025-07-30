@@ -3,4 +3,8 @@
   gap: var(--spacing-space-medium);
   flex-wrap: wrap;
   margin-bottom: var(--spacing-space-medium-large);
+
+  .dataBlockWrapper {
+    gap: var(--spacing-space-2x-small);
+  }
 }
