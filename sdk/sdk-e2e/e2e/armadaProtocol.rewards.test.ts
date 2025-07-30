@@ -13,7 +13,10 @@ describe('Armada Protocol Rewards', () => {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const addresses = ['0x38233654FB0843c8024527682352A5d41E7f7324'] as AddressValue[]
+  const addresses = [
+    '0x38233654FB0843c8024527682352A5d41E7f7324',
+    '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  ] as AddressValue[]
 
   for (const userAddress of addresses) {
     describe(`Running for user ${userAddress}`, () => {
@@ -150,6 +153,134 @@ describe('Armada Protocol Rewards', () => {
               chainId: unsupportedChainId,
             }),
           ).rejects.toThrow()
+        })
+      })
+
+      describe(`authorizeAsMerklRewardsOperatorTx`, () => {
+        it(`should generate authorization transaction for supported chains`, async () => {
+          const supportedChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[]
+
+          for (const chainId of supportedChainIds) {
+            console.log(`Testing authorization transaction for chain ${chainId}`)
+
+            const authTransactions = await sdk.armada.users.authorizeAsMerklRewardsOperatorTx({
+              chainId,
+              user: userAddress,
+            })
+
+            expect(authTransactions).toBeDefined()
+            expect(Array.isArray(authTransactions)).toBe(true)
+            expect(authTransactions.length).toBe(1)
+
+            const authTx = authTransactions[0]
+            expect(authTx.type).toBe('ToggleAQasMerklRewardsOperator')
+            expect(authTx.description).toBe('Authorize AdmiralsQuarters as Merkl rewards operator')
+            expect(authTx.transaction).toBeDefined()
+            expect(authTx.transaction.target).toBeDefined()
+            expect(authTx.transaction.calldata).toBeDefined()
+            expect(authTx.transaction.value).toBe('0')
+
+            console.log(`✅ Generated authorization transaction for chain ${chainId}`)
+            break // Test one chain to avoid rate limits
+          }
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.authorizeAsMerklRewardsOperatorTx({
+              chainId: unsupportedChainId,
+              user: userAddress,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
+      describe(`isAuthorizedAsMerklRewardsOperator`, () => {
+        it(`should check authorization status for supported chains`, async () => {
+          const supportedChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[]
+
+          for (const chainId of supportedChainIds) {
+            console.log(`Testing authorization status for chain ${chainId}`)
+
+            const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
+              chainId,
+              user: userAddress,
+            })
+
+            expect(typeof isAuthorized).toBe('boolean')
+            console.log(`✅ Authorization status for chain ${chainId}: ${isAuthorized}`)
+            break // Test one chain to avoid rate limits
+          }
+        })
+
+        it(`should return false for unauthorized user`, async () => {
+          const unauthorizedUser = '0x0000000000000000000000000000000000000001' as AddressValue
+          const testChainId = ChainIds.Base
+
+          const isAuthorized = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
+            chainId: testChainId,
+            user: unauthorizedUser,
+          })
+
+          expect(typeof isAuthorized).toBe('boolean')
+          expect(isAuthorized).toBe(false)
+          console.log(`✅ Unauthorized user correctly returned false`)
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
+              chainId: unsupportedChainId,
+              user: userAddress,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
+      describe(`Merkl Rewards Operator Authorization Flow`, () => {
+        it(`should demonstrate full authorization flow`, async () => {
+          const testChainId = ChainIds.Base
+
+          // Step 1: Check initial authorization status
+          console.log('Step 1: Checking initial authorization status...')
+          const initialAuthStatus = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
+            chainId: testChainId,
+            user: userAddress,
+          })
+          console.log(`Initial authorization status: ${initialAuthStatus}`)
+
+          // Step 2: Generate authorization transaction
+          console.log('Step 2: Generating authorization transaction...')
+          const authTransactions = await sdk.armada.users.authorizeAsMerklRewardsOperatorTx({
+            chainId: testChainId,
+            user: userAddress,
+          })
+
+          expect(authTransactions).toBeDefined()
+          expect(authTransactions.length).toBe(1)
+          console.log(`✅ Authorization transaction generated successfully`)
+
+          // Step 3: Verify transaction structure
+          const authTx = authTransactions[0]
+          expect(authTx.type).toBe('ToggleAQasMerklRewardsOperator')
+          expect(authTx.transaction.target).toBeDefined()
+          expect(authTx.transaction.calldata).toBeDefined()
+
+          console.log(`✅ Full authorization flow test completed`)
         })
       })
     })

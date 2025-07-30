@@ -1,16 +1,23 @@
 import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
+import { getDeployedContractAddress } from '@summerfi/armada-protocol-common'
 import {
   isChainId,
   LoggingService,
+  getChainInfoByChainId,
   type ChainId,
   type IChainInfo,
   type MerklClaimTransactionInfo,
+  type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
 } from '@summerfi/sdk-common'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
 import { merklClaimAbi } from './abi/merklClaimAbi'
-import { MERKL_DISTRIBUTOR_ADDRESSES } from './configs/merkl-distributor-addresses'
+import { merklToggleAbi } from './abi/merklToggleAbi'
+import { merklOperatorsAbi } from './abi/merklOperatorsAbi'
+import { getMerklDistributorContractAddress } from './configs/merkl-distributor-addresses'
+import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 
 /**
  * Response type from Merkl API for user rewards
@@ -50,9 +57,14 @@ type MerklApiResponse = {
  */
 export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   private _supportedChainIds: number[]
+  private _blockchainClientProvider: IBlockchainClientProvider
 
-  constructor(params: { supportedChains: IChainInfo[] }) {
+  constructor(params: {
+    supportedChains: IChainInfo[]
+    blockchainClientProvider: IBlockchainClientProvider
+  }) {
     this._supportedChainIds = params.supportedChains.map((chain) => chain.chainId)
+    this._blockchainClientProvider = params.blockchainClientProvider
   }
 
   async getUserMerklRewards(
@@ -149,11 +161,15 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       chainId,
     })
 
-    // Validate chain ID is supported
-    const distributorAddress = MERKL_DISTRIBUTOR_ADDRESSES[chainId]
-    if (!distributorAddress) {
-      throw new Error(`Unsupported chain ID for Merkl claims: ${chainId}`)
-    }
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainId,
+      contractName: 'admiralsQuarters',
+      contractCategory: 'core',
+    })
+
+    const claimTarget = params.useMerklDistributorDirectly
+      ? getMerklDistributorContractAddress(chainId)
+      : admiralsQuartersAddress.value
 
     // Get user's Merkl rewards for this specific chain
     const rewardsData = await this.getUserMerklRewards({
@@ -184,17 +200,23 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
 
     // Encode the claim function call
-    const calldata = encodeFunctionData({
-      abi: merklClaimAbi,
-      functionName: 'claim',
-      args: [users, tokens, amounts, proofs],
-    })
+    const calldata = params.useMerklDistributorDirectly
+      ? encodeFunctionData({
+          abi: merklClaimAbi,
+          functionName: 'claim',
+          args: [users, tokens, amounts, proofs],
+        })
+      : encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'claimFromMerklDistributor',
+          args: [users, tokens, amounts, proofs],
+        })
 
     const merklClaimTx: MerklClaimTransactionInfo = {
       type: TransactionType.MerklClaim,
       description: 'Claiming Merkle rewards',
       transaction: {
-        target: Address.createFromEthereum({ value: distributorAddress }),
+        target: Address.createFromEthereum({ value: claimTarget }),
         calldata: calldata,
         value: '0',
       },
@@ -202,9 +224,106 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
     LoggingService.log('Generated Merkl claim transaction', {
       rewardsCount: chainRewards.length,
-      target: distributorAddress,
+      target: claimTarget,
     })
 
     return [merklClaimTx]
+  }
+
+  async authorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']> {
+    const { chainId, user } = params
+
+    LoggingService.log('Generating authorize AQ as Merkl rewards operator transaction', {
+      chainId,
+      user,
+    })
+
+    // Validate chain ID is supported and get distributor address
+    const distributorAddress = getMerklDistributorContractAddress(chainId)
+
+    // Get AdmiralsQuarters contract address
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainId,
+      contractName: 'admiralsQuarters',
+      contractCategory: 'core',
+    })
+
+    if (!admiralsQuartersAddress) {
+      throw new Error(`AdmiralsQuarters contract not found for chain ID: ${chainId}`)
+    }
+
+    // Encode the toggleOperator function call
+    const calldata = encodeFunctionData({
+      abi: merklToggleAbi,
+      functionName: 'toggleOperator',
+      args: [user, admiralsQuartersAddress.value],
+    })
+
+    const toggleTx: ToggleAQasMerklRewardsOperatorTransactionInfo = {
+      type: TransactionType.ToggleAQasMerklRewardsOperator,
+      description: 'Authorize AdmiralsQuarters as Merkl rewards operator',
+      transaction: {
+        target: Address.createFromEthereum({ value: distributorAddress }),
+        calldata: calldata,
+        value: '0',
+      },
+    }
+
+    LoggingService.log('Generated authorize AQ as Merkl rewards operator transaction', {
+      target: distributorAddress,
+      operator: admiralsQuartersAddress.value,
+    })
+
+    return [toggleTx]
+  }
+
+  async isAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']> {
+    const { chainId, user } = params
+
+    LoggingService.log('Checking AdmiralsQuarters authorization as Merkl rewards operator', {
+      chainId,
+      user,
+    })
+
+    // Validate chain ID is supported and get distributor address
+    const distributorAddress = getMerklDistributorContractAddress(chainId)
+
+    // Get AdmiralsQuarters contract address
+    const admiralsQuartersAddress = getDeployedContractAddress({
+      chainId,
+      contractName: 'admiralsQuarters',
+      contractCategory: 'core',
+    })
+
+    if (!admiralsQuartersAddress) {
+      throw new Error(`AdmiralsQuarters contract not found for chain ID: ${chainId}`)
+    }
+
+    // Get blockchain client
+    const chainInfo = getChainInfoByChainId(chainId)
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo,
+    })
+
+    // Read authorization status from contract
+    const isAuthorized = await client.readContract({
+      abi: merklOperatorsAbi,
+      address: distributorAddress,
+      functionName: 'operators',
+      args: [user, admiralsQuartersAddress.value],
+    })
+
+    LoggingService.log('AdmiralsQuarters authorization check completed', {
+      chainId,
+      user,
+      isAuthorized,
+      operator: admiralsQuartersAddress.value,
+    })
+
+    return isAuthorized
   }
 }

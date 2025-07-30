@@ -22,6 +22,7 @@ export enum TransactionType {
   Send = 'Send',
   VaultSwitch = 'VaultSwitch',
   MerklClaim = 'MerklClaim',
+  ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
 }
 
 export type TransactionPriceImpact = {
@@ -115,4 +116,8 @@ export type UnstakeTransactionInfo = TransactionInfo & {
 
 export type MerklClaimTransactionInfo = TransactionInfo & {
   type: TransactionType.MerklClaim
+}
+
+export type ToggleAQasMerklRewardsOperatorTransactionInfo = TransactionInfo & {
+  type: TransactionType.ToggleAQasMerklRewardsOperator
 }

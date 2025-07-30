@@ -310,6 +310,7 @@ export type {
   MigrationTransactionInfo,
   VaultSwitchTransactionInfo,
   MerklClaimTransactionInfo,
+  ToggleAQasMerklRewardsOperatorTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'

@@ -4,7 +4,9 @@ import {
   BaseChainNames,
   ChainFamilyName,
   EthereumChainNames,
+  getChainInfoByChainId,
   SonicChainNames,
+  type ChainId,
   type ChainInfo,
   type IAddress,
 } from '@summerfi/sdk-common'
@@ -41,7 +43,7 @@ type Config = typeof bummerConfig
 type ChainKey = 'mainnet' | 'base' | 'arbitrum' | 'sonic'
 type ContractCategoryKey = keyof Config[ChainKey]['deployedContracts']
 
-const getChainKey = <TName extends string>(name: TName) => {
+const getChainKey = <TName extends string>(name: TName): ChainKey => {
   const keyMap: Record<ChainInfo['name'], ChainKey> = {
     [EthereumChainNames.Mainnet]: 'mainnet',
     [BaseChainNames.Mainnet]: 'base',
@@ -65,13 +67,23 @@ export const getDeployedContractAddress = <
   TKey extends ChainKey,
   TChainInfo extends ChainInfo,
   TCategory extends ContractCategoryKey,
->(params: {
-  chainInfo: TChainInfo
-  contractCategory: TCategory
-  contractName: keyof Config[TKey]['deployedContracts'][TCategory]
-}): IAddress => {
+>(
+  params: (
+    | {
+        chainInfo: TChainInfo
+      }
+    | { chainId: ChainId }
+  ) & {
+    contractCategory: TCategory
+    contractName: keyof Config[TKey]['deployedContracts'][TCategory]
+  },
+): IAddress => {
   const config = getConfig()
-  const chainKey = getChainKey(params.chainInfo.name) as TKey
+  const chainInfo = 'chainId' in params ? getChainInfoByChainId(params.chainId) : params.chainInfo
+  const chainKey = getChainKey(chainInfo.name)
+  if (!(chainKey in config)) {
+    throw new Error(`Chain key ${chainKey} is not valid for the current configuration`)
+  }
 
   const contract = config[chainKey].deployedContracts[params.contractCategory][
     params.contractName

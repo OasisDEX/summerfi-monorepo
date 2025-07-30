@@ -66,6 +66,8 @@ import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitc
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
+import { authorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/authorizeAsMerklRewardsOperatorTx'
+import { isAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperator'
 
 /**
  * Server
@@ -138,6 +140,8 @@ export const sdkAppRouter = router({
       getVaultSwitchTx: getVaultSwitchTx,
       getUserMerklRewards: getUserMerklRewards,
       getUserMerklClaimTx: getUserMerklClaimTx,
+      authorizeAsMerklRewardsOperatorTx: authorizeAsMerklRewardsOperatorTx,
+      isAuthorizedAsMerklRewardsOperator: isAuthorizedAsMerklRewardsOperator,
     },
     keepers: {
       rebalance: rebalance,
