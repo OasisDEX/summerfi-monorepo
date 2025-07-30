@@ -15,5 +15,5 @@ export const setMinimumBufferBalance = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.setMinimumBufferBalance(opts.input)
+    return opts.ctx.armadaManager.admin.setMinimumBufferBalance(opts.input)
   })

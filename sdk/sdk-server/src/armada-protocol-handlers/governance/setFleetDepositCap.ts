@@ -15,5 +15,5 @@ export const setFleetDepositCap = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.setFleetDepositCap(opts.input)
+    return opts.ctx.armadaManager.admin.setFleetDepositCap(opts.input)
   })

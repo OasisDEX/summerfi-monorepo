@@ -18,5 +18,5 @@ export const setArkMaxRebalanceOutflow = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.setArkMaxRebalanceOutflow(opts.input)
+    return opts.ctx.armadaManager.admin.setArkMaxRebalanceOutflow(opts.input)
   })

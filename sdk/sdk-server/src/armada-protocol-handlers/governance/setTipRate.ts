@@ -15,5 +15,5 @@ export const setTipRate = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.setTipRate(opts.input)
+    return opts.ctx.armadaManager.admin.setTipRate(opts.input)
   })

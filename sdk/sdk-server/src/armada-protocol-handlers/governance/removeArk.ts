@@ -15,5 +15,5 @@ export const removeArk = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.removeArk(opts.input)
+    return opts.ctx.armadaManager.admin.removeArk(opts.input)
   })

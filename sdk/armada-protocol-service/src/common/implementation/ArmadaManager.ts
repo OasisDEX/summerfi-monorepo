@@ -144,6 +144,10 @@ export class ArmadaManager implements IArmadaManager {
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
     })
-    this.admin = new ArmadaManagerAdmin({})
+    this.admin = new ArmadaManagerAdmin({
+      configProvider: this._configProvider,
+      contractsProvider: this._contractsProvider,
+      blockchainClientProvider: this._blockchainClientProvider,
+    })
   }
 }

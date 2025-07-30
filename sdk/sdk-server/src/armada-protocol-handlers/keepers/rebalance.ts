@@ -11,5 +11,5 @@ export const rebalance = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.rebalance(opts.input)
+    return opts.ctx.armadaManager.admin.rebalance(opts.input)
   })
