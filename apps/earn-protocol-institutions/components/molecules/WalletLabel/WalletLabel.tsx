@@ -20,6 +20,7 @@ import {
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 
+import { deleteLoginCookie } from '@/helpers/handle-login-cookie'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useUserWallet } from '@/hooks/use-user-wallet'
 
@@ -201,7 +202,16 @@ export default function WalletLabel({
   const isIframe = useIsIframe()
 
   const handleLogout = () => {
-    logout()
+    deleteLoginCookie()
+      .then((response) => {
+        if (response.ok) {
+          logout()
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error deleting login cookie:', error)
+      })
   }
 
   // removes dark mode from the document
@@ -280,7 +290,7 @@ export default function WalletLabel({
   if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
-        <LogoutButton onLogout={handleLogout} />
+        <LogoutButton onLogout={handleLogout} variant={buttonVariant} />
       </div>
     )
   }
