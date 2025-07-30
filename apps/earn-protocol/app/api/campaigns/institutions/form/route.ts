@@ -69,7 +69,7 @@ export async function POST(req: Request) {
 
     const getFormResponse = await fetch(institutionsFormServiceurl, {
       method: 'POST',
-      headers: { Accept: 'application/json' },
+      headers: { Accept: 'application/json', Referer: 'https://summer.fi' },
       body: formData,
     })
 

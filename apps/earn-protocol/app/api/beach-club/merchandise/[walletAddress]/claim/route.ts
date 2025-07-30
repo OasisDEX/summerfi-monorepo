@@ -196,6 +196,7 @@ export async function POST(
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          Referer: 'https://summer.fi',
         },
         body: encoded.toString(),
       })
