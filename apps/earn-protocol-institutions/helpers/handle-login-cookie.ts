@@ -5,7 +5,7 @@ export const setLoginCookie = async ({
 }: {
   userWalletAddress: string
   loginSignature: string
-  chainId?: number
+  chainId: number
 }) => {
   return await fetch('/api/set-login-cookie', {
     method: 'POST',

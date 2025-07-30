@@ -27,19 +27,27 @@ export const InstitutionsLoginPageClient = ({ loginCookie }: { loginCookie?: str
   const isLoginPage = currentPath === '/'
 
   useEffect(() => {
+    let cancelled = false
+
     if (isLoginPage && userWalletAddress && loginCookie) {
       switchUserInstitution({
         userWalletAddress,
       })
         .then((response) => {
+          if (cancelled) return
           // Redirect to the dashboard or home page after switching institution
           router.push(`/${response}`)
         })
         .catch((error) => {
+          if (cancelled) return
           // eslint-disable-next-line no-console
           console.error('Failed to switch institution:', error)
           setSignatureError('Failed to switch institution, please try again later.')
         })
+    }
+
+    return () => {
+      cancelled = true
     }
   }, [isLoginPage, userWalletAddress, router, loginCookie])
 
