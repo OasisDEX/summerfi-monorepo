@@ -46,6 +46,7 @@ export { getAllMerkleClaims } from './distributions/index'
 export type { IArmadaManagerBridge } from './common/interfaces/IArmadaManagerBridge'
 export type { IArmadaManagerVaults } from './common/interfaces/IArmadaManagerVaults'
 export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtils'
+export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
 export {
   setTestDeployment,
   isTestDeployment,

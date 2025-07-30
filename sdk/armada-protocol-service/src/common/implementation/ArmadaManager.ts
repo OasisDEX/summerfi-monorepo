@@ -9,6 +9,7 @@ import {
   type IArmadaManagerVaults,
   type IArmadaManagerUtils,
   type IArmadaManagerMerklRewards,
+  type IArmadaManagerAdmin,
   setTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
@@ -26,6 +27,7 @@ import { ArmadaManagerBridge } from './ArmadaManagerBridge'
 import { ArmadaManagerVaults } from './ArmadaManagerVaults'
 import { ArmadaManagerUtils } from './ArmadaManagerUtils'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
+import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 
 /**
  * @name ArmadaManager
@@ -39,6 +41,7 @@ export class ArmadaManager implements IArmadaManager {
   vaults: IArmadaManagerVaults
   utils: IArmadaManagerUtils
   merklRewards: IArmadaManagerMerklRewards
+  admin: IArmadaManagerAdmin
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -141,5 +144,6 @@ export class ArmadaManager implements IArmadaManager {
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
     })
+    this.admin = new ArmadaManagerAdmin({})
   }
 }
