@@ -1,11 +1,20 @@
 .dashboardContentLayout {
   display: flex;
-  gap: var(--spacing-space-medium-large);
+  gap: unset;
   width: 100%;
 
+  @media (min-width: 768px) {
+    gap: var(--spacing-space-medium-large);
+  }
+
   .panel {
-    max-width: 300px;
-    width: 100%;
+    max-width: unset;
+    width: unset;
+
+    @media (min-width: 768px) {
+      max-width: 300px;
+      width: 100%;
+    }
   }
 
   .content {
@@ -19,7 +28,11 @@
       width: 100%;
       flex-wrap: wrap;
       margin-bottom: var(--spacing-space-x-large);
-      padding-right: var(--spacing-space-x-large);
+      padding-right: unset;
+
+      @media (min-width: 768px) {
+        padding-right: var(--spacing-space-x-large);
+      }
     }
   }
 }

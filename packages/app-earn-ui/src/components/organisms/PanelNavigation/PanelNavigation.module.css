@@ -51,4 +51,18 @@
     background-color: var(--color-border);
     margin-bottom: var(--spacing-space-x-large);
   }
+
+  .panelNavigationHeader {
+    display: flex;
+    justify-content: center;
+    padding-bottom: var(--spacing-space-x-large);
+
+    .headerButton {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+    }
+  }
 }

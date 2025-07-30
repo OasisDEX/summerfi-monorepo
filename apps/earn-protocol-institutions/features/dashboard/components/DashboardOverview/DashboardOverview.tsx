@@ -1,10 +1,11 @@
 'use client'
 
 import { type FC, useState } from 'react'
-import { Icon, PanelNavigation } from '@summerfi/app-earn-ui'
+import { Icon, PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { DashboardVaultHeader } from '@/features/dashboard/components/DashboardVaultHeader/DashboardVaultHeader'
 import { PanelActivity } from '@/features/panels/overview/components/PanelActivity/PanelActivity'
 import { PanelAssetRelocation } from '@/features/panels/overview/components/PanelAssetRelocation/PanelAssetRelocation'
@@ -93,6 +94,8 @@ export const DashboardOverview: FC<DashboardOverviewProps> = ({ vaultData }) => 
   const [activePanel, setActivePanel] = useState<DashboardOverviewPanel>(
     DashboardOverviewPanel.OVERVIEW,
   )
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   const handlePanelChange = (panel: DashboardOverviewPanel) => {
     setActivePanel(panel)
@@ -127,6 +130,7 @@ export const DashboardOverview: FC<DashboardOverviewProps> = ({ vaultData }) => 
     <DashboardContentLayout
       panel={
         <PanelNavigation
+          isMobile={isMobile}
           navigation={navigation}
           staticItems={[
             {
