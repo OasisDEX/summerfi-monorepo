@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 
 import { checkLoginSignature } from '@/app/server-handlers/check-login-signature'
 import { getUserInstitutionView } from '@/app/server-handlers/get-user-institution-view'
+import { getWalletInstitutions } from '@/app/server-handlers/get-wallet-institutions'
 import { LOGIN_COOKIE_NAME } from '@/constants/login-cookie'
 
 export const GET = async (request: Request) => {
@@ -29,12 +30,13 @@ export const GET = async (request: Request) => {
   // This check needs to be on every route with access to user/institution data [end]
 
   try {
+    const institutionsList = await getWalletInstitutions(userWalletAddress)
     const { institution } = await getUserInstitutionView({
       userWalletAddress,
       institutionId,
     })
 
-    return new Response(JSON.stringify({ institution }), {
+    return new Response(JSON.stringify({ institution, institutionsList }), {
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {

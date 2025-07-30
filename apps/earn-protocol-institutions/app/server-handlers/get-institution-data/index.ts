@@ -1,3 +1,5 @@
+import { institutionsMockList } from '@/app/server-handlers/mock'
+
 export const getInstitutionData = async (institutionId: string) => {
   // get the 'global' institution data here
   // this is a mock implementation, replace with actual data fetching logic
@@ -7,23 +9,14 @@ export const getInstitutionData = async (institutionId: string) => {
   }
 
   await new Promise((resolve) => {
-    setTimeout(resolve, 1000)
+    setTimeout(resolve, 300)
   }) // Simulate network delay
 
-  return {
-    id: 'acme-crypto-corp',
-    name: 'ACME Crypto Corp.',
-    totalValue: 2225000000,
-    numberOfVaults: 4,
-    thirtyDayAvgApy: 0.078,
-    allTimePerformance: 0.0112,
-    vaultData: {
-      name: 'USDC-1',
-      asset: 'USDC',
-      nav: 1.153,
-      aum: 1792000000,
-      fee: 0.005,
-      inception: 1735689600000,
-    },
+  const institution = institutionsMockList.find((inst) => inst.id === institutionId)
+
+  if (!institution) {
+    throw new Error(`Institution with ID ${institutionId} not found`)
   }
+
+  return institution
 }

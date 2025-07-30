@@ -29,7 +29,10 @@ export const switchUserInstitution = async ({
     throw new Error(`Failed to switch institution: ${errorMessage}`)
   }
 
-  const data = (await response.json()) as { institution: string }
+  const data = (await response.json()) as {
+    institution: string
+    institutionsList: { id: string; name: string }[]
+  }
 
-  return data.institution
+  return data
 }
