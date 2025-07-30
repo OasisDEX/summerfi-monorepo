@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
+import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import { accountType, Button, Text } from '@summerfi/app-earn-ui'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -15,9 +15,6 @@ export const InstitutionsLoginPageClient = ({ loginCookie }: { loginCookie?: str
   const [signatureError, setSignatureError] = useState<string | null>(null)
   const router = useRouter()
   const currentPath = usePathname()
-  const {
-    chain: { id: chainId },
-  } = useChain()
   const { userWalletAddress } = useUserWallet()
   const { client } = useSmartAccountClient({ type: accountType })
   const { signMessageAsync } = useSignMessage({
@@ -70,7 +67,6 @@ export const InstitutionsLoginPageClient = ({ loginCookie }: { loginCookie?: str
       const setCookieResponse = await setLoginCookie({
         loginSignature: signature,
         userWalletAddress,
-        chainId,
       })
 
       if (setCookieResponse.ok) {

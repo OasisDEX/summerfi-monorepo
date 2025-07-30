@@ -4,19 +4,18 @@ import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 export const checkLoginSignature = async ({
   userWalletAddress,
   loginSignature,
-  chainId,
 }: {
   userWalletAddress: string
   loginSignature: string
-  chainId: number
 }) => {
   const expectedSignature = getLoginSignature(userWalletAddress)
 
-  const client = await getSSRPublicClient(chainId)
+  const client = await getSSRPublicClient(1) // does not matter for the signature check
 
   if (!client) {
-    throw new Error(`Public client not found for the specified chain ID: ${chainId}`)
+    throw new Error('Public client is not available for signature verification')
   }
+
   // Actual check
   const isValid = await client.verifyMessage({
     address: userWalletAddress as `0x${string}`,

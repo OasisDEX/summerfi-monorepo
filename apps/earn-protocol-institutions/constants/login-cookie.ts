@@ -1,5 +1,4 @@
 export const LOGIN_COOKIE_NAME = 'institutions_login_cookie'
-export const LOGIN_COOKIE_NAME_CHAIN = 'institutions_login_cookie_chain'
 export const LOGIN_COOKIE_MAX_AGE = 60 * 60 * 24 * 14 // 14 days
 export const LOGIN_COOKIE_PATH = '/' // Path for the cookie
 export const LOGIN_COOKIE_SAME_SITE = 'lax' as const // SameSite policy

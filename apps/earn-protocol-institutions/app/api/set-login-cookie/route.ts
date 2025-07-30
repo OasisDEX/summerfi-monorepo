@@ -5,7 +5,6 @@ import {
   LOGIN_COOKIE_HTTP_ONLY,
   LOGIN_COOKIE_MAX_AGE,
   LOGIN_COOKIE_NAME,
-  LOGIN_COOKIE_NAME_CHAIN,
   LOGIN_COOKIE_PATH,
   LOGIN_COOKIE_SAME_SITE,
   LOGIN_COOKIE_SECURE,
@@ -15,23 +14,21 @@ export const POST = async (req: Request) => {
   const cookieStore = await cookies()
 
   try {
-    const { userWalletAddress, loginSignature, chainId, logOut } = await req.json()
+    const { userWalletAddress, loginSignature, logOut } = await req.json()
 
     if (logOut) {
       cookieStore.delete(LOGIN_COOKIE_NAME)
-      cookieStore.delete(LOGIN_COOKIE_NAME_CHAIN)
 
       return new Response('Login cookie deleted successfully', { status: 200 })
     }
 
-    if (!userWalletAddress || !loginSignature || !chainId) {
+    if (!userWalletAddress || !loginSignature) {
       return new Response('Missing required fields', { status: 400 })
     }
 
     const isValidSignature = await checkLoginSignature({
       userWalletAddress,
       loginSignature,
-      chainId,
     })
 
     if (!isValidSignature) {
@@ -51,11 +48,6 @@ export const POST = async (req: Request) => {
     cookieStore.set({
       value: loginSignature,
       name: LOGIN_COOKIE_NAME,
-      ...commonCookieOptions,
-    })
-    cookieStore.set({
-      value: chainId,
-      name: LOGIN_COOKIE_NAME_CHAIN,
       ...commonCookieOptions,
     })
 
