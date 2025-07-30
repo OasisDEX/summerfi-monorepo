@@ -1,8 +1,11 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
-import { SDKManager } from './SDKManager'
+import { SDKAdminManager } from './SDKAdminManager'
 import { version as sdkClientVersion } from '../../bundle/package.json'
 
-export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | { apiURL: string })
+export type MakeSDKParams = { logging?: boolean; clientId: string } & (
+  | { apiDomainUrl: string }
+  | { apiURL: string }
+)
 
 /*
  * makeSDK is a factory function that creates an instance of SDKManager.
@@ -25,12 +28,13 @@ export function makeSDK(params: MakeSDKParams) {
   }
 
   if (params.logging) {
-    console.log('Summer.fi SDK: versionedURL', versionedURL)
+    console.log('Summer.fi Admin SDK: versionedURL', versionedURL)
   }
   const rpcClient = createMainRPCClient({
     apiURL: versionedURL,
+    clientId: params.clientId,
     logging: params.logging,
   })
 
-  return new SDKManager({ rpcClient })
+  return new SDKAdminManager({ rpcClient })
 }

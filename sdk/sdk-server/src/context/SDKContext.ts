@@ -28,10 +28,12 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
+import { fetchIntegratorConfig, type IntegratorConfig } from './IntegratorConfig'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type SDKAppContext = {
+  integratorConfig?: IntegratorConfig
   callUrl: string
   callKey: string
   addressBookManager: IAddressBookManager
@@ -60,7 +62,7 @@ const quickHashCode = (str: string): string => {
 }
 
 // context for each request
-export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
+export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   const configProvider = new ConfigurationProvider()
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
@@ -99,7 +101,14 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     tokensManager,
   })
 
+  // check for Client-Id header in request and add it to the context if present
+  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  const integratorConfig: IntegratorConfig | undefined = clientId
+    ? await fetchIntegratorConfig(clientId)
+    : undefined
+
   return {
+    integratorConfig,
     callUrl: `${opts.event.rawPath}?${opts.event.rawQueryString}`,
     callKey: quickHashCode(`${opts.event.rawPath}${opts.event.rawQueryString}`),
     configProvider,
