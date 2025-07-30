@@ -74,7 +74,7 @@ export {
   sdkChainIdToHumanNetwork,
   mapDbNetworkToChainId,
   mapChainIdToDbNetwork,
-  supportedNetworkId,
+  supportedSDKNetworkId,
   supportedSDKNetwork,
 } from './helpers/earn-network-tools'
 export { setCookie, getCookie } from './helpers/cookies'

@@ -20,7 +20,7 @@ import {
 import {
   networkNameToSDKId,
   networkNameToSDKNetwork,
-  supportedNetworkId,
+  supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
@@ -98,7 +98,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     }))
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[supportedNetworkId(state.tokenDropdown.chainId)],
+    chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
   })
 
   const {
@@ -211,7 +211,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
       action: () => {
         if (!isCorrectChain) {
           setChain({
-            chain: SDKChainIdToAAChainMap[supportedNetworkId(state.tokenDropdown.chainId)],
+            chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
           })
 
           return

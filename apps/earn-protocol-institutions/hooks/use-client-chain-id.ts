@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { AccountKitAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
-import { supportedNetworkId } from '@summerfi/app-utils'
+import { supportedSDKNetworkId } from '@summerfi/app-utils'
 
 /**
  * Hook to get the current blockchain network chain ID, with special handling for EOA accounts.
@@ -22,7 +22,7 @@ export const useClientChainId = () => {
   const user = useUser()
   const isIframe = useIsIframe()
 
-  const [clientChainId, setClientChainId] = useState<SupportedNetworkIds>(supportedNetworkId(id))
+  const [clientChainId, setClientChainId] = useState<SupportedNetworkIds>(supportedSDKNetworkId(id))
 
   useEffect(() => {
     const getEoaChainId = async () => {

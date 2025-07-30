@@ -7,8 +7,8 @@ import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
   subgraphNetworkToId,
-  supportedNetworkId,
   supportedSDKNetwork,
+  supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 import { type Chain } from 'viem'
@@ -46,7 +46,7 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
   const { setChain } = useChain()
 
   const sdkNetwork = humanNetworktoSDKNetwork(network as string)
-  const appChainId = supportedNetworkId(subgraphNetworkToId(supportedSDKNetwork(sdkNetwork)))
+  const appChainId = supportedSDKNetworkId(subgraphNetworkToId(supportedSDKNetwork(sdkNetwork)))
 
   const appChain = networkIdsToAccountKitChainsMap[appChainId]
 

@@ -85,7 +85,7 @@ export const isSupportedHumanNetwork = (network: unknown): network is HumanReada
   return typeof network === 'string' && network.toLowerCase() in sdkNetworkMap
 }
 
-export const supportedNetworkId = (networkId: unknown): SupportedNetworkIds => {
+export const supportedSDKNetworkId = (networkId: unknown): SupportedNetworkIds => {
   if (
     !Object.values(SupportedNetworkIds)
       .filter(
@@ -131,7 +131,7 @@ export const sdkNetworkToHumanNetwork = (network: SupportedSDKNetworks): string 
 
 export const humanNetworktoSDKNetwork = (network: string): SupportedSDKNetworks => {
   if (network in humanReadableNetworkMap) {
-    return network.toLowerCase() as SupportedSDKNetworks
+    return network as SupportedSDKNetworks
   }
   const sdkNetwork = sdkNetworkMap[network.toLowerCase() as keyof typeof sdkNetworkMap]
 

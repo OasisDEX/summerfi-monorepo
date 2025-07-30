@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType, SDKChainIdToAAChainMap, useIsIframe } from '@summerfi/app-earn-ui'
 import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
-import { chainIdToSDKNetwork, supportedNetworkId } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 import {
   type ApproveTransactionInfo,
   getChainInfoByChainId,
@@ -64,7 +64,7 @@ export const useMigrationTransaction = ({
   vaultChainId: SupportedNetworkIds
 }) => {
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[supportedNetworkId(vaultChainId)],
+    chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(vaultChainId)],
   })
   const isIframe = useIsIframe()
   const { getMigrateTx } = useAppSDK()

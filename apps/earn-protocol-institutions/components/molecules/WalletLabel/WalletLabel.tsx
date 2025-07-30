@@ -17,7 +17,7 @@ import {
   formatAddress,
   safeBTOA,
   sdkChainIdToHumanNetwork,
-  supportedNetworkId,
+  supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -95,7 +95,7 @@ const WalletAvatar = ({
           left: size * 0.9,
         }}
       >
-        <Icon iconName={networkIdIconNameMap[supportedNetworkId(chainId)]} size={iconSize} />
+        <Icon iconName={networkIdIconNameMap[supportedSDKNetworkId(chainId)]} size={iconSize} />
       </div>
     )}
   </>

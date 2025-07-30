@@ -1,4 +1,4 @@
-import { supportedNetworkId } from '@summerfi/app-utils'
+import { supportedSDKNetworkId } from '@summerfi/app-utils'
 import {
   type ArmadaMigratablePosition,
   type ArmadaMigratablePositionApy,
@@ -43,7 +43,7 @@ export const mapMigrationResponse = (
 
       return {
         ...position,
-        chainId: supportedNetworkId(positionsData.chainInfo.chainId),
+        chainId: supportedSDKNetworkId(positionsData.chainInfo.chainId),
         apy7d: apy7d ? apy7d / 100 : undefined,
         apy: apy ? apy / 100 : undefined,
       }
