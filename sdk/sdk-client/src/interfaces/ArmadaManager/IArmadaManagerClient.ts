@@ -1,5 +1,4 @@
-import { IArmadaManagerGovernanceClient } from './IArmadaManagerGovernanceClient'
-import { IArmadaManagerKeepersClient } from './IArmadaManagerKeepersClient'
+import { IArmadaManagerAdminClient } from './IArmadaManagerAdminClient'
 import { IArmadaManagerUsersClient } from './IArmadaManagerUsersClient'
 
 /**
@@ -10,8 +9,6 @@ import { IArmadaManagerUsersClient } from './IArmadaManagerUsersClient'
 export interface IArmadaManagerClient {
   /** Users API for the Armada protocol */
   users: IArmadaManagerUsersClient
-  /** Keepers API for the Armada protocol */
-  keepers: IArmadaManagerKeepersClient
-  /** Governance API for the Armada protocol */
-  governance: IArmadaManagerGovernanceClient
+  /** Admin API for the Armada protocol - consolidated administrative operations */
+  admin: IArmadaManagerAdminClient
 }

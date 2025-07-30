@@ -1,4 +1,3 @@
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import {
   IAddress,
   IPercentage,
@@ -6,21 +5,51 @@ import {
   TransactionInfo,
   type IArmadaVaultId,
 } from '@summerfi/sdk-common'
+import { IRebalanceData } from '@summerfi/armada-protocol-common'
 
 /**
- * @interface IArmadaManagerKeepersClient
- * @description Interface of the FleetCommander Keepers manager for the SDK Client. Allows to instantiate
- *              FleetCommanders to interact with them
+ * @name IArmadaManagerAdminClient
+ * @description Interface for the Armada Manager Admin client - consolidates all administrative operations
  */
-export interface IArmadaManagerGovernanceClient {
+export interface IArmadaManagerAdminClient {
+  // Keeper operations
+  /**
+   * @name rebalance
+   * @description Rebalances the fleet using the provided rebalance data. Used by the keeper
+   *
+   * @param vaultId The ID of the pool
+   * @param rebalanceData The data for the rebalance
+   *
+   * @returns The transaction information
+   */
+  rebalance(params: {
+    vaultId: IArmadaVaultId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name adjustBuffer
+   * @description Adjusts the buffer of the fleet. Used by the keeper
+   *
+   * @param vaultId The ID of the pool
+   * @param rebalanceData The data for the rebalance
+   *
+   * @returns The transaction information
+   */
+  adjustBuffer(params: {
+    vaultId: IArmadaVaultId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
+
+  // Governance operations
   /**
    * @name setFleetDepositCap
-   * @description Sets the deposit cap for the fleet
+   * @description Sets the deposit cap of the fleet. Used by the governance
    *
-   * @param vaultId ID of the pool to set the deposit cap
-   * @param cap Token amount of the deposit cap
+   * @param vaultId The ID of the pool
+   * @param cap The new deposit cap
    *
-   * @returns TransactionInfo The transaction information
+   * @returns The transaction information
    */
   setFleetDepositCap(params: {
     vaultId: IArmadaVaultId
@@ -29,13 +58,14 @@ export interface IArmadaManagerGovernanceClient {
 
   /**
    * @name setTipJar
-   * @description Sets the tip jar for the fleet
+   * @description Sets the tip jar address of the fleet. Used by the governance
    *
-   * @param vaultId ID of the pool to set the tip jar
+   * @param vaultId The ID of the pool
+   * @param tipJar The address of the new tip jar
    *
-   * @returns TransactionInfo The transaction information
+   * @returns The transaction information
    */
-  setTipJar(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
+  setTipJar(params: { vaultId: IArmadaVaultId; tipJar: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
@@ -50,25 +80,43 @@ export interface IArmadaManagerGovernanceClient {
 
   /**
    * @name addArk
-   * @description Adds a new ark to the fleet. Used by the governance
+   * @description Adds an ark to the fleet. Used by the governance
    *
    * @param vaultId The ID of the pool
-   * @param ark The address of the new ark
+   * @param ark The address of the ark to add
+   * @param maxDepositCap The maximum deposit cap of the ark
+   * @param maxRebalanceOutflow The maximum rebalance outflow of the ark
+   * @param maxRebalanceInflow The maximum rebalance inflow of the ark
    *
    * @returns The transaction information
    */
-  addArk(params: { vaultId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
+  addArk(params: {
+    vaultId: IArmadaVaultId
+    ark: IAddress
+    maxDepositCap: ITokenAmount
+    maxRebalanceOutflow: ITokenAmount
+    maxRebalanceInflow: ITokenAmount
+  }): Promise<TransactionInfo>
 
   /**
    * @name addArks
-   * @description Adds a list of new arks to the fleet. Used by the governance
+   * @description Adds multiple arks to the fleet. Used by the governance
    *
    * @param vaultId The ID of the pool
-   * @param arks The list of addresses of the new arks
+   * @param arks The addresses of the arks to add
+   * @param maxDepositCaps The maximum deposit caps of the arks
+   * @param maxRebalanceOutflows The maximum rebalance outflows of the arks
+   * @param maxRebalanceInflows The maximum rebalance inflows of the arks
    *
    * @returns The transaction information
    */
-  addArks(params: { vaultId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
+  addArks(params: {
+    vaultId: IArmadaVaultId
+    arks: IAddress[]
+    maxDepositCaps: ITokenAmount[]
+    maxRebalanceOutflows: ITokenAmount[]
+    maxRebalanceInflows: ITokenAmount[]
+  }): Promise<TransactionInfo>
 
   /**
    * @name removeArk
