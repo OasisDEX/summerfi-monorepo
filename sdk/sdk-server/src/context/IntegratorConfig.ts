@@ -60,5 +60,5 @@ export async function fetchIntegratorConfig(
       },
     })
   }
-  return Promise.resolve(undefined)
+  return Promise.reject('Integrator config not found for client ID: ' + clientId)
 }

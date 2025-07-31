@@ -101,11 +101,17 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     tokensManager,
   })
 
-  // check for Client-Id header in request and add it to the context if present
+  let integratorConfig: IntegratorConfig | undefined = undefined
+  // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
-  const integratorConfig: IntegratorConfig | undefined = clientId
-    ? await fetchIntegratorConfig(clientId)
-    : undefined
+  if (clientId) {
+    try {
+      integratorConfig = await fetchIntegratorConfig(clientId)
+    } catch (error) {
+      console.error(`Failed to fetch integrator config for clientId ${clientId}:`, error)
+      throw new Error(`ClientId ${clientId} does not exist`)
+    }
+  }
 
   return {
     integratorConfig,
