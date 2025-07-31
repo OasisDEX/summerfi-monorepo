@@ -19,6 +19,7 @@ import {
   sdkChainIdToHumanNetwork,
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
+import { useRouter } from 'next/navigation'
 
 import { deleteLoginCookie } from '@/helpers/handle-login-cookie'
 import { useClientChainId } from '@/hooks/use-client-chain-id'
@@ -192,6 +193,7 @@ export default function WalletLabel({
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const { clientChainId } = useClientChainId()
+  const router = useRouter()
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
@@ -206,6 +208,7 @@ export default function WalletLabel({
       .then((response) => {
         if (response.ok) {
           logout()
+          router.replace('/')
         }
       })
       .catch((error) => {

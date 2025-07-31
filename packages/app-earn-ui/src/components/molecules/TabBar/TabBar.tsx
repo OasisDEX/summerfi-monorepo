@@ -10,7 +10,7 @@ interface Tab {
   id: string
   label: string
   icon?: ReactNode
-  content: ReactNode
+  content?: ReactNode
   activeColor?: string
 }
 

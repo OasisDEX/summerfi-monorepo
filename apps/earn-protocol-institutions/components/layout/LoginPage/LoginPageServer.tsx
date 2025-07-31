@@ -24,7 +24,7 @@ export const InstitutionsPageServer = async () => {
     const [defaultWalletInstitution] = institutionsList
 
     // redirect to the default institution page
-    redirect(`/${defaultWalletInstitution.id}`)
+    redirect(`/${defaultWalletInstitution.id}/overview`)
   }
 
   return <InstitutionsLoginPageClient signatureCookie={signatureCookie} />

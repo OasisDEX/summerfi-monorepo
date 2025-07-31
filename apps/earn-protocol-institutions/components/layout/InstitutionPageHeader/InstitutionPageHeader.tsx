@@ -15,6 +15,7 @@ interface InstitutionPageHeaderProps {
 const connectedRole = InstitutionRoles.GENERAL_ADMIN
 
 export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({ institutionName }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const roleResolved = connectedRole ? rolesToHuman(connectedRole) : 'No role connected'
 
   return (
