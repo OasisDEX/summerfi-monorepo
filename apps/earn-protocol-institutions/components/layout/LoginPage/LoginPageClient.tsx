@@ -33,7 +33,7 @@ export const InstitutionsLoginPageClient = ({ loginCookie }: { loginCookie?: str
         .then((response) => {
           if (cancelled) return
           // Redirect to the dashboard or home page after switching institution
-          router.push(`/${response}`)
+          router.push(`/${response.institution}`)
         })
         .catch((error) => {
           if (cancelled) return
