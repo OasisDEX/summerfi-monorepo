@@ -9,11 +9,18 @@
         "node_modules/@summerfi/blockchain-client-provider/src"
       ],
       "@summerfi/serverless-shared/*": ["../../packages/serverless-shared/src/*"],
-      "@summerfi/configuration-provider": ["node_modules/@summerfi/configuration-provider/src"],
+      "@summerfi/configuration-provider": ["../configuration-provider/src"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src"],
       "@summerfi/tenderly-utils": ["node_modules/@summerfi/tenderly-utils/src"],
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
-      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"]
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"],
+      "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src"],
+      "@summerfi/sdk-server-common": ["../sdk-server-common/src"],
+      "@summerfi/tokens-service": ["node_modules/@summerfi/tokens-service/src"],
+      "@summerfi/configuration-provider-mock": [
+        "node_modules/@summerfi/configuration-provider-mock/src"
+      ],
+      "@summerfi/armada-protocol-abis": ["node_modules/@summerfi/armada-protocol-abis/src"]
     }
   },
   "include": ["src/**/*.ts"],

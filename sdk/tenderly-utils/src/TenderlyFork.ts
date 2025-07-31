@@ -214,7 +214,7 @@ export class TenderlyFork {
     let response
 
     try {
-      response = await params.apiRequestClient.post(params.tenderlyApiUrl, {
+      response = await params.apiRequestClient.post(params.tenderlyApiUrl + '/vnets', {
         network_id: params.chainInfo.chainId,
         block_number: params.atBlock,
       })

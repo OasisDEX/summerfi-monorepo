@@ -32,6 +32,7 @@
     "@summerfi/tenderly-utils": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
+    "@summerfi/tokens-service": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },

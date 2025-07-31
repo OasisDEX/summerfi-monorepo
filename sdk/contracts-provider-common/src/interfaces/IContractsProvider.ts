@@ -2,6 +2,7 @@ import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { IErc20Contract } from './contracts/IErc20Contract'
 import { IErc4626Contract } from './contracts/IErc4626Contract'
 import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
+import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAccessManagerWhiteListContract'
 
 /**
  * @name IContractsProvider
@@ -52,4 +53,18 @@ export interface IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IFleetCommanderContract>
+
+  /**
+   * @name getProtocolAccessManagerWhiteListContract
+   * @description Returns a ProtocolAccessManagerWhiteList contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the ProtocolAccessManagerWhiteList contract
+   *
+   * @returns {IProtocolAccessManagerWhiteListContract}
+   */
+  getProtocolAccessManagerWhiteListContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IProtocolAccessManagerWhiteListContract>
 }

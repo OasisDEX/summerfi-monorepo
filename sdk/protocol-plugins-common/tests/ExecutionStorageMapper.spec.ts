@@ -13,7 +13,7 @@ import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
 
 import { IPoolIdData, IProtocol, LendingPositionType } from '@summerfi/sdk-common'
 import { LendingPosition } from '@summerfi/sdk-common'
-import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
+import { DerivedAction } from './DerivedAction'
 
 describe('Execution Storage Mapper', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

@@ -2989,6 +2989,9 @@ importers:
       '@summerfi/tokens-common':
         specifier: workspace:*
         version: link:../tokens-common
+      '@summerfi/tokens-service':
+        specifier: workspace:*
+        version: link:../tokens-service
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

@@ -2,6 +2,14 @@
 import 'zx/globals'
 $.verbose = true
 
+// helper to copy abis
+async function copyAbis(contractList, pkg) {
+  for await (const f of contractList) {
+    await $`mkdir -p ${dest}/${f}`
+    await $`cp -vr armada-protocol/contracts/packages/${pkg}/out/${f}/*.abi.json ${dest}/${f}/`
+  }
+}
+
 const coreAbis = [
   'AdmiralsQuarters.sol',
   'FleetCommander.sol',
@@ -15,6 +23,14 @@ const govAbis = [
   'SummerVestingWallet.sol',
   'SummerVestingWalletFactory.sol',
 ]
+const accessContracts = ['ProtocolAccessManagerWhiteList.sol']
+
+const foldersDict = {
+  'core-contracts': coreAbis,
+  'gov-contracts': govAbis,
+  'rewards-contracts': rewardsAbis,
+  'access-contracts': accessContracts,
+}
 
 const dest = 'armada-protocol/abis/src'
 await $`pwd`
@@ -22,27 +38,17 @@ await $`pwd`
 // install deps
 cd('armada-protocol/contracts')
 await $`pnpm i`
+// await $`pnpm run build`
 cd('../..')
 
 // gen abis
-Promise.all([
-  await $`cd armada-protocol/contracts/packages/core-contracts && forge build --extra-output-files abi`,
-  await $`cd armada-protocol/contracts/packages/gov-contracts && forge build --extra-output-files abi`,
-  await $`cd armada-protocol/contracts/packages/rewards-contracts && forge build --extra-output-files abi`,
-])
+for (const pkg of Object.keys(foldersDict)) {
+  await $`cd armada-protocol/contracts/packages/${pkg} && forge build --extra-output-files abi`
+}
 
 // copy abis
-for await (const f of coreAbis) {
-  await $`mkdir -p ${dest}/${f}`
-  await $`cp -vr armada-protocol/contracts/packages/core-contracts/out/${f}/*.abi.json ${dest}/${f}/`
-}
-for await (const f of rewardsAbis) {
-  await $`mkdir -p ${dest}/${f}`
-  await $`cp -vr armada-protocol/contracts/packages/rewards-contracts/out/${f}/*.abi.json ${dest}/${f}/`
-}
-for await (const f of govAbis) {
-  await $`mkdir -p ${dest}/${f}`
-  await $`cp -vr armada-protocol/contracts/packages/gov-contracts/out/${f}/*.abi.json ${dest}/${f}/`
+for (const [pkg, contractList] of Object.entries(foldersDict)) {
+  await copyAbis(contractList, pkg)
 }
 
 // process abis to TS

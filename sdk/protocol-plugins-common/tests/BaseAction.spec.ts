@@ -1,4 +1,4 @@
-import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
+import { DerivedAction } from './DerivedAction'
 import { keccak256, toBytes } from 'viem'
 
 describe('Execution Storage Manager', () => {
