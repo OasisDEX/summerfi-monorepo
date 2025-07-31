@@ -3,7 +3,7 @@ import {
   IArmadaManagerVaults,
   createDepositTransaction,
   createWithdrawTransaction,
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
 } from '@summerfi/armada-protocol-common'
@@ -181,7 +181,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       destinationFleetToken: destinationFleetToken.toString(),
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.sourceVaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -583,7 +583,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldStake,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -815,7 +815,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldSwap,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',

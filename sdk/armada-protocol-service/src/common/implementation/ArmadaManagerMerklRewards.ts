@@ -1,5 +1,5 @@
 import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
-import { getDeployedContractAddress } from '@summerfi/armada-protocol-common'
+import { getDeploymentConfigContractAddress } from '@summerfi/armada-protocol-common'
 import {
   isChainId,
   LoggingService,
@@ -161,7 +161,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       chainId,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
       contractCategory: 'core',
@@ -244,7 +244,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const distributorAddress = getMerklDistributorContractAddress(chainId)
 
     // Get AdmiralsQuarters contract address
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
       contractCategory: 'core',
@@ -293,7 +293,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const distributorAddress = getMerklDistributorContractAddress(chainId)
 
     // Get AdmiralsQuarters contract address
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
       contractCategory: 'core',

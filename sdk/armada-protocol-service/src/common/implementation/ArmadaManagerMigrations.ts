@@ -25,7 +25,7 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
   getAaveV3Address,
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   type IArmadaManagerMigrations,
   type IArmadaManagerUtils,
 } from '@summerfi/armada-protocol-common'
@@ -499,7 +499,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',

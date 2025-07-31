@@ -8,7 +8,7 @@ import {
   type IArmadaManagerClaims,
   type IArmadaManagerUtils,
   getAllMerkleClaims,
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   getDeployedGovRewardsManagerAddress,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -204,7 +204,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo,
     })
 
-    const summerTokenAddress = getDeployedContractAddress({
+    const summerTokenAddress = getDeploymentConfigContractAddress({
       chainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
@@ -357,7 +357,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       {} as Record<HexData, typeof filteredClaims>,
     )
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -409,7 +409,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [params.govRewardsManagerAddress.value, params.rewardToken.value],
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -437,7 +437,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [params.fleetCommandersAddresses.map((a) => a.value), params.rewardToken.value],
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
@@ -483,7 +483,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         }),
       )
 
-      const govRewardToken = getDeployedContractAddress({
+      const govRewardToken = getDeploymentConfigContractAddress({
         chainInfo: this._hubChainInfo,
         contractCategory: 'gov',
         contractName: 'summerToken',
@@ -504,7 +504,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    const fleetRewardToken = getDeployedContractAddress({
+    const fleetRewardToken = getDeploymentConfigContractAddress({
       chainInfo: params.chainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',
@@ -542,7 +542,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       return undefined
     }
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',

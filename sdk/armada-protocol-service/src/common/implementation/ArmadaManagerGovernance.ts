@@ -1,6 +1,6 @@
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   getDeployedGovRewardsManagerAddress,
   type IArmadaManagerGovernance,
   type IArmadaManagerUtils,
@@ -40,7 +40,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     this._hubChainInfo = params.hubChainInfo
     this._utils = params.utils
 
-    this._hubChainSummerTokenAddress = getDeployedContractAddress({
+    this._hubChainSummerTokenAddress = getDeploymentConfigContractAddress({
       chainInfo: this._hubChainInfo,
       contractCategory: 'gov',
       contractName: 'summerToken',

@@ -1,16 +1,32 @@
-import { ChainIds, type AddressValue } from '@summerfi/sdk-common'
+import { Address, ChainIds, type AddressValue } from '@summerfi/sdk-common'
 
 type SupportedChainId = typeof ChainIds.Base
 
+type DeployedContractsConfig = {
+  admiralsQuarters: Record<SupportedChainId, AddressValue>
+  protocolAccessManager: Record<SupportedChainId, AddressValue>
+  tipJar: Record<SupportedChainId, AddressValue>
+  raft: Record<SupportedChainId, AddressValue>
+  configurationManager: Record<SupportedChainId, AddressValue>
+  harborCommand: Record<SupportedChainId, AddressValue>
+}
+
 export type IntegratorConfig = {
-  deployedContracts: {
-    admiralsQuarters: Record<SupportedChainId, AddressValue>
-    protocolAccessManager: Record<SupportedChainId, AddressValue>
-    tipJar: Record<SupportedChainId, AddressValue>
-    raft: Record<SupportedChainId, AddressValue>
-    configurationManager: Record<SupportedChainId, AddressValue>
-    harborCommand: Record<SupportedChainId, AddressValue>
+  deployedContracts: DeployedContractsConfig
+}
+
+export const getDeployedContractAddress = (
+  config: DeployedContractsConfig,
+  contractName: keyof DeployedContractsConfig,
+  chainId: SupportedChainId,
+): Address => {
+  const address = config[contractName][chainId]
+  if (!address) {
+    throw new Error(`Contract ${contractName} not deployed on chain ${chainId}`)
   }
+  return Address.createFromEthereum({
+    value: address,
+  })
 }
 
 export async function fetchIntegratorConfig(

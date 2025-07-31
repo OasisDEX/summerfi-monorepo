@@ -50,7 +50,7 @@ export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmi
 export {
   setTestDeployment,
   isTestDeployment,
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   getAaveV3Address,
   getCompoundV3Address,
   getDeployedRewardsRedeemerAddress,

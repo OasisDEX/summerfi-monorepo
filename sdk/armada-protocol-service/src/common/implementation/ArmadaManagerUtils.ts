@@ -1,7 +1,7 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   type IArmadaManagerUtils,
@@ -322,7 +322,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
       chainInfo: params.vaultId.chainInfo,
       contractCategory: 'core',
       contractName: 'admiralsQuarters',
