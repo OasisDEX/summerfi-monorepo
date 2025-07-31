@@ -205,7 +205,7 @@ export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
       }
       header={
         <DashboardVaultHeader
-          name={vaultData.name}
+          vaultName={vaultData.name}
           asset={vaultData.asset}
           nav={vaultData.nav}
           aum={vaultData.aum}
