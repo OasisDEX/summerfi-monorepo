@@ -4,7 +4,7 @@ import { DashboardFeesRevenue } from '@/features/dashboard/components/DashboardF
 export default async function InstitutionFeesRevenueTab({
   params,
 }: {
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const { institutionId } = await params
   const _institution = await getInstitutionData(institutionId)

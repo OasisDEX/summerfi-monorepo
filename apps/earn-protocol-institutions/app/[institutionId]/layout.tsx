@@ -9,7 +9,7 @@ export default async function InstitutionMainLayout({
   params,
 }: {
   children: React.ReactNode
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const [{ institutionId }] = await Promise.all([params])
   const institution = await getInstitutionData(institutionId)

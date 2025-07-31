@@ -4,7 +4,7 @@ import { DashboardRisk } from '@/features/dashboard/components/DashboardRisk/Das
 export default async function InstitutionRiskTab({
   params,
 }: {
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const { institutionId } = await params
   const _institution = await getInstitutionData(institutionId)

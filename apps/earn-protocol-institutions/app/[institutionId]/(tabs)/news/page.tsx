@@ -4,7 +4,7 @@ import { DashboardNews } from '@/features/dashboard/components/DashboardNews/Das
 export default async function InstitutionNewsTab({
   params,
 }: {
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const { institutionId } = await params
   const _institution = await getInstitutionData(institutionId)

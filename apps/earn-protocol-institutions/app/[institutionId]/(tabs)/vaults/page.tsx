@@ -4,7 +4,7 @@ import { DashboardVaults } from '@/features/dashboard/components/DashboardVaults
 export default async function InstitutionVaultsTab({
   params,
 }: {
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const { institutionId } = await params
   const institution = await getInstitutionData(institutionId)

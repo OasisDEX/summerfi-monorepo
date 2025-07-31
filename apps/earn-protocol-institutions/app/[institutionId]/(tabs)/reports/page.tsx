@@ -4,7 +4,7 @@ import { DashboardReports } from '@/features/dashboard/components/DashboardRepor
 export default async function InstitutionReportsTab({
   params,
 }: {
-  params: { institutionId: string }
+  params: Promise<{ institutionId: string }>
 }) {
   const { institutionId } = await params
   const _institution = await getInstitutionData(institutionId)

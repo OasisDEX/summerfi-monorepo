@@ -5,7 +5,7 @@ import { getInstitutionData } from '@/app/server-handlers/institution-data'
 import { InstitutionPageView } from '@/components/layout/InstitutionPageView/InstitutionPageView'
 import { getUserCookies } from '@/helpers/get-user-cookies'
 
-const InstitutionPage = async ({ params }: { params: { institutionId: string } }) => {
+const InstitutionPage = async ({ params }: { params: Promise<{ institutionId: string }> }) => {
   const { institutionId } = await params
   const { signatureCookie, walletCookie } = await getUserCookies()
   const isLoggedIn = await checkLoginSignature({
