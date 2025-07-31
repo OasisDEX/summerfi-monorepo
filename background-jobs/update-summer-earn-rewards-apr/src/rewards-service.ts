@@ -386,7 +386,7 @@ export class RewardsService {
         (acc, product) => {
           const vaultData = vaultMap.get(product.pool.toLowerCase())
 
-          acc[product.id] = vaultData ? this.processMorphoVault(vaultData, chainId) : []
+          acc[product.id] = vaultData ? this.processMorphoVault(vaultData) : []
           return acc
         },
         {} as Record<string, RewardRate[]>,
@@ -397,7 +397,7 @@ export class RewardsService {
     }
   }
 
-  private processMorphoVault(vaultData: MorphoVaultReward, chainId: ChainId): RewardRate[] {
+  private processMorphoVault(vaultData: MorphoVaultReward): RewardRate[] {
     // Calculate total allocated assets in USD
     const totalAssetsAllocated = vaultData.state.allocation.reduce(
       (sum, alloc) => sum + (alloc.supplyAssetsUsd ?? 0),
