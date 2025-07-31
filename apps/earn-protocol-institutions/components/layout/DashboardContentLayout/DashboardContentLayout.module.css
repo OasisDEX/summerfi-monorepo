@@ -1,6 +1,6 @@
 .dashboardContentLayout {
   display: flex;
-  gap: unset;
+  gap: var(--spacing-space-medium);
   width: 100%;
   flex-direction: column;
 
