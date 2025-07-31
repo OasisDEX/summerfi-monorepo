@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChainIds } from '../implementation/ChainIds'
+import { ChainIds, LegacyChainIds } from '../implementation/ChainIds'
 
 /**
  * @name chainId
@@ -23,6 +23,26 @@ export const ChainIdSchema =
 
 export const isChainId = (maybeChainId: unknown): maybeChainId is ChainId => {
   const zodReturn = ChainIdSchema.safeParse(maybeChainId)
+
+  return zodReturn.success
+}
+
+export type LegacyChainId = (typeof LegacyChainIds)[keyof typeof LegacyChainIds]
+
+const legacyChainIdLiterals = Object.values(LegacyChainIds).map((chainId) => z.literal(chainId))
+export const LegacyChainIdSchema =
+  legacyChainIdLiterals.length >= 2
+    ? z.union([
+        legacyChainIdLiterals[0],
+        legacyChainIdLiterals[1],
+        ...legacyChainIdLiterals.slice(2),
+      ])
+    : (() => {
+        throw Error('No legacy chain IDs available')
+      })()
+
+export const isLegacyChainId = (maybeChainId: unknown): maybeChainId is LegacyChainId => {
+  const zodReturn = LegacyChainIdSchema.safeParse(maybeChainId)
 
   return zodReturn.success
 }

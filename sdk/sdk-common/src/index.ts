@@ -43,7 +43,7 @@ export {
 export { ArmadaMigrationType } from './common/enums/ArmadaMigrationType'
 export { Address } from './common/implementation/Address'
 export type { AddressParameters } from './common/implementation/Address'
-export { ChainIds } from './common/implementation/ChainIds'
+export { ChainIds, LegacyChainIds } from './common/implementation/ChainIds'
 export {
   ChainFamilyMap,
   getChainFamilyInfoByChainId,

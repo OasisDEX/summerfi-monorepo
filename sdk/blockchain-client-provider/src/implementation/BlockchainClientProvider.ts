@@ -3,7 +3,7 @@ import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainIds, type IChainInfo } from '@summerfi/sdk-common'
+import { LegacyChainIds, ChainIds, type IChainInfo } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
@@ -34,7 +34,7 @@ export function getRpcGatewayEndpoint(
   const NetworkByChainID: Record<number, string> = {
     [ChainIds.Mainnet]: 'mainnet',
     [ChainIds.ArbitrumOne]: 'arbitrum',
-    [ChainIds.Optimism]: 'optimism',
+    [LegacyChainIds.Optimism]: 'optimism',
     [ChainIds.Base]: 'base',
     [ChainIds.Sonic]: 'sonic',
   }
