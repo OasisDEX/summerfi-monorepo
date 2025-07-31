@@ -1,8 +1,12 @@
 'use client'
 
-import { type FC, useState } from 'react'
-import { Icon, PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
-import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
+import { type FC, type ReactNode, useState } from 'react'
+import { Dropdown, Icon, PanelNavigation, Text, useMobileCheck } from '@summerfi/app-earn-ui'
+import {
+  type DropdownRawOption,
+  type IconNamesList,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -16,14 +20,9 @@ import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRi
 import { PanelRoleAdmin } from '@/features/panels/vaults/components/PanelRoleAdmin/PanelRoleAdmin'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
-interface IconWithTextProps {
-  iconName?: IconNamesList
-  tokenName?: TokenSymbolsList
-  text: string
-  size: number
-}
+import styles from './DashboardVaults.module.css'
 
-enum DashboardOverviewPanel {
+enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
   ASSET_RELOCATION = 'asset-relocation',
@@ -34,47 +33,68 @@ enum DashboardOverviewPanel {
   ACTIVITY = 'activity',
 }
 
-const IconWithText: FC<IconWithTextProps> = ({ iconName, tokenName, text, size }) => {
+interface IconWithTextProps {
+  iconName?: IconNamesList
+  tokenName?: TokenSymbolsList
+  children: ReactNode
+  size: number
+}
+
+const IconWithText: FC<IconWithTextProps> = ({ iconName, tokenName, children, size }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}>
       {iconName && <Icon iconName={iconName} size={size} />}
       {tokenName && <Icon tokenName={tokenName} size={size} />}
-      {text}
+      {children}
     </div>
+  )
+}
+
+interface DropdownContentProps {
+  children: ReactNode
+}
+
+const DropdownContent: FC<DropdownContentProps> = ({ children }) => {
+  return (
+    <IconWithText tokenName="USDC" size={24}>
+      <Text as="p" variant="p1semi">
+        {children}
+      </Text>
+    </IconWithText>
   )
 }
 
 const panelItems = [
   {
-    id: DashboardOverviewPanel.OVERVIEW,
+    id: DashboardVaultsPanel.OVERVIEW,
     label: 'Overview',
   },
   {
-    id: DashboardOverviewPanel.VAULT_EXPOSURE,
+    id: DashboardVaultsPanel.VAULT_EXPOSURE,
     label: 'Vault exposure',
   },
   {
-    id: DashboardOverviewPanel.ASSET_RELOCATION,
+    id: DashboardVaultsPanel.ASSET_RELOCATION,
     label: 'Asset rellocation',
   },
   {
-    id: DashboardOverviewPanel.RISK_PARAMETERS,
+    id: DashboardVaultsPanel.RISK_PARAMETERS,
     label: 'Risk Parameters',
   },
   {
-    id: DashboardOverviewPanel.ROLE_ADMIN,
+    id: DashboardVaultsPanel.ROLE_ADMIN,
     label: 'Role admin',
   },
   {
-    id: DashboardOverviewPanel.CLIENT_ADMIN,
+    id: DashboardVaultsPanel.CLIENT_ADMIN,
     label: 'Client admin',
   },
   {
-    id: DashboardOverviewPanel.FEE_REVENUE_ADMIN,
+    id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,
     label: 'Fee & revenue admin',
   },
   {
-    id: DashboardOverviewPanel.ACTIVITY,
+    id: DashboardVaultsPanel.ACTIVITY,
     label: 'Activity',
   },
 ]
@@ -91,21 +111,37 @@ interface DashboardVaultsProps {
 }
 
 export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
-  const [activePanel, setActivePanel] = useState<DashboardOverviewPanel>(
-    DashboardOverviewPanel.OVERVIEW,
+  // to be rather stored as param in url
+  const [activePanel, setActivePanel] = useState<DashboardVaultsPanel>(
+    DashboardVaultsPanel.OVERVIEW,
   )
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const handlePanelChange = (panel: DashboardOverviewPanel) => {
+  const vaultsOptions: DropdownRawOption[] = [
+    {
+      value: 'vault-1',
+      content: <DropdownContent>USDC-1</DropdownContent>,
+    },
+    {
+      value: 'vault-2',
+      content: <DropdownContent>USDC-2</DropdownContent>,
+    },
+    {
+      value: 'vault-3',
+      content: <DropdownContent>USDC-3</DropdownContent>,
+    },
+  ]
+
+  const [selectedVault, setSelectedVault] = useState<DropdownRawOption>(vaultsOptions[0])
+
+  const handlePanelChange = (panel: DashboardVaultsPanel) => {
     setActivePanel(panel)
   }
 
   const navigation = [
     {
       id: '1',
-      label: <IconWithText tokenName="USDC" text="USDC-1" size={24} />,
-      expanded: true,
       items: panelItems.map((item) => ({
         id: item.id,
         label: item.label,
@@ -116,36 +152,56 @@ export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
   ]
 
   const panelsContent = {
-    [DashboardOverviewPanel.OVERVIEW]: <PanelOverview />,
-    [DashboardOverviewPanel.VAULT_EXPOSURE]: <PanelVaultExposure />,
-    [DashboardOverviewPanel.ASSET_RELOCATION]: <PanelAssetRelocation />,
-    [DashboardOverviewPanel.RISK_PARAMETERS]: <PanelRiskParameters />,
-    [DashboardOverviewPanel.ROLE_ADMIN]: <PanelRoleAdmin />,
-    [DashboardOverviewPanel.CLIENT_ADMIN]: <PanelClientAdmin />,
-    [DashboardOverviewPanel.FEE_REVENUE_ADMIN]: <PanelFeeRevenueAdmin />,
-    [DashboardOverviewPanel.ACTIVITY]: <PanelActivity />,
+    [DashboardVaultsPanel.OVERVIEW]: <PanelOverview />,
+    [DashboardVaultsPanel.VAULT_EXPOSURE]: <PanelVaultExposure />,
+    [DashboardVaultsPanel.ASSET_RELOCATION]: <PanelAssetRelocation />,
+    [DashboardVaultsPanel.RISK_PARAMETERS]: <PanelRiskParameters />,
+    [DashboardVaultsPanel.ROLE_ADMIN]: <PanelRoleAdmin />,
+    [DashboardVaultsPanel.CLIENT_ADMIN]: <PanelClientAdmin />,
+    [DashboardVaultsPanel.FEE_REVENUE_ADMIN]: <PanelFeeRevenueAdmin />,
+    [DashboardVaultsPanel.ACTIVITY]: <PanelActivity />,
   }
 
   return (
     <DashboardContentLayout
       panel={
-        <PanelNavigation
-          isMobile={isMobile}
-          navigation={navigation}
-          staticItems={[
-            {
-              id: '1',
-              label: <IconWithText iconName="plus" text="Request a new market" size={20} />,
-              // eslint-disable-next-line no-console
-              action: () => console.log('Request a new market'),
-            },
-            {
-              id: '2',
-              label: <IconWithText iconName="question_o" text="Help & Support" size={20} />,
-              link: { href: '/', target: '_blank' },
-            },
-          ]}
-        />
+        <div className={styles.dashboardVaultsPanelWrapper}>
+          <Dropdown
+            options={vaultsOptions}
+            dropdownValue={selectedVault}
+            onChange={setSelectedVault}
+            dropdownWrapperClassName={styles.dropdownWrapper}
+            dropdownSelectedClassName={styles.dropdownSelected}
+            asCard
+          >
+            {selectedVault.content}
+          </Dropdown>
+          <PanelNavigation
+            isMobile={isMobile}
+            navigation={navigation}
+            staticItems={[
+              {
+                id: '1',
+                label: (
+                  <IconWithText iconName="plus" size={20}>
+                    Request a new market
+                  </IconWithText>
+                ),
+                // eslint-disable-next-line no-console
+                action: () => console.log('Request a new market'),
+              },
+              {
+                id: '2',
+                label: (
+                  <IconWithText iconName="question_o" size={20}>
+                    Help & Support
+                  </IconWithText>
+                ),
+                link: { href: '/', target: '_blank' },
+              },
+            ]}
+          />
+        </div>
       }
       header={
         <DashboardVaultHeader
