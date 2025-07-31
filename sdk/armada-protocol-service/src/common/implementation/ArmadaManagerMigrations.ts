@@ -25,7 +25,6 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
   getAaveV3Address,
-  getDeploymentConfigContractAddress,
   type IArmadaManagerMigrations,
   type IArmadaManagerUtils,
 } from '@summerfi/armada-protocol-common'
@@ -49,6 +48,7 @@ import {
 } from './abi'
 import type { ArmadaMigrationConfig } from './token-config/types'
 import { BigNumber } from 'bignumber.js'
+import type { IDeploymentProvider } from '../..'
 
 type ArmadaMigratablePositionWithoutPrice = Omit<ArmadaMigratablePosition, 'usdValue'>
 
@@ -64,6 +64,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
   private _tokensManager: ITokensManager
   private _oracleManager: IOracleManager
   private _utils: IArmadaManagerUtils
+  private _deploymentProvider: IDeploymentProvider
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -79,6 +80,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     hubChainInfo: IChainInfo
     oracleManager: IOracleManager
     utils: IArmadaManagerUtils
+    deploymentProvider: IDeploymentProvider
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._contractsProvider = params.contractsProvider
@@ -89,6 +91,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     this._hubChainInfo = params.hubChainInfo
     this._oracleManager = params.oracleManager
     this._utils = params.utils
+    this._deploymentProvider = params.deploymentProvider
   }
 
   async getMigratablePositions(
@@ -499,9 +502,8 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
 
-    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 

@@ -56,6 +56,7 @@ export {
   getDeployedRewardsRedeemerAddress,
   getDeployedGovRewardsManagerAddress,
   getLayerZeroConfig,
+  getDeploymentsJsonConfig,
 } from './deployments/index'
 export type {
   IArmadaManagerMerklRewards,

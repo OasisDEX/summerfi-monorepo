@@ -1,9 +1,9 @@
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeploymentConfigContractAddress,
   getDeployedGovRewardsManagerAddress,
   type IArmadaManagerGovernance,
   type IArmadaManagerUtils,
+  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -15,6 +15,7 @@ import {
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name ArmadaManager
@@ -23,6 +24,7 @@ import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _allowanceManager: IAllowanceManager
+  private _tokensManager: ITokensManager
   private _utils: IArmadaManagerUtils
 
   private _hubChainSummerTokenAddress: IAddress
@@ -32,19 +34,22 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
     allowanceManager: IAllowanceManager
+    tokensManager: ITokensManager
     hubChainInfo: IChainInfo
     utils: IArmadaManagerUtils
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._allowanceManager = params.allowanceManager
+    this._tokensManager = params.tokensManager
     this._hubChainInfo = params.hubChainInfo
     this._utils = params.utils
 
-    this._hubChainSummerTokenAddress = getDeploymentConfigContractAddress({
+    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
+
+    this._hubChainSummerTokenAddress = this._tokensManager.getTokenBySymbol({
       chainInfo: this._hubChainInfo,
-      contractCategory: 'gov',
-      contractName: 'summerToken',
-    })
+      symbol: tokenSymbol,
+    }).address
   }
 
   async getUserDelegatee(

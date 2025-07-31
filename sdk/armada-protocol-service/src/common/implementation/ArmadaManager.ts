@@ -28,6 +28,7 @@ import { ArmadaManagerVaults } from './ArmadaManagerVaults'
 import { ArmadaManagerUtils } from './ArmadaManagerUtils'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
  * @name ArmadaManager
@@ -48,6 +49,7 @@ export class ArmadaManager implements IArmadaManager {
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
+  private _deploymentProvider: IDeploymentProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
@@ -59,6 +61,7 @@ export class ArmadaManager implements IArmadaManager {
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
+    deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
@@ -68,6 +71,7 @@ export class ArmadaManager implements IArmadaManager {
     tokensManager: ITokensManager
   }) {
     this._configProvider = params.configProvider
+    this._deploymentProvider = params.deploymentProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
@@ -102,6 +106,7 @@ export class ArmadaManager implements IArmadaManager {
       oracleManager: this._oracleManager,
       subgraphManager: this._subgraphManager,
       swapManager: this._swapManager,
+      deploymentProvider: this._deploymentProvider,
     })
     this.claims = new ArmadaManagerClaims({
       ...params,
@@ -139,10 +144,12 @@ export class ArmadaManager implements IArmadaManager {
       swapManager: this._swapManager,
       utils: this.utils,
       subgraphManager: this._subgraphManager,
+      deploymentProvider: this._deploymentProvider,
     })
     this.merklRewards = new ArmadaManagerMerklRewards({
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
     })
     this.admin = new ArmadaManagerAdmin({
       configProvider: this._configProvider,

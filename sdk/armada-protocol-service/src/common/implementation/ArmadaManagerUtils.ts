@@ -1,7 +1,6 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeploymentConfigContractAddress,
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   type IArmadaManagerUtils,
@@ -36,6 +35,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
+import type { IDeploymentProvider } from '../..'
 
 /**
  * @name ArmadaManagerUtils
@@ -44,7 +44,6 @@ import { BigNumber } from 'bignumber.js'
 export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
-  private _isTestDeployment: boolean
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
@@ -55,6 +54,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _swapManager: ISwapManager
   private _oracleManager: IOracleManager
   private _tokensManager: ITokensManager
+  private _deploymentProvider: IDeploymentProvider
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -66,6 +66,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     swapManager: ISwapManager
     oracleManager: IOracleManager
     tokensManager: ITokensManager
+    deploymentProvider: IDeploymentProvider
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -75,8 +76,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-
-    this._isTestDeployment = isTestDeployment()
+    this._deploymentProvider = params.deploymentProvider
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -94,7 +94,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   getSummerToken(
     params: Parameters<IArmadaManagerUtils['getSummerToken']>[0],
   ): ReturnType<IArmadaManagerUtils['getSummerToken']> {
-    const tokenSymbol = this._isTestDeployment ? 'BUMMER' : 'SUMR'
+    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
 
     return this._tokensManager.getTokenBySymbol({
       chainInfo: params.chainInfo,
@@ -322,9 +322,8 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
-    const admiralsQuartersAddress = getDeploymentConfigContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
