@@ -6,7 +6,7 @@ export const getWalletInstitutions = async (walletAddress: string) => {
   }
 
   await new Promise((resolve) => {
-    setTimeout(resolve, 300)
+    setTimeout(resolve, 1)
   }) // Simulate network delay
 
   return institutionsMockList.map(({ id, institutionName }) => ({

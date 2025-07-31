@@ -9,7 +9,7 @@ export const getInstitutionData = async (institutionId: string) => {
   }
 
   await new Promise((resolve) => {
-    setTimeout(resolve, 300)
+    setTimeout(resolve, 1)
   }) // Simulate network delay
 
   const institution = institutionsMockList.find((inst) => inst.id === institutionId)
