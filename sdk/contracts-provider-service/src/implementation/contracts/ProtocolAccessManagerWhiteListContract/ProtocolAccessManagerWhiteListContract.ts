@@ -1,10 +1,6 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IProtocolAccessManagerWhiteListContract } from '@summerfi/contracts-provider-common'
-import {
-  IAddress,
-  IChainInfo,
-  TransactionInfo,
-} from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, TransactionInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
 import { ProtocolAccessManagerWhitelistAbi } from '@summerfi/armada-protocol-abis'
@@ -128,9 +124,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.grantWhitelistedRole */
-  async grantWhitelistedRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async grantWhitelistedRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'grantWhitelistedRole',
@@ -140,9 +136,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.revokeWhitelistedRole */
-  async revokeWhitelistedRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async revokeWhitelistedRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'revokeWhitelistedRole',
@@ -152,9 +148,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.grantCuratorRole */
-  async grantCuratorRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async grantCuratorRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'grantCuratorRole',
@@ -164,9 +160,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.revokeCuratorRole */
-  async revokeCuratorRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async revokeCuratorRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'revokeCuratorRole',
@@ -176,9 +172,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.grantKeeperRole */
-  async grantKeeperRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async grantKeeperRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'grantKeeperRole',
@@ -188,9 +184,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.revokeKeeperRole */
-  async revokeKeeperRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  async revokeKeeperRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'revokeKeeperRole',
@@ -200,9 +196,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.grantCommanderRole */
-  async grantCommanderRole(params: { 
-    arkAddress: IAddress; 
-    account: IAddress 
+  async grantCommanderRole(params: {
+    arkAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'grantCommanderRole',
@@ -212,9 +208,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.revokeCommanderRole */
-  async revokeCommanderRole(params: { 
-    arkAddress: IAddress; 
-    account: IAddress 
+  async revokeCommanderRole(params: {
+    arkAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'revokeCommanderRole',
@@ -260,9 +256,9 @@ export class ProtocolAccessManagerWhiteListContract<
   }
 
   /** @see IProtocolAccessManagerWhiteListContract.selfRevokeContractSpecificRole */
-  async selfRevokeContractSpecificRole(params: { 
-    roleName: number; 
-    roleTargetContract: IAddress 
+  async selfRevokeContractSpecificRole(params: {
+    roleName: number
+    roleTargetContract: IAddress
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'selfRevokeContractSpecificRole',

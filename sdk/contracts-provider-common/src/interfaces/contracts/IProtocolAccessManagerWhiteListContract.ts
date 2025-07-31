@@ -103,9 +103,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantWhitelistedRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  grantWhitelistedRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -115,9 +115,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeWhitelistedRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  revokeWhitelistedRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -127,9 +127,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantCuratorRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  grantCuratorRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -139,9 +139,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeCuratorRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  revokeCuratorRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -151,9 +151,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantKeeperRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  grantKeeperRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -163,9 +163,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeKeeperRole(params: { 
-    fleetCommanderAddress: IAddress; 
-    account: IAddress 
+  revokeKeeperRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
   }): Promise<TransactionInfo>
 
   /**
@@ -175,10 +175,7 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantCommanderRole(params: { 
-    arkAddress: IAddress; 
-    account: IAddress 
-  }): Promise<TransactionInfo>
+  grantCommanderRole(params: { arkAddress: IAddress; account: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name revokeCommanderRole
@@ -187,10 +184,7 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeCommanderRole(params: { 
-    arkAddress: IAddress; 
-    account: IAddress 
-  }): Promise<TransactionInfo>
+  revokeCommanderRole(params: { arkAddress: IAddress; account: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name grantDecayControllerRole
@@ -231,8 +225,8 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param roleTargetContract The target contract address
    * @returns Promise<TransactionInfo> The transaction information
    */
-  selfRevokeContractSpecificRole(params: { 
-    roleName: number; 
-    roleTargetContract: IAddress 
+  selfRevokeContractSpecificRole(params: {
+    roleName: number
+    roleTargetContract: IAddress
   }): Promise<TransactionInfo>
 }
