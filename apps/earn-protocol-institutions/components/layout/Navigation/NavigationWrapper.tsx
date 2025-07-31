@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useEffect } from 'react'
+import { type FC } from 'react'
 import {
   Button,
   Card,
@@ -31,16 +31,10 @@ export const NavigationWrapper: FC = () => {
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const router = useRouter()
   const currentPath = usePathname()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
 
   const isLoginPage = currentPath === '/'
-
-  useEffect(() => {
-    if (!isLoginPage && !isLoadingAccount && !userWalletAddress) {
-      router.replace('/')
-    }
-  }, [isLoginPage, userWalletAddress, isLoadingAccount, router])
 
   return (
     <Navigation

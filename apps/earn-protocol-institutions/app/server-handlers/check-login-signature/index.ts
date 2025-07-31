@@ -5,15 +5,22 @@ export const checkLoginSignature = async ({
   userWalletAddress,
   loginSignature,
 }: {
-  userWalletAddress: string
-  loginSignature: string
+  userWalletAddress?: string
+  loginSignature?: string
 }) => {
+  if (!userWalletAddress || !loginSignature) {
+    return false
+  }
+
   const expectedSignature = getLoginSignature(userWalletAddress)
 
   const client = await getSSRPublicClient(1) // does not matter for the signature check
 
   if (!client) {
-    throw new Error('Public client is not available for signature verification')
+    // eslint-disable-next-line no-console
+    console.error('SSR Public Client is not available for signature verification')
+
+    return false
   }
 
   // Actual check
