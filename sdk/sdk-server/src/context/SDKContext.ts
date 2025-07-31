@@ -34,7 +34,7 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { readDeploymentProviderConfig } from 'node_modules/@summerfi/armada-protocol-service/src/deployment-provider/DeploymentProviderConfig'
+import { readDeploymentProviderConfig } from '@summerfi/armada-protocol-service'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 

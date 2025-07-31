@@ -11,6 +11,7 @@ export { type IDeploymentProvider } from './deployment-provider/IDeploymentProvi
 export { DeploymentProvider } from './deployment-provider/DeploymentProvider'
 export {
   fetchDeploymentProviderConfig,
+  readDeploymentProviderConfig,
   type DeploymentProviderDeployedContracts,
   type DeploymentProviderConfig,
 } from './deployment-provider/DeploymentProviderConfig'
