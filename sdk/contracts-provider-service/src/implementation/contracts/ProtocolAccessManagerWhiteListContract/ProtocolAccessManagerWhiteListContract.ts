@@ -1,9 +1,16 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IProtocolAccessManagerWhiteListContract } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, TransactionInfo, type HexData } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
 import { ProtocolAccessManagerWhitelistAbi } from '@summerfi/armada-protocol-abis'
+
+export enum RoleName {
+  CURATOR_ROLE,
+  KEEPER_ROLE,
+  COMMANDER_ROLE,
+  WHITELISTED_ROLE,
+}
 
 /**
  * @name ProtocolAccessManagerWhiteListContract
@@ -51,7 +58,7 @@ export class ProtocolAccessManagerWhiteListContract<
   /** READ METHODS */
 
   /** @see IProtocolAccessManagerWhiteListContract.hasRole */
-  async hasRole(params: { role: string; account: IAddress }): Promise<boolean> {
+  async hasRole(params: { role: HexData; account: IAddress }): Promise<boolean> {
     return this.contract.read.hasRole([params.role as `0x${string}`, params.account.value])
   }
 

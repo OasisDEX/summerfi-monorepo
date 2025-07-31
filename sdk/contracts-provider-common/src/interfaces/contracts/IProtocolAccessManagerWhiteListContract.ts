@@ -1,4 +1,4 @@
-import { IAddress, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, TransactionInfo, type HexData } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 
 /**
@@ -15,7 +15,7 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @param account The account address to check
    * @returns Promise<boolean> True if the account has the role
    */
-  hasRole(params: { role: string; account: IAddress }): Promise<boolean>
+  hasRole(params: { role: HexData; account: IAddress }): Promise<boolean>
 
   /**
    * @name generateRole
