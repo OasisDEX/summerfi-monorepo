@@ -1,7 +1,9 @@
-export const institutionsMockList = [
+import { type InstitutionData } from '@/types/institution-data'
+
+export const institutionsMockList: InstitutionData[] = [
   {
     id: 'acme-crypto-corp',
-    name: 'ACME Crypto Corp.',
+    institutionName: 'ACME Crypto Corp.',
     totalValue: 2225000000,
     numberOfVaults: 4,
     thirtyDayAvgApy: 0.078,
@@ -17,7 +19,7 @@ export const institutionsMockList = [
   },
   {
     id: 'nova-chain-labs',
-    name: 'Nova Chain Labs',
+    institutionName: 'Nova Chain Labs',
     totalValue: 3100000000,
     numberOfVaults: 5,
     thirtyDayAvgApy: 0.083,
@@ -33,7 +35,7 @@ export const institutionsMockList = [
   },
   {
     id: 'zenith-block-inc',
-    name: 'Zenith Block Inc.',
+    institutionName: 'Zenith Block Inc.',
     totalValue: 1975000000,
     numberOfVaults: 3,
     thirtyDayAvgApy: 0.074,
@@ -49,7 +51,7 @@ export const institutionsMockList = [
   },
   {
     id: 'quantum-crypto-holdings',
-    name: 'Quantum Crypto Holdings',
+    institutionName: 'Quantum Crypto Holdings',
     totalValue: 4120000000,
     numberOfVaults: 6,
     thirtyDayAvgApy: 0.091,
@@ -65,7 +67,7 @@ export const institutionsMockList = [
   },
   {
     id: 'orbit-ledger-group',
-    name: 'Orbit Ledger Group',
+    institutionName: 'Orbit Ledger Group',
     totalValue: 1680000000,
     numberOfVaults: 2,
     thirtyDayAvgApy: 0.062,
@@ -81,7 +83,7 @@ export const institutionsMockList = [
   },
   {
     id: 'aether-token-systems',
-    name: 'Aether Token Systems',
+    institutionName: 'Aether Token Systems',
     totalValue: 2890000000,
     numberOfVaults: 4,
     thirtyDayAvgApy: 0.079,

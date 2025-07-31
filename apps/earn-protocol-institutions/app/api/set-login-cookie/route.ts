@@ -4,10 +4,11 @@ import { checkLoginSignature } from '@/app/server-handlers/check-login-signature
 import {
   LOGIN_COOKIE_HTTP_ONLY,
   LOGIN_COOKIE_MAX_AGE,
-  LOGIN_COOKIE_NAME,
   LOGIN_COOKIE_PATH,
   LOGIN_COOKIE_SAME_SITE,
   LOGIN_COOKIE_SECURE,
+  LOGIN_COOKIE_SIGNATURE_NAME,
+  LOGIN_COOKIE_WALLET_NAME,
 } from '@/constants/login-cookie'
 
 export const POST = async (req: Request) => {
@@ -17,7 +18,8 @@ export const POST = async (req: Request) => {
     const { userWalletAddress, loginSignature, logOut } = await req.json()
 
     if (logOut) {
-      cookieStore.delete(LOGIN_COOKIE_NAME)
+      cookieStore.delete(LOGIN_COOKIE_SIGNATURE_NAME)
+      cookieStore.delete(LOGIN_COOKIE_WALLET_NAME)
 
       return new Response('Login cookie deleted successfully', { status: 200 })
     }
@@ -44,10 +46,15 @@ export const POST = async (req: Request) => {
 
     // we set TWO COOKIES
     // one is for the signature itself
-    // the other is for the chain ID which is needed to verify the signature later
+    // the other is for the wallet address
     cookieStore.set({
       value: loginSignature,
-      name: LOGIN_COOKIE_NAME,
+      name: LOGIN_COOKIE_SIGNATURE_NAME,
+      ...commonCookieOptions,
+    })
+    cookieStore.set({
+      value: userWalletAddress,
+      name: LOGIN_COOKIE_WALLET_NAME,
       ...commonCookieOptions,
     })
 

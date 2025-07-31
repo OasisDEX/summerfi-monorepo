@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { getInstitutionData } from '@/app/server-handlers/get-institution-data'
+import { getInstitutionData } from '@/app/server-handlers/institution-data'
 import { InstitutionPageView } from '@/components/layout/InstitutionPageView/InstitutionPageView'
 
 const InstitutionPage = async ({ params }: { params: { institutionId: string } }) => {
@@ -15,7 +15,7 @@ const InstitutionPage = async ({ params }: { params: { institutionId: string } }
 
   return (
     <InstitutionPageView
-      institutionName={institution.name}
+      institutionName={institution.institutionName}
       totalValue={institution.totalValue}
       numberOfVaults={institution.numberOfVaults}
       thirtyDayAvgApy={institution.thirtyDayAvgApy}
