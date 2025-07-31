@@ -106,6 +106,7 @@ export default defineConfig(({ mode }) => {
           'next/image',
           'next/link',
           'next/script',
+          'next/navigation',
           'react',
           'react-dom',
           'react/jsx-runtime',
