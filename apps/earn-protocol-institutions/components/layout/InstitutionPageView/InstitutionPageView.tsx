@@ -40,12 +40,12 @@ export const InstitutionPageView: FC<InstitutionPageViewProps> = ({
     {
       id: '1',
       label: 'Overview',
-      content: <DashboardOverview vaultData={vaultData} />,
+      content: <DashboardOverview />,
     },
     {
       id: '2',
       label: 'Vaults',
-      content: <DashboardVaults />,
+      content: <DashboardVaults vaultData={vaultData} />,
     },
     {
       id: '3',

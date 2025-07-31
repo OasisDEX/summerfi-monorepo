@@ -26,13 +26,13 @@ export const roleAdminMapper = ({
           <TableCellText>{dayjs(item.lastUpdated).format('MMMM D, YYYY')}</TableCellText>
         ),
         action: (
-          <TableCellText>
+          <TableCellText style={{ marginLeft: '40px' }}>
             <Button
               variant="unstyled"
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
               onClick={() => onEdit(item)}
             >
-              <Icon iconName="edit" size={20} className={styles.onEdit} />
+              <Icon iconName="edit" size={16} className={styles.onEdit} />
             </Button>
           </TableCellText>
         ),
