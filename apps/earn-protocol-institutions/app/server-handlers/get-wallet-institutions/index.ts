@@ -1,0 +1,13 @@
+import { institutionsMockList } from '@/app/server-handlers/mock'
+
+export const getWalletInstitutions = async (walletAddress: string) => {
+  if (!walletAddress) {
+    throw new Error('Institution ID is required')
+  }
+
+  await new Promise((resolve) => {
+    setTimeout(resolve, 300)
+  }) // Simulate network delay
+
+  return institutionsMockList.map((inst) => inst.id)
+}
