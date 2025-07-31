@@ -163,10 +163,8 @@ export const sdkAppRouter = router({
       emergencyShutdown: emergencyShutdown,
     },
     admin: {
-      // Keeper operations
       rebalance: rebalance,
       adjustBuffer: adjustBuffer,
-      // Governance operations
       setFleetDepositCap: setFleetDepositCap,
       setTipJar: setTipJar,
       setTipRate: setTipRate,

@@ -12,7 +12,6 @@ import { IRebalanceData } from '@summerfi/armada-protocol-common'
  * @description Interface for the Armada Manager Admin client - consolidates all administrative operations
  */
 export interface IArmadaManagerAdminClient {
-  // Keeper operations
   /**
    * @name rebalance
    * @description Rebalances the fleet using the provided rebalance data. Used by the keeper
@@ -41,7 +40,6 @@ export interface IArmadaManagerAdminClient {
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
-  // Governance operations
   /**
    * @name setFleetDepositCap
    * @description Sets the deposit cap of the fleet. Used by the governance
