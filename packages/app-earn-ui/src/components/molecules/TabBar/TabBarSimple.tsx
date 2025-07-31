@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, type FC, type ReactNode } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 import { Text } from '@/components/atoms/Text/Text'
 import type TextClassNames from '@/components/atoms/Text/Text.module.css'
@@ -28,9 +28,8 @@ export const TabBarSimple: FC<TabBarProps> = ({
   tabHeadersStyle,
   activeTabId,
 }) => {
-  const { push } = useRouter()
   const onTabClick = (tab: Tab) => {
-    push(tab.url)
+    redirect(tab.url)
   }
 
   return (
