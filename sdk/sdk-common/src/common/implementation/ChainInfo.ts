@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { ChainId, type LegacyChainId } from '../types/ChainId'
+import { ChainId } from '../types/ChainId'
 import { IChainInfo, IChainInfoData, __signature__ } from '../interfaces/IChainInfo'
 
 /**
@@ -16,7 +16,7 @@ export class ChainInfo implements IChainInfo {
   readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
-  readonly chainId: LegacyChainId | ChainId
+  readonly chainId: ChainId
   readonly name: string
 
   /** FACTORY METHODS */
@@ -26,7 +26,7 @@ export class ChainInfo implements IChainInfo {
 
   /** SEALED CONSTRUCTOR */
   private constructor(params: ChainInfoParameters) {
-    this.chainId = params.chainId
+    this.chainId = params.chainId as ChainId
     this.name = params.name
   }
 

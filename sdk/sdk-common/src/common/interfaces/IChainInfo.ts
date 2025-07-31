@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChainId, ChainIdSchema, LegacyChainIdSchema, type LegacyChainId } from '../types/ChainId'
+import { ChainId, ChainIdSchema, LegacyChainIdSchema } from '../types/ChainId'
 import { IPrintable } from './IPrintable'
 
 /**
@@ -15,7 +15,7 @@ export interface IChainInfo extends IChainInfoData, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The chain ID of the network */
-  readonly chainId: LegacyChainId | ChainId
+  readonly chainId: ChainId
   /** The name of the network */
   readonly name: string
 
@@ -34,7 +34,7 @@ export interface IChainInfo extends IChainInfoData, IPrintable {
  * @description Zod schema for IChainInfo
  */
 export const ChainInfoDataSchema = z.object({
-  chainId: LegacyChainIdSchema.or(ChainIdSchema),
+  chainId: ChainIdSchema.or(LegacyChainIdSchema),
   name: z.string(),
 })
 

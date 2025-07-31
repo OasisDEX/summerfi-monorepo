@@ -8,6 +8,7 @@ import {
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
 import { ChainIds, LegacyChainIds } from './ChainIds'
+import type { ChainId } from '../types/ChainId'
 
 /**
  * Chain definition per family
@@ -28,7 +29,7 @@ const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
 
 const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
   [OptimismChainNames.Optimism]: ChainInfo.createFrom({
-    chainId: LegacyChainIds.Optimism,
+    chainId: LegacyChainIds.Optimism as ChainId,
     name: OptimismChainNames.Optimism,
   }),
 }

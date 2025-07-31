@@ -1,4 +1,4 @@
-import { ChainIds, ChainInfo } from '../src'
+import { ChainIds, ChainInfo, type ChainId } from '../src'
 import { getChainFamilyInfoByChainId } from '../src/common/implementation/ChainFamilies'
 
 describe('Chain Families', () => {
@@ -38,7 +38,7 @@ describe('Chain Families', () => {
     expect(optimism).toEqual({
       familyName: 'Optimism',
       chainInfo: ChainInfo.createFrom({
-        chainId: 10,
+        chainId: 10 as ChainId,
         name: 'Optimism',
       }),
     })
