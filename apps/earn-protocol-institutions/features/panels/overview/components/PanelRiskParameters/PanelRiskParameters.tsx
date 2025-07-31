@@ -66,7 +66,12 @@ export const PanelRiskParameters = () => {
         Risk Parameters
       </Text>
       <Card>
-        <Table rows={rows} columns={riskParametersColumns} />
+        <Table
+          rows={rows}
+          columns={riskParametersColumns}
+          wrapperClassName={styles.tableWrapper}
+          tableClassName={styles.table}
+        />
       </Card>
     </Card>
   )

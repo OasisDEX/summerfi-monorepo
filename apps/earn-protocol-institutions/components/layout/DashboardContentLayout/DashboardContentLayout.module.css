@@ -2,9 +2,11 @@
   display: flex;
   gap: unset;
   width: 100%;
+  flex-direction: column;
 
   @media (min-width: 768px) {
     gap: var(--spacing-space-medium-large);
+    flex-direction: row;
   }
 
   .panel {
@@ -18,6 +20,9 @@
   }
 
   .content {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
     max-width: 880px;
     flex: 1;
 

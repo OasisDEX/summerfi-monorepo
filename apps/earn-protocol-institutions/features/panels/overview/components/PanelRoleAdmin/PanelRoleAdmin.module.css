@@ -11,4 +11,12 @@
       transition: opacity 0.2s ease-in-out;
     }
   }
+
+  .tableWrapper {
+    overflow-x: auto;
+
+    .table {
+      min-width: 600px;
+    }
+  }
 }

@@ -1,6 +1,7 @@
 'use client'
 import { type CSSProperties, Fragment, type ReactNode, useState } from 'react'
 import { SortDirection } from '@summerfi/app-utils'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { TableSkeleton } from '@/components/molecules/TableSkeleton/TableSkeleton'
@@ -40,6 +41,8 @@ interface TableProps<K extends string> {
   isLoading?: boolean
   skeletonLines?: number
   skeletonStyles?: CSSProperties
+  wrapperClassName?: string
+  tableClassName?: string
 }
 
 export function Table<K extends string>({
@@ -53,6 +56,8 @@ export function Table<K extends string>({
   isLoading,
   skeletonLines = 10,
   skeletonStyles,
+  wrapperClassName,
+  tableClassName,
 }: TableProps<K>): React.ReactNode {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
@@ -88,8 +93,8 @@ export function Table<K extends string>({
   }
 
   return (
-    <div className={styles.tableWrapper}>
-      <table className={styles.table}>
+    <div className={clsx(styles.tableWrapper, wrapperClassName)}>
+      <table className={clsx(styles.table, tableClassName)}>
         <thead>
           <tr>
             {columns

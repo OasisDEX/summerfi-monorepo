@@ -43,7 +43,12 @@ export const PanelRoleAdmin = () => {
         Roles
       </Text>
       <Card>
-        <Table rows={rows} columns={roleAdminColumns} />
+        <Table
+          rows={rows}
+          columns={roleAdminColumns}
+          wrapperClassName={styles.tableWrapper}
+          tableClassName={styles.table}
+        />
       </Card>
     </Card>
   )
