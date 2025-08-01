@@ -2,6 +2,7 @@ import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   IContractsProvider,
   IProtocolAccessManagerWhiteListContract,
+  ContractSpecificRoleName,
 } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo, type HexData } from '@summerfi/sdk-common'
 import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
@@ -185,5 +186,49 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
       account: testAddress,
     })
     expect(isRevoked).toBe(false)
+  })
+
+  // test whitelisted role for address 0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17
+  it.only('should check whitelisted role', async () => {
+    const roleTargetContract = Address.createFromEthereum({
+      value: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
+    })
+    const whitelistedRole = await protocolAccessManagerWhiteListContract.generateRole({
+      roleName: ContractSpecificRoleName.WHITELISTED_ROLE,
+      roleTargetContract,
+    })
+    const isWhitelistedInitially = await protocolAccessManagerWhiteListContract.hasRole({
+      role: whitelistedRole,
+      account: testAddress,
+    })
+    expect(isWhitelistedInitially).toBe(false)
+
+    // assign role
+    const grantTxInfo = await protocolAccessManagerWhiteListContract.grantWhitelistedRole({
+      fleetCommanderAddress: roleTargetContract,
+      account: testAddress,
+    })
+    expect(grantTxInfo).toBeDefined()
+    const grantStatus = await sendTransactionTool(grantTxInfo)
+    expect(grantStatus).toBe('success')
+    const isWhitelistedPostGrant = await protocolAccessManagerWhiteListContract.hasRole({
+      role: whitelistedRole,
+      account: testAddress,
+    })
+    expect(isWhitelistedPostGrant).toBe(true)
+
+    // revoke role
+    const revokeTxInfo = await protocolAccessManagerWhiteListContract.revokeWhitelistedRole({
+      fleetCommanderAddress: roleTargetContract,
+      account: testAddress,
+    })
+    expect(revokeTxInfo).toBeDefined()
+    const revokeStatus = await sendTransactionTool(revokeTxInfo)
+    expect(revokeStatus).toBe('success')
+    const isWhitelistedPostRevocation = await protocolAccessManagerWhiteListContract.hasRole({
+      role: whitelistedRole,
+      account: testAddress,
+    })
+    expect(isWhitelistedPostRevocation).toBe(false)
   })
 })

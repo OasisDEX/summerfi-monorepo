@@ -17,8 +17,8 @@
       "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src"],
       "@summerfi/sdk-server-common": ["../sdk-server-common/src"],
       "@summerfi/tokens-service": ["node_modules/@summerfi/tokens-service/src"],
-      "@summerfi/configuration-provider-mock": [
-        "node_modules/@summerfi/configuration-provider-mock/src"
+      "@summerfi/contracts-provider-common": [
+        "node_modules/@summerfi/contracts-provider-common/src"
       ],
       "@summerfi/armada-protocol-abis": ["node_modules/@summerfi/armada-protocol-abis/src"]
     }
