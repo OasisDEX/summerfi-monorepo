@@ -27,7 +27,7 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
-import type { ITokensManager } from 'node_modules/@summerfi/tokens-common/src/interfaces/ITokensManager'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name ArmadaManager
