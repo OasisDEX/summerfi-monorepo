@@ -22,9 +22,9 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
    * @description Generates a role identifier for contract-specific roles
    * @param roleName The role name enum value
    * @param roleTargetContract The target contract address
-   * @returns Promise<string> The generated role identifier
+   * @returns The generated role identifier
    */
-  generateRole(params: { roleName: number; roleTargetContract: IAddress }): Promise<string>
+  generateRole(params: { roleName: number; roleTargetContract: IAddress }): Promise<HexData>
 
   /**
    * @name guardianExpirations
@@ -37,30 +37,30 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
   /**
    * @name GOVERNOR_ROLE
    * @description Returns the governor role identifier
-   * @returns Promise<string> The governor role identifier
+   * @returns Promise<HexData> The governor role identifier
    */
-  GOVERNOR_ROLE(): Promise<string>
+  GOVERNOR_ROLE(): Promise<HexData>
 
   /**
    * @name SUPER_KEEPER_ROLE
    * @description Returns the super keeper role identifier
-   * @returns Promise<string> The super keeper role identifier
+   * @returns Promise<HexData> The super keeper role identifier
    */
-  SUPER_KEEPER_ROLE(): Promise<string>
+  SUPER_KEEPER_ROLE(): Promise<HexData>
 
   /**
    * @name DECAY_CONTROLLER_ROLE
    * @description Returns the decay controller role identifier
-   * @returns Promise<string> The decay controller role identifier
+   * @returns Promise<HexData> The decay controller role identifier
    */
-  DECAY_CONTROLLER_ROLE(): Promise<string>
+  DECAY_CONTROLLER_ROLE(): Promise<HexData>
 
   /**
    * @name ADMIRALS_QUARTERS_ROLE
    * @description Returns the admirals quarters role identifier
-   * @returns Promise<string> The admirals quarters role identifier
+   * @returns Promise<HexData> The admirals quarters role identifier
    */
-  ADMIRALS_QUARTERS_ROLE(): Promise<string>
+  ADMIRALS_QUARTERS_ROLE(): Promise<HexData>
 
   /** WRITE METHODS */
 
