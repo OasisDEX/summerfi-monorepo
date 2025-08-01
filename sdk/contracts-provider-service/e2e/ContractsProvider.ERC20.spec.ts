@@ -1,15 +1,15 @@
 import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IContractsProvider, IErc20Contract } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo, TokenAmount } from '@summerfi/sdk-common'
-import { Tenderly, type Fork } from '@summerfi/tenderly-utils'
+import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
 import { BlockchainClientProviderMock } from '@summerfi/testing-utils'
-import { ConfigurationProviderMock } from '@summerfi/configuration-provider-mock'
 import { ContractsProviderFactory } from '../src/implementation/ContractsProviderFactory'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
 
 describe.skip('Contracts Provider Service - ERC20 Contract', () => {
-  const configurationProvider = new ConfigurationProviderMock()
+  const configurationProvider = new ConfigurationProvider()
   const tenderly = new Tenderly()
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -26,7 +26,7 @@ describe.skip('Contracts Provider Service - ERC20 Contract', () => {
     value: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   })
 
-  let tenderlyFork: Fork
+  let tenderlyFork: Vnet
   let contractsProvider: IContractsProvider
   let erc20Contract: IErc20Contract
   let blockchainClientProvider: IBlockchainClientProvider
@@ -36,7 +36,7 @@ describe.skip('Contracts Provider Service - ERC20 Contract', () => {
 
   beforeEach(async () => {
     // Tenderly Fork
-    tenderlyFork = await tenderly.createFork({ chainInfo, atBlock })
+    tenderlyFork = await tenderly.createVnet({ chainInfo, atBlock })
 
     blockchainClientProvider = new BlockchainClientProviderMock({
       configProvider: configurationProvider,

@@ -1,15 +1,15 @@
 import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IContractsProvider, IFleetCommanderContract } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common'
-import { Tenderly, type Fork } from '@summerfi/tenderly-utils'
+import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
 import { BlockchainClientProviderMock } from '@summerfi/testing-utils'
-import { ConfigurationProviderMock } from '@summerfi/configuration-provider-mock'
 import { ContractsProviderFactory } from '../src/implementation/ContractsProviderFactory'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
 
 describe.skip('Contracts Provider Service - FleetCommander Contract', () => {
-  const configurationProvider = new ConfigurationProviderMock()
+  const configurationProvider = new ConfigurationProvider()
   const tenderly = new Tenderly()
 
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
@@ -18,7 +18,7 @@ describe.skip('Contracts Provider Service - FleetCommander Contract', () => {
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
 
-  let tenderlyFork: Fork
+  let tenderlyFork: Vnet
   let contractsProvider: IContractsProvider
   let fleetCommanderContract: IFleetCommanderContract
   let blockchainClientProvider: IBlockchainClientProvider
@@ -28,7 +28,7 @@ describe.skip('Contracts Provider Service - FleetCommander Contract', () => {
 
   beforeEach(async () => {
     // Tenderly Fork
-    tenderlyFork = await tenderly.createFork({ chainInfo, atBlock })
+    tenderlyFork = await tenderly.createVnet({ chainInfo, atBlock })
 
     blockchainClientProvider = new BlockchainClientProviderMock({
       configProvider: configurationProvider,

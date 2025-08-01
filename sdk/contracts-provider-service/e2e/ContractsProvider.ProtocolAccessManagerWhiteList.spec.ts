@@ -4,14 +4,14 @@ import {
   IProtocolAccessManagerWhiteListContract,
 } from '@summerfi/contracts-provider-common'
 import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common'
-import { Tenderly, type Fork } from '@summerfi/tenderly-utils'
+import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
 import { BlockchainClientProviderMock } from '@summerfi/testing-utils'
-import { ConfigurationProviderMock } from '@summerfi/configuration-provider-mock'
 import { ContractsProvider } from '../src/implementation/ContractsProvider'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
 
 describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract', () => {
-  const configurationProvider = new ConfigurationProviderMock()
+  const configurationProvider = new ConfigurationProvider()
   const tenderly = new Tenderly()
 
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
@@ -20,20 +20,28 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     value: '0x2D2824B0f437e72B9c9194b798DecA125ccCFFeB', // Mock ProtocolAccessManagerWhiteList address on Base
   })
 
-  let tenderlyFork: Fork
+  let tenderlyVnet: Vnet
+  let tenderlyVnetFork: Vnet
   let contractsProvider: IContractsProvider
   let protocolAccessManagerWhiteListContract: IProtocolAccessManagerWhiteListContract
   let blockchainClientProvider: IBlockchainClientProvider
 
   const atBlock = 'latest'
 
+  beforeAll(async () => {
+    tenderlyVnet = await tenderly.createVnet({ chainInfo, atBlock })
+  })
+  afterAll(async () => {
+    await tenderlyVnet.delete()
+  })
+
   beforeEach(async () => {
     // Tenderly Fork
-    tenderlyFork = await tenderly.createFork({ chainInfo, atBlock })
+    tenderlyVnetFork = await tenderlyVnet.fork()
 
     blockchainClientProvider = new BlockchainClientProviderMock({
       configProvider: configurationProvider,
-      rpcUrl: tenderlyFork.getRpc(),
+      rpcUrl: tenderlyVnet.getRpc(),
     })
 
     const tokensManager = TokensManagerFactory.newTokensManager({
@@ -56,8 +64,8 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     expect(protocolAccessManagerWhiteListContract).toBeDefined()
   })
 
-  afterEach(() => {
-    tenderlyFork.delete()
+  afterEach(async () => {
+    await tenderlyVnetFork.delete() // Clean up the fork after each test
   })
 
   it('should have correct address and chain', async () => {
