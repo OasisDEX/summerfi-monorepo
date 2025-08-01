@@ -44,14 +44,14 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
   let protocolAccessManagerWhiteListContract: IProtocolAccessManagerWhiteListContract
   let blockchainClientProvider: IBlockchainClientProvider
   let rpcUrl: string
-  let sendTransactionTool: SendTransactionTool
+  let governorSendTxTool: SendTransactionTool
 
   const atBlock = 'latest'
 
   beforeAll(async () => {
     tenderlyVnet = await tenderly.createVnet({ chainInfo, atBlock })
     rpcUrl = tenderlyVnet.getRpc()
-    sendTransactionTool = createSendTransactionTool({
+    governorSendTxTool = createSendTransactionTool({
       chainInfo,
       rpcUrl,
       signerPrivateKey,
@@ -165,7 +165,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     })
     expect(grantTxInfo).toBeDefined()
 
-    const grantStatus = await sendTransactionTool(grantTxInfo)
+    const grantStatus = await governorSendTxTool(grantTxInfo)
     expect(grantStatus).toBe('success')
 
     const isGovernor = await protocolAccessManagerWhiteListContract.hasRole({
@@ -178,7 +178,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
       account: testAddress,
     })
     expect(revokeTxInfo).toBeDefined()
-    const revokeStatus = await sendTransactionTool(revokeTxInfo)
+    const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
 
     const isRevoked = await protocolAccessManagerWhiteListContract.hasRole({
@@ -209,7 +209,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
       account: testAddress,
     })
     expect(grantTxInfo).toBeDefined()
-    const grantStatus = await sendTransactionTool(grantTxInfo)
+    const grantStatus = await governorSendTxTool(grantTxInfo)
     expect(grantStatus).toBe('success')
     const isWhitelistedPostGrant = await protocolAccessManagerWhiteListContract.hasRole({
       role: whitelistedRole,
@@ -223,7 +223,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
       account: testAddress,
     })
     expect(revokeTxInfo).toBeDefined()
-    const revokeStatus = await sendTransactionTool(revokeTxInfo)
+    const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
     const isWhitelistedPostRevocation = await protocolAccessManagerWhiteListContract.hasRole({
       role: whitelistedRole,
