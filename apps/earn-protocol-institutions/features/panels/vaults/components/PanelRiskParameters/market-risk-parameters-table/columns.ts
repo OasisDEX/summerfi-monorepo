@@ -1,4 +1,4 @@
-export const riskParametersColumns = [
+export const marketRiskParametersColumns = [
   {
     key: 'market',
     title: 'Market',

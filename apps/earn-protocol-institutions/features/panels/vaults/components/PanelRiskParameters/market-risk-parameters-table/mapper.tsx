@@ -1,16 +1,16 @@
 import { Button, Icon, TableCellText } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent, formatWithSeparators } from '@summerfi/app-utils'
 
-import { type RiskParameters } from './types'
+import { type MarketRiskParameters } from './types'
 
-import styles from './PanelRiskParameters.module.css'
+import styles from './../PanelRiskParameters.module.css'
 
-export const riskParametersMapper = ({
+export const marketRiskParametersMapper = ({
   rawData,
   onEdit,
 }: {
-  rawData: RiskParameters[]
-  onEdit: (item: RiskParameters) => void
+  rawData: MarketRiskParameters[]
+  onEdit: (item: MarketRiskParameters) => void
 }) => {
   return rawData.map((item) => {
     return {

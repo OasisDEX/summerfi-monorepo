@@ -92,55 +92,59 @@ export function Table<K extends string>({
     handleSort?.(update)
   }
 
+  const isTheadHidden = columns.every((column) => column.title === '')
+
   return (
     <div className={clsx(styles.tableWrapper, wrapperClassName)}>
       <table className={clsx(styles.table, tableClassName)}>
-        <thead>
-          <tr>
-            {columns
-              .filter((column) => !hiddenColumns?.includes(column.key))
-              .map((column) => (
-                <th key={column.key}>
-                  <div
-                    style={{
-                      display: 'flex',
-                    }}
-                  >
+        {!isTheadHidden && (
+          <thead>
+            <tr>
+              {columns
+                .filter((column) => !hiddenColumns?.includes(column.key))
+                .map((column) => (
+                  <th key={column.key}>
                     <div
                       style={{
                         display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--spacing-space-x-small)',
-                        width: 'fit-content',
-                        cursor: column.sortable ? 'pointer' : 'default',
-                        ...(sortConfig?.key === column.key && {
-                          color: 'var(--earn-protocol-secondary-100)',
-                        }),
-                        // overwrite hoover if not sortable
-                        ...(!column.sortable && {
-                          color: 'var(--earn-protocol-secondary-40)',
-                        }),
                       }}
-                      onClick={() => handleColumnSorting(column.key, column.sortable)}
                     >
-                      {column.title}
-                      {sortConfig?.key === column.key && column.sortable ? (
-                        <Icon
-                          iconName={
-                            sortConfig.direction === SortDirection.ASC
-                              ? 'chevron_up'
-                              : 'chevron_down'
-                          }
-                          size={10}
-                          color="rgba(119, 117, 118, 1)"
-                        />
-                      ) : null}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--spacing-space-x-small)',
+                          width: 'fit-content',
+                          cursor: column.sortable ? 'pointer' : 'default',
+                          ...(sortConfig?.key === column.key && {
+                            color: 'var(--earn-protocol-secondary-100)',
+                          }),
+                          // overwrite hoover if not sortable
+                          ...(!column.sortable && {
+                            color: 'var(--earn-protocol-secondary-40)',
+                          }),
+                        }}
+                        onClick={() => handleColumnSorting(column.key, column.sortable)}
+                      >
+                        {column.title}
+                        {sortConfig?.key === column.key && column.sortable ? (
+                          <Icon
+                            iconName={
+                              sortConfig.direction === SortDirection.ASC
+                                ? 'chevron_up'
+                                : 'chevron_down'
+                            }
+                            size={10}
+                            color="rgba(119, 117, 118, 1)"
+                          />
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                </th>
-              ))}
-          </tr>
-        </thead>
+                  </th>
+                ))}
+            </tr>
+          </thead>
+        )}
         <tbody>
           {!isLoading &&
             resolvedRows.map((row, rowIndex) => (

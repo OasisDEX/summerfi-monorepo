@@ -32,7 +32,7 @@
       align-items: center;
       width: 100%;
       flex-wrap: wrap;
-      margin-bottom: var(--spacing-space-x-large);
+      margin-bottom: var(--spacing-space-medium-large);
       padding-right: unset;
 
       @media (min-width: 768px) {

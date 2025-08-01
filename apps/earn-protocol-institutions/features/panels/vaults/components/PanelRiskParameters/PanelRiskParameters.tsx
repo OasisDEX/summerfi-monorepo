@@ -1,12 +1,15 @@
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
 
-import { riskParametersColumns } from './columns'
-import { riskParametersMapper } from './mapper'
-import { type RiskParameters } from './types'
+import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
+import { marketRiskParametersMapper } from './market-risk-parameters-table/mapper'
+import { type MarketRiskParameters } from './market-risk-parameters-table/types'
+import { vaultRiskParametersColumns } from './vault-risk-parameters-table/columns'
+import { vaultRiskParametersMapper } from './vault-risk-parameters-table/mapper'
+import { type VaultRiskParameters } from './vault-risk-parameters-table/types'
 
 import styles from './PanelRiskParameters.module.css'
 
-const dummyRows: RiskParameters[] = [
+const dummyRows: MarketRiskParameters[] = [
   {
     id: '1',
     market: 'Aave V3',
@@ -51,24 +54,58 @@ const dummyRows: RiskParameters[] = [
   },
 ]
 
+const vaultRiskParametersDummyRows: VaultRiskParameters[] = [
+  {
+    id: '1',
+    parameter: 'Vault Cap',
+    value: 1000000000,
+  },
+  {
+    id: '2',
+    parameter: 'Buffer',
+    value: 100,
+  },
+]
+
 export const PanelRiskParameters = () => {
-  const editHandler = (item: RiskParameters) => {
+  const marketEditHandler = (item: MarketRiskParameters) => {
     // TODO: Implement edit handler
     // eslint-disable-next-line no-console
     console.log(item)
   }
 
-  const rows = riskParametersMapper({ rawData: dummyRows, onEdit: editHandler })
+  const vaultEditHandler = (item: VaultRiskParameters) => {
+    // TODO: Implement edit handler
+    // eslint-disable-next-line no-console
+    console.log(item)
+  }
+
+  const marketRows = marketRiskParametersMapper({ rawData: dummyRows, onEdit: marketEditHandler })
+  const vaultRows = vaultRiskParametersMapper({
+    rawData: vaultRiskParametersDummyRows,
+    onEdit: vaultEditHandler,
+  })
 
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
       <Text as="h5" variant="h5">
-        Risk Parameters
+        Vault Risk Parameters
       </Text>
       <Card>
         <Table
-          rows={rows}
-          columns={riskParametersColumns}
+          rows={vaultRows}
+          columns={vaultRiskParametersColumns}
+          wrapperClassName={styles.tableWrapper}
+          tableClassName={styles.table}
+        />
+      </Card>
+      <Text as="h5" variant="h5">
+        Market Risk Parameters
+      </Text>
+      <Card>
+        <Table
+          rows={marketRows}
+          columns={marketRiskParametersColumns}
           wrapperClassName={styles.tableWrapper}
           tableClassName={styles.table}
         />

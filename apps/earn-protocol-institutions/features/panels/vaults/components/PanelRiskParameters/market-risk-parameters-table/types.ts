@@ -1,4 +1,4 @@
-export type RiskParameters = {
+export type MarketRiskParameters = {
   id: string
   market: string
   marketCap: number
