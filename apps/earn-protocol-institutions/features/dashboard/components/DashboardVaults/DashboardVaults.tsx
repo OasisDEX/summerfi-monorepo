@@ -19,6 +19,7 @@ import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview
 import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters'
 import { PanelRoleAdmin } from '@/features/panels/vaults/components/PanelRoleAdmin/PanelRoleAdmin'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
+import { type InstitutionData } from '@/types/institution-data'
 
 import styles from './DashboardVaults.module.css'
 
@@ -100,17 +101,10 @@ const panelItems = [
 ]
 
 interface DashboardVaultsProps {
-  vaultData: {
-    name: string
-    asset: string
-    nav: number
-    aum: number
-    fee: number
-    inception: number
-  }
+  vaultsData: InstitutionData['vaultsData']
 }
 
-export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
+export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultsData }) => {
   // to be rather stored as param in url
   const [activePanel, setActivePanel] = useState<DashboardVaultsPanel>(
     DashboardVaultsPanel.OVERVIEW,
@@ -118,22 +112,16 @@ export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
-  const vaultsOptions: DropdownRawOption[] = [
-    {
-      value: 'vault-1',
-      content: <DropdownContent>USDC-1</DropdownContent>,
-    },
-    {
-      value: 'vault-2',
-      content: <DropdownContent>USDC-2</DropdownContent>,
-    },
-    {
-      value: 'vault-3',
-      content: <DropdownContent>USDC-3</DropdownContent>,
-    },
-  ]
+  const vaultsOptions: DropdownRawOption[] = vaultsData.map((vault) => ({
+    value: vault.name,
+    content: <DropdownContent>{vault.name}</DropdownContent>,
+  }))
 
-  const [selectedVault, setSelectedVault] = useState<DropdownRawOption>(vaultsOptions[0])
+  const [selectedVaultOption, setSelectedVaultOption] = useState<DropdownRawOption>(
+    vaultsOptions[0],
+  )
+  const vaultData =
+    vaultsData.find((vault) => vault.name === selectedVaultOption.value) ?? vaultsData[0]
 
   const handlePanelChange = (panel: DashboardVaultsPanel) => {
     setActivePanel(panel)
@@ -156,7 +144,7 @@ export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
     [DashboardVaultsPanel.VAULT_EXPOSURE]: <PanelVaultExposure />,
     [DashboardVaultsPanel.ASSET_RELOCATION]: <PanelAssetRelocation />,
     [DashboardVaultsPanel.RISK_PARAMETERS]: <PanelRiskParameters />,
-    [DashboardVaultsPanel.ROLE_ADMIN]: <PanelRoleAdmin />,
+    [DashboardVaultsPanel.ROLE_ADMIN]: <PanelRoleAdmin roles={vaultData.roles} />,
     [DashboardVaultsPanel.CLIENT_ADMIN]: <PanelClientAdmin />,
     [DashboardVaultsPanel.FEE_REVENUE_ADMIN]: <PanelFeeRevenueAdmin />,
     [DashboardVaultsPanel.ACTIVITY]: <PanelActivity />,
@@ -168,13 +156,13 @@ export const DashboardVaults: FC<DashboardVaultsProps> = ({ vaultData }) => {
         <div className={styles.dashboardVaultsPanelWrapper}>
           <Dropdown
             options={vaultsOptions}
-            dropdownValue={selectedVault}
-            onChange={setSelectedVault}
+            dropdownValue={selectedVaultOption}
+            onChange={setSelectedVaultOption}
             dropdownWrapperClassName={styles.dropdownWrapper}
             dropdownSelectedClassName={styles.dropdownSelected}
             asCard
           >
-            {selectedVault.content}
+            {selectedVaultOption.content}
           </Dropdown>
           <PanelNavigation
             isMobile={isMobile}

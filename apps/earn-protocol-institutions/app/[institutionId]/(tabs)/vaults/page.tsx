@@ -9,5 +9,5 @@ export default async function InstitutionVaultsTab({
   const { institutionId } = await params
   const institution = await getInstitutionData(institutionId)
 
-  return <DashboardVaults vaultData={institution.vaultData} />
+  return <DashboardVaults vaultsData={institution.vaultsData} />
 }

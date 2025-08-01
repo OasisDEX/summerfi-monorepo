@@ -1,41 +1,25 @@
+import { type FC, useCallback, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { InstitutionRoles } from '@summerfi/app-types'
+
+import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
 import { roleAdminMapper } from './mapper'
-import { type RoleAdmin } from './types'
 
 import styles from './PanelRoleAdmin.module.css'
 
-const dummyRows: RoleAdmin[] = [
-  {
-    id: '1',
-    role: InstitutionRoles.GENERAL_ADMIN,
-    address: '0x1234567890123456789012345678901234567890',
-    lastUpdated: 1735689600000,
-  },
-  {
-    id: '2',
-    role: InstitutionRoles.RISK_MANAGER,
-    address: '0x1234567890123456789012345678901234567890',
-    lastUpdated: 1735689600000,
-  },
-  {
-    id: '3',
-    role: InstitutionRoles.MARKET_ALLOCATOR,
-    address: '0x1234567890123456789012345678901234567890',
-    lastUpdated: 1735689600000,
-  },
-]
+interface PanelRoleAdminProps {
+  roles: InstitutionVaultRoles
+}
 
-export const PanelRoleAdmin = () => {
-  const editHandler = (item: RoleAdmin) => {
+export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
+  const onEdit = useCallback((item: InstitutionVaultRole) => {
     // TODO: Implement edit handler
     // eslint-disable-next-line no-console
     console.log(item)
-  }
+  }, [])
 
-  const rows = roleAdminMapper({ rawData: dummyRows, onEdit: editHandler })
+  const rows = useMemo(() => roleAdminMapper({ roles, onEdit }), [roles, onEdit])
 
   return (
     <Card variant="cardSecondary" className={styles.panelRoleAdminWrapper}>
