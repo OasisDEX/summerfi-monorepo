@@ -41,6 +41,11 @@ export const InstitutionsLoginPageClient = ({ signatureCookie }: { signatureCook
         <div
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '30px' }}
         >
+          <Text variant="p3" style={{ textAlign: 'center' }}>
+            connected as
+            <br />
+            <span style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>{userWalletAddress}</span>
+          </Text>
           <Text variant="h4">please sign message</Text>
           {signatureError && (
             <Text variant="p2" style={{ color: 'red' }}>
