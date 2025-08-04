@@ -1,0 +1,6 @@
+.dashboardVaultsPanelWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+}

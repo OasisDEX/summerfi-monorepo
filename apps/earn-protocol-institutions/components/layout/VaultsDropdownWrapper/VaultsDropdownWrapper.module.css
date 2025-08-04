@@ -1,0 +1,7 @@
+.dropdownWrapper {
+  width: 100%;
+
+  .dropdownSelected {
+    width: 100%;
+  }
+}
