@@ -17,6 +17,7 @@ import {
   TitleWithSelect,
   useLocalConfig,
   useMobileCheck,
+  useUserWallet,
   VaultCard,
   WithArrow,
 } from '@summerfi/app-earn-ui'
@@ -46,7 +47,6 @@ import { MigrationLandingPagePositionCard } from '@/features/migration/component
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
 import { revalidateMigrationData } from '@/helpers/revalidation-handlers'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './MigrationLandingPageView.module.css'
 

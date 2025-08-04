@@ -11,7 +11,9 @@ import {
   Text,
   type TextClassNames,
   Tooltip,
+  useClientChainId,
   useIsIframe,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   formatAddress,
@@ -19,9 +21,9 @@ import {
   sdkChainIdToHumanNetwork,
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
+import { useRouter } from 'next/navigation'
 
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useUserWallet } from '@/hooks/use-user-wallet'
+import { deleteLoginCookie } from '@/helpers/handle-login-cookie'
 
 import walletLabelStyles from './WalletLabel.module.css'
 
@@ -191,6 +193,7 @@ export default function WalletLabel({
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const { clientChainId } = useClientChainId()
+  const router = useRouter()
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
@@ -201,7 +204,17 @@ export default function WalletLabel({
   const isIframe = useIsIframe()
 
   const handleLogout = () => {
-    logout()
+    deleteLoginCookie()
+      .then((response) => {
+        if (response.ok) {
+          logout()
+          router.replace('/')
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error deleting login cookie:', error)
+      })
   }
 
   // removes dark mode from the document
@@ -280,7 +293,7 @@ export default function WalletLabel({
   if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
-        <LogoutButton onLogout={handleLogout} />
+        <LogoutButton onLogout={handleLogout} variant={buttonVariant} />
       </div>
     )
   }

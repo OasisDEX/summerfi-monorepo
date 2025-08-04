@@ -2,13 +2,12 @@
 
 import { type FC, useEffect } from 'react'
 import { useAuthModal } from '@account-kit/react'
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 import WalletIconBeachClub from '@/public/img/misc/wallet_icon_beach_club.svg'
 import WalletIcon from '@/public/img/misc/wallet_icon_colorful.svg'
 

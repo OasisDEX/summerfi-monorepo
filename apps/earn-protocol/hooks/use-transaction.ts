@@ -22,7 +22,9 @@ import {
   getVaultPositionUrl,
   getVaultUrl,
   SDKChainIdToAAChainMap,
+  useClientChainId,
   useIsIframe,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
@@ -52,9 +54,6 @@ import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-
-import { useUserWallet } from './use-user-wallet'
 
 type UseTransactionParams = {
   vault: SDKVaultishType

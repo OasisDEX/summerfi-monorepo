@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -8,6 +8,7 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Expander } from '@/components/atoms/Expander/Expander'
 import { Text } from '@/components/atoms/Text/Text'
+import { MobileDrawer } from '@/components/molecules/MobileDrawer/MobileDrawer'
 
 import styles from './PanelNavigation.module.css'
 
@@ -51,7 +52,7 @@ interface PanelNavigationItem {
   }
 }
 
-interface PanelNavigationProps {
+export interface PanelNavigationProps {
   navigation?: {
     id: string
     label?: ReactNode
@@ -59,11 +60,29 @@ interface PanelNavigationProps {
     expanded?: boolean
   }[]
   staticItems?: PanelNavigationItem[]
+  isMobile?: boolean
 }
 
-export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticItems }) => {
-  return (
+export const PanelNavigation: FC<PanelNavigationProps> = ({
+  navigation,
+  staticItems,
+  isMobile,
+}) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const content = (
     <Card variant="cardSecondary" className={styles.panelNavigationWrapper}>
+      {isMobile && (
+        <div className={styles.panelNavigationHeader}>
+          <Button
+            variant="unstyled"
+            onClick={() => setIsOpen((prev) => !prev)}
+            className={styles.headerButton}
+          >
+            <Text variant="p1semi">. . .</Text>
+          </Button>
+        </div>
+      )}
       {navigation &&
         navigation.length > 0 &&
         navigation.map((navItem) =>
@@ -130,5 +149,13 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({ navigation, staticIt
         </>
       )}
     </Card>
+  )
+
+  return isMobile ? (
+    <MobileDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} variant="sidebar" height="70vh">
+      {content}
+    </MobileDrawer>
+  ) : (
+    content
   )
 }

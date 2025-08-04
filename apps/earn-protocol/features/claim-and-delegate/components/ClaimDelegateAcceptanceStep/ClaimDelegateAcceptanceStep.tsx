@@ -6,7 +6,9 @@ import {
   Card,
   SDKChainIdToAAChainMap,
   Text,
+  useClientChainId,
   useMobileCheck,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -25,10 +27,8 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.css'

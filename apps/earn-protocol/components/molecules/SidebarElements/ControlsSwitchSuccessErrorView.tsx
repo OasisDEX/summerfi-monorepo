@@ -7,6 +7,7 @@ import {
   Risk,
   SkeletonLine,
   Text,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type RiskType,
@@ -22,7 +23,6 @@ import clsx from 'clsx'
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 import { trackVaultSwitched } from '@/helpers/mixpanel'
 import { usePosition } from '@/hooks/use-position'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import controlsSwitchSuccessErrorViewStyles from './ControlsSwitchSuccessErrorView.module.css'
 

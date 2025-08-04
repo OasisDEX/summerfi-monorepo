@@ -1,0 +1,22 @@
+.panelRiskParametersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .onEdit {
+    color: var(--earn-protocol-primary-100);
+
+    &:hover {
+      opacity: 0.6;
+      transition: opacity 0.2s ease-in-out;
+    }
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+
+    .table {
+      min-width: 600px;
+    }
+  }
+}

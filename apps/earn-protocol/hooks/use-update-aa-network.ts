@@ -2,7 +2,7 @@
 import { useEffect } from 'react'
 import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { useChain } from '@account-kit/react'
-import { customAAKitSonicConfig } from '@summerfi/app-earn-ui'
+import { customAAKitSonicConfig, useClientChainId } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -12,8 +12,6 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 import { type Chain } from 'viem'
-
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 
 const networkIdsToAccountKitChainsMap: {
   [key in SupportedNetworkIds]: Chain

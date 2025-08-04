@@ -18,6 +18,7 @@ import {
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
+  useUserWallet,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -64,7 +65,6 @@ import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 

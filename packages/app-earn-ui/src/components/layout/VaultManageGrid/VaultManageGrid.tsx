@@ -10,6 +10,8 @@ import {
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  formatFiatBalance,
+  formatWithSeparators,
   sdkNetworkToHumanNetwork,
   supportedSDKNetwork,
   ten,
@@ -250,7 +252,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 value={
                   <Tooltip
                     tooltip={
-                      <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatCryptoBalance(netValueUSD)}</>
+                      <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatFiatBalance(netValueUSD)}</>
                     }
                     tooltipWrapperStyles={{
                       maxWidth: '455px',
@@ -264,14 +266,17 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 }
                 subValue={
                   <Tooltip
-                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatCryptoBalance(netEarningsUSD)}</>}
+                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
                     tooltipWrapperStyles={{
                       maxWidth: '455px',
                     }}
                   >
                     <>
                       Earned:&nbsp;
-                      {formatCryptoBalance(netEarnings)}&nbsp;
+                      {formatWithSeparators(netEarnings, {
+                        precision: 2,
+                      })}
+                      &nbsp;
                       {getDisplayToken(vault.inputToken.symbol)}
                     </>
                   </Tooltip>

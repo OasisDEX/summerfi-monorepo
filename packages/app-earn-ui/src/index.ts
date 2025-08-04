@@ -70,6 +70,7 @@ export { TableHeadWithTooltip } from './components/molecules/TableHeadWithToolti
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
 export { TabBar } from './components/molecules/TabBar/TabBar'
+export { TabBarSimple } from './components/molecules/TabBar/TabBarSimple'
 export { LoadingSpinner } from './components/molecules/LoadingSpinner/LoadingSpinner'
 export {
   SlideCarousel,
@@ -158,6 +159,7 @@ export {
 } from './components/organisms/LandingPageContent/EnhancedRiskManagement'
 export { Audits } from './components/organisms/LandingPageContent/Audits'
 export { PanelNavigation } from './components/organisms/PanelNavigation/PanelNavigation'
+export type { PanelNavigationProps } from './components/organisms/PanelNavigation/PanelNavigation'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
@@ -177,6 +179,8 @@ export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 export { useHoldAlt } from './hooks/use-hold-alt'
 export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
+export { useClientChainId } from './hooks/use-client-chain-id'
+export { useUserWallet } from './hooks/use-user-wallet'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'
@@ -255,7 +259,6 @@ export {
   customAAKitSonicConfig,
   SDKChainIdToAAChainMap,
   getAccountKitConfig,
-  accountType,
-  overridesGasSponsorship,
 } from './account-kit/config'
+export { accountType, overridesGasSponsorship } from './account-kit/constants'
 export { AccountKitAccountType } from './account-kit/types'
