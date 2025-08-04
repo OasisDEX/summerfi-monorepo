@@ -15,6 +15,7 @@ export type InstitutionData = {
   thirtyDayAvgApy: number
   allTimePerformance: number
   vaultsData: {
+    id: string
     name: string
     asset: string
     nav: number

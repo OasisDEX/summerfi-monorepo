@@ -1,3 +1,3 @@
 export default function InstitutionVaultsLoadingTab() {
-  return <div>Loading...</div>
+  return <div>InstitutionVaultsLoadingTab</div>
 }

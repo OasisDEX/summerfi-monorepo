@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
 
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'

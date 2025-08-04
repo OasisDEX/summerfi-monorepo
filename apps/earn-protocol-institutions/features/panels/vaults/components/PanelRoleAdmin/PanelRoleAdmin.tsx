@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useCallback, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
 

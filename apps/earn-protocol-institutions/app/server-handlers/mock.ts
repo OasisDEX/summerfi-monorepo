@@ -32,7 +32,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0112,
     vaultsData: [
       {
-        name: 'USDC-1',
+        id: 'acme-usdc-vault',
+        name: 'ACME USDC Prime',
         asset: 'USDC',
         nav: 1.153,
         aum: 1792000000,
@@ -41,7 +42,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'USDC-2',
+        id: 'acme-usdc-vault-2',
+        name: 'ACME USDC Secondary',
         asset: 'USDC',
         nav: 1.253,
         aum: 1692000000,
@@ -60,7 +62,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0145,
     vaultsData: [
       {
-        name: 'USDT-Prime',
+        id: 'nova-usdt-vault',
+        name: 'Nova USDT Prime',
         asset: 'USDT',
         nav: 1.087,
         aum: 2200000000,
@@ -69,7 +72,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'USDT-2',
+        id: 'nova-usdt-vault-2',
+        name: 'Nova USDT Growth',
         asset: 'USDT',
         nav: 1.087,
         aum: 2200000000,
@@ -88,7 +92,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0101,
     vaultsData: [
       {
-        name: 'DAI-Stable',
+        id: 'zenith-dai-stable',
+        name: 'Zenith DAI Stable',
         asset: 'DAI',
         nav: 1.021,
         aum: 1450000000,
@@ -97,7 +102,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'DAI-2',
+        id: 'zenith-dai-2',
+        name: 'Zenith DAI Alpha',
         asset: 'DAI',
         nav: 1.021,
         aum: 1450000000,
@@ -116,7 +122,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0178,
     vaultsData: [
       {
-        name: 'ETH-Growth',
+        id: 'quantum-eth-growth',
+        name: 'Quantum ETH Growth',
         asset: 'ETH',
         nav: 2.45,
         aum: 2750000000,
@@ -125,7 +132,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'ETH-2',
+        id: 'quantum-eth-2',
+        name: 'Quantum ETH Yield',
         asset: 'ETH',
         nav: 2.45,
         aum: 2750000000,
@@ -144,7 +152,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0084,
     vaultsData: [
       {
-        name: 'WBTC-Core',
+        id: 'orbit-wbtc-core',
+        name: 'Orbit WBTC Core',
         asset: 'WBTC',
         nav: 1.998,
         aum: 1320000000,
@@ -153,7 +162,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'FRAX-2',
+        id: 'orbit-frax-2',
+        name: 'Orbit FRAX Stable',
         asset: 'FRAX',
         nav: 1.112,
         aum: 2020000000,
@@ -172,7 +182,8 @@ export const institutionsMockList: InstitutionData[] = [
     allTimePerformance: 0.0129,
     vaultsData: [
       {
-        name: 'FRAX-Yield',
+        id: 'aether-frax-yield',
+        name: 'Aether FRAX Yield',
         asset: 'FRAX',
         nav: 1.112,
         aum: 2020000000,
@@ -181,7 +192,8 @@ export const institutionsMockList: InstitutionData[] = [
         roles: dummyRoles,
       },
       {
-        name: 'FRAX-2',
+        id: 'aether-frax-2',
+        name: 'Aether FRAX Enhanced',
         asset: 'FRAX',
         nav: 1.112,
         aum: 2020000000,
