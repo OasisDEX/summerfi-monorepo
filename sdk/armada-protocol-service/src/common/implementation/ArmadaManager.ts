@@ -10,7 +10,7 @@ import {
   type IArmadaManagerUtils,
   type IArmadaManagerMerklRewards,
   type IArmadaManagerAdmin,
-  setTestDeployment,
+  type IArmadaManagerAccessControl,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -28,6 +28,7 @@ import { ArmadaManagerVaults } from './ArmadaManagerVaults'
 import { ArmadaManagerUtils } from './ArmadaManagerUtils'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
+import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
@@ -43,6 +44,7 @@ export class ArmadaManager implements IArmadaManager {
   utils: IArmadaManagerUtils
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
+  accessControl: IArmadaManagerAccessControl
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
@@ -79,11 +81,6 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-
-    const summerDeployment = this._configProvider.getConfigurationItem({
-      name: 'SUMMER_DEPLOYMENT_CONFIG',
-    })
-    setTestDeployment(summerDeployment)
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -155,6 +152,12 @@ export class ArmadaManager implements IArmadaManager {
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
+    })
+    this.accessControl = new ArmadaManagerAccessControl({
+      configProvider: this._configProvider,
+      contractsProvider: this._contractsProvider,
+      blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
     })
   }
 }

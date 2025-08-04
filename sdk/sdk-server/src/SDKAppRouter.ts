@@ -68,6 +68,12 @@ import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMer
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { authorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/authorizeAsMerklRewardsOperatorTx'
 import { isAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperator'
+import { hasGeneralRole } from './armada-protocol-handlers/access-control/hasGeneralRole'
+import { hasContractSpecificRole } from './armada-protocol-handlers/access-control/hasContractSpecificRole'
+import { grantGeneralRole } from './armada-protocol-handlers/access-control/grantGeneralRole'
+import { revokeGeneralRole } from './armada-protocol-handlers/access-control/revokeGeneralRole'
+import { grantContractSpecificRole } from './armada-protocol-handlers/access-control/grantContractSpecificRole'
+import { revokeContractSpecificRole } from './armada-protocol-handlers/access-control/revokeContractSpecificRole'
 
 /**
  * Server
@@ -178,6 +184,14 @@ export const sdkAppRouter = router({
       forceRebalance: forceRebalance,
       updateRebalanceCooldown: updateRebalanceCooldown,
       emergencyShutdown: emergencyShutdown,
+    },
+    accessControl: {
+      hasGeneralRole: hasGeneralRole,
+      hasContractSpecificRole: hasContractSpecificRole,
+      grantGeneralRole: grantGeneralRole,
+      revokeGeneralRole: revokeGeneralRole,
+      grantContractSpecificRole: grantContractSpecificRole,
+      revokeContractSpecificRole: revokeContractSpecificRole,
     },
   },
 })

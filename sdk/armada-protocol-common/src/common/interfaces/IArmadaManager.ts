@@ -5,6 +5,7 @@ import type { IArmadaManagerBridge } from './IArmadaManagerBridge'
 import type { IArmadaManagerVaults } from './IArmadaManagerVaults'
 import type { IArmadaManagerUtils } from './IArmadaManagerUtils'
 import type { IArmadaManagerAdmin } from './IArmadaManagerAdmin'
+import type { IArmadaManagerAccessControl } from './IArmadaManagerAccessControl'
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
@@ -20,4 +21,5 @@ export interface IArmadaManager {
   utils: IArmadaManagerUtils
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
+  accessControl: IArmadaManagerAccessControl
 }

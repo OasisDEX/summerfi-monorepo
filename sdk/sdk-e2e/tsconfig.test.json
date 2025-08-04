@@ -30,7 +30,8 @@
       "@summerfi/tokens-service": ["../tokens-service/src/index.ts"],
       "@summerfi/serverless-shared": ["../../packages/serverless-shared/src/index.ts"],
       "@summerfi/blockchain-client-provider": ["../blockchain-client-provider/src/index.ts"],
-      "@summerfi/contracts-provider-service": ["../contracts-provider-service/src/index.ts"]
+      "@summerfi/contracts-provider-service": ["../contracts-provider-service/src/index.ts"],
+      "@summerfi/contracts-provider-common": ["../contracts-provider-common/src/index.ts"]
     }
   },
   "include": ["tests/**/*.ts"],

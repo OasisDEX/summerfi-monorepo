@@ -1,5 +1,6 @@
 import { IArmadaManagerAdminClient } from './IArmadaManagerAdminClient'
 import { IArmadaManagerUsersClient } from './IArmadaManagerUsersClient'
+import { IArmadaManagerClientAccessControl } from './IArmadaManagerClientAccessControl'
 
 /**
  * @interface IArmadaManagerClient
@@ -11,4 +12,6 @@ export interface IArmadaManagerClient {
   users: IArmadaManagerUsersClient
   /** Admin API for the Armada protocol - consolidated administrative operations */
   admin: IArmadaManagerAdminClient
+  /** Access Control API for the Armada protocol - role-based access control operations */
+  accessControl: IArmadaManagerClientAccessControl
 }

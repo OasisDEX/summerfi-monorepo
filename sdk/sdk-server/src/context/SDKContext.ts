@@ -5,7 +5,7 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
-import { IArmadaManager } from '@summerfi/armada-protocol-common'
+import { IArmadaManager, setTestDeployment } from '@summerfi/armada-protocol-common'
 import {
   ArmadaManagerFactory,
   DeploymentProvider,
@@ -68,6 +68,12 @@ const quickHashCode = (str: string): string => {
 
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
+  const configProvider = new ConfigurationProvider()
+  const summerDeployment = configProvider.getConfigurationItem({
+    name: 'SUMMER_DEPLOYMENT_CONFIG',
+  })
+  setTestDeployment(summerDeployment)
+
   let deploymentProviderConfig: DeploymentProviderConfig
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
@@ -85,7 +91,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfig)
 
-  const configProvider = new ConfigurationProvider()
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
