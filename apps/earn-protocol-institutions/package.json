@@ -15,10 +15,10 @@
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
-    "@account-kit/core": "^4.36.1",
-    "@account-kit/infra": "^4.36.1",
-    "@account-kit/react": "^4.36.1",
-    "@account-kit/signer": "^4.36.1",
+    "@account-kit/core": "^4.52.2",
+    "@account-kit/infra": "^4.52.2",
+    "@account-kit/react": "^4.52.2",
+    "@account-kit/signer": "^4.52.2",
     "@loadable/component": "^5.16.4",
     "@number-flow/react": "^0.5.10",
     "@summerfi/app-earn-ui": "workspace:*",
