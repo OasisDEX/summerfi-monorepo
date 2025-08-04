@@ -165,11 +165,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
 
   const sumrRewards = useSumrRewardsToDate(position)
 
-  console.log({
-    netEarnings: netEarnings.toString(),
-    netEarningsUSD: netEarningsUSD.toString(),
-  })
-
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
