@@ -107,7 +107,7 @@ export class TransactionUtils {
 
   async sendTransactionWithReceipt(params: {
     transaction: Transaction
-    confirmations: number | undefined
+    confirmations?: number
   }): Promise<TransactionReceipt> {
     const transactionHash = await this._sendTransaction(params)
 
