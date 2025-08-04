@@ -71,11 +71,46 @@ export default defineConfig(({ mode }) => {
           return id
         },
       }),
+      {
+        name: 'optimize-exports',
+        generateBundle(_, bundle) {
+          for (const chunk of Object.values(bundle)) {
+            if (chunk.type === 'chunk' && chunk.fileName === 'index.js') {
+              // Extract import/export pattern and convert to direct re-exports
+              const importRegex = /import \{ ([^}]+) \} from "([^"]+)";/g
+              const exportRegex = /export \{[^}]+\};/g
+
+              const imports = new Map()
+              let match
+
+              // Collect all imports
+              while ((match = importRegex.exec(chunk.code)) !== null) {
+                const [, exports, path] = match
+                exports.split(',').forEach((exp) => {
+                  const [original, alias] = exp.trim().split(' as ')
+                  imports.set(alias?.trim() || original.trim(), { original: original.trim(), path })
+                })
+              }
+
+              // Replace with direct re-exports
+              chunk.code = chunk.code.replace(importRegex, '')
+              chunk.code = chunk.code.replace(exportRegex, '')
+
+              // Add direct exports
+              const directExports = Array.from(imports.entries())
+                .map(([alias, { original, path }]) => `export { ${original} } from "${path}";`)
+                .join('\n')
+
+              chunk.code = directExports + '\n' + chunk.code
+            }
+          }
+        },
+      },
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
     build: {
-      emptyOutDir: false,
+      emptyOutDir: true,
       cssCodeSplit: true,
       sourcemap: false,
       cssMinify: notDev,
@@ -118,6 +153,7 @@ export default defineConfig(({ mode }) => {
           'embla-carousel',
           '@number-flow/react',
           'boring-avatars',
+          'react-animate-height',
         ],
         input: Object.fromEntries(
           glob
