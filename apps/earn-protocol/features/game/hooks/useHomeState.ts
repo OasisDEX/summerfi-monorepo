@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
 
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { playGameStartSound } from '@/features/game/helpers/audioHelpers'
@@ -9,7 +10,6 @@ import {
 } from '@/features/game/helpers/gameHelpers'
 import { startMusic, stopMusic } from '@/features/game/helpers/musicHelper'
 import { type CardData, type GameOverParams } from '@/features/game/types'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 export function useHomeState() {
   const { setRunningGame } = useSystemConfig()

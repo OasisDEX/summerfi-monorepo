@@ -1,8 +1,6 @@
 'use client'
-import { Card, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Text, useUserWallet, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrNotTransferable.module.css'
 

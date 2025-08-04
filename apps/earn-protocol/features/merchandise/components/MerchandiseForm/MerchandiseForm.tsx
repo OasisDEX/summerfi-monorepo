@@ -11,6 +11,7 @@ import {
   INTERNAL_LINKS,
   LoadingSpinner,
   Text,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
@@ -29,7 +30,6 @@ import {
 } from '@/features/merchandise/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { merchandiseFormFields } from './fields'
 import { areAllMerchandiseFormFieldsFilled } from './helpers'

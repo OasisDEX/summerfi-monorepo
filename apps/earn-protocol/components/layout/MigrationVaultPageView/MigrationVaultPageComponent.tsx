@@ -11,9 +11,11 @@ import {
   type SidebarProps,
   SUMR_CAP,
   useAmountWithSwap,
+  useClientChainId,
   useForecast,
   useLocalConfig,
   useMobileCheck,
+  useUserWallet,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -47,10 +49,8 @@ import { migrationReducer, migrationState } from '@/features/migration/state'
 import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType

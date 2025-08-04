@@ -11,7 +11,9 @@ import {
   Text,
   type TextClassNames,
   Tooltip,
+  useClientChainId,
   useIsIframe,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   formatAddress,
@@ -19,9 +21,6 @@ import {
   sdkChainIdToHumanNetwork,
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
-
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import walletLabelStyles from './WalletLabel.module.css'
 

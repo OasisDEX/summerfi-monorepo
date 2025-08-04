@@ -1,7 +1,12 @@
 import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { SDKChainIdToAAChainMap, SUMR_CAP, useLocalConfig } from '@summerfi/app-earn-ui'
+import {
+  SDKChainIdToAAChainMap,
+  SUMR_CAP,
+  useClientChainId,
+  useLocalConfig,
+} from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -21,7 +26,6 @@ import {
   ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 

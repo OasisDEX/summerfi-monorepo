@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
-import { getVaultPositionUrl, getVaultUrl } from '@summerfi/app-earn-ui'
+import { getVaultPositionUrl, getVaultUrl, useUserWallet } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
-
-import { useUserWallet } from './use-user-wallet'
 
 // Minimum amount to consider a position to be "open"
 const minAmount = new BigNumber(0.01)

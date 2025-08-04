@@ -5,11 +5,11 @@ import {
   type SumrNetApyConfig,
   sumrNetApyConfigCookieName,
   useLocalConfig,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
 import { trackInputChange } from '@/helpers/mixpanel'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 /**
  * Custom hook to manage SUMR Net APY configuration.

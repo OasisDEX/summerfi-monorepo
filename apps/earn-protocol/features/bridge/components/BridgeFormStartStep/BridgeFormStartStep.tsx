@@ -7,6 +7,7 @@ import {
   SUMR_CAP,
   useAmount,
   useLocalConfig,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
@@ -38,7 +39,6 @@ import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 interface BridgeFormStartStepProps {
   dispatch: Dispatch<BridgeReducerAction>

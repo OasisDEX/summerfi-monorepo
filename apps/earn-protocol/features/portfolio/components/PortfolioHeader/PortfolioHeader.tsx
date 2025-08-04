@@ -8,6 +8,7 @@ import {
   LoadableAvatar,
   SkeletonLine,
   Text,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import {
@@ -26,7 +27,6 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioHeader.module.css'
 

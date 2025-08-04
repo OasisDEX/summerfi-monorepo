@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+import { accountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
 
 import { getLoginSignature } from '@/helpers/get-login-signature'
 import { setLoginCookie } from '@/helpers/handle-login-cookie'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 export const useSignUp = () => {
   const [signatureError, setSignatureError] = useState<string | null>(null)

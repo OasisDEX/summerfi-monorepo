@@ -9,13 +9,13 @@ import {
   SkeletonLine,
   Text,
   useMobileCheck,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,

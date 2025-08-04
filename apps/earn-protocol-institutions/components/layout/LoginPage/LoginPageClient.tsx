@@ -1,10 +1,9 @@
 'use client'
 
-import { Button, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Button, SkeletonLine, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 
 import { useSignUp } from '@/hooks/use-sign-up'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,

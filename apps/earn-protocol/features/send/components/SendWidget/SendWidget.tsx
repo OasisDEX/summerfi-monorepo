@@ -8,6 +8,7 @@ import {
   Sidebar,
   type SidebarProps,
   useAmount,
+  useClientChainId,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import {
@@ -34,7 +35,6 @@ import { useSendTransaction } from '@/features/send/hooks/use-send-transaction'
 import { sendReducer, sendState } from '@/features/send/state'
 import { SendStep, SendTxStatuses } from '@/features/send/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'

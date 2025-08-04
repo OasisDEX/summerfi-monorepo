@@ -11,6 +11,7 @@ import {
   LoadingSpinner,
   Text,
   Tooltip,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -18,7 +19,6 @@ import Link from 'next/link'
 import { getMessageToSign } from '@/features/game/helpers/gameHelpers'
 import { type GameOverParams } from '@/features/game/types'
 import { trackGameFinished } from '@/helpers/mixpanel'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import Card from './Card'
 

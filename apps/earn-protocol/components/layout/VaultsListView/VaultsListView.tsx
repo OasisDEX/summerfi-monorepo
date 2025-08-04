@@ -17,6 +17,7 @@ import {
   useLocalConfig,
   useMobileCheck,
   useTokenSelector,
+  useUserWallet,
   VaultCard,
   VaultGrid,
   VaultSimulationForm,
@@ -52,7 +53,6 @@ import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultsListViewStyles from './VaultsListView.module.css'
 

@@ -1,10 +1,9 @@
 'use client'
 import { type FC } from 'react'
-import { BigGradientBox, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { BigGradientBox, Text, useUserWallet, WithArrow } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { useUserWallet } from '@/hooks/use-user-wallet'
 import pillars from '@/public/img/sumr/pillars.svg'
 import rewardingUsage from '@/public/img/sumr/rewarding_usage.svg'
 

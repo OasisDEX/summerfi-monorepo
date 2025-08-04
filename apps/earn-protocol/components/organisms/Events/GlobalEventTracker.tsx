@@ -2,11 +2,10 @@
 
 import { useLayoutEffect } from 'react'
 import { useAccount, useChain, useUser } from '@account-kit/react'
-import { AccountKitAccountType, accountType } from '@summerfi/app-earn-ui'
+import { AccountKitAccountType, accountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { trackAccountChange, trackPageViewTimed } from '@/helpers/mixpanel'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 export const GlobalEventTracker = () => {
   const path = usePathname()

@@ -9,13 +9,13 @@ import {
   Icon,
   INTERNAL_LINKS,
   Text,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './BeachClubHowItWorks.module.css'
 

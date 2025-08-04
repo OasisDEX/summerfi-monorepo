@@ -9,6 +9,7 @@ import {
   SUMR_CAP,
   Text,
   Tooltip,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
@@ -28,7 +29,6 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { trackButtonClick } from '@/helpers/mixpanel'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioRewardsCards.module.css'
 

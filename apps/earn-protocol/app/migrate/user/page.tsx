@@ -1,9 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
 import { redirect } from 'next/navigation'
-
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const MigrationRedirectUserPage = () => {
   /**

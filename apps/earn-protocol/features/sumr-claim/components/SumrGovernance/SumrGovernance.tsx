@@ -6,6 +6,7 @@ import {
   EXTERNAL_LINKS,
   MarketingPointsList,
   Text,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
@@ -18,7 +19,6 @@ import { SumrGovernanceList } from '@/features/sumr-claim/components/SumrGoverna
 import { SumrOwnership } from '@/features/sumr-claim/components/SumrOwnership/SumrOwnership'
 import { SumrSupplySchedule } from '@/features/sumr-claim/components/SumrSupplySchedule/SumrSupplySchedule'
 import { isOutsideLink } from '@/helpers/is-outside-link'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './SumrGovernance.module.css'
 
