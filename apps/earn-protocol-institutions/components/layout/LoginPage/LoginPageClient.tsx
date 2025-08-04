@@ -1,10 +1,19 @@
 'use client'
 
-import { Button, Text } from '@summerfi/app-earn-ui'
+import { Button, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import dynamic from 'next/dynamic'
 
-import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { useSignUp } from '@/hooks/use-sign-up'
 import { useUserWallet } from '@/hooks/use-user-wallet'
+
+const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
+  ssr: false,
+  loading: () => (
+    <Button variant="secondarySmall">
+      <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
+    </Button>
+  ),
+})
 
 export const InstitutionsLoginPageClient = ({ signatureCookie }: { signatureCookie?: string }) => {
   const { handleSignMessage, signatureError } = useSignUp()
