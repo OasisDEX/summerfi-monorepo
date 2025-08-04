@@ -232,6 +232,9 @@ importers:
       react:
         specifier: 19.1.0
         version: 19.1.0
+      react-animate-height:
+        specifier: ^3.2.3
+        version: 3.2.3(react-dom@19.1.0)(react@19.1.0)
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
@@ -543,6 +546,9 @@ importers:
       react:
         specifier: 19.1.0
         version: 19.1.0
+      react-animate-height:
+        specifier: ^3.2.3
+        version: 3.2.3(react-dom@19.1.0)(react@19.1.0)
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
