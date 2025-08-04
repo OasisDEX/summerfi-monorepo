@@ -21,7 +21,6 @@ export default async function InstitutionMainLayout({
   if (!walletAddress) {
     throw new Error('Wallet address is not available in cookies')
   }
-
   const institution = await getInstitutionData(institutionId)
   const walletInstitutionsList = await getWalletInstitutions(walletAddress)
 

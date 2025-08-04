@@ -3,10 +3,19 @@
 import { TabBarSimple } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
-export const InstitutionTabBar = ({ institutionId }: { institutionId: string }) => {
+import { getMainTabBarTabId } from '@/helpers/get-pathname-tab-id'
+import { getInstitutionUrl, getInstitutionVaultUrl } from '@/helpers/get-url'
+
+export const InstitutionTabBar = ({
+  institutionId,
+  defaultVaultId,
+}: {
+  institutionId: string
+  defaultVaultId: string
+}) => {
   const pathname = usePathname()
 
-  const tabId = pathname.split('/')[2] ?? 'overview'
+  const tabId = getMainTabBarTabId(pathname)
 
   return (
     <TabBarSimple
@@ -15,32 +24,50 @@ export const InstitutionTabBar = ({ institutionId }: { institutionId: string }) 
         {
           id: 'overview',
           label: 'Overview',
-          url: `/${institutionId}/overview`,
+          url: getInstitutionUrl({
+            institutionId,
+            tab: 'overview',
+          }),
         },
         {
           id: 'vaults',
           label: 'Vaults',
-          url: `/${institutionId}/vaults`,
+          url: getInstitutionVaultUrl({
+            institutionId,
+            vaultId: defaultVaultId,
+          }),
         },
         {
           id: 'risk',
           label: 'Risk',
-          url: `/${institutionId}/risk`,
+          url: getInstitutionUrl({
+            institutionId,
+            tab: 'risk',
+          }),
         },
         {
           id: 'fees-revenue',
           label: 'Fees & Revenue',
-          url: `/${institutionId}/fees-revenue`,
+          url: getInstitutionUrl({
+            institutionId,
+            tab: 'fees-revenue',
+          }),
         },
         {
           id: 'reports',
           label: 'Reports',
-          url: `/${institutionId}/reports`,
+          url: getInstitutionUrl({
+            institutionId,
+            tab: 'reports',
+          }),
         },
         {
           id: 'news',
           label: 'News',
-          url: `/${institutionId}/news`,
+          url: getInstitutionUrl({
+            institutionId,
+            tab: 'news',
+          }),
         },
       ]}
     />

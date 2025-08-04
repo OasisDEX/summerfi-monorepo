@@ -52,7 +52,7 @@ interface PanelNavigationItem {
   }
 }
 
-interface PanelNavigationProps {
+export interface PanelNavigationProps {
   navigation?: {
     id: string
     label?: ReactNode
