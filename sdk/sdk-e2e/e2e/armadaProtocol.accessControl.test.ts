@@ -109,7 +109,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       expect(isGovernorAfterRevoke).toBe(false)
     })
 
-    test.only('should grant and revoke contract-specific role (whitelisted)', async () => {
+    test('should grant and revoke contract-specific role (whitelisted)', async () => {
       // Use the same fleet address as in the other tests
       const contractAddress = permissionedFleetAddress
 
