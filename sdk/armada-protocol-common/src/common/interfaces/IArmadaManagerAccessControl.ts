@@ -1,4 +1,4 @@
-import type { ChainId, IAddress, TransactionInfo } from '@summerfi/sdk-common'
+import type { ChainId, IAddress, TransactionInfo, AddressValue } from '@summerfi/sdk-common'
 import type { ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
 import type { GeneralRoles } from '../types/GeneralRoles'
 
@@ -108,4 +108,34 @@ export interface IArmadaManagerAccessControl {
     contractAddress: IAddress
     targetAddress: IAddress
   }): Promise<TransactionInfo>
+
+  /**
+   * @name getAllAddressesWithGeneralRole
+   * @description Gets all addresses that currently have a specific general protocol role
+   *
+   * @param chainId The chain ID to check the role on
+   * @param role The general role to check for
+   *
+   * @returns Promise<AddressValue[]> Array of addresses that have the role
+   */
+  getAllAddressesWithGeneralRole(params: {
+    chainId: ChainId
+    role: GeneralRoles
+  }): Promise<AddressValue[]>
+
+  /**
+   * @name getAllAddressesWithContractSpecificRole
+   * @description Gets all addresses that currently have a specific contract-specific role
+   *
+   * @param chainId The chain ID to check the role on
+   * @param role The contract-specific role to check for
+   * @param contractAddress The target contract address
+   *
+   * @returns Promise<AddressValue[]> Array of addresses that have the role
+   */
+  getAllAddressesWithContractSpecificRole(params: {
+    chainId: ChainId
+    role: ContractSpecificRoleName
+    contractAddress: IAddress
+  }): Promise<AddressValue[]>
 }

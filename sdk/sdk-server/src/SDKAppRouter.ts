@@ -74,6 +74,8 @@ import { grantGeneralRole } from './armada-protocol-handlers/access-control/gran
 import { revokeGeneralRole } from './armada-protocol-handlers/access-control/revokeGeneralRole'
 import { grantContractSpecificRole } from './armada-protocol-handlers/access-control/grantContractSpecificRole'
 import { revokeContractSpecificRole } from './armada-protocol-handlers/access-control/revokeContractSpecificRole'
+import { getAllAddressesWithGeneralRole } from './armada-protocol-handlers/access-control/getAllAddressesWithGeneralRole'
+import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handlers/access-control/getAllAddressesWithContractSpecificRole'
 
 /**
  * Server
@@ -192,6 +194,8 @@ export const sdkAppRouter = router({
       revokeGeneralRole: revokeGeneralRole,
       grantContractSpecificRole: grantContractSpecificRole,
       revokeContractSpecificRole: revokeContractSpecificRole,
+      getAllAddressesWithGeneralRole: getAllAddressesWithGeneralRole,
+      getAllAddressesWithContractSpecificRole: getAllAddressesWithContractSpecificRole,
     },
   },
 })

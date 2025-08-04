@@ -55,4 +55,18 @@ export class ArmadaManagerClientAccessControl
   ): ReturnType<IArmadaManagerClientAccessControl['revokeContractSpecificRole']> {
     return this.rpcClient.armada.accessControl.revokeContractSpecificRole.query(params)
   }
+
+  /** @see IArmadaManagerClientAccessControl.getAllAddressesWithGeneralRole */
+  async getAllAddressesWithGeneralRole(
+    params: Parameters<IArmadaManagerClientAccessControl['getAllAddressesWithGeneralRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['getAllAddressesWithGeneralRole']> {
+    return this.rpcClient.armada.accessControl.getAllAddressesWithGeneralRole.query(params)
+  }
+
+  /** @see IArmadaManagerClientAccessControl.getAllAddressesWithContractSpecificRole */
+  async getAllAddressesWithContractSpecificRole(
+    params: Parameters<IArmadaManagerClientAccessControl['getAllAddressesWithContractSpecificRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['getAllAddressesWithContractSpecificRole']> {
+    return this.rpcClient.armada.accessControl.getAllAddressesWithContractSpecificRole.query(params)
+  }
 }
