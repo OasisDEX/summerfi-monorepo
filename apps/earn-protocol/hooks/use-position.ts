@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 /**
  * Standalone function to fetch an Armada position for a given vault and user

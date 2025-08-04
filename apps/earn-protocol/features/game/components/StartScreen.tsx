@@ -1,11 +1,10 @@
 'use client'
 
-import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import styles from './StartScreen.module.css'
 

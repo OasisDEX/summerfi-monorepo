@@ -13,8 +13,10 @@ import {
   TabBar,
   Text,
   useAmount,
+  useClientChainId,
   useLocalConfig,
   useMobileCheck,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
@@ -45,10 +47,8 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { getStakeButtonLabel } from './getStakeButtonLabel'
 
@@ -312,6 +312,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   )
 
   const sumrToClaim =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`

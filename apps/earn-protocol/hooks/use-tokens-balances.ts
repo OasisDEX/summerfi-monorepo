@@ -1,3 +1,4 @@
+import { useUserWallet } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, SupportedSDKNetworks } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
@@ -9,7 +10,6 @@ import {
 } from '@/helpers/get-fe-public-client'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { type TokenBalanceData, useTokenBalance } from '@/hooks/use-token-balance'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 /**
  * Hook to fetch token and vault token balances for a specific network

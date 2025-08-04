@@ -1,7 +1,13 @@
 'use client'
 
 import { type FC, useEffect, useReducer } from 'react'
-import { getPositionValues, Icon, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
+import {
+  getPositionValues,
+  Icon,
+  NonOwnerPortfolioBanner,
+  TabBar,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type HistoryChartData,
@@ -31,7 +37,6 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioPageView.module.css'
 

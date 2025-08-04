@@ -1,11 +1,9 @@
 import { useCallback } from 'react'
 import { useLogout } from '@account-kit/react'
+import { useClientChainId, useUserWallet } from '@summerfi/app-earn-ui'
 import { fetchRisk } from '@summerfi/app-risk'
 
 import { type TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
-
-import { useClientChainId } from './use-client-chain-id'
-import { useUserWallet } from './use-user-wallet'
 
 /**
  * Hook to verify wallet risk status.

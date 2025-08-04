@@ -12,6 +12,8 @@ import {
   SDKChainIdToAAChainMap,
   SkeletonLine,
   Text,
+  useClientChainId,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
@@ -41,8 +43,6 @@ import {
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import {
   getChangeDelegateButtonLabel,

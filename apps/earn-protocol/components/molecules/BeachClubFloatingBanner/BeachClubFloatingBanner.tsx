@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
-import { FloatingBanner, Icon, INTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
+import { FloatingBanner, Icon, INTERNAL_LINKS, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import styles from './BeachClubFloatingBanner.module.css'
 

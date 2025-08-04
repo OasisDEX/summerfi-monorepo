@@ -1,5 +1,6 @@
 import { useAccount, useUser } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+
+import { accountType } from '@/account-kit/constants'
 
 /**
  * Custom hook to get the user's wallet address.
