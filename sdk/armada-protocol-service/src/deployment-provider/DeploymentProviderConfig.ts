@@ -63,7 +63,7 @@ export async function fetchDeploymentProviderConfig(
       },
     } as unknown as DeploymentProviderConfig)
   }
-  return Promise.reject('Integrator config not found for client ID: ' + clientId)
+  return Promise.reject('Integrator config not found for clientId: ' + clientId)
 }
 
 export const readDeploymentProviderConfig = (): DeploymentProviderConfig => {

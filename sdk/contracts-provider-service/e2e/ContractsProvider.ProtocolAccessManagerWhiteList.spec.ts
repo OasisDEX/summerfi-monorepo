@@ -44,6 +44,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
   let protocolAccessManagerWhiteListContract: IProtocolAccessManagerWhiteListContract
   let blockchainClientProvider: IBlockchainClientProvider
   let rpcUrl: string
+
   let governorSendTxTool: SendTransactionTool
 
   const atBlock = 'latest'

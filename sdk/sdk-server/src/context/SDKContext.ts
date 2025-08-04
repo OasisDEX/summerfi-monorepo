@@ -81,7 +81,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     try {
       deploymentProviderConfig = await fetchDeploymentProviderConfig(clientId)
     } catch (error) {
-      console.error(`Failed to fetch integrator config for clientId ${clientId}:`, error)
+      console.error(`Failed to fetch integrator config:`, error)
       throw new Error(`ClientId ${clientId} does not exist`)
     }
   } else {

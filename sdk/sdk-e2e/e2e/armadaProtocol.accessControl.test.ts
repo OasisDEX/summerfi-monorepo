@@ -1,7 +1,8 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { Address, ChainIds } from '@summerfi/sdk-common'
+import { makeAdminSDK } from '@summerfi/sdk-client'
+import { Address, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { GeneralRoles, ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { SDKApiUrl, userAddress } from './utils/testConfig'
+import { SDKApiUrl, testWalletAddress, privWalletAddress } from './utils/testConfig'
+import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
@@ -9,14 +10,32 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control E2E Tests', () => {
-  const sdk: SDKManager = makeSDK({
+  const sdk = makeAdminSDK({
+    clientId: 'test-client',
     apiDomainUrl: SDKApiUrl,
   })
 
   const chainId = ChainIds.Base
-  const testAddress = userAddress
   const permissionedFleetAddress = Address.createFromEthereum({
     value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17', // Using a known fleet address
+  })
+
+  let governorSendTxTool: SendTransactionTool
+
+  beforeAll(async () => {
+    const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY
+    const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+    if (!signerPrivateKey || !rpcUrl) {
+      throw new Error(
+        'Environment variables E2E_USER_PRIVATE_KEY and E2E_SDK_FORK_URL_BASE must be set',
+      )
+    }
+
+    governorSendTxTool = createSendTransactionTool({
+      chainInfo: getChainInfoByChainId(chainId),
+      rpcUrl,
+      signerPrivateKey,
+    })
   })
 
   describe('Access Control API', () => {
@@ -24,56 +43,121 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const hasGeneralRole = await sdk.armada.accessControl.hasGeneralRole({
         chainId,
         role: GeneralRoles.GOVERNOR_ROLE,
-        targetAddress: testAddress,
+        targetAddress: testWalletAddress,
       })
-      expect(typeof hasGeneralRole).toBe('boolean')
+      expect(hasGeneralRole).toBe(true)
     })
 
-    test('should check contract-specific role (keeper)', async () => {
+    test('should check contract-specific role (whitelisted)', async () => {
       const hasContractSpecificRole = await sdk.armada.accessControl.hasContractSpecificRole({
         chainId,
-        role: ContractSpecificRoleName.KEEPER_ROLE,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
         contractAddress: permissionedFleetAddress,
-        targetAddress: testAddress,
+        targetAddress: testWalletAddress,
       })
-      expect(typeof hasContractSpecificRole).toBe('boolean')
+      expect(hasContractSpecificRole).toBe(false)
     })
 
-    test('should handle grant/revoke general role (expect error or tx)', async () => {
-      // These will likely fail on testnet/mainnet unless the test address has permissions
-      expect(
-        sdk.armada.accessControl.grantGeneralRole({
+    test('should grant and revoke governor role', async () => {
+      const governorRole = GeneralRoles.GOVERNOR_ROLE
+      const isGovernorBefore = await sdk.armada.accessControl.hasGeneralRole({
+        chainId,
+        role: governorRole,
+        targetAddress: privWalletAddress,
+      })
+
+      if (isGovernorBefore === false) {
+        console.log('Granting governor role because the address does not have it...')
+        // Grant role by sending tx
+        const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
           chainId,
-          role: GeneralRoles.SUPER_KEEPER_ROLE,
-          targetAddress: testAddress,
-        }),
-      ).resolves.toBeDefined()
-      expect(
-        sdk.armada.accessControl.revokeGeneralRole({
-          chainId,
-          role: GeneralRoles.SUPER_KEEPER_ROLE,
-          targetAddress: testAddress,
-        }),
-      ).resolves.toBeDefined()
+          role: governorRole,
+          targetAddress: privWalletAddress,
+        })
+        expect(grantTxInfo).toBeDefined()
+        const grantStatus = await governorSendTxTool(grantTxInfo)
+        expect(grantStatus).toBe('success')
+      } else {
+        console.log('Address already has governor role, skipping grant step.')
+      }
+
+      // Check after grant
+      const isGovernorAfterGrant = await sdk.armada.accessControl.hasGeneralRole({
+        chainId,
+        role: governorRole,
+        targetAddress: privWalletAddress,
+      })
+      expect(isGovernorAfterGrant).toBe(true)
+
+      // Revoke role
+      console.log('Revoking governor role...')
+      const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
+        chainId,
+        role: governorRole,
+        targetAddress: privWalletAddress,
+      })
+      expect(revokeTxInfo).toBeDefined()
+      const revokeStatus = await governorSendTxTool(revokeTxInfo)
+      expect(revokeStatus).toBe('success')
+
+      // Check after revoke
+      const isGovernorAfterRevoke = await sdk.armada.accessControl.hasGeneralRole({
+        chainId,
+        role: governorRole,
+        targetAddress: privWalletAddress,
+      })
+      expect(isGovernorAfterRevoke).toBe(false)
     })
 
-    test('should handle grant/revoke contract-specific role (expect error or tx)', async () => {
-      expect(
-        sdk.armada.accessControl.grantContractSpecificRole({
-          chainId,
-          role: ContractSpecificRoleName.KEEPER_ROLE,
-          contractAddress: permissionedFleetAddress,
-          targetAddress: testAddress,
-        }),
-      ).resolves.toBeDefined()
-      await expect(
-        sdk.armada.accessControl.revokeContractSpecificRole({
-          chainId,
-          role: ContractSpecificRoleName.KEEPER_ROLE,
-          contractAddress: permissionedFleetAddress,
-          targetAddress: testAddress,
-        }),
-      ).resolves.toBeDefined()
+    test('should grant and revoke contract-specific role (whitelisted)', async () => {
+      // Use the same fleet address as in the other tests
+      const contractAddress = permissionedFleetAddress
+
+      const isWhitelistedInitially = await sdk.armada.accessControl.hasContractSpecificRole({
+        chainId,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress: contractAddress,
+        targetAddress: privWalletAddress,
+      })
+      expect(isWhitelistedInitially).toBe(false)
+
+      // Grant whitelisted role
+      const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
+        chainId,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress: contractAddress,
+        targetAddress: privWalletAddress,
+      })
+      expect(grantTxInfo).toBeDefined()
+      const grantStatus = await governorSendTxTool(grantTxInfo)
+      expect(grantStatus).toBe('success')
+
+      const isWhitelistedAfterGrant = await sdk.armada.accessControl.hasContractSpecificRole({
+        chainId,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress: contractAddress,
+        targetAddress: privWalletAddress,
+      })
+      expect(isWhitelistedAfterGrant).toBe(true)
+
+      // Revoke whitelisted role
+      const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
+        chainId,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress: contractAddress,
+        targetAddress: privWalletAddress,
+      })
+      expect(revokeTxInfo).toBeDefined()
+      const revokeStatus = await governorSendTxTool(revokeTxInfo)
+      expect(revokeStatus).toBe('success')
+
+      const isWhitelistedAfterRevoke = await sdk.armada.accessControl.hasContractSpecificRole({
+        chainId,
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress: contractAddress,
+        targetAddress: privWalletAddress,
+      })
+      expect(isWhitelistedAfterRevoke).toBe(false)
     })
   })
 })

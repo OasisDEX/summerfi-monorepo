@@ -2,6 +2,7 @@
 export { Chain } from './implementation/Chain'
 export { ChainsManagerClient } from './implementation/ChainsManager'
 export { makeSDK } from './implementation/MakeSDK'
+export { makeAdminSDK } from './implementation/MakeAdminSDK'
 export { PortfolioManager } from './implementation/PortfolioManager'
 export { ProtocolsManagerClient } from './implementation/ProtocolsManagerClient'
 export { SDKManager } from './implementation/SDKManager'
