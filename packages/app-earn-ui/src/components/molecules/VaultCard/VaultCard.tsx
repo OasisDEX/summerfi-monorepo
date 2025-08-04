@@ -2,7 +2,12 @@
 
 import { type FC } from 'react'
 import { type DeviceType, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent, ten } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  supportedSDKNetwork,
+  ten,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -101,7 +106,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
 
   return (
     <GradientBox
-      withHover={withHover}
+      withHover={withHover && !disabled}
       selected={selected}
       onClick={handleVaultClick}
       style={wrapperStyle}
@@ -117,7 +122,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           <VaultTitleWithRisk
             symbol={getDisplayToken(inputToken.symbol)}
             risk={customFields?.risk ?? 'lower'}
-            networkName={protocol.network}
+            networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
           />
