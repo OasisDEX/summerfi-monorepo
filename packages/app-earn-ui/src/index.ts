@@ -257,7 +257,6 @@ export {
   customAAKitSonicConfig,
   SDKChainIdToAAChainMap,
   getAccountKitConfig,
-  accountType,
-  overridesGasSponsorship,
 } from './account-kit/config'
+export { accountType, overridesGasSponsorship } from './account-kit/constants'
 export { AccountKitAccountType } from './account-kit/types'

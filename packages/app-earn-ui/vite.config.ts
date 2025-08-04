@@ -117,6 +117,7 @@ export default defineConfig(({ mode }) => {
           'embla-carousel-react',
           'embla-carousel',
           '@number-flow/react',
+          'boring-avatars',
         ],
         input: Object.fromEntries(
           glob
