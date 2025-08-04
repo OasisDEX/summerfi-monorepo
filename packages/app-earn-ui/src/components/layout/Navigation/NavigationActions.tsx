@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import clsx from 'clsx'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -44,7 +45,10 @@ export const NavigationActions = ({
         <Button
           variant="secondaryMedium"
           onClick={toggleMobileMenu}
-          className={navigationActionsStyles.gradientOuterCircle}
+          className={clsx(
+            navigationActionsStyles.gradientOuterCircle,
+            navigationActionsStyles.gradientInnerCircle,
+          )}
         >
           <Icon
             iconName="menu"
