@@ -65,7 +65,9 @@ export class ArmadaManagerClientAccessControl
 
   /** @see IArmadaManagerClientAccessControl.getAllAddressesWithContractSpecificRole */
   async getAllAddressesWithContractSpecificRole(
-    params: Parameters<IArmadaManagerClientAccessControl['getAllAddressesWithContractSpecificRole']>[0],
+    params: Parameters<
+      IArmadaManagerClientAccessControl['getAllAddressesWithContractSpecificRole']
+    >[0],
   ): ReturnType<IArmadaManagerClientAccessControl['getAllAddressesWithContractSpecificRole']> {
     return this.rpcClient.armada.accessControl.getAllAddressesWithContractSpecificRole.query(params)
   }
