@@ -1230,17 +1230,17 @@ importers:
   packages/app-earn-ui:
     dependencies:
       '@account-kit/core':
-        specifier: ^4.36.1
-        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
+        specifier: ^4.52.2
+        version: 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
       '@account-kit/infra':
-        specifier: ^4.36.1
-        version: 4.40.0(typescript@5.7.3)(viem@2.29.2)
+        specifier: ^4.52.2
+        version: 4.52.2(typescript@5.7.3)(viem@2.29.2)
       '@account-kit/react':
-        specifier: ^4.36.1
-        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.17.3)(immer@9.0.21)(react-dom@19.1.0)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
+        specifier: ^4.52.2
+        version: 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.17.3)(immer@9.0.21)(react-dom@19.1.0)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
       '@account-kit/signer':
-        specifier: ^4.36.1
-        version: 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
+        specifier: ^4.52.2
+        version: 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@19.1.0)
@@ -4664,19 +4664,6 @@ importers:
 
 packages:
 
-  /@aa-sdk/core@4.40.0(typescript@5.7.3)(viem@2.29.2):
-    resolution: {integrity: sha512-MYRts2ATWf258OAteeY+DkAeO29t7nxgtKXSavum8KBNUAnKH9XSzjgHlzRnihUADkKMsXIJD4kVzWV6cJo2RA==}
-    peerDependencies:
-      viem: ^2.29.2
-    dependencies:
-      abitype: 0.8.7(typescript@5.7.3)(zod@3.25.61)
-      eventemitter3: 5.0.1
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-      zod: 3.25.61
-    transitivePeerDependencies:
-      - typescript
-    dev: false
-
   /@aa-sdk/core@4.52.2(typescript@5.7.3)(viem@2.29.2):
     resolution: {integrity: sha512-7LLNELTIxZBfdrWn3NhBtnFuBr1d7Wprem8FAx2OE2gEJ8ij+Lk/TM7TRGhVxdljO14we+Ib0DApGpD3gjRN9Q==}
     peerDependencies:
@@ -4694,45 +4681,6 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /@account-kit/core@4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9):
-    resolution: {integrity: sha512-+6MYUqxA7XJbkTVC+RqGlj77XBCsM/vSWYjS1Ubzl3nM6gosScb/1PVaYdYt/6ZdwMA/xavzTs4XDvHMH3ILBA==}
-    peerDependencies:
-      viem: ^2.29.2
-      wagmi: ^2.12.7
-    dependencies:
-      '@account-kit/infra': 4.52.2(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/logging': 4.40.0
-      '@account-kit/react-native-signer': 4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(zod@3.25.61)
-      '@account-kit/signer': 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/smart-contracts': 4.40.0(typescript@5.7.3)(viem@2.29.2)
-      '@solana/web3.js': 1.98.0
-      js-cookie: 3.0.5
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(rollup@4.44.2)(typescript@5.7.3)(viem@2.29.2)(zod@3.25.61)
-      zod: 3.25.61
-      zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
-    optionalDependencies:
-      alchemy-sdk: 3.3.1
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@babel/preset-env'
-      - '@types/react'
-      - bufferutil
-      - debug
-      - encoding
-      - immer
-      - react
-      - react-native
-      - react-native-get-random-values
-      - react-native-inappbrowser-reborn
-      - react-native-mmkv
-      - react-native-passkey
-      - supports-color
-      - typescript
-      - use-sync-external-store
-      - utf-8-validate
-    dev: false
 
   /@account-kit/core@4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9):
     resolution: {integrity: sha512-5zN1YnM8SlrMHjNBXoBb2sBf4TIqaWdYgBhNyLkH9jFzavhtcaGLf6c+Gck0DIJaL9t53AJydtBNdR1AU1j9rw==}
@@ -4774,27 +4722,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/infra@4.40.0(typescript@5.7.3)(viem@2.29.2):
-    resolution: {integrity: sha512-3hvDUzSQ4zKdrLPvoyp4QsVsc4iyuVI/SFZsuKG3YYL6HN0Sa4q18bH0v0uzVqVD508Qu1odk3rgqYreG80UCA==}
-    peerDependencies:
-      viem: ^2.29.2
-    dependencies:
-      '@aa-sdk/core': 4.40.0(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/logging': 4.40.0
-      eventemitter3: 5.0.1
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-      zod: 3.25.61
-    optionalDependencies:
-      alchemy-sdk: 3.3.1
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
   /@account-kit/infra@4.52.2(typescript@5.7.3)(viem@2.29.2):
     resolution: {integrity: sha512-DBW7m6HkmpD6WdB/rw3UG6m6NE8Y9RhaBIEILQ9TBQGGrqYH9qfpSquf4Zy1+E1HoshiAlzbMolM9js/rEGc/w==}
     peerDependencies:
@@ -4816,15 +4743,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/logging@4.40.0:
-    resolution: {integrity: sha512-yi+hff992fvm6nFYkNov0EfYgtz72Or/D9mytqLAIeMWb3d4TTeE3NFgH8wY9sywOMbbWOuCXj6EL6peZIH8Ng==}
-    dependencies:
-      '@segment/analytics-next': 1.74.0
-      uuid: 11.1.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /@account-kit/logging@4.52.2:
     resolution: {integrity: sha512-p19H0VjdZ1qVNXKGmx3DKqwdEeImGxQ0msCjzHb77+HLD1Pj5RMEwuut5ZQS3bhI/rqj7aHxx3LA6lbC7wAk7A==}
     dependencies:
@@ -4832,41 +4750,6 @@ packages:
       uuid: 11.1.0
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@account-kit/react-native-signer@4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(zod@3.25.61):
-    resolution: {integrity: sha512-PYr8omzuTpeTTgWIUXv0k5PKDZ14xTecDj44p2Az90KcI4Dmf7OG3wvwZcRBpae5rgTetAh94/sg+w5wXnBVJw==}
-    peerDependencies:
-      react: '>=18.0.0'
-      react-native: '>=0.76.0'
-      react-native-get-random-values: ^1.11.0
-      react-native-inappbrowser-reborn: ^3.7.0
-      react-native-mmkv: ^3.1.0
-      react-native-passkey: ^3.1.0
-    dependencies:
-      '@aa-sdk/core': 4.40.0(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/signer': 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
-      '@turnkey/react-native-passkey-stamper': 1.0.15(react-native@0.78.0)(react@19.1.0)
-      react: 19.1.0
-      react-native: 0.78.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)
-      react-native-get-random-values: 1.11.0(react-native@0.78.0)
-      react-native-inappbrowser-reborn: 3.7.0(react-native@0.78.0)
-      react-native-mmkv: 3.2.0(react-native@0.78.0)(react@19.1.0)
-      react-native-passkey: 3.1.0(react-native@0.78.0)(react@19.1.0)
-      uuid: 11.1.0
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@babel/preset-env'
-      - '@types/react'
-      - bufferutil
-      - encoding
-      - immer
-      - supports-color
-      - typescript
-      - use-sync-external-store
-      - utf-8-validate
-      - zod
     dev: false
 
   /@account-kit/react-native-signer@4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(zod@3.25.61):
@@ -4902,71 +4785,6 @@ packages:
       - use-sync-external-store
       - utf-8-validate
       - zod
-    dev: false
-
-  /@account-kit/react@4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.17.3)(immer@9.0.21)(react-dom@19.1.0)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9):
-    resolution: {integrity: sha512-H3gVBoItW940xWzwiIXLX+czj+aC96TeJW3LuXTUgk20puZAEa+MotlhI49qjMpza7lr71BMLQO13dp9oWCaXg==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.28.9
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      tailwindcss: ^3.4.3
-      viem: ^2.29.2
-      wagmi: ^2.12.7
-    dependencies:
-      '@account-kit/core': 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9)
-      '@account-kit/infra': 4.52.2(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/logging': 4.40.0
-      '@account-kit/signer': 4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)
-      '@solana/web3.js': 1.98.0
-      '@tanstack/react-form': 0.33.0(react-dom@19.1.0)(react@19.1.0)(typescript@5.7.3)
-      '@tanstack/react-query': 5.51.1(react@19.1.0)
-      '@tanstack/zod-form-adapter': 0.33.0(zod@3.25.61)
-      '@wagmi/connectors': 5.8.5(@types/react@19.0.8)(@wagmi/core@2.17.3)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2)(zod@3.25.61)
-      bs58: 6.0.0
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      react-remove-scroll: 2.6.0(@types/react@19.0.8)(react@19.1.0)
-      tailwindcss: 3.4.13
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-      wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(rollup@4.44.2)(typescript@5.7.3)(viem@2.29.2)(zod@3.25.61)
-      zod: 3.25.61
-      zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
-    optionalDependencies:
-      alchemy-sdk: 3.3.1
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@babel/core'
-      - '@babel/preset-env'
-      - '@capacitor/preferences'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@react-native-async-storage/async-storage'
-      - '@tanstack/start'
-      - '@types/react'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - '@wagmi/core'
-      - bufferutil
-      - debug
-      - encoding
-      - immer
-      - ioredis
-      - react-native
-      - react-native-get-random-values
-      - react-native-inappbrowser-reborn
-      - react-native-mmkv
-      - react-native-passkey
-      - supports-color
-      - typescript
-      - uWebSockets.js
-      - use-sync-external-store
-      - utf-8-validate
     dev: false
 
   /@account-kit/react@4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(@wagmi/core@2.17.3)(immer@9.0.21)(react-dom@19.1.0)(react-native-get-random-values@1.11.0)(react-native-inappbrowser-reborn@3.7.0)(react-native-mmkv@3.2.0)(react-native-passkey@3.1.0)(react-native@0.78.0)(react@19.1.0)(tailwindcss@3.4.13)(typescript@5.7.3)(viem@2.29.2)(wagmi@2.10.9):
@@ -5035,37 +4853,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/signer@4.40.0(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2):
-    resolution: {integrity: sha512-BIECGo3MxSfAWOv5D1ipqUkqucNoXxndK8ybJKB5fG1A9apNLd/L5nTj33EZFVUmtVtf9XF0FH2YtaufwLFA4g==}
-    peerDependencies:
-      viem: 2.29.2
-    dependencies:
-      '@aa-sdk/core': 4.40.0(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/logging': 4.40.0
-      '@solana/web3.js': 1.98.0
-      '@turnkey/http': 2.22.0
-      '@turnkey/iframe-stamper': 1.2.0
-      '@turnkey/viem': 0.4.22(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(react@19.1.0)(viem@2.29.2)
-      '@turnkey/webauthn-stamper': 0.4.3
-      bs58: 6.0.0
-      jwt-decode: 4.0.0
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-      zod: 3.25.61
-      zustand: 5.0.0(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@babel/preset-env'
-      - '@types/react'
-      - bufferutil
-      - encoding
-      - immer
-      - react
-      - supports-color
-      - typescript
-      - use-sync-external-store
-      - utf-8-validate
-    dev: false
-
   /@account-kit/signer@4.52.2(@babel/core@7.26.0)(@babel/preset-env@7.24.7)(@types/react@19.0.8)(immer@9.0.21)(react@19.1.0)(typescript@5.7.3)(viem@2.29.2):
     resolution: {integrity: sha512-uMWo7Hp8RNcPAViL+NCJKfhfbRwS6GIhhYwCI2ySCCy8Ev1pe07pU4PxbLt2qr7yNrbvHQ8cTLsF5pr6134r5A==}
     peerDependencies:
@@ -5097,23 +4884,6 @@ packages:
       - supports-color
       - typescript
       - use-sync-external-store
-      - utf-8-validate
-    dev: false
-
-  /@account-kit/smart-contracts@4.40.0(typescript@5.7.3)(viem@2.29.2):
-    resolution: {integrity: sha512-6BBVyFoJg+apBJSXetDPKVHwiXT9MqBHBv4RyPJiQ7UrkXCMBtSwEt9W/2MFE2gKrPQ6J73EKyat6HzdVdiVdw==}
-    peerDependencies:
-      viem: 2.29.2
-    dependencies:
-      '@aa-sdk/core': 4.40.0(typescript@5.7.3)(viem@2.29.2)
-      '@account-kit/infra': 4.52.2(typescript@5.7.3)(viem@2.29.2)
-      viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - supports-color
-      - typescript
       - utf-8-validate
     dev: false
 
@@ -16025,7 +15795,7 @@ packages:
       '@paulmillr/qr': 0.2.1
       bowser: 2.11.0
       cross-fetch: 4.0.0
-      debug: 4.4.0
+      debug: 4.3.4(supports-color@8.1.1)
       eciesjs: 0.4.15
       eth-rpc-errors: 4.0.3
       eventemitter2: 6.4.9
@@ -16033,7 +15803,7 @@ packages:
       pump: 3.0.0
       readable-stream: 3.6.2
       socket.io-client: 4.7.5
-      tslib: 2.8.1
+      tslib: 2.2.0
       util: 0.12.5
       uuid: 8.3.2
     transitivePeerDependencies:
@@ -21836,15 +21606,6 @@ packages:
       sha256-uint8array: 0.10.7
     dev: false
 
-  /@turnkey/api-key-stamper@0.4.4:
-    resolution: {integrity: sha512-KXvf2yV3OkSrZYEnHSgOwy2XS7Q4+XNwRkgRhDNsiYvgz8KNGLbqXg0/aAlkTIUT7NYODZ3iaGMml0DtyzGeDQ==}
-    engines: {node: '>=18.0.0'}
-    dependencies:
-      '@noble/curves': 1.9.2
-      '@turnkey/encoding': 0.4.0
-      sha256-uint8array: 0.10.7
-    dev: false
-
   /@turnkey/api-key-stamper@0.4.6:
     resolution: {integrity: sha512-zUcbhOunsSD//CIKAbfyX9FWchiHcO/CjOdBKvbB+8w6gk/m4NxchVrYCdqdrtxzPFdRYAdFjcUnN0FBvDKobw==}
     engines: {node: '>=18.0.0'}
@@ -21897,11 +21658,6 @@ packages:
     engines: {node: '>=18.0.0'}
     dev: false
 
-  /@turnkey/encoding@0.4.0:
-    resolution: {integrity: sha512-ptLgcpWVt34KTPx0omF2QLJrosW6I//clCJ4G2+yngYFCzrdR0yBchV/BOcfME67mK1v3MmauyXl9AAnQTmB4Q==}
-    engines: {node: '>=18.0.0'}
-    dev: false
-
   /@turnkey/encoding@0.5.0:
     resolution: {integrity: sha512-nRlKRQa6B5/xltGUKN1iKo4h4YC/0iFz0fAuFFZevc+YGDj7ddAP/3HkWmVvLmdoicUgs9rxvWbLRlgqPkbwzQ==}
     engines: {node: '>=18.0.0'}
@@ -21913,18 +21669,6 @@ packages:
     dependencies:
       '@turnkey/api-key-stamper': 0.4.0
       '@turnkey/encoding': 0.1.0
-      '@turnkey/webauthn-stamper': 0.5.0
-      cross-fetch: 3.1.8
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@turnkey/http@2.22.0:
-    resolution: {integrity: sha512-nkzSIiur68PDEXh0E6fPpgrev0qeMfnVjeh/nWePZpS6TwJ7NGw1i4WRqZ1VkQ+ODmCD2ztKMzUhii9b4pzURg==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      '@turnkey/api-key-stamper': 0.4.4
-      '@turnkey/encoding': 0.4.0
       '@turnkey/webauthn-stamper': 0.5.0
       cross-fetch: 3.1.8
     transitivePeerDependencies:
@@ -21953,11 +21697,6 @@ packages:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@turnkey/iframe-stamper@1.2.0:
-    resolution: {integrity: sha512-OXbCVVzypa0AXa6dcNpfu8Q0xY/sq2nGXwhesrUQmE7V5I5nYYHZE3sQv54lErToX6H6YyDR9Z1DuPzEUkYTjw==}
-    engines: {node: '>=18.0.0'}
     dev: false
 
   /@turnkey/iframe-stamper@2.0.0:
