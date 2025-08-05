@@ -211,9 +211,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       address: params.vaultId.fleetAddress,
     })
 
-    console.log('getStakedShares', { fleetAddress: params.vaultId.fleetAddress })
     const { stakingRewardsManager } = await fleetContract.config()
-    console.log('stakingRewardsManager', stakingRewardsManager.value)
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.vaultId.chainInfo,
     })

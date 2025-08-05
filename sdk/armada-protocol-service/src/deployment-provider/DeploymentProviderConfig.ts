@@ -25,7 +25,7 @@ export async function fetchDeploymentProviderConfig(
     return Promise.resolve({
       deployedContracts: {
         admiralsQuarters: {
-          [ChainIds.Base]: '0x1234567890abcdef1234567890abcdef12345678',
+          [ChainIds.Base]: '0x',
           [ChainIds.ArbitrumOne]: '0x',
           [ChainIds.Mainnet]: '0x',
           [ChainIds.Sonic]: '0x',

@@ -387,7 +387,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       const indices = claims.map((claim) => claim.index)
       const amounts = claims.map((claim) => claim.amount)
       const proofs = claims.map((claim) => claim.proof)
-      console.log('proofs', proofs)
 
       const calldata = encodeFunctionData({
         abi: AdmiralsQuartersAbi,
