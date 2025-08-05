@@ -23,8 +23,9 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
   let governorSendTxTool: SendTransactionTool
 
   beforeAll(async () => {
-    const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY
     const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+    const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY
+
     if (!signerPrivateKey || !rpcUrl) {
       throw new Error(
         'Environment variables E2E_USER_PRIVATE_KEY and E2E_SDK_FORK_URL_BASE must be set',
