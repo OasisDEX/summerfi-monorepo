@@ -265,12 +265,6 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
         address: this._getProtocolAccessManagerAddress(chainInfo),
       })
 
-    // Generate the role hash for the contract-specific role
-    const _roleHash = await protocolAccessManagerContract.generateRole({
-      roleName: params.role,
-      roleTargetContract: params.contractAddress,
-    })
-
     switch (params.role) {
       case ContractSpecificRoleName.KEEPER_ROLE:
         return protocolAccessManagerContract.grantKeeperRole({
