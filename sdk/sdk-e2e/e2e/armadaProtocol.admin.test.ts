@@ -1,5 +1,5 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
-import { Address, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { GeneralRoles, ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
 import { SDKApiUrl, testWalletAddress, privWalletAddress } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
@@ -42,6 +42,26 @@ describe('Armada Protocol - Admin E2E Tests', () => {
       chainInfo: getChainInfoByChainId(chainId),
       rpcUrl,
       signerPrivateKey,
+    })
+  })
+  afterAll(async () => {
+    await tenderlyVnet.delete()
+  })
+
+  it('should fetch the list of available arks', async () => {
+    const arks = await sdk.armada.admin.arks({
+      vaultId: ArmadaVaultId.createFrom({
+        chainInfo,
+        fleetAddress: permissionedFleetAddress,
+      }),
+    })
+
+    expect(Array.isArray(arks)).toBe(true)
+    expect(arks.length).toBeGreaterThan(0)
+    arks.forEach((ark) => {
+      expect(typeof ark).toBe('object')
+      expect(ark.value).toMatch(/^0x[a-fA-F0-9]{40}$/)
+      console.log('Ark Address:', ark.value)
     })
   })
 })

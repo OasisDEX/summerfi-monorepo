@@ -10,7 +10,8 @@
     "e2e:deposit": "jest --roots e2e -- ./e2e/armadaProtocol.deposit.test.ts",
     "e2e:claim": "jest --roots e2e -- ./e2e/armadaProtocol.claim.test.ts",
     "e2e:rewards": "jest --roots e2e -- ./e2e/armadaProtocol.rewards.test.ts",
-    "e2e:access": "jest --roots e2e -- ./e2e/armadaProtocol.accessControl.test.ts"
+    "e2e:access": "jest --roots e2e -- ./e2e/armadaProtocol.accessControl.test.ts",
+    "e2e:admin": "jest --roots e2e -- ./e2e/armadaProtocol.admin.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",
