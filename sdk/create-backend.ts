@@ -30,6 +30,8 @@ export const createBackend = ({
 
   const nameSuffix = deployedVersion.replaceAll('.', 'x')
 
+  console.log(`ENV FUNCTIONS_API_URL: `, environmentVariables.FUNCTIONS_API_URL)
+
   // create and deploy function
   const sdkBackend = new Function(stack, `SdkBackendV${nameSuffix}`, {
     handler: 'sdk-router-function/src/index.handler',

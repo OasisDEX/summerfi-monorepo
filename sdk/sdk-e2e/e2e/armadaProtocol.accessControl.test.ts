@@ -16,8 +16,8 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
   })
 
   const chainId = ChainIds.Base
-  const permissionedFleetAddress = Address.createFromEthereum({
-    value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17', // Using a known fleet address
+  const permissionedFleetAddressUsdc = Address.createFromEthereum({
+    value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198', // Using a known fleet address
   })
 
   let governorSendTxTool: SendTransactionTool
@@ -49,14 +49,48 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       expect(hasGeneralRole).toBe(true)
     })
 
-    test('should check contract-specific role (whitelisted)', async () => {
+    test.only('should check contract-specific role (whitelisted)', async () => {
+      const shouldGrant = false
+      const shouldRevoke = false
+
+      if (shouldGrant) {
+        // Grant the role if not already granted
+        const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
+          chainId,
+          role: ContractSpecificRoleName.WHITELISTED_ROLE,
+          contractAddress: permissionedFleetAddressUsdc,
+          targetAddress: testWalletAddress,
+        })
+        expect(grantTxInfo).toBeDefined()
+        const grantStatus = await governorSendTxTool(grantTxInfo)
+        expect(grantStatus).toBe('success')
+      }
+
+      if (shouldRevoke) {
+        // Revoke the role if it was granted
+        const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
+          chainId,
+          role: ContractSpecificRoleName.WHITELISTED_ROLE,
+          contractAddress: permissionedFleetAddressUsdc,
+          targetAddress: testWalletAddress,
+        })
+        expect(revokeTxInfo).toBeDefined()
+        const revokeStatus = await governorSendTxTool(revokeTxInfo)
+        expect(revokeStatus).toBe('success')
+      }
+
       const hasContractSpecificRole = await sdk.armada.accessControl.hasContractSpecificRole({
         chainId,
         role: ContractSpecificRoleName.WHITELISTED_ROLE,
-        contractAddress: permissionedFleetAddress,
-        targetAddress: testWalletAddress,
+        contractAddress: permissionedFleetAddressUsdc,
+        targetAddress: Address.createFromEthereum({
+          value: '0x16160cd5c54de1caba7c567c6d232c1a9d514515',
+        }),
       })
       expect(hasContractSpecificRole).toBe(false)
+      console.log(
+        `Address ${testWalletAddress.value} has whitelisted role for contract ${permissionedFleetAddressUsdc.value}: ${hasContractSpecificRole}`,
+      )
     })
 
     test('should grant and revoke governor role', async () => {
@@ -112,7 +146,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
 
     test('should grant and revoke contract-specific role (whitelisted)', async () => {
       // Use the same fleet address as in the other tests
-      const contractAddress = permissionedFleetAddress
+      const contractAddress = permissionedFleetAddressUsdc
 
       const isWhitelistedInitially = await sdk.armada.accessControl.hasContractSpecificRole({
         chainId,
@@ -202,7 +236,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
     })
 
     test('should get all addresses with whitelisted role for specific contract', async () => {
-      const contractAddress = permissionedFleetAddress
+      const contractAddress = permissionedFleetAddressUsdc
 
       const addressesWithWhitelistedRole =
         await sdk.armada.accessControl.getAllAddressesWithContractSpecificRole({
@@ -219,7 +253,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
     })
 
     test('should get all addresses with keeper role for specific contract', async () => {
-      const contractAddress = permissionedFleetAddress
+      const contractAddress = permissionedFleetAddressUsdc
 
       const addressesWithKeeperRole =
         await sdk.armada.accessControl.getAllAddressesWithContractSpecificRole({

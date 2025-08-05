@@ -16,8 +16,8 @@ describe('Armada Protocol - Admin E2E Tests', () => {
 
   const chainId = ChainIds.Base
   const chainInfo = getChainInfoByChainId(chainId)
-  const permissionedFleetAddress = Address.createFromEthereum({
-    value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17', // Using a known fleet address
+  const permissionedFleetAddressUsdc = Address.createFromEthereum({
+    value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198', // Using a known fleet address
   })
 
   let governorSendTxTool: SendTransactionTool
@@ -43,7 +43,7 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     const arks = await sdk.armada.admin.arks({
       vaultId: ArmadaVaultId.createFrom({
         chainInfo,
-        fleetAddress: permissionedFleetAddress,
+        fleetAddress: permissionedFleetAddressUsdc,
       }),
     })
 
