@@ -28,7 +28,7 @@ import {
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, zeroAddress } from 'viem'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -211,18 +211,24 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       address: params.vaultId.fleetAddress,
     })
 
+    console.log('getStakedShares', { fleetAddress: params.vaultId.fleetAddress })
     const { stakingRewardsManager } = await fleetContract.config()
+    console.log('stakingRewardsManager', stakingRewardsManager.value)
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.vaultId.chainInfo,
     })
 
+    const isStakingRewardsManagerZero = stakingRewardsManager.value === zeroAddress
+
     const [balance, token] = await Promise.all([
-      client.readContract({
-        abi: StakingRewardsManagerBaseAbi,
-        address: stakingRewardsManager.value,
-        functionName: 'balanceOf',
-        args: [params.user.wallet.address.value],
-      }),
+      isStakingRewardsManagerZero
+        ? Promise.resolve('0')
+        : client.readContract({
+            abi: StakingRewardsManagerBaseAbi,
+            address: stakingRewardsManager.value,
+            functionName: 'balanceOf',
+            args: [params.user.wallet.address.value],
+          }),
       fleetContract.asErc20().getToken(),
     ])
 
