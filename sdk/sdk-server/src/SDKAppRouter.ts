@@ -1,6 +1,7 @@
 import { router } from './SDKTRPC'
 
 import { addArk } from './armada-protocol-handlers/admin/addArk'
+import { arks } from './armada-protocol-handlers/admin/arks'
 import { addArks } from './armada-protocol-handlers/admin/addArks'
 import { emergencyShutdown } from './armada-protocol-handlers/admin/emergencyShutdown'
 import { forceRebalance } from './armada-protocol-handlers/admin/forceRebalance'
@@ -186,6 +187,7 @@ export const sdkAppRouter = router({
       forceRebalance: forceRebalance,
       updateRebalanceCooldown: updateRebalanceCooldown,
       emergencyShutdown: emergencyShutdown,
+      arks: arks,
     },
     accessControl: {
       hasGeneralRole: hasGeneralRole,

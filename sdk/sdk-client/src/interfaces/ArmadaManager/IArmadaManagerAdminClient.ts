@@ -3,6 +3,8 @@ import {
   IPercentage,
   ITokenAmount,
   TransactionInfo,
+  type AddressValue,
+  type ChainId,
   type IArmadaVaultId,
 } from '@summerfi/sdk-common'
 import { IRebalanceData } from '@summerfi/armada-protocol-common'
@@ -58,12 +60,9 @@ export interface IArmadaManagerAdminClient {
    * @name setTipJar
    * @description Sets the tip jar address of the fleet. Used by the governance
    *
-   * @param vaultId The ID of the pool
-   * @param tipJar The address of the new tip jar
-   *
    * @returns The transaction information
    */
-  setTipJar(params: { vaultId: IArmadaVaultId; tipJar: IAddress }): Promise<TransactionInfo>
+  setTipJar(params: { chainId: ChainId; addressValue: AddressValue }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
@@ -126,6 +125,16 @@ export interface IArmadaManagerAdminClient {
    * @returns The transaction information
    */
   removeArk(params: { vaultId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
+
+  /**
+   * @name arks
+   * @description Gets the list of active arks for a fleet
+   *
+   * @param vaultId The ID of the vault
+   *
+   * @returns The list of active ark addresses
+   */
+  arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
 
   /**
    * @name setArkDepositCap

@@ -210,4 +210,14 @@ export interface IArmadaManagerAdmin {
    * @returns The transaction information
    */
   emergencyShutdown(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
+
+  /**
+   * @name arks
+   * @description Gets the list of active arks for a fleet. Used to fetch data from the blockchain
+   *
+   * @param vaultId The ID of the vault
+   *
+   * @returns Promise<IAddress[]> The list of active ark addresses
+   */
+  arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
 }
