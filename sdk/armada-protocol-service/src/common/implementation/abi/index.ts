@@ -159,3 +159,5 @@ export const abiBorrowBalanceOf = [
     type: 'function',
   },
 ] as const
+
+export { AccessControlAbi } from './accessControlAbi'

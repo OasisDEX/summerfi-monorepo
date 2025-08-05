@@ -2,6 +2,8 @@
 export { Chain } from './implementation/Chain'
 export { ChainsManagerClient } from './implementation/ChainsManager'
 export { makeSDK } from './implementation/MakeSDK'
+export { makeAdminSDK } from './implementation/MakeAdminSDK'
+export { SDKAdminManager } from './implementation/SDKAdminManager'
 export { PortfolioManager } from './implementation/PortfolioManager'
 export { ProtocolsManagerClient } from './implementation/ProtocolsManagerClient'
 export { SDKManager } from './implementation/SDKManager'
@@ -9,6 +11,8 @@ export { TokensManagerClient } from './implementation/TokensManagerClient'
 export { UserClient } from './implementation/UserClient'
 export { UsersManager } from './implementation/UsersManager'
 export type { IArmadaManagerClient } from './interfaces/ArmadaManager/IArmadaManagerClient'
+export type { IArmadaManagerAdminClient } from './interfaces/ArmadaManager/IArmadaManagerAdminClient'
+export type { IArmadaManagerClientAccessControl } from './interfaces/ArmadaManager/IArmadaManagerClientAccessControl'
 export type { IChain } from './interfaces/IChain'
 export type { IChainsManagerClient } from './interfaces/IChainsManager'
 export type { IProtocolsManagerClient } from './interfaces/IProtocolsManagerClient'
@@ -52,3 +56,4 @@ export {
   SparkProtocol,
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
+export { GeneralRoles } from '@summerfi/armada-protocol-common'

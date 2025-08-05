@@ -84,11 +84,10 @@ describe('Armada Protocol Rewards', () => {
 
           const allChainIds = [
             ChainIds.Mainnet,
-            ChainIds.Optimism,
             ChainIds.Base,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
-          ] as ChainId[] // Ethereum, Optimism, Base, Arbitrum, Sonic
+          ] as ChainId[] // Ethereum, Base, Arbitrum, Sonic
           const chainsWithRewards = Object.entries(rewards.perChain)
             .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
             .map(([chainId]) => parseInt(chainId) as ChainId)

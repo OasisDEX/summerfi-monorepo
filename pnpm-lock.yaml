@@ -2980,12 +2980,12 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
       '@summerfi/configuration-provider-common':
         specifier: workspace:*
         version: link:../configuration-provider-common
-      '@summerfi/configuration-provider-mock':
-        specifier: workspace:*
-        version: link:../configuration-provider-mock
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -3001,6 +3001,9 @@ importers:
       '@summerfi/tokens-common':
         specifier: workspace:*
         version: link:../tokens-common
+      '@summerfi/tokens-service':
+        specifier: workspace:*
+        version: link:../tokens-service
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

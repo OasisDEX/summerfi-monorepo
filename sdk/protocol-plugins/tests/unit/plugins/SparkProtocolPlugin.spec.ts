@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ChainInfo, ProtocolName, type ChainId } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { SparkLendingPositionId } from '../../../src/plugins/spark/implementation/SparkLendingPositionId'
 import { SparkProtocolPlugin } from '../../../src/plugins/spark/implementation/SparkProtocolPlugin'
@@ -59,7 +59,7 @@ describe('Spark Protocol Plugin', () => {
       protocol: {
         ...sparkPoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
-          chainId: 10,
+          chainId: 10 as ChainId,
           name: 'Unknown',
         }),
       },

@@ -8,6 +8,7 @@ import type { IOracleManager } from '@summerfi/oracle-common'
 
 import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
  * @name ArmadaManagerFactory
@@ -16,6 +17,7 @@ import type { ITokensManager } from '@summerfi/tokens-common'
 export class ArmadaManagerFactory {
   public static newArmadaManager(params: {
     configProvider: IConfigurationProvider
+    deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager

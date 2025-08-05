@@ -3,7 +3,6 @@ import {
   IArmadaManagerVaults,
   createDepositTransaction,
   createWithdrawTransaction,
-  getDeployedContractAddress,
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
 } from '@summerfi/armada-protocol-common'
@@ -40,6 +39,7 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
+import type { IDeploymentProvider } from '../..'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -49,6 +49,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _allowanceManager: IAllowanceManager
   private _oracleManager: IOracleManager
   private _contractsProvider: IContractsProvider
+  private _deploymentProvider: IDeploymentProvider
   private _swapManager: ISwapManager
   private _utils: IArmadaManagerUtils
   private _subgraphManager: IArmadaSubgraphManager
@@ -66,6 +67,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     swapManager: ISwapManager
     utils: IArmadaManagerUtils
     subgraphManager: IArmadaSubgraphManager
+    deploymentProvider: IDeploymentProvider
   }) {
     this._supportedChains = params.supportedChains
     this._blockchainClientProvider = params.blockchainClientProvider
@@ -75,6 +77,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     this._oracleManager = params.oracleManager
     this._contractsProvider = params.contractsProvider
     this._swapManager = params.swapManager
+    this._deploymentProvider = params.deploymentProvider
     this._utils = params.utils
     this._subgraphManager = params.subgraphManager
     this._functionsUrl = this._configProvider.getConfigurationItem({
@@ -181,9 +184,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       destinationFleetToken: destinationFleetToken.toString(),
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.sourceVaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.sourceVaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -583,9 +585,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldStake,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -815,9 +816,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldSwap,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -1518,13 +1518,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     ])
     const { depositCap } = config
 
+    const apysForVault = apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()]
+    if (!apysForVault) {
+      throw new Error(`APY not found for vault ${params.vaultId.fleetAddress.value}`)
+    }
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       token: token,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
-      apy: apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()].apy,
+      apy: apysForVault.apy,
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
     })
   }
@@ -1586,29 +1590,33 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         chainId: number
         fleetAddress: string
         sma: {
-          sma24h: string
-          sma7d: string
-          sma30d: string
+          sma24h: string | null
+          sma7d: string | null
+          sma30d: string | null
         }
-        rates: [
-          {
-            id: string
-            rate: string
-            timestamp: number
-            fleetAddress: string
-          },
-        ]
+        rates:
+          | [
+              {
+                id: string
+                rate: string
+                timestamp: number
+                fleetAddress: string
+              },
+            ]
+          | []
       }>
     } = await res.json()
 
     const byFleetAddress = data.rates.reduce(
       (result, rate) => {
         const fleetAddress = rate.fleetAddress
-        const apy = rate.rates[0].rate
-        result[fleetAddress] = {
-          apy: Percentage.createFrom({
-            value: Number(apy),
-          }),
+        const apy = rate.rates[0]?.rate || null
+        result[fleetAddress.toLowerCase()] = {
+          apy: apy
+            ? Percentage.createFrom({
+                value: Number(apy),
+              })
+            : null,
         }
         return result
       },

@@ -9,7 +9,7 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
     configurationProviderMock = new ConfigurationProviderMock()
 
     testManagerProvider = new TestManagerProvider({
-      type: TestProviderType.TestProvider,
+      type: TestProviderType.MainnetProvider,
       configProvider: configurationProviderMock,
       supportedChainIds: [1],
     })
@@ -18,7 +18,7 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
   })
 
   it('should store the provider type', () => {
-    expect(testManagerProvider.type).toBe(TestProviderType.TestProvider)
+    expect(testManagerProvider.type).toBe(TestProviderType.MainnetProvider)
   })
 
   it('should store the configuration provider', () => {

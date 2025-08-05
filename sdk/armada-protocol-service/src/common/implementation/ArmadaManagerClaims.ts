@@ -8,8 +8,8 @@ import {
   type IArmadaManagerClaims,
   type IArmadaManagerUtils,
   getAllMerkleClaims,
-  getDeployedContractAddress,
   getDeployedGovRewardsManagerAddress,
+  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -26,6 +26,8 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * @name ArmadaManager
@@ -33,8 +35,10 @@ import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
  */
 export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _deploymentProvider: IDeploymentProvider
   private _contractsProvider: IContractsProvider
   private _configProvider: IConfigurationProvider
+  private _tokensManager: ITokensManager
   private _utils: IArmadaManagerUtils
 
   private _supportedChains: IChainInfo[]
@@ -46,6 +50,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   /** CONSTRUCTOR */
   constructor(params: {
     blockchainClientProvider: IBlockchainClientProvider
+    deploymentProvider: IDeploymentProvider
     contractsProvider: IContractsProvider
     configProvider: IConfigurationProvider
     supportedChains: IChainInfo[]
@@ -53,8 +58,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     rewardsRedeemerAddress: IAddress
     utils: IArmadaManagerUtils
     subgraphManager: IArmadaSubgraphManager
+    tokensManager: ITokensManager
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._deploymentProvider = params.deploymentProvider
     this._contractsProvider = params.contractsProvider
     this._configProvider = params.configProvider
     this._supportedChains = params.supportedChains
@@ -62,16 +69,28 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
     this._utils = params.utils
     this._subgraphManager = params.subgraphManager
+    this._tokensManager = params.tokensManager
+
     const _distributionsBaseUrl = this._configProvider.getConfigurationItem({
       name: 'SDK_DISTRIBUTIONS_BASE_URL',
     })
-
     this._distributionsUrls = this._configProvider
       .getConfigurationItem({
         name: 'SDK_DISTRIBUTIONS_FILES',
       })
       .split(',')
       .map((file) => new URL(file.trim(), _distributionsBaseUrl.trim()).toString())
+  }
+
+  getSummerToken(
+    params: Parameters<IArmadaManagerUtils['getSummerToken']>[0],
+  ): ReturnType<IArmadaManagerUtils['getSummerToken']> {
+    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
+
+    return this._tokensManager.getTokenBySymbol({
+      chainInfo: params.chainInfo,
+      symbol: tokenSymbol,
+    })
   }
 
   async canClaimDistributions(
@@ -204,11 +223,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo,
     })
 
-    const summerTokenAddress = getDeployedContractAddress({
-      chainInfo,
-      contractCategory: 'gov',
-      contractName: 'summerToken',
-    })
+    const summerTokenAddress = this.getSummerToken({ chainInfo }).address
 
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
     const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
@@ -357,10 +372,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       {} as Record<HexData, typeof filteredClaims>,
     )
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: this._hubChainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'admiralsQuarters',
+      chainId: this._hubChainInfo.chainId,
     })
 
     const transactions: ClaimTransactionInfo[] = []
@@ -409,10 +423,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [params.govRewardsManagerAddress.value, params.rewardToken.value],
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: this._hubChainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'admiralsQuarters',
+      chainId: this._hubChainInfo.chainId,
     })
 
     return [
@@ -437,9 +450,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       args: [params.fleetCommandersAddresses.map((a) => a.value), params.rewardToken.value],
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -483,11 +495,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         }),
       )
 
-      const govRewardToken = getDeployedContractAddress({
-        chainInfo: this._hubChainInfo,
-        contractCategory: 'gov',
-        contractName: 'summerToken',
-      })
+      const govRewardToken = this.getSummerToken({ chainInfo: this._hubChainInfo }).address
 
       gatherMulticallArgsFromRequests.push(
         this.getVoteDelegationRewards(params.user).then((voteDelegationRewards) => {
@@ -504,11 +512,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    const fleetRewardToken = getDeployedContractAddress({
-      chainInfo: params.chainInfo,
-      contractCategory: 'gov',
-      contractName: 'summerToken',
-    })
+    const fleetRewardToken = this.getSummerToken({ chainInfo: params.chainInfo }).address
 
     gatherMulticallArgsFromRequests.push(
       this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
@@ -542,9 +546,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       return undefined
     }
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 

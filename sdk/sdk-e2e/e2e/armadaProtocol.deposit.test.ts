@@ -12,8 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
-import { waitSeconds } from './utils/wait'
+import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
 import { DEFAULT_SLIPPAGE_PERCENTAGE, TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
 import assert from 'assert'
 
@@ -34,14 +33,18 @@ const usdtFleetArb = Address.createFromEthereum({
 const usdcFleetSonic = Address.createFromEthereum({
   value: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
 })
+const permissionedFleetAddressUsdc = Address.createFromEthereum({
+  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+})
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const rpcUrl = process.env.E2E_SDK_FORK_URL_SONIC
-    const chainId = ChainIds.Sonic
-    const fleetAddress = usdcFleetSonic
+    const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+    const chainId = ChainIds.Base
+    const fleetAddress = permissionedFleetAddressUsdc
     const swapToSymbol = undefined
     const amountValue = '1'
+    const userAddress = testWalletAddress
 
     await runTests({
       swapToSymbol,
@@ -49,6 +52,8 @@ describe('Armada Protocol Deposit', () => {
       fleetAddress,
       rpcUrl,
       amountValue,
+      userAddress,
+      stake: false,
     })
     // await runTests({
     //   swapToSymbol,
@@ -65,6 +70,7 @@ describe('Armada Protocol Deposit', () => {
     fleetAddress,
     rpcUrl,
     amountValue,
+    userAddress,
     stake,
     referralCode,
   }: {
@@ -73,6 +79,7 @@ describe('Armada Protocol Deposit', () => {
     fleetAddress: Address
     rpcUrl: string | undefined
     amountValue: string
+    userAddress: Address
     stake?: boolean
     referralCode?: string
   }) {
@@ -154,8 +161,6 @@ describe('Armada Protocol Deposit', () => {
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
-
-    await waitSeconds(TX_CONFIRMATION_WAIT_TIME)
 
     const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
       vaultId,

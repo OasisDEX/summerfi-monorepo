@@ -104,14 +104,6 @@ export interface IFleetCommanderContract extends IContractWrapper {
   setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo>
 
   /**
-   * @name setTipJar
-   * @description Sets the tip jar of the fleet. Used by the governance
-   *
-   * @returns The transaction information
-   */
-  setTipJar(): Promise<TransactionInfo>
-
-  /**
    * @name setTipRate
    * @description Sets the tip rate of the fleet. Used by the governance
    *

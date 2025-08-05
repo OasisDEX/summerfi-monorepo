@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ChainInfo, ProtocolName, type ChainId } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { MakerLendingPositionId } from '../../../src/plugins/maker/implementation/MakerLendingPositionId'
 import { MakerProtocolPlugin } from '../../../src/plugins/maker/implementation/MakerProtocolPlugin'
@@ -57,7 +57,7 @@ describe('Maker Protocol Plugin', () => {
       protocol: {
         ...makerPoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
-          chainId: 10,
+          chainId: 10 as ChainId,
           name: 'Unknown',
         }),
       },

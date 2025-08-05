@@ -9,7 +9,8 @@ import {
   type IArmadaManagerVaults,
   type IArmadaManagerUtils,
   type IArmadaManagerMerklRewards,
-  setTestDeployment,
+  type IArmadaManagerAdmin,
+  type IArmadaManagerAccessControl,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -26,6 +27,9 @@ import { ArmadaManagerBridge } from './ArmadaManagerBridge'
 import { ArmadaManagerVaults } from './ArmadaManagerVaults'
 import { ArmadaManagerUtils } from './ArmadaManagerUtils'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
+import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
+import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
  * @name ArmadaManager
@@ -39,12 +43,15 @@ export class ArmadaManager implements IArmadaManager {
   vaults: IArmadaManagerVaults
   utils: IArmadaManagerUtils
   merklRewards: IArmadaManagerMerklRewards
+  admin: IArmadaManagerAdmin
+  accessControl: IArmadaManagerAccessControl
 
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
+  private _deploymentProvider: IDeploymentProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
   private _subgraphManager: IArmadaSubgraphManager
@@ -56,6 +63,7 @@ export class ArmadaManager implements IArmadaManager {
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
+    deploymentProvider: IDeploymentProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
     subgraphManager: IArmadaSubgraphManager
@@ -65,6 +73,7 @@ export class ArmadaManager implements IArmadaManager {
     tokensManager: ITokensManager
   }) {
     this._configProvider = params.configProvider
+    this._deploymentProvider = params.deploymentProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
@@ -72,11 +81,6 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-
-    const summerDeployment = this._configProvider.getConfigurationItem({
-      name: 'SUMMER_DEPLOYMENT_CONFIG',
-    })
-    setTestDeployment(summerDeployment)
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -99,6 +103,7 @@ export class ArmadaManager implements IArmadaManager {
       oracleManager: this._oracleManager,
       subgraphManager: this._subgraphManager,
       swapManager: this._swapManager,
+      deploymentProvider: this._deploymentProvider,
     })
     this.claims = new ArmadaManagerClaims({
       ...params,
@@ -136,10 +141,23 @@ export class ArmadaManager implements IArmadaManager {
       swapManager: this._swapManager,
       utils: this.utils,
       subgraphManager: this._subgraphManager,
+      deploymentProvider: this._deploymentProvider,
     })
     this.merklRewards = new ArmadaManagerMerklRewards({
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
+    })
+    this.admin = new ArmadaManagerAdmin({
+      configProvider: this._configProvider,
+      contractsProvider: this._contractsProvider,
+      blockchainClientProvider: this._blockchainClientProvider,
+    })
+    this.accessControl = new ArmadaManagerAccessControl({
+      configProvider: this._configProvider,
+      contractsProvider: this._contractsProvider,
+      blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
     })
   }
 }

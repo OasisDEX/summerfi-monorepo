@@ -24,7 +24,7 @@
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/blockchain-client-provider": "workspace:*",
-    "@summerfi/configuration-provider-mock": "workspace:*",
+    "@summerfi/configuration-provider": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
@@ -32,6 +32,7 @@
     "@summerfi/tenderly-utils": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
+    "@summerfi/tokens-service": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },

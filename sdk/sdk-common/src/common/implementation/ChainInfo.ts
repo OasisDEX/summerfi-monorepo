@@ -26,7 +26,7 @@ export class ChainInfo implements IChainInfo {
 
   /** SEALED CONSTRUCTOR */
   private constructor(params: ChainInfoParameters) {
-    this.chainId = params.chainId
+    this.chainId = params.chainId as ChainId
     this.name = params.name
   }
 

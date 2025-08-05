@@ -26,7 +26,7 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol Vault', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
   if (!rpcUrl) {
     throw new Error('Missing rpc url')

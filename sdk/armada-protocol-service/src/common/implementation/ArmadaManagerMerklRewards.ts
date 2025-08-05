@@ -1,5 +1,4 @@
 import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
-import { getDeployedContractAddress } from '@summerfi/armada-protocol-common'
 import {
   isChainId,
   LoggingService,
@@ -18,6 +17,7 @@ import { merklToggleAbi } from './abi/merklToggleAbi'
 import { merklOperatorsAbi } from './abi/merklOperatorsAbi'
 import { getMerklDistributorContractAddress } from './configs/merkl-distributor-addresses'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
+import type { IDeploymentProvider } from '../..'
 
 /**
  * Response type from Merkl API for user rewards
@@ -58,13 +58,16 @@ type MerklApiResponse = {
 export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   private _supportedChainIds: number[]
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _deploymentProvider: IDeploymentProvider
 
   constructor(params: {
     supportedChains: IChainInfo[]
     blockchainClientProvider: IBlockchainClientProvider
+    deploymentProvider: IDeploymentProvider
   }) {
     this._supportedChainIds = params.supportedChains.map((chain) => chain.chainId)
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._deploymentProvider = params.deploymentProvider
   }
 
   async getUserMerklRewards(
@@ -161,10 +164,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       chainId,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
-      contractCategory: 'core',
     })
 
     const claimTarget = params.useMerklDistributorDirectly
@@ -244,10 +246,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const distributorAddress = getMerklDistributorContractAddress(chainId)
 
     // Get AdmiralsQuarters contract address
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
-      contractCategory: 'core',
     })
 
     if (!admiralsQuartersAddress) {
@@ -293,10 +294,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const distributorAddress = getMerklDistributorContractAddress(chainId)
 
     // Get AdmiralsQuarters contract address
-    const admiralsQuartersAddress = getDeployedContractAddress({
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       chainId,
       contractName: 'admiralsQuarters',
-      contractCategory: 'core',
     })
 
     if (!admiralsQuartersAddress) {

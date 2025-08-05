@@ -10,7 +10,7 @@ jest.setTimeout(300000)
 
 describe.skip('Armada Protocol Gov', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
 
   for (const { chainInfo, rpcUrl, userAddress } of testConfig) {

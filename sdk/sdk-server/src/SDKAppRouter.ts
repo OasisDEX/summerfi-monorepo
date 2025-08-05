@@ -1,20 +1,21 @@
 import { router } from './SDKTRPC'
 
-import { addArk } from './armada-protocol-handlers/governance/addArk'
-import { addArks } from './armada-protocol-handlers/governance/addArks'
-import { emergencyShutdown } from './armada-protocol-handlers/governance/emergencyShutdown'
-import { forceRebalance } from './armada-protocol-handlers/governance/forceRebalance'
-import { removeArk } from './armada-protocol-handlers/governance/removeArk'
-import { setArkDepositCap } from './armada-protocol-handlers/governance/setArkDepositCap'
-import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceInflow'
-import { setArkMaxRebalanceOutflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceOutflow'
-import { setFleetDepositCap } from './armada-protocol-handlers/governance/setFleetDepositCap'
-import { setMinimumBufferBalance } from './armada-protocol-handlers/governance/setMinimumBufferBalance'
-import { setTipJar } from './armada-protocol-handlers/governance/setTipJar'
-import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
-import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
-import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
-import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
+import { addArk } from './armada-protocol-handlers/admin/addArk'
+import { arks } from './armada-protocol-handlers/admin/arks'
+import { addArks } from './armada-protocol-handlers/admin/addArks'
+import { emergencyShutdown } from './armada-protocol-handlers/admin/emergencyShutdown'
+import { forceRebalance } from './armada-protocol-handlers/admin/forceRebalance'
+import { removeArk } from './armada-protocol-handlers/admin/removeArk'
+import { setArkDepositCap } from './armada-protocol-handlers/admin/setArkDepositCap'
+import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceInflow'
+import { setArkMaxRebalanceOutflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceOutflow'
+import { setFleetDepositCap } from './armada-protocol-handlers/admin/setFleetDepositCap'
+import { setMinimumBufferBalance } from './armada-protocol-handlers/admin/setMinimumBufferBalance'
+import { setTipJar } from './armada-protocol-handlers/admin/setTipJar'
+import { setTipRate } from './armada-protocol-handlers/admin/setTipRate'
+import { updateRebalanceCooldown } from './armada-protocol-handlers/admin/updateRebalanceCooldown'
+import { adjustBuffer } from './armada-protocol-handlers/admin/adjustBuffer'
+import { rebalance } from './armada-protocol-handlers/admin/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
@@ -68,6 +69,14 @@ import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMer
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { authorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/authorizeAsMerklRewardsOperatorTx'
 import { isAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperator'
+import { hasGeneralRole } from './armada-protocol-handlers/access-control/hasGeneralRole'
+import { hasContractSpecificRole } from './armada-protocol-handlers/access-control/hasContractSpecificRole'
+import { grantGeneralRole } from './armada-protocol-handlers/access-control/grantGeneralRole'
+import { revokeGeneralRole } from './armada-protocol-handlers/access-control/revokeGeneralRole'
+import { grantContractSpecificRole } from './armada-protocol-handlers/access-control/grantContractSpecificRole'
+import { revokeContractSpecificRole } from './armada-protocol-handlers/access-control/revokeContractSpecificRole'
+import { getAllAddressesWithGeneralRole } from './armada-protocol-handlers/access-control/getAllAddressesWithGeneralRole'
+import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handlers/access-control/getAllAddressesWithContractSpecificRole'
 
 /**
  * Server
@@ -161,6 +170,34 @@ export const sdkAppRouter = router({
       forceRebalance: forceRebalance,
       updateRebalanceCooldown: updateRebalanceCooldown,
       emergencyShutdown: emergencyShutdown,
+    },
+    admin: {
+      rebalance: rebalance,
+      adjustBuffer: adjustBuffer,
+      setFleetDepositCap: setFleetDepositCap,
+      setTipJar: setTipJar,
+      setTipRate: setTipRate,
+      addArk: addArk,
+      addArks: addArks,
+      removeArk: removeArk,
+      setArkDepositCap: setArkDepositCap,
+      setArkMaxRebalanceInflow: setArkMaxRebalanceInflow,
+      setArkMaxRebalanceOutflow: setArkMaxRebalanceOutflow,
+      setMinimumBufferBalance: setMinimumBufferBalance,
+      forceRebalance: forceRebalance,
+      updateRebalanceCooldown: updateRebalanceCooldown,
+      emergencyShutdown: emergencyShutdown,
+      arks: arks,
+    },
+    accessControl: {
+      hasGeneralRole: hasGeneralRole,
+      hasContractSpecificRole: hasContractSpecificRole,
+      grantGeneralRole: grantGeneralRole,
+      revokeGeneralRole: revokeGeneralRole,
+      grantContractSpecificRole: grantContractSpecificRole,
+      revokeContractSpecificRole: revokeContractSpecificRole,
+      getAllAddressesWithGeneralRole: getAllAddressesWithGeneralRole,
+      getAllAddressesWithContractSpecificRole: getAllAddressesWithContractSpecificRole,
     },
   },
 })

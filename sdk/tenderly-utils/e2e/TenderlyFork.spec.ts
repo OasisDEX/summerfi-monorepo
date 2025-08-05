@@ -51,7 +51,7 @@ describe('e2e', () => {
     const tenderly = new Tenderly({ configurationProvider: new ConfigurationProvider() })
 
     for (const forkInfo of forksInfo) {
-      const tenderlyFork = await tenderly.createFork({
+      const tenderlyFork = await tenderly.createVnet({
         chainInfo: forkInfo.chainInfo,
         atBlock: forkInfo.atBlock,
       })

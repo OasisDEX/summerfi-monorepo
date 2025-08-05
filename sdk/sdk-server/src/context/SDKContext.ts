@@ -5,8 +5,14 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
-import { IArmadaManager } from '@summerfi/armada-protocol-common'
-import { ArmadaManagerFactory } from '@summerfi/armada-protocol-service'
+import { IArmadaManager, setTestDeployment } from '@summerfi/armada-protocol-common'
+import {
+  ArmadaManagerFactory,
+  DeploymentProvider,
+  fetchDeploymentProviderConfig,
+  type DeploymentProviderConfig,
+  type IDeploymentProvider,
+} from '@summerfi/armada-protocol-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
@@ -28,6 +34,7 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
+import { readDeploymentProviderConfig } from '@summerfi/armada-protocol-service'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -60,8 +67,30 @@ const quickHashCode = (str: string): string => {
 }
 
 // context for each request
-export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
+export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   const configProvider = new ConfigurationProvider()
+  const summerDeployment = configProvider.getConfigurationItem({
+    name: 'SUMMER_DEPLOYMENT_CONFIG',
+  })
+  setTestDeployment(summerDeployment)
+
+  let deploymentProviderConfig: DeploymentProviderConfig
+  // check for Client-Id header in request and fetch integrator config if present
+  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  if (clientId) {
+    try {
+      deploymentProviderConfig = await fetchDeploymentProviderConfig(clientId)
+    } catch (error) {
+      console.error(`Failed to fetch integrator config:`, error)
+      throw new Error(`ClientId ${clientId} does not exist`)
+    }
+  } else {
+    // if no Client-Id header, use default deployment provider config
+    deploymentProviderConfig = readDeploymentProviderConfig()
+  }
+
+  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfig)
+
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
@@ -90,6 +119,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
+    deploymentProvider,
     blockchainClientProvider,
     allowanceManager,
     contractsProvider,

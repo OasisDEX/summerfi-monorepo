@@ -27,7 +27,10 @@ export function makeSDK(params: MakeSDKParams) {
   if (params.logging) {
     console.log('Summer.fi SDK: versionedURL', versionedURL)
   }
-  const rpcClient = createMainRPCClient(versionedURL, params.logging)
+  const rpcClient = createMainRPCClient({
+    apiURL: versionedURL,
+    logging: params.logging,
+  })
 
   return new SDKManager({ rpcClient })
 }

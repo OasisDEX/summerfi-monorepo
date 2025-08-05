@@ -1,22 +1,27 @@
-import { type Address, InstitutionRoles } from '@summerfi/app-types'
+import { type Address } from '@summerfi/app-types'
+import { GeneralRoles } from '@summerfi/sdk-client'
 
 import { type InstitutionData } from '@/types/institution-data'
 
 const dummyRoles: {
-  [key in InstitutionRoles]: {
+  [key in GeneralRoles]: {
     address: Address
     lastUpdated: number
   }
 } = {
-  [InstitutionRoles.GENERAL_ADMIN]: {
+  [GeneralRoles.ADMIRALS_QUARTERS_ROLE]: {
     address: '0x0000000000000000000000000000000000000123',
     lastUpdated: 1725689600000,
   },
-  [InstitutionRoles.RISK_MANAGER]: {
+  [GeneralRoles.DECAY_CONTROLLER_ROLE]: {
     address: '0x0000000000000000000000000000000000000456',
     lastUpdated: 1735689600000,
   },
-  [InstitutionRoles.MARKET_ALLOCATOR]: {
+  [GeneralRoles.GOVERNOR_ROLE]: {
+    address: '0x0000000000000000000000000000000000000789',
+    lastUpdated: 1745689600000,
+  },
+  [GeneralRoles.SUPER_KEEPER_ROLE]: {
     address: '0x0000000000000000000000000000000000000789',
     lastUpdated: 1745689600000,
   },

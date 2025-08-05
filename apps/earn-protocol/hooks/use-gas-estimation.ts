@@ -37,7 +37,7 @@ const getNativeSymbol = (chainId: number) => {
     [ChainIds.ArbitrumOne]: 'WETH',
     [ChainIds.Base]: 'WETH',
     [ChainIds.Mainnet]: 'WETH',
-    [ChainIds.Optimism]: 'WETH',
+    // [ChainIds.Optimism]: 'WETH',
     [ChainIds.Sonic]: 'WS',
   }
   const symbol = nativeSymbolByChain[chainId]
