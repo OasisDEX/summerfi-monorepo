@@ -2,7 +2,6 @@ import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { SDKApiUrl } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
-import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
 
 jest.setTimeout(300000)
 
