@@ -1,6 +1,6 @@
 import { Button, Icon, TableCellText } from '@summerfi/app-earn-ui'
-import { type InstitutionRoles } from '@summerfi/app-types'
 import { formatAddress } from '@summerfi/app-utils'
+import { type GeneralRoles } from '@summerfi/sdk-client'
 import dayjs from 'dayjs'
 
 import { rolesToHuman } from '@/helpers/roles-to-human'
@@ -20,7 +20,7 @@ export const roleAdminMapper = ({
 
     return {
       content: {
-        role: <TableCellText>{rolesToHuman(role as InstitutionRoles)}</TableCellText>,
+        role: <TableCellText>{rolesToHuman(role as GeneralRoles)}</TableCellText>,
         address: (
           <TableCellText>{formatAddress(item.address, { first: 10, last: 10 })}</TableCellText>
         ),

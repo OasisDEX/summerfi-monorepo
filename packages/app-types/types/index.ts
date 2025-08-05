@@ -150,7 +150,6 @@ export type {
 } from './src/terms-of-service'
 export type { JWTChallenge, JwtPayload } from './src/auth'
 export type { RiskType } from './src/earn-protocol/risk'
-export { InstitutionRoles } from './src/earn-protocol/institutions'
 export type {
   ArkDetailsType,
   ArksHistoricalChartData,

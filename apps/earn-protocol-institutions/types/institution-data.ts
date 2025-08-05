@@ -1,7 +1,8 @@
-import { type Address, type InstitutionRoles } from '@summerfi/app-types'
+import { type Address } from '@summerfi/app-types'
+import { type GeneralRoles } from '@summerfi/sdk-client'
 
 export type InstitutionVaultRoles = {
-  [key in InstitutionRoles]: {
+  [key in GeneralRoles]: {
     address: Address
     lastUpdated: number
   }
@@ -26,7 +27,7 @@ export type InstitutionData = {
   }[]
 }
 
-export type InstitutionVaultRole = [InstitutionRoles, { address: Address; lastUpdated: number }]
+export type InstitutionVaultRole = [GeneralRoles, { address: Address; lastUpdated: number }]
 
 export type InstitutionDataBasic = {
   id: InstitutionData['id']

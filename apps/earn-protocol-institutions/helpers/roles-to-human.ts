@@ -1,18 +1,20 @@
-import { InstitutionRoles } from '@summerfi/app-types'
+import { GeneralRoles } from '@summerfi/sdk-client'
 
 /**
  * Converts an institution role to a human-readable string
  * @param role - The institution role to convert
  * @returns The human-readable string
  */
-export const rolesToHuman = (role: InstitutionRoles): string => {
+export const rolesToHuman = (role: GeneralRoles): string => {
   switch (role) {
-    case InstitutionRoles.GENERAL_ADMIN:
-      return 'General Admin'
-    case InstitutionRoles.RISK_MANAGER:
-      return 'Risk Manager'
-    case InstitutionRoles.MARKET_ALLOCATOR:
-      return 'Market Allocator'
+    case GeneralRoles.SUPER_KEEPER_ROLE:
+      return 'Super Keeper'
+    case GeneralRoles.GOVERNOR_ROLE:
+      return 'Governor'
+    case GeneralRoles.ADMIRALS_QUARTERS_ROLE:
+      return "Admiral's Quarters"
+    case GeneralRoles.DECAY_CONTROLLER_ROLE:
+      return 'Decay Controller'
     default:
       return 'Unknown role'
   }

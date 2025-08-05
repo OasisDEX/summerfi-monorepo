@@ -1,7 +1,8 @@
 'use client'
 import { type FC, type ReactNode } from 'react'
 import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, InstitutionRoles } from '@summerfi/app-types'
+import { type DropdownRawOption } from '@summerfi/app-types'
+import { GeneralRoles } from '@summerfi/sdk-client'
 import { useRouter } from 'next/navigation'
 
 import { rolesToHuman } from '@/helpers/roles-to-human'
@@ -16,7 +17,7 @@ interface InstitutionPageHeaderProps {
 }
 
 // todo to be replaced with the actual connected role & mapping from backend per wallet address
-const connectedRole = InstitutionRoles.GENERAL_ADMIN
+const connectedRole = GeneralRoles.ADMIRALS_QUARTERS_ROLE
 
 const DropdownContent: FC<{ children: ReactNode }> = ({ children }) => {
   return (
