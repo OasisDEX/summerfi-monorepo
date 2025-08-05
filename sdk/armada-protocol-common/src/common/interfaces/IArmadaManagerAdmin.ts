@@ -4,6 +4,8 @@ import type {
   ITokenAmount,
   TransactionInfo,
   IArmadaVaultId,
+  ChainId,
+  AddressValue,
 } from '@summerfi/sdk-common'
 import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 
@@ -58,11 +60,12 @@ export interface IArmadaManagerAdmin {
    * @name setTipJar
    * @description Updates the tip jar for the Fleet
    *
-   * @param vaultId The ID of the vault
+   * @param params.chainId The chain ID
+   * @param params.addressValue The new address of the tip jar
    *
    * @returns TransactionInfo The transaction information
    */
-  setTipJar(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
+  setTipJar(params: { chainId: ChainId; addressValue: AddressValue }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate

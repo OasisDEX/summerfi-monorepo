@@ -190,7 +190,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
   })
 
   // test whitelisted role for address 0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17
-  it.only('should check whitelisted role', async () => {
+  it('should check whitelisted role', async () => {
     const roleTargetContract = Address.createFromEthereum({
       value: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
     })

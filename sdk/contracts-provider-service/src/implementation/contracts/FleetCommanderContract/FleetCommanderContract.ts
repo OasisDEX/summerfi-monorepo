@@ -191,15 +191,6 @@ export class FleetCommanderContract<
     })
   }
 
-  /** @see IFleetCommanderContract.setTipJar */
-  async setTipJar(): Promise<TransactionInfo> {
-    return this._createTransaction({
-      functionName: 'setTipJar',
-      args: [],
-      description: 'Updates the tip jar of the fleet',
-    })
-  }
-
   /** @see IFleetCommanderContract.setTipRate */
   setTipRate(params: { rate: IPercentage }): Promise<TransactionInfo> {
     return this._createTransaction({

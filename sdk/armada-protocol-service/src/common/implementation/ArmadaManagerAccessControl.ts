@@ -14,8 +14,10 @@ import {
   Address,
   LoggingService,
 } from '@summerfi/sdk-common'
+
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import { AccessControlAbi } from './abi'
+import { AccessControlStartBlockConfig } from './configs/AccessControlStartBlockConfig'
 
 /**
  * @name ArmadaManagerAccessControl
@@ -31,10 +33,9 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   /**
    * @description Block numbers from which to start fetching events for each chain
    * This avoids scanning from genesis block for performance
+   * Values are loaded from configuration file for flexibility
    */
-  private readonly _startBlocks: Partial<Record<ChainId, bigint>> = {
-    8453: 33275700n, // Base chain
-  }
+  private readonly _startBlocks: Partial<Record<ChainId, bigint>> = AccessControlStartBlockConfig
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -292,7 +293,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
           fleetCommanderAddress: params.contractAddress,
         })
       default:
-        // If the role is unnknown, throw an error
+        // If the role is unknown, throw an error
         throw new Error(`Grant method not implemented for role: ${params.role}`)
     }
   }

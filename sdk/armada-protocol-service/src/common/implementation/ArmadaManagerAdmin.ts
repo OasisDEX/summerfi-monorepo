@@ -64,12 +64,9 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   async setTipJar(
     params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
   ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipJar()
+    throw new Error(
+      'setTipJar method is not implemented in ArmadaManagerAdmin' + JSON.stringify(params),
+    )
   }
 
   /** @see IArmadaManagerAdmin.setTipRate */

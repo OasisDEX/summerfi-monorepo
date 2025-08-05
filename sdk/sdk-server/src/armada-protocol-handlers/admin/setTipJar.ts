@@ -1,11 +1,12 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { type IArmadaVaultId, isArmadaVaultId } from '@summerfi/sdk-common'
+import { AddressValue, type ChainId, isAddressValue, isChainId } from '@summerfi/sdk-common'
 
 export const setTipJar = publicProcedure
   .input(
     z.object({
-      vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
+      chainId: z.custom<ChainId>(isChainId),
+      addressValue: z.custom<AddressValue>(isAddressValue),
     }),
   )
   .query(async (opts) => {
