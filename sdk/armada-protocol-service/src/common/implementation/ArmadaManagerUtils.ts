@@ -222,7 +222,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
     const [balance, token] = await Promise.all([
       isStakingRewardsManagerZero
-        ? Promise.resolve('0')
+        ? Promise.resolve(0n)
         : client.readContract({
             abi: StakingRewardsManagerBaseAbi,
             address: stakingRewardsManager.value,
