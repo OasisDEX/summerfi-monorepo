@@ -8,14 +8,15 @@ import { PostgresDB } from 'kysely-codegen/dist/dialects/postgres/postgres-db'
 
 export function getMigrator() {
   console.log('Retrieving database connection string from environment variables...')
-  const { EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING } = process.env
-  if (!EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING) {
+  const {
+    EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING
+  } = process.env
+  if (
+    !EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING
+  ) {
     console.error('EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING is not set')
     throw new Error('EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING is not set')
   }
-  console.log(
-    'Database connection string retrieved successfully.' + EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING,
-  )
 
   console.log('Creating Postgres dialect...')
   const dialect = new PostgresJSDialect({
