@@ -262,7 +262,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe.only(`User Flow`, () => {
+      describe(`User Flow`, () => {
         test(`should demonstrate full claiming flow on base`, async () => {
           const testChainId = ChainIds.Base
 
@@ -320,7 +320,7 @@ describe('Armada Protocol Rewards', () => {
             assert(authTransactions[0], 'No authorization transaction Generated')
 
             const status = await sendTxTool(authTransactions[0])
-            assert(status === 'reverted', 'Authorization transaction simulation failed')
+            assert(status === 'success', 'Authorization transaction failed')
 
             console.log(`Checking authorization status after sending transaction...`)
             const postAuthStatus = await sdk.armada.users.isAuthorizedAsMerklRewardsOperator({
