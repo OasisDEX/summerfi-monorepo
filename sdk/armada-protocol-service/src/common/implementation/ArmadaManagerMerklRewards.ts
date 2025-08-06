@@ -210,8 +210,16 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         })
       : encodeFunctionData({
           abi: AdmiralsQuartersAbi,
-          functionName: 'claimFromMerklDistributor',
-          args: [users, tokens, amounts, proofs],
+          functionName: 'multicall',
+          args: [
+            [
+              encodeFunctionData({
+                abi: AdmiralsQuartersAbi,
+                functionName: 'claimFromMerklDistributor',
+                args: [users, tokens, amounts, proofs],
+              }),
+            ],
+          ],
         })
 
     const merklClaimTx: MerklClaimTransactionInfo = {
