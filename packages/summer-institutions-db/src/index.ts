@@ -40,7 +40,7 @@ export const getSummerProtocolInstitutionDB = async (
     await sql`SELECT 1`.execute(db)
   } catch (error) {
     await db.destroy()
-    throw new Error(`Failed to connect to earn app database`)
+    throw new Error(`Failed to connect to institutions database`)
   }
 
   return {
