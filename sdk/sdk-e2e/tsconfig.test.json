@@ -35,6 +35,6 @@
       "@summerfi/contracts-provider-common": ["../contracts-provider-common/src/index.ts"]
     }
   },
-  "include": ["tests/**/*.ts"],
+  "include": ["tests/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
