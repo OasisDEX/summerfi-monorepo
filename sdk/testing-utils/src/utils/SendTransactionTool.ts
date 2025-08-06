@@ -3,6 +3,7 @@ import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
 
 export type SendTransactionTool = ReturnType<typeof createSendTransactionTool>
+export type SendTransactionToolStatus = 'success' | 'reverted'
 
 export const createSendTransactionTool = (params: {
   chainInfo: IChainInfo
@@ -30,8 +31,10 @@ export const createSendTransactionTool = (params: {
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
     transactionOrTransactions: T,
-  ): Promise<T extends TransactionInfo ? string : string[]> => {
-    const statuses: string[] = []
+  ): Promise<
+    T extends TransactionInfo ? SendTransactionToolStatus : SendTransactionToolStatus[]
+  > => {
+    const statuses: SendTransactionToolStatus[] = []
 
     const transactions = Array.isArray(transactionOrTransactions)
       ? transactionOrTransactions
@@ -52,8 +55,10 @@ export const createSendTransactionTool = (params: {
           transaction: transaction.transaction,
         })
         console.log('  > Simulation successful' + (res.data ? `, with result: ${res.data}` : ''))
-      } catch (error) {
-        console.error('  > Simulation failed with error:', error)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        debugViemError('  > Simulation failed with error:', error)
+        continue
       }
 
       if (!params.onlySimulation) {
@@ -64,8 +69,8 @@ export const createSendTransactionTool = (params: {
           console.log('  > Sending successful with hash: ' + receipt.transactionHash)
           statuses.push(receipt.status)
         } catch (error) {
-          console.error('  > Sending failed with error:', error)
-          statuses.push('failed')
+          debugViemError('  > Sending failed with error:', error)
+          statuses.push('reverted')
         }
       }
     }
@@ -73,6 +78,12 @@ export const createSendTransactionTool = (params: {
     console.log('  > Done', statuses)
     return (
       Array.isArray(transactionOrTransactions) ? statuses : statuses[0]
-    ) as T extends TransactionInfo ? string : string[]
+    ) as T extends TransactionInfo ? SendTransactionToolStatus : SendTransactionToolStatus[]
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debugViemError(msg: string, error: any) {
+  console.error(msg, error.shortMessage)
+  console.log('Transaction data:', error.metaMessages)
 }
