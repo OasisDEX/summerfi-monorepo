@@ -377,6 +377,9 @@ importers:
       '@summerfi/subgraph-manager-common':
         specifier: workspace:*
         version: link:../../sdk/subgraph-manager-common
+      '@summerfi/summer-protocol-institutions-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-institutions-db
       '@tanstack/react-query':
         specifier: ^5.51.1
         version: 5.51.1(react@19.1.0)
@@ -2418,6 +2421,43 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+
+  packages/summer-institutions-db:
+    dependencies:
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.3
+      pg:
+        specifier: ^8.14.1
+        version: 8.16.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.11.11
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.5.0
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      kysely-codegen:
+        specifier: ^0.15.0
+        version: 0.15.0(kysely@0.27.3)(pg@8.16.0)
+      tsx:
+        specifier: ^4.9.0
+        version: 4.19.4
 
   packages/summer-protocol-db:
     dependencies:
@@ -15794,7 +15834,7 @@ packages:
       '@paulmillr/qr': 0.2.1
       bowser: 2.11.0
       cross-fetch: 4.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.4.0
       eciesjs: 0.4.15
       eth-rpc-errors: 4.0.3
       eventemitter2: 6.4.9
@@ -26949,13 +26989,6 @@ packages:
     dependencies:
       balanced-match: 1.0.2
 
-  /braces@3.0.2:
-    resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
-    engines: {node: '>=8'}
-    dependencies:
-      fill-range: 7.0.1
-    dev: true
-
   /braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
@@ -31668,13 +31701,6 @@ packages:
       typescript: 5.7.3
     dev: true
 
-  /fill-range@7.0.1:
-    resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
-    engines: {node: '>=8'}
-    dependencies:
-      to-regex-range: 5.0.1
-    dev: true
-
   /fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
@@ -35190,11 +35216,11 @@ packages:
         optional: true
     dependencies:
       chalk: 4.1.2
-      dotenv: 16.4.5
+      dotenv: 16.5.0
       dotenv-expand: 11.0.6
       git-diff: 2.0.6
       kysely: 0.27.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       minimist: 1.2.8
       pg: 8.11.5
     dev: true
@@ -35231,13 +35257,54 @@ packages:
         optional: true
     dependencies:
       chalk: 4.1.2
-      dotenv: 16.4.5
+      dotenv: 16.5.0
       dotenv-expand: 11.0.6
       git-diff: 2.0.6
       kysely: 0.27.3
-      micromatch: 4.0.5
+      micromatch: 4.0.8
       minimist: 1.2.8
       pg: 8.14.1
+    dev: true
+
+  /kysely-codegen@0.15.0(kysely@0.27.3)(pg@8.16.0):
+    resolution: {integrity: sha512-LPta2nQOyoEPDQ3w/Gsplc+2iyZPAsGvtWoS21VzOB0NDQ0B38Xy1gS8WlbGef542Zdw2eLJHxekud9DzVdNRw==}
+    hasBin: true
+    peerDependencies:
+      '@libsql/kysely-libsql': ^0.3.0
+      '@tediousjs/connection-string': ^0.5.0
+      better-sqlite3: '>=7.6.2'
+      kysely: ^0.27.0
+      kysely-bun-worker: ^0.5.3
+      mysql2: ^2.3.3 || ^3.0.0
+      pg: ^8.8.0
+      tarn: ^3.0.0
+      tedious: ^16.6.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@libsql/kysely-libsql':
+        optional: true
+      '@tediousjs/connection-string':
+        optional: true
+      better-sqlite3:
+        optional: true
+      kysely-bun-worker:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      tarn:
+        optional: true
+      tedious:
+        optional: true
+    dependencies:
+      chalk: 4.1.2
+      dotenv: 16.5.0
+      dotenv-expand: 11.0.6
+      git-diff: 2.0.6
+      kysely: 0.27.3
+      micromatch: 4.0.8
+      minimist: 1.2.8
+      pg: 8.16.0
     dev: true
 
   /kysely-codegen@0.18.5(kysely@0.28.2)(pg@8.16.0)(typescript@5.7.3):
@@ -36467,14 +36534,6 @@ packages:
   /microdiff@1.4.0:
     resolution: {integrity: sha512-OBKBOa1VBznvLPb/3ljeJaENVe0fO0lnWl77lR4vhPlQD71UpjEoRV5P0KdQkcjbFlBu1Oy2mEUBMU3wxcBAGg==}
     dev: false
-
-  /micromatch@4.0.5:
-    resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
-    engines: {node: '>=8.6'}
-    dependencies:
-      braces: 3.0.2
-      picomatch: 2.3.1
-    dev: true
 
   /micromatch@4.0.7:
     resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
