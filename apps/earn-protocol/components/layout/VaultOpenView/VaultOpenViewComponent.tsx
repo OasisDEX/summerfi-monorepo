@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   AccountKitAccountType,
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
+  isUserSmartAccount,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
@@ -54,6 +56,7 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
+import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -104,6 +107,8 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
+  const userAAKit = useUser()
+  const userIsSmartAccount = isUserSmartAccount(userAAKit)
 
   const { features } = useSystemConfig()
 
@@ -356,6 +361,14 @@ export const VaultOpenViewComponent = ({
     type: 'default',
   })
 
+  const filteredVaults = useMemo(() => {
+    if (userIsSmartAccount) {
+      return filterOutSonicFromVaults(vaults)
+    }
+
+    return vaults
+  }, [vaults, userIsSmartAccount])
+
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
   useEffect(() => {
@@ -499,7 +512,7 @@ export const VaultOpenViewComponent = ({
       <VaultOpenGrid
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
-        vaults={vaults}
+        vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
         sumrPrice={estimatedSumrPrice}
