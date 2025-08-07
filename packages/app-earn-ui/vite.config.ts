@@ -128,6 +128,7 @@ export default defineConfig(({ mode }) => {
           '@loadable/component',
           '@summerfi/app-icons',
           '@summerfi/armada-protocol-common',
+          '@summerfi/summer-earn-rates-subgraph',
           '@tanstack/react-query',
           'viem',
           'viem/chains',

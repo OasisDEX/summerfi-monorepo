@@ -1,6 +1,6 @@
 'use server'
 
-import { type GetInterestRatesParams } from '@summerfi/app-types'
+import { type GetInterestRatesParams, type InterestRates } from '@summerfi/app-types'
 import { getArkProductId, getArkRatesBatchUrl } from '@summerfi/app-utils'
 
 import {
@@ -22,7 +22,7 @@ export async function getInterestRates({
   network,
   arksList,
   justLatestRates = false,
-}: GetInterestRatesParams) {
+}: GetInterestRatesParams): Promise<InterestRates> {
   if (!isProperInterestRatesNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
@@ -115,5 +115,3 @@ export async function getInterestRates({
     interestRatesMap: historicalResponse,
   })
 }
-
-export type GetInterestRatesReturnType = Awaited<ReturnType<typeof getInterestRates>>

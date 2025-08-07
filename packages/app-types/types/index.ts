@@ -184,6 +184,9 @@ export type {
   SupportedDefillamaTvlProtocols,
   ProAppStats,
   TotalRebalanceItemsPerStrategyId,
+  InterestRates,
+  GetInterestRatesQuery,
+  GetInterestRatesDocument,
 } from './src/earn-protocol'
 export {
   supportedDefillamaProtocols,

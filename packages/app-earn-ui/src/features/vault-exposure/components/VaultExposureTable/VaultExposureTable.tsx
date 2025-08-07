@@ -1,10 +1,6 @@
 'use client'
 import { type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
-import {
-  type GetInterestRatesParams,
-  type SDKVaultType,
-  type VaultApyData,
-} from '@summerfi/app-types'
+import { type InterestRates, type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
 import { Table, type TableSortedColumn } from '@/components/organisms/Table/Table'
@@ -24,7 +20,7 @@ interface VaultExposureTableProps {
   }
   hiddenColumns?: string[]
   rowsToDisplay?: number
-  arksInterestRates: GetInterestRatesParams
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isMobile: boolean
 }

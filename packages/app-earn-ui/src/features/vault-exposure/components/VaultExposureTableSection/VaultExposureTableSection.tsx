@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, type SetStateAction, useMemo } from 'react'
 import {
-  type GetInterestRatesParams,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type VaultApyData,
@@ -20,7 +20,7 @@ interface VaultExposureTableSectionProps {
   resolvedRowsToDisplay: number
   seeAll: boolean
   setSeeAll: Dispatch<SetStateAction<boolean>>
-  arksInterestRates: GetInterestRatesParams
+  arksInterestRates: InterestRates
   hiddenColumns?: string[]
   vaultApyData: VaultApyData
   isMobile: boolean

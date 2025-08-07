@@ -2,7 +2,7 @@
 
 import { type FC, useState } from 'react'
 import {
-  type GetInterestRatesParams,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type VaultApyData,
@@ -21,7 +21,7 @@ const rowsToDisplay = 5
 
 interface VaultExposureProps {
   vault: SDKVaultishType
-  arksInterestRates: GetInterestRatesParams
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   isMobile: boolean
 }
@@ -35,8 +35,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   isMobile,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
-
-  console.log('vault', vault)
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
   const resolvedRowsToDisplay = seeAll ? 20 : rowsToDisplay

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
 import {
-  type GetInterestRatesParams,
+  type InterestRates,
   type SDKVaultType,
   type SupportedSDKNetworks,
   type TokenSymbolsList,
@@ -56,11 +56,11 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
  * @param days - Number of days to consider for the average calculation
  * @returns BigNumber representing the average APY
  */
-const calculateAverageApy = (rates: { averageRate: number; date: number }[], days: number) => {
+const calculateAverageApy = (rates: { averageRate: number; date: string }[], days: number) => {
   const now = dayjs().unix()
   // eslint-disable-next-line no-mixed-operators
   const cutoffDate = now - days * 24 * 60 * 60
-  const relevantRates = rates.filter((rate) => rate.date >= cutoffDate)
+  const relevantRates = rates.filter((rate) => Number(rate.date) >= cutoffDate)
 
   if (relevantRates.length === 0) return new BigNumber(0)
 
@@ -79,11 +79,11 @@ const calculateAverageApy = (rates: { averageRate: number; date: number }[], day
  * @param rates - Array of rate objects containing averageRate and date
  * @returns Object containing the lowest and highest yearly yield
  */
-const calculateYearlyYieldRange = (rates: { averageRate: number; date: number }[]): YieldRange => {
+const calculateYearlyYieldRange = (rates: { averageRate: number; date: string }[]): YieldRange => {
   const now = dayjs().unix()
   // eslint-disable-next-line no-mixed-operators
   const oneYearAgo = now - 365 * 24 * 60 * 60
-  const yearlyRates = rates.filter((rate) => rate.date >= oneYearAgo)
+  const yearlyRates = rates.filter((rate) => Number(rate.date) >= oneYearAgo)
 
   if (yearlyRates.length === 0) return { low: new BigNumber(0), high: new BigNumber(0) }
 
@@ -248,7 +248,7 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
  */
 export const vaultExposureMapper = (
   vault: SDKVaultType,
-  arksInterestRates: GetInterestRatesParams,
+  arksInterestRates: InterestRates,
   sortConfig?: TableSortedColumn<string>,
 ): TableRow<string>[] => {
   const vaultInputTokenBalance = vault.inputTokenBalance

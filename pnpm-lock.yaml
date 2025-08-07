@@ -522,9 +522,6 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
-      '@summerfi/summer-earn-rates-subgraph':
-        specifier: workspace:*
-        version: link:../../packages/summer-earn-rates-subgraph
       browser-detect:
         specifier: ^0.2.28
         version: 0.2.28
@@ -1256,6 +1253,9 @@ importers:
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
         version: link:../../sdk/armada-protocol-common
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../summer-earn-rates-subgraph
       '@tanstack/react-query':
         specifier: ^5.51.1
         version: 5.51.1(react@19.1.0)
@@ -1608,6 +1608,9 @@ importers:
       '@summerfi/subgraph-manager-common':
         specifier: workspace:*
         version: link:../../sdk/subgraph-manager-common
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../summer-earn-rates-subgraph
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../summer-protocol-db

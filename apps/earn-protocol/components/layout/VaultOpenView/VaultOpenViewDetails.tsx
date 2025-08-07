@@ -1,21 +1,29 @@
+'use client'
 import { type FC } from 'react'
-import { Card, Expander, getUniqueVaultId, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  Expander,
+  getUniqueVaultId,
+  Text,
+  useMobileCheck,
+  VaultExposure,
+} from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
 import { detailsLinks } from './vault-details-links'
@@ -27,7 +35,7 @@ interface VaultOpenViewDetailsProps {
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 
@@ -40,6 +48,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   arksInterestRates,
   vaultApyData,
 }) => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
   const summerVaultName = getVaultNiceName({ vault })
 
   const managementFee = getManagementFee(vault.inputToken.symbol)
@@ -79,6 +89,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           vault={vault}
           arksInterestRates={arksInterestRates}
           vaultApyData={vaultApyData}
+          isMobile={isMobile}
         />
       </Expander>
       <Expander

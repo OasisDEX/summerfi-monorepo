@@ -1,3 +1,4 @@
+import { getProtocolLabel, getUniqueColor } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type ChartsDataTimeframes,
@@ -11,8 +12,6 @@ import dayjs from 'dayjs'
 import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
-import { getColor } from '@/helpers/get-color'
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 type BaseHistoricalChartsDataReturnType = {
   [key in TimeframesType]: {
@@ -255,7 +254,7 @@ export const getArkHistoricalChartData = ({
 
     return {
       ...acc,
-      [arkUniqueName]: getColor(arkUniqueName),
+      [arkUniqueName]: getUniqueColor(arkUniqueName),
     }
   }, {})
 

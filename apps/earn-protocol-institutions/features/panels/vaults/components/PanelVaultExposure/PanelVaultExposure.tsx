@@ -11,13 +11,13 @@ import {
   VaultExposure,
 } from '@summerfi/app-earn-ui'
 import {
+  type InterestRates,
   type SDKVaultType,
   type TimeframesItem,
   type TimeframesType,
   type VaultApyData,
 } from '@summerfi/app-types'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import styles from './PanelVaultExposure.module.css'
@@ -51,7 +51,7 @@ const dummyItems = [
 
 interface PanelVaultExposureProps {
   vault: SDKVaultType
-  arkInterestRates: GetInterestRatesReturnType
+  arkInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 

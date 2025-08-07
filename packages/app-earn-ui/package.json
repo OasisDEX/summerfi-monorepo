@@ -51,6 +51,7 @@
     "@account-kit/signer": "^4.52.2",
     "@loadable/component": "^5.16.4",
     "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "^2.0.0",

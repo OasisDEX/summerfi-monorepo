@@ -1,4 +1,4 @@
-import { type GetInterestRatesParams } from '@summerfi/app-types'
+import { type InterestRates } from '@summerfi/app-types'
 
 /**
  * Maps Ark interest rates data to a simplified key-value object format.
@@ -9,7 +9,7 @@ import { type GetInterestRatesParams } from '@summerfi/app-types'
  * @returns Object mapping asset keys to their latest interest rates as numbers
  */
 export const mapArkLatestInterestRates = (
-  interestRates: GetInterestRatesParams,
+  interestRates: InterestRates,
 ): { [key: string]: number } =>
   Object.fromEntries(
     Object.keys(interestRates).map((key) => [

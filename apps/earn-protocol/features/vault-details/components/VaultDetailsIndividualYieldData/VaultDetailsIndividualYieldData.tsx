@@ -1,12 +1,20 @@
 'use client'
 
 import { type FC, useState } from 'react'
-import { TabBar } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, type SDKVaultType, type VaultApyData } from '@summerfi/app-types'
+import {
+  TabBar,
+  useMobileCheck,
+  vaultExposureFilter,
+  VaultExposureTableSection,
+} from '@summerfi/app-earn-ui'
+import {
+  type InterestRates,
+  type SDKVaultishType,
+  type SDKVaultType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
-import { VaultExposureTableSection } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
-import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 enum VaultExposureFilterType {
   ALL = 'ALL',
@@ -20,7 +28,7 @@ const hiddenColumns = ['liquidity']
 
 interface VaultDetailsIndividualYieldDataProps {
   vault: SDKVaultishType
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 
@@ -30,6 +38,8 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
   vaultApyData,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
   const resolvedRowsToDisplay = seeAll ? 20 : rowsToDisplay
@@ -52,6 +62,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALL}
           hiddenColumns={hiddenColumns}
+          isMobile={isMobile}
         />
       ),
     },
@@ -72,6 +83,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALLOCATED}
           hiddenColumns={hiddenColumns}
+          isMobile={isMobile}
         />
       ),
     },
@@ -92,6 +104,7 @@ export const VaultDetailsIndividualYieldData: FC<VaultDetailsIndividualYieldData
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.UNALLOCATED}
           hiddenColumns={hiddenColumns}
+          isMobile={isMobile}
         />
       ),
     },

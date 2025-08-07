@@ -1,3 +1,4 @@
+'use client'
 import {
   Card,
   Expander,
@@ -5,10 +6,13 @@ import {
   getUniqueVaultId,
   getVaultDetailsUrl,
   Text,
+  useMobileCheck,
+  VaultExposure,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type PerformanceChartData,
   type SDKVaultishType,
   type SDKVaultType,
@@ -17,16 +21,15 @@ import {
 import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
@@ -45,7 +48,7 @@ export const VaultManageViewDetails = ({
   vault: SDKVaultishType
   arksHistoricalChartData: ArksHistoricalChartData
   performanceChartData: PerformanceChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
@@ -53,6 +56,9 @@ export const VaultManageViewDetails = ({
   viewWalletAddress?: string
 }) => {
   const managementFee = getManagementFee(vault.inputToken.symbol)
+
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
 
   return [
     <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
@@ -142,6 +148,7 @@ export const VaultManageViewDetails = ({
           vault={vault as SDKVaultType}
           arksInterestRates={arksInterestRates}
           vaultApyData={vaultApyData}
+          isMobile={isMobile}
         />
       </Expander>
       <Expander
