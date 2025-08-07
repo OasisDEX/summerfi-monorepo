@@ -1,6 +1,7 @@
 'use client'
 
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   DataBlock,
   Dropdown,
@@ -9,6 +10,7 @@ import {
   getUniqueVaultId,
   getVaultsProtocolsList,
   getVaultUrl,
+  isUserSmartAccount,
   networkNameIconNameMap,
   SUMR_CAP,
   Text,
@@ -47,6 +49,7 @@ import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/n
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
+import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
@@ -130,6 +133,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
+
+  const user = useUser()
+  const userIsSmartAccount = isUserSmartAccount(user)
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
@@ -241,10 +247,22 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
       : networkFilteredVaults
 
-    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
+    const accountTypeFilteredVaults = userIsSmartAccount
+      ? filterOutSonicFromVaults(assetFilteredVaults ?? [])
+      : assetFilteredVaults
+
+    const sortedVaults = accountTypeFilteredVaults?.sort(sortVaults)
 
     return sortedVaults
-  }, [sortVaults, filterNetworks, filterNetworkVaults, filterAssetVaults, vaultsList, filterAssets])
+  }, [
+    sortVaults,
+    filterNetworks,
+    filterNetworkVaults,
+    filterAssetVaults,
+    vaultsList,
+    filterAssets,
+    userIsSmartAccount,
+  ])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
     filteredAndSortedVaults?.length

@@ -262,3 +262,5 @@ export {
 } from './account-kit/config'
 export { accountType, overridesGasSponsorship } from './account-kit/constants'
 export { AccountKitAccountType } from './account-kit/types'
+export { isUserEOA } from './account-kit/helpers/is-user-eoa'
+export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
