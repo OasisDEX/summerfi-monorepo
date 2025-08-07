@@ -989,17 +989,6 @@ export const StaticTokensData: TokenListData = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
-    // another instance of USDC on sonic, with the same address but different symbol to ease handling
-    // since 3rd party usually refer to USDC on sonic as USDC instead of USDC.e
-    {
-      name: 'Bridged USDC',
-      address: '0x29219dd400f2bf60e5a23d13be72b486d4038894',
-      symbol: 'USDC',
-      decimals: 6,
-      chainId: ChainIds.Sonic,
-      logoURI:
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-    },
     {
       name: 'Wrapped Ether',
       address: '0x50c42deacd8fc9773493ed674b675be577f2634b',
