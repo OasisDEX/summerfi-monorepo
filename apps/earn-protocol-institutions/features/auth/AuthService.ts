@@ -1,5 +1,7 @@
 import {
   CognitoIdentityProviderClient,
+  GetUserCommand,
+  type GetUserCommandOutput,
   GlobalSignOutCommand,
   InitiateAuthCommand,
   type InitiateAuthCommandOutput,
@@ -144,5 +146,29 @@ export class AuthService {
     })
 
     await client.send(command)
+  }
+
+  static async getUserData(
+    accessToken: string,
+  ): Promise<{ sub: string; email: string; name: string }> {
+    const command = new GetUserCommand({
+      AccessToken: accessToken,
+    })
+
+    const response: GetUserCommandOutput = await client.send(command)
+
+    const email = response.UserAttributes?.find((attr) => attr.Name === 'email')?.Value
+    const username = response.Username
+    const sub = response.UserAttributes?.find((attr) => attr.Name === 'sub')?.Value
+
+    if (!sub || !email || !username) {
+      throw new Error('User data is incomplete')
+    }
+
+    return {
+      sub,
+      email,
+      name: username,
+    }
   }
 }

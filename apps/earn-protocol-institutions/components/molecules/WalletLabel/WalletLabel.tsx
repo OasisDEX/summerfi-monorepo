@@ -227,7 +227,7 @@ export default function WalletLabel({
 
     return (
       <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
-        {customLoginLabel ?? 'Log in'}
+        {customLoginLabel ?? 'Connect wallet'}
       </Button>
     )
   }

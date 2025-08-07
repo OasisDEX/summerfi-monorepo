@@ -3,6 +3,7 @@ import { decodeJwt } from 'jose'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+import { AuthService } from '@/features/auth/AuthService'
 import { type SignInResponse } from '@/types/auth'
 
 if (!process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING) {
@@ -27,6 +28,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
+    const user = await AuthService.getUserData(accessToken)
+
     // check the user role
     const institutionsDB = await getSummerProtocolInstitutionDB({
       connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -41,9 +44,9 @@ export async function GET() {
     if (globalAdmin) {
       return NextResponse.json({
         user: {
-          id: payload.id,
-          email: payload.email,
-          name: payload.name,
+          id: user.sub,
+          email: user.email,
+          name: user.name,
           isGlobalAdmin: true,
         },
       } as SignInResponse)
@@ -70,9 +73,9 @@ export async function GET() {
 
     return NextResponse.json({
       user: {
-        id: payload.sub,
-        email: payload.email,
-        name: payload.name,
+        id: user.sub,
+        email: user.email,
+        name: user.name,
         institutionsList: userInstitutions.map((inst) => ({
           id: inst.institutionId,
           name: inst.institutionName,

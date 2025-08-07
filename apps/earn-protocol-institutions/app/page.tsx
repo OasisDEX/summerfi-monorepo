@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
+import { useRouter } from 'next/navigation'
+
+import { type SignInResponse } from '@/types/auth'
 
 export default function InstitutionsLoginPage() {
   const [email, setEmail] = useState('')
@@ -16,6 +19,8 @@ export default function InstitutionsLoginPage() {
     email: string
   } | null>(null)
 
+  const { replace } = useRouter()
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -28,14 +33,14 @@ export default function InstitutionsLoginPage() {
         body: JSON.stringify({ email, password }),
       })
 
-      const data = await response.json()
+      const data = (await response.json()) as SignInResponse
 
       if (!response.ok) {
-        throw new Error(data.error || 'Sign in failed')
+        throw new Error(data.error ?? 'Sign in failed')
       }
 
       // Check if there's a challenge
-      if (data.challenge === 'NEW_PASSWORD_REQUIRED') {
+      if (data.challenge === 'NEW_PASSWORD_REQUIRED' && data.session && data.email) {
         setChallengeData({
           challenge: data.challenge,
           session: data.session,
@@ -44,7 +49,11 @@ export default function InstitutionsLoginPage() {
       } else {
         // eslint-disable-next-line no-console
         console.log('Login successful:', data)
-        // Redirect or update UI here
+        if (data.user?.isGlobalAdmin) {
+          replace('/admin')
+        } else {
+          replace(`${data.user?.institutionsList?.[0]?.id}/overview`)
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
