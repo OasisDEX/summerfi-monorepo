@@ -134,6 +134,7 @@ export {
   type SavedAnalyticsCookiesSettings,
 } from './components/molecules/CookieBanner/config'
 export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
+export { AllocationBar } from './components/molecules/AllocationBar/AllocationBar'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -213,6 +214,8 @@ export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
 
 export { getTokenGuarded } from './tokens/helpers'
 export { getArkNiceName } from './helpers/get-ark-nice-name'
+export { getUniqueColor } from './helpers/get-unique-color'
+export { getProtocolLabel } from './helpers/get-protocol-label'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
@@ -264,3 +267,7 @@ export { accountType, overridesGasSponsorship } from './account-kit/constants'
 export { AccountKitAccountType } from './account-kit/types'
 export { isUserEOA } from './account-kit/helpers/is-user-eoa'
 export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
+
+export { VaultExposure } from './features/vault-exposure/components/VaultExposure/VaultExposure.tsx'
+export { VaultExposureTable } from './features/vault-exposure/components/VaultExposureTable/VaultExposureTable.tsx'
+export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'

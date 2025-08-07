@@ -154,6 +154,7 @@ export default defineConfig(({ mode }) => {
           '@number-flow/react',
           'boring-avatars',
           'react-animate-height',
+          'uniqolor',
         ],
         input: Object.fromEntries(
           glob

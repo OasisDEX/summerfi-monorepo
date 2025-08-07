@@ -1,4 +1,6 @@
-import { getDisplayToken, getTokenGuarded } from '@summerfi/app-earn-ui'
+import { getTokenGuarded } from '@/tokens/helpers'
+
+import { getDisplayToken } from './get-display-token'
 
 const arkNameMap: { [key: string]: string } = {
   BufferArk: 'Buffer',
@@ -11,14 +13,41 @@ const arkNameMap: { [key: string]: string } = {
 
 const noTouchZone = ['PRIME', 'EULER', 'SKY']
 
+/**
+ * Filters out token symbols from external names that should not be modified.
+ * @param part - The name part to check
+ * @returns True if the part should be kept (not a token or in no-touch zone), false otherwise
+ */
 const filterTokensFromExternalName = (part: string) => {
   const potentialToken = part.toUpperCase()
 
   return !getTokenGuarded(potentialToken) || noTouchZone.includes(potentialToken)
 }
 
-export const getProtocolLabel = (nameParts: string[], noToken = false) => {
-  const finalNameArray = []
+/**
+ * Generates a human-readable protocol label from an array of name parts.
+ *
+ * This function processes protocol name components to create a clean, user-friendly label.
+ * It handles various cases including:
+ * - Mapping protocol names using predefined mappings (e.g., 'BufferArk' → 'Buffer')
+ * - Filtering out token symbols when appropriate
+ * - Handling special naming patterns like "Gauntlet_USDC_Core" → "Gauntlet Core"
+ * - Removing numeric parts at the beginning or end
+ * - Deduplicating final components
+ *
+ * @param nameParts - Array of string parts that make up the protocol name
+ * @param noToken - Optional flag to exclude token symbols from the final label. Defaults to false
+ * @returns A formatted string representing the protocol label
+ *
+ * @example
+ * ```typescript
+ * getProtocolLabel(['BufferArk', 'USDC']) // Returns: "Buffer USDC"
+ * getProtocolLabel(['AaveV3', 'DAI'], true) // Returns: "Aave V3"
+ * getProtocolLabel(['Gauntlet_USDC_Core']) // Returns: "Gauntlet Core"
+ * ```
+ */
+export const getProtocolLabel = (nameParts: string[], noToken = false): string => {
+  const finalNameArray: string[] = []
   const clonedName = [...nameParts]
 
   const clonedNameLength = clonedName.length

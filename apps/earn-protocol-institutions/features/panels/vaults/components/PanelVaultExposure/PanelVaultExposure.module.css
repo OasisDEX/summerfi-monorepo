@@ -1,0 +1,34 @@
+.panelVaultExposureWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .panelVaultExposureHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .headerButton {
+      /* padding: var(--spacing-space-small); */
+      min-width: unset;
+    }
+  }
+
+  .allocationBar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-x-small);
+    width: 100%;
+
+    .allocationHeader {
+      color: var(--earn-protocol-secondary-60);
+    }
+  }
+
+  .tableSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-large);
+    width: 100%;
+  }
+}

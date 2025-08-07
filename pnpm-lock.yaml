@@ -250,9 +250,6 @@ importers:
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
-      uniqolor:
-        specifier: 1.1.1
-        version: 1.1.1
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@19.1.0)
@@ -377,6 +374,9 @@ importers:
       '@summerfi/subgraph-manager-common':
         specifier: workspace:*
         version: link:../../sdk/subgraph-manager-common
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-rates-subgraph
       '@summerfi/summer-protocol-institutions-db':
         specifier: workspace:*
         version: link:../../packages/summer-institutions-db
@@ -522,6 +522,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
+      '@summerfi/summer-earn-rates-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-rates-subgraph
       browser-detect:
         specifier: ^0.2.28
         version: 0.2.28
@@ -1298,6 +1301,9 @@ importers:
       typed-css-modules:
         specifier: 0.9.1
         version: 0.9.1
+      uniqolor:
+        specifier: 1.1.1
+        version: 1.1.1
       usehooks-ts:
         specifier: ^3.1.0
         version: 3.1.0(react@19.1.0)
@@ -26867,10 +26873,6 @@ packages:
   /bluebird@3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
 
-  /bn.js@4.11.6:
-    resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
-    dev: true
-
   /bn.js@4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}
     dev: false
@@ -31141,7 +31143,7 @@ packages:
     resolution: {integrity: sha512-/Sn9Y0oKl0uqQuvgFk/zQgR7aw1g36qX/jzSQ5lSwlO0GigPymk4eGQfeNTD03w1dPOqfz8V77Cy43jH56pagw==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 5.2.1
       number-to-bn: 1.7.0
     dev: true
 
@@ -37425,7 +37427,7 @@ packages:
     resolution: {integrity: sha512-wsJ9gfSz1/s4ZsJN01lyonwuxA1tml6X1yBDnfpMglypcBRFZZkus26EdPSlqS5GJfYddVZa22p3VNb3z5m5Ig==}
     engines: {node: '>=6.5.0', npm: '>=3'}
     dependencies:
-      bn.js: 4.11.6
+      bn.js: 5.2.1
       strip-hex-prefix: 1.0.0
     dev: true
 

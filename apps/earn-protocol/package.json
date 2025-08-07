@@ -61,7 +61,6 @@
     "react": "19.1.0",
     "recharts": "^2.15.0",
     "sharp": "^0.33.5",
-    "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
     "viem": "2.29.2",
     "wagmi": "2.10.9",
