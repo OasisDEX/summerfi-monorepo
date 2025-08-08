@@ -49,7 +49,7 @@ export default function InstitutionsLoginPage() {
       } else if (data.user?.isGlobalAdmin) {
         replace('/admin/institutions')
       } else {
-        replace(`${data.user?.institutionsList?.[0]?.id}/overview`)
+        replace(`${data.user?.institutionsList?.[0]?.name}/overview`)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')

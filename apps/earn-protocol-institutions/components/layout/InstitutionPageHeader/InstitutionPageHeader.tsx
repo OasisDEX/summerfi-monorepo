@@ -7,13 +7,12 @@ import { useRouter } from 'next/navigation'
 
 import { rolesToHuman } from '@/helpers/roles-to-human'
 import { type InstitutionData } from '@/types/institution-data'
-import { type WalletData } from '@/types/wallet-data'
 
 import styles from './InstitutionPageHeader.module.css'
 
 interface InstitutionPageHeaderProps {
   selectedInstitution: InstitutionData
-  institutionsList: WalletData['institutionsList']
+  institutionsList: InstitutionData[]
 }
 
 // todo to be replaced with the actual connected role & mapping from backend per wallet address
