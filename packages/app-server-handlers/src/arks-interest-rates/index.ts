@@ -3,20 +3,46 @@
 import { type GetInterestRatesParams, type InterestRates } from '@summerfi/app-types'
 import { getArkProductId, getArkRatesBatchUrl } from '@summerfi/app-utils'
 
-import {
-  filterArksWithCapHigherThanZero,
-  interestRatesMapArkName,
-  isProperInterestRatesNetwork,
-  mapLatestInterestRatesResponse,
-  prepareInterestRatesDataResponse,
-  prepareInterestRatesFallbackCalls,
-  prepareInterestRatesHistoricalResponse,
-} from '@/arks-interest-rates/helpers'
+import { filterArksWithCapHigherThanZero } from '@/arks-interest-rates/helpers/filter-arks-with-cap-higher-than-zero'
+import { isProperInterestRatesNetwork } from '@/arks-interest-rates/helpers/is-proper-interest-rates-network'
+import { mapArkName } from '@/arks-interest-rates/helpers/map-ark-name'
+import { mapLatestInterestRatesResponse } from '@/arks-interest-rates/helpers/map-latest-interest-rates-response'
+import { prepareInterestRatesDataResponse } from '@/arks-interest-rates/helpers/prepare-interest-rates-data-response'
+import { prepareInterestRatesFallbackCalls } from '@/arks-interest-rates/helpers/prepare-interest-rates-fallback-calls'
+import { prepareInterestRatesHistoricalResponse } from '@/arks-interest-rates/helpers/prepare-interest-rates-historical-response'
 
 if (!process.env.FUNCTIONS_API_URL) {
   throw new Error('FUNCTIONS_API_URL is not set')
 }
 
+/**
+ * Retrieves interest rates data for Arks on the specified network.
+ *
+ * This function fetches interest rates for a list of Arks, supporting both
+ * latest rates (via batch API) and historical rates (via individual API calls).
+ * It automatically filters out Arks with zero capacity and handles fallback
+ * scenarios when the batch API fails.
+ *
+ * @param {Object} params - The parameters for fetching interest rates
+ * @param {SupportedSDKNetworks} params.network - The blockchain network to query (e.g., Mainnet, Base, ArbitrumOne)
+ * @param {Array} params.arksList - Array of Ark vault objects to fetch rates for
+ * @param {boolean} [params.justLatestRates=false] - If true, only fetches latest rates via batch API with fallback to individual calls
+ *
+ * @returns {Promise<InterestRates>} A promise that resolves to an object mapping Ark names to their interest rate data
+ *
+ * @throws {Error} When FUNCTIONS_API_URL environment variable is not set
+ * @throws {Error} When the specified network is not supported for interest rates
+ * @throws {Error} When batch API request fails and fallback also fails
+ *
+ * @example
+ * ```typescript
+ * const rates = await getArksInterestRates({
+ *   network: SupportedSDKNetworks.Mainnet,
+ *   arksList: vaultArks,
+ *   justLatestRates: true
+ * });
+ * ```
+ */
 export async function getArksInterestRates({
   network,
   arksList,
@@ -28,7 +54,7 @@ export async function getArksInterestRates({
 
   const filteredArksWithCapHigherThanZero = arksList.filter(filterArksWithCapHigherThanZero)
 
-  const arkNamesList = filteredArksWithCapHigherThanZero.map(interestRatesMapArkName)
+  const arkNamesList = filteredArksWithCapHigherThanZero.map(mapArkName)
 
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
 
