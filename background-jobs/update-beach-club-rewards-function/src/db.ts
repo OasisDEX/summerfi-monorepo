@@ -12,6 +12,7 @@ import {
   SimplifiedReferralCode,
   RewardsBalance,
   ReferralCodeType,
+  SupportedChain,
 } from './types'
 
 dotenv.config({ path: path.join(__dirname, '../../../.env') })
@@ -493,6 +494,40 @@ WHERE u.id = ANY(${userIds});
       total_earned: Number(result.total_earned),
       total_claimed: Number(result.total_claimed),
     }))
+  }
+
+  /**
+   * Upsert a user with conditional referral backfill inside a transaction
+   */
+  async upsertUser(
+    trx: Kysely<DB>,
+    params: {
+      id: string
+      referrerId: string | null
+      referralChain: SupportedChain | null
+      referralTimestamp: Date | null
+    },
+  ): Promise<void> {
+    await trx.executeQuery(
+      sql`
+        INSERT INTO users (id, referrer_id, referral_chain, referral_timestamp, is_active)
+        VALUES (
+          ${params.id},
+          ${params.referrerId},
+          ${params.referralChain},
+          ${params.referralTimestamp},
+          ${false}
+        )
+        ON CONFLICT (id) DO UPDATE SET
+          referrer_id = EXCLUDED.referrer_id,
+          referral_chain = EXCLUDED.referral_chain,
+          referral_timestamp = EXCLUDED.referral_timestamp
+        WHERE EXCLUDED.referrer_id IS NOT NULL
+          AND EXCLUDED.referral_timestamp IS NOT NULL
+          AND users.referrer_id IS NULL
+          AND users.created_at > EXCLUDED.referral_timestamp
+      `.compile(trx),
+    )
   }
 
   get rawDb() {

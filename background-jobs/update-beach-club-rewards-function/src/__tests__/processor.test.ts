@@ -55,6 +55,7 @@ describe('ReferralProcessor', () => {
         executeTakeFirst: jest.fn().mockResolvedValue({ count: '2' }),
         onConflict: jest.fn().mockReturnThis(),
         doNothing: jest.fn().mockReturnThis(),
+        executeQuery: jest.fn().mockResolvedValue({ rows: [] }),
       })
     })
 
