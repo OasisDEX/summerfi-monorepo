@@ -252,31 +252,20 @@ export class ReferralProcessor {
           )
         }
 
-        const referralTimestampDate = validatedReferrerId
-          ? new Date(Number(account.referralTimestamp) * 1000)
-          : null
+        const referralTimestampDate =
+          validatedReferrerId && account.referralTimestamp
+            ? new Date(Number(account.referralTimestamp) * 1000)
+            : null
+        const referralChain =
+          validatedReferrerId && account.referralChain ? account.referralChain : null
 
         // Insert new user or conditionally update referral fields if the user was created AFTER the referral happened
-        await trx.executeQuery(
-          sql`
-            INSERT INTO users (id, referrer_id, referral_chain, referral_timestamp, is_active)
-            VALUES (
-              ${account.id},
-              ${validatedReferrerId},
-              ${validatedReferrerId ? account.referralChain : null},
-              ${referralTimestampDate},
-              ${false}
-            )
-            ON CONFLICT (id) DO UPDATE SET
-              referrer_id = EXCLUDED.referrer_id,
-              referral_chain = EXCLUDED.referral_chain,
-              referral_timestamp = EXCLUDED.referral_timestamp
-            WHERE EXCLUDED.referrer_id IS NOT NULL
-              AND EXCLUDED.referral_timestamp IS NOT NULL
-              AND users.referrer_id IS NULL
-              AND users.created_at > EXCLUDED.referral_timestamp
-          `.compile(trx),
-        )
+        await this.db.upsertUser(trx, {
+          id: account.id,
+          referrerId: validatedReferrerId,
+          referralChain: referralChain,
+          referralTimestamp: referralTimestampDate,
+        })
       }
     }
 
