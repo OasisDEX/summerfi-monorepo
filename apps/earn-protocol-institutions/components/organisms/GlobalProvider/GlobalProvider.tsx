@@ -11,6 +11,7 @@ import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
 import dynamic from 'next/dynamic'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { AuthProvider } from '@/contexts/AuthContext/AuthContext'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
 
@@ -40,15 +41,17 @@ export const GlobalProvider = ({
 }: GlobalProviderProps) => {
   return (
     <Suspense>
-      <SystemConfigProvider value={config}>
-        <DeviceProvider value={deviceType}>
-          <LocalConfigContextProvider value={localConfigContextState}>
-            <AlchemyAccountsProvider initialState={accountKitInitializedState}>
-              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
-            </AlchemyAccountsProvider>
-          </LocalConfigContextProvider>
-        </DeviceProvider>
-      </SystemConfigProvider>
+      <AuthProvider>
+        <SystemConfigProvider value={config}>
+          <DeviceProvider value={deviceType}>
+            <LocalConfigContextProvider value={localConfigContextState}>
+              <AlchemyAccountsProvider initialState={accountKitInitializedState}>
+                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              </AlchemyAccountsProvider>
+            </LocalConfigContextProvider>
+          </DeviceProvider>
+        </SystemConfigProvider>
+      </AuthProvider>
     </Suspense>
   )
 }

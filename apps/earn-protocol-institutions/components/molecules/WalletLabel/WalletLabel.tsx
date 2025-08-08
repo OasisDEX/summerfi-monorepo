@@ -21,9 +21,6 @@ import {
   sdkChainIdToHumanNetwork,
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
-import { useRouter } from 'next/navigation'
-
-import { deleteLoginCookie } from '@/helpers/handle-login-cookie'
 
 import walletLabelStyles from './WalletLabel.module.css'
 
@@ -193,7 +190,6 @@ export default function WalletLabel({
   const [addressCopied, setAddressCopied] = useState(false)
   const { userWalletAddress } = useUserWallet()
   const { clientChainId } = useClientChainId()
-  const router = useRouter()
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
@@ -202,20 +198,6 @@ export default function WalletLabel({
     useSignerStatus()
   const { logout } = useLogout()
   const isIframe = useIsIframe()
-
-  const handleLogout = () => {
-    deleteLoginCookie()
-      .then((response) => {
-        if (response.ok) {
-          logout()
-          router.replace('/')
-        }
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error deleting login cookie:', error)
-      })
-  }
 
   // removes dark mode from the document
   // to ensure that account-kit modal is always in light mode
@@ -245,7 +227,7 @@ export default function WalletLabel({
 
     return (
       <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
-        {customLoginLabel ?? 'Log in'}
+        {customLoginLabel ?? 'Connect wallet'}
       </Button>
     )
   }
@@ -293,7 +275,7 @@ export default function WalletLabel({
   if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
-        <LogoutButton onLogout={handleLogout} variant={buttonVariant} />
+        <LogoutButton onLogout={logout} variant={buttonVariant} />
       </div>
     )
   }
@@ -309,7 +291,7 @@ export default function WalletLabel({
             address={userWalletAddress}
             onCopy={handleCopyAddress}
             copied={addressCopied}
-            onLogout={handleLogout}
+            onLogout={logout}
           />
         }
         tooltipCardVariant="cardSecondarySmallPaddings"
@@ -332,7 +314,7 @@ export default function WalletLabel({
         </div>
       </Tooltip>
       <div className={walletLabelStyles.mobileCopyLogoutButtons}>
-        <LogoutButton onLogout={handleLogout} variant="primaryMedium" />
+        <LogoutButton onLogout={logout} variant="primaryMedium" />
         <CopyAddressButton
           address={userWalletAddress.toString()}
           onCopy={handleCopyAddress}
