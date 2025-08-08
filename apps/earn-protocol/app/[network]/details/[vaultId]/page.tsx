@@ -1,5 +1,5 @@
 import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { getArksInterestRates } from '@summerfi/app-server-handlers'
+import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   getVaultNiceName,
@@ -20,7 +20,6 @@ import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/const
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getSeoKeywords } from '@/helpers/seo-keywords'

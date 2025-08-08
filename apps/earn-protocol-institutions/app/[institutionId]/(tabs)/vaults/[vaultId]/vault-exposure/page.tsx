@@ -1,4 +1,4 @@
-import { getArksInterestRates } from '@summerfi/app-server-handlers'
+import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   decorateWithFleetConfig,
@@ -8,7 +8,6 @@ import {
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
 export default async function InstitutionVaultVaultExposurePage() {
