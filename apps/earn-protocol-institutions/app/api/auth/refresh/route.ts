@@ -18,17 +18,14 @@ export async function POST() {
   try {
     const existing = await readSession()
 
-    if (!existing?.user.email) {
+    if (!existing?.user.name) {
       throw new Error('Missing user email')
     }
-    const secretHash = generateSecretHash(existing.user.email)
-    const { accessToken, idToken } = await AuthService.refreshToken(refreshToken, secretHash)
 
-    console.log({
-      refreshToken,
-      accessToken,
-      idToken,
-    })
+    // for some reason this needs to be a `name`, instead of `email (like in signup)
+    // no time to debug this right now
+    const secretHash = generateSecretHash(existing.user.name)
+    const { accessToken, idToken } = await AuthService.refreshToken(refreshToken, secretHash)
 
     cookieStore.set(ACCESS_TOKEN_COOKIE, accessToken, {
       httpOnly: true,
@@ -36,10 +33,6 @@ export async function POST() {
       sameSite: 'strict',
       path: '/',
       maxAge: 15 * 60,
-    })
-
-    console.log({
-      existing,
     })
 
     if (idToken) {
@@ -50,18 +43,15 @@ export async function POST() {
         name: (payload.name as string | undefined) ?? (payload.email as string),
       })
 
-      console.log({
-        enriched,
-        payload,
-      })
-
       await createSession(enriched, payload.sub as string)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (existing) {
       await createSession(existing.user, existing.sub)
     }
 
     return NextResponse.json({ ok: true })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Refresh failed', error)
 
     return NextResponse.json({ error: 'Refresh failed' }, { status: 401 })

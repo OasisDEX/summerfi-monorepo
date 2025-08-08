@@ -99,9 +99,6 @@ export default function InstitutionsLoginPage() {
       if (!response.ok) {
         throw new Error(data.error || 'Password change failed')
       }
-
-      // eslint-disable-next-line no-console
-      console.log('Password set successfully:', data)
       setChallengeData(null)
       // Redirect or update UI here
     } catch (err) {

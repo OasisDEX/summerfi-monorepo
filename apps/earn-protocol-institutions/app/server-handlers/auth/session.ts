@@ -49,8 +49,6 @@ export async function readSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(SESSION_COOKIE)?.value
 
-  console.log('token', token)
-
   if (!token) return null
 
   try {

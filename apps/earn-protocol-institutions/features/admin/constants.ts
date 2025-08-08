@@ -16,3 +16,25 @@ export const institutionsAdminPanelColumns = [
     accessor: 'createdAt',
   },
 ]
+
+// Users admin panel
+export type AdminPanelColumn<T> = {
+  label: string
+  accessor: keyof T & string
+}
+
+export type UserAdminTableRow = {
+  id: number
+  userSub: string
+  institutionId: number
+  role: string | null
+  createdAt: Date
+}
+
+export const usersAdminPanelColumns: readonly AdminPanelColumn<UserAdminTableRow>[] = [
+  { label: 'ID', accessor: 'id' },
+  { label: 'User Sub', accessor: 'userSub' },
+  { label: 'Institution ID', accessor: 'institutionId' },
+  { label: 'Role', accessor: 'role' },
+  { label: 'Created At', accessor: 'createdAt' },
+]

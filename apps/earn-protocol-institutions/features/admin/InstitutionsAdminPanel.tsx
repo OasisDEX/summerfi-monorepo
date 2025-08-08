@@ -19,6 +19,8 @@ export const InstitutionsAdminPanel = async () => {
 
   const institutions = await db.selectFrom('institutions').selectAll().execute()
 
+  db.destroy()
+
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '80px' }}>
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
@@ -29,7 +31,6 @@ export const InstitutionsAdminPanel = async () => {
         <Text variant="h2">Add Institution</Text>
         <form
           action={createInstitution}
-          encType="multipart/form-data"
           style={{ display: 'grid', gap: 12, maxWidth: 640, gridTemplateColumns: 'repeat(5, 1fr)' }}
         >
           <div style={{ display: 'grid', gap: 4 }}>

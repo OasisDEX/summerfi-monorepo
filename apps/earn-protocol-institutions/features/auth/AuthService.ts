@@ -8,10 +8,11 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import { decodeJwt } from 'jose'
 
+import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 import type { AuthUser, LoginCredentials } from '@/types/auth'
 
 const client = new CognitoIdentityProviderClient({
-  region: 'eu-central-1',
+  region: COGNITO_USER_POOL_REGION,
 })
 
 // Define a JWT claims helper type with an index signature
