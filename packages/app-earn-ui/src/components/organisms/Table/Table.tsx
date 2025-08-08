@@ -8,7 +8,7 @@ import { TableSkeleton } from '@/components/molecules/TableSkeleton/TableSkeleto
 
 import styles from './Table.module.css'
 
-interface Column<K> {
+export interface TableColumn<K> {
   title: ReactNode
   key: K
   sortable?: boolean
@@ -18,18 +18,20 @@ type Row<K extends string> = {
   [key in K]: ReactNode
 }
 
+export interface TableRow<K extends string> {
+  id?: string
+  content: Row<K>
+  details?: ReactNode
+}
+
 export interface TableSortedColumn<K> {
   key: K
   direction: SortDirection
 }
 
 interface TableProps<K extends string> {
-  rows: {
-    id?: string
-    content: Row<K>
-    details?: ReactNode
-  }[]
-  columns: Column<K>[]
+  rows: TableRow<K>[]
+  columns: TableColumn<K>[]
   hiddenColumns?: K[]
   handleSort?: (config: TableSortedColumn<K>) => void
   customRow?: {

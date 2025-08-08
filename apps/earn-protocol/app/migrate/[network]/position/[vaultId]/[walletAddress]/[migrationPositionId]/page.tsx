@@ -1,4 +1,6 @@
 import { Text } from '@summerfi/app-earn-ui'
+import { getVaultsApy } from '@summerfi/app-server-handlers'
+import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -11,7 +13,6 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -20,7 +21,6 @@ import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/la
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import {
@@ -107,7 +107,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
 
   const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
     vault?.arks
-      ? getInterestRates({
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

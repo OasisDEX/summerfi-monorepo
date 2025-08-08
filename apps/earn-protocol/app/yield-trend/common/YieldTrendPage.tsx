@@ -1,15 +1,14 @@
 import { type FC } from 'react'
+import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -47,7 +46,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
   const parsedNetwork = supportedSDKNetwork(selectedVault.protocol.network)
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyByNetworkMap] = await Promise.all([
-    getInterestRates({
+    getArksInterestRates({
       network: parsedNetwork,
       arksList: selectedVault.arks,
     }),

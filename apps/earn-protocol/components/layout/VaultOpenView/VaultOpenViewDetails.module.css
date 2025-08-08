@@ -1,0 +1,7 @@
+.vaultOpenViewDetailsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-x-large);
+  width: 100%;
+  min-width: 0;
+}

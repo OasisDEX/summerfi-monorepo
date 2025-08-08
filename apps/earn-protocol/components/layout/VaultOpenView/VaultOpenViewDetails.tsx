@@ -1,25 +1,35 @@
+'use client'
 import { type FC } from 'react'
-import { Card, Expander, getUniqueVaultId, Text } from '@summerfi/app-earn-ui'
+import { Card, Expander, getUniqueVaultId, Text, VaultExposure } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
+import {
+  formatDecimalAsPercent,
+  getVaultNiceName,
+  sdkNetworkToHumanNetwork,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
+import { capitalize } from 'lodash-es'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
+import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
 import { detailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
+
+import styles from './VaultOpenViewDetails.module.css'
 
 interface VaultOpenViewDetailsProps {
   vault: SDKVaultType | SDKVaultishType
@@ -27,7 +37,7 @@ interface VaultOpenViewDetailsProps {
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 
@@ -44,15 +54,12 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
 
   const managementFee = getManagementFee(vault.inputToken.symbol)
 
+  const humanReadableNetwork = capitalize(
+    sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+  )
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--spacing-space-x-large)',
-        width: '100%',
-      }}
-    >
+    <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
       <Expander
         title={
@@ -75,11 +82,14 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposure
-          vault={vault}
-          arksInterestRates={arksInterestRates}
-          vaultApyData={vaultApyData}
-        />
+        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork}>
+          <VaultExposure
+            vault={vault}
+            arksInterestRates={arksInterestRates}
+            vaultApyData={vaultApyData}
+            columnsToHide={vaultExposureColumnsToHideOpenManage}
+          />
+        </VaultExposureDescription>
       </Expander>
       <Expander
         title={

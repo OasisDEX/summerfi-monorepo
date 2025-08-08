@@ -51,6 +51,7 @@
     "@account-kit/signer": "^4.52.2",
     "@loadable/component": "^5.16.4",
     "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "^2.0.0",
@@ -63,6 +64,7 @@
     "react-animate-height": "^3.2.3",
     "react-dom": "19.1.0",
     "react": "19.1.0",
+    "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
     "viem": "2.29.2",
     "wagmi": "2.10.9"

@@ -1,4 +1,5 @@
 // import { type FleetRate } from '@summerfi/app-types'
+import { getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   mapChainIdToDbNetwork,
   subgraphNetworkToId,
@@ -8,8 +9,6 @@ import {
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { BigNumber } from 'bignumber.js'
 import { type GraphQLClient } from 'graphql-request'
-
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 
 import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'

@@ -2,6 +2,7 @@ import { type FC } from 'react'
 import {
   Card,
   Expander,
+  getProtocolLabel,
   getScannerAddressUrl,
   Icon,
   Text,
@@ -11,8 +12,6 @@ import {
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import Link from 'next/link'
-
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const whitelistedActorsLinks = [{ title: 'BlockAnalytica ', link: 'https://blockanalitica.com/' }]
 

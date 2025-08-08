@@ -301,7 +301,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       <div
         onClick={handleClick}
         data-tooltip-btn-id={generatedId}
-        style={{ display: 'flex', alignItems: 'center' }}
+        style={{ display: 'flex', alignItems: 'center', width: '100%' }}
       >
         {childrenTypeGuard(children) ? children : children(tooltipOpen, handleTooltipOpenState)}
       </div>
