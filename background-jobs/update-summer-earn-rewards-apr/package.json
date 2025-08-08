@@ -1,12 +1,16 @@
 {
   "name": "@summerfi/update-summer-earn-rewards-apr",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc -b --preserveWatchOutput -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "backfill": "ts-node scripts/backfill.ts"
+    "backfill": "ts-node src/scripts/backfill.ts",
+    "standalone:backfill": "pnpm run build && node dist/scripts/standalone-backfill.js",
+    "standalone:backfill:js": "node dist/scripts/standalone-backfill.js",
+    "standalone:backfill:ts": "ts-node -P tsconfig.run.json src/scripts/standalone-backfill.ts"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.2",
@@ -26,6 +30,7 @@
     "@types/node": "^20.11.5",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
 }

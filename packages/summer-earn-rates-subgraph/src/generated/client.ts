@@ -649,6 +649,7 @@ export type Product = {
   protocol: Scalars['String']['output'];
   rewardsInterestRates: Array<RewardsInterestRate>;
   token: Token;
+  totalValueLocked: Array<TotalValueLocked>;
   weeklyInterestRates: Array<WeeklyInterestRate>;
 };
 
@@ -686,6 +687,15 @@ export type ProductRewardsInterestRatesArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<RewardsInterestRate_Filter>;
+};
+
+
+export type ProductTotalValueLockedArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TotalValueLocked_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<TotalValueLocked_Filter>;
 };
 
 
@@ -815,6 +825,7 @@ export type Product_Filter = {
   token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   token_starts_with?: InputMaybe<Scalars['String']['input']>;
   token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  totalValueLocked_?: InputMaybe<TotalValueLocked_Filter>;
   weeklyInterestRates_?: InputMaybe<WeeklyInterestRate_Filter>;
 };
 
@@ -834,6 +845,7 @@ export type Product_OrderBy =
   | 'token__id'
   | 'token__precision'
   | 'token__symbol'
+  | 'totalValueLocked'
   | 'weeklyInterestRates';
 
 export type Query = {
@@ -855,6 +867,8 @@ export type Query = {
   tokenPrice?: Maybe<TokenPrice>;
   tokenPrices: Array<TokenPrice>;
   tokens: Array<Token>;
+  totalValueLocked?: Maybe<TotalValueLocked>;
+  totalValueLockeds: Array<TotalValueLocked>;
   vaultState?: Maybe<VaultState>;
   vaultStates: Array<VaultState>;
   weeklyInterestRate?: Maybe<WeeklyInterestRate>;
@@ -1008,6 +1022,24 @@ export type QueryTokensArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Token_Filter>;
+};
+
+
+export type QueryTotalValueLockedArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryTotalValueLockedsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TotalValueLocked_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TotalValueLocked_Filter>;
 };
 
 
@@ -1279,6 +1311,8 @@ export type Subscription = {
   tokenPrice?: Maybe<TokenPrice>;
   tokenPrices: Array<TokenPrice>;
   tokens: Array<Token>;
+  totalValueLocked?: Maybe<TotalValueLocked>;
+  totalValueLockeds: Array<TotalValueLocked>;
   vaultState?: Maybe<VaultState>;
   vaultStates: Array<VaultState>;
   weeklyInterestRate?: Maybe<WeeklyInterestRate>;
@@ -1432,6 +1466,24 @@ export type SubscriptionTokensArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Token_Filter>;
+};
+
+
+export type SubscriptionTotalValueLockedArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionTotalValueLockedsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<TotalValueLocked_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<TotalValueLocked_Filter>;
 };
 
 
@@ -1676,8 +1728,193 @@ export type Token_OrderBy =
   | 'precision'
   | 'symbol';
 
+export type TotalValueLocked = {
+  blockNumber: Scalars['BigInt']['output'];
+  id: Scalars['String']['output'];
+  product: Product;
+  productId: Scalars['String']['output'];
+  protocol: Scalars['String']['output'];
+  timestamp: Scalars['BigInt']['output'];
+  token: Token;
+  totalValueLockedInAssets: Scalars['BigInt']['output'];
+  totalValueLockedInAssetsNormalized: Scalars['BigDecimal']['output'];
+  totalValueLockedInUSD: Scalars['BigDecimal']['output'];
+};
+
+export type TotalValueLocked_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<TotalValueLocked_Filter>>>;
+  blockNumber?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  blockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
+  blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_ends_with?: InputMaybe<Scalars['String']['input']>;
+  id_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  id_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  id_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  id_starts_with?: InputMaybe<Scalars['String']['input']>;
+  id_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  or?: InputMaybe<Array<InputMaybe<TotalValueLocked_Filter>>>;
+  product?: InputMaybe<Scalars['String']['input']>;
+  productId?: InputMaybe<Scalars['String']['input']>;
+  productId_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_gt?: InputMaybe<Scalars['String']['input']>;
+  productId_gte?: InputMaybe<Scalars['String']['input']>;
+  productId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_lt?: InputMaybe<Scalars['String']['input']>;
+  productId_lte?: InputMaybe<Scalars['String']['input']>;
+  productId_not?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  productId_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  productId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  productId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_?: InputMaybe<Product_Filter>;
+  product_contains?: InputMaybe<Scalars['String']['input']>;
+  product_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_gt?: InputMaybe<Scalars['String']['input']>;
+  product_gte?: InputMaybe<Scalars['String']['input']>;
+  product_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_lt?: InputMaybe<Scalars['String']['input']>;
+  product_lte?: InputMaybe<Scalars['String']['input']>;
+  product_not?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains?: InputMaybe<Scalars['String']['input']>;
+  product_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  product_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with?: InputMaybe<Scalars['String']['input']>;
+  product_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_gt?: InputMaybe<Scalars['String']['input']>;
+  protocol_gte?: InputMaybe<Scalars['String']['input']>;
+  protocol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_lt?: InputMaybe<Scalars['String']['input']>;
+  protocol_lte?: InputMaybe<Scalars['String']['input']>;
+  protocol_not?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  protocol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  protocol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  timestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  token?: InputMaybe<Scalars['String']['input']>;
+  token_?: InputMaybe<Token_Filter>;
+  token_contains?: InputMaybe<Scalars['String']['input']>;
+  token_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_gt?: InputMaybe<Scalars['String']['input']>;
+  token_gte?: InputMaybe<Scalars['String']['input']>;
+  token_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_lt?: InputMaybe<Scalars['String']['input']>;
+  token_lte?: InputMaybe<Scalars['String']['input']>;
+  token_not?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  totalValueLockedInAssets?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssetsNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalValueLockedInAssetsNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInAssetsNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalValueLockedInAssets_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssets_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssets_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  totalValueLockedInAssets_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssets_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssets_not?: InputMaybe<Scalars['BigInt']['input']>;
+  totalValueLockedInAssets_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  totalValueLockedInUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  totalValueLockedInUSD_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  totalValueLockedInUSD_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+};
+
+export type TotalValueLocked_OrderBy =
+  | 'blockNumber'
+  | 'id'
+  | 'product'
+  | 'productId'
+  | 'product__id'
+  | 'product__name'
+  | 'product__network'
+  | 'product__pool'
+  | 'product__protocol'
+  | 'protocol'
+  | 'timestamp'
+  | 'token'
+  | 'token__address'
+  | 'token__decimals'
+  | 'token__id'
+  | 'token__precision'
+  | 'token__symbol'
+  | 'totalValueLockedInAssets'
+  | 'totalValueLockedInAssetsNormalized'
+  | 'totalValueLockedInUSD';
+
 export type VaultState = {
   id: Scalars['Bytes']['output'];
+  lastRate?: Maybe<Scalars['BigDecimal']['output']>;
   lastSharePrice: Scalars['BigDecimal']['output'];
   lastUpdateTimestamp: Scalars['BigInt']['output'];
 };
@@ -1696,6 +1933,14 @@ export type VaultState_Filter = {
   id_not?: InputMaybe<Scalars['Bytes']['input']>;
   id_not_contains?: InputMaybe<Scalars['Bytes']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>;
+  lastRate?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lastRate_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastRate_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   lastSharePrice?: InputMaybe<Scalars['BigDecimal']['input']>;
   lastSharePrice_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
   lastSharePrice_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -1717,6 +1962,7 @@ export type VaultState_Filter = {
 
 export type VaultState_OrderBy =
   | 'id'
+  | 'lastRate'
   | 'lastSharePrice'
   | 'lastUpdateTimestamp';
 
@@ -1912,7 +2158,7 @@ export type _SubgraphErrorPolicy_ =
   | 'deny';
 
 export type GetProductsQueryVariables = Exact<{
-  protocols: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  protocols?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
@@ -1950,13 +2196,15 @@ export type GetArksRewardsRatesQuery = { products: Array<{ id: string, rewardsIn
 export type GetHistoricalArksRatesQueryVariables = Exact<{
   productIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
   timestamp: Scalars['BigInt']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  lastID?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetHistoricalArksRatesQuery = { products: Array<{ id: string, interestRates: Array<{ timestamp: string, blockNumber: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> }> };
+export type GetHistoricalArksRatesQuery = { products: Array<{ id: string, interestRates: Array<{ id: string, timestamp: string, blockNumber: string, rate: number, productId: string, protocol: string, token: { symbol: string, address: string } }> }> };
 
 
-export const GetProductsDocument : DocumentNode= gql`
+export const GetProductsDocument = gql`
     query GetProducts($protocols: [String!], $first: Int = 1000) {
   products(first: $first, where: {protocol_in: $protocols}) {
     id
@@ -1973,7 +2221,7 @@ export const GetProductsDocument : DocumentNode= gql`
   }
 }
     `;
-export const GetInterestRatesDocument : DocumentNode= gql`
+export const GetInterestRatesDocument = gql`
     query GetInterestRates($productId: String!) {
   dailyInterestRates(
     where: {productId: $productId}
@@ -2019,7 +2267,7 @@ export const GetInterestRatesDocument : DocumentNode= gql`
   }
 }
     `;
-export const GetArkRatesDocument: DocumentNode = gql`
+export const GetArkRatesDocument = gql`
     query GetArkRates($productId: String!) {
   interestRates(
     where: {productId: $productId}
@@ -2038,7 +2286,7 @@ export const GetArkRatesDocument: DocumentNode = gql`
   }
 }
     `;
-export const GetArksRatesDocument: DocumentNode = gql`
+export const GetArksRatesDocument = gql`
     query GetArksRates($productIds: [ID!]!) {
   products(where: {id_in: $productIds}) {
     id
@@ -2055,7 +2303,7 @@ export const GetArksRatesDocument: DocumentNode = gql`
   }
 }
     `;
-export const GetArksRewardsRatesDocument: DocumentNode = gql`
+export const GetArksRewardsRatesDocument = gql`
     query GetArksRewardsRates($productIds: [ID!]!) {
   products(where: {id_in: $productIds}) {
     id
@@ -2078,16 +2326,17 @@ export const GetArksRewardsRatesDocument: DocumentNode = gql`
   }
 }
     `;
-export const GetHistoricalArksRatesDocument : DocumentNode= gql`
-    query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
+export const GetHistoricalArksRatesDocument = gql`
+    query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!, $first: Int = 1000, $lastID: String = "") {
   products(where: {id_in: $productIds}) {
     id
     interestRates(
-      where: {timestamp_gte: $timestamp}
-      orderBy: timestamp
+      where: {timestamp_gte: $timestamp, id_gt: $lastID}
+      orderBy: id
       orderDirection: asc
-      first: 5000
+      first: $first
     ) {
+      id
       timestamp
       blockNumber
       rate

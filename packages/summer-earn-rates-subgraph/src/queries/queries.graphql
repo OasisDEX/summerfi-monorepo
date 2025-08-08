@@ -116,15 +116,21 @@ query GetArksRewardsRates($productIds: [ID!]!) {
     }
   }
 }
-query GetHistoricalArksRates($productIds: [ID!]!, $timestamp: BigInt!) {
+query GetHistoricalArksRates(
+  $productIds: [ID!]!
+  $timestamp: BigInt!
+  $first: Int = 1000
+  $lastID: String = ""
+) {
   products(where: { id_in: $productIds }) {
     id
     interestRates(
-      where: { timestamp_gte: $timestamp }
-      orderBy: timestamp
+      where: { timestamp_gte: $timestamp, id_gt: $lastID }
+      orderBy: id
       orderDirection: asc
-      first: 5000
+      first: $first
     ) {
+      id
       timestamp
       blockNumber
       rate

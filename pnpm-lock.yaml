@@ -945,6 +945,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.14.2)(ts-node@10.9.2)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.14.2)(typescript@5.7.3)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -2464,9 +2467,6 @@ importers:
       '@summerfi/abstractions':
         specifier: workspace:*
         version: link:../abstractions
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../serverless-shared
       kysely:
         specifier: ^0.27.3
         version: 0.27.3
