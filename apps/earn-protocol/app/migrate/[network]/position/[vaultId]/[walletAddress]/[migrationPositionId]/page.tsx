@@ -1,4 +1,5 @@
 import { Text } from '@summerfi/app-earn-ui'
+import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -11,7 +12,6 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -107,7 +107,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
 
   const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
     vault?.arks
-      ? getInterestRates({
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

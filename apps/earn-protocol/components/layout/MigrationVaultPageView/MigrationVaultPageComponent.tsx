@@ -20,6 +20,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -31,7 +32,6 @@ import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -60,7 +60,7 @@ type MigrationVaultPageComponentProps = {
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string

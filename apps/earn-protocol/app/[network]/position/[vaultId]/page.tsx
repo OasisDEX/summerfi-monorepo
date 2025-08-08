@@ -1,4 +1,5 @@
 import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
+import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
@@ -19,7 +20,6 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
@@ -101,7 +101,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     vault?.arks
-      ? getInterestRates({
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

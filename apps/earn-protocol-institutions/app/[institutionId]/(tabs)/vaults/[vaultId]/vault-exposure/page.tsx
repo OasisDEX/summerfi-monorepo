@@ -1,3 +1,4 @@
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   decorateWithFleetConfig,
@@ -6,7 +7,6 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
@@ -29,8 +29,8 @@ export default async function InstitutionVaultVaultExposurePage() {
   const vaultWithConfig = decorateWithFleetConfig([vault], systemConfig)
 
   const [arkInterestRates, vaultsApyRaw] = await Promise.all([
-    vault?.arks
-      ? getInterestRates({
+    vault.arks
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

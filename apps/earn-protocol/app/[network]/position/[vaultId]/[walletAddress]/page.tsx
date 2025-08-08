@@ -5,6 +5,7 @@ import {
   parseForecastDatapoints,
   Text,
 } from '@summerfi/app-earn-ui'
+import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
@@ -26,7 +27,6 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
@@ -145,7 +145,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
     migratablePositionsData,
   ] = await Promise.all([
-    getInterestRates({
+    getArksInterestRates({
       network: parsedNetwork,
       arksList: vault.arks,
     }),

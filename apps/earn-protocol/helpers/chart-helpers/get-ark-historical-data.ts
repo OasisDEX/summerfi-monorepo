@@ -2,6 +2,7 @@ import { getProtocolLabel, getUniqueColor } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type ChartsDataTimeframes,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type TimeframesType,
@@ -9,7 +10,6 @@ import {
 import { getVaultNiceName, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
@@ -77,7 +77,7 @@ export const getArkHistoricalChartData = ({
   vaultInterestRates,
 }: {
   vault: SDKVaultishType
-  arkInterestRatesMap: GetInterestRatesReturnType
+  arkInterestRatesMap: InterestRates
   vaultInterestRates: GetVaultsHistoricalApyResponse
 }) => {
   const castedVault = vault as SDKVaultType
@@ -183,7 +183,7 @@ export const getArkHistoricalChartData = ({
     chartDataNames.push(arkUniqueName)
 
     for (const hourlyInterestRate of interestRates.hourlyInterestRates) {
-      const timestamp = dayjs(hourlyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(hourlyInterestRate.date) * 1000)
         .startOf('hour')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
@@ -202,7 +202,7 @@ export const getArkHistoricalChartData = ({
     }
 
     for (const dailyInterestRate of interestRates.dailyInterestRates) {
-      const timestamp = dayjs(dailyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(dailyInterestRate.date) * 1000)
         .startOf('day')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
@@ -226,7 +226,7 @@ export const getArkHistoricalChartData = ({
       }
     }
     for (const weeklyInterestRate of interestRates.weeklyInterestRates) {
-      const timestamp = dayjs(weeklyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(weeklyInterestRate.date) * 1000)
         .startOf('week')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED) as keyof (typeof chartsDataRaw)['90d']
 

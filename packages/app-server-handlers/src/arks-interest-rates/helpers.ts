@@ -17,7 +17,7 @@ const noInterestRates: GetInterestRatesQuery = {
   ],
 }
 
-const clients = {
+const clients: { [key in SupportedSDKNetworks]: GraphQLClient } = {
   [SupportedSDKNetworks.Mainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates`,
   ),
@@ -37,10 +37,10 @@ type ArkType = GetInterestRatesParams['arksList'][number]
 export const isProperInterestRatesNetwork = (network: string): network is keyof typeof clients =>
   network in clients
 
-export const filterArksWithCapHigherThanZero = (ark: ArkType) =>
+export const filterArksWithCapHigherThanZero = (ark: ArkType): boolean =>
   Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0
 
-export const interestRatesMapArkName = (ark: ArkType) =>
+export const interestRatesMapArkName = (ark: ArkType): string =>
   ark.name ? ark.name : getArkProductId(ark) || 'NOT FOUND'
 
 export const mapLatestInterestRatesResponse =
@@ -91,7 +91,7 @@ export const prepareInterestRatesDataResponse = ({
 
 export const prepareInterestRatesFallbackCalls =
   ({ network, functionsApiUrl }: { network: keyof typeof clients; functionsApiUrl: string }) =>
-  async (ark: ArkType) => {
+  async (ark: ArkType): Promise<GetInterestRatesQuery> => {
     const productId = getArkProductId(ark)
 
     if (productId === false) {
@@ -108,9 +108,7 @@ export const prepareInterestRatesFallbackCalls =
       const startTime = performance.now()
       const apiUrl = `${resolvedUrl}?productId=${productId}`
       const apiResponse = await fetch(apiUrl, {
-        next: {
-          revalidate: 0,
-        },
+        cache: 'no-store',
       })
       const endTime = performance.now()
 
@@ -144,7 +142,7 @@ export const prepareInterestRatesFallbackCalls =
 
 export const prepareInterestRatesHistoricalResponse =
   ({ network, functionsApiUrl }: { network: keyof typeof clients; functionsApiUrl: string }) =>
-  async (ark: ArkType) => {
+  async (ark: ArkType): Promise<GetInterestRatesQuery> => {
     const productId = getArkProductId(ark)
 
     if (productId === false) {
@@ -160,9 +158,7 @@ export const prepareInterestRatesHistoricalResponse =
       // Try primary source first
       const apiUrl = `${resolvedUrl}?productId=${productId}`
       const apiResponse = await fetch(apiUrl, {
-        next: {
-          revalidate: 0,
-        },
+        cache: 'no-store',
       })
 
       if (!apiResponse.ok) {

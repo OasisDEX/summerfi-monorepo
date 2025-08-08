@@ -35,6 +35,7 @@
     "@summerfi/subgraph-manager-common": "workspace:*",
     "@summerfi/summer-protocol-institutions-db": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
+    "@summerfi/app-server-handlers": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "^2.0.0",

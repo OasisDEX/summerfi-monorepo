@@ -26,6 +26,7 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-utils/**'
+              - 'packages/app-server-handlers/**'
               - 'packages/serverless-shared/**'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'
