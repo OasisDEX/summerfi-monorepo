@@ -1,4 +1,4 @@
-.leftContentWrapper {
+.vaultOpenViewDetailsWrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-x-large);

@@ -23,7 +23,6 @@ interface VaultExposureTableSectionProps {
   arksInterestRates: InterestRates
   hiddenColumns?: string[]
   vaultApyData: VaultApyData
-  isMobile: boolean
 }
 
 export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
@@ -36,7 +35,6 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   arksInterestRates,
   hiddenColumns,
   vaultApyData,
-  isMobile,
 }) => {
   const vaultExposureFiltered = useMemo(
     () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
@@ -51,7 +49,6 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         rowsToDisplay={resolvedRowsToDisplay}
         hiddenColumns={hiddenColumns ?? []}
         vaultApyData={vaultApyData}
-        isMobile={isMobile}
       />
       {filteredVault.arks.length > 5 && (
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>

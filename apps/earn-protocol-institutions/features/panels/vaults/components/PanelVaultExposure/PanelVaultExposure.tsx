@@ -7,7 +7,6 @@ import {
   Icon,
   Text,
   Timeframes,
-  useMobileCheck,
   VaultExposure,
 } from '@summerfi/app-earn-ui'
 import {
@@ -17,8 +16,6 @@ import {
   type TimeframesType,
   type VaultApyData,
 } from '@summerfi/app-types'
-
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 
 import styles from './PanelVaultExposure.module.css'
 
@@ -49,6 +46,8 @@ const dummyItems = [
   },
 ]
 
+const columnsToHide = ['yearlyLow', 'yearlyHigh', 'avgApy1y']
+
 interface PanelVaultExposureProps {
   vault: SDKVaultType
   arkInterestRates: InterestRates
@@ -61,8 +60,6 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
   vaultApyData,
 }) => {
   const [activeTimeframe, setActiveTimeframe] = useState<TimeframesType>('7d')
-  const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
 
   const handleExportToCSV = () => {
     // TODO: Implement export to CSV
@@ -101,7 +98,7 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
           vault={vault}
           arksInterestRates={arkInterestRates}
           vaultApyData={vaultApyData}
-          isMobile={isMobile}
+          columnsToHide={columnsToHide}
         />
       </Card>
     </Card>

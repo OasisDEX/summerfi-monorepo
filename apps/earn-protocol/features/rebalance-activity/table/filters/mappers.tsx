@@ -1,14 +1,13 @@
 import {
   type GenericMultiselectOption,
   getDisplayToken,
+  getProtocolLabel,
   getUniqueVaultId,
   networkNameIconNameMap,
   Risk,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
-
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const getProtocolIcon = (protocolLabel: string) => {
   const lowerCasedProtocolLabel = protocolLabel.toLowerCase()

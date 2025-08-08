@@ -4,13 +4,12 @@ import { type InterestRates, type SDKVaultType, type VaultApyData } from '@summe
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
 import { Table, type TableSortedColumn } from '@/components/organisms/Table/Table'
-import {
-  vaultExposureColumns,
-  vaultExposureColumnsHiddenOnMobile,
-} from '@/features/vault-exposure/table/columns'
+import { vaultExposureColumns } from '@/features/vault-exposure/table/columns'
 import { vaultExposureMapper } from '@/features/vault-exposure/table/mapper'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
+
+import styles from './VaultExposureTable.module.css'
 
 interface VaultExposureTableProps {
   vault: SDKVaultType
@@ -22,7 +21,6 @@ interface VaultExposureTableProps {
   rowsToDisplay?: number
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
-  isMobile: boolean
 }
 
 export const VaultExposureTable: FC<VaultExposureTableProps> = ({
@@ -32,7 +30,6 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   rowsToDisplay,
   arksInterestRates,
   vaultApyData,
-  isMobile,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
 
@@ -45,8 +42,6 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
     (nextSortConfig: TableSortedColumn<string>) => setSortConfig(nextSortConfig),
     [],
   )
-
-  const resolvedHiddenColumns = isMobile ? vaultExposureColumnsHiddenOnMobile : hiddenColumns
   const isAltPressed = useHoldAlt()
   const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
   const apyUpdatedAt = useApyUpdatedAt({
@@ -67,7 +62,9 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
       columns={columns}
       customRow={customRow}
       handleSort={handleSort}
-      hiddenColumns={resolvedHiddenColumns}
+      hiddenColumns={hiddenColumns}
+      wrapperClassName={styles.tableWrapper}
+      tableClassName={styles.table}
     />
   )
 }

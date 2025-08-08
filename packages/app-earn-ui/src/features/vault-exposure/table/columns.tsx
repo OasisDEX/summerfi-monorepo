@@ -68,13 +68,3 @@ export const vaultExposureColumns = ({
     sortable: true,
   },
 ]
-
-export const vaultExposureColumnsHiddenOnMobile: string[] = [
-  'allocated',
-  'liveApy',
-  'allocationCap',
-  'avgApy30d',
-  'avgApy1y',
-  'yearlyLow',
-  'yearlyHigh',
-]

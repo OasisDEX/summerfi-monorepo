@@ -1,21 +1,21 @@
 import { type FC, useMemo, useState } from 'react'
-import { InlineButtons, Text } from '@summerfi/app-earn-ui'
+import { InlineButtons, Text, VaultExposure } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
   type InlineButtonOption,
+  type InterestRates,
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
+import { vaultExposureColumnsToHideDetails } from '@/constants/tables'
 import { VaultDetailsHistoricalYieldChart } from '@/features/vault-details/components/VaultDetailsHistoricalYieldChart/VaultDetailsHistoricalYieldChart'
-import { VaultDetailsIndividualYieldData } from '@/features/vault-details/components/VaultDetailsIndividualYieldData/VaultDetailsIndividualYieldData'
 
 interface VaultDetailsAdvancedYieldProps {
   chartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 
@@ -90,10 +90,11 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
       >
         Individual Yield Data
       </Text>
-      <VaultDetailsIndividualYieldData
+      <VaultExposure
         vault={vault}
         arksInterestRates={arksInterestRates}
         vaultApyData={vaultApyData}
+        columnsToHide={vaultExposureColumnsToHideDetails}
       />
     </>
   )
