@@ -983,7 +983,7 @@ export const StaticTokensData: TokenListData = {
     {
       name: 'Bridged USDC',
       address: '0x29219dd400f2bf60e5a23d13be72b486d4038894',
-      symbol: 'USDC.e',
+      symbol: 'USDC',
       decimals: 6,
       chainId: ChainIds.Sonic,
       logoURI:
