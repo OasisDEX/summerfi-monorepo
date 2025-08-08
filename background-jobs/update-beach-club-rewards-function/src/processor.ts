@@ -1,7 +1,9 @@
+import { Kysely, sql } from 'kysely'
 import { ReferralClient } from './client'
 import { DatabaseService } from './db'
 import { Account, HourlySnapshot, AssetVolatility, PositionUpdate, ReferralCodeType } from './types'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { DB } from '@summerfi/summer-beach-club-db'
 
 export interface ProcessingResult {
   success: boolean
@@ -222,7 +224,7 @@ export class ReferralProcessor {
   }
 
   async processNewUsersInTransaction(
-    trx: any,
+    trx: Kysely<DB>,
     periodStart: Date,
     periodEnd: Date,
   ): Promise<ProcessingResult> {
@@ -250,19 +252,35 @@ export class ReferralProcessor {
           )
         }
 
-        await trx
-          .insertInto('users')
-          .values({
-            id: account.id,
-            referrer_id: validatedReferrerId,
-            referral_chain: validatedReferrerId ? account.referralChain : null,
-            referral_timestamp: validatedReferrerId
-              ? new Date(Number(account.referralTimestamp) * 1000)
-              : null,
-            is_active: false,
-          })
-          .onConflict((oc: any) => oc.doNothing())
-          .execute()
+        const referralTimestampDate = validatedReferrerId
+          ? new Date(Number(account.referralTimestamp) * 1000)
+          : null
+
+        // Insert new user or conditionally update referral fields if the user was created AFTER the referral happened
+        await trx.executeQuery(
+          sql`
+            INSERT INTO users (id, referrer_id, referral_chain, referral_timestamp, is_active)
+            VALUES (
+              ${account.id},
+              ${validatedReferrerId},
+              ${validatedReferrerId ? account.referralChain : null},
+              ${referralTimestampDate},
+              ${false}
+            )
+            ON CONFLICT (id) DO UPDATE SET
+              referrer_id = EXCLUDED.referrer_id,
+              referral_chain = EXCLUDED.referral_chain,
+              referral_timestamp = EXCLUDED.referral_timestamp
+            WHERE EXCLUDED.referrer_id IS NOT NULL
+              AND EXCLUDED.referral_timestamp IS NOT NULL
+              AND users.created_at > EXCLUDED.referral_timestamp
+              AND (
+                users.referrer_id IS DISTINCT FROM EXCLUDED.referrer_id OR
+                users.referral_chain IS DISTINCT FROM EXCLUDED.referral_chain OR
+                users.referral_timestamp IS DISTINCT FROM EXCLUDED.referral_timestamp
+              )
+          `.compile(trx),
+        )
       }
     }
 
