@@ -2,7 +2,6 @@ import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   decorateWithFleetConfig,
-  parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -13,14 +12,17 @@ import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
 export default async function InstitutionVaultVaultExposurePage() {
+  // dummy for now as well as vault address
   const parsedNetwork = SupportedSDKNetworks.Base
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
 
-  const vault = await getVaultDetails({
-    institutionID: 'test-client',
-    vaultAddress: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
-    network: parsedNetwork,
-  })
+  const [vault, { config: systemConfig }] = await Promise.all([
+    getVaultDetails({
+      institutionID: 'test-client',
+      vaultAddress: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
+      network: parsedNetwork,
+    }),
+    systemConfigHandler(),
+  ])
 
   if (!vault) {
     return <div>Vault not found</div>
