@@ -1,3 +1,4 @@
+import { getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -17,7 +18,6 @@ import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const emptyTvls = {
