@@ -9,17 +9,17 @@ import { type ArkType } from '@/arks-interest-rates/types'
 
 /**
  * Creates a function to fetch individual Ark interest rates with fallback mechanism.
- * 
+ *
  * This function returns a callable that attempts to fetch latest interest rates
  * for a single Ark via the primary API endpoint. If the primary API fails,
  * it falls back to the GraphQL subgraph. Includes performance timing for
  * monitoring API response times.
- * 
+ *
  * @param {Object} params - Configuration parameters for the fallback calls
  * @param {keyof typeof graphqlClients} params.network - The blockchain network to query
  * @param {string} params.functionsApiUrl - Base URL for the functions API
  * @returns {Function} A function that takes an Ark and returns its interest rates data
- * 
+ *
  * @example
  * ```typescript
  * const fallbackCaller = prepareInterestRatesFallbackCalls({

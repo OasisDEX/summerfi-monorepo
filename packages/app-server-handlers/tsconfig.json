@@ -1,11 +1,11 @@
 {
   "extends": "@summerfi/typescript-config/tsconfig.nextjs.json",
-  "include": ["src/**/*", "next-env.d.ts",],
+  "include": ["src/**/*", "next-env.d.ts"],
   "exclude": ["dist/**/*", "node_modules"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "typeRoots": [],

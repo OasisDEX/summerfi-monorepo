@@ -9,16 +9,16 @@ import { type ArkType } from '@/arks-interest-rates/types'
 
 /**
  * Creates a function to fetch historical interest rates for individual Arks with fallback.
- * 
+ *
  * This function returns a callable that attempts to fetch historical interest rates
  * (daily, hourly, weekly) for a single Ark via the primary API endpoint. If the
  * primary API fails, it falls back to the GraphQL subgraph for complete historical data.
- * 
+ *
  * @param {Object} params - Configuration parameters for historical rate fetching
  * @param {keyof typeof graphqlClients} params.network - The blockchain network to query
  * @param {string} params.functionsApiUrl - Base URL for the functions API
  * @returns {Function} A function that takes an Ark and returns its historical interest rates data
- * 
+ *
  * @example
  * ```typescript
  * const historicalCaller = prepareInterestRatesHistoricalResponse({
