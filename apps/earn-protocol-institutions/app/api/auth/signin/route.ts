@@ -1,8 +1,10 @@
-import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
 import { createHmac } from 'crypto'
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { createSession } from '@/app/server-handlers/auth/session'
+import { getEnrichedUser } from '@/app/server-handlers/auth/user'
+import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { AuthService } from '@/features/auth/AuthService'
 import { type SignInResponse } from '@/types/auth'
 
@@ -40,98 +42,36 @@ export async function POST(request: NextRequest) {
     const secretHash = generateSecretHash(email)
     const result = await AuthService.signIn({ email, password }, secretHash)
 
-    // Check if it's a challenge response
     if ('challenge' in result) {
-      return NextResponse.json({
-        challenge: result.challenge,
-        session: result.session,
-        email,
-      })
+      return NextResponse.json({ challenge: result.challenge, session: result.session, email })
     }
 
-    // check the user role
-    const institutionsDB = await getSummerProtocolInstitutionDB({
-      connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+    const enriched = await getEnrichedUser({
+      sub: result.id,
+      email: result.email,
+      name: result.name ?? result.email,
     })
 
-    const globalAdmin = await institutionsDB.db
-      .selectFrom('globalAdmins')
-      .select(['userSub'])
-      .where('userSub', '=', result.id)
-      .executeTakeFirst()
-
-    // Normal authentication success
     const cookieStore = await cookies()
 
-    cookieStore.set('access_token', result.accessToken, {
+    cookieStore.set(ACCESS_TOKEN_COOKIE, result.accessToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 15 * 60,
+    })
+    cookieStore.set(REFRESH_TOKEN_COOKIE, result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60, // 1 hour
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
     })
 
-    cookieStore.set('refresh_token', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    })
+    await createSession(enriched, result.id)
 
-    cookieStore.set('username', email, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    })
-
-    if (globalAdmin) {
-      return NextResponse.json({
-        user: {
-          id: result.id,
-          email: result.email,
-          name: result.name,
-          isGlobalAdmin: true,
-        },
-      } as SignInResponse)
-    }
-
-    // If not a global admin, check the institution data on the user
-    const userInstitutions = await institutionsDB.db
-      .selectFrom('institutionUsers')
-      .innerJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
-      .select([
-        'institutionUsers.role',
-        'institutionUsers.institutionId',
-        'institutions.name as institutionName',
-        'institutions.displayName as institutionDisplayName',
-      ])
-      .where('institutionUsers.userSub', '=', result.id)
-      .execute()
-
-    if (userInstitutions.length === 0) {
-      return NextResponse.json(
-        { error: 'User does not have any institution roles' },
-        { status: 403 },
-      )
-    }
-
-    return NextResponse.json({
-      user: {
-        id: result.id,
-        email: result.email,
-        name: result.name,
-        institutionsList: userInstitutions.map((inst) => ({
-          id: inst.institutionId,
-          name: inst.institutionName,
-          displayName: inst.institutionDisplayName,
-          role: inst.role,
-        })),
-      },
-    } as SignInResponse)
+    return NextResponse.json({ user: enriched } as SignInResponse)
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Sign in error:', error)
-
     return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
   }
 }

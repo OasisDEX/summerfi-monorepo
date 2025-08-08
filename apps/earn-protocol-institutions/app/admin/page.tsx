@@ -1,19 +1,12 @@
-import { cookies } from 'next/headers'
-
-import { UserDataProvider } from '@/contexts/UserDataContext/UserDataContext'
+import { readSession } from '@/app/server-handlers/auth/session'
 import { AdminPanel } from '@/features/admin/AdminPanel'
 
 export default async function AdminPage() {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('access_token')?.value
+  const session = await readSession()
 
-  if (!accessToken) {
+  if (!session) {
     throw new Error('Unauthorized')
   }
 
-  return (
-    <UserDataProvider>
-      <AdminPanel />
-    </UserDataProvider>
-  )
+  return <AdminPanel session={session} />
 }

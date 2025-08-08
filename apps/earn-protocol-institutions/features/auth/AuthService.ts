@@ -1,7 +1,5 @@
 import {
   CognitoIdentityProviderClient,
-  GetUserCommand,
-  type GetUserCommandOutput,
   GlobalSignOutCommand,
   InitiateAuthCommand,
   type InitiateAuthCommandOutput,
@@ -116,10 +114,11 @@ export class AuthService {
     }
   }
 
-  static async refreshToken(refreshToken: string, secretHash?: string): Promise<string> {
-    const authParameters: { [key: string]: string } = {
-      REFRESH_TOKEN: refreshToken,
-    }
+  static async refreshToken(
+    refreshToken: string,
+    secretHash?: string,
+  ): Promise<{ accessToken: string; idToken?: string }> {
+    const authParameters: { [key: string]: string } = { REFRESH_TOKEN: refreshToken }
 
     if (secretHash) {
       authParameters.SECRET_HASH = secretHash
@@ -132,12 +131,13 @@ export class AuthService {
     })
 
     const response: InitiateAuthCommandOutput = await client.send(command)
+    const { AccessToken, IdToken } = response.AuthenticationResult ?? {}
 
-    if (!response.AuthenticationResult?.AccessToken) {
+    if (!AccessToken) {
       throw new Error('Token refresh failed')
     }
 
-    return response.AuthenticationResult.AccessToken
+    return { accessToken: AccessToken, idToken: IdToken }
   }
 
   static async signOut(accessToken: string): Promise<void> {
@@ -146,29 +146,5 @@ export class AuthService {
     })
 
     await client.send(command)
-  }
-
-  static async getUserData(
-    accessToken: string,
-  ): Promise<{ sub: string; email: string; name: string }> {
-    const command = new GetUserCommand({
-      AccessToken: accessToken,
-    })
-
-    const response: GetUserCommandOutput = await client.send(command)
-
-    const email = response.UserAttributes?.find((attr) => attr.Name === 'email')?.Value
-    const username = response.Username
-    const sub = response.UserAttributes?.find((attr) => attr.Name === 'sub')?.Value
-
-    if (!sub || !email || !username) {
-      throw new Error('User data is incomplete')
-    }
-
-    return {
-      sub,
-      email,
-      name: username,
-    }
   }
 }

@@ -2,6 +2,7 @@ import { createHmac } from 'crypto'
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { AuthService } from '@/features/auth/AuthService'
 
 if (
@@ -38,21 +39,14 @@ export async function POST(request: NextRequest) {
     // Set secure HTTP-only cookies
     const cookieStore = await cookies()
 
-    cookieStore.set('access_token', user.accessToken, {
+    cookieStore.set(ACCESS_TOKEN_COOKIE, user.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60, // 1 hour
     })
 
-    cookieStore.set('refresh_token', user.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    })
-
-    cookieStore.set('username', email, {
+    cookieStore.set(REFRESH_TOKEN_COOKIE, user.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',

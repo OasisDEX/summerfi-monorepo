@@ -1,26 +1,25 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+import { destroySession } from '@/app/server-handlers/auth/session'
+import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { AuthService } from '@/features/auth/AuthService'
 
 export async function POST() {
-  try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('access_token')?.value
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value
 
-    if (accessToken) {
+  if (accessToken) {
+    try {
       await AuthService.signOut(accessToken)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Sign out error:', error)
     }
-
-    // Clear cookies
-    cookieStore.delete('access_token')
-    cookieStore.delete('refresh_token')
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Sign out error:', error)
-
-    return NextResponse.json({ error: 'Sign out failed' }, { status: 500 })
   }
+  await destroySession()
+  cookieStore.set(ACCESS_TOKEN_COOKIE, '', { path: '/', maxAge: 0 })
+  cookieStore.set(REFRESH_TOKEN_COOKIE, '', { path: '/', maxAge: 0 })
+
+  return NextResponse.json({ ok: true })
 }
