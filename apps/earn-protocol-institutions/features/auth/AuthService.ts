@@ -14,7 +14,36 @@ const client = new CognitoIdentityProviderClient({
   region: 'eu-central-1',
 })
 
+// Define a JWT claims helper type with an index signature
+type JwtClaims = {
+  sub?: string
+  email?: string
+  name?: string
+  given_name?: string
+  family_name?: string
+  preferred_username?: string
+  'cognito:username'?: string
+  [key: string]: unknown
+}
+
 export class AuthService {
+  // Add a safe fallback for deriving user's display name from JWT claims
+  private static getNameFromPayload(payload: JwtClaims): string {
+    const { given_name: given, family_name: family } = payload
+
+    if (given && family) {
+      return `${given} ${family}`
+    }
+
+    return (
+      payload.name ??
+      payload.preferred_username ??
+      payload['cognito:username'] ?? // its this one, but leaving the rest as a fallback
+      payload.email ??
+      ''
+    )
+  }
+
   static async signIn(
     credentials: LoginCredentials,
     secretHash?: string,
@@ -58,12 +87,12 @@ export class AuthService {
       throw new Error('Missing tokens in response')
     }
 
-    const payload = decodeJwt(IdToken)
+    const payload = decodeJwt(IdToken) as JwtClaims
 
     return {
       id: payload.sub as string,
       email: payload.email as string,
-      name: payload.name as string,
+      name: AuthService.getNameFromPayload(payload),
       accessToken: AccessToken,
       refreshToken: RefreshToken,
     }
@@ -103,12 +132,12 @@ export class AuthService {
       throw new Error('Missing tokens in response')
     }
 
-    const payload = decodeJwt(IdToken)
+    const payload = decodeJwt(IdToken) as JwtClaims
 
     return {
       id: payload.sub as string,
       email: payload.email as string,
-      name: payload.name as string,
+      name: AuthService.getNameFromPayload(payload),
       accessToken: AccessToken,
       refreshToken: RefreshToken,
     }

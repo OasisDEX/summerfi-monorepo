@@ -1,12 +1,12 @@
 import { readSession } from '@/app/server-handlers/auth/session'
-import { AdminPanel } from '@/features/admin/AdminPanel'
+import { InstitutionsAdminPanel } from '@/features/admin/InstitutionsAdminPanel'
 
 export default async function AdminPage() {
   const session = await readSession()
 
-  if (!session) {
+  if (!session || !session.user.isGlobalAdmin) {
     throw new Error('Unauthorized')
   }
 
-  return <AdminPanel session={session} />
+  return <InstitutionsAdminPanel />
 }

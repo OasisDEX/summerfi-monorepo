@@ -1,3 +1,4 @@
+import { createHmac } from 'crypto'
 import dayjs from 'dayjs'
 import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
@@ -48,6 +49,8 @@ export async function readSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(SESSION_COOKIE)?.value
 
+  console.log('token', token)
+
   if (!token) return null
 
   try {
@@ -67,4 +70,13 @@ export async function destroySession() {
   const cookieStore = await cookies()
 
   cookieStore.set(SESSION_COOKIE, '', { maxAge: 0, path: '/' })
+}
+
+export function generateSecretHash(username: string): string {
+  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID as string
+  const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET as string
+
+  const message = username + clientId
+
+  return createHmac('sha256', clientSecret).update(message).digest('base64')
 }

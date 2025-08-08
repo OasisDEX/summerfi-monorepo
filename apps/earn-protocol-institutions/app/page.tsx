@@ -46,14 +46,10 @@ export default function InstitutionsLoginPage() {
           session: data.session,
           email: data.email,
         })
+      } else if (data.user?.isGlobalAdmin) {
+        replace('/admin/institutions')
       } else {
-        // eslint-disable-next-line no-console
-        console.log('Login successful:', data)
-        if (data.user?.isGlobalAdmin) {
-          replace('/admin')
-        } else {
-          replace(`${data.user?.institutionsList?.[0]?.id}/overview`)
-        }
+        replace(`${data.user?.institutionsList?.[0]?.id}/overview`)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')

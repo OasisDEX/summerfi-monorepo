@@ -1,8 +1,7 @@
-import { createHmac } from 'crypto'
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { createSession } from '@/app/server-handlers/auth/session'
+import { createSession, generateSecretHash } from '@/app/server-handlers/auth/session'
 import { getEnrichedUser } from '@/app/server-handlers/auth/user'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { AuthService } from '@/features/auth/AuthService'
@@ -19,15 +18,6 @@ if (!process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING) {
   throw new Error(
     'EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING must be set in environment variables',
   )
-}
-
-function generateSecretHash(username: string): string {
-  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID as string
-  const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET as string
-
-  const message = username + clientId
-
-  return createHmac('sha256', clientSecret).update(message).digest('base64')
 }
 
 export async function POST(request: NextRequest) {
