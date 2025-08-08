@@ -273,12 +273,8 @@ export class ReferralProcessor {
               referral_timestamp = EXCLUDED.referral_timestamp
             WHERE EXCLUDED.referrer_id IS NOT NULL
               AND EXCLUDED.referral_timestamp IS NOT NULL
+              AND users.referrer_id IS NULL
               AND users.created_at > EXCLUDED.referral_timestamp
-              AND (
-                users.referrer_id IS DISTINCT FROM EXCLUDED.referrer_id OR
-                users.referral_chain IS DISTINCT FROM EXCLUDED.referral_chain OR
-                users.referral_timestamp IS DISTINCT FROM EXCLUDED.referral_timestamp
-              )
           `.compile(trx),
         )
       }
