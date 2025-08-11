@@ -25,19 +25,37 @@ describe('Armada Protocol Claim', () => {
         }),
       })
 
-      describe.skip(`getAggregatedRewards`, () => {
+      describe(`getAggregatedRewards`, () => {
         it(`should get aggregated rewards cross chain`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
-          console.log(rewards)
+          console.log('rewards', rewards)
+          expect(rewards.total).toBeDefined()
           expect(rewards.total).toBeGreaterThan(0n)
-          // expect(rewards.perChain[ChainFamilyMap.Base.Base.chainId]).toBeGreaterThan(0n)
-          // expect(rewards.perChain[ChainFamilyMap.Arbitrum.ArbitrumOne.chainId]).toBe(0n)
+          expect(rewards.vaultUsagePerChain).toBeDefined()
+          expect(rewards.vaultUsage).toBeDefined()
+          expect(rewards.merkleDistribution).toBeDefined()
+          expect(rewards.voteDelegation).toBeGreaterThan(0n)
         })
       })
 
-      describe(`claimRewards`, () => {
+      describe(`getAggregatedRewardsIncludingMerkl`, () => {
+        it(`should get aggregated rewards cross chain including merkl`, async () => {
+          const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+            user,
+          })
+          console.log('rewards including merkl', rewards)
+          expect(rewards.total).toBeDefined()
+          expect(rewards.total).toBeGreaterThan(0n)
+          expect(rewards.vaultUsagePerChain).toBeDefined()
+          expect(rewards.vaultUsage).toBeDefined()
+          expect(rewards.merkleDistribution).toBeDefined()
+          expect(rewards.voteDelegation).toBeGreaterThan(0n)
+        })
+      })
+
+      describe.skip(`claimRewards`, () => {
         it(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,

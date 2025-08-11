@@ -281,6 +281,22 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
+   * @method getAggregatedRewardsIncludingMerkl
+   * @description Returns the aggregated rewards of a user including Merkl rewards
+   *
+   * @param user Address of the user to check the rewards for
+   *
+   * @returns The aggregated rewards of the user including Merkl rewards
+   */
+  getAggregatedRewardsIncludingMerkl: (params: { user: IUser }) => Promise<{
+    total: bigint
+    vaultUsagePerChain: Record<number, bigint>
+    vaultUsage: bigint
+    merkleDistribution: bigint
+    voteDelegation: bigint
+  }>
+
+  /**
    * @method getClaimableAggregatedRewards
    * @description Returns the claimable aggregated rewards of a user in a Fleet
    *

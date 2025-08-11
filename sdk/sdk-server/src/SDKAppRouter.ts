@@ -43,6 +43,7 @@ import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalanc
 import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
+import { getAggregatedRewardsIncludingMerkl } from './armada-protocol-handlers/users/getAggregatedRewardsIncludingMerkl'
 import { getAggregatedClaimsForChainTx } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
 import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
 import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
@@ -130,6 +131,7 @@ export const sdkAppRouter = router({
       getTotalBalance: getTotalBalance,
       getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
+      getAggregatedRewardsIncludingMerkl: getAggregatedRewardsIncludingMerkl,
       getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
