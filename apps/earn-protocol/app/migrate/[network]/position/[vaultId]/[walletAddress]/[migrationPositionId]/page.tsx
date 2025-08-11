@@ -111,27 +111,40 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       })
     : []
 
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+  }
+
+  const keyParts = [walletAddress, vaultId, paramsNetwork]
+
   const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
     vault?.arks
-      ? unstableCache(getArksInterestRates, [REVALIDATION_TAGS.INTEREST_RATES], {
-          revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-        })({
+      ? unstableCache(
+          getArksInterestRates,
+          keyParts,
+          cacheConfig,
+        )({
           network: parsedNetwork,
           arksList: vault.arks,
         })
       : Promise.resolve({}),
-    unstableCache(getVaultsHistoricalApy, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    unstableCache(
+      getVaultsHistoricalApy,
+      keyParts,
+      cacheConfig,
+    )({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    unstableCache(
+      getVaultsApy,
+      keyParts,
+      cacheConfig,
+    )({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

@@ -25,15 +25,17 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
 
   const cacheConfig = {
     revalidate: REVALIDATION_TIMES.MIGRATION_DATA,
-    tags: [REVALIDATION_TAGS.MIGRATION_DATA, walletAddress.toLowerCase()],
+    tags: [REVALIDATION_TAGS.MIGRATION_DATA],
   }
+
+  const keyParts = [walletAddress]
 
   const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
     })(),
-    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(getMigratablePositions, keyParts, cacheConfig)({ walletAddress }),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -52,10 +54,8 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
 
   const vaultsApyByNetworkMap = await unstableCache(
     getVaultsApy,
-    [REVALIDATION_TAGS.INTEREST_RATES],
-    {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    },
+    keyParts,
+    cacheConfig,
   )({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,

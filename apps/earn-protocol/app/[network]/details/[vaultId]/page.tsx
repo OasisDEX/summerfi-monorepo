@@ -98,25 +98,38 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     systemConfig,
   })
 
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+  }
+
+  const keyParts = [vaultId, network]
+
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
-    unstableCache(getArksInterestRates, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    unstableCache(
+      getArksInterestRates,
+      keyParts,
+      cacheConfig,
+    )({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
-    unstableCache(getVaultsHistoricalApy, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    unstableCache(
+      getVaultsHistoricalApy,
+      keyParts,
+      cacheConfig,
+    )({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
       })),
     }),
-    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    unstableCache(
+      getVaultsApy,
+      keyParts,
+      cacheConfig,
+    )({
       fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
