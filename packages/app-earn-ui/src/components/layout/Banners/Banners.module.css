@@ -1,5 +1,4 @@
 .bannerWrapper {
-  width: calc(100vw - var(--general-space-16));
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -7,6 +6,10 @@
   height: 0;
   transition: opacity 0.3s ease-in-out;
   pointer-events: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .bannerWrapperVisible {
