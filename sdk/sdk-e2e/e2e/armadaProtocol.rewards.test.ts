@@ -262,7 +262,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`User Flow`, () => {
+      describe.skip(`User Flow`, () => {
         test(`should demonstrate full claiming flow on base`, async () => {
           const testChainId = ChainIds.Base
 

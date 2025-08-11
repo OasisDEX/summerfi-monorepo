@@ -1,16 +1,13 @@
-@tokenSymbol = SUMR
-
-## by Opportunity
-@opportunityId = 17697067541467596262
-
-GET https://api.merkl.xyz/v4/opportunities/campaigns
-  ?opportunityId={{opportunityId}}
-
 ### by Token
+@tokenSymbol = SUMR
 GET https://api.merkl.xyz/v4/campaigns
   ?tokenSymbol={{tokenSymbol}}
 
-### by Id
-@campaignId = 14000681846625431474
+### by Opportunity
+@opportunityId = 14664258849434578914
+GET https://api.merkl.xyz/v4/opportunities/campaigns
+  ?opportunityId={{opportunityId}}
 
+### by Id
+@campaignId = 6882942589603688379
 GET https://api.merkl.xyz/v4/campaigns/{{campaignId}}

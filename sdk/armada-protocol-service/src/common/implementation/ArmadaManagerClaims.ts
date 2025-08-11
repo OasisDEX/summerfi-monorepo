@@ -6,15 +6,19 @@ import {
 } from '@summerfi/armada-protocol-abis'
 import {
   type IArmadaManagerClaims,
+  type IArmadaManagerMerklRewards,
   type IArmadaManagerUtils,
+  type MerklReward,
   getAllMerkleClaims,
   getDeployedGovRewardsManagerAddress,
   isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  getChainInfoByChainId,
   LoggingService,
   TransactionType,
+  type ChainId,
   type ClaimTransactionInfo,
   type HexData,
   type IAddress,
@@ -40,6 +44,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _configProvider: IConfigurationProvider
   private _tokensManager: ITokensManager
   private _utils: IArmadaManagerUtils
+  private _merkleRewards: IArmadaManagerMerklRewards
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -57,6 +62,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
     utils: IArmadaManagerUtils
+    merkleRewards: IArmadaManagerMerklRewards
     subgraphManager: IArmadaSubgraphManager
     tokensManager: ITokensManager
   }) {
@@ -68,6 +74,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
     this._utils = params.utils
+    this._merkleRewards = params.merkleRewards
     this._subgraphManager = params.subgraphManager
     this._tokensManager = params.tokensManager
 
@@ -311,6 +318,49 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       vaultUsage: totalUsageRewards,
       merkleDistribution: merkleDistributionRewards,
       voteDelegation: voteDelegationRewards,
+    }
+  }
+
+  private getMerklRewardsForChain(
+    merklRewards: { perChain: Partial<Record<ChainId, MerklReward[]>> },
+    chainId: number,
+  ): bigint {
+    const merklUsage = merklRewards.perChain[chainId as ChainId] || []
+    return merklUsage
+      .filter(
+        (item: MerklReward) =>
+          item.token.address ===
+          this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId as ChainId) }).address
+            .value,
+      )
+      .reduce((sum: bigint, item: MerklReward) => sum + BigInt(item.amount), 0n)
+  }
+
+  async getAggregatedRewardsIncludingMerkl(
+    params: Parameters<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']>[0],
+  ): ReturnType<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']> {
+    const [rewards, userMerklRewards] = await Promise.all([
+      this.getAggregatedRewards(params),
+      this._merkleRewards.getUserMerklRewards({
+        address: params.user.wallet.address.value,
+      }),
+    ])
+
+    const vaultUsagePerChain: Record<number, bigint> = {}
+    for (const [chainId, vaultUsageRewards] of Object.entries(rewards.vaultUsagePerChain)) {
+      const merklRewards = this.getMerklRewardsForChain(userMerklRewards, Number(chainId))
+      vaultUsagePerChain[Number(chainId)] = vaultUsageRewards + merklRewards
+    }
+
+    const vaultUsage = Object.values(vaultUsagePerChain).reduce((acc, usage) => acc + usage, 0n)
+    const total = rewards.merkleDistribution + rewards.voteDelegation + vaultUsage
+
+    return {
+      total,
+      vaultUsagePerChain,
+      vaultUsage,
+      merkleDistribution: rewards.merkleDistribution,
+      voteDelegation: rewards.voteDelegation,
     }
   }
 
