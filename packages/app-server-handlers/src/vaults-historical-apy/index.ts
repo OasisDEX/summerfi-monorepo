@@ -91,7 +91,6 @@ export const getVaultsHistoricalApy: ({
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
     })
 
     const rawResponse: GetVaultsHistoricalApyRAWResponse = await apiResponse.json()

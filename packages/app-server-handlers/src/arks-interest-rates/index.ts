@@ -76,7 +76,6 @@ export async function getArksInterestRates({
         headers: {
           'Content-Type': 'application/json',
         },
-        cache: 'no-store',
       })
 
       if (!latestRatesResponse.ok) {
