@@ -1,10 +1,24 @@
-import { init } from 'mixpanel'
+import { init, type Mixpanel } from 'mixpanel'
 
-if (!process.env.EARN_MIXPANEL_KEY) {
-  throw new Error('EARN_MIXPANEL_KEY is not defined')
+// Singleton instance
+let mixpanelInstance: Mixpanel | null = null
+
+/**
+ * Gets or creates a singleton Mixpanel instance with the given key.
+ *
+ * @param key - The Mixpanel project token.
+ * @returns A Mixpanel instance (singleton).
+ */
+export const getMixpanel = (key: string | undefined): Mixpanel => {
+  if (!mixpanelInstance) {
+    if (!key) {
+      throw new Error('MIXPANEL_KEY is not defined')
+    }
+    mixpanelInstance = init(key)
+  }
+
+  return mixpanelInstance
 }
-
-const mixpanel = init(process.env.EARN_MIXPANEL_KEY)
 
 /**
  * Tracks an event in Mixpanel with the given event name and body. To be used in server-side code.
@@ -18,6 +32,7 @@ const mixpanel = init(process.env.EARN_MIXPANEL_KEY)
 export const trackEventHandler = (
   eventName: string,
   eventBody: { [key: string]: unknown },
+  mixpanel: Mixpanel,
 ): void => {
   const env = process.env.MIXPANEL_ENV
   const loggingEnabled = process.env.MIXPANEL_LOG
