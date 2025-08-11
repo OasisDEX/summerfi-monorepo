@@ -191,7 +191,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
           }),
         ),
       ).then(mapPortfolioVaultsApy),
-      getVaultsApy({
+      unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+      })({
         fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
           fleetAddress: id,
           chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
