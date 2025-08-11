@@ -79,6 +79,7 @@ export default defineConfig(({ mode }) => {
           'jose',
           'viem',
           'viem/chains',
+          'mixpanel',
         ],
         output: {
           assetFileNames: 'assets/[name][extname]',

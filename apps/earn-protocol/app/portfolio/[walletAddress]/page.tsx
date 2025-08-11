@@ -4,7 +4,7 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
@@ -38,7 +38,6 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getTallyDelegates } from '@/app/server-handlers/tally'
@@ -86,7 +85,9 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
@@ -166,7 +167,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
+    systemConfig,
     userPositions: userPositionsJsonSafe,
   })
 
@@ -280,7 +281,7 @@ export async function generateMetadata({
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
+    systemConfig,
     userPositions: userPositionsJsonSafe,
   })
 

@@ -8,18 +8,21 @@ import {
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { DeviceType } from '@summerfi/app-types'
 import { getDeviceType, getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 import Script from 'next/script'
 
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { fontInter } from '@/helpers/fonts'
@@ -36,7 +39,9 @@ export const metadata: Metadata = {
 const reactScanDebug = false
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [{ config }] = await Promise.all([systemConfigHandler()])
+  const config = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
 
   const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()

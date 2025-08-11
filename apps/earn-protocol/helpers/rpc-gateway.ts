@@ -1,6 +1,5 @@
+import { configProAppFetcher } from '@summerfi/app-server-handlers'
 import { type AppConfigType, NetworkNames } from '@summerfi/app-types'
-
-import { mainConfigFetcher } from '@/app/server-handlers/system-config/calls/config'
 
 let cachedConfig: Partial<AppConfigType> | undefined
 let cacheExpirationTime: number | undefined
@@ -22,7 +21,7 @@ async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfi
   let configResponse
 
   try {
-    configResponse = await mainConfigFetcher()
+    configResponse = await configProAppFetcher()
   } catch (e) {
     throw new Error('Failed to fetch config data')
   }

@@ -1,6 +1,16 @@
-import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
-import { getVaultsApy } from '@summerfi/app-server-handlers'
-import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
+import {
+  getDisplayToken,
+  isVaultAtLeastDaysOld,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+  Text,
+} from '@summerfi/app-earn-ui'
+import {
+  configEarnAppFetcher,
+  getArksInterestRates,
+  getVaultsApy,
+  getVaultsHistoricalApy,
+} from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
@@ -16,6 +26,7 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
@@ -23,11 +34,9 @@ import { isAddress } from 'viem'
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
@@ -47,7 +56,10 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const { network: paramsNetwork, vaultId } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
@@ -161,11 +173,17 @@ export async function generateMetadata({
 }: EarnVaultOpenPageProps & {
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
-  const [{ network: paramsNetwork, vaultId }, config, headersList, searchParamsAwaited] =
-    await Promise.all([params, systemConfigHandler(), headers(), searchParams])
+  const [{ network: paramsNetwork, vaultId }, systemConfig, headersList, searchParamsAwaited] =
+    await Promise.all([
+      params,
+      unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+        revalidate: REVALIDATION_TIMES.CONFIG,
+      })(),
+      headers(),
+      searchParams,
+    ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(config)
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 

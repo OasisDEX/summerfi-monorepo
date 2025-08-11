@@ -169,13 +169,6 @@ export type VaultApyData = {
 
 export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
 
-export interface FleetRate {
-  id: string
-  rate: string
-  timestamp: number
-  fleetAddress: string
-}
-
 // Define a new type for transactions that includes an `executed` property
 export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
   executed: boolean
@@ -336,4 +329,31 @@ export enum SupportedSDKNetworks {
   Base = Network.Base,
   ArbitrumOne = Network.ArbitrumOne,
   SonicMainnet = Network.SonicMainnet,
+}
+
+export interface FleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}
+
+export interface AggregatedFleetRate {
+  id: string
+  averageRate: string
+  date: string
+  fleetAddress: string
+}
+
+export interface HistoricalFleetRates {
+  dailyRates: AggregatedFleetRate[]
+  hourlyRates: AggregatedFleetRate[]
+  weeklyRates: AggregatedFleetRate[]
+  latestRate: FleetRate[]
+}
+
+export interface HistoricalFleetRateResult {
+  chainId: string
+  fleetAddress: string
+  rates: HistoricalFleetRates
 }
