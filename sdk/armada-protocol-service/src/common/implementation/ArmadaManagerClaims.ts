@@ -321,7 +321,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  private getMerklUsageForChain(
+  private getMerklRewardsForChain(
     merklRewards: { perChain: Partial<Record<ChainId, MerklReward[]>> },
     chainId: number,
   ): bigint {
@@ -339,7 +339,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getAggregatedRewardsIncludingMerkl(
     params: Parameters<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']> {
-    const [rewards, merklRewards] = await Promise.all([
+    const [rewards, userMerklRewards] = await Promise.all([
       this.getAggregatedRewards(params),
       this._merkleRewards.getUserMerklRewards({
         address: params.user.wallet.address.value,
@@ -347,9 +347,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     ])
 
     const vaultUsagePerChain: Record<number, bigint> = {}
-    for (const [chainId, usage] of Object.entries(rewards.vaultUsagePerChain)) {
-      const totalMerklUsage = this.getMerklUsageForChain(merklRewards, Number(chainId))
-      vaultUsagePerChain[Number(chainId)] = usage + totalMerklUsage
+    for (const [chainId, vaultUsageRewards] of Object.entries(rewards.vaultUsagePerChain)) {
+      const merklRewards = this.getMerklRewardsForChain(userMerklRewards, Number(chainId))
+      vaultUsagePerChain[Number(chainId)] = vaultUsageRewards + merklRewards
     }
 
     const vaultUsage = Object.values(vaultUsagePerChain).reduce((acc, usage) => acc + usage, 0n)
