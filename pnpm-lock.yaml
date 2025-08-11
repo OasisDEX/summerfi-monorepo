@@ -4595,6 +4595,9 @@ importers:
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db
     devDependencies:
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../../packages/app-types
       '@types/aws-lambda':
         specifier: ^8.10.119
         version: 8.10.137

@@ -1,3 +1,9 @@
+import {
+  type AggregatedFleetRate,
+  type FleetRate,
+  type HistoricalFleetRateResult,
+} from '@summerfi/app-types'
+
 type GetVaultsHistoricalApyParams = {
   fleets: {
     fleetAddress: string
@@ -5,31 +11,8 @@ type GetVaultsHistoricalApyParams = {
   }[]
 }
 
-type RatesRaw = {
-  id: string
-  averageRate: string
-  date: string
-  fleetAddress: string
-}
-
-type LatestRateRaw = {
-  id: string
-  rate: string
-  timestamp: string
-  fleetAddress: string
-}
-
 type GetVaultsHistoricalApyRAWResponse = {
-  rates: {
-    chainId: number
-    fleetAddress: string
-    rates: {
-      dailyRates: RatesRaw[]
-      hourlyRates: RatesRaw[]
-      weeklyRates: RatesRaw[]
-      latestRate: LatestRateRaw[]
-    }
-  }[]
+  rates: HistoricalFleetRateResult[]
 }
 
 type RatesParsed = {
@@ -39,7 +22,7 @@ type RatesParsed = {
 
 export type GetVaultsHistoricalApyResponse = {
   // key is `${fleetAddress}-${chainId}`
-  [key: `${string}-${number}`]: {
+  [key: `${string}-${string}`]: {
     hourlyInterestRates: RatesParsed[]
     dailyInterestRates: RatesParsed[]
     weeklyInterestRates: RatesParsed[]
@@ -47,12 +30,12 @@ export type GetVaultsHistoricalApyResponse = {
   }
 }
 
-const mapRates = ({ averageRate, date }: RatesRaw) => ({
+const mapRates = ({ averageRate, date }: AggregatedFleetRate) => ({
   averageRate,
   date: Number(date),
 })
 
-const mapLatestRate = ({ rate, timestamp }: LatestRateRaw) => ({
+const mapLatestRate = ({ rate, timestamp }: FleetRate) => ({
   averageRate: rate,
   date: Number(timestamp),
 })
@@ -72,6 +55,23 @@ const getEmptyResponse = (fleets: GetVaultsHistoricalApyParams['fleets']) => {
   return emptyResponse
 }
 
+/**
+ * Retrieves historical APY (Annual Percentage Yield) rates for the specified vault fleets.
+ *
+ * This function sends a POST request to the configured FUNCTIONS_API_URL endpoint to fetch
+ * hourly, daily, weekly, and latest interest rates for each fleet and chain combination.
+ *
+ * @param params - The parameters for fetching historical APY rates.
+ * @param params.fleets - An array of objects, each containing a `fleetAddress` and `chainId`
+ *   identifying the vault fleet and its blockchain network.
+ *
+ * @returns A promise that resolves to an object where each key is a string in the format
+ *   `${fleetAddress}-${chainId}` and the value contains arrays of parsed interest rates
+ *   (hourly, daily, weekly, and latest) for that fleet.
+ *
+ * @throws Will throw an error if the FUNCTIONS_API_URL environment variable is not set,
+ *   or if the fetch request fails.
+ */
 export const getVaultsHistoricalApy: ({
   fleets,
 }: GetVaultsHistoricalApyParams) => Promise<GetVaultsHistoricalApyResponse> = async ({
@@ -91,13 +91,10 @@ export const getVaultsHistoricalApy: ({
       headers: {
         'Content-Type': 'application/json',
       },
-      next: {
-        revalidate: 0,
-      },
+      cache: 'no-store',
     })
 
-    let rawResponse: GetVaultsHistoricalApyRAWResponse | null =
-      (await apiResponse.json()) as GetVaultsHistoricalApyRAWResponse
+    const rawResponse: GetVaultsHistoricalApyRAWResponse = await apiResponse.json()
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!rawResponse.rates) {
@@ -114,9 +111,6 @@ export const getVaultsHistoricalApy: ({
         latestInterestRate: rates.latestRate.map(mapLatestRate),
       }
     }
-
-    // Clear the reference to rawResponse after processing
-    rawResponse = null
 
     return response
   } catch (error) {

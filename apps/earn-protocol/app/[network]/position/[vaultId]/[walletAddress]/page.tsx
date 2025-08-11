@@ -5,8 +5,11 @@ import {
   parseForecastDatapoints,
   Text,
 } from '@summerfi/app-earn-ui'
-import { getVaultsApy } from '@summerfi/app-server-handlers'
-import { getArksInterestRates } from '@summerfi/app-server-handlers/arks-interest-rates'
+import {
+  getArksInterestRates,
+  getVaultsApy,
+  getVaultsHistoricalApy,
+} from '@summerfi/app-server-handlers'
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
@@ -38,7 +41,6 @@ import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'

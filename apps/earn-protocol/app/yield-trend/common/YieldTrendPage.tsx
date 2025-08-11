@@ -1,5 +1,9 @@
 import { type FC } from 'react'
-import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
+import {
+  getArksInterestRates,
+  getVaultsApy,
+  getVaultsHistoricalApy,
+} from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
@@ -8,7 +12,6 @@ import {
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
