@@ -339,11 +339,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getAggregatedRewardsIncludingMerkl(
     params: Parameters<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']> {
-    const rewards = await this.getAggregatedRewards(params)
-
-    const merklRewards = await this._merkleRewards.getUserMerklRewards({
-      address: params.user.wallet.address.value,
-    })
+    const [rewards, merklRewards] = await Promise.all([
+      this.getAggregatedRewards(params),
+      this._merkleRewards.getUserMerklRewards({
+        address: params.user.wallet.address.value,
+      }),
+    ])
 
     const vaultUsagePerChain: Record<number, bigint> = {}
     for (const [chainId, usage] of Object.entries(rewards.vaultUsagePerChain)) {
