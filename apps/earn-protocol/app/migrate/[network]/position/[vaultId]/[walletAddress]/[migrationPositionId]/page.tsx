@@ -1,5 +1,6 @@
-import { Text } from '@summerfi/app-earn-ui'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES, Text } from '@summerfi/app-earn-ui'
 import {
+  configEarnAppFetcher,
   getArksInterestRates,
   getVaultsApy,
   getVaultsHistoricalApy,
@@ -12,6 +13,7 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -19,7 +21,6 @@ import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-d
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -43,7 +44,10 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
   const { network: paramsNetwork, vaultId, walletAddress, migrationPositionId } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const migrationsEnabled = !!systemConfig.features?.Migrations
 

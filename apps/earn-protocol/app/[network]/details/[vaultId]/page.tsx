@@ -1,5 +1,12 @@
-import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import {
+  getDisplayToken,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+  Text,
+  VaultGridDetails,
+} from '@summerfi/app-earn-ui'
+import {
+  configEarnAppFetcher,
   getArksInterestRates,
   getVaultsApy,
   getVaultsHistoricalApy,
@@ -14,12 +21,12 @@ import {
 } from '@summerfi/app-utils'
 import capitalize from 'lodash-es/capitalize'
 import { type Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -43,7 +50,11 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+
+  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId.toLowerCase()
@@ -137,13 +148,14 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 }
 
 export async function generateMetadata({ params }: EarnVaultDetailsPageProps): Promise<Metadata> {
-  const [{ network: paramsNetwork, vaultId }, config] = await Promise.all([
+  const [{ network: paramsNetwork, vaultId }, systemConfig] = await Promise.all([
     params,
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
   ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(config)
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId.toLowerCase()

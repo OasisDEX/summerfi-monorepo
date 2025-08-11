@@ -1,5 +1,5 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
@@ -10,7 +10,6 @@ import { redirect } from 'next/navigation'
 
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -31,11 +30,13 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
 
   const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([
     getVaultsList(),
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
   ])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
+  const systemConfig = parseServerResponseToClient(configRaw)
   const migrationsEnabled = !!systemConfig.features?.Migrations
 
   if (!migrationsEnabled) {

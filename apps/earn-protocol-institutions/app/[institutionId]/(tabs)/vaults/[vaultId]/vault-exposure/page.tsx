@@ -1,5 +1,9 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
+import {
+  configEarnAppFetcher,
+  getArksInterestRates,
+  getVaultsApy,
+} from '@summerfi/app-server-handlers'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   decorateWithFleetConfig,
@@ -9,7 +13,6 @@ import {
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
 export default async function InstitutionVaultVaultExposurePage() {
@@ -22,7 +25,7 @@ export default async function InstitutionVaultVaultExposurePage() {
     tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, parsedNetwork],
   }
 
-  const [vault, { config: systemConfig }] = await Promise.all([
+  const [vault, config] = await Promise.all([
     unstableCache(
       getVaultDetails,
       [parsedNetwork],
@@ -32,14 +35,16 @@ export default async function InstitutionVaultVaultExposurePage() {
       vaultAddress: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
       network: parsedNetwork,
     }),
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
   ])
 
   if (!vault) {
     return <div>Vault not found</div>
   }
 
-  const vaultWithConfig = decorateWithFleetConfig([vault], systemConfig)
+  const vaultWithConfig = decorateWithFleetConfig([vault], config)
 
   const [arkInterestRates, vaultsApyRaw] = await Promise.all([
     vault.arks
