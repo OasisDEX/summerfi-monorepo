@@ -631,6 +631,9 @@ importers:
       '@summerfi/app-icons':
         specifier: workspace:*
         version: link:../../packages/app-icons
+      '@summerfi/app-server-handlers':
+        specifier: workspace:*
+        version: link:../../packages/app-server-handlers
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
@@ -1529,6 +1532,9 @@ importers:
       lodash-es:
         specifier: ^4.17.1
         version: 4.17.21
+      mixpanel:
+        specifier: ^0.18.0
+        version: 0.18.0
       next:
         specifier: 15.4.4
         version: 15.4.4(@babel/core@7.26.0)(react-dom@19.1.0)(react@19.1.0)
@@ -33096,7 +33102,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.4.0
     transitivePeerDependencies:
       - supports-color
     dev: false

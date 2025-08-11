@@ -50,6 +50,7 @@
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "graphql-request": "^6.1.0",
+    "mixpanel": "^0.18.0",
     "jose": "^6.0.10",
     "lodash-es": "^4.17.1",
     "next": "15.4.4",

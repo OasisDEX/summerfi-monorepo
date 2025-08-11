@@ -1,4 +1,5 @@
 import { getProtocolLabel, getUniqueColor } from '@summerfi/app-earn-ui'
+import { type GetVaultsHistoricalApyResponse } from '@summerfi/app-server-handlers'
 import {
   type ArksHistoricalChartData,
   type ChartsDataTimeframes,
@@ -10,7 +11,6 @@ import {
 import { getVaultNiceName, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
-import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
 type BaseHistoricalChartsDataReturnType = {

@@ -23,6 +23,7 @@
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/app-server-handlers": "workspace:*",
     "@tabler/icons-react": "^3.19.0",
     "@web3-onboard/coinbase": "^2.4.1",
     "@web3-onboard/common": "^2.4.2",
