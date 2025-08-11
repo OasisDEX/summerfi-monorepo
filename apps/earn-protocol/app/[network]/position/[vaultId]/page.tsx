@@ -113,19 +113,25 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     vault?.arks
-      ? getArksInterestRates({
+      ? unstableCache(getArksInterestRates, [REVALIDATION_TAGS.INTEREST_RATES], {
+          revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        })({
           network: parsedNetwork,
           arksList: vault.arks,
         })
       : Promise.resolve({}),
-    getVaultsHistoricalApy({
+    unstableCache(getVaultsHistoricalApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    getVaultsApy({
+    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
@@ -206,7 +212,9 @@ export async function generateMetadata({
     : []
 
   const [vaultsApyRaw] = await Promise.all([
-    getVaultsApy({
+    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

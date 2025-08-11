@@ -50,7 +50,13 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
     systemConfig,
   })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
+  const vaultsApyByNetworkMap = await unstableCache(
+    getVaultsApy,
+    [REVALIDATION_TAGS.INTEREST_RATES],
+    {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    },
+  )({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

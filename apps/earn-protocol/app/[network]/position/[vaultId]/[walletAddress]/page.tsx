@@ -153,11 +153,15 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
     migratablePositionsData,
   ] = await Promise.all([
-    getArksInterestRates({
+    unstableCache(getArksInterestRates, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
-    getVaultsHistoricalApy({
+    unstableCache(getVaultsHistoricalApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
@@ -174,7 +178,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       chainId: Number(parsedNetworkId),
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
-    getVaultsApy({
+    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
+      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    })({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

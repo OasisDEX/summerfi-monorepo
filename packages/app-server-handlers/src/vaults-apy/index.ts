@@ -54,10 +54,9 @@ export const getVaultsApy: ({
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
     })
 
-    let rawResponse: GetVaultsApyRAWResponse | null =
+    const rawResponse: GetVaultsApyRAWResponse | null =
       (await apiResponse.json()) as GetVaultsApyRAWResponse
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -78,9 +77,6 @@ export const getVaultsApy: ({
         }
       }
     }
-
-    // Clear the reference to rawResponse after processing
-    rawResponse = null
 
     return response
   } catch (error) {
