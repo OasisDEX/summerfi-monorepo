@@ -200,7 +200,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     logger.error('STAGE is not set')
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Internal server error' }),
+      body: JSON.stringify({ error: 'STAGE is not set' }),
     }
   }
 
