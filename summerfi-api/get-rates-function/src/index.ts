@@ -19,9 +19,19 @@ const logger = new Logger({
 })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
 
+/**
+ * Generates a cache key based on a prefix and a list of product IDs.
+ * The product IDs are sorted and hashed to ensure uniqueness and consistency.
+ *
+ * @param {Object} params - The parameters for generating the cache key.
+ * @param {string} params.prefix - The prefix to use for the cache key.
+ * @param {string[]} params.productIds - The array of product IDs.
+ * @returns {string} The generated cache key.
+ */
 const generateCacheKey = ({ prefix, productIds }: { prefix: string; productIds: string[] }) => {
   const sortedProductIds = productIds.sort()
   const hash = createHash('sha256').update(sortedProductIds.join(',')).digest('hex')
+
   return `${prefix}-${hash}`
 }
 
