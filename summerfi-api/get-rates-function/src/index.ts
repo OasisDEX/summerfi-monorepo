@@ -246,6 +246,21 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         }
       }
 
+      const cacheKey = generateCacheKey({
+        prefix: 'post-rates',
+        productIds,
+      })
+
+      const cached = await cache.get(cacheKey)
+
+      if (cached) {
+        logger.info('Returning cached post-rates', { cacheKey })
+        return {
+          statusCode: 200,
+          body: cached,
+        }
+      }
+
       // Group product IDs by chain ID
       const productIdsByChain: Record<string, string[]> = {}
       const batchRequests: BatchRateRequest[] = []
@@ -323,11 +338,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         }),
       )
 
-      const cacheKey = generateCacheKey({
-        prefix: 'post-rates',
-        productIds,
-      })
-
       const output = {
         interestRates: allCombinedRates,
       }
@@ -371,6 +381,20 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     }
 
     if (path.includes('/rates')) {
+      const cacheKey = generateCacheKey({
+        prefix: 'get-rates',
+        productIds: [productId],
+      })
+
+      const cached = await cache.get(cacheKey)
+
+      if (cached) {
+        logger.info('Returning cached get-rates', { cacheKey })
+        return {
+          statusCode: 200,
+          body: cached,
+        }
+      }
       // Get rates from both sources
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetArkRates({ productId }), {
@@ -409,11 +433,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         subgraphRatesCount: subgraphRates?.interestRates?.length,
       })
 
-      const cacheKey = generateCacheKey({
-        prefix: 'get-rates',
-        productIds: [productId],
-      })
-
       const output = {
         interestRates: combinedRates,
       }
@@ -425,6 +444,20 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         body: JSON.stringify(output),
       }
     } else if (path.includes('/historicalRates')) {
+      const cacheKey = generateCacheKey({
+        prefix: 'get-historical-rates',
+        productIds: [productId],
+      })
+
+      const cached = await cache.get(cacheKey)
+
+      if (cached) {
+        logger.info('Returning cached get-historical-rates', { cacheKey })
+        return {
+          statusCode: 200,
+          body: cached,
+        }
+      }
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetInterestRates({ productId }), {
           retries: 3,
@@ -477,11 +510,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           db: dbRates?.weeklyRates?.length,
           combined: result.weeklyInterestRates.length,
         },
-      })
-
-      const cacheKey = generateCacheKey({
-        prefix: 'get-historical-rates',
-        productIds: [productId],
       })
 
       await cache.set(cacheKey, JSON.stringify(result))
