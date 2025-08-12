@@ -6,8 +6,8 @@ import {
 } from '@summerfi/summer-protocol-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { HistoricalFleetRateResult, FleetRate } from '@summerfi/app-types'
-import { DistributedCache } from '../../../packages/abstractions/dist'
 import { createHash } from 'crypto'
+import { DistributedCache } from '@summerfi/abstractions'
 
 const logger = new Logger({ serviceName: 'vault-rates-db-service' })
 
