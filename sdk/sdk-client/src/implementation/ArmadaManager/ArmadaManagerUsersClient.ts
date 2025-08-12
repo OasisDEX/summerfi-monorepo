@@ -240,17 +240,17 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserMerklClaimTx.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.authorizeAsMerklRewardsOperatorTx */
-  async authorizeAsMerklRewardsOperatorTx(
-    params: Parameters<IArmadaManagerUsersClient['authorizeAsMerklRewardsOperatorTx']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['authorizeAsMerklRewardsOperatorTx']> {
-    return this.rpcClient.armada.users.authorizeAsMerklRewardsOperatorTx.query(params)
+  /** @see IArmadaManagerUsersClient.getAuthorizeAsMerklRewardsOperatorTx */
+  async getAuthorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerUsersClient['getAuthorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAuthorizeAsMerklRewardsOperatorTx']> {
+    return this.rpcClient.armada.users.getAuthorizeAsMerklRewardsOperatorTx.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.isAuthorizedAsMerklRewardsOperator */
-  async isAuthorizedAsMerklRewardsOperator(
-    params: Parameters<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperator']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['isAuthorizedAsMerklRewardsOperator']> {
-    return this.rpcClient.armada.users.isAuthorizedAsMerklRewardsOperator.query(params)
+  /** @see IArmadaManagerUsersClient.getIsAuthorizedAsMerklRewardsOperator */
+  async getIsAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerUsersClient['getIsAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getIsAuthorizedAsMerklRewardsOperator']> {
+    return this.rpcClient.armada.users.getIsAuthorizedAsMerklRewardsOperator.query(params)
   }
 }

@@ -44,7 +44,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   private _configProvider: IConfigurationProvider
   private _tokensManager: ITokensManager
   private _utils: IArmadaManagerUtils
-  private _merkleRewards: IArmadaManagerMerklRewards
+  private _merklRewards: IArmadaManagerMerklRewards
 
   private _supportedChains: IChainInfo[]
   private _hubChainInfo: IChainInfo
@@ -62,7 +62,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     hubChainInfo: IChainInfo
     rewardsRedeemerAddress: IAddress
     utils: IArmadaManagerUtils
-    merkleRewards: IArmadaManagerMerklRewards
+    merklRewards: IArmadaManagerMerklRewards
     subgraphManager: IArmadaSubgraphManager
     tokensManager: ITokensManager
   }) {
@@ -74,7 +74,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     this._hubChainInfo = params.hubChainInfo
     this._rewardsRedeemerAddress = params.rewardsRedeemerAddress
     this._utils = params.utils
-    this._merkleRewards = params.merkleRewards
+    this._merklRewards = params.merklRewards
     this._subgraphManager = params.subgraphManager
     this._tokensManager = params.tokensManager
 
@@ -341,7 +341,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewardsIncludingMerkl']> {
     const [rewards, userMerklRewards] = await Promise.all([
       this.getAggregatedRewards(params),
-      this._merkleRewards.getUserMerklRewards({
+      this._merklRewards.getUserMerklRewards({
         address: params.user.wallet.address.value,
       }),
     ])
@@ -587,6 +587,23 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       }),
     )
 
+    // if includeMerkl is true, add merkle rewards to the multicall
+    if (params.includeMerkl) {
+      gatherMulticallArgsFromRequests.push(
+        this._merklRewards
+          .getUserMerklClaimDirectTx({
+            address: params.user.wallet.address.value,
+            chainId: params.chainInfo.chainId,
+          })
+          .then((tx) => {
+            if (tx) {
+              multicallArgs.push(tx[0].transaction.calldata)
+              multicallOperations.push('merkl rewards: ' + tx[0].transaction.value)
+            }
+          }),
+      )
+    }
+
     // fetch and parse multicall args from the async requests results
     await Promise.all(gatherMulticallArgsFromRequests)
 
@@ -614,7 +631,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     return [
       {
         type: TransactionType.Claim,
-        description: 'Claiming aggregated rewards',
+        description:
+          'Claiming aggregated rewards' + (params.includeMerkl ? ' including merkl rewards' : ''),
         transaction: {
           target: admiralsQuartersAddress,
           calldata: multicallCalldata,

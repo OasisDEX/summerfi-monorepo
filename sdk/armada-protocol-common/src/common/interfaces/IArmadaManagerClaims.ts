@@ -145,5 +145,6 @@ export interface IArmadaManagerClaims {
   getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
+    includeMerkl: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 }

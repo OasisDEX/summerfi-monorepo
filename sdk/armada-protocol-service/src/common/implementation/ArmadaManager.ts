@@ -116,7 +116,7 @@ export class ArmadaManager implements IArmadaManager {
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
       utils: this.utils,
-      merkleRewards: this.merklRewards,
+      merklRewards: this.merklRewards,
     })
     this.governance = new ArmadaManagerGovernance({
       ...params,

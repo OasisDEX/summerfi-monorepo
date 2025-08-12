@@ -154,9 +154,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
   }
 
-  async getUserMerklClaimTx(
-    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimTx']> {
+  async getUserMerklClaimDirectTx(
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']> {
     const { address, chainId } = params
 
     LoggingService.log('Generating Merkl claim transaction', {
@@ -210,16 +210,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         })
       : encodeFunctionData({
           abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [
-            [
-              encodeFunctionData({
-                abi: AdmiralsQuartersAbi,
-                functionName: 'claimFromMerklDistributor',
-                args: [users, tokens, amounts, proofs],
-              }),
-            ],
-          ],
+          functionName: 'claimFromMerklDistributor',
+          args: [users, tokens, amounts, proofs],
         })
 
     const merklClaimTx: MerklClaimTransactionInfo = {
@@ -240,9 +232,40 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     return [merklClaimTx]
   }
 
-  async authorizeAsMerklRewardsOperatorTx(
-    params: Parameters<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']> {
+  async getUserMerklClaimTx(
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimTx']> {
+    const { address, chainId } = params
+
+    const claimTx = await this.getUserMerklClaimDirectTx({
+      address,
+      chainId,
+      useMerklDistributorDirectly: false,
+    })
+    if (!claimTx) {
+      return undefined
+    }
+
+    const multicallMerklClaimTx: MerklClaimTransactionInfo = {
+      type: TransactionType.MerklClaim,
+      description: 'Claiming Merkle rewards',
+      transaction: {
+        target: claimTx[0].transaction.target,
+        calldata: encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [[claimTx[0].transaction.calldata]],
+        }),
+        value: claimTx[0].transaction.value,
+      },
+    }
+
+    return [multicallMerklClaimTx]
+  }
+
+  async getAuthorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerMerklRewards['getAuthorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getAuthorizeAsMerklRewardsOperatorTx']> {
     const { chainId, user } = params
 
     LoggingService.log('Generating authorize AQ as Merkl rewards operator transaction', {
@@ -288,9 +311,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     return [toggleTx]
   }
 
-  async isAuthorizedAsMerklRewardsOperator(
-    params: Parameters<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']> {
+  async getIsAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerMerklRewards['getIsAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getIsAuthorizedAsMerklRewardsOperator']> {
     const { chainId, user } = params
 
     LoggingService.log('Checking AdmiralsQuarters authorization as Merkl rewards operator', {
