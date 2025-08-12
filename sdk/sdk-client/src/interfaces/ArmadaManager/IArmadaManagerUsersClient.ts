@@ -334,12 +334,14 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the multicall transaction needed to claim rewards from the Fleet
    * @param chainInfo Chain information
    * @param user Address of the user to claim rewards for
+   * @param includeMerkl Whether to include Merkl rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
   getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
+    includeMerkl?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 
   /**

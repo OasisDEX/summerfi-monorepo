@@ -7,6 +7,7 @@ export const getAggregatedClaimsForChainTx = publicProcedure
     z.object({
       chainInfo: z.custom<IChainInfo>(isChainInfo),
       user: z.custom<IUser>(isUser),
+      includeMerkl: z.boolean().optional(),
     }),
   )
   .query(async (opts) => {
