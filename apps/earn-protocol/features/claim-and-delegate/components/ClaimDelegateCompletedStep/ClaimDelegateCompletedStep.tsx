@@ -46,7 +46,7 @@ const ClaimedCard: FC<ClaimedCardProps> = ({
   estimatedSumrPrice,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const claimedSumrRaw = externalData.sumrToClaim.claimableAggregatedRewards.perChain[chainId] ?? 0
+  const claimedSumrRaw = externalData.sumrToClaim.aggregatedRewards.perChain[chainId] ?? 0
 
   if (!hasClaimed) {
     return (
@@ -191,7 +191,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
   const sumrClaimedStepBefore =
     state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
       ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
+        externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
       : 0
 
   const externalDataSumrDelegated = externalData.sumrStakeDelegate.sumrDelegated

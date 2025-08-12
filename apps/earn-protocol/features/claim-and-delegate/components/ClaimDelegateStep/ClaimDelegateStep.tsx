@@ -159,7 +159,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const sumrToClaim =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
+    externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
   const apy = (
     <Text as="h5" variant="h5">

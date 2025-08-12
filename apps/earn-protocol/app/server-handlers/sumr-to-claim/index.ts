@@ -9,10 +9,6 @@ export interface SumrToClaimData {
     total: number
     perChain: { [key: number]: number }
   }
-  claimableAggregatedRewards: {
-    total: number
-    perChain: { [key: number]: number }
-  }
 }
 
 /**
@@ -31,29 +27,15 @@ export const getSumrToClaim = async ({
     chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
   })
 
-  const [aggregatedRewards, claimableAggregatedRewards] = await Promise.all([
-    backendSDK.armada.users.getAggregatedRewards({
-      user,
-    }),
-    backendSDK.armada.users.getClaimableAggregatedRewards({
-      user,
-    }),
-  ])
+  const aggregatedRewards = await backendSDK.armada.users.getAggregatedRewards({
+    user,
+  })
 
   return {
     aggregatedRewards: {
       total: Number(aggregatedRewards.total) / 10 ** 18,
       perChain: Object.fromEntries(
-        Object.entries(aggregatedRewards.perChain).map(([chainId, amount]) => [
-          chainId,
-          Number(amount) / 10 ** 18,
-        ]),
-      ),
-    },
-    claimableAggregatedRewards: {
-      total: Number(claimableAggregatedRewards.total) / 10 ** 18,
-      perChain: Object.fromEntries(
-        Object.entries(claimableAggregatedRewards.perChain).map(([chainId, amount]) => [
+        Object.entries(aggregatedRewards.vaultUsagePerChain).map(([chainId, amount]) => [
           chainId,
           Number(amount) / 10 ** 18,
         ]),
