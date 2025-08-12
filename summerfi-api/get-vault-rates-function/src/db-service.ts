@@ -11,6 +11,20 @@ import { DistributedCache } from '@summerfi/abstractions'
 
 const logger = new Logger({ serviceName: 'vault-rates-db-service' })
 
+const generateCacheKey = ({
+  prefix,
+  pairs,
+  first,
+}: {
+  prefix: string
+  pairs: FleetWithChainId[]
+  first?: number
+}) => {
+  const fleetAddresses = pairs.map((pair) => pair.fleetAddress + pair.chainId).sort()
+  const hash = createHash('sha256').update(fleetAddresses.join(',')).digest('hex')
+  return `${prefix}-${hash}${first ? `-${first}` : ''}`
+}
+
 export interface FleetWithChainId {
   chainId: string
   fleetAddress: string
@@ -107,9 +121,11 @@ export class VaultRatesService {
       return []
     }
 
-    const fleetAddresses = pairs.map((pair) => pair.fleetAddress).sort()
-    const hash = createHash('sha256').update(fleetAddresses.join(',')).digest('hex')
-    const cacheKey = `latest-fleet-rates-${hash}-${first}`
+    const cacheKey = generateCacheKey({
+      prefix: 'latest-fleet-rates',
+      pairs,
+      first,
+    })
 
     const cached = await cache.get(cacheKey)
 
@@ -289,9 +305,10 @@ export class VaultRatesService {
       return []
     }
 
-    const fleetAddresses = pairs.map((pair) => pair.fleetAddress).sort()
-    const hash = createHash('sha256').update(fleetAddresses.join(',')).digest('hex')
-    const cacheKey = `historical-fleet-rates-${hash}`
+    const cacheKey = generateCacheKey({
+      prefix: 'historical-fleet-rates',
+      pairs,
+    })
 
     const cached = await cache.get(cacheKey)
 
