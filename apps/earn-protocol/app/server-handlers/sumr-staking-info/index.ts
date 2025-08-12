@@ -78,9 +78,14 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
       throw new Error(`Failed to fetch reward data: ${rewardDataResult.error.message}`)
     }
 
-    const [, rewardRate] = rewardData
+    const [periodFinish, rewardRate] = rewardData
+
+    const isRewardPeriodFinished = Number(periodFinish) * 1000 < Date.now()
+
+    const resolvedRewardRate = isRewardPeriodFinished ? 0 : Number(rewardRate)
+
     // eslint-disable-next-line no-mixed-operators
-    const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
+    const sumrTokenDailyEmissionAmount = new BigNumber(resolvedRewardRate)
       .shiftedBy(-sumrToken.decimals * 2)
       .multipliedBy(SECONDS_PER_DAY)
       .toNumber()
