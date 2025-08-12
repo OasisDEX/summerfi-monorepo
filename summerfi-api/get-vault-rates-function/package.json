@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.12.1",
-    "@summerfi/abstractions": "workspace:*",
-    "@summerfi/redis-cache": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*"
   }
 }

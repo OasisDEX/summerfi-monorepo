@@ -4373,6 +4373,12 @@ importers:
       '@middy/core':
         specifier: ^6.0.0
         version: 6.0.0
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../../packages/abstractions
+      '@summerfi/redis-cache':
+        specifier: workspace:*
+        version: link:../../packages/redis-cache
       '@summerfi/summer-earn-rates-subgraph':
         specifier: workspace:*
         version: link:../../packages/summer-earn-rates-subgraph
@@ -4597,12 +4603,6 @@ importers:
       '@aws-lambda-powertools/logger':
         specifier: ^1.12.1
         version: 1.18.1(@middy/core@6.0.0)
-      '@summerfi/abstractions':
-        specifier: workspace:*
-        version: link:../../packages/abstractions
-      '@summerfi/redis-cache':
-        specifier: workspace:*
-        version: link:../../packages/redis-cache
       '@summerfi/summer-protocol-db':
         specifier: workspace:*
         version: link:../../packages/summer-protocol-db

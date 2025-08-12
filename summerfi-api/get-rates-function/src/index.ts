@@ -9,12 +9,21 @@ import {
 } from '@summerfi/summer-earn-rates-subgraph'
 import { RatesService, DBRate, DBAggregatedRate, DBHistoricalRates } from './db-service'
 import middy from '@middy/core'
+import { getRedisInstance } from '@summerfi/redis-cache'
+import { DistributedCache } from '@summerfi/abstractions'
+import { createHash } from 'crypto'
 
 const logger = new Logger({
   serviceName: 'get-rates-function',
   logLevel: 'INFO',
 })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
+
+const generateCacheKey = ({ prefix, productIds }: { prefix: string; productIds: string[] }) => {
+  const sortedProductIds = productIds.sort()
+  const hash = createHash('sha256').update(sortedProductIds.join(',')).digest('hex')
+  return `${prefix}-${hash}`
+}
 
 const HOUR_IN_SECONDS = 60 * 60
 
@@ -168,6 +177,39 @@ interface BatchRateRequest {
 async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   const ratesService = new RatesService()
 
+  const REDIS_CACHE_URL = process.env.REDIS_CACHE_URL
+  const REDIS_CACHE_USER = process.env.REDIS_CACHE_USER
+  const REDIS_CACHE_PASSWORD = process.env.REDIS_CACHE_PASSWORD
+  const STAGE = process.env.STAGE
+
+  if (!REDIS_CACHE_URL) {
+    logger.warn('REDIS_CACHE_URL is not set, the function will not use cache')
+  }
+
+  if (!STAGE) {
+    logger.error('STAGE is not set')
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal server error' }),
+    }
+  }
+
+  const cache = !REDIS_CACHE_URL
+    ? ({
+        get: async () => null,
+        set: async () => {},
+      } as DistributedCache)
+    : await getRedisInstance(
+        {
+          url: REDIS_CACHE_URL,
+          ttlInSeconds: 60 * 2, // 2 minutes
+          username: REDIS_CACHE_USER,
+          password: REDIS_CACHE_PASSWORD,
+          stage: STAGE,
+        },
+        logger,
+      )
+
   try {
     logger.info('Initializing rates service')
     await ratesService.init()
@@ -271,9 +313,20 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         }),
       )
 
+      const cacheKey = generateCacheKey({
+        prefix: 'post-rates',
+        productIds,
+      })
+
+      const output = {
+        interestRates: allCombinedRates,
+      }
+
+      await cache.set(cacheKey, JSON.stringify(output))
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ interestRates: allCombinedRates }),
+        body: JSON.stringify(output),
       }
     }
 
@@ -346,9 +399,20 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         subgraphRatesCount: subgraphRates?.interestRates?.length,
       })
 
+      const cacheKey = generateCacheKey({
+        prefix: 'get-rates',
+        productIds: [productId],
+      })
+
+      const output = {
+        interestRates: combinedRates,
+      }
+
+      await cache.set(cacheKey, JSON.stringify(output))
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ interestRates: combinedRates }),
+        body: JSON.stringify(output),
       }
     } else if (path.includes('/historicalRates')) {
       const [subgraphRates, dbRates] = await Promise.all([
@@ -404,6 +468,13 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           combined: result.weeklyInterestRates.length,
         },
       })
+
+      const cacheKey = generateCacheKey({
+        prefix: 'get-historical-rates',
+        productIds: [productId],
+      })
+
+      await cache.set(cacheKey, JSON.stringify(result))
 
       return {
         statusCode: 200,
