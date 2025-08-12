@@ -69,8 +69,9 @@ export async function getArksInterestRates({
         .map((ark) => getArkProductId(ark))
         .filter((id): id is string => id !== false)
 
+      const url = `${getArkRatesBatchUrl({ apiUrl: functionsApiUrl })}?withCache=true`
       // Call the POST endpoint
-      const latestRatesResponse = await fetch(getArkRatesBatchUrl({ apiUrl: functionsApiUrl }), {
+      const latestRatesResponse = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({ productIds }),
         headers: {
