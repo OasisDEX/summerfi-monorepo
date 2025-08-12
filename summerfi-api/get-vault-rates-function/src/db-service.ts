@@ -6,6 +6,8 @@ import {
 } from '@summerfi/summer-protocol-db'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { HistoricalFleetRateResult, FleetRate } from '@summerfi/app-types'
+import { DistributedCache } from '../../../packages/abstractions/dist'
+import { createHash } from 'crypto'
 
 const logger = new Logger({ serviceName: 'vault-rates-db-service' })
 
@@ -95,10 +97,25 @@ export class VaultRatesService {
     }
   }
 
-  async getLatestRates(pairs: FleetWithChainId[], first: number = 1): Promise<FleetRateResult[]> {
+  async getLatestRates(
+    pairs: FleetWithChainId[],
+    first: number = 1,
+    cache: DistributedCache,
+  ): Promise<FleetRateResult[]> {
     if (!this.db) {
       logger.error('Database connection not initialized')
       return []
+    }
+
+    const fleetAddresses = pairs.map((pair) => pair.fleetAddress).sort()
+    const hash = createHash('sha256').update(fleetAddresses.join(',')).digest('hex')
+    const cacheKey = `latest-fleet-rates-${hash}-${first}`
+
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      logger.info('Returning cached latest fleet rates', { cacheKey })
+      return JSON.parse(cached) as FleetRateResult[]
     }
 
     logger.info('Fetching latest fleet rates', { pairs, first })
@@ -252,17 +269,35 @@ export class VaultRatesService {
         }),
       )
 
-      return results.flat()
+      const output = results.flat()
+
+      await cache.set(cacheKey, JSON.stringify(output))
+
+      return output
     } catch (error) {
       logger.error('Error fetching latest fleet rates from DB', { error, pairs, first })
       return []
     }
   }
 
-  async getHistoricalRates(pairs: FleetWithChainId[]): Promise<HistoricalFleetRateResult[]> {
+  async getHistoricalRates(
+    pairs: FleetWithChainId[],
+    cache: DistributedCache,
+  ): Promise<HistoricalFleetRateResult[]> {
     if (!this.db) {
       logger.error('Database connection not initialized')
       return []
+    }
+
+    const fleetAddresses = pairs.map((pair) => pair.fleetAddress).sort()
+    const hash = createHash('sha256').update(fleetAddresses.join(',')).digest('hex')
+    const cacheKey = `historical-fleet-rates-${hash}`
+
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      logger.info('Returning cached historical fleet rates', { cacheKey })
+      return JSON.parse(cached) as HistoricalFleetRateResult[]
     }
 
     logger.info('Fetching historical fleet rates', { pairs })
@@ -363,11 +398,16 @@ export class VaultRatesService {
           }))
         }),
       )
-      return results.flat().map((result) => ({
+
+      const output = results.flat().map((result) => ({
         chainId: result.chainId,
         fleetAddress: result.fleetAddress,
         rates: result.data,
       }))
+
+      await cache.set(cacheKey, JSON.stringify(output))
+
+      return output
     } catch (error) {
       logger.error('Error fetching historical fleet rates from DB', { error, pairs })
       return []
