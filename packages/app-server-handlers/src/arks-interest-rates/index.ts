@@ -70,13 +70,16 @@ export async function getArksInterestRates({
         .filter((id): id is string => id !== false)
 
       // Call the POST endpoint
-      const latestRatesResponse = await fetch(getArkRatesBatchUrl({ apiUrl: functionsApiUrl }), {
-        method: 'POST',
-        body: JSON.stringify({ productIds }),
-        headers: {
-          'Content-Type': 'application/json',
+      const latestRatesResponse = await fetch(
+        getArkRatesBatchUrl({ apiUrl: `${functionsApiUrl}?withCache=true` }),
+        {
+          method: 'POST',
+          body: JSON.stringify({ productIds }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
 
       if (!latestRatesResponse.ok) {
         // eslint-disable-next-line no-console
