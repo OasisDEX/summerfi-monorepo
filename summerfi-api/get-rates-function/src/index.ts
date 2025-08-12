@@ -204,23 +204,23 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     }
   }
 
-  const cache = !REDIS_CACHE_URL
-    ? ({
-        get: async () => null,
-        set: async () => {},
-      } as DistributedCache)
-    : await getRedisInstance(
-        {
-          url: REDIS_CACHE_URL,
-          ttlInSeconds: 60 * 2, // 2 minutes
-          username: REDIS_CACHE_USER,
-          password: REDIS_CACHE_PASSWORD,
-          stage: STAGE,
-        },
-        logger,
-      )
-
   try {
+    const cache = !REDIS_CACHE_URL
+      ? ({
+          get: async () => null,
+          set: async () => {},
+        } as DistributedCache)
+      : await getRedisInstance(
+          {
+            url: REDIS_CACHE_URL,
+            ttlInSeconds: 60 * 2, // 2 minutes
+            username: REDIS_CACHE_USER,
+            password: REDIS_CACHE_PASSWORD,
+            stage: STAGE,
+          },
+          logger,
+        )
+
     logger.info('Initializing rates service')
     await ratesService.init()
 
