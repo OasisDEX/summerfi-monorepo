@@ -47,6 +47,7 @@ export async function getArksInterestRates({
   network,
   arksList,
   justLatestRates = false,
+  withCache = true,
 }: GetInterestRatesParams): Promise<InterestRates> {
   if (!isProperInterestRatesNetwork(network)) {
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
@@ -69,7 +70,7 @@ export async function getArksInterestRates({
         .map((ark) => getArkProductId(ark))
         .filter((id): id is string => id !== false)
 
-      const url = `${getArkRatesBatchUrl({ apiUrl: functionsApiUrl })}?withCache=true`
+      const url = `${getArkRatesBatchUrl({ apiUrl: functionsApiUrl })}?withCache=${withCache}`
       // Call the POST endpoint
       const latestRatesResponse = await fetch(url, {
         method: 'POST',
@@ -112,6 +113,7 @@ export async function getArksInterestRates({
           prepareInterestRatesFallbackCalls({
             network,
             functionsApiUrl,
+            withCache,
           }),
         ),
       )
@@ -129,6 +131,7 @@ export async function getArksInterestRates({
       prepareInterestRatesHistoricalResponse({
         network,
         functionsApiUrl,
+        withCache,
       }),
     ),
   )

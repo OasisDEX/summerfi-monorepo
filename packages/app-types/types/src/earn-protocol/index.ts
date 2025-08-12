@@ -155,6 +155,7 @@ export type GetInterestRatesParams = {
   weeklyCount?: number
   arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
   justLatestRates?: boolean
+  withCache?: boolean
 }
 
 export type PlatformLogo = 'aave' | 'spark' | 'morpho' | 'summer'

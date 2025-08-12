@@ -32,9 +32,11 @@ export const prepareInterestRatesHistoricalResponse =
   ({
     network,
     functionsApiUrl,
+    withCache,
   }: {
     network: keyof typeof graphqlClients
     functionsApiUrl: string
+    withCache: boolean
   }) =>
   async (ark: ArkType): Promise<GetInterestRatesQuery> => {
     const productId = getArkProductId(ark)
@@ -50,7 +52,7 @@ export const prepareInterestRatesHistoricalResponse =
       })
 
       // Try primary source first
-      const apiUrl = `${resolvedUrl}?productId=${productId}`
+      const apiUrl = `${resolvedUrl}?productId=${productId}&withCache=${withCache}`
       const apiResponse = await fetch(apiUrl, {
         cache: 'no-store',
       })

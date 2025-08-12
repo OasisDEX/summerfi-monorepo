@@ -33,9 +33,11 @@ export const prepareInterestRatesFallbackCalls =
   ({
     network,
     functionsApiUrl,
+    withCache,
   }: {
     network: keyof typeof graphqlClients
     functionsApiUrl: string
+    withCache: boolean
   }) =>
   async (ark: ArkType): Promise<GetInterestRatesQuery> => {
     const productId = getArkProductId(ark)
@@ -52,10 +54,8 @@ export const prepareInterestRatesFallbackCalls =
 
       // Try primary source first
       const startTime = performance.now()
-      const apiUrl = `${resolvedUrl}?productId=${productId}`
-      const apiResponse = await fetch(apiUrl, {
-        cache: 'no-store',
-      })
+      const apiUrl = `${resolvedUrl}?productId=${productId}&withCache=${withCache}`
+      const apiResponse = await fetch(apiUrl)
       const endTime = performance.now()
 
       // eslint-disable-next-line no-console
