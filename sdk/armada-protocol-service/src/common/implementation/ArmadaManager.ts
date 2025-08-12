@@ -109,6 +109,7 @@ export class ArmadaManager implements IArmadaManager {
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
       deploymentProvider: this._deploymentProvider,
+      tokensManager: this._tokensManager,
     })
     this.claims = new ArmadaManagerClaims({
       ...params,
@@ -116,7 +117,7 @@ export class ArmadaManager implements IArmadaManager {
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
       utils: this.utils,
-      merkleRewards: this.merklRewards,
+      merklRewards: this.merklRewards,
     })
     this.governance = new ArmadaManagerGovernance({
       ...params,

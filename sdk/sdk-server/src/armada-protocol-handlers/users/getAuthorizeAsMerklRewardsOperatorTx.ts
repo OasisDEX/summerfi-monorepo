@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { AddressValue, isAddressValue, isChainId, ChainId } from '@summerfi/sdk-common'
 
-export const authorizeAsMerklRewardsOperatorTx = publicProcedure
+export const getAuthorizeAsMerklRewardsOperatorTx = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
@@ -10,5 +10,7 @@ export const authorizeAsMerklRewardsOperatorTx = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return await opts.ctx.armadaManager.merklRewards.authorizeAsMerklRewardsOperatorTx(opts.input)
+    return await opts.ctx.armadaManager.merklRewards.getAuthorizeAsMerklRewardsOperatorTx(
+      opts.input,
+    )
   })

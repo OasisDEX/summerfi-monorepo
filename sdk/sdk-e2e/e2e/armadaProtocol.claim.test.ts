@@ -6,6 +6,7 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = true
 
 describe('Armada Protocol Claim', () => {
   const sdk: SDKManager = makeSDK({
@@ -55,8 +56,8 @@ describe('Armada Protocol Claim', () => {
         })
       })
 
-      describe.skip(`claimRewards`, () => {
-        it(`should claim rewards`, async () => {
+      describe(`claimRewards`, () => {
+        it.skip(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
@@ -82,7 +83,7 @@ describe('Armada Protocol Claim', () => {
             transactions: tx,
             rpcUrl: rpcUrl,
             privateKey: signerPrivateKey,
-            simulateOnly: true,
+            simulateOnly,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')
@@ -93,6 +94,45 @@ describe('Armada Protocol Claim', () => {
           })
           const toClaimAfter = rewardsAfter.total
           console.log('after', toClaimAfter)
+        })
+
+        it.only(`should claim rewards including merkl`, async () => {
+          const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+            user,
+          })
+          const toClaimBefore = rewards.total
+          console.log('before', toClaimBefore)
+          assert(toClaimBefore > 0n, 'Rewards should be greater than 0')
+
+          const tx = await sdk.armada.users.getAggregatedClaimsForChainTx({
+            chainInfo,
+            user,
+            includeMerkl: true,
+          })
+          if (!tx) {
+            throw new Error('No claims')
+          }
+
+          const { statuses } = await sendAndLogTransactions({
+            chainInfo,
+            transactions: tx,
+            rpcUrl: rpcUrl,
+            privateKey: signerPrivateKey,
+            simulateOnly,
+          })
+          statuses.forEach((status) => {
+            expect(status).toBe('success')
+          })
+          if (!simulateOnly) {
+            const rewardsAfter = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+              user,
+            })
+            const toClaimAfter = rewardsAfter.total
+            console.log('after', toClaimAfter)
+
+            // difference
+            console.log(`Claimed rewards: ${toClaimBefore - toClaimAfter}`)
+          }
         })
       })
     })

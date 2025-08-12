@@ -139,11 +139,13 @@ export interface IArmadaManagerClaims {
    *
    * @param chainInfo Chain information
    * @param user Address of the user that is trying to claim
+   * @param includeMerkl Whether to include Merkl rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
   getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
+    includeMerkl?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 }

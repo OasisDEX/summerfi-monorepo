@@ -1,4 +1,9 @@
-import type { IArmadaManagerMerklRewards, MerklReward } from '@summerfi/armada-protocol-common'
+import {
+  isTestDeployment,
+  type IArmadaManagerMerklRewards,
+  type IArmadaManagerUtils,
+  type MerklReward,
+} from '@summerfi/armada-protocol-common'
 import {
   isChainId,
   LoggingService,
@@ -18,6 +23,7 @@ import { merklOperatorsAbi } from './abi/merklOperatorsAbi'
 import { getMerklDistributorContractAddress } from './configs/merkl-distributor-addresses'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import type { IDeploymentProvider } from '../..'
+import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * Response type from Merkl API for user rewards
@@ -59,15 +65,29 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   private _supportedChainIds: number[]
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
+  private _tokensManager: ITokensManager
 
   constructor(params: {
     supportedChains: IChainInfo[]
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
+    tokensManager: ITokensManager
   }) {
     this._supportedChainIds = params.supportedChains.map((chain) => chain.chainId)
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
+    this._tokensManager = params.tokensManager
+  }
+
+  getSummerToken(
+    params: Parameters<IArmadaManagerUtils['getSummerToken']>[0],
+  ): ReturnType<IArmadaManagerUtils['getSummerToken']> {
+    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
+
+    return this._tokensManager.getTokenBySymbol({
+      chainInfo: params.chainInfo,
+      symbol: tokenSymbol,
+    })
   }
 
   async getUserMerklRewards(
@@ -76,17 +96,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const { address, chainIds = this._supportedChainIds } = params
     const userAddress = address
 
-    LoggingService.log('Fetching Merkl rewards for user', {
-      address: userAddress,
-      chainIds: chainIds,
-    })
-
     try {
       // Build the URL with chain ID filters
       const chainIdParam = chainIds.join(',')
       const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=${chainIdParam}&claimableOnly=true`
 
-      LoggingService.debug('Making request to Merkl API', { url })
+      LoggingService.log('Making request to Merkl API', { url })
 
       const response = await fetch(url, {
         method: 'GET',
@@ -96,7 +111,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       })
 
       if (!response.ok) {
-        LoggingService.log('Merkl API request failed', {
+        LoggingService.debug('Merkl API request failed', {
           status: response.status,
           statusText: response.statusText,
           url,
@@ -107,7 +122,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       const data = (await response.json()) as MerklApiResponse
 
       if (!data || !Array.isArray(data)) {
-        LoggingService.log('Invalid response from Merkl API', { data })
+        LoggingService.debug('Invalid response from Merkl API', { data })
         throw new Error('Invalid response from Merkl API')
       }
 
@@ -136,14 +151,17 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         merklRewardsPerChain[chainId].push(...rewards)
       })
 
-      LoggingService.log('Successfully fetched Merkl rewards', {
+      LoggingService.debug('Successfully fetched Merkl rewards', {
         address: userAddress,
-        merklRewardsPerChain: merklRewardsPerChain,
+        perChain: Object.entries(merklRewardsPerChain).map(([chainId, rewards]) => [
+          chainId,
+          rewards.length,
+        ]),
       })
 
       return { perChain: merklRewardsPerChain }
     } catch (error) {
-      LoggingService.log('Failed to fetch Merkl rewards', {
+      LoggingService.debug('Failed to fetch Merkl rewards', {
         address: userAddress,
         chainIds: chainIds,
         error: error instanceof Error ? error.message : String(error),
@@ -154,12 +172,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
   }
 
-  async getUserMerklClaimTx(
-    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimTx']> {
+  async getUserMerklClaimDirectTx(
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']> {
     const { address, chainId } = params
 
-    LoggingService.log('Generating Merkl claim transaction', {
+    LoggingService.debug('Generating Merkl claim transaction', {
       address,
       chainId,
     })
@@ -181,7 +199,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
     const chainRewards = rewardsData.perChain[chainId]
     if (!chainRewards || chainRewards.length === 0) {
-      LoggingService.log('No claimable Merkl rewards found', {
+      LoggingService.debug('No claimable Merkl rewards found', {
         address,
         chainId,
       })
@@ -189,16 +207,38 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
 
     // Prepare arrays for the claim function
+    let processed = 0
     const users: `0x${string}`[] = []
     const tokens: `0x${string}`[] = []
     const amounts: bigint[] = []
     const proofs: `0x${string}`[][] = []
 
     for (const reward of chainRewards) {
+      if (
+        params.rewardsTokens &&
+        !params.rewardsTokens.includes(reward.token.address as `0x${string}`)
+      ) {
+        LoggingService.debug(
+          `Skipping reward in token ${reward.token.address} not matching any of ${params.rewardsTokens}`,
+        )
+        continue
+      }
       users.push(address as `0x${string}`)
       tokens.push(reward.token.address as `0x${string}`)
       amounts.push(BigInt(reward.amount))
       proofs.push(reward.proofs as `0x${string}`[])
+      processed++
+    }
+    if (processed === 0) {
+      LoggingService.debug('No matching rewards found', params.rewardsTokens)
+      return undefined
+    } else {
+      LoggingService.debug('Claiming matching rewards', {
+        users,
+        tokens,
+        amounts,
+        proofs,
+      })
     }
 
     // Encode the claim function call
@@ -210,21 +250,15 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         })
       : encodeFunctionData({
           abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [
-            [
-              encodeFunctionData({
-                abi: AdmiralsQuartersAbi,
-                functionName: 'claimFromMerklDistributor',
-                args: [users, tokens, amounts, proofs],
-              }),
-            ],
-          ],
+          functionName: 'claimFromMerklDistributor',
+          args: [users, tokens, amounts, proofs],
         })
 
     const merklClaimTx: MerklClaimTransactionInfo = {
       type: TransactionType.MerklClaim,
-      description: 'Claiming Merkle rewards',
+      description:
+        'Claiming Merkl rewards' +
+        (params.useMerklDistributorDirectly ? ' directly' : ' via AdmiralsQuarters'),
       transaction: {
         target: Address.createFromEthereum({ value: claimTarget }),
         calldata: calldata,
@@ -232,7 +266,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       },
     }
 
-    LoggingService.log('Generated Merkl claim transaction', {
+    LoggingService.debug('Generated Merkl claim transaction', {
       rewardsCount: chainRewards.length,
       target: claimTarget,
     })
@@ -240,12 +274,46 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     return [merklClaimTx]
   }
 
-  async authorizeAsMerklRewardsOperatorTx(
-    params: Parameters<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['authorizeAsMerklRewardsOperatorTx']> {
+  async getUserMerklClaimTx(
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimTx']> {
+    const { address, chainId } = params
+
+    const claimTx = await this.getUserMerklClaimDirectTx({
+      address,
+      chainId,
+      rewardsTokens: [
+        this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId) }).address.value,
+      ],
+      useMerklDistributorDirectly: false,
+    })
+    if (!claimTx) {
+      return undefined
+    }
+
+    const multicallMerklClaimTx: MerklClaimTransactionInfo = {
+      type: claimTx[0].type,
+      description: claimTx[0].description,
+      transaction: {
+        target: claimTx[0].transaction.target,
+        calldata: encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [[claimTx[0].transaction.calldata]],
+        }),
+        value: claimTx[0].transaction.value,
+      },
+    }
+
+    return [multicallMerklClaimTx]
+  }
+
+  async getAuthorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerMerklRewards['getAuthorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getAuthorizeAsMerklRewardsOperatorTx']> {
     const { chainId, user } = params
 
-    LoggingService.log('Generating authorize AQ as Merkl rewards operator transaction', {
+    LoggingService.debug('Generating authorize AQ as Merkl rewards operator transaction', {
       chainId,
       user,
     })
@@ -280,7 +348,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       },
     }
 
-    LoggingService.log('Generated authorize AQ as Merkl rewards operator transaction', {
+    LoggingService.debug('Generated authorize AQ as Merkl rewards operator transaction', {
       target: distributorAddress,
       operator: admiralsQuartersAddress.value,
     })
@@ -288,12 +356,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     return [toggleTx]
   }
 
-  async isAuthorizedAsMerklRewardsOperator(
-    params: Parameters<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['isAuthorizedAsMerklRewardsOperator']> {
+  async getIsAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerMerklRewards['getIsAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getIsAuthorizedAsMerklRewardsOperator']> {
     const { chainId, user } = params
 
-    LoggingService.log('Checking AdmiralsQuarters authorization as Merkl rewards operator', {
+    LoggingService.debug('Checking AdmiralsQuarters authorization as Merkl rewards operator', {
       chainId,
       user,
     })
@@ -325,7 +393,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       args: [user, admiralsQuartersAddress.value],
     })
 
-    LoggingService.log('AdmiralsQuarters authorization check completed', {
+    LoggingService.debug('AdmiralsQuarters authorization check completed', {
       chainId,
       user,
       isAuthorized,

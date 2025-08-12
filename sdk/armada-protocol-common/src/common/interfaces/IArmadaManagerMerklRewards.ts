@@ -58,29 +58,44 @@ export interface IArmadaManagerMerklRewards {
   getUserMerklClaimTx: (params: {
     address: AddressValue
     chainId: ChainId
+  }) => Promise<[MerklClaimTransactionInfo] | undefined>
+
+  /**
+   * @name getUserMerklClaimDirectTx
+   * @description Generates a transaction to directly claim Merkl rewards for a user on a specific chain
+   * @param params.address The user's address
+   * @param params.chainId The chain ID to claim rewards on
+   * @param params.rewardsTokens Optional array of token addresses to claim (default: all tokens)
+   * @param params.useMerklDistributorDirectly Optional flag to use Merkl distributor directly (default: false)
+   * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
+   */
+  getUserMerklClaimDirectTx: (params: {
+    address: AddressValue
+    chainId: ChainId
+    rewardsTokens?: `0x${string}`[]
     useMerklDistributorDirectly?: boolean
   }) => Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
-   * @name authorizeAsMerklRewardsOperatorTx
+   * @name getAuthorizeAsMerklRewardsOperatorTx
    * @description Generates a transaction to toggle AdmiralsQuarters as a Merkl rewards operator for a user
    * @param params.chainId The chain ID to perform the operation on
    * @param params.user The user's address
    * @returns Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]> Array containing the toggle transaction
    */
-  authorizeAsMerklRewardsOperatorTx: (params: {
+  getAuthorizeAsMerklRewardsOperatorTx: (params: {
     chainId: ChainId
     user: AddressValue
   }) => Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
 
   /**
-   * @name isAuthorizedAsMerklRewardsOperator
+   * @name getIsAuthorizedAsMerklRewardsOperator
    * @description Checks if AdmiralsQuarters is authorized as a Merkl rewards operator for a user
    * @param params.chainId The chain ID to check authorization on
    * @param params.user The user's address
    * @returns Promise<boolean> True if AdmiralsQuarters is authorized as operator, false otherwise
    */
-  isAuthorizedAsMerklRewardsOperator: (params: {
+  getIsAuthorizedAsMerklRewardsOperator: (params: {
     chainId: ChainId
     user: AddressValue
   }) => Promise<boolean>

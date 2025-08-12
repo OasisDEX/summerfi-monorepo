@@ -334,12 +334,14 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the multicall transaction needed to claim rewards from the Fleet
    * @param chainInfo Chain information
    * @param user Address of the user to claim rewards for
+   * @param includeMerkl Whether to include Merkl rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
   getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
+    includeMerkl?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 
   /**
@@ -552,25 +554,25 @@ export interface IArmadaManagerUsersClient {
   }): Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
-   * @name authorizeAsMerklRewardsOperatorTx
+   * @name getAuthorizeAsMerklRewardsOperatorTx
    * @description Generates a transaction to toggle AdmiralsQuarters as a Merkl rewards operator for a user
    * @param params.chainId The chain ID to perform the operation on
    * @param params.user The user's address
    * @returns Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]> Array containing the toggle transaction
    */
-  authorizeAsMerklRewardsOperatorTx(params: {
+  getAuthorizeAsMerklRewardsOperatorTx(params: {
     chainId: ChainId
     user: AddressValue
   }): Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
 
   /**
-   * @name isAuthorizedAsMerklRewardsOperator
+   * @name getIsAuthorizedAsMerklRewardsOperator
    * @description Checks if AdmiralsQuarters is authorized as a Merkl rewards operator for a user
    * @param params.chainId The chain ID to check authorization on
    * @param params.user The user's address
    * @returns Promise<boolean> True if AdmiralsQuarters is authorized as operator, false otherwise
    */
-  isAuthorizedAsMerklRewardsOperator(params: {
+  getIsAuthorizedAsMerklRewardsOperator(params: {
     chainId: ChainId
     user: AddressValue
   }): Promise<boolean>
