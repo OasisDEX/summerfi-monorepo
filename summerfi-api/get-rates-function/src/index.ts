@@ -205,6 +205,9 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
   }
 
   try {
+    const withCacheRaw = event.queryStringParameters?.withCache
+    const withCache = withCacheRaw ? Boolean(withCacheRaw) : false
+
     const cache = !REDIS_CACHE_URL
       ? ({
           get: async () => null,
@@ -251,13 +254,15 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         productIds,
       })
 
-      const cached = await cache.get(cacheKey)
+      if (withCache) {
+        const cached = await cache.get(cacheKey)
 
-      if (cached) {
-        logger.info('Returning cached post-rates', { cacheKey })
-        return {
-          statusCode: 200,
-          body: cached,
+        if (cached) {
+          logger.info('Returning cached post-rates', { cacheKey })
+          return {
+            statusCode: 200,
+            body: cached,
+          }
         }
       }
 
@@ -386,13 +391,15 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         productIds: [productId],
       })
 
-      const cached = await cache.get(cacheKey)
+      if (withCache) {
+        const cached = await cache.get(cacheKey)
 
-      if (cached) {
-        logger.info('Returning cached get-rates', { cacheKey })
-        return {
-          statusCode: 200,
-          body: cached,
+        if (cached) {
+          logger.info('Returning cached get-rates', { cacheKey })
+          return {
+            statusCode: 200,
+            body: cached,
+          }
         }
       }
       // Get rates from both sources
@@ -449,13 +456,15 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         productIds: [productId],
       })
 
-      const cached = await cache.get(cacheKey)
+      if (withCache) {
+        const cached = await cache.get(cacheKey)
 
-      if (cached) {
-        logger.info('Returning cached get-historical-rates', { cacheKey })
-        return {
-          statusCode: 200,
-          body: cached,
+        if (cached) {
+          logger.info('Returning cached get-historical-rates', { cacheKey })
+          return {
+            statusCode: 200,
+            body: cached,
+          }
         }
       }
       const [subgraphRates, dbRates] = await Promise.all([
