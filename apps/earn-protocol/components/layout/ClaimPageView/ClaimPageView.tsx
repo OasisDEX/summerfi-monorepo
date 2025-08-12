@@ -31,7 +31,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
         const numericChainId = chainId as SupportedNetworkIds
 
         acc[numericChainId] =
-          externalData.sumrToClaim.claimableAggregatedRewards.perChain[numericChainId] || 0
+          externalData.sumrToClaim.aggregatedRewards.perChain[numericChainId] || 0
 
         return acc
       }, {} as ClaimableBalances),

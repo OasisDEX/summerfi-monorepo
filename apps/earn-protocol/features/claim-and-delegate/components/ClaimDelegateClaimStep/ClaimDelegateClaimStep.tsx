@@ -117,7 +117,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
         // Update wallet balances - add claimed amount to the existing balance
         const claimedAmount =
-          initialExternalData.sumrToClaim.claimableAggregatedRewards.perChain[clientChainId] || 0
+          initialExternalData.sumrToClaim.aggregatedRewards.perChain[clientChainId] || 0
 
         dispatch({
           type: 'update-wallet-balances',

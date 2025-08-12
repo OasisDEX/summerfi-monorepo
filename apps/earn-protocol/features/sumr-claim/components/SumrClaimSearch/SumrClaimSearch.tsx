@@ -39,10 +39,9 @@ export const SumrClaimSearch = () => {
 
   const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
 
-  const { claimableAggregatedRewards, isLoading: isAggregatedRewardsLoading } =
-    useUserAggregatedRewards({
-      walletAddress: eligibleUser?.userAddress,
-    })
+  const { aggregatedRewards, isLoading: isAggregatedRewardsLoading } = useUserAggregatedRewards({
+    walletAddress: eligibleUser?.userAddress,
+  })
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
@@ -150,9 +149,9 @@ export const SumrClaimSearch = () => {
 
   const sumrToClaim = isAggregatedRewardsLoading ? (
     <SkeletonLine width="100px" height="35px" />
-  ) : claimableAggregatedRewards?.total ? (
+  ) : aggregatedRewards?.total ? (
     // eslint-disable-next-line no-mixed-operators
-    formatCryptoBalance(Number(claimableAggregatedRewards.total) / 10 ** 18)
+    formatCryptoBalance(Number(aggregatedRewards.total) / 10 ** 18)
   ) : (
     ''
   )
