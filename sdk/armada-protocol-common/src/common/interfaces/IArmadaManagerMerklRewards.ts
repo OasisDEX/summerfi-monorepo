@@ -65,12 +65,14 @@ export interface IArmadaManagerMerklRewards {
    * @description Generates a transaction to directly claim Merkl rewards for a user on a specific chain
    * @param params.address The user's address
    * @param params.chainId The chain ID to claim rewards on
+   * @param params.rewardsTokens Optional array of token addresses to claim (default: all tokens)
    * @param params.useMerklDistributorDirectly Optional flag to use Merkl distributor directly (default: false)
    * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
    */
   getUserMerklClaimDirectTx: (params: {
     address: AddressValue
     chainId: ChainId
+    rewardsTokens?: `0x${string}`[]
     useMerklDistributorDirectly?: boolean
   }) => Promise<[MerklClaimTransactionInfo] | undefined>
 
