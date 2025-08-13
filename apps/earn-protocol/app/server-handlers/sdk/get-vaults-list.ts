@@ -29,7 +29,7 @@ const getVaultsListRaw = async () => {
           ...vault,
           rewardTokenEmissionsAmount: [rewardTokenEmissionsAmount],
           // eslint-disable-next-line no-mixed-operators
-          rewardTokenEmissionsFinish: [new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).getTime()], // 5 days from now
+          rewardTokenEmissionsFinish: [new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).getTime()], // infinite offset by 1 day
         }
       }) as unknown as SDKVaultishType[],
     callDataTimestamp: Date.now(),
