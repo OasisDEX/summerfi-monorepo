@@ -35,6 +35,11 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
     token: IToken
     apy: IPercentage | null
   }>
+  /** Vault Merkl rewards apy */
+  readonly merklRewards: Array<{
+    token: IToken
+    dailyEmission: string
+  }>
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -55,6 +60,12 @@ export const ArmadaVaultInfoDataSchema = z.object({
     z.object({
       token: z.custom<IToken>((val) => isToken(val)),
       apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    }),
+  ),
+  merklRewards: z.array(
+    z.object({
+      token: z.custom<IToken>((val) => isToken(val)),
+      dailyEmission: z.string(),
     }),
   ),
   type: z.literal(PoolType.Armada),

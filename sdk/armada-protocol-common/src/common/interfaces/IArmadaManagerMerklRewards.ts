@@ -3,33 +3,7 @@ import type {
   MerklClaimTransactionInfo,
   ToggleAQasMerklRewardsOperatorTransactionInfo,
 } from '@summerfi/sdk-common'
-
-/**
- * @name MerklReward
- * @description Represents a Merkl reward for a user
- */
-export interface MerklReward {
-  /** The token address for the reward */
-  token: {
-    chainId: number
-    address: string
-    symbol: string
-    decimals: number
-    price: number
-  }
-  /** The merkle root for the reward */
-  root: string
-  /** The recipient address */
-  recipient: string
-  /** The reward amount */
-  amount: string
-  /** The claimed amount */
-  claimed: string
-  /** The pending amount */
-  pending: string
-  /** The merkle proofs for claiming */
-  proofs: string[]
-}
+import type { MerklReward } from '../types/MerklTypes'
 
 /**
  * @name IArmadaManagerMerklRewards
