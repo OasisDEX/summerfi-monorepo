@@ -1768,7 +1768,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
     const byFleetAddress = responses.reduce(
       (acc, response, index) => {
-        const fleetAddress = vaultIds[index].fleetAddress.value
+        const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
         if (!acc[fleetAddress]) {
           acc[fleetAddress] = []
         }
@@ -1799,8 +1799,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       },
     )
 
-    return Promise.resolve({
+    return {
       byFleetAddress,
-    })
+    }
   }
 }
