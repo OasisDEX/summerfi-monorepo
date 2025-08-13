@@ -34,10 +34,15 @@ export type WalletBalances = {
   [key in HumanReadableNetwork]: number
 }
 
+export type MerklIsAuthorizedPerChain = {
+  [key: number]: boolean
+}
+
 export type ClaimDelegateState = {
   step: ClaimDelegateSteps
   delegatee: string | undefined
   claimStatus: ClaimDelegateTxStatuses | undefined
+  merklStatus: ClaimDelegateTxStatuses | undefined
   delegateStatus: ClaimDelegateTxStatuses | undefined
   stakingStatus: ClaimDelegateTxStatuses | undefined
   stakingApproveStatus: ClaimDelegateTxStatuses | undefined
@@ -48,6 +53,7 @@ export type ClaimDelegateState = {
   // Add balance tracking
   claimableBalances: ClaimableBalances
   walletBalances: WalletBalances
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
 
 export type ClaimDelegateReducerAction =
@@ -58,6 +64,10 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'update-delegatee'
       payload: string | undefined
+    }
+  | {
+      type: 'update-merkl-status'
+      payload: ClaimDelegateTxStatuses | undefined
     }
   | {
       type: 'update-claim-status'
@@ -94,6 +104,10 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'update-wallet-balances'
       payload: WalletBalances
+    }
+  | {
+      type: 'update-merkl-is-authorized-per-chain'
+      payload: MerklIsAuthorizedPerChain
     }
 
 export type ClaimDelegateExternalData = {

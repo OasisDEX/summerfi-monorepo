@@ -18,6 +18,7 @@ interface ClaimDelegateToClaimProps {
   isChangingNetwork?: boolean
   canClaim: boolean
   isOnlyStep?: boolean
+  isOwner?: boolean
 }
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
@@ -29,6 +30,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   isOnlyStep,
   isChangingNetwork,
   canClaim,
+  isOwner,
 }) => {
   const getButtonLabel = () => {
     if (isChangingNetwork) {
@@ -86,9 +88,9 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
             e.stopPropagation()
             onClaim()
           }}
-          disabled={!canClaim || isLoading || isChangingNetwork}
+          disabled={!canClaim || isLoading || isChangingNetwork || !isOwner}
         >
-          {isLoading || isChangingNetwork ? (
+          {isLoading ?? isChangingNetwork ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
               <span>{getButtonLabel()}</span>

@@ -30,6 +30,7 @@ import { getMigratablePositionsHandler } from '../handlers/getMigratablePosition
 import { getMigratablePositionsHandlerApy } from '../handlers/getMigratablePositionsHandlerApy'
 import { getSpotPriceHandler } from '../handlers/getSpotPriceHandler'
 import { getSpotPricesHandler } from '../handlers/getSpotPricesHandler'
+import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuthorizeAsMerklRewardsOperatorTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -101,6 +102,10 @@ export const useSDK = (params: UseSdk) => {
   const getVaultSwitchTx = useMemo(() => getVaultSwitchTXHandler(sdk), [sdk])
   const getMigratablePositions = useMemo(() => getMigratablePositionsHandler(sdk), [sdk])
   const getMigratablePositionsApy = useMemo(() => getMigratablePositionsHandlerApy(sdk), [sdk])
+  const getAuthorizeAsMerklRewardsOperatorTx = useMemo(
+    () => getAuthorizeAsMerklRewardsOperatorTxHandler(sdk),
+    [sdk],
+  )
 
   const memo = useMemo(
     () => ({
@@ -133,6 +138,7 @@ export const useSDK = (params: UseSdk) => {
       getMigratablePositionsApy,
       getSpotPrice,
       getSpotPrices,
+      getAuthorizeAsMerklRewardsOperatorTx,
     }),
     [
       getCurrentUser,
@@ -164,6 +170,7 @@ export const useSDK = (params: UseSdk) => {
       getMigratablePositionsApy,
       getSpotPrice,
       getSpotPrices,
+      getAuthorizeAsMerklRewardsOperatorTx,
     ],
   )
 
