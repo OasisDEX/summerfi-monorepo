@@ -1,3 +1,4 @@
+import { rewardsDailyEmmission } from '@summerfi/app-earn-ui'
 import { type SDKVaultType, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
@@ -31,7 +32,17 @@ export async function getVaultDetails({
       vaultId: poolId,
     })
 
-    return vault as SDKVaultType | undefined
+    // TEMPORARY FIX FOR REWARDS EMISSIONS
+    const rewardTokenEmissionsAmount = rewardsDailyEmmission.find(
+      (reward) => reward.id === vault?.id,
+    )?.dailyEmmission
+
+    return {
+      ...vault,
+      rewardTokenEmissionsAmount: [rewardTokenEmissionsAmount],
+      // eslint-disable-next-line no-mixed-operators
+      rewardTokenEmissionsFinish: [new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).getTime()], // 5 days from now
+    } as unknown as SDKVaultType | undefined
   } catch (error) {
     return serverOnlyErrorHandler(
       'getVaultDetails',

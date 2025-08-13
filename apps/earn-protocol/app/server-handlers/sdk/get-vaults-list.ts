@@ -1,5 +1,5 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds } from '@summerfi/app-types'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES, rewardsDailyEmmission } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType, SupportedNetworkIds } from '@summerfi/app-types'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { unstable_cache as unstableCache } from 'next/cache'
 
@@ -17,7 +17,21 @@ const getVaultsListRaw = async () => {
   )
 
   return {
-    vaults: vaultsListByNetwork.flatMap(({ vaults }) => vaults),
+    vaults: vaultsListByNetwork
+      .flatMap(({ vaults }) => vaults)
+      // TEMPORARY FIX FOR REWARDS EMISSIONS
+      .map((vault) => {
+        const rewardTokenEmissionsAmount = rewardsDailyEmmission.find(
+          (reward) => reward.id === vault.id,
+        )?.dailyEmmission
+
+        return {
+          ...vault,
+          rewardTokenEmissionsAmount: [rewardTokenEmissionsAmount],
+          // eslint-disable-next-line no-mixed-operators
+          rewardTokenEmissionsFinish: [new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).getTime()], // 5 days from now
+        }
+      }) as unknown as SDKVaultishType[],
     callDataTimestamp: Date.now(),
   }
 }
