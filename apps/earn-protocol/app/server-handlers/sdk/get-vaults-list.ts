@@ -22,7 +22,7 @@ const getVaultsListRaw = async () => {
       // TEMPORARY FIX FOR REWARDS EMISSIONS
       .map((vault) => {
         const rewardTokenEmissionsAmount = rewardsDailyEmmission.find(
-          (reward) => reward.id === vault.id,
+          (reward) => reward.id === vault.id && reward.chainId === vault.protocol.network,
         )?.dailyEmmission
 
         return {

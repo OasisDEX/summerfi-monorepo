@@ -34,7 +34,7 @@ export async function getVaultDetails({
 
     // TEMPORARY FIX FOR REWARDS EMISSIONS
     const rewardTokenEmissionsAmount = rewardsDailyEmmission.find(
-      (reward) => reward.id === vault?.id,
+      (reward) => reward.id === vault?.id && reward.chainId === vault?.protocol.network,
     )?.dailyEmmission
 
     return {
