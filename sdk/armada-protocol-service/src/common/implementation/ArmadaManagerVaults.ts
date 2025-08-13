@@ -41,7 +41,6 @@ import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
 import type { IDeploymentProvider } from '../..'
-import { bigint } from 'zod'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -1751,19 +1750,19 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ),
     )
     // get rewards manager addresses of the provided vaults
-    const rewardsManagerAddresses = vaultsData
-      .map((vault) => vault.vault?.rewardsManager.id)
-      .filter((id): id is string => !!id)
+    const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
     const url = 'https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}'
     const responses: MerklOpportunitiesResponse[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
-        fetch(url.replace('{{identifier}}', address)).then((res) => {
-          if (!res.ok) {
-            throw new Error(`Failed to fetch rewards for address ${address}`)
-          }
-          return res.json()
-        }),
+        address
+          ? fetch(url.replace('{{identifier}}', address)).then((res) => {
+              if (!res.ok) {
+                throw new Error(`Failed to fetch rewards for address ${address}`)
+              }
+              return res.json()
+            })
+          : Promise.resolve(undefined),
       ),
     )
 
