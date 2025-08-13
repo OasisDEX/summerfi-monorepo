@@ -1,14 +1,16 @@
 /* eslint-disable no-mixed-operators */
 import { SupportedNetworkIds } from '@summerfi/app-types'
-import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, type ChainId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
 
 export interface SumrToClaimData {
   aggregatedRewards: {
     total: number
     perChain: { [key: number]: number }
   }
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
 
 /**
@@ -27,9 +29,20 @@ export const getSumrToClaim = async ({
     chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
   })
 
-  const aggregatedRewards = await backendSDK.armada.users.getAggregatedRewards({
+  const aggregatedRewards = await backendSDK.armada.users.getAggregatedRewardsIncludingMerkl({
     user,
   })
+
+  const chains = Object.keys(aggregatedRewards.vaultUsagePerChain)
+
+  const isAuthorizedAsMerklRewardsOperatorPerChain = await Promise.all(
+    chains.map((chainId) =>
+      backendSDK.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+        user: user.wallet.address.value,
+        chainId: Number(chainId) as ChainId,
+      }),
+    ),
+  )
 
   return {
     aggregatedRewards: {
@@ -41,5 +54,8 @@ export const getSumrToClaim = async ({
         ]),
       ),
     },
+    merklIsAuthorizedPerChain: Object.fromEntries(
+      chains.map((chainId, index) => [chainId, isAuthorizedAsMerklRewardsOperatorPerChain[index]]),
+    ),
   }
 }

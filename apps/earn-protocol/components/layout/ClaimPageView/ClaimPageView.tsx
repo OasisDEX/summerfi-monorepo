@@ -45,6 +45,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
       },
       {} as Record<HumanReadableNetwork, number>,
     ),
+    merklIsAuthorizedPerChain: externalData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
   return (
