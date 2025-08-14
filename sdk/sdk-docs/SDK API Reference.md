@@ -371,32 +371,27 @@ interacting with the api like: tokens, token prices, or subgraph data etc.
 ### Tokens
 
 ```tsx
-import { getChainInfoByChainId, ChainIds, type IAddress, type IToken } from 'sdk-common'
+import { ChainIds } from 'sdk-common'
 
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-const baseChain = await sdk.chains.getChain({ chainInfo })
-
+const chainId = ChainIds.Base
 // get token by symbol
-const usdcToken: IToken = await baseChain.tokens.getTokenBySymbol({ symbol: 'USDC' })
+const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
 // or by address
-const address: IAddress = Address.createFromEthereum({ value: '0x.......' })
-const otherToken: IToken = await baseChain.tokens.getTokenByAddress({ address })
+const usdcToken2 = await sdk.tokens.getTokenByAddress({ addressValue: '0x.......', chainId })
 ```
 
 ### Token Prices
 
 ```tsx
-import { getChainInfoByChainId, ChainIds, FiatCurrency, type IToken } from 'sdk-common'
+import { ChainIds, FiatCurrency } from 'sdk-common'
 
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-const baseChain = await sdk.chains.getChain({ chainInfo })
+const chainId = ChainIds.Base
 
-const baseToken = await baseChain.tokens.getTokenBySymbol({ symbol: 'ETH' })
-
+const baseToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId })
 // denomination in quote token
-const denomination: IToken = await baseChain.tokens.getTokenBySymbol({ symbol: 'USDC' })
+const denomination = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
 // or in Fiat USD
-const denomination: FiatCurrency = FiatCurrency.USD
+const denomination = FiatCurrency.USD
 
 const priceInfo: SpotPriceInfo = sdk.oracle.getSpotPrice({
   baseToken,
@@ -663,9 +658,9 @@ Returns an array containing the authorization transaction.
 ]
 ```
 
-# SDK Client Interfaces Definition
+## SDK Client Interfaces Definition
 
-## ISDKManager
+### ISDKManager
 
 ```tsx
 interface ISDKManager {
@@ -674,7 +669,7 @@ interface ISDKManager {
 }
 ```
 
-## IChainsManagerClient
+### IChainsManagerClient
 
 ```tsx
 interface IChainsManager {
@@ -683,7 +678,7 @@ interface IChainsManager {
 }
 ```
 
-## IChain
+### IChain
 
 ```tsx
 interface IChain {
@@ -694,7 +689,7 @@ interface IChain {
 }
 ```
 
-## ITokensManagerClient
+### ITokensManagerClient
 
 ```tsx
 interface ITokensManager {
@@ -703,7 +698,7 @@ interface ITokensManager {
 }
 ```
 
-## IOracleManagerClient
+### IOracleManagerClient
 
 ```tsx
 interface IOracleManager {
@@ -711,9 +706,9 @@ interface IOracleManager {
 }
 ```
 
-# SDK Common Interface Definitions
+## SDK Common Interface Definitions
 
-## IArmadaPosition
+### IArmadaPosition
 
 ```tsx
 IArmadaPosition = {
@@ -741,7 +736,7 @@ IArmadaPosition = {
 }
 ```
 
-## IArmadaPositionId
+### IArmadaPositionId
 
 ```tsx
 IArmadaPositionId = {
@@ -749,7 +744,7 @@ IArmadaPositionId = {
 }
 ```
 
-## IArmadaVault
+### IArmadaVault
 
 ```tsx
 IArmadaVault = {
@@ -757,7 +752,7 @@ IArmadaVault = {
 }
 ```
 
-## IArmadaVaultId
+### IArmadaVaultId
 
 ```tsx
 IArmadaVault = {
@@ -766,7 +761,7 @@ IArmadaVault = {
 }
 ```
 
-## IArmadaVaultInfo
+### IArmadaVaultInfo
 
 ```tsx
 IArmadaVaultInfo = {
@@ -780,7 +775,7 @@ IArmadaVaultInfo = {
 }
 ```
 
-## IAddress
+### IAddress
 
 ```tsx
 IAddress = {
@@ -792,7 +787,7 @@ IAddress = {
 }
 ```
 
-## IChainInfo
+### IChainInfo
 
 ```tsx
 IChainInfo = {
@@ -801,7 +796,7 @@ IChainInfo = {
 }
 ```
 
-## IToken
+### IToken
 
 ```tsx
 IToken = {
@@ -813,7 +808,7 @@ IToken = {
 }
 ```
 
-## ITokenAmount
+### ITokenAmount
 
 ```tsx
 ITokenAmount = {
@@ -824,7 +819,7 @@ ITokenAmount = {
 }
 ```
 
-## IPrice
+### IPrice
 
 ```tsx
 IPrice = {
@@ -836,7 +831,7 @@ IPrice = {
 }
 ```
 
-## IPercentage
+### IPercentage
 
 ```tsx
 IPercentage = {
@@ -847,7 +842,7 @@ IPercentage = {
 }
 ```
 
-## ISpotPriceInfo
+### ISpotPriceInfo
 
 ```tsx
 ISpotPriceInfo = {
@@ -856,7 +851,7 @@ ISpotPriceInfo = {
 }
 ```
 
-## IUser
+### IUser
 
 ```tsx
 IUser = {
@@ -867,7 +862,7 @@ IUser = {
 }
 ```
 
-## IWallet
+### IWallet
 
 ```tsx
 IWallet = {
@@ -877,7 +872,7 @@ IWallet = {
 }
 ```
 
-# SDK Common Transaction Types
+## SDK Common Transaction Types
 
 ```tsx
 /**
@@ -896,6 +891,7 @@ export enum TransactionType {
   Bridge = 'Bridge',
   Send = 'Send',
   VaultSwitch = 'VaultSwitch',
+  ...
 }
 
 type Transaction = {
@@ -989,9 +985,9 @@ export type UnstakeTransactionInfo = TransactionInfo & {
 }
 ```
 
-# SDK Common Enums and Types
+## SDK Common Enums and Types
 
-## AddressType
+### AddressType
 
 ```tsx
 enum AddressType {
@@ -1000,13 +996,13 @@ enum AddressType {
 }
 ```
 
-## AddressValue
+### AddressValue
 
 ```tsx
 type AddressValue = `0x${string}`
 ```
 
-## ChainId & ChainIds
+### ChainId & ChainIds
 
 ```tsx
 const ChainIds = {
@@ -1020,13 +1016,13 @@ const ChainIds = {
 type ChainId = 1 | 10 | 8453 | 42161 | 146
 ```
 
-## Denomination
+### Denomination
 
 ```tsx
 type Denomination = IToken | FiatCurrency
 ```
 
-## FiatCurrency
+### FiatCurrency
 
 ```tsx
 enum FiatCurrency {
@@ -1035,7 +1031,7 @@ enum FiatCurrency {
 }
 ```
 
-# Changelog
+## Changelog
 
 ### v1.1.0
 
