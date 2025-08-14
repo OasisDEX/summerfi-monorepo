@@ -137,10 +137,10 @@ const vaultId: [IArmadaVaultId](https://www.notion.so/SDK-API-Reference-v1-0-1-1
   fleetAddress: Address.createFromEthereum({ value: "0x........." })
 })
 
-// you can get token entity using chain namespace to get particular token entity
-// you can query by symbol or by address on a particular chain from our curated list
-const chain: [IChain](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.chains.getChain({ chainInfo: user.chainInfo })
-const token: [IToken](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await chain.tokens.getTokenBySymbol({ symbol: "ETH" })
+// you can get token entity directly from the SDK
+// query by symbol or by address on a particular chain
+// from a curated list of supported tokens
+const token: [IToken](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.tokens.getTokenBySymbol({ symbol: "ETH", chainId: user.chainInfo.chainId })
 
 // create a token amount to deposit
 const amount = TokenAmount.createFrom({
@@ -219,10 +219,9 @@ const vaultId = ArmadaVaultId.createFrom({
   fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
 
-// you can get token entity using chain namespace to get particular token entity
+// you can get token entity directly from the SDK
 // you can query by symbol or by address on a particular chain from our curated list
-const chain = await sdk.chains.getChain({ chainInfo: user.chainInfo })
-const token = await chain.tokens.getTokenBySymbol({ symbol: 'USDC' })
+const token = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId: user.chainInfo.chainId })
 
 // create a token amount to deposit
 const amount = TokenAmount.createFrom({
@@ -291,8 +290,7 @@ const position: [IArmadaPosition](https://www.notion.so/SDK-API-Reference-v1-0-1
 const userAddress = "0x..."
 const user = User.createFromEthereum(ChainIds.Base, userAddress)
 
-const chain = await sdk.chains.getChain({ chainInfo: user.chainInfo })
-const usdc = await chain.tokens.getTokenBySymbol({ symbol: "USDC" })
+const usdc = await sdk.tokens.getTokenBySymbol({ symbol: "USDC", chainId: user.chainInfo.chainId })
 const switchAmount = TokenAmount.createFrom({
   amount: "10",
   token: usdc,
@@ -717,6 +715,7 @@ const price: IPrice = priceInfo.price
 ```tsx
 interface ISDKManager {
   chains: IChainsManagerClient
+  tokens: ITokensManagerClient2
   oracle: IOracleManagerClient
 }
 ```
@@ -1103,6 +1102,19 @@ Features:
     all chains
   - **getAggregatedRewardsIncludingMerkl** - retrieves aggregated rewards including Merkl rewards
     across all chains
+- **Streamlined User Creation**: Added `User.createFromEthereum(chainId, address)` method that
+  simplifies user creation
+  - No longer requires complex object creation with ChainInfo and Wallet classes
+  - Replaces the previous pattern that required `getChainInfoByChainId()`,
+    `Address.createFromEthereum()`, and `Wallet.createFrom()`
+  - Example: `User.createFromEthereum(ChainIds.Base, "0x...")` instead of the previous multi-step
+    approach
+- **Improved Token Access Pattern**: Added direct token access through
+  `sdk.tokens.getTokenBySymbol({ symbol, chainId })` and
+  `sdk.tokens.getTokenByAddress({ addressValue, chainId })`
+  - This provides a more convenient way to access tokens without needing to get the chain first
+  - Previous pattern `chain.tokens.getTokenBySymbol()` is still supported for backward compatibility
+  - Updated all documentation examples to use the new simplified pattern
 
 ### v1.0.1
 
