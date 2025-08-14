@@ -363,52 +363,9 @@ typeof transactions =
 | [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
 ```
 
-## Utility Interfaces
+### Check rewards for Vault deposits
 
-There are utility interfaces that are of interest for providing various entities required for
-interacting with the api like: tokens, token prices, or subgraph data etc.
-
-### Tokens
-
-```tsx
-import { ChainIds } from 'sdk-common'
-
-const chainId = ChainIds.Base
-// get token by symbol
-const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
-// or by address
-const usdcToken2 = await sdk.tokens.getTokenByAddress({ addressValue: '0x.......', chainId })
-```
-
-### Token Prices
-
-```tsx
-import { ChainIds, FiatCurrency } from 'sdk-common'
-
-const chainId = ChainIds.Base
-
-const baseToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId })
-// denomination in quote token
-const denomination = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
-// or in Fiat USD
-const denomination = FiatCurrency.USD
-
-const priceInfo: SpotPriceInfo = sdk.oracle.getSpotPrice({
-  baseToken,
-  denomination,
-})
-
-const price: IPrice = priceInfo.price
-```
-
-## Merkl Rewards
-
-The Merkl Rewards flow enables users to claim their accrued rewards from the Merkl campaigns for
-both using Lazy Vaults but also using referral programs.
-
-### Get User Merkl Rewards
-
-Get all Merkl rewards for a user across specified chains.
+Get rewards data for a user across all vaults on specified chains.
 
 #### Parameters
 
@@ -469,7 +426,7 @@ Returns an object with rewards organized by chain ID.
 }
 ```
 
-### Get Referral Fees Merkl Claim Transaction
+### Generate Claim Transaction for Referral Fees
 
 Generate a transaction to claim accrued referral fees in some token for a user on a specific chain.
 
@@ -524,9 +481,9 @@ exist for the specified chain.
 ]
 ```
 
-### Get User Merkl Claim Transaction
+### Generate Claim Transaction for Vault usage
 
-Generate a transaction to claim all Merkl rewards for a user on a specific chain.
+Generate a transaction to claim all Merkl vaults rewards for a user on a specific chain.
 
 #### Parameters
 
@@ -579,7 +536,8 @@ exist for the specified chain.
 
 ### Check Merkl Rewards Operator Authorization
 
-Check if AdmiralsQuarters is authorized as a Merkl rewards operator for a user on a specific chain.
+Check if multicall contract (AQ) is authorized as a Merkl rewards operator for a user on a specific
+chain.
 
 #### Parameters
 
@@ -608,9 +566,9 @@ Returns a boolean value indicating authorization status.
 true
 ```
 
-### Authorize as Merkl Rewards Operator Transaction
+### Generate Transaction to Authorize as Merkl Rewards Operator
 
-Generate a transaction to authorize AdmiralsQuarters as a Merkl rewards operator for a user.
+Generate a transaction to authorize multicall contract (AQ) as a Merkl rewards operator for a user.
 
 #### Parameters
 
@@ -656,6 +614,145 @@ Returns an array containing the authorization transaction.
     }
   }
 ]
+```
+
+### Get Governance Rewards
+
+Get the total aggregated governance rewards a user is eligible to claim across all chains.
+
+#### Parameters
+
+- **user**: The user object containing wallet and chain information
+
+#### Example
+
+```typescript
+import { User, Wallet, Address, getChainInfoByChainId, ChainIds } from '@summerfi/sdk-common'
+
+// Create user object
+const chainInfo = getChainInfoByChainId(ChainIds.Base)
+const address = Address.createFromEthereum({ value: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2' })
+const user = User.createFrom({
+  chainInfo,
+  wallet: Wallet.createFrom({ address }),
+})
+
+// Get aggregated rewards for the user
+const rewards = await sdk.armada.users.getAggregatedRewards({
+  user,
+})
+
+console.log('Total rewards:', rewards.total)
+console.log('Vault usage per chain:', rewards.vaultUsagePerChain)
+console.log('Vote delegation rewards:', rewards.voteDelegation)
+```
+
+#### Response
+
+Returns aggregated rewards breakdown across different reward sources.
+
+```json
+{
+  "total": "1500000000000000000",
+  "vaultUsagePerChain": {
+    "1": "500000000000000000",
+    "8453": "800000000000000000"
+  },
+  "vaultUsage": "1300000000000000000",
+  "merkleDistribution": "100000000000000000",
+  "voteDelegation": "100000000000000000",
+  "perChain": {
+    "1": "500000000000000000",
+    "8453": "800000000000000000"
+  }
+}
+```
+
+### Get Aggregated Rewards Including Merkl
+
+Get the total aggregated rewards a user is eligible to claim across all chains, including Merkl
+rewards.
+
+#### Parameters
+
+- **user**: The user object containing wallet and chain information
+
+#### Example
+
+```typescript
+import { User, Wallet, Address, getChainInfoByChainId, ChainIds } from '@summerfi/sdk-common'
+
+// Create user object
+const chainInfo = getChainInfoByChainId(ChainIds.Base)
+const address = Address.createFromEthereum({ value: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2' })
+const user = User.createFrom({
+  chainInfo,
+  wallet: Wallet.createFrom({ address }),
+})
+
+// Get aggregated rewards including Merkl for the user
+const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+  user,
+})
+
+console.log('Total rewards including Merkl:', rewards.total)
+console.log('Vault usage per chain:', rewards.vaultUsagePerChain)
+console.log('Merkle distribution:', rewards.merkleDistribution)
+```
+
+#### Response
+
+Returns aggregated rewards breakdown including Merkl rewards across different sources.
+
+```json
+{
+  "total": "2200000000000000000",
+  "vaultUsagePerChain": {
+    "1": "500000000000000000",
+    "8453": "800000000000000000"
+  },
+  "vaultUsage": "1300000000000000000",
+  "merkleDistribution": "800000000000000000",
+  "voteDelegation": "100000000000000000"
+}
+```
+
+## Utility Modules
+
+There are utility interfaces that are of interest for providing various entities required for
+interacting with the api like: tokens, token prices, or subgraph data etc.
+
+### Tokens
+
+```tsx
+import { ChainIds } from 'sdk-common'
+
+const chainId = ChainIds.Base
+// get token by symbol
+const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
+// or by address
+const usdcToken2 = await sdk.tokens.getTokenByAddress({ addressValue: '0x.......', chainId })
+```
+
+### Token Prices
+
+```tsx
+import { ChainIds, FiatCurrency } from 'sdk-common'
+
+const chainId = ChainIds.Base
+
+const baseToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId })
+// denomination in quote token
+const denomination = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
+// or in Fiat USD
+const denomination = FiatCurrency.USD
+
+const priceInfo: SpotPriceInfo = sdk.oracle.getSpotPrice({
+  baseToken,
+  denomination,
+})
+
+const price: IPrice = priceInfo.price
 ```
 
 ## SDK Client Interfaces Definition
@@ -891,7 +988,8 @@ export enum TransactionType {
   Bridge = 'Bridge',
   Send = 'Send',
   VaultSwitch = 'VaultSwitch',
-  ...
+  MerklClaim = 'MerklClaim',
+  ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
 }
 
 type Transaction = {
@@ -1037,7 +1135,7 @@ enum FiatCurrency {
 
 Features:
 
-- Added new Merkl Rewards flow with comprehensive methods:
+- Added several new flows related to rewards handling:
   - **getUserMerklRewards** - retrieves Merkl rewards for a user across specified chains
   - **getUserMerklClaimTx** - generates transaction to claim all Merkl rewards for a user
   - **getReferralFeesMerklClaimTx** - generates transaction to claim referral fee rewards from Merkl
@@ -1046,6 +1144,10 @@ Features:
     rewards operator
   - **getAuthorizeAsMerklRewardsOperatorTx** - generates transaction to authorize AdmiralsQuarters
     as Merkl rewards operator
+  - **getAggregatedRewards** - retrieves total aggregated rewards a user is eligible to claim across
+    all chains
+  - **getAggregatedRewardsIncludingMerkl** - retrieves aggregated rewards including Merkl rewards
+    across all chains
 
 ### v1.0.1
 
