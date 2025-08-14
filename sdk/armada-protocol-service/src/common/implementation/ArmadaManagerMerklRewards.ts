@@ -14,7 +14,6 @@ import {
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
-  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
@@ -130,6 +129,11 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       // Map response to our interface, picking only required properties
       const merklRewardsPerChain: Partial<Record<ChainId, MerklReward[]>> = {}
 
+      // Pre-normalize rewardsTokensAddresses to lowercase Set for case-insensitive comparison
+      const normalizedRewardsTokensSet = params.rewardsTokensAddresses
+        ? new Set(params.rewardsTokensAddresses.map((address) => address.toLowerCase()))
+        : null
+
       data.forEach((item) => {
         const chainId = item.chain.id
         if (!isChainId(chainId)) {
@@ -139,8 +143,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         const rewards: MerklReward[] = []
         for (const reward of item.rewards) {
           if (
-            params.rewardsTokensAddresses &&
-            !params.rewardsTokensAddresses.includes(reward.token.address as AddressValue)
+            normalizedRewardsTokensSet &&
+            !normalizedRewardsTokensSet.has(reward.token.address.toLowerCase())
           ) {
             continue
           }
@@ -338,11 +342,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       description: claimTx[0].description,
       transaction: {
         target: claimTx[0].transaction.target,
-        calldata: encodeFunctionData({
-          abi: AdmiralsQuartersAbi,
-          functionName: 'multicall',
-          args: [[claimTx[0].transaction.calldata]],
-        }),
+        calldata: claimTx[0].transaction.calldata,
         value: claimTx[0].transaction.value,
       },
     }
