@@ -719,7 +719,7 @@ interface IChain {
 ```tsx
 interface ITokensManagerClient2 {
   getTokenBySymbol({ symbol: string, chainId: ChainId }): Promise<IToken>
-  getTokenByAddress({ address: string, chainId: ChainId }): Promise<IToken>
+  getTokenByAddress({ addressValue: AddressValue, chainId: ChainId }): Promise<IToken>
 }
 ```
 
