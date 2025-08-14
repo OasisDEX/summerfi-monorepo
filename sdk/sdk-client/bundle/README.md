@@ -405,9 +405,9 @@ if (claimTransactions) {
 
   // Send transaction using your wallet
   const result = await wallet.sendTransaction({
-    to: tx.transaction.target,
+    to: tx.transaction.target.value,
     data: tx.transaction.calldata,
-    value: tx.transaction.value,
+    value: BigInt(tx.transaction.value),
   })
 }
 ```
@@ -456,9 +456,9 @@ if (claimTransactions) {
 
   // Send transaction using your wallet
   const result = await wallet.sendTransaction({
-    to: tx.transaction.target,
+    to: tx.transaction.target.value,
     data: tx.transaction.calldata,
-    value: tx.transaction.value,
+    value: BigInt(tx.transaction.value),
   })
 }
 ```
@@ -657,8 +657,6 @@ interacting with the api like: tokens, token prices, or subgraph data etc.
 ### Tokens
 
 ```tsx
-import { ChainIds } from 'sdk-common'
-
 const chainId = ChainIds.Base
 // get token by symbol
 const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
@@ -669,8 +667,6 @@ const usdcToken2 = await sdk.tokens.getTokenByAddress({ addressValue: '0x.......
 ### Token Prices
 
 ```tsx
-import { ChainIds, FiatCurrency } from 'sdk-common'
-
 const chainId = ChainIds.Base
 
 const baseToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId })
