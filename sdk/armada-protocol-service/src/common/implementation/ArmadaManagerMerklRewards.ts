@@ -129,21 +129,35 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       // Map response to our interface, picking only required properties
       const merklRewardsPerChain: Partial<Record<ChainId, MerklReward[]>> = {}
 
+      // Pre-normalize rewardsTokensAddresses to lowercase Set for case-insensitive comparison
+      const normalizedRewardsTokensSet = params.rewardsTokensAddresses
+        ? new Set(params.rewardsTokensAddresses.map((address) => address.toLowerCase()))
+        : null
+
       data.forEach((item) => {
         const chainId = item.chain.id
         if (!isChainId(chainId)) {
           throw new Error(`Invalid chain ID: ${chainId}`)
         }
 
-        const rewards: MerklReward[] = item.rewards.map((reward) => ({
-          token: reward.token,
-          root: reward.root,
-          recipient: reward.recipient,
-          amount: reward.amount,
-          claimed: reward.claimed,
-          pending: reward.pending,
-          proofs: reward.proofs,
-        }))
+        const rewards: MerklReward[] = []
+        for (const reward of item.rewards) {
+          if (
+            normalizedRewardsTokensSet &&
+            !normalizedRewardsTokensSet.has(reward.token.address.toLowerCase())
+          ) {
+            continue
+          }
+          rewards.push({
+            token: reward.token,
+            root: reward.root,
+            recipient: reward.recipient,
+            amount: reward.amount,
+            claimed: reward.claimed,
+            pending: reward.pending,
+            proofs: reward.proofs,
+          })
+        }
 
         if (!merklRewardsPerChain[chainId]) {
           merklRewardsPerChain[chainId] = []
@@ -301,6 +315,34 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           functionName: 'multicall',
           args: [[claimTx[0].transaction.calldata]],
         }),
+        value: claimTx[0].transaction.value,
+      },
+    }
+
+    return [multicallMerklClaimTx]
+  }
+
+  async getReferralFeesMerklClaimTx(
+    params: Parameters<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']> {
+    const { address, chainId, rewardsTokensAddresses } = params
+
+    const claimTx = await this.getUserMerklClaimDirectTx({
+      address,
+      chainId,
+      rewardsTokens: rewardsTokensAddresses,
+      useMerklDistributorDirectly: true,
+    })
+    if (!claimTx) {
+      return undefined
+    }
+
+    const multicallMerklClaimTx: MerklClaimTransactionInfo = {
+      type: claimTx[0].type,
+      description: claimTx[0].description,
+      transaction: {
+        target: claimTx[0].transaction.target,
+        calldata: claimTx[0].transaction.calldata,
         value: claimTx[0].transaction.value,
       },
     }

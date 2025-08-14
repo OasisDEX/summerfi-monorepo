@@ -15,9 +15,14 @@ export interface IArmadaManagerMerklRewards {
    * @description Gets Merkl rewards for a user across specified chains
    * @param params.address The user's address
    * @param params.chainIds Optional chain IDs to filter by (default: supported chains)
+   * @param params.rewardsTokensAddresses Optional array of token addresses to filter rewards (default: all tokens)
    * @returns Promise<MerklReward[]> Array of Merkl rewards
    */
-  getUserMerklRewards: (params: { address: AddressValue; chainIds?: ChainId[] }) => Promise<{
+  getUserMerklRewards: (params: {
+    address: AddressValue
+    chainIds?: ChainId[]
+    rewardsTokensAddresses?: AddressValue[]
+  }) => Promise<{
     perChain: Partial<Record<ChainId, MerklReward[]>>
   }>
 
@@ -61,6 +66,20 @@ export interface IArmadaManagerMerklRewards {
     chainId: ChainId
     user: AddressValue
   }) => Promise<[ToggleAQasMerklRewardsOperatorTransactionInfo]>
+
+  /**
+   * @name getReferralFeesMerklClaimTx
+   * @description Generates a transaction to claim Merkl rewards for a referral on a specific chain
+   * @param params.address The user's address
+   * @param params.chainId The chain ID to claim rewards on
+   * @param params.rewardsTokensAddresses Optional array of token addresses to claim (default: all tokens)
+   * @returns Promise<[MerklClaimTransactionInfo] | undefined> Array containing the claim transaction, or undefined if no rewards to claim
+   */
+  getReferralFeesMerklClaimTx: (params: {
+    address: AddressValue
+    chainId: ChainId
+    rewardsTokensAddresses?: AddressValue[]
+  }) => Promise<[MerklClaimTransactionInfo] | undefined>
 
   /**
    * @name getIsAuthorizedAsMerklRewardsOperator

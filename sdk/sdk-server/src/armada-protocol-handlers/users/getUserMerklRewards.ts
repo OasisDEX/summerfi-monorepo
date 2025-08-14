@@ -7,6 +7,7 @@ export const getUserMerklRewards = publicProcedure
     z.object({
       address: z.custom<AddressValue>(isAddressValue),
       chainIds: z.array(z.custom<ChainId>(isChainId)).optional(),
+      rewardsTokensAddresses: z.array(z.custom<AddressValue>(isAddressValue)).optional(),
     }),
   )
   .query(async (opts) => {
