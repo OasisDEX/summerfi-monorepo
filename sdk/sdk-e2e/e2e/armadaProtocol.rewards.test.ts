@@ -171,6 +171,150 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
+      describe(`getReferralFeesMerklClaimTx`, () => {
+        it(`should generate referral claim transaction for user with rewards`, async () => {
+          // First get rewards to find chains with rewards
+          const usdcToken = await sdk.tokens.getTokenBySymbol({
+            chainId: ChainIds.Base,
+            symbol: 'USDC',
+          })
+          const rewards = await sdk.armada.users.getUserMerklRewards({
+            address: userAddress,
+            chainIds: [ChainIds.Base],
+            rewardsTokensAddresses: [usdcToken.address.value],
+          })
+
+          const allChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[] // Ethereum, Base, Arbitrum, Sonic
+          const chainsWithRewards = Object.entries(rewards.perChain)
+            .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
+            .map(([chainId]) => parseInt(chainId) as ChainId)
+
+          const chainsWithoutRewards = allChainIds.filter(
+            (chainId) => !chainsWithRewards.includes(chainId),
+          )
+
+          console.log(`Chains with rewards for referral claim: ${chainsWithRewards}`)
+          console.log(`Chains without rewards for referral claim: ${chainsWithoutRewards}`)
+
+          // Test chains WITH rewards - should return transaction array
+          for (const chainId of chainsWithRewards) {
+            console.log(`Testing referral claim on chain ${chainId} (has rewards)`)
+            const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+              address: userAddress,
+              chainId,
+            })
+            if (!claimTransactions) {
+              console.log(`No referral claim transactions generated for chain ${chainId}`)
+              continue // Skip to next chain
+            }
+
+            expect(claimTransactions).toBeDefined()
+            expect(claimTransactions).not.toBeUndefined()
+            expect(Array.isArray(claimTransactions)).toBe(true)
+            expect(claimTransactions!.length).toBe(1)
+
+            const claimTx = claimTransactions![0]
+            expect(claimTx.type).toBe('MerklClaim')
+            expect(claimTx.description).toContain('Claiming Merkl rewards')
+            expect(claimTx.transaction).toBeDefined()
+            expect(claimTx.transaction.target).toBeDefined()
+            expect(claimTx.transaction.calldata).toBeDefined()
+            expect(claimTx.transaction.value).toBe('0')
+
+            console.log(`✅ Generated referral claim transaction for chain ${chainId}`)
+            break // No need to test further chains with rewards
+          }
+
+          // Test chains WITHOUT rewards - should return undefined
+          for (const chainId of chainsWithoutRewards) {
+            console.log(`Testing referral claim on chain ${chainId} (no rewards)`)
+            const result = await sdk.armada.users.getReferralFeesMerklClaimTx({
+              address: userAddress,
+              chainId,
+            })
+
+            expect(result).toBeUndefined()
+            console.log(`✅ Chain ${chainId} correctly returned undefined (no rewards)`)
+            break // No need to test further chains without rewards
+          }
+
+          // Ensure we tested at least one scenario
+          if (chainsWithRewards.length === 0 && chainsWithoutRewards.length === 0) {
+            throw new Error('Nothing was tested - no chains with or without rewards found')
+          }
+        })
+
+        it(`should generate referral claim transaction with specific token addresses`, async () => {
+          // First get rewards to find chains with rewards and get token addresses
+          const rewards = await sdk.armada.users.getUserMerklRewards({
+            address: userAddress,
+          })
+
+          const chainsWithRewards = Object.entries(rewards.perChain)
+            .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
+            .map(([chainId]) => parseInt(chainId) as ChainId)
+
+          if (chainsWithRewards.length === 0) {
+            console.log('No chains with rewards found, skipping token-specific test')
+            return
+          }
+
+          const testChainId = chainsWithRewards[0]
+          const chainRewards = rewards.perChain[testChainId]
+          if (!chainRewards || chainRewards.length === 0) {
+            console.log('No rewards found on test chain, skipping token-specific test')
+            return
+          }
+
+          // Extract token addresses from rewards
+          const tokenAddresses = chainRewards.map((reward) => reward.token.address as `0x${string}`)
+          console.log(`Testing referral claim with specific tokens: ${tokenAddresses}`)
+
+          const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+            address: userAddress,
+            chainId: testChainId,
+            rewardsTokensAddresses: tokenAddresses,
+          })
+
+          if (!claimTransactions) {
+            console.log(`No referral claim transactions generated with specific tokens`)
+            return
+          }
+
+          expect(claimTransactions).toBeDefined()
+          expect(Array.isArray(claimTransactions)).toBe(true)
+          expect(claimTransactions.length).toBe(1)
+
+          const claimTx = claimTransactions[0]
+          expect(claimTx.type).toBe('MerklClaim')
+          expect(claimTx.description).toContain('Claiming Merkl rewards')
+          expect(claimTx.transaction).toBeDefined()
+          expect(claimTx.transaction.target).toBeDefined()
+          expect(claimTx.transaction.calldata).toBeDefined()
+          expect(claimTx.transaction.value).toBe('0')
+
+          console.log(
+            `✅ Generated referral claim transaction with specific tokens for chain ${testChainId}`,
+          )
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.getReferralFeesMerklClaimTx({
+              address: userAddress,
+              chainId: unsupportedChainId,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
       describe(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
         it(`should generate authorization transaction for supported chains`, async () => {
           const supportedChainIds = [

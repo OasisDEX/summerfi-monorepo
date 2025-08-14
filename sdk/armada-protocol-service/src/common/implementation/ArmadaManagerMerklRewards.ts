@@ -14,6 +14,7 @@ import {
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
@@ -135,15 +136,24 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           throw new Error(`Invalid chain ID: ${chainId}`)
         }
 
-        const rewards: MerklReward[] = item.rewards.map((reward) => ({
-          token: reward.token,
-          root: reward.root,
-          recipient: reward.recipient,
-          amount: reward.amount,
-          claimed: reward.claimed,
-          pending: reward.pending,
-          proofs: reward.proofs,
-        }))
+        const rewards: MerklReward[] = []
+        for (const reward of item.rewards) {
+          if (
+            params.rewardsTokensAddresses &&
+            !params.rewardsTokensAddresses.includes(reward.token.address as AddressValue)
+          ) {
+            continue
+          }
+          rewards.push({
+            token: reward.token,
+            root: reward.root,
+            recipient: reward.recipient,
+            amount: reward.amount,
+            claimed: reward.claimed,
+            pending: reward.pending,
+            proofs: reward.proofs,
+          })
+        }
 
         if (!merklRewardsPerChain[chainId]) {
           merklRewardsPerChain[chainId] = []
@@ -286,6 +296,38 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId) }).address.value,
       ],
       useMerklDistributorDirectly: false,
+    })
+    if (!claimTx) {
+      return undefined
+    }
+
+    const multicallMerklClaimTx: MerklClaimTransactionInfo = {
+      type: claimTx[0].type,
+      description: claimTx[0].description,
+      transaction: {
+        target: claimTx[0].transaction.target,
+        calldata: encodeFunctionData({
+          abi: AdmiralsQuartersAbi,
+          functionName: 'multicall',
+          args: [[claimTx[0].transaction.calldata]],
+        }),
+        value: claimTx[0].transaction.value,
+      },
+    }
+
+    return [multicallMerklClaimTx]
+  }
+
+  async getReferralFeesMerklClaimTx(
+    params: Parameters<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']> {
+    const { address, chainId, rewardsTokensAddresses } = params
+
+    const claimTx = await this.getUserMerklClaimDirectTx({
+      address,
+      chainId,
+      rewardsTokens: rewardsTokensAddresses,
+      useMerklDistributorDirectly: true,
     })
     if (!claimTx) {
       return undefined
