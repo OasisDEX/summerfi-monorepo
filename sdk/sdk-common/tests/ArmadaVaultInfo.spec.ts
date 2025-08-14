@@ -56,6 +56,7 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
           value: 0.05,
         }),
         rewardsApys: [],
+        merklRewards: [],
       })
 
       expect(poolInfo).toBeDefined()

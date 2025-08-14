@@ -9,5 +9,5 @@ GET https://api.merkl.xyz/v4/opportunities/campaigns
   ?opportunityId={{opportunityId}}
 
 ### by Id
-@campaignId = 6882942589603688379
+@campaignId = 11740145657796578250
 GET https://api.merkl.xyz/v4/campaigns/{{campaignId}}
