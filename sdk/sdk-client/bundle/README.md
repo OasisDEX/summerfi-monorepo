@@ -23,7 +23,7 @@ export const sdk = makeSDK({
 
 ```tsx
 const chainId = ChainIds.Base
-const vaults: [IArmadaVaultInfo](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21)[] = await sdk.armada.users.getVaultInfoList({
+const vaults = await sdk.armada.users.getVaultInfoList({
   chainId,
 })
 
@@ -73,12 +73,12 @@ console.log(
 ```tsx
 // you can get vaultId from getVaultInfoList() => vaultInfoList[0].id
 // or construct manually using static factory method
-const vaultId: IArmadaVaultId = ArmadaVaultId.createFrom({
+const vaultId = ArmadaVaultId.createFrom({
   chainInfo,
   fleetAddress: '0x....',
 })
 
-const vaultInfo: [IArmadaVaultInfo](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.armada.users.getVaultInfo({
+const vaultInfo = await sdk.armada.users.getVaultInfo({
   vaultId,
 })
 
@@ -122,25 +122,23 @@ console.log(
 ### Create Deposit Transaction
 
 ```tsx
-import {
-	ArmadaVaultId, ChainIds, getChainInfoByChainId, User
-} from "@summer_fi/sdk-common"
+import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
 
-import { sdk } from "./sdk"
+import { sdk } from './sdk'
 
 // create a user using chainId and wallet address
-const user: [IUser](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = User.createFromEthereum(ChainIds.Base, "0x.........")
+const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
 // create a vaultId object for a selected fleet using it's deployment address
-const vaultId: [IArmadaVaultId](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = ArmadaVaultId.createFrom({
+const vaultId = ArmadaVaultId.createFrom({
   chainInfo: user.chainInfo,
-  fleetAddress: Address.createFromEthereum({ value: "0x........." })
+  fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
 
 // you can get token entity directly from the SDK
 // query by symbol or by address on a particular chain
 // from a curated list of supported tokens
-const token: [IToken](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.tokens.getTokenBySymbol({ symbol: "ETH", chainId: user.chainInfo.chainId })
+const token = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId: user.chainInfo.chainId })
 
 // create a token amount to deposit
 const amount = TokenAmount.createFrom({
@@ -159,36 +157,35 @@ const transactions = await sdk.armada.users.getNewDepositTx({
   user,
   amount,
   slippage,
-  referralCode: "XXXXX" // optional
+  referralCode: 'XXXXX', // optional - user for referral program
 })
 
 if (transactions.length == 2) {
-	// first tx is approval
-	const [approval, deposit] = transactions
+  // first tx is approval
+  const [approval, deposit] = transactions
 
-	// {
-	//   type: "Approval",
-	//   transaction: [Transaction](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21)
-	//   description: "Approval for ..."
-	//   metadata: {
-	//     approvalAmount: ITokenAmount
+  // {
+  //   type: "Approval",
+  //   transaction: [Transaction]
+  //   description: "Approval for ..."
+  //   metadata: {
+  //     approvalAmount: ITokenAmount
   //     approvalSpender: IAddress
-	//   }
-	// }
-	// {
-	//   type: "Deposit",
-	//   transaction: [Transaction](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21)
+  //   }
+  // }
+  // {
+  //   type: "Deposit",
+  //   transaction: [Transaction]
   //   description: "Deposit Operations: ..."
-	//   metadata: {
-	//     fromAmount: ITokenAmount,
-	//     toAmount: ITokenAmount
-	//     priceImpact?: TransactionPriceImpact
-	//     slippage: IPercentage
-	//   }
-	// }
-}
-else if (transactions.length == 1) {
-	const [deposit] = transactions
+  //   metadata: {
+  //     fromAmount: ITokenAmount,
+  //     toAmount: ITokenAmount
+  //     priceImpact?: TransactionPriceImpact
+  //     slippage: IPercentage
+  //   }
+  // }
+} else if (transactions.length == 1) {
+  const [deposit] = transactions
 }
 
 // now you can sign and send the transactions using your preferred web3 client (ethers, wagmi, viem... etc.)
@@ -197,10 +194,9 @@ else if (transactions.length == 1) {
 const txInfo = transactions[0]
 const hash = this.walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(depositTx.transaction.value),
+  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
 })
-
 ```
 
 ### Create Withdraw Transaction
@@ -251,7 +247,7 @@ const transactions = await sdk.armada.users.getWithdrawTx({
 const txInfo = transactions[0]
 const hash = this.walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(depositTx.transaction.value),
+  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
 })
 ```
@@ -259,40 +255,32 @@ const hash = this.walletClient.sendTransaction({
 ### Retrieve Positions
 
 ```tsx
-import { makeSDK, ArmadaVaultId } from '@summer_fi/sdk-client';
-import {
-	ChainIds, User, Address
-} from "@summer_fi/sdk-common"
-
-import { sdk } from "./sdk"
-
 // create a user using chainId and wallet address
-const userEOAAddress = "0x........."
-const user = User.createFromEthereum(ChainIds.Base, userEOAAddress)
+const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
 // when you have deposited some assets to the vault
 
 // you can retrieve all user positions on a particular chain
-const positions: [IArmadaPosition](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21)[] = await sdk.armada.users.getUserPositions({
+const positions = await sdk.armada.users.getUserPositions({
   user,
 })
 
 // or only position in a particular vault
-const position: [IArmadaPosition](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.armada.users.getUserPosition({
+const position = await sdk.armada.users.getUserPosition({
   user,
-  fleetAddress: Address.createFromEthereum({ value: "0x........." })
+  fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
 ```
 
 ### Switch Vaults
 
 ```tsx
-const userAddress = "0x..."
-const user = User.createFromEthereum(ChainIds.Base, userAddress)
+// create a user using chainId and wallet address
+const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
-const usdc = await sdk.tokens.getTokenBySymbol({ symbol: "USDC", chainId: user.chainInfo.chainId })
+const usdc = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId: user.chainInfo.chainId })
 const switchAmount = TokenAmount.createFrom({
-  amount: "10",
+  amount: '10',
   token: usdc,
 })
 
@@ -317,30 +305,31 @@ const transactions = await sdk.armada.users.getVaultSwitchTx({
   slippage,
 })
 
-// you'll get up to 3 transactions to execute
-// first two are approvals, only if they are needed so they are optional
+// this transaction may require up to 3 transactions to execute
+// first two may be approvals, but only if they are needed (allowance check)
 // the last one will always be a switch tx
-typeof transactions =
-| [VaultSwitchTransactionInfo]
-| [ApproveTransactionInfo, VaultSwitchTransactionInfo]
-| [ApproveTransactionInfo, ApproveTransactionInfo, VaultSwitchTransactionInfo]
+if (transactions.length === 3) {
+  // handle all three transactions
+} else if (transactions.length === 2) {
+  // handle approval and switch transaction
+} else if (transactions.length === 1) {
+  // handle only switch transaction
+}
 ```
 
 ### Check rewards for Vault deposits
 
 Get rewards data for a user across all vaults on specified chains.
 
-#### Parameters
+**Parameters:**
 
 - **address**: The user's wallet address
 - **chainIds** (optional): Array of chain IDs to filter by (default: all supported chains)
 - **rewardsTokensAddresses** (optional): Array of specific reward token addresses to filter rewards
 
-#### Example
+**Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
-
 // Get rewards for all supported chains
 const rewards = await sdk.armada.users.getUserMerklRewards({
   address: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
@@ -355,7 +344,7 @@ const baseRewards = await sdk.armada.users.getUserMerklRewards({
 console.log('Rewards per chain on base:', baseRewards.perChain)
 ```
 
-#### Response
+**Response:**
 
 Returns an object with rewards organized by chain ID.
 
@@ -393,17 +382,15 @@ Returns an object with rewards organized by chain ID.
 
 Generate a transaction to claim accrued referral fees in some token for a user on a specific chain.
 
-#### Parameters
+**Parameters:**
 
 - **address**: The user's wallet address
 - **chainId**: The chain ID where rewards should be claimed
 - **rewardsTokensAddresses** : Array of specific reward token addresses to claim
 
-#### Example
+**Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
-
 // Get referral fees claim transaction for a user
 const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
   address: userAddress,
@@ -425,7 +412,7 @@ if (claimTransactions) {
 }
 ```
 
-#### Response
+**Response:**
 
 Returns an array with one claim transaction if rewards are available, or `undefined` if no rewards
 exist for the specified chain.
@@ -448,16 +435,14 @@ exist for the specified chain.
 
 Generate a transaction to claim all Merkl vaults rewards for a user on a specific chain.
 
-#### Parameters
+**Parameters:**
 
 - **address**: The user's wallet address
 - **chainId**: The chain ID where rewards should be claimed
 
-#### Example
+**Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
-
 // Get claim transaction for user rewards
 const claimTransactions = await sdk.armada.users.getUserMerklClaimTx({
   address: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
@@ -478,7 +463,7 @@ if (claimTransactions) {
 }
 ```
 
-#### Response
+**Response:**
 
 Returns an array with one claim transaction if rewards are available, or `undefined` if no rewards
 exist for the specified chain.
@@ -502,12 +487,12 @@ exist for the specified chain.
 Check if multicall contract (AQ) is authorized as a Merkl rewards operator for a user on a specific
 chain.
 
-#### Parameters
+**Parameters:**
 
 - **chainId**: The chain ID to check authorization on
 - **user**: The user's wallet address
 
-#### Example
+**Example:**
 
 ```typescript
 import { ChainIds } from '@summerfi/sdk-common'
@@ -521,7 +506,7 @@ const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperato
 console.log('Is authorized as operator:', isAuthorized)
 ```
 
-#### Response
+**Response:**
 
 Returns a boolean value indicating authorization status.
 
@@ -533,16 +518,14 @@ true
 
 Generate a transaction to authorize multicall contract (AQ) as a Merkl rewards operator for a user.
 
-#### Parameters
+**Parameters:**
 
 - **chainId**: The chain ID to perform the operation on
 - **user**: The user's wallet address
 
-#### Example
+**Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
-
 // Generate authorization transaction
 const authTransactions = await sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
   chainId: ChainIds.Base,
@@ -561,7 +544,7 @@ const result = await wallet.sendTransaction({
 })
 ```
 
-#### Response
+**Response:**
 
 Returns an array containing the authorization transaction.
 
@@ -583,15 +566,13 @@ Returns an array containing the authorization transaction.
 
 Get the total aggregated governance rewards a user is eligible to claim across all chains.
 
-#### Parameters
+**Parameters:**
 
 - **user**: The user object containing wallet and chain information
 
-#### Example
+**Example:**
 
 ```typescript
-import { User, ChainIds } from '@summerfi/sdk-common'
-
 // Create user object
 const user = User.createFromEthereum(ChainIds.Base, '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2')
 
@@ -605,7 +586,7 @@ console.log('Vault usage per chain:', rewards.vaultUsagePerChain)
 console.log('Vote delegation rewards:', rewards.voteDelegation)
 ```
 
-#### Response
+**Response:**
 
 Returns aggregated rewards breakdown across different reward sources.
 
@@ -631,15 +612,13 @@ Returns aggregated rewards breakdown across different reward sources.
 Get the total aggregated rewards a user is eligible to claim across all chains, including Merkl
 rewards.
 
-#### Parameters
+**Parameters:**
 
 - **user**: The user object containing wallet and chain information
 
-#### Example
+**Example:**
 
 ```typescript
-import { User, ChainIds } from '@summerfi/sdk-common'
-
 // Create user object
 const user = User.createFromEthereum(ChainIds.Base, '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2')
 
@@ -653,7 +632,7 @@ console.log('Vault usage per chain:', rewards.vaultUsagePerChain)
 console.log('Merkle distribution:', rewards.merkleDistribution)
 ```
 
-#### Response
+**Response:**
 
 Returns aggregated rewards breakdown including Merkl rewards across different sources.
 
