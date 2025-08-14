@@ -1,6 +1,6 @@
 # SDK API Reference
 
-**Latest version: v1.0.1**
+**Latest version: v1.1.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -406,6 +406,65 @@ const priceInfo: SpotPriceInfo = sdk.oracle.getSpotPrice({
 const price: IPrice = priceInfo.price
 ```
 
+## Merkl Rewards
+
+The Merkl Rewards flow enables users to claim their accrued rewards from the Merkl campaigns for
+using Lazy Vaults and accrued referral fees.
+
+### Get Referral Fees Merkl Claim Transaction
+
+Get a transaction to claim accrued referral fees from the Merkl campaign for a specific user on a
+given chain.
+
+#### Parameters
+
+- **address**: The user's wallet address
+- **chainId**: The chain ID where rewards should be claimed
+- **rewardsTokensAddresses** : Array of specific reward token addresses to claim
+
+#### Example
+
+```typescript
+import { ChainId } from '@summerfi/sdk-common'
+
+// Get referral fees claim transaction for a user
+const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+  address: userAddress,
+  chainId: ChainId.ETHEREUM,
+  rewardsTokensAddresses: [usdcTokenAddress],
+})
+
+if (claimTransactions) {
+  // Execute the claim transaction
+  const tx = claimTransactions[0]
+  console.log('Claim transaction:', tx.transaction)
+
+  // Send transaction using your wallet
+  const result = await wallet.sendTransaction({
+    to: tx.transaction.target,
+    data: tx.transaction.calldata,
+    value: tx.transaction.value,
+  })
+}
+```
+
+#### Response
+
+Returns `MerklClaimTransactionInfo[]` if rewards are available, or `undefined` if no rewards exist
+for the specified chain.
+
+```typescript
+interface MerklClaimTransactionInfo {
+  type: 'MerklClaim'
+  description: string
+  transaction: {
+    target: string
+    calldata: string
+    value: string
+  }
+}
+```
+
 # SDK Client Interfaces Definition
 
 ## ISDKManager
@@ -779,6 +838,13 @@ enum FiatCurrency {
 ```
 
 # Changelog
+
+### v1.1.0
+
+Features:
+
+- Added new Merkl Rewards flow - **getReferralFeesMerklClaimTx** - enables users to claim accrued
+  referral fee rewards from the Merkl protocol
 
 ### v1.0.1
 
