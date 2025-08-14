@@ -123,30 +123,23 @@ console.log(
 
 ```tsx
 import {
-	ArmadaVaultId, ChainIds, getChainInfoByChainId, Wallet, Address, User
+	ArmadaVaultId, ChainIds, getChainInfoByChainId, User
 } from "@summer_fi/sdk-common"
 
 import { sdk } from "./sdk"
 
-// create chainInfo for the Base chain
-const chainInfo: [IChainInfo](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = getChainInfoByChainId(ChainIds.Base)
-
-// create a user wallet using EOA address
-const address: [IAddress](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = Address.createFromEthereum({ value: "0x........." })
-const user: [IUser](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = User.createFrom({
-  chainInfo,
-  wallet: Wallet.createFrom({ address })
-})
+// create a user using chainId and wallet address
+const user: [IUser](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = User.createFromEthereum(ChainIds.Base, "0x.........")
 
 // create a vaultId object for a selected fleet using it's deployment address
 const vaultId: [IArmadaVaultId](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = ArmadaVaultId.createFrom({
-  chainInfo,
+  chainInfo: user.chainInfo,
   fleetAddress: Address.createFromEthereum({ value: "0x........." })
 })
 
 // you can get token entity using chain namespace to get particular token entity
 // you can query by symbol or by address on a particular chain from our curated list
-const chain: [IChain](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.chains.getChain({ chainInfo })
+const chain: [IChain](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await sdk.chains.getChain({ chainInfo: user.chainInfo })
 const token: [IToken](https://www.notion.so/SDK-API-Reference-v1-0-1-1c98cbaf47f88066b3b4d2ab5008c884?pvs=21) = await chain.tokens.getTokenBySymbol({ symbol: "ETH" })
 
 // create a token amount to deposit
@@ -213,36 +206,22 @@ const hash = this.walletClient.sendTransaction({
 ### Create Withdraw Transaction
 
 ```tsx
-import {
-  ArmadaVaultId,
-  ChainIds,
-  getChainInfoByChainId,
-  Wallet,
-  Address,
-  User,
-} from '@summer_fi/sdk-common'
+import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
 
 import { sdk } from './sdk'
 
-// create chainInfo for the Base chain
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-
-// create a user wallet using EOA address
-const address = Address.createFromEthereum({ value: '0x.........' })
-const user = User.createFrom({
-  chainInfo,
-  wallet: Wallet.createFrom({ address }),
-})
+// create a user using chainId and wallet address
+const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
 // create a vaultId object for a selected fleet using it's deployment address
 const vaultId = ArmadaVaultId.createFrom({
-  chainInfo,
+  chainInfo: user.chainInfo,
   fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
 
 // you can get token entity using chain namespace to get particular token entity
 // you can query by symbol or by address on a particular chain from our curated list
-const chain = await sdk.chains.getChain({ chainInfo })
+const chain = await sdk.chains.getChain({ chainInfo: user.chainInfo })
 const token = await chain.tokens.getTokenBySymbol({ symbol: 'USDC' })
 
 // create a token amount to deposit
@@ -283,20 +262,14 @@ const hash = this.walletClient.sendTransaction({
 ```tsx
 import { makeSDK, ArmadaVaultId } from '@summer_fi/sdk-client';
 import {
-	ChainIds, getChainInfoByChainId, Wallet, Address, User
+	ChainIds, User, Address
 } from "@summer_fi/sdk-common"
 
 import { sdk } from "./sdk"
 
-// create chainInfo for the Base chain
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-
-// create a user wallet using EOA address
+// create a user using chainId and wallet address
 const userEOAAddress = "0x........."
-const user = User.createFrom({
-  chainInfo,
-  wallet: Wallet.createFrom({ address })
-})
+const user = User.createFromEthereum(ChainIds.Base, userEOAAddress)
 
 // when you have deposited some assets to the vault
 
@@ -316,29 +289,21 @@ const position: [IArmadaPosition](https://www.notion.so/SDK-API-Reference-v1-0-1
 
 ```tsx
 const userAddress = "0x..."
-const chainId = ChainIds.Base
-const chainInfo = getChainInfoByChainId(chainId)
+const user = User.createFromEthereum(ChainIds.Base, userAddress)
 
-const chain = await sdk.chains.getChain({ chainInfo })
+const chain = await sdk.chains.getChain({ chainInfo: user.chainInfo })
 const usdc = await chain.tokens.getTokenBySymbol({ symbol: "USDC" })
 const switchAmount = TokenAmount.createFrom({
   amount: "10",
   token: usdc,
 })
 
-const user = User.createFrom({
-  wallet: Wallet.createFrom({
-    address: userAddress,
-  }),
-  chainInfo,
-})
-
 const sourceVaultId = ArmadaVaultId.createFrom({
-  chainInfo,
+  chainInfo: user.chainInfo,
   fleetAddress: sourceFleetAddress,
 })
 const destinationVaultId = ArmadaVaultId.createFrom({
-  chainInfo,
+  chainInfo: user.chainInfo,
   fleetAddress: destinationFleetAddress,
 })
 
@@ -627,15 +592,10 @@ Get the total aggregated governance rewards a user is eligible to claim across a
 #### Example
 
 ```typescript
-import { User, Wallet, Address, getChainInfoByChainId, ChainIds } from '@summerfi/sdk-common'
+import { User, ChainIds } from '@summerfi/sdk-common'
 
 // Create user object
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-const address = Address.createFromEthereum({ value: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2' })
-const user = User.createFrom({
-  chainInfo,
-  wallet: Wallet.createFrom({ address }),
-})
+const user = User.createFromEthereum(ChainIds.Base, '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2')
 
 // Get aggregated rewards for the user
 const rewards = await sdk.armada.users.getAggregatedRewards({
@@ -680,15 +640,10 @@ rewards.
 #### Example
 
 ```typescript
-import { User, Wallet, Address, getChainInfoByChainId, ChainIds } from '@summerfi/sdk-common'
+import { User, ChainIds } from '@summerfi/sdk-common'
 
 // Create user object
-const chainInfo = getChainInfoByChainId(ChainIds.Base)
-const address = Address.createFromEthereum({ value: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2' })
-const user = User.createFrom({
-  chainInfo,
-  wallet: Wallet.createFrom({ address }),
-})
+const user = User.createFromEthereum(ChainIds.Base, '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2')
 
 // Get aggregated rewards including Merkl for the user
 const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
@@ -955,6 +910,7 @@ IUser = {
   chainInfo: IChainInfo
 
   createFrom({ wallet: IWallet, chainInfo: IChainInfo }): IUser
+  createFromEthereum(chainId: number, addressValue: string): IUser
 }
 ```
 
@@ -1177,4 +1133,4 @@ Docs:
 
 ### v0.3.1
 
-**First public release**
+First public release
