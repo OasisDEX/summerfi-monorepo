@@ -409,7 +409,62 @@ const price: IPrice = priceInfo.price
 ## Merkl Rewards
 
 The Merkl Rewards flow enables users to claim their accrued rewards from the Merkl campaigns for
-using Lazy Vaults and accrued referral fees.
+both using Lazy Vaults but also using referral programs.
+
+### Get User Merkl Rewards
+
+Get all Merkl rewards for a user across specified chains.
+
+#### Parameters
+
+- **address**: The user's wallet address
+- **chainIds** (optional): Array of chain IDs to filter by (default: all supported chains)
+- **rewardsTokensAddresses** (optional): Array of specific reward token addresses to filter rewards
+
+#### Example
+
+```typescript
+import { ChainIds } from '@summerfi/sdk-common'
+
+// Get rewards for all supported chains
+const rewards = await sdk.armada.users.getUserMerklRewards({
+  address: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+})
+console.log('Rewards per chain:', rewards.perChain)
+
+// Get rewards for specific chain (like Base in this example)
+const baseRewards = await sdk.armada.users.getUserMerklRewards({
+  address: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+  chainIds: [ChainIds.Base],
+})
+console.log('Rewards per chain on base:', baseRewards.perChain)
+```
+
+#### Response
+
+Returns an object with rewards organized by chain ID.
+
+```typescript
+interface MerklReward {
+  token: {
+    chainId: number
+    address: string
+    symbol: string
+    decimals: number
+    price: number
+  }
+  root: string
+  recipient: string
+  amount: string
+  claimed: string
+  pending: string
+  proofs: string[]
+}
+
+type Response = {
+  perChain: Partial<Record<ChainId, MerklReward[]>>
+}
+```
 
 ### Get Referral Fees Merkl Claim Transaction
 
@@ -456,6 +511,132 @@ for the specified chain.
 ```typescript
 interface MerklClaimTransactionInfo {
   type: 'MerklClaim'
+  description: string
+  transaction: {
+    target: string
+    calldata: string
+    value: string
+  }
+}
+```
+
+### Get User Merkl Claim Transaction
+
+Generate a transaction to claim all Merkl rewards for a user on a specific chain.
+
+#### Parameters
+
+- **address**: The user's wallet address
+- **chainId**: The chain ID where rewards should be claimed
+
+#### Example
+
+```typescript
+import { ChainIds } from '@summerfi/sdk-common'
+
+// Get claim transaction for user rewards
+const claimTransactions = await sdk.armada.users.getUserMerklClaimTx({
+  address: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+  chainId: ChainIds.Base,
+})
+
+if (claimTransactions) {
+  // Execute the claim transaction
+  const tx = claimTransactions[0]
+  console.log('Claim transaction:', tx.transaction)
+
+  // Send transaction using your wallet
+  const result = await wallet.sendTransaction({
+    to: tx.transaction.target,
+    data: tx.transaction.calldata,
+    value: tx.transaction.value,
+  })
+}
+```
+
+#### Response
+
+Returns `MerklClaimTransactionInfo[]` if rewards are available, or `undefined` if no rewards exist
+for the specified chain.
+
+```typescript
+interface MerklClaimTransactionInfo {
+  type: 'MerklClaim'
+  description: string
+  transaction: {
+    target: string
+    calldata: string
+    value: string
+  }
+}
+```
+
+### Check Merkl Rewards Operator Authorization
+
+Check if AdmiralsQuarters is authorized as a Merkl rewards operator for a user on a specific chain.
+
+#### Parameters
+
+- **chainId**: The chain ID to check authorization on
+- **user**: The user's wallet address
+
+#### Example
+
+```typescript
+import { ChainIds } from '@summerfi/sdk-common'
+
+// Check if user has authorized AdmiralsQuarters as operator
+const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+  chainId: ChainIds.Base,
+  user: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+})
+
+console.log('Is authorized as operator:', isAuthorized)
+```
+
+#### Response
+
+Returns `boolean` - `true` if AdmiralsQuarters is authorized as operator, `false` otherwise.
+
+### Authorize as Merkl Rewards Operator Transaction
+
+Generate a transaction to authorize AdmiralsQuarters as a Merkl rewards operator for a user.
+
+#### Parameters
+
+- **chainId**: The chain ID to perform the operation on
+- **user**: The user's wallet address
+
+#### Example
+
+```typescript
+import { ChainIds } from '@summerfi/sdk-common'
+
+// Generate authorization transaction
+const authTransactions = await sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
+  chainId: ChainIds.Base,
+  user: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+})
+
+// Execute the authorization transaction
+const tx = authTransactions[0]
+console.log('Authorization transaction:', tx.transaction)
+
+// Send transaction using your wallet
+const result = await wallet.sendTransaction({
+  to: tx.transaction.target,
+  data: tx.transaction.calldata,
+  value: tx.transaction.value,
+})
+```
+
+#### Response
+
+Returns `ToggleAQasMerklRewardsOperatorTransactionInfo[]` containing the authorization transaction.
+
+```typescript
+interface ToggleAQasMerklRewardsOperatorTransactionInfo {
+  type: 'ToggleAQasMerklRewardsOperator'
   description: string
   transaction: {
     target: string
@@ -843,8 +1024,15 @@ enum FiatCurrency {
 
 Features:
 
-- Added new Merkl Rewards flow - **getReferralFeesMerklClaimTx** - enables users to claim accrued
-  referral fee rewards from the Merkl protocol
+- Added new Merkl Rewards flow with comprehensive methods:
+  - **getUserMerklRewards** - retrieves Merkl rewards for a user across specified chains
+  - **getUserMerklClaimTx** - generates transaction to claim all Merkl rewards for a user
+  - **getReferralFeesMerklClaimTx** - generates transaction to claim referral fee rewards from Merkl
+    campaigns
+  - **getIsAuthorizedAsMerklRewardsOperator** - checks if AdmiralsQuarters is authorized as Merkl
+    rewards operator
+  - **getAuthorizeAsMerklRewardsOperatorTx** - generates transaction to authorize AdmiralsQuarters
+    as Merkl rewards operator
 
 ### v1.0.1
 
