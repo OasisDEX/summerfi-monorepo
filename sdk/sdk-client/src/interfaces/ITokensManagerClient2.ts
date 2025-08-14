@@ -1,5 +1,4 @@
-import type { Token, ChainId } from '@summerfi/sdk-common'
-import type { AddressValue } from 'node_modules/@summerfi/sdk-common/dist'
+import type { Token, ChainId, AddressValue } from '@summerfi/sdk-common'
 
 /**
  * @name ITokensManagerClient

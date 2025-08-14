@@ -3,6 +3,7 @@ import type { IChainsManagerClient } from './IChainsManager'
 import type { IOracleManagerClient } from './IOracleManagerClient'
 import type { IPortfolioManager } from './IPortfolioManager'
 import type { ISwapManagerClient } from './ISwapManagerClient'
+import type { ITokensManagerClient2 } from './ITokensManagerClient2'
 import type { IUsersManager } from './IUsersManager'
 import type { ISimulationManager } from './simulations/ISimulationManager'
 
@@ -16,6 +17,8 @@ export interface ISDKManager {
   readonly simulator: ISimulationManager
   /** Chains Manager for interacting with the different chains supported in the SDK */
   readonly chains: IChainsManagerClient
+  /** Tokens Manager for interacting with the different tokens supported in the SDK */
+  readonly tokens: ITokensManagerClient2
   /** Users Manager for retrieving information about a user */
   readonly users: IUsersManager
   /** Portfolio Manager for retrieving information about a user's portfolio */
