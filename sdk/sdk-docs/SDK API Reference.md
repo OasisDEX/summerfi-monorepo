@@ -169,7 +169,7 @@ const transactions = await sdk.armada.users.getNewDepositTx({
   referralCode: "XXXXX" // optional
 })
 
-if (transactions == 2) {
+if (transactions.length == 2) {
 	// first tx is approval
 	const [approval, deposit] = transactions
 
@@ -439,12 +439,12 @@ Generate a transaction to claim accrued referral fees in some token for a user o
 #### Example
 
 ```typescript
-import { ChainId } from '@summerfi/sdk-common'
+import { ChainIds } from '@summerfi/sdk-common'
 
 // Get referral fees claim transaction for a user
 const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
   address: userAddress,
-  chainId: ChainId.Base,
+  chainId: ChainIds.Base,
   rewardsTokensAddresses: [usdcTokenAddress],
 })
 
@@ -768,12 +768,11 @@ interface ISDKManager {
 
 ### IChainsManagerClient
 
-```tsx
-interface IChainsManager {
+````tsx
+interface IChainsManagerClient {
   getChain({ chainInfo: IChainInfo }): Promise<IChain>
   getChainById({ chainId: ChainId }): Promise<IChain>
 }
-```
 
 ### IChain
 
@@ -784,14 +783,14 @@ interface IChain {
   chainId: ChainId
   name: string
 }
-```
+````
 
-### ITokensManagerClient
+### ITokensManagerClient2
 
 ```tsx
-interface ITokensManager {
-  getTokenBySymbol({ symbol: string }): Promise<IToken>
-  getTokenByAddress({ address: string }): Promise<IToken>
+interface ITokensManagerClient2 {
+  getTokenBySymbol({ symbol: string, chainId: ChainId }): Promise<IToken>
+  getTokenByAddress({ address: string, chainId: ChainId }): Promise<IToken>
 }
 ```
 
@@ -824,12 +823,12 @@ IArmadaPosition = {
   deposits: {
     amount: ITokenAmount;
     timestamp: number;
-	}[]
+  }[]
   @deprecated
   withdrawals: {
     amount: ITokenAmount;
     timestamp: number;
-	}[]
+  }[]
 }
 ```
 
@@ -852,7 +851,7 @@ IArmadaVault = {
 ### IArmadaVaultId
 
 ```tsx
-IArmadaVault = {
+IArmadaVaultId = {
   chainInfo: IChainInfo
   fleetAddress: IAddress
 }
