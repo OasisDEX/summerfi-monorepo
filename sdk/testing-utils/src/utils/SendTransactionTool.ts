@@ -1,4 +1,4 @@
-import { IChainInfo, type TransactionInfo } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, type ChainId, type TransactionInfo } from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
 
@@ -6,7 +6,7 @@ export type SendTransactionTool = ReturnType<typeof createSendTransactionTool>
 export type SendTransactionToolStatus = 'success' | 'reverted'
 
 export const createSendTransactionTool = (params: {
-  chainInfo: IChainInfo
+  chainId: ChainId
   rpcUrl: string
   signerPrivateKey: string
   onlySimulation?: boolean
@@ -25,7 +25,7 @@ export const createSendTransactionTool = (params: {
   const transactionUtils = new TransactionUtils({
     rpcUrl: rpcUrl,
     walletPrivateKey: signerPrivateKey,
-    chainInfo: params.chainInfo,
+    chainInfo: getChainInfoByChainId(params.chainId),
     useFork: useFork ? true : false,
   })
 

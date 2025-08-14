@@ -53,7 +53,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     tenderlyVnet = await tenderly.createVnet({ chainInfo, atBlock })
     rpcUrl = tenderlyVnet.getRpc()
     governorSendTxTool = createSendTransactionTool({
-      chainInfo,
+      chainId: chainInfo.chainId,
       rpcUrl,
       signerPrivateKey,
     })
