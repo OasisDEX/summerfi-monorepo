@@ -5,9 +5,9 @@
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
 
-# Main Flows
+## Main Flows
 
-## SDK creation
+### SDK creation
 
 ```tsx
 // create a local file ./sdk.ts to reuse a single sdk instance
@@ -19,7 +19,7 @@ export const sdk = makeSDK({
 })
 ```
 
-## Retrieve Vault List with extra info
+### Retrieve Vault List with extra info
 
 ```tsx
 const chainId = ChainIds.Base
@@ -68,7 +68,7 @@ console.log(
 }, ...]
 ```
 
-## Retrieve Specific Vault with extra info
+### Retrieve Specific Vault with extra info
 
 ```tsx
 // you can get vaultId from getVaultInfoList() => vaultInfoList[0].id
@@ -119,7 +119,7 @@ console.log(
 }
 ```
 
-## Create Deposit Transaction
+### Create Deposit Transaction
 
 ```tsx
 import {
@@ -210,7 +210,7 @@ const hash = this.walletClient.sendTransaction({
 
 ```
 
-## Create Withdraw Transaction
+### Create Withdraw Transaction
 
 ```tsx
 import {
@@ -278,7 +278,7 @@ const hash = this.walletClient.sendTransaction({
 })
 ```
 
-## Retrieve Positions
+### Retrieve Positions
 
 ```tsx
 import { makeSDK, ArmadaVaultId } from '@summer_fi/sdk-client';
@@ -312,7 +312,7 @@ const position: [IArmadaPosition](https://www.notion.so/SDK-API-Reference-v1-0-1
 })
 ```
 
-## Switch Vaults
+### Switch Vaults
 
 ```tsx
 const userAddress = "0x..."
@@ -444,32 +444,39 @@ console.log('Rewards per chain on base:', baseRewards.perChain)
 
 Returns an object with rewards organized by chain ID.
 
-```typescript
-interface MerklReward {
-  token: {
-    chainId: number
-    address: string
-    symbol: string
-    decimals: number
-    price: number
+```json
+{
+  "perChain": {
+    "8453": [
+      {
+        "token": {
+          "chainId": 8453,
+          "address": "0xA0b86a33E6D9FDB91b23DC0a4dD9A7B0D2d15a76",
+          "symbol": "USDC",
+          "decimals": 6,
+          "price": 1.0
+        },
+        "root": "0x1234567890abcdef...",
+        "recipient": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+        "amount": "1000000",
+        "claimed": "0",
+        "pending": "1000000",
+        "proofs": [
+          "0xabcdef1234567890...",
+          "0x9876543210fedcba..."
+        ]
+      }
+    ],
+    "1": [
+      ...
+    ]
   }
-  root: string
-  recipient: string
-  amount: string
-  claimed: string
-  pending: string
-  proofs: string[]
-}
-
-type Response = {
-  perChain: Partial<Record<ChainId, MerklReward[]>>
 }
 ```
 
 ### Get Referral Fees Merkl Claim Transaction
 
-Get a transaction to claim accrued referral fees from the Merkl campaign for a specific user on a
-given chain.
+Generate a transaction to claim accrued referral fees in some token for a user on a specific chain.
 
 #### Parameters
 
@@ -485,7 +492,7 @@ import { ChainId } from '@summerfi/sdk-common'
 // Get referral fees claim transaction for a user
 const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
   address: userAddress,
-  chainId: ChainId.ETHEREUM,
+  chainId: ChainId.Base,
   rewardsTokensAddresses: [usdcTokenAddress],
 })
 
@@ -505,19 +512,21 @@ if (claimTransactions) {
 
 #### Response
 
-Returns `MerklClaimTransactionInfo[]` if rewards are available, or `undefined` if no rewards exist
-for the specified chain.
+Returns an array with one claim transaction if rewards are available, or `undefined` if no rewards
+exist for the specified chain.
 
-```typescript
-interface MerklClaimTransactionInfo {
-  type: 'MerklClaim'
-  description: string
-  transaction: {
-    target: string
-    calldata: string
-    value: string
+```json
+[
+  {
+    "type": "MerklClaim",
+    "description": "Claiming Merkl rewards for 1 token(s) on Base",
+    "transaction": {
+      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
+      "calldata": "0x2f49ae08000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba2000000000000000000000000a0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a760000000000000000000000000000000000000000000000000000000000000001",
+      "value": "0"
+    }
   }
-}
+]
 ```
 
 ### Get User Merkl Claim Transaction
@@ -556,19 +565,21 @@ if (claimTransactions) {
 
 #### Response
 
-Returns `MerklClaimTransactionInfo[]` if rewards are available, or `undefined` if no rewards exist
-for the specified chain.
+Returns an array with one claim transaction if rewards are available, or `undefined` if no rewards
+exist for the specified chain.
 
-```typescript
-interface MerklClaimTransactionInfo {
-  type: 'MerklClaim'
-  description: string
-  transaction: {
-    target: string
-    calldata: string
-    value: string
+```json
+[
+  {
+    "type": "MerklClaim",
+    "description": "Claiming Merkl rewards for 2 token(s) on Base",
+    "transaction": {
+      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
+      "calldata": "0x2f49ae08000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba2000000000000000000000000a0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a760000000000000000000000000000000000000000000000000000000000000002",
+      "value": "0"
+    }
   }
-}
+]
 ```
 
 ### Check Merkl Rewards Operator Authorization
@@ -596,7 +607,11 @@ console.log('Is authorized as operator:', isAuthorized)
 
 #### Response
 
-Returns `boolean` - `true` if AdmiralsQuarters is authorized as operator, `false` otherwise.
+Returns a boolean value indicating authorization status.
+
+```json
+true
+```
 
 ### Authorize as Merkl Rewards Operator Transaction
 
@@ -632,18 +647,20 @@ const result = await wallet.sendTransaction({
 
 #### Response
 
-Returns `ToggleAQasMerklRewardsOperatorTransactionInfo[]` containing the authorization transaction.
+Returns an array containing the authorization transaction.
 
-```typescript
-interface ToggleAQasMerklRewardsOperatorTransactionInfo {
-  type: 'ToggleAQasMerklRewardsOperator'
-  description: string
-  transaction: {
-    target: string
-    calldata: string
-    value: string
+```json
+[
+  {
+    "type": "ToggleAQasMerklRewardsOperator",
+    "description": "Authorize AdmiralsQuarters as Merkl rewards operator",
+    "transaction": {
+      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
+      "calldata": "0xa9059cbb000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba20000000000000000000000000000000000000000000000000000000000000001",
+      "value": "0"
+    }
   }
-}
+]
 ```
 
 # SDK Client Interfaces Definition
