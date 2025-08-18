@@ -11,8 +11,6 @@ export default async function InstitutionTabLayout({
   const [{ institutionId }] = await Promise.all([params])
   const [institutionVaults] = await Promise.all([getInstitutionVaults({ institutionId })])
 
-  console.log('institutionVaults', institutionVaults)
-
   if (!institutionId || !institutionVaults?.vaults) {
     // Handle institution not found
     return <div>Institution not found.</div>
