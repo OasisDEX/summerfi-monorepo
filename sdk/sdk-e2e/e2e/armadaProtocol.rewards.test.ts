@@ -1,10 +1,5 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import {
-  ChainIds,
-  getChainInfoByChainId,
-  type AddressValue,
-  type ChainId,
-} from '@summerfi/sdk-common'
+import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
 import assert from 'node:assert'
@@ -173,7 +168,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe.only(`getReferralFeesMerklClaimTx`, () => {
+      describe(`getReferralFeesMerklClaimTx`, () => {
         it(`should generate referral claim transaction with specific token addresses`, async () => {
           const usdcToken = await sdk.tokens.getTokenBySymbol({
             symbol: 'USDC',

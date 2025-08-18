@@ -675,12 +675,12 @@ const denomination = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId
 // or in Fiat USD
 const denomination = FiatCurrency.USD
 
-const priceInfo: SpotPriceInfo = sdk.oracle.getSpotPrice({
+const priceInfo = await sdk.oracle.getSpotPrice({
   baseToken,
   denomination,
 })
 
-const price: IPrice = priceInfo.price
+const price = priceInfo.price
 ```
 
 ## SDK Client Interfaces Definition
@@ -726,7 +726,7 @@ interface ITokensManagerClient2 {
 ### IOracleManagerClient
 
 ```tsx
-interface IOracleManager {
+interface IOracleManagerClient {
   getSpotPrice({ baseToken: IToken; denomination?: Denomination }): Promise<ISpotPriceInfo>
 }
 ```
