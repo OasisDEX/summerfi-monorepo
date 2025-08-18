@@ -1,4 +1,4 @@
-import { type SupportedNetworkIds } from '@summerfi/app-types'
+import { type SupportedNetworkIds, type UiTransactionStatuses } from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
@@ -13,12 +13,6 @@ export enum ClaimDelegateSteps {
   DELEGATE = 'delegate',
   STAKE = 'stake',
   COMPLETED = 'completed',
-}
-
-export enum ClaimDelegateTxStatuses {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
 }
 
 export enum ClaimDelegateStakeType {
@@ -41,11 +35,11 @@ export type MerklIsAuthorizedPerChain = {
 export type ClaimDelegateState = {
   step: ClaimDelegateSteps
   delegatee: string | undefined
-  claimStatus: ClaimDelegateTxStatuses | undefined
-  merklStatus: ClaimDelegateTxStatuses | undefined
-  delegateStatus: ClaimDelegateTxStatuses | undefined
-  stakingStatus: ClaimDelegateTxStatuses | undefined
-  stakingApproveStatus: ClaimDelegateTxStatuses | undefined
+  claimStatus: UiTransactionStatuses | undefined
+  merklStatus: UiTransactionStatuses | undefined
+  delegateStatus: UiTransactionStatuses | undefined
+  stakingStatus: UiTransactionStatuses | undefined
+  stakingApproveStatus: UiTransactionStatuses | undefined
   stakeType: ClaimDelegateStakeType
   stakeChangeAmount: string | undefined
   walletAddress: string
@@ -67,23 +61,23 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'update-merkl-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-claim-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-delegate-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-staking-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-staking-approve-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-stake-type'

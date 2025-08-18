@@ -197,6 +197,7 @@ export {
   SupportedNetworkIds,
   SupportedSDKNetworks,
   UserActivityType,
+  UiTransactionStatuses,
 } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'
 export type { DeviceInfo } from './src/device-type'

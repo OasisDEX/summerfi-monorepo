@@ -1,16 +1,16 @@
-import { ClaimDelegateTxStatuses } from '@/features/claim-and-delegate/types'
+import { UiTransactionStatuses } from '@summerfi/app-types'
 
 export const getDelegateOptInMerklButtonLabel = ({
   merklStatus,
 }: {
-  merklStatus?: ClaimDelegateTxStatuses
+  merklStatus?: UiTransactionStatuses
 }) => {
   switch (merklStatus) {
-    case ClaimDelegateTxStatuses.FAILED:
+    case UiTransactionStatuses.FAILED:
       return 'Try again'
-    case ClaimDelegateTxStatuses.PENDING:
+    case UiTransactionStatuses.PENDING:
       return 'Approving...'
-    case ClaimDelegateTxStatuses.COMPLETED:
+    case UiTransactionStatuses.COMPLETED:
       return 'Approved'
     default:
       return 'Approve'

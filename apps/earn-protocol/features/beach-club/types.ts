@@ -1,3 +1,7 @@
+import { type UiTransactionStatuses } from '@summerfi/app-types'
+
+import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
+
 export type BeachClubReferralList = {
   address: string
   tvl: string
@@ -34,3 +38,29 @@ export type BeachClubRecruitedUsersPagination = {
     itemsPerPage: number
   }
 }
+
+export type BeachClubState = {
+  claimStatus: UiTransactionStatuses | undefined
+  merklStatus: UiTransactionStatuses | undefined
+  walletAddress: string
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
+  feesClaimed: boolean
+}
+
+export type BeachClubReducerAction =
+  | {
+      type: 'update-merkl-status'
+      payload: UiTransactionStatuses | undefined
+    }
+  | {
+      type: 'update-claim-status'
+      payload: UiTransactionStatuses | undefined
+    }
+  | {
+      type: 'update-merkl-is-authorized-per-chain'
+      payload: MerklIsAuthorizedPerChain
+    }
+  | {
+      type: 'update-fees-claimed'
+      payload: boolean
+    }

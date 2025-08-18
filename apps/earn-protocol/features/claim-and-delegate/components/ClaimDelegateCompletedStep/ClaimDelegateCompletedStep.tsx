@@ -11,7 +11,7 @@ import {
   useLocalConfig,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds } from '@summerfi/app-types'
+import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -26,7 +26,6 @@ import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-fa
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateState,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
@@ -189,7 +188,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const sumrClaimedStepBefore =
-    state.claimStatus === ClaimDelegateTxStatuses.COMPLETED
+    state.claimStatus === UiTransactionStatuses.COMPLETED
       ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
       : 0
@@ -226,7 +225,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
     <div className={classNames.claimDelegateStakeDelegateCompletedSubstepWrapper}>
       <div className={classNames.mainContent}>
         <ClaimedCard
-          hasClaimed={state.claimStatus === ClaimDelegateTxStatuses.COMPLETED}
+          hasClaimed={state.claimStatus === UiTransactionStatuses.COMPLETED}
           externalData={externalData}
           chainId={chain.id}
           estimatedSumrPrice={estimatedSumrPrice}
