@@ -53,6 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Self-rescheduling refresher: refresh -> fetchMe -> schedule next run
   const refreshAndReschedule = async () => {
+    console.log('refreshAndReschedule')
+
     const ok = await refresh()
 
     if (!ok) {
@@ -72,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         clearRefreshTimer()
         if (delayMs === 0) {
-          void refreshAndReschedule()
+          await refreshAndReschedule()
         } else {
           refreshTimeout.current = setTimeout(() => {
             void refreshAndReschedule()

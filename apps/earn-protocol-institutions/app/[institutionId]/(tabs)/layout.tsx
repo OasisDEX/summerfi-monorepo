@@ -1,7 +1,7 @@
-import { getInstitutionData } from '@/app/server-handlers/institution-data'
+import { getInstitutionVaults } from '@/app/server-handlers/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
 
-export default async function InstitutionTabFeesRevenueLayout({
+export default async function InstitutionTabLayout({
   children,
   params,
 }: {
@@ -9,14 +9,18 @@ export default async function InstitutionTabFeesRevenueLayout({
   params: Promise<{ institutionId: string }>
 }) {
   const [{ institutionId }] = await Promise.all([params])
-  const [institution] = await Promise.all([getInstitutionData(institutionId)])
+  const [institutionVaults] = await Promise.all([getInstitutionVaults({ institutionId })])
+
+  console.log('institutionVaults', institutionVaults)
+
+  if (!institutionId || !institutionVaults?.vaults) {
+    // Handle institution not found
+    return <div>Institution not found.</div>
+  }
 
   return (
     <>
-      <InstitutionTabBar
-        institutionId={institutionId}
-        defaultVaultId={institution.vaultsData[0].id}
-      />
+      <InstitutionTabBar institutionId={institutionId} defaultVault={institutionVaults.vaults[0]} />
       <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
     </>
   )

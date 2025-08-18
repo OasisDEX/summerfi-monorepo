@@ -1,6 +1,7 @@
 'use client'
 
 import { PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
@@ -55,10 +56,10 @@ const panelItems = [
 ]
 
 export const VaultsPanelNavigationWrapper = ({
-  selectedVaultId,
+  selectedVault,
   institutionId,
 }: {
-  selectedVaultId: string
+  selectedVault: SDKVaultishType
   institutionId: string
 }) => {
   const { deviceType } = useDeviceType()
@@ -78,7 +79,7 @@ export const VaultsPanelNavigationWrapper = ({
           push(
             getInstitutionVaultUrl({
               institutionId,
-              vaultId: selectedVaultId,
+              vault: selectedVault,
               page: item.id,
             }),
           )

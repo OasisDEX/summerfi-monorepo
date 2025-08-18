@@ -30,17 +30,25 @@ export async function POST(request: NextRequest) {
     }
 
     const secretHash = generateSecretHash(email)
+
+    console.time('AuthService.signIn')
     const result = await AuthService.signIn({ email, password }, secretHash)
+
+    console.timeEnd('AuthService.signIn')
 
     if ('challenge' in result) {
       return NextResponse.json({ challenge: result.challenge, session: result.session, email })
     }
+
+    console.time('getEnrichedUser')
 
     const enriched = await getEnrichedUser({
       sub: result.id,
       email: result.email,
       name: result.name ?? result.email,
     })
+
+    console.timeEnd('getEnrichedUser')
 
     const cookieStore = await cookies()
 
@@ -58,10 +66,17 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 7,
     })
 
+    console.time('createSession')
+
     await createSession(enriched, result.id)
+
+    console.timeEnd('createSession')
 
     return NextResponse.json({ user: enriched } as SignInResponse)
   } catch (error) {
-    return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Authentication failed', details: (error as Error).message },
+      { status: 401 },
+    )
   }
 }

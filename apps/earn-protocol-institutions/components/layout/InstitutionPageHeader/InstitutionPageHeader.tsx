@@ -34,9 +34,9 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const roleResolved = connectedRole ? rolesToHuman(connectedRole) : 'No role connected'
-  const vaultsOptions: DropdownRawOption[] = institutionsList.map((institution) => ({
-    value: institution.id,
-    content: <DropdownContent>{institution.institutionName}</DropdownContent>,
+  const institutionsOptions: DropdownRawOption[] = institutionsList.map((institution) => ({
+    value: institution.name,
+    content: <DropdownContent>{institution.displayName}</DropdownContent>,
   }))
 
   const handleChangeInstitution = (option: DropdownRawOption) => {
@@ -47,12 +47,12 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
     <div className={styles.institutionPageHeaderWrapper}>
       <div className={styles.leftWrapper}>
         <Icon iconName="earn_institution" size={54} />
-        {vaultsOptions.length > 1 ? (
+        {institutionsOptions.length > 1 ? (
           <Dropdown
-            options={vaultsOptions}
+            options={institutionsOptions}
             dropdownValue={{
-              value: selectedInstitution.id,
-              content: <DropdownContent>{selectedInstitution.institutionName}</DropdownContent>,
+              value: selectedInstitution.name,
+              content: <DropdownContent>{selectedInstitution.displayName}</DropdownContent>,
             }}
             onChange={handleChangeInstitution}
             dropdownWrapperStyle={{
@@ -61,12 +61,12 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
             }}
           >
             <Text as="h2" variant="h2">
-              {selectedInstitution.institutionName}
+              {selectedInstitution.displayName}
             </Text>
           </Dropdown>
         ) : (
           <Text as="h2" variant="h2">
-            {selectedInstitution.institutionName}
+            {selectedInstitution.displayName}
           </Text>
         )}
       </div>

@@ -9,13 +9,17 @@ export const getInstitutionData = async (institutionName: string) => {
   })
 
   try {
-    const institutionData = await db
+    const institution = await db
       .selectFrom('institutions')
       .select(['id', 'name', 'displayName'])
       .where('name', '=', institutionName)
       .executeTakeFirst()
 
-    return institutionData
+    if (!institution) return null
+
+    return {
+      institution,
+    }
   } finally {
     db.destroy()
   }
