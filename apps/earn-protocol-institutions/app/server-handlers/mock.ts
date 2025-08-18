@@ -27,6 +27,27 @@ const dummyRoles: {
   },
 }
 
+const dummyThirdPartyCosts = [
+  {
+    type: 'Summer.fi Fee',
+    fee: 0.001,
+    address: '0x1234567890123456789012345678901234567890' as Address,
+  },
+  {
+    type: '3rd Party Risk Manager',
+    fee: 0.001,
+    address: '0x1234567890123456789012345678901234567890' as Address,
+  },
+]
+
+const dummyFeeRevenueHistory = [
+  { monthYear: 'January 2025', income: 100, expense: 123, revenue: 100 },
+  { monthYear: 'February 2025', income: 100, expense: 123, revenue: 100 },
+  { monthYear: 'March 2025', income: 100, expense: 123, revenue: 100 },
+]
+
+const dummyFeeRevenue = [{ name: 'Vult AUM Fee', aumFee: 0.001 }]
+
 export const institutionsMockList: InstitutionData[] = [
   {
     id: 'acme-crypto-corp',
@@ -45,6 +66,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.005,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'acme-usdc-vault-2',
@@ -55,6 +79,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1725689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
@@ -75,6 +102,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'nova-usdt-vault-2',
@@ -85,6 +115,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
@@ -105,6 +138,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.003,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'zenith-dai-2',
@@ -115,6 +151,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.003,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
@@ -135,6 +174,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.007,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'quantum-eth-2',
@@ -145,6 +187,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.007,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
@@ -165,6 +210,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.006,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'orbit-frax-2',
@@ -175,6 +223,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
@@ -195,6 +246,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
       {
         id: 'aether-frax-2',
@@ -205,6 +259,9 @@ export const institutionsMockList: InstitutionData[] = [
         fee: 0.004,
         inception: 1735689600000,
         roles: dummyRoles,
+        thirdPartyCosts: dummyThirdPartyCosts,
+        feeRevenueHistory: dummyFeeRevenueHistory,
+        feeRevenue: dummyFeeRevenue,
       },
     ],
   },
