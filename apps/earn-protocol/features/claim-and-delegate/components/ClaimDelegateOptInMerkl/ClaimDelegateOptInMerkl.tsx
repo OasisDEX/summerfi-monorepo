@@ -1,32 +1,27 @@
 import { type FC } from 'react'
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
+import { UiTransactionStatuses } from '@summerfi/app-types'
 import Link from 'next/link'
-
-import {
-  type ClaimDelegateState,
-  ClaimDelegateTxStatuses,
-} from '@/features/claim-and-delegate/types'
 
 import { getDelegateOptInMerklButtonLabel } from './helpers'
 
 import classNames from './ClaimDelegateOptInMerkl.module.css'
 
 interface ClaimDelegateOptInMerklProps {
-  state: ClaimDelegateState
   onAccept: () => void
   onReject: () => void
+  merklStatus?: UiTransactionStatuses
 }
 
 export const ClaimDelegateOptInMerkl: FC<ClaimDelegateOptInMerklProps> = ({
-  state,
   onAccept,
   onReject,
+  merklStatus,
 }) => {
-  const buttonLabel = getDelegateOptInMerklButtonLabel({ merklStatus: state.merklStatus })
+  const buttonLabel = getDelegateOptInMerklButtonLabel({ merklStatus })
 
   const isDisabled =
-    state.merklStatus === ClaimDelegateTxStatuses.PENDING ||
-    state.merklStatus === ClaimDelegateTxStatuses.COMPLETED
+    merklStatus === UiTransactionStatuses.PENDING || merklStatus === UiTransactionStatuses.COMPLETED
 
   return (
     <Card variant="cardSecondary" className={classNames.claimDelegateOptInMerklWrapper}>

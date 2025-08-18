@@ -19,7 +19,7 @@ import {
   useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds } from '@summerfi/app-types'
+import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -43,7 +43,6 @@ import {
   ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
@@ -170,7 +169,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs } = useStakeSumrTransaction({
     onStakeSuccess: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
       toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
@@ -178,18 +177,18 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     onApproveSuccess: () => {
       dispatch({
         type: 'update-staking-approve-status',
-        payload: ClaimDelegateTxStatuses.COMPLETED,
+        payload: UiTransactionStatuses.COMPLETED,
       })
 
       toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
     },
     onStakeError: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.FAILED })
 
       toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
     },
     onApproveError: () => {
-      dispatch({ type: 'update-staking-approve-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'update-staking-approve-status', payload: UiTransactionStatuses.FAILED })
 
       toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
     },
@@ -198,13 +197,13 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const { unstakeSumrTransaction } = useUnstakeSumrTransaction({
     amount: formatDecimalToBigInt(amountRawUnstake),
     onSuccess: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.COMPLETED })
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
       toast.success('Unstaked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
     },
     onError: () => {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.FAILED })
 
       toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
     },
@@ -236,13 +235,10 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       return
     }
 
-    if (
-      approveSumrTransaction &&
-      state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
-    ) {
+    if (approveSumrTransaction && state.stakingApproveStatus !== UiTransactionStatuses.COMPLETED) {
       dispatch({
         type: 'update-staking-approve-status',
-        payload: ClaimDelegateTxStatuses.PENDING,
+        payload: UiTransactionStatuses.PENDING,
       })
 
       dispatch({
@@ -259,7 +255,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     }
 
     if (stakeSumrTransaction) {
-      dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
+      dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.PENDING })
 
       await stakeSumrTransaction()
         .catch((err) => {
@@ -281,7 +277,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
       return
     }
 
-    dispatch({ type: 'update-staking-status', payload: ClaimDelegateTxStatuses.PENDING })
+    dispatch({ type: 'update-staking-status', payload: UiTransactionStatuses.PENDING })
 
     dispatch({
       type: 'update-stake-change-amount',
@@ -321,16 +317,16 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const stakedAmountUSD = formatFiatBalance(stakedAmountRaw * estimatedSumrPrice)
 
   const isLoading =
-    state.stakingStatus === ClaimDelegateTxStatuses.PENDING ||
-    state.stakingApproveStatus === ClaimDelegateTxStatuses.PENDING ||
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING
+    state.stakingStatus === UiTransactionStatuses.PENDING ||
+    state.stakingApproveStatus === UiTransactionStatuses.PENDING ||
+    state.delegateStatus === UiTransactionStatuses.PENDING
 
   const { stakedAmount } = externalData.sumrStakeDelegate
 
   const withApproval = !!approveSumrTransaction
 
   const hasNoDelegatee =
-    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED
+    state.delegateStatus === UiTransactionStatuses.COMPLETED
       ? state.delegatee === ADDRESS_ZERO
       : externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO
 
@@ -534,7 +530,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
                 dispatch({ type: 'update-stake-type', payload: _tab.id as ClaimDelegateStakeType })
                 if (
                   [state.stakingApproveStatus, state.stakingStatus].includes(
-                    ClaimDelegateTxStatuses.FAILED,
+                    UiTransactionStatuses.FAILED,
                   )
                 ) {
                   dispatch({ type: 'update-staking-status', payload: undefined })

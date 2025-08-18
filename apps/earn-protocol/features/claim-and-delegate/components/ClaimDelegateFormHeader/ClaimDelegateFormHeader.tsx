@@ -1,12 +1,9 @@
 import { type FC } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
+import { UiTransactionStatuses } from '@summerfi/app-types'
 import clsx from 'clsx'
 
-import {
-  type ClaimDelegateState,
-  ClaimDelegateSteps,
-  ClaimDelegateTxStatuses,
-} from '@/features/claim-and-delegate/types'
+import { type ClaimDelegateState, ClaimDelegateSteps } from '@/features/claim-and-delegate/types'
 
 import classNames from './ClaimDelegateFormHeader.module.css'
 
@@ -48,7 +45,7 @@ const getIsCompleted = ({
 }) =>
   idx < steps.findIndex((item) => item.value === state.step) ||
   (state.step === ClaimDelegateSteps.DELEGATE &&
-    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED)
+    state.delegateStatus === UiTransactionStatuses.COMPLETED)
 
 interface ClaimDelegateFormHeaderProps {
   state: ClaimDelegateState

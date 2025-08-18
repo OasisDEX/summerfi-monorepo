@@ -76,6 +76,12 @@ export type EarnTransactionViewStates =
   | 'txError'
   | 'txSuccess'
 
+export enum UiTransactionStatuses {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+}
+
 export type EarnAllowanceTypes = 'deposit' | 'custom'
 
 export enum UserActivityType {

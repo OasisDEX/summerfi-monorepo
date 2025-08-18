@@ -1,9 +1,11 @@
-import { type FC, useMemo } from 'react'
+import { type Dispatch, type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubBoatChallenge } from '@/features/beach-club/components/BeachClubBoatChallenge/BeachClubBoatChallenge'
 import { BeachClubTvlChallenge } from '@/features/beach-club/components/BeachClubTvlChallenge/BeachClubTvlChallenge'
+import { type BeachClubReducerAction, type BeachClubState } from '@/features/beach-club/types'
+import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
 
 import classNames from './BeachClubRewards.module.css'
 
@@ -15,15 +17,31 @@ enum ReferAndEarnTab {
 interface BeachClubRewardsProps {
   beachClubData: BeachClubData
   walletAddress: string
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
+  state: BeachClubState
+  dispatch: Dispatch<BeachClubReducerAction>
 }
 
-export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData, walletAddress }) => {
+export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
+  beachClubData,
+  walletAddress,
+  merklIsAuthorizedPerChain,
+  state,
+  dispatch,
+}) => {
   const tabsOptions = useMemo(
     () => [
       {
         label: 'TVL Challenges',
         id: ReferAndEarnTab.TVL_CHALLENGES,
-        content: <BeachClubTvlChallenge beachClubData={beachClubData} />,
+        content: (
+          <BeachClubTvlChallenge
+            beachClubData={beachClubData}
+            merklIsAuthorizedPerChain={merklIsAuthorizedPerChain}
+            state={state}
+            dispatch={dispatch}
+          />
+        ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
       {
@@ -35,7 +53,7 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({ beachClubData, wal
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
-    [beachClubData, walletAddress],
+    [beachClubData, walletAddress, merklIsAuthorizedPerChain, state, dispatch],
   )
 
   return (

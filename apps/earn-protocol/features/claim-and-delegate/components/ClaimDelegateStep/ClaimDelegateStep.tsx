@@ -16,7 +16,11 @@ import {
   useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  SupportedNetworkIds,
+  UiTransactionStatuses,
+} from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -38,7 +42,6 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
@@ -174,7 +177,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
     onSuccess: () => {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.COMPLETED })
 
       toast.success('Delegate has been updated', SUCCESS_TOAST_CONFIG)
 
@@ -188,7 +191,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
     },
     onError: () => {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.FAILED })
 
       toast.error('Failed to update delegate', ERROR_TOAST_CONFIG)
     },
@@ -227,7 +230,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       }
     }
 
-    dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
+    dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.PENDING })
 
     await sumrDelegateTransaction(updateDelegatee)
       .catch((err) => {
@@ -242,19 +245,17 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const mappedSumrDelegatesData = mergeDelegatesData(delegates)
 
   const isChangeDelegateLoading =
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
-    action === ClaimDelegateAction.CHANGE
+    state.delegateStatus === UiTransactionStatuses.PENDING && action === ClaimDelegateAction.CHANGE
 
   const isRemoveDelegateLoading =
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
-    action === ClaimDelegateAction.REMOVE
+    state.delegateStatus === UiTransactionStatuses.PENDING && action === ClaimDelegateAction.REMOVE
 
   // self delegating is available on for EOA only
   // since we use tally that doesn't support SCA
   const isEoa = user?.type === AccountKitAccountType.EOA
 
   const sumrDelegatedTo =
-    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && state.delegatee
+    state.delegateStatus === UiTransactionStatuses.COMPLETED && state.delegatee
       ? state.delegatee.toLowerCase()
       : externalData.sumrStakeDelegate.delegatedTo.toLowerCase()
 

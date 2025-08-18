@@ -1,7 +1,6 @@
-import {
-  type ClaimDelegateState,
-  ClaimDelegateTxStatuses,
-} from '@/features/claim-and-delegate/types'
+import { UiTransactionStatuses } from '@summerfi/app-types'
+
+import { type ClaimDelegateState } from '@/features/claim-and-delegate/types'
 
 import { ClaimDelegateAction } from './types'
 
@@ -22,11 +21,11 @@ export const getChangeDelegateButtonLabel = ({
     return 'Delegate'
   }
 
-  if (state.delegateStatus === ClaimDelegateTxStatuses.PENDING) {
+  if (state.delegateStatus === UiTransactionStatuses.PENDING) {
     return 'Delegating'
   }
 
-  if (state.delegateStatus === ClaimDelegateTxStatuses.FAILED) {
+  if (state.delegateStatus === UiTransactionStatuses.FAILED) {
     return 'Retry'
   }
 
@@ -50,11 +49,11 @@ export const getRemoveDelegateButtonLabel = ({
     return 'Remove delegation'
   }
 
-  if (state.delegateStatus === ClaimDelegateTxStatuses.PENDING) {
+  if (state.delegateStatus === UiTransactionStatuses.PENDING) {
     return 'Removing'
   }
 
-  if (state.delegateStatus === ClaimDelegateTxStatuses.FAILED) {
+  if (state.delegateStatus === UiTransactionStatuses.FAILED) {
     return 'Retry'
   }
 
