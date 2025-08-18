@@ -16,6 +16,7 @@ interface ClaimDelegateNetworkCardProps {
   isChangingNetwork?: boolean
   isChangingNetworkTo?: SupportedNetworkIds
   isOnlyStep?: boolean
+  isOwner?: boolean
 }
 
 export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
@@ -29,6 +30,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   isChangingNetwork,
   isChangingNetworkTo,
   isOnlyStep,
+  isOwner,
 }) => {
   const isReadyToBridge =
     claimableAmount === 0 && balance > 0 && chainId !== SupportedNetworkIds.Base
@@ -58,6 +60,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
       isChangingNetwork={isChangingNetworkTo === chainId && isChangingNetwork}
       canClaim={canClaim}
       isOnlyStep={isOnlyStep}
+      isOwner={isOwner}
     />
   )
 }

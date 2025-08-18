@@ -143,4 +143,13 @@ export interface IArmadaManagerVaults {
       }[]
     }
   }>
+
+  getMerklRewardsData(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
+    byFleetAddress: {
+      [fleetAddress: string]: {
+        token: IToken
+        dailyEmission: string
+      }[]
+    }
+  }>
 }

@@ -1,7 +1,9 @@
+import { Kysely, sql } from 'kysely'
 import { ReferralClient } from './client'
 import { DatabaseService } from './db'
 import { Account, HourlySnapshot, AssetVolatility, PositionUpdate, ReferralCodeType } from './types'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { DB } from '@summerfi/summer-beach-club-db'
 
 export interface ProcessingResult {
   success: boolean
@@ -222,7 +224,7 @@ export class ReferralProcessor {
   }
 
   async processNewUsersInTransaction(
-    trx: any,
+    trx: Kysely<DB>,
     periodStart: Date,
     periodEnd: Date,
   ): Promise<ProcessingResult> {
@@ -250,19 +252,20 @@ export class ReferralProcessor {
           )
         }
 
-        await trx
-          .insertInto('users')
-          .values({
-            id: account.id,
-            referrer_id: validatedReferrerId,
-            referral_chain: validatedReferrerId ? account.referralChain : null,
-            referral_timestamp: validatedReferrerId
-              ? new Date(Number(account.referralTimestamp) * 1000)
-              : null,
-            is_active: false,
-          })
-          .onConflict((oc: any) => oc.doNothing())
-          .execute()
+        const referralTimestampDate =
+          validatedReferrerId && account.referralTimestamp
+            ? new Date(Number(account.referralTimestamp) * 1000)
+            : null
+        const referralChain =
+          validatedReferrerId && account.referralChain ? account.referralChain : null
+
+        // Insert new user or conditionally update referral fields if the user was created AFTER the referral happened
+        await this.db.upsertUser(trx, {
+          id: account.id,
+          referrerId: validatedReferrerId,
+          referralChain: referralChain,
+          referralTimestamp: referralTimestampDate,
+        })
       }
     }
 

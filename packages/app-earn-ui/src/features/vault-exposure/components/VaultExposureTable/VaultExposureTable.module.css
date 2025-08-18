@@ -1,0 +1,7 @@
+.tableWrapper {
+  overflow-x: auto;
+
+  .table {
+    min-width: max-content;
+  }
+}

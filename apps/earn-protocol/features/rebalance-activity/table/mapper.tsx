@@ -1,5 +1,6 @@
 import {
   getDisplayToken,
+  getProtocolLabel,
   getScannerUrl,
   getVaultPositionUrl,
   Icon,
@@ -18,8 +19,6 @@ import {
 import { type RebalanceActivity } from '@summerfi/summer-protocol-db'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
-
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 const actionTypeMap: {
   [key: RebalanceActivity['actionType']]: { label: string; icon: IconNamesList }

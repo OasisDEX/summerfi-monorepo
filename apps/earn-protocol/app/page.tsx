@@ -1,4 +1,9 @@
-import { getVaultsProtocolsList } from '@summerfi/app-earn-ui'
+import {
+  getVaultsProtocolsList,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+} from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   formatCryptoBalance,
   parseServerResponseToClient,
@@ -7,18 +12,22 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
-  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const [{ vaults }, configRaw] = await Promise.all([
+    getVaultsList(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+  ])
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,

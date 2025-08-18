@@ -1,11 +1,15 @@
-import { type Dispatch, type FC, useCallback, useEffect } from 'react'
+import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
+  MobileDrawer,
+  Modal,
   SDKChainIdToAAChainMap,
   SUMR_CAP,
   useClientChainId,
   useLocalConfig,
+  useMobileCheck,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
@@ -17,7 +21,10 @@ import {
 import { redirect, useParams, useSearchParams } from 'next/navigation'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
+import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -68,9 +75,14 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   dispatch,
   externalData: initialExternalData,
 }) => {
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+  const [isOptInOpen, setIsOptInOpen] = useState(false)
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
@@ -89,12 +101,39 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
+  const { userWalletAddress } = useUserWallet()
+  const isOwner = state.walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
+
+  const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
 
   const handleClaimError = useCallback(() => {
     dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
     dispatch({ type: 'set-pending-claim', payload: undefined })
     toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
   }, [dispatch])
+
+  const { merklOptInTransaction } = useMerklOptInTransaction({
+    onSuccess: () => {
+      setTimeout(() => {
+        dispatch({ type: 'update-merkl-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+        dispatch({
+          type: 'update-merkl-is-authorized-per-chain',
+          payload: {
+            ...state.merklIsAuthorizedPerChain,
+            [clientChainId]: true,
+          },
+        })
+        toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
+        handleOptInOpenClose()
+      }, delayPerNetwork[clientChainId])
+    },
+    onError: () => {
+      dispatch({ type: 'update-merkl-status', payload: ClaimDelegateTxStatuses.FAILED })
+      toast.error('Merkl approval failed', ERROR_TOAST_CONFIG)
+    },
+    network: chainIdToSDKNetwork(clientChainId),
+    publicClient,
+  })
 
   const { claimSumrTransaction } = useClaimSumrTransaction({
     onSuccess: () => {
@@ -117,7 +156,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
         // Update wallet balances - add claimed amount to the existing balance
         const claimedAmount =
-          initialExternalData.sumrToClaim.claimableAggregatedRewards.perChain[clientChainId] || 0
+          initialExternalData.sumrToClaim.aggregatedRewards.perChain[clientChainId] || 0
 
         dispatch({
           type: 'update-wallet-balances',
@@ -214,7 +253,12 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
       return
     }
-    handleClaim()
+    handleClaim().catch((err) => {
+      dispatch({ type: 'update-claim-status', payload: ClaimDelegateTxStatuses.FAILED })
+      toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
+      // eslint-disable-next-line no-console
+      console.error('Error claiming $SUMR:', err)
+    })
   }
 
   const satelliteClaimItems = claimItems.filter((item) => item.chainId !== SupportedNetworkIds.Base)
@@ -258,6 +302,26 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     )
   }
 
+  // chainId for now will always be Base as we support Merkl on base only
+  const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
+    if (Number(clientChainId) !== Number(chainId)) {
+      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+
+      return
+    }
+    dispatch({ type: 'update-merkl-status', payload: ClaimDelegateTxStatuses.PENDING })
+    merklOptInTransaction().catch((err) => {
+      dispatch({ type: 'update-merkl-status', payload: ClaimDelegateTxStatuses.FAILED })
+      toast.error('Failed to approve Merkl', ERROR_TOAST_CONFIG)
+      // eslint-disable-next-line no-console
+      console.error('Error approving Merkl', err)
+    })
+  }
+
+  const handleOptInReject = () => {
+    handleOptInOpenClose()
+  }
+
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
       {/* Base network card */}
@@ -267,7 +331,15 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         balance={state.walletBalances.base || 0}
         estimatedSumrPrice={estimatedSumrPrice}
         walletAddress={resolvedWalletAddress}
-        onClaim={() => handleClaimClick(SupportedNetworkIds.Base)}
+        onClaim={() => {
+          if (!isOptInOpen && !merklIsAuthorizedOnBase) {
+            handleOptInOpenClose()
+
+            return
+          }
+
+          handleClaimClick(SupportedNetworkIds.Base)
+        }}
         isLoading={
           state.claimStatus === ClaimDelegateTxStatuses.PENDING &&
           (state.pendingClaimChainId === SupportedNetworkIds.Base ||
@@ -276,6 +348,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         isChangingNetwork={isSettingChain && state.pendingClaimChainId === SupportedNetworkIds.Base}
         isChangingNetworkTo={state.pendingClaimChainId}
         isOnlyStep
+        isOwner={isOwner}
       />
 
       {/* Satellite network cards */}
@@ -299,11 +372,29 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             }
             isChangingNetwork={isSettingChain && state.pendingClaimChainId === item.chainId}
             isChangingNetworkTo={state.pendingClaimChainId}
+            isOwner={isOwner}
           />
         )
       })}
 
       <ClaimDelegateFooter canContinue={canContinue} onContinue={handleAccept} />
+      {isMobile ? (
+        <MobileDrawer isOpen={isOptInOpen} onClose={handleOptInOpenClose} height="auto">
+          <ClaimDelegateOptInMerkl
+            onAccept={() => handleMerklOptInAccept(SupportedNetworkIds.Base)}
+            onReject={handleOptInReject}
+            state={state}
+          />
+        </MobileDrawer>
+      ) : (
+        <Modal openModal={isOptInOpen} closeModal={handleOptInOpenClose}>
+          <ClaimDelegateOptInMerkl
+            onAccept={() => handleMerklOptInAccept(SupportedNetworkIds.Base)}
+            onReject={handleOptInReject}
+            state={state}
+          />
+        </Modal>
+      )}
     </div>
   )
 }

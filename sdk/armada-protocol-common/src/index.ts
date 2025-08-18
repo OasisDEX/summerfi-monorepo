@@ -61,7 +61,12 @@ export {
   getLayerZeroConfig,
   getDeploymentsJsonConfig,
 } from './deployments/index'
+export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
 export type {
-  IArmadaManagerMerklRewards,
   MerklReward,
-} from './common/interfaces/IArmadaManagerMerklRewards'
+  MerklRewardsBreakdown,
+  MerklRewardsRecord,
+  MerklOpportunitiesResponse,
+  MerklOpportunityResponse,
+  MerklRewardsToken,
+} from './common/types/MerklTypes'

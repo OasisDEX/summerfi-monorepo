@@ -1,4 +1,5 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
@@ -9,8 +10,6 @@ import { redirect } from 'next/navigation'
 
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -26,16 +25,20 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
 
   const cacheConfig = {
     revalidate: REVALIDATION_TIMES.MIGRATION_DATA,
-    tags: [REVALIDATION_TAGS.MIGRATION_DATA, walletAddress.toLowerCase()],
+    tags: [REVALIDATION_TAGS.MIGRATION_DATA],
   }
+
+  const keyParts = [walletAddress]
 
   const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([
     getVaultsList(),
-    systemConfigHandler(),
-    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+    unstableCache(getMigratablePositions, keyParts, cacheConfig)({ walletAddress }),
   ])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
 
+  const systemConfig = parseServerResponseToClient(configRaw)
   const migrationsEnabled = !!systemConfig.features?.Migrations
 
   if (!migrationsEnabled) {
@@ -49,7 +52,11 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
     systemConfig,
   })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
+  const vaultsApyByNetworkMap = await unstableCache(
+    getVaultsApy,
+    keyParts,
+    cacheConfig,
+  )({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

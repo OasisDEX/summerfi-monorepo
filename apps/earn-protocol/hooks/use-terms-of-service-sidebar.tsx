@@ -33,6 +33,15 @@ const getPrimaryButtonLabel = (tosState: TOSState) => {
   }
 }
 
+/**
+ * Custom hook to manage the Terms of Service sidebar logic.
+ * Handles device type checks, risk verification, and triggers TOS actions based on state.
+ *
+ * @param {Object} params - The parameters object.
+ * @param {TOSState} params.tosState - The current Terms of Service state.
+ * @param {() => void} params.handleGoBack - Callback to handle the "go back" action.
+ * @returns {SidebarProps} Sidebar properties for rendering the TOS sidebar.
+ */
 export const useTermsOfServiceSidebar = ({
   tosState,
   handleGoBack,

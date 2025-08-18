@@ -1,15 +1,19 @@
 import { type FC } from 'react'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import {
+  configEarnAppFetcher,
+  getArksInterestRates,
+  getVaultsApy,
+  getVaultsHistoricalApy,
+} from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
-import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -22,8 +26,14 @@ interface YieldTrendPageProps {
 
 export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPromise }) => {
   const { vaultIdWithNetwork } = await paramsPromise
-  const [{ vaults }, configRaw] = await Promise.all([getVaultsList(), systemConfigHandler()])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const [{ vaults }, configRaw] = await Promise.all([
+    getVaultsList(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+  ])
+
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
@@ -47,7 +57,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
   const parsedNetwork = supportedSDKNetwork(selectedVault.protocol.network)
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyByNetworkMap] = await Promise.all([
-    getInterestRates({
+    getArksInterestRates({
       network: parsedNetwork,
       arksList: selectedVault.arks,
     }),

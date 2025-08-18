@@ -3,12 +3,12 @@ import { type FC } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
 
 import { VaultDetailsYieldsHeader } from './VaultDetailsYieldsHeader'
@@ -17,7 +17,7 @@ interface VaultDetailsYieldsProps {
   arksHistoricalChartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
 }
 

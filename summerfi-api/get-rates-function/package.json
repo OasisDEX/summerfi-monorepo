@@ -15,6 +15,8 @@
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.12.1",
     "@middy/core": "^6.0.0",
+    "@summerfi/abstractions": "workspace:*",
+    "@summerfi/redis-cache": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
     "graphql": "^16.7.1",

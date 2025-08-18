@@ -1,7 +1,7 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
-import { type SupportedSDKNetworks } from '@summerfi/app-types'
+import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { type PublicClient } from 'viem'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -56,12 +56,15 @@ export const useClaimSumrTransaction = ({
     onSuccess,
     onError,
   })
+  const chainId = publicClient?.chain?.id
+
+  const includeMerkl = chainId === SupportedNetworkIds.Base
 
   const claimSumrTransaction = async () => {
     const user = getCurrentUser()
     const chainInfo = getChainInfo()
 
-    const tx = await getAggregatedClaimsForChainTx({ user, chainInfo })
+    const tx = await getAggregatedClaimsForChainTx({ user, chainInfo, includeMerkl })
 
     if (tx === undefined) {
       throw new Error('aggregated claims tx is undefined')

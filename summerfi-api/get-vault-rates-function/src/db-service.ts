@@ -5,27 +5,15 @@ import {
   PgSummerProtocolDbConfig,
 } from '@summerfi/summer-protocol-db'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { HistoricalFleetRateResult, FleetRate } from '@summerfi/app-types'
 
 const logger = new Logger({ serviceName: 'vault-rates-db-service' })
-
-export interface AggregatedFleetRate {
-  id: string
-  averageRate: string
-  date: string
-  fleetAddress: string
-}
 
 export interface FleetWithChainId {
   chainId: string
   fleetAddress: string
 }
 
-export interface FleetRate {
-  id: string
-  rate: string
-  timestamp: number
-  fleetAddress: string
-}
 export interface FleetRateResult {
   chainId: string
   fleetAddress: string
@@ -35,19 +23,6 @@ export interface FleetRateResult {
     sma30d: string | null
   }
   rates: FleetRate[]
-}
-
-export interface HistoricalFleetRates {
-  dailyRates: AggregatedFleetRate[]
-  hourlyRates: AggregatedFleetRate[]
-  weeklyRates: AggregatedFleetRate[]
-  latestRate: FleetRate[]
-}
-
-export interface HistoricalFleetRateResult {
-  chainId: string
-  fleetAddress: string
-  rates: HistoricalFleetRates
 }
 
 export class VaultRatesService {

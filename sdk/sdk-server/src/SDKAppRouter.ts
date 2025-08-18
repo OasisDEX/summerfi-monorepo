@@ -43,6 +43,7 @@ import { getFleetBalance } from './armada-protocol-handlers/users/getFleetBalanc
 import { getStakedBalance } from './armada-protocol-handlers/users/getStakedBalance'
 import { getTotalBalance } from './armada-protocol-handlers/users/getTotalBalance'
 import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggregatedRewards'
+import { getAggregatedRewardsIncludingMerkl } from './armada-protocol-handlers/users/getAggregatedRewardsIncludingMerkl'
 import { getAggregatedClaimsForChainTx } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
 import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
 import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
@@ -67,8 +68,9 @@ import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitc
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
-import { authorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/authorizeAsMerklRewardsOperatorTx'
-import { isAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/isAuthorizedAsMerklRewardsOperator'
+import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
+import { getAuthorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/getAuthorizeAsMerklRewardsOperatorTx'
+import { getIsAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/getIsAuthorizedAsMerklRewardsOperator'
 import { hasGeneralRole } from './armada-protocol-handlers/access-control/hasGeneralRole'
 import { hasContractSpecificRole } from './armada-protocol-handlers/access-control/hasContractSpecificRole'
 import { grantGeneralRole } from './armada-protocol-handlers/access-control/grantGeneralRole'
@@ -130,6 +132,7 @@ export const sdkAppRouter = router({
       getTotalBalance: getTotalBalance,
       getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
+      getAggregatedRewardsIncludingMerkl: getAggregatedRewardsIncludingMerkl,
       getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
@@ -149,8 +152,9 @@ export const sdkAppRouter = router({
       getVaultSwitchTx: getVaultSwitchTx,
       getUserMerklRewards: getUserMerklRewards,
       getUserMerklClaimTx: getUserMerklClaimTx,
-      authorizeAsMerklRewardsOperatorTx: authorizeAsMerklRewardsOperatorTx,
-      isAuthorizedAsMerklRewardsOperator: isAuthorizedAsMerklRewardsOperator,
+      getReferralFeesMerklClaimTx: getReferralFeesMerklClaimTx,
+      getAuthorizeAsMerklRewardsOperatorTx: getAuthorizeAsMerklRewardsOperatorTx,
+      getIsAuthorizedAsMerklRewardsOperator: getIsAuthorizedAsMerklRewardsOperator,
     },
     keepers: {
       rebalance: rebalance,

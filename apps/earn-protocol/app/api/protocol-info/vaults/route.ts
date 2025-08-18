@@ -1,8 +1,8 @@
+import { getVaultsApy } from '@summerfi/app-server-handlers'
 import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { NextResponse } from 'next/server'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 
 /**
  * This is for external vendors to get the list of vaults with their APY.

@@ -8,6 +8,24 @@ export type InstitutionVaultRoles = {
   }
 }
 
+export type InstitutionVaultThirdPartyCost = {
+  type: string
+  fee: number
+  address: Address
+}
+
+export type InstitutionVaultFeeRevenueHistoryItem = {
+  monthYear: string
+  income: number
+  expense: number
+  revenue: number
+}
+
+export type InstitutionVaultFeeRevenueItem = {
+  name: string
+  aumFee: number
+}
+
 export type InstitutionData = {
   id: number
   displayName: string

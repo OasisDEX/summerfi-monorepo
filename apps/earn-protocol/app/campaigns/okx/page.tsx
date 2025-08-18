@@ -5,16 +5,19 @@ import {
   EnhancedRiskManagementCampaign,
   FaqSection,
   ProtocolStats,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
   SectionTabs,
   SupportedNetworksList,
   Text,
 } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 import Image from 'next/image'
 
 import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 import chainSecurityLogo from '@/public/img/campaigns/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/campaigns/auditor-logos/prototech-labs.svg'
@@ -113,11 +116,16 @@ const quests = [
 ]
 
 export default async function OkxCampaignPage() {
-  const [{ vaults }, systemConfig] = await Promise.all([getVaultsList(), systemConfigHandler()])
+  const [{ vaults }, configRaw] = await Promise.all([
+    getVaultsList(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+  ])
 
-  const { config } = parseServerResponseToClient(systemConfig)
+  const systemConfig = parseServerResponseToClient(configRaw)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig: config })
+  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   return (
     <div className={campaignPageStyles.wrapper}>

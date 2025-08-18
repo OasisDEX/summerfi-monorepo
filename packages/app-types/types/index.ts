@@ -184,6 +184,12 @@ export type {
   SupportedDefillamaTvlProtocols,
   ProAppStats,
   TotalRebalanceItemsPerStrategyId,
+  InterestRates,
+  GetInterestRatesQuery,
+  GetInterestRatesDocument,
+  AggregatedFleetRate,
+  HistoricalFleetRates,
+  HistoricalFleetRateResult,
 } from './src/earn-protocol'
 export {
   supportedDefillamaProtocols,

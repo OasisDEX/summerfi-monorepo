@@ -29,11 +29,11 @@ export class User implements IUser {
     return new User(params)
   }
 
-  public static createFromEthereum(chainId: number, address: AddressValue): User {
+  public static createFromEthereum(chainId: number, addressValue: AddressValue): User {
     return new User({
       chainInfo: getChainInfoByChainId(chainId),
       wallet: Wallet.createFrom({
-        address: Address.createFromEthereum({ value: address }),
+        address: Address.createFromEthereum({ value: addressValue }),
       }),
     })
   }

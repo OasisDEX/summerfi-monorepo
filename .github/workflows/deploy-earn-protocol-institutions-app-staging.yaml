@@ -26,6 +26,7 @@ jobs:
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
+              - 'packages/app-server-handlers/**'
               - '.github/workflows/deploy-earn-protocol-institutions-app-staging.yaml'
               - 'sdk/sdk-client/**'
               - 'sdk/sdk-client-react/**'

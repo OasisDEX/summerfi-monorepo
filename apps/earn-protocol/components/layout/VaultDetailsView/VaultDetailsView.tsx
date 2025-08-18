@@ -3,12 +3,12 @@
 import { type FC } from 'react'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
 } from '@summerfi/app-types'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { VaultDetailsFaq } from '@/features/vault-details/components/VaultDetailsFaq/VaultDetailsFaq'
 import { VaultDetailsHowItWorks } from '@/features/vault-details/components/VaultDetailsHowItWorks/VaultDetailsHowItWorks'
 import { VaultDetailsSecurity } from '@/features/vault-details/components/VaultDetailsSecurity/VaultDetailsSecurity'
@@ -19,7 +19,7 @@ interface VaultDetailsViewProps {
   summerVaultName: string
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   totalRebalanceActions: number
   totalUsers: number
   vaultApyData: VaultApyData

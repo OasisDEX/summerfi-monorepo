@@ -3,8 +3,16 @@ import {
   getDisplayToken,
   getPositionValues,
   parseForecastDatapoints,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
   Text,
 } from '@summerfi/app-earn-ui'
+import {
+  configEarnAppFetcher,
+  getArksInterestRates,
+  getVaultsApy,
+  getVaultsHistoricalApy,
+} from '@summerfi/app-server-handlers'
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
@@ -22,23 +30,20 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
-import { getInterestRates } from '@/app/server-handlers/interest-rates'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
 import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
-import { getVaultsHistoricalApy } from '@/app/server-handlers/vault-historical-apy'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
@@ -60,7 +65,10 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const { network: paramsNetwork, vaultId, walletAddress } = await params
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(await systemConfigHandler())
+  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const parsedVaultId = isAddress(vaultId)
     ? vaultId.toLowerCase()
@@ -137,6 +145,13 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault,
   })
 
+  const cacheConfig = {
+    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+  }
+
+  const keyParts = [walletAddress, vaultId, paramsNetwork]
+
   const [
     arkInterestRatesMap,
     vaultInterestRates,
@@ -145,11 +160,19 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
     migratablePositionsData,
   ] = await Promise.all([
-    getInterestRates({
+    unstableCache(
+      getArksInterestRates,
+      keyParts,
+      cacheConfig,
+    )({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
-    getVaultsHistoricalApy({
+    unstableCache(
+      getVaultsHistoricalApy,
+      keyParts,
+      cacheConfig,
+    )({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
@@ -166,7 +189,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       chainId: Number(parsedNetworkId),
       amount: Number(netValue.toFixed(position.amount.token.decimals)),
     }),
-    getVaultsApy({
+    unstableCache(
+      getVaultsApy,
+      keyParts,
+      cacheConfig,
+    )({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
@@ -234,13 +261,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const [
     { network: paramsNetwork, vaultId, walletAddress },
-    config,
+    systemConfig,
     headersList,
     searchParamsAwaited,
-  ] = await Promise.all([params, systemConfigHandler(), headers(), searchParams])
+  ] = await Promise.all([
+    params,
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+    headers(),
+    searchParams,
+  ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const { config: systemConfig } = parseServerResponseToClient(config)
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 

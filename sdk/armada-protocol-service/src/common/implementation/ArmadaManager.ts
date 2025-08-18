@@ -105,12 +105,19 @@ export class ArmadaManager implements IArmadaManager {
       swapManager: this._swapManager,
       deploymentProvider: this._deploymentProvider,
     })
+    this.merklRewards = new ArmadaManagerMerklRewards({
+      supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
+      tokensManager: this._tokensManager,
+    })
     this.claims = new ArmadaManagerClaims({
       ...params,
       hubChainInfo: this._hubChainInfo,
       rewardsRedeemerAddress: this._rewardsRedeemerAddress,
       supportedChains: this._supportedChains,
       utils: this.utils,
+      merklRewards: this.merklRewards,
     })
     this.governance = new ArmadaManagerGovernance({
       ...params,
@@ -143,11 +150,7 @@ export class ArmadaManager implements IArmadaManager {
       subgraphManager: this._subgraphManager,
       deploymentProvider: this._deploymentProvider,
     })
-    this.merklRewards = new ArmadaManagerMerklRewards({
-      supportedChains: this._supportedChains,
-      blockchainClientProvider: this._blockchainClientProvider,
-      deploymentProvider: this._deploymentProvider,
-    })
+
     this.admin = new ArmadaManagerAdmin({
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,

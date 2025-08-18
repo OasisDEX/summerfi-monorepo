@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   AccountKitAccountType,
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
+  isUserSmartAccount,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
@@ -26,6 +28,7 @@ import {
   type ArksHistoricalChartData,
   type DropdownRawOption,
   type GetVaultsApyResponse,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -37,7 +40,6 @@ import {
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -54,6 +56,7 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
+import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -76,7 +79,7 @@ type VaultOpenViewComponentProps = {
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
@@ -104,6 +107,8 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
+  const userAAKit = useUser()
+  const userIsSmartAccount = isUserSmartAccount(userAAKit)
 
   const { features } = useSystemConfig()
 
@@ -356,6 +361,14 @@ export const VaultOpenViewComponent = ({
     type: 'default',
   })
 
+  const filteredVaults = useMemo(() => {
+    if (userIsSmartAccount) {
+      return filterOutSonicFromVaults(vaults)
+    }
+
+    return vaults
+  }, [vaults, userIsSmartAccount])
+
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
   useEffect(() => {
@@ -499,7 +512,7 @@ export const VaultOpenViewComponent = ({
       <VaultOpenGrid
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
-        vaults={vaults}
+        vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
         sumrPrice={estimatedSumrPrice}

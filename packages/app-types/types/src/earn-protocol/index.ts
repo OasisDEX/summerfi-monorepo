@@ -16,8 +16,18 @@ import { TimeframesType } from '../components'
 import { DeviceType } from '../device-type'
 import { IconNamesList, TokenSymbolsList } from '../icons'
 import { NetworkIds } from '../networks'
+import {
+  GetInterestRatesQuery,
+  GetInterestRatesDocument,
+} from '@summerfi/summer-earn-rates-subgraph'
 
+export type { GetInterestRatesQuery }
+export { GetInterestRatesDocument }
 export type { IArmadaPosition as IArmadaPosition }
+
+export type InterestRates = {
+  [key: string]: GetInterestRatesQuery
+}
 
 export type ChartDataPoints = {
   timestamp: number
@@ -145,6 +155,7 @@ export type GetInterestRatesParams = {
   weeklyCount?: number
   arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
   justLatestRates?: boolean
+  withCache?: boolean
 }
 
 export type PlatformLogo = 'aave' | 'spark' | 'morpho' | 'summer'
@@ -158,13 +169,6 @@ export type VaultApyData = {
 }
 
 export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
-
-export interface FleetRate {
-  id: string
-  rate: string
-  timestamp: number
-  fleetAddress: string
-}
 
 // Define a new type for transactions that includes an `executed` property
 export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
@@ -326,4 +330,31 @@ export enum SupportedSDKNetworks {
   Base = Network.Base,
   ArbitrumOne = Network.ArbitrumOne,
   SonicMainnet = Network.SonicMainnet,
+}
+
+export interface FleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}
+
+export interface AggregatedFleetRate {
+  id: string
+  averageRate: string
+  date: string
+  fleetAddress: string
+}
+
+export interface HistoricalFleetRates {
+  dailyRates: AggregatedFleetRate[]
+  hourlyRates: AggregatedFleetRate[]
+  weeklyRates: AggregatedFleetRate[]
+  latestRate: FleetRate[]
+}
+
+export interface HistoricalFleetRateResult {
+  chainId: string
+  fleetAddress: string
+  rates: HistoricalFleetRates
 }
