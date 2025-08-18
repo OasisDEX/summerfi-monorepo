@@ -33,7 +33,7 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     }
 
     governorSendTxTool = createSendTransactionTool({
-      chainInfo: getChainInfoByChainId(chainId),
+      chainId: chainId,
       rpcUrl,
       signerPrivateKey,
     })

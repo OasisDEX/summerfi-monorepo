@@ -2,6 +2,7 @@ import type { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
 import type { IChainsManagerClient } from './IChainsManager'
 import type { IOracleManagerClient } from './IOracleManagerClient'
 import type { ISwapManagerClient } from './ISwapManagerClient'
+import type { ITokensManagerClient2 } from './ITokensManagerClient2'
 import type { IUsersManager } from './IUsersManager'
 
 /**
@@ -12,6 +13,8 @@ import type { IUsersManager } from './IUsersManager'
 export interface ISDKAdminManager {
   /** Chains Manager for interacting with the different chains supported in the SDK */
   readonly chains: IChainsManagerClient
+  /** Tokens Manager for interacting with the different tokens supported in the SDK */
+  readonly tokens: ITokensManagerClient2
   /** Users Manager for retrieving information about a user */
   readonly users: IUsersManager
   /** Armada Manager for interacting with the Armada protocol */

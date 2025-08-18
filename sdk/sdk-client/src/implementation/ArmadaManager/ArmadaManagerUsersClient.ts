@@ -240,6 +240,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserMerklClaimTx.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getReferralFeesMerklClaimTx */
+  async getReferralFeesMerklClaimTx(
+    params: Parameters<IArmadaManagerUsersClient['getReferralFeesMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getReferralFeesMerklClaimTx']> {
+    return this.rpcClient.armada.users.getReferralFeesMerklClaimTx.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getAuthorizeAsMerklRewardsOperatorTx */
   async getAuthorizeAsMerklRewardsOperatorTx(
     params: Parameters<IArmadaManagerUsersClient['getAuthorizeAsMerklRewardsOperatorTx']>[0],

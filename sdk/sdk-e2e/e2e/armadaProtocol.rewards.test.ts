@@ -1,14 +1,11 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import {
-  ChainIds,
-  getChainInfoByChainId,
-  type AddressValue,
-  type ChainId,
-} from '@summerfi/sdk-common'
+import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
 import assert from 'node:assert'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
+
+const onlySimulation = true // Set to false to actually send transactions
 
 describe('Armada Protocol Rewards', () => {
   const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
@@ -171,6 +168,94 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
+      describe(`getReferralFeesMerklClaimTx`, () => {
+        it(`should generate referral claim transaction with specific token addresses`, async () => {
+          const usdcToken = await sdk.tokens.getTokenBySymbol({
+            symbol: 'USDC',
+            chainId: ChainIds.Base,
+          })
+          const usdcTokenAddress = usdcToken.address.value
+
+          const feeUserAddress = '0xE9c245293DAC615c11A5bF26FCec91C3617645E4'
+
+          // First get rewards to find chains with rewards and get token addresses
+          const rewards = await sdk.armada.users.getUserMerklRewards({
+            address: feeUserAddress,
+            chainIds: [ChainIds.Base],
+            rewardsTokensAddresses: [usdcTokenAddress],
+          })
+
+          const chainsWithRewards = Object.entries(rewards.perChain)
+            .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
+            .map(([chainId]) => parseInt(chainId) as ChainId)
+
+          if (chainsWithRewards.length === 0) {
+            console.log('No chains with rewards found, skipping token-specific test')
+            return
+          }
+
+          const testChainId = chainsWithRewards[0]
+          const chainRewards = rewards.perChain[testChainId]
+          if (!chainRewards || chainRewards.length === 0) {
+            console.log('No rewards found on test chain, skipping token-specific test')
+            return
+          }
+
+          console.log(
+            `Testing referral claim transaction for chain ${testChainId} and token ${chainRewards[0].token.address} with ${chainRewards[0].amount} ${chainRewards[0].token.symbol}`,
+          )
+
+          const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+            address: feeUserAddress,
+            chainId: testChainId,
+            rewardsTokensAddresses: [chainRewards[0].token.address as AddressValue],
+          })
+
+          if (!claimTransactions) {
+            console.log(`No referral claim transactions generated with specific tokens`)
+            return
+          }
+
+          expect(claimTransactions).toBeDefined()
+          expect(Array.isArray(claimTransactions)).toBe(true)
+          expect(claimTransactions.length).toBe(1)
+
+          const claimTx = claimTransactions[0]
+          expect(claimTx.type).toBe('MerklClaim')
+          expect(claimTx.description).toContain('Claiming Merkl rewards')
+          expect(claimTx.transaction).toBeDefined()
+          expect(claimTx.transaction.target).toBeDefined()
+          expect(claimTx.transaction.calldata).toBeDefined()
+          expect(claimTx.transaction.value).toBe('0')
+
+          console.log(
+            `✅ Generated referral claim transaction with specific tokens for chain ${testChainId}`,
+          )
+
+          // try to send tx
+          sendTxTool = createSendTransactionTool({
+            chainId: testChainId,
+            rpcUrl,
+            signerPrivateKey: signerPrivateKey,
+            onlySimulation,
+          })
+
+          const status = await sendTxTool(claimTx)
+          console.log(`✅ Sent referral claim transaction for chain ${testChainId}: ${status}`)
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.getReferralFeesMerklClaimTx({
+              address: userAddress,
+              chainId: unsupportedChainId,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
       describe(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
         it(`should generate authorization transaction for supported chains`, async () => {
           const supportedChainIds = [
@@ -271,7 +356,7 @@ describe('Armada Protocol Rewards', () => {
           const testChainId = ChainIds.Base
 
           sendTxTool = createSendTransactionTool({
-            chainInfo: getChainInfoByChainId(testChainId),
+            chainId: testChainId,
             rpcUrl,
             signerPrivateKey: signerPrivateKey,
           })
