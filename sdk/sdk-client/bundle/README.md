@@ -661,7 +661,10 @@ const chainId = ChainIds.Base
 // get token by symbol
 const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
 // or by address
-const usdcToken2 = await sdk.tokens.getTokenByAddress({ addressValue: '0x.......', chainId })
+const usdcTokenByAddress = await sdk.tokens.getTokenByAddress({
+  addressValue: '0x.......',
+  chainId,
+})
 ```
 
 ### Token Prices
@@ -673,7 +676,7 @@ const baseToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId })
 // denomination in quote token
 const denomination = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId })
 // or in Fiat USD
-const denomination = FiatCurrency.USD
+const denominationInFiat = FiatCurrency.USD
 
 const priceInfo = await sdk.oracle.getSpotPrice({
   baseToken,
