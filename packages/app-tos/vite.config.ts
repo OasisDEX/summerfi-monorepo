@@ -46,19 +46,37 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      UnpluginIsolatedDecl(),
+      UnpluginIsolatedDecl({
+        rewriteImports: (id: string) => {
+          if (id.startsWith('@/')) {
+            return id.replace('@/', '../../')
+          }
+
+          return id
+        },
+      }),
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
     build: {
       emptyOutDir: false,
-      cssCodeSplit: true,
       lib: {
         // eslint-disable-next-line no-undef
-        entry: resolve(__dirname, 'src/index.ts'),
+        entry: {
+          index: resolve(__dirname, 'src/index.ts'),
+        },
         formats: ['es'],
       },
       rollupOptions: {
+        input: Object.fromEntries(
+          glob
+            .sync('src/**/*.{ts,tsx}')
+            .filter((file) => !file.endsWith('.d.ts'))
+            .map((file) => [
+              relative('src', file.slice(0, file.length - extname(file).length)),
+              fileURLToPath(new URL(file, import.meta.url)),
+            ]),
+        ),
         external: [
           'react',
           'next',
@@ -74,15 +92,6 @@ export default defineConfig(({ mode }) => {
           '@summerfi/app-types',
           '@summerfi/serverless-shared',
         ],
-        input: Object.fromEntries(
-          glob
-            .sync('src/**/*.{ts,tsx}')
-            .filter((file) => !file.endsWith('.d.ts'))
-            .map((file) => [
-              relative('src', file.slice(0, file.length - extname(file).length)),
-              fileURLToPath(new URL(file, import.meta.url)),
-            ]),
-        ),
         output: {
           assetFileNames: 'assets/[name][extname]',
           entryFileNames: '[name].js',
