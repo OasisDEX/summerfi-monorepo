@@ -1,16 +1,7 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
-import {
-  Button,
-  Card,
-  GradientBox,
-  Input,
-  LoadingSpinner,
-  NewsletterWrapper,
-  SkeletonLine,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { Button, Card, Input, LoadingSpinner, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -30,7 +21,6 @@ export const SumrClaimSearch = () => {
 
   const [eligibleUsers, setEligibleUsers] =
     useState<{ ens: string | null; userAddress: string }[]>()
-  const [isBoxVisible, setIsBoxVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [inputError, setInputError] = useState('')
   const [inputValue, setInputValue] = useState('')
@@ -60,7 +50,6 @@ export const SumrClaimSearch = () => {
     }
 
     setInputValue(newInputValue)
-    setIsBoxVisible(true)
   }
 
   const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user?.address
@@ -235,24 +224,6 @@ export const SumrClaimSearch = () => {
           </Button>
         </Link>
       </div>
-
-      <GradientBox
-        selected
-        className={`${classNames.gradientBox} ${isBoxVisible ? classNames.gradientBoxOpened : ''}`}
-        style={{
-          position: isBoxVisible ? 'relative' : 'absolute',
-        }}
-      >
-        <Card variant="cardGradientLight" style={{ flexDirection: 'column' }}>
-          <Text variant="p2semiColorful" style={{ marginBottom: 'var(--general-space-8)' }}>
-            Get notified when The Lazy Summer protocol launches
-          </Text>
-          <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
-            The best way to earn $SUMR is by depositing into the protocol when its live.
-          </Text>
-          <NewsletterWrapper inputWrapperStyles={{ maxWidth: '366px' }} isEarnApp />
-        </Card>
-      </GradientBox>
     </div>
   )
 }
