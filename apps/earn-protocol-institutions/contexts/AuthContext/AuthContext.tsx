@@ -1,48 +1,35 @@
 'use client'
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import dayjs from 'dayjs'
+import { useRouter } from 'next/navigation'
 
-import type { AuthUser } from '@/types/auth'
+import { authComputeDelayMs, authFetchMe, authRefresh } from '@/contexts/AuthContext/helpers'
+import { type ChallengeResponse, type SignInResponse } from '@/features/auth/types'
 
 interface AuthContextType {
-  user: AuthUser | null
+  user: SignInResponse['user'] | null
   isLoading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  challengeData: { challenge: string; session: string; email: string } | null
+  setChallengeData: React.Dispatch<
+    React.SetStateAction<{ challenge: string; session: string; email: string } | null>
+  >
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const computeDelayMs = (exp: number, leadSec = 30) => {
-  const nowSec = dayjs().unix()
-
-  return Math.max((exp - nowSec - leadSec) * 1000, 0)
-}
-
-const fetchMe = async () => {
-  const res = await fetch('/api/auth/me', { credentials: 'include' })
-
-  if (!res.ok) {
-    throw new Error(`me failed: ${res.status}`)
-  }
-
-  return res.json() as Promise<{ user: AuthUser; exp?: number }>
-}
-
-const refresh = async () => {
-  const res = await fetch('/api/auth/refresh', {
-    method: 'POST',
-    credentials: 'include',
-  })
-
-  return res.ok
-}
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
+export function AuthContextProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<SignInResponse['user'] | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [challengeData, setChallengeData] = useState<{
+    // setting new password
+    challenge: string
+    session: string
+    email: string
+  } | null>(null)
   const refreshTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const { replace } = useRouter()
 
   const clearRefreshTimer = () => {
     if (refreshTimeout.current) {
@@ -53,10 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Self-rescheduling refresher: refresh -> fetchMe -> schedule next run
   const refreshAndReschedule = async () => {
-    // eslint-disable-next-line no-console
-    console.log('refreshAndReschedule')
-
-    const ok = await refresh()
+    const ok = await authRefresh()
 
     if (!ok) {
       setUser(null)
@@ -66,12 +50,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const data = await fetchMe()
+      const data = await authFetchMe()
 
       setUser(data.user)
 
       if (data.exp) {
-        const delayMs = computeDelayMs(data.exp)
+        const delayMs = authComputeDelayMs(data.exp)
 
         clearRefreshTimer()
         if (delayMs === 0) {
@@ -92,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearRefreshTimer()
     if (!exp) return
 
-    const delayMs = computeDelayMs(exp)
+    const delayMs = authComputeDelayMs(exp)
 
     if (delayMs === 0) {
       void refreshAndReschedule()
@@ -107,13 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const data = await fetchMe()
+      const data = await authFetchMe()
 
       setUser(data.user)
       scheduleRefresh(data.exp)
     } catch {
       // Try refresh once on cold load
-      const ok = await refresh()
+      const ok = await authRefresh()
 
       if (!ok) {
         setUser(null)
@@ -122,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
       try {
-        const data2 = await fetchMe()
+        const data2 = await authFetchMe()
 
         setUser(data2.user)
         scheduleRefresh(data2.exp)
@@ -150,27 +134,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       body: JSON.stringify({ email, password }),
     })
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
+    const data = (await response.json()) as
+      | SignInResponse
+      | ChallengeResponse
+      | {
+          error: string
+        }
 
-      throw new Error(error.error || 'Sign in failed')
+    if (!response.ok) {
+      throw new Error('error' in data ? data.error : 'Sign in failed')
     }
 
-    // Always reload from /me to get exp and schedule timer
-    const data = await fetchMe()
+    if (
+      'challenge' in data &&
+      'email' in data &&
+      data.challenge === 'NEW_PASSWORD_REQUIRED' &&
+      data.session &&
+      data.email &&
+      typeof data.email === 'string'
+    ) {
+      // Store challenge data so the UI can render the new password form
+      setChallengeData({ challenge: data.challenge, session: data.session, email: data.email })
 
-    setUser(data.user)
-    scheduleRefresh(data.exp)
+      return
+    }
+
+    // Normal successful sign in -> fetch /me to set user and schedule token refresh
+    const me = await authFetchMe()
+
+    if (!me.user) {
+      throw new Error('User not found')
+    }
+
+    setUser(me.user)
+    scheduleRefresh(me.exp)
+
+    // Redirection logic
+    if (me.user.isGlobalAdmin) {
+      replace('/admin/institutions')
+    } else if (me.user.institutionsList?.[0]?.name) {
+      replace(`${me.user.institutionsList[0].name}/overview`)
+    }
   }
 
   const signOut = async () => {
     await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' })
     setUser(null)
     clearRefreshTimer()
+    replace('/')
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isLoading, signIn, signOut, challengeData, setChallengeData }}
+    >
       {children}
     </AuthContext.Provider>
   )
@@ -180,7 +197,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext)
 
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthContextProvider')
   }
 
   return context

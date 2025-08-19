@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
 
-import { type SignInResponse } from '@/types/auth'
+import { useAuth } from '@/contexts/AuthContext/AuthContext'
 
 export default function InstitutionsLoginPage() {
   const [email, setEmail] = useState('')
@@ -13,44 +13,16 @@ export default function InstitutionsLoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [challengeData, setChallengeData] = useState<{
-    challenge: string
-    session: string
-    email: string
-  } | null>(null)
-
   const { replace } = useRouter()
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const { signIn, challengeData, setChallengeData } = useAuth()
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
-
     try {
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = (await response.json()) as SignInResponse
-
-      if (!response.ok) {
-        throw new Error(data.error ?? 'Sign in failed')
-      }
-
-      // Check if there's a challenge
-      if (data.challenge === 'NEW_PASSWORD_REQUIRED' && data.session && data.email) {
-        setChallengeData({
-          challenge: data.challenge,
-          session: data.session,
-          email: data.email,
-        })
-      } else if (data.user?.isGlobalAdmin) {
-        replace('/admin/institutions')
-      } else {
-        replace(`${data.user?.institutionsList?.[0]?.name}/overview`)
-      }
+      await signIn(email, password)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
     } finally {
@@ -208,7 +180,7 @@ export default function InstitutionsLoginPage() {
       <Text variant="h4">please log in</Text>
 
       <form
-        onSubmit={handleSignIn}
+        onSubmit={handleLoginSubmit}
         style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '15px' }}
       >
         <div>

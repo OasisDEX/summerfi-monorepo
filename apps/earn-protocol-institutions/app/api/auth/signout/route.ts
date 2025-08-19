@@ -1,9 +1,10 @@
+import { GlobalSignOutCommand } from '@aws-sdk/client-cognito-identity-provider'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { destroySession } from '@/app/server-handlers/auth/session'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
-import { AuthService } from '@/features/auth/AuthService'
+import { cognitoClient } from '@/features/auth/constants'
 
 export async function POST() {
   const cookieStore = await cookies()
@@ -11,13 +12,17 @@ export async function POST() {
 
   if (accessToken) {
     try {
-      await AuthService.signOut(accessToken)
+      const command = new GlobalSignOutCommand({
+        AccessToken: accessToken,
+      })
+
+      await cognitoClient.send(command)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Sign out error:', error)
     }
   }
-  await destroySession()
+  await destroySession() // handles SESSION_COOKIE
   cookieStore.set(ACCESS_TOKEN_COOKIE, '', { path: '/', maxAge: 0 })
   cookieStore.set(REFRESH_TOKEN_COOKIE, '', { path: '/', maxAge: 0 })
 

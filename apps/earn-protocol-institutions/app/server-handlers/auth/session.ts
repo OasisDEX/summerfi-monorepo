@@ -4,7 +4,7 @@ import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 
 import { SESSION_COOKIE } from '@/constants/cookies'
-import { type SignInGlobalAdminResponse, type SignInUserResponse } from '@/types/auth'
+import { type SignInResponse } from '@/features/auth/types'
 
 const encoder = new TextEncoder()
 const secret = process.env.INSTITUTIONS_SESSION_SECRET
@@ -17,17 +17,21 @@ if (!secret) {
   throw new Error('INSTITUTIONS_SESSION_SECRET must be set')
 }
 
-export type SessionUser = SignInUserResponse | SignInGlobalAdminResponse
-
 type SessionPayload = {
-  user: SessionUser
+  user: SignInResponse['user']
   sub: string
+  cognitoUsername: string
   exp: number
 }
 
-export async function createSession(user: SessionUser, sub: string, ttlSeconds = 15 * 60) {
+export async function createSession(
+  user: SignInResponse['user'],
+  sub: string,
+  cognitoUsername: string,
+  ttlSeconds = 15 * 60,
+) {
   const exp = dayjs().unix() + ttlSeconds
-  const token = await new SignJWT({ user, sub, ver: SESSION_VERSION })
+  const token = await new SignJWT({ user, sub, cognitoUsername, ver: SESSION_VERSION })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt() // helps verification and debugging
     .setAudience(SESSION_AUD)
@@ -55,8 +59,9 @@ export async function readSession(): Promise<SessionPayload | null> {
     const { payload } = await jwtVerify(token, encoder.encode(secret), { audience: SESSION_AUD })
 
     return {
-      user: payload.user as SessionUser,
+      user: payload.user as SignInResponse['user'],
       sub: payload.sub as string,
+      cognitoUsername: payload.cognitoUsername as string,
       exp: payload.exp as number,
     }
   } catch {
@@ -70,11 +75,11 @@ export async function destroySession() {
   cookieStore.set(SESSION_COOKIE, '', { maxAge: 0, path: '/' })
 }
 
-export function generateSecretHash(username: string): string {
+export function generateSecretHash(message: string): string {
   const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID as string
   const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET as string
 
-  const message = username + clientId
-
-  return createHmac('sha256', clientSecret).update(message).digest('base64')
+  return createHmac('sha256', clientSecret)
+    .update(message + clientId)
+    .digest('base64')
 }

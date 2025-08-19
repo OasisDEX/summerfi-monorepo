@@ -42,7 +42,7 @@ const dummyItems = [
   {
     label: 'Euler Prime USDC',
     percentage: 0.1,
-    color: 'var(--earn-protocol-primary-40)',
+    color: 'var(--earn-protocol-primary-33)',
   },
 ]
 

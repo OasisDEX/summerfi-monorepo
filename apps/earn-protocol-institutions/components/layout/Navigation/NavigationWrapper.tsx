@@ -43,7 +43,13 @@ export const NavigationWrapper: FC = () => {
       currentPath={currentPath}
       logo="/img/branding/logo-dark.svg"
       logoSmall="/img/branding/dot-dark.svg"
-      walletConnectionComponent={!isLoginPage ? <WalletLabel /> : undefined}
+      walletConnectionComponent={
+        !isLoginPage ? (
+          <div>
+            <WalletLabel />
+          </div>
+        ) : undefined
+      }
       mobileWalletConnectionComponents={
         !isLoginPage
           ? {

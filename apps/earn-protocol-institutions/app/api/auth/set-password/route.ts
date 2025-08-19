@@ -1,9 +1,16 @@
+import {
+  RespondToAuthChallengeCommand,
+  type RespondToAuthChallengeCommandOutput,
+} from '@aws-sdk/client-cognito-identity-provider'
 import { createHmac } from 'crypto'
+import { decodeJwt } from 'jose'
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
-import { AuthService } from '@/features/auth/AuthService'
+import { cognitoClient } from '@/features/auth/constants'
+import { getNameFromPayload } from '@/features/auth/helpers'
+import { type BasicAuthResponse, type JwtClaims } from '@/features/auth/types'
 
 if (
   !process.env.INSTITUTIONS_COGNITO_CLIENT_ID ||
@@ -21,6 +28,51 @@ function generateSecretHash(username: string): string {
   return createHmac('sha256', clientSecret).update(message).digest('base64')
 }
 
+async function serverSetNewPassword(
+  email: string,
+  newPassword: string,
+  session: string,
+  secretHash?: string,
+): Promise<BasicAuthResponse> {
+  const challengeResponses: { [key: string]: string } = {
+    USERNAME: email,
+    NEW_PASSWORD: newPassword,
+  }
+
+  if (secretHash) {
+    challengeResponses.SECRET_HASH = secretHash
+  }
+
+  const command = new RespondToAuthChallengeCommand({
+    ClientId: process.env.INSTITUTIONS_COGNITO_CLIENT_ID,
+    ChallengeName: 'NEW_PASSWORD_REQUIRED',
+    Session: session,
+    ChallengeResponses: challengeResponses,
+  })
+
+  const response: RespondToAuthChallengeCommandOutput = await cognitoClient.send(command)
+
+  if (!response.AuthenticationResult) {
+    throw new Error('Password change failed')
+  }
+
+  const { AccessToken, RefreshToken, IdToken } = response.AuthenticationResult
+
+  if (!AccessToken || !RefreshToken || !IdToken) {
+    throw new Error('Missing tokens in response')
+  }
+
+  const payload = decodeJwt(IdToken) as JwtClaims
+
+  return {
+    id: payload.sub as string,
+    email: payload.email as string,
+    name: getNameFromPayload(payload),
+    accessToken: AccessToken,
+    refreshToken: RefreshToken,
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -34,32 +86,36 @@ export async function POST(request: NextRequest) {
     }
 
     const secretHash = generateSecretHash(email)
-    const user = await AuthService.setNewPassword(email, newPassword, session, secretHash)
+    const user = await serverSetNewPassword(email, newPassword, session, secretHash)
 
-    // Set secure HTTP-only cookies
-    const cookieStore = await cookies()
+    if ('id' in user && user.accessToken && user.refreshToken) {
+      // Set secure HTTP-only cookies
+      const cookieStore = await cookies()
 
-    cookieStore.set(ACCESS_TOKEN_COOKIE, user.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60, // 1 hour
-    })
+      cookieStore.set(ACCESS_TOKEN_COOKIE, user.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60, // 1 hour
+      })
 
-    cookieStore.set(REFRESH_TOKEN_COOKIE, user.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    })
+      cookieStore.set(REFRESH_TOKEN_COOKIE, user.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      })
 
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      },
-    })
+      return NextResponse.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        },
+      })
+    } else {
+      return NextResponse.json({ error: 'Password change failed' }, { status: 400 })
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Set password error:', error)
