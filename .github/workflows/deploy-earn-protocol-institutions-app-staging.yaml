@@ -81,6 +81,8 @@ jobs:
       INSTITUTIONS_COGNITO_CLIENT_ID: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_ID }}
       INSTITUTIONS_COGNITO_CLIENT_SECRET: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_SECRET }}
       INSTITUTIONS_SESSION_SECRET: ${{ secrets.INSTITUTIONS_SESSION_SECRET }}
+      EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING:
+        ${{ secrets.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -222,6 +224,7 @@ jobs:
                        --build-arg INSTITUTIONS_COGNITO_CLIENT_ID=${{ env.INSTITUTIONS_COGNITO_CLIENT_ID }} \
                        --build-arg INSTITUTIONS_COGNITO_CLIENT_SECRET=${{ env.INSTITUTIONS_COGNITO_CLIENT_SECRET }} \
                        --build-arg INSTITUTIONS_SESSION_SECRET=${{ env.INSTITUTIONS_SESSION_SECRET }} \
+                       --build-arg EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING=${{ env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING }} \
                        --build-arg SECURE_PAGE_COOKIE_AUTH_TOKEN=${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \
