@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  AccountKitAccountType,
   Card,
   ControlsDepositWithdraw,
   ControlsSwitch,
@@ -22,6 +21,7 @@ import {
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
@@ -357,17 +357,18 @@ export const VaultManageViewComponent = ({
   })
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
     type: 'default',
+    isIframe,
   })
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
