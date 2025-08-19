@@ -83,7 +83,7 @@ export const SendFormInitialStep: FC<SendFormInitialStepProps> = ({
               Paste
             </Text>
           }
-          style={{ paddingRight: 'var(--general-space-64)' }}
+          inputWrapperStyles={{ paddingRight: 'var(--general-space-64)' }}
           buttonStyles={{ right: '15px' }}
         />
       </div>

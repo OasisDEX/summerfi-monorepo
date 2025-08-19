@@ -1,12 +1,12 @@
 import { type Dispatch, type FC, useEffect } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  AccountKitAccountType,
   Button,
   Card,
   SDKChainIdToAAChainMap,
   Text,
   useClientChainId,
+  useIsIframe,
   useMobileCheck,
   useUserWallet,
   WithArrow,
@@ -50,6 +50,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const { clientChainId } = useClientChainId()
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[clientChainId as SupportedNetworkIds],
@@ -60,11 +61,11 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     signMessage: signTosMessage,
     chainId: clientChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.SUMR_CLAIM_TOKEN_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
     host: '/earn',
     type: 'sumrAirdrop',
+    isIframe,
   })
 
   useEffect(() => {

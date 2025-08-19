@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
-  AccountKitAccountType,
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
@@ -16,6 +15,7 @@ import {
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
@@ -348,17 +348,18 @@ export const VaultOpenViewComponent = ({
   })
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
     type: 'default',
+    isIframe,
   })
 
   const filteredVaults = useMemo(() => {

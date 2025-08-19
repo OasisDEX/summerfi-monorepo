@@ -23,10 +23,10 @@ export type TOSInput = {
   version: string
   cookiePrefix: string
   isGnosisSafe: boolean
+  isIframe: boolean
   host?: string
   forceDisconnect?: () => void
   type?: TOSMessageType
-  isSmartAccount?: boolean
 }
 
 export interface TOSVerifyAcceptance {
