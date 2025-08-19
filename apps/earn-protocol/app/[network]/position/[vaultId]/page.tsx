@@ -119,11 +119,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
     vault?.arks
-      ? unstableCache(
-          getArksInterestRates,
-          keyParts,
-          cacheConfig,
-        )({
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

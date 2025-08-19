@@ -106,11 +106,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   const keyParts = [vaultId, network]
 
   const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
-    unstableCache(
-      getArksInterestRates,
-      keyParts,
-      cacheConfig,
-    )({
+    getArksInterestRates({
       network: parsedNetwork,
       arksList: vault.arks,
     }),

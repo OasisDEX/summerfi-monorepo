@@ -160,11 +160,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
     migratablePositionsData,
   ] = await Promise.all([
-    unstableCache(
-      getArksInterestRates,
-      keyParts,
-      cacheConfig,
-    )({
+    getArksInterestRates({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
