@@ -1,0 +1,17 @@
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--general-space-64);
+    margin-top: var(--general-space-128);
+    margin-bottom: var(--general-space-128);
+    max-width: 647px;
+    border: 1px solid var(--earn-protocol-neutral-70);
+  }
+}

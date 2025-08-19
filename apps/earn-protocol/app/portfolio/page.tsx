@@ -11,6 +11,8 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import WalletIconBeachClub from '@/public/img/misc/wallet_icon_beach_club.svg'
 import WalletIcon from '@/public/img/misc/wallet_icon_colorful.svg'
 
+import styles from './page.module.css'
+
 const getIcon = (tab: PortfolioTabs | null) => {
   if (tab === PortfolioTabs.BEACH_CLUB) {
     return WalletIconBeachClub
@@ -52,40 +54,33 @@ const PortfolioPage: FC = () => {
   }, [userWalletAddress, push, tab])
 
   return (
-    <Card
-      variant="cardSecondary"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        padding: 'var(--general-space-64)',
-        marginTop: 'var(--general-space-128)',
-        marginBottom: 'var(--general-space-128)',
-        maxWidth: '647px',
-        border: '1px solid var(--earn-protocol-neutral-70)',
-      }}
-    >
-      <Image src={getIcon(tab)} alt="Wallet icon" width={90} height={90} />
-      <Text
-        as="h5"
-        variant="h5"
-        style={{ marginBottom: 'var(--general-space-20)', marginTop: 'var(--general-space-32)' }}
-      >
-        {getTitle(tab)}
-      </Text>
-      <Button variant={getButtonVariant(tab)} onClick={openAuthModal} style={{ minWidth: 'unset' }}>
-        Connect wallet
-      </Button>
-      {tab === PortfolioTabs.BEACH_CLUB && (
-        <BeachClubPalmBackground
-          rightPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
-          leftPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
-          bottomGradientStyles={{ display: 'none' }}
-          topGradientStyles={{ display: 'none' }}
-        />
-      )}
-    </Card>
+    <div className={styles.pageWrapper}>
+      <Card variant="cardSecondary" className={styles.card}>
+        <Image src={getIcon(tab)} alt="Wallet icon" width={90} height={90} />
+        <Text
+          as="h5"
+          variant="h5"
+          style={{ marginBottom: 'var(--general-space-20)', marginTop: 'var(--general-space-32)' }}
+        >
+          {getTitle(tab)}
+        </Text>
+        <Button
+          variant={getButtonVariant(tab)}
+          onClick={openAuthModal}
+          style={{ minWidth: 'unset' }}
+        >
+          Connect wallet
+        </Button>
+        {tab === PortfolioTabs.BEACH_CLUB && (
+          <BeachClubPalmBackground
+            rightPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
+            leftPalmSyles={{ top: 'unset', bottom: '0', opacity: 0.4 }}
+            bottomGradientStyles={{ display: 'none' }}
+            topGradientStyles={{ display: 'none' }}
+          />
+        )}
+      </Card>
+    </div>
   )
 }
 
