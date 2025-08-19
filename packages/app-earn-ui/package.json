@@ -17,7 +17,7 @@
     "generate-module-types-watch": "concurrently \"tcm -w -s -p 'src/**/*.module.css'\" \"tcm --outDir 'dist/' -w -s -p 'src/**/*.module.css'\"",
     "build": "concurrently \"pnpm vite build -w false\" \"pnpm generate-module-types\"",
     "prebuild": "concurrently \"pnpm vite build -w false\" \"pnpm generate-module-types\"",
-    "dev": "concurrently \"pnpm vite build -w true\" \"pnpm:generate-module-types-watch\"",
+    "dev": "concurrently \"pnpm vite build -w true --mode=dev\" \"pnpm:generate-module-types-watch\"",
     "knip": "knip"
   },
   "devDependencies": {
