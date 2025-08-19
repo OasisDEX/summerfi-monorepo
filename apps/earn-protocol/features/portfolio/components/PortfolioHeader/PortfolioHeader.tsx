@@ -5,12 +5,13 @@ import {
   DataBlock,
   Dropdown,
   Icon,
+  isUserSmartAccount,
   LoadableAvatar,
   SkeletonLine,
   Text,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption } from '@summerfi/app-types'
+import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
 import {
   formatAddress,
   formatCryptoBalance,
@@ -76,6 +77,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   const [isSendOpen, setIsSendOpen] = useState(false)
   const [transakNetwork, setTransakNetwork] = useState<TransakNetworkOption | null>(null)
   const user = useUser()
+  const userIsSmartAccount = isUserSmartAccount(user)
 
   const { features } = useSystemConfig()
 
@@ -138,15 +140,23 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}
             isDisabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
-            options={transakNetworkOptions.map((option) => ({
-              value: option.value,
-              content: (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Icon iconName={option.iconName} />
-                  <span>{option.label}</span>
-                </div>
-              ),
-            }))}
+            options={transakNetworkOptions
+              .filter((option) => {
+                if (userIsSmartAccount) {
+                  return option.chainId !== SupportedNetworkIds.SonicMainnet
+                }
+
+                return true
+              })
+              .map((option) => ({
+                value: option.value,
+                content: (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Icon iconName={option.iconName} />
+                    <span>{option.label}</span>
+                  </div>
+                ),
+              }))}
             onChange={handleNetworkSelect}
           >
             {null}
