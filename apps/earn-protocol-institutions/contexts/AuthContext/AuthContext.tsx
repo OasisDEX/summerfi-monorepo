@@ -53,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Self-rescheduling refresher: refresh -> fetchMe -> schedule next run
   const refreshAndReschedule = async () => {
+    // eslint-disable-next-line no-console
     console.log('refreshAndReschedule')
 
     const ok = await refresh()

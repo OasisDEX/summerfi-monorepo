@@ -4,11 +4,11 @@ import { formatFiatBalance } from '@summerfi/app-utils'
 import { type InstitutionVaultFeeRevenueHistoryItem } from '@/types/institution-data'
 
 export const feeRevenueHistoryMapper = ({
-  history,
+  feeRevenueHistory,
 }: {
-  history: InstitutionVaultFeeRevenueHistoryItem[]
+  feeRevenueHistory: InstitutionVaultFeeRevenueHistoryItem[]
 }) => {
-  return history.map((item) => {
+  return feeRevenueHistory.map((item) => {
     return {
       content: {
         monthYear: <TableCellText>{item.monthYear}</TableCellText>,
