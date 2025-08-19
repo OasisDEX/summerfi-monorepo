@@ -13,6 +13,7 @@ export const getInstitutionsSDK: (institutionId: string) => SDKAdminManager = (
   if (!institutionId) {
     throw new Error('Institution ID is required')
   }
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!apiClientsList[institutionId]) {
     apiClientsList[institutionId] = makeAdminSDK({
       clientId: institutionId, // institution ID

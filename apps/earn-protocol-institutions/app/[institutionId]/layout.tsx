@@ -1,10 +1,9 @@
-import { cookies } from 'next/headers'
+import { Button } from '@summerfi/app-earn-ui'
+import Link from 'next/link'
 
-import { getInstitutionData } from '@/app/server-handlers/institution-data'
-import { getWalletInstitutions } from '@/app/server-handlers/wallet-institutions'
-import { InstitutionPageDataBlocks } from '@/components/layout/InstitutionPageDataBlocks/InstitutionPageDataBlocks'
+import { readSession } from '@/app/server-handlers/auth/session'
+import { getInstitutionData, getUserInstitutionsList } from '@/app/server-handlers/institution-data'
 import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
-import { LOGIN_COOKIE_WALLET_NAME } from '@/constants/login-cookie'
 
 import institutionMainLayoutStyles from './InstitutionMainLayout.module.css'
 
@@ -15,27 +14,53 @@ export default async function InstitutionMainLayout({
   children: React.ReactNode
   params: Promise<{ institutionId: string }>
 }) {
-  const [{ institutionId }, awaitedCookies] = await Promise.all([params, cookies()])
-  const walletAddress = awaitedCookies.get(LOGIN_COOKIE_WALLET_NAME)?.value
+  const [{ institutionId }, session] = await Promise.all([params, readSession()])
 
-  if (!walletAddress) {
-    throw new Error('Wallet address is not available in cookies')
+  if (!session) {
+    // Handle unauthenticated state
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '30px',
+        }}
+      >
+        Please log in to view this page.
+        <Link href="/">
+          <Button variant="secondaryMedium">Log In</Button>
+        </Link>
+      </div>
+    )
   }
-  const institution = await getInstitutionData(institutionId)
-  const walletInstitutionsList = await getWalletInstitutions(walletAddress)
+
+  const [institutionData, userInstitutionsList] = await Promise.all([
+    getInstitutionData(institutionId),
+    getUserInstitutionsList(session.sub),
+  ])
+
+  if (!institutionId || !institutionData) {
+    // Handle institution not found
+    return <div>Institution not found.</div>
+  }
+
+  const { institution } = institutionData
 
   return (
     <div className={institutionMainLayoutStyles.institutionPageView}>
       <InstitutionPageHeader
         selectedInstitution={institution}
-        institutionsList={walletInstitutionsList}
+        institutionsList={userInstitutionsList}
       />
+      {/* 
       <InstitutionPageDataBlocks
         totalValue={institution.totalValue}
         numberOfVaults={institution.numberOfVaults}
         thirtyDayAvgApy={institution.thirtyDayAvgApy}
         allTimePerformance={institution.allTimePerformance}
-      />
+      /> */}
       {children}
     </div>
   )

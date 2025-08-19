@@ -1,22 +1,45 @@
-import { institutionsMockList } from '@/app/server-handlers/mock'
+import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
 
-export const getInstitutionData = async (institutionId: string) => {
-  // get the 'global' institution data here
-  // this is a mock implementation, replace with actual data fetching logic
+export const getInstitutionData = async (institutionName: string) => {
+  if (!institutionName) return null
+  if (typeof institutionName !== 'string') return null
 
-  if (!institutionId) {
-    throw new Error('Institution ID is required')
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  try {
+    const institution = await db
+      .selectFrom('institutions')
+      .select(['id', 'name', 'displayName'])
+      .where('name', '=', institutionName)
+      .executeTakeFirst()
+
+    if (!institution) return null
+
+    return {
+      institution,
+    }
+  } finally {
+    db.destroy()
   }
+}
 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1)
-  }) // Simulate network delay
+export const getUserInstitutionsList = async (userSub: string) => {
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
 
-  const institution = institutionsMockList.find((inst) => inst.id === institutionId)
+  try {
+    const institutionsList = await db
+      .selectFrom('institutionUsers as iu')
+      .innerJoin('institutions as i', 'i.id', 'iu.institutionId')
+      .select(['i.id as id', 'i.name as name', 'i.displayName as displayName'])
+      .where('iu.userSub', '=', userSub)
+      .execute()
 
-  if (!institution) {
-    throw new Error(`Institution with ID ${institutionId} not found`)
+    return institutionsList
+  } finally {
+    db.destroy()
   }
-
-  return institution
 }

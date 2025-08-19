@@ -110,7 +110,7 @@ export default defineConfig(({ mode }) => {
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
     build: {
-      emptyOutDir: true,
+      emptyOutDir: false,
       cssCodeSplit: true,
       sourcemap: false,
       cssMinify: notDev,

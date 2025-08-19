@@ -55,7 +55,6 @@ jobs:
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
-      ACCOUNT_KIT_API_KEY: ${{ secrets.ACCOUNT_KIT_API_KEY }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
@@ -75,6 +74,13 @@ jobs:
       SECURE_PAGE_COOKIE_AUTH_TOKEN: ${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
+      INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY: ${{ secrets.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY }}
+      INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY:
+        ${{ secrets.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY }}
+      INSTITUTIONS_COGNITO_USER_POOL_ID: ${{ secrets.INSTITUTIONS_COGNITO_USER_POOL_ID }}
+      INSTITUTIONS_COGNITO_CLIENT_ID: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_ID }}
+      INSTITUTIONS_COGNITO_CLIENT_SECRET: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_SECRET }}
+      INSTITUTIONS_SESSION_SECRET: ${{ secrets.INSTITUTIONS_SESSION_SECRET }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -193,7 +199,6 @@ jobs:
                        --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \
                        --build-arg NEXT_PUBLIC_EARN_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }} \
-                       --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg FORECAST_API_URL=${{ secrets.FORECAST_API_URL }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_API_KEY=${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }} \
                        --build-arg TRANSAK_SECRET=${{ secrets.TRANSAK_SECRET }} \
@@ -211,6 +216,12 @@ jobs:
                        --build-arg EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN=${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }} \
                        --build-arg EARN_APP_URL=${{ secrets.EARN_APP_URL }} \
                        --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
+                       --build-arg INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY=${{ env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY }} \
+                       --build-arg INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY=${{ env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY }} \
+                       --build-arg INSTITUTIONS_COGNITO_USER_POOL_ID=${{ env.INSTITUTIONS_COGNITO_USER_POOL_ID }} \
+                       --build-arg INSTITUTIONS_COGNITO_CLIENT_ID=${{ env.INSTITUTIONS_COGNITO_CLIENT_ID }} \
+                       --build-arg INSTITUTIONS_COGNITO_CLIENT_SECRET=${{ env.INSTITUTIONS_COGNITO_CLIENT_SECRET }} \
+                       --build-arg INSTITUTIONS_SESSION_SECRET=${{ env.INSTITUTIONS_SESSION_SECRET }} \
                        --build-arg SECURE_PAGE_COOKIE_AUTH_TOKEN=${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$NEXT_PUBLIC_SHA \

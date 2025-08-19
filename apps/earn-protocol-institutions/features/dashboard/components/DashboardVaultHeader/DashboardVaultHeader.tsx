@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import styles from './DashboardVaultHeader.module.css'
 
 interface DashboardVaultHeaderProps {
-  vaultName: string
+  vaultName?: string | null
   asset: string
   nav: number
   aum: number
@@ -29,7 +29,7 @@ export const DashboardVaultHeader: FC<DashboardVaultHeaderProps> = ({
   const blocks = [
     {
       title: 'Name',
-      value: vaultName,
+      value: vaultName ?? 'Unnamed vault',
     },
     {
       title: 'Asset',

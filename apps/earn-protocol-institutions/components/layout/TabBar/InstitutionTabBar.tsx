@@ -1,6 +1,7 @@
 'use client'
 
 import { TabBarSimple } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname } from 'next/navigation'
 
 import { getMainTabBarTabId } from '@/helpers/get-pathname-tab-id'
@@ -8,10 +9,10 @@ import { getInstitutionUrl, getInstitutionVaultUrl } from '@/helpers/get-url'
 
 export const InstitutionTabBar = ({
   institutionId,
-  defaultVaultId,
+  defaultVault,
 }: {
   institutionId: string
-  defaultVaultId: string
+  defaultVault: SDKVaultishType
 }) => {
   const pathname = usePathname()
 
@@ -34,7 +35,7 @@ export const InstitutionTabBar = ({
           label: 'Vaults',
           url: getInstitutionVaultUrl({
             institutionId,
-            vaultId: defaultVaultId,
+            vault: defaultVault,
           }),
         },
         {
