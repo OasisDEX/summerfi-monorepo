@@ -1,33 +1,29 @@
 import { type FC } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-
-import { type InstitutionData } from '@/types/institution-data'
+import { type SDKVaultishType } from '@summerfi/app-types'
 
 import { feeRevenueColumns } from './tables/fee-revenue/columns'
-import { feeRevenueMapper } from './tables/fee-revenue/mapper'
 import { feeRevenueHistoryColumns } from './tables/history/columns'
-import { feeRevenueHistoryMapper } from './tables/history/mapper'
 import { thirdPartyCostsColumns } from './tables/third-party-costs/columns'
-import { thirdPartyCostsMapper } from './tables/third-party-costs/mapper'
 
 import classNames from './PanelFeeRevenueAdmin.module.css'
 
 interface PanelFeeRevenueAdminProps {
-  vaultData: InstitutionData['vaultsData'][number]
+  vaultData: SDKVaultishType
 }
 
-export const PanelFeeRevenueAdmin: FC<PanelFeeRevenueAdminProps> = ({ vaultData }) => {
-  const thirdPartyCostsRows = thirdPartyCostsMapper({
-    costs: vaultData.thirdPartyCosts,
-  })
+export const PanelFeeRevenueAdmin: FC<PanelFeeRevenueAdminProps> = ({ vaultData: _vaultData }) => {
+  // const thirdPartyCostsRows = thirdPartyCostsMapper({
+  //   costs: vaultData.thirdPartyCosts,
+  // })
 
-  const feeRevenueHistoryRows = feeRevenueHistoryMapper({
-    history: vaultData.feeRevenueHistory,
-  })
+  // const feeRevenueHistoryRows = feeRevenueHistoryMapper({
+  //   history: vaultData.feeRevenueHistory,
+  // })
 
-  const feeRevenueRows = feeRevenueMapper({
-    feeRevenue: vaultData.feeRevenue,
-  })
+  // const feeRevenueRows = feeRevenueMapper({
+  //   feeRevenue: vaultData.feeRevenue,
+  // })
 
   return (
     <Card variant="cardSecondary" className={classNames.panelFeeRevenueAdminWrapper}>
@@ -38,19 +34,19 @@ export const PanelFeeRevenueAdmin: FC<PanelFeeRevenueAdminProps> = ({ vaultData 
         <Text as="p" variant="p3semi">
           Fee Revenue
         </Text>
-        <Table rows={feeRevenueRows} columns={feeRevenueColumns} />
+        <Table rows={[]} columns={feeRevenueColumns} />
       </Card>
       <Card variant="cardPrimary" className={classNames.panelFeeRevenueAdminCard}>
         <Text as="p" variant="p3semi">
           3rd Party Costs
         </Text>
-        <Table rows={thirdPartyCostsRows} columns={thirdPartyCostsColumns} />
+        <Table rows={[]} columns={thirdPartyCostsColumns} />
       </Card>
       <Card className={classNames.panelFeeRevenueAdminCard} style={{ background: 'unset' }}>
         <Text as="p" variant="p1semi">
           History
         </Text>
-        <Table rows={feeRevenueHistoryRows} columns={feeRevenueHistoryColumns} />
+        <Table rows={[]} columns={feeRevenueHistoryColumns} />
       </Card>
     </Card>
   )

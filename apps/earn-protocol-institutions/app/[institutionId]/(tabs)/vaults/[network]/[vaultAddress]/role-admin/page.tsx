@@ -7,14 +7,7 @@ export default async function InstitutionVaultRoleAdminPage({
 }: {
   params: Promise<{ institutionId: string; vaultAddress: string; network: string }>
 }) {
-  const { institutionId, network, vaultAddress } = await params
-
-  // eslint-disable-next-line no-console
-  console.log({
-    institutionId,
-    network,
-    vaultAddress,
-  })
+  const _params = await params
 
   // get roles here
 

@@ -4,9 +4,9 @@ import {
   getArksInterestRates,
   getVaultsApy,
 } from '@summerfi/app-server-handlers'
-import { SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   decorateWithFleetConfig,
+  humanNetworktoSDKNetwork,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -15,9 +15,14 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
-export default async function InstitutionVaultVaultExposurePage() {
-  // dummy for now as well as vault address
-  const parsedNetwork = SupportedSDKNetworks.Base
+export default async function InstitutionVaultVaultExposurePage({
+  params,
+}: {
+  params: Promise<{ institutionId: string; vaultAddress: string; network: string }>
+}) {
+  const { institutionId, vaultAddress, network } = await params
+
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
 
   // tags yet to be determined
   const cacheConfig = {
@@ -31,8 +36,8 @@ export default async function InstitutionVaultVaultExposurePage() {
       [parsedNetwork],
       cacheConfig,
     )({
-      institutionID: 'test-client',
-      vaultAddress: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
+      institutionID: institutionId,
+      vaultAddress,
       network: parsedNetwork,
     }),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
@@ -47,7 +52,7 @@ export default async function InstitutionVaultVaultExposurePage() {
   const vaultWithConfig = decorateWithFleetConfig([vault], config)
 
   const [arkInterestRates, vaultsApyRaw] = await Promise.all([
-    vault.arks
+    vault.arks.length
       ? unstableCache(
           getArksInterestRates,
           [parsedNetwork],
@@ -62,9 +67,9 @@ export default async function InstitutionVaultVaultExposurePage() {
       [parsedNetwork],
       cacheConfig,
     )({
-      fleets: vaultWithConfig.map(({ id, protocol: { network } }) => ({
+      fleets: vaultWithConfig.map(({ id, protocol: { network: vaultNetwork } }) => ({
         fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+        chainId: subgraphNetworkToId(supportedSDKNetwork(vaultNetwork)),
       })),
     }),
   ])
