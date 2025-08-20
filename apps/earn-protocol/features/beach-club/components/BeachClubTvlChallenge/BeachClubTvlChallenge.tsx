@@ -12,6 +12,7 @@ import {
   Tooltip,
   useClientChainId,
   useMobileCheck,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
@@ -20,6 +21,7 @@ import {
   formatFiatBalance,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
+import { type MerklReward } from '@summerfi/armada-protocol-common'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { delayPerNetwork } from '@/constants/delay-per-network'
@@ -38,6 +40,19 @@ import { getBeachClubTvlRewardsCards } from './cards'
 
 import classNames from './BeachClubTvlChallenge.module.css'
 
+const getFeesUSDClaimableNow = (merklRewards: MerklReward[] | undefined) => {
+  if (merklRewards) {
+    return merklRewards.reduce((acc, reward) => {
+      return (
+        acc +
+        Number((Number(reward.amount) / Number(10 ** reward.token.decimals)) * reward.token.price)
+      )
+    }, 0)
+  }
+
+  return 0
+}
+
 interface BeachClubTvlChallengeProps {
   beachClubData: BeachClubData
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
@@ -55,6 +70,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const { isMobile } = useMobileCheck(deviceType)
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
   const [isOptInOpen, setIsOptInOpen] = useState(false)
+  const { userWalletAddress } = useUserWallet()
 
   const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
@@ -62,6 +78,9 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   })
   const { setChain, isSettingChain } = useChain()
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
+
+  const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
+
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
@@ -101,6 +120,13 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
     network: chainIdToSDKNetwork(clientChainId),
     publicClient,
   })
+
+  const claimableFeesRewardsOnBase =
+    beachClubData.claimableRewardsPerChain.perChain[SupportedNetworkIds.Base]
+
+  const feesUSDclaimableNowOnBase = getFeesUSDClaimableNow(claimableFeesRewardsOnBase)
+
+  const hasClaimableFeesRewardsOnBase = feesUSDclaimableNowOnBase > 0
 
   const handleClaimFees = async () => {
     await claimBeachClubFeesTransaction().catch((err) => {
@@ -145,13 +171,32 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
     },
     {
       id: 3,
-      value: `$${formatFiatBalance(feesRewards)}`,
+      value: `$${formatFiatBalance(feesUSDclaimableNowOnBase)}`,
       description: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           Earned Fee&apos;s{' '}
           <Tooltip
-            tooltip="Earned fee's are the total accrued fee's from your Beach Club referrals to date, denominated in dollars."
-            tooltipWrapperStyles={{ minWidth: '200px' }}
+            tooltip={
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--spacing-space-2x-small)',
+                }}
+              >
+                Earned fees are the total accrued fees from your Beach Club referrals to date,
+                denominated in dollars.
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <Text as="p" variant="p3semi">
+                    Claimable now: {formatFiatBalance(feesUSDclaimableNowOnBase)} USD
+                  </Text>
+                  <Text as="p" variant="p3semi">
+                    Earned: {formatFiatBalance(feesRewards)} USD
+                  </Text>
+                </div>
+              </div>
+            }
+            tooltipWrapperStyles={{ minWidth: '230px' }}
           >
             <Icon iconName="info" size={24} />
           </Tooltip>
@@ -171,7 +216,9 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
         disabled:
           isSettingChain ||
           state.claimStatus === UiTransactionStatuses.PENDING ||
-          state.claimStatus === UiTransactionStatuses.COMPLETED,
+          state.claimStatus === UiTransactionStatuses.COMPLETED ||
+          !isOwner ||
+          !hasClaimableFeesRewardsOnBase,
       },
     },
   ]
