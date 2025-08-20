@@ -3,7 +3,7 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
 import { Button, Card, Table, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 
 import { assetRelocationColumns } from './columns'
 import { assetRelocationMapper } from './mapper'
@@ -63,8 +63,14 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
   }, [])
 
   const totalBalance = useMemo(
-    () => vault.arks.reduce((acc, ark) => acc + Number(ark.inputTokenBalance), 0),
-    [vault.arks],
+    () =>
+      vault.arks.reduce(
+        (acc, ark) =>
+          // eslint-disable-next-line no-mixed-operators
+          acc + Number(ark.inputTokenBalance) / 10 ** vault.inputToken.decimals,
+        0,
+      ),
+    [vault.arks, vault.inputToken.decimals],
   )
 
   const netBalanceChange = vault.arks.reduce((acc, ark) => {
@@ -99,7 +105,7 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
             Total Balance
           </Text>
           <Text as="p" variant="p3semi">
-            {formatCryptoBalance(totalBalance)}
+            {formatWithSeparators(totalBalance, { precision: 2 })}
           </Text>
         </div>
         <div className={styles.summary}>
@@ -114,7 +120,7 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
                 netBalanceChange >= 0 ? 'var(--color-text-primary)' : 'var(--color-text-critical)',
             }}
           >
-            {formatWithSeparators(netBalanceChange, { cutOffNegative: false })}
+            {formatWithSeparators(netBalanceChange, { precision: 2, cutOffNegative: false })}
           </Text>
         </div>
         <div className={styles.buttons}>

@@ -23,16 +23,24 @@ export const assetRelocationMapper = ({
   balanceAddChange: { [key: string]: string }
   balanceRemoveChange: { [key: string]: string }
 }) => {
+  const precision = vault.inputToken.decimals
+
   return vault.arks
     .sort((a, b) => Number(b.inputTokenBalance) - Number(a.inputTokenBalance))
     .map((ark) => {
       const protocol = ark.name?.split('-') ?? ['n/a']
       const protocolLabel = getProtocolLabel(protocol)
 
+      // eslint-disable-next-line no-mixed-operators
+      const arkBalance = Number(ark.inputTokenBalance) / 10 ** precision
+
+      const newBalance =
+        arkBalance + Number(balanceAddChange[ark.id]) - Number(balanceRemoveChange[ark.id])
+
       return {
         content: {
           market: <TableCellText>{protocolLabel}</TableCellText>,
-          balance: <TableCellText>{formatCryptoBalance(ark.inputTokenBalance)}</TableCellText>,
+          balance: <TableCellText>{formatCryptoBalance(arkBalance)}</TableCellText>,
           'remove-from-market': (
             <Input
               variant="withBorder"
@@ -55,9 +63,7 @@ export const assetRelocationMapper = ({
               type="number"
             />
           ),
-          'new-balance': (
-            <TableCellText>{formatCryptoBalance(ark.inputTokenBalance)}</TableCellText>
-          ),
+          'new-balance': <TableCellText>{formatCryptoBalance(newBalance)}</TableCellText>,
         },
       }
     })
