@@ -17,6 +17,8 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 
+import { getArksAllocation } from './get-arks-allocation'
+
 import styles from './PanelVaultExposure.module.css'
 
 const timeframes: TimeframesItem = {
@@ -27,24 +29,6 @@ const timeframes: TimeframesItem = {
   '1y': true,
   '3y': true,
 }
-
-const dummyItems = [
-  {
-    label: 'Morpho USDC Moonwell Flagship',
-    percentage: 0.3,
-    color: 'var(--earn-protocol-primary-100)',
-  },
-  {
-    label: 'Compound V3 USDC',
-    percentage: 0.6,
-    color: 'var(--earn-protocol-primary-70)',
-  },
-  {
-    label: 'Euler Prime USDC',
-    percentage: 0.1,
-    color: 'var(--earn-protocol-primary-40)',
-  },
-]
 
 const columnsToHide = ['yearlyLow', 'yearlyHigh', 'avgApy1y']
 
@@ -67,6 +51,8 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
     console.log('Export to CSV')
   }
 
+  const allocation = getArksAllocation(vault)
+
   return (
     <Card variant="cardSecondary" className={styles.panelVaultExposureWrapper}>
       <Text as="h5" variant="h5">
@@ -76,7 +62,7 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
         <Text as="p" variant="p4semi" className={styles.allocationHeader}>
           Asset allocation
         </Text>
-        <AllocationBar items={dummyItems} variant="large" />
+        <AllocationBar items={allocation} variant="large" />
       </div>
       <Card className={styles.tableSection}>
         <div className={styles.panelVaultExposureHeader}>
