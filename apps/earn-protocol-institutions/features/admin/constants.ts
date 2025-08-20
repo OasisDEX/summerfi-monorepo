@@ -19,6 +19,10 @@ export const institutionsAdminPanelColumns = [
     label: 'Created At',
     accessor: 'createdAt',
   },
+  {
+    label: 'Actions',
+    accessor: 'actions',
+  },
 ]
 
 // Users admin panel

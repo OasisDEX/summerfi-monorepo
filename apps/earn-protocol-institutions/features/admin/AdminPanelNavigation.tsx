@@ -17,7 +17,7 @@ export const AdminPanelNavigation = () => {
     { href: '/admin/users', label: 'Users' },
   ]
 
-  const activePageLabel = links.find((link) => link.href === pathname)?.label
+  const activePageLabel = links.find((link) => pathname.startsWith(link.href))?.label
 
   return (
     <div className={adminPanelNavigationStyles.container}>
@@ -26,7 +26,9 @@ export const AdminPanelNavigation = () => {
         <div>
           {links.map((link) => (
             <Link key={link.href} href={link.href}>
-              <Button variant={pathname === link.href ? 'primarySmall' : 'textPrimarySmall'}>
+              <Button
+                variant={pathname.startsWith(link.href) ? 'primarySmall' : 'textPrimarySmall'}
+              >
                 {link.label}
               </Button>
             </Link>

@@ -4,6 +4,8 @@ import {
   ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
+import { revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
@@ -101,12 +103,14 @@ export async function updateInstitution(formData: FormData) {
         name: institutionName.trim(),
         displayName: displayName.trim(),
         logoUrl: typeof logoUrl === 'string' ? logoUrl.trim() : '',
-        logoFile,
+        logoFile: logoFile ? logoFile : undefined,
       })
       .where('id', '=', Number(institutionId))
       .execute()
   } finally {
     db.destroy()
+    revalidateTag('getInstitutionsList')
+    redirect('/admin/institutions')
   }
 }
 
@@ -206,6 +210,8 @@ export async function deleteInstitution(formData: FormData) {
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
+    revalidateTag('getInstitutionsList')
+    redirect('/admin/institutions')
   }
 }
 
@@ -227,4 +233,20 @@ export async function getInstitutionsList() {
       users,
     }
   })
+}
+
+export async function getInstitutionData(institutionDbId: number) {
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  const institution = await db
+    .selectFrom('institutions')
+    .selectAll()
+    .where('id', '=', institutionDbId)
+    .executeTakeFirst()
+
+  db.destroy()
+
+  return institution
 }
