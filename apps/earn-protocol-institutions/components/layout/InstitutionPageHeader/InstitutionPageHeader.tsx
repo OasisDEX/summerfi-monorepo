@@ -1,11 +1,12 @@
 'use client'
 import { type FC, type ReactNode } from 'react'
-import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { GeneralRoles } from '@summerfi/sdk-client'
 import { useRouter } from 'next/navigation'
 
-import { rolesToHuman } from '@/helpers/roles-to-human'
+import { useAuth } from '@/contexts/AuthContext/AuthContext'
+import { walletRolesToHuman } from '@/helpers/roles-to-human'
 import { type InstitutionData } from '@/types/institution-data'
 
 import styles from './InstitutionPageHeader.module.css'
@@ -32,8 +33,13 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
 }) => {
   const { push } = useRouter()
 
+  const { signOut, user } = useAuth()
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const roleResolved = connectedRole ? rolesToHuman(connectedRole) : 'No role connected'
+  const walletRole = connectedRole ? walletRolesToHuman(connectedRole) : 'No role connected'
+  const institutionUserRole = user
+    ? user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)?.role
+    : 'No role connected'
   const institutionsOptions: DropdownRawOption[] = institutionsList.map((institution) => ({
     value: institution.name,
     content: <DropdownContent>{institution.displayName}</DropdownContent>,
@@ -71,12 +77,27 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
         )}
       </div>
       <div className={styles.rightWrapper}>
-        <Text as="p" variant="p1semi">
-          Currently connected role:
-        </Text>
-        <Text as="p" variant="p1semi" style={{ color: 'var(--color-text-link)' }}>
-          {roleResolved}
-        </Text>
+        <div className={styles.rightWrapperItem}>
+          <Button variant="textSecondarySmall" onClick={signOut}>
+            Log out
+          </Button>
+        </div>
+        <div className={styles.rightWrapperItem}>
+          <Text as="p" variant="p1semi">
+            User role:
+          </Text>
+          <Text as="p" variant="p1semi" style={{ color: 'var(--color-text-link)' }}>
+            {institutionUserRole}
+          </Text>
+        </div>
+        <div className={styles.rightWrapperItem}>
+          <Text as="p" variant="p1semi">
+            Wallet role:
+          </Text>
+          <Text as="p" variant="p1semi" style={{ color: 'var(--color-text-link)' }}>
+            {walletRole}
+          </Text>
+        </div>
       </div>
     </div>
   )

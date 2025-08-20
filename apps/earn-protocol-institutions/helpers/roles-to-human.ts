@@ -5,7 +5,7 @@ import { GeneralRoles } from '@summerfi/sdk-client'
  * @param role - The institution role to convert
  * @returns The human-readable string
  */
-export const rolesToHuman = (role: GeneralRoles): string => {
+export const walletRolesToHuman = (role: GeneralRoles): string => {
   switch (role) {
     case GeneralRoles.SUPER_KEEPER_ROLE:
       return 'Super Keeper'

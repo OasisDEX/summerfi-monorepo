@@ -3,13 +3,13 @@ import {
   type UserRole,
 } from '@summerfi/summer-protocol-institutions-db'
 
-import { type SignInGlobalAdminResponse, type SignInUserResponse } from '@/types/auth'
+import { type SignInResponse } from '@/features/auth/types'
 
 export async function getEnrichedUser(params: {
   sub: string
   email: string
   name: string
-}): Promise<SignInUserResponse | SignInGlobalAdminResponse> {
+}): Promise<SignInResponse['user']> {
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
