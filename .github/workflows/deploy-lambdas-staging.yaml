@@ -26,7 +26,7 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
       DEBANK_API_KEY: ${{ secrets.DEBANK_API_KEY }}
-      DEBANK_API_URL: ${{ secrets.STAGING_DEBANK_API_URL }}
+      DEBANK_API_URL: ${{ vars.DEBANK_API_URL }}
       FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
       POWERTOOLS_LOG_LEVEL: ${{ vars.POWERTOOLS_LOG_LEVEL }}
       REDIS_CACHE_URL: ${{ secrets.REDIS_CACHE_URL }}

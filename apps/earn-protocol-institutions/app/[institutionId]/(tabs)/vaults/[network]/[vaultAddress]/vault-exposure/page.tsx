@@ -53,11 +53,7 @@ export default async function InstitutionVaultVaultExposurePage({
 
   const [arkInterestRates, vaultsApyRaw] = await Promise.all([
     vault.arks.length
-      ? unstableCache(
-          getArksInterestRates,
-          [parsedNetwork],
-          cacheConfig,
-        )({
+      ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
         })

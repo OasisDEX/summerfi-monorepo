@@ -1,0 +1,59 @@
+.panelAssetRelocationWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium-large);
+
+  .contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-medium-large);
+
+    .tableWrapper {
+      overflow-x: auto;
+
+      .table {
+        min-width: max-content;
+      }
+    }
+
+    .inputContainer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .inputWrapper {
+        max-width: 130px;
+        height: 28px;
+        padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
+        border-radius: var(--radius-small);
+        font-size: 12px;
+        text-align: right;
+      }
+
+      /* Target number inputs with the inputWrapper class */
+      .inputWrapper[type='number']::-webkit-outer-spin-button,
+      .inputWrapper[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .inputWrapper[type='number'] {
+        -moz-appearance: textfield;
+      }
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-space-medium);
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-space-medium);
+    }
+  }
+}

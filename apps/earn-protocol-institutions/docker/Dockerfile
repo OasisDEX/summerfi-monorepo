@@ -8,6 +8,7 @@ COPY public .next/standalone/apps/earn-protocol-institutions/public
 COPY .next/static .next/standalone/apps/earn-protocol-institutions/.next/static
 
 ARG CONFIG_URL_EARN \
+    ACCOUNT_KIT_API_KEY \
     EARN_MIXPANEL_KEY \
     SUBGRAPH_BASE \
     NEXT_PUBLIC_EARN_MIXPANEL_KEY \
@@ -32,6 +33,7 @@ ARG CONFIG_URL_EARN \
 
 
 ENV CONFIG_URL_EARN=$CONFIG_URL_EARN \
+    ACCOUNT_KIT_API_KEY=$ACCOUNT_KIT_API_KEY \
     EARN_MIXPANEL_KEY=$EARN_MIXPANEL_KEY \
     SUBGRAPH_BASE=$SUBGRAPH_BASE \
     NEXT_PUBLIC_EARN_MIXPANEL_KEY=$NEXT_PUBLIC_EARN_MIXPANEL_KEY \
