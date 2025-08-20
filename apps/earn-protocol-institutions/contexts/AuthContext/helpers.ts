@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { type SignInResponse } from '@/types/auth'
+import { type SignInResponse } from '@/features/auth/types'
 
 export const authComputeDelayMs = (exp: number, leadSec = 30) => {
   const nowSec = dayjs().unix()
