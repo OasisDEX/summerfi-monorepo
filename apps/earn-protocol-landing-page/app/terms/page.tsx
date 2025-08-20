@@ -344,15 +344,15 @@ export default function TermsOfServicePage() {
           agree to these Rewards Program Terms in their entirety, then you cannot participate in the
           Program. Users also cannot participate where (i) by so doing, they would violate any
           applicable law or regulations that may apply to that User and (ii) the User or the
-          Refferred User (as defined below) do not comply with the eligibility requirements set
-          forth in Section 2. By participating in the Program, the User repeats the representations
-          and warranties made to the Company pursuant to Section 1.2.
+          Referred User (as defined below) do not comply with the eligibility requirements set forth
+          in Section 2. By participating in the Program, the User repeats the representations and
+          warranties made to the Company pursuant to Section 1.2.
         </Text>
         <Text as="h5" variant="h5">
           Eligibility
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          This Pogram is void where such programs are prohibited. Users who refer other users who
+          This Program is void where such programs are prohibited. Users who refer other users who
           join the Program are &quot;Referrers&quot;; those who are referred to the Program are
           &quot;Referred Users.&quot; Referrers may be eligible to receive Rewards for every
           qualified transaction by a Referred User, in accordance to the specific terms of the
@@ -364,10 +364,10 @@ export default function TermsOfServicePage() {
           Privacy and Personal Data
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          You may be required to shared certain information about yourself in order to be able to
+          You may be required to share certain information about yourself in order to be able to
           participate in the Programs or to receive the Rewards. If you do not wish to share that
           information you may not participate in Program. Please refer to the Company’s Privacy
-          Policy for details on your privacy rights and information on how the Company colelcts and
+          Policy for details on your privacy rights and information on how the Company collects and
           processes personal data.
         </Text>
         <Text as="h5" variant="h5">
@@ -391,8 +391,8 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Both the Referrer and the Referred User shall be informed of the Rewards to which they are
-          elible, in accordance to the specific terms of each Program. A Referrer or Referred User
-          may claim their Rewards balance as precribed in the specific Program’s terms.
+          eligible, in accordance to the specific terms of each Program. A Referrer or Referred User
+          may claim their Rewards balance as prescribed in the specific Program’s terms.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Each Program is subject to its own specific terms and conditions, which shall be
@@ -1374,7 +1374,7 @@ export default function TermsOfServicePage() {
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           You are asked to read the Privacy Policy before you use the Site or Services or
-          aprticipate in the Programs. If you are unwilling to accept the terms and conditions of
+          participate in the Programs. If you are unwilling to accept the terms and conditions of
           the Privacy Policy, please do not use or immediately discontinue use of the Site and the
           Services.
         </Text>

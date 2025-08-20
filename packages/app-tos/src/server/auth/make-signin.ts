@@ -1,4 +1,4 @@
-import { type JWTChallenge, type JwtPayload, SDKChainId } from '@summerfi/app-types'
+import { type JWTChallenge, type JwtPayload, SupportedNetworkIds } from '@summerfi/app-types'
 import { chainIdSchema, getRpcGatewayEndpoint, type IRpcConfig } from '@summerfi/serverless-shared'
 import { jwtVerify, SignJWT } from 'jose'
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
@@ -10,7 +10,7 @@ import {
   type PublicClient,
   recoverMessageAddress,
 } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
+import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 import * as z from 'zod'
 
 import { checkIfArgentWallet } from '@/server/helpers/check-if-argent'
@@ -28,13 +28,11 @@ const inputSchema = z.object({
   type: TOSMessageTypeSchema,
 })
 
-const domainChainIdToViemChain: { [key in SDKChainId]: ViemChain } = {
-  [SDKChainId.MAINNET]: mainnet,
-  [SDKChainId.ARBITRUM]: arbitrum,
-  [SDKChainId.OPTIMISM]: optimism,
-  [SDKChainId.BASE]: base,
-  [SDKChainId.SEPOLIA]: sepolia,
-  [SDKChainId.SONIC]: sonic,
+const domainChainIdToViemChain: { [key in SupportedNetworkIds]: ViemChain } = {
+  [SupportedNetworkIds.Mainnet]: mainnet,
+  [SupportedNetworkIds.ArbitrumOne]: arbitrum,
+  [SupportedNetworkIds.Base]: base,
+  [SupportedNetworkIds.SonicMainnet]: sonic,
 }
 const rpcConfig: IRpcConfig = {
   skipCache: false,

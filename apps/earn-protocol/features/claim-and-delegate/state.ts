@@ -4,12 +4,14 @@ import {
   ClaimDelegateStakeType,
   type ClaimDelegateState,
   ClaimDelegateSteps,
+  type MerklIsAuthorizedPerChain,
   type WalletBalances,
 } from '@/features/claim-and-delegate/types'
 
 export const claimDelegateState: ClaimDelegateState = {
   step: ClaimDelegateSteps.TERMS,
   delegatee: undefined,
+  merklStatus: undefined,
   claimStatus: undefined,
   delegateStatus: undefined,
   stakingStatus: undefined,
@@ -20,6 +22,7 @@ export const claimDelegateState: ClaimDelegateState = {
   pendingClaimChainId: undefined,
   claimableBalances: {} as ClaimableBalances,
   walletBalances: {} as WalletBalances,
+  merklIsAuthorizedPerChain: {} as MerklIsAuthorizedPerChain,
 }
 
 export const claimDelegateReducer = (
@@ -41,6 +44,11 @@ export const claimDelegateReducer = (
       return {
         ...prevState,
         claimStatus: action.payload,
+      }
+    case 'update-merkl-status':
+      return {
+        ...prevState,
+        merklStatus: action.payload,
       }
     case 'update-delegate-status':
       return {
@@ -82,6 +90,11 @@ export const claimDelegateReducer = (
       return {
         ...prevState,
         walletBalances: action.payload,
+      }
+    case 'update-merkl-is-authorized-per-chain':
+      return {
+        ...prevState,
+        merklIsAuthorizedPerChain: action.payload,
       }
     default:
       return prevState

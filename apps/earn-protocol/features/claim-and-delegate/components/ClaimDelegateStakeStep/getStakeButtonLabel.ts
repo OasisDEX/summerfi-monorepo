@@ -1,7 +1,8 @@
+import { UiTransactionStatuses } from '@summerfi/app-types'
+
 import {
   ClaimDelegateStakeType,
   type ClaimDelegateState,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 
 export const getStakeButtonLabel = ({
@@ -19,22 +20,22 @@ export const getStakeButtonLabel = ({
     return isMobile ? 'Change network' : 'Change network to Base'
   }
 
-  if (state.stakingApproveStatus === ClaimDelegateTxStatuses.PENDING) {
+  if (state.stakingApproveStatus === UiTransactionStatuses.PENDING) {
     return 'Approving...'
   }
 
-  if (state.stakingStatus === ClaimDelegateTxStatuses.PENDING) {
+  if (state.stakingStatus === UiTransactionStatuses.PENDING) {
     return state.stakeType === ClaimDelegateStakeType.ADD_STAKE ? 'Staking...' : 'Unstaking...'
   }
 
-  if ([state.stakingStatus, state.stakingApproveStatus].includes(ClaimDelegateTxStatuses.FAILED)) {
+  if ([state.stakingStatus, state.stakingApproveStatus].includes(UiTransactionStatuses.FAILED)) {
     return 'Retry'
   }
 
   if (
     withApproval &&
     state.stakeType === ClaimDelegateStakeType.ADD_STAKE &&
-    state.stakingApproveStatus !== ClaimDelegateTxStatuses.COMPLETED
+    state.stakingApproveStatus !== UiTransactionStatuses.COMPLETED
   ) {
     return 'Approve'
   }

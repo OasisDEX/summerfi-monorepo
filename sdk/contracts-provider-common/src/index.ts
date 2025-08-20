@@ -5,6 +5,10 @@ export type { IContractWrapper } from './interfaces/contracts/IContractWrapper'
 export type { IErc20Contract } from './interfaces/contracts/IErc20Contract'
 export type { IErc4626Contract } from './interfaces/contracts/IErc4626Contract'
 export type { IFleetCommanderContract } from './interfaces/contracts/IFleetCommanderContract'
+export {
+  type IProtocolAccessManagerWhiteListContract,
+  ContractSpecificRoleName,
+} from './interfaces/contracts/IProtocolAccessManagerWhiteListContract'
 export { RebalanceDataSchema, isRebalanceData } from './interfaces/types/IRebalanceData'
 export type { IRebalanceData, IRebalanceDataData } from './interfaces/types/IRebalanceData'
 export type { IFleetConfig } from './interfaces/types/IFleetConfig'

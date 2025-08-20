@@ -12,7 +12,8 @@ interface ContentProps {
 const Content: FC<ContentProps> = ({ option }) => (
   <>
     {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
-    {'iconName' in option && <Icon iconName={option.iconName} />}
+    {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+    {'iconName' in option && option.iconName && <Icon iconName={option.iconName} />}
     {'icon' in option && (
       <div
         dangerouslySetInnerHTML={{ __html: option.icon }}

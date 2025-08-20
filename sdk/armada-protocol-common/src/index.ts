@@ -1,4 +1,5 @@
 export type { IRebalanceData } from '@summerfi/contracts-provider-common'
+export { ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
 export type {
   GetVaultsQuery,
   GetVaultQuery,
@@ -46,17 +47,26 @@ export { getAllMerkleClaims } from './distributions/index'
 export type { IArmadaManagerBridge } from './common/interfaces/IArmadaManagerBridge'
 export type { IArmadaManagerVaults } from './common/interfaces/IArmadaManagerVaults'
 export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtils'
+export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
+export type { IArmadaManagerAccessControl } from './common/interfaces/IArmadaManagerAccessControl'
+export { GeneralRoles, GENERAL_ROLE_HASHES } from './common/types/GeneralRoles'
 export {
   setTestDeployment,
   isTestDeployment,
-  getDeployedContractAddress,
+  getDeploymentConfigContractAddress,
   getAaveV3Address,
   getCompoundV3Address,
   getDeployedRewardsRedeemerAddress,
   getDeployedGovRewardsManagerAddress,
   getLayerZeroConfig,
+  getDeploymentsJsonConfig,
 } from './deployments/index'
+export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
 export type {
-  IArmadaManagerMerklRewards,
   MerklReward,
-} from './common/interfaces/IArmadaManagerMerklRewards'
+  MerklRewardsBreakdown,
+  MerklRewardsRecord,
+  MerklOpportunitiesResponse,
+  MerklOpportunityResponse,
+  MerklRewardsToken,
+} from './common/types/MerklTypes'

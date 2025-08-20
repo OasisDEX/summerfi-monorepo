@@ -1,10 +1,10 @@
-import { SDKChainId, type TokenSymbolsList } from '@summerfi/app-types'
+import { SupportedNetworkIds, type TokenSymbolsList } from '@summerfi/app-types'
 
 // For swap testing purposes only adding testToken to dropdown
 const swapTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   // base
   // ETH WETH DAI cbETH tBTC COMP USDC rETH WstETH UNI sUSDe cbBTC MORPHO USDS sUSDS
-  [SDKChainId.BASE]: [
+  [SupportedNetworkIds.Base]: [
     'ETH',
     'WETH',
     'DAI',
@@ -21,7 +21,7 @@ const swapTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   ],
   // arbitrum
   // AAVE rETH USDC WstETH USDs UNI USDT USDC.e WBTC WETH DAI LDO LINK MKR ETH COMP ARB weETH USDe cbBTC
-  [SDKChainId.ARBITRUM]: [
+  [SupportedNetworkIds.ArbitrumOne]: [
     'AAVE',
     'RETH',
     'USDC',
@@ -45,7 +45,7 @@ const swapTokens: { [key: number]: TokenSymbolsList[] | undefined } = {
   ],
   // mainnet
   // PYUSD LDO WBTC LINK MKR USDC COMP WETH USDT ETH DAI UNI AAVE WstETH rETH cbETH tBTC ARB sDAI weETH USDe sUSDe RSETH rswETH ENA USD0 USD0++ cbBTC SKY USDS sUSDS MORPHO
-  [SDKChainId.MAINNET]: [
+  [SupportedNetworkIds.Mainnet]: [
     'PYUSD',
     'LDO',
     'WBTC',

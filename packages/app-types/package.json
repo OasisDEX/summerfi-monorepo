@@ -15,6 +15,7 @@
     "@summerfi/sdk-client-react": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",
+    "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
     "@types/react": "19.0.8"

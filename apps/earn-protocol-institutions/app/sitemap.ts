@@ -1,11 +1,15 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type MetadataRoute } from 'next'
-
-import systemConfigHandler from '@/app/server-handlers/system-config'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [configRaw] = await Promise.all([systemConfigHandler()])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+    revalidate: REVALIDATION_TIMES.CONFIG,
+  })()
+
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const isStaging = systemConfig.deployment?.isStaging
 

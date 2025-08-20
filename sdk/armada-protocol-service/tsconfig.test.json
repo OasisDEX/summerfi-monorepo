@@ -15,6 +15,7 @@
       "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
       "@summerfi/contracts-provider-service": ["../contracts-provider-service/src/index.ts"],
+      "@summerfi/contracts-provider-common": ["../contracts-provider-common/src/index.ts"],
       "@summerfi/allowance-manager-service": [
         "node_modules/@summerfi/allowance-manager-service/src/index.ts"
       ],

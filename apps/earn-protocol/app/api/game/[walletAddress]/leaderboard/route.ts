@@ -1,10 +1,10 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { addressSchema, getRpcGatewayEndpoint, type IRpcConfig } from '@summerfi/serverless-shared'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import dayjs from 'dayjs'
 import { type NextRequest, NextResponse } from 'next/server'
 import { type Chain, createPublicClient, http, type PublicClient } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
+import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 import { z } from 'zod'
 
 import {
@@ -15,13 +15,11 @@ import {
   scoreMakesSenseCheck,
 } from '@/features/game/helpers/gameHelpers'
 
-const domainChainIdToViemChain: { [key in SDKChainId]: Chain } = {
-  [SDKChainId.MAINNET]: mainnet,
-  [SDKChainId.ARBITRUM]: arbitrum,
-  [SDKChainId.OPTIMISM]: optimism,
-  [SDKChainId.BASE]: base,
-  [SDKChainId.SEPOLIA]: sepolia,
-  [SDKChainId.SONIC]: sonic,
+const domainChainIdToViemChain: { [key in SupportedNetworkIds]: Chain } = {
+  [SupportedNetworkIds.Mainnet]: mainnet,
+  [SupportedNetworkIds.ArbitrumOne]: arbitrum,
+  [SupportedNetworkIds.Base]: base,
+  [SupportedNetworkIds.SonicMainnet]: sonic,
 }
 
 const rpcConfig: IRpcConfig = {
@@ -113,7 +111,7 @@ export async function POST(
     }
 
     // check the signature
-    const viemChain: Chain = domainChainIdToViemChain[Number(chainId) as SDKChainId]
+    const viemChain: Chain = domainChainIdToViemChain[Number(chainId) as SupportedNetworkIds]
     const rpcUrl = getRpcGatewayEndpoint(rpcGateway, Number(chainId), rpcConfig)
 
     const transport = http(rpcUrl, {

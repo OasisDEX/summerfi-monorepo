@@ -1,5 +1,5 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ChainIds } from '@summerfi/sdk-common'
 import assert from 'assert'
 import { TestManagerProvider, TestProviderType } from './mocks/TestManagerProvider'
 import { TestManager } from './mocks/TestManagerWithProviders'
@@ -11,14 +11,14 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
     testManager = new TestManager({
       providers: [
         new TestManagerProvider({
-          type: TestProviderType.TestProvider,
+          type: TestProviderType.MainnetProvider,
           configProvider: {} as unknown as IConfigurationProvider,
-          supportedChainIds: [1],
+          supportedChainIds: [ChainIds.Mainnet],
         }),
         new TestManagerProvider({
-          type: TestProviderType.OtherTestProvider,
+          type: TestProviderType.ArbitrumProvider,
           configProvider: {} as unknown as IConfigurationProvider,
-          supportedChainIds: [10],
+          supportedChainIds: [ChainIds.ArbitrumOne],
         }),
       ],
     })
@@ -30,39 +30,39 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
     })
     assert(providerMainnet, 'Provider not found')
 
-    expect(providerMainnet.type).toBe(TestProviderType.TestProvider)
+    expect(providerMainnet.type).toBe(TestProviderType.MainnetProvider)
 
-    const providerOptimism = testManager.getBestProvider({
-      chainInfo: ChainFamilyMap.Optimism.Optimism,
+    const providerArbitrum = testManager.getBestProvider({
+      chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
     })
-    assert(providerOptimism, 'Provider not found')
+    assert(providerArbitrum, 'Provider not found')
 
-    expect(providerOptimism.type).toBe(TestProviderType.OtherTestProvider)
+    expect(providerArbitrum.type).toBe(TestProviderType.ArbitrumProvider)
   })
 
   it('should return the forced provider when requested, ignoring the chain', () => {
     const providerMainnet = testManager.getBestProvider({
-      chainInfo: ChainFamilyMap.Optimism.Optimism,
-      forceUseProvider: TestProviderType.TestProvider,
+      chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
+      forceUseProvider: TestProviderType.MainnetProvider,
     })
     assert(providerMainnet, 'Provider not found')
 
-    expect(providerMainnet.type).toBe(TestProviderType.TestProvider)
+    expect(providerMainnet.type).toBe(TestProviderType.MainnetProvider)
 
-    const providerOptimism = testManager.getBestProvider({
+    const providerArbitrum = testManager.getBestProvider({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-      forceUseProvider: TestProviderType.OtherTestProvider,
+      forceUseProvider: TestProviderType.ArbitrumProvider,
     })
-    assert(providerOptimism, 'Provider not found')
+    assert(providerArbitrum, 'Provider not found')
 
-    expect(providerOptimism.type).toBe(TestProviderType.OtherTestProvider)
+    expect(providerArbitrum.type).toBe(TestProviderType.ArbitrumProvider)
   })
 
   it('should throw when no provider is found for the given chain', () => {
     expect(() =>
       testManager.getBestProvider({
-        chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
+        chainInfo: ChainFamilyMap.Optimism.Optimism, // ChainId 10 is not supported
       }),
-    ).toThrow('No provider found for chainId: 42161')
+    ).toThrow('No provider found for chainId: 10')
   })
 })

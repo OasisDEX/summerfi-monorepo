@@ -149,14 +149,6 @@ export type {
   TOSWaitingForSignatureStep,
 } from './src/terms-of-service'
 export type { JWTChallenge, JwtPayload } from './src/auth'
-export {
-  SDKChainId,
-  SDKNetwork,
-  SDKSupportedNetworkIdsEnum,
-  UserActivityType,
-  sdkSupportedChains,
-  sdkSupportedNetworks,
-} from './src/earn-protocol'
 export type { RiskType } from './src/earn-protocol/risk'
 export type {
   ArkDetailsType,
@@ -177,8 +169,6 @@ export type {
   PositionForecastAPIResponse,
   SDKGlobalRebalancesType,
   SDKGlobalRebalanceType,
-  SDKSupportedChain,
-  SDKSupportedNetwork,
   SDKUserActivityType,
   SDKUsersActivityType,
   SDKVaultishType,
@@ -194,8 +184,21 @@ export type {
   SupportedDefillamaTvlProtocols,
   ProAppStats,
   TotalRebalanceItemsPerStrategyId,
+  InterestRates,
+  GetInterestRatesQuery,
+  GetInterestRatesDocument,
+  AggregatedFleetRate,
+  HistoricalFleetRates,
+  HistoricalFleetRateResult,
 } from './src/earn-protocol'
-export { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from './src/earn-protocol'
+export {
+  supportedDefillamaProtocols,
+  supportedDefillamaProtocolsConfig,
+  SupportedNetworkIds,
+  SupportedSDKNetworks,
+  UserActivityType,
+  UiTransactionStatuses,
+} from './src/earn-protocol'
 export { DeviceType } from './src/device-type'
 export type { DeviceInfo } from './src/device-type'
 export { TransactionAction } from './src/transaction'

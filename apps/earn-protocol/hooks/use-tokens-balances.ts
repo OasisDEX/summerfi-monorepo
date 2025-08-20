@@ -1,4 +1,5 @@
-import { SDKChainId, SDKNetwork } from '@summerfi/app-types'
+import { useUserWallet } from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds, SupportedSDKNetworks } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
 import {
@@ -9,13 +10,12 @@ import {
 } from '@/helpers/get-fe-public-client'
 import { supportedNetworkGuard } from '@/helpers/supported-network-guard'
 import { type TokenBalanceData, useTokenBalance } from '@/hooks/use-token-balance'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 /**
  * Hook to fetch token and vault token balances for a specific network
  * @param {Object} params - The parameters object
  * @param {string} params.tokenSymbol - The symbol of the token to fetch balance for
- * @param {SDKNetwork} params.network - The network to fetch balances from (Arbitrum or Base)
+ * @param {SupportedSDKNetworks} params.network - The network to fetch balances from (Arbitrum or Base)
  * @param {string} params.vaultTokenSymbol - The symbol of the vault token
  * @returns {Object} Object containing:
  *  - token: Token information
@@ -30,7 +30,7 @@ export const useTokenBalances = ({
   vaultTokenSymbol,
 }: {
   tokenSymbol: string
-  network: SDKNetwork
+  network: SupportedSDKNetworks
   vaultTokenSymbol: string
 }): TokenBalanceData => {
   if (!supportedNetworkGuard(network)) {
@@ -42,36 +42,36 @@ export const useTokenBalances = ({
     tokenSymbol,
     vaultTokenSymbol,
     publicClient: arbitrumPublicClient,
-    chainId: SDKChainId.ARBITRUM,
-    skip: network !== SDKNetwork.ArbitrumOne,
+    chainId: SupportedNetworkIds.ArbitrumOne,
+    skip: network !== SupportedSDKNetworks.ArbitrumOne,
   })
   const baseTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
     publicClient: basePublicClient,
-    chainId: SDKChainId.BASE,
-    skip: network !== SDKNetwork.Base,
+    chainId: SupportedNetworkIds.Base,
+    skip: network !== SupportedSDKNetworks.Base,
   })
   const mainnetTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
     publicClient: mainnetPublicClient,
-    chainId: SDKChainId.MAINNET,
-    skip: network !== SDKNetwork.Mainnet,
+    chainId: SupportedNetworkIds.Mainnet,
+    skip: network !== SupportedSDKNetworks.Mainnet,
   })
   const sonicTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
     publicClient: sonicPublicClient,
-    chainId: SDKChainId.SONIC,
-    skip: network !== SDKNetwork.SonicMainnet,
+    chainId: SupportedNetworkIds.SonicMainnet,
+    skip: network !== SupportedSDKNetworks.SonicMainnet,
   })
 
   const balance = {
-    [SDKNetwork.ArbitrumOne]: arbitrumTokenBalance,
-    [SDKNetwork.Base]: baseTokenBalance,
-    [SDKNetwork.Mainnet]: mainnetTokenBalance,
-    [SDKNetwork.SonicMainnet]: sonicTokenBalance,
+    [SupportedSDKNetworks.ArbitrumOne]: arbitrumTokenBalance,
+    [SupportedSDKNetworks.Base]: baseTokenBalance,
+    [SupportedSDKNetworks.Mainnet]: mainnetTokenBalance,
+    [SupportedSDKNetworks.SonicMainnet]: sonicTokenBalance,
   }[network]
 
   /**

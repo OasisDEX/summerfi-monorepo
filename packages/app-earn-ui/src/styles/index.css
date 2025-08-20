@@ -91,8 +91,8 @@ body {
   --color-surface-lighter: var(--earn-protocol-neutral-60);
   --color-text-primary: var(--earn-protocol-secondary-100);
   --color-text-primary-hover: var(--earn-protocol-secondary-70);
-  --color-text-primary-disabled: rgba(255, 251, 253, 0.5);
-  --color-text-secondary-disabled: rgba(255, 251, 253, 0.5);
+  --color-text-primary-disabled: var(--earn-protocol-secondary-40);
+  --color-text-secondary-disabled: var(--earn-protocol-secondary-40);
   --color-text-secondary: var(--earn-protocol-secondary-60);
   --color-text-link: var(--earn-protocol-primary-100);
   --color-text-link-hover: var(--earn-protocol-primary-70);
@@ -122,15 +122,21 @@ body {
   --radius-rounder: var(--general-radius-32);
   --radius-circle: var(--general-radius-50);
   --gradient-earn-protocol-dark: linear-gradient(90deg, #ff49a4 0%, #b049ff 100%);
-  --gradient-earn-protocol-light: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.5) 0%,
-      rgba(176, 73, 255, 0.5) 100%);
-  --gradient-earn-protocol-dark-10: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.1) 0%,
-      rgba(176, 73, 255, 0.1) 100%);
-  --gradient-earn-protocol-light-10: linear-gradient(90deg,
-      rgba(255, 73, 164, 0.1) 0%,
-      rgba(176, 73, 255, 0.1) 100%);
+  --gradient-earn-protocol-light: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.5) 0%,
+    rgba(176, 73, 255, 0.5) 100%
+  );
+  --gradient-earn-protocol-dark-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
+  --gradient-earn-protocol-light-10: linear-gradient(
+    90deg,
+    rgba(255, 73, 164, 0.1) 0%,
+    rgba(176, 73, 255, 0.1) 100%
+  );
   --shadow-depth-1: 0px 0px 8px 0px #0000001a;
   --shadow-depth-2: 0px 0px 8px 8px #00000026;
   --shadow-depth-3: 0px 4px 8px 0px #00000033;
@@ -155,18 +161,26 @@ body {
   --beach-club-tab-underline: rgba(110, 219, 152, 1);
 
   --gradient-earn-protocol-beach-club-1: linear-gradient(90deg, #ffe74a 0%, #2cecf2 98.56%);
-  --gradient-earn-protocol-beach-club-2: linear-gradient(269.08deg,
-      #136ff1 -15.48%,
-      #14407f 91.66%);
-  --gradient-earn-protocol-beach-club-3: linear-gradient(149.97deg,
-      #054cdb 31.92%,
-      #13cbdf 118.76%);
-  --gradient-earn-protocol-beach-club-4: linear-gradient(156.6deg,
-      #139adf -29.11%,
-      #054cdb 126.91%);
-  --gradient-earn-protocol-beach-club-5: linear-gradient(90deg,
-      rgba(255, 210, 74, 0.03) 0%,
-      rgba(49, 223, 186, 0.03) 93%);
+  --gradient-earn-protocol-beach-club-2: linear-gradient(
+    269.08deg,
+    #136ff1 -15.48%,
+    #14407f 91.66%
+  );
+  --gradient-earn-protocol-beach-club-3: linear-gradient(
+    149.97deg,
+    #054cdb 31.92%,
+    #13cbdf 118.76%
+  );
+  --gradient-earn-protocol-beach-club-4: linear-gradient(
+    156.6deg,
+    #139adf -29.11%,
+    #054cdb 126.91%
+  );
+  --gradient-earn-protocol-beach-club-5: linear-gradient(
+    90deg,
+    rgba(255, 210, 74, 0.03) 0%,
+    rgba(49, 223, 186, 0.03) 93%
+  );
 }
 
 .grecaptcha-badge {

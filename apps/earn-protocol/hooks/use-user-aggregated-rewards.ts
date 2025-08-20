@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -7,7 +7,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 const getUser = (address: string) =>
   User.createFrom({
     // chainId doesn't matter here since aggregated rewards are fetched from all chains
-    chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+    chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
     wallet: Wallet.createFrom({
       address: Address.createFromEthereum({ value: address }),
     }),
@@ -21,17 +21,10 @@ const getUser = (address: string) =>
  * @returns {Object} returns.aggregatedRewards - Total rewards and per-chain breakdown
  * @returns {bigint} returns.aggregatedRewards.total - Total rewards across all chains
  * @returns {Object.<number, bigint>} returns.aggregatedRewards.perChain - Rewards broken down by chain ID
- * @returns {Object} returns.claimableAggregatedRewards - Total claimable rewards and per-chain breakdown
- * @returns {bigint} returns.claimableAggregatedRewards.total - Total claimable rewards across all chains
- * @returns {Object.<number, bigint>} returns.claimableAggregatedRewards.perChain - Claimable rewards broken down by chain ID
  * @returns {boolean} returns.isLoading - Loading state of the rewards fetch
  */
 export const useUserAggregatedRewards = ({ walletAddress }: { walletAddress?: string }) => {
   const [aggregatedRewards, setAggregatedRewards] = useState<{
-    total: bigint
-    perChain: { [key: number]: bigint }
-  }>()
-  const [claimableAggregatedRewards, setClaimableAggregatedRewards] = useState<{
     total: bigint
     perChain: { [key: number]: bigint }
   }>()
@@ -48,12 +41,7 @@ export const useUserAggregatedRewards = ({ walletAddress }: { walletAddress?: st
           user,
         })
 
-        const _claimableAggregatedRewards = await sdk.getClaimableAggregatedRewards({
-          user,
-        })
-
         setAggregatedRewards(_aggregatedRewards)
-        setClaimableAggregatedRewards(_claimableAggregatedRewards)
 
         setIsLoading(false)
       } catch (error) {
@@ -69,5 +57,5 @@ export const useUserAggregatedRewards = ({ walletAddress }: { walletAddress?: st
     }
   }, [sdk, walletAddress])
 
-  return { aggregatedRewards, claimableAggregatedRewards, isLoading }
+  return { aggregatedRewards, isLoading }
 }

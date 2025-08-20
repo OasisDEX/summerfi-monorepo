@@ -1,9 +1,7 @@
 import { useCallback } from 'react'
 import { useSigner, useSignMessage, useSmartAccountClient, useUser } from '@account-kit/react'
+import { AccountKitAccountType, accountType } from '@summerfi/app-earn-ui'
 import { type TOSSignMessage } from '@summerfi/app-tos'
-
-import { accountType } from '@/account-kit/config'
-import { AccountKitAccountType } from '@/account-kit/types'
 
 /**
  * Hook to handle signing Terms of Service messages for both EOA and Smart Contract accounts

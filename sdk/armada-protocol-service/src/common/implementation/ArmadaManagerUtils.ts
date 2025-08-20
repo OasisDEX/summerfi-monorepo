@@ -1,7 +1,6 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeployedContractAddress,
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   type IArmadaManagerUtils,
@@ -17,7 +16,6 @@ import {
   LoggingService,
   Price,
   TokenAmount,
-  TransactionInfo,
   type ChainInfo,
   type HexData,
   type IPercentage,
@@ -30,13 +28,14 @@ import {
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, zeroAddress } from 'viem'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
+import type { IDeploymentProvider } from '../..'
 
 /**
  * @name ArmadaManagerUtils
@@ -45,7 +44,6 @@ import { BigNumber } from 'bignumber.js'
 export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
-  private _isTestDeployment: boolean
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
@@ -56,6 +54,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _swapManager: ISwapManager
   private _oracleManager: IOracleManager
   private _tokensManager: ITokensManager
+  private _deploymentProvider: IDeploymentProvider
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -67,6 +66,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     swapManager: ISwapManager
     oracleManager: IOracleManager
     tokensManager: ITokensManager
+    deploymentProvider: IDeploymentProvider
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -76,8 +76,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
-
-    this._isTestDeployment = isTestDeployment()
+    this._deploymentProvider = params.deploymentProvider
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -95,7 +94,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   getSummerToken(
     params: Parameters<IArmadaManagerUtils['getSummerToken']>[0],
   ): ReturnType<IArmadaManagerUtils['getSummerToken']> {
-    const tokenSymbol = this._isTestDeployment ? 'BUMMER' : 'SUMR'
+    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
 
     return this._tokensManager.getTokenBySymbol({
       chainInfo: params.chainInfo,
@@ -217,13 +216,17 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       chainInfo: params.vaultId.chainInfo,
     })
 
+    const isStakingRewardsManagerZero = stakingRewardsManager.value === zeroAddress
+
     const [balance, token] = await Promise.all([
-      client.readContract({
-        abi: StakingRewardsManagerBaseAbi,
-        address: stakingRewardsManager.value,
-        functionName: 'balanceOf',
-        args: [params.user.wallet.address.value],
-      }),
+      isStakingRewardsManagerZero
+        ? Promise.resolve(0n)
+        : client.readContract({
+            abi: StakingRewardsManagerBaseAbi,
+            address: stakingRewardsManager.value,
+            functionName: 'balanceOf',
+            args: [params.user.wallet.address.value],
+          }),
       fleetContract.asErc20().getToken(),
     ])
 
@@ -312,194 +315,6 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     return erc4626Contract.convertToAssets({ amount: params.amount })
   }
 
-  /** KEEPERS TRANSACTIONS */
-
-  /** @see IArmadaManagerUtils.rebalance */
-  async rebalance(
-    params: Parameters<IArmadaManagerUtils['rebalance']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManagerUtils.adjustBuffer */
-  async adjustBuffer(
-    params: Parameters<IArmadaManagerUtils['adjustBuffer']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
-  }
-
-  /** GOVERNANCE TRANSACTIONS */
-
-  /** @see IArmadaManagerUtils.setFleetDepositCap */
-  async setFleetDepositCap(
-    params: Parameters<IArmadaManagerUtils['setFleetDepositCap']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setFleetDepositCap({ cap: params.cap })
-  }
-
-  /** @see IArmadaManagerUtils.setTipJar */
-  async setTipJar(
-    params: Parameters<IArmadaManagerUtils['setTipJar']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipJar()
-  }
-
-  /** @see IArmadaManagerUtils.setTipRate */
-  async setTipRate(
-    params: Parameters<IArmadaManagerUtils['setTipRate']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipRate({ rate: params.rate })
-  }
-
-  /** @see IArmadaManagerUtils.addArk */
-  async addArk(params: Parameters<IArmadaManagerUtils['addArk']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.addArk({ ark: params.ark })
-  }
-
-  /** @see IArmadaManagerUtils.addArks */
-  async addArks(params: Parameters<IArmadaManagerUtils['addArks']>[0]): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.addArks({ arks: params.arks })
-  }
-
-  /** @see IArmadaManagerUtils.removeArk */
-  async removeArk(
-    params: Parameters<IArmadaManagerUtils['removeArk']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.removeArk({ ark: params.ark })
-  }
-
-  /** @see IArmadaManagerUtils.setArkDepositCap */
-  async setArkDepositCap(
-    params: Parameters<IArmadaManagerUtils['setArkDepositCap']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
-  }
-
-  /** @see IArmadaManagerUtils.setArkMaxRebalanceOutflow */
-  async setArkMaxRebalanceOutflow(
-    params: Parameters<IArmadaManagerUtils['setArkMaxRebalanceOutflow']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkMaxRebalanceOutflow({
-      ark: params.ark,
-      maxRebalanceOutflow: params.maxRebalanceOutflow,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.setArkMaxRebalanceInflow */
-  async setArkMaxRebalanceInflow(
-    params: Parameters<IArmadaManagerUtils['setArkMaxRebalanceInflow']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setArkMaxRebalanceInflow({
-      ark: params.ark,
-      maxRebalanceInflow: params.maxRebalanceInflow,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.setMinimumBufferBalance */
-  async setMinimumBufferBalance(
-    params: Parameters<IArmadaManagerUtils['setMinimumBufferBalance']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setMinimumBufferBalance({
-      minimumBufferBalance: params.minimumBufferBalance,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.updateRebalanceCooldown */
-  async updateRebalanceCooldown(
-    params: Parameters<IArmadaManagerUtils['updateRebalanceCooldown']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.updateRebalanceCooldown({ cooldown: params.cooldown })
-  }
-
-  /** @see IArmadaManagerUtils.forceRebalance */
-  async forceRebalance(
-    params: Parameters<IArmadaManagerUtils['forceRebalance']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.forceRebalance({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManagerUtils.emergencyShutdown */
-  async emergencyShutdown(
-    params: Parameters<IArmadaManagerUtils['emergencyShutdown']>[0],
-  ): Promise<TransactionInfo> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.emergencyShutdown()
-  }
-
   async getSwapCall(params: {
     vaultId: IArmadaVaultId
     fromAmount: ITokenAmount
@@ -511,9 +326,8 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     toAmount: ITokenAmount
   }> {
     // get the admirals quarters address
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 

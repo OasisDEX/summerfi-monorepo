@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use client'
 
 import {
@@ -16,15 +17,24 @@ import {
   useUser,
 } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
-import { getVaultPositionUrl, getVaultUrl, useIsIframe } from '@summerfi/app-earn-ui'
+import {
+  accountType,
+  getVaultPositionUrl,
+  getVaultUrl,
+  SDKChainIdToAAChainMap,
+  useClientChainId,
+  useIsIframe,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
+  type SupportedNetworkIds,
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, ten } from '@summerfi/app-utils'
+import { sdkNetworkToHumanNetwork, supportedSDKNetwork, ten } from '@summerfi/app-utils'
 import {
   Address,
   getChainInfoByChainId,
@@ -37,11 +47,6 @@ import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 
-import {
-  type AccountKitSupportedNetworks,
-  accountType,
-  SDKChainIdToAAChainMap,
-} from '@/account-kit/config'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -49,13 +54,10 @@ import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-
-import { useUserWallet } from './use-user-wallet'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
-  vaultChainId: AccountKitSupportedNetworks
+  vaultChainId: SupportedNetworkIds
   amount: BigNumber | undefined
   manualSetAmount: (amount: string | undefined) => void
   vaultToken: IToken | undefined
@@ -258,7 +260,7 @@ export const useTransaction = ({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       if (isIframe) {
-        getSafeTxHash(hash, vault.protocol.network)
+        getSafeTxHash(hash, supportedSDKNetwork(vault.protocol.network))
           .then((safeTransactionData) => {
             if (safeTransactionData.transactionHash) {
               setWaitingForTx(safeTransactionData.transactionHash)
@@ -362,7 +364,7 @@ export const useTransaction = ({
         })
         .then(({ safeTxHash }) => {
           setTxStatus('txInProgress')
-          getSafeTxHash(safeTxHash, vault.protocol.network)
+          getSafeTxHash(safeTxHash, supportedSDKNetwork(vault.protocol.network))
             .then((safeTransactionData) => {
               if (safeTransactionData.transactionHash) {
                 setWaitingForTx(safeTransactionData.transactionHash)
@@ -610,7 +612,7 @@ export const useTransaction = ({
           action: () => {
             push(
               getVaultPositionUrl({
-                network: vault.protocol.network,
+                network: supportedSDKNetwork(vault.protocol.network),
                 vaultId: selectedSwitchVault?.split('-')[0] ?? '',
                 walletAddress: userWalletAddress,
               }),
@@ -730,7 +732,7 @@ export const useTransaction = ({
         refreshView()
         // revalidates users wallet data (all of fetches with wallet tagged in it)
         revalidatePositionData(
-          sdkNetworkToHumanNetwork(vault.protocol.network),
+          sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
           vault.id,
           userWalletAddress,
         )
@@ -745,7 +747,7 @@ export const useTransaction = ({
           push(
             isOpening
               ? getVaultPositionUrl({
-                  network: vault.protocol.network,
+                  network: supportedSDKNetwork(vault.protocol.network),
                   vaultId: vault.customFields?.slug ?? vault.id,
                   walletAddress: userWalletAddress,
                 })

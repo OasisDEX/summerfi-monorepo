@@ -2,8 +2,8 @@ import { type FC } from 'react'
 import {
   type NetworkIds,
   type RiskType,
-  type SDKNetwork,
   type SDKVaultType,
+  type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
@@ -18,7 +18,7 @@ interface VaultTitleWithRiskProps {
   risk: RiskType
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: SDKNetwork
+  networkName?: SupportedSDKNetworks
   selected?: boolean
   isVaultCard?: boolean
   titleVariant?: keyof typeof TextVariants

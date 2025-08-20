@@ -9,6 +9,7 @@ import {
   SUMR_CAP,
   Text,
   Tooltip,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
@@ -28,7 +29,6 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { trackButtonClick } from '@/helpers/mixpanel'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioRewardsCards.module.css'
 
@@ -41,7 +41,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const rawSumr = Number(rewardsData.sumrToClaim.claimableAggregatedRewards.total)
+  const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
   const rawSumrUSD = rawSumr * assumedSumrPriceRaw
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`

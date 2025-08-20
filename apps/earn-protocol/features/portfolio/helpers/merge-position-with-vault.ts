@@ -1,5 +1,5 @@
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 
 type MergePositionWithVaultProps = {
   position: IArmadaPosition
@@ -15,7 +15,8 @@ export const mergePositionWithVault = ({
   const vaultData = vaultsWithConfig.find(
     (vault) =>
       vault.id.toLowerCase() === position.pool.id.fleetAddress.value.toLowerCase() &&
-      subgraphNetworkToSDKId(vault.protocol.network) === position.id.user.chainInfo.chainId,
+      subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)) ===
+        position.id.user.chainInfo.chainId,
   )
 
   if (!vaultData) {

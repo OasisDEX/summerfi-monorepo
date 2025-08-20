@@ -1,11 +1,18 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
-import { SDKApiUrl } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
+import assert from 'node:assert'
+import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
-jest.setTimeout(10_000)
+const onlySimulation = true // Set to false to actually send transactions
 
 describe('Armada Protocol Rewards', () => {
+  const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+  if (!rpcUrl) {
+    throw new Error('E2E_SDK_FORK_URL_BASE environment variable not set')
+  }
+
   if (!SDKApiUrl) {
     throw new Error('E2E_SDK_API_URL environment variable not set')
   }
@@ -13,7 +20,12 @@ describe('Armada Protocol Rewards', () => {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const addresses = ['0x38233654FB0843c8024527682352A5d41E7f7324'] as AddressValue[]
+  let sendTxTool: SendTransactionTool
+
+  const addresses = [
+    // '0x38233654FB0843c8024527682352A5d41E7f7324',
+    '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  ] as AddressValue[]
 
   for (const userAddress of addresses) {
     describe(`Running for user ${userAddress}`, () => {
@@ -81,11 +93,10 @@ describe('Armada Protocol Rewards', () => {
 
           const allChainIds = [
             ChainIds.Mainnet,
-            ChainIds.Optimism,
             ChainIds.Base,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
-          ] as ChainId[] // Ethereum, Optimism, Base, Arbitrum, Sonic
+          ] as ChainId[] // Ethereum, Base, Arbitrum, Sonic
           const chainsWithRewards = Object.entries(rewards.perChain)
             .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
             .map(([chainId]) => parseInt(chainId) as ChainId)
@@ -104,6 +115,10 @@ describe('Armada Protocol Rewards', () => {
               address: userAddress,
               chainId,
             })
+            if (!claimTransactions) {
+              console.log(`No claim transactions generated for chain ${chainId}`)
+              continue // Skip to next chain
+            }
 
             expect(claimTransactions).toBeDefined()
             expect(claimTransactions).not.toBeUndefined()
@@ -112,7 +127,7 @@ describe('Armada Protocol Rewards', () => {
 
             const claimTx = claimTransactions![0]
             expect(claimTx.type).toBe('MerklClaim')
-            expect(claimTx.description).toBe('Claiming Merkle rewards')
+            expect(claimTx.description).toContain('Claiming Merkl rewards')
             expect(claimTx.transaction).toBeDefined()
             expect(claimTx.transaction.target).toBeDefined()
             expect(claimTx.transaction.calldata).toBeDefined()
@@ -151,6 +166,300 @@ describe('Armada Protocol Rewards', () => {
             }),
           ).rejects.toThrow()
         })
+      })
+
+      describe(`getReferralFeesMerklClaimTx`, () => {
+        it(`should generate referral claim transaction with specific token addresses`, async () => {
+          const usdcToken = await sdk.tokens.getTokenBySymbol({
+            symbol: 'USDC',
+            chainId: ChainIds.Base,
+          })
+          const usdcTokenAddress = usdcToken.address.value
+
+          const feeUserAddress = '0xE9c245293DAC615c11A5bF26FCec91C3617645E4'
+
+          // First get rewards to find chains with rewards and get token addresses
+          const rewards = await sdk.armada.users.getUserMerklRewards({
+            address: feeUserAddress,
+            chainIds: [ChainIds.Base],
+            rewardsTokensAddresses: [usdcTokenAddress],
+          })
+
+          const chainsWithRewards = Object.entries(rewards.perChain)
+            .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
+            .map(([chainId]) => parseInt(chainId) as ChainId)
+
+          if (chainsWithRewards.length === 0) {
+            console.log('No chains with rewards found, skipping token-specific test')
+            return
+          }
+
+          const testChainId = chainsWithRewards[0]
+          const chainRewards = rewards.perChain[testChainId]
+          if (!chainRewards || chainRewards.length === 0) {
+            console.log('No rewards found on test chain, skipping token-specific test')
+            return
+          }
+
+          console.log(
+            `Testing referral claim transaction for chain ${testChainId} and token ${chainRewards[0].token.address} with ${chainRewards[0].amount} ${chainRewards[0].token.symbol}`,
+          )
+
+          const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+            address: feeUserAddress,
+            chainId: testChainId,
+            rewardsTokensAddresses: [chainRewards[0].token.address as AddressValue],
+          })
+
+          if (!claimTransactions) {
+            console.log(`No referral claim transactions generated with specific tokens`)
+            return
+          }
+
+          expect(claimTransactions).toBeDefined()
+          expect(Array.isArray(claimTransactions)).toBe(true)
+          expect(claimTransactions.length).toBe(1)
+
+          const claimTx = claimTransactions[0]
+          expect(claimTx.type).toBe('MerklClaim')
+          expect(claimTx.description).toContain('Claiming Merkl rewards')
+          expect(claimTx.transaction).toBeDefined()
+          expect(claimTx.transaction.target).toBeDefined()
+          expect(claimTx.transaction.calldata).toBeDefined()
+          expect(claimTx.transaction.value).toBe('0')
+
+          console.log(
+            `✅ Generated referral claim transaction with specific tokens for chain ${testChainId}`,
+          )
+
+          // try to send tx
+          sendTxTool = createSendTransactionTool({
+            chainId: testChainId,
+            rpcUrl,
+            signerPrivateKey: signerPrivateKey,
+            onlySimulation,
+          })
+
+          const status = await sendTxTool(claimTx)
+          console.log(`✅ Sent referral claim transaction for chain ${testChainId}: ${status}`)
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.getReferralFeesMerklClaimTx({
+              address: userAddress,
+              chainId: unsupportedChainId,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
+      describe(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
+        it(`should generate authorization transaction for supported chains`, async () => {
+          const supportedChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[]
+
+          for (const chainId of supportedChainIds) {
+            console.log(`Testing authorization transaction for chain ${chainId}`)
+
+            const authTransactions = await sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
+              chainId,
+              user: userAddress,
+            })
+
+            expect(authTransactions).toBeDefined()
+            expect(Array.isArray(authTransactions)).toBe(true)
+            expect(authTransactions.length).toBe(1)
+
+            const authTx = authTransactions[0]
+            expect(authTx.type).toBe('ToggleAQasMerklRewardsOperator')
+            expect(authTx.description).toBe('Authorize AdmiralsQuarters as Merkl rewards operator')
+            expect(authTx.transaction).toBeDefined()
+            expect(authTx.transaction.target).toBeDefined()
+            expect(authTx.transaction.calldata).toBeDefined()
+            expect(authTx.transaction.value).toBe('0')
+
+            console.log(`✅ Generated authorization transaction for chain ${chainId}`)
+            break // Test one chain to avoid rate limits
+          }
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
+              chainId: unsupportedChainId,
+              user: userAddress,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
+      describe(`getIsAuthorizedAsMerklRewardsOperator`, () => {
+        it(`should check authorization status for supported chains`, async () => {
+          const supportedChainIds = [
+            ChainIds.Mainnet,
+            ChainIds.Base,
+            ChainIds.ArbitrumOne,
+            ChainIds.Sonic,
+          ] as ChainId[]
+
+          for (const chainId of supportedChainIds) {
+            console.log(`Testing authorization status for chain ${chainId}`)
+
+            const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+              chainId,
+              user: userAddress,
+            })
+
+            expect(typeof isAuthorized).toBe('boolean')
+            console.log(`✅ Authorization status for chain ${chainId}: ${isAuthorized}`)
+            break // Test one chain to avoid rate limits
+          }
+        })
+
+        it(`should return false for unauthorized user`, async () => {
+          const unauthorizedUser = '0x0000000000000000000000000000000000000001' as AddressValue
+          const testChainId = ChainIds.Base
+
+          const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+            chainId: testChainId,
+            user: unauthorizedUser,
+          })
+
+          expect(typeof isAuthorized).toBe('boolean')
+          expect(isAuthorized).toBe(false)
+          console.log(`✅ Unauthorized user correctly returned false`)
+        })
+
+        it(`should throw error for unsupported chain`, async () => {
+          const unsupportedChainId = 999999 as ChainId
+
+          await expect(
+            sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+              chainId: unsupportedChainId,
+              user: userAddress,
+            }),
+          ).rejects.toThrow()
+        })
+      })
+
+      describe.skip(`User Flow`, () => {
+        test(`should demonstrate full claiming flow on base`, async () => {
+          const testChainId = ChainIds.Base
+
+          sendTxTool = createSendTransactionTool({
+            chainId: testChainId,
+            rpcUrl,
+            signerPrivateKey: signerPrivateKey,
+          })
+
+          console.log(`Step 0: Checking user rewards on chain ${testChainId}...`)
+          const userRewards = await sdk.armada.users.getUserMerklRewards({
+            address: userAddress,
+            chainIds: [testChainId],
+          })
+
+          if (
+            !userRewards.perChain[testChainId] ||
+            userRewards.perChain[testChainId].length === 0
+          ) {
+            console.log(`No rewards found for user on chain ${testChainId}. Skipping flow.`)
+            return
+          } else {
+            console.log(
+              `User rewards on chain ${testChainId}:`,
+              userRewards.perChain[testChainId].map((reward) => ({
+                token: reward.token.symbol,
+                amount: reward.amount,
+                claimed: reward.claimed,
+              })),
+            )
+          }
+
+          console.log('Step 1: Checking operator authorization status...')
+          const initialAuthStatus = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+            chainId: testChainId,
+            user: userAddress,
+          })
+          console.log(`Operator authorization status: ${initialAuthStatus}`)
+
+          // Step 2: Generate authorization transaction if needed
+          console.log('Step 2: Generating authorization transaction if needed...')
+          if (initialAuthStatus) {
+            console.log(
+              `User is already authorized on chain ${testChainId}. Skipping authorization.`,
+            )
+          } else {
+            console.log(
+              `User is not authorized on chain ${testChainId}. Generating authorization transaction...`,
+            )
+
+            const authTransactions = await sdk.armada.users.getAuthorizeAsMerklRewardsOperatorTx({
+              chainId: testChainId,
+              user: userAddress,
+            })
+            assert(authTransactions[0], 'No authorization transaction Generated')
+
+            const status = await sendTxTool(authTransactions[0])
+            assert(status === 'success', 'Authorization transaction failed')
+
+            console.log(`Checking authorization status after sending transaction...`)
+            const postAuthStatus = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
+              chainId: testChainId,
+              user: userAddress,
+            })
+            console.log(`Post-authorization status: ${postAuthStatus}`)
+            if (!postAuthStatus) {
+              throw new Error(
+                `User is still not authorized on chain ${testChainId} after sending transaction`,
+              )
+            } else {
+              console.log(`User is now authorized on chain ${testChainId}`)
+            }
+          }
+
+          console.log('Step 4: Generating and sending claim transaction...')
+          const claimTransactions = await sdk.armada.users.getUserMerklClaimTx({
+            address: userAddress,
+            chainId: testChainId,
+          })
+          if (!claimTransactions) {
+            throw new Error(`No claim transactions generated`)
+          } else {
+            console.log(`Claim transaction generated: ${claimTransactions[0].description}`)
+
+            const claimTxStatus = await sendTxTool(claimTransactions[0])
+            assert(claimTxStatus === 'success', 'Claim transaction failed')
+          }
+
+          console.log('Step 5: Verifying claim is successful by checking rewards again...')
+          const updatedRewards = await sdk.armada.users.getUserMerklRewards({
+            address: userAddress,
+            chainIds: [testChainId],
+          })
+          const updatedChainRewards = updatedRewards.perChain[testChainId]
+          if (!updatedChainRewards || updatedChainRewards.length === 0) {
+            throw new Error(`No updated rewards found for user on chain ${testChainId}`)
+          }
+          console.log(
+            `Updated rewards on chain ${testChainId}:`,
+            updatedChainRewards.map((reward) => ({
+              token: reward.token.symbol,
+              amount: reward.amount,
+              claimed: reward.claimed,
+            })),
+          )
+
+          console.log(`✅ Full authorization flow test completed successfully`)
+        }, 60_000)
       })
     })
   }

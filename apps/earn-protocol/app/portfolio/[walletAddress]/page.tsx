@@ -4,6 +4,7 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
@@ -15,6 +16,7 @@ import {
   formatFiatBalance,
   parseServerResponseToClient,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -36,11 +38,9 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getTallyDelegates } from '@/app/server-handlers/tally'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
@@ -85,7 +85,9 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getVaultsList(),
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
@@ -165,7 +167,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
+    systemConfig,
     userPositions: userPositionsJsonSafe,
   })
 
@@ -183,16 +185,19 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       Promise.all(
         vaultsWithConfig.map((vault) =>
           getPositionHistory({
-            network: vault.protocol.network,
+            network: supportedSDKNetwork(vault.protocol.network),
             address: walletAddress.toLowerCase(),
             vault,
           }),
         ),
       ).then(mapPortfolioVaultsApy),
-      getVaultsApy({
+      unstableCache(getVaultsApy, [walletAddress], {
+        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
+        tags: [REVALIDATION_TAGS.INTEREST_RATES],
+      })({
         fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
           fleetAddress: id,
-          chainId: subgraphNetworkToId(network),
+          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
         })),
       }),
       getPaginatedRebalanceActivity({
@@ -279,7 +284,7 @@ export async function generateMetadata({
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
-    systemConfig: systemConfig.config,
+    systemConfig,
     userPositions: userPositionsJsonSafe,
   })
 

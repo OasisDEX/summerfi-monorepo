@@ -1,37 +1,15 @@
 import { type FC } from 'react'
-import { SDKChainId, SDKNetwork, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type IconNamesList,
+  type SupportedNetworkIds,
+  type SupportedSDKNetworks,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { networkIdIconNameMap, networkNameIconNameMap } from '@/constants/icon-maps'
 
 import classNames from './TokenWithNetworkIcon.module.css'
-
-const chainIdIconMap: {
-  1: string
-  8453: string
-  42161: string
-  10: string
-  146: string
-} = {
-  [SDKChainId.MAINNET]: 'earn_network_ethereum',
-  [SDKChainId.BASE]: 'earn_network_base',
-  [SDKChainId.ARBITRUM]: 'earn_network_arbitrum',
-  [SDKChainId.OPTIMISM]: 'earn_network_optimism',
-  [SDKChainId.SONIC]: 'earn_network_sonic',
-}
-
-const networkNameIconMap: {
-  MAINNET: string
-  BASE: string
-  ARBITRUM_ONE: string
-  OPTIMISM: string
-  SONIC_MAINNET: string
-} = {
-  [SDKNetwork.Mainnet]: 'earn_network_ethereum',
-  [SDKNetwork.Base]: 'earn_network_base',
-  [SDKNetwork.ArbitrumOne]: 'earn_network_arbitrum',
-  [SDKNetwork.Optimism]: 'earn_network_optimism',
-  [SDKNetwork.SonicMainnet]: 'earn_network_sonic',
-}
 
 const tokenIconSizeMap = {
   tiny: 20,
@@ -63,10 +41,10 @@ type BaseProps = {
 type TokenWithNetworkIconProps = BaseProps &
   (
     | {
-        network: SDKNetwork
+        network: SupportedSDKNetworks
       }
     | {
-        chainId: SDKChainId
+        chainId: SupportedNetworkIds
       }
   )
 
@@ -76,8 +54,9 @@ export const TokenWithNetworkIcon: FC<TokenWithNetworkIconProps> = ({
   overrideIconSize,
   ...rest
 }) => {
-  const resolvedNetworkIcon =
-    'network' in rest ? networkNameIconMap[rest.network] : chainIdIconMap[rest.chainId]
+  const resolvedNetworkIcon = (
+    'network' in rest ? networkNameIconNameMap[rest.network] : networkIdIconNameMap[rest.chainId]
+  ) as IconNamesList
 
   const resolvedIconSize = overrideIconSize ?? tokenIconSizeMap[variant]
 

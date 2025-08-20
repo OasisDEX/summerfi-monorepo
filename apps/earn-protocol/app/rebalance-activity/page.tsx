@@ -1,10 +1,12 @@
 import { type FC } from 'react'
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { parseQueryStringServerSide, parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 import { parseProtocolFilter } from '@/features/rebalance-activity/table/filters/mappers'
@@ -27,10 +29,12 @@ const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
       strategies: parsedSearchParams.strategies,
       tokens: parsedSearchParams.tokens,
     }),
-    systemConfigHandler(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
   ])
 
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,

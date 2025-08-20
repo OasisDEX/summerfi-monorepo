@@ -8,6 +8,7 @@ interface TableCellTextProps {
   suppressHydrationWarning?: boolean
   small?: boolean
   as?: 'p' | 'span' | 'div'
+  className?: string
 }
 
 export const TableCellText: FC<TableCellTextProps> = ({
@@ -16,12 +17,14 @@ export const TableCellText: FC<TableCellTextProps> = ({
   suppressHydrationWarning,
   small = false,
   as = 'p',
+  className,
 }) => (
   <Text
     as={as}
     variant={small ? 'p4semi' : 'p3semi'}
     style={{ color: 'var(--earn-protocol-secondary-100)', userSelect: 'none', ...style }}
     suppressHydrationWarning={suppressHydrationWarning}
+    className={className}
   >
     {children}
   </Text>

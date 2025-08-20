@@ -107,10 +107,11 @@ export class TransactionUtils {
 
   async sendTransactionWithReceipt(params: {
     transaction: Transaction
+    confirmations?: number
   }): Promise<TransactionReceipt> {
     const transactionHash = await this._sendTransaction(params)
 
-    return this._waitForReceipt({ hash: transactionHash })
+    return this._waitForReceipt({ hash: transactionHash, confirmations: params.confirmations || 5 })
   }
 
   async sendSimulation(params: { transaction: Transaction }): Promise<CallReturnType> {

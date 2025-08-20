@@ -18,6 +18,7 @@ artifacts
 **/.sst/**
 **/.turbo/**
 **/*.module.css.d.ts
+database-types.ts
 sst-env.d.ts
 
 background-jobs/**/src/generated

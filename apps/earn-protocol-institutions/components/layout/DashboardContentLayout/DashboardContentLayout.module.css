@@ -1,0 +1,43 @@
+.dashboardContentLayout {
+  display: flex;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    gap: var(--spacing-space-medium-large);
+    flex-direction: row;
+  }
+
+  .panel {
+    max-width: unset;
+    width: unset;
+
+    @media (min-width: 768px) {
+      max-width: 300px;
+      width: 100%;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    max-width: 880px;
+    flex: 1;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-space-medium-large);
+      padding-right: unset;
+
+      @media (min-width: 768px) {
+        padding-right: var(--spacing-space-x-large);
+      }
+    }
+  }
+}

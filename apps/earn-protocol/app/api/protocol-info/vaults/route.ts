@@ -1,8 +1,8 @@
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { getVaultsApy } from '@summerfi/app-server-handlers'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { NextResponse } from 'next/server'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 
 /**
  * This is for external vendors to get the list of vaults with their APY.
@@ -14,13 +14,14 @@ export async function GET() {
   const vaultsApyByNetworkMap = await getVaultsApy({
     fleets: vaults.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
     })),
   })
 
   const mappedVaultsList = Object.fromEntries(
     vaults.map((vault) => {
-      const vaultExternalId = `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}` as const
+      const vaultExternalId =
+        `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}` as const
       const apy = vaultsApyByNetworkMap[vaultExternalId]
 
       return [

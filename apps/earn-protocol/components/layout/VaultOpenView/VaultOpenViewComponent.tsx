@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
+  isUserSmartAccount,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
@@ -13,10 +15,12 @@ import {
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
+  useUserWallet,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -24,19 +28,18 @@ import {
   type ArksHistoricalChartData,
   type DropdownRawOption,
   type GetVaultsApyResponse,
-  sdkSupportedChains,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
-import { AccountKitAccountType } from '@/account-kit/types'
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -53,6 +56,7 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
+import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -64,7 +68,6 @@ import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 
@@ -76,7 +79,7 @@ type VaultOpenViewComponentProps = {
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
@@ -104,6 +107,8 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
+  const userAAKit = useUser()
+  const userIsSmartAccount = isUserSmartAccount(userAAKit)
 
   const { features } = useSystemConfig()
 
@@ -111,7 +116,7 @@ export const VaultOpenViewComponent = ({
 
   const { userWalletAddress } = useUserWallet()
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -140,39 +145,41 @@ export const VaultOpenViewComponent = ({
 
   useEffect(() => {
     const fetchMigratablePositions = async (walletAddress: string) => {
-      const promises = sdkSupportedChains.map(async (chainId) => {
-        const chainInfo = getChainInfoByChainId(chainId)
+      const promises = Object.values(SupportedNetworkIds)
+        .filter((networkId): networkId is number => typeof networkId === 'number')
+        .map(async (chainId) => {
+          const chainInfo = getChainInfoByChainId(Number(chainId))
 
-        let positionsData
-        let apyData
+          let positionsData
+          let apyData
 
-        try {
-          positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
-          positionsData = {
-            chainInfo,
-            positions: [],
+          try {
+            positionsData = await sdk.getMigratablePositions({ walletAddress, chainInfo })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch migratable positions for chain ${chainId}:`, error)
+            positionsData = {
+              chainInfo,
+              positions: [],
+            }
           }
-        }
 
-        try {
-          apyData = await sdk.getMigratablePositionsApy({
-            chainInfo,
-            positionIds: positionsData.positions.map((p) => p.id),
-          })
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
-          apyData = {
-            chainInfo,
-            apyByPositionId: {},
+          try {
+            apyData = await sdk.getMigratablePositionsApy({
+              chainInfo,
+              positionIds: positionsData.positions.map((p) => p.id),
+            })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to fetch APY data for chain ${chainId}:`, error)
+            apyData = {
+              chainInfo,
+              apyByPositionId: {},
+            }
           }
-        }
 
-        return { positionsData, apyData }
-      })
+          return { positionsData, apyData }
+        })
 
       const positions = await Promise.all(promises)
 
@@ -341,18 +348,27 @@ export const VaultOpenViewComponent = ({
   })
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
     type: 'default',
+    isIframe,
   })
+
+  const filteredVaults = useMemo(() => {
+    if (userIsSmartAccount) {
+      return filterOutSonicFromVaults(vaults)
+    }
+
+    return vaults
+  }, [vaults, userIsSmartAccount])
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
@@ -497,7 +513,7 @@ export const VaultOpenViewComponent = ({
       <VaultOpenGrid
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
-        vaults={vaults}
+        vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
         sumrPrice={estimatedSumrPrice}

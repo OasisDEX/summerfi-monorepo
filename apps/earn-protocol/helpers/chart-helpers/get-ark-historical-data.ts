@@ -1,18 +1,17 @@
+import { getProtocolLabel, getUniqueColor } from '@summerfi/app-earn-ui'
+import { type GetVaultsHistoricalApyResponse } from '@summerfi/app-server-handlers'
 import {
   type ArksHistoricalChartData,
   type ChartsDataTimeframes,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultType,
   type TimeframesType,
 } from '@summerfi/app-types'
-import { getVaultNiceName, subgraphNetworkToId } from '@summerfi/app-utils'
+import { getVaultNiceName, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
-import { type GetVaultsHistoricalApyResponse } from '@/app/server-handlers/vault-historical-apy'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
-import { getColor } from '@/helpers/get-color'
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
 
 type BaseHistoricalChartsDataReturnType = {
   [key in TimeframesType]: {
@@ -78,12 +77,14 @@ export const getArkHistoricalChartData = ({
   vaultInterestRates,
 }: {
   vault: SDKVaultishType
-  arkInterestRatesMap: GetInterestRatesReturnType
+  arkInterestRatesMap: InterestRates
   vaultInterestRates: GetVaultsHistoricalApyResponse
 }) => {
   const castedVault = vault as SDKVaultType
   const vaultsInterestRates =
-    vaultInterestRates[`${castedVault.id}-${subgraphNetworkToId(vault.protocol.network)}`]
+    vaultInterestRates[
+      `${castedVault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+    ]
   const vaultName = getVaultNiceName({ vault: castedVault })
   const today = dayjs()
   const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
@@ -182,7 +183,7 @@ export const getArkHistoricalChartData = ({
     chartDataNames.push(arkUniqueName)
 
     for (const hourlyInterestRate of interestRates.hourlyInterestRates) {
-      const timestamp = dayjs(hourlyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(hourlyInterestRate.date) * 1000)
         .startOf('hour')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
@@ -201,7 +202,7 @@ export const getArkHistoricalChartData = ({
     }
 
     for (const dailyInterestRate of interestRates.dailyInterestRates) {
-      const timestamp = dayjs(dailyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(dailyInterestRate.date) * 1000)
         .startOf('day')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
@@ -225,7 +226,7 @@ export const getArkHistoricalChartData = ({
       }
     }
     for (const weeklyInterestRate of interestRates.weeklyInterestRates) {
-      const timestamp = dayjs(weeklyInterestRate.date * 1000)
+      const timestamp = dayjs(Number(weeklyInterestRate.date) * 1000)
         .startOf('week')
         .format(CHART_TIMESTAMP_FORMAT_DETAILED) as keyof (typeof chartsDataRaw)['90d']
 
@@ -253,7 +254,7 @@ export const getArkHistoricalChartData = ({
 
     return {
       ...acc,
-      [arkUniqueName]: getColor(arkUniqueName),
+      [arkUniqueName]: getUniqueColor(arkUniqueName),
     }
   }, {})
 

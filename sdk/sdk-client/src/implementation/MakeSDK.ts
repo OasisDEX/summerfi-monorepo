@@ -1,6 +1,6 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
-import { version as sdkClientVersion } from '../../bundle/package.json'
+import packageFile from '../../bundle/package.json'
 
 export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | { apiURL: string })
 
@@ -10,7 +10,7 @@ export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | 
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
 export function makeSDK(params: MakeSDKParams) {
-  const apiVersion = `v${sdkClientVersion.charAt(0)}`
+  const apiVersion = `v${packageFile.version.charAt(0)}`
   let versionedURL: string
   // url based on domain
   if ('apiDomainUrl' in params) {
@@ -27,7 +27,10 @@ export function makeSDK(params: MakeSDKParams) {
   if (params.logging) {
     console.log('Summer.fi SDK: versionedURL', versionedURL)
   }
-  const rpcClient = createMainRPCClient(versionedURL, params.logging)
+  const rpcClient = createMainRPCClient({
+    apiURL: versionedURL,
+    logging: params.logging,
+  })
 
   return new SDKManager({ rpcClient })
 }

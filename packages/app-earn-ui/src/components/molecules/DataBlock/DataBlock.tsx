@@ -15,7 +15,7 @@ export type DataBlockProps = {
   titleStyle?: CSSProperties
   titleWrapperStyles?: CSSProperties
   subValueSize?: 'small' | 'medium' | 'large'
-  valueSize?: 'small' | 'large' | 'largeColorful'
+  valueSize?: 'small' | 'medium' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
   value: ReactNode
   subValue?: ReactNode
@@ -24,6 +24,8 @@ export type DataBlockProps = {
   subValueStyle?: CSSProperties
   accent?: string
   tooltipIconName?: IconNamesList
+  wrapperStyles?: CSSProperties
+  wrapperClassName?: string
 }
 
 export const DataBlock = ({
@@ -43,6 +45,8 @@ export const DataBlock = ({
   subValueStyle,
   accent,
   tooltipIconName,
+  wrapperStyles,
+  wrapperClassName,
 }: DataBlockProps): React.ReactNode => {
   const titleVariant = {
     small: 'p3semi' as const,
@@ -52,6 +56,7 @@ export const DataBlock = ({
 
   const valueVariant = {
     small: 'p1semi' as const,
+    medium: 'h5' as const,
     large: 'h4' as const,
     largeColorful: 'h4colorful' as const,
   }[valueSize ?? size]
@@ -64,10 +69,11 @@ export const DataBlock = ({
 
   return (
     <div
-      className={clsx(dataBlockStyles.dataBlockWrapper, {
+      className={clsx(dataBlockStyles.dataBlockWrapper, wrapperClassName, {
         [dataBlockStyles.centered]: centered,
         [dataBlockStyles.hasAccent]: accent,
       })}
+      style={wrapperStyles}
     >
       <div className={dataBlockStyles.titleWrapper} style={titleWrapperStyles}>
         {accent && <div className={dataBlockStyles.accent} style={{ backgroundColor: accent }} />}

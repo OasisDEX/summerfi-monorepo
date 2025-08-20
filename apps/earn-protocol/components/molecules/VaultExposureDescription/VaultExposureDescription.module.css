@@ -1,0 +1,11 @@
+.vaultExposureDescriptionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: var(--spacing-space-medium);
+
+  .descriptionText {
+    margin-bottom: var(--spacing-space-large);
+    color: var(--earn-protocol-secondary-60);
+  }
+}

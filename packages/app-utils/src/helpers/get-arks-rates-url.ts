@@ -1,9 +1,9 @@
-import { SDKChainId, SDKNetwork, type SDKSupportedNetwork } from '@summerfi/app-types'
+import { SupportedNetworkIds, SupportedSDKNetworks } from '@summerfi/app-types'
 
 /**
  * Generates URL for fetching historical rates from Arks API based on network
  * @param {Object} params - The parameters object
- * @param {SDKSupportedNetwork} params.network - The blockchain network
+ * @param {SupportedSDKNetworks} params.network - The blockchain network
  * @param {string} params.apiUrl - Base API URL
  * @returns {string} The complete historical rates API URL
  */
@@ -11,20 +11,20 @@ export const getArkHistoricalRatesUrl = ({
   network,
   apiUrl,
 }: {
-  network: SDKSupportedNetwork
+  network: SupportedSDKNetworks
   apiUrl: string
 }): string =>
   ({
-    [SDKNetwork.Mainnet]: `${apiUrl}/api/historicalRates/${SDKChainId.MAINNET}`,
-    [SDKNetwork.Base]: `${apiUrl}/api/historicalRates/${SDKChainId.BASE}`,
-    [SDKNetwork.ArbitrumOne]: `${apiUrl}/api/historicalRates/${SDKChainId.ARBITRUM}`,
-    [SDKNetwork.SonicMainnet]: `${apiUrl}/api/historicalRates/${SDKChainId.SONIC}`,
+    [SupportedSDKNetworks.Mainnet]: `${apiUrl}/api/historicalRates/${SupportedNetworkIds.Mainnet}`,
+    [SupportedSDKNetworks.Base]: `${apiUrl}/api/historicalRates/${SupportedNetworkIds.Base}`,
+    [SupportedSDKNetworks.ArbitrumOne]: `${apiUrl}/api/historicalRates/${SupportedNetworkIds.ArbitrumOne}`,
+    [SupportedSDKNetworks.SonicMainnet]: `${apiUrl}/api/historicalRates/${SupportedNetworkIds.SonicMainnet}`,
   })[network]
 
 /**
  * Generates URL for fetching current rates from Arks API based on network
  * @param {Object} params - The parameters object
- * @param {SDKSupportedNetwork} params.network - The blockchain network
+ * @param {SupportedSDKNetworks} params.network - The blockchain network
  * @param {string} params.apiUrl - Base API URL
  * @returns {string} The complete current rates API URL
  */
@@ -32,14 +32,14 @@ export const getArkRatesUrl = ({
   network,
   apiUrl,
 }: {
-  network: SDKSupportedNetwork
+  network: SupportedSDKNetworks
   apiUrl: string
 }): string =>
   ({
-    [SDKNetwork.Mainnet]: `${apiUrl}/api/rates/${SDKChainId.MAINNET}`,
-    [SDKNetwork.Base]: `${apiUrl}/api/rates/${SDKChainId.BASE}`,
-    [SDKNetwork.ArbitrumOne]: `${apiUrl}/api/rates/${SDKChainId.ARBITRUM}`,
-    [SDKNetwork.SonicMainnet]: `${apiUrl}/api/rates/${SDKChainId.SONIC}`,
+    [SupportedSDKNetworks.Mainnet]: `${apiUrl}/api/rates/${SupportedNetworkIds.Mainnet}`,
+    [SupportedSDKNetworks.Base]: `${apiUrl}/api/rates/${SupportedNetworkIds.Base}`,
+    [SupportedSDKNetworks.ArbitrumOne]: `${apiUrl}/api/rates/${SupportedNetworkIds.ArbitrumOne}`,
+    [SupportedSDKNetworks.SonicMainnet]: `${apiUrl}/api/rates/${SupportedNetworkIds.SonicMainnet}`,
   })[network]
 
 /**

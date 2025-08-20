@@ -11,12 +11,17 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   experimental: {
     serverComponentsHmrCache: true,
     optimizePackageImports: [
+      '@account-kit/core',
+      '@account-kit/infra',
+      '@account-kit/react',
+      '@account-kit/signer',
       '@summerfi/app-earn-ui',
       '@summerfi/app-icons',
       '@summerfi/app-risk',
       '@summerfi/app-tos',
       '@summerfi/app-types',
       '@summerfi/app-utils',
+      '@summerfi/app-server-handlers',
       '@summerfi/armada-protocol-abis',
       '@summerfi/sdk-client-react',
       '@summerfi/subgraph-manager-common',

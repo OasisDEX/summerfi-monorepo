@@ -7,11 +7,6 @@ import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
 
-const morphoTokenByChainId: Partial<Record<ChainId, string>> = {
-  [ChainId.BASE]: '0xBAa5CC21fd487B8Fcc2F632f3F4E8D37262a0842',
-  [ChainId.MAINNET]: '0x58D97B57BB95320F9a05dC918Aef65434969c2B2',
-}
-
 interface AaveMeritResponse {
   previousAPR: number | null
   currentAPR: {
@@ -79,7 +74,9 @@ interface MorphoVaultReward {
           rewards: {
             supplyApr: number | null
             asset: {
+              address: string
               symbol: string
+              decimals: number
             }
           }[]
         }
@@ -354,7 +351,9 @@ export class RewardsService {
                     rewards {
                       supplyApr
                       asset {
+                        address
                         symbol
+                        decimals
                       }
                     }
                   }
@@ -387,7 +386,7 @@ export class RewardsService {
         (acc, product) => {
           const vaultData = vaultMap.get(product.pool.toLowerCase())
 
-          acc[product.id] = vaultData ? this.processMorphoVault(vaultData, chainId) : []
+          acc[product.id] = vaultData ? this.processMorphoVault(vaultData) : []
           return acc
         },
         {} as Record<string, RewardRate[]>,
@@ -398,38 +397,14 @@ export class RewardsService {
     }
   }
 
-  private processMorphoVault(vaultData: MorphoVaultReward, chainId: ChainId): RewardRate[] {
-    if (!morphoTokenByChainId[chainId]) {
-      return []
-    }
-
+  private processMorphoVault(vaultData: MorphoVaultReward): RewardRate[] {
     // Calculate total allocated assets in USD
     const totalAssetsAllocated = vaultData.state.allocation.reduce(
       (sum, alloc) => sum + (alloc.supplyAssetsUsd ?? 0),
       0,
     )
-    // Calculate weighted rewards across all markets
-    const weightedMorphoTokenRewardsApy =
-      totalAssetsAllocated == 0
-        ? []
-        : vaultData.state.allocation.reduce((acc, allocation) => {
-            const marketRewards = allocation.market.state.rewards
-              .filter((reward) => reward.asset.symbol === 'MORPHO')
-              .map((reward) => {
-                return (
-                  (reward.supplyApr ?? 0) *
-                  ((allocation.supplyAssetsUsd ?? 0) / totalAssetsAllocated)
-                )
-              })
 
-            return acc.concat(marketRewards)
-          }, [] as number[])
-    // Calculate total rewards APY
-    const morphoTokenRewardsApy = weightedMorphoTokenRewardsApy.reduce(
-      (sum, reward) => sum + reward,
-      0,
-    )
-    // Create reward rates array
+    // Create reward rates array from vault-level rewards
     const rewards = vaultData.state.rewards.map((reward, index) => ({
       rewardToken: reward.asset.address,
       rate: ((reward.supplyApr ?? 0) * 100).toString(), // Convert to percentage
@@ -442,21 +417,57 @@ export class RewardsService {
       },
     }))
 
-    // Add Morpho token reward
-    return [
-      ...rewards,
-      {
-        rewardToken: morphoTokenByChainId[chainId],
-        rate: (morphoTokenRewardsApy > 10 ? 0 : morphoTokenRewardsApy * 100).toString(), // Convert to percentage
-        index: rewards.length,
-        token: {
-          address: morphoTokenByChainId[chainId],
-          symbol: 'Morpho',
-          decimals: 18,
-          precision: (10n ** BigInt(18)).toString(),
-        },
-      },
-    ]
+    if (totalAssetsAllocated === 0) {
+      return rewards
+    }
+
+    // Get all unique tokens from market rewards with their full asset info
+    const uniqueTokens = new Map<string, { address: string; symbol: string; decimals: number }>()
+    vaultData.state.allocation.forEach((allocation) => {
+      allocation.market.state.rewards.forEach((reward) => {
+        uniqueTokens.set(reward.asset.address, {
+          address: reward.asset.address,
+          symbol: reward.asset.symbol,
+          decimals: reward.asset.decimals,
+        })
+      })
+    })
+
+    // Calculate weighted rewards for each unique token
+    const additionalRewards: RewardRate[] = []
+    let nextIndex = rewards.length
+
+    uniqueTokens.forEach((tokenInfo, tokenAddress) => {
+      const weightedTokenRewardsApy = vaultData.state.allocation.reduce((acc, allocation) => {
+        const marketRewards = allocation.market.state.rewards
+          .filter((reward) => reward.asset.address === tokenAddress)
+          .map((reward) => {
+            return (
+              (reward.supplyApr ?? 0) * ((allocation.supplyAssetsUsd ?? 0) / totalAssetsAllocated)
+            )
+          })
+
+        return acc.concat(marketRewards)
+      }, [] as number[])
+
+      const totalWeightedApy = weightedTokenRewardsApy.reduce((sum, reward) => sum + reward, 0)
+
+      if (totalWeightedApy > 0) {
+        additionalRewards.push({
+          rewardToken: tokenInfo.address,
+          rate: (totalWeightedApy > 10 ? 0 : totalWeightedApy * 100).toString(), // Convert to percentage, cap if too high
+          index: nextIndex++,
+          token: {
+            address: tokenInfo.address,
+            symbol: tokenInfo.symbol,
+            decimals: tokenInfo.decimals,
+            precision: (10n ** BigInt(tokenInfo.decimals)).toString(),
+          },
+        })
+      }
+    })
+
+    return [...rewards, ...additionalRewards]
   }
   private async getGearboxRewardsBatch(
     products: Product[],

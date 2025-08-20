@@ -33,6 +33,10 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
     token: IToken
     apy: IPercentage | null
   }>
+  readonly merklRewards: Array<{
+    token: IToken
+    dailyEmission: string
+  }>
 
   /** FACTORY */
   static createFrom(params: ArmadaVaultInfoParameters): ArmadaVaultInfo {
@@ -50,6 +54,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
     this.totalShares = params.totalShares
     this.apy = params.apy
     this.rewardsApys = params.rewardsApys
+    this.merklRewards = params.merklRewards
   }
 }
 

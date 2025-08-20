@@ -12,6 +12,7 @@ import {
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 
+import './global.css'
 import masterPageStyles from './MasterPage.module.css'
 
 interface MasterPageProps {

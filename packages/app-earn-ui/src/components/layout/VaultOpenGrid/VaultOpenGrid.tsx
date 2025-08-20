@@ -2,9 +2,9 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
-  type SDKChainId,
   type SDKVaultishType,
   type SDKVaultsListType,
+  type SupportedNetworkIds,
   type VaultApyData,
 } from '@summerfi/app-types'
 import {
@@ -12,6 +12,7 @@ import {
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -59,7 +60,7 @@ interface VaultOpenGridProps {
     label: string
     href: string
   }
-  disableDropdownOptionsByChainId?: SDKChainId
+  disableDropdownOptionsByChainId?: SupportedNetworkIds
   getOptionUrl?: (option: SDKVaultishType) => string
 }
 
@@ -162,7 +163,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   )
 
   const handleUserRefresh = () => {
-    onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id)
+    onRefresh?.(sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)), vault.id)
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)
@@ -211,7 +212,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                     link={getOptionUrl?.(item) ?? getVaultUrl(item)}
                     isDisabled={
                       disableDropdownOptionsByChainId &&
-                      subgraphNetworkToSDKId(item.protocol.network) !==
+                      subgraphNetworkToSDKId(supportedSDKNetwork(item.protocol.network)) !==
                         disableDropdownOptionsByChainId
                     }
                   />
@@ -225,7 +226,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                     link={getOptionUrl?.(vault) ?? getVaultUrl(vault)}
                     isDisabled={
                       disableDropdownOptionsByChainId &&
-                      subgraphNetworkToSDKId(vault.protocol.network) !==
+                      subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)) !==
                         disableDropdownOptionsByChainId
                     }
                   />
@@ -236,7 +237,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 // TODO: fill data
                 risk={vault.customFields?.risk ?? 'lower'}
-                networkName={vault.protocol.network}
+                networkName={supportedSDKNetwork(vault.protocol.network)}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>

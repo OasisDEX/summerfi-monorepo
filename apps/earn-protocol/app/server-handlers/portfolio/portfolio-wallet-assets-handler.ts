@@ -43,6 +43,10 @@ export const portfolioWalletAssetsHandler = async (
           return { ...asset, symbol: 'USD₮0' as TokenSymbolsList }
         }
 
+        if (asset.network === 'sonic' && asset.symbol === 'USDC') {
+          return { ...asset, symbol: 'USDC.E' as TokenSymbolsList }
+        }
+
         return asset
       })
 

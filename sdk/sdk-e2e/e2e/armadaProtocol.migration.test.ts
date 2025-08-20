@@ -10,7 +10,7 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol Migration', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
 
   for (const { chainInfo, rpcUrl, userAddress, fleetAddress } of testConfig) {

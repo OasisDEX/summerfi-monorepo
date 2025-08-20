@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { type ForecastData, type SDKChainId } from '@summerfi/app-types'
+import { type ForecastData, type SupportedNetworkIds } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import debounce from 'lodash-es/debounce'
 
@@ -12,7 +12,7 @@ import { getOneYearEarnings } from '@/helpers/get-one-year-earnings'
 
 type UseForecastProps = {
   fleetAddress: string
-  chainId: SDKChainId
+  chainId: SupportedNetworkIds
   amount: string
   disabled?: boolean
   isEarnApp?: boolean

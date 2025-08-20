@@ -1,6 +1,6 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { accountType } from '@summerfi/app-earn-ui'
 
-import { accountType } from '@/account-kit/config'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -41,6 +41,7 @@ export const useUnstakeSumrTransaction = ({
   const unstakeSumrTransaction = async () => {
     const tx = await getUnstakeTx({ amount })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (tx === undefined) {
       throw new Error('unstake tx is undefined')
     }

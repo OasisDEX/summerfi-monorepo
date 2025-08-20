@@ -11,14 +11,12 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
-import { waitSeconds } from './utils/wait'
-import { TX_CONFIRMATION_WAIT_TIME, DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
+import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
 const usdcFleet = Address.createFromEthereum({
   value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
@@ -26,16 +24,25 @@ const usdcFleet = Address.createFromEthereum({
 const eurcFleet = Address.createFromEthereum({
   value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
 })
-const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+const permissionedFleetAddressUsdc = Address.createFromEthereum({
+  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+})
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
+    const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+    const chainId = ChainIds.Base
+    const fleetAddress = usdcFleet
+    const amountValue = '1'
+    const userAddress = testWalletAddress
+
     await runTests({
       swapToSymbol: undefined,
       chainId,
-      fleetAddress: usdcFleet,
+      fleetAddress,
       rpcUrl,
-      amountValue: '0.81',
+      amountValue,
+      userAddress,
     })
   })
 
@@ -45,15 +52,17 @@ describe('Armada Protocol Withdraw', () => {
     fleetAddress,
     rpcUrl,
     amountValue,
+    userAddress,
   }: {
     chainId: number
     swapToSymbol: string | undefined
     fleetAddress: Address
     rpcUrl: string | undefined
     amountValue: string
+    userAddress: Address
   }) {
     const sdk: SDKManager = makeSDK({
-      apiURL: SDKApiUrl,
+      apiDomainUrl: SDKApiUrl,
     })
     if (!rpcUrl) {
       throw new Error('Missing rpc url')
@@ -131,8 +140,6 @@ describe('Armada Protocol Withdraw', () => {
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
-
-    await waitSeconds(TX_CONFIRMATION_WAIT_TIME)
 
     const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
       vaultId,

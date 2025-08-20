@@ -2,17 +2,25 @@ import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState }
 import { toast } from 'react-toastify'
 import { useChain, useUser } from '@account-kit/react'
 import {
+  AccountKitAccountType,
   Button,
   Card,
   DataBlock,
   Dropdown,
   Icon,
   Input,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
   Text,
+  useClientChainId,
+  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, SDKChainId } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  SupportedNetworkIds,
+  UiTransactionStatuses,
+} from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -22,8 +30,6 @@ import {
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { AccountKitAccountType } from '@/account-kit/types'
 import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
@@ -36,13 +42,10 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
   ClaimDelegateSteps,
-  ClaimDelegateTxStatuses,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import {
   getChangeDelegateButtonLabel,
@@ -158,7 +161,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   }, [externalData.sumrStakeDelegate.delegatedTo])
 
   const sumrToClaim =
-    externalData.sumrToClaim.claimableAggregatedRewards.perChain[SDKChainId.BASE] ?? 0
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
   const apy = (
     <Text as="h5" variant="h5">
@@ -173,7 +177,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
     onSuccess: () => {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.COMPLETED })
+      dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.COMPLETED })
 
       toast.success('Delegate has been updated', SUCCESS_TOAST_CONFIG)
 
@@ -187,7 +191,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
     },
     onError: () => {
-      dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.FAILED })
+      dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.FAILED })
 
       toast.error('Failed to update delegate', ERROR_TOAST_CONFIG)
     },
@@ -195,7 +199,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const hasStake = Number(externalData.sumrStakeDelegate.stakedAmount) > 0
 
-  const isBase = clientChainId === SDKChainId.BASE
+  const isBase = clientChainId === SupportedNetworkIds.Base
 
   const handleDelegate = async (updateDelegatee?: string) => {
     const isDelegateUnchanged =
@@ -205,7 +209,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     // delegation is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
-      setChain({ chain: SDKChainIdToAAChainMap[SDKChainId.BASE] })
+      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
 
       return
     }
@@ -226,7 +230,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       }
     }
 
-    dispatch({ type: 'update-delegate-status', payload: ClaimDelegateTxStatuses.PENDING })
+    dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.PENDING })
 
     await sumrDelegateTransaction(updateDelegatee)
       .catch((err) => {
@@ -241,19 +245,17 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const mappedSumrDelegatesData = mergeDelegatesData(delegates)
 
   const isChangeDelegateLoading =
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
-    action === ClaimDelegateAction.CHANGE
+    state.delegateStatus === UiTransactionStatuses.PENDING && action === ClaimDelegateAction.CHANGE
 
   const isRemoveDelegateLoading =
-    state.delegateStatus === ClaimDelegateTxStatuses.PENDING &&
-    action === ClaimDelegateAction.REMOVE
+    state.delegateStatus === UiTransactionStatuses.PENDING && action === ClaimDelegateAction.REMOVE
 
   // self delegating is available on for EOA only
   // since we use tally that doesn't support SCA
   const isEoa = user?.type === AccountKitAccountType.EOA
 
   const sumrDelegatedTo =
-    state.delegateStatus === ClaimDelegateTxStatuses.COMPLETED && state.delegatee
+    state.delegateStatus === UiTransactionStatuses.COMPLETED && state.delegatee
       ? state.delegatee.toLowerCase()
       : externalData.sumrStakeDelegate.delegatedTo.toLowerCase()
 

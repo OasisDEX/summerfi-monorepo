@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/prefer-reduce-type-parameter */
 'use client'
 import { type FC, useReducer } from 'react'
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { type HumanReadableNetwork, isSupportedHumanNetwork } from '@summerfi/app-utils'
 
 import { ClaimDelegateForm } from '@/features/claim-and-delegate/components/ClaimDelegateForm/ClaimDelegateForm'
@@ -25,13 +25,13 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
     ...claimDelegateState,
     delegatee: externalData.sumrStakeDelegate.delegatedTo,
     walletAddress,
-    claimableBalances: Object.values(SDKChainId)
-      .filter((id) => typeof id === 'number')
+    claimableBalances: Object.values(SupportedNetworkIds)
+      .filter((networkId): networkId is number => typeof networkId === 'number')
       .reduce<ClaimableBalances>((acc, chainId) => {
-        const numericChainId = chainId as SDKChainId
+        const numericChainId = chainId as SupportedNetworkIds
 
         acc[numericChainId] =
-          externalData.sumrToClaim.claimableAggregatedRewards.perChain[numericChainId] || 0
+          externalData.sumrToClaim.aggregatedRewards.perChain[numericChainId] || 0
 
         return acc
       }, {} as ClaimableBalances),
@@ -45,6 +45,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
       },
       {} as Record<HumanReadableNetwork, number>,
     ),
+    merklIsAuthorizedPerChain: externalData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
   return (

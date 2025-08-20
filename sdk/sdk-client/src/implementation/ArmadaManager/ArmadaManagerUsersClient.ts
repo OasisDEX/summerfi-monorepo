@@ -125,6 +125,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getAggregatedRewards.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getAggregatedRewardsIncludingMerkl */
+  async getAggregatedRewardsIncludingMerkl(
+    params: Parameters<IArmadaManagerUsersClient['getAggregatedRewardsIncludingMerkl']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAggregatedRewardsIncludingMerkl']> {
+    return this.rpcClient.armada.users.getAggregatedRewardsIncludingMerkl.query(params)
+  }
+
   async getClaimableAggregatedRewards(
     params: Parameters<IArmadaManagerUsersClient['getClaimableAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getClaimableAggregatedRewards']> {
@@ -231,5 +238,26 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getUserMerklClaimTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserMerklClaimTx']> {
     return this.rpcClient.armada.users.getUserMerklClaimTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getReferralFeesMerklClaimTx */
+  async getReferralFeesMerklClaimTx(
+    params: Parameters<IArmadaManagerUsersClient['getReferralFeesMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getReferralFeesMerklClaimTx']> {
+    return this.rpcClient.armada.users.getReferralFeesMerklClaimTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getAuthorizeAsMerklRewardsOperatorTx */
+  async getAuthorizeAsMerklRewardsOperatorTx(
+    params: Parameters<IArmadaManagerUsersClient['getAuthorizeAsMerklRewardsOperatorTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getAuthorizeAsMerklRewardsOperatorTx']> {
+    return this.rpcClient.armada.users.getAuthorizeAsMerklRewardsOperatorTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getIsAuthorizedAsMerklRewardsOperator */
+  async getIsAuthorizedAsMerklRewardsOperator(
+    params: Parameters<IArmadaManagerUsersClient['getIsAuthorizedAsMerklRewardsOperator']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getIsAuthorizedAsMerklRewardsOperator']> {
+    return this.rpcClient.armada.users.getIsAuthorizedAsMerklRewardsOperator.query(params)
   }
 }

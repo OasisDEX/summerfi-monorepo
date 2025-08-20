@@ -9,10 +9,11 @@ import {
   Wallet,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, userAddress } from './utils/testConfig'
+import { SDKApiUrl, testWalletAddress } from './utils/testConfig'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = true
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -24,9 +25,9 @@ const eurcFleet = Address.createFromEthereum({
 })
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
-describe('Armada Protocol Vault', () => {
+describe('Armada Protocol - Vault', () => {
   const sdk: SDKManager = makeSDK({
-    apiURL: SDKApiUrl,
+    apiDomainUrl: SDKApiUrl,
   })
   if (!rpcUrl) {
     throw new Error('Missing rpc url')
@@ -38,10 +39,10 @@ describe('Armada Protocol Vault', () => {
   const user = User.createFrom({
     chainInfo,
     wallet: Wallet.createFrom({
-      address: userAddress,
+      address: testWalletAddress,
     }),
   })
-  console.log(`Running on ${chainInfo.name} for user ${userAddress.value}`)
+  console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
 
   it(`should get all user positions: ${fleetAddress.value}`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
@@ -82,6 +83,10 @@ describe('Armada Protocol Vault', () => {
                 token: reward.token.toString(),
                 apy: reward.apy?.toString(),
               })),
+              merklRewards: vaultInfo.merklRewards.map((reward) => ({
+                token: reward.token.toString(),
+                dailyEmission: reward.dailyEmission,
+              })),
             },
             null,
             2,
@@ -113,6 +118,10 @@ describe('Armada Protocol Vault', () => {
           rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
             token: reward.token.toString(),
             apy: reward.apy?.toString(),
+          })),
+          merklRewards: vaultInfo.merklRewards.map((reward) => ({
+            token: reward.token.toString(),
+            dailyEmission: reward.dailyEmission,
           })),
         },
         null,

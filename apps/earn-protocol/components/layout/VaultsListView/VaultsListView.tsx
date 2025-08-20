@@ -1,6 +1,7 @@
 'use client'
 
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import {
   DataBlock,
   Dropdown,
@@ -9,7 +10,8 @@ import {
   getUniqueVaultId,
   getVaultsProtocolsList,
   getVaultUrl,
-  networkIconByNetworkName,
+  isUserSmartAccount,
+  networkNameIconNameMap,
   SUMR_CAP,
   Text,
   useAmount,
@@ -17,6 +19,7 @@ import {
   useLocalConfig,
   useMobileCheck,
   useTokenSelector,
+  useUserWallet,
   VaultCard,
   VaultGrid,
   VaultSimulationForm,
@@ -26,9 +29,9 @@ import {
   type GetVaultsApyResponse,
   type IconNamesList,
   type IToken,
-  type SDKNetwork,
   type SDKVaultishType,
   type SDKVaultsListType,
+  type SupportedSDKNetworks,
   type TokenSymbolsList,
   TransactionAction,
 } from '@summerfi/app-types'
@@ -38,6 +41,7 @@ import {
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
@@ -45,13 +49,13 @@ import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/n
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
+import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import vaultsListViewStyles from './VaultsListView.module.css'
 
@@ -130,6 +134,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { push } = useRouter()
   const queryParams = useSearchParams()
 
+  const user = useUser()
+  const userIsSmartAccount = isUserSmartAccount(user)
+
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
   const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
@@ -200,8 +207,14 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
         return Number(aRewards) > Number(bRewards) ? -1 : 1
       }
 
-      const aApy = vaultsApyByNetworkMap[`${a.id}-${subgraphNetworkToId(a.protocol.network)}`]
-      const bApy = vaultsApyByNetworkMap[`${b.id}-${subgraphNetworkToId(b.protocol.network)}`]
+      const aApy =
+        vaultsApyByNetworkMap[
+          `${a.id}-${subgraphNetworkToId(supportedSDKNetwork(a.protocol.network))}`
+        ]
+      const bApy =
+        vaultsApyByNetworkMap[
+          `${b.id}-${subgraphNetworkToId(supportedSDKNetwork(b.protocol.network))}`
+        ]
 
       // default sorting method which is VaultsSorting.HIGHEST_APY
       return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
@@ -234,10 +247,22 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
       : networkFilteredVaults
 
-    const sortedVaults = assetFilteredVaults?.sort(sortVaults)
+    const accountTypeFilteredVaults = userIsSmartAccount
+      ? filterOutSonicFromVaults(assetFilteredVaults ?? [])
+      : assetFilteredVaults
+
+    const sortedVaults = accountTypeFilteredVaults?.sort(sortVaults)
 
     return sortedVaults
-  }, [sortVaults, filterNetworks, filterNetworkVaults, filterAssetVaults, vaultsList, filterAssets])
+  }, [
+    sortVaults,
+    filterNetworks,
+    filterNetworkVaults,
+    filterAssetVaults,
+    vaultsList,
+    filterAssets,
+    userIsSmartAccount,
+  ])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
     filteredAndSortedVaults?.length
@@ -276,7 +301,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { userWalletAddress } = useUserWallet()
 
   const { position: positionExists, isLoading } = usePosition({
-    chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+    chainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
     vaultId: resolvedVaultData.id,
     onlyActive: true,
   })
@@ -284,12 +309,12 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, setSelectedTokenOption } =
     useTokenSelector({
       vault: resolvedVaultData,
-      chainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+      chainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
     })
 
   const tokenBalances = useTokenBalances({
     tokenSymbol: selectedTokenOption.value,
-    network: resolvedVaultData.protocol.network,
+    network: supportedSDKNetwork(resolvedVaultData.protocol.network),
     vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
   })
 
@@ -349,7 +374,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   const { amountDisplayUSDWithSwap, rawToTokenAmount } = useAmountWithSwap({
     vault: resolvedVaultData,
-    vaultChainId: subgraphNetworkToSDKId(resolvedVaultData.protocol.network),
+    vaultChainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
     amountDisplay,
     amountDisplayUSD,
     sidebarTransactionType: TransactionAction.DEPOSIT,
@@ -404,9 +429,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const vaultsNetworksList = useMemo(
     () => [
       ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
-        icon: networkIconByNetworkName[network] as IconNamesList,
+        icon: networkNameIconNameMap[supportedSDKNetwork(network)] as IconNamesList,
         value: network,
-        label: capitalize(sdkNetworkToHumanNetwork(network)),
+        label: capitalize(sdkNetworkToHumanNetwork(supportedSDKNetwork(network))),
       })),
     ],
     [vaultsList],
@@ -546,7 +571,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                 sumrPrice={estimatedSumrPrice}
                 vaultApyData={
                   vaultsApyByNetworkMap[
-                    `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                    `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
               />
@@ -556,7 +581,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
                 No vaults available
                 {filterNetworks.length
-                  ? ` for ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SDKNetwork))).join(' and ')}`
+                  ? ` for ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
                   : ''}
                 {filterAssets.length
                   ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
@@ -600,7 +625,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                   sumrPrice={estimatedSumrPrice}
                   vaultApyData={
                     vaultsApyByNetworkMap[
-                      `${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`
+                      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                     ]
                   }
                 />

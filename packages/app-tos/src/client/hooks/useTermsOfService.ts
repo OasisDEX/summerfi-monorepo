@@ -23,8 +23,8 @@ import { type TOSInput } from '@/types'
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
  * @param type - The type of Terms of Service message to generate.
  * @param forceDisconnect Optional, to be used to disconnect user when there is an issue with API to prevent him / her from using app without accepting TOS.
- * @param isSmartAccount - A boolean indicating if the wallet is a Smart Account.
  * @param publicClient - public viem client
+ * @param isIframe - A boolean indicating if the app is an iframe.
  *
  * @returns Returns state of Terms of Service flow
  *
@@ -38,8 +38,8 @@ export const useTermsOfService = ({
   forceDisconnect,
   cookiePrefix,
   type = 'default',
-  isSmartAccount,
   publicClient,
+  isIframe,
 }: Omit<TOSInput, 'isGnosisSafe'>): TOSState => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
@@ -56,23 +56,8 @@ export const useTermsOfService = ({
 
   useEffect(() => {
     const request = async (address: string) => {
-      // smart account could be the one from account kit
-      // which handles signatures well
-      // condition below is for safe specific case
-      const bytecodeOfPotentialContract = !isSmartAccount
-        ? await publicClient
-            .getBytecode({
-              address: address as `0x${string}`,
-            })
-            .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.error('Failed to fetch bytecode:', error)
-
-              return undefined
-            })
-        : undefined
-
-      const isGnosisSafe = (bytecodeOfPotentialContract?.length ?? 0) > 0
+      // We assume that if the app is an iframe, it is a Safe global wallet
+      const isGnosisSafe = isIframe
 
       /**
          Initial step - fetch info about user acceptance from database.
@@ -155,7 +140,7 @@ export const useTermsOfService = ({
     forceDisconnect,
     type,
     publicClient,
-    isSmartAccount,
+    isIframe,
   ])
 
   return tos

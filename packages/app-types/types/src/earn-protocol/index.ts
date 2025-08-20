@@ -15,10 +15,19 @@ import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/ea
 import { TimeframesType } from '../components'
 import { DeviceType } from '../device-type'
 import { IconNamesList, TokenSymbolsList } from '../icons'
+import { NetworkIds } from '../networks'
+import {
+  GetInterestRatesQuery,
+  GetInterestRatesDocument,
+} from '@summerfi/summer-earn-rates-subgraph'
 
-export { Network as SDKNetwork }
-export { ChainId as SDKChainId }
+export type { GetInterestRatesQuery }
+export { GetInterestRatesDocument }
 export type { IArmadaPosition as IArmadaPosition }
+
+export type InterestRates = {
+  [key: string]: GetInterestRatesQuery
+}
 
 export type ChartDataPoints = {
   timestamp: number
@@ -59,31 +68,6 @@ export type SDKUserActivityType = SDKUsersActivityType[0]
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = (SDKVaultType | SDKVaultsListType[number]) & VaultCustomFields
 
-export const sdkSupportedNetworks = [
-  Network.ArbitrumOne,
-  Network.Base,
-  Network.Mainnet,
-  Network.SonicMainnet,
-] as const
-
-export const sdkSupportedChains = [
-  ChainId.ARBITRUM,
-  ChainId.BASE,
-  ChainId.MAINNET,
-  ChainId.SONIC,
-] as const
-
-export type SDKSupportedNetwork = (typeof sdkSupportedNetworks)[number]
-export type SDKSupportedChain = (typeof sdkSupportedChains)[number]
-
-export enum SDKSupportedNetworkIdsEnum {
-  ARBITRUM = ChainId.ARBITRUM,
-  BASE = ChainId.BASE,
-  OPTIMISM = ChainId.OPTIMISM,
-  MAINNET = ChainId.MAINNET,
-  SONIC = ChainId.SONIC,
-}
-
 export type EarnTransactionViewStates =
   | 'idle'
   | 'loadingTx'
@@ -91,6 +75,12 @@ export type EarnTransactionViewStates =
   | 'txInProgress'
   | 'txError'
   | 'txSuccess'
+
+export enum UiTransactionStatuses {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+}
 
 export type EarnAllowanceTypes = 'deposit' | 'custom'
 
@@ -165,12 +155,13 @@ export type ArkDetailsType = {
 }
 
 export type GetInterestRatesParams = {
-  network: Network
+  network: SupportedSDKNetworks
   dailyCount?: number
   hourlyCount?: number
   weeklyCount?: number
   arksList: SDKVaultishType['arks'] | SDKVaultType['arks']
   justLatestRates?: boolean
+  withCache?: boolean
 }
 
 export type PlatformLogo = 'aave' | 'spark' | 'morpho' | 'summer'
@@ -184,13 +175,6 @@ export type VaultApyData = {
 }
 
 export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
-
-export interface FleetRate {
-  id: string
-  rate: string
-  timestamp: number
-  fleetAddress: string
-}
 
 // Define a new type for transactions that includes an `executed` property
 export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
@@ -338,4 +322,45 @@ export type LandingPageData = {
   }
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
+}
+
+export enum SupportedNetworkIds {
+  Mainnet = NetworkIds.MAINNET,
+  Base = NetworkIds.BASEMAINNET,
+  ArbitrumOne = NetworkIds.ARBITRUMMAINNET,
+  SonicMainnet = NetworkIds.SONICMAINNET,
+}
+
+export enum SupportedSDKNetworks {
+  Mainnet = Network.Mainnet,
+  Base = Network.Base,
+  ArbitrumOne = Network.ArbitrumOne,
+  SonicMainnet = Network.SonicMainnet,
+}
+
+export interface FleetRate {
+  id: string
+  rate: string
+  timestamp: number
+  fleetAddress: string
+}
+
+export interface AggregatedFleetRate {
+  id: string
+  averageRate: string
+  date: string
+  fleetAddress: string
+}
+
+export interface HistoricalFleetRates {
+  dailyRates: AggregatedFleetRate[]
+  hourlyRates: AggregatedFleetRate[]
+  weeklyRates: AggregatedFleetRate[]
+  latestRate: FleetRate[]
+}
+
+export interface HistoricalFleetRateResult {
+  chainId: string
+  fleetAddress: string
+  rates: HistoricalFleetRates
 }

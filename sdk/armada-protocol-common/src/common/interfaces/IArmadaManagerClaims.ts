@@ -59,6 +59,27 @@ export interface IArmadaManagerClaims {
   }>
 
   /**
+   * @name getAggregatedRewardsIncludingMerkl
+   * @description Returns the total aggregated rewards a user is eligible to claim cross-chain including Merkl
+   * @param params.user The user
+   * @returns Promise<{
+   *  total: bigint
+   *  vaultUsagePerChain: Record<number, bigint>
+   *  vaultUsage: bigint
+   *  merkleDistribution: bigint
+   *  voteDelegation: bigint
+   * }>
+   * @throws Error
+   */
+  getAggregatedRewardsIncludingMerkl: (params: { user: IUser }) => Promise<{
+    total: bigint
+    vaultUsagePerChain: Record<number, bigint>
+    vaultUsage: bigint
+    merkleDistribution: bigint
+    voteDelegation: bigint
+  }>
+
+  /**
    * @deprecated use getAggregatedRewards instead
    * @name getClaimableAggregatedRewards
    * @description Returns the claimable amount a user is eligible to claim cross-chain
@@ -118,11 +139,13 @@ export interface IArmadaManagerClaims {
    *
    * @param chainInfo Chain information
    * @param user Address of the user that is trying to claim
+   * @param includeMerkl Whether to include Merkl rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
   getAggregatedClaimsForChainTx(params: {
     chainInfo: ChainInfo
     user: IUser
+    includeMerkl?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 }

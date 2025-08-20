@@ -21,10 +21,12 @@ import {
   useAmount,
   useAmountWithSwap,
   useForecast,
+  useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
+  useUserWallet,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -34,6 +36,7 @@ import {
   type EarnAppConfigType,
   type GetVaultsApyResponse,
   type IArmadaPosition,
+  type InterestRates,
   type NetworkIds,
   type PerformanceChartData,
   type SDKVaultishType,
@@ -42,12 +45,15 @@ import {
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
-import { subgraphNetworkToId, subgraphNetworkToSDKId, zero } from '@summerfi/app-utils'
+import {
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+  zero,
+} from '@summerfi/app-utils'
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
-import { AccountKitAccountType } from '@/account-kit/types'
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -70,7 +76,6 @@ import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 import { useTransaction } from '@/hooks/use-transaction'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 const ControlsApproval = dynamic(
   () =>
@@ -137,7 +142,7 @@ export const VaultManageViewComponent = ({
   viewWalletAddress: string
   performanceChartData: PerformanceChartData
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
@@ -157,14 +162,16 @@ export const VaultManageViewComponent = ({
     TransactionAction.DEPOSIT,
   )
 
-  const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
+  const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
   const [selectedPosition, setSelectedPosition] = useState<string | undefined>(
     migratablePositions[0]?.id,
   )
 
   const vaultApyData =
-    vaultsApyByNetworkMap[`${vault.id}-${subgraphNetworkToId(vault.protocol.network)}`] ?? {}
+    vaultsApyByNetworkMap[
+      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+    ] ?? {}
 
   const handleSelectPosition = (id: string) => {
     setSelectedPosition(id)
@@ -350,17 +357,18 @@ export const VaultManageViewComponent = ({
   })
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
     type: 'default',
+    isIframe,
   })
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
@@ -399,8 +407,8 @@ export const VaultManageViewComponent = ({
     return vaults
       .filter((potentialVault) => {
         return (
-          subgraphNetworkToSDKId(potentialVault.protocol.network) === vaultChainId &&
-          potentialVault.id !== vault.id
+          subgraphNetworkToSDKId(supportedSDKNetwork(potentialVault.protocol.network)) ===
+            vaultChainId && potentialVault.id !== vault.id
         )
       })
       .sort((a, b) => {

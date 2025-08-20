@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { Button, Card, Icon, LoadingSpinner, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKSupportedChain } from '@summerfi/app-types'
+import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
@@ -12,12 +12,13 @@ interface ClaimDelegateToClaimProps {
   earned: string
   earnedInUSD: string
   balance: string
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
   onClaim: () => void
   isLoading?: boolean
   isChangingNetwork?: boolean
   canClaim: boolean
   isOnlyStep?: boolean
+  isOwner?: boolean
 }
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
@@ -29,6 +30,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   isOnlyStep,
   isChangingNetwork,
   canClaim,
+  isOwner,
 }) => {
   const getButtonLabel = () => {
     if (isChangingNetwork) {
@@ -86,9 +88,9 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
             e.stopPropagation()
             onClaim()
           }}
-          disabled={!canClaim || isLoading || isChangingNetwork}
+          disabled={!canClaim || isLoading || isChangingNetwork || !isOwner}
         >
-          {isLoading || isChangingNetwork ? (
+          {isLoading ?? isChangingNetwork ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
               <span>{getButtonLabel()}</span>

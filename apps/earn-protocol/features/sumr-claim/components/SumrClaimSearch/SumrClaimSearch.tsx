@@ -1,16 +1,7 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
-import {
-  Button,
-  Card,
-  GradientBox,
-  Input,
-  LoadingSpinner,
-  NewsletterWrapper,
-  SkeletonLine,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { Button, Card, Input, LoadingSpinner, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -30,7 +21,6 @@ export const SumrClaimSearch = () => {
 
   const [eligibleUsers, setEligibleUsers] =
     useState<{ ens: string | null; userAddress: string }[]>()
-  const [isBoxVisible, setIsBoxVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [inputError, setInputError] = useState('')
   const [inputValue, setInputValue] = useState('')
@@ -39,10 +29,9 @@ export const SumrClaimSearch = () => {
 
   const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
 
-  const { claimableAggregatedRewards, isLoading: isAggregatedRewardsLoading } =
-    useUserAggregatedRewards({
-      walletAddress: eligibleUser?.userAddress,
-    })
+  const { aggregatedRewards, isLoading: isAggregatedRewardsLoading } = useUserAggregatedRewards({
+    walletAddress: eligibleUser?.userAddress,
+  })
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setInputError('')
@@ -61,7 +50,6 @@ export const SumrClaimSearch = () => {
     }
 
     setInputValue(newInputValue)
-    setIsBoxVisible(true)
   }
 
   const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user?.address
@@ -150,9 +138,9 @@ export const SumrClaimSearch = () => {
 
   const sumrToClaim = isAggregatedRewardsLoading ? (
     <SkeletonLine width="100px" height="35px" />
-  ) : claimableAggregatedRewards?.total ? (
+  ) : aggregatedRewards?.total ? (
     // eslint-disable-next-line no-mixed-operators
-    formatCryptoBalance(Number(claimableAggregatedRewards.total) / 10 ** 18)
+    formatCryptoBalance(Number(aggregatedRewards.total) / 10 ** 18)
   ) : (
     ''
   )
@@ -236,24 +224,6 @@ export const SumrClaimSearch = () => {
           </Button>
         </Link>
       </div>
-
-      <GradientBox
-        selected
-        className={`${classNames.gradientBox} ${isBoxVisible ? classNames.gradientBoxOpened : ''}`}
-        style={{
-          position: isBoxVisible ? 'relative' : 'absolute',
-        }}
-      >
-        <Card variant="cardGradientLight" style={{ flexDirection: 'column' }}>
-          <Text variant="p2semiColorful" style={{ marginBottom: 'var(--general-space-8)' }}>
-            Get notified when The Lazy Summer protocol launches
-          </Text>
-          <Text variant="p3" style={{ marginBottom: 'var(--general-space-16)' }}>
-            The best way to earn $SUMR is by depositing into the protocol when its live.
-          </Text>
-          <NewsletterWrapper inputWrapperStyles={{ maxWidth: '366px' }} isEarnApp />
-        </Card>
-      </GradientBox>
     </div>
   )
 }

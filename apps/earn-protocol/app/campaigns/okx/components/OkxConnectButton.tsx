@@ -2,10 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal, useLogout } from '@account-kit/react'
-import { Button, EXTERNAL_LINKS, Text } from '@summerfi/app-earn-ui'
+import { Button, EXTERNAL_LINKS, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
-
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 declare global {
   interface Window {

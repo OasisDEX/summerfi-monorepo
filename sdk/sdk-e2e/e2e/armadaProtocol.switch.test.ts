@@ -11,9 +11,8 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, userAddress } from './utils/testConfig'
-import { waitSeconds } from './utils/wait'
-import { TX_CONFIRMATION_WAIT_TIME, DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
+import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -66,7 +65,7 @@ describe('Armada Protocol Switch', () => {
     stake?: boolean
   }) {
     const sdk: SDKManager = makeSDK({
-      apiURL: SDKApiUrl,
+      apiDomainUrl: SDKApiUrl,
     })
     if (!rpcUrl) {
       throw new Error('Missing fork url')
@@ -76,7 +75,7 @@ describe('Armada Protocol Switch', () => {
 
     const user = User.createFrom({
       wallet: Wallet.createFrom({
-        address: userAddress,
+        address: testWalletAddress,
       }),
       chainInfo,
     })
@@ -143,9 +142,6 @@ describe('Armada Protocol Switch', () => {
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
-
-    // Wait for transaction confirmation
-    await waitSeconds(TX_CONFIRMATION_WAIT_TIME)
 
     const sourcePositionAfter = await sdk.armada.users.getUserPosition({
       user,

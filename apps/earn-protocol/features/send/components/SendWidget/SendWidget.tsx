@@ -4,23 +4,27 @@ import { useChain } from '@account-kit/react'
 import {
   getTokenGuarded,
   Modal,
+  SDKChainIdToAAChainMap,
   Sidebar,
   type SidebarProps,
   useAmount,
+  useClientChainId,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import {
   type Address,
   type DropdownRawOption,
-  type SDKSupportedChain,
-  type SDKSupportedNetwork,
-  sdkSupportedNetworks,
+  type SupportedNetworkIds,
+  SupportedSDKNetworks,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { networkNameToSDKId, networkNameToSDKNetwork } from '@summerfi/app-utils'
+import {
+  networkNameToSDKId,
+  networkNameToSDKNetwork,
+  supportedSDKNetworkId,
+} from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
-import { SDKChainIdToAAChainMap } from '@/account-kit/config'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -31,7 +35,6 @@ import { useSendTransaction } from '@/features/send/hooks/use-send-transaction'
 import { sendReducer, sendState } from '@/features/send/state'
 import { SendStep, SendTxStatuses } from '@/features/send/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -63,7 +66,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     label: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase(),
     value: `${walletDataAssetsSortedByUsdValue[0].id}_${walletDataAssetsSortedByUsdValue[0].network}`,
     tokenSymbol: walletDataAssetsSortedByUsdValue[0].symbol.toUpperCase() as TokenSymbolsList,
-    chainId: networkNameToSDKId(walletDataAssetsSortedByUsdValue[0].network) as SDKSupportedChain,
+    chainId: networkNameToSDKId(walletDataAssetsSortedByUsdValue[0].network) as SupportedNetworkIds,
   }
 
   const [state, dispatch] = useReducer(sendReducer, {
@@ -82,19 +85,20 @@ export const SendWidget: FC<SendWidgetProps> = ({
 
   const dropdownOptions = walletDataAssetsSortedByUsdValue
     .filter((item) =>
-      sdkSupportedNetworks.includes(networkNameToSDKNetwork(item.network) as SDKSupportedNetwork),
+      Object.values(SupportedSDKNetworks).includes(
+        networkNameToSDKNetwork(item.network) as SupportedSDKNetworks,
+      ),
     )
     .filter((item) => !!getTokenGuarded(item.symbol.toLocaleUpperCase()))
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
       value: `${asset.id}_${asset.network}`,
       tokenSymbol: asset.symbol.toUpperCase() as TokenSymbolsList,
-      chainId: networkNameToSDKId(asset.network) as SDKSupportedChain,
+      chainId: networkNameToSDKId(asset.network) as SupportedNetworkIds,
     }))
 
   const { publicClient } = usePublicClient({
-    chain:
-      SDKChainIdToAAChainMap[state.tokenDropdown.chainId as keyof typeof SDKChainIdToAAChainMap],
+    chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
   })
 
   const {
@@ -207,10 +211,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
       action: () => {
         if (!isCorrectChain) {
           setChain({
-            chain:
-              SDKChainIdToAAChainMap[
-                state.tokenDropdown.chainId as keyof typeof SDKChainIdToAAChainMap
-              ],
+            chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
           })
 
           return

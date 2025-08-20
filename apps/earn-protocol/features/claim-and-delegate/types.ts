@@ -1,4 +1,4 @@
-import { type SDKChainId } from '@summerfi/app-types'
+import { type SupportedNetworkIds, type UiTransactionStatuses } from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
@@ -15,12 +15,6 @@ export enum ClaimDelegateSteps {
   COMPLETED = 'completed',
 }
 
-export enum ClaimDelegateTxStatuses {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-}
-
 export enum ClaimDelegateStakeType {
   ADD_STAKE = 'add-stake',
   REMOVE_STAKE = 'remove-stake',
@@ -28,26 +22,32 @@ export enum ClaimDelegateStakeType {
 
 // Define types for balance tracking
 export type ClaimableBalances = {
-  [key in SDKChainId]: number
+  [key in SupportedNetworkIds]: number
 }
 export type WalletBalances = {
   [key in HumanReadableNetwork]: number
 }
 
+export type MerklIsAuthorizedPerChain = {
+  [key: number]: boolean
+}
+
 export type ClaimDelegateState = {
   step: ClaimDelegateSteps
   delegatee: string | undefined
-  claimStatus: ClaimDelegateTxStatuses | undefined
-  delegateStatus: ClaimDelegateTxStatuses | undefined
-  stakingStatus: ClaimDelegateTxStatuses | undefined
-  stakingApproveStatus: ClaimDelegateTxStatuses | undefined
+  claimStatus: UiTransactionStatuses | undefined
+  merklStatus: UiTransactionStatuses | undefined
+  delegateStatus: UiTransactionStatuses | undefined
+  stakingStatus: UiTransactionStatuses | undefined
+  stakingApproveStatus: UiTransactionStatuses | undefined
   stakeType: ClaimDelegateStakeType
   stakeChangeAmount: string | undefined
   walletAddress: string
-  pendingClaimChainId: SDKChainId | undefined
+  pendingClaimChainId: SupportedNetworkIds | undefined
   // Add balance tracking
   claimableBalances: ClaimableBalances
   walletBalances: WalletBalances
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
 
 export type ClaimDelegateReducerAction =
@@ -60,20 +60,24 @@ export type ClaimDelegateReducerAction =
       payload: string | undefined
     }
   | {
+      type: 'update-merkl-status'
+      payload: UiTransactionStatuses | undefined
+    }
+  | {
       type: 'update-claim-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-delegate-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-staking-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-staking-approve-status'
-      payload: ClaimDelegateTxStatuses | undefined
+      payload: UiTransactionStatuses | undefined
     }
   | {
       type: 'update-stake-type'
@@ -85,7 +89,7 @@ export type ClaimDelegateReducerAction =
     }
   | {
       type: 'set-pending-claim'
-      payload: SDKChainId | undefined
+      payload: SupportedNetworkIds | undefined
     }
   | {
       type: 'update-claimable-balances'
@@ -94,6 +98,10 @@ export type ClaimDelegateReducerAction =
   | {
       type: 'update-wallet-balances'
       payload: WalletBalances
+    }
+  | {
+      type: 'update-merkl-is-authorized-per-chain'
+      payload: MerklIsAuthorizedPerChain
     }
 
 export type ClaimDelegateExternalData = {

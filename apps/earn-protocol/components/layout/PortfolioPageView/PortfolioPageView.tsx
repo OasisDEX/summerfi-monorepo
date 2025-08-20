@@ -1,7 +1,13 @@
 'use client'
 
 import { type FC, useEffect, useReducer } from 'react'
-import { getPositionValues, Icon, NonOwnerPortfolioBanner, TabBar } from '@summerfi/app-earn-ui'
+import {
+  getPositionValues,
+  Icon,
+  NonOwnerPortfolioBanner,
+  TabBar,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type HistoryChartData,
@@ -16,6 +22,7 @@ import { type LatestActivityPagination } from '@/app/server-handlers/tables-data
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { BeachClubPalmBackground } from '@/features/beach-club/components/BeachClubPalmBackground/BeachClubPalmBackground'
+import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
@@ -31,7 +38,6 @@ import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 import classNames from './PortfolioPageView.module.css'
 
@@ -81,6 +87,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     ...claimDelegateState,
     delegatee: rewardsData.sumrStakeDelegate.delegatedTo,
     walletAddress,
+    merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
+  })
+
+  const [beachClubState, beachClubDispatch] = useReducer(beachClubReducer, {
+    ...beachClubDefaultState,
+    walletAddress,
+    merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
   const beachClubEnabled = !!features?.BeachClub
@@ -170,7 +183,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             label: 'Beach Club',
             icon: <Icon iconName="beach_club_icon" size={24} />,
             content: (
-              <PortfolioBeachClub walletAddress={walletAddress} beachClubData={beachClubData} />
+              <PortfolioBeachClub
+                walletAddress={walletAddress}
+                beachClubData={beachClubData}
+                merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
+                state={beachClubState}
+                dispatch={beachClubDispatch}
+              />
             ),
             activeColor: 'var(--beach-club-tab-underline)',
           },

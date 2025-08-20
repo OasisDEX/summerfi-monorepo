@@ -70,6 +70,7 @@ export { TableHeadWithTooltip } from './components/molecules/TableHeadWithToolti
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
 export { TabBar } from './components/molecules/TabBar/TabBar'
+export { TabBarSimple } from './components/molecules/TabBar/TabBarSimple'
 export { LoadingSpinner } from './components/molecules/LoadingSpinner/LoadingSpinner'
 export {
   SlideCarousel,
@@ -132,6 +133,8 @@ export {
   type SelectedAnalyticsCookies,
   type SavedAnalyticsCookiesSettings,
 } from './components/molecules/CookieBanner/config'
+export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
+export { AllocationBar } from './components/molecules/AllocationBar/AllocationBar'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
@@ -156,6 +159,8 @@ export {
   EnhancedRiskManagementCampaign,
 } from './components/organisms/LandingPageContent/EnhancedRiskManagement'
 export { Audits } from './components/organisms/LandingPageContent/Audits'
+export { PanelNavigation } from './components/organisms/PanelNavigation/PanelNavigation'
+export type { PanelNavigationProps } from './components/organisms/PanelNavigation/PanelNavigation'
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
@@ -175,6 +180,8 @@ export { useAnalyticsCookies } from './hooks/use-analytics-cookies'
 export { useHoldAlt } from './hooks/use-hold-alt'
 export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
+export { useClientChainId } from './hooks/use-client-chain-id'
+export { useUserWallet } from './hooks/use-user-wallet'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'
@@ -204,10 +211,12 @@ export { softRouterPush } from './helpers/soft-router-push'
 export { isVaultAtLeastDaysOld } from './helpers/is-vault-at-least-days-old'
 export { INTERNAL_LINKS, EXTERNAL_LINKS } from './helpers/application-links'
 export { getVaultsProtocolsList } from './helpers/get-vaults-protocols-list'
+export { mapArkLatestInterestRates } from './helpers/map-ark-interest-rates'
 
 export { getTokenGuarded } from './tokens/helpers'
-export { networkIconByNetworkName, networkIconByChainId } from './helpers/network-icons'
 export { getArkNiceName } from './helpers/get-ark-nice-name'
+export { getUniqueColor } from './helpers/get-unique-color'
+export { getProtocolLabel } from './helpers/get-protocol-label'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'
@@ -240,8 +249,29 @@ export {
 // constants
 export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
+export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
+export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'
 
 // beach club
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
 export { BeachClubRewardSimulation } from './features/beach-club/BeachClubRewardSimulation/BeachClubRewardSimulation'
 export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGradient/BeachClubRadialGradient'
+
+// aa kit
+export {
+  queryClient,
+  customAAKitSonicConfig,
+  SDKChainIdToAAChainMap,
+  getAccountKitConfig,
+} from './account-kit/config'
+export { accountType, overridesGasSponsorship } from './account-kit/constants'
+export { AccountKitAccountType } from './account-kit/types'
+export { isUserEOA } from './account-kit/helpers/is-user-eoa'
+export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
+
+export { VaultExposure } from './features/vault-exposure/components/VaultExposure/VaultExposure.tsx'
+export { VaultExposureTable } from './features/vault-exposure/components/VaultExposureTable/VaultExposureTable.tsx'
+export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'
+export { vaultExposureFilter } from './features/vault-exposure/table/filters/filters'
+
+export { rewardsDailyEmmission } from './constants/rewards-emission'

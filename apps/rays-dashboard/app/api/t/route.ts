@@ -1,8 +1,7 @@
+import { getMixpanel, trackEventHandler } from '@summerfi/app-server-handlers'
 import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
 import { snakeCase } from 'lodash-es'
 import { type NextRequest, NextResponse } from 'next/server'
-
-import { trackEventHandler } from '@/server-handlers/mixpanel'
 
 export const revalidate = 0
 
@@ -12,6 +11,7 @@ const skipArtificialTrackingOS = [
 
 export async function POST(request: NextRequest) {
   try {
+    const mixpanel = getMixpanel(process.env.MIXPANEL_KEY)
     const { distinctId, eventBody, eventName, os, ...rest } = await request.json()
 
     if (
@@ -22,12 +22,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ status: 400 })
     }
 
-    trackEventHandler(`${eventName}`, {
-      // eslint-disable-next-line camelcase
-      distinct_id: distinctId,
-      ...eventBody,
-      ...Object.keys(rest).reduce((a, v) => ({ ...a, [`$${snakeCase(v)}`]: rest[v] }), {}),
-    })
+    trackEventHandler(
+      `${eventName}`,
+      {
+        // eslint-disable-next-line camelcase
+        distinct_id: distinctId,
+        ...eventBody,
+        ...Object.keys(rest).reduce((a, v) => ({ ...a, [`$${snakeCase(v)}`]: rest[v] }), {}),
+      },
+      mixpanel,
+    )
 
     return NextResponse.json({ status: 200 })
   } catch (error) {

@@ -15,18 +15,23 @@ import { useMobileCheck } from '@/hooks/use-mobile-check'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.css'
 
-type TriggerProps = { isOpen: boolean; isDisabled?: boolean }
+type TriggerProps = { isOpen: boolean; isDisabled?: boolean; dropdownValue?: DropdownRawOption }
 
 interface DropdownProps {
   options: DropdownRawOption[]
   dropdownValue: DropdownRawOption
   children: ReactNode
   asPill?: boolean
+  asCard?: boolean
   withSearch?: boolean
   inputPlaceholder?: string
   isDisabled?: boolean
   dropdownOptionsStyle?: CSSProperties
+  dropdownOptionsClassName?: string
   dropdownChildrenStyle?: CSSProperties
+  dropdownWrapperStyle?: CSSProperties
+  dropdownWrapperClassName?: string
+  dropdownSelectedClassName?: string
   trigger?: (props: TriggerProps) => ReactNode
   onChange?: (option: DropdownRawOption) => void
 }
@@ -36,11 +41,16 @@ export const Dropdown: FC<DropdownProps> = ({
   dropdownValue,
   children,
   asPill,
+  asCard,
   withSearch,
   inputPlaceholder,
   isDisabled,
   dropdownOptionsStyle,
+  dropdownOptionsClassName,
   dropdownChildrenStyle,
+  dropdownWrapperStyle,
+  dropdownWrapperClassName,
+  dropdownSelectedClassName,
   onChange,
   trigger,
 }) => {
@@ -106,9 +116,13 @@ export const Dropdown: FC<DropdownProps> = ({
   const hasMultipleOptions = optionsMapped.length > 1
 
   return (
-    <div className={dropdownStyles.dropdown} ref={dropdownRef}>
+    <div
+      className={clsx(dropdownStyles.dropdown, dropdownWrapperClassName)}
+      ref={dropdownRef}
+      style={dropdownWrapperStyle}
+    >
       <div
-        className={clsx(dropdownStyles.dropdownSelected, {
+        className={clsx(dropdownStyles.dropdownSelected, dropdownSelectedClassName, {
           [dropdownStyles.disabled]: isDisabled,
         })}
         onClick={hasMultipleOptions ? toggleDropdown : undefined}
@@ -127,12 +141,24 @@ export const Dropdown: FC<DropdownProps> = ({
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...dropdownChildrenStyle,
               }
-            : { ...dropdownChildrenStyle }
+            : asCard
+              ? {
+                  padding: '16px 24px',
+                  backgroundColor: 'var(--earn-protocol-neutral-90)',
+                  border: '1px solid var(--earn-protocol-neutral-90)',
+                  ...((isOpen || isHover) && {
+                    border: '1px solid var(--earn-protocol-neutral-60)',
+                    transition: 'border 0.2s ease-in-out',
+                  }),
+                  borderRadius: 'var(--general-radius-24)',
+                  ...dropdownChildrenStyle,
+                }
+              : { ...dropdownChildrenStyle }
         }
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
       >
-        {trigger ? trigger({ isOpen, isDisabled }) : children}
+        {trigger ? trigger({ isOpen, isDisabled, dropdownValue }) : children}
         {!trigger && hasMultipleOptions && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
@@ -169,7 +195,11 @@ export const Dropdown: FC<DropdownProps> = ({
         </MobileDrawer>
       ) : (
         <div
-          className={`${dropdownStyles.dropdownOptions} ${isOpen ? dropdownStyles.dropdownShow : dropdownStyles.dropdownHide}`}
+          className={clsx(
+            dropdownStyles.dropdownOptions,
+            dropdownOptionsClassName,
+            isOpen ? dropdownStyles.dropdownShow : dropdownStyles.dropdownHide,
+          )}
           aria-hidden={!isOpen} // For accessibility
           style={dropdownOptionsStyle}
         >

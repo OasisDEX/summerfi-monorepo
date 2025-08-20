@@ -10,7 +10,10 @@ import {
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  formatFiatBalance,
+  formatWithSeparators,
   sdkNetworkToHumanNetwork,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -149,7 +152,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault.rewardTokenEmissionsFinish,
   )
   const handleUserRefresh = () => {
-    onRefresh?.(sdkNetworkToHumanNetwork(vault.protocol.network), vault.id, viewWalletAddress)
+    onRefresh?.(
+      sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+      vault.id,
+      viewWalletAddress,
+    )
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)
@@ -212,7 +219,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <VaultTitleWithRisk
                 symbol={getDisplayToken(vault.inputToken.symbol)}
                 risk={vault.customFields?.risk ?? 'lower'}
-                networkName={vault.protocol.network}
+                networkName={supportedSDKNetwork(vault.protocol.network)}
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>
@@ -245,7 +252,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 value={
                   <Tooltip
                     tooltip={
-                      <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatCryptoBalance(netValueUSD)}</>
+                      <>USD&nbsp;Market&nbsp;Value:&nbsp;${formatFiatBalance(netValueUSD)}</>
                     }
                     tooltipWrapperStyles={{
                       maxWidth: '455px',
@@ -259,14 +266,17 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 }
                 subValue={
                   <Tooltip
-                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatCryptoBalance(netEarningsUSD)}</>}
+                    tooltip={<>USD&nbsp;Earned:&nbsp;${formatFiatBalance(netEarningsUSD)}</>}
                     tooltipWrapperStyles={{
                       maxWidth: '455px',
                     }}
                   >
                     <>
                       Earned:&nbsp;
-                      {formatCryptoBalance(netEarnings)}&nbsp;
+                      {formatWithSeparators(netEarnings, {
+                        precision: 2,
+                      })}
+                      &nbsp;
                       {getDisplayToken(vault.inputToken.symbol)}
                     </>
                   </Tooltip>

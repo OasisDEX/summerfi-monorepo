@@ -1,4 +1,4 @@
-import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
+import { DerivedAction } from './DerivedAction'
 import { ActionCallsStack } from '../src/context/ActionCallsStack'
 
 describe('Action Calls Stack', () => {

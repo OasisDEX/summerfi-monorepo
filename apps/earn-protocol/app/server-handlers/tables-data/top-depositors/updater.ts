@@ -1,14 +1,14 @@
 // import { type FleetRate } from '@summerfi/app-types'
+import { getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   mapChainIdToDbNetwork,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { BigNumber } from 'bignumber.js'
 import { type GraphQLClient } from 'graphql-request'
-
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 
 import { getTopDepositors } from './getter'
 import { calculateTopDepositors7daysChange, getEarningStreakResetTimestamp } from './helpers'
@@ -51,7 +51,7 @@ export const updateTopDepositors = async ({
     new Set(
       topDepositors.map(
         (position) =>
-          `${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`,
+          `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`,
       ),
     ),
   ).map((key) => {
@@ -103,12 +103,14 @@ export const updateTopDepositors = async ({
 
     const earningsStreakResetTimestamp = getEarningStreakResetTimestamp({ position })
 
-    const fleetId = `${position.vault.id}-${mapChainIdToDbNetwork(subgraphNetworkToSDKId(position.vault.protocol.network))}`
+    const fleetId = `${position.vault.id}-${mapChainIdToDbNetwork(subgraphNetworkToSDKId(supportedSDKNetwork(position.vault.protocol.network)))}`
 
     const earningsStreak = BigInt(new Date().getTime() - earningsStreakResetTimestamp)
 
     const fleetRate =
-      vaultsApyData[`${position.vault.id}-${subgraphNetworkToId(position.vault.protocol.network)}`]
+      vaultsApyData[
+        `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
+      ]
 
     // const fleetRate = vaultsApyData[fleetId]
 

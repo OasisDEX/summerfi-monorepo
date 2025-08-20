@@ -1,0 +1,5 @@
+.dashboardOverviewWrapper {
+  display: flex;
+  gap: var(--spacing-space-medium-large);
+  width: 100%;
+}

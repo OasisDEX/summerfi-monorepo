@@ -13,9 +13,6 @@ export function getMigrator() {
     console.error('EARN_PROTOCOL_DB_CONNECTION_STRING is not set')
     throw new Error('EARN_PROTOCOL_DB_CONNECTION_STRING is not set')
   }
-  console.log(
-    'Database connection string retrieved successfully.' + EARN_PROTOCOL_DB_CONNECTION_STRING,
-  )
 
   console.log('Creating Postgres dialect...')
   const dialect = new PostgresJSDialect({

@@ -1,12 +1,20 @@
 import { type Dispatch, type FC, useEffect } from 'react'
 import { useUser } from '@account-kit/react'
-import { Button, Card, Text, useMobileCheck, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  SDKChainIdToAAChainMap,
+  Text,
+  useClientChainId,
+  useIsIframe,
+  useMobileCheck,
+  useUserWallet,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
-import { TOSStatus } from '@summerfi/app-types'
+import { type SupportedNetworkIds, TOSStatus } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { type AccountKitSupportedNetworks, SDKChainIdToAAChainMap } from '@/account-kit/config'
-import { AccountKitAccountType } from '@/account-kit/types'
 import { TermsOfServiceCookiePrefix, TermsOfServiceVersion } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import {
@@ -19,10 +27,8 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useClientChainId } from '@/hooks/use-client-chain-id'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 import { useVisibleParagraph } from '@/hooks/use-visible-paragraph'
 
 import classNames from './ClaimDelegateAcceptanceStep.module.css'
@@ -44,9 +50,10 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const { clientChainId } = useClientChainId()
 
   const signTosMessage = useTermsOfServiceSigner()
+  const isIframe = useIsIframe()
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[clientChainId as AccountKitSupportedNetworks],
+    chain: SDKChainIdToAAChainMap[clientChainId as SupportedNetworkIds],
   })
 
   const tosState = useTermsOfService({
@@ -54,11 +61,11 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
     signMessage: signTosMessage,
     chainId: clientChainId,
     walletAddress: user?.address,
-    isSmartAccount: user?.type === AccountKitAccountType.SCA,
     version: TermsOfServiceVersion.SUMR_CLAIM_TOKEN_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
     host: '/earn',
     type: 'sumrAirdrop',
+    isIframe,
   })
 
   useEffect(() => {

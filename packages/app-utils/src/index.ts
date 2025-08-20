@@ -74,6 +74,8 @@ export {
   sdkChainIdToHumanNetwork,
   mapDbNetworkToChainId,
   mapChainIdToDbNetwork,
+  supportedSDKNetworkId,
+  supportedSDKNetwork,
 } from './helpers/earn-network-tools'
 export { setCookie, getCookie } from './helpers/cookies'
 export { verifyAccessToken } from './helpers/verify-access-token'
@@ -108,3 +110,4 @@ export { getVaultNiceName } from './helpers/get-vault-nice-name'
 export { getVaultRiskTooltipLabel } from './helpers/get-vault-risk-tooltip-label'
 export { convertEthToWeth, convertWethToEth } from './helpers/convert-eth'
 export { RECAPTCHA_SITE_KEY, handleCaptcha } from './helpers/handle-captcha'
+export { serverOnlyErrorHandler } from './helpers/server-only-error-handler'

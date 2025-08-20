@@ -6,7 +6,11 @@ import {
   type DropdownRawOption,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, subgraphNetworkToSDKId } from '@summerfi/app-utils'
+import {
+  sdkNetworkToHumanNetwork,
+  subgraphNetworkToSDKId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
@@ -72,7 +76,7 @@ export const VaultSimulationForm = ({
 
   const { isLoadingForecast, oneYearEarningsForecast } = useForecast({
     fleetAddress: vaultData.id,
-    chainId: subgraphNetworkToSDKId(vaultData.protocol.network),
+    chainId: subgraphNetworkToSDKId(supportedSDKNetwork(vaultData.protocol.network)),
     amount: resolvedForecastAmount.toString(),
     isEarnApp,
   })
@@ -114,7 +118,7 @@ export const VaultSimulationForm = ({
         {...{
           title: 'Deposit',
           subtitle: isEarnApp
-            ? `${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(vaultData.protocol.network))}`
+            ? `${getDisplayToken(vaultData.inputToken.symbol)} on ${capitalize(sdkNetworkToHumanNetwork(supportedSDKNetwork(vaultData.protocol.network)))}`
             : undefined,
           content: (
             <ControlsDepositWithdraw

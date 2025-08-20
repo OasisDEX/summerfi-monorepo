@@ -3,9 +3,9 @@ import {
   IArmadaManagerVaults,
   createDepositTransaction,
   createWithdrawTransaction,
-  getDeployedContractAddress,
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
+  type MerklOpportunitiesResponse,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -40,6 +40,7 @@ import { encodeFunctionData } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
+import type { IDeploymentProvider } from '../..'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -49,6 +50,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _allowanceManager: IAllowanceManager
   private _oracleManager: IOracleManager
   private _contractsProvider: IContractsProvider
+  private _deploymentProvider: IDeploymentProvider
   private _swapManager: ISwapManager
   private _utils: IArmadaManagerUtils
   private _subgraphManager: IArmadaSubgraphManager
@@ -66,6 +68,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     swapManager: ISwapManager
     utils: IArmadaManagerUtils
     subgraphManager: IArmadaSubgraphManager
+    deploymentProvider: IDeploymentProvider
   }) {
     this._supportedChains = params.supportedChains
     this._blockchainClientProvider = params.blockchainClientProvider
@@ -75,6 +78,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     this._oracleManager = params.oracleManager
     this._contractsProvider = params.contractsProvider
     this._swapManager = params.swapManager
+    this._deploymentProvider = params.deploymentProvider
     this._utils = params.utils
     this._subgraphManager = params.subgraphManager
     this._functionsUrl = this._configProvider.getConfigurationItem({
@@ -181,9 +185,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       destinationFleetToken: destinationFleetToken.toString(),
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.sourceVaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.sourceVaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -583,9 +586,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldStake,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -815,9 +817,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       shouldSwap,
     })
 
-    const admiralsQuartersAddress = getDeployedContractAddress({
-      chainInfo: params.vaultId.chainInfo,
-      contractCategory: 'core',
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
 
@@ -1502,30 +1503,40 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const [config, token, totalDeposits, totalShares, apys, rewardsApys] = await Promise.all([
-      fleetContract.config(),
-      fleetERC20Contract.getToken(),
-      fleetERC4626Contract.totalAssets(),
-      fleetERC20Contract.totalSupply(),
-      this.getVaultsApys({
-        chainId: params.vaultId.chainInfo.chainId,
-        vaultIds: [params.vaultId],
-      }),
-      this.getVaultsRewardsApys({
-        chainId: params.vaultId.chainInfo.chainId,
-        vaultIds: [params.vaultId],
-      }),
-    ])
+    const [config, token, totalDeposits, totalShares, apys, rewardsApys, merklRewards] =
+      await Promise.all([
+        fleetContract.config(),
+        fleetERC20Contract.getToken(),
+        fleetERC4626Contract.totalAssets(),
+        fleetERC20Contract.totalSupply(),
+        this.getVaultsApys({
+          chainId: params.vaultId.chainInfo.chainId,
+          vaultIds: [params.vaultId],
+        }),
+        this.getVaultsRewardsApys({
+          chainId: params.vaultId.chainInfo.chainId,
+          vaultIds: [params.vaultId],
+        }),
+        this.getMerklRewardsData({
+          chainId: params.vaultId.chainInfo.chainId,
+          vaultIds: [params.vaultId],
+        }),
+      ])
     const { depositCap } = config
 
+    const apysForVault = apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()]
+    if (!apysForVault) {
+      throw new Error(`APY not found for vault ${params.vaultId.fleetAddress.value}`)
+    }
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       token: token,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
-      apy: apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()].apy,
+      apy: apysForVault.apy,
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
+      merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
     })
   }
 
@@ -1586,29 +1597,33 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         chainId: number
         fleetAddress: string
         sma: {
-          sma24h: string
-          sma7d: string
-          sma30d: string
+          sma24h: string | null
+          sma7d: string | null
+          sma30d: string | null
         }
-        rates: [
-          {
-            id: string
-            rate: string
-            timestamp: number
-            fleetAddress: string
-          },
-        ]
+        rates:
+          | [
+              {
+                id: string
+                rate: string
+                timestamp: number
+                fleetAddress: string
+              },
+            ]
+          | []
       }>
     } = await res.json()
 
     const byFleetAddress = data.rates.reduce(
       (result, rate) => {
         const fleetAddress = rate.fleetAddress
-        const apy = rate.rates[0].rate
-        result[fleetAddress] = {
-          apy: Percentage.createFrom({
-            value: Number(apy),
-          }),
+        const apy = rate.rates[0]?.rate || null
+        result[fleetAddress.toLowerCase()] = {
+          apy: apy
+            ? Percentage.createFrom({
+                value: Number(apy),
+              })
+            : null,
         }
         return result
       },
@@ -1712,6 +1727,74 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         [fleetAddress: string]: {
           token: IToken
           apy: IPercentage | null
+        }[]
+      },
+    )
+
+    return {
+      byFleetAddress,
+    }
+  }
+
+  async getMerklRewardsData(
+    params: Parameters<IArmadaManagerVaults['getMerklRewardsData']>[0],
+  ): ReturnType<IArmadaManagerVaults['getMerklRewardsData']> {
+    const { vaultIds } = params
+    // get vaults data by creating promises list and executing with promise all
+    const vaultsData = await Promise.all(
+      vaultIds.map((vaultId) =>
+        this._subgraphManager.getVault({
+          chainId: params.chainId,
+          vaultId: vaultId.fleetAddress.value,
+        }),
+      ),
+    )
+    // get rewards manager addresses of the provided vaults
+    const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
+    // find opportunities by querying merkl api using rewards manager address as id
+    const url = 'https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}'
+    const responses: MerklOpportunitiesResponse[] = await Promise.all(
+      rewardsManagerAddresses.map((address) =>
+        address
+          ? fetch(url.replace('{{identifier}}', address)).then((res) => {
+              if (!res.ok) {
+                throw new Error(`Failed to fetch rewards for address ${address}`)
+              }
+              return res.json()
+            })
+          : Promise.resolve(undefined),
+      ),
+    )
+
+    const byFleetAddress = responses.reduce(
+      (acc, response, index) => {
+        const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
+        if (!acc[fleetAddress]) {
+          acc[fleetAddress] = []
+        }
+        acc[fleetAddress].push({
+          dailyEmission: response
+            .reduce((dailyEmission, opportunity) => {
+              const sumrReward = opportunity.rewardsRecord.breakdowns.find(
+                (b) => b.token.symbol === 'SUMR',
+              )
+              if (sumrReward) {
+                dailyEmission += BigInt(sumrReward.amount)
+              }
+              return dailyEmission
+            }, 0n)
+            .toString(),
+          token: this._tokensManager.getTokenBySymbol({
+            chainInfo: getChainInfoByChainId(params.chainId),
+            symbol: 'SUMR',
+          }),
+        })
+        return acc
+      },
+      {} as {
+        [fleetAddress: string]: {
+          token: IToken
+          dailyEmission: string
         }[]
       },
     )

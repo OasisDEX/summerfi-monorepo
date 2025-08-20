@@ -5,6 +5,7 @@
   cursor: pointer;
   transition: border 0.1s ease-in-out;
   border: 1px solid transparent;
+  height: 100%;
 }
 .positionCardWrapper:hover {
   border: 1px solid var(--earn-protocol-neutral-70);

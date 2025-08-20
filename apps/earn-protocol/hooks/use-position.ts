@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
-import { type IArmadaPosition, type SDKSupportedChain } from '@summerfi/app-types'
+import { useUserWallet } from '@summerfi/app-earn-ui'
+import { type IArmadaPosition, type SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useUserWallet } from '@/hooks/use-user-wallet'
 
 /**
  * Standalone function to fetch an Armada position for a given vault and user
  * @param {Object} params - Parameters
  * @param {string} params.vaultId - The fleet/vault address to query
- * @param {SDKSupportedChain} params.chainId - Chain ID where the vault exists
+ * @param {SupportedNetworkIds} params.chainId - Chain ID where the vault exists
  * @param {string} params.userWalletAddress - The user's wallet address
  * @param {Function} getUserPosition - The getUserPosition function from SDK
  * @returns {Promise<IArmadaPosition | undefined>} The position or undefined
@@ -21,7 +21,7 @@ async function updateUserPosition({
   getUserPosition,
 }: {
   vaultId: string
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
   userWalletAddress: string
   getUserPosition: ReturnType<typeof useAppSDK>['getUserPosition']
 }): Promise<IArmadaPosition | undefined> {
@@ -46,7 +46,7 @@ async function updateUserPosition({
  * Hook to fetch and manage an Armada position for a given vault
  * @param {Object} params - Hook parameters
  * @param {string} params.vaultId - The fleet/vault address to query
- * @param {SDKSupportedChain} params.chainId - Chain ID where the vault exists
+ * @param {SupportedNetworkIds} params.chainId - Chain ID where the vault exists
  * @param {boolean} [params.onlyActive] - When true, only returns positions with amount > 0.01
  * @returns {{ position: IArmadaPosition | undefined, isLoading: boolean }} Position data and loading state
  */
@@ -56,7 +56,7 @@ export const usePosition = ({
   onlyActive,
 }: {
   vaultId: string
-  chainId: SDKSupportedChain
+  chainId: SupportedNetworkIds
   onlyActive?: boolean
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()

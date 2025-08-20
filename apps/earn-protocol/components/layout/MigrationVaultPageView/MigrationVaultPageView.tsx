@@ -2,13 +2,13 @@
 import { type FC } from 'react'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -25,7 +25,7 @@ type MigrationVaultPageViewProps = {
   rebalanceActivity: RebalanceActivityPagination
   medianDefiYield?: number
   arksHistoricalChartData: ArksHistoricalChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string

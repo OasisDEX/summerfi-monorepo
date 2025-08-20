@@ -1,4 +1,4 @@
-import { type DropdownOption, NetworkNames, SDKChainId } from '@summerfi/app-types'
+import { type DropdownOption, NetworkNames, SupportedNetworkIds } from '@summerfi/app-types'
 
 import {
   type TransakNetworkOption,
@@ -153,25 +153,25 @@ export const transakNetworkOptions: TransakNetworkOption[] = [
   {
     label: 'Ethereum',
     value: 'ethereum',
-    chainId: SDKChainId.MAINNET,
+    chainId: SupportedNetworkIds.Mainnet,
     iconName: 'earn_network_ethereum',
   },
   {
     label: 'Base',
     value: 'base',
-    chainId: SDKChainId.BASE,
+    chainId: SupportedNetworkIds.Base,
     iconName: 'earn_network_base',
   },
   {
     label: 'Arbitrum',
     value: 'arbitrum',
-    chainId: SDKChainId.ARBITRUM,
+    chainId: SupportedNetworkIds.ArbitrumOne,
     iconName: 'earn_network_arbitrum',
   },
   {
     label: 'Sonic',
     value: 'sonic',
-    chainId: SDKChainId.SONIC,
+    chainId: SupportedNetworkIds.SonicMainnet,
     iconName: 'earn_network_sonic',
   },
 ]

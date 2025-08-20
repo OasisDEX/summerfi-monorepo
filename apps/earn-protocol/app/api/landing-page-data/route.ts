@@ -1,19 +1,24 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
   type SupportedDefillamaTvlProtocols,
 } from '@summerfi/app-types'
-import { parseServerResponseToClient, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  parseServerResponseToClient,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import { getMedianDefiProjectYield } from '@/app/server-handlers/defillama/get-median-defi-project-yield'
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-stats'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
-import systemConfigHandler from '@/app/server-handlers/system-config'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getVaultsApy } from '@/app/server-handlers/vaults-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const emptyTvls = {
@@ -81,7 +86,9 @@ export async function GET() {
   const [{ vaults }, configRaw, rebalanceActivity, proAppStats, protocolTvls, protocolApys] =
     await Promise.all([
       getVaultsList(),
-      systemConfigHandler(),
+      unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+        revalidate: REVALIDATION_TIMES.CONFIG,
+      })(),
       getPaginatedRebalanceActivity({
         page: 1,
         limit: 1,
@@ -90,7 +97,8 @@ export async function GET() {
       getProtocolsTvl(),
       getProtocolsApy(),
     ])
-  const { config: systemConfig } = parseServerResponseToClient(configRaw)
+
+  const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
@@ -100,7 +108,7 @@ export async function GET() {
   const vaultsApyByNetworkMap = await getVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
-      chainId: subgraphNetworkToId(network),
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
     })),
   })
 

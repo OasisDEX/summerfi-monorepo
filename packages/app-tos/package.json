@@ -37,7 +37,7 @@
     "@summerfi/serverless-shared": "workspace:*",
     "jose": "^6.0.10",
     "kysely": "^0.27.3",
-    "next": "15.4.3",
+    "next": "15.4.4",
     "react": "19.1.0",
     "viem": "2.29.2",
     "zod": "3.25.61"

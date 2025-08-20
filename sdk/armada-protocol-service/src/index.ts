@@ -7,3 +7,11 @@ export type { ArmadaParametersParameters } from './simulator/implementation/Arma
 export { ArmadaSimulatedPosition } from './simulator/implementation/ArmadaSimulatedPosition'
 export type { ArmadaSimulatedPositionParameters } from './simulator/implementation/ArmadaSimulatedPosition'
 export { ArmadaSimulator } from './simulator/implementation/ArmadaSimulator'
+export { type IDeploymentProvider } from './deployment-provider/IDeploymentProvider'
+export { DeploymentProvider } from './deployment-provider/DeploymentProvider'
+export {
+  fetchDeploymentProviderConfig,
+  readDeploymentProviderConfig,
+  type DeploymentProviderDeployedContracts,
+  type DeploymentProviderConfig,
+} from './deployment-provider/DeploymentProviderConfig'

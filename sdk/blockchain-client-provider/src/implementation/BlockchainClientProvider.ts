@@ -3,7 +3,7 @@ import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainIds, type IChainInfo } from '@summerfi/sdk-common'
+import { LegacyChainIds, ChainIds, type IChainInfo } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
@@ -34,7 +34,7 @@ export function getRpcGatewayEndpoint(
   const NetworkByChainID: Record<number, string> = {
     [ChainIds.Mainnet]: 'mainnet',
     [ChainIds.ArbitrumOne]: 'arbitrum',
-    [ChainIds.Optimism]: 'optimism',
+    [LegacyChainIds.Optimism]: 'optimism',
     [ChainIds.Base]: 'base',
     [ChainIds.Sonic]: 'sonic',
   }
@@ -115,8 +115,17 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
         throw new Error('SDK_RPC_GATEWAY not found')
       }
 
-      const useFork = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
-      const forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
+      let useFork = false
+      let forkConfig = undefined
+      try {
+        const useForkEnv = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
+        forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
+
+        useFork = useForkEnv === 'true'
+      } catch {
+        // SDK_USE_FORK not found, defaulting to false
+      }
+
       let forkRpc = undefined
       if (useFork && forkConfig) {
         forkRpc = getForkUrl(forkConfig, chain.id)

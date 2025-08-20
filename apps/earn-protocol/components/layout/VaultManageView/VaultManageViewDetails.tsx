@@ -1,3 +1,4 @@
+'use client'
 import {
   Card,
   Expander,
@@ -5,28 +6,35 @@ import {
   getUniqueVaultId,
   getVaultDetailsUrl,
   Text,
+  VaultExposure,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type InterestRates,
   type PerformanceChartData,
   type SDKVaultishType,
-  type SDKVaultType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, getVaultNiceName } from '@summerfi/app-utils'
+import {
+  formatDecimalAsPercent,
+  getVaultNiceName,
+  sdkNetworkToHumanNetwork,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { type GetInterestRatesReturnType } from '@/app/server-handlers/interest-rates'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { detailsLinks } from '@/components/layout/VaultOpenView/vault-details-links'
+import { VaultExposureDescription } from '@/components/molecules/VaultExposureDescription/VaultExposureDescription'
 import { ArkHistoricalYieldChart } from '@/components/organisms/Charts/ArkHistoricalYieldChart'
 import { PositionPerformanceChart } from '@/components/organisms/Charts/PositionPerformanceChart'
+import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
-import { VaultExposure } from '@/features/vault-exposure/components/VaultExposure/VaultExposure'
 import { getManagementFee } from '@/helpers/get-management-fee'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
@@ -45,7 +53,7 @@ export const VaultManageViewDetails = ({
   vault: SDKVaultishType
   arksHistoricalChartData: ArksHistoricalChartData
   performanceChartData: PerformanceChartData
-  arksInterestRates: GetInterestRatesReturnType
+  arksInterestRates: InterestRates
   vaultApyData: VaultApyData
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
@@ -53,6 +61,10 @@ export const VaultManageViewDetails = ({
   viewWalletAddress?: string
 }) => {
   const managementFee = getManagementFee(vault.inputToken.symbol)
+
+  const humanReadableNetwork = capitalize(
+    sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+  )
 
   return [
     <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
@@ -138,11 +150,14 @@ export const VaultManageViewDetails = ({
           </Text>
         }
       >
-        <VaultExposure
-          vault={vault as SDKVaultType}
-          arksInterestRates={arksInterestRates}
-          vaultApyData={vaultApyData}
-        />
+        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork}>
+          <VaultExposure
+            vault={vault}
+            arksInterestRates={arksInterestRates}
+            vaultApyData={vaultApyData}
+            columnsToHide={vaultExposureColumnsToHideOpenManage}
+          />
+        </VaultExposureDescription>
       </Expander>
       <Expander
         title={

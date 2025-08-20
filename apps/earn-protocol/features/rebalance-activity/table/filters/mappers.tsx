@@ -1,13 +1,13 @@
 import {
   type GenericMultiselectOption,
   getDisplayToken,
+  getProtocolLabel,
   getUniqueVaultId,
-  networkIconByNetworkName,
+  networkNameIconNameMap,
   Risk,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
-
-import { getProtocolLabel } from '@/helpers/get-protocol-label'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 
 const getProtocolIcon = (protocolLabel: string) => {
   const lowerCasedProtocolLabel = protocolLabel.toLowerCase()
@@ -82,7 +82,7 @@ const mapStrategiesToMultiselectOptions = (
         />
       ),
       token: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
-      networkIcon: networkIconByNetworkName[vault.protocol.network],
+      networkIcon: networkNameIconNameMap[supportedSDKNetwork(vault.protocol.network)],
       value: getUniqueVaultId(vault),
     }))
     .sort((a, b) => a.label.trim().localeCompare(b.label.trim()))

@@ -1,17 +1,15 @@
 ### by Protocol Name
-@name = morpho
-
+@name = SUMMER
 https://api.merkl.xyz/v4/opportunities?name={{name}}
 
 ### by Tag
-@tags = summerfi
-
+@tags = POOL
 https://api.merkl.xyz/v4/opportunities?tags={{tags}}
 
-### by Id
-@opportunityId = 17697067541467596262
-
+### by OpportunityId
+@opportunityId = 14664258849434578914
 https://api.merkl.xyz/v4/opportunities/{{opportunityId}}
 
-
-
+### by Identifier (rewards manager)
+@identifier = 0xB1A851b8c70A4749408754d398702153A61DFc78
+https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}

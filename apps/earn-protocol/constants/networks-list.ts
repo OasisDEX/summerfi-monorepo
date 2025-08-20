@@ -1,4 +1,4 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 
 import { clientId } from '@/helpers/client-id'
 
@@ -38,16 +38,12 @@ function getRpc(network: NetworkNames): string {
 
 const mainnetRpc = getRpc(NetworkNames.ethereumMainnet)
 const arbitrumMainnetRpc = getRpc(NetworkNames.arbitrumMainnet)
-const optimismMainnetRpc = getRpc(NetworkNames.optimismMainnet)
 const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
-const baseGoerliRpc = getRpc(NetworkNames.baseGoerli)
 const sonicMainnetRpc = getRpc(NetworkNames.sonicMainnet)
 
 export const SDKChainIdToRpcGatewayMap = {
-  [SDKChainId.ARBITRUM]: arbitrumMainnetRpc,
-  [SDKChainId.BASE]: baseMainnetRpc,
-  [SDKChainId.MAINNET]: mainnetRpc,
-  [SDKChainId.OPTIMISM]: optimismMainnetRpc,
-  [SDKChainId.SEPOLIA]: baseGoerliRpc, // dummy for now, not used anyway
-  [SDKChainId.SONIC]: sonicMainnetRpc,
+  [SupportedNetworkIds.ArbitrumOne]: arbitrumMainnetRpc,
+  [SupportedNetworkIds.Base]: baseMainnetRpc,
+  [SupportedNetworkIds.Mainnet]: mainnetRpc,
+  [SupportedNetworkIds.SonicMainnet]: sonicMainnetRpc,
 }

@@ -3,8 +3,8 @@ import { ChainId } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '../../src'
 
 export enum TestProviderType {
-  TestProvider = 'TestProvider',
-  OtherTestProvider = 'OtherTestProvider',
+  MainnetProvider = 'TestProvider',
+  ArbitrumProvider = 'OtherTestProvider',
 }
 
 export class TestManagerProvider extends ManagerProviderBase<TestProviderType> {

@@ -14,7 +14,7 @@ export const getBeachClubBoatCards = (currentPoints: number, earningPointsPerDay
     {
       requiredPoints: 1000,
       currentPoints,
-      left: 1000,
+      left: 500,
       unlocked: currentPoints >= 1000,
       reward: {
         type: BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT,

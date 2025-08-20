@@ -1,4 +1,4 @@
-import { SDKChainId } from '@summerfi/app-types'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 import { SECONDS_PER_DAY } from '@summerfi/app-utils'
 import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
@@ -25,15 +25,15 @@ export interface SumrStakingInfoData {
  */
 export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
   try {
-    const publicClient = await getSSRPublicClient(SDKChainId.BASE)
+    const publicClient = await getSSRPublicClient(SupportedNetworkIds.Base)
 
     if (!publicClient) {
-      throw new Error(`Public client for chain ${SDKChainId.BASE} not found`)
+      throw new Error(`Public client for chain ${SupportedNetworkIds.Base} not found`)
     }
 
     const sumrToken = await backendSDK.armada.users
       .getSummerToken({
-        chainInfo: getChainInfoByChainId(SDKChainId.BASE),
+        chainInfo: getChainInfoByChainId(SupportedNetworkIds.Base),
       })
       .catch((error) => {
         return serverOnlyErrorHandler(
@@ -78,9 +78,14 @@ export const getSumrStakingInfo = async (): Promise<SumrStakingInfoData> => {
       throw new Error(`Failed to fetch reward data: ${rewardDataResult.error.message}`)
     }
 
-    const [, rewardRate] = rewardData
+    const [periodFinish, rewardRate] = rewardData
+
+    const isRewardPeriodFinished = Number(periodFinish) * 1000 < Date.now()
+
+    const resolvedRewardRate = isRewardPeriodFinished ? 0 : Number(rewardRate)
+
     // eslint-disable-next-line no-mixed-operators
-    const sumrTokenDailyEmissionAmount = new BigNumber(Number(rewardRate))
+    const sumrTokenDailyEmissionAmount = new BigNumber(resolvedRewardRate)
       .shiftedBy(-sumrToken.decimals * 2)
       .multipliedBy(SECONDS_PER_DAY)
       .toNumber()
