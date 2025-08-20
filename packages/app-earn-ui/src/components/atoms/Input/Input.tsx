@@ -30,6 +30,7 @@ export const Input: FC<
     button?: ReactNode
     buttonStyles?: CSSProperties
     inputWrapperStyles?: CSSProperties
+    inputWrapperClassName?: string
   }
 > = ({
   variant = 'default',
@@ -44,6 +45,7 @@ export const Input: FC<
   value,
   buttonStyles,
   inputWrapperStyles,
+  inputWrapperClassName,
   ...rest
 }) => {
   return (
@@ -62,6 +64,7 @@ export const Input: FC<
         className={[
           icon ? inputStyles.withIconOffset : '',
           getAtomClassList({ className, variant: inputStyles[variant] }),
+          inputWrapperClassName,
         ].join(' ')}
         {...rest}
         value={value}
