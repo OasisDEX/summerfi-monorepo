@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
-import { useRouter } from 'next/navigation'
 
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
 
@@ -13,7 +12,6 @@ export default function InstitutionsLoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { replace } = useRouter()
 
   const { signIn, challengeData, setChallengeData } = useAuth()
 
