@@ -64,9 +64,14 @@ async function serverSetNewPassword(
 
   const payload = decodeJwt(IdToken) as JwtClaims
 
+  if (!payload.sub || !payload.email || !payload['cognito:username']) {
+    throw new Error('Invalid ID token')
+  }
+
   return {
     id: payload.sub as string,
     email: payload.email as string,
+    cognitoUsername: payload['cognito:username'],
     name: getNameFromPayload(payload),
     accessToken: AccessToken,
     refreshToken: RefreshToken,
