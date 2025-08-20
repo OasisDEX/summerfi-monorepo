@@ -43,8 +43,10 @@ import classNames from './BeachClubTvlChallenge.module.css'
 const getFeesUSDClaimableNow = (merklRewards: MerklReward[] | undefined) => {
   if (merklRewards) {
     return merklRewards.reduce((acc, reward) => {
-      // eslint-disable-next-line no-mixed-operators
-      return acc + (Number(reward.amount) / 10 ** reward.token.decimals) * reward.token.price
+      return (
+        acc +
+        Number((Number(reward.amount) / Number(10 ** reward.token.decimals)) * reward.token.price)
+      )
     }, 0)
   }
 
