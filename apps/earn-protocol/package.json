@@ -32,6 +32,7 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/armada-protocol-abis": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/sdk-client-react": "workspace:^",
     "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-common": "workspace:*",

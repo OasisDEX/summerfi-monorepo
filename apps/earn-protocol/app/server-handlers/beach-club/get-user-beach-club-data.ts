@@ -1,7 +1,10 @@
 /* eslint-disable camelcase */
+import { type MerklReward } from '@summerfi/armada-protocol-common'
+import { type AddressValue, type ChainId, ChainIds } from '@summerfi/sdk-common'
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
+import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import {
   defaultLatestActivityPagination,
   getPaginatedLatestActivity,
@@ -25,6 +28,9 @@ export interface BeachClubData {
   rewards: BeachClubRewardBalance[]
   recruitedUsersWithRewards: BeachClubRecruitedUsersPagination
   recruitedUsersLatestActivity: LatestActivityPagination
+  claimableRewardsPerChain: {
+    perChain: Partial<{ [key in ChainId]: MerklReward[] }>
+  }
 }
 
 const defaultBeachClubData: BeachClubData = {
@@ -53,6 +59,9 @@ const defaultBeachClubData: BeachClubData = {
     medianDeposit: 0,
     totalDeposits: 0,
     totalUniqueUsers: 0,
+  },
+  claimableRewardsPerChain: {
+    perChain: {},
   },
 }
 
@@ -130,9 +139,22 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
         : defaultLatestActivityPagination,
     ])
 
+    const usdcToken = await backendSDK.tokens.getTokenBySymbol({
+      symbol: 'USDC',
+      chainId: ChainIds.Base,
+    })
+
+    // these are fees rewards
+    const claimableRewardsPerChain = await backendSDK.armada.users.getUserMerklRewards({
+      address: walletAddress as AddressValue,
+      chainIds: [ChainIds.Base],
+      rewardsTokensAddresses: [usdcToken.address.value],
+    })
+
     return {
       ...basicData,
       rewards: rewardsData,
+      claimableRewardsPerChain,
       recruitedUsersWithRewards,
       recruitedUsersLatestActivity,
     }
