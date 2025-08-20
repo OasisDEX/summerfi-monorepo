@@ -12,6 +12,10 @@ export const institutionsAdminPanelColumns = [
     accessor: 'displayName',
   },
   {
+    label: 'Users',
+    accessor: 'users',
+  },
+  {
     label: 'Created At',
     accessor: 'createdAt',
   },
@@ -34,7 +38,7 @@ export type UserAdminTableRow = {
 export const usersAdminPanelColumns: readonly AdminPanelColumn<UserAdminTableRow>[] = [
   { label: 'ID', accessor: 'id' },
   { label: 'User Sub', accessor: 'userSub' },
-  { label: 'Institution ID', accessor: 'institutionId' },
+  { label: 'Institution', accessor: 'institutionId' },
   { label: 'Role', accessor: 'role' },
   { label: 'Created At', accessor: 'createdAt' },
 ]

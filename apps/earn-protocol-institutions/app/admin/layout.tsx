@@ -1,36 +1,11 @@
-import { Button } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { AdminPanelNavigation } from '@/features/admin/AdminPanelNavigation'
 
-import { logout } from '@/app/server-handlers/auth/logout'
+import adminLayoutStyles from './layout.module.css'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        width: '100%',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: '20px',
-        }}
-      >
-        <Link href="/admin/institutions">
-          <Button variant="primarySmall">Institutions</Button>
-        </Link>
-        <Link href="/admin/users">
-          <Button variant="primarySmall">Users</Button>
-        </Link>
-        <form action={logout}>
-          <Button variant="secondarySmall" type="submit">
-            Log out
-          </Button>
-        </form>
-      </div>
+    <div className={adminLayoutStyles.wrapper}>
+      <AdminPanelNavigation />
       {children}
     </div>
   )

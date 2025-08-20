@@ -63,7 +63,7 @@ export async function createUser(formData: FormData) {
   if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
   if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
-  const cognito = new CognitoIdentityProviderClient({
+  const cognitoClient = new CognitoIdentityProviderClient({
     region,
     credentials: {
       accessKeyId,
@@ -72,7 +72,7 @@ export async function createUser(formData: FormData) {
   })
 
   // 1) Find existing user by email
-  const found = await cognito.send(
+  const found = await cognitoClient.send(
     new ListUsersCommand({
       UserPoolId: userPoolId,
       Filter: `email = "${email}"`,
@@ -91,7 +91,7 @@ export async function createUser(formData: FormData) {
     const base = slugifyName(fullName)
     const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
 
-    const created = await cognito.send(
+    const created = await cognitoClient.send(
       new AdminCreateUserCommand({
         UserPoolId: userPoolId,
         Username: generatedUsername,
@@ -107,7 +107,7 @@ export async function createUser(formData: FormData) {
     username = created.User?.Username ?? generatedUsername
 
     // Retrieve attributes to get sub
-    const createdFetch = await cognito.send(
+    const createdFetch = await cognitoClient.send(
       new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
     )
 
@@ -116,7 +116,7 @@ export async function createUser(formData: FormData) {
 
   // 2b) Ensure we have sub
   if (!sub && username) {
-    const fetched = await cognito.send(
+    const fetched = await cognitoClient.send(
       new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
     )
 
@@ -128,7 +128,7 @@ export async function createUser(formData: FormData) {
   // Optionally map role to a Cognito group
   if (role && username) {
     try {
-      await cognito.send(
+      await cognitoClient.send(
         new AdminAddUserToGroupCommand({
           UserPoolId: userPoolId,
           Username: username,
@@ -150,5 +150,35 @@ export async function createUser(formData: FormData) {
     revalidatePath('/admin/users')
   } finally {
     db.destroy()
+    cognitoClient.destroy()
+  }
+}
+
+export async function getUsersList() {
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  const [users, institutions] = await Promise.all([
+    db
+      .selectFrom('institutionUsers')
+      .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
+      .select([
+        'institutionUsers.id',
+        'institutionUsers.userSub',
+        'institutionUsers.institutionId',
+        'institutionUsers.role',
+        'institutionUsers.createdAt',
+        'institutions.displayName as institutionDisplayName',
+      ])
+      .execute(),
+    db.selectFrom('institutions').select(['id', 'displayName']).execute(),
+  ])
+
+  db.destroy()
+
+  return {
+    users,
+    institutions,
   }
 }
