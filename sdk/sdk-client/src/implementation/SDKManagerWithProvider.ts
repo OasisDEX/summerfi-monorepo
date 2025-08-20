@@ -9,11 +9,13 @@ import { UsersManager } from './UsersManager'
 import { SimulationManager } from './simulations/SimulationManager'
 import type { Web3Signer } from './MakeSDKWithProvider'
 import { IntentSwapClient } from './IntentSwapClient'
+import { TokensManagerClient2 } from './TokensManagerClient2'
 
 /** @see ISDKManager */
 export class SDKManagerWithProvider implements ISDKManager {
   public readonly simulator: SimulationManager
   public readonly chains: ChainsManagerClient
+  public readonly tokens: TokensManagerClient2
   public readonly users: UsersManager
   public readonly portfolio: PortfolioManager
   public readonly armada: ArmadaManagerClient
@@ -24,6 +26,7 @@ export class SDKManagerWithProvider implements ISDKManager {
   public constructor(params: { rpcClient: RPCMainClientType; signer: Web3Signer }) {
     this.simulator = new SimulationManager(params)
     this.chains = new ChainsManagerClient(params)
+    this.tokens = new TokensManagerClient2(params)
     this.users = new UsersManager(params)
     this.portfolio = new PortfolioManager(params)
     this.armada = new ArmadaManagerClient(params)
