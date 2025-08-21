@@ -59,3 +59,30 @@ export const usersAdminPanelColumns = [
     accessor: 'actions',
   },
 ]
+
+export const globalAdminsAdminPanelColumns = [
+  {
+    label: 'ID',
+    accessor: 'id',
+  },
+  {
+    label: 'Sub',
+    accessor: 'userSub',
+  },
+  {
+    label: 'User name',
+    accessor: 'cognitoUserName',
+  },
+  {
+    label: 'Name',
+    accessor: 'cognitoName',
+  },
+  {
+    label: 'Created At',
+    accessor: 'createdAt',
+  },
+  {
+    label: 'Actions',
+    accessor: 'actions',
+  },
+]

@@ -20,6 +20,39 @@ import { redirect } from 'next/navigation'
 import { getAttr, slugifyName } from '@/app/server-handlers/admin/helpers'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
+export async function deleteCognitoUser(userSub: string) {
+  'use server'
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  const userData = await cognitoAdminClient.send(
+    new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
+  )
+
+  if (!userData.Users || userData.Users.length === 0) {
+    throw new Error(`User with sub ${userSub} not found`)
+  }
+
+  const userDeletionQuery = await cognitoAdminClient.send(
+    new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
+  )
+
+  return userDeletionQuery
+}
+
 export async function createUser(formData: FormData) {
   'use server'
   const email = String(formData.get('email') ?? '')
@@ -135,40 +168,6 @@ export async function createUser(formData: FormData) {
   }
 }
 
-// [internal] Server Action: delete cognito user
-export async function deleteCognitoUser(userSub: string) {
-  'use server'
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  const userData = await cognitoAdminClient.send(
-    new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
-  )
-
-  if (!userData.Users || userData.Users.length === 0) {
-    throw new Error(`User with sub ${userSub} not found`)
-  }
-
-  const userDeletionQuery = await cognitoAdminClient.send(
-    new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
-  )
-
-  return userDeletionQuery
-}
-
 export async function deleteWholeUser(formData: FormData) {
   'use server'
 
@@ -224,139 +223,6 @@ export async function deleteWholeUser(formData: FormData) {
     cognitoAdminClient.destroy()
     revalidateTag('getUsersList')
     redirect('/admin/users')
-  }
-}
-
-export async function getUsersList() {
-  'use server'
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const { db } = await getSummerProtocolInstitutionDB({
-    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
-
-  const [dbUsers] = await Promise.all([
-    db
-      .selectFrom('institutionUsers')
-      .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
-      .select([
-        'institutionUsers.id',
-        'institutionUsers.userSub',
-        'institutionUsers.institutionId',
-        'institutionUsers.role',
-        'institutionUsers.createdAt',
-        'institutions.displayName as institutionDisplayName',
-      ])
-      .execute(),
-  ])
-
-  db.destroy()
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  const cognitoUsers = await cognitoAdminClient.send(
-    new ListUsersInGroupCommand({
-      UserPoolId: userPoolId,
-      GroupName: 'institution-user',
-    }),
-  )
-
-  // enriched with cognito data
-  // just `userName` now
-  const users = dbUsers.map(({ userSub, ...dbUser }) => {
-    const user = cognitoUsers.Users?.find((u) =>
-      u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
-    )
-    const cognitoUserName = user?.Username
-    const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
-
-    return {
-      ...dbUser,
-      userSub,
-      cognitoUserName,
-      cognitoName,
-    }
-  })
-
-  return {
-    users,
-  }
-}
-
-export async function getUserData(userDbId: number) {
-  'use server'
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const { db } = await getSummerProtocolInstitutionDB({
-    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
-
-  const [dbUser] = await Promise.all([
-    db
-      .selectFrom('institutionUsers')
-      .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
-      .select([
-        'institutionUsers.id',
-        'institutionUsers.userSub',
-        'institutionUsers.institutionId',
-        'institutionUsers.role',
-        'institutionUsers.createdAt',
-        'institutions.displayName as institutionDisplayName',
-      ])
-      .where('institutionUsers.id', '=', userDbId)
-      .executeTakeFirst(),
-  ])
-
-  if (!dbUser?.userSub) {
-    throw new Error(`User with id ${userDbId} not found`)
-  }
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  const userData = await cognitoAdminClient.send(
-    new ListUsersCommand({
-      UserPoolId: userPoolId,
-      Filter: `sub = "${dbUser.userSub}"`,
-      Limit: 1,
-    }),
-  )
-
-  if (!userData.Users || userData.Users.length === 0) {
-    throw new Error(`User with sub ${dbUser.userSub} not found`)
-  }
-
-  const cognitoUserName = userData.Users[0].Username
-  const cognitoName = userData.Users[0].Attributes?.find((a) => a.Name === 'name')?.Value
-
-  return {
-    ...dbUser,
-    userSub: dbUser.userSub,
-    cognitoUserName,
-    cognitoName,
   }
 }
 
@@ -452,5 +318,446 @@ export async function updateUser(formData: FormData) {
     db.destroy()
     revalidateTag('getUsersList')
     redirect('/admin/users')
+  }
+}
+
+export async function getUsersList() {
+  'use server'
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    const [dbUsers] = await Promise.all([
+      db
+        .selectFrom('institutionUsers')
+        .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
+        .select([
+          'institutionUsers.id',
+          'institutionUsers.userSub',
+          'institutionUsers.institutionId',
+          'institutionUsers.role',
+          'institutionUsers.createdAt',
+          'institutions.displayName as institutionDisplayName',
+        ])
+        .execute(),
+    ])
+
+    const cognitoUsers = await cognitoAdminClient.send(
+      new ListUsersInGroupCommand({
+        UserPoolId: userPoolId,
+        GroupName: 'institution-user',
+      }),
+    )
+
+    // enriched with cognito data
+    const users = dbUsers.map(({ userSub, ...dbUser }) => {
+      const user = cognitoUsers.Users?.find((u) =>
+        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
+      )
+      const cognitoUserName = user?.Username
+      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+
+      return {
+        ...dbUser,
+        userSub,
+        cognitoUserName,
+        cognitoName,
+      }
+    })
+
+    return {
+      users,
+    }
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error fetching users list', error)
+
+    throw new Error('Failed to fetch users list')
+  } finally {
+    db.destroy()
+    cognitoAdminClient.destroy()
+  }
+}
+
+export async function getUserData(userDbId: number) {
+  'use server'
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  const [dbUser] = await Promise.all([
+    db
+      .selectFrom('institutionUsers')
+      .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
+      .select([
+        'institutionUsers.id',
+        'institutionUsers.userSub',
+        'institutionUsers.institutionId',
+        'institutionUsers.role',
+        'institutionUsers.createdAt',
+        'institutions.displayName as institutionDisplayName',
+      ])
+      .where('institutionUsers.id', '=', userDbId)
+      .executeTakeFirst(),
+  ])
+
+  if (!dbUser?.userSub) {
+    throw new Error(`User with id ${userDbId} not found`)
+  }
+
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  const userData = await cognitoAdminClient.send(
+    new ListUsersCommand({
+      UserPoolId: userPoolId,
+      Filter: `sub = "${dbUser.userSub}"`,
+      Limit: 1,
+    }),
+  )
+
+  if (!userData.Users || userData.Users.length === 0) {
+    throw new Error(`User with sub ${dbUser.userSub} not found`)
+  }
+
+  const cognitoUserName = userData.Users[0].Username
+  const cognitoName = userData.Users[0].Attributes?.find((a) => a.Name === 'name')?.Value
+
+  return {
+    ...dbUser,
+    userSub: dbUser.userSub,
+    cognitoUserName,
+    cognitoName,
+  }
+}
+
+export async function getGlobalAdminsList() {
+  'use server'
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    const [globalAdmins] = await Promise.all([db.selectFrom('globalAdmins').selectAll().execute()])
+
+    const cognitoUsers = await cognitoAdminClient.send(
+      new ListUsersInGroupCommand({
+        UserPoolId: userPoolId,
+        GroupName: 'global-admin',
+      }),
+    )
+
+    // enriched with cognito data
+    const admins = globalAdmins.map(({ userSub, ...dbUser }) => {
+      const user = cognitoUsers.Users?.find((u) =>
+        u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
+      )
+      const cognitoUserName = user?.Username
+      const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+
+      return {
+        ...dbUser,
+        userSub,
+        cognitoUserName,
+        cognitoName,
+      }
+    })
+
+    return {
+      admins,
+    }
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error fetching global admins', error)
+
+    throw new Error('Failed to fetch global admins')
+  } finally {
+    cognitoAdminClient.destroy()
+    db.destroy()
+  }
+}
+
+export async function getGlobalAdminData(userDbId: number) {
+  'use server'
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    const [globalAdmin] = await Promise.all([
+      db.selectFrom('globalAdmins').selectAll().where('id', '=', userDbId).executeTakeFirst(),
+    ])
+
+    if (!globalAdmin) throw new Error(`Global admin with id ${userDbId} not found`)
+
+    const userData = await cognitoAdminClient.send(
+      new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Filter: `sub = "${globalAdmin.userSub}"`,
+        Limit: 1,
+      }),
+    )
+
+    if (!userData.Users || userData.Users.length === 0) {
+      throw new Error(`Cognito user not found for sub ${globalAdmin.userSub}`)
+    }
+
+    return {
+      ...globalAdmin,
+      cognitoUserName: userData.Users[0].Username,
+      cognitoName: userData.Users[0].Attributes?.find((a) => a.Name === 'name')?.Value,
+    }
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error fetching global admin data', error)
+
+    throw new Error('Failed to fetch global admin data')
+  } finally {
+    cognitoAdminClient.destroy()
+    db.destroy()
+  }
+}
+
+export async function createGlobalAdmin(formData: FormData) {
+  'use server'
+  const email = formData.get('email')?.toString()
+  const fullName = formData.get('name')?.toString()
+
+  if (!email || !fullName) {
+    throw new Error('Missing required fields')
+  }
+
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    const generatedUsername = slugifyName(fullName)
+    // Create the user in Cognito
+    const cognitoUser = await cognitoAdminClient.send(
+      new AdminCreateUserCommand({
+        UserPoolId: userPoolId,
+        Username: generatedUsername,
+        UserAttributes: [
+          { Name: 'email', Value: email },
+          { Name: 'name', Value: fullName },
+        ],
+      }),
+    )
+
+    // Add the user to the 'institution-user' group
+    await cognitoAdminClient.send(
+      new AdminAddUserToGroupCommand({
+        UserPoolId: userPoolId,
+        Username: generatedUsername,
+        GroupName: 'global-admin',
+      }),
+    )
+
+    const userSub = cognitoUser.User?.Attributes?.find((a) => a.Name === 'sub')?.Value as string
+
+    // Create the user in the database
+    await db
+      .insertInto('globalAdmins')
+      .values({
+        userSub,
+      })
+      .execute()
+
+    // eslint-disable-next-line no-console
+    console.log(`Global admin created successfully: ${userSub}`)
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error creating global admin', error)
+
+    throw new Error('Failed to create global admin')
+  } finally {
+    revalidateTag('getGlobalAdminsList')
+    cognitoAdminClient.destroy()
+    db.destroy()
+  }
+}
+
+export async function deleteGlobalAdmin(formData: FormData) {
+  'use server'
+  const userSub = formData.get('userSub')
+
+  if (typeof userSub !== 'string') {
+    throw new Error('userSub is required')
+  }
+
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    // Delete the user from the database
+    await db.deleteFrom('globalAdmins').where('userSub', '=', userSub).execute()
+
+    // Delete the user from Cognito
+    await deleteCognitoUser(userSub)
+
+    // eslint-disable-next-line no-console
+    console.log(`Global admin deleted successfully: ${userSub}`)
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error deleting global admin', error)
+
+    throw new Error('Failed to delete global admin')
+  } finally {
+    revalidateTag('getGlobalAdminsList')
+    cognitoAdminClient.destroy()
+    db.destroy()
+    redirect('/admin/global-admins')
+  }
+}
+
+export async function updateGlobalAdmin(formData: FormData) {
+  'use server'
+  const fullName = formData.get('name')?.toString()
+  const cognitoUserName = formData.get('cognitoUserName')
+
+  if (!fullName || typeof cognitoUserName !== 'string') {
+    throw new Error('Missing required fields')
+  }
+
+  console.log({
+    fullName,
+    cognitoUserName,
+  })
+
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  try {
+    // Update the user in Cognito
+    await cognitoAdminClient.send(
+      new AdminUpdateUserAttributesCommand({
+        UserPoolId: userPoolId,
+        Username: cognitoUserName,
+        UserAttributes: [{ Name: 'name', Value: fullName }],
+      }),
+    )
+
+    // eslint-disable-next-line no-console
+    console.log(`Global admin updated successfully: ${cognitoUserName}`)
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error updating global admin', error)
+
+    throw new Error('Failed to update global admin')
+  } finally {
+    revalidateTag('getGlobalAdminsList')
+    cognitoAdminClient.destroy()
+    redirect('/admin/global-admins')
   }
 }
