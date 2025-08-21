@@ -1,7 +1,10 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
+import { unstable_cache as unstableCache } from 'next/cache'
+import Link from 'next/link'
 
+import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
 import { createUser, getUsersList } from '@/app/server-handlers/admin/user'
-import { type UserAdminTableRow, usersAdminPanelColumns } from '@/features/admin/constants'
+import { usersAdminPanelColumns } from '@/features/admin/constants'
 import { institutionsAdminPanelDisplayRow } from '@/features/admin/helpers'
 
 import styles from './AdminPanelUsers.module.css'
@@ -9,7 +12,7 @@ import styles from './AdminPanelUsers.module.css'
 const AddUserForm = ({
   institutions,
 }: {
-  institutions: Awaited<ReturnType<typeof getUsersList>>['institutions']
+  institutions: Awaited<ReturnType<typeof getInstitutionsList>>
 }) => {
   return (
     <Card variant="cardGradientDark">
@@ -87,13 +90,23 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
 
                 return (
                   <tr key={key}>
-                    {usersAdminPanelColumns.map((col) => (
-                      <td key={col.accessor} className={styles.tableCell}>
+                    {usersAdminPanelColumns.map(({ accessor }) => (
+                      <td key={accessor} className={styles.tableCell}>
                         <div className={styles.tableCellContent}>
-                          {col.accessor === 'institutionId' && row.institutionDisplayName}
+                          {accessor === 'institutionId' && row.institutionDisplayName}
+                          {accessor === 'actions' && (
+                            <>
+                              <Link href={`/admin/users/${row.id}/edit`}>
+                                <Button variant="textPrimarySmall">Edit</Button>
+                              </Link>
+                              <Link href={`/admin/users/${row.id}/delete`}>
+                                <Button variant="textPrimarySmall">Delete</Button>
+                              </Link>
+                            </>
+                          )}
                           {institutionsAdminPanelDisplayRow(
-                            row[col.accessor as keyof UserAdminTableRow] as unknown,
-                            col.accessor,
+                            (row as { [key: string]: unknown })[accessor],
+                            accessor,
                           )}
                         </div>
                       </td>
@@ -110,7 +123,14 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
 }
 
 export const AdminPanelUsers = async () => {
-  const { users, institutions } = await getUsersList()
+  const [{ users }, institutions] = await Promise.all([
+    unstableCache(getUsersList, [], {
+      tags: ['getUsersList'],
+    })(),
+    unstableCache(getInstitutionsList, [], {
+      tags: ['getInstitutionsList'],
+    })(),
+  ])
 
   return (
     <div className={styles.container}>

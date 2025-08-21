@@ -1,11 +1,11 @@
 import { readSession } from '@/app/server-handlers/auth/session'
-import { AdminPanelInstitutionsDelete } from '@/features/admin/AdminPanelInstitutionsDelete'
+import { AdminPanelUsersUpdate } from '@/features/admin/AdminPanelUsersUpdate'
 
-export default async function DeleteInstitutionAdminPage({
+export default async function EditUserAdminPage({
   params,
 }: {
   params: Promise<{
-    institutionDbId: string
+    userDbId: string
   }>
 }) {
   const [session, awaitedParams] = await Promise.all([readSession(), params])
@@ -14,5 +14,5 @@ export default async function DeleteInstitutionAdminPage({
     throw new Error('Unauthorized')
   }
 
-  return <AdminPanelInstitutionsDelete institutionDbId={awaitedParams.institutionDbId} />
+  return <AdminPanelUsersUpdate userDbId={awaitedParams.userDbId} />
 }
