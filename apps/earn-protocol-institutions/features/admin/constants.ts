@@ -34,6 +34,8 @@ export type AdminPanelColumn<T> = {
 export type UserAdminTableRow = {
   id: number
   userSub: string
+  cognitoUserName: string
+  cognitoName: string
   institutionId: number
   role: string | null
   createdAt: Date
@@ -41,7 +43,9 @@ export type UserAdminTableRow = {
 
 export const usersAdminPanelColumns: readonly AdminPanelColumn<UserAdminTableRow>[] = [
   { label: 'ID', accessor: 'id' },
-  { label: 'User Sub', accessor: 'userSub' },
+  { label: 'Sub', accessor: 'userSub' },
+  { label: 'User name', accessor: 'cognitoUserName' },
+  { label: 'Name', accessor: 'cognitoName' },
   { label: 'Institution', accessor: 'institutionId' },
   { label: 'Role', accessor: 'role' },
   { label: 'Created At', accessor: 'createdAt' },

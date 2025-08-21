@@ -6,6 +6,7 @@ import {
   AdminGetUserCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
+  ListUsersInGroupCommand,
   type UserType,
 } from '@aws-sdk/client-cognito-identity-provider'
 import {
@@ -104,6 +105,16 @@ export async function createUser(formData: FormData) {
       }),
     )
 
+    // add to `institution-user` group - easier to list them later
+    // `ListUsersInGroupCommand` instead of `ListUsersCommand`
+    await cognitoClient.send(
+      new AdminAddUserToGroupCommand({
+        UserPoolId: userPoolId,
+        Username: generatedUsername,
+        GroupName: 'institution-user',
+      }),
+    )
+
     username = created.User?.Username ?? generatedUsername
 
     // Retrieve attributes to get sub
@@ -155,11 +166,19 @@ export async function createUser(formData: FormData) {
 }
 
 export async function getUsersList() {
+  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+  const region = COGNITO_USER_POOL_REGION
+
+  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
 
-  const [users, institutions] = await Promise.all([
+  const [dbUsers, institutions] = await Promise.all([
     db
       .selectFrom('institutionUsers')
       .leftJoin('institutions', 'institutions.id', 'institutionUsers.institutionId')
@@ -176,6 +195,38 @@ export async function getUsersList() {
   ])
 
   db.destroy()
+
+  const cognitoAdminClient = new CognitoIdentityProviderClient({
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  })
+
+  const cognitoUsers = await cognitoAdminClient.send(
+    new ListUsersInGroupCommand({
+      UserPoolId: userPoolId,
+      GroupName: 'institution-user',
+    }),
+  )
+
+  // enriched with cognito data
+  // just `userName` now
+  const users = dbUsers.map(({ userSub, ...dbUser }) => {
+    const user = cognitoUsers.Users?.find((u) =>
+      u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
+    )
+    const cognitoUserName = user?.Username
+    const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+
+    return {
+      ...dbUser,
+      userSub,
+      cognitoUserName,
+      cognitoName,
+    }
+  })
 
   return {
     users,
