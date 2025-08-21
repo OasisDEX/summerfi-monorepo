@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { getGlobalAdminData, updateGlobalAdmin } from '@/app/server-handlers/admin/user'
@@ -39,7 +38,7 @@ const UpdateGlobalAdminForm = ({
             >
               Update&nbsp;User
             </Button>
-            <Link href="/admin/institutions">
+            <Link href="/admin/global-admins">
               <Button variant="secondarySmall">Go back</Button>
             </Link>
           </div>
@@ -53,11 +52,7 @@ export const AdminPanelGlobalAdminsUpdate = async ({ userDbId }: { userDbId: str
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const [globalAdmin] = await Promise.all([
-    unstableCache(getGlobalAdminData, [], {
-      tags: [`globalAdmin:${userDbId}`],
-    })(Number(userDbId)),
-  ])
+  const [globalAdmin] = await Promise.all([getGlobalAdminData(Number(userDbId))])
 
   return (
     <div className={styles.adminPanelUsers}>

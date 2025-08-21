@@ -1,6 +1,5 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
@@ -63,7 +62,7 @@ const UpdateUserForm = ({
             >
               Update&nbsp;User
             </Button>
-            <Link href="/admin/institutions">
+            <Link href="/admin/users">
               <Button variant="secondarySmall">Go back</Button>
             </Link>
           </div>
@@ -78,12 +77,8 @@ export const AdminPanelUsersUpdate = async ({ userDbId }: { userDbId: string }) 
     throw new Error('userDbId is required')
   }
   const [user, institutions] = await Promise.all([
-    unstableCache(getUserData, [], {
-      tags: [`user:${userDbId}`],
-    })(Number(userDbId)),
-    unstableCache(getInstitutionsList, [], {
-      tags: ['getInstitutionsList'],
-    })(),
+    getUserData(Number(userDbId)),
+    getInstitutionsList(),
   ])
 
   return (

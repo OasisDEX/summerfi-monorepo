@@ -4,11 +4,12 @@ import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { deleteCognitoUser } from '@/app/server-handlers/admin/user'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
-// Server Action: create institution
 export async function createInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -60,9 +61,9 @@ export async function createInstitution(formData: FormData) {
   }
 }
 
-// Server Action: update institution
 export async function updateInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -131,9 +132,9 @@ export async function updateInstitution(formData: FormData) {
   }
 }
 
-// Server Action: delete institution and associated users
 export async function deleteInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -204,6 +205,9 @@ export async function deleteInstitution(formData: FormData) {
 }
 
 export async function getInstitutionsList() {
+  'use server'
+  await validateGlobalAdminSession()
+
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
@@ -224,6 +228,9 @@ export async function getInstitutionsList() {
 }
 
 export async function getInstitutionData(institutionDbId: number) {
+  'use server'
+  await validateGlobalAdminSession()
+
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })

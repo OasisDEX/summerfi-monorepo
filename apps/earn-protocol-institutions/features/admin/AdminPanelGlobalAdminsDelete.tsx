@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { deleteGlobalAdmin, getGlobalAdminData } from '@/app/server-handlers/admin/user'
@@ -59,7 +58,7 @@ const DeleteUserForm = ({
             >
               Delete&nbsp;User
             </Button>
-            <Link href="/admin/institutions">
+            <Link href="/admin/global-admins">
               <Button variant="secondarySmall">Go back</Button>
             </Link>
           </div>
@@ -73,9 +72,7 @@ export const AdminPanelGlobalAdminsDelete = async ({ userDbId }: { userDbId: str
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const globalAdmin = await unstableCache(getGlobalAdminData, [], {
-    tags: [`globalAdmin:${userDbId}`],
-  })(Number(userDbId))
+  const globalAdmin = await getGlobalAdminData(Number(userDbId))
 
   return (
     <div className={styles.adminPanelUsers}>

@@ -1,82 +1,25 @@
 'use client'
 
-import { useState } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
-import { useAuth } from '@/contexts/AuthContext/AuthContext'
+import { useLogin } from '@/hooks/useLogin'
 
 export default function InstitutionsLoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-
-  const { signIn, challengeData, setChallengeData } = useAuth()
-
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
-    try {
-      await signIn(email, password)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign in failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleSetNewPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-
-    if (newPassword !== confirmPassword) {
-      setError('Passwords do not match')
-
-      return
-    }
-
-    if (newPassword.length < 8) {
-      setError('Password must be at least 8 characters long')
-
-      return
-    }
-
-    setIsLoading(true)
-
-    if (!challengeData) {
-      setError('No challenge data available')
-      setIsLoading(false)
-
-      return
-    }
-
-    try {
-      const response = await fetch('/api/auth/set-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: challengeData.email,
-          newPassword,
-          session: challengeData.session,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Password change failed')
-      }
-      setChallengeData(null)
-      // Redirect or update UI here
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Password change failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
+    error,
+    isLoading,
+    handleLoginSubmit,
+    handleSetNewPassword,
+    challengeData,
+  } = useLogin()
 
   if (challengeData?.challenge === 'NEW_PASSWORD_REQUIRED') {
     return (

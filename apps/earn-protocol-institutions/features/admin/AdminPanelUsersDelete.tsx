@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { deleteWholeUser, getUserData } from '@/app/server-handlers/admin/user'
@@ -67,7 +66,7 @@ const DeleteUserForm = ({ user }: { user: Awaited<ReturnType<typeof getUserData>
             >
               Delete&nbsp;User
             </Button>
-            <Link href="/admin/institutions">
+            <Link href="/admin/users">
               <Button variant="secondarySmall">Go back</Button>
             </Link>
           </div>
@@ -81,9 +80,7 @@ export const AdminPanelUsersDelete = async ({ userDbId }: { userDbId: string }) 
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const user = await unstableCache(getUserData, [], {
-    tags: [`user:${userDbId}`],
-  })(Number(userDbId))
+  const user = await getUserData(Number(userDbId))
 
   return (
     <div className={styles.adminPanelUsers}>

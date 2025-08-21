@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
@@ -123,14 +122,7 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
 }
 
 export const AdminPanelUsers = async () => {
-  const [{ users }, institutions] = await Promise.all([
-    unstableCache(getUsersList, [], {
-      tags: ['getUsersList'],
-    })(),
-    unstableCache(getInstitutionsList, [], {
-      tags: ['getInstitutionsList'],
-    })(),
-  ])
+  const [{ users }, institutions] = await Promise.all([getUsersList(), getInstitutionsList()])
 
   return (
     <div className={styles.container}>

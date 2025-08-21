@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { createGlobalAdmin, getGlobalAdminsList } from '@/app/server-handlers/admin/user'
@@ -104,11 +103,7 @@ const AdminsList = ({
 }
 
 export const AdminPanelGlobalAdmins = async () => {
-  const [{ admins }] = await Promise.all([
-    unstableCache(getGlobalAdminsList, [], {
-      tags: ['getGlobalAdminsList'],
-    })(),
-  ])
+  const [{ admins }] = await Promise.all([getGlobalAdminsList()])
 
   return (
     <div className={styles.container}>

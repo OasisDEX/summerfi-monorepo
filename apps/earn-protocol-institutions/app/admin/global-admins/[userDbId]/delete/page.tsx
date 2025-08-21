@@ -1,4 +1,4 @@
-import { readSession } from '@/app/server-handlers/auth/session'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { AdminPanelGlobalAdminsDelete } from '@/features/admin/AdminPanelGlobalAdminsDelete'
 
 export default async function DeleteUserAdminPage({
@@ -8,11 +8,8 @@ export default async function DeleteUserAdminPage({
     userDbId: string
   }>
 }) {
-  const [session, awaitedParams] = await Promise.all([readSession(), params])
-
-  if (!session || !session.user?.isGlobalAdmin) {
-    throw new Error('Unauthorized')
-  }
+  await validateGlobalAdminSession()
+  const [awaitedParams] = await Promise.all([params])
 
   return <AdminPanelGlobalAdminsDelete userDbId={awaitedParams.userDbId} />
 }

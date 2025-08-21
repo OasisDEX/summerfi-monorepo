@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE, SESSION_COOKIE } from '@/constants/cookies'
 
-export async function logout() {
+export async function logout(queryParams?: string) {
   const jar = await cookies()
 
   const known = [
@@ -28,5 +28,5 @@ export async function logout() {
     if (c.name.startsWith('institutions_')) jar.delete(c.name)
   }
 
-  redirect('/')
+  redirect(`/${queryParams}`)
 }

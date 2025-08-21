@@ -18,10 +18,12 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { getAttr, slugifyName } from '@/app/server-handlers/admin/helpers'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 export async function deleteCognitoUser(userSub: string) {
   'use server'
+  await validateGlobalAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -38,23 +40,33 @@ export async function deleteCognitoUser(userSub: string) {
     },
   })
 
-  const userData = await cognitoAdminClient.send(
-    new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
-  )
+  try {
+    const userData = await cognitoAdminClient.send(
+      new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
+    )
 
-  if (!userData.Users || userData.Users.length === 0) {
-    throw new Error(`User with sub ${userSub} not found`)
+    if (!userData.Users || userData.Users.length === 0) {
+      throw new Error(`User with sub ${userSub} not found`)
+    }
+
+    const userDeletionQuery = await cognitoAdminClient.send(
+      new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
+    )
+
+    return userDeletionQuery
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error deleting user', error)
+
+    throw new Error(`Failed to delete user with sub ${userSub}`)
+  } finally {
+    cognitoAdminClient.destroy()
   }
-
-  const userDeletionQuery = await cognitoAdminClient.send(
-    new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
-  )
-
-  return userDeletionQuery
 }
 
 export async function createUser(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
   const email = String(formData.get('email') ?? '')
     .trim()
     .toLowerCase()
@@ -170,6 +182,7 @@ export async function createUser(formData: FormData) {
 
 export async function deleteWholeUser(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -228,6 +241,7 @@ export async function deleteWholeUser(formData: FormData) {
 
 export async function updateUser(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
   const fullName = String(formData.get('name') ?? '').trim()
   const roleRaw = formData.get('role')
   const institutionIdRaw = formData.get('institutionId')
@@ -323,6 +337,7 @@ export async function updateUser(formData: FormData) {
 
 export async function getUsersList() {
   'use server'
+  await validateGlobalAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -401,6 +416,7 @@ export async function getUsersList() {
 
 export async function getUserData(userDbId: number) {
   'use server'
+  await validateGlobalAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -466,6 +482,7 @@ export async function getUserData(userDbId: number) {
 
 export async function getGlobalAdminsList() {
   'use server'
+  await validateGlobalAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -530,6 +547,7 @@ export async function getGlobalAdminsList() {
 
 export async function getGlobalAdminData(userDbId: number) {
   'use server'
+  await validateGlobalAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -587,6 +605,7 @@ export async function getGlobalAdminData(userDbId: number) {
 
 export async function createGlobalAdmin(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
   const email = formData.get('email')?.toString()
   const fullName = formData.get('name')?.toString()
 
@@ -663,6 +682,7 @@ export async function createGlobalAdmin(formData: FormData) {
 
 export async function deleteGlobalAdmin(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
   const userSub = formData.get('userSub')
 
   if (typeof userSub !== 'string') {
@@ -713,6 +733,7 @@ export async function deleteGlobalAdmin(formData: FormData) {
 
 export async function updateGlobalAdmin(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
   const fullName = formData.get('name')?.toString()
   const cognitoUserName = formData.get('cognitoUserName')
 
