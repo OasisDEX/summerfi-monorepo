@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -152,9 +151,7 @@ const InstitutionsListTable = ({
 }
 
 export const AdminPanelInstitutions = async () => {
-  const institutions = await unstableCache(getInstitutionsList, [], {
-    tags: ['getInstitutionsList'],
-  })()
+  const institutions = await getInstitutionsList()
 
   return (
     <div className={styles.adminPanelInstitutions}>

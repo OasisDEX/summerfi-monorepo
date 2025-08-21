@@ -13,8 +13,9 @@ export const AdminPanelNavigation = () => {
   const user = useAuth()
 
   const links = [
-    { href: '/admin/institutions', label: 'Institutions' },
-    { href: '/admin/users', label: 'Users' },
+    { href: '/admin/institutions', label: <>Institutions</> },
+    { href: '/admin/users', label: <>Users</> },
+    { href: '/admin/global-admins', label: <>Global&nbsp;Admins</> },
   ]
 
   const activePageLabel = links.find((link) => pathname.startsWith(link.href))?.label

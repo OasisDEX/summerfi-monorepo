@@ -1,34 +1,34 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { deleteInstitution, getInstitutionData } from '@/app/server-handlers/admin/institution'
+import { deleteGlobalAdmin, getGlobalAdminData } from '@/app/server-handlers/admin/user'
 
-import styles from './AdminPanelInstitutions.module.css'
+import styles from './AdminPanelUsers.module.css'
 
-const DeleteInstitutionForm = ({
-  institution,
+const DeleteUserForm = ({
+  globalAdmin,
 }: {
-  institution: Awaited<ReturnType<typeof getInstitutionData>>
+  globalAdmin: Awaited<ReturnType<typeof getGlobalAdminData>>
 }) => {
   return (
     <Card variant="cardGradientDark">
-      <div className={styles.editInstitutionFormWrapper}>
-        <Text variant="h4">Delete Institution</Text>
+      <div className={styles.editUserFormWrapper}>
+        <Text variant="h4">Delete Global admin</Text>
         <Text variant="p3">
-          Deleting the institution will remove: the institution itself and all of the users added to
-          that institution (from the DB and cognito user pool)
+          Deleting the GLOBAL ADMIN will remove: the DB entry in our DB and the cognito user pool
+          entry.
         </Text>
-        <form action={deleteInstitution} className={styles.editInstitutionForm}>
+        <form action={deleteGlobalAdmin} className={styles.editUserForm}>
           <div className={styles.formFields}>
-            <input type="hidden" name="id" value={institution?.id} />
+            <input type="hidden" name="userSub" value={globalAdmin.userSub} />
             <div className={styles.formField}>
               <label htmlFor="name" className={styles.formLabel}>
-                Name
+                User name
               </label>
               <input
                 id="name"
                 name="name"
-                defaultValue={institution?.name}
+                defaultValue={globalAdmin.cognitoUserName}
                 disabled
                 required
                 placeholder="internal-name"
@@ -37,12 +37,12 @@ const DeleteInstitutionForm = ({
 
             <div className={styles.formField}>
               <label htmlFor="displayName" className={styles.formLabel}>
-                Display Name
+                Name
               </label>
               <input
                 id="displayName"
                 name="displayName"
-                defaultValue={institution?.displayName}
+                defaultValue={globalAdmin.cognitoName}
                 disabled
                 required
                 placeholder="Human Friendly Name"
@@ -56,9 +56,9 @@ const DeleteInstitutionForm = ({
               style={{ alignSelf: 'flex-start' }}
               className={styles.submitButton}
             >
-              Delete&nbsp;Institution
+              Delete&nbsp;User
             </Button>
-            <Link href="/admin/institutions">
+            <Link href="/admin/global-admins">
               <Button variant="secondarySmall">Go back</Button>
             </Link>
           </div>
@@ -68,19 +68,15 @@ const DeleteInstitutionForm = ({
   )
 }
 
-export const AdminPanelInstitutionsDelete = async ({
-  institutionDbId,
-}: {
-  institutionDbId: string
-}) => {
-  if (!institutionDbId || isNaN(Number(institutionDbId))) {
-    throw new Error('institutionDbId is required')
+export const AdminPanelGlobalAdminsDelete = async ({ userDbId }: { userDbId: string }) => {
+  if (!userDbId || isNaN(Number(userDbId))) {
+    throw new Error('userDbId is required')
   }
-  const institution = await getInstitutionData(Number(institutionDbId))
+  const globalAdmin = await getGlobalAdminData(Number(userDbId))
 
   return (
-    <div className={styles.adminPanelInstitutions}>
-      <DeleteInstitutionForm institution={institution} />
+    <div className={styles.adminPanelUsers}>
+      <DeleteUserForm globalAdmin={globalAdmin} />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { unstable_cache as unstableCache } from 'next/cache'
 import Link from 'next/link'
 
 import { getInstitutionData, updateInstitution } from '@/app/server-handlers/admin/institution'
@@ -92,9 +91,7 @@ export const AdminPanelInstitutionsUpdate = async ({
   if (!institutionDbId || isNaN(Number(institutionDbId))) {
     throw new Error('institutionDbId is required')
   }
-  const institution = await unstableCache(getInstitutionData, [], {
-    tags: [`institution:${institutionDbId}`],
-  })(Number(institutionDbId))
+  const institution = await getInstitutionData(Number(institutionDbId))
 
   return (
     <div className={styles.adminPanelInstitutions}>

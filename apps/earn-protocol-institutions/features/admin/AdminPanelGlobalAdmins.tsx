@@ -1,23 +1,26 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
-import { createUser, getUsersList } from '@/app/server-handlers/admin/user'
-import { usersAdminPanelColumns } from '@/features/admin/constants'
+import { createGlobalAdmin, getGlobalAdminsList } from '@/app/server-handlers/admin/user'
+import { globalAdminsAdminPanelColumns } from '@/features/admin/constants'
 import { institutionsAdminPanelDisplayRow } from '@/features/admin/helpers'
 
 import styles from './AdminPanelUsers.module.css'
 
-const AddUserForm = ({
-  institutions,
-}: {
-  institutions: Awaited<ReturnType<typeof getInstitutionsList>>
-}) => {
+const AddGlobalAdminForm = () => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.addUserFormContainer}>
-        <Text variant="h4">Add user</Text>
-        <form action={createUser} className={styles.addUserForm}>
+        <Text variant="h4">Add global admin</Text>
+        <Text variant="p3">
+          <Text variant="p3semi" as="span">
+            &quot;With great power comes great responsibility&quot;
+          </Text>{' '}
+          is a proverb popularized by Spider-Man in Marvel comics, films, and related media.
+          Introduced by Stan Lee, it originally appeared as a closing narration in the 1962 Amazing
+          Fantasy #15, and was later attributed to Uncle Ben as advice to the young Peter Parker.
+        </Text>
+        <form action={createGlobalAdmin} className={styles.addUserForm}>
           <div className={styles.formFields}>
             <div className={styles.formField}>
               <label htmlFor="email" className={styles.formLabel}>
@@ -31,34 +34,9 @@ const AddUserForm = ({
               </label>
               <input name="name" placeholder="Full name" required />
             </div>
-            <div className={styles.formField}>
-              <label htmlFor="role" className={styles.formLabel}>
-                Role
-              </label>
-              <select name="role" defaultValue="Viewer">
-                <option value="RoleAdmin">RoleAdmin</option>
-                <option value="SuperAdmin">SuperAdmin</option>
-                <option value="Viewer">Viewer</option>
-              </select>
-            </div>
-            <div className={styles.formField}>
-              <label htmlFor="institutionId" className={styles.formLabel}>
-                Institution
-              </label>
-              <select name="institutionId" required defaultValue="">
-                <option value="" disabled>
-                  Select institution
-                </option>
-                {institutions.map((i) => (
-                  <option key={i.id} value={i.id}>
-                    {i.displayName} (#{i.id})
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
           <Button variant="primarySmall" type="submit" className={styles.addUserButton}>
-            Add&nbsp;User
+            Add&nbsp;Global&nbsp;Admin
           </Button>
         </form>
       </div>
@@ -66,17 +44,21 @@ const AddUserForm = ({
   )
 }
 
-const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>['users'] }) => {
+const AdminsList = ({
+  admins,
+}: {
+  admins: Awaited<ReturnType<typeof getGlobalAdminsList>>['admins']
+}) => {
   return (
     <div className={styles.usersSection}>
-      {users.length === 0 ? (
-        <Text>No users found.</Text>
+      {admins.length === 0 ? (
+        <Text>No global admins found.</Text>
       ) : (
         <div className={styles.tableContainer}>
           <table className={styles.table}>
             <thead>
               <tr>
-                {usersAdminPanelColumns.map((col) => (
+                {globalAdminsAdminPanelColumns.map((col) => (
                   <th key={col.accessor} className={styles.tableHeader}>
                     {col.label}
                   </th>
@@ -84,21 +66,20 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
               </tr>
             </thead>
             <tbody>
-              {users.map((row) => {
+              {admins.map((row) => {
                 const key = `${row.userSub}-${row.id}`
 
                 return (
                   <tr key={key}>
-                    {usersAdminPanelColumns.map(({ accessor }) => (
+                    {globalAdminsAdminPanelColumns.map(({ accessor }) => (
                       <td key={accessor} className={styles.tableCell}>
                         <div className={styles.tableCellContent}>
-                          {accessor === 'institutionId' && row.institutionDisplayName}
                           {accessor === 'actions' && (
                             <>
-                              <Link href={`/admin/users/${row.id}/edit`}>
+                              <Link href={`/admin/global-admins/${row.id}/edit`}>
                                 <Button variant="textPrimarySmall">Edit</Button>
                               </Link>
-                              <Link href={`/admin/users/${row.id}/delete`}>
+                              <Link href={`/admin/global-admins/${row.id}/delete`}>
                                 <Button variant="textPrimarySmall">Delete</Button>
                               </Link>
                             </>
@@ -121,13 +102,13 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
   )
 }
 
-export const AdminPanelUsers = async () => {
-  const [{ users }, institutions] = await Promise.all([getUsersList(), getInstitutionsList()])
+export const AdminPanelGlobalAdmins = async () => {
+  const [{ admins }] = await Promise.all([getGlobalAdminsList()])
 
   return (
     <div className={styles.container}>
-      <UsersList users={users} />
-      <AddUserForm institutions={institutions} />
+      <AdminsList admins={admins} />
+      <AddGlobalAdminForm />
     </div>
   )
 }

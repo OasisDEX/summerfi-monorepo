@@ -1,17 +1,15 @@
-import {
-  AdminDeleteUserCommand,
-  CognitoIdentityProviderClient,
-  ListUsersCommand,
-} from '@aws-sdk/client-cognito-identity-provider'
+import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider'
 import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
 import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { deleteCognitoUser } from '@/app/server-handlers/admin/user'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
-// Server Action: create institution
 export async function createInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -54,14 +52,18 @@ export async function createInstitution(formData: FormData) {
         logoFile,
       })
       .execute()
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error creating institution', error)
   } finally {
     db.destroy()
   }
 }
 
-// Server Action: update institution
 export async function updateInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -97,7 +99,7 @@ export async function updateInstitution(formData: FormData) {
       logoFile = Buffer.from(buf)
     }
 
-    await db
+    const institutionUpdateResult = await db
       .updateTable('institutions')
       .set({
         name: institutionName.trim(),
@@ -107,6 +109,22 @@ export async function updateInstitution(formData: FormData) {
       })
       .where('id', '=', Number(institutionId))
       .execute()
+
+    // eslint-disable-next-line no-console
+    console.log(
+      // Log the results of the update
+      'Institution updated',
+      JSON.stringify(
+        {
+          institutionUpdateResult,
+        },
+        (_key, value) => (typeof value === 'bigint' ? value.toString() : value),
+      ),
+    )
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error updating institution', error)
   } finally {
     db.destroy()
     revalidateTag('getInstitutionsList')
@@ -114,42 +132,9 @@ export async function updateInstitution(formData: FormData) {
   }
 }
 
-// [internal] Server Action: delete cognito user
-async function deleteCognitoUser(userSub: string) {
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const cognitoAdminClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  const userData = await cognitoAdminClient.send(
-    new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
-  )
-
-  if (!userData.Users || userData.Users.length === 0) {
-    throw new Error(`User with sub ${userSub} not found`)
-  }
-
-  const userDeletionQuery = await cognitoAdminClient.send(
-    new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
-  )
-
-  return userDeletionQuery
-}
-
-// Server Action: delete institution and associated users
 export async function deleteInstitution(formData: FormData) {
   'use server'
+  await validateGlobalAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -207,6 +192,10 @@ export async function deleteInstitution(formData: FormData) {
         (_key, value) => (typeof value === 'bigint' ? value.toString() : value),
       ),
     )
+  } catch (error) {
+    // Handle errors
+    // eslint-disable-next-line no-console
+    console.error('Error deleting institution', error)
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
@@ -216,6 +205,9 @@ export async function deleteInstitution(formData: FormData) {
 }
 
 export async function getInstitutionsList() {
+  'use server'
+  await validateGlobalAdminSession()
+
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
@@ -236,6 +228,9 @@ export async function getInstitutionsList() {
 }
 
 export async function getInstitutionData(institutionDbId: number) {
+  'use server'
+  await validateGlobalAdminSession()
+
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })

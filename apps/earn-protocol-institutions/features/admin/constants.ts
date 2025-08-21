@@ -25,24 +25,72 @@ export const institutionsAdminPanelColumns = [
   },
 ]
 
-// Users admin panel
-export type AdminPanelColumn<T> = {
-  label: string
-  accessor: keyof T & string
-}
+export const usersAdminPanelColumns = [
+  {
+    label: 'ID',
+    accessor: 'id',
+  },
+  {
+    label: 'Sub',
+    accessor: 'userSub',
+  },
+  {
+    label: 'User name',
+    accessor: 'cognitoUserName',
+  },
+  {
+    label: 'Name',
+    accessor: 'cognitoName',
+  },
+  {
+    label: 'Email',
+    accessor: 'cognitoEmail',
+  },
+  {
+    label: 'Institution',
+    accessor: 'institutionId',
+  },
+  {
+    label: 'Role',
+    accessor: 'role',
+  },
+  {
+    label: 'Created At',
+    accessor: 'createdAt',
+  },
+  {
+    label: 'Actions',
+    accessor: 'actions',
+  },
+]
 
-export type UserAdminTableRow = {
-  id: number
-  userSub: string
-  institutionId: number
-  role: string | null
-  createdAt: Date
-}
-
-export const usersAdminPanelColumns: readonly AdminPanelColumn<UserAdminTableRow>[] = [
-  { label: 'ID', accessor: 'id' },
-  { label: 'User Sub', accessor: 'userSub' },
-  { label: 'Institution', accessor: 'institutionId' },
-  { label: 'Role', accessor: 'role' },
-  { label: 'Created At', accessor: 'createdAt' },
+export const globalAdminsAdminPanelColumns = [
+  {
+    label: 'ID',
+    accessor: 'id',
+  },
+  {
+    label: 'Sub',
+    accessor: 'userSub',
+  },
+  {
+    label: 'User name',
+    accessor: 'cognitoUserName',
+  },
+  {
+    label: 'Name',
+    accessor: 'cognitoName',
+  },
+  {
+    label: 'Email',
+    accessor: 'cognitoEmail',
+  },
+  {
+    label: 'Created At',
+    accessor: 'createdAt',
+  },
+  {
+    label: 'Actions',
+    accessor: 'actions',
+  },
 ]
