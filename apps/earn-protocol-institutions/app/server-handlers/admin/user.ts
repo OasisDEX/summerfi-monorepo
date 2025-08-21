@@ -371,12 +371,14 @@ export async function getUsersList() {
       const user = cognitoUsers.Users?.find((u) =>
         u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
       )
+      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
       const cognitoUserName = user?.Username
       const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
 
       return {
         ...dbUser,
         userSub,
+        cognitoEmail,
         cognitoUserName,
         cognitoName,
       }
@@ -500,10 +502,12 @@ export async function getGlobalAdminsList() {
       )
       const cognitoUserName = user?.Username
       const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
+      const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
 
       return {
         ...dbUser,
         userSub,
+        cognitoEmail,
         cognitoUserName,
         cognitoName,
       }

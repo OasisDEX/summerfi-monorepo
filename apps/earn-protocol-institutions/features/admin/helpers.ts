@@ -67,7 +67,7 @@ export const institutionsAdminPanelDisplayRow = (v: unknown, accessor?: string) 
   if (accessor === 'userSub') {
     const sub = v as string
 
-    return `${sub.slice(0, 8)}...${sub.slice(-4)}`
+    return `${sub.slice(0, 4)}...${sub.slice(-4)}`
   }
   if (accessor === 'users') return ''
   if (accessor === 'institutionId') return ''

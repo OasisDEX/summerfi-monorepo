@@ -43,6 +43,10 @@ export const usersAdminPanelColumns = [
     accessor: 'cognitoName',
   },
   {
+    label: 'Email',
+    accessor: 'cognitoEmail',
+  },
+  {
     label: 'Institution',
     accessor: 'institutionId',
   },
@@ -76,6 +80,10 @@ export const globalAdminsAdminPanelColumns = [
   {
     label: 'Name',
     accessor: 'cognitoName',
+  },
+  {
+    label: 'Email',
+    accessor: 'cognitoEmail',
   },
   {
     label: 'Created At',
