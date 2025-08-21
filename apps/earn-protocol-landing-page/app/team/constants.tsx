@@ -13,8 +13,8 @@ export const teamList: TeamListItem[] = [
     name: 'Chris Bradbury',
     role: 'CEO',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      twitter: 'https://x.com/chrisbducky',
+      linkedin: 'https://www.linkedin.com/in/chris-bradbury-summer',
     },
   },
   {
@@ -22,8 +22,8 @@ export const teamList: TeamListItem[] = [
     name: 'Andrei David',
     role: 'CTO',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      twitter: 'https://x.com/AndreiDavid',
+      linkedin: 'https://www.linkedin.com/in/andreidavid',
     },
   },
   {
@@ -31,8 +31,7 @@ export const teamList: TeamListItem[] = [
     name: 'Anthony Fernandez',
     role: 'Head of business development',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      linkedin: 'https://www.linkedin.com/in/anthony-fernandez-36a732a6',
     },
   },
   {
@@ -40,8 +39,7 @@ export const teamList: TeamListItem[] = [
     name: 'Joe Clark',
     role: 'CFO',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      linkedin: 'https://www.linkedin.com/in/joe-clark-215a226',
     },
   },
   {
@@ -49,8 +47,8 @@ export const teamList: TeamListItem[] = [
     name: 'Jordan Jackson',
     role: 'Product Lead',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      twitter: 'https://x.com/samehueasyou',
+      linkedin: 'https://www.linkedin.com/company/summerfi/',
     },
   },
   {
@@ -58,8 +56,8 @@ export const teamList: TeamListItem[] = [
     name: 'Konrad Kloch',
     role: 'Smart Contract Engineer',
     socialLinks: {
-      twitter: '#',
-      linkedin: '#',
+      twitter: 'https://x.com/halaprix',
+      linkedin: 'https://www.linkedin.com/in/konrad-kloch',
     },
   },
 ]
