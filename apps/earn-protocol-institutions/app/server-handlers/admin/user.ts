@@ -716,11 +716,6 @@ export async function updateGlobalAdmin(formData: FormData) {
     throw new Error('Missing required fields')
   }
 
-  console.log({
-    fullName,
-    cognitoUserName,
-  })
-
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
