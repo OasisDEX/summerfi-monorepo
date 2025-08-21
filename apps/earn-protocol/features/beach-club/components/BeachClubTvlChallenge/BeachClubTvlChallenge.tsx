@@ -171,7 +171,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
     },
     {
       id: 3,
-      value: `$${formatFiatBalance(feesUSDclaimableNowOnBase)}`,
+      value: `$${formatFiatBalance(feesRewards)}`,
       description: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           Earned Fee&apos;s{' '}
