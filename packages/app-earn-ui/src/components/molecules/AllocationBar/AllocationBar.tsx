@@ -38,9 +38,9 @@ interface AllocationBarProps {
 export const AllocationBar: FC<AllocationBarProps> = ({ variant = 'large', items }) => {
   return (
     <div className={clsx(allocationBarStyles.allocationBar, allocationBarStyles[variant])}>
-      {items.map((item) => (
+      {items.map((item, idx) => (
         <Tooltip
-          key={item.label}
+          key={`${item.label}-${idx}`}
           tooltip={item.tooltip ?? <TooltipContent {...item} />}
           style={{ width: `${item.percentage * 100}%`, height: '100%' }}
           tooltipWrapperStyles={{ minWidth: '300px', top: '24px' }}

@@ -21,7 +21,7 @@ const AggregatedTooltip: FC<AggregatedTooltipProps> = ({ items }) => {
         Other Protocols:
       </Text>
       {items.map((item, index) => (
-        <Text key={index} as="div" variant="p4semi">
+        <Text key={`${item.label}-${index}`} as="div" variant="p4semi">
           {item.label}{' '}
           <Text as="span" variant="p4semiColorful">
             {formatDecimalAsPercent(item.percentage)}
