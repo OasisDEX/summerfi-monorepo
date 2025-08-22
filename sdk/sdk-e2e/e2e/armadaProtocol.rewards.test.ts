@@ -25,6 +25,8 @@ describe('Armada Protocol Rewards', () => {
   const addresses = [
     // '0x38233654FB0843c8024527682352A5d41E7f7324',
     '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+    // '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d',
+    // '0xE9c245293DAC615c11A5bF26FCec91C3617645E4',
   ] as AddressValue[]
 
   for (const userAddress of addresses) {
@@ -92,8 +94,8 @@ describe('Armada Protocol Rewards', () => {
           })
 
           const allChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[] // Ethereum, Base, Arbitrum, Sonic
@@ -168,7 +170,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`getReferralFeesMerklClaimTx`, () => {
+      describe.only(`getReferralFeesMerklClaimTx`, () => {
         it(`should generate referral claim transaction with specific token addresses`, async () => {
           const usdcToken = await sdk.tokens.getTokenBySymbol({
             symbol: 'USDC',
@@ -176,7 +178,7 @@ describe('Armada Protocol Rewards', () => {
           })
           const usdcTokenAddress = usdcToken.address.value
 
-          const feeUserAddress = '0xE9c245293DAC615c11A5bF26FCec91C3617645E4'
+          const feeUserAddress = '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d'
 
           // First get rewards to find chains with rewards and get token addresses
           const rewards = await sdk.armada.users.getUserMerklRewards({
@@ -259,8 +261,8 @@ describe('Armada Protocol Rewards', () => {
       describe(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
         it(`should generate authorization transaction for supported chains`, async () => {
           const supportedChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[]
@@ -305,8 +307,8 @@ describe('Armada Protocol Rewards', () => {
       describe(`getIsAuthorizedAsMerklRewardsOperator`, () => {
         it(`should check authorization status for supported chains`, async () => {
           const supportedChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[]

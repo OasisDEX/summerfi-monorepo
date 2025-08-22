@@ -50,6 +50,7 @@ export const createSendTransactionTool = (params: {
         // rpcUrl,
       )
 
+      // Simulate the transaction
       try {
         const res = await transactionUtils.sendSimulation({
           transaction: transaction.transaction,
@@ -61,6 +62,7 @@ export const createSendTransactionTool = (params: {
         continue
       }
 
+      // Send the transaction
       if (!params.onlySimulation) {
         try {
           const receipt = await transactionUtils.sendTransactionWithReceipt({
