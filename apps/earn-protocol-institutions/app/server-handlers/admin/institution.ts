@@ -204,7 +204,7 @@ export async function deleteInstitution(formData: FormData) {
   }
 }
 
-export async function getInstitutionsList() {
+export async function adminGetInstitutionsList() {
   'use server'
   await validateGlobalAdminSession()
 

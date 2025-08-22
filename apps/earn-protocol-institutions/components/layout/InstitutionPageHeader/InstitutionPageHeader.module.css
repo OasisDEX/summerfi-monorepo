@@ -15,11 +15,12 @@
 
   .rightWrapper {
     display: flex;
-    gap: 16px;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .rightWrapperItem {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
 }

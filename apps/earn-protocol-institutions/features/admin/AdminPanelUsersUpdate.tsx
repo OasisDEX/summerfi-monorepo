@@ -2,7 +2,7 @@ import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
 import Link from 'next/link'
 
-import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
+import { adminGetInstitutionsList } from '@/app/server-handlers/admin/institution'
 import { getUserData, updateUser } from '@/app/server-handlers/admin/user'
 
 import styles from './AdminPanelUsers.module.css'
@@ -12,7 +12,7 @@ const UpdateUserForm = ({
   institutions,
 }: {
   user: Awaited<ReturnType<typeof getUserData>>
-  institutions: Awaited<ReturnType<typeof getInstitutionsList>>
+  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
 }) => {
   return (
     <Card variant="cardGradientDark">
@@ -78,7 +78,7 @@ export const AdminPanelUsersUpdate = async ({ userDbId }: { userDbId: string }) 
   }
   const [user, institutions] = await Promise.all([
     getUserData(Number(userDbId)),
-    getInstitutionsList(),
+    adminGetInstitutionsList(),
   ])
 
   return (

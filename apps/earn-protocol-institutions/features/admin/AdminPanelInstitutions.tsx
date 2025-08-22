@@ -2,7 +2,10 @@ import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { createInstitution, getInstitutionsList } from '@/app/server-handlers/admin/institution'
+import {
+  adminGetInstitutionsList,
+  createInstitution,
+} from '@/app/server-handlers/admin/institution'
 import { institutionsAdminPanelColumns } from '@/features/admin/constants'
 import {
   institutionsAdminPanelDisplayRow,
@@ -69,7 +72,7 @@ const AddInstitutionForm = () => {
 const InstitutionsListTable = ({
   institutions,
 }: {
-  institutions: Awaited<ReturnType<typeof getInstitutionsList>>
+  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
 }) => {
   return (
     <div className={styles.institutionsListWrapper}>
@@ -151,7 +154,7 @@ const InstitutionsListTable = ({
 }
 
 export const AdminPanelInstitutions = async () => {
-  const institutions = await getInstitutionsList()
+  const institutions = await adminGetInstitutionsList()
 
   return (
     <div className={styles.adminPanelInstitutions}>

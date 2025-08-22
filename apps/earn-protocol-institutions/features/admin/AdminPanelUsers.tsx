@@ -1,7 +1,7 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { getInstitutionsList } from '@/app/server-handlers/admin/institution'
+import { adminGetInstitutionsList } from '@/app/server-handlers/admin/institution'
 import { createUser, getUsersList } from '@/app/server-handlers/admin/user'
 import { usersAdminPanelColumns } from '@/features/admin/constants'
 import { institutionsAdminPanelDisplayRow } from '@/features/admin/helpers'
@@ -11,7 +11,7 @@ import styles from './AdminPanelUsers.module.css'
 const AddUserForm = ({
   institutions,
 }: {
-  institutions: Awaited<ReturnType<typeof getInstitutionsList>>
+  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
 }) => {
   return (
     <Card variant="cardGradientDark">
@@ -122,7 +122,7 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
 }
 
 export const AdminPanelUsers = async () => {
-  const [{ users }, institutions] = await Promise.all([getUsersList(), getInstitutionsList()])
+  const [{ users }, institutions] = await Promise.all([getUsersList(), adminGetInstitutionsList()])
 
   return (
     <div className={styles.container}>

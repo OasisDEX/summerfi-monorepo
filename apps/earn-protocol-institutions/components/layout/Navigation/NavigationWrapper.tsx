@@ -4,6 +4,7 @@ import { type FC } from 'react'
 import {
   Button,
   Card,
+  Icon,
   Navigation,
   NavigationConfig,
   SkeletonLine,
@@ -14,6 +15,7 @@ import {
 import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { useAuth } from '@/contexts/AuthContext/AuthContext'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 
@@ -33,6 +35,7 @@ export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
+  const { signOut } = useAuth()
 
   const isLoginPage = currentPath === '/'
 
@@ -45,8 +48,16 @@ export const NavigationWrapper: FC = () => {
       logoSmall="/img/branding/dot-dark.svg"
       walletConnectionComponent={
         !isLoginPage ? (
-          <div>
-            <WalletLabel />
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <Button
+              variant="secondaryMedium"
+              onClick={signOut}
+              style={{ display: 'flex', gap: '14px', alignItems: 'center' }}
+            >
+              <Icon iconName="user" size={14} />
+              Log out
+            </Button>
+            <WalletLabel buttonVariant="secondaryMedium" />
           </div>
         ) : undefined
       }

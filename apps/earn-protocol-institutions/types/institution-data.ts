@@ -1,6 +1,8 @@
 import { type Address } from '@summerfi/app-types'
 import { type GeneralRoles } from '@summerfi/sdk-client'
 
+import { type getInstitutionData, getUserInstitutionsList } from '@/app/server-handlers/institution-data'
+
 export type InstitutionVaultRoles = {
   [key in GeneralRoles]?: {
     address: Address
@@ -26,11 +28,8 @@ export type InstitutionVaultFeeRevenueItem = {
   aumFee: number
 }
 
-export type InstitutionData = {
-  id: number
-  displayName: string
-  name: string
-}
+export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
+export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
 
 export type InstitutionVaultRole = [GeneralRoles, { address: Address; lastUpdated: number }]
 
