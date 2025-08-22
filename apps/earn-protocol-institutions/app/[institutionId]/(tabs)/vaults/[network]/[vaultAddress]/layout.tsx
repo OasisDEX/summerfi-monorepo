@@ -57,7 +57,7 @@ export default async function InstitutionVaultLayout({
       panel={
         <div className={institutionVaultLayoutStyles.dashboardVaultsPanelWrapper}>
           <VaultsDropdownWrapper
-            institution={institutionData.institution}
+            institution={institutionData}
             vaults={institutionVaults.vaults}
             selectedVault={institutionVault.vault}
           />
