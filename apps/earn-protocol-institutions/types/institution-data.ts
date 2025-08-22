@@ -1,7 +1,10 @@
 import { type Address } from '@summerfi/app-types'
 import { type GeneralRoles } from '@summerfi/sdk-client'
 
-import { type getInstitutionData, getUserInstitutionsList } from '@/app/server-handlers/institution-data'
+import {
+  type getInstitutionData,
+  type getUserInstitutionsList,
+} from '@/app/server-handlers/institution-data'
 
 export type InstitutionVaultRoles = {
   [key in GeneralRoles]?: {
