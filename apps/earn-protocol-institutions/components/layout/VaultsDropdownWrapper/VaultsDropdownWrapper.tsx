@@ -2,7 +2,11 @@
 
 import { type FC, type ReactNode } from 'react'
 import { Dropdown, Text } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  type SDKVaultishType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { getHumanReadableFleetName, supportedSDKNetwork } from '@summerfi/app-utils'
 import { usePathname, useRouter } from 'next/navigation'
 
@@ -15,11 +19,12 @@ import vaultsDropdownWrapperStyles from './VaultsDropdownWrapper.module.css'
 
 interface DropdownContentProps {
   children: ReactNode
+  tokenName: TokenSymbolsList
 }
 
-const DropdownContent: FC<DropdownContentProps> = ({ children }) => {
+const DropdownContent: FC<DropdownContentProps> = ({ children, tokenName }) => {
   return (
-    <IconWithText tokenName="USDC" size={24}>
+    <IconWithText tokenName={tokenName} size={24}>
       <Text as="p" variant="p1semi">
         {children}
       </Text>
@@ -41,7 +46,10 @@ export const VaultsDropdownWrapper = ({
   const vaultsOptions: DropdownRawOption[] = vaults.map((vault) => ({
     value: `${vault.id}-${vault.protocol.network}`,
     content: (
-      <DropdownContent key={`${vault.id}-${vault.protocol.network}`}>
+      <DropdownContent
+        key={`${vault.id}-${vault.protocol.network}`}
+        tokenName={vault.inputToken.symbol as TokenSymbolsList}
+      >
         {getHumanReadableFleetName(supportedSDKNetwork(vault.protocol.network), vault.name)}
       </DropdownContent>
     ),
@@ -50,7 +58,10 @@ export const VaultsDropdownWrapper = ({
   const selectedVaultOption = {
     value: `${selectedVault.id}-${selectedVault.protocol.network}`,
     content: (
-      <DropdownContent key={`${selectedVault.id}-${selectedVault.protocol.network}`}>
+      <DropdownContent
+        key={`${selectedVault.id}-${selectedVault.protocol.network}`}
+        tokenName={selectedVault.inputToken.symbol as TokenSymbolsList}
+      >
         {getHumanReadableFleetName(
           supportedSDKNetwork(selectedVault.protocol.network),
           selectedVault.name,

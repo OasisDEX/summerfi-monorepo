@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC } from 'react'
+import { type FC, type ReactNode } from 'react'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
@@ -30,6 +30,7 @@ interface AllocationBarProps {
     label: string
     percentage: number
     color: string
+    tooltip?: ReactNode
   }[]
   variant?: 'large' | 'medium' | 'small'
 }
@@ -40,7 +41,7 @@ export const AllocationBar: FC<AllocationBarProps> = ({ variant = 'large', items
       {items.map((item) => (
         <Tooltip
           key={item.label}
-          tooltip={<TooltipContent {...item} />}
+          tooltip={item.tooltip ?? <TooltipContent {...item} />}
           style={{ width: `${item.percentage * 100}%`, height: '100%' }}
           tooltipWrapperStyles={{ minWidth: '300px', top: '24px' }}
           tooltipCardVariant="cardPrimarySmallPaddings"
