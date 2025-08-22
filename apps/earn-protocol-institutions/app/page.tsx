@@ -1,6 +1,6 @@
 'use client'
 
-import { Text } from '@summerfi/app-earn-ui'
+import { AnimateHeight, Button, Card, Input, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
 
 import { useLogin } from '@/hooks/useLogin'
 
@@ -107,6 +107,8 @@ export default function InstitutionsLoginPage() {
     )
   }
 
+  const buttonDisabled = isLoading || !email || !password
+
   return (
     <div
       style={{
@@ -131,19 +133,13 @@ export default function InstitutionsLoginPage() {
           >
             Email
           </label>
-          <input
+          <Input
+            variant="dark"
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              fontSize: '16px',
-            }}
           />
         </div>
 
@@ -154,39 +150,41 @@ export default function InstitutionsLoginPage() {
           >
             Password
           </label>
-          <input
+          <Input
+            variant="dark"
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              fontSize: '16px',
-            }}
           />
         </div>
-
-        {error && <div style={{ color: 'red', fontSize: '14px' }}>{error}</div>}
-
-        <button
+        <Button
           type="submit"
-          disabled={isLoading}
-          style={{
-            padding: '12px',
-            backgroundColor: isLoading ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '16px',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-          }}
+          disabled={buttonDisabled}
+          variant={buttonDisabled ? 'secondaryMedium' : 'primaryMedium'}
+          style={{ padding: '24px 32px', marginTop: '10px' }}
         >
-          {isLoading ? 'Signing in...' : 'Sign In'}
-        </button>
+          {isLoading ? <LoadingSpinner size={14} /> : 'Sign In'}
+        </Button>
+
+        <AnimateHeight show={!!error} id="error-message">
+          <Card
+            variant="cardSecondarySmallPaddings"
+            style={{
+              border: '1px solid var(--earn-protocol-critical-50)',
+              color: 'var(--earn-protocol-critical-100)',
+              textAlign: 'center',
+              padding: '24px 32px',
+              margin: '30px auto 0 auto',
+              width: 'fit-content',
+            }}
+          >
+            <Text variant="p3" style={{ width: '100%' }}>
+              {error}
+            </Text>
+          </Card>
+        </AnimateHeight>
       </form>
     </div>
   )
