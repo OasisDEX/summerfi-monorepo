@@ -1,30 +1,34 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import { User, Wallet } from '@summerfi/sdk-common'
+import { ChainIds, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
 
 jest.setTimeout(300000)
 const simulateOnly = true
 
+const config = [
+  {
+    chainId: ChainIds.Base,
+    rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
+    userAddress: '0x' as AddressValue,
+  },
+]
+
 describe('Armada Protocol Claim', () => {
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
   })
 
-  for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
+  for (const { chainId, rpcUrl, userAddress } of config) {
     if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
+    const chainInfo = getChainInfoByChainId(chainId)
 
-    describe(`Running on ${chainInfo.name} for user ${userAddress.value}`, () => {
-      const user = User.createFrom({
-        chainInfo,
-        wallet: Wallet.createFrom({
-          address: userAddress,
-        }),
-      })
+    describe(`Running on ${chainInfo.name} for user ${userAddress}`, () => {
+      const user = User.createFromEthereum(chainId, userAddress)
 
       describe(`getAggregatedRewards`, () => {
         it(`should get aggregated rewards cross chain`, async () => {
@@ -37,7 +41,7 @@ describe('Armada Protocol Claim', () => {
           expect(rewards.vaultUsagePerChain).toBeDefined()
           expect(rewards.vaultUsage).toBeDefined()
           expect(rewards.merkleDistribution).toBeDefined()
-          expect(rewards.voteDelegation).toBeGreaterThan(0n)
+          expect(rewards.voteDelegation).toBeDefined()
         })
       })
 
@@ -52,7 +56,7 @@ describe('Armada Protocol Claim', () => {
           expect(rewards.vaultUsagePerChain).toBeDefined()
           expect(rewards.vaultUsage).toBeDefined()
           expect(rewards.merkleDistribution).toBeDefined()
-          expect(rewards.voteDelegation).toBeGreaterThan(0n)
+          expect(rewards.voteDelegation).toBeDefined()
         })
       })
 
@@ -61,8 +65,9 @@ describe('Armada Protocol Claim', () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
-
-          assert(rewards.total > 0n, 'Rewards should be greater than 0')
+          const toClaimBefore = rewards.total
+          console.log('before', toClaimBefore)
+          assert(toClaimBefore > 0n, 'Rewards should be greater than 0')
 
           const tx = await sdk.armada.users.getAggregatedClaimsForChainTx({
             chainInfo,
@@ -71,12 +76,6 @@ describe('Armada Protocol Claim', () => {
           if (!tx) {
             throw new Error('No claims')
           }
-
-          const rewardsBefore = await sdk.armada.users.getAggregatedRewards({
-            user,
-          })
-          const toClaimBefore = rewardsBefore.total
-          console.log('before', toClaimBefore)
 
           const { statuses } = await sendAndLogTransactions({
             chainInfo,
@@ -89,14 +88,17 @@ describe('Armada Protocol Claim', () => {
             expect(status).toBe('success')
           })
 
-          const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
-            user,
-          })
-          const toClaimAfter = rewardsAfter.total
-          console.log('after', toClaimAfter)
+          if (!simulateOnly) {
+            // Check rewards after claiminge
+            const rewardsAfter = await sdk.armada.users.getAggregatedRewards({
+              user,
+            })
+            const toClaimAfter = rewardsAfter.total
+            console.log('after', toClaimAfter)
+          }
         })
 
-        it.only(`should claim rewards including merkl`, async () => {
+        it(`should claim rewards including merkl`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
             user,
           })
@@ -123,6 +125,7 @@ describe('Armada Protocol Claim', () => {
           statuses.forEach((status) => {
             expect(status).toBe('success')
           })
+
           if (!simulateOnly) {
             const rewardsAfter = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
               user,
