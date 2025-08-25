@@ -27,7 +27,7 @@ import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
 import { ISwapManager } from '@summerfi/swap-common'
-import { SwapManagerFactory } from '@summerfi/swap-service'
+import { SwapManagerFactory, CowSwapProvider } from '@summerfi/swap-service'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
 
@@ -54,6 +54,7 @@ export type SDKAppContext = {
   orderPlannerService: IOrderPlannerService
   allowanceManager: IAllowanceManager
   armadaManager: IArmadaManager
+  intentSwapsManager: CowSwapProvider
 }
 
 const quickHashCode = (str: string): string => {
@@ -111,6 +112,8 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     swapManager,
     addressBookManager,
   })
+  const intentSwapsManager = new CowSwapProvider({ configProvider })
+
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
@@ -145,5 +148,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     orderPlannerService,
     allowanceManager,
     armadaManager,
+    intentSwapsManager,
   }
 }
