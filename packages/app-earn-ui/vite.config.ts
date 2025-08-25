@@ -156,6 +156,7 @@ export default defineConfig(({ mode }) => {
           'boring-avatars',
           'react-animate-height',
           'uniqolor',
+          'react-day-picker',
         ],
         input: Object.fromEntries(
           glob

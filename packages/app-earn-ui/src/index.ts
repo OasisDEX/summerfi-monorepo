@@ -135,6 +135,7 @@ export {
 } from './components/molecules/CookieBanner/config'
 export { ZoomableImage } from './components/molecules/ZoomableImage/ZoomableImage'
 export { AllocationBar } from './components/molecules/AllocationBar/AllocationBar'
+export { DateRangePicker } from './components/molecules/DateRangePicker/DateRangePicker.tsx'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
