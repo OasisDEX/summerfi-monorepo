@@ -125,6 +125,10 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
       console.error(`Error fetching ark details for ${item.id} on ${vaultNetwork}`, error)
     }
 
+    const arkDaysSinceCreated = dayjs().diff(dayjs(Number(item.createdTimestamp) * 1000), 'day')
+
+    const isArkNew = arkDaysSinceCreated < 30
+
     return {
       content: {
         vault: (
@@ -134,6 +138,7 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <TableCellText>{protocolLabel}</TableCellText>
               <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
+                {isArkNew && <Text variant="p3semiColorful">New!&nbsp;</Text>}
                 {formatDecimalAsPercent(item.allocationRatio)} allocated
               </TableCellText>
             </div>
