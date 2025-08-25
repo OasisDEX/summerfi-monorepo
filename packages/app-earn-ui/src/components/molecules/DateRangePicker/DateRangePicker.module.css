@@ -1,0 +1,88 @@
+.datePickerContainer {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: var(--spacing-space-2x-small);
+  position: relative;
+  max-width: 300px;
+}
+
+.datePickerInputContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-small);
+  position: relative;
+
+  .datePickerInput {
+    border-radius: var(--radius-large);
+  }
+
+  .datePickerButton {
+    position: absolute;
+    right: var(--spacing-space-small);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.datePickerMobileWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.datePickerDialog {
+  padding: var(--spacing-space-large);
+  background-color: var(--earn-protocol-neutral-85);
+  border-radius: var(--radius-large);
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 90px;
+  left: 0;
+  z-index: 1000;
+}
+
+.datePickerDialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.datePicker :global(.rdp-chevron) {
+  fill: var(--earn-protocol-secondary-100);
+}
+
+.datePicker :global(.rdp-day) {
+  color: var(--earn-protocol-secondary-40);
+  background-color: unset;
+  border: unset;
+}
+.datePicker :global(.rdp-day_button) {
+  color: inherit;
+  background-color: unset;
+  border: unset;
+}
+
+.datePicker :global(.rdp-day_button:hover) {
+  color: var(--color-background-primary-hover);
+}
+
+.datePicker :global(.rdp-selected) {
+  color: var(--color-background-primary-hover);
+  background-color: unset;
+}
+
+.datePicker :global(.rdp-range_start) {
+  color: var(--color-background-primary-hover);
+  background-color: unset;
+  background: unset;
+  border: unset;
+}
+
+.datePicker :global(.rdp-range_end) {
+  color: var(--color-background-primary-hover);
+  background-color: unset;
+  background: unset;
+  border: unset;
+}

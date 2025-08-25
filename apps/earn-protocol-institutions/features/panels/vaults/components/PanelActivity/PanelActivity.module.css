@@ -1,0 +1,50 @@
+.panelActivityWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .headingWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-space-small);
+    flex-wrap: wrap;
+
+    .filters {
+      display: flex;
+      gap: var(--spacing-space-small);
+      flex-wrap: wrap;
+
+      .button {
+        border: 1px solid var(--earn-protocol-neutral-70);
+        background-color: unset;
+
+        &:hover {
+          border: 1px solid var(--earn-protocol-neutral-60);
+        }
+      }
+
+      .active {
+        border: 1px solid var(--earn-protocol-primary-100);
+        background-color: unset;
+      }
+    }
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+
+    .table {
+      min-width: max-content;
+
+      .onEdit {
+        color: var(--earn-protocol-primary-100);
+
+        &:hover {
+          opacity: 0.6;
+          transition: opacity 0.2s ease-in-out;
+        }
+      }
+    }
+  }
+}
