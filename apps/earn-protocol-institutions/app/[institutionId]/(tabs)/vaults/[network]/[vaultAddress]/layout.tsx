@@ -3,7 +3,9 @@ import {
   getHumanReadableFleetName,
   humanNetworktoSDKNetwork,
   supportedSDKNetwork,
+  ten,
 } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 
 import { getInstitutionData } from '@/app/server-handlers/institution-data'
 import { getInstitutionVault, getInstitutionVaults } from '@/app/server-handlers/institution-vaults'
@@ -52,6 +54,11 @@ export default async function InstitutionVaultLayout({
     return <div>Vault not found.</div>
   }
 
+  const inception = Number(Number(institutionVault.vault.createdTimestamp) * 1000)
+  const aum = new BigNumber(institutionVault.vault.inputTokenBalance.toString())
+    .div(ten.pow(institutionVault.vault.inputToken.decimals))
+    .toNumber()
+
   return (
     <DashboardContentLayout
       panel={
@@ -75,9 +82,9 @@ export default async function InstitutionVaultLayout({
           )}
           asset={institutionVault.vault.inputToken.symbol}
           nav={0}
-          aum={0}
+          aum={aum}
           fee={0}
-          inception={0}
+          inception={inception}
         />
       }
     >

@@ -9,24 +9,28 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
   if (!institutionId) return null
   if (typeof institutionId !== 'string') return null
 
+  const testInstitutionVaults = ['0x29f13a877f3d1a14ac0b15b07536d4423b35e198'].map((vault) =>
+    vault.toLowerCase(),
+  )
+  const testInstitutionNetworks = [SupportedNetworkIds.Base]
+
   try {
     const systemConfig = await configEarnAppFetcher()
 
     const institutionSdk = getInstitutionsSDK(institutionId)
     const vaultsListByNetwork = await Promise.all(
-      Object.values(SupportedNetworkIds)
-        .filter((networkId): networkId is number => typeof networkId === 'number')
-        .map((networkId) =>
-          institutionSdk.armada.users.getVaultsRaw({
-            chainInfo: getChainInfoByChainId(Number(networkId)),
-          }),
-        ),
+      testInstitutionNetworks.map((networkId) =>
+        institutionSdk.armada.users.getVaultsRaw({
+          chainInfo: getChainInfoByChainId(Number(networkId)),
+        }),
+      ),
     )
 
-    const vaultsWithConfig = decorateWithFleetConfig(
-      vaultsListByNetwork.flatMap(({ vaults }) => vaults),
-      systemConfig,
-    )
+    const filteredVaults = vaultsListByNetwork
+      .flatMap(({ vaults }) => vaults)
+      .filter((vault) => testInstitutionVaults.includes(vault.id.toLowerCase()))
+
+    const vaultsWithConfig = decorateWithFleetConfig(filteredVaults, systemConfig)
 
     return {
       vaults: vaultsWithConfig,
