@@ -61,7 +61,7 @@ jobs:
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      SDK_API_URL: ${{ vars.SDK_API_URL }}
+      SDK_API_URL: ${{ vars.SDK_API_URL_INSTI }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
       RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
@@ -216,7 +216,7 @@ jobs:
                        --build-arg NEWSLETTER_PUBLICATION_ID=${{ secrets.NEWSLETTER_PUBLICATION_ID }} \
                        --build-arg NEWSLETTER_ENDPOINT=${{ secrets.NEWSLETTER_ENDPOINT }} \
                        --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
-                       --build-arg SDK_API_URL=${{ env.SDK_API_URL }} \
+                       --build-arg SDK_API_URL=${{ env.SDK_API_URL_INSTI }} \
                        --build-arg EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN=${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }} \
                        --build-arg EARN_APP_URL=${{ secrets.EARN_APP_URL }} \
                        --build-arg NEXT_PUBLIC_SHA=${{ env.NEXT_PUBLIC_SHA }} \
