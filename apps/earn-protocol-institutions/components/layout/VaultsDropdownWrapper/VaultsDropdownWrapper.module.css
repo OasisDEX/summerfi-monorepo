@@ -4,4 +4,9 @@
   .dropdownSelected {
     width: 100%;
   }
+
+  .contentWrapper {
+    width: 100%;
+    min-width: 200px;
+  }
 }

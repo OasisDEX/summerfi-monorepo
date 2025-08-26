@@ -1,5 +1,6 @@
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { decorateWithFleetConfig, subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
@@ -9,6 +10,8 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
   if (typeof institutionId !== 'string') return null
 
   try {
+    const systemConfig = await configEarnAppFetcher()
+
     const institutionSdk = getInstitutionsSDK(institutionId)
     const vaultsListByNetwork = await Promise.all(
       Object.values(SupportedNetworkIds)
@@ -20,8 +23,13 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
         ),
     )
 
+    const vaultsWithConfig = decorateWithFleetConfig(
+      vaultsListByNetwork.flatMap(({ vaults }) => vaults),
+      systemConfig,
+    )
+
     return {
-      vaults: vaultsListByNetwork.flatMap(({ vaults }) => vaults),
+      vaults: vaultsWithConfig,
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -55,12 +63,21 @@ export const getInstitutionVault = async ({
       fleetAddress,
     })
     const institutionSdk = getInstitutionsSDK(institutionId)
-    const vault = await institutionSdk.armada.users.getVaultRaw({
-      vaultId: poolId,
-    })
+    const [vault, systemConfig] = await Promise.all([
+      institutionSdk.armada.users.getVaultRaw({
+        vaultId: poolId,
+      }),
+      configEarnAppFetcher(),
+    ])
+
+    if (!vault.vault) {
+      return null
+    }
+
+    const vaultWithConfig = decorateWithFleetConfig([vault.vault], systemConfig)
 
     return {
-      vault: vault.vault,
+      vault: vaultWithConfig[0],
     }
   } catch (error) {
     // eslint-disable-next-line no-console
