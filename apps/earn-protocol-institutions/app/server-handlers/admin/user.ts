@@ -642,6 +642,7 @@ export async function createGlobalAdmin(formData: FormData) {
         UserAttributes: [
           { Name: 'email', Value: email },
           { Name: 'name', Value: fullName },
+          { Name: 'email_verified', Value: 'true' },
         ],
       }),
     )

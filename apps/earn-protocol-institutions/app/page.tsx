@@ -22,6 +22,8 @@ export default function InstitutionsLoginPage() {
   } = useLogin()
 
   if (challengeData?.challenge === 'NEW_PASSWORD_REQUIRED') {
+    const buttonChallengeDisabled = isLoading || !newPassword || !confirmPassword
+
     return (
       <div
         style={{
@@ -46,7 +48,8 @@ export default function InstitutionsLoginPage() {
             >
               New Password
             </label>
-            <input
+            <Input
+              variant="dark"
               type="password"
               id="newPassword"
               value={newPassword}
@@ -69,7 +72,8 @@ export default function InstitutionsLoginPage() {
             >
               Confirm Password
             </label>
-            <input
+            <Input
+              variant="dark"
               type="password"
               id="confirmPassword"
               value={confirmPassword}
@@ -87,21 +91,14 @@ export default function InstitutionsLoginPage() {
 
           {error && <div style={{ color: 'red', fontSize: '14px' }}>{error}</div>}
 
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
-            style={{
-              padding: '12px',
-              backgroundColor: isLoading ? '#ccc' : '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '16px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-            }}
+            disabled={buttonChallengeDisabled}
+            variant={buttonChallengeDisabled ? 'secondaryMedium' : 'primaryMedium'}
+            style={{ padding: '24px 32px', marginTop: '10px' }}
           >
             {isLoading ? 'Setting Password...' : 'Set New Password'}
-          </button>
+          </Button>
         </form>
       </div>
     )
