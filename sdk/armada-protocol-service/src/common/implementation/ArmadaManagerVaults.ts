@@ -1745,24 +1745,40 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       vaultIds.map((vaultId) =>
         this._subgraphManager.getVault({
           chainId: params.chainId,
-          vaultId: vaultId.fleetAddress.value,
+          vaultId: vaultId.fleetAddress.value.toLowerCase(),
         }),
       ),
     )
     // get rewards manager addresses of the provided vaults
-    const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
+    const stakingRewardsManagerAddresses = await Promise.all(
+      vaultsData.map((vault, index) => {
+        if (!vault.vault) {
+          throw new Error(
+            `Vaults ${index}: Vault does not exist: ${vaultIds[index].fleetAddress.value}`,
+          )
+        }
+        // fetch from fleetCommanderContract config then return
+        return this._contractsProvider
+          .getFleetCommanderContract({
+            chainInfo: getChainInfoByChainId(params.chainId),
+            address: Address.createFromEthereum({ value: vault.vault.id }),
+          })
+          .then(async (fleetContract) => {
+            const config = await fleetContract.config()
+            return config.stakingRewardsManager.value
+          })
+      }),
+    )
     // find opportunities by querying merkl api using rewards manager address as id
     const url = 'https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}'
-    const responses: MerklOpportunitiesResponse[] = await Promise.all(
-      rewardsManagerAddresses.map((address) =>
-        address
-          ? fetch(url.replace('{{identifier}}', address)).then((res) => {
-              if (!res.ok) {
-                throw new Error(`Failed to fetch rewards for address ${address}`)
-              }
-              return res.json()
-            })
-          : Promise.resolve(undefined),
+    const responses: (MerklOpportunitiesResponse | undefined)[] = await Promise.all(
+      stakingRewardsManagerAddresses.map((address) =>
+        fetch(url.replace('{{identifier}}', address)).then((res) => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch rewards for address ${address}`)
+          }
+          return res.json()
+        }),
       ),
     )
 
@@ -1774,16 +1790,18 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         }
         acc[fleetAddress].push({
           dailyEmission: response
-            .reduce((dailyEmission, opportunity) => {
-              const sumrReward = opportunity.rewardsRecord.breakdowns.find(
-                (b) => b.token.symbol === 'SUMR',
-              )
-              if (sumrReward) {
-                dailyEmission += BigInt(sumrReward.amount)
-              }
-              return dailyEmission
-            }, 0n)
-            .toString(),
+            ? response
+                .reduce((dailyEmission, opportunity) => {
+                  const sumrReward = opportunity.rewardsRecord.breakdowns.find(
+                    (b) => b.token.symbol === 'SUMR',
+                  )
+                  if (sumrReward) {
+                    dailyEmission += BigInt(sumrReward.amount)
+                  }
+                  return dailyEmission
+                }, 0n)
+                .toString()
+            : '0',
           token: this._tokensManager.getTokenBySymbol({
             chainInfo: getChainInfoByChainId(params.chainId),
             symbol: 'SUMR',

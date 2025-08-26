@@ -7,6 +7,7 @@
     "sst:install": "npx sst install",
     "sst:remove": "npx sst remove",
     "sst:deploy": "npx sst deploy",
+    "sst:deploy-inst-demo": "npx sst deploy --stage=inst-demo",
     "sst:dev": "npx sst dev",
     "sst:dev:basic": "npx sst dev --mode=basic"
   },

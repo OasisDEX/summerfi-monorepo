@@ -57,7 +57,7 @@ query GetUserPositions($accountAddress: String!) {
 }
 
 query GetUserPosition($accountAddress: String!, $vaultId: String!) {
-  positions(where: { account_contains_nocase: $accountAddress, vault: $vaultId }) {
+  positions(where: { account_contains_nocase: $accountAddress, vault_contains_nocase: $vaultId }) {
     id
     inputTokenBalance
     outputTokenBalance

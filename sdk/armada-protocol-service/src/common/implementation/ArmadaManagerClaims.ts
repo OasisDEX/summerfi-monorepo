@@ -234,10 +234,23 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
     const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
-    const stakingRewardsManagerAddresses = vaults.vaults.map(
-      (vault) => vault.rewardsManager.id as `0x${string}`,
+    const stakingRewardsManagerAddresses = await Promise.all(
+      vaults.vaults.map((vault) => {
+        if (!vault) {
+          throw new Error(`Claims: Vault does not exist`)
+        }
+        // fetch from fleetCommanderContract config then return
+        return this._contractsProvider
+          .getFleetCommanderContract({
+            chainInfo,
+            address: Address.createFromEthereum({ value: vault.id }),
+          })
+          .then(async (fleetContract) => {
+            const config = await fleetContract.config()
+            return config.stakingRewardsManager.value
+          })
+      }),
     )
-    // readContract summer token abi
 
     const contractCalls: {
       abi: typeof StakingRewardsManagerBaseAbi

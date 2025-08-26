@@ -5,9 +5,9 @@ query GetVaults {
     }
     id
     name
-    rewardsManager {
-      id
-    }
+    # rewardsManager {
+    # id
+    # }
     rewardTokens {
       id
       token {
@@ -72,9 +72,9 @@ query GetVault($id: ID!) {
     }
     id
     name
-    rewardsManager {
-      id
-    }
+    # rewardsManager {
+    # id
+    # }
     rewardTokens {
       id
       token {
