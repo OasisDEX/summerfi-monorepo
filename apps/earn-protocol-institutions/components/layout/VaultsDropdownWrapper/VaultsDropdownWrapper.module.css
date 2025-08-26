@@ -6,7 +6,6 @@
   }
 
   .contentWrapper {
-    min-width: unset;
     width: 100%;
     min-width: 200px;
   }
