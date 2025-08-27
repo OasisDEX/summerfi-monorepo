@@ -137,6 +137,9 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       throw new Error('Vaults must be on the same chain')
     }
     const withdrawAmount = params.amount
+    if (withdrawAmount.toSolidityValue() <= 0) {
+      throw new Error('Cannot switch 0 or negative amounts')
+    }
 
     const sourceFleet = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.sourceVaultId.chainInfo,
@@ -790,6 +793,10 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const swapToToken = params.toToken
     const shouldSwap = !swapToToken.equals(withdrawAmount.token)
 
+    if (withdrawAmount.toSolidityValue() <= 0) {
+      throw new Error('Cannot withdraw 0 or negative amounts')
+    }
+
     // let swapMinAmount: ITokenAmount | undefined
     let swapToAmount: ITokenAmount | undefined = undefined
     let transactions: Awaited<ReturnType<IArmadaManagerVaults['getWithdrawTx']>>
@@ -831,31 +838,37 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
 
+        const { approvalAmount, calculatedWithdrawAssets } = this._calculateWithdrawSharesData({
+          vaultId: params.vaultId,
+          fleetShares: beforeFleetShares,
+          withdrawShares: calculatedSharesToWithdraw,
+          withdrawAmount,
+        })
         // Approve the requested amount in shares
         const [approvalToWithdrawSharesOnBehalf, exitWithdrawMulticall, priceImpact] =
           await Promise.all([
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
               spender: admiralsQuartersAddress,
-              amount: calculatedSharesToWithdraw,
+              amount: approvalAmount,
               owner: params.user.wallet.address,
             }),
             this._getExitWithdrawMulticall({
               vaultId: params.vaultId,
               slippage: params.slippage,
-              amount: withdrawAmount,
+              amount: calculatedWithdrawAssets,
               // if withdraw is WETH and unwrapping to ETH,
               // we need to withdraw WETH for later deposit & unwrap operation
               withdrawToken:
-                withdrawAmount.token.symbol === 'WETH' && toEth
-                  ? withdrawAmount.token
+                calculatedWithdrawAssets.token.symbol === 'WETH' && toEth
+                  ? calculatedWithdrawAssets.token
                   : swapToToken,
               shouldSwap,
               toEth,
             }),
             swapToAmount &&
               this._utils.getPriceImpact({
-                fromAmount: withdrawAmount,
+                fromAmount: calculatedWithdrawAssets,
                 toAmount: swapToAmount,
               }),
           ])
@@ -882,8 +895,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           description:
             'Withdraw Operations: ' + exitWithdrawMulticall.multicallOperations.join(', '),
           metadata: {
-            fromAmount: withdrawAmount,
-            toAmount: swapToAmount || withdrawAmount,
+            fromAmount: calculatedWithdrawAssets,
+            toAmount: swapToAmount || calculatedWithdrawAssets,
             slippage: params.slippage,
             priceImpact,
           },
@@ -1412,6 +1425,53 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
   }
 
+  private _calculateWithdrawSharesData(params: {
+    vaultId: IArmadaVaultId
+    fleetShares: ITokenAmount
+    withdrawShares: ITokenAmount
+    withdrawAmount: ITokenAmount
+  }): {
+    shouldWithdrawAll: boolean
+    approvalAmount: ITokenAmount
+    calculatedWithdrawAssets: ITokenAmount
+  } {
+    // if the requested amount is close to all fleet shares, we make assumption to withdraw all
+    const withdrawAllThreshold = 0.998
+
+    const sharesToWithdraw = params.withdrawShares.toSolidityValue()
+    const fleetShares = params.fleetShares.toSolidityValue()
+    const shouldWithdrawAll =
+      sharesToWithdraw === 0n ||
+      new BigNumber(fleetShares.toString())
+        .div(sharesToWithdraw.toString())
+        .gte(withdrawAllThreshold)
+    const approvalAmountValue = shouldWithdrawAll ? fleetShares : sharesToWithdraw
+
+    const calculatedWithdrawAssets = shouldWithdrawAll
+      ? TokenAmount.createFromBaseUnit({
+          token: params.withdrawShares.token,
+          amount: '0',
+        })
+      : params.withdrawAmount
+
+    const approvalAmount = TokenAmount.createFromBaseUnit({
+      token: params.withdrawShares.token,
+      amount: approvalAmountValue.toString(),
+    })
+
+    LoggingService.debug('_calculateWithdrawSharesData', {
+      shouldWithdrawAll,
+      approvalAmount: approvalAmount.toString(),
+      calculatedWithdrawAssets: calculatedWithdrawAssets.toString(),
+    })
+
+    return {
+      shouldWithdrawAll,
+      approvalAmount,
+      calculatedWithdrawAssets,
+    }
+  }
+
   private async _calculateUnstakeWithdrawData(params: {
     vaultId: IArmadaVaultId
     shares: ITokenAmount
@@ -1423,7 +1483,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     unstakeWithdrawSharesValue: bigint
   }> {
     // if the requested amount is close to all staked shares, we make assumption to withdraw all
-    // withdraw all assumption threshold is set to 0.998
     const withdrawAllThreshold = 0.998
 
     const sharesToWithdraw = params.shares.toSolidityValue()
