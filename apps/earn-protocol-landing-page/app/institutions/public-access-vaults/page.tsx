@@ -19,11 +19,13 @@ import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
@@ -38,6 +40,7 @@ import howItWorksImage from '@/public/img/institution/how-it-works-diagram.png'
 export default function PublicAccessVaults() {
   const { landingPageData } = useLandingPageData()
   const { isScrolledToTop } = useScrolled()
+  const pathname = usePathname()
   const smoothScrollToId = (id: string) => () => {
     const element = document.getElementById(id)
 
@@ -84,6 +87,23 @@ export default function PublicAccessVaults() {
   const totalProtocolTvl = landingPageData
     ? Object.values(landingPageData.protocolTvls).reduce((acc, tvl) => acc + BigInt(tvl), BigInt(0))
     : BigInt(0)
+
+  const handlePublicAccessVaultsFaqSection = (props: { expanded: boolean; title: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-faq-section-${props.title
+        .toLowerCase()
+        .replace(/\s+/gu, '-')
+        .replace(/\?/gu, '')}-${props.expanded ? 'expand' : 'collapse'}`,
+      page: pathname,
+    })
+  }
+
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
 
   return (
     <div className={publicAccessVaultsStyles.wrapper}>
@@ -407,7 +427,11 @@ export default function PublicAccessVaults() {
             We’re focused on compliance, so you can focus on utility and yield.
           </Text>
         </div>
-        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+        <Audits
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          onAuditClick={handleAuditClick}
+        />
       </div>
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <div className={institutionsPageStyles.finalCTAs}>
@@ -441,6 +465,7 @@ export default function PublicAccessVaults() {
         expanderButtonStyles={{
           padding: 'var(--spacing-space-large) 0',
         }}
+        onExpand={handlePublicAccessVaultsFaqSection}
         data={[
           {
             title: 'What is a Public access vault?',

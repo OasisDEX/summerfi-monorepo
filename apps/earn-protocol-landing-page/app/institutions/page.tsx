@@ -14,11 +14,13 @@ import {
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -54,6 +56,7 @@ export const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
   const { isScrolledToTop } = useScrolled()
+  const pathname = usePathname()
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -66,6 +69,30 @@ export default function InstitutionsPage() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  const handleInstitutionsFaqSection = (props: { expanded: boolean; title: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-faq-section-${props.title
+        .toLowerCase()
+        .replace(/\s+/gu, '-')
+        .replace(/\?/gu, '')}-${props.expanded ? 'expand' : 'collapse'}`,
+      page: pathname,
+    })
+  }
+
+  const handleRiskManagementLearnMoreClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-enhanced-risk-management-learn-more`,
+      page: '/',
+    })
+  }
+
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
   }
 
   return (
@@ -193,9 +220,14 @@ export default function InstitutionsPage() {
             sparkLogo,
           }}
           bottomBoxes={false}
+          handleLearnMoreClick={handleRiskManagementLearnMoreClick}
         />
       </div>
-      <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+      <Audits
+        chainSecurityLogo={chainSecurityLogo}
+        prototechLabsLogo={prototechLabsLogo}
+        onAuditClick={handleAuditClick}
+      />
       <div className={institutionsPageStyles.buildBySummerSpacer}>
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
@@ -231,6 +263,7 @@ export default function InstitutionsPage() {
         expanderButtonStyles={{
           padding: 'var(--spacing-space-large) 0',
         }}
+        onExpand={handleInstitutionsFaqSection}
         data={[
           {
             title: 'What institutional solutions does Summer.fi offer?',

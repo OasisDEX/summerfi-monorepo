@@ -3,8 +3,10 @@ import { type ReactNode } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import startEarningNowStyles from '@/components/layout/LandingPageContent/content/StartEarningNow.module.css'
 
@@ -40,8 +42,16 @@ const StartEarningNowBlock = ({
 
 export const StartEarningNow = () => {
   const { landingPageData } = useLandingPageData()
+  const pathname = usePathname()
 
   const migrationsEnabled = !!landingPageData?.systemConfig.features.Migrations
+
+  const handleCtaClick = (buttonName: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName,
+      page: pathname,
+    })
+  }
 
   return (
     <div>
@@ -69,7 +79,11 @@ export const StartEarningNow = () => {
             'Withdraw anytime',
           ]}
           cta={
-            <Link href="/earn" prefetch={false}>
+            <Link
+              href="/earn"
+              prefetch={false}
+              onClick={handleCtaClick(`lp-start-earning-cta-sign-up`)}
+            >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                 <Text variant="p3semi">Sign up</Text>
               </Button>
@@ -92,7 +106,11 @@ export const StartEarningNow = () => {
           ]}
           cta={
             migrationsEnabled ? (
-              <Link href="/earn/migrate/user" prefetch={false}>
+              <Link
+                href="/earn/migrate/user"
+                prefetch={false}
+                onClick={handleCtaClick(`lp-start-earning-cta-migrate`)}
+              >
                 <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                   <Text variant="p3semi">Migrate</Text>
                 </Button>
@@ -132,6 +150,7 @@ export const StartEarningNow = () => {
             <Link
               href="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
               target="_blank"
+              onClick={handleCtaClick(`lp-start-earning-cta-set-up-a-call`)}
             >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                 <Text variant="p3semi">Set up a call</Text>
