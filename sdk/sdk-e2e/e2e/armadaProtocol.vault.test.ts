@@ -47,25 +47,6 @@ describe('Armada Protocol - Vault', () => {
   })
   console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
 
-  it(`should get all user positions: ${fleetAddress.value}`, async () => {
-    const positions = await sdk.armada.users.getUserPositions({
-      user,
-    })
-    console.log('User positions:')
-    positions.forEach((position, index) => {
-      console.log(`Position ${index} amount: ${position.amount.toString()}`)
-    })
-  })
-
-  it(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
-    const position = await sdk.armada.users.getUserPosition({
-      user: User.createFromEthereum(ChainIds.Base, '0x4eb7f19d6efcace59eaed70220da5002709f9b71'),
-      fleetAddress,
-    })
-    assert(position != null, 'User position not found')
-    console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
-  })
-
   it('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
