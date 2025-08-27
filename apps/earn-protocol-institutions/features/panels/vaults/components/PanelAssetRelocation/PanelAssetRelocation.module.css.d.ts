@@ -1,4 +1,6 @@
 declare const styles: {
+  readonly "allocationBar": string;
+  readonly "allocationHeader": string;
   readonly "buttons": string;
   readonly "contentWrapper": string;
   readonly "inputContainer": string;
