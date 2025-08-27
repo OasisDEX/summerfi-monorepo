@@ -28,6 +28,8 @@ const selfManagedFleet = Address.createFromEthereum({
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol - User', () => {
+  const fleetAddress = usdcFleet
+
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
   })
@@ -36,7 +38,6 @@ describe('Armada Protocol - User', () => {
   }
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = usdcFleet
 
   const user = User.createFrom({
     chainInfo,
