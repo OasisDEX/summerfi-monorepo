@@ -14,7 +14,10 @@ export interface CleanOpts {
 const K = 1.4826 // MAD -> std conversion factor
 
 function median(a: number[]): number {
-  const b = a.filter(Number.isFinite).slice().sort((x, y) => x - y)
+  const b = a
+    .filter(Number.isFinite)
+    .slice()
+    .sort((x, y) => x - y)
   if (!b.length) return NaN
   const m = Math.floor(b.length / 2)
   return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2
@@ -27,7 +30,10 @@ function quantile(sorted: number[], p: number): number {
 }
 
 function winsorize(xs: number[], loq: number, hiq: number): number[] {
-  const s = xs.filter(Number.isFinite).slice().sort((a, b) => a - b)
+  const s = xs
+    .filter(Number.isFinite)
+    .slice()
+    .sort((a, b) => a - b)
   const lo = quantile(s, loq)
   const hi = quantile(s, hiq)
   return xs.map((v) => Math.min(hi, Math.max(lo, v)))
@@ -39,9 +45,9 @@ function linearTimeInterp(t: number[], y: number[]): number[] {
   const out = y.slice()
   let i = 0
   while (i < n) {
-    if (Number.isFinite(out[i])) { 
+    if (Number.isFinite(out[i])) {
       i++
-      continue 
+      continue
     }
     const start = i - 1 // could be -1
     while (i < n && !Number.isFinite(out[i])) i++
@@ -72,7 +78,7 @@ function linearTimeInterp(t: number[], y: number[]): number[] {
  * - Winsorizes global tails
  * - Hampel detects local outliers
  * - Only short runs (<= maxRunToFix) are interpolated; longer runs are preserved
- * 
+ *
  * Using default values:
  * - win: 24 (for hourly data, ~1 day window)
  * - nSigmas: 3.5 (moderate sensitivity)
@@ -81,22 +87,17 @@ function linearTimeInterp(t: number[], y: number[]): number[] {
  */
 export function cleanRateSeries(
   points: RatePoint[],
-  opts: CleanOpts = {}
+  opts: CleanOpts = {},
 ): { cleanedPct: number[]; replaced: boolean[] } {
-  const {
-    win = 24,
-    nSigmas = 3.5,
-    maxRunToFix = 2,
-    clipQ = [0.005, 0.995],
-  } = opts
+  const { win = 24, nSigmas = 3.5, maxRunToFix = 2, clipQ = [0.005, 0.995] } = opts
 
   if (!points.length) return { cleanedPct: [], replaced: [] }
 
   // Guard against too small series
   if (points.length < 3) {
-    return { 
-      cleanedPct: points.map(p => p.r), 
-      replaced: new Array(points.length).fill(false) 
+    return {
+      cleanedPct: points.map((p) => p.r),
+      replaced: new Array(points.length).fill(false),
     }
   }
 
@@ -117,27 +118,27 @@ export function cleanRateSeries(
     const a = Math.max(0, i - half)
     const b = Math.min(x.length, i + half + 1)
     const slice = x.slice(a, b)
-    
+
     // Pre-filter extreme values before computing median to avoid contamination
     // Values > 1000% or < -90% in original scale are clearly errors
-    const filteredSlice = slice.filter(v => {
+    const filteredSlice = slice.filter((v) => {
       const pctValue = Math.expm1(v) * 100
       return Math.abs(pctValue) <= 1000
     })
-    
+
     // Use filtered slice if we have enough points, otherwise fall back to original
     const workingSlice = filteredSlice.length >= 3 ? filteredSlice : slice
     const m = median(workingSlice)
     const deviations = workingSlice.map((v) => Math.abs(v - m))
     let s = K * median(deviations)
-    
+
     // If MAD is too small (all values similar), use a robust estimate
     if (s < 1e-10) {
       // Use mean absolute deviation as fallback
       const meanDev = deviations.reduce((a, b) => a + b, 0) / deviations.length
       s = Math.max(meanDev * K, 0.01) // Ensure minimum threshold
     }
-    
+
     if (Number.isFinite(s) && Math.abs(x[i] - m) > nSigmas * s) {
       isOutlier[i] = true
     }
@@ -147,9 +148,9 @@ export function cleanRateSeries(
   const toReplace = isOutlier.slice()
   let i = 0
   while (i < toReplace.length) {
-    if (!toReplace[i]) { 
+    if (!toReplace[i]) {
       i++
-      continue 
+      continue
     }
     const start = i
     while (i < toReplace.length && toReplace[i]) i++
@@ -174,7 +175,7 @@ export function cleanRateSeries(
     }
     return v
   })
-  
+
   // 5) Interpolate on log scale; convert back to %
   const xi = linearTimeInterp(t, xf)
   const cleanedPct = xi.map((v) => Math.expm1(v) * 100)
@@ -188,19 +189,19 @@ export function cleanRateSeries(
  */
 export function inferWindowSize(timestamps: number[]): number {
   if (timestamps.length < 2) return 24 // default
-  
+
   const intervals: number[] = []
   for (let i = 1; i < timestamps.length; i++) {
-    intervals.push(timestamps[i] - timestamps[i-1])
+    intervals.push(timestamps[i] - timestamps[i - 1])
   }
-  
+
   const medianInterval = median(intervals)
-  
+
   // Convert to common time units (assuming milliseconds)
   const TEN_MINUTES = 10 * 60 * 1000
   const HOUR = 60 * 60 * 1000
   const DAY = 24 * HOUR
-  
+
   if (medianInterval <= TEN_MINUTES) {
     return 36 // ~6 hours of 10-min data
   } else if (medianInterval <= HOUR * 1.5) {

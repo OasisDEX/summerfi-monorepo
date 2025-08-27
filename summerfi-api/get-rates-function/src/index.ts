@@ -118,44 +118,44 @@ function findMatchingDbRate(subgraphTimestamp: number, dbRates: DBRate[]) {
  * Converts timestamps to milliseconds if needed
  */
 function cleanSubgraphRates<T extends { timestamp: string | number; rate: string | number }>(
-  rates: T[]
+  rates: T[],
 ): T[] {
   if (!rates || rates.length < 3) return rates
 
   // Convert to RatePoint format
-  const points: RatePoint[] = rates.map(r => ({
+  const points: RatePoint[] = rates.map((r) => ({
     t: Number(r.timestamp) < 10_000_000_000 ? Number(r.timestamp) * 1000 : Number(r.timestamp),
-    r: typeof r.rate === 'string' ? parseFloat(r.rate) : r.rate
+    r: typeof r.rate === 'string' ? parseFloat(r.rate) : r.rate,
   }))
 
   // Infer appropriate window size based on data granularity
-  const timestamps = points.map(p => p.t)
+  const timestamps = points.map((p) => p.t)
   const windowSize = inferWindowSize(timestamps)
 
   // Clean the series using hybrid approach
-  const { cleanedPct, replaced } = cleanRateSeriesHybrid(points, { 
+  const { cleanedPct, replaced } = cleanRateSeriesHybrid(points, {
     maxReasonableRate: 500,
     minReasonableRate: -95,
     contextFactor: 10,
     win: windowSize,
     nSigmas: 3.0,
-    maxRunToFix: 6
+    maxRunToFix: 6,
   })
 
   // Log replacement info
   const replacedCount = replaced.filter(Boolean).length
   if (replacedCount > 0) {
-    logger.info('[rates-clean] Cleaned native rates', { 
-      replacedCount, 
+    logger.info('[rates-clean] Cleaned native rates', {
+      replacedCount,
       totalCount: rates.length,
-      windowSize 
+      windowSize,
     })
   }
 
   // Map back to original format
   return rates.map((r, i) => ({
     ...r,
-    rate: cleanedPct[i].toString()
+    rate: cleanedPct[i].toString(),
   }))
 }
 
@@ -163,47 +163,50 @@ function cleanSubgraphRates<T extends { timestamp: string | number; rate: string
  * Helper to clean aggregated rates (daily, hourly, weekly)
  */
 function cleanAggregatedRates<T extends { date: string | number; averageRate: string | number }>(
-  rates: T[]
+  rates: T[],
 ): T[] {
   if (!rates || rates.length < 3) return rates
 
   // Convert to RatePoint format
-  const points: RatePoint[] = rates.map(r => ({
+  const points: RatePoint[] = rates.map((r) => ({
     // Date might be a timestamp or date string
-    t: typeof r.date === 'number' 
-      ? (r.date < 10_000_000_000 ? r.date * 1000 : r.date)
-      : new Date(r.date).getTime(),
-    r: typeof r.averageRate === 'string' ? parseFloat(r.averageRate) : r.averageRate
+    t:
+      typeof r.date === 'number'
+        ? r.date < 10_000_000_000
+          ? r.date * 1000
+          : r.date
+        : new Date(r.date).getTime(),
+    r: typeof r.averageRate === 'string' ? parseFloat(r.averageRate) : r.averageRate,
   }))
 
   // Infer appropriate window size
-  const timestamps = points.map(p => p.t)
+  const timestamps = points.map((p) => p.t)
   const windowSize = inferWindowSize(timestamps)
 
   // Clean the series using hybrid approach
-  const { cleanedPct, replaced } = cleanRateSeriesHybrid(points, { 
+  const { cleanedPct, replaced } = cleanRateSeriesHybrid(points, {
     maxReasonableRate: 500,
     minReasonableRate: -95,
     contextFactor: 10,
     win: windowSize,
     nSigmas: 3.0,
-    maxRunToFix: 6
+    maxRunToFix: 6,
   })
 
   // Log replacement info
   const replacedCount = replaced.filter(Boolean).length
   if (replacedCount > 0) {
-    logger.info('[rates-clean] Cleaned aggregated rates', { 
-      replacedCount, 
+    logger.info('[rates-clean] Cleaned aggregated rates', {
+      replacedCount,
       totalCount: rates.length,
-      windowSize 
+      windowSize,
     })
   }
 
   // Map back to original format
   return rates.map((r, i) => ({
     ...r,
-    averageRate: cleanedPct[i].toString()
+    averageRate: cleanedPct[i].toString(),
   }))
 }
 
@@ -213,7 +216,7 @@ function combineRatesById(
 ) {
   // Clean native rates from subgraph first
   const cleanedSubgraphRates = cleanAggregatedRates(subgraphRates)
-  
+
   const dbRatesMap = new Map(dbRates.map((rate) => [rate.date, rate]))
 
   return cleanedSubgraphRates.map((subgraphRate) => {
@@ -521,7 +524,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
 
       // Clean native rates from subgraph first
       const cleanedSubgraphRates = cleanSubgraphRates(subgraphRates?.interestRates || [])
-      
+
       // Process and combine rates
       const combinedRates: CombinedRate[] = cleanedSubgraphRates
         .map((subgraphRate) => {
