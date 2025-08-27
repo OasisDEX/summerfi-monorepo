@@ -72,6 +72,35 @@ describe('Armada Protocol - User', () => {
     })
     assert(position != null, 'User position not found')
     console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
+    console.log(
+      JSON.stringify(
+        {
+          id: position.id.id,
+          amount: position.amount.toString(),
+          deposits: position.deposits.map((deposit) => ({
+            amount: deposit.amount.toString(),
+          })),
+          withdrawals: position.withdrawals.map((withdrawal) => ({
+            amount: withdrawal.amount.toString(),
+          })),
+          rewards: position.rewards.map((reward) => ({
+            token: reward.claimable.toString(),
+            amount: reward.claimed.toString(),
+          })),
+          claimed: position.claimedSummerToken.toString(),
+          claimable: position.claimableSummerToken.toString(),
+        },
+        null,
+        2,
+      ),
+    )
+  })
+
+  it(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+    const _user = User.createFromEthereum(
+      ChainIds.Base,
+      '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
+    )
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user: _user,
