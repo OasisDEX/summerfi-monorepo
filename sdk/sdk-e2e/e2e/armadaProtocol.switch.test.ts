@@ -34,7 +34,7 @@ describe('Armada Protocol Switch', () => {
       chainId,
       sourceFleetAddress: usdcFleet,
       destinationFleetAddress: eurcFleet,
-      amountValue: '0.9999',
+      amountValue: '1.9999',
       rpcUrl,
     })
   })

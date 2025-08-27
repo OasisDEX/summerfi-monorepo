@@ -55,6 +55,15 @@ describe('Armada Protocol Deposit', () => {
       userAddress,
       amountValue,
       swapToSymbol,
+      stake: true,
+    })
+    await runTests({
+      rpcUrl,
+      chainId,
+      fleetAddress,
+      userAddress,
+      amountValue,
+      swapToSymbol,
     })
   })
 

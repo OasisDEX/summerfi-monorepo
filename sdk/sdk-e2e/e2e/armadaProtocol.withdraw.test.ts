@@ -36,7 +36,7 @@ describe('Armada Protocol Withdraw', () => {
     const chainId = ChainIds.Base
     const fleetAddress = usdcFleet
     const userAddress = testWalletAddress
-    const amountValue = '0.9999'
+    const amountValue = '1.9999'
     const swapToSymbol = undefined
 
     await runTests({
