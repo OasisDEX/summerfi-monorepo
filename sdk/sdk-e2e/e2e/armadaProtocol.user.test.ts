@@ -57,7 +57,7 @@ describe('Armada Protocol - User', () => {
     })
     console.log('User positions:')
     positions.forEach((position) => {
-      console.log(`Position ${position.id.id} amount: ${position.amount.toString()}`)
+      console.log(`Position ${position.id.id}\n - amount: ${position.amount.toString()}`)
     })
   })
 
@@ -71,28 +71,25 @@ describe('Armada Protocol - User', () => {
       fleetAddress,
     })
     assert(position != null, 'User position not found')
-    console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
     console.log(
-      JSON.stringify(
-        {
-          id: position.id.id,
-          amount: position.amount.toString(),
-          deposits: position.deposits.map((deposit) => ({
-            amount: deposit.amount.toString(),
-          })),
-          withdrawals: position.withdrawals.map((withdrawal) => ({
-            amount: withdrawal.amount.toString(),
-          })),
-          rewards: position.rewards.map((reward) => ({
-            token: reward.claimable.toString(),
-            amount: reward.claimed.toString(),
-          })),
-          claimed: position.claimedSummerToken.toString(),
-          claimable: position.claimableSummerToken.toString(),
-        },
-        null,
-        2,
-      ),
+      `User position for specific fleet`,
+      '\n' +
+        JSON.stringify(
+          {
+            id: position.id.id,
+            amount: position.amount.toString(),
+            deposits: position.deposits.length,
+            withdrawals: position.withdrawals.length,
+            rewards: position.rewards.map((reward) => ({
+              claimed: reward.claimed.toString(),
+              claimable: reward.claimable.toString(),
+            })),
+            claimed: position.claimedSummerToken.toString(),
+            claimable: position.claimableSummerToken.toString(),
+          },
+          null,
+          2,
+        ),
     )
   })
 
@@ -112,9 +109,10 @@ describe('Armada Protocol - User', () => {
       vaultId,
     })
     console.log(
-      'Fleet: ',
+      'Fleet balance',
+      '\n - Wallet: ',
       fleetAmountBefore.assets.toString(),
-      'Staked: ',
+      '\n - Staked: ',
       stakedAmountBefore.assets.toString(),
     )
   })
