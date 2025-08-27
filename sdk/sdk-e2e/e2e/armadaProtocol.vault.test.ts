@@ -37,7 +37,7 @@ describe('Armada Protocol - Vault', () => {
   }
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = selfManagedFleet
+  const fleetAddress = usdcFleet
 
   const user = User.createFrom({
     chainInfo,

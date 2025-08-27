@@ -36,7 +36,7 @@ describe('Armada Protocol - User', () => {
   }
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = selfManagedFleet
+  const fleetAddress = usdcFleet
 
   const user = User.createFrom({
     chainInfo,
@@ -51,7 +51,7 @@ describe('Armada Protocol - User', () => {
 
   console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
 
-  it.skip(`should get all user positions: ${fleetAddress.value}`, async () => {
+  it(`should get all user positions: ${fleetAddress.value}`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
       user,
     })
@@ -97,10 +97,11 @@ describe('Armada Protocol - User', () => {
   })
 
   it(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
-    const _user = User.createFromEthereum(
-      ChainIds.Base,
-      '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
-    )
+    // const _user = User.createFromEthereum(
+    //   ChainIds.Base,
+    //   '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
+    // )
+    const _user = user
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user: _user,
