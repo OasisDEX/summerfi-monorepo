@@ -28,7 +28,7 @@ import {
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { trackButtonClick } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import classNames from './PortfolioRewardsCards.module.css'
 
@@ -51,11 +51,10 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const resolvedWalletAddress = walletAddress as string
 
   const handleClaimEventButton = () => {
-    trackButtonClick({
-      id: 'SumrClaimPortfolioButton',
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'SumrClaimPortfolioButton',
       page: `/portfolio/${resolvedWalletAddress}`,
-      userAddress: userWalletAddress,
-      totalSumr: sumrAmount,
+      walletAddress: userWalletAddress,
     })
   }
 

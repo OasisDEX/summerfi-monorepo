@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
 
@@ -27,6 +28,8 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
+
+  useScrollTracker({})
 
   const isBeachClub = pathname.includes('beach-club')
   const isLegal =

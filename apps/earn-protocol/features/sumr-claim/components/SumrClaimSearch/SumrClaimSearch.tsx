@@ -9,7 +9,7 @@ import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
-import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.css'
@@ -56,10 +56,10 @@ export const SumrClaimSearch = () => {
 
   const handleButtonClick = () => {
     if (!user) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'SumrClaimSearch',
         page: '/sumr',
-        userAddress: '',
+        walletAddress: '',
       })
       openAuthModal()
 
@@ -67,11 +67,10 @@ export const SumrClaimSearch = () => {
     }
 
     if (resolvedPortfolioUserAddress) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'SumrClaimSearch',
         page: '/sumr',
-        userAddress: resolvedPortfolioUserAddress,
-        searcherdForAddress: resolvedAddress,
+        walletAddress: resolvedPortfolioUserAddress,
       })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
@@ -95,6 +94,11 @@ export const SumrClaimSearch = () => {
           setIsLoading(false)
         } catch (e) {
           setIsLoading(false)
+          EarnProtocolEvents.errorOccurred({
+            page: '/sumr',
+            errorMessage: (e as Error).message,
+            walletAddress: address,
+          })
           setInputError('Error fetching user $SUMR eligibility')
         }
       }
@@ -103,11 +107,10 @@ export const SumrClaimSearch = () => {
         void request(resolvedAddress)
       }
       if (inputValue) {
-        trackInputChange({
-          id: 'SumrClaimSearch',
+        EarnProtocolEvents.inputChanged({
+          inputName: 'SumrClaimSearch',
           page: '/sumr',
-          userAddress: user?.address,
-          searcherdForAddress: resolvedAddress,
+          value: inputValue,
         })
       }
     }, 400)

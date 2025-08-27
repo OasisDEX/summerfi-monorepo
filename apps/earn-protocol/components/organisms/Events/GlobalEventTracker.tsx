@@ -2,10 +2,10 @@
 
 import { useLayoutEffect } from 'react'
 import { useAccount, useChain, useUser } from '@account-kit/react'
-import { AccountKitAccountType, accountType, useUserWallet } from '@summerfi/app-earn-ui'
+import { accountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
-import { trackAccountChange, trackPageViewTimed } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 export const GlobalEventTracker = () => {
   const path = usePathname()
@@ -17,35 +17,27 @@ export const GlobalEventTracker = () => {
   // pageview tracking
   useLayoutEffect(() => {
     if (!isLoadingAccount) {
-      trackPageViewTimed({
-        path,
-        userAddress: userAddress ?? undefined,
+      EarnProtocolEvents.pageViewed({
+        page: path,
+        walletAddress: userAddress ?? undefined,
+        connectionMethod: user?.type,
       })
     }
-  }, [path, userAddress, isLoadingAccount])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, isLoadingAccount])
 
   // wallet tracking for the SCA
   useLayoutEffect(() => {
     if (!isLoadingAccount && account?.address && user?.type) {
-      trackAccountChange({
-        account: account.address.toString() as `0x${string}`,
+      EarnProtocolEvents.accountChanged({
+        page: path,
+        walletAddress: userAddress ?? undefined,
         network: chain.name,
         connectionMethod: user.type,
-        accountType: account.type,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, isLoadingAccount, chain, user])
-
-  // wallet tracking for the EOA
-  useLayoutEffect(() => {
-    if (!isLoadingAccount && !account?.address && userAddress && user?.type) {
-      trackAccountChange({
-        account: userAddress as `0x${string}`,
-        network: chain.name,
-        connectionMethod: AccountKitAccountType.EOA,
-      })
-    }
-  }, [userAddress, isLoadingAccount, account, chain, user])
 
   return null
 }
