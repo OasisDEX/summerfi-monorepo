@@ -6,12 +6,12 @@ import {
 
 const dummyActivitiesData: InstitutionVaultActivityItem[] = [
   {
-    when: '2021-01-01',
+    when: '2021-01-05',
     type: InstitutionVaultActivityType.DEPOSIT,
     message: 'A message here tp explain the type of activity that has taken place',
   },
   {
-    when: '2021-01-02',
+    when: '2021-01-04',
     type: InstitutionVaultActivityType.WITHDRAWAL,
     message: 'A message here tp explain the type of activity that has taken place',
   },
@@ -21,12 +21,12 @@ const dummyActivitiesData: InstitutionVaultActivityItem[] = [
     message: 'A message here tp explain the type of activity that has taken place',
   },
   {
-    when: '2021-01-04',
+    when: '2021-01-02',
     type: InstitutionVaultActivityType.USER_ADDED,
     message: '-',
   },
   {
-    when: '2021-01-05',
+    when: '2021-01-01',
     type: InstitutionVaultActivityType.USER_REMOVED,
     message: '-',
   },

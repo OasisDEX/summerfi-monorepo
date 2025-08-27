@@ -16,7 +16,7 @@ export type InstitutionVaultRoles = {
 export type InstitutionVaultThirdPartyCost = {
   type: string
   fee: number
-  address: Address
+  address: string
 }
 
 export type InstitutionVaultFeeRevenueHistoryItem = {
@@ -29,6 +29,12 @@ export type InstitutionVaultFeeRevenueHistoryItem = {
 export type InstitutionVaultFeeRevenueItem = {
   name: string
   aumFee: number
+}
+
+export type InstitutionVaultFeeRevenueData = {
+  thirdPartyCosts: InstitutionVaultThirdPartyCost[]
+  feeRevenueHistory: InstitutionVaultFeeRevenueHistoryItem[]
+  feeRevenue: InstitutionVaultFeeRevenueItem[]
 }
 
 export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
