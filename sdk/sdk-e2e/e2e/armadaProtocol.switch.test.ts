@@ -16,6 +16,7 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = false
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -33,20 +34,9 @@ describe('Armada Protocol Switch', () => {
       chainId,
       sourceFleetAddress: usdcFleet,
       destinationFleetAddress: eurcFleet,
+      amountValue: '0.9999',
       rpcUrl,
     })
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: ethFleet,
-    //   destinationFleetAddress: eurcFleet,
-    //   rpcUrl,
-    // })
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: eurcFleet,
-    //   destinationFleetAddress: usdcFleet,
-    //   rpcUrl,
-    // })
   })
 
   async function runTests({
@@ -138,11 +128,16 @@ describe('Armada Protocol Switch', () => {
       transactions,
       rpcUrl: rpcUrl,
       privateKey: signerPrivateKey,
+      simulateOnly,
     })
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
 
+    if (simulateOnly) {
+      console.log('Simulation only - skipping post-switch position checks')
+      return
+    }
     const sourcePositionAfter = await sdk.armada.users.getUserPosition({
       user,
       fleetAddress: sourceFleetAddress,

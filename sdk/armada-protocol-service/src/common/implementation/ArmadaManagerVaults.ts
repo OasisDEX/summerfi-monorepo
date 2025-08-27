@@ -261,6 +261,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
 
+        const { approvalAmount, calculatedWithdrawAssets } = this._calculateWithdrawSharesData({
+          vaultId: params.sourceVaultId,
+          fleetShares: beforeFleetShares,
+          withdrawShares: calculatedSharesToWithdraw,
+          withdrawAmount,
+        })
+
         // Approve the requested amount in shares
         const [
           approvalToWithdrawSharesOnBehalf,
@@ -271,26 +278,26 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           this._allowanceManager.getApproval({
             chainInfo: params.sourceVaultId.chainInfo,
             spender: admiralsQuartersAddress,
-            amount: calculatedSharesToWithdraw,
+            amount: approvalAmount,
             owner: params.user.wallet.address,
           }),
           this._allowanceManager.getApproval({
             chainInfo: params.sourceVaultId.chainInfo,
             spender: admiralsQuartersAddress,
-            amount: withdrawAmount,
+            amount: calculatedWithdrawAssets,
             owner: params.user.wallet.address,
           }),
           this._getExitWithdrawMulticall({
             vaultId: params.sourceVaultId,
             slippage: params.slippage,
-            amount: withdrawAmount,
-            withdrawToken: withdrawAmount.token,
+            amount: calculatedWithdrawAssets,
+            withdrawToken: calculatedWithdrawAssets.token,
             shouldSwap: false, //override as we do swap in deposit
             toEth: false,
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
-              fromAmount: withdrawAmount,
+              fromAmount: calculatedWithdrawAssets,
               toAmount: swapToAmount,
             }),
         ])
@@ -1446,18 +1453,19 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         .div(sharesToWithdraw.toString())
         .gte(withdrawAllThreshold)
     const approvalAmountValue = shouldWithdrawAll ? fleetShares : sharesToWithdraw
-
-    const calculatedWithdrawAssets = shouldWithdrawAll
-      ? TokenAmount.createFromBaseUnit({
-          token: params.withdrawShares.token,
-          amount: '0',
-        })
-      : params.withdrawAmount
-
     const approvalAmount = TokenAmount.createFromBaseUnit({
       token: params.withdrawShares.token,
       amount: approvalAmountValue.toString(),
     })
+    // if we are withdrawing all, we set withdraw amount to 0 (all)
+    // so the contract can calculate the exact amount
+    // otherwise we use the requested withdraw amount
+    const calculatedWithdrawAssets = shouldWithdrawAll
+      ? TokenAmount.createFromBaseUnit({
+          token: params.withdrawAmount.token,
+          amount: '0',
+        })
+      : params.withdrawAmount
 
     LoggingService.debug('_calculateWithdrawSharesData', {
       shouldWithdrawAll,

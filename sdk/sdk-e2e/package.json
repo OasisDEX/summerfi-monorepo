@@ -11,6 +11,7 @@
     "e2e:user": "jest --roots e2e -- ./e2e/armadaProtocol.user.test.ts",
     "e2e:deposit": "jest --roots e2e -- ./e2e/armadaProtocol.deposit.test.ts",
     "e2e:withdraw": "jest --roots e2e -- ./e2e/armadaProtocol.withdraw.test.ts",
+    "e2e:switch": "jest --roots e2e -- ./e2e/armadaProtocol.switch.test.ts",
     "e2e:claim": "jest --roots e2e -- ./e2e/armadaProtocol.claim.test.ts",
     "e2e:rewards": "jest --roots e2e -- ./e2e/armadaProtocol.rewards.test.ts",
     "e2e:access": "jest --roots e2e -- ./e2e/armadaProtocol.accessControl.test.ts",
