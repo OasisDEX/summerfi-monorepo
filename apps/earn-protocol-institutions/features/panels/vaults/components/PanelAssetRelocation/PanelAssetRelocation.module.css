@@ -56,4 +56,14 @@
       gap: var(--spacing-space-medium);
     }
   }
+
+  .allocationBar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-x-small);
+
+    .allocationHeader {
+      color: var(--earn-protocol-secondary-60);
+    }
+  }
 }
