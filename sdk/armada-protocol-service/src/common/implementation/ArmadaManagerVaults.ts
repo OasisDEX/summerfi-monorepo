@@ -194,7 +194,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     let approvalForDeposit: ApproveTransactionInfo | undefined
 
     // Deposit logic
-    const shouldStake = params.shouldStake ?? true
+    // default to not staking as rewardsManager was deprecated
+    const shouldStake = params.shouldStake ?? false
     // should compensate the tip during withdrawal
     const depositAmount = this._compensateAmount(withdrawAmount, 'decrease')
 
@@ -574,7 +575,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     }
 
     const shouldSwap = !swapFromAmount.token.equals(fleetToken)
-    const shouldStake = params.shouldStake ?? true
+    // default to not staking as rewardsManager was deprecated
+    const shouldStake = params.shouldStake ?? false
 
     let swapToAmount: ITokenAmount | undefined
 
@@ -828,8 +830,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       if (beforeFleetShares.toSolidityValue() >= calculatedSharesToWithdraw.toSolidityValue()) {
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
-
-        // TODO: when withdraw from fleetShares and no swap, we can skip approval and multicall and withdraw directly from fleet
 
         // Approve the requested amount in shares
         const [approvalToWithdrawSharesOnBehalf, exitWithdrawMulticall, priceImpact] =
