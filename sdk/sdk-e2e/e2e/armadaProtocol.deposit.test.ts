@@ -69,7 +69,7 @@ describe('Armada Protocol Deposit', () => {
 
 async function runTests({
   chainId,
-  swapToSymbol: swapSymbol,
+  swapToSymbol,
   fleetAddress,
   rpcUrl,
   amountValue,
@@ -109,8 +109,8 @@ async function runTests({
     vaultId,
   })
   const token = vaultInfo.depositCap.token
-  const swapToken = swapSymbol
-    ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapSymbol })
+  const swapToken = swapToSymbol
+    ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapToSymbol })
     : undefined
 
   const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
