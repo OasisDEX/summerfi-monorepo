@@ -9,8 +9,11 @@ export default function InstitutionVaultsLoadingTab() {
     <DashboardContentLayout
       panel={
         <div className={institutionVaultLayoutStyles.dashboardVaultsPanelWrapper}>
-          <Card variant="cardSecondary">
-            <SkeletonLine height={20} style={{ margin: '10px 0' }} />
+          <Card
+            variant="cardSecondary"
+            style={{ padding: 'var(--spacing-space-medium) var(--spacing-space-large)' }}
+          >
+            <SkeletonLine height={20} style={{ margin: '5px 0' }} />
           </Card>
           <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column' }}>
             <SkeletonLine height={20} width={100} style={{ margin: '20px 0 30px 0' }} />
