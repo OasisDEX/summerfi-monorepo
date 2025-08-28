@@ -65,126 +65,127 @@ describe('Armada Protocol Deposit', () => {
       swapToSymbol,
     })
   })
-
-  async function runTests({
-    chainId,
-    swapToSymbol: swapSymbol,
-    fleetAddress,
-    rpcUrl,
-    amountValue,
-    userAddress,
-    stake,
-    referralCode,
-  }: {
-    chainId: ChainId
-    swapToSymbol: string | undefined
-    fleetAddress: Address
-    rpcUrl: string | undefined
-    amountValue: string
-    userAddress: Address
-    stake?: boolean
-    referralCode?: string
-  }) {
-    const sdk: SDKManager = makeSDK({
-      apiDomainUrl: SDKApiUrl,
-    })
-    if (!rpcUrl) {
-      throw new Error('Missing rpc url')
-    }
-
-    const chainInfo = getChainInfoByChainId(chainId)
-    const user = User.createFrom({
-      wallet: Wallet.createFrom({
-        address: userAddress,
-      }),
-      chainInfo,
-    })
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress,
-    })
-
-    const vaultInfo = await sdk.armada.users.getVaultInfo({
-      vaultId,
-    })
-    const token = vaultInfo.depositCap.token
-    const swapToken = swapSymbol
-      ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapSymbol })
-      : undefined
-
-    console.log(
-      `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
-    )
-
-    const amount = TokenAmount.createFrom({
-      amount: amountValue,
-      token: swapToken || token,
-    })
-
-    const transactions = await sdk.armada.users.getNewDepositTx({
-      vaultId,
-      user,
-      amount,
-      slippage: Percentage.createFrom({
-        value: DEFAULT_SLIPPAGE_PERCENTAGE,
-      }),
-      shouldStake: stake,
-      referralCode,
-    })
-
-    assert(
-      vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
-      `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
-        .add(amount)
-        .toString()}`,
-    )
-
-    const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
-      vaultId,
-      user,
-    })
-    const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
-      vaultId,
-      user,
-    })
-    console.log(
-      'before',
-      fleetAmountBefore.assets.toSolidityValue(),
-      '/',
-      stakedAmountBefore.assets.toSolidityValue(),
-    )
-    const { statuses } = await sendAndLogTransactions({
-      chainInfo,
-      transactions,
-      rpcUrl: rpcUrl,
-      privateKey: signerPrivateKey,
-      simulateOnly,
-    })
-    statuses.forEach((status) => {
-      expect(status).toBe('success')
-    })
-
-    if (!simulateOnly) {
-      const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
-        vaultId,
-        user,
-      })
-      const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
-        vaultId,
-        user,
-      })
-      console.log(
-        'after',
-        fleetAmountAfter.assets.toSolidityValue(),
-        '/',
-        stakedAmountAfter.assets.toSolidityValue(),
-      )
-      console.log(
-        'difference',
-        fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
-        '/',
-        stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
-      )
-    }
-  }
 })
+
+async function runTests({
+  chainId,
+  swapToSymbol: swapSymbol,
+  fleetAddress,
+  rpcUrl,
+  amountValue,
+  userAddress,
+  stake,
+  referralCode,
+}: {
+  chainId: ChainId
+  swapToSymbol: string | undefined
+  fleetAddress: Address
+  rpcUrl: string | undefined
+  amountValue: string
+  userAddress: Address
+  stake?: boolean
+  referralCode?: string
+}) {
+  const sdk: SDKManager = makeSDK({
+    apiDomainUrl: SDKApiUrl,
+  })
+  if (!rpcUrl) {
+    throw new Error('Missing rpc url')
+  }
+
+  const chainInfo = getChainInfoByChainId(chainId)
+  const user = User.createFrom({
+    wallet: Wallet.createFrom({
+      address: userAddress,
+    }),
+    chainInfo,
+  })
+  const vaultId = ArmadaVaultId.createFrom({
+    chainInfo,
+    fleetAddress,
+  })
+
+  const vaultInfo = await sdk.armada.users.getVaultInfo({
+    vaultId,
+  })
+  const token = vaultInfo.depositCap.token
+  const swapToken = swapSymbol
+    ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapSymbol })
+    : undefined
+
+  const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+    vaultId,
+    user,
+  })
+  const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+    vaultId,
+    user,
+  })
+  console.log(
+    'before',
+    fleetAmountBefore.assets.toSolidityValue(),
+    '/',
+    stakedAmountBefore.assets.toSolidityValue(),
+  )
+
+  console.log(
+    `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
+  )
+
+  const amount = TokenAmount.createFrom({
+    amount: amountValue,
+    token: swapToken || token,
+  })
+
+  assert(
+    vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
+    `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
+      .add(amount)
+      .toString()}`,
+  )
+
+  const transactions = await sdk.armada.users.getNewDepositTx({
+    vaultId,
+    user,
+    amount,
+    slippage: Percentage.createFrom({
+      value: DEFAULT_SLIPPAGE_PERCENTAGE,
+    }),
+    shouldStake: stake,
+    referralCode,
+  })
+
+  const { statuses } = await sendAndLogTransactions({
+    chainInfo,
+    transactions,
+    rpcUrl: rpcUrl,
+    privateKey: signerPrivateKey,
+    simulateOnly,
+  })
+  statuses.forEach((status) => {
+    expect(status).toBe('success')
+  })
+
+  if (!simulateOnly) {
+    const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
+      vaultId,
+      user,
+    })
+    const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+      vaultId,
+      user,
+    })
+    console.log(
+      'after',
+      fleetAmountAfter.assets.toSolidityValue(),
+      '/',
+      stakedAmountAfter.assets.toSolidityValue(),
+    )
+    console.log(
+      'difference',
+      fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
+      '/',
+      stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
+    )
+  }
+}
