@@ -8,10 +8,11 @@ import {
   Wallet,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, userAddress } from './utils/testConfig'
+import { SDKApiUrl, testWalletAddress } from './utils/testConfig'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = true
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -21,9 +22,14 @@ const usdcFleet = Address.createFromEthereum({
 const eurcFleet = Address.createFromEthereum({
   value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
 })
+const selfManagedFleet = Address.createFromEthereum({
+  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+})
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
-describe('Armada Protocol User', () => {
+describe('Armada Protocol - User', () => {
+  const fleetAddress = usdcFleet
+
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
   })
@@ -32,12 +38,11 @@ describe('Armada Protocol User', () => {
   }
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = usdcFleet
 
   const user = User.createFrom({
     chainInfo,
     wallet: Wallet.createFrom({
-      address: userAddress,
+      address: testWalletAddress,
     }),
   })
   const vaultId = ArmadaVaultId.createFrom({
@@ -45,38 +50,70 @@ describe('Armada Protocol User', () => {
     fleetAddress,
   })
 
-  console.log(`Running on ${chainInfo.name} for user ${userAddress.value}`)
+  console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
 
-  it.skip(`should get all user positions: ${fleetAddress.value}`, async () => {
+  it(`should get all user positions: ${fleetAddress.value}`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
       user,
     })
     console.log('User positions:')
     positions.forEach((position) => {
-      console.log(`Position ${position.id.id} amount: ${position.amount.toString()}`)
+      console.log(`Position ${position.id.id}\n - amount: ${position.amount.toString()}`)
     })
   })
 
   it(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
+    const _user = User.createFromEthereum(
+      ChainIds.Base,
+      '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
+    )
     const position = await sdk.armada.users.getUserPosition({
-      user,
+      user: _user,
       fleetAddress,
     })
     assert(position != null, 'User position not found')
-    console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
+    console.log(
+      `User position for specific fleet`,
+      '\n' +
+        JSON.stringify(
+          {
+            id: position.id.id,
+            amount: position.amount.toString(),
+            deposits: position.deposits.length,
+            withdrawals: position.withdrawals.length,
+            rewards: position.rewards.map((reward) => ({
+              claimed: reward.claimed.toString(),
+              claimable: reward.claimable.toString(),
+            })),
+            claimed: position.claimedSummerToken.toString(),
+            claimable: position.claimableSummerToken.toString(),
+          },
+          null,
+          2,
+        ),
+    )
+  })
+
+  it.only(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+    // const _user = User.createFromEthereum(
+    //   ChainIds.Base,
+    //   '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
+    // )
+    const _user = user
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      user: _user,
       vaultId,
-      user,
     })
     const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      user: _user,
       vaultId,
-      user,
     })
     console.log(
-      'Fleet: ',
+      'Fleet balance',
+      '\n - Wallet: ',
       fleetAmountBefore.assets.toString(),
-      'Staked: ',
+      '\n - Staked: ',
       stakedAmountBefore.assets.toString(),
     )
   })

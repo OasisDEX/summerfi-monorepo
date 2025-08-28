@@ -6,6 +6,7 @@ import {
   ChainIds,
   getChainInfoByChainId,
   Percentage,
+  TokenAmount,
   User,
   Wallet,
 } from '@summerfi/sdk-common'
@@ -16,6 +17,7 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = false
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -29,24 +31,20 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol Switch', () => {
   it('should switch position', async () => {
+    // await runTests({
+    //   chainId,
+    //   sourceFleetAddress: eurcFleet,
+    //   destinationFleetAddress: usdcFleet,
+    //   amountValue: '1.9999',
+    //   rpcUrl,
+    // })
     await runTests({
       chainId,
       sourceFleetAddress: usdcFleet,
       destinationFleetAddress: eurcFleet,
+      amountValue: '2',
       rpcUrl,
     })
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: ethFleet,
-    //   destinationFleetAddress: eurcFleet,
-    //   rpcUrl,
-    // })
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: eurcFleet,
-    //   destinationFleetAddress: usdcFleet,
-    //   rpcUrl,
-    // })
   })
 
   async function runTests({
@@ -61,7 +59,7 @@ describe('Armada Protocol Switch', () => {
     sourceFleetAddress: Address
     destinationFleetAddress: Address
     rpcUrl: string | undefined
-    amountValue?: string
+    amountValue: string
     stake?: boolean
   }) {
     const sdk: SDKManager = makeSDK({
@@ -104,6 +102,12 @@ describe('Armada Protocol Switch', () => {
       fleetAddress: destinationFleetAddress,
     })
 
+    console.log(
+      'positions before:',
+      '\n - destination: ',
+      destinationPositionBefore?.amount.toString(),
+    )
+
     assert(
       sourcePositionBefore !== undefined,
       `Source position should be defined for ${sourceFleetAddress.value}`,
@@ -113,13 +117,27 @@ describe('Armada Protocol Switch', () => {
       `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
     )
 
+    const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
+    const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
     console.log(
-      'positions before',
-      sourcePositionBefore.amount.toString(),
-      destinationPositionBefore?.amount.toString(),
+      'Source balance before',
+      '\n - Wallet: ',
+      fleetAmountBefore.assets.toString(),
+      '\n - Staked: ',
+      stakedAmountBefore.assets.toString(),
     )
 
-    const switchAmount = sourcePositionBefore.amount
+    const switchAmount = TokenAmount.createFrom({
+      amount: amountValue,
+      token: sourcePositionBefore.amount.token,
+    })
+
     console.log(
       `switch position from ${switchAmount.toString()} to ${destinationVaultInfo.depositCap.token.toString()}`,
     )
@@ -138,15 +156,33 @@ describe('Armada Protocol Switch', () => {
       transactions,
       rpcUrl: rpcUrl,
       privateKey: signerPrivateKey,
+      simulateOnly,
     })
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
 
-    const sourcePositionAfter = await sdk.armada.users.getUserPosition({
+    if (simulateOnly) {
+      console.log('Simulation only - skipping post-switch position checks')
+      return
+    }
+
+    const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
       user,
-      fleetAddress: sourceFleetAddress,
+      vaultId: sourceVaultId,
     })
+    const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
+    console.log(
+      'Source balance after:',
+      '\n - Wallet: ',
+      fleetAmountAfter.assets.toString(),
+      '\n - Staked: ',
+      stakedAmountAfter.assets.toString(),
+    )
+
     const destinationPositionAfter = await sdk.armada.users.getUserPosition({
       user,
       fleetAddress: destinationFleetAddress,
@@ -157,8 +193,8 @@ describe('Armada Protocol Switch', () => {
     )
 
     console.log(
-      'positions after',
-      sourcePositionAfter?.amount.toString(),
+      'positions after:',
+      '\n - destination: ',
       destinationPositionAfter.amount.toString(),
     )
   }

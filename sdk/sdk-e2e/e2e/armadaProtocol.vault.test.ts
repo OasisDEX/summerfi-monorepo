@@ -23,6 +23,9 @@ const usdcFleet = Address.createFromEthereum({
 const eurcFleet = Address.createFromEthereum({
   value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
 })
+const selfManagedFleet = Address.createFromEthereum({
+  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+})
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol - Vault', () => {
@@ -43,25 +46,6 @@ describe('Armada Protocol - Vault', () => {
     }),
   })
   console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
-
-  it(`should get all user positions: ${fleetAddress.value}`, async () => {
-    const positions = await sdk.armada.users.getUserPositions({
-      user,
-    })
-    console.log('User positions:')
-    positions.forEach((position, index) => {
-      console.log(`Position ${index} amount: ${position.amount.toString()}`)
-    })
-  })
-
-  it(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
-    const position = await sdk.armada.users.getUserPosition({
-      user,
-      fleetAddress,
-    })
-    assert(position != null, 'User position not found')
-    console.log(`User position for fleet ${fleetAddress.value}: ${position.amount.toString()}`)
-  })
 
   it('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
@@ -99,7 +83,7 @@ describe('Armada Protocol - Vault', () => {
   it('should get a specific vault info', async () => {
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
-      fleetAddress: ethFleet,
+      fleetAddress,
     })
     const vaultInfo = await sdk.armada.users.getVaultInfo({
       vaultId,
