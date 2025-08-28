@@ -35,6 +35,7 @@ export interface EarnProtocolBaseEventProps {
   network?: string;          // blockchain network (e.g. "Ethereum", "Polygon")
   page: string;            // page route/path (e.g. "/earn", "/portfolio")
   connectionMethod?: string;  // connection method (e.g. "EOA", "SCA")
+  errorId?: string;  // optional error message
   errorMessage?: string;  // optional error message
 }
 

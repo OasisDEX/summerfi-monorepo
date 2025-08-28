@@ -82,6 +82,7 @@ export const StartEarningNow = () => {
             <Link
               href="/earn"
               prefetch={false}
+              rel="noopener noreferrer"
               onClick={handleCtaClick(`lp-start-earning-cta-sign-up`)}
             >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
@@ -150,6 +151,7 @@ export const StartEarningNow = () => {
             <Link
               href="https://cal.com/jordan-jackson-d278ib/summer.fi-support-call"
               target="_blank"
+              rel="noopener noreferrer"
               onClick={handleCtaClick(`lp-start-earning-cta-set-up-a-call`)}
             >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>

@@ -15,6 +15,7 @@ interface FooterProps {
   logo: string
   languageSwitcher?: ReactNode
   newsletter: ReactNode
+  onFooterItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }
 
 const linksList = [
@@ -95,7 +96,12 @@ const linksList = [
   },
 ]
 
-export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) => {
+export const Footer: FC<FooterProps> = ({
+  logo,
+  newsletter,
+  languageSwitcher,
+  onFooterItemClick,
+}) => {
   // listen to holding ALT button
   const isAltPressed = useHoldAlt()
 
@@ -109,7 +115,12 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
         <img src={logo} alt="Summer.fi" className={footerStyles.logo} />
         <ul className={footerStyles.socialsList}>
           <li>
-            <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
+            <Link
+              href="https://twitter.com/summerfinance_"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => onFooterItemClick?.({ buttonName: 'twitter' })}
+            >
               <Icon
                 iconName="brand_icon_twitter"
                 size={20}
@@ -118,7 +129,12 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
             </Link>
           </li>
           <li>
-            <Link href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
+            <Link
+              href="https://discord.com/invite/summerfi"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => onFooterItemClick?.({ buttonName: 'discord' })}
+            >
               <Icon
                 iconName="brand_icon_discord"
                 size={20}
@@ -127,7 +143,12 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
             </Link>
           </li>
           <li>
-            <Link href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
+            <Link
+              href="https://github.com/OasisDEX"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => onFooterItemClick?.({ buttonName: 'github' })}
+            >
               <Icon
                 iconName="brand_icon_github"
                 size={20}
@@ -144,6 +165,7 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
                   ? `https://github.com/OasisDEX/summerfi-monorepo/commit/${process.env.NEXT_PUBLIC_SHA}`
                   : '#'
               }
+              onClick={() => onFooterItemClick?.({ buttonName: 'sha-commit' })}
             >
               SHA Commit:&nbsp;{process.env.NEXT_PUBLIC_SHA ?? 'none'}
             </Link>
@@ -162,7 +184,16 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
 
               return (
                 <li key={j}>
-                  <Link prefetch={false} href={url} target={isOutsideLink ? '_blank' : undefined}>
+                  <Link
+                    prefetch={false}
+                    href={url}
+                    target={isOutsideLink ? '_blank' : undefined}
+                    onClick={() =>
+                      onFooterItemClick?.({
+                        buttonName: label.toLowerCase().replace(/\s+/gu, '-').replace(/\?/gu, ''),
+                      })
+                    }
+                  >
                     <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
                       {label}
                     </Text>

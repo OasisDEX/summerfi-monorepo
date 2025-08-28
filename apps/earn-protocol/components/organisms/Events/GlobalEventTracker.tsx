@@ -31,8 +31,9 @@ export const GlobalEventTracker = () => {
     if (!isLoadingAccount && account?.address && user?.type) {
       EarnProtocolEvents.accountChanged({
         page: path,
-        walletAddress: userAddress ?? undefined,
-        network: chain.name,
+        walletAddress: userAddress ?? account.address,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        network: chain.name ?? 'unknown',
         connectionMethod: user.type,
       })
     }

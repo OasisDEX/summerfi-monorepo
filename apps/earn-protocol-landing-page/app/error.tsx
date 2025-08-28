@@ -19,7 +19,8 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
     console.error(error)
     EarnProtocolEvents.errorOccurred({
       page: pathname,
-      errorMessage: error.message,
+      errorId: `lp-global-error-${error.digest}`,
+      errorMessage: `${error.name}${error.digest ? `:${error.digest}` : ''}`,
     })
   }, [error, pathname])
 

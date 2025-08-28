@@ -13,6 +13,7 @@ import {
   type HistoryChartData,
   type SDKVaultishType,
 } from '@summerfi/app-types'
+import { usePathname } from 'next/navigation'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
@@ -76,6 +77,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   beachClubData,
   blogPosts,
 }) => {
+  const pathname = usePathname()
   const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -100,8 +102,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   useEffect(() => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `portfolio-tab-${activeTab}`,
-      page: `/portfolio/${walletAddress}`,
+      buttonName: `ep-portfolio-tab-${activeTab}`,
+      page: pathname,
       walletAddress: userWalletAddress,
     })
     // only on tab change

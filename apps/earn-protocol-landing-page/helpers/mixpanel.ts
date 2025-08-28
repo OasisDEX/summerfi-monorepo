@@ -1,6 +1,7 @@
 import {
   type EarnProtocolBaseEventProps,
   type EarnProtocolButtonClickedEventProps,
+  type EarnProtocolCustomEventProps,
   type EarnProtocolDropdownChangedEventProps,
   EarnProtocolEventNames,
   type EarnProtocolEventPropsMap,
@@ -10,7 +11,6 @@ import {
   type EarnProtocolTransactionEventProps,
   type EarnProtocolViewPositionEventProps,
 } from '@summerfi/app-types'
-import { type EarnProtocolCustomEventProps } from '@summerfi/app-types/types/src/mixpanel/earn-protocol-events'
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash-es'
 

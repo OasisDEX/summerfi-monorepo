@@ -50,6 +50,7 @@ export {
   type EarnProtocolTooltipHoveredEventProps,
   type EarnProtocolEventPropsMap,
   type EarnProtocolAnalyticsEvent,
+  type EarnProtocolCustomEventProps,
 } from './src/mixpanel/earn-protocol-events'
 export type {
   NavigationFeaturedProduct,

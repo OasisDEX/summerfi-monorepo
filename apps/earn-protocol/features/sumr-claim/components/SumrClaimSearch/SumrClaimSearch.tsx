@@ -4,7 +4,7 @@ import { useAuthModal, useUser } from '@account-kit/react'
 import { Button, Card, Input, LoadingSpinner, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
@@ -17,6 +17,7 @@ import classNames from './SumrClaimSearch.module.css'
 export const SumrClaimSearch = () => {
   const { push } = useRouter()
   const user = useUser()
+  const pathname = usePathname()
   const { openAuthModal } = useAuthModal()
 
   const [eligibleUsers, setEligibleUsers] =
@@ -57,9 +58,8 @@ export const SumrClaimSearch = () => {
   const handleButtonClick = () => {
     if (!user) {
       EarnProtocolEvents.buttonClicked({
-        buttonName: 'SumrClaimSearch',
-        page: '/sumr',
-        walletAddress: '',
+        buttonName: 'sumr-claim-search',
+        page: pathname,
       })
       openAuthModal()
 
@@ -68,8 +68,8 @@ export const SumrClaimSearch = () => {
 
     if (resolvedPortfolioUserAddress) {
       EarnProtocolEvents.buttonClicked({
-        buttonName: 'SumrClaimSearch',
-        page: '/sumr',
+        buttonName: 'sumr-claim-search',
+        page: pathname,
         walletAddress: resolvedPortfolioUserAddress,
       })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)

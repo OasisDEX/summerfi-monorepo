@@ -18,11 +18,18 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
     // Log the error to an error reporting service
     // eslint-disable-next-line no-console
     console.error(error)
-    EarnProtocolEvents.errorOccurred({
-      page: pathname,
-      errorMessage: error.message,
-      walletAddress: userWalletAddress,
-    })
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const errorMessage = String(error.message ?? 'unknown').slice(0, 300)
+
+      EarnProtocolEvents.errorOccurred({
+        page: pathname,
+        errorMessage,
+        walletAddress: userWalletAddress,
+      })
+    } catch {
+      // swallow analytics errors
+    }
   }, [error, pathname, userWalletAddress])
 
   return (

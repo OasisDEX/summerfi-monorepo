@@ -20,6 +20,9 @@ export const useScrollTracker = ({
   const firedMilestones = useRef<Set<number>>(new Set())
 
   useEffect(() => {
+    // reset on dependency change (e.g., new page)
+    firedMilestones.current.clear()
+    lastFired.current = 0
     const handleScroll = () => {
       const now = Date.now()
 
@@ -28,10 +31,10 @@ export const useScrollTracker = ({
       const scrollTop = window.scrollY
       const viewportHeight = window.innerHeight
       const documentHeight = document.documentElement.scrollHeight
-      const scrollPercent = Math.min(
-        100,
-        Math.round((scrollTop / (documentHeight - viewportHeight)) * 100),
-      )
+      const scrollable = documentHeight - viewportHeight
+
+      if (scrollable <= 0) return
+      const scrollPercent = Math.min(100, Math.max(0, Math.round((scrollTop / scrollable) * 100)))
 
       // Determine the nearest breakpoint
       const milestone = Math.floor(scrollPercent / breakpointPercent) * breakpointPercent

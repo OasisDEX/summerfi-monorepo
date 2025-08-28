@@ -19,7 +19,7 @@ import {
   formatShorthandNumber,
 } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
@@ -40,6 +40,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const { walletAddress } = useParams()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
+  const pathname = usePathname()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
   const rawSumrUSD = rawSumr * assumedSumrPriceRaw
@@ -52,8 +53,8 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
   const handleClaimEventButton = () => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: 'SumrClaimPortfolioButton',
-      page: `/portfolio/${resolvedWalletAddress}`,
+      buttonName: 'ep-sumr-claim-portfolio-button',
+      page: pathname,
       walletAddress: userWalletAddress,
     })
   }

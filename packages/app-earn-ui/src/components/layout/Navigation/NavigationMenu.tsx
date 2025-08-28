@@ -45,6 +45,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}
                 prefetch={!(link.disabled ?? link.prefetchDisabled)}
+                onClick={link.onClick}
               >
                 {link.label}
               </Link>

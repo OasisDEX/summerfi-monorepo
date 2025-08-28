@@ -67,6 +67,10 @@ export default function InstitutionsPage() {
     const element = document.getElementById(id)
 
     if (element) {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: `lp-institutions-scroll-to-${id}`,
+        page: pathname,
+      })
       element.scrollIntoView({ behavior: 'smooth' })
     }
   }
@@ -84,13 +88,20 @@ export default function InstitutionsPage() {
   const handleRiskManagementLearnMoreClick = () => {
     EarnProtocolEvents.buttonClicked({
       buttonName: `lp-institutions-enhanced-risk-management-learn-more`,
-      page: '/',
+      page: pathname,
     })
   }
 
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
       buttonName: `lp-institutions-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleCtaClick = (ctaid: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-${ctaid}`,
       page: pathname,
     })
   }
@@ -139,6 +150,7 @@ export default function InstitutionsPage() {
       <div className={institutionsPageStyles.promoBlocks}>
         <InstitutionsPromoBlock
           title="Self managed Vaults"
+          id="self-managed-vaults"
           description="Institutional-grade vault infrastructure to access the best of DeFi - fully customizable, inherently composable, and built for future compliance and regulatory needs."
           bestFor="Banks, Hedge funds, Centralized exchanges and Asset managers"
           coreFeatures={[
@@ -156,6 +168,7 @@ export default function InstitutionsPage() {
         />
         <InstitutionsPromoBlock
           title="Large capital deployment into public access vaults"
+          id="large-capital-deployment"
           description="Effortless access to crypto’s best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and costs."
           bestFor="Crypto native funds, Family offices, and Large individual allocators"
           coreFeatures={[
@@ -177,7 +190,11 @@ export default function InstitutionsPage() {
             Get started quickly with our streamlined, self serve onboarding process or our hands on
             technical support for custom integrations.
           </Text>
-          <Link href={EXTERNAL_LINKS.BD_CONTACT} target="_blank">
+          <Link
+            href={EXTERNAL_LINKS.BD_CONTACT}
+            target="_blank"
+            onClick={handleCtaClick('stress-free-set-up-a-call')}
+          >
             <Button variant="primaryLarge">Set up a call</Button>
           </Link>
         </div>
