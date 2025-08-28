@@ -111,3 +111,4 @@ export { getVaultRiskTooltipLabel } from './helpers/get-vault-risk-tooltip-label
 export { convertEthToWeth, convertWethToEth } from './helpers/convert-eth'
 export { RECAPTCHA_SITE_KEY, handleCaptcha } from './helpers/handle-captcha'
 export { serverOnlyErrorHandler } from './helpers/server-only-error-handler'
+export { slugify } from './helpers/slugify'

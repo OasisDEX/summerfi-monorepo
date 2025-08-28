@@ -40,7 +40,7 @@ const StartEarningNowBlock = ({
   </Card>
 )
 
-export const StartEarningNow = () => {
+export const StartEarningNow = ({ id }: { id: string }) => {
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
 
@@ -83,7 +83,7 @@ export const StartEarningNow = () => {
               href="/earn"
               prefetch={false}
               rel="noopener noreferrer"
-              onClick={handleCtaClick(`lp-start-earning-cta-sign-up`)}
+              onClick={handleCtaClick(`lp-start-earning-${id}-sign-up`)}
             >
               <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                 <Text variant="p3semi">Sign up</Text>
@@ -110,7 +110,7 @@ export const StartEarningNow = () => {
               <Link
                 href="/earn/migrate/user"
                 prefetch={false}
-                onClick={handleCtaClick(`lp-start-earning-cta-migrate`)}
+                onClick={handleCtaClick(`lp-start-earning-${id}-migrate`)}
               >
                 <Button variant="primarySmall" className={clsx(startEarningNowStyles.ctaButton)}>
                   <Text variant="p3semi">Migrate</Text>

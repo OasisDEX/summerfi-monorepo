@@ -1,4 +1,5 @@
 import { FaqSection, vaultFaqData } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -10,10 +11,7 @@ export const LandingFaqSection = () => {
 
   const handleLandingFaqSection = (props: { expanded: boolean; title: string }) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-faq-section-${props.title
-        .toLowerCase()
-        .replace(/\s+/gu, '-')
-        .replace(/\?/gu, '')}-${props.expanded ? 'expand' : 'collapse'}`,
+      buttonName: `lp-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
       page: pathname,
     })
   }

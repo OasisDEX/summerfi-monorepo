@@ -1,4 +1,5 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -33,10 +34,7 @@ export const InstitutionsPromoBlock = ({
   const pathname = usePathname()
   const handleInstitutionsPromoBlockCtaClick = (buttonName: string) => () => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-institutions-promo-block-${id}-${buttonName
-        .toLowerCase()
-        .replace(/\s+/gu, '-')
-        .replace(/\?/gu, '')}`,
+      buttonName: `lp-institutions-promo-block-${id}-${slugify(buttonName)}`,
       page: pathname,
     })
   }

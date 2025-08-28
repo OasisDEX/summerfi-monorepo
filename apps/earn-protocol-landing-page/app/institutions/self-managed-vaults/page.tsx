@@ -13,7 +13,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
-import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent, slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -78,16 +78,17 @@ export default function SelfManagedVaults() {
     const element = document.getElementById(id)
 
     if (element) {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: `lp-institutions-self-managed-scroll-to-${id}`,
+        page: pathname,
+      })
       element.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
   const handleSelfManagedVaultsFaqSection = (props: { expanded: boolean; title: string }) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-self-managed-vaults-faq-section-${props.title
-        .toLowerCase()
-        .replace(/\s+/gu, '-')
-        .replace(/\?/gu, '')}-${props.expanded ? 'expand' : 'collapse'}`,
+      buttonName: `lp-self-managed-vaults-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
       page: pathname,
     })
   }
@@ -95,6 +96,13 @@ export default function SelfManagedVaults() {
   const handleAuditClick = (auditId: string) => {
     EarnProtocolEvents.buttonClicked({
       buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleSectionTabChange = (sectionId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-self-managed-vaults-key-benefits-tabs-${sectionId}`,
       page: pathname,
     })
   }
@@ -322,6 +330,7 @@ export default function SelfManagedVaults() {
               id: 'operational-efficiency',
             },
           ]}
+          additionalOnTabChange={handleSectionTabChange}
         />
       </div>
       <div id="institutions-self-managed-vaults-contact-form">

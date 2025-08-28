@@ -104,7 +104,7 @@ export default function HomePage() {
         />
         <BestOfDecentralizedFinance />
         <SumrToken />
-        <StartEarningNow />
+        <StartEarningNow id="home" />
         <SummerFiProSection />
         <CryptoUtilities />
         <Audits

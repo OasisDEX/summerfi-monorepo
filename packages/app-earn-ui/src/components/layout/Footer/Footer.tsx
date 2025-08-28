@@ -1,6 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode, useEffect } from 'react'
+import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -190,7 +191,7 @@ export const Footer: FC<FooterProps> = ({
                     target={isOutsideLink ? '_blank' : undefined}
                     onClick={() =>
                       onFooterItemClick?.({
-                        buttonName: label.toLowerCase().replace(/\s+/gu, '-').replace(/\?/gu, ''),
+                        buttonName: slugify(label),
                       })
                     }
                   >

@@ -11,6 +11,7 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -77,10 +78,7 @@ export default function InstitutionsPage() {
 
   const handleInstitutionsFaqSection = (props: { expanded: boolean; title: string }) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-institutions-faq-section-${props.title
-        .toLowerCase()
-        .replace(/\s+/gu, '-')
-        .replace(/\?/gu, '')}-${props.expanded ? 'expand' : 'collapse'}`,
+      buttonName: `lp-institutions-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
       page: pathname,
     })
   }
@@ -255,18 +253,21 @@ export default function InstitutionsPage() {
         </Text>
         <div className={institutionsPageStyles.finalCTAElementsList}>
           <FinalCTAElement
+            id="institutions-schedule-call"
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
             url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
+            id="institutions-self-serve-vault"
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
             url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
+            id="institutions-integration-docs"
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
             url={EXTERNAL_LINKS.KB.HELP}

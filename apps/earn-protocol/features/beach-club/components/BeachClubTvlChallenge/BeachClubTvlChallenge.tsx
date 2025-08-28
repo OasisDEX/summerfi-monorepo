@@ -22,6 +22,8 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import { type MerklReward } from '@summerfi/armada-protocol-common'
+import { debounce } from 'lodash-es'
+import { usePathname } from 'next/navigation'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { delayPerNetwork } from '@/constants/delay-per-network'
@@ -34,6 +36,7 @@ import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/component
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
 import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 import { getBeachClubTvlRewardsCards } from './cards'
@@ -66,6 +69,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   state,
   dispatch,
 }) => {
+  const pathname = usePathname()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
@@ -82,6 +86,14 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
+
+  const setSimulationValueCallback = debounce((value: string) => {
+    EarnProtocolEvents.inputChanged({
+      inputName: 'ep-beach-club-simulation-slider',
+      value,
+      page: pathname,
+    })
+  }, 1000)
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
@@ -273,7 +285,10 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
           />
         ))}
       </div>
-      <BeachClubRewardSimulation tvl={currentGroupTvl} />
+      <BeachClubRewardSimulation
+        tvl={currentGroupTvl}
+        setSimulationValueCallback={setSimulationValueCallback}
+      />
       {isMobile ? (
         <MobileDrawer isOpen={isOptInOpen} onClose={handleOptInOpenClose} height="auto">
           <ClaimDelegateOptInMerkl
