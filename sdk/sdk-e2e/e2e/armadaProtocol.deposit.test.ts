@@ -45,7 +45,6 @@ describe('Armada Protocol Deposit', () => {
     const chainId = ChainIds.Base
     const fleetAddress = usdcFleetBase
     const userAddress = testWalletAddress
-    const amountValue = '1'
     const swapToSymbol = undefined
 
     await runTests({
@@ -53,7 +52,7 @@ describe('Armada Protocol Deposit', () => {
       chainId,
       fleetAddress,
       userAddress,
-      amountValue,
+      amountValue: '0.5',
       swapToSymbol,
       stake: true,
     })
@@ -62,7 +61,7 @@ describe('Armada Protocol Deposit', () => {
       chainId,
       fleetAddress,
       userAddress,
-      amountValue,
+      amountValue: '1.5',
       swapToSymbol,
     })
   })
