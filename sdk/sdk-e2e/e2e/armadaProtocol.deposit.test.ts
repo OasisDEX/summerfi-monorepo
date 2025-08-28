@@ -43,25 +43,25 @@ describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
     const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
     const chainId = ChainIds.Base
-    const fleetAddress = usdcFleetBase
+    const fleetAddress = ethFleetBase
     const userAddress = testWalletAddress
     const swapToSymbol = undefined
 
+    // await runTests({
+    //   rpcUrl,
+    //   chainId,
+    //   fleetAddress,
+    //   userAddress,
+    //   amountValue: '0.5',
+    //   swapToSymbol,
+    //   stake: true,
+    // })
     await runTests({
       rpcUrl,
       chainId,
       fleetAddress,
       userAddress,
-      amountValue: '0.5',
-      swapToSymbol,
-      stake: true,
-    })
-    await runTests({
-      rpcUrl,
-      chainId,
-      fleetAddress,
-      userAddress,
-      amountValue: '1.5',
+      amountValue: '0.003',
       swapToSymbol,
     })
   })
@@ -122,9 +122,10 @@ async function runTests({
     user,
   })
   console.log(
-    'before',
+    'assets before:',
+    '\n - wallet',
     fleetAmountBefore.assets.toSolidityValue(),
-    '/',
+    '\n - staked',
     stakedAmountBefore.assets.toSolidityValue(),
   )
 
@@ -176,15 +177,17 @@ async function runTests({
       user,
     })
     console.log(
-      'after',
+      'assets after:',
+      '\n - wallet',
       fleetAmountAfter.assets.toSolidityValue(),
-      '/',
+      '\n - staked',
       stakedAmountAfter.assets.toSolidityValue(),
     )
     console.log(
-      'difference',
+      'assets difference:',
+      '\n - wallet',
       fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
-      '/',
+      '\n - staked',
       stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
     )
   }

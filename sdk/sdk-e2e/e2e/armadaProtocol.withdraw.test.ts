@@ -34,9 +34,10 @@ describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
     const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
     const chainId = ChainIds.Base
-    const fleetAddress = usdcFleet
+    const fleetAddress = ethFleet
     const userAddress = testWalletAddress
-    const amountValue = '1.9999'
+    const amountValue = '0.001'
+    const symbol = 'ETH'
     const swapToSymbol = undefined
 
     await runTests({
@@ -45,19 +46,22 @@ describe('Armada Protocol Withdraw', () => {
       fleetAddress,
       userAddress,
       amountValue,
+      symbol,
       swapToSymbol,
     })
   })
 
   async function runTests({
     chainId,
-    swapToSymbol: swapSymbol,
+    symbol,
+    swapToSymbol,
     fleetAddress,
     rpcUrl,
     amountValue,
     userAddress,
   }: {
     chainId: ChainId
+    symbol: string
     swapToSymbol: string | undefined
     fleetAddress: Address
     rpcUrl: string | undefined
@@ -84,32 +88,10 @@ describe('Armada Protocol Withdraw', () => {
       fleetAddress,
     })
 
-    const vaultInfo = await sdk.armada.users.getVaultInfo({
-      vaultId,
-    })
-    const token = vaultInfo.depositCap.token
-    const swapToken = swapSymbol
-      ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapSymbol })
+    const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
+    const swapToken = swapToSymbol
+      ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapToSymbol })
       : undefined
-
-    console.log(
-      `withdraw ${amountValue} USDC unstaked assets back from fleet at ${fleetAddress.value}`,
-    )
-
-    const amount = TokenAmount.createFrom({
-      amount: amountValue,
-      token: swapToken || token,
-    })
-
-    const transactions = await sdk.armada.users.getWithdrawTx({
-      vaultId: vaultId,
-      user,
-      amount,
-      toToken: swapToken || token,
-      slippage: Percentage.createFrom({
-        value: DEFAULT_SLIPPAGE_PERCENTAGE,
-      }),
-    })
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       vaultId,
@@ -120,18 +102,35 @@ describe('Armada Protocol Withdraw', () => {
       user,
     })
 
-    console.log(
-      'before',
-      fleetAmountBefore.assets.toSolidityValue(),
-      '/',
-      stakedAmountBefore.assets.toSolidityValue(),
-    )
+    const amount = TokenAmount.createFrom({
+      amount: amountValue,
+      token: token,
+    })
+    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress.value}`)
 
     const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
     assert(
-      totalAssetsBefore.isGreaterOrEqualThan(amount),
+      totalAssetsBefore.toSolidityValue() >= amount.toSolidityValue(),
       `Fleet balance is not enough: ${totalAssetsBefore.toString()} < ${amount.toString()}`,
     )
+
+    console.log(
+      'assets before:',
+      '\n - wallet',
+      fleetAmountBefore.assets.toSolidityValue(),
+      '\n - staked',
+      stakedAmountBefore.assets.toSolidityValue(),
+    )
+
+    const transactions = await sdk.armada.users.getWithdrawTx({
+      vaultId,
+      user,
+      amount,
+      toToken: swapToken || token,
+      slippage: Percentage.createFrom({
+        value: DEFAULT_SLIPPAGE_PERCENTAGE,
+      }),
+    })
 
     const { statuses } = await sendAndLogTransactions({
       chainInfo,
@@ -154,15 +153,17 @@ describe('Armada Protocol Withdraw', () => {
         user,
       })
       console.log(
-        'after',
+        'assets after:',
+        '\n - wallet',
         fleetAmountAfter.assets.toSolidityValue(),
-        '/',
+        '\n - staked',
         stakedAmountAfter.assets.toSolidityValue(),
       )
       console.log(
-        'difference',
+        'assets difference:',
+        '\n - wallet',
         fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
-        '/',
+        '\n - staked',
         stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
       )
     }

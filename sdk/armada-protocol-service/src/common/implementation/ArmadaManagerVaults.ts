@@ -872,12 +872,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               vaultId: params.vaultId,
               slippage: params.slippage,
               amount: finalWithdrawAmount,
-              // if withdraw is WETH and unwrapping to ETH,
-              // we need to withdraw WETH for later deposit & unwrap operation
-              withdrawToken:
-                finalWithdrawAmount.token.symbol === 'WETH' && toEth
-                  ? finalWithdrawAmount.token
-                  : swapToToken,
+              withdrawToken: swapToToken,
               shouldSwap,
               toEth,
             }),
@@ -968,12 +963,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             slippage: params.slippage,
             amount: previewRedeemAssetsAmount,
             exitAll: true,
-            // if withdraw is WETH and unwrapping to ETH,
-            // we need to withdraw WETH for later deposit & unwrap operation
-            withdrawToken:
-              previewRedeemAssetsAmount.token.symbol === 'WETH' && toEth
-                ? previewRedeemAssetsAmount.token // this is WETH
-                : swapToToken,
+            withdrawToken: swapToToken,
             shouldSwap,
             toEth,
           }),
@@ -1350,7 +1340,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       args: [params.vaultId.fleetAddress.value, exitAll ? 0n : fromAmount.toSolidityValue()],
     })
     multicallArgs.push(exitFleetCalldata)
-    multicallOperations.push('exitFleet ' + fromAmount.token.toString() + ' (all)')
+    multicallOperations.push(
+      'exitFleet ' +
+        (fromAmount.toSolidityValue() === 0n || exitAll
+          ? fromAmount.token.toString() + ' (all)'
+          : fromAmount.toString()),
+    )
 
     let toToken = params.withdrawToken
     // if the out token is ETH, we need to use wrapped ETH to withdraw
@@ -1400,7 +1395,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       args: [withdrawAll.token.address.value, withdrawAll.toSolidityValue()],
     })
     multicallArgs.push(withdrawTokensCalldata)
-    multicallOperations.push('withdrawTokens' + withdrawAll.token.toString() + ' (all)')
+    multicallOperations.push(
+      'withdrawTokens' +
+        (fromAmount.toSolidityValue() === 0n || exitAll
+          ? fromAmount.token.toString() + ' (all)'
+          : fromAmount.toString()),
+    )
 
     return { multicallArgs, multicallOperations }
   }
