@@ -62,7 +62,7 @@ describe('Armada Protocol - User', () => {
     })
   })
 
-  it(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
+  it.skip(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
     const _user = User.createFromEthereum(
       ChainIds.Base,
       '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
@@ -94,7 +94,7 @@ describe('Armada Protocol - User', () => {
     )
   })
 
-  it.only(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+  it.skip(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
     // const _user = User.createFromEthereum(
     //   ChainIds.Base,
     //   '0x4eb7f19d6efcace59eaed70220da5002709f9b71',

@@ -287,7 +287,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           this._allowanceManager.getApproval({
             chainInfo: params.sourceVaultId.chainInfo,
             spender: admiralsQuartersAddress,
-            amount: finalWithdrawAmount,
+            amount: withdrawAmount,
             owner: params.user.wallet.address,
           }),
           this._getExitWithdrawMulticall({
@@ -1361,6 +1361,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       // we need to compensate for the tip eating exited amount
       // by decreasing swap amount as it will be lower than read amount
       const compensatedFromAmount = this._compensateAmount(fromAmount, 'decrease')
+      // const compensatedFromAmount = fromAmount
 
       const swapCall = await this._utils.getSwapCall({
         vaultId: params.vaultId,
