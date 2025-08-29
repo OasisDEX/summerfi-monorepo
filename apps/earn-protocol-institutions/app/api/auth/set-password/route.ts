@@ -12,28 +12,38 @@ import { cognitoClient } from '@/features/auth/constants'
 import { getNameFromPayload } from '@/features/auth/helpers'
 import { type BasicAuthResponse, type JwtClaims } from '@/features/auth/types'
 
-if (
-  !process.env.INSTITUTIONS_COGNITO_CLIENT_ID ||
-  !process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET
-) {
-  throw new Error('Cognito client ID and secret must be set in environment variables')
-}
+/**
+ * Generate a secret hash for the Cognito client
+ * @param username - The username of the user
+ * @returns The secret hash
+ */
+const generateSecretHash = (username: string): string => {
+  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID
+  const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET
 
-function generateSecretHash(username: string): string {
-  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID as string
-  const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET as string
+  if (!clientId || !clientSecret) {
+    throw new Error('Cognito client ID and secret must be set in environment variables')
+  }
 
   const message = username + clientId
 
   return createHmac('sha256', clientSecret).update(message).digest('base64')
 }
 
-async function serverSetNewPassword(
+/**
+ * Set a new password for a user
+ * @param email - The email of the user
+ * @param newPassword - The new password
+ * @param session - The session
+ * @param secretHash - The secret hash
+ * @returns The basic auth response
+ */
+const serverSetNewPassword = async (
   email: string,
   newPassword: string,
   session: string,
   secretHash?: string,
-): Promise<BasicAuthResponse> {
+): Promise<BasicAuthResponse> => {
   const challengeResponses: { [key: string]: string } = {
     USERNAME: email,
     NEW_PASSWORD: newPassword,
@@ -64,14 +74,18 @@ async function serverSetNewPassword(
 
   const payload = decodeJwt(IdToken) as JwtClaims
 
-  if (!payload.sub || !payload.email || !payload['cognito:username']) {
+  const payloadSub = payload.sub
+  const payloadEmail = payload.email
+  const payloadCognitoUsername = payload['cognito:username']
+
+  if (!payloadSub || !payloadEmail || !payloadCognitoUsername) {
     throw new Error('Invalid ID token')
   }
 
   return {
-    id: payload.sub as string,
-    email: payload.email as string,
-    cognitoUsername: payload['cognito:username'],
+    id: payloadSub,
+    email: payloadEmail,
+    cognitoUsername: payloadCognitoUsername,
     name: getNameFromPayload(payload),
     accessToken: AccessToken,
     refreshToken: RefreshToken,

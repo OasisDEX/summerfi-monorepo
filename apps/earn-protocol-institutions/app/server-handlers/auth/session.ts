@@ -7,15 +7,10 @@ import { SESSION_COOKIE } from '@/constants/cookies'
 import { type SignInResponse } from '@/features/auth/types'
 
 const encoder = new TextEncoder()
-const secret = process.env.INSTITUTIONS_SESSION_SECRET
 
 // bump to invalidate all sessions after a breaking change
 const SESSION_AUD = 'institutions'
 const SESSION_VERSION = '1'
-
-if (!secret) {
-  throw new Error('INSTITUTIONS_SESSION_SECRET must be set')
-}
 
 type SessionPayload = {
   user: SignInResponse['user']
@@ -24,12 +19,25 @@ type SessionPayload = {
   exp: number
 }
 
-export async function createSession(
+/**
+ * Create a cognito session for a user
+ * @param user - The user
+ * @param sub - The subject
+ * @param cognitoUsername - The cognito username
+ * @param ttlSeconds - The time to live in seconds
+ */
+export const createSession = async (
   user: SignInResponse['user'],
   sub: string,
   cognitoUsername: string,
   ttlSeconds = 15 * 60,
-) {
+) => {
+  const secret = process.env.INSTITUTIONS_SESSION_SECRET
+
+  if (!secret) {
+    throw new Error('INSTITUTIONS_SESSION_SECRET must be set')
+  }
+
   const exp = dayjs().unix() + ttlSeconds
   const token = await new SignJWT({ user, sub, cognitoUsername, ver: SESSION_VERSION })
     .setProtectedHeader({ alg: 'HS256' })
@@ -49,9 +57,19 @@ export async function createSession(
   })
 }
 
-export async function readSession(): Promise<SessionPayload | null> {
+/**
+ * Read a cognito session for a user
+ * @returns The session payload
+ */
+export const readSession = async (): Promise<SessionPayload | null> => {
   const cookieStore = await cookies()
   const token = cookieStore.get(SESSION_COOKIE)?.value
+
+  const secret = process.env.INSTITUTIONS_SESSION_SECRET
+
+  if (!secret) {
+    throw new Error('INSTITUTIONS_SESSION_SECRET must be set')
+  }
 
   if (!token) return null
 
@@ -69,13 +87,21 @@ export async function readSession(): Promise<SessionPayload | null> {
   }
 }
 
-export async function destroySession() {
+/**
+ * Destroy a cognito session for a user
+ */
+export const destroySession = async () => {
   const cookieStore = await cookies()
 
   cookieStore.set(SESSION_COOKIE, '', { maxAge: 0, path: '/' })
 }
 
-export function generateSecretHash(message: string): string {
+/**
+ * Generate a secret hash for a message
+ * @param message - The message
+ * @returns The secret hash
+ */
+export const generateSecretHash = (message: string): string => {
   const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID as string
   const clientSecret = process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET as string
 

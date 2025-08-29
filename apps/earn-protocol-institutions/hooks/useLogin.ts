@@ -33,9 +33,9 @@ export const useLogin = () => {
       await signIn(email, password)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
-    } finally {
       setIsLoading(false)
     }
+    // don't set isLoading to false in finally to avoid button flickering before redirect
   }
 
   const handleSetNewPassword = async (e: React.FormEvent) => {
