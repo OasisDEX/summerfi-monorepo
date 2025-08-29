@@ -36,6 +36,12 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const pathname = usePathname()
 
   const beachClubEnabled = !!features?.BeachClub
+  const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `ep-footer-${buttonName}`,
+      page: pathname,
+    })
+  }
   const handleNewsletterEvent = ({
     eventType,
     errorMessage,
@@ -74,6 +80,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
       >
         <Footer
           logo="/earn/img/branding/logo-light.svg"
+          onFooterItemClick={onFooterItemClick}
           newsletter={
             <div>
               <Text

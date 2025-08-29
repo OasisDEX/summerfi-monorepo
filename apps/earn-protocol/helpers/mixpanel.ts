@@ -26,23 +26,19 @@ export function trackEvent<E extends EarnProtocolEventNames>(
   ev: E,
   props: EarnProtocolEventPropsMap[E],
 ) {
+  const eventData = {
+    eventName: ev,
+    eventBody: {
+      ...props,
+      timestamp: new Date().toISOString(),
+      page: includeBasePath(props.page),
+    },
+  }
+
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.TURBOPACK) {
     // eslint-disable-next-line no-console
-    console.info(
-      'Mixpanel event:',
-      JSON.stringify(
-        {
-          eventName: ev,
-          eventBody: {
-            timestamp: new Date().toISOString(),
-            ...props,
-          },
-        },
-        null,
-        2,
-      ),
-    )
+    console.info('Mixpanel event:', JSON.stringify(eventData, null, 2))
 
     return
   }
@@ -70,11 +66,7 @@ export function trackEvent<E extends EarnProtocolEventNames>(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      eventName: ev,
-      eventBody: {
-        timestamp: new Date().toISOString(),
-        ...props,
-      },
+      ...eventData,
       distinctId: mixpanelBrowser.get_distinct_id(),
       currentUrl: includeBasePath(win.location.href),
       ...(!optedOutCheck() && {

@@ -71,15 +71,9 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
     return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
   }, [scrolledAmount, isInstitutions, isTeam])
 
-  const onFooterItemClick = ({
-    buttonName,
-    isEarnApp,
-  }: {
-    buttonName: string
-    isEarnApp?: boolean
-  }) => {
+  const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `${isEarnApp ? 'ep' : 'lp'}-footer-${buttonName}`,
+      buttonName: `lp-footer-${buttonName}`,
       page: pathname,
     })
   }
