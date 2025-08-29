@@ -10,6 +10,8 @@ import additionalBonusLabelStyles from './AdditionalBonusLabel.module.css'
 type AdditionalBonusLabelProps = {
   externalTokenBonus?: EarnAppConfigType['fleetMap']['1']['0x']['bonus']
   sumrTokenBonus?: string
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
 }
 
 /**
@@ -18,12 +20,16 @@ type AdditionalBonusLabelProps = {
 export const AdditionalBonusLabel = ({
   externalTokenBonus,
   sumrTokenBonus,
+  onTooltipOpen,
+  tooltipName,
 }: AdditionalBonusLabelProps): ReactNode | null => {
   return externalTokenBonus ?? sumrTokenBonus ? (
     <Tooltip
       tooltipWrapperStyles={{
         marginTop: 'var(--general-space-12)',
       }}
+      tooltipName={tooltipName}
+      onTooltipOpen={onTooltipOpen}
       tooltip={
         externalTokenBonus ? (
           <div className={additionalBonusLabelStyles.additionalBonusTooltipWrapper}>

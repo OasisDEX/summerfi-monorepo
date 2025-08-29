@@ -27,6 +27,8 @@ interface BonulsLabelProps {
     apyUpdatedAtAltLabel: string
   }
   deviceType?: DeviceType
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
 }
 
 export const BonusLabel: FC<BonulsLabelProps> = ({
@@ -40,6 +42,8 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
   apyUpdatedAt,
   totalSumrEarned,
   deviceType,
+  onTooltipOpen,
+  tooltipName,
 }): React.ReactNode => {
   const isAltPressed = useHoldAlt()
 
@@ -47,6 +51,8 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
     <Tooltip
       deviceType={deviceType}
       stopPropagation
+      tooltipName={tooltipName}
+      onTooltipOpen={onTooltipOpen}
       tooltip={
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
