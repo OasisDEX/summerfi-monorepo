@@ -9,7 +9,7 @@ import {
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
-import { memoize } from 'lodash-es'
+import memoize from 'lodash-es/memoize'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'

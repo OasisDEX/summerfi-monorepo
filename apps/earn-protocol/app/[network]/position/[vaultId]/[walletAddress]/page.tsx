@@ -28,7 +28,7 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'

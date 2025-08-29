@@ -7,7 +7,7 @@ import {
   useContext,
   useReducer,
 } from 'react'
-import { isEmpty } from 'lodash-es'
+import isEmpty from 'lodash-es/isEmpty'
 
 import {
   type LocalConfigActions,

@@ -18,7 +18,7 @@ import {
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import { useSearchParams } from 'next/navigation'
 
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'

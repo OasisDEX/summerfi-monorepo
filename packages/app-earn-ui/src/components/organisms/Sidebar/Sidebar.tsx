@@ -1,7 +1,7 @@
 'use client'
 import { type CSSProperties, type FC, type ReactNode, useState } from 'react'
 import clsx from 'clsx'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'

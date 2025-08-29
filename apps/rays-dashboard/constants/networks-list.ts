@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash-es'
+import keyBy from 'lodash-es/keyBy'
 
 import { clientId } from '@/helpers/client-id'
 import arbitrumMainnetBadge from '@/public/img/network_icons/arbitrum_badge_mainnet.svg'

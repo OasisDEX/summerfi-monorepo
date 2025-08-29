@@ -1,6 +1,6 @@
 import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
 import browserDetect from 'browser-detect'
-import { upperFirst } from 'lodash-es'
+import upperFirst from 'lodash-es/upperFirst'
 
 import { basePath } from '@/helpers/base-path'
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'

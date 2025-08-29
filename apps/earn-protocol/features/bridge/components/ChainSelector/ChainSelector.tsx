@@ -6,7 +6,7 @@ import {
   SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import { type Chain } from 'viem'
 
 import styles from './ChainSelector.module.css'

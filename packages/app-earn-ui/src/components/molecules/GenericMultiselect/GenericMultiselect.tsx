@@ -2,7 +2,7 @@
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { toggleArrayItem } from '@summerfi/app-utils'
-import { isEqual } from 'lodash-es'
+import isEqual from 'lodash-es/isEqual'
 import Image from 'next/image'
 
 import { Button } from '@/components/atoms/Button/Button'

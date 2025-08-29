@@ -14,7 +14,7 @@ import {
   sdkNetworkToHumanNetwork,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'

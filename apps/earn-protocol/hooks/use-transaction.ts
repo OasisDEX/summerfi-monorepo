@@ -43,7 +43,7 @@ import {
   TransactionType,
 } from '@summerfi/sdk-common'
 import type BigNumber from 'bignumber.js'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 

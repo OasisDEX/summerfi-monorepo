@@ -7,7 +7,7 @@ import {
 } from '@summerfi/app-types'
 import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'

@@ -1,4 +1,4 @@
-import { clone } from 'lodash-es'
+import clone from 'lodash-es/clone'
 
 /**
  * Recursively sets all values within an object or array to `null`.

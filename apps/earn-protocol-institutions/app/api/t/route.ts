@@ -1,6 +1,6 @@
 import { getMixpanel, trackEventHandler } from '@summerfi/app-server-handlers'
 import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
-import { snakeCase } from 'lodash-es'
+import snakeCase from 'lodash-es/snakeCase'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export const revalidate = 0

@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash-es'
+import keyBy from 'lodash-es/keyBy'
 import aaveIcon from 'public/img/protocol_icons/aave_icon.svg'
 import aaveV2Logo from 'public/img/protocol_icons/aave_v2_logo.svg'
 import aaveV3Logo from 'public/img/protocol_icons/aave_v3_logo.svg'

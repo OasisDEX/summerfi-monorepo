@@ -1,5 +1,5 @@
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { sdkNetworkToHumanNetwork } from './earn-network-tools'
 

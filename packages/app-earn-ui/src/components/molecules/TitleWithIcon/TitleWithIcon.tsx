@@ -1,7 +1,8 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
-import { identity, pickBy } from 'lodash-es'
+import identity from 'lodash-es/identity'
+import pickBy from 'lodash-es/pickBy'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'

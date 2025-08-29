@@ -12,7 +12,7 @@ import {
   type SupportedNetworkIds,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import Image from 'next/image'
 
 import { platformLogoMap } from '@/helpers/platform-logo-map'

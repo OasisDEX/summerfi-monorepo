@@ -1,6 +1,6 @@
 import { tokenConfigs } from '@summerfi/app-token-config'
 import { type TokenConfig } from '@summerfi/app-types'
-import { keyBy } from 'lodash-es'
+import keyBy from 'lodash-es/keyBy'
 
 export const tokens: TokenConfig[] = [...tokenConfigs]
 export const tokensBySymbol: { [key: string]: TokenConfig } = keyBy(tokens, 'symbol')

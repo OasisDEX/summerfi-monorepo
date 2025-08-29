@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import { type RiskType } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'

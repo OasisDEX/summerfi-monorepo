@@ -7,7 +7,7 @@ import {
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { VaultDetailsAdvancedYield } from '@/features/vault-details/components/VaultDetailsAdvancedYield/VaultDetailsAdvancedYield'
 

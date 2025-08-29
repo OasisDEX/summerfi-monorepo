@@ -22,7 +22,7 @@ import {
   sdkNetworkToHumanNetwork,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'

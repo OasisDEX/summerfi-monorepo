@@ -12,7 +12,7 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import type BigNumber from 'bignumber.js'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'

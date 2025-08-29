@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash-es'
+import keyBy from 'lodash-es/keyBy'
 
 import {
   type NetworkConfig,

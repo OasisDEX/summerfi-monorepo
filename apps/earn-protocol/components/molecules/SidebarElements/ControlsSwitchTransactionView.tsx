@@ -35,7 +35,7 @@ import {
 import { TransactionType, type VaultSwitchTransactionInfo } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
 

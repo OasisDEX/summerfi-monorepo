@@ -36,7 +36,7 @@ import {
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 

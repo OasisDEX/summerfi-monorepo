@@ -1,6 +1,6 @@
 import { Icon, networkNameIconNameMap, Text } from '@summerfi/app-earn-ui'
 import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
-import { capitalize } from 'lodash-es'
+import capitalize from 'lodash-es/capitalize'
 
 import styles from './NetworkDisplay.module.css'
 
