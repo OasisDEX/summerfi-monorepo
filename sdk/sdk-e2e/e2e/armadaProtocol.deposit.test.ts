@@ -45,24 +45,19 @@ describe('Armada Protocol Deposit', () => {
     const chainId = ChainIds.Base
     const fleetAddress = ethFleetBase
     const userAddress = testWalletAddress
+    const amountValue = '0.003'
+    const symbol = 'ETH'
     const swapToSymbol = undefined
 
-    // await runTests({
-    //   rpcUrl,
-    //   chainId,
-    //   fleetAddress,
-    //   userAddress,
-    //   amountValue: '0.5',
-    //   swapToSymbol,
-    //   stake: true,
-    // })
     await runTests({
       rpcUrl,
       chainId,
       fleetAddress,
       userAddress,
-      amountValue: '0.003',
+      symbol,
+      amountValue,
       swapToSymbol,
+      stake: true,
     })
   })
 })
@@ -72,6 +67,7 @@ async function runTests({
   swapToSymbol,
   fleetAddress,
   rpcUrl,
+  symbol,
   amountValue,
   userAddress,
   stake,
@@ -81,6 +77,7 @@ async function runTests({
   swapToSymbol: string | undefined
   fleetAddress: Address
   rpcUrl: string | undefined
+  symbol: string
   amountValue: string
   userAddress: Address
   stake?: boolean
@@ -108,7 +105,7 @@ async function runTests({
   const vaultInfo = await sdk.armada.users.getVaultInfo({
     vaultId,
   })
-  const token = vaultInfo.depositCap.token
+  const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
   const swapToken = swapToSymbol
     ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapToSymbol })
     : undefined
@@ -129,20 +126,19 @@ async function runTests({
     stakedAmountBefore.assets.toSolidityValue(),
   )
 
-  console.log(
-    `deposit ${amountValue} USDC to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
-  )
-
   const amount = TokenAmount.createFrom({
     amount: amountValue,
     token: swapToken || token,
   })
 
+  console.log(
+    `deposit ${amountValue.toString()} to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
+  )
+
   assert(
-    vaultInfo.depositCap.isGreaterOrEqualThan(vaultInfo.totalDeposits.add(amount)),
-    `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits
-      .add(amount)
-      .toString()}`,
+    vaultInfo.depositCap.toSolidityValue() >=
+      vaultInfo.totalDeposits.toSolidityValue() + amount.toSolidityValue(),
+    `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits.toString()} + ${amount.toString()}`,
   )
 
   const transactions = await sdk.armada.users.getNewDepositTx({

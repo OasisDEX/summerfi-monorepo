@@ -8,11 +8,12 @@ import {
   Wallet,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { SDKApiUrl, testWalletAddress, signerPrivateKey } from './utils/testConfig'
 import assert from 'assert'
 
 jest.setTimeout(300000)
-const simulateOnly = true
+const simulateOnly = false
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -116,5 +117,95 @@ describe('Armada Protocol - User', () => {
       '\n - Staked: ',
       stakedAmountBefore.assets.toString(),
     )
+  })
+
+  it(`should unstake all fleet tokens for vault: ${fleetAddress.value}`, async () => {
+    // Check initial balances
+    const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId,
+    })
+    const stakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId,
+    })
+
+    console.log('Balances before unstaking:')
+    console.log(' - Wallet fleet balance:', fleetAmountBefore.assets.toString())
+    console.log(' - Staked fleet balance:', stakedAmountBefore.assets.toString())
+
+    // Assert that there are staked tokens to unstake
+    assert(
+      stakedAmountBefore.assets.toSolidityValue() > 0n,
+      `No staked tokens found. Staked balance: ${stakedAmountBefore.assets.toString()}`,
+    )
+
+    console.log(`Unstaking all fleet tokens from vault at ${fleetAddress.value}`)
+
+    // Get unstake transaction (unstake all by not providing amount parameter)
+    const transaction = await sdk.armada.users.getUnstakeFleetTokensTx({
+      chainId: chainId,
+      addressValue: user.wallet.address.value,
+      vaultId: vaultId,
+      // No amount provided - should unstake all
+    })
+
+    console.log('Transaction description:', transaction.description)
+
+    // Send transaction
+    const { statuses } = await sendAndLogTransactions({
+      chainInfo,
+      transactions: [transaction],
+      rpcUrl: rpcUrl!,
+      privateKey: signerPrivateKey,
+      simulateOnly,
+    })
+
+    // Verify transaction success
+    statuses.forEach((status) => {
+      expect(status).toBe('success')
+    })
+
+    if (!simulateOnly) {
+      // Check balances after unstaking
+      const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
+        user,
+        vaultId,
+      })
+      const stakedAmountAfter = await sdk.armada.users.getStakedBalance({
+        user,
+        vaultId,
+      })
+
+      console.log('Balances after unstaking:')
+      console.log(' - Wallet fleet balance:', fleetAmountAfter.assets.toString())
+      console.log(' - Staked fleet balance:', stakedAmountAfter.assets.toString())
+
+      console.log('Balance changes:')
+      console.log(
+        ' - Wallet change:',
+        fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
+      )
+      console.log(
+        ' - Staked change:',
+        stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
+      )
+
+      // Verify that staked balance decreased and wallet balance increased
+      assert(
+        stakedAmountAfter.assets.toSolidityValue() < stakedAmountBefore.assets.toSolidityValue(),
+        'Staked balance should have decreased after unstaking',
+      )
+      assert(
+        fleetAmountAfter.assets.toSolidityValue() > fleetAmountBefore.assets.toSolidityValue(),
+        'Wallet balance should have increased after unstaking',
+      )
+
+      // Verify that all tokens were unstaked (staked balance should be 0 or very close to 0)
+      assert(
+        stakedAmountAfter.assets.toSolidityValue() === 0n,
+        `All tokens should have been unstaked. Remaining staked balance: ${stakedAmountAfter.assets.toString()}`,
+      )
+    }
   })
 })
