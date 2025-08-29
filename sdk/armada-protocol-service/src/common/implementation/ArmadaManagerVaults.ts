@@ -300,7 +300,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           }),
           swapToAmount &&
             this._utils.getPriceImpact({
-              fromAmount: finalWithdrawAmount,
+              fromAmount: withdrawAmount,
               toAmount: swapToAmount,
             }),
         ])
@@ -878,7 +878,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             }),
             swapToAmount &&
               this._utils.getPriceImpact({
-                fromAmount: finalWithdrawAmount,
+                fromAmount: withdrawAmount,
                 toAmount: swapToAmount,
               }),
           ])
@@ -1397,7 +1397,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     })
     multicallArgs.push(withdrawTokensCalldata)
     multicallOperations.push(
-      'withdrawTokens' +
+      'withdrawTokens ' +
         (fromAmount.toSolidityValue() === 0n || exitAll
           ? fromAmount.token.toString() + ' (all)'
           : fromAmount.toString()),
