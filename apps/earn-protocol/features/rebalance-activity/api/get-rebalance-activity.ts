@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
+import { normalizeQueryTableFilters } from '@/helpers/normalize-query-table-filters'
 
 /**
  * Fetches rebalance activity data from the API with optional filters.
@@ -52,6 +53,10 @@ export const getRebalanceActivity = async ({
 
   const response = await fetch(`/earn/api/rebalance-activity?${query.toString()}`, { signal })
 
+  if (!response.ok) {
+    throw new Error(`rebalance-activity ${response.status}`)
+  }
+
   return response.json()
 }
 
@@ -89,9 +94,9 @@ export const useRebalanceActivityInfiniteQuery = ({
   limit?: number
 }) => {
   const key = {
-    tokens: tokens?.length ? [...tokens].sort().join(',') : '',
-    strategies: strategies?.length ? [...strategies].sort().join(',') : '',
-    protocols: protocols?.length ? [...protocols].sort().join(',') : '',
+    tokens: normalizeQueryTableFilters(tokens),
+    strategies: normalizeQueryTableFilters(strategies),
+    protocols: normalizeQueryTableFilters(protocols),
     sortBy: sortBy ?? '',
     orderBy: orderBy?.toLowerCase() ?? '',
     userAddress: userAddress?.toLowerCase() ?? '',

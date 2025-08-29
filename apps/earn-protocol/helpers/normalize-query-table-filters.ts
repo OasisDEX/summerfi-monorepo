@@ -5,4 +5,4 @@
  * @returns {string} A normalized string representation of the array.
  */
 export const normalizeQueryTableFilters = (arr?: string[]) =>
-  arr?.length ? [...arr].sort().join(',') : ''
+  arr?.length ? [...new Set(arr.map((s) => s.toLowerCase()))].sort().join(',') : ''
