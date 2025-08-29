@@ -39,6 +39,7 @@ import {
   convertWethToEth,
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
+  slugifyVault,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
@@ -54,6 +55,7 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useHandleButtonOpenEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
@@ -133,6 +135,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const buttonClickEventHandler = useHandleButtonOpenEvent()
 
   const user = useUser()
   const userIsSmartAccount = isUserSmartAccount(user)
@@ -326,12 +330,16 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
+      buttonClickEventHandler(
+        `home-page-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
+      )
       const vaultUrl = getVaultUrl(resolvedVaultData)
 
       push(vaultUrl)
 
       return
     }
+    buttonClickEventHandler(`home-page-vault-card-${slugifyVault(resolvedVaultData)}-select`)
     setSelectedVaultId(nextselectedVaultId)
   }
 
@@ -459,10 +467,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     return sortingMethod ?? sortingMethods.find(({ id }) => id === 'highest-apy')! // selecting the default one
   }, [sortingMethodId])
 
+  const handleRefresh = () => {
+    buttonClickEventHandler('-page-vault-card-${nextselectedVaultId}-page-refresh')
+    revalidateVaultsListData()
+  }
+
+  const handleWhatIsLazyClick = () => {
+    buttonClickEventHandler('home-page-what-is-lazy')
+  }
+
   return (
     <VaultGrid
       isMobileOrTablet={isMobileOrTablet}
-      onRefresh={revalidateVaultsListData}
+      onRefresh={handleRefresh}
+      onWhatIsLazyClick={handleWhatIsLazyClick}
       topContent={
         <div className={vaultsListViewStyles.topContentGrid}>
           <DataBlock
@@ -470,6 +488,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
             size="large"
             value={`$${formattedTotalAssets}`}
+            tooltipName="home-page-protocol-tvl"
+            onTooltipOpen={tooltipEventHandler}
           />
 
           <DataBlock
@@ -477,6 +497,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}
             size="large"
             value={`$${formattedTotalLiquidity}`}
+            tooltipName="home-page-instant-liquidity"
+            onTooltipOpen={tooltipEventHandler}
           />
           <DataBlock
             title="Protocols Supported"
@@ -486,6 +508,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               .join(', ')}`}
             size="large"
             value={formattedProtocolsSupportedCount}
+            tooltipName="home-page-protocols-supported"
+            onTooltipOpen={tooltipEventHandler}
           />
         </div>
       }
@@ -574,6 +598,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
+                tooltipName="home-page-vault-card"
+                onTooltipOpen={tooltipEventHandler}
               />
             ))
           ) : (

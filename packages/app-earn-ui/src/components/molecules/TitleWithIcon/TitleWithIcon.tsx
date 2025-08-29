@@ -19,6 +19,8 @@ type TitleWithIconProps = {
   color?: string
   titleStyle?: CSSProperties
   tooltipWrapperStyles?: CSSProperties
+  onTooltipOpen?: (tooltipName: string) => void
+  tooltipName?: string
 }
 
 export const TitleWithIcon = ({
@@ -30,6 +32,8 @@ export const TitleWithIcon = ({
   color,
   titleStyle,
   tooltipWrapperStyles,
+  onTooltipOpen,
+  tooltipName,
 }: TitleWithIconProps): React.ReactNode => {
   // clear undefined values from style properties to avoid overwrite
   const resolvedTitleStyle = pickBy(titleStyle, identity)
@@ -41,7 +45,12 @@ export const TitleWithIcon = ({
       </Text>
       {iconName && !tooltip && <Icon iconName={iconName} size={18} color={color} />}
       {iconName && tooltip && (
-        <Tooltip tooltip={tooltip} tooltipWrapperStyles={tooltipWrapperStyles}>
+        <Tooltip
+          tooltip={tooltip}
+          tooltipWrapperStyles={tooltipWrapperStyles}
+          onTooltipOpen={onTooltipOpen}
+          tooltipName={tooltipName}
+        >
           <Icon iconName={iconName} size={18} color={color} />
         </Tooltip>
       )}

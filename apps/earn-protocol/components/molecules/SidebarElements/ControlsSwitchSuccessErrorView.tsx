@@ -21,7 +21,6 @@ import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { networkSDKChainIdIconMap } from '@/constants/network-id-to-icon'
-import { trackVaultSwitched } from '@/helpers/mixpanel'
 import { usePosition } from '@/hooks/use-position'
 
 import controlsSwitchSuccessErrorViewStyles from './ControlsSwitchSuccessErrorView.module.css'
@@ -232,22 +231,6 @@ export const ControlsSwitchSuccessErrorView = ({
       }
     }
   }, [locallyLoadingNextPosition])
-
-  useEffect(() => {
-    trackVaultSwitched({
-      id: 'VaultSwitched',
-      page: window.location.host + window.location.pathname,
-      userAddress: userWalletAddress,
-      fromVaultId: currentVault.id,
-      toVaultId: nextVault.id,
-      fromToken: currentVault.inputToken.symbol,
-      toToken: nextVault.inputToken.symbol,
-      fromAmount: switchedAmount,
-      toAmount: nextAmount,
-      chainId,
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <div className={controlsSwitchSuccessErrorViewStyles.controlsSwitchSuccessErrorView}>

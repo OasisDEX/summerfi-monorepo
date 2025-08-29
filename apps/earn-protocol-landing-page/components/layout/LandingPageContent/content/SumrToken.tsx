@@ -1,12 +1,22 @@
 import { Button, Emphasis, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import sumrTokenBubbles from '@/public/img/landing-page/sumr-token_bubbles.svg'
 
 import sumrTokenStyles from '@/components/layout/LandingPageContent/content/SumrToken.module.css'
 
 export const SumrToken = () => {
+  const pathname = usePathname()
+  const handleSumrTokenCta = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-sumr-token-cta`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={sumrTokenStyles.sumrTokenWrapper}>
       <div className={sumrTokenStyles.sumrTokenDescription}>
@@ -33,7 +43,7 @@ export const SumrToken = () => {
           Protocol, Stake & Delegate your voting power or be a Delegate and vote on behalf of
           others. Earn $SUMR and help contribute to the value created by the Lazy Summer Protocol.
         </Text>
-        <Link href="/earn/sumr" prefetch={false}>
+        <Link href="/earn/sumr" prefetch={false} onClick={handleSumrTokenCta}>
           <Button variant="secondarySmall">Get $SUMR</Button>
         </Link>
       </div>

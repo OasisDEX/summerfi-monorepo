@@ -11,6 +11,9 @@ import {
 } from '@summerfi/app-utils'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import higherYieldsBlockStyles from '@/components/layout/LandingPageContent/content/HigherYieldsBlock.module.css'
 
@@ -19,6 +22,7 @@ import howYouEarnMoreImage from '@/public/img/landing-page/higher-yields_how-you
 import howYouSaveTimeAndCostsImage from '@/public/img/landing-page/higher-yields_how-you-save-costs.png'
 
 type HigherYieldsSectionProps = {
+  id: string
   title: string
   description: string
   ctaLabel: string
@@ -44,6 +48,7 @@ type HigherYieldsSectionContentProps = {
 }
 
 const HigherYieldsSection = ({
+  id,
   title,
   description,
   ctaLabel,
@@ -53,6 +58,14 @@ const HigherYieldsSection = ({
   imageSrc,
   statsList,
 }: HigherYieldsSectionProps) => {
+  const pathname = usePathname()
+  const handleHigherYieldsSectionCta = (buttonId: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-higher-yields-section-cta-${id}-${buttonId}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={higherYieldsBlockStyles.higherYieldsSection}>
       <Text as="h5" variant="h5" className={higherYieldsBlockStyles.higherYieldsSectionTitle}>
@@ -62,12 +75,13 @@ const HigherYieldsSection = ({
         {description}
       </Text>
       <div className={higherYieldsBlockStyles.higherYieldsSectionCTA}>
-        <Link href={ctaUrl} prefetch={false}>
+        <Link href={ctaUrl} prefetch={false} onClick={handleHigherYieldsSectionCta('primary')}>
           <Button variant="primarySmall">{ctaLabel}</Button>
         </Link>
         <Link
           prefetch={false}
           href={secondaryCtaUrl}
+          onClick={handleHigherYieldsSectionCta('secondary')}
           className={higherYieldsBlockStyles.higherYieldsSectionSecondaryButton}
         >
           <WithArrow>
@@ -101,6 +115,7 @@ const higherYieldsBlockSections = {
       supportedProtocolsCount,
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
+        id="how-you-earn-more"
         title="You’re earning DeFi’s highest yields, all of the time."
         description="With Lazy Summer Protocol, your deposits are continuously monitored and reallocated across the top protocols, ensuring you are earning the best available yields."
         ctaLabel="Get started"
@@ -133,6 +148,7 @@ const higherYieldsBlockSections = {
       totalVaultsCount,
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
+        id="how-we-use-ai"
         title="Always optimized, zero effort."
         description="Summer.fi's AI-powered keeper network requires a majority of AI Agents to agree on a single strategy to automatically rebalance your portfolio. It continually optimizes rebalancing strategies to maximize long-term yields."
         ctaLabel="Get started"
@@ -166,6 +182,7 @@ const higherYieldsBlockSections = {
       supportedProtocolsCount,
     }: HigherYieldsSectionContentProps) => (
       <HigherYieldsSection
+        id="how-you-save-time-and-costs"
         title="Save Time, Cut Complexity and forget about Gas Costs"
         description="With Summer.fi, there is no need to keep a spreadsheet, check different apps and sign multiple transactions, chasing the best yields and seeing your profit disappear with gas fees. All rebalances are included in the 1% Annualized AUM Fee...sit back, relax and earn more the lazy way."
         ctaLabel="Deposit"
@@ -206,6 +223,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   vaultsList,
   totalRebalanceItemsPerStrategyId = [],
 }) => {
+  const pathname = usePathname()
   const totalRebalances = useMemo(
     () => totalRebalanceItemsPerStrategyId.reduce((acc, item) => acc + Number(item.count), 0),
     [totalRebalanceItemsPerStrategyId],
@@ -261,6 +279,13 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
     vaultsList,
   ])
 
+  const handleSectionTabChange = (sectionId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-higher-yields-section-${sectionId}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div>
       <div className={higherYieldsBlockStyles.higherYieldsHeaderWrapper}>
@@ -270,7 +295,9 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
           with AI.
         </Text>
       </div>
-      {sectionTabs ? <SectionTabs sections={sectionTabs} /> : null}
+      {sectionTabs ? (
+        <SectionTabs sections={sectionTabs} additionalOnTabChange={handleSectionTabChange} />
+      ) : null}
     </div>
   )
 }

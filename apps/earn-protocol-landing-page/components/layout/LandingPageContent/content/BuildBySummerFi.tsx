@@ -3,6 +3,9 @@ import { Emphasis, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type ProAppStats } from '@summerfi/app-types'
 import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
 
@@ -20,6 +23,15 @@ const StatBlock = ({ title, value }: { title: string; value: string }) => {
 }
 
 const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: boolean }) => {
+  const pathname = usePathname()
+
+  const handleViewLeadershipCta = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-view-leadership`,
+      page: pathname,
+    })
+  }
+
   return (
     <>
       <div
@@ -40,7 +52,7 @@ const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: 
             </Text>
           </div>
           <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
-            <Link href="/team" prefetch={false}>
+            <Link href="/team" prefetch={false} onClick={handleViewLeadershipCta}>
               <WithArrow>
                 <Text variant="p2semi">View leadership</Text>
               </WithArrow>

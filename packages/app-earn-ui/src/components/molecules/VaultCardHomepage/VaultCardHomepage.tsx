@@ -9,6 +9,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -219,6 +220,7 @@ type VaultCardHomepageProps = {
   }
   selected?: boolean
   onSelect?: () => void
+  onGetStartedClick?: (vault?: SDKVaultishType) => void
   sumrPrice?: number
   isLoading?: boolean
 }
@@ -230,6 +232,7 @@ export const VaultCardHomepage = ({
   onSelect,
   sumrPrice,
   isLoading,
+  onGetStartedClick,
 }: VaultCardHomepageProps): React.ReactNode => {
   if (isLoading ?? !vault) {
     return <VaultCardLoading selected={selected} onSelect={onSelect} />
@@ -249,7 +252,8 @@ export const VaultCardHomepage = ({
   if (!vaultsApyByNetworkMap) {
     return null
   }
-  const { apy } = vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(protocol.network)}`]
+  const { apy } =
+    vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(supportedSDKNetwork(protocol.network))}`]
   const parsedApy = formatDecimalAsPercent(apy)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
@@ -262,6 +266,12 @@ export const VaultCardHomepage = ({
     totalValueLockedUSD,
     rewardTokenEmissionsFinish,
   )
+
+  const handleGetStartedClick = () => {
+    if (onGetStartedClick) {
+      onGetStartedClick(vault)
+    }
+  }
 
   return (
     <Card
@@ -279,7 +289,11 @@ export const VaultCardHomepage = ({
         })}
       >
         <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
-          <VaultTitle symbol={inputToken.symbol} networkName={protocol.network} isVaultCard />
+          <VaultTitle
+            symbol={inputToken.symbol}
+            networkName={supportedSDKNetwork(protocol.network)}
+            isVaultCard
+          />
           <AdditionalBonusLabel
             externalTokenBonus={customFields?.bonus}
             sumrTokenBonus={rawSumrTokenBonus !== '0' ? sumrTokenBonus : undefined}
@@ -360,7 +374,7 @@ export const VaultCardHomepage = ({
             />
           </div>
         </div>
-        <Link href={`/earn${getVaultUrl(vault)}`}>
+        <Link href={`/earn${getVaultUrl(vault)}`} onClick={handleGetStartedClick}>
           <Button variant="primaryLargeColorful" style={{ width: '100%' }}>
             Get started
           </Button>

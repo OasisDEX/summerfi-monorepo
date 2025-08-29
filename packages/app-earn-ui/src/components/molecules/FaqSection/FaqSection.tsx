@@ -16,6 +16,7 @@ interface FaqSectionProps {
     title: string
     content: ReactNode
   }[]
+  onExpand?: (props: { expanded: boolean; title: string }) => void
   wrapperClassName?: string
   headerClassName?: string
   faqSectionClassName?: string
@@ -25,6 +26,7 @@ interface FaqSectionProps {
 }
 
 export const FaqSection: FC<FaqSectionProps> = ({
+  onExpand,
   data,
   wrapperClassName,
   headerVariant = 'h2',
@@ -33,6 +35,12 @@ export const FaqSection: FC<FaqSectionProps> = ({
   customTitle,
   expanderButtonStyles,
 }) => {
+  const handleOnExpand = (title: string) => (expanded: boolean) => {
+    if (onExpand) {
+      onExpand({ expanded, title })
+    }
+  }
+
   return (
     <div className={clsx(wrapperClassName, faqSectionStyles.faqGeneralWrapper)}>
       <div className={clsx(headerClassName)}>
@@ -40,7 +48,12 @@ export const FaqSection: FC<FaqSectionProps> = ({
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
         {data.map(({ title, content }) => (
-          <Expander title={title} key={title} expanderButtonStyles={expanderButtonStyles}>
+          <Expander
+            title={title}
+            key={title}
+            expanderButtonStyles={expanderButtonStyles}
+            onExpand={handleOnExpand(title)}
+          >
             <ExpanderContent>{content}</ExpanderContent>
           </Expander>
         ))}

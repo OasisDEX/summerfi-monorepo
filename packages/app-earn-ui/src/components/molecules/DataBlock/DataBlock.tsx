@@ -26,6 +26,8 @@ export type DataBlockProps = {
   tooltipIconName?: IconNamesList
   wrapperStyles?: CSSProperties
   wrapperClassName?: string
+  onTooltipOpen?: (tooltipName: string) => void
+  tooltipName?: string
 }
 
 export const DataBlock = ({
@@ -47,6 +49,8 @@ export const DataBlock = ({
   tooltipIconName,
   wrapperStyles,
   wrapperClassName,
+  onTooltipOpen,
+  tooltipName,
 }: DataBlockProps): React.ReactNode => {
   const titleVariant = {
     small: 'p3semi' as const,
@@ -85,6 +89,8 @@ export const DataBlock = ({
           color="rgb(119, 117, 118)"
           titleStyle={titleStyle}
           tooltipWrapperStyles={{ minWidth: '230px', left: '-120px' }}
+          onTooltipOpen={onTooltipOpen}
+          tooltipName={tooltipName}
         />
       </div>
       <Text variant={valueVariant} style={valueStyle}>

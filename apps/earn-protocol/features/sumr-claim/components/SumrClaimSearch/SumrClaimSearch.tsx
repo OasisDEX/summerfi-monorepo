@@ -4,12 +4,12 @@ import { useAuthModal, useUser } from '@account-kit/react'
 import { Button, Card, Input, LoadingSpinner, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
-import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.css'
@@ -17,6 +17,7 @@ import classNames from './SumrClaimSearch.module.css'
 export const SumrClaimSearch = () => {
   const { push } = useRouter()
   const user = useUser()
+  const pathname = usePathname()
   const { openAuthModal } = useAuthModal()
 
   const [eligibleUsers, setEligibleUsers] =
@@ -56,10 +57,9 @@ export const SumrClaimSearch = () => {
 
   const handleButtonClick = () => {
     if (!user) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
-        page: '/sumr',
-        userAddress: '',
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'sumr-claim-search',
+        page: pathname,
       })
       openAuthModal()
 
@@ -67,11 +67,10 @@ export const SumrClaimSearch = () => {
     }
 
     if (resolvedPortfolioUserAddress) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
-        page: '/sumr',
-        userAddress: resolvedPortfolioUserAddress,
-        searcherdForAddress: resolvedAddress,
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'sumr-claim-search',
+        page: pathname,
+        walletAddress: resolvedPortfolioUserAddress,
       })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
@@ -95,6 +94,11 @@ export const SumrClaimSearch = () => {
           setIsLoading(false)
         } catch (e) {
           setIsLoading(false)
+          EarnProtocolEvents.errorOccurred({
+            page: '/sumr',
+            errorMessage: (e as Error).message,
+            walletAddress: address,
+          })
           setInputError('Error fetching user $SUMR eligibility')
         }
       }
@@ -103,11 +107,10 @@ export const SumrClaimSearch = () => {
         void request(resolvedAddress)
       }
       if (inputValue) {
-        trackInputChange({
-          id: 'SumrClaimSearch',
+        EarnProtocolEvents.inputChanged({
+          inputName: 'SumrClaimSearch',
           page: '/sumr',
-          userAddress: user?.address,
-          searcherdForAddress: resolvedAddress,
+          value: inputValue,
         })
       }
     }, 400)

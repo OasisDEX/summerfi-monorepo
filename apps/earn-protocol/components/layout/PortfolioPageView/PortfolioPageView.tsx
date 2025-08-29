@@ -13,6 +13,7 @@ import {
   type HistoryChartData,
   type SDKVaultishType,
 } from '@summerfi/app-types'
+import { usePathname } from 'next/navigation'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
@@ -36,7 +37,7 @@ import { PortfolioYourActivity } from '@/features/portfolio/components/Portfolio
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { trackButtonClick } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.css'
@@ -76,6 +77,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   beachClubData,
   blogPosts,
 }) => {
+  const pathname = usePathname()
   const { features } = useSystemConfig()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -99,11 +101,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const beachClubEnabled = !!features?.BeachClub
 
   useEffect(() => {
-    trackButtonClick({
-      id: 'TabChange_Portfolio',
-      page: `/portfolio/${walletAddress}`,
-      userAddress: userWalletAddress,
-      activeTab,
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `ep-portfolio-tab-${activeTab}`,
+      page: pathname,
+      walletAddress: userWalletAddress,
     })
     // only on tab change
     // eslint-disable-next-line react-hooks/exhaustive-deps

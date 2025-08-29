@@ -3,6 +3,8 @@ import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-e
 import { type GetVaultsApyResponse, type SDKVaultishType } from '@summerfi/app-types'
 import Link from 'next/link'
 
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
+
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
 
 export const LandingPageHero = ({
@@ -46,14 +48,34 @@ export const LandingPageHero = ({
     </Text>
   )
 
+  const handleGetStartedClick = (vault?: SDKVaultishType) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-get-started-${vault?.inputToken.symbol}-${vault?.protocol.network}`,
+      page: '/',
+    })
+  }
+
   return (
     <div className={landingPageHeroStyles.landingPageHeroWrapper}>
       <div className={landingPageHeroStyles.heroHeader}>
         <div className={landingPageHeroStyles.heroHeaderPartA}>{headerPartA}</div>
         <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
       </div>
-      <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
-      <Link href="/earn" prefetch={false}>
+      <HomepageCarousel
+        vaultsList={vaultsList}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        onGetStartedClick={handleGetStartedClick}
+      />
+      <Link
+        href="/earn"
+        prefetch={false}
+        onClick={() => {
+          EarnProtocolEvents.buttonClicked({
+            buttonName: 'lp-view-all-strategies',
+            page: '/',
+          })
+        }}
+      >
         <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
           {vaultsList?.length ? (
             <WithArrow style={{ color: 'white' }}>

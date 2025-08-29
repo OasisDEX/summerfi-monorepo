@@ -22,11 +22,13 @@ const max = 1000000
 interface BeachClubRewardSimulationProps {
   cardBackgroundColor?: string
   tvl?: number
+  setSimulationValueCallback?: (value: string) => void
 }
 
 export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
   cardBackgroundColor,
   tvl,
+  setSimulationValueCallback,
 }) => {
   const [simulationValue, setSimulationValue] = useState(tvl ? Math.min(tvl, max) : 500000)
   const sliderWrapperRef = useRef<HTMLDivElement>(null)
@@ -38,6 +40,17 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
       sliderWrapperRef.current.style.setProperty('--slider-value', `${percentage}%`)
     }
   }, [simulationValue])
+
+  const handleSetSimulationValue = (e) => {
+    const simValue = Number(e.target.value)
+
+    setSimulationValueCallback?.(
+      formatWithSeparators(getMultiplier(simValue) * simValue, {
+        precision: 2,
+      }),
+    )
+    setSimulationValue(simValue)
+  }
 
   return (
     <div className={classNames.beachClubRewardSimulationWrapper}>
@@ -99,7 +112,7 @@ export const BeachClubRewardSimulation: FC<BeachClubRewardSimulationProps> = ({
           min={0}
           max={max}
           value={simulationValue}
-          onChange={(e) => setSimulationValue(Number(e.target.value))}
+          onChange={handleSetSimulationValue}
           className={classNames.slider}
         />
         <div className={classNames.sliderLabels}>

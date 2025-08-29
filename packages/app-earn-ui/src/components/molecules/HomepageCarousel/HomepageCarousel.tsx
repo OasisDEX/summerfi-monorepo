@@ -19,11 +19,13 @@ type HomepageCarouselProps = {
   vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
+  onGetStartedClick?: (vault?: SDKVaultishType) => void
 }
 
 export const HomepageCarousel = ({
   vaultsList,
   vaultsApyByNetworkMap,
+  onGetStartedClick,
 }: HomepageCarouselProps): React.ReactNode => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
@@ -95,6 +97,7 @@ export const HomepageCarousel = ({
                     selected={selectedIndex === vaultIndex}
                     sumrPrice={estimatedSumrPrice}
                     isLoading={!vaultsList}
+                    onGetStartedClick={onGetStartedClick}
                   />
                 </div>
               </div>

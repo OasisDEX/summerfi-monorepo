@@ -1,5 +1,8 @@
 import { Card, Emphasis, Icon, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import summerFiProSectionStyles from '@/components/layout/LandingPageContent/content/SummerFiProSection.module.css'
 
@@ -16,6 +19,14 @@ const SummerFiProSectionBlock = ({
   ctaLabel: string
   ctaUrl: string
 }) => {
+  const pathname = usePathname()
+  const handleSummerFiProSectionBlockCTA = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-summer-fi-pro-section-cta-${tag.replaceAll(' ', '-').toLowerCase()}`,
+      page: pathname,
+    })
+  }
+
   return (
     <Card className={summerFiProSectionStyles.summerFiProSectionCard}>
       <div className={summerFiProSectionStyles.summerFiProSectionCardDetails}>
@@ -33,7 +44,12 @@ const SummerFiProSectionBlock = ({
         </div>
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionCardCta}>
-        <Link href={ctaUrl} target="_blank" prefetch={false}>
+        <Link
+          href={ctaUrl}
+          target="_blank"
+          prefetch={false}
+          onClick={handleSummerFiProSectionBlockCTA}
+        >
           <WithArrow>
             <Text variant="p3semi">{ctaLabel}</Text>
           </WithArrow>
@@ -44,6 +60,14 @@ const SummerFiProSectionBlock = ({
 }
 
 export const SummerFiProSection = () => {
+  const pathname = usePathname()
+  const handleSummerFiProSectionCTA = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-summer-fi-pro-section-cta-go-to`,
+      page: pathname,
+    })
+  }
+
   return (
     <div>
       <div className={summerFiProSectionStyles.summerFiProSectionHeaderWrapper}>
@@ -76,7 +100,12 @@ export const SummerFiProSection = () => {
         />
       </div>
       <div className={summerFiProSectionStyles.summerFiProSectionBottomLink}>
-        <Link href={INTERNAL_LINKS.summerPro} target="_blank" prefetch={false}>
+        <Link
+          href={INTERNAL_LINKS.summerPro}
+          target="_blank"
+          prefetch={false}
+          onClick={handleSummerFiProSectionCTA}
+        >
           <WithArrow>
             <Text variant="p2semi">Go to Summer.fi Pro</Text>
           </WithArrow>

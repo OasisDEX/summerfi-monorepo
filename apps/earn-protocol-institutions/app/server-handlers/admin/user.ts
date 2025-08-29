@@ -10,6 +10,7 @@ import {
   ListUsersCommand,
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
+import { slugify } from '@summerfi/app-utils'
 import {
   getSummerProtocolInstitutionDB,
   type UserRole,
@@ -17,7 +18,7 @@ import {
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { getAttr, slugifyName } from '@/app/server-handlers/admin/helpers'
+import { getAttr } from '@/app/server-handlers/admin/helpers'
 import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
@@ -116,7 +117,7 @@ export async function createUser(formData: FormData) {
     sub = getAttr(found.Users[0], 'sub')
   } else {
     // 2) Create user if not exists. Username cannot be an email when email alias is enabled.
-    const base = slugifyName(fullName)
+    const base = slugify(fullName)
     const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
 
     const created = await cognitoClient.send(
@@ -633,7 +634,7 @@ export async function createGlobalAdmin(formData: FormData) {
   })
 
   try {
-    const generatedUsername = slugifyName(fullName)
+    const generatedUsername = slugify(fullName)
     // Create the user in Cognito
     const cognitoUser = await cognitoAdminClient.send(
       new AdminCreateUserCommand({
