@@ -11,16 +11,26 @@ import { getEnrichedUser } from '@/app/server-handlers/auth/user'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { cognitoClient } from '@/features/auth/constants'
 
-async function serverRefreshToken(
+/**
+ * Refresh a token for a user
+ * @param refreshToken - The refresh token
+ * @param username - The username of the user
+ * @param secretHash - The secret hash
+ * @returns The access token and id token
+ */
+const serverRefreshToken = async (
   refreshToken: string,
   username: string,
   secretHash: string,
-): Promise<{ accessToken: string; idToken?: string }> {
-  if (!process.env.INSTITUTIONS_COGNITO_CLIENT_ID) {
+): Promise<{ accessToken: string; idToken?: string }> => {
+  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID
+
+  if (!clientId) {
     throw new Error('Missing Cognito Client ID')
   }
+
   const command = new InitiateAuthCommand({
-    ClientId: process.env.INSTITUTIONS_COGNITO_CLIENT_ID,
+    ClientId: clientId,
     AuthFlow: 'REFRESH_TOKEN_AUTH',
     AuthParameters: {
       REFRESH_TOKEN: refreshToken,

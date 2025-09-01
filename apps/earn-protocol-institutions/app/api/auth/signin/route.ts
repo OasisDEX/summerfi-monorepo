@@ -17,19 +17,6 @@ import {
   type SignInResponse,
 } from '@/features/auth/types'
 
-if (
-  !process.env.INSTITUTIONS_COGNITO_CLIENT_ID ||
-  !process.env.INSTITUTIONS_COGNITO_CLIENT_SECRET
-) {
-  throw new Error('Cognito client ID and secret must be set in environment variables')
-}
-
-if (!process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING) {
-  throw new Error(
-    'EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING must be set in environment variables',
-  )
-}
-
 type JwtClaims = {
   sub?: string
   email?: string
@@ -41,10 +28,22 @@ type JwtClaims = {
   [key: string]: unknown
 }
 
-async function serverSignIn(
+/**
+ * Sign in a user
+ * @param credentials - The login credentials
+ * @param secretHash - The secret hash
+ * @returns The basic auth type
+ */
+const serverSignIn = async (
   credentials: LoginCredentials,
   secretHash?: string,
-): Promise<BasicAuthType> {
+): Promise<BasicAuthType> => {
+  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID
+
+  if (!clientId) {
+    throw new Error('Cognito client ID must be set in environment variables')
+  }
+
   const authParameters: { [key: string]: string } = {
     USERNAME: credentials.email,
     PASSWORD: credentials.password,
@@ -56,7 +55,7 @@ async function serverSignIn(
 
   const command = new InitiateAuthCommand({
     AuthFlow: 'USER_PASSWORD_AUTH',
-    ClientId: process.env.INSTITUTIONS_COGNITO_CLIENT_ID,
+    ClientId: clientId,
     AuthParameters: authParameters,
   })
 
@@ -133,6 +132,7 @@ export async function POST(request: NextRequest) {
 
       cookieStore.set(ACCESS_TOKEN_COOKIE, result.accessToken, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         path: '/',
         maxAge: 15 * 60,
