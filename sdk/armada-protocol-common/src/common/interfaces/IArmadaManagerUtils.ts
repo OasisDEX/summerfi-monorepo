@@ -12,6 +12,7 @@ import {
   type HexData,
   type AddressValue,
   type TransactionInfo,
+  type AmountValue,
 } from '@summerfi/sdk-common'
 import type {
   GetGlobalRebalancesQuery,
@@ -250,13 +251,13 @@ export interface IArmadaManagerUtils {
    *
    * @param addressValue The user address
    * @param vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
-   * @param amount Optional amount to unstake (if not provided, unstakes full balance)
+   * @param amountValue Optional balance amount value to unstake (if not provided, unstakes full balance)
    *
    * @returns TransactionInfo The transaction to unstake fleet tokens
    */
   getUnstakeFleetTokensTx(params: {
     addressValue: AddressValue
     vaultId: IArmadaVaultId
-    amount?: string
+    amountValue?: AmountValue
   }): Promise<TransactionInfo>
 }

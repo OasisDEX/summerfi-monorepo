@@ -3,6 +3,8 @@ import {
   isAddressValue,
   type IArmadaVaultId,
   type AddressValue,
+  isAmountValue,
+  type AmountValue,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -12,7 +14,7 @@ export const getUnstakeFleetTokensTx = publicProcedure
     z.object({
       addressValue: z.custom<AddressValue>(isAddressValue),
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
-      amount: z.string().optional(),
+      amountValue: z.custom<AmountValue>(isAmountValue).optional(),
     }),
   )
   .query(async (opts) => {

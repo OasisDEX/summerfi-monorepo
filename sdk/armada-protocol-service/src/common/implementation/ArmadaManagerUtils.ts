@@ -424,7 +424,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   async getUnstakeFleetTokensTx(params: {
     addressValue: AddressValue
     vaultId: IArmadaVaultId
-    amount?: string
+    amountValue?: string
   }): Promise<TransactionInfo> {
     // Get chain info from vaultId
     const chainInfo = params.vaultId.chainInfo
@@ -458,9 +458,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
     // Determine amount to unstake
     let amountToUnstake: bigint
-    if (params.amount) {
+    if (params.amountValue) {
       // Parse the provided amount string to bigint
-      amountToUnstake = BigInt(params.amount)
+      amountToUnstake = BigInt(params.amountValue)
 
       // Validate that the user has enough staked balance
       if (amountToUnstake > stakedBalance) {
