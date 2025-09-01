@@ -144,7 +144,6 @@ describe('Armada Protocol - User', () => {
 
     // Get unstake transaction (unstake all by not providing amount parameter)
     const transaction = await sdk.armada.users.getUnstakeFleetTokensTx({
-      chainId: chainId,
       addressValue: user.wallet.address.value,
       vaultId: vaultId,
       // No amount provided - should unstake all

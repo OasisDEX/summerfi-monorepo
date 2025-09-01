@@ -597,14 +597,12 @@ export interface IArmadaManagerUsersClient {
   /**
    * @name getUnstakeFleetTokensTx
    * @description Generates a transaction to unstake fleet tokens from the rewards manager
-   * @param params.chainId The chain ID to perform the operation on
    * @param params.addressValue The user's address
-   * @param params.vaultId The vault ID to unstake from
+   * @param params.vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
    * @param params.amount Optional amount to unstake (if not provided, unstakes full balance)
    * @returns Promise<TransactionInfo> The transaction to unstake fleet tokens
    */
   getUnstakeFleetTokensTx(params: {
-    chainId: ChainId
     addressValue: AddressValue
     vaultId: IArmadaVaultId
     amount?: string

@@ -10,7 +10,6 @@ import {
   IUser,
   type TransactionPriceImpact,
   type HexData,
-  type ChainId,
   type AddressValue,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
@@ -249,15 +248,13 @@ export interface IArmadaManagerUtils {
    * @name getUnstakeFleetTokensTx
    * @description Get the transaction to unstake fleet tokens from the rewards manager
    *
-   * @param chainId The chain ID
    * @param addressValue The user address
-   * @param vaultId The vault ID to unstake from
+   * @param vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
    * @param amount Optional amount to unstake (if not provided, unstakes full balance)
    *
    * @returns TransactionInfo The transaction to unstake fleet tokens
    */
   getUnstakeFleetTokensTx(params: {
-    chainId: ChainId
     addressValue: AddressValue
     vaultId: IArmadaVaultId
     amount?: string

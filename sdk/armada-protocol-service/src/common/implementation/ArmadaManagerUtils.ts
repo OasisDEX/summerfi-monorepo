@@ -25,7 +25,6 @@ import {
   type IArmadaPosition,
   type IArmadaPositionId,
   type IArmadaVaultId,
-  type ChainId,
   type AddressValue,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
@@ -423,13 +422,12 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
   /** @see IArmadaManagerUtils.getUnstakeFleetTokensTx */
   async getUnstakeFleetTokensTx(params: {
-    chainId: ChainId
     addressValue: AddressValue
     vaultId: IArmadaVaultId
     amount?: string
   }): Promise<TransactionInfo> {
-    // Get chain info from chainId
-    const chainInfo = getChainInfoByChainId(params.chainId)
+    // Get chain info from vaultId
+    const chainInfo = params.vaultId.chainInfo
 
     // Get fleet commander contract
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -498,7 +496,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     const description = `Unstake ${amountToUnstake.toString()} fleet tokens from rewards manager`
 
     LoggingService.debug('getUnstakeFleetTokensTx', {
-      chainId: params.chainId,
+      chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
       addressValue: params.addressValue,
       stakedBalance: stakedBalance.toString(),
