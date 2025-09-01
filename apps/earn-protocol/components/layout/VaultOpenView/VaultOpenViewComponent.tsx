@@ -61,6 +61,11 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import {
+  useHandleButtonOpenEvent,
+  useHandleInputChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
@@ -106,6 +111,9 @@ export const VaultOpenViewComponent = ({
   })
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const inputChangeHandler = useHandleInputChangeEvent()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
@@ -276,6 +284,8 @@ export const VaultOpenViewComponent = ({
         // we need to fill it here
         decimals: vault.inputToken.decimals,
       } as IToken),
+    inputChangeHandler,
+    inputName: 'open-amount',
   })
 
   const {
@@ -289,6 +299,8 @@ export const VaultOpenViewComponent = ({
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
+    inputChangeHandler,
+    inputName: 'open-approval-amount',
   })
 
   const {

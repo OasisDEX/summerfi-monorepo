@@ -71,6 +71,11 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import {
+  useHandleButtonOpenEvent,
+  useHandleInputChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
@@ -154,6 +159,9 @@ export const VaultManageViewComponent = ({
   }>({
     key: `${vault.id}-amount`,
   })
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const inputChangeHandler = useHandleInputChangeEvent()
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -228,6 +236,8 @@ export const VaultManageViewComponent = ({
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
+    inputChangeHandler,
+    inputName: 'manage-amount',
   })
 
   const {
@@ -243,6 +253,8 @@ export const VaultManageViewComponent = ({
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
     initialAmount: amountParsed.toString(),
+    inputChangeHandler,
+    inputName: 'manage-approval-amount',
   })
 
   const {
@@ -258,6 +270,8 @@ export const VaultManageViewComponent = ({
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
     initialAmount: netValue.toString(),
+    inputChangeHandler,
+    inputName: 'manage-switch-amount',
   })
 
   const transactionAmount = useMemo(() => {
