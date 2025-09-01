@@ -736,6 +736,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
           positionExists={Boolean(positionExists)}
           userWalletAddress={userWalletAddress}
           isLoading={isLoading}
+          onButtonClick={buttonClickEventHandler}
         />
       }
     />
