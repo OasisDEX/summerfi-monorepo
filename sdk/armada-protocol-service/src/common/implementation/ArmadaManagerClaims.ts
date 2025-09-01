@@ -334,10 +334,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
             this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId as ChainId) }).address
               .value,
         )
-        // need to subtract claimed and pending to show actual claimable rewards
+        // need to subtract claimed to show actual claimable rewards
         .reduce(
-          (sum: bigint, item: MerklReward) =>
-            sum + (BigInt(item.amount) - BigInt(item.claimed) - BigInt(item.pending)),
+          (sum: bigint, item: MerklReward) => sum + (BigInt(item.amount) - BigInt(item.claimed)),
           0n,
         )
     )
