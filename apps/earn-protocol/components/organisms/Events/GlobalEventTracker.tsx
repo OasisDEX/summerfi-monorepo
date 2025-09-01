@@ -1,6 +1,6 @@
 'use client'
 
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useAccount, useChain, useUser } from '@account-kit/react'
 import { accountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
@@ -14,6 +14,17 @@ export const GlobalEventTracker = () => {
   const { chain } = useChain()
   const { account, isLoadingAccount } = useAccount({ type: accountType })
 
+  // Track previous wallet state for connection/disconnection events
+  const prevWalletRef = useRef<{
+    address: string | undefined
+    isConnected: boolean
+    connectionMethod: string | undefined
+  }>({
+    address: undefined,
+    isConnected: false,
+    connectionMethod: undefined,
+  })
+
   // pageview tracking
   useLayoutEffect(() => {
     if (!isLoadingAccount) {
@@ -26,19 +37,57 @@ export const GlobalEventTracker = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, isLoadingAccount])
 
-  // wallet tracking for the SCA
+  // wallet connection/disconnection and account change tracking
   useLayoutEffect(() => {
-    if (!isLoadingAccount && account?.address && user?.type) {
-      EarnProtocolEvents.accountChanged({
+    if (isLoadingAccount) return
+
+    const currentAddress = userAddress ?? account?.address
+    const currentConnectionMethod = user?.type
+    const isCurrentlyConnected = Boolean(currentAddress && currentConnectionMethod)
+
+    const prevState = prevWalletRef.current
+    const wasConnected = prevState.isConnected
+
+    // Track wallet connection
+    if (!wasConnected && isCurrentlyConnected) {
+      EarnProtocolEvents.walletConnected({
         page: path,
-        walletAddress: userAddress ?? account.address,
+        walletAddress: currentAddress,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         network: chain.name ?? 'unknown',
-        connectionMethod: user.type,
+        connectionMethod: currentConnectionMethod,
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, isLoadingAccount, chain, user])
+
+    // Track wallet disconnection
+    if (wasConnected && !isCurrentlyConnected) {
+      EarnProtocolEvents.walletDisconnected({
+        page: path,
+        walletAddress: prevState.address,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        network: chain.name ?? 'unknown',
+        connectionMethod: prevState.connectionMethod,
+      })
+    }
+
+    // Track account change (different wallet address while staying connected)
+    if (wasConnected && isCurrentlyConnected && prevState.address !== currentAddress) {
+      EarnProtocolEvents.accountChanged({
+        page: path,
+        walletAddress: currentAddress,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        network: chain.name ?? 'unknown',
+        connectionMethod: currentConnectionMethod,
+      })
+    }
+
+    // Update previous state
+    prevWalletRef.current = {
+      address: currentAddress,
+      isConnected: isCurrentlyConnected,
+      connectionMethod: currentConnectionMethod,
+    }
+  }, [account, userAddress, user, isLoadingAccount, chain, path])
 
   return null
 }
