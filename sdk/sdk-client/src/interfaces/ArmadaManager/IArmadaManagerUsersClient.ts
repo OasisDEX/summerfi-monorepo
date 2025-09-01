@@ -33,6 +33,7 @@ import {
   type MigrationTransactionInfo,
   type StakeTransactionInfo,
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
+  type TransactionInfo,
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,
   type WithdrawTransactionInfo,
@@ -592,4 +593,18 @@ export interface IArmadaManagerUsersClient {
     chainId: ChainId
     user: AddressValue
   }): Promise<boolean>
+
+  /**
+   * @name getUnstakeFleetTokensTx
+   * @description Generates a transaction to unstake fleet tokens from the rewards manager
+   * @param params.addressValue The user's address
+   * @param params.vaultId The vault ID to unstake from (chain info is derived from vaultId.chainInfo)
+   * @param params.amountValue Optional amount to unstake (if not provided, unstakes full balance)
+   * @returns Promise<TransactionInfo> The transaction to unstake fleet tokens
+   */
+  getUnstakeFleetTokensTx(params: {
+    addressValue: AddressValue
+    vaultId: IArmadaVaultId
+    amountValue?: string
+  }): Promise<TransactionInfo>
 }

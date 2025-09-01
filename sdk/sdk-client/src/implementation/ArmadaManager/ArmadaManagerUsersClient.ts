@@ -260,4 +260,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getIsAuthorizedAsMerklRewardsOperator']> {
     return this.rpcClient.armada.users.getIsAuthorizedAsMerklRewardsOperator.query(params)
   }
+
+  /** @see IArmadaManagerUsersClient.getUnstakeFleetTokensTx */
+  async getUnstakeFleetTokensTx(
+    params: Parameters<IArmadaManagerUsersClient['getUnstakeFleetTokensTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUnstakeFleetTokensTx']> {
+    return this.rpcClient.armada.users.getUnstakeFleetTokensTx.query(params)
+  }
 }
