@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@account-kit/react'
+import { useChain, useUser } from '@account-kit/react'
 import {
   DataBlock,
   Dropdown,
@@ -46,16 +46,26 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
-import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
+import {
+  type ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import { useHandleButtonOpenEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import {
+  useHandleButtonOpenEvent,
+  useHandleInputChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
@@ -100,45 +110,17 @@ const VaultsSortingItem = ({ label, style }: { label: string; style?: CSSPropert
   )
 }
 
-const updateQueryParams = (
-  queryParams: ReadonlyURLSearchParams,
-  newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
-) => {
-  // use soft router push to update the URL without reloading the page
-  const newQueryParams = {
-    ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
-    ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
-    ...(newFilters.sorting && {
-      sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
-    }),
-  }
-
-  const nextQueryParams = new URLSearchParams(newQueryParams)
-  const currentQueryParams = new URLSearchParams(queryParams.toString())
-  const mergedQueryParams = new URLSearchParams({
-    ...Object.fromEntries(currentQueryParams.entries()),
-    ...Object.fromEntries(nextQueryParams.entries()),
-  })
-
-  for (const param of ['assets', 'networks', 'sort']) {
-    if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
-      mergedQueryParams.delete(param)
-    }
-  }
-
-  const newUrl = `/earn?${mergedQueryParams.toString()}`
-
-  softRouterPush(newUrl)
-}
-
 export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
+  const pathname = usePathname()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const inputChangeHandler = useHandleInputChangeEvent()
 
   const user = useUser()
+  const { chain } = useChain()
   const userIsSmartAccount = isUserSmartAccount(user)
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
@@ -149,12 +131,76 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     [queryParams],
   )
 
+  const userData = useMemo(() => {
+    return {
+      page: pathname,
+      walletAddress: user?.address,
+      connectionMethod: user?.type,
+      network: chain.name,
+    }
+  }, [chain.name, pathname, user?.address, user?.type])
+
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
 
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
+  const updateQueryParams = useCallback(
+    (
+      params: ReadonlyURLSearchParams,
+      newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
+    ) => {
+      // use soft router push to update the URL without reloading the page
+      const newQueryParams = {
+        ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
+        ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
+        ...(newFilters.sorting && {
+          sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
+        }),
+      }
+
+      const nextQueryParams = new URLSearchParams(newQueryParams)
+      const currentQueryParams = new URLSearchParams(params.toString())
+      const mergedQueryParams = new URLSearchParams({
+        ...Object.fromEntries(currentQueryParams.entries()),
+        ...Object.fromEntries(nextQueryParams.entries()),
+      })
+
+      for (const param of ['assets', 'networks', 'sort']) {
+        if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
+          mergedQueryParams.delete(param)
+        }
+      }
+
+      const isAssetsChange = newFilters.assets !== undefined
+      const isNetworksChange = newFilters.networks !== undefined
+      const isSortingChange = newFilters.sorting !== undefined
+      const dropdownName = isAssetsChange
+        ? 'vaults-list-view-assets'
+        : isNetworksChange
+          ? 'vaults-list-view-networks'
+          : isSortingChange
+            ? 'vaults-list-view-sorting'
+            : ''
+
+      EarnProtocolEvents.dropdownChanged({
+        dropdownName,
+        value:
+          newFilters.assets?.join(',') ??
+          newFilters.networks?.join(',') ??
+          newFilters.sorting?.value ??
+          'unknown',
+        ...userData,
+      })
+
+      const newUrl = `/earn?${mergedQueryParams.toString()}`
+
+      softRouterPush(newUrl)
+    },
+    [userData],
+  )
 
   const filterAssetVaults = useCallback(
     (vault: (typeof vaultsList)[number]) => {
@@ -324,6 +370,11 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    EarnProtocolEvents.dropdownChanged({
+      dropdownName: `ep-vault-list-token-${slugifyVault(resolvedVaultData)}`,
+      value: option.value,
+      ...userData,
+    })
     tokenBalances.handleSetTokenBalanceLoading(true)
     handleTokenSelectionChange(option)
   }
@@ -371,6 +422,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     onBlur,
     onFocus,
   } = useAmount({
+    inputName: `vault-list-amount-${slugifyVault(resolvedVaultData)}`,
+    inputChangeHandler,
     tokenDecimals: resolvedVaultData.inputToken.decimals,
     tokenPrice: resolvedVaultData.inputTokenPriceUSD,
     selectedToken:
@@ -468,7 +521,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   }, [sortingMethodId])
 
   const handleRefresh = () => {
-    buttonClickEventHandler('-page-vault-card-${nextselectedVaultId}-page-refresh')
+    buttonClickEventHandler(`home-page-refresh-vaults-list`)
     revalidateVaultsListData()
   }
 

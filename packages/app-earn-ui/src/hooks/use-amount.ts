@@ -16,6 +16,8 @@ type UseAmountProps = {
   selectedToken?: IToken
   tokenPrice?: string | null
   initialAmount?: string
+  inputChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
+  inputName: string
 }
 
 /**
@@ -25,6 +27,8 @@ type UseAmountProps = {
  * @param tokenPrice - Token price
  * @param selectedToken - Token selected for the transaction
  * @param initialAmount - Optional initial amount to populate the input
+ * @param inputChangeHandler - Additional event handler for input changes (mixpanel events)
+ * @param inputName - Name of the input field for event tracking
  *
  * @returns {Object} Amount management utilities:
  *   - amountRaw: String version of the amount as entered
@@ -40,6 +44,8 @@ export const useAmount = ({
   tokenPrice,
   selectedToken,
   initialAmount,
+  inputChangeHandler,
+  inputName,
 }: UseAmountProps): {
   /**
     A is a string version of the amount
@@ -70,8 +76,14 @@ export const useAmount = ({
   const [amountRaw, setAmountRaw] = useState<string | undefined>(initialAmount)
 
   const resetToInitialAmount = useCallback(() => {
+    if (initialAmount) {
+      inputChangeHandler({
+        inputName,
+        value: initialAmount,
+      })
+    }
     setAmountRaw(initialAmount)
-  }, [initialAmount])
+  }, [initialAmount, inputChangeHandler, inputName])
 
   const amountDisplay = useMemo(() => {
     if (!amountRaw && amountRaw !== '0') {
@@ -139,6 +151,10 @@ export const useAmount = ({
 
       return
     }
+    inputChangeHandler({
+      inputName,
+      value: value.trim(),
+    })
     setAmountRaw(value.trim())
   }
 
@@ -163,7 +179,13 @@ export const useAmount = ({
     /**
       A function to manually set the amount
     */
-    manualSetAmount: setAmountRaw,
+    manualSetAmount: (value: string | undefined) => {
+      inputChangeHandler({
+        inputName,
+        value: value?.trim() ?? '0',
+      })
+      setAmountRaw(value)
+    },
     onFocus: () => setEditMode(true),
     onBlur: () => setEditMode(false),
     /**

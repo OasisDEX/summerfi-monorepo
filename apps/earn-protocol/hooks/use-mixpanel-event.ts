@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { debounce } from 'lodash-es'
@@ -41,4 +42,31 @@ export const useHandleButtonOpenEvent = () => {
       ...userData,
     })
   }, 1000)
+}
+
+export const useHandleInputChangeEvent = () => {
+  const pathname = usePathname()
+  const user = useUser()
+  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
+  const { chain } = useChain()
+
+  const userData = useMemo(() => {
+    return !isLoadingAccount
+      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
+      : {}
+  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+
+  const handleEvent = useCallback(
+    ({ inputName, value }: { inputName: string; value: string }) => {
+      EarnProtocolEvents.inputChanged({
+        page: pathname,
+        inputName: `ep-${inputName}`,
+        value,
+        ...userData,
+      })
+    },
+    [pathname, userData],
+  )
+
+  return useMemo(() => debounce(handleEvent, 1000), [handleEvent])
 }
