@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
-import { useChain, useUser } from '@account-kit/react'
+import { useUser } from '@account-kit/react'
 import {
   DataBlock,
   Dropdown,
@@ -46,23 +46,18 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
-import {
-  type ReadonlyURLSearchParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation'
+import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import {
-  useHandleButtonOpenEvent,
+  useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
   useHandleInputChangeEvent,
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
@@ -114,13 +109,12 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
-  const pathname = usePathname()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
 
   const user = useUser()
-  const { chain } = useChain()
   const userIsSmartAccount = isUserSmartAccount(user)
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
@@ -130,15 +124,6 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
     [queryParams],
   )
-
-  const userData = useMemo(() => {
-    return {
-      page: pathname,
-      walletAddress: user?.address,
-      connectionMethod: user?.type,
-      network: chain.name,
-    }
-  }, [chain.name, pathname, user?.address, user?.type])
 
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -185,21 +170,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             ? 'vaults-list-view-sorting'
             : ''
 
-      EarnProtocolEvents.dropdownChanged({
-        dropdownName,
+      dropdownChangeHandler({
+        inputName: dropdownName,
         value:
           newFilters.assets?.join(',') ??
           newFilters.networks?.join(',') ??
           newFilters.sorting?.value ??
           'unknown',
-        ...userData,
       })
 
       const newUrl = `/earn?${mergedQueryParams.toString()}`
 
       softRouterPush(newUrl)
     },
-    [userData],
+    [dropdownChangeHandler],
   )
 
   const filterAssetVaults = useCallback(
@@ -370,10 +354,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
-    EarnProtocolEvents.dropdownChanged({
-      dropdownName: `ep-vault-list-token-${slugifyVault(resolvedVaultData)}`,
+    dropdownChangeHandler({
+      inputName: `ep-vault-list-token-selector`,
       value: option.value,
-      ...userData,
     })
     tokenBalances.handleSetTokenBalanceLoading(true)
     handleTokenSelectionChange(option)
@@ -382,7 +365,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
       buttonClickEventHandler(
-        `home-page-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
+        `vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
       )
       const vaultUrl = getVaultUrl(resolvedVaultData)
 
@@ -390,12 +373,13 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
       return
     }
-    buttonClickEventHandler(`home-page-vault-card-${slugifyVault(resolvedVaultData)}-select`)
+    buttonClickEventHandler(`vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-select`)
     setSelectedVaultId(nextselectedVaultId)
   }
 
   const formattedTotalLiquidity = useMemo(() => {
     return formatCryptoBalance(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
     )
   }, [vaultsList])
@@ -521,12 +505,12 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
   }, [sortingMethodId])
 
   const handleRefresh = () => {
-    buttonClickEventHandler(`home-page-refresh-vaults-list`)
+    buttonClickEventHandler(`vaults-list-refresh-vaults-list`)
     revalidateVaultsListData()
   }
 
   const handleWhatIsLazyClick = () => {
-    buttonClickEventHandler('home-page-what-is-lazy')
+    buttonClickEventHandler('vaults-list-what-is-lazy')
   }
 
   return (
@@ -541,7 +525,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
             size="large"
             value={`$${formattedTotalAssets}`}
-            tooltipName="home-page-protocol-tvl"
+            tooltipName="vaults-list-protocol-tvl"
             onTooltipOpen={tooltipEventHandler}
           />
 
@@ -550,7 +534,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}
             size="large"
             value={`$${formattedTotalLiquidity}`}
-            tooltipName="home-page-instant-liquidity"
+            tooltipName="vaults-list-instant-liquidity"
             onTooltipOpen={tooltipEventHandler}
           />
           <DataBlock
@@ -561,7 +545,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               .join(', ')}`}
             size="large"
             value={formattedProtocolsSupportedCount}
-            tooltipName="home-page-protocols-supported"
+            tooltipName="vaults-list-protocols-supported"
             onTooltipOpen={tooltipEventHandler}
           />
         </div>
@@ -651,7 +635,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
-                tooltipName="home-page-vault-card"
+                tooltipName="vaults-list-vault-card"
                 onTooltipOpen={tooltipEventHandler}
               />
             ))

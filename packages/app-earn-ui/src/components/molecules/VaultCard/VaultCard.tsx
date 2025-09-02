@@ -5,7 +5,6 @@ import { type DeviceType, type SDKVaultishType, type VaultApyData } from '@summe
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
-  sdkNetworkToHumanNetwork,
   slugifyVault,
   supportedSDKNetwork,
   ten,
@@ -131,7 +130,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
-            tooltipName={`${tooltipName}-${getDisplayToken(inputToken.symbol).toLowerCase()}-${sdkNetworkToHumanNetwork(supportedSDKNetwork(protocol.network))}-${customFields?.risk ?? 'lower'}-risk-label`}
+            tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
             onTooltipOpen={onTooltipOpen}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>

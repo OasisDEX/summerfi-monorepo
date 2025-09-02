@@ -139,6 +139,7 @@ export const VaultManageViewDetails = ({
         }
       >
         <ArkHistoricalYieldChart
+          chartId="manage-view"
           chartData={arksHistoricalChartData}
           summerVaultName={getVaultNiceName({ vault })}
         />

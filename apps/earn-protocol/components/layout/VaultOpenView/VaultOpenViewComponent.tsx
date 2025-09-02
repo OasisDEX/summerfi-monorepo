@@ -62,7 +62,8 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {
-  useHandleButtonOpenEvent,
+  useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
   useHandleInputChangeEvent,
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
@@ -112,8 +113,9 @@ export const VaultOpenViewComponent = ({
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
@@ -224,6 +226,8 @@ export const VaultOpenViewComponent = ({
         // eslint-disable-next-line no-console
         console.error('Error fetching if user is new', error)
         setIsNewUser(false)
+
+        return false
       }
     }
 
@@ -285,7 +289,7 @@ export const VaultOpenViewComponent = ({
         decimals: vault.inputToken.decimals,
       } as IToken),
     inputChangeHandler,
-    inputName: 'open-amount',
+    inputName: 'vault-open-amount',
   })
 
   const {
@@ -300,7 +304,7 @@ export const VaultOpenViewComponent = ({
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
     inputChangeHandler,
-    inputName: 'open-approval-amount',
+    inputName: 'vault-open-approval-amount',
   })
 
   const {
@@ -531,6 +535,9 @@ export const VaultOpenViewComponent = ({
         sumrPrice={estimatedSumrPrice}
         onRefresh={revalidatePositionData}
         vaultApyData={vaultApyData}
+        tooltipEventHandler={tooltipEventHandler}
+        buttonClickEventHandler={buttonClickEventHandler}
+        dropdownChangeHandler={dropdownChangeHandler}
         simulationGraph={
           <VaultSimulationGraph
             vault={vault}

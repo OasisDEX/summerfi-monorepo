@@ -25,6 +25,7 @@ import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
+import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import { detailsLinks } from './vault-details-links'
 import { VaultOpenHeaderBlock } from './VaultOpenHeaderBlock'
@@ -50,6 +51,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   arksInterestRates,
   vaultApyData,
 }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const summerVaultName = getVaultNiceName({ vault })
 
   const managementFee = getManagementFee(vault.inputToken.symbol)
@@ -58,10 +61,15 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
 
+  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
+    buttonClickEventHandler(`vault-open-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
+  }
+
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
       <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
       <Expander
+        onExpand={handleExpanderToggle('historical-yield')}
         title={
           <Text as="p" variant="p1semi">
             Historical yield
@@ -70,11 +78,13 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         defaultExpanded
       >
         <ArkHistoricalYieldChart
+          chartId="open-view"
           chartData={arksHistoricalChartData}
           summerVaultName={summerVaultName}
         />
       </Expander>
       <Expander
+        onExpand={handleExpanderToggle('vault-exposure')}
         title={
           <Text as="p" variant="p1semi">
             Vault exposure
@@ -88,10 +98,14 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             arksInterestRates={arksInterestRates}
             vaultApyData={vaultApyData}
             columnsToHide={vaultExposureColumnsToHideOpenManage}
+            tableId="vault-open"
+            buttonClickEventHandler={buttonClickEventHandler}
+            tooltipEventHandler={tooltipEventHandler}
           />
         </VaultExposureDescription>
       </Expander>
       <Expander
+        onExpand={handleExpanderToggle('rebalancing-activity')}
         title={
           <Text as="p" variant="p1semi">
             Rebalancing activity
@@ -105,6 +119,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         />
       </Expander>
       <Expander
+        onExpand={handleExpanderToggle('users-activity')}
         title={
           <Text as="p" variant="p1semi">
             Users activity
@@ -121,6 +136,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         />
       </Expander>
       <Expander
+        onExpand={handleExpanderToggle('strategy-management-fee')}
         title={
           <Text as="p" variant="p1semi">
             Strategy management fee

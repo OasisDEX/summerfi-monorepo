@@ -72,7 +72,7 @@ import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {
-  useHandleButtonOpenEvent,
+  useHandleButtonClickEvent,
   useHandleInputChangeEvent,
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
@@ -160,7 +160,7 @@ export const VaultManageViewComponent = ({
     key: `${vault.id}-amount`,
   })
   const tooltipEventHandler = useHandleTooltipOpenEvent()
-  const buttonClickEventHandler = useHandleButtonOpenEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()

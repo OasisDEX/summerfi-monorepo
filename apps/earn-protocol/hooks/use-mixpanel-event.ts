@@ -22,10 +22,10 @@ export const useHandleTooltipOpenEvent = () => {
       tooltipName: `ep-${tooltipName}`,
       ...userData,
     })
-  }, 1000)
+  }, 500)
 }
 
-export const useHandleButtonOpenEvent = () => {
+export const useHandleButtonClickEvent = () => {
   const pathname = usePathname()
   const user = useUser()
   const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
@@ -41,7 +41,34 @@ export const useHandleButtonOpenEvent = () => {
       buttonName: `ep-${buttonName}`,
       ...userData,
     })
-  }, 1000)
+  }, 500)
+}
+
+export const useHandleDropdownChangeEvent = () => {
+  const pathname = usePathname()
+  const user = useUser()
+  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
+  const { chain } = useChain()
+
+  const userData = useMemo(() => {
+    return !isLoadingAccount
+      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
+      : {}
+  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+
+  const handleEvent = useCallback(
+    ({ inputName, value }: { inputName: string; value: string }) => {
+      EarnProtocolEvents.dropdownChanged({
+        page: pathname,
+        dropdownName: `ep-${inputName}`,
+        value,
+        ...userData,
+      })
+    },
+    [pathname, userData],
+  )
+
+  return useMemo(() => debounce(handleEvent, 500), [handleEvent])
 }
 
 export const useHandleInputChangeEvent = () => {
@@ -68,5 +95,5 @@ export const useHandleInputChangeEvent = () => {
     [pathname, userData],
   )
 
-  return useMemo(() => debounce(handleEvent, 1000), [handleEvent])
+  return useMemo(() => debounce(handleEvent, 500), [handleEvent])
 }

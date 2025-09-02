@@ -1,7 +1,10 @@
 import { type FC } from 'react'
 import { getVaultDetailsUrl, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
+
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 interface VaultOpenHeaderBlockProps {
   vault?: SDKVaultishType
@@ -9,6 +12,8 @@ interface VaultOpenHeaderBlockProps {
 }
 
 export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({ detailsLinks, vault }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+
   return (
     <div
       style={{
@@ -37,7 +42,11 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({ detailsLin
         }}
       >
         {detailsLinks.map(({ label, id }) => (
-          <Link key={label} href={`${getVaultDetailsUrl(vault)}#${id}`}>
+          <Link
+            key={label}
+            href={`${getVaultDetailsUrl(vault)}#${id}`}
+            onClick={() => buttonClickEventHandler(`vault-open-details-${slugify(label)}`)}
+          >
             <Text
               as="p"
               variant="p3semi"

@@ -200,7 +200,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       if (onTooltipOpen && tooltipName) {
         onTooltipOpenTimeoutRef.current = setTimeout(() => {
           onTooltipOpen(tooltipName)
-        }, 1000)
+        }, 500)
       }
       portalElement.style.setProperty(
         'top',
