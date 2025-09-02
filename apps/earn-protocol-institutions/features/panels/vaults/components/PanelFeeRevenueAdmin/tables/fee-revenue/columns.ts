@@ -1,11 +1,11 @@
 export const feeRevenueColumns = [
   {
     key: 'name',
-    title: '',
+    title: 'Type',
   },
   {
     key: 'aum-fee',
-    title: '',
+    title: 'Fee',
   },
   {
     key: 'action',

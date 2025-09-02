@@ -16,42 +16,24 @@ export default function InstitutionVaultsLoadingTab() {
             <SkeletonLine height={20} style={{ margin: '5px 0' }} />
           </Card>
           <Card variant="cardSecondary" style={{ display: 'flex', flexDirection: 'column' }}>
-            <SkeletonLine height={20} width={100} style={{ margin: '20px 0 30px 0' }} />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '46px',
+                marginBottom: 'var(--spacing-space-large)',
+              }}
+            >
+              <SkeletonLine height={20} width={100} />
+              {Array.from({ length: 7 }).map((_, index) => (
+                <SkeletonLine
+                  key={index}
+                  height={14}
+                  width={Math.round(Number(Math.random() * 80) + 100)}
+                  style={{ margin: '0 0', opacity: 0.6 }}
+                />
+              ))}
+            </div>
             <div
               style={{
                 height: '1px',
@@ -60,46 +42,50 @@ export default function InstitutionVaultsLoadingTab() {
                 margin: 'var(--spacing-space-medium) 0 var(--spacing-space-x-large)',
               }}
             />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
-            <SkeletonLine
-              height={14}
-              width={Math.round(Number(Math.random() * 80) + 100)}
-              style={{ margin: '20px 0', opacity: 0.6 }}
-            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '46px',
+                marginTop: 'var(--spacing-space-2x-small)',
+                marginBottom: 'var(--spacing-space-small)',
+              }}
+            >
+              {Array.from({ length: 2 }).map((_, index) => (
+                <SkeletonLine
+                  key={index}
+                  height={14}
+                  width={Math.round(Number(Math.random() * 80) + 100)}
+                  style={{ margin: '0 0', opacity: 0.6 }}
+                />
+              ))}
+            </div>
           </Card>
         </div>
       }
       header={
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <SkeletonLine height={12} width={60} />
-              <SkeletonLine height={18} width={120} />
-            </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginBottom: 'var(--spacing-space-2x-small)',
+              marginTop: 'var(--spacing-space-x-small)',
+            }}
+          >
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--spacing-space-medium)',
+                }}
+              >
+                <SkeletonLine height={12} width={60} />
+                <SkeletonLine height={18} width={120} />
+              </div>
+            ))}
           </div>
         </div>
       }
