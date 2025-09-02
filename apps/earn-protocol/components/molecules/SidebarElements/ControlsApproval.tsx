@@ -1,5 +1,5 @@
 import { Input, SelectionBlock, Text } from '@summerfi/app-earn-ui'
-import { type EarnAllowanceTypes } from '@summerfi/app-types'
+import { type EarnAllowanceTypes, TransactionAction } from '@summerfi/app-types'
 import type BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
@@ -15,6 +15,7 @@ type ControlsApprovalProps = {
   tokenBalance?: BigNumber
   customApprovalOnBlur?: () => void
   customApprovalOnFocus?: () => void
+  sidebarTransactionType: TransactionAction
 }
 
 export const ControlsApproval = ({
@@ -27,10 +28,17 @@ export const ControlsApproval = ({
   tokenBalance,
   customApprovalOnBlur,
   customApprovalOnFocus,
+  sidebarTransactionType,
 }: ControlsApprovalProps) => {
   const handleMaxApproval = () => {
     if (!tokenBalance) return
     customApprovalManualSetAmount(tokenBalance.toString())
+  }
+
+  const action = {
+    [TransactionAction.DEPOSIT]: 'deposit',
+    [TransactionAction.WITHDRAW]: 'withdraw',
+    [TransactionAction.SWITCH]: 'switch',
   }
 
   return (
@@ -40,7 +48,7 @@ export const ControlsApproval = ({
         determined by you. You can revoke the permission anytime you want.{' '}
       </Text>
       <SelectionBlock
-        title={`${tokenSymbol} deposit`}
+        title={`${tokenSymbol} ${action[sidebarTransactionType]}`}
         subTitle="Recommended"
         onClick={() => setApprovalType('deposit')}
         active={approvalType === 'deposit'}
