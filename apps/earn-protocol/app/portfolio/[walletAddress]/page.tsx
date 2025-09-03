@@ -8,6 +8,7 @@ import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-
 import {
   type HistoryChartData,
   type IArmadaPosition,
+  type IArmadaVaultInfo,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import {
@@ -177,11 +178,15 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     ),
   )
 
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[],
+  )
+
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
-      vaultsInfo,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 
@@ -291,6 +296,10 @@ export async function generateMetadata({
     ),
   )
 
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[] | undefined,
+  )
+
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
@@ -305,7 +314,7 @@ export async function generateMetadata({
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
-      vaultsInfo,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 

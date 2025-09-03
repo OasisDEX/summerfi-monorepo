@@ -37,6 +37,7 @@ import {
 } from '@summerfi/app-types'
 import {
   convertWethToEth,
+  findVaultInfo,
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
@@ -192,12 +193,8 @@ export const VaultsListView = ({
       const aTvl = a.totalValueLockedUSD
       const bTvl = b.totalValueLockedUSD
 
-      const aMerklRewards = vaultsInfo?.find(
-        (vault) => vault.id.fleetAddress.value === a.id,
-      )?.merklRewards
-      const bMerklRewards = vaultsInfo?.find(
-        (vault) => vault.id.fleetAddress.value === b.id,
-      )?.merklRewards
+      const aMerklRewards = findVaultInfo(vaultsInfo, a)?.merklRewards
+      const bMerklRewards = findVaultInfo(vaultsInfo, b)?.merklRewards
 
       const aRewards = getSumrTokenBonus({
         merklRewards: aMerklRewards,
@@ -584,10 +581,7 @@ export const VaultsListView = ({
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
-                merklRewards={
-                  vaultsInfo?.find((vaultInfo) => vaultInfo.id.fleetAddress.value === vault.id)
-                    ?.merklRewards
-                }
+                merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
               />
             ))
           ) : (
@@ -642,10 +636,7 @@ export const VaultsListView = ({
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                     ]
                   }
-                  merklRewards={
-                    vaultsInfo?.find((vaultInfo) => vaultInfo.id.fleetAddress.value === vault.id)
-                      ?.merklRewards
-                  }
+                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
                 />
               ))}
             </>
