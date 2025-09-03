@@ -181,8 +181,21 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       ? 'portal-dropdown'
       : withinDialog
         ? 'modal-portal'
-        : 'portal'
-    const element = document.getElementById(portalId)
+        : `tooltip-portal-${generatedId}` // Make each tooltip have a unique portal
+
+    // Create a unique portal element for this tooltip if it doesn't exist
+    let element = document.getElementById(portalId)
+
+    if (!element && !persistWhenOpened && !withinDialog) {
+      element = document.createElement('div')
+      element.id = portalId
+      element.style.position = 'absolute'
+      element.style.top = '0'
+      element.style.left = '0'
+      element.style.pointerEvents = 'none'
+      element.style.zIndex = `${1000 + (parseInt(generatedId.slice(-3), 36) % 100)}` // Unique z-index for each tooltip
+      document.body.appendChild(element)
+    }
 
     if (!element) {
       // eslint-disable-next-line no-console
@@ -192,7 +205,14 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     if (element) {
       setPortalElement(element)
     }
-  }, [persistWhenOpened, withinDialog])
+
+    // Cleanup function to remove the unique portal element when component unmounts
+    return () => {
+      if (!persistWhenOpened && !withinDialog && element?.parentNode) {
+        element.parentNode.removeChild(element)
+      }
+    }
+  }, [persistWhenOpened, withinDialog, generatedId])
 
   useEffect(() => {
     if (portalElement && tooltipRefRect && tooltipOpen) {
@@ -202,11 +222,18 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
           onTooltipOpen(tooltipName)
         }, 500)
       }
-      portalElement.style.setProperty(
-        'top',
-        `${tooltipRefRect.y - (dialogRect?.y ?? 0) + window.scrollY}px`,
-      )
-      portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
+      // For unique tooltip portals, position them relative to the viewport
+      if (portalElement.id.startsWith('tooltip-portal-')) {
+        portalElement.style.setProperty('top', `${tooltipRefRect.y + window.scrollY}px`)
+        portalElement.style.setProperty('left', `${tooltipRefRect.x}px`)
+      } else {
+        // For shared portals (dropdown, modal), use the original positioning logic
+        portalElement.style.setProperty(
+          'top',
+          `${tooltipRefRect.y - (dialogRect?.y ?? 0) + window.scrollY}px`,
+        )
+        portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
+      }
     }
 
     return () => {

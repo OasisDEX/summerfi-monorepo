@@ -11,6 +11,7 @@ import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/const
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { LatestActivityView } from '@/features/latest-activity/components/LatestActivityView/LatestActivityView'
+import { parseLatestActivitySearchParams } from '@/features/latest-activity/helpers/parse-lastest-activity-search-params'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 interface LatestActivityPageProps {
@@ -24,10 +25,14 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
     searchParams: searchParamsResolved,
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const tokens = searchParamsParsed.tokens ?? []
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const strategies = searchParamsParsed.strategies ?? []
+  const {
+    tokens,
+    strategies,
+    topDepositorsSortBy,
+    topDepositorsOrderBy,
+    latestActivitySortBy,
+    latestActivityOrderBy,
+  } = parseLatestActivitySearchParams(searchParamsParsed)
 
   const [{ vaults }, topDepositors, latestActivity, configRaw] = await Promise.all([
     getVaultsList(),
@@ -36,6 +41,8 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
       limit: 50,
       tokens,
       strategies,
+      sortBy: topDepositorsSortBy,
+      orderBy: topDepositorsOrderBy,
       filterOutUsersAddresses: userAddresesToFilterOut,
     }),
     getPaginatedLatestActivity({
@@ -43,6 +50,8 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
       limit: 50,
       tokens,
       strategies,
+      sortBy: latestActivitySortBy,
+      orderBy: latestActivityOrderBy,
       filterOutUsersAddresses: userAddresesToFilterOut,
     }),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {

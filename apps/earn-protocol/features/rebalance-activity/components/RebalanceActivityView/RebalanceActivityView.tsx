@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, useMemo } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   GenericMultiselect,
@@ -16,13 +16,14 @@ import { getRebalanceSavedGasCost, getRebalanceSavedTimeInHours } from '@summerf
 
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { getRebalanceActivity } from '@/features/rebalance-activity/api/get-rebalance-activity'
+import { useRebalanceActivityInfiniteQuery } from '@/features/rebalance-activity/api/get-rebalance-activity'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import {
   getRebalanceActivityHeadingCards,
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
+import { getRebalanceActivityShouldHydrateFromServer } from '@/features/rebalance-activity/helpers/get-should-hydrate-from-server'
 import {
   mapMultiselectOptions,
   parseProtocolFilter,
@@ -49,44 +50,48 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     [queryParams.protocols],
   )
 
-  const isFirstRender = useRef(true)
   const currentUrl = useCurrentUrl()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const [hasMoreItems, setHasMoreItems] = useState(true)
-
-  const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(rebalanceActivity.data)
 
   const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
     () => mapMultiselectOptions(vaultsList),
     [vaultsList],
   )
 
-  const handleMoreItems = async () => {
-    if (!hasMoreItems || isLoading) return // Add loading check
+  const shouldHydrateFromServer = getRebalanceActivityShouldHydrateFromServer({
+    strategyFilter,
+    tokenFilter,
+    protocolFilter,
+    searchParams,
+  })
 
-    try {
-      const nextPage = currentPage + 1
-      const res = await getRebalanceActivity({
-        page: nextPage,
-        tokens: tokenFilter,
-        strategies: strategyFilter,
-        protocols: protocolFilter,
-      })
+  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useRebalanceActivityInfiniteQuery({
+      tokens: tokenFilter,
+      strategies: strategyFilter,
+      protocols: protocolFilter,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      initialData: shouldHydrateFromServer ? rebalanceActivity : undefined,
+    })
 
-      if (res.data.length === 0 || nextPage >= res.pagination.totalPages) {
-        setHasMoreItems(false)
-      }
-      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
-      setCurrentPage((prev) => prev + 1)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching more rebalance activity', error)
-      setHasMoreItems(false)
-    }
-  }
+  const currentlyLoadedList = useMemo(
+    () => (data ? data.pages.flatMap((p) => p.data) : rebalanceActivity.data),
+    [data, rebalanceActivity.data],
+  )
+
+  const { totalItems } = rebalanceActivity.pagination
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(
+    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
+    [rebalanceActivity.totalItemsPerStrategyId],
+  )
+
+  const cards = useMemo(
+    () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),
+    [totalItems, savedGasCost, savedTimeInHours],
+  )
 
   const genericMultiSelectFilters = [
     {
@@ -115,49 +120,10 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
     },
   ]
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-
-      return
-    }
-
-    setIsLoading(true)
-    setHasMoreItems(true)
-
-    getRebalanceActivity({
-      page: 1,
-      tokens: tokenFilter,
-      strategies: strategyFilter,
-      protocols: protocolFilter,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
-    })
-      .then((res) => {
-        setCurrentlyLoadedList(res.data)
-        setCurrentPage(1)
-
-        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
-          setHasMoreItems(false)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [strategyFilter, tokenFilter, protocolFilter])
-
-  const { totalItems } = rebalanceActivity.pagination
-
-  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
-  const savedGasCost = useMemo(
-    () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
-    [rebalanceActivity.totalItemsPerStrategyId],
-  )
-
-  const cards = useMemo(
-    () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),
-    [totalItems, savedGasCost, savedTimeInHours],
-  )
+  const handleLoadMore = () => {
+    if (isFetchingNextPage || !hasNextPage) return
+    void fetchNextPage()
+  }
 
   return (
     <div className={classNames.wrapper}>
@@ -186,11 +152,10 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
         ))}
       </div>
       <InfiniteScroll
-        loadMore={handleMoreItems}
-        hasMore={hasMoreItems}
+        loadMore={handleLoadMore}
+        hasMore={!!hasNextPage}
         loader={
-          // inversed, we don't want loading spinner when skeleton is visible
-          !isLoading ? (
+          isFetchingNextPage ? (
             <LoadingSpinner
               key="spinner"
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
@@ -204,7 +169,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
             idx: 3,
             content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
           }}
-          isLoading={isLoading}
+          isLoading={isPending}
         />
       </InfiniteScroll>
     </div>

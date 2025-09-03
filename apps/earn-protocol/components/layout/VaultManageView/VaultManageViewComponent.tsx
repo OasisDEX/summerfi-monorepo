@@ -580,6 +580,7 @@ export const VaultManageViewComponent = ({
           customApprovalOnBlur={approvalOnBlur}
           customApprovalOnFocus={approvalOnFocus}
           tokenBalance={selectedTokenBalance}
+          sidebarTransactionType={sidebarTransactionType}
         />
       )
     } else if (nextTransaction.type === TransactionType.Deposit) {

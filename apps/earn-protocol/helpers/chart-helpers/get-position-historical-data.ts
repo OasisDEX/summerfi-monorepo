@@ -20,12 +20,12 @@ const mapPositionHistory = (
   const nowStartOfDay = now.startOf('day')
   const nowStartOfWeek = now.startOf('week')
 
-  const thresholdHistorical7d = nowStartOfHour.subtract(7, 'day').unix()
-  const thresholdHistorical30d = nowStartOfHour.subtract(30, 'day').unix()
-  const thresholdHistorical90d = nowStartOfDay.subtract(90, 'day').unix()
-  const thresholdHistorical6m = nowStartOfDay.subtract(6, 'month').unix()
-  const thresholdHistorical1y = nowStartOfDay.subtract(1, 'year').unix()
-  const thresholdHistorical3y = nowStartOfWeek.subtract(3, 'year').unix()
+  const pointsNeededFor7dChart = now.diff(nowStartOfHour.subtract(7, 'day'), 'hours')
+  const pointsNeededFor30dChart = now.diff(nowStartOfHour.subtract(30, 'day'), 'hours')
+  const pointsNeededFor90dChart = now.diff(nowStartOfDay.subtract(90, 'day'), 'days')
+  const pointsNeededFor6mChart = now.diff(nowStartOfDay.subtract(6, 'month'), 'days')
+  const pointsNeededFor1yChart = now.diff(nowStartOfDay.subtract(1, 'year'), 'days')
+  const pointsNeededFor3yChart = now.diff(nowStartOfWeek.subtract(3, 'year'), 'weeks')
 
   const chartBaseData: ChartsDataTimeframes = {
     '7d': [], // hourly
@@ -36,221 +36,213 @@ const mapPositionHistory = (
     '3y': [], // weekly
   }
 
-  const pointsNeededToDisplayAnyGraph = 1 // 1 hours
   const inputTokenDecimals = position?.amount.token.decimals ?? 2
 
-  const positionValues =
-    position && vault
-      ? getPositionValues({
-          position,
-          vault,
-        })
-      : false
+  const positionValues = position && vault ? getPositionValues({ position, vault }) : false
 
-  if (
-    (positionHistory.position?.hourlyPositionHistory.length ?? 0) < pointsNeededToDisplayAnyGraph
-  ) {
-    return {
-      data: chartBaseData,
+  // Create maps for quick lookup of historical data
+  const hourlyDataMap = new Map<
+    number,
+    NonNullable<
+      GetPositionHistoryReturnType['positionHistory']['position']
+    >['hourlyPositionHistory'][number]
+  >()
+  const dailyDataMap = new Map<
+    number,
+    NonNullable<
+      GetPositionHistoryReturnType['positionHistory']['position']
+    >['dailyPositionHistory'][number]
+  >()
+  const weeklyDataMap = new Map<
+    number,
+    NonNullable<
+      GetPositionHistoryReturnType['positionHistory']['position']
+    >['weeklyPositionHistory'][number]
+  >()
+
+  // Populate maps with existing data
+  positionHistory.position?.hourlyPositionHistory.forEach((point) => {
+    hourlyDataMap.set(
+      dayjs(point.timestamp * 1000)
+        .startOf('hour')
+        .unix(),
+      point,
+    )
+  })
+
+  positionHistory.position?.dailyPositionHistory.forEach((point) => {
+    dailyDataMap.set(
+      dayjs(point.timestamp * 1000)
+        .startOf('day')
+        .unix(),
+      point,
+    )
+  })
+
+  positionHistory.position?.weeklyPositionHistory.forEach((point) => {
+    weeklyDataMap.set(
+      dayjs(point.timestamp * 1000)
+        .startOf('week')
+        .unix(),
+      point,
+    )
+  })
+
+  // Generate complete 7d chart (hourly points)
+  for (let i = pointsNeededFor7dChart - 1; i >= 0; i--) {
+    const pointTime = nowStartOfHour.subtract(i, 'hours')
+    const timestampUnix = pointTime.unix()
+    const timestampParsed = pointTime.format(CHART_TIMESTAMP_FORMAT_DETAILED)
+    const isSameHour = pointTime.isSame(nowStartOfHour)
+
+    const existingPoint = hourlyDataMap.get(timestampUnix)
+
+    if (existingPoint) {
+      const pointNetValue =
+        isSameHour && positionValues
+          ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+          : existingPoint.netValue
+      const pointDepositedValue =
+        isSameHour && positionValues
+          ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+          : Math.max(Math.abs(existingPoint.deposits) - Math.abs(existingPoint.withdrawals), 0)
+
+      chartBaseData['7d'].push({
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
+      })
+    } else {
+      const backfillPointData = {
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: 0,
+        depositedValue: 0,
+      }
+
+      chartBaseData['7d'].push(backfillPointData)
     }
   }
 
-  // history hourly points
-  positionHistory.position?.hourlyPositionHistory.reverse().forEach((point, pointIndex) => {
-    const timestamp = dayjs(point.timestamp * 1000).startOf('hour')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
-    const timestampUnix = timestamp.unix()
+  // Generate complete 30d chart (hourly points)
+  for (let i = pointsNeededFor30dChart - 1; i >= 0; i--) {
+    const pointTime = nowStartOfHour.subtract(i, 'hours')
+    const timestampUnix = pointTime.unix()
+    const timestampParsed = pointTime.format(CHART_TIMESTAMP_FORMAT_DETAILED)
+    const isSameHour = pointTime.isSame(nowStartOfHour)
 
-    // backfill the hourly position history with 0 values
-    if (pointIndex === 0) {
-      const chartStartTime7d = dayjs(thresholdHistorical7d * 1000)
-      const chartStartTime30d = dayjs(thresholdHistorical30d * 1000)
-      const hoursNeededFor7dChart = timestamp.diff(chartStartTime7d, 'hours')
-      const hoursNeededFor30dChart = timestamp.diff(chartStartTime30d, 'hours')
+    const existingPoint = hourlyDataMap.get(timestampUnix)
 
-      if (hoursNeededFor7dChart > 0) {
-        for (let i = 0; i < hoursNeededFor7dChart; i++) {
-          const backfillTimestamp = chartStartTime7d.add(i, 'hour')
-          const backfillPointData = {
-            timestamp: backfillTimestamp.unix(),
-            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
-            netValue: 0,
-            depositedValue: 0,
-          }
+    if (existingPoint) {
+      const pointNetValue =
+        isSameHour && positionValues
+          ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+          : existingPoint.netValue
+      const pointDepositedValue =
+        isSameHour && positionValues
+          ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+          : Math.max(Math.abs(existingPoint.deposits) - Math.abs(existingPoint.withdrawals), 0)
 
-          chartBaseData['7d'].push(backfillPointData)
-        }
+      chartBaseData['30d'].push({
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
+      })
+    } else {
+      const backfillPointData = {
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: 0,
+        depositedValue: 0,
       }
 
-      if (hoursNeededFor30dChart > 0) {
-        for (let i = 0; i < hoursNeededFor30dChart; i++) {
-          const backfillTimestamp = chartStartTime30d.add(i, 'hour')
-          const backfillPointData = {
-            timestamp: backfillTimestamp.unix(),
-            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
-            netValue: 0,
-            depositedValue: 0,
-          }
-
-          chartBaseData['30d'].push(backfillPointData)
-        }
-      }
+      chartBaseData['30d'].push(backfillPointData)
     }
+  }
 
-    const isSameHour = timestamp.isSame(nowStartOfHour)
+  // Generate complete daily charts (90d, 6m, 1y)
+  const generateDailyChart = (timeframe: '90d' | '6m' | '1y', pointsNeeded: number) => {
+    for (let i = pointsNeeded - 1; i >= 0; i--) {
+      const pointTime = nowStartOfDay.subtract(i, 'days')
+      const timestampUnix = pointTime.unix()
+      const timestampParsed = pointTime.format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const isSameDay = pointTime.isSame(nowStartOfDay)
 
-    const pointNetValue =
-      isSameHour && positionValues
-        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
-        : point.netValue
-    const pointDepositedValue =
-      isSameHour && positionValues
-        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
-    const newPointData = {
-      timestamp: timestampUnix,
-      timestampParsed,
-      netValue: pointNetValue,
-      depositedValue: pointDepositedValue,
-    }
+      const existingPoint = dailyDataMap.get(timestampUnix)
 
-    if (timestampUnix >= thresholdHistorical7d) {
-      chartBaseData['7d'].push(newPointData)
-    }
-    if (timestampUnix >= thresholdHistorical30d) {
-      chartBaseData['30d'].push(newPointData)
-    }
-  })
+      if (existingPoint) {
+        const pointNetValue =
+          isSameDay && positionValues
+            ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+            : existingPoint.netValue
+        const pointDepositedValue =
+          isSameDay && positionValues
+            ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+            : Math.max(Math.abs(existingPoint.deposits) - Math.abs(existingPoint.withdrawals), 0)
 
-  // history daily points
-  positionHistory.position?.dailyPositionHistory.reverse().forEach((point, pointIndex) => {
-    const timestamp = dayjs(point.timestamp * 1000).startOf('day')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
-    const timestampUnix = timestamp.unix()
-
-    // backfill the daily position history with 0 values
-    if (pointIndex === 0) {
-      const chartStartTime90d = dayjs(thresholdHistorical90d * 1000)
-      const chartStartTime6m = dayjs(thresholdHistorical6m * 1000)
-      const chartStartTime1y = dayjs(thresholdHistorical1y * 1000)
-      const daysNeededFor90dChart = timestamp.diff(chartStartTime90d, 'days')
-      const daysNeededFor6mChart = timestamp.diff(chartStartTime6m, 'days')
-      const daysNeededFor1yChart = timestamp.diff(chartStartTime1y, 'days')
-
-      if (daysNeededFor90dChart > 0) {
-        for (let i = 0; i < daysNeededFor90dChart; i++) {
-          const backfillTimestamp = chartStartTime90d.add(i, 'day')
-          const backfillPointData = {
-            timestamp: backfillTimestamp.unix(),
-            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
-            netValue: 0,
-            depositedValue: 0,
-          }
-
-          chartBaseData['90d'].push(backfillPointData)
-        }
-      }
-      if (daysNeededFor6mChart > 0) {
-        for (let i = 0; i < daysNeededFor6mChart; i++) {
-          const backfillTimestamp = chartStartTime6m.add(i, 'day')
-          const backfillPointData = {
-            timestamp: backfillTimestamp.unix(),
-            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
-            netValue: 0,
-            depositedValue: 0,
-          }
-
-          chartBaseData['6m'].push(backfillPointData)
-        }
-      }
-      if (daysNeededFor1yChart > 0) {
-        for (let i = 0; i < daysNeededFor1yChart; i++) {
-          const backfillTimestamp = chartStartTime1y.add(i, 'day')
-          const backfillPointData = {
-            timestamp: backfillTimestamp.unix(),
-            timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
-            netValue: 0,
-            depositedValue: 0,
-          }
-
-          chartBaseData['1y'].push(backfillPointData)
-        }
-      }
-    }
-
-    const isSameDay = timestamp.isSame(nowStartOfDay)
-
-    const pointNetValue =
-      isSameDay && positionValues
-        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
-        : point.netValue
-    const pointDepositedValue =
-      isSameDay && positionValues
-        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
-    const newPointData = {
-      timestamp: timestampUnix,
-      timestampParsed,
-      netValue: pointNetValue,
-      depositedValue: pointDepositedValue,
-    }
-
-    if (timestampUnix >= thresholdHistorical90d) {
-      chartBaseData['90d'].push(newPointData)
-    }
-    if (timestampUnix >= thresholdHistorical6m) {
-      chartBaseData['6m'].push(newPointData)
-    }
-    if (timestampUnix >= thresholdHistorical1y) {
-      chartBaseData['1y'].push(newPointData)
-    }
-  })
-
-  // history weekly points
-  positionHistory.position?.weeklyPositionHistory.reverse().forEach((point, pointIndex) => {
-    const timestamp = dayjs(point.timestamp * 1000).startOf('week')
-    const timestampParsed = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
-    const timestampUnix = timestamp.unix()
-
-    // backfill the weekly position history with 0 values
-    if (pointIndex === 0) {
-      const chartStartTime3y = dayjs(thresholdHistorical3y * 1000)
-      const weeksNeededFor3yChart = timestamp.diff(chartStartTime3y, 'weeks')
-
-      for (let i = 0; i < weeksNeededFor3yChart; i++) {
-        const backfillTimestamp = chartStartTime3y.add(i, 'week')
+        chartBaseData[timeframe].push({
+          timestamp: timestampUnix,
+          timestampParsed,
+          netValue: pointNetValue,
+          depositedValue: pointDepositedValue,
+        })
+      } else {
         const backfillPointData = {
-          timestamp: backfillTimestamp.unix(),
-          timestampParsed: backfillTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED),
+          timestamp: timestampUnix,
+          timestampParsed,
           netValue: 0,
           depositedValue: 0,
         }
 
-        chartBaseData['3y'].push(backfillPointData)
+        chartBaseData[timeframe].push(backfillPointData)
       }
     }
+  }
 
-    const isSameWeek = timestamp.isSame(nowStartOfWeek)
+  generateDailyChart('90d', pointsNeededFor90dChart)
 
-    const pointNetValue =
-      isSameWeek && positionValues
-        ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
-        : point.netValue
-    const pointDepositedValue =
-      isSameWeek && positionValues
-        ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
-        : Math.max(Math.abs(point.deposits) - Math.abs(point.withdrawals), 0)
-    const newPointData = {
-      timestamp: timestampUnix,
-      timestampParsed,
-      netValue: pointNetValue,
-      depositedValue: pointDepositedValue,
+  generateDailyChart('6m', pointsNeededFor6mChart)
+
+  generateDailyChart('1y', pointsNeededFor1yChart)
+
+  // Generate complete 3y chart (weekly points)
+  for (let i = pointsNeededFor3yChart - 1; i >= 0; i--) {
+    const pointTime = nowStartOfWeek.subtract(i, 'weeks')
+    const timestampUnix = pointTime.unix()
+    const timestampParsed = pointTime.format(CHART_TIMESTAMP_FORMAT_DETAILED)
+    const isSameWeek = pointTime.isSame(nowStartOfWeek)
+
+    const existingPoint = weeklyDataMap.get(timestampUnix)
+
+    if (existingPoint) {
+      const pointNetValue =
+        isSameWeek && positionValues
+          ? Number(positionValues.netValue.toFixed(inputTokenDecimals))
+          : existingPoint.netValue
+      const pointDepositedValue =
+        isSameWeek && positionValues
+          ? Number(positionValues.netDeposited.toFixed(inputTokenDecimals))
+          : Math.max(Math.abs(existingPoint.deposits) - Math.abs(existingPoint.withdrawals), 0)
+
+      chartBaseData['3y'].push({
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: pointNetValue,
+        depositedValue: pointDepositedValue,
+      })
+    } else {
+      const backfillPointData = {
+        timestamp: timestampUnix,
+        timestampParsed,
+        netValue: 0,
+        depositedValue: 0,
+      }
+
+      chartBaseData['3y'].push(backfillPointData)
     }
-
-    if (timestampUnix >= thresholdHistorical3y) {
-      chartBaseData['3y'].push(newPointData)
-    }
-  })
+  }
 
   return {
     data: chartBaseData,

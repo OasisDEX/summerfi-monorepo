@@ -206,7 +206,12 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
       },
       details: arkDetails ? (
         <div
-          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--spacing-space-medium)',
+            maxWidth: '600px',
+          }}
         >
           <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
             Why this vault?

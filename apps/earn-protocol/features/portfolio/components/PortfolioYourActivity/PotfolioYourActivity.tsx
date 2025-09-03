@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   Card,
@@ -13,7 +13,7 @@ import { type SDKVaultsListType } from '@summerfi/app-types'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { getLatestActivity } from '@/features/latest-activity/api/get-latest-activity'
+import { useLatestActivityInfiniteQuery } from '@/features/latest-activity/api/get-latest-activity'
 import { LatestActivityTable } from '@/features/latest-activity/components/LatestActivityTable/LatestActivityTable'
 import { mapMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -33,46 +33,15 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   vaultsList,
   positions,
 }) => {
-  const isFirstRender = useRef(true)
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
   const [sortBy, setSortBy] = useState<TableSortedColumn<string> | undefined>()
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(latestActivity.data)
-  const [currentPage, setCurrentPage] = useState(latestActivity.pagination.currentPage)
-  const [isLoading, setIsLoading] = useState(false)
-  const [hasMoreItems, setHasMoreItems] = useState(true)
   const [strategyFilter, setStrategyFilter] = useState<string[]>([])
   const [tokenFilter, setTokenFilter] = useState<string[]>([])
 
   const handleSort = (sortConfig: TableSortedColumn<string>) => {
     setSortBy(sortConfig)
-  }
-
-  const handleMoreItems = async () => {
-    if (!hasMoreItems || isLoading) return
-
-    try {
-      const nextPage = currentPage + 1
-      const res = await getLatestActivity({
-        page: nextPage,
-        usersAddresses: [walletAddress],
-        sortBy: sortBy?.key,
-        orderBy: sortBy?.direction,
-        strategies: strategyFilter,
-        tokens: tokenFilter,
-      })
-
-      if (res.data.length === 0 || nextPage >= latestActivity.pagination.totalPages) {
-        setHasMoreItems(false)
-      }
-      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
-      setCurrentPage((prev) => prev + 1)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.info('Error fetching more latest activity items', error)
-      setHasMoreItems(false)
-    }
   }
 
   const resolvedVaultsList = useMemo(() => {
@@ -120,38 +89,30 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
     </div>
   )
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
+  // For portfolio component, hydrate from server only when no filters are applied
+  // since this component uses local state instead of URL params
+  const shouldHydrateFromServer =
+    strategyFilter.length === 0 && tokenFilter.length === 0 && sortBy?.key === ''
 
-      return
-    }
-
-    setIsLoading(true)
-    setHasMoreItems(true)
-
-    getLatestActivity({
-      page: 1,
-      usersAddresses: [walletAddress],
-      sortBy: sortBy?.key,
-      orderBy: sortBy?.direction,
+  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useLatestActivityInfiniteQuery({
       strategies: strategyFilter,
       tokens: tokenFilter,
+      sortBy: sortBy?.key,
+      orderBy: sortBy?.direction,
+      initialData: shouldHydrateFromServer ? latestActivity : undefined,
+      usersAddresses: walletAddress ? [walletAddress] : undefined,
     })
-      .then((res) => {
-        setCurrentlyLoadedList(res.data)
-        setCurrentPage(1)
 
-        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
-          setHasMoreItems(false)
-        }
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching users activity', error)
-      })
-      .finally(() => setIsLoading(false))
-  }, [sortBy?.key, sortBy?.direction, walletAddress, strategyFilter, tokenFilter])
+  const currentlyLoadedList = useMemo(
+    () => (data ? data.pages.flatMap((p) => p.data) : latestActivity.data),
+    [data, latestActivity.data],
+  )
+
+  const handleLoadMore = () => {
+    if (isFetchingNextPage || !hasNextPage) return
+    void fetchNextPage()
+  }
 
   return (
     <Card className={classNames.wrapper} variant="cardSecondary">
@@ -159,11 +120,10 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
         Your Activity
       </Text>
       <InfiniteScroll
-        loadMore={handleMoreItems}
-        hasMore={hasMoreItems}
+        loadMore={handleLoadMore}
+        hasMore={!!hasNextPage}
         loader={
-          // inversed, we don't want loading spinner when skeleton is visible
-          !isLoading ? (
+          isFetchingNextPage ? (
             <LoadingSpinner
               key="spinner"
               style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
@@ -176,7 +136,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
           latestActivityList={currentlyLoadedList}
           hiddenColumns={['strategy']}
           handleSort={handleSort}
-          isLoading={isLoading}
+          isLoading={isPending}
           noHighlight
         />
       </InfiniteScroll>

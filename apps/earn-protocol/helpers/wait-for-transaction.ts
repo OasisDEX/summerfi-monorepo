@@ -12,7 +12,7 @@ export const waitForTransaction = async ({ publicClient, hash }: WaitForTransact
   })
 
   if (receipt.status === 'reverted') {
-    throw new Error('Transaction reverted')
+    throw new Error(`Transaction reverted with hash ${hash}`)
   }
 
   return receipt

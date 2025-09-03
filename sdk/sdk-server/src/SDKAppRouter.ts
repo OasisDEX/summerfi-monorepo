@@ -52,6 +52,7 @@ import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
 import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserStakedBalance'
 import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
 import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
+import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
@@ -143,6 +144,7 @@ export const sdkAppRouter = router({
       getUserEarnedRewards: getUserEarnedRewards,
       getStakeTx: getStakeTx,
       getUnstakeTx: getUnstakeTx,
+      getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
       getDelegationChainLength: getDelegationChainLength,
@@ -155,25 +157,6 @@ export const sdkAppRouter = router({
       getReferralFeesMerklClaimTx: getReferralFeesMerklClaimTx,
       getAuthorizeAsMerklRewardsOperatorTx: getAuthorizeAsMerklRewardsOperatorTx,
       getIsAuthorizedAsMerklRewardsOperator: getIsAuthorizedAsMerklRewardsOperator,
-    },
-    keepers: {
-      rebalance: rebalance,
-      adjustBuffer: adjustBuffer,
-    },
-    governance: {
-      setFleetDepositCap: setFleetDepositCap,
-      setTipJar: setTipJar,
-      setTipRate: setTipRate,
-      addArk: addArk,
-      addArks: addArks,
-      removeArk: removeArk,
-      setArkDepositCap: setArkDepositCap,
-      setArkMaxRebalanceInflow: setArkMaxRebalanceInflow,
-      setArkMaxRebalanceOutflow: setArkMaxRebalanceOutflow,
-      setMinimumBufferBalance: setMinimumBufferBalance,
-      forceRebalance: forceRebalance,
-      updateRebalanceCooldown: updateRebalanceCooldown,
-      emergencyShutdown: emergencyShutdown,
     },
     admin: {
       rebalance: rebalance,

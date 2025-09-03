@@ -432,6 +432,7 @@ export const VaultOpenViewComponent = ({
           customApprovalOnBlur={approvalOnBlur}
           customApprovalOnFocus={approvalOnFocus}
           tokenBalance={selectedTokenBalance}
+          sidebarTransactionType={TransactionAction.DEPOSIT}
         />
       ),
       [TransactionType.Deposit]: (

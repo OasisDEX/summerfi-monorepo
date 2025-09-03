@@ -167,10 +167,17 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
       LoggingService.debug('Successfully fetched Merkl rewards', {
         address: userAddress,
-        perChain: Object.entries(merklRewardsPerChain).map(([chainId, rewards]) => [
-          chainId,
-          rewards.length,
-        ]),
+        perChain: Object.entries(merklRewardsPerChain).map(([chainId, rewards]) =>
+          JSON.stringify([
+            chainId,
+            rewards.map((reward) => ({
+              token: reward.token.symbol,
+              amount: reward.amount,
+              claimed: reward.claimed,
+              pending: reward.pending,
+            })),
+          ]),
+        ),
       })
 
       return { perChain: merklRewardsPerChain }
