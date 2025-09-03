@@ -73,6 +73,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {
   useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
   useHandleInputChangeEvent,
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
@@ -162,6 +163,7 @@ export const VaultManageViewComponent = ({
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const user = useUser()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -688,6 +690,7 @@ export const VaultManageViewComponent = ({
     title: sidebarTitle,
     titleTabs: sidebarTitleTabs,
     onTitleTabChange: (action) => {
+      buttonClickEventHandler(`vault-manage-title-tab-${action}`)
       setSidebarTransactionType(action as TransactionAction)
       setSidebarTransactionError(undefined)
       if (amountParsed.gt(0)) {
@@ -761,6 +764,9 @@ export const VaultManageViewComponent = ({
         viewWalletAddress={viewWalletAddress}
         connectedWalletAddress={user?.address}
         displaySimulationGraph={displaySimulationGraph}
+        tooltipEventHandler={tooltipEventHandler}
+        buttonClickEventHandler={buttonClickEventHandler}
+        dropdownChangeHandler={dropdownChangeHandler}
         simulationGraph={
           !forecastDisabled && (
             <VaultSimulationGraph

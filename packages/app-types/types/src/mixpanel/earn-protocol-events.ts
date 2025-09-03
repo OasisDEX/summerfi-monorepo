@@ -57,10 +57,10 @@ export interface EarnProtocolViewPositionEventProps extends EarnProtocolBaseEven
 
 // Transaction* (Simulated, Submitted, Confirmed, Success, Failure)
 export interface EarnProtocolTransactionEventProps extends EarnProtocolBaseEventProps {
-  transactionType: "deposit" | "withdraw" | "swap" | "other";
+  transactionType: "deposit" | "withdraw" | "vault-switch" | "other";
+  vaultSlug?: string;       // vault info
+  result?: 'success' | 'failure';
   txHash?: string;    // only available after submit
-  txData?: string;       // raw tx payload if needed
-  success?: boolean;  // success/failure flag (mainly for Confirmed/Success/Failure)
   errorMessage?: string; // optional if failed
 }
 

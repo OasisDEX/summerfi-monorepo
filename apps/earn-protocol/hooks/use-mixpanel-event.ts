@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
+import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
 import { debounce } from 'lodash-es'
 import { usePathname } from 'next/navigation'
 
@@ -42,6 +43,50 @@ export const useHandleButtonClickEvent = () => {
       ...userData,
     })
   }, 500)
+}
+
+export const useHandleTransactionEvent = () => {
+  const pathname = usePathname()
+  const user = useUser()
+  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
+  const { chain } = useChain()
+
+  const userData = !isLoadingAccount
+    ? { walletAddress, connectionMethod: user?.type, network: chain.name }
+    : {}
+
+  return debounce(
+    ({
+      transactionType,
+      txEvent,
+      vaultSlug,
+      txHash,
+      result,
+    }: {
+      transactionType: EarnProtocolTransactionEventProps['transactionType']
+      vaultSlug?: EarnProtocolTransactionEventProps['vaultSlug']
+      txHash?: EarnProtocolTransactionEventProps['txHash']
+      result?: EarnProtocolTransactionEventProps['result']
+      txEvent:
+        | 'transactionSimulated'
+        | 'transactionSubmitted'
+        | 'transactionConfirmed'
+        | 'transactionSuccess'
+        | 'transactionFailure'
+    }) => {
+      const eventHandler = EarnProtocolEvents[txEvent]
+
+      eventHandler({
+        page: pathname,
+        transactionType,
+        vaultSlug,
+        txHash,
+        result,
+        ...userData,
+      })
+    },
+    500,
+  )
 }
 
 export const useHandleDropdownChangeEvent = () => {

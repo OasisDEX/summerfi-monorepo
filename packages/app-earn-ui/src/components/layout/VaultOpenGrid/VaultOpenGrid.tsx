@@ -170,6 +170,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   )
 
   const handleUserRefresh = () => {
+    buttonClickEventHandler(`vault-open-refresh-button`)
     onRefresh?.(sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)), vault.id)
     setIsRefreshing(true)
     setTimeout(() => {
@@ -191,7 +192,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Link
             href={headerLink.href}
-            onClick={() => buttonClickEventHandler(`vault-open-header-link-`)}
+            onClick={() => buttonClickEventHandler(`vault-open-header-link`)}
           >
             <Text as="p" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {headerLink.label} / &nbsp;
