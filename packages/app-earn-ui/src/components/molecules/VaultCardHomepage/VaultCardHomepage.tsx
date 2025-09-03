@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import {
+  type IArmadaVaultInfo,
   type IconNamesList,
   type SDKVaultishType,
   SupportedSDKNetworks,
@@ -9,6 +10,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   subgraphNetworkToId,
+  supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -214,6 +216,7 @@ const VaultCardLoading = ({
 
 type VaultCardHomepageProps = {
   vault?: SDKVaultishType
+  vaultInfo?: IArmadaVaultInfo
   vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
@@ -225,6 +228,7 @@ type VaultCardHomepageProps = {
 
 export const VaultCardHomepage = ({
   vault,
+  vaultInfo,
   vaultsApyByNetworkMap,
   selected = true,
   onSelect,
@@ -234,34 +238,23 @@ export const VaultCardHomepage = ({
   if (isLoading ?? !vault) {
     return <VaultCardLoading selected={selected} onSelect={onSelect} />
   }
-  const {
-    id,
-    inputToken,
-    inputTokenBalance,
-    totalValueLockedUSD,
-    protocol,
-    customFields,
-    rewardTokens,
-    rewardTokenEmissionsAmount,
-    rewardTokenEmissionsFinish,
-  } = vault
+  const { id, inputToken, inputTokenBalance, totalValueLockedUSD, protocol, customFields } = vault
 
   if (!vaultsApyByNetworkMap) {
     return null
   }
-  const { apy } = vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(protocol.network)}`]
+  const { apy } =
+    vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(supportedSDKNetwork(protocol.network))}`]
   const parsedApy = formatDecimalAsPercent(apy)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    rewardTokens,
-    rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD,
-    rewardTokenEmissionsFinish,
-  )
+  })
 
   return (
     <Card
@@ -279,7 +272,11 @@ export const VaultCardHomepage = ({
         })}
       >
         <div className={vaultCardHomepageStyles.vaultCardHomepageTitleWrapper}>
-          <VaultTitle symbol={inputToken.symbol} networkName={protocol.network} isVaultCard />
+          <VaultTitle
+            symbol={inputToken.symbol}
+            networkName={supportedSDKNetwork(protocol.network)}
+            isVaultCard
+          />
           <AdditionalBonusLabel
             externalTokenBonus={customFields?.bonus}
             sumrTokenBonus={rawSumrTokenBonus !== '0' ? sumrTokenBonus : undefined}

@@ -4,10 +4,11 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
+  type IArmadaVaultInfo,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import {
@@ -171,10 +172,21 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions: userPositionsJsonSafe,
   })
 
+  const vaultsInfo = await Promise.all(
+    vaultsWithConfig.map(({ id, protocol: { network } }) =>
+      getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+    ),
+  )
+
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[],
+  )
+
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 
@@ -278,6 +290,16 @@ export async function generateMetadata({
 
   const { userPositions, vaultsList, systemConfig } = await portfolioCallsHandler(walletAddress)
 
+  const vaultsInfo = await Promise.all(
+    vaultsList.vaults.map(({ id, protocol: { network } }) =>
+      getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+    ),
+  )
+
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[] | undefined,
+  )
+
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
@@ -292,6 +314,7 @@ export async function generateMetadata({
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 

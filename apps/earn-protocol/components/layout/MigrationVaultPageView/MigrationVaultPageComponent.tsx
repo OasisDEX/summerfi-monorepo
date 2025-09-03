@@ -20,6 +20,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type ArksHistoricalChartData,
+  type IArmadaVaultInfo,
   type InterestRates,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -55,6 +56,7 @@ import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -69,6 +71,7 @@ type MigrationVaultPageComponentProps = {
 export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({
   vault,
   vaults,
+  vaultInfo,
   latestActivity,
   topDepositors,
   rebalanceActivity,
@@ -303,6 +306,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       isMobileOrTablet={isMobileOrTablet}
       vault={vault}
       vaults={vaults}
+      vaultInfo={vaultInfo}
       medianDefiYield={medianDefiYield}
       displaySimulationGraph={displaySimulationGraph}
       sumrPrice={estimatedSumrPrice}

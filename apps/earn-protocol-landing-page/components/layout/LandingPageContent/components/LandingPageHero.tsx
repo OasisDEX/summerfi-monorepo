@@ -1,6 +1,10 @@
 'use client'
 import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type GetVaultsApyResponse, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type GetVaultsApyResponse,
+  type IArmadaVaultInfo,
+  type SDKVaultishType,
+} from '@summerfi/app-types'
 import Link from 'next/link'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
@@ -8,9 +12,11 @@ import landingPageHeroStyles from '@/components/layout/LandingPageContent/compon
 export const LandingPageHero = ({
   vaultsList,
   vaultsApyByNetworkMap,
+  vaultsInfo,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
+  vaultsInfo?: IArmadaVaultInfo[]
 }) => {
   const headerPartA = (
     <Text
@@ -52,7 +58,11 @@ export const LandingPageHero = ({
         <div className={landingPageHeroStyles.heroHeaderPartA}>{headerPartA}</div>
         <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
       </div>
-      <HomepageCarousel vaultsList={vaultsList} vaultsApyByNetworkMap={vaultsApyByNetworkMap} />
+      <HomepageCarousel
+        vaultsList={vaultsList}
+        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        vaultsInfo={vaultsInfo}
+      />
       <Link href="/earn" prefetch={false}>
         <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
           {vaultsList?.length ? (
