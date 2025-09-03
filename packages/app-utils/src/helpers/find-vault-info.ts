@@ -1,5 +1,6 @@
 import { type IArmadaVaultInfo, type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+
+import { subgraphNetworkToSDKId, supportedSDKNetwork } from './earn-network-tools'
 
 /**
  * Finds the vault info for a given vault
