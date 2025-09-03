@@ -1,6 +1,7 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
+  type IArmadaVaultInfo,
   type LandingPageData,
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
@@ -112,6 +113,16 @@ export async function GET() {
     })),
   })
 
+  const vaultsInfo = await Promise.all(
+    vaultsWithConfig.map(({ id, protocol: { network } }) =>
+      getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+    ),
+  )
+
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[] | undefined,
+  )
+
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
 
   return NextResponse.json({
@@ -122,5 +133,6 @@ export async function GET() {
     protocolApys,
     totalRebalanceItemsPerStrategyId,
     proAppStats,
+    vaultsInfo: vaultsInfoParsed,
   } as LandingPageData)
 }
