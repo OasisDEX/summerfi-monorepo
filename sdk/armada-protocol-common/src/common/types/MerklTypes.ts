@@ -3,6 +3,7 @@
  */
 
 export type MerklOpportunityResponse = {
+  status: 'LIVE' | 'PAST'
   rewardsRecord: MerklRewardsRecord
 }
 

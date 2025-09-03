@@ -1818,7 +1818,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   async getMerklRewardsData(
     params: Parameters<IArmadaManagerVaults['getMerklRewardsData']>[0],
   ): ReturnType<IArmadaManagerVaults['getMerklRewardsData']> {
-    const { vaultIds } = params
+    const { chainId, vaultIds } = params
     // get vaults data by creating promises list and executing with promise all
     const vaultsData = await Promise.all(
       vaultIds.map((vaultId) =>
@@ -1831,8 +1831,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     // get rewards manager addresses of the provided vaults
     const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
-    const url = 'https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}'
-    const responses: MerklOpportunitiesResponse[] = await Promise.all(
+    const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
+    const opportunitiesPerVault: MerklOpportunitiesResponse[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
           ? fetch(url.replace('{{identifier}}', address)).then((res) => {
@@ -1845,15 +1845,19 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ),
     )
 
-    const byFleetAddress = responses.reduce(
-      (acc, response, index) => {
+    const byFleetAddress = opportunitiesPerVault.reduce(
+      (acc, opportunities, index) => {
         const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
         if (!acc[fleetAddress]) {
           acc[fleetAddress] = []
         }
         acc[fleetAddress].push({
-          dailyEmission: response
+          dailyEmission: opportunities
             .reduce((dailyEmission, opportunity) => {
+              // check opportunity is live
+              if (opportunity.status !== 'LIVE') {
+                return dailyEmission
+              }
               const sumrReward = opportunity.rewardsRecord.breakdowns.find(
                 (b) => b.token.symbol === 'SUMR',
               )
