@@ -71,10 +71,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  if (!isAddress(vaultId)) {
-    redirect('/not-found')
-  }
-
   if (!parsedVaultId) {
     redirect('/not-found')
   }

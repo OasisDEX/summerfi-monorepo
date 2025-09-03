@@ -14,13 +14,11 @@ import { backendSDK } from '@/sdk/sdk-backend-client'
  *
  * This function retrieves the information of an Armada vault by creating a vault ID from
  * the provided network and vault address, then making a request to the backend SDK.
- * It returns the vault information or throws an error if the request fails.
+ * It returns the vault information or undefined if the request fails.
  * @param {Object} params - The parameters for fetching the vault information
  * @param {SupportedSDKNetworks} params.network - The network of the vault
  * @param {string} params.vaultAddress - The address of the vault
  * @returns {Promise<IArmadaVaultInfo | undefined>} The vault information or undefined if the request fails
- *
- * @throws {Error} When the request fails
  *
  * @example
  * ```typescript
