@@ -46,6 +46,8 @@ import {
   TransactionAction,
 } from '@summerfi/app-types'
 import {
+  slugify,
+  slugifyVault,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
@@ -214,10 +216,13 @@ export const VaultManageViewComponent = ({
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = useCallback(
     (option: DropdownRawOption) => {
+      buttonClickEventHandler(
+        `vault-manage-${slugifyVault(vault)}-change-token-to-${slugify(option.value)}`,
+      )
       handleTokenSelectionChange(option)
       handleSetTokenBalanceLoading(true)
     },
-    [handleTokenSelectionChange, handleSetTokenBalanceLoading],
+    [buttonClickEventHandler, vault, handleTokenSelectionChange, handleSetTokenBalanceLoading],
   )
 
   const { netValue, netValueUSD } = getPositionValues({

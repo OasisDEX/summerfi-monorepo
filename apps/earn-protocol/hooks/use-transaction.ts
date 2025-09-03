@@ -290,6 +290,13 @@ export const useTransaction = ({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
+      transactionEventHandler({
+        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        txEvent: 'transactionSubmitted',
+        result: 'success',
+        txHash: hash,
+        vaultSlug: slugifyVault(vault),
+      })
       if (isIframe) {
         getSafeTxHash(hash, supportedSDKNetwork(vault.protocol.network))
           .then((safeTransactionData) => {
@@ -329,6 +336,12 @@ export const useTransaction = ({
         // we need to refresh the transactions list then to fetch the new swap
         getTransactionsList()
       }
+      transactionEventHandler({
+        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        txEvent: 'transactionSubmitted',
+        result: 'failure',
+        vaultSlug: slugifyVault(vault),
+      })
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
@@ -441,7 +454,7 @@ export const useTransaction = ({
       throw new Error('Token not loaded')
     }
 
-    buttonClickEventHandler(`ep-vault-${flow}-next-transaction-${slugify(nextTransaction.type)}`)
+    buttonClickEventHandler(`vault-${flow}-next-transaction-${slugify(nextTransaction.type)}`)
 
     const txParams =
       nextTransaction.type === TransactionType.Approve &&
@@ -495,8 +508,7 @@ export const useTransaction = ({
     setTransactions(undefined)
     setTxStatus('idle')
     setApprovalType('deposit')
-    buttonClickEventHandler(`ep-vault-${flow}-sidebar-cancel`)
-  }, [buttonClickEventHandler, flow])
+  }, [])
 
   const reset = useCallback(() => {
     // resets everything
@@ -505,7 +517,7 @@ export const useTransaction = ({
     setSidebarTransactionError(undefined)
     setSidebarValidationError(undefined)
     setSidebarTransactionType?.(TransactionAction.DEPOSIT)
-    buttonClickEventHandler(`ep-vault-${flow}-sidebar-reset`)
+    buttonClickEventHandler(`vault-${flow}-sidebar-reset`)
   }, [backToInit, buttonClickEventHandler, flow, manualSetAmount, setSidebarTransactionType])
 
   const sidebarSecondaryButton = useMemo(() => {
@@ -554,6 +566,7 @@ export const useTransaction = ({
       return {
         label: `Change network to ${nextChain.name}`,
         action: () => {
+          buttonClickEventHandler(`vault-${flow}-change-network-to-${slugify(nextChain.name)}`)
           setChain({
             chain: nextChain,
           })
@@ -567,7 +580,7 @@ export const useTransaction = ({
       return {
         label: 'Buy crypto',
         action: () => {
-          buttonClickEventHandler(`ep-vault-${flow}-buy-crypto`)
+          buttonClickEventHandler(`vault-${flow}-buy-crypto`)
           setIsTransakOpen(true)
         },
         disabled: false,
@@ -643,6 +656,7 @@ export const useTransaction = ({
         return {
           label: 'Go to new position',
           action: () => {
+            buttonClickEventHandler(`vault-${flow}-go-to-new-position`)
             push(
               getVaultPositionUrl({
                 network: supportedSDKNetwork(vault.protocol.network),

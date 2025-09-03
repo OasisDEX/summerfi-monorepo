@@ -37,7 +37,7 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
@@ -266,6 +266,7 @@ export const VaultOpenViewComponent = ({
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    buttonClickEventHandler(`vault-manage-change-token-to-${slugify(option.value)}`)
     handleSetTokenBalanceLoading(true)
     handleTokenSelectionChange(option)
   }
