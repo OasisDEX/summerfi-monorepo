@@ -11,7 +11,8 @@ export const useLogin = () => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState(isUnauthorized ? 'Unauthorized access.' : '')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingLoginView, setIsLoadingLoginView] = useState(false)
+  const [isLoadingChangePasswordView, setIsLoadingChangePasswordView] = useState(false)
 
   const { signIn, challengeData, setChallengeData } = useAuth()
 
@@ -28,12 +29,12 @@ export const useLogin = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setIsLoading(true)
+    setIsLoadingLoginView(true)
     try {
       await signIn(email, password)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
-      setIsLoading(false)
+      setIsLoadingLoginView(false)
     }
     // don't set isLoading to false in finally to avoid button flickering before redirect
   }
@@ -54,11 +55,11 @@ export const useLogin = () => {
       return
     }
 
-    setIsLoading(true)
+    setIsLoadingChangePasswordView(true)
 
     if (!challengeData) {
       setError('No challenge data available')
-      setIsLoading(false)
+      setIsLoadingChangePasswordView(false)
 
       return
     }
@@ -84,7 +85,7 @@ export const useLogin = () => {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Password change failed')
     } finally {
-      setIsLoading(false)
+      setIsLoadingChangePasswordView(false)
     }
   }
 
@@ -98,7 +99,8 @@ export const useLogin = () => {
     confirmPassword,
     setConfirmPassword,
     error,
-    isLoading,
+    isLoadingLoginView,
+    isLoadingChangePasswordView,
     handleLoginSubmit,
     handleSetNewPassword,
     challengeData,
