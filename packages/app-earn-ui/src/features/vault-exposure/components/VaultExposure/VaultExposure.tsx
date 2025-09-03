@@ -21,7 +21,6 @@ interface VaultExposureProps {
   vaultApyData: VaultApyData
   columnsToHide?: string[]
   tableId: string
-  tooltipEventHandler: (tooltipName: string) => void
   buttonClickEventHandler: (buttonName: string) => void
 }
 
@@ -32,7 +31,6 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   columnsToHide,
   tableId,
   buttonClickEventHandler,
-  tooltipEventHandler: _tooltipEventHandler, // to be handled later
 }) => {
   const [seeAll, setSeeAll] = useState(false)
 

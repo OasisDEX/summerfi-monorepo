@@ -100,7 +100,6 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             columnsToHide={vaultExposureColumnsToHideOpenManage}
             tableId="vault-open"
             buttonClickEventHandler={buttonClickEventHandler}
-            tooltipEventHandler={tooltipEventHandler}
           />
         </VaultExposureDescription>
       </Expander>
@@ -116,6 +115,9 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         <RebalancingActivity
           rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
+          tableId="vault-open-rebalancing-activity"
+          buttonClickEventHandler={buttonClickEventHandler}
+          tooltipEventHandler={tooltipEventHandler}
         />
       </Expander>
       <Expander
@@ -133,6 +135,8 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           vaultId={getUniqueVaultId(vault)}
           page="open"
           noHighlight
+          tableId="vault-open-users-activity"
+          buttonClickEventHandler={buttonClickEventHandler}
         />
       </Expander>
       <Expander
