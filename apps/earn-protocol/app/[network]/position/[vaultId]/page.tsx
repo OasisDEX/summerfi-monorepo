@@ -8,6 +8,7 @@ import {
 import {
   configEarnAppFetcher,
   getArksInterestRates,
+  getVaultInfo,
   getVaultsApy,
   getVaultsHistoricalApy,
 } from '@summerfi/app-server-handlers'
@@ -70,7 +71,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  if (!parsedVaultId && !isAddress(vaultId)) {
+  if (!isAddress(vaultId)) {
+    redirect('/not-found')
+  }
+
+  if (!parsedVaultId) {
     redirect('/not-found')
   }
 
@@ -117,7 +122,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   }
   const keyParts = [vaultId, paramsNetwork]
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
+  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw, vaultInfo] = await Promise.all([
     vault?.arks
       ? getArksInterestRates({
           network: parsedNetwork,
@@ -145,6 +150,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
+    getVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   if (!vault) {
@@ -164,6 +170,8 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const vaultApyData =
     vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
+  const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
+
   return (
     <VaultOpenView
       vault={vaultWithConfig}
@@ -177,6 +185,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaultApyData={vaultApyData}
       vaultsApyRaw={vaultsApyRaw}
       referralCode={referralCode}
+      vaultInfo={vaultInfoParsed}
     />
   )
 }

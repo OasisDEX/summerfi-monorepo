@@ -10,6 +10,7 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -20,6 +21,7 @@ import { sdkApiUrl } from '@/constants/sdk'
 export const VaultOpenView = ({
   vault,
   vaults,
+  vaultInfo,
   latestActivity,
   topDepositors,
   rebalanceActivity,
@@ -32,6 +34,7 @@ export const VaultOpenView = ({
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -47,6 +50,7 @@ export const VaultOpenView = ({
       <VaultOpenViewComponent
         vault={vault}
         vaults={vaults}
+        vaultInfo={vaultInfo}
         latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}

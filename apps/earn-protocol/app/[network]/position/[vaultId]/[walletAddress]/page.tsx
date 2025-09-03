@@ -10,6 +10,7 @@ import {
 import {
   configEarnAppFetcher,
   getArksInterestRates,
+  getVaultInfo,
   getVaultsApy,
   getVaultsHistoricalApy,
 } from '@summerfi/app-server-handlers'
@@ -74,9 +75,10 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  if (!parsedVaultId && !isAddress(vaultId)) {
+  if (!parsedVaultId) {
     redirect('/not-found')
   }
+
   if (!isAddress(walletAddress)) {
     redirect('/not-found')
   }
@@ -159,6 +161,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     positionForecastResponse,
     vaultsApyByNetworkMap,
     migratablePositionsData,
+    vaultInfo,
   ] = await Promise.all([
     getArksInterestRates({
       network: parsedNetwork,
@@ -198,6 +201,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getMigratablePositions({
       walletAddress,
     }),
+    getVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   if (!positionForecastResponse.ok) {
@@ -229,6 +233,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
   })
 
+  const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
+
   return (
     <VaultManageView
       systemConfig={systemConfig}
@@ -245,6 +251,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       arksInterestRates={arkInterestRatesMap}
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
+      vaultInfo={vaultInfoParsed}
     />
   )
 }

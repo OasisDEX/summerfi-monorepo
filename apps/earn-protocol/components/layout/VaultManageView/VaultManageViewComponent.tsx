@@ -36,6 +36,7 @@ import {
   type EarnAppConfigType,
   type GetVaultsApyResponse,
   type IArmadaPosition,
+  type IArmadaVaultInfo,
   type InterestRates,
   type NetworkIds,
   type PerformanceChartData,
@@ -120,6 +121,7 @@ const OrderInfoWithdraw = dynamic(
 export const VaultManageViewComponent = ({
   vault,
   vaults,
+  vaultInfo,
   position,
   latestActivity,
   topDepositors,
@@ -136,6 +138,7 @@ export const VaultManageViewComponent = ({
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
   position: IArmadaPosition
+  vaultInfo?: IArmadaVaultInfo
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -740,6 +743,7 @@ export const VaultManageViewComponent = ({
       <RebalancingNoticeBanner vault={vault} />
       <VaultManageGrid
         vault={vault}
+        vaultInfo={vaultInfo}
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}

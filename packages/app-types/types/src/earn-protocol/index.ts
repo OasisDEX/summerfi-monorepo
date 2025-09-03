@@ -9,6 +9,7 @@ import {
   ExtendedTransactionInfo,
   IArmadaPosition,
   VaultSwitchTransactionInfo,
+  IArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
@@ -24,6 +25,7 @@ import {
 export type { GetInterestRatesQuery }
 export { GetInterestRatesDocument }
 export type { IArmadaPosition as IArmadaPosition }
+export type { IArmadaVaultInfo }
 
 export type InterestRates = {
   [key: string]: GetInterestRatesQuery

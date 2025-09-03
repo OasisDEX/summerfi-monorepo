@@ -1,6 +1,11 @@
 import { type ReactNode } from 'react'
-import { type IArmadaPosition, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
-import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import {
+  type IArmadaPosition,
+  type IArmadaVaultInfo,
+  type SDKVaultishType,
+  type VaultApyData,
+} from '@summerfi/app-types'
+import { formatDecimalAsPercent, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -23,6 +28,7 @@ type PortfolioPositionProps = {
   portfolioPosition: {
     position: IArmadaPosition
     vault: SDKVaultishType
+    vaultInfo: IArmadaVaultInfo
   }
   positionGraph: ReactNode
   sumrPrice?: number
@@ -62,9 +68,6 @@ export const PortfolioPosition = ({
     totalValueLockedUSD,
     id: vaultId,
     customFields,
-    rewardTokenEmissionsAmount,
-    rewardTokenEmissionsFinish,
-    rewardTokens,
     createdTimestamp,
   } = portfolioPosition.vault
   const {
@@ -90,18 +93,16 @@ export const PortfolioPosition = ({
       : 'n/a'
     : 'New Strategy'
 
-  const { sumrTokenBonus } = getSumrTokenBonus(
-    rewardTokens,
-    rewardTokenEmissionsAmount,
+  const { sumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: portfolioPosition.vaultInfo.merklRewards,
     sumrPrice,
     totalValueLockedUSD,
-    rewardTokenEmissionsFinish,
-  )
+  })
 
   const linkToPosition = (
     <Link
       href={getVaultPositionUrl({
-        network: protocol.network,
+        network: supportedSDKNetwork(protocol.network),
         vaultId: customFields?.slug ?? vaultId,
         walletAddress,
       })}
@@ -120,7 +121,7 @@ export const PortfolioPosition = ({
             <VaultTitleWithRisk
               symbol={getDisplayToken(inputToken.symbol)}
               risk={customFields?.risk ?? 'lower'}
-              networkName={protocol.network}
+              networkName={supportedSDKNetwork(protocol.network)}
               titleVariant="h3"
               isVaultCard
             />

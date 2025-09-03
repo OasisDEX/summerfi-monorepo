@@ -74,6 +74,8 @@ export default defineConfig(({ mode }) => {
           'dayjs',
           'lodash-es',
           '@summerfi/app-types',
+          '@summerfi/sdk-client',
+          '@summerfi/sdk-common',
           'next',
           'next/navigation',
           'jose',

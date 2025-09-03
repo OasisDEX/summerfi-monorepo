@@ -44,6 +44,7 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
@@ -62,6 +63,7 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  vaultsInfo?: IArmadaVaultInfo[]
 }
 
 enum VaultsSorting {
@@ -129,7 +131,11 @@ const updateQueryParams = (
   softRouterPush(newUrl)
 }
 
-export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsListViewProps) => {
+export const VaultsListView = ({
+  vaultsList,
+  vaultsApyByNetworkMap,
+  vaultsInfo,
+}: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
@@ -185,20 +191,24 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     (a: (typeof vaultsList)[number], b: (typeof vaultsList)[number]) => {
       const aTvl = a.totalValueLockedUSD
       const bTvl = b.totalValueLockedUSD
-      const aRewards = getSumrTokenBonus(
-        a.rewardTokens,
-        a.rewardTokenEmissionsAmount,
-        estimatedSumrPrice,
-        aTvl,
-        a.rewardTokenEmissionsFinish,
-      ).rawSumrTokenBonus
-      const bRewards = getSumrTokenBonus(
-        b.rewardTokens,
-        b.rewardTokenEmissionsAmount,
-        estimatedSumrPrice,
-        bTvl,
-        b.rewardTokenEmissionsFinish,
-      ).rawSumrTokenBonus
+
+      const aMerklRewards = vaultsInfo?.find(
+        (vault) => vault.id.fleetAddress.value === a.id,
+      )?.merklRewards
+      const bMerklRewards = vaultsInfo?.find(
+        (vault) => vault.id.fleetAddress.value === b.id,
+      )?.merklRewards
+
+      const aRewards = getSumrTokenBonus({
+        merklRewards: aMerklRewards,
+        sumrPrice: estimatedSumrPrice,
+        totalValueLockedUSD: aTvl,
+      }).rawSumrTokenBonus
+      const bRewards = getSumrTokenBonus({
+        merklRewards: bMerklRewards,
+        sumrPrice: estimatedSumrPrice,
+        totalValueLockedUSD: bTvl,
+      }).rawSumrTokenBonus
 
       if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
         return Number(aTvl) > Number(bTvl) ? -1 : 1
@@ -219,7 +229,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       // default sorting method which is VaultsSorting.HIGHEST_APY
       return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
     },
-    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId],
+    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId, vaultsInfo],
   )
 
   const filteredSafeVaultsList = useMemo(() => {
@@ -574,6 +584,10 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
+                merklRewards={
+                  vaultsInfo?.find((vaultInfo) => vaultInfo.id.fleetAddress.value === vault.id)
+                    ?.merklRewards
+                }
               />
             ))
           ) : (
@@ -627,6 +641,10 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     vaultsApyByNetworkMap[
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                     ]
+                  }
+                  merklRewards={
+                    vaultsInfo?.find((vaultInfo) => vaultInfo.id.fleetAddress.value === vault.id)
+                      ?.merklRewards
                   }
                 />
               ))}

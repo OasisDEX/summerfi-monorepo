@@ -3,6 +3,7 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
   type IArmadaPosition,
+  type IArmadaVaultInfo,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
@@ -48,6 +49,7 @@ import vaultManageGridStyles from './VaultManageGrid.module.css'
 interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   position: IArmadaPosition
   detailsContent: ReactNode[] | ReactNode
   sidebarContent: ReactNode
@@ -66,6 +68,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   vault,
   vaultApyData,
   vaults,
+  vaultInfo,
   detailsContent,
   sidebarContent,
   position,
@@ -144,13 +147,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault,
   })
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    vault.rewardTokens,
-    vault.rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
-    vault.totalValueLockedUSD,
-    vault.rewardTokenEmissionsFinish,
-  )
+    totalValueLockedUSD: vault.totalValueLockedUSD,
+  })
   const handleUserRefresh = () => {
     onRefresh?.(
       sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),

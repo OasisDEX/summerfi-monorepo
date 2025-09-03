@@ -47,6 +47,8 @@
   "peerDependencies": {
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
+    "@summerfi/sdk-client": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "graphql-request": "^6.1.0",
