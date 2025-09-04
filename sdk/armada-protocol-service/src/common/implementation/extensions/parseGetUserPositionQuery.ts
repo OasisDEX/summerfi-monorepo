@@ -19,6 +19,10 @@ export const parseGetUserPositionQuery = ({
   getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
 }): IArmadaPosition | undefined => {
   const chainInfo = user.chainInfo
+  // TODO: pass a callback to fetch merkl rewards (rewards manager => getUserMerklRewards)
+  // in the response parse campaigns breakdowns data
+  // then map each campaign data to their respective vault
+
   const armadaPositions = query.positions.map(
     mapGraphDataToArmadaPosition({ user, chainInfo, summerToken, getTokenBySymbol }),
   )

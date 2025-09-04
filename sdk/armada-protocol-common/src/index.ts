@@ -64,9 +64,15 @@ export {
 export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
 export type {
   MerklReward,
-  MerklRewardsBreakdown,
-  MerklRewardsRecord,
-  MerklOpportunitiesResponse,
-  MerklOpportunityResponse,
-  MerklRewardsToken,
+  MerklApiOpportunitiesResponse,
+  MerklApiOpportunity,
+  MerklApiOpportunityRewardsRecord,
+  MerklApiOpportunityRewardsRecordBreakdown,
+  MerklApiOpportunityRewardsRecordBreakdownToken,
+  MerklApiUsersResponse,
+  MerklApiUser,
+  MerklApiChain,
+  MerklApiReward,
+  MerklApiRewardBreakdown,
+  MerklApiToken,
 } from './common/types/MerklTypes'

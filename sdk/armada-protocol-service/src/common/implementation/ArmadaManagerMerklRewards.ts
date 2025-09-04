@@ -2,6 +2,7 @@ import {
   isTestDeployment,
   type IArmadaManagerMerklRewards,
   type IArmadaManagerUtils,
+  type MerklApiUsersResponse,
   type MerklReward,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -24,38 +25,6 @@ import { getMerklDistributorContractAddress } from './configs/merkl-distributor-
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import type { IDeploymentProvider } from '../..'
 import type { ITokensManager } from '@summerfi/tokens-common'
-
-/**
- * Response type from Merkl API for user rewards
- */
-
-interface MerklApiChain {
-  id: number
-  name: string
-  icon: string
-  liveCampaigns: number
-}
-
-interface MerklApiReward {
-  token: {
-    chainId: number
-    address: string
-    symbol: string
-    decimals: number
-    price: number
-  }
-  root: string
-  recipient: string
-  amount: string
-  claimed: string
-  pending: string
-  proofs: string[]
-}
-
-type MerklApiResponse = {
-  chain: MerklApiChain
-  rewards: MerklApiReward[]
-}[]
 
 /**
  * @name ArmadaManagerMerklRewards
@@ -119,7 +88,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         throw new Error(`Merkl API request failed: ${response.status} ${response.statusText}`)
       }
 
-      const data = (await response.json()) as MerklApiResponse
+      const data = (await response.json()) as MerklApiUsersResponse
 
       if (!data || !Array.isArray(data)) {
         LoggingService.debug('Invalid response from Merkl API', { data })
@@ -156,6 +125,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
+            breakdowns: reward.breakdowns,
           })
         }
 

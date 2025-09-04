@@ -5,7 +5,7 @@ import {
   createWithdrawTransaction,
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
-  type MerklOpportunitiesResponse,
+  type MerklApiOpportunitiesResponse,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -1832,7 +1832,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
     const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
-    const opportunitiesPerVault: MerklOpportunitiesResponse[] = await Promise.all(
+    const opportunitiesPerVault: MerklApiOpportunitiesResponse[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
           ? fetch(url.replace('{{identifier}}', address)).then((res) => {
