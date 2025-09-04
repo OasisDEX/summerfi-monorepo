@@ -305,7 +305,6 @@ export const VaultOpenViewComponent = ({
     sidebar,
     nextTransaction,
     backToInit,
-    user,
     isTransakOpen,
     setIsTransakOpen,
   } = useTransaction({
@@ -361,7 +360,7 @@ export const VaultOpenViewComponent = ({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
-    walletAddress: user?.address,
+    walletAddress: userAAKit?.address,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
@@ -406,7 +405,7 @@ export const VaultOpenViewComponent = ({
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: nextTransaction,
-    walletAddress: user?.address,
+    walletAddress: userAAKit?.address,
     publicClient,
   })
 
@@ -554,7 +553,7 @@ export const VaultOpenViewComponent = ({
               <TransakWidget
                 cryptoCurrency={vault.inputToken.symbol}
                 walletAddress={userWalletAddress}
-                email={user?.email}
+                email={userAAKit?.email}
                 isOpen={isTransakOpen}
                 onClose={() => setIsTransakOpen(false)}
               />
