@@ -38,6 +38,7 @@ import { type PositionWithVault } from '@/features/portfolio/helpers/merge-posit
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.css'
@@ -77,8 +78,8 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   beachClubData,
   blogPosts,
 }) => {
-  const pathname = usePathname()
   const { features } = useSystemConfig()
+  const handleButtonClick = useHandleButtonClickEvent()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
@@ -101,11 +102,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const beachClubEnabled = !!features?.BeachClub
 
   useEffect(() => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `ep-portfolio-tab-${activeTab}`,
-      page: pathname,
-      walletAddress: userWalletAddress,
-    })
+    handleButtonClick(`portfolio-tab-${activeTab}`)
     // only on tab change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])

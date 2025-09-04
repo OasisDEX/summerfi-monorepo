@@ -362,7 +362,7 @@ export const VaultsListView = ({
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
     dropdownChangeHandler({
-      inputName: `ep-vault-list-token-selector`,
+      inputName: `vault-list-token-selector-${slugifyVault(resolvedVaultData)}`,
       value: option.value,
     })
     tokenBalances.handleSetTokenBalanceLoading(true)

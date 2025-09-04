@@ -16,6 +16,7 @@ import { BeachClubFloatingBanner } from '@/components/molecules/BeachClubFloatin
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.css'
@@ -34,13 +35,11 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const { features } = useSystemConfig()
   const pathname = usePathname()
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const beachClubEnabled = !!features?.BeachClub
   const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: `ep-footer-${buttonName}`,
-      page: pathname,
-    })
+    handleButtonClick(buttonName)
   }
   const handleNewsletterEvent = ({
     eventType,

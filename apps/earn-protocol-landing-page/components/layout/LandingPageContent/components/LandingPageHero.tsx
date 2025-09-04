@@ -71,6 +71,7 @@ export const LandingPageHero = ({
         vaultsList={vaultsList}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
+        onGetStartedClick={handleGetStartedClick}
       />
       <Link
         href="/earn"
