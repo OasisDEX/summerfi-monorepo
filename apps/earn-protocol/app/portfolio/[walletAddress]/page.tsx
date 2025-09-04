@@ -174,7 +174,9 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const vaultsInfo = await Promise.all(
     vaultsWithConfig.map(({ id, protocol: { network } }) =>
-      getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+      unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      })({ network: supportedSDKNetwork(network), vaultAddress: id }),
     ),
   )
 
@@ -292,7 +294,9 @@ export async function generateMetadata({
 
   const vaultsInfo = await Promise.all(
     vaultsList.vaults.map(({ id, protocol: { network } }) =>
-      getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+      unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      })({ network: supportedSDKNetwork(network), vaultAddress: id }),
     ),
   )
 

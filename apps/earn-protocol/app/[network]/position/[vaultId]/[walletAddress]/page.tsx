@@ -201,7 +201,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getMigratablePositions({
       walletAddress,
     }),
-    getVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    unstableCache(
+      getVaultInfo,
+      keyParts,
+      cacheConfig,
+    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   if (!positionForecastResponse.ok) {

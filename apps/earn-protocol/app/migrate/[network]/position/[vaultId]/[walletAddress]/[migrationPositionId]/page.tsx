@@ -151,7 +151,11 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    getVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    unstableCache(
+      getVaultInfo,
+      keyParts,
+      cacheConfig,
+    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })

@@ -146,7 +146,11 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    getVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    unstableCache(
+      getVaultInfo,
+      keyParts,
+      cacheConfig,
+    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   if (!vault) {

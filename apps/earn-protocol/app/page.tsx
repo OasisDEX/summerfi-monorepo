@@ -44,7 +44,9 @@ const EarnAllVaultsPage = async () => {
     }),
     Promise.all(
       vaultsWithConfig.map(({ id, protocol: { network } }) =>
-        getVaultInfo({ network: supportedSDKNetwork(network), vaultAddress: id }),
+        unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+          revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+        })({ network: supportedSDKNetwork(network), vaultAddress: id }),
       ),
     ),
   ])
