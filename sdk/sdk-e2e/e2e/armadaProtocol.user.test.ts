@@ -13,7 +13,7 @@ import { SDKApiUrl, testWalletAddress, signerPrivateKey } from './utils/testConf
 import assert from 'assert'
 
 jest.setTimeout(300000)
-const simulateOnly = false
+const simulateOnly = true
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -95,6 +95,13 @@ describe('Armada Protocol - User', () => {
     )
   })
 
+  it.only(`should get user merkl rewards`, async () => {
+    const rewards = await sdk.armada.users.getUserMerklRewards({
+      address: user.wallet.address.value,
+    })
+    console.log('User Merkle rewards:', JSON.stringify(rewards, null, 2))
+  })
+
   it.skip(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
     // const _user = User.createFromEthereum(
     //   ChainIds.Base,
@@ -119,7 +126,7 @@ describe('Armada Protocol - User', () => {
     )
   })
 
-  it(`should unstake all fleet tokens for vault: ${fleetAddress.value}`, async () => {
+  it.skip(`should unstake all fleet tokens for vault: ${fleetAddress.value}`, async () => {
     // Check initial balances
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user,

@@ -84,7 +84,7 @@ export { isValidLink } from './helpers/is-valid-link'
 export { getRebalanceSavedGasCost } from './helpers/get-rebalance-saved-gas-cost'
 export { getRebalanceSavedTimeInHours } from './helpers/get-rebalance-saved-time-in-hours'
 export { getArksWeightedApy } from './helpers/get-arks-weighted-apy'
-
+export { findVaultInfo } from './helpers/find-vault-info'
 export { safeParseJson } from './helpers/safe-parse-json'
 export { getServerSideCookies } from './helpers/get-server-side-cookies'
 export { safeATOB, safeBTOA } from './helpers/safe-b64'

@@ -38,7 +38,12 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
-import { getChainInfoByChainId, type IToken, TransactionType } from '@summerfi/sdk-common'
+import {
+  getChainInfoByChainId,
+  type IArmadaVaultInfo,
+  type IToken,
+  TransactionType,
+} from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -80,6 +85,7 @@ import { VaultOpenViewDetails } from './VaultOpenViewDetails'
 type VaultOpenViewComponentProps = {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   latestActivity: LatestActivityPagination
   topDepositors: TopDepositorsPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -93,6 +99,7 @@ type VaultOpenViewComponentProps = {
 
 export const VaultOpenViewComponent = ({
   vault,
+  vaultInfo,
   vaults,
   latestActivity,
   topDepositors,
@@ -315,7 +322,6 @@ export const VaultOpenViewComponent = ({
     sidebar,
     nextTransaction,
     backToInit,
-    user,
     isTransakOpen,
     setIsTransakOpen,
   } = useTransaction({
@@ -371,7 +377,7 @@ export const VaultOpenViewComponent = ({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
-    walletAddress: user?.address,
+    walletAddress: userAAKit?.address,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
@@ -416,7 +422,7 @@ export const VaultOpenViewComponent = ({
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: nextTransaction,
-    walletAddress: user?.address,
+    walletAddress: userAAKit?.address,
     publicClient,
   })
 
@@ -531,6 +537,7 @@ export const VaultOpenViewComponent = ({
       <VaultOpenGrid
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
+        vaultInfo={vaultInfo}
         vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
@@ -566,7 +573,7 @@ export const VaultOpenViewComponent = ({
               <TransakWidget
                 cryptoCurrency={vault.inputToken.symbol}
                 walletAddress={userWalletAddress}
-                email={user?.email}
+                email={userAAKit?.email}
                 isOpen={isTransakOpen}
                 onClose={() => setIsTransakOpen(false)}
               />

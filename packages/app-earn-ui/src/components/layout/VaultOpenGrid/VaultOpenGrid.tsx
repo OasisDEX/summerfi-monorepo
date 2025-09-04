@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
+  type IArmadaVaultInfo,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SupportedNetworkIds,
@@ -47,6 +48,7 @@ import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
@@ -70,6 +72,7 @@ interface VaultOpenGridProps {
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
+  vaultInfo,
   vaults,
   displaySimulationGraph,
   simulationGraph,
@@ -161,13 +164,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     }
   }, [displaySimulationGraph])
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    vault.rewardTokens,
-    vault.rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
-    vault.totalValueLockedUSD,
-    vault.rewardTokenEmissionsFinish,
-  )
+    totalValueLockedUSD: vault.totalValueLockedUSD,
+  })
 
   const handleUserRefresh = () => {
     buttonClickEventHandler(`vault-open-refresh-button`)

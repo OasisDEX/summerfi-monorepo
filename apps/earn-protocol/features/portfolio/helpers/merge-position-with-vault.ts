@@ -1,9 +1,11 @@
 import { type IArmadaPosition, type SDKVaultishType } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { findVaultInfo, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
 type MergePositionWithVaultProps = {
   position: IArmadaPosition
   vaultsWithConfig: SDKVaultishType[]
+  vaultsInfo?: IArmadaVaultInfo[]
 }
 
 // since we dont have vault details on the positions list
@@ -11,6 +13,7 @@ type MergePositionWithVaultProps = {
 export const mergePositionWithVault = ({
   position,
   vaultsWithConfig,
+  vaultsInfo,
 }: MergePositionWithVaultProps) => {
   const vaultData = vaultsWithConfig.find(
     (vault) =>
@@ -25,9 +28,16 @@ export const mergePositionWithVault = ({
     )
   }
 
+  const vaultInfo = findVaultInfo(vaultsInfo, vaultData)
+
+  if (!vaultInfo) {
+    throw new Error(`Vault info not found for vault ${vaultData.id}`)
+  }
+
   return {
     position,
     vault: vaultData,
+    vaultInfo,
   }
 }
 

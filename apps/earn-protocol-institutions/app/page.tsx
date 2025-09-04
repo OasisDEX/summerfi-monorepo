@@ -15,14 +15,15 @@ export default function InstitutionsLoginPage() {
     confirmPassword,
     setConfirmPassword,
     error,
-    isLoading,
+    isLoadingChangePasswordView,
+    isLoadingLoginView,
     handleLoginSubmit,
     handleSetNewPassword,
     challengeData,
   } = useLogin()
 
   if (challengeData?.challenge === 'NEW_PASSWORD_REQUIRED') {
-    const buttonChallengeDisabled = isLoading || !newPassword || !confirmPassword
+    const buttonChallengeDisabled = isLoadingChangePasswordView || !newPassword || !confirmPassword
 
     return (
       <div
@@ -97,14 +98,14 @@ export default function InstitutionsLoginPage() {
             variant={buttonChallengeDisabled ? 'secondaryMedium' : 'primaryMedium'}
             style={{ padding: '24px 32px', marginTop: '10px' }}
           >
-            {isLoading ? 'Setting Password...' : 'Set New Password'}
+            {isLoadingChangePasswordView ? 'Setting Password...' : 'Set New Password'}
           </Button>
         </form>
       </div>
     )
   }
 
-  const buttonDisabled = isLoading || !email || !password
+  const buttonDisabled = isLoadingLoginView || !email || !password
 
   return (
     <div
@@ -162,7 +163,7 @@ export default function InstitutionsLoginPage() {
           variant={buttonDisabled ? 'secondaryMedium' : 'primaryMedium'}
           style={{ padding: '24px 32px', marginTop: '10px' }}
         >
-          {isLoading ? <LoadingSpinner size={14} /> : 'Sign In'}
+          {isLoadingLoginView ? <LoadingSpinner size={14} /> : 'Sign In'}
         </Button>
 
         <AnimateHeight show={!!error} id="error-message">

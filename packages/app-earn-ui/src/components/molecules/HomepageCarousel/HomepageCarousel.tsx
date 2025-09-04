@@ -1,6 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import { type IArmadaVaultInfo, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import { findVaultInfo } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import useEmblaCarousel from 'embla-carousel-react'
 
@@ -20,12 +21,14 @@ type HomepageCarouselProps = {
     [key: `${string}-${number}`]: VaultApyData
   }
   onGetStartedClick?: (vault?: SDKVaultishType) => void
+  vaultsInfo?: IArmadaVaultInfo[]
 }
 
 export const HomepageCarousel = ({
   vaultsList,
   vaultsApyByNetworkMap,
   onGetStartedClick,
+  vaultsInfo,
 }: HomepageCarouselProps): React.ReactNode => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
@@ -91,13 +94,14 @@ export const HomepageCarousel = ({
               >
                 <div className={homepageCarouselStyles.emblaSlideNumber}>
                   <VaultCardHomepage
-                    vault={vault as SDKVaultishType | undefined}
+                    vault={vault}
                     onSelect={selectSlide(vaultIndex)}
                     vaultsApyByNetworkMap={vaultsApyByNetworkMap}
                     selected={selectedIndex === vaultIndex}
                     sumrPrice={estimatedSumrPrice}
                     isLoading={!vaultsList}
                     onGetStartedClick={onGetStartedClick}
+                    vaultInfo={findVaultInfo(vaultsInfo, vault)}
                   />
                 </div>
               </div>

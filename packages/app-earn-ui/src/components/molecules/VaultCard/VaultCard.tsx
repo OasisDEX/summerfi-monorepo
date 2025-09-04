@@ -1,7 +1,12 @@
 'use client'
 
 import { type FC } from 'react'
-import { type DeviceType, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import {
+  type DeviceType,
+  type IArmadaVaultInfo,
+  type SDKVaultishType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -41,6 +46,7 @@ type VaultCardProps = SDKVaultishType & {
   deviceType?: DeviceType
   tooltipName?: string
   onTooltipOpen?: (tooltipName: string) => void
+  merklRewards?: IArmadaVaultInfo['merklRewards'] | undefined
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -55,9 +61,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     selected = false,
     onClick,
     customFields,
-    rewardTokenEmissionsAmount,
-    rewardTokenEmissionsFinish,
-    rewardTokens,
+    merklRewards,
     withTokenBonus,
     sumrPrice,
     showCombinedBonus = false,
@@ -70,13 +74,11 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     tooltipName,
   } = props
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    rewardTokens,
-    rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards,
     sumrPrice,
     totalValueLockedUSD,
-    rewardTokenEmissionsFinish,
-  )
+  })
 
   const handleVaultClick = () => {
     if (onClick && !disabled) {

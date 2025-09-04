@@ -1532,6 +1532,12 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../app-utils
+      '@summerfi/sdk-client':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-client
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-common
       '@summerfi/summer-earn-rates-subgraph':
         specifier: workspace:*
         version: link:../summer-earn-rates-subgraph

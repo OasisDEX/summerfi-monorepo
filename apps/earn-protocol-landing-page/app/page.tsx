@@ -68,6 +68,7 @@ export default function HomePage() {
       }}
     >
       <LandingPageHero
+        vaultsInfo={landingPageData?.vaultsInfo}
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
       />

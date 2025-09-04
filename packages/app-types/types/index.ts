@@ -178,6 +178,7 @@ export type {
   GetInterestRatesParams,
   HistoryChartData,
   IArmadaPosition,
+  IArmadaVaultInfo,
   PerformanceChartData,
   PlatformLogo,
   PositionForecastAPIResponse,

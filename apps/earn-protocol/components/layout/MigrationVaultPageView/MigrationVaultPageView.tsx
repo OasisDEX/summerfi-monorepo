@@ -8,6 +8,7 @@ import {
   type VaultApyData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -20,6 +21,7 @@ import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
 type MigrationVaultPageViewProps = {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -34,6 +36,7 @@ type MigrationVaultPageViewProps = {
 export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vault,
   vaults,
+  vaultInfo,
   latestActivity,
   topDepositors,
   rebalanceActivity,
@@ -49,6 +52,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
       <MigrationVaultPageComponent
         vault={vault}
         vaults={vaults}
+        vaultInfo={vaultInfo}
         latestActivity={latestActivity}
         topDepositors={topDepositors}
         rebalanceActivity={rebalanceActivity}

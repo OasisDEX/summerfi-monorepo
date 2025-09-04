@@ -3,7 +3,7 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   formatCryptoBalance,
   parseServerResponseToClient,
@@ -11,6 +11,7 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
@@ -34,17 +35,31 @@ const EarnAllVaultsPage = async () => {
     vaults,
   })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
-    fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-      fleetAddress: id,
-      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-    })),
-  })
+  const [vaultsApyByNetworkMap, vaultsInfo] = await Promise.all([
+    getVaultsApy({
+      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+      })),
+    }),
+    Promise.all(
+      vaultsWithConfig.map(({ id, protocol: { network } }) =>
+        unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+          revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+        })({ network: supportedSDKNetwork(network), vaultAddress: id }),
+      ),
+    ),
+  ])
+
+  const vaultsInfoParsed = parseServerResponseToClient(
+    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[],
+  )
 
   return (
     <VaultListViewComponent
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsList={vaultsWithConfig}
+      vaultsInfo={vaultsInfoParsed}
     />
   )
 }

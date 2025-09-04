@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
+import { type IArmadaPosition } from '@summerfi/app-types'
 import { zero } from '@summerfi/app-utils'
-import { type IArmadaPosition } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
 export const useSumrRewardsToDate = (portfolioPosition: IArmadaPosition): BigNumber => {

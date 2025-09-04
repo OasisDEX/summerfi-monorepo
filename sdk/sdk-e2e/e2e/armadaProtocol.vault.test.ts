@@ -8,6 +8,7 @@ import {
   User,
   Wallet,
 } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 
 import { SDKApiUrl, testWalletAddress } from './utils/testConfig'
 import assert from 'assert'
@@ -58,6 +59,7 @@ describe('Armada Protocol - Vault', () => {
           return JSON.stringify(
             {
               id: vaultInfo.id.toString(),
+              address: vaultInfo.id.fleetAddress.toString(),
               token: vaultInfo.token.toString(),
               depositCap: vaultInfo.depositCap.toString(),
               totalDeposits: vaultInfo.totalDeposits.toString(),
@@ -69,7 +71,7 @@ describe('Armada Protocol - Vault', () => {
               })),
               merklRewards: vaultInfo.merklRewards.map((reward) => ({
                 token: reward.token.toString(),
-                dailyEmission: reward.dailyEmission,
+                dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
               })),
             },
             null,
@@ -94,6 +96,7 @@ describe('Armada Protocol - Vault', () => {
       JSON.stringify(
         {
           id: vaultInfo.id.toString(),
+          address: vaultInfo.id.fleetAddress.toString(),
           token: vaultInfo.token.toString(),
           depositCap: vaultInfo.depositCap.toString(),
           totalDeposits: vaultInfo.totalDeposits.toString(),
@@ -105,7 +108,7 @@ describe('Armada Protocol - Vault', () => {
           })),
           merklRewards: vaultInfo.merklRewards.map((reward) => ({
             token: reward.token.toString(),
-            dailyEmission: reward.dailyEmission,
+            dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
           })),
         },
         null,

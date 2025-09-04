@@ -14,7 +14,6 @@ import {
   useChain,
   useSendUserOperation,
   useSmartAccountClient,
-  useUser,
 } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
@@ -114,7 +113,6 @@ export const useTransaction = ({
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
-  const user = useUser()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const transactionEventHandler = useHandleTransactionEvent()
   const { userWalletAddress } = useUserWallet()
@@ -158,7 +156,14 @@ export const useTransaction = ({
 
   const getTransactionsList = useCallback(async () => {
     // get deposit/withdraw transactions
-    if ((isWithdraw || isDeposit) && ownerView && token && vaultToken && amount && user) {
+    if (
+      (isWithdraw || isDeposit) &&
+      ownerView &&
+      token &&
+      vaultToken &&
+      amount &&
+      userWalletAddress
+    ) {
       const fromToken = {
         [TransactionAction.DEPOSIT]: token,
         [TransactionAction.WITHDRAW]: vaultToken,
@@ -175,7 +180,7 @@ export const useTransaction = ({
           [TransactionAction.WITHDRAW]: getWithdrawTX,
         }[sidebarTransactionType]({
           walletAddress: Address.createFromEthereum({
-            value: user.address,
+            value: userWalletAddress,
           }),
           amount: TokenAmount.createFrom({
             token: fromToken,
@@ -216,14 +221,14 @@ export const useTransaction = ({
       }
     }
     // get switch transactions
-    if (isSwitch && ownerView && selectedSwitchVault && vaultToken && user) {
+    if (isSwitch && ownerView && selectedSwitchVault && vaultToken && userWalletAddress) {
       setTxStatus('loadingTx')
       const [destinationFleetAddress] = selectedSwitchVault.split('-') // it is {vaultId}-{chainId}
 
       try {
         const transactionsList = await getVaultSwitchTx({
           walletAddress: Address.createFromEthereum({
-            value: user.address,
+            value: userWalletAddress,
           }),
           amount: TokenAmount.createFrom({
             token: vaultToken,
@@ -266,7 +271,7 @@ export const useTransaction = ({
     token,
     vaultToken,
     amount,
-    user,
+    userWalletAddress,
     isSwitch,
     selectedSwitchVault,
     sidebarTransactionType,
@@ -444,7 +449,7 @@ export const useTransaction = ({
     if (!nextTransaction) {
       throw new Error('No transaction to execute')
     }
-    if (!user) {
+    if (!userWalletAddress) {
       throw new Error('User not logged in')
     }
     if (!publicClient) {
@@ -490,7 +495,6 @@ export const useTransaction = ({
     }
   }, [
     nextTransaction,
-    user,
     publicClient,
     token,
     buttonClickEventHandler,
@@ -501,6 +505,8 @@ export const useTransaction = ({
     isIframe,
     sendSafeWalletTransaction,
     sendTransaction,
+    setTxStatus,
+    userWalletAddress,
   ])
 
   const backToInit = useCallback(() => {
@@ -544,7 +550,7 @@ export const useTransaction = ({
       }
     }
     // missing data
-    if (!user) {
+    if (!userWalletAddress) {
       return {
         label: 'Log in',
         action: openAuthModal,
@@ -700,7 +706,6 @@ export const useTransaction = ({
     }
   }, [
     isEditingSwitchAmount,
-    user,
     ownerView,
     isProperChainSelected,
     isSettingChain,
@@ -952,7 +957,7 @@ export const useTransaction = ({
     vaultChainId,
     reset,
     backToInit,
-    user,
+    userWalletAddress,
     approvalTokenSymbol,
     approvalType,
     setApprovalType,

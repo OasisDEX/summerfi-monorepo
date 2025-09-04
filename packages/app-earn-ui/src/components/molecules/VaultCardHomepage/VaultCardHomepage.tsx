@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import {
+  type IArmadaVaultInfo,
   type IconNamesList,
   type SDKVaultishType,
   SupportedSDKNetworks,
@@ -215,6 +216,7 @@ const VaultCardLoading = ({
 
 type VaultCardHomepageProps = {
   vault?: SDKVaultishType
+  vaultInfo?: IArmadaVaultInfo
   vaultsApyByNetworkMap?: {
     [key: `${string}-${number}`]: VaultApyData
   }
@@ -227,6 +229,7 @@ type VaultCardHomepageProps = {
 
 export const VaultCardHomepage = ({
   vault,
+  vaultInfo,
   vaultsApyByNetworkMap,
   selected = true,
   onSelect,
@@ -237,17 +240,7 @@ export const VaultCardHomepage = ({
   if (isLoading ?? !vault) {
     return <VaultCardLoading selected={selected} onSelect={onSelect} />
   }
-  const {
-    id,
-    inputToken,
-    inputTokenBalance,
-    totalValueLockedUSD,
-    protocol,
-    customFields,
-    rewardTokens,
-    rewardTokenEmissionsAmount,
-    rewardTokenEmissionsFinish,
-  } = vault
+  const { id, inputToken, inputTokenBalance, totalValueLockedUSD, protocol, customFields } = vault
 
   if (!vaultsApyByNetworkMap) {
     return null
@@ -259,13 +252,11 @@ export const VaultCardHomepage = ({
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    rewardTokens,
-    rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD,
-    rewardTokenEmissionsFinish,
-  )
+  })
 
   const handleGetStartedClick = () => {
     if (onGetStartedClick) {
