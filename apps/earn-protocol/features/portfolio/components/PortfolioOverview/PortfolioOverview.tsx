@@ -292,7 +292,7 @@ export const PortfolioOverview = ({
             vaultsList={vaultsList}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
-            carouselId="portfolio-overview-vaults-carousel"
+            carouselId="portfolio-overview-you-might-like-carousel"
           />
         </Card>
         {migrationsEnabled && (
@@ -300,6 +300,7 @@ export const PortfolioOverview = ({
             walletAddress={walletAddress}
             migratablePositions={migratablePositions}
             migrationBestVaultApy={migrationBestVaultApy}
+            carouselId="portfolio-overview-migrate-carousel"
           />
         )}
         <NewsAndUpdates blogPosts={blogPosts} />

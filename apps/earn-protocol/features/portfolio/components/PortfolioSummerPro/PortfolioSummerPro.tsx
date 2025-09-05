@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioSummerPro.module.css'
 
@@ -21,18 +22,22 @@ interface PortfolioSummerProProps {
   walletAddress: string
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  carouselId: string
 }
 
 export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
   walletAddress,
   migratablePositions,
   migrationBestVaultApy,
+  carouselId,
 }) => {
   const { isMobile } = useMobileCheck()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
 
   const [selectedPosition, setSelectedPosition] = useState<string>()
 
   const handleSelectPosition = (id: string) => {
+    buttonClickEventHandler(`${carouselId}-vault-${id}-click`)
     setSelectedPosition(id)
   }
 
@@ -70,11 +75,18 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                       />
                     ))}
                     portalElementId="portal-embla-buttons"
+                    handleButtonClick={buttonClickEventHandler}
+                    carouselId={carouselId}
                     options={{ slidesToScroll: 'auto' }}
                   />
                 )}
                 <div className={classNames.buttonWrapper}>
-                  <Link href={`/migrate/user/${walletAddress}?positionId=${selectedPosition}`}>
+                  <Link
+                    href={`/migrate/user/${walletAddress}?positionId=${selectedPosition}`}
+                    onClick={() => {
+                      buttonClickEventHandler(`${carouselId}-migrate-${selectedPosition}-click`)
+                    }}
+                  >
                     <Button
                       variant="primarySmall"
                       style={{ paddingRight: 'var(--general-space-32)' }}
