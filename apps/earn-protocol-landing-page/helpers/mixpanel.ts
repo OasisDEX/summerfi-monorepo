@@ -32,8 +32,11 @@ export function trackEvent<E extends EarnProtocolEventNames>(
     },
   }
 
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.TURBOPACK ?? window.location.hostname.includes('staging')) {
+  // eslint-disable-next-line no-console
+  console.log('window.location.hostname', window.location.hostname)
+
+  // eslint-disable-next-line turbo/no-undeclared-env-vars, @typescript-eslint/prefer-nullish-coalescing
+  if (process.env.TURBOPACK || window.location.hostname.includes('staging')) {
     // eslint-disable-next-line no-console
     console.info('Mixpanel event:', JSON.stringify(eventData, null, 2))
 
