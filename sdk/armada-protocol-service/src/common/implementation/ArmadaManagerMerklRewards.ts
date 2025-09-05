@@ -173,22 +173,35 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     const resultByChain: Record<
       ChainId,
       Record<AddressValue, { total: string; claimable: string; claimed: string }>
-    > = {
-      '1': {},
-      '146': {},
-      '8453': {},
-      '42161': {},
-    }
+    > = Object.values(this._supportedChainIds).reduce(
+      (acc, chainId) => {
+        acc[chainId as ChainId] = {}
+        return acc
+      },
+      {} as Record<
+        ChainId,
+        Record<AddressValue, { total: string; claimable: string; claimed: string }>
+      >,
+    )
+    // aggregate breakdowns by chainId and fleetAddress
     for (const breakdown of breakdowns) {
       const vault = getVaultByMerklCampaignId(breakdown.campaignId)
-      if (!vault) {
-        continue
-      }
+      if (!vault) continue
       const { chainId, fleetAddress } = vault
-      resultByChain[chainId][fleetAddress] = {
-        total: breakdown.amount,
-        claimable: BigNumber(breakdown.amount).minus(breakdown.claimed).toString(),
-        claimed: breakdown.claimed,
+      const perChain =
+        resultByChain[chainId] ||
+        ({} as Record<AddressValue, { total: string; claimable: string; claimed: string }>)
+      const prev = perChain[fleetAddress]
+      const total = prev
+        ? new BigNumber(prev.total).plus(breakdown.amount)
+        : new BigNumber(breakdown.amount)
+      const claimed = prev
+        ? new BigNumber(prev.claimed).plus(breakdown.claimed)
+        : new BigNumber(breakdown.claimed)
+      perChain[fleetAddress] = {
+        total: total.toString(),
+        claimable: total.minus(claimed).toString(),
+        claimed: claimed.toString(),
       }
     }
     return resultByChain

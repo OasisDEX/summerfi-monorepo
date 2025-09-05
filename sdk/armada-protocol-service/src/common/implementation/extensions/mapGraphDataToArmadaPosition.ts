@@ -51,13 +51,14 @@ export const mapGraphDataToArmadaPosition =
 
     const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
       (acc, reward) => {
-        const positionRewards = reward.breakdowns[chainInfo.chainId][position.id as AddressValue]
+        const vaultKey = position.vault.id.toLowerCase() as AddressValue
+        const positionRewards = reward.breakdowns[chainInfo.chainId][vaultKey]
         if (positionRewards == null) {
           return acc
         }
         return {
-          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || 0n),
-          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || 0n),
+          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable),
+          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed),
         }
       },
       { claimableSummerToken: 0n, claimedSummerToken: 0n },

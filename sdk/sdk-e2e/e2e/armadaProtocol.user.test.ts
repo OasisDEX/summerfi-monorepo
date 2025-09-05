@@ -32,7 +32,8 @@ describe('Armada Protocol - User', () => {
   const fleetAddress = ethFleet
 
   const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
+    // apiDomainUrl: SDKApiUrl,
+    apiDomainUrl: 'https://summer.fi',
   })
   if (!rpcUrl) {
     throw new Error('Missing rpc url')
@@ -95,19 +96,25 @@ describe('Armada Protocol - User', () => {
     )
   })
 
-  it.only(`should get user merkl rewards`, async () => {
+  it.skip(`should get user merkl rewards`, async () => {
     const rewards = await sdk.armada.users.getUserMerklRewards({
       address: user.wallet.address.value,
     })
     console.log('User Merkle rewards:', JSON.stringify(rewards, null, 2))
   })
 
-  it.skip(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
-    // const _user = User.createFromEthereum(
-    //   ChainIds.Base,
-    //   '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
-    // )
-    const _user = user
+  it.only(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+    // const _user = user
+    const _user = User.createFromEthereum(
+      ChainIds.ArbitrumOne,
+      '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+    )
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(ChainIds.ArbitrumOne),
+      fleetAddress: Address.createFromEthereum({
+        value: '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58',
+      }),
+    })
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user: _user,
