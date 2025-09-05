@@ -4,11 +4,13 @@ import { useChain } from '@account-kit/react'
 import { MessageStatus } from '@layerzerolabs/scan-client'
 import {
   Alert,
+  ERROR_TOAST_CONFIG,
   Icon,
   InfoBox,
   LoadingSpinner,
   networkNameIconNameMap,
   Sidebar,
+  SUCCESS_TOAST_CONFIG,
   Text,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
@@ -24,7 +26,6 @@ import { useSearchParams } from 'next/navigation'
 import { BridgeFormStepFallback } from '@/features/bridge/components/BridgeFormFallbackStep/BridgeFormStepFallback'
 import { useCrossChainMessages } from '@/features/bridge/hooks/use-cross-chain-messages'
 import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/features/bridge/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import styles from './BridgeFormPendingStep.module.css'
 

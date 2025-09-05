@@ -5,10 +5,12 @@ import {
   Button,
   Card,
   DataBlock,
+  ERROR_TOAST_CONFIG,
   Icon,
   InputWithDropdown,
   SDKChainIdToAAChainMap,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   SUMR_CAP,
   TabBar,
   Text,
@@ -44,7 +46,6 @@ import {
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'

@@ -7,6 +7,7 @@ import {
   Card,
   Icon,
   Input,
+  SUCCESS_TOAST_CONFIG,
   Text,
   ToggleButton,
   useMobileCheck,
@@ -17,7 +18,6 @@ import Link from 'next/link'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import classNames from './NavConfigContent.module.css'
 

@@ -65,6 +65,7 @@
     "react-dom": "19.1.0",
     "react": "19.1.0",
     "react-day-picker": "9.9.0",
+    "react-toastify": "^11.0.3",
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
     "viem": "2.29.2",

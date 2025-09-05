@@ -4,6 +4,7 @@ import {
   BeachClubSteps,
   Button,
   CopyToClipboard,
+  ERROR_TOAST_CONFIG,
   EXTERNAL_LINKS,
   getTwitterShareUrl,
   Icon,
@@ -15,7 +16,6 @@ import {
 import Link from 'next/link'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
 
 import classNames from './BeachClubHowItWorks.module.css'
 
