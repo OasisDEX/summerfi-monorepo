@@ -37,7 +37,6 @@ import { type BeachClubReducerAction, type BeachClubState } from '@/features/bea
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
