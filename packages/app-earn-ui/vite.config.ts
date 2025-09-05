@@ -157,6 +157,7 @@ export default defineConfig(({ mode }) => {
           'react-animate-height',
           'uniqolor',
           'react-day-picker',
+          'react-toastify',
         ],
         input: Object.fromEntries(
           glob

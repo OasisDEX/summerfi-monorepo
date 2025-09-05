@@ -5,11 +5,13 @@ import {
   Button,
   DataBlock,
   Dropdown,
+  ERROR_TOAST_CONFIG,
   Icon,
   isUserSmartAccount,
   LoadableAvatar,
   SDKChainIdToAAChainMap,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   Text,
   useTokenTransfer,
   useUserWallet,
@@ -26,7 +28,6 @@ import clsx from 'clsx'
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
-import { SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
@@ -157,8 +158,13 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
                     chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
                   })
                 }
-                await transferAllBalance()
-                toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
+
+                try {
+                  await transferAllBalance()
+                  toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
+                } catch (error) {
+                  toast.error('Transfer failed', ERROR_TOAST_CONFIG)
+                }
               }}
             >
               <Text as="span" variant="p3semi">
