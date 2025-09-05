@@ -61,7 +61,6 @@ export const mapGraphDataToArmadaPosition =
         if (positionRewards == null) {
           return acc
         }
-        // Use BigNumber to safely parse decimal strings before converting to BigInt
         return {
           claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || '0'),
           claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || '0'),
