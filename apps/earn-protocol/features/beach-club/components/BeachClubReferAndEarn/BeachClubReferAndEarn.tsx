@@ -1,10 +1,12 @@
 import { type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubHowItWorks } from '@/features/beach-club/components/BeachClubHowItWorks/BeachClubHowItWorks'
 import { BeachClubReferralActivity } from '@/features/beach-club/components/BeachClubReferralActivity/BeachClubReferralActivity'
 import { BeachClubTrackReferrals } from '@/features/beach-club/components/BeachClubTrackReferrals/BeachClubTrackReferrals'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubReferAndEarn.module.css'
 
@@ -49,6 +51,12 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
     [walletAddress, beachClubData],
   )
 
+  const handleButtonClick = useHandleButtonClickEvent()
+
+  const handleTabChange = (tab: { id: string }) => {
+    handleButtonClick(`portfolio-beach-club-refer-and-earn-tab-${slugify(tab.id)}`)
+  }
+
   return (
     <div className={classNames.beachClubReferAndEarnWrapper}>
       <div className={classNames.header}>
@@ -61,6 +69,7 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
           tabs={tabsOptions}
           textVariant="p3semi"
           tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
+          handleTabChange={handleTabChange}
         />
       </Card>
     </div>

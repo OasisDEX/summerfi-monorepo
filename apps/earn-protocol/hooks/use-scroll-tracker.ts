@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolScrolledEventProps } from '@summerfi/app-types'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 interface UseScrollTrackerProps {
-  walletAddress?: string
   throttleMs?: number // minimum ms between events
   breakpointPercent?: number // default 10%
 }
@@ -14,6 +14,7 @@ export const useScrollTracker = ({
   throttleMs = 1000,
   breakpointPercent = 10,
 }: UseScrollTrackerProps) => {
+  const { userWalletAddress } = useUserWallet()
   const pathname = usePathname()
   const lastFired = useRef<number>(0)
   const firedMilestones = useRef<Set<number>>(new Set())
@@ -43,6 +44,7 @@ export const useScrollTracker = ({
         lastFired.current = now
 
         const eventProps: EarnProtocolScrolledEventProps = {
+          walletAddress: userWalletAddress,
           page: pathname || '/',
           scrollDepthPercent: scrollPercent,
           scrollDepthPixels: scrollTop,
@@ -57,5 +59,5 @@ export const useScrollTracker = ({
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [pathname, throttleMs, breakpointPercent])
+  }, [userWalletAddress, pathname, throttleMs, breakpointPercent])
 }

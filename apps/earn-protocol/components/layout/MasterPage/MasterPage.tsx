@@ -17,6 +17,7 @@ import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigCont
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
+import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
 import './global.css'
 import masterPageStyles from './MasterPage.module.css'
@@ -36,6 +37,8 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const { features } = useSystemConfig()
   const pathname = usePathname()
   const handleButtonClick = useHandleButtonClickEvent()
+
+  useScrollTracker({})
 
   const beachClubEnabled = !!features?.BeachClub
   const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {

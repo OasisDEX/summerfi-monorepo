@@ -59,13 +59,6 @@ export const BeachClubBoatChallenge: FC<BeachClubBoatChallengeProps> = ({
           </Text>
         </div>
       ))}
-      {/* <div className={classNames.leaderboardLink}>
-        <Link href="/" target="_blank" style={{ textAlign: 'center' }}>
-          <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-            See leaderboard
-          </WithArrow>
-        </Link>
-      </div> */}
       <div className={classNames.rewardCardsWrapper}>
         {cards.map((card) => (
           <BeachClubBoatChallengeRewardCard
