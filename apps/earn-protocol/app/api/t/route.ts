@@ -1,5 +1,5 @@
 import { getMixpanel, trackEventHandler } from '@summerfi/app-server-handlers'
-import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
+import { EarnProtocolEventNames } from '@summerfi/app-types'
 import { snakeCase } from 'lodash-es'
 import { type NextRequest, NextResponse } from 'next/server'
 
@@ -15,10 +15,13 @@ export async function POST(request: NextRequest) {
 
     const { distinctId, eventBody, eventName, os, ...rest } = await request.json()
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const reqOrigin = request.headers.get('origin') || ''
+
     if (
-      ![...Object.values(MixpanelEventTypes)].includes(eventName) ||
-      ![...Object.values(MixpanelEventProduct)].includes(eventBody.product) ||
-      skipArtificialTrackingOS.includes(os)
+      ![...Object.values(EarnProtocolEventNames)].includes(eventName) ||
+      skipArtificialTrackingOS.includes(os) ||
+      reqOrigin.includes('staging')
     ) {
       return NextResponse.json({ status: 400 })
     }
