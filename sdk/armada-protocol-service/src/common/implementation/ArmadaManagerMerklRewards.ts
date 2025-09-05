@@ -188,17 +188,21 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       const vault = getVaultByMerklCampaignId(breakdown.campaignId)
       if (!vault) continue
       const { chainId, fleetAddress } = vault
-      const perChain =
-        resultByChain[chainId] ||
-        ({} as Record<AddressValue, { total: string; claimable: string; claimed: string }>)
-      const prev = perChain[fleetAddress]
+      // Normalize fleet address to ensure consistent key usage
+      const normalizedFleetAddress = fleetAddress.toLowerCase() as AddressValue
+      // Ensure perChain map exists for this chainId
+      const perChain = (resultByChain[chainId] ||= {} as Record<
+        AddressValue,
+        { total: string; claimable: string; claimed: string }
+      >)
+      const prev = perChain[normalizedFleetAddress]
       const total = prev
         ? new BigNumber(prev.total).plus(breakdown.amount)
         : new BigNumber(breakdown.amount)
       const claimed = prev
         ? new BigNumber(prev.claimed).plus(breakdown.claimed)
         : new BigNumber(breakdown.claimed)
-      perChain[fleetAddress] = {
+      perChain[normalizedFleetAddress] = {
         total: total.toString(),
         claimable: total.minus(claimed).toString(),
         claimed: claimed.toString(),

@@ -32,8 +32,7 @@ describe('Armada Protocol - User', () => {
   const fleetAddress = ethFleet
 
   const sdk: SDKManager = makeSDK({
-    // apiDomainUrl: SDKApiUrl,
-    apiDomainUrl: 'https://summer.fi',
+    apiDomainUrl: SDKApiUrl,
   })
   if (!rpcUrl) {
     throw new Error('Missing rpc url')
