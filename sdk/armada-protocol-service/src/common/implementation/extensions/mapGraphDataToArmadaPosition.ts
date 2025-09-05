@@ -52,13 +52,22 @@ export const mapGraphDataToArmadaPosition =
     const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
       (acc, reward) => {
         const vaultKey = position.vault.id.toLowerCase() as AddressValue
-        const positionRewards = reward.breakdowns[chainInfo.chainId][vaultKey]
+        // Guard against missing breakdowns for this chain
+        const chainBreakdowns = reward.breakdowns[chainInfo.chainId]
+        if (!chainBreakdowns) {
+          return acc
+        }
+        const positionRewards = chainBreakdowns[vaultKey]
         if (positionRewards == null) {
           return acc
         }
+        // Use BigNumber to safely parse decimal strings before converting to BigInt
+        const claimableBN = new BigNumber(positionRewards.claimable || '0')
+        const claimedBN = new BigNumber(positionRewards.claimed || '0')
         return {
-          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable),
-          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed),
+          claimableSummerToken:
+            acc.claimableSummerToken + BigInt(claimableBN.integerValue().toString()),
+          claimedSummerToken: acc.claimedSummerToken + BigInt(claimedBN.integerValue().toString()),
         }
       },
       { claimableSummerToken: 0n, claimedSummerToken: 0n },
