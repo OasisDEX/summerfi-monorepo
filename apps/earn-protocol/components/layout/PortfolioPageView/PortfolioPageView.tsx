@@ -97,9 +97,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const beachClubEnabled = !!features?.BeachClub
 
-  const handleTabChange = (tab: { id: PortfolioTabs }) => {
+  const handleTabChange = (tab: { id: string }) => {
     handleButtonClick(`portfolio-tab-${tab.id}`)
-    updateTab(tab.id)
+    updateTab(tab.id as PortfolioTabs)
   }
 
   const overallSumr = calculateOverallSumr(rewardsData)

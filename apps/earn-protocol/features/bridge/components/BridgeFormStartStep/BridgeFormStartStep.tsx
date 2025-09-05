@@ -37,6 +37,7 @@ import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transac
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
 import { sdkNetworkToAAChain } from '@/helpers/sdk-network-to-aa-chain'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 import { useToken } from '@/hooks/use-token'
@@ -56,6 +57,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()
+  const inputChangeHandler = useHandleInputChangeEvent()
 
   const sourceChainFromParams = searchParams.get('source_chain')
   const amountFromParams = searchParams.get('amount')
@@ -95,6 +97,8 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     tokenPrice: estimatedSumrPrice.toString(),
     selectedToken: sumrToken,
     initialAmount: amountFromParams ?? undefined,
+    inputChangeHandler,
+    inputName: 'bridge-amount',
   })
 
   const { checkRisk } = useRiskVerification({
