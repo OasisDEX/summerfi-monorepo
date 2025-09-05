@@ -43,6 +43,8 @@ query GetUserPositions($accountAddress: String!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {
@@ -100,6 +102,8 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {
@@ -157,6 +161,8 @@ query GetPosition($id: ID!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {

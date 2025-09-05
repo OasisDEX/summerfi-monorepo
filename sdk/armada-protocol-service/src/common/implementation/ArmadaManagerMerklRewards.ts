@@ -2,6 +2,8 @@ import {
   isTestDeployment,
   type IArmadaManagerMerklRewards,
   type IArmadaManagerUtils,
+  type MerklApiRewardBreakdown,
+  type MerklApiUsersResponse,
   type MerklReward,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -14,6 +16,7 @@ import {
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
@@ -24,38 +27,8 @@ import { getMerklDistributorContractAddress } from './configs/merkl-distributor-
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import type { IDeploymentProvider } from '../..'
 import type { ITokensManager } from '@summerfi/tokens-common'
-
-/**
- * Response type from Merkl API for user rewards
- */
-
-interface MerklApiChain {
-  id: number
-  name: string
-  icon: string
-  liveCampaigns: number
-}
-
-interface MerklApiReward {
-  token: {
-    chainId: number
-    address: string
-    symbol: string
-    decimals: number
-    price: number
-  }
-  root: string
-  recipient: string
-  amount: string
-  claimed: string
-  pending: string
-  proofs: string[]
-}
-
-type MerklApiResponse = {
-  chain: MerklApiChain
-  rewards: MerklApiReward[]
-}[]
+import { getVaultByMerklCampaignId } from './configs/vaultByMerklCampaignId'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManagerMerklRewards
@@ -119,7 +92,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         throw new Error(`Merkl API request failed: ${response.status} ${response.statusText}`)
       }
 
-      const data = (await response.json()) as MerklApiResponse
+      const data = (await response.json()) as MerklApiUsersResponse
 
       if (!data || !Array.isArray(data)) {
         LoggingService.debug('Invalid response from Merkl API', { data })
@@ -156,6 +129,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
+            breakdowns: this._parseBreakdowns(reward.breakdowns),
           })
         }
 
@@ -191,6 +165,50 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         `Failed to fetch Merkl rewards: ${error instanceof Error ? error.message : String(error)}`,
       )
     }
+  }
+
+  private _parseBreakdowns(
+    breakdowns: MerklApiRewardBreakdown[],
+  ): Record<ChainId, Record<AddressValue, { total: string; claimable: string; claimed: string }>> {
+    const resultByChain: Record<
+      ChainId,
+      Record<AddressValue, { total: string; claimable: string; claimed: string }>
+    > = Object.values(this._supportedChainIds).reduce(
+      (acc, chainId) => {
+        acc[chainId as ChainId] = {}
+        return acc
+      },
+      {} as Record<
+        ChainId,
+        Record<AddressValue, { total: string; claimable: string; claimed: string }>
+      >,
+    )
+    // aggregate breakdowns by chainId and fleetAddress
+    for (const breakdown of breakdowns) {
+      const vault = getVaultByMerklCampaignId(breakdown.campaignId)
+      if (!vault) continue
+      const { chainId, fleetAddress } = vault
+      // Normalize fleet address to ensure consistent key usage
+      const normalizedFleetAddress = fleetAddress.toLowerCase() as AddressValue
+      // Ensure perChain map exists for this chainId
+      const perChain = (resultByChain[chainId] ||= {} as Record<
+        AddressValue,
+        { total: string; claimable: string; claimed: string }
+      >)
+      const prev = perChain[normalizedFleetAddress]
+      const total = prev
+        ? new BigNumber(prev.total).plus(breakdown.amount)
+        : new BigNumber(breakdown.amount)
+      const claimed = prev
+        ? new BigNumber(prev.claimed).plus(breakdown.claimed)
+        : new BigNumber(breakdown.claimed)
+      perChain[normalizedFleetAddress] = {
+        total: total.toString(),
+        claimable: total.minus(claimed).toString(),
+        claimed: claimed.toString(),
+      }
+    }
+    return resultByChain
   }
 
   async getUserMerklClaimDirectTx(

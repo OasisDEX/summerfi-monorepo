@@ -94,6 +94,12 @@ export class ArmadaManager implements IArmadaManager {
     this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
     this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
 
+    this.merklRewards = new ArmadaManagerMerklRewards({
+      supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
+      deploymentProvider: this._deploymentProvider,
+      tokensManager: this._tokensManager,
+    })
     this.utils = new ArmadaManagerUtils({
       configProvider: this._configProvider,
       allowanceManager: this._allowanceManager,
@@ -104,12 +110,7 @@ export class ArmadaManager implements IArmadaManager {
       subgraphManager: this._subgraphManager,
       swapManager: this._swapManager,
       deploymentProvider: this._deploymentProvider,
-    })
-    this.merklRewards = new ArmadaManagerMerklRewards({
-      supportedChains: this._supportedChains,
-      blockchainClientProvider: this._blockchainClientProvider,
-      deploymentProvider: this._deploymentProvider,
-      tokensManager: this._tokensManager,
+      getUserMerklRewards: this.merklRewards.getUserMerklRewards.bind(this.merklRewards),
     })
     this.claims = new ArmadaManagerClaims({
       ...params,
