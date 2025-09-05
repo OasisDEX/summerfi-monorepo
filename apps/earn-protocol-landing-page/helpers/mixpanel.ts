@@ -39,6 +39,13 @@ export function trackEvent<E extends EarnProtocolEventNames>(
 
     return
   }
+  const isOptedOut = optedOutCheck()
+
+  if (isOptedOut && eventData.eventName !== EarnProtocolEventNames.PageViewed) {
+    // if the user is opted out, we track just the page view event
+    return
+  }
+
   const baseWindowObject = {
     navigator: { userAgent: '' },
     document: { location: { hostname: '' }, referrer: '' },
@@ -66,7 +73,7 @@ export function trackEvent<E extends EarnProtocolEventNames>(
       ...eventData,
       distinctId: mixpanelBrowser.get_distinct_id(),
       currentUrl: win.location.href,
-      ...(!optedOutCheck() && {
+      ...(!isOptedOut && {
         browser: upperFirst(browserName),
         browserVersion: versionNumber,
         initialReferrer,
