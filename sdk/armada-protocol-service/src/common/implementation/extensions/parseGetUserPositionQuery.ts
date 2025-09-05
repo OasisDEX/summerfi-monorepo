@@ -4,7 +4,7 @@ import {
   type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
-import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
+import type { GetUserPositionQuery, GetPositionQuery } from '@summerfi/subgraph-manager-common'
 import { mapGraphDataToArmadaPosition } from './mapGraphDataToArmadaPosition'
 import type { IArmadaManagerMerklRewards } from '@summerfi/armada-protocol-common'
 
@@ -16,7 +16,7 @@ export const parseGetUserPositionQuery = async ({
   getUserMerklRewards,
 }: {
   user: IUser
-  query: GetUserPositionQuery
+  query: GetUserPositionQuery | GetPositionQuery
   summerToken: IToken
   getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
   getUserMerklRewards: (

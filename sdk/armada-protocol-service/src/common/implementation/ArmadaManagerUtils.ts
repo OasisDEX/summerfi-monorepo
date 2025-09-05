@@ -4,6 +4,7 @@ import {
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   type IArmadaManagerUtils,
+  type IArmadaManagerMerklRewards,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -57,6 +58,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _oracleManager: IOracleManager
   private _tokensManager: ITokensManager
   private _deploymentProvider: IDeploymentProvider
+  private _getUserMerklRewards: (
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
+  ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -69,6 +73,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     deploymentProvider: IDeploymentProvider
+    getUserMerklRewards: (
+      params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
+    ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -79,6 +86,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
     this._deploymentProvider = params.deploymentProvider
+    this._getUserMerklRewards = params.getUserMerklRewards
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -154,6 +162,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getUserPositions({ user }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 
@@ -173,6 +182,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 
@@ -188,6 +198,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getPosition({ positionId: params.positionId }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 

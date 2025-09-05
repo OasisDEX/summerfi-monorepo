@@ -1,4 +1,4 @@
-import type { ChainId, AddressValue } from '@summerfi/sdk-common/index'
+import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 // parsed with
 // Object.fromEntries(d.map(c => ([c.campaignId, {chainId: c.computeChainId,fleetAddress: c.params.vaultAddress?.toLowerCase() || c.params.targetToken?.toLowerCase()}])))
 const vaultsByCampaignId: Record<string, { chainId: ChainId; fleetAddress: AddressValue }> = {
