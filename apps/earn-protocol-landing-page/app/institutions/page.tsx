@@ -11,14 +11,17 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { InstitutionsPromoBlock } from '@/features/institutions/components/InstitutionsPromoBlock/InstitutionsPromoBlock'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -54,6 +57,7 @@ export const SecurityAndComplianceList = ({ items }: { items: string[] }) => {
 export default function InstitutionsPage() {
   const { landingPageData } = useLandingPageData()
   const { isScrolledToTop } = useScrolled()
+  const pathname = usePathname()
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -64,8 +68,40 @@ export default function InstitutionsPage() {
     const element = document.getElementById(id)
 
     if (element) {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: `lp-institutions-scroll-to-${id}`,
+        page: pathname,
+      })
       element.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  const handleInstitutionsFaqSection = (props: { expanded: boolean; title: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
+      page: pathname,
+    })
+  }
+
+  const handleRiskManagementLearnMoreClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-enhanced-risk-management-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleCtaClick = (ctaid: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-${ctaid}`,
+      page: pathname,
+    })
   }
 
   return (
@@ -112,6 +148,7 @@ export default function InstitutionsPage() {
       <div className={institutionsPageStyles.promoBlocks}>
         <InstitutionsPromoBlock
           title="Self managed Vaults"
+          id="self-managed-vaults"
           description="Institutional-grade vault infrastructure to access the best of DeFi - fully customizable, inherently composable, and built for future compliance and regulatory needs."
           bestFor="Banks, Hedge funds, Centralized exchanges and Asset managers"
           coreFeatures={[
@@ -129,6 +166,7 @@ export default function InstitutionsPage() {
         />
         <InstitutionsPromoBlock
           title="Large capital deployment into public access vaults"
+          id="large-capital-deployment"
           description="Effortless access to crypto’s best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and costs."
           bestFor="Crypto native funds, Family offices, and Large individual allocators"
           coreFeatures={[
@@ -150,7 +188,11 @@ export default function InstitutionsPage() {
             Get started quickly with our streamlined, self serve onboarding process or our hands on
             technical support for custom integrations.
           </Text>
-          <Link href={EXTERNAL_LINKS.BD_CONTACT} target="_blank">
+          <Link
+            href={EXTERNAL_LINKS.BD_CONTACT}
+            target="_blank"
+            onClick={handleCtaClick('stress-free-set-up-a-call')}
+          >
             <Button variant="primaryLarge">Set up a call</Button>
           </Link>
         </div>
@@ -193,9 +235,14 @@ export default function InstitutionsPage() {
             sparkLogo,
           }}
           bottomBoxes={false}
+          handleLearnMoreClick={handleRiskManagementLearnMoreClick}
         />
       </div>
-      <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+      <Audits
+        chainSecurityLogo={chainSecurityLogo}
+        prototechLabsLogo={prototechLabsLogo}
+        onAuditClick={handleAuditClick}
+      />
       <div className={institutionsPageStyles.buildBySummerSpacer}>
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
@@ -206,18 +253,21 @@ export default function InstitutionsPage() {
         </Text>
         <div className={institutionsPageStyles.finalCTAElementsList}>
           <FinalCTAElement
+            id="institutions-schedule-call"
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
             url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
+            id="institutions-self-serve-vault"
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
             url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
+            id="institutions-integration-docs"
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
             url={EXTERNAL_LINKS.KB.HELP}
@@ -231,6 +281,7 @@ export default function InstitutionsPage() {
         expanderButtonStyles={{
           padding: 'var(--spacing-space-large) 0',
         }}
+        onExpand={handleInstitutionsFaqSection}
         data={[
           {
             title: 'What institutional solutions does Summer.fi offer?',

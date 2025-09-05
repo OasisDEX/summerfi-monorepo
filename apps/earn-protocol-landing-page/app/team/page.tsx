@@ -6,8 +6,10 @@ import {
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
 } from '@summerfi/app-types'
+import { slugify } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { teamList } from '@/app/team/constants'
 import { type TeamListItem } from '@/app/team/types'
@@ -16,6 +18,7 @@ import { ProtocolScrollerItem } from '@/components/layout/LandingPageContent/com
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import sumrTokenBubbles from '@/public/img/landing-page/sumr-token_bubbles.svg'
 
@@ -85,6 +88,14 @@ function VerticalProtocolScroller({ protocols }: { protocols: ProtocolItemType[]
 }
 
 function TeamMember({ member }: { member: TeamListItem }) {
+  const pathname = usePathname()
+  const onClickMemberSocial = (social: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-team-social-${slugify(member.name)}-${social}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={teamPageStyles.teamMember}>
       <Image src={member.image} alt={member.name} />
@@ -98,12 +109,22 @@ function TeamMember({ member }: { member: TeamListItem }) {
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         {member.socialLinks?.linkedin && (
-          <Link href={member.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+          <Link
+            href={member.socialLinks.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClickMemberSocial('linkedin')}
+          >
             <Icon iconName="team_linkedin" size={32} />
           </Link>
         )}
         {member.socialLinks?.twitter && (
-          <Link href={member.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+          <Link
+            href={member.socialLinks.twitter}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClickMemberSocial('twitter')}
+          >
             <Icon iconName="team_x" size={32} />
           </Link>
         )}
@@ -113,6 +134,7 @@ function TeamMember({ member }: { member: TeamListItem }) {
 }
 
 export default function TeamPage() {
+  const pathname = usePathname()
   const { landingPageData } = useLandingPageData()
   const videoRef = useMemo(() => createRef<HTMLVideoElement>(), [])
   const [isWatchingVideo, setIsWatchingVideo] = useState(false)
@@ -147,18 +169,30 @@ export default function TeamPage() {
   }, [videoRef])
 
   const setFullscreen = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-team-fullscreen-video`,
+      page: pathname,
+    })
     if (videoRef.current) {
       videoRef.current.requestFullscreen()
       setIsVideoFullScreen(true)
       videoRef.current.onfullscreenchange = () => {
         if (document.fullscreenElement === null) {
           setIsVideoFullScreen(false)
+          EarnProtocolEvents.buttonClicked({
+            buttonName: `lp-team-fullscreen-disable-video`,
+            page: pathname,
+          })
         }
       }
     }
   }
 
   const playVideo = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-team-play-video`,
+      page: pathname,
+    })
     if (videoRef.current) {
       setIsWatchingVideo(true)
       videoRef.current.play()
@@ -173,6 +207,10 @@ export default function TeamPage() {
   }
 
   const stopVideo = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-team-stop-video`,
+      page: pathname,
+    })
     if (videoRef.current) {
       setIsWatchingVideo(false)
       videoRef.current.currentTime = 0 // Reset video to the start
@@ -182,18 +220,6 @@ export default function TeamPage() {
 
   return (
     <div className={teamPageStyles.wrapper}>
-      {/* <div className={teamPageStyles.pageHeader}>
-        <Text as="h1" variant="h1">
-          Making the best of DeFi
-          <br />
-          <Emphasis variant="h1colorful">simple and safe </Emphasis>
-        </Text>
-        <div className={teamPageStyles.pageHeaderDetails}>
-          <Text as="p" variant="p1">
-            Summer.fi is the best place to borrow and earn in DeFi
-          </Text>
-        </div>
-      </div> */}
       <div className={teamPageStyles.whoAreWe}>
         <div className={teamPageStyles.whoAreWeDescription}>
           <Text as="h2" variant="h2">
@@ -319,7 +345,7 @@ export default function TeamPage() {
         <VerticalProtocolScroller protocols={protocolsList} />
       </div>
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} noHeaderDescription />
-      <StartEarningNow />
+      <StartEarningNow id="team" />
     </div>
   )
 }

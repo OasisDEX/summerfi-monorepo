@@ -35,6 +35,7 @@ import { type BeachClubReducerAction, type BeachClubState } from '@/features/bea
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 import { getBeachClubTvlRewardsCards } from './cards'
@@ -72,6 +73,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
   const [isOptInOpen, setIsOptInOpen] = useState(false)
   const { userWalletAddress } = useUserWallet()
+  const handleInputEvent = useHandleInputChangeEvent()
 
   const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
@@ -83,6 +85,13 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
+
+  const setSimulationValueCallback = (value: string) => {
+    handleInputEvent({
+      inputName: 'portfolio-beach-club-simulation-slider',
+      value,
+    })
+  }
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
@@ -255,13 +264,6 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
           </div>
         ))}
       </div>
-      {/* <div className={classNames.leaderboardLink}>
-        <Link href="/" target="_blank" style={{ textAlign: 'center' }}>
-          <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-            See leaderboard
-          </WithArrow>
-        </Link>
-      </div> */}
       <div
         className={classNames.rewardCardsWrapper}
         style={{ marginTop: 'var(--general-space-32)' }}
@@ -274,7 +276,10 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
           />
         ))}
       </div>
-      <BeachClubRewardSimulation tvl={currentGroupTvl} />
+      <BeachClubRewardSimulation
+        tvl={currentGroupTvl}
+        setSimulationValueCallback={setSimulationValueCallback}
+      />
       {isMobile ? (
         <MobileDrawer isOpen={isOptInOpen} onClose={handleOptInOpenClose} height="auto">
           <ClaimDelegateOptInMerkl

@@ -51,6 +51,11 @@ import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import {
+  useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 type MigrationVaultPageComponentProps = {
@@ -88,6 +93,9 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const { push } = useRouter()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const { setChain, isSettingChain } = useChain()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
 
   const { clientChainId } = useClientChainId()
 
@@ -312,6 +320,9 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       sumrPrice={estimatedSumrPrice}
       onRefresh={revalidatePositionData}
       vaultApyData={vaultApyData}
+      tooltipEventHandler={tooltipEventHandler}
+      buttonClickEventHandler={buttonClickEventHandler}
+      dropdownChangeHandler={dropdownChangeHandler}
       headerLink={{
         label: 'Migrate',
         href: `/migrate/user/${walletAddress}`,

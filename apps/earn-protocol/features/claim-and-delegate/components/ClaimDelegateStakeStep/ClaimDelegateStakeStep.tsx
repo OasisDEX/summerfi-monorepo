@@ -47,6 +47,7 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
@@ -115,6 +116,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const { userWalletAddress } = useUserWallet()
+  const inputChangeHandler = useHandleInputChangeEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
@@ -149,6 +151,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     tokenDecimals: 18,
     tokenPrice: estimatedSumrPrice.toString(),
     selectedToken: sumrToken,
+    inputChangeHandler,
+    inputName: 'stake-amount',
   })
 
   const {
@@ -164,6 +168,8 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     tokenDecimals: 18,
     tokenPrice: estimatedSumrPrice.toString(),
     selectedToken: sumrToken,
+    inputChangeHandler,
+    inputName: 'unstake-amount',
   })
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)

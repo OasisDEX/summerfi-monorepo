@@ -132,6 +132,8 @@ interface StatefulTooltipProps {
   hideDrawerOnMobile?: boolean
   deviceType?: DeviceType
   stopPropagation?: boolean
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -154,12 +156,15 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   hideDrawerOnMobile = false,
   deviceType,
   stopPropagation = false,
+  onTooltipOpen,
+  tooltipName,
 }): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
   const { tooltipOpen, setTooltipOpen, closeHandler } = useTooltip(generatedId)
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
+  const onTooltipOpenTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { isMobile } = useMobileCheck(deviceType)
 
@@ -211,6 +216,12 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
 
   useEffect(() => {
     if (portalElement && tooltipRefRect && tooltipOpen) {
+      // Set up timeout to call onTooltipOpen after 1 second
+      if (onTooltipOpen && tooltipName) {
+        onTooltipOpenTimeoutRef.current = setTimeout(() => {
+          onTooltipOpen(tooltipName)
+        }, 500)
+      }
       // For unique tooltip portals, position them relative to the viewport
       if (portalElement.id.startsWith('tooltip-portal-')) {
         portalElement.style.setProperty('top', `${tooltipRefRect.y + window.scrollY}px`)
@@ -224,7 +235,14 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
         portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
       }
     }
-  }, [tooltipRefRect, portalElement, tooltipOpen, dialogRect])
+
+    return () => {
+      if (onTooltipOpenTimeoutRef.current) {
+        clearTimeout(onTooltipOpenTimeoutRef.current)
+        onTooltipOpenTimeoutRef.current = null
+      }
+    }
+  }, [tooltipRefRect, portalElement, tooltipOpen, dialogRect, tooltipName, onTooltipOpen])
 
   const handleMouseEnter = useMemo(
     () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(true) : undefined),
@@ -262,6 +280,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
         setTooltipOpen(true)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [triggerOnClick, persistWhenOpened, setTooltipOpen],
   )
 
@@ -269,6 +288,9 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
+      }
+      if (onTooltipOpenTimeoutRef.current) {
+        clearTimeout(onTooltipOpenTimeoutRef.current)
       }
     }
   }, [])

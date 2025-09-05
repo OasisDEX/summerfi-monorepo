@@ -18,6 +18,7 @@ import { usePathname } from 'next/navigation'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
   ssr: false,
@@ -37,6 +38,19 @@ export const NavigationWrapper: FC = () => {
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const startGame = () => {
     setRunningGame?.(true)
+  }
+
+  const onNavItemClick = ({
+    buttonName,
+    isEarnApp,
+  }: {
+    buttonName: string
+    isEarnApp?: boolean
+  }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `${isEarnApp ? 'ep' : 'lp'}-navigation-${buttonName}`,
+      page: currentPath,
+    })
   }
 
   const isCampaignPage = currentPath.startsWith('/campaigns')
@@ -74,6 +88,7 @@ export const NavigationWrapper: FC = () => {
         userWalletAddress,
         isEarnApp: true,
         features,
+        onNavItemClick,
       })}
       walletConnectionComponent={!isCampaignPage ? <WalletLabel /> : null}
       mobileWalletConnectionComponents={{
@@ -86,6 +101,7 @@ export const NavigationWrapper: FC = () => {
         </NavigationConfig>
       }
       onLogoClick={() => {
+        onNavItemClick({ buttonName: 'logo', isEarnApp: true })
         // because router will use base path...
         window.location.replace('/')
       }}
@@ -96,6 +112,7 @@ export const NavigationWrapper: FC = () => {
           beachClubEnabled={beachClubEnabled}
           isEarnApp
           userWalletAddress={userWalletAddress}
+          onNavItemClick={onNavItemClick}
         />
       }
     />

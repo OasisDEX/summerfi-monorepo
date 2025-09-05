@@ -5,7 +5,7 @@ import {
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { formatDecimalAsPercent, supportedSDKNetwork } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, slugifyVault, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -34,6 +34,8 @@ type PortfolioPositionProps = {
   sumrPrice?: number
   vaultApyData: VaultApyData
   isMobile?: boolean
+  tooltipEventHandler: (tooltipName: string) => void
+  buttonClickEventHandler: (buttonName: string) => void
 }
 
 const PortfolioPositionHeaderValue = ({
@@ -61,6 +63,8 @@ export const PortfolioPosition = ({
   sumrPrice,
   vaultApyData,
   isMobile,
+  buttonClickEventHandler,
+  tooltipEventHandler,
 }: PortfolioPositionProps): React.ReactNode => {
   const {
     inputToken,
@@ -106,6 +110,11 @@ export const PortfolioPosition = ({
         vaultId: customFields?.slug ?? vaultId,
         walletAddress,
       })}
+      onClick={() =>
+        buttonClickEventHandler(
+          `portfolio-overview-view-position-${slugifyVault(portfolioPosition.vault)}`,
+        )
+      }
     >
       <Button variant="primarySmall" style={{ width: 'fit-content', margin: '0 auto' }}>
         View&nbsp;position
@@ -124,6 +133,8 @@ export const PortfolioPosition = ({
               networkName={supportedSDKNetwork(protocol.network)}
               titleVariant="h3"
               isVaultCard
+              tooltipName={`portfolio-overview-risk-label-${slugifyVault(portfolioPosition.vault)}`}
+              onTooltipOpen={tooltipEventHandler}
             />
             {isMobile && linkToPosition}
           </div>
@@ -141,6 +152,8 @@ export const PortfolioPosition = ({
           <PortfolioPositionHeaderValue
             title={
               <Tooltip
+                tooltipName={`portfolio-overview-live-apy-info-${slugifyVault(portfolioPosition.vault)}`}
+                onTooltipOpen={tooltipEventHandler}
                 tooltip={
                   <LiveApyInfo
                     apyCurrent={apyCurrent}

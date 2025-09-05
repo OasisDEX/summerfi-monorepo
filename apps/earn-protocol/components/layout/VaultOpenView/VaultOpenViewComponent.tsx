@@ -37,7 +37,7 @@ import {
   TransactionAction,
   type VaultApyData,
 } from '@summerfi/app-types'
-import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { slugify, subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import {
   getChainInfoByChainId,
   type IArmadaVaultInfo,
@@ -66,6 +66,12 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import {
+  useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
+  useHandleInputChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
@@ -113,6 +119,10 @@ export const VaultOpenViewComponent = ({
   })
   const { publicClient } = useNetworkAlignedClient()
   const { deviceType } = useDeviceType()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const inputChangeHandler = useHandleInputChangeEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
@@ -223,6 +233,8 @@ export const VaultOpenViewComponent = ({
         // eslint-disable-next-line no-console
         console.error('Error fetching if user is new', error)
         setIsNewUser(false)
+
+        return false
       }
     }
 
@@ -261,6 +273,7 @@ export const VaultOpenViewComponent = ({
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    buttonClickEventHandler(`vault-manage-change-token-to-${slugify(option.value)}`)
     handleSetTokenBalanceLoading(true)
     handleTokenSelectionChange(option)
   }
@@ -283,6 +296,8 @@ export const VaultOpenViewComponent = ({
         // we need to fill it here
         decimals: vault.inputToken.decimals,
       } as IToken),
+    inputChangeHandler,
+    inputName: 'vault-open-amount',
   })
 
   const {
@@ -296,6 +311,8 @@ export const VaultOpenViewComponent = ({
     tokenDecimals: vault.inputToken.decimals,
     tokenPrice: vault.inputTokenPriceUSD,
     selectedToken,
+    inputChangeHandler,
+    inputName: 'vault-open-approval-amount',
   })
 
   const {
@@ -496,6 +513,8 @@ export const VaultOpenViewComponent = ({
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}
           tooltip={sidebarFootnote.tooltip}
+          handleTooltipOpen={tooltipEventHandler}
+          tooltipName="vault-open"
         />
       </>
     ),
@@ -527,6 +546,9 @@ export const VaultOpenViewComponent = ({
         sumrPrice={estimatedSumrPrice}
         onRefresh={revalidatePositionData}
         vaultApyData={vaultApyData}
+        tooltipEventHandler={tooltipEventHandler}
+        buttonClickEventHandler={buttonClickEventHandler}
+        dropdownChangeHandler={dropdownChangeHandler}
         simulationGraph={
           <VaultSimulationGraph
             vault={vault}

@@ -33,7 +33,13 @@ import {
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
-import { sdkNetworkToHumanNetwork, supportedSDKNetwork, ten } from '@summerfi/app-utils'
+import {
+  sdkNetworkToHumanNetwork,
+  slugify,
+  slugifyVault,
+  supportedSDKNetwork,
+  ten,
+} from '@summerfi/app-utils'
 import {
   Address,
   getChainInfoByChainId,
@@ -53,6 +59,7 @@ import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -106,6 +113,8 @@ export const useTransaction = ({
 }: UseTransactionParams) => {
   const { refresh: refreshView, push } = useRouter()
   const [slippageConfig] = useSlippageConfig()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const transactionEventHandler = useHandleTransactionEvent()
   const { userWalletAddress } = useUserWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
@@ -184,6 +193,13 @@ export const useTransaction = ({
           referralCode,
         })
 
+        transactionEventHandler({
+          transactionType: isWithdraw ? 'withdraw' : 'deposit',
+          txEvent: 'transactionSimulated',
+          vaultSlug: slugifyVault(vault),
+          result: 'success',
+        })
+
         if (transactionsList.length <= 0) {
           throw new Error('Error getting the transactions list')
         }
@@ -191,6 +207,12 @@ export const useTransaction = ({
         setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
         setTxStatus('txPrepared')
       } catch (err) {
+        transactionEventHandler({
+          transactionType: isWithdraw ? 'withdraw' : 'deposit',
+          txEvent: 'transactionSimulated',
+          vaultSlug: slugifyVault(vault),
+          result: 'failure',
+        })
         if (err instanceof Error) {
           setSidebarTransactionError(err.message)
         } else {
@@ -218,15 +240,23 @@ export const useTransaction = ({
           destinationFleetAddress,
         })
 
-        // TS says that this is never empty, but it can be... leaving that for now
-        // if (transactionsList.length === 0) {
-        //   throw new Error('Error getting the transactions list')
-        // }
+        transactionEventHandler({
+          transactionType: 'vault-switch',
+          txEvent: 'transactionSimulated',
+          vaultSlug: slugifyVault(vault),
+          result: 'success',
+        })
 
         // Map to TransactionWithStatus and set executed to false
         setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
         setTxStatus('txPrepared')
       } catch (err) {
+        transactionEventHandler({
+          transactionType: 'vault-switch',
+          txEvent: 'transactionSimulated',
+          vaultSlug: slugifyVault(vault),
+          result: 'failure',
+        })
         if (err instanceof Error) {
           setSidebarTransactionError(err.message)
         } else {
@@ -247,12 +277,13 @@ export const useTransaction = ({
     sidebarTransactionType,
     getDepositTX,
     getWithdrawTX,
-    vault.id,
+    vault,
     vaultChainId,
     slippageConfig.slippage,
+    referralCode,
+    transactionEventHandler,
     getVaultSwitchTx,
     positionAmount,
-    referralCode,
   ])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
@@ -264,6 +295,13 @@ export const useTransaction = ({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
+      transactionEventHandler({
+        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        txEvent: 'transactionSubmitted',
+        result: 'success',
+        txHash: hash,
+        vaultSlug: slugifyVault(vault),
+      })
       if (isIframe) {
         getSafeTxHash(hash, supportedSDKNetwork(vault.protocol.network))
           .then((safeTransactionData) => {
@@ -303,6 +341,12 @@ export const useTransaction = ({
         // we need to refresh the transactions list then to fetch the new swap
         getTransactionsList()
       }
+      transactionEventHandler({
+        transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
+        txEvent: 'transactionSubmitted',
+        result: 'failure',
+        vaultSlug: slugifyVault(vault),
+      })
       // eslint-disable-next-line no-console
       console.error('Error executing the transaction:', err)
 
@@ -415,6 +459,8 @@ export const useTransaction = ({
       throw new Error('Token not loaded')
     }
 
+    buttonClickEventHandler(`vault-${flow}-next-transaction-${slugify(nextTransaction.type)}`)
+
     const txParams =
       nextTransaction.type === TransactionType.Approve &&
       approvalType !== 'deposit' &&
@@ -448,17 +494,19 @@ export const useTransaction = ({
       sendTransaction(txParams, resolvedOverrides)
     }
   }, [
-    isIframe,
-    token,
-    approvalCustomValue,
-    approvalType,
     nextTransaction,
     publicClient,
+    token,
+    buttonClickEventHandler,
+    flow,
+    approvalType,
+    approvalCustomValue,
+    smartAccountClient,
+    isIframe,
     sendSafeWalletTransaction,
     sendTransaction,
     setTxStatus,
     userWalletAddress,
-    smartAccountClient,
   ])
 
   const backToInit = useCallback(() => {
@@ -466,7 +514,7 @@ export const useTransaction = ({
     setTransactions(undefined)
     setTxStatus('idle')
     setApprovalType('deposit')
-  }, [setApprovalType, setTransactions, setTxStatus])
+  }, [])
 
   const reset = useCallback(() => {
     // resets everything
@@ -475,13 +523,8 @@ export const useTransaction = ({
     setSidebarTransactionError(undefined)
     setSidebarValidationError(undefined)
     setSidebarTransactionType?.(TransactionAction.DEPOSIT)
-  }, [
-    backToInit,
-    manualSetAmount,
-    setSidebarTransactionError,
-    setSidebarValidationError,
-    setSidebarTransactionType,
-  ])
+    buttonClickEventHandler(`vault-${flow}-sidebar-reset`)
+  }, [backToInit, buttonClickEventHandler, flow, manualSetAmount, setSidebarTransactionType])
 
   const sidebarSecondaryButton = useMemo(() => {
     if (txStatus === 'txSuccess' && !nextTransaction && userWalletAddress) {
@@ -529,6 +572,7 @@ export const useTransaction = ({
       return {
         label: `Change network to ${nextChain.name}`,
         action: () => {
+          buttonClickEventHandler(`vault-${flow}-change-network-to-${slugify(nextChain.name)}`)
           setChain({
             chain: nextChain,
           })
@@ -541,7 +585,10 @@ export const useTransaction = ({
     if (!tokenBalanceLoading && tokenBalance && tokenBalance.isZero() && flow === 'open') {
       return {
         label: 'Buy crypto',
-        action: () => setIsTransakOpen(true),
+        action: () => {
+          buttonClickEventHandler(`vault-${flow}-buy-crypto`)
+          setIsTransakOpen(true)
+        },
         disabled: false,
       }
     }
@@ -615,6 +662,7 @@ export const useTransaction = ({
         return {
           label: 'Go to new position',
           action: () => {
+            buttonClickEventHandler(`vault-${flow}-go-to-new-position`)
             push(
               getVaultPositionUrl({
                 network: supportedSDKNetwork(vault.protocol.network),
@@ -657,6 +705,7 @@ export const useTransaction = ({
       action: getTransactionsList,
     }
   }, [
+    isEditingSwitchAmount,
     ownerView,
     isProperChainSelected,
     isSettingChain,
@@ -671,11 +720,13 @@ export const useTransaction = ({
     txStatus,
     token,
     nextTransaction,
+    referralCodeError,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
     setChain,
+    buttonClickEventHandler,
     sidebarTransactionType,
     approvalTokenSymbol,
     executeNextTransaction,
@@ -683,8 +734,6 @@ export const useTransaction = ({
     selectedSwitchVault,
     push,
     vault.protocol.network,
-    isEditingSwitchAmount,
-    referralCodeError,
   ])
 
   const sidebarTitle = useMemo(() => {

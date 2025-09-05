@@ -27,7 +27,6 @@ import { redirect } from 'next/navigation'
 
 import { getUserBeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { getBlogPosts } from '@/app/server-handlers/blog-posts'
-import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
@@ -64,7 +63,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   const [
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -80,7 +78,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
-    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
@@ -112,7 +109,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   return {
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -152,7 +148,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const {
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -228,11 +223,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     tallyDelegates,
   }
 
-  const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
-  const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
-
-  const totalRays = totalRaysPoints - tgeSnapshotPoints
-
   const positionsHistoricalChartMap = positionsWithVault.reduce<{
     [key: string]: HistoryChartData
   }>(
@@ -260,7 +250,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}
-      totalRays={totalRays}
       latestActivity={latestActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}

@@ -1,4 +1,16 @@
-import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
+import {
+  type EarnProtocolBaseEventProps,
+  type EarnProtocolButtonClickedEventProps,
+  type EarnProtocolDropdownChangedEventProps,
+  EarnProtocolEventNames,
+  type EarnProtocolEventPropsMap,
+  type EarnProtocolInputChangedEventProps,
+  type EarnProtocolScrolledEventProps,
+  type EarnProtocolTooltipHoveredEventProps,
+  type EarnProtocolTransactionEventProps,
+  type EarnProtocolViewPositionEventProps,
+} from '@summerfi/app-types'
+import { type EarnProtocolCustomEventProps } from '@summerfi/app-types/types/src/mixpanel/earn-protocol-events'
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash-es'
 
@@ -9,25 +21,36 @@ const optedOutCheck = () =>
 
 const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
-const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
+// --- Generic trackEvent helper ---
+export function trackEvent<E extends EarnProtocolEventNames>(
+  ev: E,
+  props: EarnProtocolEventPropsMap[E],
+) {
+  const eventData = {
+    eventName: ev,
+    eventBody: {
+      ...props,
+      timestamp: new Date().toISOString(),
+      page: includeBasePath(props.page),
+    },
+  }
+
   // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.TURBOPACK) {
+  if (process.env.TURBOPACK ?? window.location.hostname.includes('staging')) {
+    // eslint-disable-next-line no-console
+    console.info('Mixpanel event:', JSON.stringify(eventData, null, 2))
+
     return
   }
-  let win: Window
+  const baseWindowObject = {
+    navigator: { userAgent: '' },
+    document: { location: { hostname: '' }, referrer: '' },
+    screen: { width: 0, height: 0 },
+    location: { href: '' },
+  } as Window
 
-  if (typeof window === 'undefined') {
-    const loc = { hostname: '' }
+  const win = typeof window !== 'undefined' ? window : baseWindowObject
 
-    win = {
-      navigator: { userAgent: '' },
-      document: { location: loc, referrer: '' },
-      screen: { width: 0, height: 0 },
-      location: loc,
-    } as Window
-  } else {
-    win = window
-  }
   const { name: browserName, mobile, os, versionNumber } = browserDetect()
   const initialReferrer = mixpanelBrowser.get_property('$initial_referrer')
   const initialReferringDomain = initialReferrer
@@ -43,10 +66,9 @@ const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      eventBody,
-      eventName,
+      ...eventData,
       distinctId: mixpanelBrowser.get_distinct_id(),
-      currentUrl: win.location.href,
+      currentUrl: includeBasePath(win.location.href),
       ...(!optedOutCheck() && {
         browser: upperFirst(browserName),
         browserVersion: versionNumber,
@@ -62,184 +84,57 @@ const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) =>
   })
 }
 
-type PageViewType = {
-  path: string
-  userAddress?: string
-}
+// --- Specific Event Handlers ---
 
-// page view
-const trackPageView = ({ path, userAddress }: PageViewType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id: includeBasePath(path),
-      userAddress,
-    }
+export const EarnProtocolEvents = {
+  pageViewed: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.PageViewed, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.Pageview, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking page view', error)
-  }
-}
+  scrolled: (props: EarnProtocolScrolledEventProps) =>
+    trackEvent(EarnProtocolEventNames.Scrolled, props),
 
-export const trackPageViewTimed = ({ path, userAddress }: PageViewType) => {
-  setTimeout(() => {
-    trackPageView({ path, userAddress })
-  }, 1000)
-}
+  walletConnected: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.WalletConnected, props),
 
-type AccountChangeType = {
-  account: `0x${string}`
-  accountType?: string
-  network: string
-  connectionMethod: string
-}
+  accountChanged: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.AccountChanged, props),
 
-// account change
-export const trackAccountChange = ({
-  account,
-  network,
-  accountType,
-  connectionMethod,
-}: AccountChangeType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id: 'AccountChange',
-      account,
-      network,
-      connectionMethod,
-      accountType,
-    }
+  walletDisconnected: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.WalletDisconnected, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.AccountChange, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking account change', error)
-  }
-}
+  viewPosition: (props: EarnProtocolViewPositionEventProps) =>
+    trackEvent(EarnProtocolEventNames.ViewPosition, props),
 
-type ButtonClickType = {
-  id: string
-  page: string
-  userAddress?: string
-  [key: string]: unknown
-}
+  transactionSimulated: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSimulated, props),
 
-// button click
-export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClickType) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
+  transactionSubmitted: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSubmitted, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.ButtonClick, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
-}
+  transactionConfirmed: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionConfirmed, props),
 
-type MixpanelEventData = {
-  id: string
-  page: string
-  userAddress?: string
-  [key: string]: unknown
-}
+  transactionSuccess: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSuccess, props),
 
-// input change
-export const trackInputChange = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
+  transactionFailure: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionFailure, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.InputChange, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
-}
+  buttonClicked: (props: EarnProtocolButtonClickedEventProps) =>
+    trackEvent(EarnProtocolEventNames.ButtonClicked, props),
 
-// game finished
-export const trackGameFinished = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
+  inputChanged: (props: EarnProtocolInputChangedEventProps) =>
+    trackEvent(EarnProtocolEventNames.InputChanged, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.GameFinished, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking game finished', error)
-  }
-}
+  dropdownChanged: (props: EarnProtocolDropdownChangedEventProps) =>
+    trackEvent(EarnProtocolEventNames.DropdownChanged, props),
 
-export const trackVaultSwitched = ({ id, page, userAddress, ...rest }: MixpanelEventData) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      userAddress,
-      ...rest,
-    }
+  tooltipHovered: (props: EarnProtocolTooltipHoveredEventProps) =>
+    trackEvent(EarnProtocolEventNames.TooltipHovered, props),
 
-    if (!optedOutCheck()) {
-      trackEvent(MixpanelEventTypes.VaultSwitched, eventBody)
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking vault switched', error)
-  }
-}
+  errorOccurred: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.ErrorOccurred, props),
 
-type AppError = {
-  id: string
-  page: string
-  digest?: string
-  message?: string
-  [key: string]: unknown
-}
-
-// app error - global error handler
-export const trackError = ({ id, page, message, digest, ...rest }: AppError) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      digest,
-      message,
-      ...rest,
-    }
-
-    trackEvent(MixpanelEventTypes.AppError, eventBody)
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
+  customEvent: (props: EarnProtocolCustomEventProps) =>
+    trackEvent(EarnProtocolEventNames.CustomEvent, props),
 }

@@ -18,6 +18,7 @@ interface VaultDropdownContentProps {
   style?: CSSProperties
   link?: string
   className?: string
+  linkOnClick?: () => void
 }
 
 export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 'link'>> = ({
@@ -53,12 +54,13 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
 export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({
   vault,
   link,
+  linkOnClick,
   isDisabled,
   style = {},
   className,
 }) => {
   return link ? (
-    <Link href={link}>
+    <Link href={link} onClick={linkOnClick}>
       <VaultTitleDropdownContentBlock
         vault={vault}
         isDisabled={isDisabled}

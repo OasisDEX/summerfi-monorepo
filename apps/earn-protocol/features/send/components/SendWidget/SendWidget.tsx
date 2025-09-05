@@ -36,6 +36,7 @@ import { sendReducer, sendState } from '@/features/send/state'
 import { SendStep, SendTxStatuses } from '@/features/send/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
@@ -55,6 +56,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
   isOwner,
 }) => {
   const { deviceType } = useDeviceType()
+  const inputChangeHandler = useHandleInputChangeEvent()
 
   const walletDataAssetsSortedByUsdValue = walletData.assets
     .sort((a, b) => b.balanceUSD - a.balanceUSD)
@@ -128,6 +130,8 @@ export const SendWidget: FC<SendWidgetProps> = ({
       ?.priceUSD.toString(),
     selectedToken,
     initialAmount: undefined,
+    inputChangeHandler,
+    inputName: 'send-widget-amount',
   })
 
   const {

@@ -18,7 +18,7 @@ import Link from 'next/link'
 
 import { getMessageToSign } from '@/features/game/helpers/gameHelpers'
 import { type GameOverParams } from '@/features/game/types'
-import { trackGameFinished } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import Card from './Card'
 
@@ -90,7 +90,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   const { userWalletAddress } = useUserWallet()
 
   useEffect(() => {
-    trackGameFinished({
+    EarnProtocolEvents.customEvent({
       id: 'GameFinished',
       page: window.location.host + window.location.pathname,
       userAddress: userWalletAddress,

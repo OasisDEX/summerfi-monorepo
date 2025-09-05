@@ -19,6 +19,7 @@ import BigNumber from 'bignumber.js'
 
 import { type PortfolioWalletAsset } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioAssetsList.module.css'
 
@@ -94,6 +95,7 @@ const mapAssetCardItem = (item: PortfolioWalletAsset) => (
 
 export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets }) => {
   const [isSeeAll, setIsSeeAll] = useState(false)
+  const buttonClickEventHandler = useHandleButtonClickEvent()
 
   return (
     <div className={classNames.wrapper}>
@@ -114,7 +116,13 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets
         </Text>
       )}
       {walletAssets.length > 3 && (
-        <div onClick={() => setIsSeeAll((prev) => !prev)} className={classNames.linkWrapper}>
+        <div
+          onClick={() => {
+            buttonClickEventHandler(`portfolio-wallet-see-all-${isSeeAll ? 'hide' : 'show'}`)
+            setIsSeeAll((prev) => !prev)
+          }}
+          className={classNames.linkWrapper}
+        >
           <Text as="p" variant="p3semi">
             {isSeeAll ? 'Hide' : 'See'} all assets
           </Text>

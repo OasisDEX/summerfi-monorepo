@@ -9,6 +9,7 @@ import {
   beachClubRewardCardImages,
   beachClubRewardDescriptions,
 } from '@/features/beach-club/constants/reward-cards'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubBoatChallengeRewardCard.module.css'
 
@@ -37,16 +38,18 @@ export const BeachClubBoatChallengeRewardCard = ({
   walletAddress,
 }: BeachClubBoatChallengeRewardCardProps) => {
   const { type } = reward
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const { push } = useRouter()
 
   const handleClaim = () => {
-    if (reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT) {
+    if (type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT) {
       // TODO: implement NFT claim
       return
     }
+    handleButtonClick(`portfolio-beach-club-beach-boat-challenge-${type}-card`)
 
-    push(`/merchandise/${reward.type}/${walletAddress}`)
+    push(`/merchandise/${type}/${walletAddress}`)
   }
 
   return (
@@ -88,11 +91,11 @@ export const BeachClubBoatChallengeRewardCard = ({
           <Button
             variant="beachClubMedium"
             style={{ width: '100%' }}
-            disabled={reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT}
+            disabled={type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT}
             onClick={handleClaim}
           >
             Claim {beachClubRewardDescriptions[type]}
-            {reward.type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT && (
+            {type === BeachClubBoatChallengeRewardCardType.BEACH_CLUB_NFT && (
               <Tooltip tooltip="Available soon" tooltipWrapperStyles={{ minWidth: '140px' }}>
                 <Icon iconName="info" size={24} />
               </Tooltip>

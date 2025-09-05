@@ -1,10 +1,11 @@
 import { type FC, useState } from 'react'
 import { AnimateHeight, Card, getTwitterShareUrl, Icon, Text } from '@summerfi/app-earn-ui'
-import { formatAsShorthandNumbers, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatAsShorthandNumbers, formatDecimalAsPercent, slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
 import { BeachClubProgressBar } from '@/features/beach-club/components/BeachClubProgressBar/BeachClubProgressBar'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubTvlChallengeRewardCard.module.css'
 
@@ -33,6 +34,7 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
   youAreHere,
   referralCode,
 }) => {
+  const handleButtonClick = useHandleButtonClickEvent()
   const groupAchieved = currentGroupTvl >= rawTvlGroup
 
   const resolvedIsExpanded = youAreHere ? true : !groupAchieved
@@ -53,7 +55,15 @@ export const BeachClubTvlChallengeRewardCard: FC<BeachClubTvlChallengeRewardCard
         }),
       }}
     >
-      <div className={classNames.header} onClick={() => setIsExpanded(!isExpanded)}>
+      <div
+        className={classNames.header}
+        onClick={() => {
+          handleButtonClick(
+            `portfolio-beach-club-tvl-challenge-${slugify(tvlGroup)}-card-${!isExpanded ? 'expand' : 'collapse'}`,
+          )
+          setIsExpanded(!isExpanded)
+        }}
+      >
         <div className={classNames.headerLeftWrapper}>
           <Text as="p" variant="p1semi">
             {customTitle ? (

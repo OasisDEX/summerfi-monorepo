@@ -20,6 +20,13 @@ interface NewsletterWrapperProps {
   inputWrapperStyles?: CSSProperties
   inputBtnLabel?: string
   isEarnApp?: boolean
+  handleNewsletterEvent: ({
+    eventType,
+    errorMessage,
+  }: {
+    eventType: 'subscribe-submit' | 'subscribe-failure'
+    errorMessage?: string
+  }) => void
 }
 
 export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
@@ -28,6 +35,7 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
   inputWrapperClassName,
   inputBtnLabel,
   isEarnApp = false,
+  handleNewsletterEvent,
 }) => {
   const [email, setEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] =
@@ -44,6 +52,9 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
       setNewsletterStatus('loading')
       setNewsletterStatusLabel('')
     }
+    handleNewsletterEvent({
+      eventType: 'subscribe-submit',
+    })
     try {
       // since we moved to static LP there is just earn apps endpoint
       const response = await fetch(`/earn/api/newsletter-subscribe`, {
@@ -61,13 +72,26 @@ export const NewsletterWrapper: FC<NewsletterWrapperProps> = ({
         const responseBody = await response.json()
 
         if (errorMessagesList[responseBody.error as keyof typeof errorMessagesList]) {
+          handleNewsletterEvent({
+            eventType: 'subscribe-failure',
+            errorMessage: errorMessagesList[responseBody.error as keyof typeof errorMessagesList],
+          })
           setNewsletterStatusLabel(
             errorMessagesList[responseBody.error as keyof typeof errorMessagesList],
           )
+        } else {
+          handleNewsletterEvent({
+            eventType: 'subscribe-failure',
+            errorMessage: 'An unknown error occurred',
+          })
         }
         setNewsletterStatus('error')
       }
     } catch (error) {
+      handleNewsletterEvent({
+        eventType: 'subscribe-failure',
+        errorMessage: error.message,
+      })
       setNewsletterStatus('error')
     }
   }

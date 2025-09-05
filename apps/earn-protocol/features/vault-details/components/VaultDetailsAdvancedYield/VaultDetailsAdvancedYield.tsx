@@ -7,9 +7,11 @@ import {
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
+import { slugifyVault } from '@summerfi/app-utils'
 
 import { vaultExposureColumnsToHideDetails } from '@/constants/tables'
 import { VaultDetailsHistoricalYieldChart } from '@/features/vault-details/components/VaultDetailsHistoricalYieldChart/VaultDetailsHistoricalYieldChart'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 interface VaultDetailsAdvancedYieldProps {
   chartData: ArksHistoricalChartData
@@ -26,6 +28,7 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
   arksInterestRates,
   vaultApyData,
 }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const chartNames = useMemo(() => {
     return [summerVaultName, ...(chartData.dataNames ?? [])]
   }, [chartData.dataNames, summerVaultName])
@@ -95,6 +98,8 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
         arksInterestRates={arksInterestRates}
         vaultApyData={vaultApyData}
         columnsToHide={vaultExposureColumnsToHideDetails}
+        tableId={`vault-details-${slugifyVault(vault)}`}
+        buttonClickEventHandler={buttonClickEventHandler}
       />
     </>
   )

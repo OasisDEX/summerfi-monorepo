@@ -1,11 +1,13 @@
 import { type Dispatch, type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { BeachClubBoatChallenge } from '@/features/beach-club/components/BeachClubBoatChallenge/BeachClubBoatChallenge'
 import { BeachClubTvlChallenge } from '@/features/beach-club/components/BeachClubTvlChallenge/BeachClubTvlChallenge'
 import { type BeachClubReducerAction, type BeachClubState } from '@/features/beach-club/types'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubRewards.module.css'
 
@@ -55,6 +57,11 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
     ],
     [beachClubData, walletAddress, merklIsAuthorizedPerChain, state, dispatch],
   )
+  const handleButtonClick = useHandleButtonClickEvent()
+
+  const handleTabChange = (tab: { id: string }) => {
+    handleButtonClick(`portfolio-beach-club-rewards-tab-${slugify(tab.id)}`)
+  }
 
   return (
     <div className={classNames.beachClubRewardsWrapper}>
@@ -72,6 +79,7 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
           tabs={tabsOptions}
           textVariant="p3semi"
           tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
+          handleTabChange={handleTabChange}
         />
       </Card>
     </div>

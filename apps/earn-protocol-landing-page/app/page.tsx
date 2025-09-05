@@ -25,6 +25,7 @@ import { StartEarningNow } from '@/components/layout/LandingPageContent/content/
 import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
 import prototechLabsLogo from '@/public/img/landing-page/auditor-logos/prototech-labs.svg'
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
@@ -42,6 +43,19 @@ import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 
 export default function HomePage() {
   const { landingPageData } = useLandingPageData()
+
+  const handleRiskManagementLearnMoreClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-enhanced-risk-management-learn-more`,
+      page: '/',
+    })
+  }
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-audit-${auditId}-learn-more`,
+      page: '/',
+    })
+  }
 
   return (
     <div
@@ -87,13 +101,18 @@ export default function HomePage() {
             skyLogo,
             sparkLogo,
           }}
+          handleLearnMoreClick={handleRiskManagementLearnMoreClick}
         />
         <BestOfDecentralizedFinance />
         <SumrToken />
-        <StartEarningNow />
+        <StartEarningNow id="home" />
         <SummerFiProSection />
         <CryptoUtilities />
-        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+        <Audits
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          onAuditClick={handleAuditClick}
+        />
         <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />

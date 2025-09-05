@@ -10,6 +10,7 @@ import {
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  slugifyVault,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -43,6 +44,8 @@ type VaultCardProps = SDKVaultishType & {
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
   deviceType?: DeviceType
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
   merklRewards?: IArmadaVaultInfo['merklRewards'] | undefined
 }
 
@@ -67,6 +70,8 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     disabled,
     depositCap,
     deviceType,
+    onTooltipOpen,
+    tooltipName,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
@@ -127,6 +132,8 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
+            tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
+            onTooltipOpen={onTooltipOpen}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
@@ -137,9 +144,15 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 combinedApr={combinedApr}
                 apyUpdatedAt={apyUpdatedAt}
                 deviceType={deviceType}
+                tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}
+                onTooltipOpen={onTooltipOpen}
               />
             </Text>
-            <AdditionalBonusLabel externalTokenBonus={customFields?.bonus} />
+            <AdditionalBonusLabel
+              externalTokenBonus={customFields?.bonus}
+              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
+              onTooltipOpen={onTooltipOpen}
+            />
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>

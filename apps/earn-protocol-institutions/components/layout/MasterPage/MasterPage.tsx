@@ -71,7 +71,11 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
                   maxWidth: '380px',
                 }}
               >
-                <NewsletterWrapper inputBtnLabel="Subscribe" isEarnApp />
+                <NewsletterWrapper
+                  inputBtnLabel="Subscribe"
+                  isEarnApp
+                  handleNewsletterEvent={() => null}
+                />
               </div>
             </div>
           }
