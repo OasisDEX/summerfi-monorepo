@@ -95,6 +95,7 @@ export async function GET() {
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
     })(),
     getPaginatedRebalanceActivity({
       page: 1,
@@ -105,6 +106,7 @@ export async function GET() {
     getProtocolsApy(),
     unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
       revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
   ])
 

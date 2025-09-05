@@ -88,6 +88,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
     })(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(
@@ -104,6 +105,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getBlogPosts, [], cacheConfig)(),
     unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
       revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
   ])
 

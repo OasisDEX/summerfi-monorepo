@@ -25,9 +25,11 @@ const EarnAllVaultsPage = async () => {
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
     })(),
     unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
       revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
