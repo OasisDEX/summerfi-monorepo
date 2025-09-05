@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "prebuild": "pnpm generate-module-types",
+    "prebuild-rays": "pnpm generate-module-types",
     "dev": "dotenv -e ../../.env -e ../../.env.local -- concurrently \"next dev -p 3001 --turbopack\" \"pnpm:generate-module-types-watch\"",
-    "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
+    "build:apps-rays": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3001",
     "lint": "eslint .",
     "generate-module-types": "tcm -s -p './+(components|features)/**/*.module.css'",
