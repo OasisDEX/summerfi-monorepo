@@ -2,6 +2,7 @@ import {
   isTestDeployment,
   type IArmadaManagerMerklRewards,
   type IArmadaManagerUtils,
+  type MerklApiRewardBreakdown,
   type MerklApiUsersResponse,
   type MerklReward,
 } from '@summerfi/armada-protocol-common'
@@ -15,6 +16,7 @@ import {
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
   TransactionType,
   Address,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
@@ -25,6 +27,8 @@ import { getMerklDistributorContractAddress } from './configs/merkl-distributor-
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
 import type { IDeploymentProvider } from '../..'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import { getVaultByMerklCampaignId } from './configs/vaultByMerklCampaignId'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManagerMerklRewards
@@ -125,7 +129,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
-            breakdowns: reward.breakdowns,
+            breakdowns: this._parseBreakdowns(reward.breakdowns),
           })
         }
 
@@ -161,6 +165,33 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         `Failed to fetch Merkl rewards: ${error instanceof Error ? error.message : String(error)}`,
       )
     }
+  }
+
+  private _parseBreakdowns(
+    breakdowns: MerklApiRewardBreakdown[],
+  ): Record<ChainId, Record<AddressValue, { total: string; claimable: string; claimed: string }>> {
+    const resultByChain: Record<
+      ChainId,
+      Record<AddressValue, { total: string; claimable: string; claimed: string }>
+    > = {
+      '1': {},
+      '146': {},
+      '8453': {},
+      '42161': {},
+    }
+    for (const breakdown of breakdowns) {
+      const vault = getVaultByMerklCampaignId(breakdown.campaignId)
+      if (!vault) {
+        continue
+      }
+      const { chainId, fleetAddress } = vault
+      resultByChain[chainId][fleetAddress] = {
+        total: breakdown.amount,
+        claimable: BigNumber(breakdown.amount).minus(breakdown.claimed).toString(),
+        claimed: breakdown.claimed,
+      }
+    }
+    return resultByChain
   }
 
   async getUserMerklClaimDirectTx(

@@ -2,6 +2,8 @@
  * Response type from Merkl API for users rewards
  */
 
+import type { ChainId, AddressValue } from '@summerfi/sdk-common'
+
 export type MerklApiUsersResponse = MerklApiUser[]
 
 export type MerklApiUser = {
@@ -146,5 +148,15 @@ export interface MerklReward {
   /** The merkle proofs for claiming */
   proofs: string[]
   /** Breakdown of the reward into components */
-  breakdowns: MerklApiRewardBreakdown[]
+  breakdowns: Record<
+    ChainId,
+    Record<
+      AddressValue,
+      {
+        total: string
+        claimable: string
+        claimed: string
+      }
+    >
+  >
 }

@@ -6,25 +6,39 @@ import {
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { mapGraphDataToArmadaPosition } from './mapGraphDataToArmadaPosition'
+import type { IArmadaManagerMerklRewards } from '@summerfi/armada-protocol-common'
 
-export const parseGetUserPositionQuery = ({
+export const parseGetUserPositionQuery = async ({
   user,
   query,
   summerToken,
   getTokenBySymbol,
+  getUserMerklRewards,
 }: {
   user: IUser
   query: GetUserPositionQuery
   summerToken: IToken
   getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
-}): IArmadaPosition | undefined => {
+  getUserMerklRewards: (
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
+  ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
+}): Promise<IArmadaPosition | undefined> => {
   const chainInfo = user.chainInfo
-  // TODO: pass a callback to fetch merkl rewards (rewards manager => getUserMerklRewards)
-  // in the response parse campaigns breakdowns data
-  // then map each campaign data to their respective vault
+
+  const merklSummerRewards = await getUserMerklRewards({
+    address: user.wallet.address.value,
+    chainIds: [user.chainInfo.chainId],
+    rewardsTokensAddresses: [summerToken.address.value],
+  })
 
   const armadaPositions = query.positions.map(
-    mapGraphDataToArmadaPosition({ user, chainInfo, summerToken, getTokenBySymbol }),
+    mapGraphDataToArmadaPosition({
+      user,
+      chainInfo,
+      summerToken,
+      getTokenBySymbol,
+      merklSummerRewards,
+    }),
   )
   return armadaPositions[0] ? armadaPositions[0] : undefined
 }

@@ -1,3 +1,4 @@
+import type { MerklReward } from '@summerfi/armada-protocol-common'
 import {
   type IUser,
   SDKError,
@@ -11,6 +12,8 @@ import {
   ArmadaPositionId,
   ArmadaVault,
   ArmadaVaultId,
+  type ChainId,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { BigNumber } from 'bignumber.js'
@@ -21,11 +24,15 @@ export const mapGraphDataToArmadaPosition =
     chainInfo,
     summerToken,
     getTokenBySymbol,
+    merklSummerRewards,
   }: {
     user: IUser
     chainInfo: IChainInfo
     summerToken: IToken
     getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
+    merklSummerRewards: {
+      perChain: Partial<Record<ChainId, MerklReward[]>>
+    }
   }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
     if (position.vault.outputToken == null) {
@@ -42,13 +49,30 @@ export const mapGraphDataToArmadaPosition =
 
     const sharesBalance = BigNumber(position.outputTokenBalance.toString())
 
+    const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
+      (acc, reward) => {
+        const positionRewards = reward.breakdowns[chainInfo.chainId][position.id as AddressValue]
+        if (positionRewards == null) {
+          return acc
+        }
+        return {
+          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || 0n),
+          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || 0n),
+        }
+      },
+      { claimableSummerToken: 0n, claimedSummerToken: 0n },
+    )
     const claimedSummerToken = TokenAmount.createFrom({
-      amount: position.claimedSummerTokenNormalized || '0',
+      amount: BigNumber(position.claimedSummerTokenNormalized || '0')
+        .plus(merklSummerRewardsForPosition?.claimedSummerToken.toString() || '0')
+        .toString(),
       token: summerToken,
     })
 
     const claimableSummerToken = TokenAmount.createFrom({
-      amount: position.claimableSummerTokenNormalized || '0',
+      amount: BigNumber(position.claimableSummerTokenNormalized || '0')
+        .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
+        .toString(),
       token: summerToken,
     })
 
@@ -64,6 +88,15 @@ export const mapGraphDataToArmadaPosition =
           type: SDKErrorType.ArmadaError,
         })
       }
+
+      // for summer token rewards override with the calculated values above
+      if (reward.rewardToken.symbol === summerToken.symbol) {
+        return {
+          claimed: claimedSummerToken,
+          claimable: claimableSummerToken,
+        }
+      }
+
       return {
         claimed: TokenAmount.createFrom({
           amount: reward.claimedNormalized || '0',
