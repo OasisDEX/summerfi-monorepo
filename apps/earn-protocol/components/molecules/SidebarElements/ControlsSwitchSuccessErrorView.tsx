@@ -7,7 +7,6 @@ import {
   Risk,
   SkeletonLine,
   Text,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type RiskType,
@@ -126,7 +125,6 @@ export const ControlsSwitchSuccessErrorView = ({
   transactions,
   chainId,
 }: ControlsSwitchSuccessErrorViewProps) => {
-  const { userWalletAddress } = useUserWallet()
   const [locallyLoadingNextPosition, setLocallyLoadingNextPosition] = useState(false)
   const [throttledLocallyLoading, setThrottledLocallyLoading] = useState(false)
   const throttleTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
