@@ -68,15 +68,15 @@ export const mapGraphDataToArmadaPosition =
       },
       { claimableSummerToken: 0n, claimedSummerToken: 0n },
     )
-    const claimedSummerToken = TokenAmount.createFrom({
-      amount: BigNumber(position.claimedSummerTokenNormalized || '0')
+    const claimedSummerToken = TokenAmount.createFromBaseUnit({
+      amount: BigNumber(position.claimedSummerToken || '0')
         .plus(merklSummerRewardsForPosition?.claimedSummerToken.toString() || '0')
         .toString(),
       token: summerToken,
     })
 
-    const claimableSummerToken = TokenAmount.createFrom({
-      amount: BigNumber(position.claimableSummerTokenNormalized || '0')
+    const claimableSummerToken = TokenAmount.createFromBaseUnit({
+      amount: BigNumber(position.claimableSummerToken || '0')
         .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
         .toString(),
       token: summerToken,
