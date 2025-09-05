@@ -49,7 +49,6 @@ interface PortfolioPageViewProps {
   positions: PositionWithVault[]
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
-  totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
@@ -68,7 +67,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   positions,
   rebalanceActivity,
   latestActivity,
-  totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
@@ -162,14 +160,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.REWARDS,
       label: '$SUMR Rewards',
-      content: (
-        <PortfolioRewards
-          rewardsData={rewardsData}
-          totalRays={totalRays}
-          state={state}
-          dispatch={dispatch}
-        />
-      ),
+      content: <PortfolioRewards rewardsData={rewardsData} state={state} dispatch={dispatch} />,
     },
     ...(beachClubEnabled
       ? [

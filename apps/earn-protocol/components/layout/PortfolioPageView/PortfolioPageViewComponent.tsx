@@ -28,7 +28,6 @@ interface PortfolioPageViewComponentProps {
   positions: PositionWithVault[]
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
-  totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
@@ -47,7 +46,6 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   positions,
   rebalanceActivity,
   latestActivity,
-  totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
@@ -65,7 +63,6 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         vaultsList={vaultsList}
         rebalanceActivity={rebalanceActivity}
         latestActivity={latestActivity}
-        totalRays={totalRays}
         positionsHistoricalChartMap={positionsHistoricalChartMap}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         migratablePositions={migratablePositions}

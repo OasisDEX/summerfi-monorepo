@@ -19,7 +19,7 @@ import {
   formatShorthandNumber,
 } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useParams, usePathname } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
@@ -28,7 +28,7 @@ import {
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRewardsCards.module.css'
 
@@ -37,10 +37,11 @@ interface SumrAvailableToClaimProps {
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
-  const pathname = usePathname()
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
   const rawSumrUSD = rawSumr * assumedSumrPriceRaw
@@ -52,16 +53,12 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   const resolvedWalletAddress = walletAddress as string
 
   const handleClaimEventButton = () => {
-    EarnProtocolEvents.buttonClicked({
-      buttonName: 'ep-sumr-claim-portfolio-button',
-      page: pathname,
-      walletAddress: userWalletAddress,
-    })
+    buttonClickEventHandler(`portfolio-sumr-rewards-claim`)
   }
 
   const handleConnect = () => {
+    buttonClickEventHandler(`portfolio-sumr-rewards-claim-connect`)
     if (!userWalletAddress) {
-      handleClaimEventButton()
       openAuthModal()
     }
   }
@@ -77,6 +74,8 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
               </Text>
             }
             tooltipWrapperStyles={{ minWidth: '240px' }}
+            tooltipName="portfolio-sumr-rewards-total-available-to-claim"
+            onTooltipOpen={tooltipEventHandler}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <Icon iconName="info" variant="s" />
@@ -123,6 +122,7 @@ interface StakedAndDelegatedSumrProps {
 }
 
 const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
   const { userWalletAddress } = useUserWallet()
@@ -136,16 +136,11 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
 
   const handleStakeAndDelegateEventButton = () => {
-    trackButtonClick({
-      id: 'SumrStakeAndDelegatePortfolioButton',
-      page: `/portfolio/${resolvedWalletAddress}`,
-      userAddress: userWalletAddress,
-      totalSumrStaked: value,
-    })
+    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
   }
 
   const handleConnect = () => {
-    handleStakeAndDelegateEventButton()
+    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
     if (!userWalletAddress) {
       openAuthModal()
     }
@@ -245,6 +240,7 @@ interface YourDelegateProps {
 }
 
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
   const { userWalletAddress } = useUserWallet()
@@ -287,16 +283,11 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
     )
 
   const handleChangeDelegateEventButton = () => {
-    trackButtonClick({
-      id: 'SumrChangeDelegatePortfolioButton',
-      page: `/portfolio/${resolvedWalletAddress}`,
-      userAddress: userWalletAddress,
-      totalSumrStaked: rewardsData.sumrStakeDelegate.stakedAmount,
-    })
+    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate`)
   }
 
   const handleConnect = () => {
-    handleChangeDelegateEventButton()
+    buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate-connect`)
     if (!userWalletAddress) {
       openAuthModal()
     }
@@ -339,55 +330,18 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   )
 }
 
-interface YourRaysProps {
-  totalRays: number
-}
-
-const YourRays: FC<YourRaysProps> = ({ totalRays }) => {
-  const _totalRays = formatCryptoBalance(totalRays)
-
-  return (
-    <DataModule
-      dataBlock={{
-        title: 'Your season 2 $RAYS',
-        value: _totalRays,
-        titleSize: 'medium',
-        valueSize: 'large',
-      }}
-      actionable={
-        <Link href="https://pro.summer.fi/rays/leaderboard" target="_blank">
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Rays Leaderboard
-          </Text>
-        </Link>
-      }
-    />
-  )
-}
-
 interface PortfolioRewardsCardsProps {
   rewardsData: ClaimDelegateExternalData
-  totalRays: number
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
-  rewardsData,
-  totalRays,
-  state,
-}) => {
-  const hasRays = totalRays > 0
-
+export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({ rewardsData, state }) => {
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
-      {!hasRays ? (
-        <div className={classNames.cardWrapper}>
-          <YourTotalSumr rewardsData={rewardsData} />
-        </div>
-      ) : (
+      <div className={classNames.cardWrapper}>
         <YourTotalSumr rewardsData={rewardsData} />
-      )}
+      </div>
       <div className={classNames.cardWrapper}>
         <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
@@ -397,11 +351,6 @@ export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
       <div className={classNames.cardWrapper}>
         <YourDelegate rewardsData={rewardsData} state={state} />
       </div>
-      {hasRays && (
-        <div className={classNames.cardWrapper}>
-          <YourRays totalRays={totalRays} />
-        </div>
-      )}
     </div>
   )
 }

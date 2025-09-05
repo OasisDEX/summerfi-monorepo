@@ -1,6 +1,6 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
-import { useAuthModal } from '@account-kit/react'
+import { useAuthModal, useUser } from '@account-kit/react'
 import {
   Button,
   Card,
