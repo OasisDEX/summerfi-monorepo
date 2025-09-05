@@ -2,8 +2,10 @@ import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
+  ERROR_TOAST_CONFIG,
   InputWithDropdown,
   Sidebar,
+  SUCCESS_TOAST_CONFIG,
   SUMR_CAP,
   useAmount,
   useLocalConfig,
@@ -33,7 +35,6 @@ import { TransactionDetails } from '@/features/bridge/components/TransactionDeta
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useBridgeTransaction } from '@/features/bridge/hooks/use-bridge-transaction'
 import { type BridgeReducerAction, type BridgeState } from '@/features/bridge/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { sdkNetworkToAAChain } from '@/helpers/sdk-network-to-aa-chain'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'

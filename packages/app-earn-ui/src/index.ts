@@ -183,6 +183,7 @@ export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
 export { useClientChainId } from './hooks/use-client-chain-id'
 export { useUserWallet } from './hooks/use-user-wallet'
+export { useTokenTransfer } from './hooks/use-token-transfer'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'
@@ -274,3 +275,5 @@ export { VaultExposure } from './features/vault-exposure/components/VaultExposur
 export { VaultExposureTable } from './features/vault-exposure/components/VaultExposureTable/VaultExposureTable.tsx'
 export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'
 export { vaultExposureFilter } from './features/vault-exposure/table/filters/filters'
+
+export { SUCCESS_TOAST_CONFIG, ERROR_TOAST_CONFIG } from './features/toastify/config'

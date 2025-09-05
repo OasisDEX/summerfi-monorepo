@@ -2,9 +2,11 @@ import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
+  ERROR_TOAST_CONFIG,
   MobileDrawer,
   Modal,
   SDKChainIdToAAChainMap,
+  SUCCESS_TOAST_CONFIG,
   SUMR_CAP,
   useClientChainId,
   useLocalConfig,
@@ -32,7 +34,6 @@ import {
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 

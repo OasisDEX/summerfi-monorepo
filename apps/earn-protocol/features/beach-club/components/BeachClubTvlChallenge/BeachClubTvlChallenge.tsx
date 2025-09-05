@@ -4,10 +4,12 @@ import { useChain } from '@account-kit/react'
 import {
   BeachClubRewardSimulation,
   Button,
+  ERROR_TOAST_CONFIG,
   Icon,
   MobileDrawer,
   Modal,
   SDKChainIdToAAChainMap,
+  SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useClientChainId,
