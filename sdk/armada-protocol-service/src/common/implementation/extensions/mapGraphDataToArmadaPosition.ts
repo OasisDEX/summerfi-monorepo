@@ -62,12 +62,9 @@ export const mapGraphDataToArmadaPosition =
           return acc
         }
         // Use BigNumber to safely parse decimal strings before converting to BigInt
-        const claimableBN = new BigNumber(positionRewards.claimable || '0')
-        const claimedBN = new BigNumber(positionRewards.claimed || '0')
         return {
-          claimableSummerToken:
-            acc.claimableSummerToken + BigInt(claimableBN.integerValue().toString()),
-          claimedSummerToken: acc.claimedSummerToken + BigInt(claimedBN.integerValue().toString()),
+          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || '0'),
+          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || '0'),
         }
       },
       { claimableSummerToken: 0n, claimedSummerToken: 0n },
