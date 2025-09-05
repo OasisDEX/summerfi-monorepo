@@ -56,7 +56,10 @@ export const PortfolioRewardsCountdown = () => {
         />
       </div>
       <Card className={classNames.countdownWrapper}>
-        <SumrTransferabilityCounter wrapperStyles={{ marginTop: 0 }} />
+        <SumrTransferabilityCounter
+          wrapperStyles={{ marginTop: 0 }}
+          counterId="portfolio-sumr-rewards"
+        />
       </Card>
     </Card>
   )
