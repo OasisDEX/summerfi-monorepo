@@ -31,7 +31,7 @@ export const parseGetUserPositionQuery = async ({
     rewardsTokensAddresses: [summerToken.address.value],
   })
 
-  const armadaPositions = query.positions.map(
+  const armadaPositions = (query.positions ?? []).map(
     mapGraphDataToArmadaPosition({
       user,
       chainInfo,
