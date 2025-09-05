@@ -156,7 +156,7 @@ export const PortfolioOverview = ({
 
   const handleShowEmptyPositions = () => {
     setShowEmptyPositions((prev) => {
-      handleButtonClick(`portfolio-overview-show-empty-positions-${!prev}`)
+      buttonClickEventHandler(`portfolio-overview-portfolio-overview-show-empty-positions-${!prev}`)
 
       return !prev
     })
@@ -292,6 +292,7 @@ export const PortfolioOverview = ({
             vaultsList={vaultsList}
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
+            carouselId="portfolio-overview-vaults-carousel"
           />
         </Card>
         {migrationsEnabled && (
