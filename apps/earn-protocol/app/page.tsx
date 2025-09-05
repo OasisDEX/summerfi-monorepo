@@ -3,7 +3,7 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   formatCryptoBalance,
   parseServerResponseToClient,
@@ -11,7 +11,6 @@ import {
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
-import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
@@ -22,10 +21,15 @@ import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
-  const [{ vaults }, configRaw] = await Promise.all([
+  const [{ vaults }, configRaw, vaultsInfoRaw] = await Promise.all([
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
+    })(),
+    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -35,31 +39,22 @@ const EarnAllVaultsPage = async () => {
     vaults,
   })
 
-  const [vaultsApyByNetworkMap, vaultsInfo] = await Promise.all([
+  const [vaultsApyByNetworkMap] = await Promise.all([
     getVaultsApy({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    Promise.all(
-      vaultsWithConfig.map(({ id, protocol: { network } }) =>
-        unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-          revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-        })({ network: supportedSDKNetwork(network), vaultAddress: id }),
-      ),
-    ),
   ])
 
-  const vaultsInfoParsed = parseServerResponseToClient(
-    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[],
-  )
+  const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
 
   return (
     <VaultListViewComponent
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsList={vaultsWithConfig}
-      vaultsInfo={vaultsInfoParsed}
+      vaultsInfo={vaultsInfo}
     />
   )
 }
