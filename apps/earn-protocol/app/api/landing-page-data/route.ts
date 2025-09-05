@@ -1,7 +1,6 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
-  type IArmadaVaultInfo,
   type LandingPageData,
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
@@ -84,20 +83,30 @@ const getProtocolsApy = async (): Promise<{
 }
 
 export async function GET() {
-  const [{ vaults }, configRaw, rebalanceActivity, proAppStats, protocolTvls, protocolApys] =
-    await Promise.all([
-      getVaultsList(),
-      unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-        revalidate: REVALIDATION_TIMES.CONFIG,
-      })(),
-      getPaginatedRebalanceActivity({
-        page: 1,
-        limit: 1,
-      }),
-      getProAppStats(),
-      getProtocolsTvl(),
-      getProtocolsApy(),
-    ])
+  const [
+    { vaults },
+    configRaw,
+    rebalanceActivity,
+    proAppStats,
+    protocolTvls,
+    protocolApys,
+    vaultsInfoRaw,
+  ] = await Promise.all([
+    getVaultsList(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+    })(),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 1,
+    }),
+    getProAppStats(),
+    getProtocolsTvl(),
+    getProtocolsApy(),
+    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+    })(),
+  ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -113,17 +122,7 @@ export async function GET() {
     })),
   })
 
-  const vaultsInfo = await Promise.all(
-    vaultsWithConfig.map(({ id, protocol: { network } }) =>
-      unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      })({ network: supportedSDKNetwork(network), vaultAddress: id }),
-    ),
-  )
-
-  const vaultsInfoParsed = parseServerResponseToClient(
-    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[] | undefined,
-  )
+  const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
 
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
 
@@ -135,6 +134,6 @@ export async function GET() {
     protocolApys,
     totalRebalanceItemsPerStrategyId,
     proAppStats,
-    vaultsInfo: vaultsInfoParsed,
+    vaultsInfo,
   } as LandingPageData)
 }

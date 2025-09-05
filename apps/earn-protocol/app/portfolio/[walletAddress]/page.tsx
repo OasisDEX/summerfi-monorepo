@@ -4,11 +4,10 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultInfo, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
-  type IArmadaVaultInfo,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import {
@@ -77,6 +76,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -102,6 +102,9 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
     unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
     unstableCache(getBlogPosts, [], cacheConfig)(),
+    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+    })(),
   ])
 
   return {
@@ -119,6 +122,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   }
 }
 
@@ -158,6 +162,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -172,17 +177,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions: userPositionsJsonSafe,
   })
 
-  const vaultsInfo = await Promise.all(
-    vaultsWithConfig.map(({ id, protocol: { network } }) =>
-      unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      })({ network: supportedSDKNetwork(network), vaultAddress: id }),
-    ),
-  )
-
-  const vaultsInfoParsed = parseServerResponseToClient(
-    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[],
-  )
+  const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
@@ -290,19 +285,10 @@ export async function generateMetadata({
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
-  const { userPositions, vaultsList, systemConfig } = await portfolioCallsHandler(walletAddress)
+  const { userPositions, vaultsList, systemConfig, vaultsInfo } =
+    await portfolioCallsHandler(walletAddress)
 
-  const vaultsInfo = await Promise.all(
-    vaultsList.vaults.map(({ id, protocol: { network } }) =>
-      unstableCache(getVaultInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-        revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      })({ network: supportedSDKNetwork(network), vaultAddress: id }),
-    ),
-  )
-
-  const vaultsInfoParsed = parseServerResponseToClient(
-    vaultsInfo.filter(Boolean) as IArmadaVaultInfo[] | undefined,
-  )
+  const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
