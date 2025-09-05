@@ -749,7 +749,7 @@ export const VaultManageViewComponent = ({
         position={position}
         onRefresh={revalidatePositionData}
         viewWalletAddress={viewWalletAddress}
-        connectedWalletAddress={user?.address}
+        connectedWalletAddress={userWalletAddress}
         displaySimulationGraph={displaySimulationGraph}
         simulationGraph={
           !forecastDisabled && (
