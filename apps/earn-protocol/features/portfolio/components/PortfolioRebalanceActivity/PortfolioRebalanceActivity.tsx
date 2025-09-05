@@ -17,6 +17,7 @@ import {
   formatWithSeparators,
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
+  slugify,
 } from '@summerfi/app-utils'
 
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
@@ -25,6 +26,7 @@ import { type PositionWithVault } from '@/features/portfolio/helpers/merge-posit
 import { useRebalanceActivityInfiniteQuery } from '@/features/rebalance-activity/api/get-rebalance-activity'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
+import { useHandleDropdownChangeEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRebalanceActivity.module.css'
 
@@ -43,6 +45,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const { totalItems } = rebalanceActivity.pagination
 
@@ -100,6 +104,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       options: strategiesOptions,
       label: 'Strategies',
       onChange: (strategies: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-rebalance-activity-strategy-filter',
+          value: strategies.map(slugify).join(','),
+        })
         setStrategyFilter(strategies)
       },
       initialValues: strategyFilter,
@@ -108,6 +116,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       options: tokensOptions,
       label: 'Tokens',
       onChange: (tokens: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-your-rebalance-token-filter',
+          value: tokens.map(slugify).join(','),
+        })
         setTokenFilter(tokens)
       },
       initialValues: tokenFilter,
@@ -116,6 +128,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       options: protocolsOptions,
       label: 'Protocols',
       onChange: (protocols: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-your-rebalance-network-filter',
+          value: protocols.map(slugify).join(','),
+        })
         setProtocolFilter(protocols)
       },
       initialValues: protocolFilter,
@@ -139,6 +155,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           <Tooltip
             tooltip="Time user avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates."
             tooltipWrapperStyles={{ minWidth: '230px' }}
+            onTooltipOpen={tooltipEventHandler}
+            tooltipName="portfolio-rebalance-activity-user-saved-time"
           >
             <Icon iconName="info" size={18} />
           </Tooltip>
@@ -153,6 +171,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           <Tooltip
             tooltip="Gas fees user sidestep when the keeper handles trades, using typical mainnet-dollar and L2-cent costs for each transaction."
             tooltipWrapperStyles={{ minWidth: '230px' }}
+            onTooltipOpen={tooltipEventHandler}
+            tooltipName="portfolio-rebalance-activity-gas-cost-savings"
           >
             <Icon iconName="info" size={18} />
           </Tooltip>
