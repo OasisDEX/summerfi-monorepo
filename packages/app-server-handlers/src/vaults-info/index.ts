@@ -8,15 +8,15 @@ import { backendSDK } from '@/sdk/sdk-backend-client'
  * Fetches the information of all Armada vaults for all chains.
  *
  * This function retrieves the information of all Armada vaults for all chains, then making a request to the backend SDK.
- * It returns the vaults information or undefined if the request fails.
- * @returns {Promise<{ list: IArmadaVaultInfo[] } | undefined>} The vaults information or undefined if the request fails
+ * It returns the vaults information.
+ * @returns {Promise<{ list: IArmadaVaultInfo[] }>} The vaults information
  *
  * @example
  * ```typescript
  * const vaultsInfo = await getVaultsInfo()
  * ```
  */
-export const getVaultsInfo = async (): Promise<IArmadaVaultInfo[] | undefined> => {
+export const getVaultsInfo = async (): Promise<IArmadaVaultInfo[]> => {
   try {
     const chainIds = Object.values(SupportedNetworkIds).filter(
       (id): id is number => typeof id === 'number',
@@ -34,7 +34,7 @@ export const getVaultsInfo = async (): Promise<IArmadaVaultInfo[] | undefined> =
   } catch (error) {
     serverOnlyErrorHandler('getVaultsInfo', error as string)
 
-    return undefined
+    return []
   }
 }
 
@@ -42,9 +42,9 @@ export const getVaultsInfo = async (): Promise<IArmadaVaultInfo[] | undefined> =
  * Fetches the information of all Armada vaults for a given network.
  *
  * This function retrieves the information of all Armada vaults for a given network, then making a request to the backend SDK.
- * It returns the vaults information or undefined if the request fails.
+ * It returns the vaults information.
  * @param {SupportedSDKNetworks} network - The network of the vaults
- * @returns {Promise<IArmadaVaultInfo[] | undefined>} The vaults information or undefined if the request fails
+ * @returns {Promise<IArmadaVaultInfo[]>} The vaults information
  *
  * @example
  * ```typescript
@@ -53,7 +53,7 @@ export const getVaultsInfo = async (): Promise<IArmadaVaultInfo[] | undefined> =
  */
 export const getVaultsInfoByNetwork = async (
   network: SupportedSDKNetworks,
-): Promise<IArmadaVaultInfo[] | undefined> => {
+): Promise<IArmadaVaultInfo[]> => {
   try {
     const chainId = subgraphNetworkToId(network)
     const chainInfo = getChainInfoByChainId(chainId)
@@ -66,6 +66,6 @@ export const getVaultsInfoByNetwork = async (
   } catch (error) {
     serverOnlyErrorHandler('getVaulttInfoByNetwork', error as string)
 
-    return undefined
+    return []
   }
 }
