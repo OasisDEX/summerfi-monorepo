@@ -15,7 +15,9 @@ import assert from 'assert'
 jest.setTimeout(300000)
 const simulateOnly = true
 
-const chainId = ChainIds.Base
+const chainId = ChainIds.Mainnet
+const rpcUrl = process.env.E2E_SDK_FORK_URL_MAINNET
+
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
 const usdcFleet = Address.createFromEthereum({
   value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
@@ -26,10 +28,12 @@ const eurcFleet = Address.createFromEthereum({
 const selfManagedFleet = Address.createFromEthereum({
   value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
 })
-const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+const mainnetFleet = Address.createFromEthereum({
+  value: '0x17ee2d03e88b55e762c66c76ec99c3a28a54ad8d',
+})
 
 describe('Armada Protocol - User', () => {
-  const fleetAddress = ethFleet
+  const fleetAddress = mainnetFleet
 
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
@@ -59,17 +63,30 @@ describe('Armada Protocol - User', () => {
     })
     console.log('User positions:')
     positions.forEach((position) => {
-      console.log(`Position ${position.id.id}\n - amount: ${position.amount.toString()}`)
+      console.log(
+        JSON.stringify(
+          {
+            id: position.id.id,
+            amount: position.amount.toString(),
+            deposits: position.deposits.length,
+            withdrawals: position.withdrawals.length,
+            rewards: position.rewards.map((reward) => ({
+              claimed: reward.claimed.toString(),
+              claimable: reward.claimable.toString(),
+            })),
+            claimed: position.claimedSummerToken.toString(),
+            claimable: position.claimableSummerToken.toString(),
+          },
+          null,
+          2,
+        ),
+      )
     })
   })
 
   it.skip(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
-    const _user = User.createFromEthereum(
-      ChainIds.Base,
-      '0x4eb7f19d6efcace59eaed70220da5002709f9b71',
-    )
     const position = await sdk.armada.users.getUserPosition({
-      user: _user,
+      user: user,
       fleetAddress,
     })
     assert(position != null, 'User position not found')
@@ -102,18 +119,8 @@ describe('Armada Protocol - User', () => {
     console.log('User Merkle rewards:', JSON.stringify(rewards, null, 2))
   })
 
-  it.only(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
-    // const _user = user
-    const _user = User.createFromEthereum(
-      ChainIds.ArbitrumOne,
-      '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
-    )
-    const vaultId = ArmadaVaultId.createFrom({
-      chainInfo: getChainInfoByChainId(ChainIds.ArbitrumOne),
-      fleetAddress: Address.createFromEthereum({
-        value: '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58',
-      }),
-    })
+  it.skip(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+    const _user = user
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user: _user,
@@ -144,13 +151,13 @@ describe('Armada Protocol - User', () => {
     })
 
     console.log('Balances before unstaking:')
-    console.log(' - Wallet fleet balance:', fleetAmountBefore.assets.toString())
-    console.log(' - Staked fleet balance:', stakedAmountBefore.assets.toString())
+    console.log(' - Wallet fleet balance:', fleetAmountBefore.shares.toString())
+    console.log(' - Staked fleet balance:', stakedAmountBefore.shares.toString())
 
     // Assert that there are staked tokens to unstake
     assert(
-      stakedAmountBefore.assets.toSolidityValue() > 0n,
-      `No staked tokens found. Staked balance: ${stakedAmountBefore.assets.toString()}`,
+      stakedAmountBefore.shares.toSolidityValue() > 0n,
+      `No staked tokens found. Staked balance: ${stakedAmountBefore.shares.toString()}`,
     )
 
     console.log(`Unstaking all fleet tokens from vault at ${fleetAddress.value}`)
@@ -190,33 +197,33 @@ describe('Armada Protocol - User', () => {
       })
 
       console.log('Balances after unstaking:')
-      console.log(' - Wallet fleet balance:', fleetAmountAfter.assets.toString())
-      console.log(' - Staked fleet balance:', stakedAmountAfter.assets.toString())
+      console.log(' - Wallet fleet balance:', fleetAmountAfter.shares.toString())
+      console.log(' - Staked fleet balance:', stakedAmountAfter.shares.toString())
 
       console.log('Balance changes:')
       console.log(
         ' - Wallet change:',
-        fleetAmountAfter.assets.subtract(fleetAmountBefore.assets).toString(),
+        fleetAmountAfter.shares.subtract(fleetAmountBefore.shares).toString(),
       )
       console.log(
         ' - Staked change:',
-        stakedAmountAfter.assets.subtract(stakedAmountBefore.assets).toString(),
+        stakedAmountAfter.shares.subtract(stakedAmountBefore.shares).toString(),
       )
 
       // Verify that staked balance decreased and wallet balance increased
       assert(
-        stakedAmountAfter.assets.toSolidityValue() < stakedAmountBefore.assets.toSolidityValue(),
+        stakedAmountAfter.shares.toSolidityValue() < stakedAmountBefore.shares.toSolidityValue(),
         'Staked balance should have decreased after unstaking',
       )
       assert(
-        fleetAmountAfter.assets.toSolidityValue() > fleetAmountBefore.assets.toSolidityValue(),
+        fleetAmountAfter.shares.toSolidityValue() > fleetAmountBefore.shares.toSolidityValue(),
         'Wallet balance should have increased after unstaking',
       )
 
       // Verify that all tokens were unstaked (staked balance should be 0 or very close to 0)
       assert(
-        stakedAmountAfter.assets.toSolidityValue() === 0n,
-        `All tokens should have been unstaked. Remaining staked balance: ${stakedAmountAfter.assets.toString()}`,
+        stakedAmountAfter.shares.toSolidityValue() === 0n,
+        `All tokens should have been unstaked. Remaining staked balance: ${stakedAmountAfter.shares.toString()}`,
       )
     }
   })
