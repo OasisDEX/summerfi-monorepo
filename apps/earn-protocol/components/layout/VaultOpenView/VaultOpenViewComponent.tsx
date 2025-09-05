@@ -513,6 +513,8 @@ export const VaultOpenViewComponent = ({
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}
           tooltip={sidebarFootnote.tooltip}
+          handleTooltipOpen={tooltipEventHandler}
+          tooltipName="vault-open"
         />
       </>
     ),

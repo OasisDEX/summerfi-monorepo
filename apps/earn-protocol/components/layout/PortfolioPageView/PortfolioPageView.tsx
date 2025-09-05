@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useEffect, useReducer } from 'react'
+import { type FC, useReducer } from 'react'
 import {
   getPositionValues,
   Icon,
@@ -13,7 +13,6 @@ import {
   type HistoryChartData,
   type SDKVaultishType,
 } from '@summerfi/app-types'
-import { usePathname } from 'next/navigation'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
@@ -37,7 +36,6 @@ import { PortfolioYourActivity } from '@/features/portfolio/components/Portfolio
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
@@ -101,11 +99,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const beachClubEnabled = !!features?.BeachClub
 
-  useEffect(() => {
-    handleButtonClick(`portfolio-tab-${activeTab}`)
-    // only on tab change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab])
+  const handleTabChange = (tab: { id: PortfolioTabs }) => {
+    handleButtonClick(`portfolio-tab-${tab.id}`)
+    updateTab(tab.id)
+  }
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
@@ -216,7 +213,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
-          handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
+          handleTabChange={handleTabChange}
           useAsControlled
         />
       </div>

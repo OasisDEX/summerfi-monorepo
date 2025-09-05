@@ -739,6 +739,8 @@ export const VaultManageViewComponent = ({
           title={sidebarFootnote.title}
           list={sidebarFootnote.list}
           tooltip={sidebarFootnote.tooltip}
+          handleTooltipOpen={tooltipEventHandler}
+          tooltipName="vault-manage"
         />
       </>
     ),

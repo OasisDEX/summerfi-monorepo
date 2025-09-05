@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   Button,
   Card,
@@ -20,6 +20,7 @@ import {
   type GetVaultsApyResponse,
   type HistoryChartData,
   type SDKVaultsListType,
+  type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import {
@@ -42,6 +43,7 @@ import { PortfolioSummerPro } from '@/features/portfolio/components/PortfolioSum
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
+import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import {
   allTimeframesAvailable,
   allTimeframesNotAvailable,
@@ -49,55 +51,6 @@ import {
 } from '@/hooks/use-timeframes'
 
 import portfolioOverviewStyles from './PortfolioOverview.module.css'
-
-const getDatablocks = ({
-  totalSummerPortfolioUSD,
-  overallSumr,
-  availableToMigrate,
-  walletAddress,
-  migrationsEnabled,
-}: {
-  totalSummerPortfolioUSD: number
-  overallSumr: number
-  availableToMigrate: number
-  walletAddress: string
-  migrationsEnabled: boolean
-}) => [
-  {
-    title: 'Total Summer.fi Portfolio',
-    value: `$${formatFiatBalance(totalSummerPortfolioUSD)}`,
-    gradient: 'var(--gradient-earn-protocol-light)',
-    titleColor: 'var(--earn-protocol-secondary-60)',
-  },
-  {
-    title: '$SUMR Token Rewards',
-    value: `${formatCryptoBalance(overallSumr)} $SUMR`,
-  },
-  ...(migrationsEnabled
-    ? [
-        {
-          title: 'Available to Migrate',
-          value: `$${formatFiatBalance(availableToMigrate)}`,
-          subValue: (
-            <Link href={`/migrate/user/${walletAddress}`}>
-              <WithArrow
-                as="p"
-                variant="p3semi"
-                style={{ color: 'var(--earn-protocol-primary-100)' }}
-              >
-                Migrate
-              </WithArrow>
-            </Link>
-          ),
-        },
-      ]
-    : [
-        {
-          title: 'Available to Migrate',
-          value: `Coming Soon`,
-        },
-      ]),
-]
 
 type PortfolioOverviewProps = {
   vaultsList: SDKVaultsListType
@@ -127,6 +80,9 @@ export const PortfolioOverview = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const [showEmptyPositions, setShowEmptyPositions] = useLocalStorage<boolean>(
     'showEmptyPositions',
@@ -165,6 +121,11 @@ export const PortfolioOverview = ({
       : undefined,
   })
 
+  const handleSetNextTimeframe = (nextTimeframe: string) => {
+    setTimeframe(nextTimeframe as TimeframesType)
+    buttonClickEventHandler(`portfolio-overview-positions-timeframe-set-${nextTimeframe}`)
+  }
+
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
 
@@ -186,16 +147,74 @@ export const PortfolioOverview = ({
     0,
   )
 
+  const handleButtonClick = useCallback(
+    (buttonName: string) => () => {
+      buttonClickEventHandler(`portfolio-overview-${buttonName}`)
+    },
+    [buttonClickEventHandler],
+  )
+
+  const handleShowEmptyPositions = () => {
+    setShowEmptyPositions((prev) => {
+      handleButtonClick(`portfolio-overview-show-empty-positions-${!prev}`)
+
+      return !prev
+    })
+  }
+
+  const dataBlocks = useMemo(() => {
+    return [
+      {
+        title: 'Total Summer.fi Portfolio',
+        value: `$${formatFiatBalance(totalSummerPortfolioUSD)}`,
+        gradient: 'var(--gradient-earn-protocol-light)',
+        titleColor: 'var(--earn-protocol-secondary-60)',
+      },
+      {
+        title: '$SUMR Token Rewards',
+        value: `${formatCryptoBalance(overallSumr)} $SUMR`,
+      },
+      ...(migrationsEnabled
+        ? [
+            {
+              title: 'Available to Migrate',
+              value: `$${formatFiatBalance(availableToMigrate)}`,
+              subValue: (
+                <Link
+                  href={`/migrate/user/${walletAddress}`}
+                  onClick={handleButtonClick('migrate')}
+                >
+                  <WithArrow
+                    as="p"
+                    variant="p3semi"
+                    style={{ color: 'var(--earn-protocol-primary-100)' }}
+                  >
+                    Migrate
+                  </WithArrow>
+                </Link>
+              ),
+            },
+          ]
+        : [
+            {
+              title: 'Available to Migrate',
+              value: `Coming Soon`,
+            },
+          ]),
+    ]
+  }, [
+    availableToMigrate,
+    handleButtonClick,
+    migrationsEnabled,
+    overallSumr,
+    totalSummerPortfolioUSD,
+    walletAddress,
+  ])
+
   return (
     <div>
       <div className={portfolioOverviewStyles.portfolioPositionsListWrapper}>
-        {getDatablocks({
-          totalSummerPortfolioUSD,
-          overallSumr,
-          availableToMigrate,
-          walletAddress,
-          migrationsEnabled,
-        }).map((item) => (
+        {dataBlocks.map((item) => (
           <Card
             key={item.title}
             style={{ flex: 1, background: item.gradient, minHeight: '142px' }}
@@ -219,11 +238,11 @@ export const PortfolioOverview = ({
               <ToggleButton
                 checked={showEmptyPositions}
                 title="Show empty positions"
-                onChange={() => setShowEmptyPositions(!showEmptyPositions)}
+                onChange={handleShowEmptyPositions}
               />
               <Timeframes
                 timeframes={hasPositions ? allTimeframesAvailable : allTimeframesNotAvailable}
-                setActiveTimeframe={setTimeframe}
+                setActiveTimeframe={handleSetNextTimeframe}
                 activeTimeframe={timeframe}
               />
             </div>
@@ -234,6 +253,8 @@ export const PortfolioOverview = ({
                 isMobile={isMobile || isTablet}
                 key={`Position_${position.position.id.id}_${position.vault.protocol.network}`}
                 portfolioPosition={position}
+                buttonClickEventHandler={buttonClickEventHandler}
+                tooltipEventHandler={tooltipEventHandler}
                 positionGraph={
                   <PositionHistoricalChart
                     chartData={positionsHistoricalChartMap[getUniqueVaultId(position.vault)]}
@@ -262,7 +283,7 @@ export const PortfolioOverview = ({
                 <br />
                 Earn more, save time, and reduce costs.
               </Text>
-              <Link href="/">
+              <Link href="/" onClick={handleButtonClick('portfolio-overview-view-strategies')}>
                 <Button variant="primaryMedium">View strategies</Button>
               </Link>
             </div>

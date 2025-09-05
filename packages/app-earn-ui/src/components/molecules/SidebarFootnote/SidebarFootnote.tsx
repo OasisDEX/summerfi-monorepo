@@ -12,11 +12,21 @@ interface SidebarFootnoteProps {
     style?: CSSProperties
     showAbove?: boolean
   }
+  tooltipName?: string
+  handleTooltipOpen?: (tooltipName: string) => void
 }
 
-export const SidebarFootnote: FC<SidebarFootnoteProps> = ({ title, list, tooltip }) => {
+export const SidebarFootnote: FC<SidebarFootnoteProps> = ({
+  title,
+  list,
+  tooltip,
+  handleTooltipOpen,
+  tooltipName,
+}) => {
   return (
     <Tooltip
+      tooltipName={`${tooltipName}-sidebar-footnote`}
+      onTooltipOpen={handleTooltipOpen}
       tooltip={
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <Text

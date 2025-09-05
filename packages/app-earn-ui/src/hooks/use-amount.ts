@@ -79,11 +79,11 @@ export const useAmount = ({
     if (initialAmount) {
       inputChangeHandler({
         inputName,
-        value: initialAmount,
+        value: `${initialAmount} ${selectedToken?.symbol}`,
       })
     }
     setAmountRaw(initialAmount)
-  }, [initialAmount, inputChangeHandler, inputName])
+  }, [initialAmount, inputChangeHandler, inputName, selectedToken])
 
   const amountDisplay = useMemo(() => {
     if (!amountRaw && amountRaw !== '0') {
@@ -153,7 +153,7 @@ export const useAmount = ({
     }
     inputChangeHandler({
       inputName,
-      value: value.trim(),
+      value: `${value.trim()} ${selectedToken.symbol}`,
     })
     setAmountRaw(value.trim())
   }
@@ -182,7 +182,7 @@ export const useAmount = ({
     manualSetAmount: (value: string | undefined) => {
       inputChangeHandler({
         inputName,
-        value: value?.trim() ?? '0',
+        value: `${value?.trim() ?? '0'} ${selectedToken?.symbol}`,
       })
       setAmountRaw(value)
     },
