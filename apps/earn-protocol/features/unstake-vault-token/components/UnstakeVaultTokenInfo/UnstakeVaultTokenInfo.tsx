@@ -19,6 +19,7 @@ interface UnstakeVaultTokenInfoProps {
   handleTx: () => Promise<void>
   balance: UnstakeVaultTokenBalance
   isOwner: boolean
+  isOnCorrectChain: boolean
 }
 
 export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
@@ -26,6 +27,7 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
   balance,
   handleTx,
   isOwner,
+  isOnCorrectChain,
 }) => {
   const resolvedAmount = balance.amount ? parseFloat(balance.amount) : 0
   const usdValue = state.vaultTokenPrice ? state.vaultTokenPrice * resolvedAmount : 0
@@ -52,7 +54,7 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
             className={classNames.actionButton}
             disabled={state.step === UnstakeVaultTokenStep.PENDING || !isOwner}
           >
-            {getUnstakeVaultTokenInfoButtonLabel({ state })}
+            {getUnstakeVaultTokenInfoButtonLabel({ state, isOnCorrectChain })}
           </Button>
         )}
         {state.step === UnstakeVaultTokenStep.INIT && (

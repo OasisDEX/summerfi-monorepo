@@ -1,3 +1,5 @@
+import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
+
 import {
   type UnstakeVaultTokenBalance,
   type UnstakeVaultTokenState,
@@ -14,7 +16,7 @@ export const getUnstakeVaultTokenInfoLabel = ({
   switch (state.step) {
     case UnstakeVaultTokenStep.INIT:
     case UnstakeVaultTokenStep.PENDING:
-      return `You’ll get ${balance.token?.symbol}`
+      return `You’ll get ${balance.token?.symbol ?? 'vault token'}`
     case UnstakeVaultTokenStep.COMPLETED:
       return 'You have'
     default:
@@ -24,9 +26,15 @@ export const getUnstakeVaultTokenInfoLabel = ({
 
 export const getUnstakeVaultTokenInfoButtonLabel = ({
   state,
+  isOnCorrectChain,
 }: {
   state: UnstakeVaultTokenState
+  isOnCorrectChain: boolean
 }) => {
+  if (!isOnCorrectChain && state.vaultChainId) {
+    return `Switch network to ${humanReadableChainToLabelMap[state.vaultChainId]}`
+  }
+
   switch (state.step) {
     case UnstakeVaultTokenStep.PENDING:
       return 'Withdrawing...'

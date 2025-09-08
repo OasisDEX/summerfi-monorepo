@@ -13,6 +13,7 @@ interface UnstakeVaultTokenFormProps {
   handleTx: () => Promise<void>
   balance: UnstakeVaultTokenBalance
   isOwner: boolean
+  isOnCorrectChain: boolean
 }
 
 export const UnstakeVaultTokenForm: FC<UnstakeVaultTokenFormProps> = ({
@@ -20,6 +21,7 @@ export const UnstakeVaultTokenForm: FC<UnstakeVaultTokenFormProps> = ({
   handleTx,
   balance,
   isOwner,
+  isOnCorrectChain,
 }) => {
   switch (state.step) {
     case UnstakeVaultTokenStep.INIT:
@@ -31,6 +33,7 @@ export const UnstakeVaultTokenForm: FC<UnstakeVaultTokenFormProps> = ({
           balance={balance}
           handleTx={handleTx}
           isOwner={isOwner}
+          isOnCorrectChain={isOnCorrectChain}
         />
       )
     case UnstakeVaultTokenStep.ERROR:

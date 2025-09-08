@@ -22,6 +22,7 @@ export const UnstakeVaultTokenError: FC<UnstakeVaultTokenErrorProps> = ({ handle
         <Link
           href={EXTERNAL_LINKS.DISCORD}
           target="_blank"
+          rel="noopener noreferrer"
           style={{ color: 'var(--earn-protocol-primary-100)' }}
         >
           Discord

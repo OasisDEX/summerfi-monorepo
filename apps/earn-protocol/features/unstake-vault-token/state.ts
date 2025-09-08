@@ -10,6 +10,7 @@ export const unstakeVaultTokenState: UnstakeVaultTokenState = {
   walletAddress: '0x0', // dummy address just for init,
   vaultToken: undefined,
   vaultTokenPrice: undefined,
+  vaultChainId: undefined,
 }
 
 export const unstakeVaultTokenReducer = (

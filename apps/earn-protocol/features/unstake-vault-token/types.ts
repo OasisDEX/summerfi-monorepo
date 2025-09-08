@@ -1,4 +1,9 @@
-import { type IToken, type TokenSymbolsList, type UiTransactionStatuses } from '@summerfi/app-types'
+import {
+  type IToken,
+  type SupportedNetworkIds,
+  type TokenSymbolsList,
+  type UiTransactionStatuses,
+} from '@summerfi/app-types'
 
 export enum UnstakeVaultTokenStep {
   INIT = 'init',
@@ -13,6 +18,7 @@ export type UnstakeVaultTokenState = {
   walletAddress: string
   vaultToken: TokenSymbolsList | undefined
   vaultTokenPrice: number | undefined
+  vaultChainId: SupportedNetworkIds | undefined
 }
 
 export type UnstakeVaultTokenReducerAction =

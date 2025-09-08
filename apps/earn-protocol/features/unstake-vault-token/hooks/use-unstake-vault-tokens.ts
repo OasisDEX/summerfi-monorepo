@@ -72,7 +72,7 @@ export const useUnstakeVaultTokens = ({
     isLoading: isLoadingBalance,
     isError: isErrorBalance,
   } = useQuery({
-    queryKey: ['unstake-vault-tokens-balance', fleetAddress],
+    queryKey: ['unstake-vault-tokens-balance', fleetAddress, walletAddress, network],
     queryFn: () =>
       getStakedBalance({
         user,

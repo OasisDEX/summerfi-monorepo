@@ -38,6 +38,7 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
     ...unstakeVaultTokenState,
     vaultToken: vault.inputToken.symbol as TokenSymbolsList,
     vaultTokenPrice: vault.inputTokenPriceUSD ? parseFloat(vault.inputTokenPriceUSD) : undefined,
+    vaultChainId: subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
     walletAddress,
   })
   const [isExpanded, setIsExpanded] = useState(false)
@@ -63,17 +64,21 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
 
   const isOwner = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
+  const isOnCorrectChain = chain.id === vaultChainId
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleUnstakeVaultTokens = useCallback(async () => {
-    if (chain.id !== vaultChainId) {
+    if (!isOnCorrectChain) {
       setChain({
         chain: SDKChainIdToAAChainMap[vaultChainId],
       })
+
+      return
     }
 
     dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.PENDING })
     await unstakeVaultTokensTransaction()
-  }, [dispatch, unstakeVaultTokensTransaction, chain, setChain, vaultChainId])
+  }, [dispatch, unstakeVaultTokensTransaction, setChain, isOnCorrectChain, vaultChainId])
 
   const handleExpand = useCallback((flag: boolean) => {
     setIsExpanded(flag)
@@ -112,6 +117,7 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
           handleTx={handleUnstakeVaultTokens}
           balance={balance}
           isOwner={isOwner}
+          isOnCorrectChain={isOnCorrectChain}
         />
       </Expander>
     </Card>
