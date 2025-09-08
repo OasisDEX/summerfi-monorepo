@@ -5,6 +5,7 @@
     align-items: center;
     gap: var(--spacing-space-x-small);
     width: 100%;
+    flex-wrap: wrap;
 
     .expanderTitleWrapperLeft {
       display: flex;
