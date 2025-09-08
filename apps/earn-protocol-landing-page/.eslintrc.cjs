@@ -8,6 +8,7 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
+  ignorePatterns: ['next-env.d.ts'],
   rules: {
     'no-magic-numbers': 'off',
   },
