@@ -9,12 +9,14 @@ import {
   SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
+  useClientChainId,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
+import { delayPerNetwork } from '@/constants/delay-per-network'
 import { UnstakeVaultTokenForm } from '@/features/unstake-vault-token/components/UnstakeVaultTokenForm/UnstakeVaultTokenForm'
 import { useUnstakeVaultTokens } from '@/features/unstake-vault-token/hooks/use-unstake-vault-tokens'
 import {
@@ -46,11 +48,14 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
   const { userWalletAddress } = useUserWallet()
   const { publicClient } = useNetworkAlignedClient()
   const { chain, setChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const { unstakeVaultTokensTransaction, balance } = useUnstakeVaultTokens({
     onSuccess: () => {
-      dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.COMPLETED })
-      toast.success('Withdrawal successful', SUCCESS_TOAST_CONFIG)
+      setTimeout(() => {
+        dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.COMPLETED })
+        toast.success('Withdrawal successful', SUCCESS_TOAST_CONFIG)
+      }, delayPerNetwork[clientChainId])
     },
     onError: () => {
       dispatch({ type: 'update-step', payload: UnstakeVaultTokenStep.ERROR })
