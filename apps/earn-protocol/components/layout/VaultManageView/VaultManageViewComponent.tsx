@@ -68,6 +68,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationBox } from '@/features/migration/components/MigrationBox/MigrationBox'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
+import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/UnstakeVaultToken/UnstakeVaultToken'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -778,22 +779,24 @@ export const VaultManageViewComponent = ({
         }
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
-          migrationsEnabled &&
-          migratablePositions.length > 0 && (
-            <MigrationBox
-              migratablePositions={migratablePositions}
-              selectedPosition={selectedPosition}
-              onSelectPosition={handleSelectPosition}
-              cta={{
-                link: getMigrationLandingPageUrl({
-                  walletAddress: viewWalletAddress,
-                  selectedPosition,
-                }),
-                disabled: !selectedPosition,
-              }}
-              migrationBestVaultApy={migrationBestVaultApy}
-            />
-          )
+          <>
+            {migrationsEnabled && migratablePositions.length > 0 && (
+              <MigrationBox
+                migratablePositions={migratablePositions}
+                selectedPosition={selectedPosition}
+                onSelectPosition={handleSelectPosition}
+                cta={{
+                  link: getMigrationLandingPageUrl({
+                    walletAddress: viewWalletAddress,
+                    selectedPosition,
+                  }),
+                  disabled: !selectedPosition,
+                }}
+                migrationBestVaultApy={migrationBestVaultApy}
+              />
+            )}
+            <UnstakeVaultToken vault={vault} walletAddress={viewWalletAddress} />
+          </>
         }
         isMobile={isMobile}
       />

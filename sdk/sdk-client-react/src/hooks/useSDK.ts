@@ -33,6 +33,8 @@ import { getSpotPricesHandler } from '../handlers/getSpotPricesHandler'
 import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuthorizeAsMerklRewardsOperatorTxHandler'
 import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesMerklClaimTxHandler'
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
+import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
+import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -110,6 +112,8 @@ export const useSDK = (params: UseSdk) => {
   )
   const getReferralFeesMerklClaimTx = useMemo(() => getReferralFeesMerklClaimTxHandler(sdk), [sdk])
   const getUserMerklRewards = useMemo(() => getUserMerklRewardsHandler(sdk), [sdk])
+  const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
+  const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -145,6 +149,8 @@ export const useSDK = (params: UseSdk) => {
       getAuthorizeAsMerklRewardsOperatorTx,
       getReferralFeesMerklClaimTx,
       getUserMerklRewards,
+      getUnstakeFleetTokensTx,
+      getStakedBalance,
     }),
     [
       getCurrentUser,
@@ -179,6 +185,8 @@ export const useSDK = (params: UseSdk) => {
       getAuthorizeAsMerklRewardsOperatorTx,
       getReferralFeesMerklClaimTx,
       getUserMerklRewards,
+      getUnstakeFleetTokensTx,
+      getStakedBalance,
     ],
   )
 

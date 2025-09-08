@@ -1,0 +1,14 @@
+.unstakeVaultTokenContentWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: var(--earn-protocol-neutral-70);
+    margin-top: var(--spacing-space-medium);
+    margin-bottom: var(--spacing-space-large);
+  }
+}
