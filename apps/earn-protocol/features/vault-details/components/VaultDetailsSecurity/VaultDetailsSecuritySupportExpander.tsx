@@ -1,6 +1,9 @@
+'use client'
 import { Card, Expander, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type IconNamesList } from '@summerfi/app-types'
 import Link from 'next/link'
+
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 const items: {
   text: string
@@ -37,6 +40,12 @@ const items: {
 ]
 
 export const VaultDetailsSecuritySupportExpander = () => {
+  const handleButtonClick = useHandleButtonClickEvent()
+
+  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
+    handleButtonClick(`vault-details-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
+  }
+
   return (
     <Card>
       <Expander
@@ -45,6 +54,7 @@ export const VaultDetailsSecuritySupportExpander = () => {
             24/7 Support
           </Text>
         }
+        onExpand={handleExpanderToggle('support')}
       >
         <Text
           as="p"
