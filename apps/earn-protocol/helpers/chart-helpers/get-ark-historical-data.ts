@@ -132,11 +132,8 @@ export const getArkHistoricalChartData = ({
     const timestamp = dayjs(Number(vaultDailyInterestRate.date) * 1000).startOf('day')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-    chartsDataRaw['90d'][timestampFormatted] = { timestamp: timestampFormatted }
-    chartsDataRaw['6m'][timestampFormatted] = { timestamp: timestampFormatted }
-    chartsDataRaw['1y'][timestampFormatted] = { timestamp: timestampFormatted }
-
     if (timestamp.unix() > threshold90d) {
+      chartsDataRaw['90d'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['90d'][timestampFormatted] = {
         ...chartsDataRaw['90d'][timestampFormatted],
         [vaultName]: Number(vaultDailyInterestRate.averageRate),
@@ -144,12 +141,14 @@ export const getArkHistoricalChartData = ({
     }
 
     if (timestamp.unix() > threshold6m) {
+      chartsDataRaw['6m'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['6m'][timestampFormatted] = {
         ...chartsDataRaw['6m'][timestampFormatted],
         [vaultName]: Number(vaultDailyInterestRate.averageRate),
       }
     }
     if (timestamp.unix() > threshold1y) {
+      chartsDataRaw['1y'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['1y'][timestampFormatted] = {
         ...chartsDataRaw['1y'][timestampFormatted],
         [vaultName]: Number(vaultDailyInterestRate.averageRate),
@@ -160,9 +159,8 @@ export const getArkHistoricalChartData = ({
     const timestamp = dayjs(Number(vaultWeeklyInterestRate.date) * 1000).startOf('week')
     const timestampFormatted = timestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-    chartsDataRaw['3y'][timestampFormatted] = { timestamp: timestampFormatted }
-
     if (timestamp.unix() > threshold3y) {
+      chartsDataRaw['3y'][timestampFormatted] = { timestamp: timestampFormatted }
       chartsDataRaw['3y'][timestampFormatted] = {
         ...chartsDataRaw['3y'][timestampFormatted],
         [vaultName]: Number(vaultWeeklyInterestRate.averageRate),
@@ -171,7 +169,6 @@ export const getArkHistoricalChartData = ({
   }
 
   // mapping the interest rates for all arks (but only since the vault has APR)
-  // no need to check for the threshold, since we map ark interest rates only against the vaults data
   for (const arkInterestRateKey of arksInterestRatesKeys) {
     const interestRates = arkInterestRatesMap[arkInterestRateKey]
 
@@ -183,42 +180,39 @@ export const getArkHistoricalChartData = ({
     chartDataNames.push(arkUniqueName)
 
     for (const hourlyInterestRate of interestRates.hourlyInterestRates) {
-      const timestamp = dayjs(Number(hourlyInterestRate.date) * 1000)
-        .startOf('hour')
-        .format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const timestampNeat = dayjs(Number(hourlyInterestRate.date) * 1000).startOf('hour')
+      const timestamp = timestampNeat.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-      if (timestamp in chartsDataRaw['7d']) {
+      if (timestamp in chartsDataRaw['7d'] && timestampNeat.unix() > threshold7d) {
         chartsDataRaw['7d'][timestamp] = {
           ...chartsDataRaw['7d'][timestamp],
           [arkUniqueName]: Number(hourlyInterestRate.averageRate),
         }
       }
-      if (timestamp in chartsDataRaw['30d']) {
+      if (timestamp in chartsDataRaw['30d'] && timestampNeat.unix() > threshold30d) {
         chartsDataRaw['30d'][timestamp] = {
           ...chartsDataRaw['30d'][timestamp],
           [arkUniqueName]: Number(hourlyInterestRate.averageRate),
         }
       }
     }
-
     for (const dailyInterestRate of interestRates.dailyInterestRates) {
-      const timestamp = dayjs(Number(dailyInterestRate.date) * 1000)
-        .startOf('day')
-        .format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const timestampNeat = dayjs(Number(dailyInterestRate.date) * 1000).startOf('day')
+      const timestamp = timestampNeat.format(CHART_TIMESTAMP_FORMAT_DETAILED)
 
-      if (timestamp in chartsDataRaw['90d']) {
+      if (timestamp in chartsDataRaw['90d'] && timestampNeat.unix() > threshold90d) {
         chartsDataRaw['90d'][timestamp] = {
           ...chartsDataRaw['90d'][timestamp],
           [arkUniqueName]: Number(dailyInterestRate.averageRate),
         }
       }
-      if (timestamp in chartsDataRaw['6m']) {
+      if (timestamp in chartsDataRaw['6m'] && timestampNeat.unix() > threshold6m) {
         chartsDataRaw['6m'][timestamp] = {
           ...chartsDataRaw['6m'][timestamp],
           [arkUniqueName]: Number(dailyInterestRate.averageRate),
         }
       }
-      if (timestamp in chartsDataRaw['1y']) {
+      if (timestamp in chartsDataRaw['1y'] && timestampNeat.unix() > threshold1y) {
         chartsDataRaw['1y'][timestamp] = {
           ...chartsDataRaw['1y'][timestamp],
           [arkUniqueName]: Number(dailyInterestRate.averageRate),
@@ -226,11 +220,12 @@ export const getArkHistoricalChartData = ({
       }
     }
     for (const weeklyInterestRate of interestRates.weeklyInterestRates) {
-      const timestamp = dayjs(Number(weeklyInterestRate.date) * 1000)
-        .startOf('week')
-        .format(CHART_TIMESTAMP_FORMAT_DETAILED) as keyof (typeof chartsDataRaw)['90d']
+      const timestampNeat = dayjs(Number(weeklyInterestRate.date) * 1000).startOf('week')
+      const timestamp = timestampNeat.format(
+        CHART_TIMESTAMP_FORMAT_DETAILED,
+      ) as keyof (typeof chartsDataRaw)['90d']
 
-      if (timestamp in chartsDataRaw['3y']) {
+      if (timestamp in chartsDataRaw['3y'] && timestampNeat.unix() > threshold3y) {
         chartsDataRaw['3y'][timestamp] = {
           ...chartsDataRaw['3y'][timestamp],
           [arkUniqueName]: Number(weeklyInterestRate.averageRate),
