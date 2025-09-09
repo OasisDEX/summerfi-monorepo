@@ -15,7 +15,7 @@ import assert from 'assert'
 jest.setTimeout(300000)
 const simulateOnly = true
 
-const chainId = ChainIds.Mainnet
+const chainId = ChainIds.Base
 const rpcUrl = process.env.E2E_SDK_FORK_URL_MAINNET
 
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -47,7 +47,8 @@ describe('Armada Protocol - User', () => {
   const user = User.createFrom({
     chainInfo,
     wallet: Wallet.createFrom({
-      address: testWalletAddress,
+      // address: testWalletAddress,
+      address: Address.createFromEthereum({ value: '0xbddC796b7156F3816c6d004FC25aB04362FAE77a' }),
     }),
   })
   const vaultId = ArmadaVaultId.createFrom({
@@ -55,7 +56,7 @@ describe('Armada Protocol - User', () => {
     fleetAddress,
   })
 
-  console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
+  console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
   it(`should get all user positions: ${fleetAddress.value}`, async () => {
     const positions = await sdk.armada.users.getUserPositions({

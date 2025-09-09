@@ -63,6 +63,7 @@ export const mapGraphDataToArmadaPosition =
         if (positionRewards == null) {
           return acc
         }
+
         return {
           claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || '0'),
           claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || '0'),
@@ -73,14 +74,14 @@ export const mapGraphDataToArmadaPosition =
     const claimedSummerToken = TokenAmount.createFromBaseUnit({
       amount: BigNumber(position.claimedSummerToken || '0')
         .plus(merklSummerRewardsForPosition?.claimedSummerToken.toString() || '0')
-        .toString(),
+        .toFixed(),
       token: summerToken,
     })
 
     const claimableSummerToken = TokenAmount.createFromBaseUnit({
       amount: BigNumber(position.claimableSummerToken || '0')
         .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
-        .toString(),
+        .toFixed(),
       token: summerToken,
     })
 
@@ -128,7 +129,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       shares: TokenAmount.createFrom({
-        amount: sharesBalance.toString(),
+        amount: sharesBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
@@ -140,7 +141,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       amount: TokenAmount.createFrom({
-        amount: fleetBalance.toString(),
+        amount: fleetBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
@@ -187,7 +188,7 @@ export const mapGraphDataToArmadaPosition =
         const amount = TokenAmount.createFrom({
           amount: BigNumber(deposit.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
-            .toString(),
+            .toFixed(),
           token: Token.createFrom({
             chainInfo,
             address: Address.createFromEthereum({
@@ -207,7 +208,7 @@ export const mapGraphDataToArmadaPosition =
         const amount = TokenAmount.createFrom({
           amount: BigNumber(withdrawal.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
-            .toString(),
+            .toFixed(),
           token: Token.createFrom({
             chainInfo,
             address: Address.createFromEthereum({

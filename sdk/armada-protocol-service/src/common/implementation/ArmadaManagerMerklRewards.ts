@@ -203,10 +203,11 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         ? new BigNumber(prev.claimed).plus(breakdown.claimed)
         : new BigNumber(breakdown.claimed)
       perChain[normalizedFleetAddress] = {
-        total: total.toString(),
-        claimable: total.minus(claimed).toString(),
-        claimed: claimed.toString(),
+        total: total.toFixed(),
+        claimable: total.minus(claimed).toFixed(),
+        claimed: claimed.toFixed(),
       }
+      console.log('resultByChain', perChain[normalizedFleetAddress])
     }
     return resultByChain
   }

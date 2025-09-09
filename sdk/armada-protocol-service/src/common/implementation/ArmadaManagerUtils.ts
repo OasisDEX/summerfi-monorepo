@@ -400,7 +400,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     const quotePrice = Price.createFrom({
       base: params.fromAmount.token,
       quote: params.toAmount.token,
-      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
+      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toFixed(),
     })
 
     let spotPriceInfo: ISpotPriceInfo | undefined
