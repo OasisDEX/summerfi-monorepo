@@ -14,6 +14,8 @@ import {
   ArmadaVaultId,
   type ChainId,
   type AddressValue,
+  FiatCurrencyAmount,
+  FiatCurrency,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { BigNumber } from 'bignumber.js'
@@ -148,6 +150,38 @@ export const mapGraphDataToArmadaPosition =
           symbol: position.vault.inputToken.symbol,
           decimals: position.vault.inputToken.decimals,
         }),
+      }),
+      depositsAmount: TokenAmount.createFromBaseUnit({
+        amount: position.inputTokenDeposits.toString(),
+        token: Token.createFrom({
+          chainInfo,
+          address: Address.createFromEthereum({
+            value: position.vault.inputToken.id,
+          }),
+          name: position.vault.inputToken.name,
+          symbol: position.vault.inputToken.symbol,
+          decimals: position.vault.inputToken.decimals,
+        }),
+      }),
+      withdrawalsAmount: TokenAmount.createFromBaseUnit({
+        amount: position.inputTokenWithdrawals.toString(),
+        token: Token.createFrom({
+          chainInfo,
+          address: Address.createFromEthereum({
+            value: position.vault.inputToken.id,
+          }),
+          name: position.vault.inputToken.name,
+          symbol: position.vault.inputToken.symbol,
+          decimals: position.vault.inputToken.decimals,
+        }),
+      }),
+      depositsAmountUSD: FiatCurrencyAmount.createFrom({
+        amount: position.inputTokenDepositsNormalizedInUSD,
+        fiat: FiatCurrency.USD,
+      }),
+      withdrawalsAmountUSD: FiatCurrencyAmount.createFrom({
+        amount: position.inputTokenWithdrawalsNormalizedInUSD,
+        fiat: FiatCurrency.USD,
       }),
       deposits: position.deposits.map((deposit) => {
         const amount = TokenAmount.createFrom({

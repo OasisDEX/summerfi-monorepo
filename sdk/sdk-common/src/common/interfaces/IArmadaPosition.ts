@@ -4,6 +4,8 @@ import { type IArmadaPositionId, isArmadaPositionId } from './IArmadaPositionId'
 import { PositionDataSchema, type IPosition } from './IPosition'
 import { isTokenAmount, type ITokenAmount } from './ITokenAmount'
 import { PositionType } from '../enums/PositionType'
+import type { FiatCurrencyAmount } from '../implementation/FiatCurrencyAmount'
+import { isFiatCurrencyAmount } from './IFiatCurrencyAmount'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -25,6 +27,16 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   readonly amount: ITokenAmount
   /** Number of shares allocated to this position */
   readonly shares: ITokenAmount
+
+  /** Total amount deposited in the Fleet */
+  readonly depositsAmount: ITokenAmount
+  /** Total amount withdrawn from the Fleet */
+  readonly withdrawalsAmount: ITokenAmount
+
+  /** Total amount deposited in the Fleet in USD */
+  readonly depositsAmountUSD: FiatCurrencyAmount
+  /** Total amount withdrawn from the Fleet in USD */
+  readonly withdrawalsAmountUSD: FiatCurrencyAmount
 
   /** Claimed SUMR rewards */
   readonly claimedSummerToken: ITokenAmount
@@ -49,6 +61,10 @@ export const ArmadaPositionDataSchema = z.object({
   pool: z.custom<IArmadaVault>((val) => isArmadaVault(val)),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  depositsAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  withdrawalsAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  depositsAmountUSD: z.custom<FiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
+  withdrawalsAmountUSD: z.custom<FiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
   /* @deprecated do not use */
   deposits: z.array(
     z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),

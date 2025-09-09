@@ -5,6 +5,7 @@ import type { IArmadaPosition, IArmadaPositionData } from '../interfaces/IArmada
 import type { IArmadaPositionId } from '../interfaces/IArmadaPositionId'
 import type { IArmadaVault } from '../interfaces/IArmadaVault'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import type { FiatCurrencyAmount } from './FiatCurrencyAmount'
 import { Position } from './Position'
 
 /**
@@ -26,7 +27,14 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   readonly pool: IArmadaVault
   readonly amount: ITokenAmount
   readonly shares: ITokenAmount
+  readonly depositsAmount: ITokenAmount
+  readonly withdrawalsAmount: ITokenAmount
+  readonly depositsAmountUSD: FiatCurrencyAmount
+  readonly withdrawalsAmountUSD: FiatCurrencyAmount
+
+  /** @deprecated do not use */
   readonly deposits: { amount: ITokenAmount; timestamp: number }[]
+  /** @deprecated do not use */
   readonly withdrawals: { amount: ITokenAmount; timestamp: number }[]
 
   readonly claimedSummerToken: ITokenAmount
@@ -49,6 +57,10 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
     this.pool = params.pool
     this.amount = params.amount
     this.shares = params.shares
+    this.depositsAmount = params.depositsAmount
+    this.withdrawalsAmount = params.withdrawalsAmount
+    this.depositsAmountUSD = params.depositsAmountUSD
+    this.withdrawalsAmountUSD = params.withdrawalsAmountUSD
     this.deposits = params.deposits
     this.withdrawals = params.withdrawals
     this.claimedSummerToken = params.claimedSummerToken
