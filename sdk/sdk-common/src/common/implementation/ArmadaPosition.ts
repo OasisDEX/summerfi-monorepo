@@ -1,3 +1,4 @@
+import type { IFiatCurrencyAmount } from '../..'
 import { SerializationService } from '../../services/SerializationService'
 import { PositionType } from '../enums/PositionType'
 import { __signature__ } from '../interfaces/IArmadaPosition'
@@ -5,7 +6,6 @@ import type { IArmadaPosition, IArmadaPositionData } from '../interfaces/IArmada
 import type { IArmadaPositionId } from '../interfaces/IArmadaPositionId'
 import type { IArmadaVault } from '../interfaces/IArmadaVault'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
-import type { FiatCurrencyAmount } from './FiatCurrencyAmount'
 import { Position } from './Position'
 
 /**
@@ -29,8 +29,8 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   readonly shares: ITokenAmount
   readonly depositsAmount: ITokenAmount
   readonly withdrawalsAmount: ITokenAmount
-  readonly depositsAmountUSD: FiatCurrencyAmount
-  readonly withdrawalsAmountUSD: FiatCurrencyAmount
+  readonly depositsAmountUSD: IFiatCurrencyAmount
+  readonly withdrawalsAmountUSD: IFiatCurrencyAmount
 
   /** @deprecated do not use */
   readonly deposits: { amount: ITokenAmount; timestamp: number }[]
