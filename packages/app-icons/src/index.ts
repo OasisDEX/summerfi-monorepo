@@ -36,6 +36,9 @@ export const icons = {
   arrow_backward: customLazy(() => import('./icons/arrow_backward.svg?react')) as IconExportType,
   arrow_decrease: customLazy(() => import('./icons/arrow_decrease.svg?react')) as IconExportType,
   arrow_forward: customLazy(() => import('./icons/arrow_forward.svg?react')) as IconExportType,
+  arrow_forward_colorful: customLazy(
+    () => import('./icons/arrow_forward_colorful.svg?react'),
+  ) as IconExportType,
   arrow_increase: customLazy(() => import('./icons/arrow_increase.svg?react')) as IconExportType,
   augur_circle_color: customLazy(
     () => import('./icons/augur_circle_color.svg?react'),
@@ -644,6 +647,7 @@ export const iconsSync: {
   arrow_backward: import('./icons/arrow_backward.svg?react'),
   arrow_decrease: import('./icons/arrow_decrease.svg?react'),
   arrow_forward: import('./icons/arrow_forward.svg?react'),
+  arrow_forward_colorful: import('./icons/arrow_forward_colorful.svg?react'),
   arrow_increase: import('./icons/arrow_increase.svg?react'),
   augur_circle_color: import('./icons/augur_circle_color.svg?react'),
   augur_color: import('./icons/augur_color.svg?react'),
