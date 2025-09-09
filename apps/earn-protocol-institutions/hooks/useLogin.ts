@@ -3,11 +3,49 @@ import { useSearchParams } from 'next/navigation'
 
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
 
+const passwordMeetsRequirements = (password: string) => {
+  // Password minimum length
+  // 8 character(s)
+  // Password requirements
+  // Contains at least 1 number
+  // Contains at least 1 special character (^$*.[]{}()?-"!@#%&/\,><':;|_~`+=)
+  // Contains at least 1 uppercase letter
+  // Contains at least 1 lowercase letter
+  return (
+    password.length >= 8 &&
+    /[0-9]/u.test(password) &&
+    /[\^$*.-[\]{}(?)"!@#%&/\\,><':;|_~`+=]/u.test(password) &&
+    /[A-Z]/u.test(password) &&
+    /[a-z]/u.test(password)
+  )
+}
+
+const passwordMeetsRequirementsDetailed = (password: string, confirmedPassword: string) => {
+  // Password minimum length
+  // 8 character(s)
+  // Password requirements
+  // Contains at least 1 number
+  // Contains at least 1 special character (^$*.[]{}()?-"!@#%&/\,><':;|_~`+=)
+  // Contains at least 1 uppercase letter
+  // Contains at least 1 lowercase letter
+  return {
+    length: password.length >= 8,
+    hasNumber: /[0-9]/u.test(password),
+    hasSpecialCharacter: /[\^$*.-[\]{}(?)"!@#%&/\\,><':;|_~`+=]/u.test(password),
+    hasUppercase: /[A-Z]/u.test(password),
+    hasLowercase: /[a-z]/u.test(password),
+    isTheSame: password.length >= 8 && password === confirmedPassword,
+    allRequirementsMet: passwordMeetsRequirements(password) && password === confirmedPassword,
+  }
+}
+
 export const useLogin = () => {
   const urlQueryParams = useSearchParams()
   const isUnauthorized = urlQueryParams.get('error') === 'unauthorized'
   const [email, setEmail] = useState('')
+  const [isEmailValid, setIsEmailValid] = useState(false)
   const [password, setPassword] = useState('')
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState(isUnauthorized ? 'Unauthorized access.' : '')
@@ -19,11 +57,13 @@ export const useLogin = () => {
   const handleSetEmail = (nextEmail: string) => {
     setError('')
     setEmail(nextEmail)
+    setIsEmailValid(!!nextEmail && /^\S+@\S+\.\S+$/u.test(nextEmail))
   }
 
   const handleSetPassword = (nextPassword: string) => {
     setError('')
     setPassword(nextPassword)
+    setIsPasswordValid(passwordMeetsRequirements(nextPassword))
   }
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -91,11 +131,14 @@ export const useLogin = () => {
 
   return {
     email,
+    isEmailValid,
     setEmail: handleSetEmail,
     password,
+    isPasswordValid,
     setPassword: handleSetPassword,
     newPassword,
     setNewPassword,
+    newPasswordRequirements: passwordMeetsRequirementsDetailed(newPassword, confirmPassword),
     confirmPassword,
     setConfirmPassword,
     error,
