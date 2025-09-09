@@ -197,13 +197,15 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     let approvalForDeposit: ApproveTransactionInfo | undefined
 
     // Deposit logic
-    // default to not staking as rewardsManager was deprecated
-    const shouldStake = params.shouldStake ?? false
     // should compensate the tip during withdrawal
     const depositAmount = this._compensateAmount(withdrawAmount, 'decrease')
 
+    // default to not staking as rewardsManager was deprecated
+    const shouldStake = params.shouldStake ?? false
+
     const depositMulticallArgs: HexData[] = []
     const depositMulticallOperations: string[] = []
+
     const depositTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'depositTokens',

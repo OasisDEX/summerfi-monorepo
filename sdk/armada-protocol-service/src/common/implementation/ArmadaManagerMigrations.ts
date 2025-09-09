@@ -497,11 +497,6 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       throw new Error('PositionIds are required')
     }
 
-    const shouldStake = params.shouldStake ?? true
-
-    const multicallArgs: HexData[] = []
-    const multicallOperations: string[] = []
-
     const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
       chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
@@ -528,10 +523,16 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
       filteredPositions: filteredPositions.map((position) => position.id).join(', '),
     })
 
+    // default to not staking as rewardsManager was deprecated
+    const shouldStake = params.shouldStake ?? false
+
+    const migrateMulticallArgs: HexData[] = []
+    const migrateMulticallOperations: string[] = []
+
     // get the move calls to multicall
     const moveCalls = filteredPositions.map((position) => this._getMoveCall({ ...position }))
-    multicallArgs.push(...moveCalls.map((call) => call.call))
-    multicallOperations.push(...moveCalls.map((call) => call.operation))
+    migrateMulticallArgs.push(...moveCalls.map((call) => call.call))
+    migrateMulticallOperations.push(...moveCalls.map((call) => call.operation))
 
     // check the fleet token
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -554,8 +555,8 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
           toToken: fleetToken,
           slippage: params.slippage,
         })
-        multicallArgs.push(swapCall.calldata)
-        multicallOperations.push(
+        migrateMulticallArgs.push(swapCall.calldata)
+        migrateMulticallOperations.push(
           `swap ${position.underlyingTokenAmount.toString()} to ${swapCall.toAmount.toString()} (min ${swapCall.minAmount.toString()})`,
         )
         swapAmountByPositionId[position.id] = swapCall.toAmount
@@ -570,13 +571,14 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     const fleetTokenReceiver = shouldStake
       ? admiralsQuartersAddress.value
       : params.user.wallet.address.value
+
     const enterFleetCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'enterFleet',
       args: [params.vaultId.fleetAddress.value, 0n, fleetTokenReceiver],
     })
-    multicallArgs.push(enterFleetCalldata)
-    multicallOperations.push('enterFleet all (0)')
+    migrateMulticallArgs.push(enterFleetCalldata)
+    migrateMulticallOperations.push('enterFleet all (0)')
 
     if (shouldStake) {
       const stakeCalldata = encodeFunctionData({
@@ -584,19 +586,20 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
         functionName: 'stake',
         args: [params.vaultId.fleetAddress.value, 0n],
       })
-      multicallArgs.push(stakeCalldata)
-      multicallOperations.push('stake all (0)')
+      migrateMulticallArgs.push(stakeCalldata)
+      migrateMulticallOperations.push('stake all (0)')
     }
 
     // return the migration transaction info
     const multicallCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
       functionName: 'multicall',
-      args: [multicallArgs],
+      args: [migrateMulticallArgs],
     })
     const multicallTransaction: MigrationTransactionInfo = {
       type: TransactionType.Migration,
-      description: 'Migrating assets to Admirals Quarters: ' + multicallOperations.join(', '),
+      description:
+        'Migrating assets to Admirals Quarters: ' + migrateMulticallOperations.join(', '),
       transaction: {
         target: admiralsQuartersAddress,
         calldata: multicallCalldata,
@@ -609,7 +612,7 @@ export class ArmadaManagerMigrations implements IArmadaManagerMigrations {
     }
     LoggingService.debug(
       'multicallTransaction: ',
-      multicallOperations.map((op) => op.toString()),
+      migrateMulticallOperations.map((op) => op.toString()),
     )
 
     const approvalTransactions = await Promise.all(
