@@ -68,6 +68,10 @@ describe('Armada Protocol - User', () => {
           {
             id: position.id.id,
             amount: position.amount.toString(),
+            depositsAmount: position.depositsAmount.toString(),
+            withdrawalsAmount: position.withdrawalsAmount.toString(),
+            depositsAmountUSD: position.depositsAmountUSD.toString(),
+            withdrawalsAmountUSD: position.withdrawalsAmountUSD.toString(),
             deposits: position.deposits.length,
             withdrawals: position.withdrawals.length,
             rewards: position.rewards.map((reward) => ({
@@ -97,6 +101,10 @@ describe('Armada Protocol - User', () => {
           {
             id: position.id.id,
             amount: position.amount.toString(),
+            depositsAmount: position.depositsAmount.toString(),
+            withdrawalsAmount: position.withdrawalsAmount.toString(),
+            depositsAmountUSD: position.depositsAmountUSD.toString(),
+            withdrawalsAmountUSD: position.withdrawalsAmountUSD.toString(),
             deposits: position.deposits.length,
             withdrawals: position.withdrawals.length,
             rewards: position.rewards.map((reward) => ({

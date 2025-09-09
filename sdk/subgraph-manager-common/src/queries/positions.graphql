@@ -6,6 +6,10 @@ query GetUserPositions($accountAddress: String!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
@@ -66,6 +70,10 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
@@ -125,6 +133,10 @@ query GetPosition($id: ID!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
