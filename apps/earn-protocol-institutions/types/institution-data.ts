@@ -40,7 +40,7 @@ export type InstitutionVaultFeeRevenueData = {
 export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
 export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
 
-export type InstitutionVaultRole = [GeneralRoles, { address: Address; lastUpdated: number }]
+export type InstitutionVaultRole = { address: Address; lastUpdated: number; role: GeneralRoles }
 
 export type InstitutionDataBasic = {
   id: InstitutionData['id']

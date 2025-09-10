@@ -1,9 +1,11 @@
 'use client'
 
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useMemo, useState } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
+import { type Address } from '@summerfi/app-types'
 
 import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
+import { PanelAdminStep, usePanelAdmin } from '@/providers/PanelAdminProvider/PanelAdminProvider'
 import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
@@ -11,43 +13,81 @@ import { roleAdminMapper } from './mapper'
 
 import styles from './PanelRoleAdmin.module.css'
 
-const change = [
-  {
-    title: 'Risk Manager Address',
-    from: '0xC3P0F36260817d1c78C471406BdE482177a1935071',
-    to: '0xC3P0F36260817d1c78C471406BdE482177a1935071',
-  },
-  {
-    title: 'Market Allocator Address',
-    from: '0xC3P0F36260817d1c78C471406BdE482177a1935071',
-    to: '0xC3P0F36260817d1c78C471406BdE482177a1935071',
-  },
-]
-
 interface PanelRoleAdminProps {
   roles: InstitutionVaultRoles
 }
 
 export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
+  const { state, dispatch } = usePanelAdmin()
+
+  const [updatingRole, setUpdatingRole] = useState<InstitutionVaultRole | null>(null)
+  const [updatingRoleAddress, setUpdatingRoleAddress] = useState('')
+
+  const onChange = useCallback((value: string) => {
+    setUpdatingRoleAddress(value)
+  }, [])
+
   const onEdit = useCallback((item: InstitutionVaultRole) => {
-    // TODO: Implement edit handler
-    // eslint-disable-next-line no-console
-    console.log(item)
+    setUpdatingRole(item)
+  }, [])
+
+  const onRowEditCancel = useCallback(() => {
+    setUpdatingRole(null)
+    setUpdatingRoleAddress('')
   }, [])
 
   const onCancel = useCallback(() => {
-    // TODO: Implement cancel handler
-    // eslint-disable-next-line no-console
-    console.log('cancel')
-  }, [])
+    dispatch({ type: 'reset' })
+    setUpdatingRole(null)
+    setUpdatingRoleAddress('')
+  }, [dispatch])
 
   const onConfirm = useCallback(() => {
+    dispatch({ type: 'update-step', payload: PanelAdminStep.PENDING })
     // TODO: Implement confirm handler
     // eslint-disable-next-line no-console
     console.log('confirm')
-  }, [])
+  }, [dispatch])
 
-  const rows = useMemo(() => roleAdminMapper({ roles, onEdit }), [roles, onEdit])
+  const onSave = useCallback(
+    (item: InstitutionVaultRole) => {
+      setUpdatingRole(null)
+      dispatch({
+        type: 'edit-item',
+        payload: { ...item, address: (updatingRoleAddress as Address) || item.address },
+      })
+      setUpdatingRoleAddress('')
+    },
+    [updatingRoleAddress, dispatch],
+  )
+
+  const rows = useMemo(
+    () =>
+      roleAdminMapper({
+        roles,
+        onEdit,
+        onSave,
+        updatingRole,
+        onRowEditCancel,
+        onChange,
+        updatingRoleAddress,
+      }),
+    [roles, onEdit, onSave, updatingRole, onRowEditCancel, onChange, updatingRoleAddress],
+  )
+
+  const change = useMemo(
+    () =>
+      state.items.map((item) => {
+        const from = roles[item.role]?.address ?? 'n/a'
+
+        return {
+          title: item.role,
+          from,
+          to: item.address,
+        }
+      }),
+    [state.items, roles],
+  )
 
   return (
     <Card variant="cardSecondary" className={styles.panelRoleAdminWrapper}>

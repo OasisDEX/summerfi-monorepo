@@ -22,7 +22,7 @@ export const EditSummaryChange: FC<EditSummaryChangeProps> = ({ title, change })
       <div className={styles.boxWrapper}>
         <EditSummaryBox type="from" value={change.from} />
         <div className={styles.arrowWrapper}>
-          <Icon iconName="arrow_forward_colorful" size={14} />
+          <Icon iconName="arrow_forward_colorful" size={20} />
         </div>
         <EditSummaryBox type="to" value={change.to} />
       </div>

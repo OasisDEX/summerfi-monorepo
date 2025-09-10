@@ -1,5 +1,6 @@
 import { getInstitutionVaults } from '@/app/server-handlers/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
+import { PanelsProvider } from '@/providers/PanelsProvider/PanelsProvider'
 
 export default async function InstitutionTabLayout({
   children,
@@ -17,9 +18,9 @@ export default async function InstitutionTabLayout({
   }
 
   return (
-    <>
+    <PanelsProvider>
       <InstitutionTabBar institutionId={institutionId} defaultVault={institutionVaults.vaults[0]} />
       <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
-    </>
+    </PanelsProvider>
   )
 }
