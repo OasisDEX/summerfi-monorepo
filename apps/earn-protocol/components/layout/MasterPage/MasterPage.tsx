@@ -65,9 +65,36 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
     }
   }
 
+  const isSuperLazyVaults = pathname.startsWith('/super')
+
   return (
     <div className={masterPageStyles.mainContainer}>
       {!skipNavigation && <NavigationWrapper />}
+      {isSuperLazyVaults && (
+        <div
+          style={{
+            position: 'relative',
+            top: '-50px',
+            width: '100vw',
+            backgroundColor: '#FAF5DE',
+            height: '220px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            variant="h1"
+            style={{
+              color: '#F3D283',
+              textShadow:
+                '#2D2D2D 2px 0px 0px, #2D2D2D 1.75517px 0.958851px 0px, #2D2D2D 1.0806px 1.68294px 0px, #2D2D2D 0.141474px 1.99499px 0px, #2D2D2D -0.832294px 1.81859px 0px, #2D2D2D -1.60229px 1.19694px 0px, #2D2D2D -1.97998px 0.28224px 0px, #2D2D2D -1.87291px -0.701566px 0px, #2D2D2D -1.30729px -1.5136px 0px, #2D2D2D -0.421592px -1.95506px 0px, #2D2D2D 0.567324px -1.91785px 0px, #2D2D2D 1.41734px -1.41108px 0px, #2D2D2D 1.92034px -0.558831px 0px',
+            }}
+          >
+            SuperLazy Vaults
+          </Text>
+        </div>
+      )}
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{
