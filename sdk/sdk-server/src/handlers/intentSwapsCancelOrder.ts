@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { publicProcedure } from '../SDKTRPC'
 import { isChainId, type ChainId } from '@summerfi/sdk-common'
+import type { EcdsaSigningScheme } from '@cowprotocol/cow-sdk'
 
 export const intentSwapsCancelOrder = publicProcedure
   .input(
@@ -9,8 +10,7 @@ export const intentSwapsCancelOrder = publicProcedure
       orderId: z.string(),
       signingResult: z.custom<{
         signature: string
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        signingScheme: any
+        signingScheme: EcdsaSigningScheme
       }>((val) => val && typeof val === 'object' && 'signature' in val && 'signingScheme' in val),
     }),
   )

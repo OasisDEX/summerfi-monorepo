@@ -44,7 +44,6 @@ export class CowSwapProvider
 
   constructor(params: { configProvider: IConfigurationProvider }) {
     super({ ...params, type: IntentSwapProviderType.CowSwap })
-    // Use a config getter like OneInchSwapProvider
 
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
@@ -86,9 +85,11 @@ export class CowSwapProvider
 
     const order: UnsignedOrder = {
       ...quote,
-      sellAmount,
-      feeAmount: '0', // CowSwap does not require feeAmount
       receiver,
+      sellAmount,
+      // CowSwap protocol does not require a feeAmount to be set; it is always '0' for CowSwap orders.
+      // This field is included only to satisfy the UnsignedOrder type/interface.
+      feeAmount: '0',
       partiallyFillable: params.partiallyFillable ?? false,
     }
 
