@@ -6,10 +6,12 @@ import {
   accountType,
   Button,
   Dropdown,
+  ERROR_TOAST_CONFIG,
   Icon,
   Input,
   INTERNAL_LINKS,
   LoadingSpinner,
+  SUCCESS_TOAST_CONFIG,
   Text,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
@@ -29,7 +31,6 @@ import {
   type MerchandiseType,
 } from '@/features/merchandise/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 
 import { merchandiseFormFields } from './fields'
 import { areAllMerchandiseFormFieldsFilled } from './helpers'

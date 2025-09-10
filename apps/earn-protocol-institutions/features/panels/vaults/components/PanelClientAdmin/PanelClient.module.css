@@ -1,0 +1,64 @@
+.panelClientAdminWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-space-medium);
+  }
+
+  .input {
+    border-radius: var(--radius-medium);
+    max-width: 500px;
+  }
+
+  .iconWrapper {
+    left: 19px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-small);
+
+    .tableWrapper {
+      overflow-x: auto;
+
+      .table {
+        min-width: 600px;
+      }
+    }
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-small);
+
+    .inputWrapper {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: var(--spacing-space-small);
+      gap: var(--spacing-space-small);
+    }
+  }
+
+  .noDataAvailable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--spacing-space-small);
+  }
+
+  .buttonsWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-space-large);
+    margin-top: var(--spacing-space-small);
+  }
+}

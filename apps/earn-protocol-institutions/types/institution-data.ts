@@ -1,6 +1,11 @@
 import { type Address } from '@summerfi/app-types'
 import { type GeneralRoles } from '@summerfi/sdk-client'
 
+import {
+  type getInstitutionData,
+  type getUserInstitutionsList,
+} from '@/app/server-handlers/institution-data'
+
 export type InstitutionVaultRoles = {
   [key in GeneralRoles]?: {
     address: Address
@@ -11,7 +16,7 @@ export type InstitutionVaultRoles = {
 export type InstitutionVaultThirdPartyCost = {
   type: string
   fee: number
-  address: Address
+  address: string
 }
 
 export type InstitutionVaultFeeRevenueHistoryItem = {
@@ -26,15 +31,32 @@ export type InstitutionVaultFeeRevenueItem = {
   aumFee: number
 }
 
-export type InstitutionData = {
-  id: number
-  displayName: string
-  name: string
+export type InstitutionVaultFeeRevenueData = {
+  thirdPartyCosts: InstitutionVaultThirdPartyCost[]
+  feeRevenueHistory: InstitutionVaultFeeRevenueHistoryItem[]
+  feeRevenue: InstitutionVaultFeeRevenueItem[]
 }
+
+export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
+export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
 
 export type InstitutionVaultRole = [GeneralRoles, { address: Address; lastUpdated: number }]
 
 export type InstitutionDataBasic = {
   id: InstitutionData['id']
   displayName: InstitutionData['displayName']
+}
+
+export enum InstitutionVaultActivityType {
+  DEPOSIT = 'deposit',
+  WITHDRAWAL = 'withdrawal',
+  REBALANCE = 'rebalance',
+  USER_ADDED = 'user-added',
+  USER_REMOVED = 'user-removed',
+}
+
+export type InstitutionVaultActivityItem = {
+  when: string
+  type: InstitutionVaultActivityType
+  message: string
 }

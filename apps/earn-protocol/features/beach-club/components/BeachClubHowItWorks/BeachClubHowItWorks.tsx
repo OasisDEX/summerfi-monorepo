@@ -4,6 +4,7 @@ import {
   BeachClubSteps,
   Button,
   CopyToClipboard,
+  ERROR_TOAST_CONFIG,
   EXTERNAL_LINKS,
   getTwitterShareUrl,
   Icon,
@@ -15,7 +16,7 @@ import {
 import Link from 'next/link'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { ERROR_TOAST_CONFIG } from '@/features/toastify/config'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubHowItWorks.module.css'
 
@@ -32,6 +33,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
   const { userWalletAddress } = useUserWallet()
   const [refCode, setRefCode] = useState(resolvedInitReferralCode)
   const [isLoading, setIsLoading] = useState(false)
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const isOwner = userWalletAddress?.toLowerCase() === walletAddress.toLowerCase()
 
@@ -40,6 +42,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
       if (!isOwner) {
         return
       }
+      handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-generate-code`)
 
       setIsLoading(true)
       const response = await fetch(`/earn/api/beach-club/generate-code/${walletAddress}`, {
@@ -75,6 +78,9 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
         href="https://blog.summer.fi/introducing-summer-fi-beach-club-earn-big-rewards-for-sharing"
         target="_blank"
         style={{ width: '100%', textAlign: 'left' }}
+        onClick={() => {
+          handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-read-details`)
+        }}
       >
         <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
           Read the details
@@ -94,6 +100,11 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
               href={INTERNAL_LINKS.tempTerms}
               target="_blank"
               style={{ display: 'inline', color: 'var(--beach-club-link)' }}
+              onClick={() => {
+                handleButtonClick(
+                  `portfolio-beach-club-refer-and-earn-how-it-works-terms-of-service`,
+                )
+              }}
             >
               terms of service
             </Link>
@@ -102,6 +113,9 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
               href={EXTERNAL_LINKS.DISCORD}
               style={{ display: 'inline', color: 'var(--beach-club-link)' }}
               target="_blank"
+              onClick={() => {
+                handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-discord`)
+              }}
             >
               <WithArrow
                 as="span"
@@ -145,6 +159,9 @@ Open a position using my code below and earn even more https://summer.fi/earn?re
                 })}
                 target="_blank"
                 className={classNames.socialMediaLink}
+                onClick={() => {
+                  handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-twitter`)
+                }}
               >
                 <Icon iconName="social_x_beach_club" size={45} />
               </Link>
@@ -172,6 +189,9 @@ Open a position using my code below and earn even more https://summer.fi/earn?re
                 href={EXTERNAL_LINKS.DISCORD}
                 style={{ display: 'inline', color: 'var(--beach-club-link)' }}
                 target="_blank"
+                onClick={() => {
+                  handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-discord`)
+                }}
               >
                 <WithArrow
                   as="span"

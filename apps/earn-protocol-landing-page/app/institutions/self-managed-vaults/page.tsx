@@ -13,14 +13,16 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
-import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent, slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { InstitutionsContactForm } from '@/components/layout/LandingPageContent/components/InstitutionsContactForm'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -35,6 +37,7 @@ import selfManagedVaultDiagram from '@/public/img/institution/self-managed-vault
 export default function SelfManagedVaults() {
   const { landingPageData } = useLandingPageData()
   const { isScrolledToTop } = useScrolled()
+  const pathname = usePathname()
 
   useFeatureFlagRedirect({
     config: landingPageData?.systemConfig,
@@ -75,8 +78,33 @@ export default function SelfManagedVaults() {
     const element = document.getElementById(id)
 
     if (element) {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: `lp-institutions-self-managed-scroll-to-${id}`,
+        page: pathname,
+      })
       element.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  const handleSelfManagedVaultsFaqSection = (props: { expanded: boolean; title: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-self-managed-vaults-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
+      page: pathname,
+    })
+  }
+
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-self-managed-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleSectionTabChange = (sectionId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-self-managed-vaults-key-benefits-tabs-${sectionId}`,
+      page: pathname,
+    })
   }
 
   return (
@@ -302,6 +330,7 @@ export default function SelfManagedVaults() {
               id: 'operational-efficiency',
             },
           ]}
+          additionalOnTabChange={handleSectionTabChange}
         />
       </div>
       <div id="institutions-self-managed-vaults-contact-form">
@@ -319,7 +348,11 @@ export default function SelfManagedVaults() {
             We’re focused on compliance, so you can focus on utility and yield.
           </Text>
         </div>
-        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+        <Audits
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          onAuditClick={handleAuditClick}
+        />
       </div>
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <FaqSection
@@ -328,6 +361,7 @@ export default function SelfManagedVaults() {
         expanderButtonStyles={{
           padding: 'var(--spacing-space-large) 0',
         }}
+        onExpand={handleSelfManagedVaultsFaqSection}
         data={[
           {
             title: 'What is a Self-Managed Vault?',

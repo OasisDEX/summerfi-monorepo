@@ -13,6 +13,8 @@ import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
 
@@ -27,6 +29,8 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
+
+  useScrollTracker({})
 
   const isBeachClub = pathname.includes('beach-club')
   const isLegal =
@@ -66,6 +70,34 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
 
     return { offset: scrolledAmount * 0.2, opacity: 1 - Number(scrolledAmount * 0.0015) }
   }, [scrolledAmount, isInstitutions, isTeam])
+
+  const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-footer-${buttonName}`,
+      page: pathname,
+    })
+  }
+
+  const handleNewsletterEvent = ({
+    eventType,
+    errorMessage,
+  }: {
+    eventType: 'subscribe-submit' | 'subscribe-failure'
+    errorMessage?: string
+  }) => {
+    if (eventType === 'subscribe-failure') {
+      EarnProtocolEvents.errorOccurred({
+        errorId: 'lp-newsletter-subscribe-failure',
+        errorMessage,
+        page: pathname,
+      })
+    } else {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'lp-newsletter-subscribe',
+        page: pathname,
+      })
+    }
+  }
 
   return (
     <div className={landingMasterPageStyles.mainContainer}>
@@ -127,6 +159,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
         {children}
         <Footer
           logo="/img/branding/logo-light.svg"
+          onFooterItemClick={onFooterItemClick}
           newsletter={
             <div>
               <Text
@@ -153,7 +186,10 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
                   maxWidth: '380px',
                 }}
               >
-                <NewsletterWrapper inputBtnLabel="Subscribe" />
+                <NewsletterWrapper
+                  inputBtnLabel="Subscribe"
+                  handleNewsletterEvent={handleNewsletterEvent}
+                />
               </div>
             </div>
           }

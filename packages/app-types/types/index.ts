@@ -38,6 +38,20 @@ export type { LeaderboardItem, LeaderboardResponse } from './src/leaderboard'
 export type { PortfolioMigrations } from './src/migrations'
 export { LendingProtocol, lendingProtocolMap } from './src/lending-protocol'
 export { MixpanelEventProduct, MixpanelEventTypes } from './src/mixpanel'
+export {
+  EarnProtocolEventNames,
+  type EarnProtocolBaseEventProps,
+  type EarnProtocolScrolledEventProps,
+  type EarnProtocolViewPositionEventProps,
+  type EarnProtocolTransactionEventProps,
+  type EarnProtocolButtonClickedEventProps,
+  type EarnProtocolInputChangedEventProps,
+  type EarnProtocolDropdownChangedEventProps,
+  type EarnProtocolTooltipHoveredEventProps,
+  type EarnProtocolEventPropsMap,
+  type EarnProtocolAnalyticsEvent,
+  type EarnProtocolCustomEventProps,
+} from './src/mixpanel/earn-protocol-events'
 export type {
   NavigationFeaturedProduct,
   NavigationLinkTypes,
@@ -164,6 +178,7 @@ export type {
   GetInterestRatesParams,
   HistoryChartData,
   IArmadaPosition,
+  IArmadaVaultInfo,
   PerformanceChartData,
   PlatformLogo,
   PositionForecastAPIResponse,

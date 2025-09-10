@@ -132,6 +132,8 @@ interface StatefulTooltipProps {
   hideDrawerOnMobile?: boolean
   deviceType?: DeviceType
   stopPropagation?: boolean
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -154,12 +156,15 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   hideDrawerOnMobile = false,
   deviceType,
   stopPropagation = false,
+  onTooltipOpen,
+  tooltipName,
 }): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
   const { tooltipOpen, setTooltipOpen, closeHandler } = useTooltip(generatedId)
   const [portalElement, setPortalElement] = useState<HTMLElement | null>()
   const tooltipRef = useRef<HTMLDivElement | null>(null)
+  const onTooltipOpenTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { isMobile } = useMobileCheck(deviceType)
 
@@ -176,8 +181,21 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       ? 'portal-dropdown'
       : withinDialog
         ? 'modal-portal'
-        : 'portal'
-    const element = document.getElementById(portalId)
+        : `tooltip-portal-${generatedId}` // Make each tooltip have a unique portal
+
+    // Create a unique portal element for this tooltip if it doesn't exist
+    let element = document.getElementById(portalId)
+
+    if (!element && !persistWhenOpened && !withinDialog) {
+      element = document.createElement('div')
+      element.id = portalId
+      element.style.position = 'absolute'
+      element.style.top = '0'
+      element.style.left = '0'
+      element.style.pointerEvents = 'none'
+      element.style.zIndex = `${1000 + (parseInt(generatedId.slice(-3), 36) % 100)}` // Unique z-index for each tooltip
+      document.body.appendChild(element)
+    }
 
     if (!element) {
       // eslint-disable-next-line no-console
@@ -187,17 +205,44 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     if (element) {
       setPortalElement(element)
     }
-  }, [persistWhenOpened, withinDialog])
+
+    // Cleanup function to remove the unique portal element when component unmounts
+    return () => {
+      if (!persistWhenOpened && !withinDialog && element?.parentNode) {
+        element.parentNode.removeChild(element)
+      }
+    }
+  }, [persistWhenOpened, withinDialog, generatedId])
 
   useEffect(() => {
     if (portalElement && tooltipRefRect && tooltipOpen) {
-      portalElement.style.setProperty(
-        'top',
-        `${tooltipRefRect.y - (dialogRect?.y ?? 0) + window.scrollY}px`,
-      )
-      portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
+      // Set up timeout to call onTooltipOpen after 1 second
+      if (onTooltipOpen && tooltipName) {
+        onTooltipOpenTimeoutRef.current = setTimeout(() => {
+          onTooltipOpen(tooltipName)
+        }, 500)
+      }
+      // For unique tooltip portals, position them relative to the viewport
+      if (portalElement.id.startsWith('tooltip-portal-')) {
+        portalElement.style.setProperty('top', `${tooltipRefRect.y + window.scrollY}px`)
+        portalElement.style.setProperty('left', `${tooltipRefRect.x}px`)
+      } else {
+        // For shared portals (dropdown, modal), use the original positioning logic
+        portalElement.style.setProperty(
+          'top',
+          `${tooltipRefRect.y - (dialogRect?.y ?? 0) + window.scrollY}px`,
+        )
+        portalElement.style.setProperty('left', `${tooltipRefRect.x - (dialogRect?.x ?? 0)}px`)
+      }
     }
-  }, [tooltipRefRect, portalElement, tooltipOpen, dialogRect])
+
+    return () => {
+      if (onTooltipOpenTimeoutRef.current) {
+        clearTimeout(onTooltipOpenTimeoutRef.current)
+        onTooltipOpenTimeoutRef.current = null
+      }
+    }
+  }, [tooltipRefRect, portalElement, tooltipOpen, dialogRect, tooltipName, onTooltipOpen])
 
   const handleMouseEnter = useMemo(
     () => (!isTouchDevice && !triggerOnClick ? () => setTooltipOpen(true) : undefined),
@@ -235,6 +280,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
         setTooltipOpen(true)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [triggerOnClick, persistWhenOpened, setTooltipOpen],
   )
 
@@ -242,6 +288,9 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
+      }
+      if (onTooltipOpenTimeoutRef.current) {
+        clearTimeout(onTooltipOpenTimeoutRef.current)
       }
     }
   }, [])

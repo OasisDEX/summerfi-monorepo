@@ -1,6 +1,7 @@
 import type { CSSProperties, FC } from 'react'
 import { type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -13,18 +14,21 @@ import classNames from './VaultTitleDropdownContent.module.css'
 
 interface VaultDropdownContentProps {
   vault: SDKVaultishType
-  link: string
   isDisabled?: boolean
   style?: CSSProperties
+  link?: string
+  className?: string
+  linkOnClick?: () => void
 }
 
 export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 'link'>> = ({
   vault,
   isDisabled,
   style,
+  className,
 }) => (
   <div
-    className={classNames.wrapper}
+    className={clsx(classNames.wrapper, className)}
     style={{
       opacity: isDisabled ? 0.5 : 1,
       cursor: isDisabled ? 'not-allowed' : 'pointer',
@@ -50,14 +54,26 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
 export const VaultTitleDropdownContent: FC<VaultDropdownContentProps> = ({
   vault,
   link,
+  linkOnClick,
   isDisabled,
   style = {},
+  className,
 }) => {
-  return isDisabled ? (
-    <VaultTitleDropdownContentBlock vault={vault} isDisabled={isDisabled} style={style} />
-  ) : (
-    <Link href={link}>
-      <VaultTitleDropdownContentBlock vault={vault} isDisabled={isDisabled} style={style} />
+  return link ? (
+    <Link href={link} onClick={linkOnClick}>
+      <VaultTitleDropdownContentBlock
+        vault={vault}
+        isDisabled={isDisabled}
+        style={style}
+        className={className}
+      />
     </Link>
+  ) : (
+    <VaultTitleDropdownContentBlock
+      vault={vault}
+      isDisabled={isDisabled}
+      style={style}
+      className={className}
+    />
   )
 }

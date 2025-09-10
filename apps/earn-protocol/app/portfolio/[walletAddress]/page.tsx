@@ -4,7 +4,7 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
@@ -27,7 +27,6 @@ import { redirect } from 'next/navigation'
 
 import { getUserBeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { getBlogPosts } from '@/app/server-handlers/blog-posts'
-import { fetchRaysLeaderboard } from '@/app/server-handlers/leaderboard'
 import { getMigratablePositions } from '@/app/server-handlers/migration'
 import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { getPositionHistory } from '@/app/server-handlers/position-history'
@@ -64,7 +63,6 @@ const portfolioCallsHandler = async (walletAddress: string) => {
   const [
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -76,10 +74,10 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
-    fetchRaysLeaderboard({ userAddress: walletAddress, page: '1', limit: '1' }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
@@ -87,6 +85,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
     })(),
     unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(
@@ -101,12 +100,15 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
     unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
     unstableCache(getBlogPosts, [], cacheConfig)(),
+    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
+    })(),
   ])
 
   return {
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -118,6 +120,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   }
 }
 
@@ -145,7 +148,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const {
     walletData,
     sumrStakeDelegate,
-    sumrEligibility,
     sumrBalances,
     sumrStakingInfo,
     sumrToClaim,
@@ -157,6 +159,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     beachClubData,
     positionsActivePeriods,
     blogPosts,
+    vaultsInfo,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -171,10 +174,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     userPositions: userPositionsJsonSafe,
   })
 
+  const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
+
   const positionsWithVault = userPositionsJsonSafe.map((position) => {
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 
@@ -217,11 +223,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     tallyDelegates,
   }
 
-  const totalRaysPoints = Number(sumrEligibility.leaderboard[0]?.totalPoints ?? 0)
-  const tgeSnapshotPoints = Number(sumrEligibility.leaderboard[0]?.tgeSnapshotPoints ?? 0)
-
-  const totalRays = totalRaysPoints - tgeSnapshotPoints
-
   const positionsHistoricalChartMap = positionsWithVault.reduce<{
     [key: string]: HistoryChartData
   }>(
@@ -249,7 +250,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}
-      totalRays={totalRays}
       latestActivity={latestActivity}
       positionsHistoricalChartMap={positionsHistoricalChartMap}
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
@@ -276,7 +276,10 @@ export async function generateMetadata({
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
-  const { userPositions, vaultsList, systemConfig } = await portfolioCallsHandler(walletAddress)
+  const { userPositions, vaultsList, systemConfig, vaultsInfo } =
+    await portfolioCallsHandler(walletAddress)
+
+  const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
@@ -292,6 +295,7 @@ export async function generateMetadata({
     return mergePositionWithVault({
       position,
       vaultsWithConfig,
+      vaultsInfo: vaultsInfoParsed,
     })
   })
 

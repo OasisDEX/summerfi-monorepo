@@ -225,6 +225,7 @@ export type IconNamesList =
   | 'arrow_backward'
   | 'arrow_decrease'
   | 'arrow_forward'
+  | 'arrow_forward_colorful'
   | 'arrow_increase'
   | 'base'
   | 'bug'

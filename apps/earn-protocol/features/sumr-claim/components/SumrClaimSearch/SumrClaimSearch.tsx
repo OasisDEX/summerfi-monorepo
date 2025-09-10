@@ -1,15 +1,23 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
-import { Button, Card, Input, LoadingSpinner, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  Input,
+  LoadingSpinner,
+  SkeletonLine,
+  Text,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { getUserSumrEligibility } from '@/features/sumr-claim/helpers/getUserSumrEligibility'
-import { trackButtonClick, trackInputChange } from '@/helpers/mixpanel'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useUserAggregatedRewards } from '@/hooks/use-user-aggregated-rewards'
 
 import classNames from './SumrClaimSearch.module.css'
@@ -17,6 +25,8 @@ import classNames from './SumrClaimSearch.module.css'
 export const SumrClaimSearch = () => {
   const { push } = useRouter()
   const user = useUser()
+  const pathname = usePathname()
+  const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
 
   const [eligibleUsers, setEligibleUsers] =
@@ -25,7 +35,7 @@ export const SumrClaimSearch = () => {
   const [inputError, setInputError] = useState('')
   const [inputValue, setInputValue] = useState('')
 
-  const resolvedAddress = inputValue || user?.address
+  const resolvedAddress = inputValue || userWalletAddress
 
   const eligibleUser = eligibleUsers?.length === 1 ? eligibleUsers[0] : undefined
 
@@ -52,14 +62,13 @@ export const SumrClaimSearch = () => {
     setInputValue(newInputValue)
   }
 
-  const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? user?.address
+  const resolvedPortfolioUserAddress = eligibleUser?.userAddress ?? userWalletAddress
 
   const handleButtonClick = () => {
     if (!user) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
-        page: '/sumr',
-        userAddress: '',
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'sumr-claim-search',
+        page: pathname,
       })
       openAuthModal()
 
@@ -67,11 +76,10 @@ export const SumrClaimSearch = () => {
     }
 
     if (resolvedPortfolioUserAddress) {
-      trackButtonClick({
-        id: 'SumrClaimSearch',
-        page: '/sumr',
-        userAddress: resolvedPortfolioUserAddress,
-        searcherdForAddress: resolvedAddress,
+      EarnProtocolEvents.buttonClicked({
+        buttonName: 'sumr-claim-search',
+        page: pathname,
+        walletAddress: resolvedPortfolioUserAddress,
       })
       push(`/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`)
 
@@ -95,6 +103,11 @@ export const SumrClaimSearch = () => {
           setIsLoading(false)
         } catch (e) {
           setIsLoading(false)
+          EarnProtocolEvents.errorOccurred({
+            page: '/sumr',
+            errorMessage: (e as Error).message,
+            walletAddress: address,
+          })
           setInputError('Error fetching user $SUMR eligibility')
         }
       }
@@ -103,11 +116,10 @@ export const SumrClaimSearch = () => {
         void request(resolvedAddress)
       }
       if (inputValue) {
-        trackInputChange({
-          id: 'SumrClaimSearch',
+        EarnProtocolEvents.inputChanged({
+          inputName: 'SumrClaimSearch',
           page: '/sumr',
-          userAddress: user?.address,
-          searcherdForAddress: resolvedAddress,
+          value: inputValue,
         })
       }
     }, 400)
@@ -121,11 +133,11 @@ export const SumrClaimSearch = () => {
     ? `Address ${eligibleUser.ens ? eligibleUser.ens : formatAddress(eligibleUser.userAddress).toLowerCase()} is eligible for `
     : inputValue.length > 0
       ? 'Given address is not eligible for '
-      : user?.address
-        ? `Address ${formatAddress(user.address).toLowerCase()} is not eligible for  `
+      : userWalletAddress
+        ? `Address ${formatAddress(userWalletAddress).toLowerCase()} is not eligible for  `
         : 'Claim your '
 
-  const resolvedButtonText = !user
+  const resolvedButtonText = !userWalletAddress
     ? 'Connect Wallet'
     : eligibleUser
       ? 'Claim $SUMR'
@@ -134,7 +146,7 @@ export const SumrClaimSearch = () => {
   const isButtonDisabled =
     isLoading ||
     inputError.length > 0 ||
-    (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!user)
+    (!eligibleUser && inputValue.length > 0 && !isAddress(inputValue) && !!userWalletAddress)
 
   const sumrToClaim = isAggregatedRewardsLoading ? (
     <SkeletonLine width="100px" height="35px" />
@@ -208,7 +220,7 @@ export const SumrClaimSearch = () => {
         )}
         <Link
           href={
-            !user || !resolvedPortfolioUserAddress
+            !userWalletAddress || !resolvedPortfolioUserAddress
               ? '/sumr'
               : `/portfolio/${resolvedPortfolioUserAddress}?tab=${PortfolioTabs.REWARDS}`
           }

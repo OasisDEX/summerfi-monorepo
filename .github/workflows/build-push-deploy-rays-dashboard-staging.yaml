@@ -1,9 +1,6 @@
 name: Deploy Rays Dashboard Staging
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - dev
 
 jobs:
   changes:

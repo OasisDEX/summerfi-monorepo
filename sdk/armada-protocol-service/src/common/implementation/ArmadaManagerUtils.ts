@@ -4,6 +4,7 @@ import {
   getDeployedRewardsRedeemerAddress,
   isTestDeployment,
   type IArmadaManagerUtils,
+  type IArmadaManagerMerklRewards,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -25,6 +26,8 @@ import {
   type IArmadaPosition,
   type IArmadaPositionId,
   type IArmadaVaultId,
+  type AddressValue,
+  type TransactionInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
@@ -55,6 +58,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _oracleManager: IOracleManager
   private _tokensManager: ITokensManager
   private _deploymentProvider: IDeploymentProvider
+  private _getUserMerklRewards: (
+    params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
+  ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -67,6 +73,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     deploymentProvider: IDeploymentProvider
+    getUserMerklRewards: (
+      params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
+    ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
@@ -77,6 +86,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
     this._deploymentProvider = params.deploymentProvider
+    this._getUserMerklRewards = params.getUserMerklRewards
 
     this._supportedChains = this._configProvider
       .getConfigurationItem({
@@ -152,6 +162,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getUserPositions({ user }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 
@@ -171,6 +182,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 
@@ -186,6 +198,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       query: await this._subgraphManager.getPosition({ positionId: params.positionId }),
       summerToken,
       getTokenBySymbol,
+      getUserMerklRewards: this._getUserMerklRewards,
     })
   }
 
@@ -387,7 +400,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     const quotePrice = Price.createFrom({
       base: params.fromAmount.token,
       quote: params.toAmount.token,
-      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toString(),
+      value: new BigNumber(params.toAmount.amount).div(params.fromAmount.amount).toFixed(),
     })
 
     let spotPriceInfo: ISpotPriceInfo | undefined
@@ -415,6 +428,96 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     return {
       price: quotePrice,
       impact,
+    }
+  }
+
+  /** @see IArmadaManagerUtils.getUnstakeFleetTokensTx */
+  async getUnstakeFleetTokensTx(params: {
+    addressValue: AddressValue
+    vaultId: IArmadaVaultId
+    amountValue?: string
+  }): Promise<TransactionInfo> {
+    // Get chain info from vaultId
+    const chainInfo = params.vaultId.chainInfo
+
+    // Get fleet commander contract
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    // Get rewards manager address from fleet config
+    const fleetConfig = await fleetContract.config()
+    const rewardsManagerAddress = fleetConfig.stakingRewardsManager
+
+    if (rewardsManagerAddress.value === zeroAddress) {
+      throw new Error('Staking rewards manager found for this vault is ZERO_ADDRESS')
+    }
+
+    // get public client
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo,
+    })
+
+    // Read user's current staked balance
+    const stakedBalance = await client.readContract({
+      abi: StakingRewardsManagerBaseAbi,
+      address: rewardsManagerAddress.value,
+      functionName: 'balanceOf',
+      args: [params.addressValue],
+    })
+
+    // Determine amount to unstake
+    let amountToUnstake: bigint
+    if (params.amountValue) {
+      // Parse the provided amount string to bigint
+      amountToUnstake = BigInt(params.amountValue)
+
+      // Validate that the user has enough staked balance
+      if (amountToUnstake > stakedBalance) {
+        throw new Error(
+          `Insufficient staked balance. Available: ${stakedBalance.toString()}, Requested: ${amountToUnstake.toString()}`,
+        )
+      }
+    } else {
+      // Use full balance
+      amountToUnstake = stakedBalance
+    }
+
+    // Validate amount is greater than 0
+    if (amountToUnstake === 0n) {
+      throw new Error('Staked balance is zero')
+    }
+
+    // Generate the unstake transaction calldata
+    const calldata = encodeFunctionData({
+      abi: StakingRewardsManagerBaseAbi,
+      functionName: 'unstake',
+      args: [amountToUnstake],
+    })
+
+    // Create the transaction
+    const transaction = {
+      target: rewardsManagerAddress,
+      calldata: calldata,
+      value: '0',
+    }
+
+    // Create description
+    const description = `Unstake ${amountToUnstake.toString()} fleet tokens from rewards manager`
+
+    LoggingService.debug('getUnstakeFleetTokensTx', {
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
+      addressValue: params.addressValue,
+      stakedBalance: stakedBalance.toString(),
+      amountToUnstake: amountToUnstake.toString(),
+      rewardsManagerAddress,
+    })
+
+    return {
+      transaction,
+      description,
     }
   }
 }

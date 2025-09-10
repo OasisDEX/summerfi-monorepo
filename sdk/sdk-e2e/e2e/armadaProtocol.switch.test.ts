@@ -6,6 +6,7 @@ import {
   ChainIds,
   getChainInfoByChainId,
   Percentage,
+  TokenAmount,
   User,
   Wallet,
 } from '@summerfi/sdk-common'
@@ -16,6 +17,7 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+const simulateOnly = false
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -29,22 +31,22 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 
 describe('Armada Protocol Switch', () => {
   it('should switch position', async () => {
+    // await runTests({
+    //   chainId,
+    //   sourceFleetAddress: eurcFleet,
+    //   destinationFleetAddress: usdcFleet,
+    //   rpcUrl,
+    // })
     await runTests({
       chainId,
-      sourceFleetAddress: usdcFleet,
+      sourceFleetAddress: ethFleet,
       destinationFleetAddress: eurcFleet,
       rpcUrl,
     })
     // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: ethFleet,
-    //   destinationFleetAddress: eurcFleet,
-    //   rpcUrl,
-    // })
-    // await runTests({
-    //   chainInfo,
-    //   sourceFleetAddress: eurcFleet,
-    //   destinationFleetAddress: usdcFleet,
+    //   chainId,
+    //   sourceFleetAddress: usdcFleet,
+    //   destinationFleetAddress: ethFleet,
     //   rpcUrl,
     // })
   })
@@ -99,10 +101,6 @@ describe('Armada Protocol Switch', () => {
       user,
       fleetAddress: sourceFleetAddress,
     })
-    const destinationPositionBefore = await sdk.armada.users.getUserPosition({
-      user,
-      fleetAddress: destinationFleetAddress,
-    })
 
     assert(
       sourcePositionBefore !== undefined,
@@ -113,13 +111,43 @@ describe('Armada Protocol Switch', () => {
       `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
     )
 
+    const sourceFleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
+    const sourceStakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
     console.log(
-      'positions before',
-      sourcePositionBefore.amount.toString(),
-      destinationPositionBefore?.amount.toString(),
+      'Source balance before',
+      '\n - Wallet: ',
+      sourceFleetAmountBefore.assets.toString(),
+      '\n - Staked: ',
+      sourceStakedAmountBefore.assets.toString(),
+    )
+    // log balances of destination vault
+    const destinationFleetAmountBefore = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId: destinationVaultId,
+    })
+    const destinationStakedAmountBefore = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: destinationVaultId,
+    })
+    console.log(
+      'Destination balance before',
+      '\n - Wallet: ',
+      destinationFleetAmountBefore.assets.toString(),
+      '\n - Staked: ',
+      destinationStakedAmountBefore.assets.toString(),
     )
 
-    const switchAmount = sourcePositionBefore.amount
+    const switchAmount = TokenAmount.createFrom({
+      amount: amountValue ?? sourcePositionBefore.amount.amount,
+      token: sourcePositionBefore.amount.token,
+    })
+
     console.log(
       `switch position from ${switchAmount.toString()} to ${destinationVaultInfo.depositCap.token.toString()}`,
     )
@@ -138,15 +166,17 @@ describe('Armada Protocol Switch', () => {
       transactions,
       rpcUrl: rpcUrl,
       privateKey: signerPrivateKey,
+      simulateOnly,
     })
     statuses.forEach((status) => {
       expect(status).toBe('success')
     })
 
-    const sourcePositionAfter = await sdk.armada.users.getUserPosition({
-      user,
-      fleetAddress: sourceFleetAddress,
-    })
+    if (simulateOnly) {
+      console.log('Simulation only - skipping post-switch position checks')
+      return
+    }
+
     const destinationPositionAfter = await sdk.armada.users.getUserPosition({
       user,
       fleetAddress: destinationFleetAddress,
@@ -156,10 +186,36 @@ describe('Armada Protocol Switch', () => {
       `Destination position should be defined for ${destinationFleetAddress.value}`,
     )
 
+    const sourceFleetAmountAfter = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
+    const sourceStakedAmountAfter = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: sourceVaultId,
+    })
     console.log(
-      'positions after',
-      sourcePositionAfter?.amount.toString(),
-      destinationPositionAfter.amount.toString(),
+      'Source balance after:',
+      '\n - Wallet: ',
+      sourceFleetAmountAfter.assets.toString(),
+      '\n - Staked: ',
+      sourceStakedAmountAfter.assets.toString(),
+    )
+    // log dest balances after
+    const destinationFleetAmountAfter = await sdk.armada.users.getFleetBalance({
+      user,
+      vaultId: destinationVaultId,
+    })
+    const destinationStakedAmountAfter = await sdk.armada.users.getStakedBalance({
+      user,
+      vaultId: destinationVaultId,
+    })
+    console.log(
+      'Destination balance after:',
+      '\n - Wallet: ',
+      destinationFleetAmountAfter.assets.toString(),
+      '\n - Staked: ',
+      destinationStakedAmountAfter.assets.toString(),
     )
   }
 })

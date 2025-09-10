@@ -13,25 +13,14 @@ import classNames from './PortfolioRewards.module.css'
 
 interface PortfolioRewardsProps {
   rewardsData: ClaimDelegateExternalData
-  totalRays: number
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-export const PortfolioRewards: FC<PortfolioRewardsProps> = ({
-  rewardsData,
-  totalRays,
-  state,
-  dispatch,
-}) => {
+export const PortfolioRewards: FC<PortfolioRewardsProps> = ({ rewardsData, state, dispatch }) => {
   return (
     <div className={classNames.wrapper}>
-      <PortfolioRewardsCards
-        rewardsData={rewardsData}
-        totalRays={totalRays}
-        state={state}
-        dispatch={dispatch}
-      />
+      <PortfolioRewardsCards rewardsData={rewardsData} state={state} dispatch={dispatch} />
       <PortfolioRewardsCountdown />
       <PortfolioRewardsFaq />
     </div>

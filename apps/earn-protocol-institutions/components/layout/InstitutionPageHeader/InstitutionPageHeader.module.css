@@ -16,5 +16,11 @@
   .rightWrapper {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+  }
+
+  .rightWrapperItem {
+    display: flex;
+    flex-direction: row;
   }
 }

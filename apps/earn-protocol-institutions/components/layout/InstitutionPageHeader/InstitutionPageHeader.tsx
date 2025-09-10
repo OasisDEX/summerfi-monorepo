@@ -3,16 +3,18 @@ import { type FC, type ReactNode } from 'react'
 import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { GeneralRoles } from '@summerfi/sdk-client'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
-import { rolesToHuman } from '@/helpers/roles-to-human'
-import { type InstitutionData } from '@/types/institution-data'
+import { useAuth } from '@/contexts/AuthContext/AuthContext'
+import { walletRolesToHuman } from '@/helpers/roles-to-human'
+import { type InstitutionData, type InstitutionsList } from '@/types/institution-data'
 
 import styles from './InstitutionPageHeader.module.css'
 
 interface InstitutionPageHeaderProps {
   selectedInstitution: InstitutionData
-  institutionsList: InstitutionData[]
+  institutionsList: InstitutionsList
 }
 
 // todo to be replaced with the actual connected role & mapping from backend per wallet address
@@ -26,14 +28,30 @@ const DropdownContent: FC<{ children: ReactNode }> = ({ children }) => {
   )
 }
 
+const InstitutionLogo = ({ institution }: { institution: InstitutionData }) => {
+  if (institution.logoUrl) {
+    return <Image src={institution.logoUrl} alt={institution.displayName} width={54} height={54} />
+  }
+  if (institution.logoFile) {
+    return <Image src={institution.logoFile} alt={institution.displayName} width={54} height={54} />
+  }
+
+  return <Icon iconName="earn_institution" size={54} />
+}
+
 export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
   selectedInstitution,
   institutionsList,
 }) => {
   const { push } = useRouter()
 
+  const { user } = useAuth()
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const roleResolved = connectedRole ? rolesToHuman(connectedRole) : 'No role connected'
+  const walletRole = connectedRole ? walletRolesToHuman(connectedRole) : 'No role connected'
+  const institutionUserRole = user
+    ? user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)?.role
+    : 'No role connected'
   const institutionsOptions: DropdownRawOption[] = institutionsList.map((institution) => ({
     value: institution.name,
     content: <DropdownContent>{institution.displayName}</DropdownContent>,
@@ -46,7 +64,7 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
   return (
     <div className={styles.institutionPageHeaderWrapper}>
       <div className={styles.leftWrapper}>
-        <Icon iconName="earn_institution" size={54} />
+        <InstitutionLogo institution={selectedInstitution} />
         {institutionsOptions.length > 1 ? (
           <Dropdown
             options={institutionsOptions}
@@ -71,12 +89,22 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
         )}
       </div>
       <div className={styles.rightWrapper}>
-        <Text as="p" variant="p1semi">
-          Currently connected role:
-        </Text>
-        <Text as="p" variant="p1semi" style={{ color: 'var(--color-text-link)' }}>
-          {roleResolved}
-        </Text>
+        <div className={styles.rightWrapperItem}>
+          <Text as="p" variant="p2semi">
+            User role:&nbsp;
+          </Text>
+          <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-link)' }}>
+            {institutionUserRole}
+          </Text>
+        </div>
+        <div className={styles.rightWrapperItem}>
+          <Text as="p" variant="p2semi">
+            Wallet role:&nbsp;
+          </Text>
+          <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-link)' }}>
+            {walletRole}
+          </Text>
+        </div>
       </div>
     </div>
   )

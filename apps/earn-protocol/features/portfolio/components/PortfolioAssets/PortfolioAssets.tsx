@@ -1,12 +1,13 @@
 import { type FC, type ReactNode, useMemo, useState } from 'react'
 import { DataBlock, Icon, PillSelector } from '@summerfi/app-earn-ui'
 import { NetworkNames } from '@summerfi/app-types'
-import { formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, formatFiatBalance, slugify } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { PortfolioAssetsList } from '@/features/portfolio/components/PortfolioAssetsList/PortfolioAssetsList'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PotfolioAssets.module.css'
 
@@ -44,6 +45,7 @@ interface PortfolioAssetsProps {
 }
 
 export const PortfolioAssets: FC<PortfolioAssetsProps> = ({ walletData }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const [network, setNetwork] = useState<PortfolioAssetNetworkOption>(networks[0].value)
 
   const resolvedWalletAssets = useMemo(() => {
@@ -78,7 +80,10 @@ export const PortfolioAssets: FC<PortfolioAssetsProps> = ({ walletData }) => {
         />
         <PillSelector
           options={networks}
-          onSelect={(newNetwork) => setNetwork(newNetwork as PortfolioAssetNetworkOption)}
+          onSelect={(newNetwork) => {
+            buttonClickEventHandler(`portfolio-wallet-network-select-${slugify(newNetwork)}`)
+            setNetwork(newNetwork as PortfolioAssetNetworkOption)
+          }}
           defaultSelected={network}
         />
       </div>

@@ -1,5 +1,7 @@
 import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
 
+import { institutionsAdminPanelGetLogoSrc } from '@/features/admin/helpers'
+
 export const getInstitutionData = async (institutionName: string) => {
   if (!institutionName) return null
   if (typeof institutionName !== 'string') return null
@@ -11,14 +13,17 @@ export const getInstitutionData = async (institutionName: string) => {
   try {
     const institution = await db
       .selectFrom('institutions')
-      .select(['id', 'name', 'displayName'])
+      .select(['id', 'name', 'displayName', 'logoFile', 'logoUrl'])
       .where('name', '=', institutionName)
       .executeTakeFirst()
 
     if (!institution) return null
 
     return {
-      institution,
+      ...institution,
+      logoFile: institution.logoFile
+        ? (institutionsAdminPanelGetLogoSrc(institution.logoFile) as string)
+        : undefined,
     }
   } finally {
     db.destroy()

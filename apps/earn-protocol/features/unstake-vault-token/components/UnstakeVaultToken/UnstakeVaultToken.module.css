@@ -1,0 +1,31 @@
+.unstakeVaultTokenWrapper {
+  .expanderTitleWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-space-x-small);
+    width: 100%;
+    flex-wrap: wrap;
+
+    .expanderTitleWrapperLeft {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-space-x-small);
+
+      .iconWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: var(--radius-circle);
+        background: var(--gradient-earn-protocol-dark);
+
+        &.iconWrapperError {
+          background: var(--earn-protocol-critical-100);
+        }
+      }
+    }
+  }
+}

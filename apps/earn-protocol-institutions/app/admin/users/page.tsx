@@ -1,12 +1,8 @@
-import { readSession } from '@/app/server-handlers/auth/session'
-import { UsersAdminPanel } from '@/features/admin/UsersAdminPanel'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { AdminPanelUsers } from '@/features/admin/AdminPanelUsers'
 
 export default async function UsersAdminPage() {
-  const session = await readSession()
+  await validateGlobalAdminSession()
 
-  if (!session || !session.user.isGlobalAdmin) {
-    throw new Error('Unauthorized')
-  }
-
-  return <UsersAdminPanel />
+  return <AdminPanelUsers />
 }

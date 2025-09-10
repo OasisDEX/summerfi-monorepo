@@ -1,14 +1,18 @@
 'use client'
 import { type FC } from 'react'
 import { Card, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { vaultDetailsHowItWorksLinks } from '@/features/vault-details/components/VaultDetailsHowItWorks/config'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import governance from '@/public/img/vault_details/governance.svg'
 import howItWorks from '@/public/img/vault_details/how_it_works.svg'
 
 const LinksAndDescription = () => {
+  const handleButtonClick = useHandleButtonClickEvent()
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Text
@@ -24,7 +28,14 @@ const LinksAndDescription = () => {
       </Text>
       <div style={{ display: 'flex', gap: '45px', flexWrap: 'wrap' }}>
         {vaultDetailsHowItWorksLinks.map((link) => (
-          <Link href={link.href} key={link.label} target="_blank">
+          <Link
+            href={link.href}
+            key={link.label}
+            target="_blank"
+            onClick={() => {
+              handleButtonClick(`vault-details-how-it-all-works-${slugify(link.label)}`)
+            }}
+          >
             <WithArrow
               as="p"
               variant="p3semi"
@@ -66,6 +77,7 @@ const ImageWrapper = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const VaultDetailsHowItWorks = () => {
+  const handleButtonClick = useHandleButtonClickEvent()
   const tabs = [
     {
       label: 'Rebalance mechanism',
@@ -109,6 +121,10 @@ export const VaultDetailsHowItWorks = () => {
     },
   ]
 
+  const handleTabChange = (tab: { id: string }) => {
+    handleButtonClick(`vault-details-how-it-all-works-${tab.id}`)
+  }
+
   return (
     <Card variant="cardSecondary">
       <div
@@ -124,7 +140,7 @@ export const VaultDetailsHowItWorks = () => {
           How it all works
         </Text>
 
-        <TabBar tabs={tabs} />
+        <TabBar tabs={tabs} handleTabChange={handleTabChange} />
       </div>
     </Card>
   )

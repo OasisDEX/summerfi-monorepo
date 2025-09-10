@@ -1,10 +1,16 @@
 'use client'
 
 import { type FC } from 'react'
-import { type DeviceType, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
+import {
+  type DeviceType,
+  type IArmadaVaultInfo,
+  type SDKVaultishType,
+  type VaultApyData,
+} from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
+  slugifyVault,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
@@ -38,6 +44,9 @@ type VaultCardProps = SDKVaultishType & {
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
   deviceType?: DeviceType
+  tooltipName?: string
+  onTooltipOpen?: (tooltipName: string) => void
+  merklRewards?: IArmadaVaultInfo['merklRewards'] | undefined
 }
 
 export const VaultCard: FC<VaultCardProps> = (props) => {
@@ -52,9 +61,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     selected = false,
     onClick,
     customFields,
-    rewardTokenEmissionsAmount,
-    rewardTokenEmissionsFinish,
-    rewardTokens,
+    merklRewards,
     withTokenBonus,
     sumrPrice,
     showCombinedBonus = false,
@@ -63,15 +70,15 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     disabled,
     depositCap,
     deviceType,
+    onTooltipOpen,
+    tooltipName,
   } = props
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    rewardTokens,
-    rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards,
     sumrPrice,
     totalValueLockedUSD,
-    rewardTokenEmissionsFinish,
-  )
+  })
 
   const handleVaultClick = () => {
     if (onClick && !disabled) {
@@ -125,6 +132,8 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
+            tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
+            onTooltipOpen={onTooltipOpen}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
@@ -135,9 +144,15 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
                 combinedApr={combinedApr}
                 apyUpdatedAt={apyUpdatedAt}
                 deviceType={deviceType}
+                tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}
+                onTooltipOpen={onTooltipOpen}
               />
             </Text>
-            <AdditionalBonusLabel externalTokenBonus={customFields?.bonus} />
+            <AdditionalBonusLabel
+              externalTokenBonus={customFields?.bonus}
+              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
+              onTooltipOpen={onTooltipOpen}
+            />
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>

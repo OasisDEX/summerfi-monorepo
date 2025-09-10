@@ -1,3 +1,4 @@
+import type { MerklReward } from '@summerfi/armada-protocol-common'
 import {
   type IUser,
   SDKError,
@@ -11,6 +12,10 @@ import {
   ArmadaPositionId,
   ArmadaVault,
   ArmadaVaultId,
+  type ChainId,
+  type AddressValue,
+  FiatCurrencyAmount,
+  FiatCurrency,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { BigNumber } from 'bignumber.js'
@@ -21,11 +26,15 @@ export const mapGraphDataToArmadaPosition =
     chainInfo,
     summerToken,
     getTokenBySymbol,
+    merklSummerRewards,
   }: {
     user: IUser
     chainInfo: IChainInfo
     summerToken: IToken
     getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
+    merklSummerRewards: {
+      perChain: Partial<Record<ChainId, MerklReward[]>>
+    }
   }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
     if (position.vault.outputToken == null) {
@@ -42,13 +51,37 @@ export const mapGraphDataToArmadaPosition =
 
     const sharesBalance = BigNumber(position.outputTokenBalance.toString())
 
-    const claimedSummerToken = TokenAmount.createFrom({
-      amount: position.claimedSummerTokenNormalized || '0',
+    const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
+      (acc, reward) => {
+        const vaultKey = position.vault.id.toLowerCase() as AddressValue
+        // Guard against missing breakdowns for this chain
+        const chainBreakdowns = reward.breakdowns[chainInfo.chainId]
+        if (!chainBreakdowns) {
+          return acc
+        }
+        const positionRewards = chainBreakdowns[vaultKey]
+        if (positionRewards == null) {
+          return acc
+        }
+
+        return {
+          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || '0'),
+          claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || '0'),
+        }
+      },
+      { claimableSummerToken: 0n, claimedSummerToken: 0n },
+    )
+    const claimedSummerToken = TokenAmount.createFromBaseUnit({
+      amount: BigNumber(position.claimedSummerToken || '0')
+        .plus(merklSummerRewardsForPosition?.claimedSummerToken.toString() || '0')
+        .toFixed(),
       token: summerToken,
     })
 
-    const claimableSummerToken = TokenAmount.createFrom({
-      amount: position.claimableSummerTokenNormalized || '0',
+    const claimableSummerToken = TokenAmount.createFromBaseUnit({
+      amount: BigNumber(position.claimableSummerToken || '0')
+        .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
+        .toFixed(),
       token: summerToken,
     })
 
@@ -64,6 +97,15 @@ export const mapGraphDataToArmadaPosition =
           type: SDKErrorType.ArmadaError,
         })
       }
+
+      // for summer token rewards override with the calculated values above
+      if (reward.rewardToken.symbol === summerToken.symbol) {
+        return {
+          claimed: claimedSummerToken,
+          claimable: claimableSummerToken,
+        }
+      }
+
       return {
         claimed: TokenAmount.createFrom({
           amount: reward.claimedNormalized || '0',
@@ -87,7 +129,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       shares: TokenAmount.createFrom({
-        amount: sharesBalance.toString(),
+        amount: sharesBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
@@ -99,7 +141,7 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       amount: TokenAmount.createFrom({
-        amount: fleetBalance.toString(),
+        amount: fleetBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({
@@ -110,11 +152,43 @@ export const mapGraphDataToArmadaPosition =
           decimals: position.vault.inputToken.decimals,
         }),
       }),
+      depositsAmount: TokenAmount.createFromBaseUnit({
+        amount: position.inputTokenDeposits.toString(),
+        token: Token.createFrom({
+          chainInfo,
+          address: Address.createFromEthereum({
+            value: position.vault.inputToken.id,
+          }),
+          name: position.vault.inputToken.name,
+          symbol: position.vault.inputToken.symbol,
+          decimals: position.vault.inputToken.decimals,
+        }),
+      }),
+      withdrawalsAmount: TokenAmount.createFromBaseUnit({
+        amount: position.inputTokenWithdrawals.toString(),
+        token: Token.createFrom({
+          chainInfo,
+          address: Address.createFromEthereum({
+            value: position.vault.inputToken.id,
+          }),
+          name: position.vault.inputToken.name,
+          symbol: position.vault.inputToken.symbol,
+          decimals: position.vault.inputToken.decimals,
+        }),
+      }),
+      depositsAmountUSD: FiatCurrencyAmount.createFrom({
+        amount: position.inputTokenDepositsNormalizedInUSD,
+        fiat: FiatCurrency.USD,
+      }),
+      withdrawalsAmountUSD: FiatCurrencyAmount.createFrom({
+        amount: position.inputTokenWithdrawalsNormalizedInUSD,
+        fiat: FiatCurrency.USD,
+      }),
       deposits: position.deposits.map((deposit) => {
         const amount = TokenAmount.createFrom({
           amount: BigNumber(deposit.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
-            .toString(),
+            .toFixed(),
           token: Token.createFrom({
             chainInfo,
             address: Address.createFromEthereum({
@@ -134,7 +208,7 @@ export const mapGraphDataToArmadaPosition =
         const amount = TokenAmount.createFrom({
           amount: BigNumber(withdrawal.amount.toString())
             .div(10 ** position.vault.inputToken.decimals)
-            .toString(),
+            .toFixed(),
           token: Token.createFrom({
             chainInfo,
             address: Address.createFromEthereum({

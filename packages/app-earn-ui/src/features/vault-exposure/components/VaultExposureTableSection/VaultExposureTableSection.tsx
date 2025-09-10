@@ -23,6 +23,8 @@ interface VaultExposureTableSectionProps {
   arksInterestRates: InterestRates
   hiddenColumns?: string[]
   vaultApyData: VaultApyData
+  tableId: string
+  buttonClickEventHandler: (buttonName: string) => void
 }
 
 export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
@@ -35,11 +37,18 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   arksInterestRates,
   hiddenColumns,
   vaultApyData,
+  tableId,
+  buttonClickEventHandler,
 }) => {
   const vaultExposureFiltered = useMemo(
     () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
     [allocationType, vault],
   )
+
+  const handleButtonClick = (buttonName: string) => () => {
+    setSeeAll((prev) => !prev)
+    buttonClickEventHandler(buttonName)
+  }
 
   return (
     <>
@@ -54,7 +63,9 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           <Button
             variant="unstyled"
-            onClick={() => setSeeAll((prev) => !prev)}
+            onClick={handleButtonClick(
+              `${tableId}-vault-exposure-tab--${allocationType.toLowerCase()}-${seeAll ? 'all' : 'less'}`,
+            )}
             style={{
               display: 'flex',
               alignItems: 'center',

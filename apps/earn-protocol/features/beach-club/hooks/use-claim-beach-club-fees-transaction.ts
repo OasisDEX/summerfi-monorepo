@@ -2,7 +2,7 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
-import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
+import { ChainIds } from '@summerfi/sdk-common'
 import { type PublicClient } from 'viem'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -34,13 +34,8 @@ export const useClaimBeachClubFeesTransaction = ({
   isLoading: boolean
   error: Error | null
 } => {
-  const {
-    getReferralFeesMerklClaimTx,
-    getCurrentUser,
-    getChainInfo,
-    getUserMerklRewards,
-    getTokenBySymbol,
-  } = useAppSDK()
+  const { getReferralFeesMerklClaimTx, getCurrentUser, getChainInfo, getTokenBySymbol } =
+    useAppSDK()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -73,23 +68,10 @@ export const useClaimBeachClubFeesTransaction = ({
       chainId: ChainIds.Base,
     })
 
-    // fees are claimed on base only and only for USDC
-    const rewards = await getUserMerklRewards({
-      user,
-      chainIds: [ChainIds.Base],
-      rewardsTokensAddresses: [usdcToken.address.value],
-    })
-
-    const rewardsOnBase = rewards.perChain[ChainIds.Base]
-
-    if (!rewardsOnBase) {
-      throw new Error('No fees to claim on Base')
-    }
-
     const tx = await getReferralFeesMerklClaimTx({
       user,
       chainInfo,
-      rewardsTokensAddresses: rewardsOnBase.map((reward) => reward.token.address as AddressValue),
+      rewardsTokensAddresses: [usdcToken.address.value],
     })
 
     if (!tx) {

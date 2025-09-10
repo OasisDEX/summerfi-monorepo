@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useEffect, useReducer } from 'react'
+import { type FC, useReducer } from 'react'
 import {
   getPositionValues,
   Icon,
@@ -36,7 +36,7 @@ import { PortfolioYourActivity } from '@/features/portfolio/components/Portfolio
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { trackButtonClick } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
 import classNames from './PortfolioPageView.module.css'
@@ -49,7 +49,6 @@ interface PortfolioPageViewProps {
   positions: PositionWithVault[]
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
-  totalRays: number
   positionsHistoricalChartMap: {
     [key: string]: HistoryChartData
   }
@@ -68,7 +67,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   positions,
   rebalanceActivity,
   latestActivity,
-  totalRays,
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
@@ -77,6 +75,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   blogPosts,
 }) => {
   const { features } = useSystemConfig()
+  const handleButtonClick = useHandleButtonClickEvent()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
@@ -98,16 +97,10 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const beachClubEnabled = !!features?.BeachClub
 
-  useEffect(() => {
-    trackButtonClick({
-      id: 'TabChange_Portfolio',
-      page: `/portfolio/${walletAddress}`,
-      userAddress: userWalletAddress,
-      activeTab,
-    })
-    // only on tab change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab])
+  const handleTabChange = (tab: { id: string }) => {
+    handleButtonClick(`portfolio-tab-${tab.id}`)
+    updateTab(tab.id as PortfolioTabs)
+  }
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
@@ -167,14 +160,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
     {
       id: PortfolioTabs.REWARDS,
       label: '$SUMR Rewards',
-      content: (
-        <PortfolioRewards
-          rewardsData={rewardsData}
-          totalRays={totalRays}
-          state={state}
-          dispatch={dispatch}
-        />
-      ),
+      content: <PortfolioRewards rewardsData={rewardsData} state={state} dispatch={dispatch} />,
     },
     ...(beachClubEnabled
       ? [
@@ -218,7 +204,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
-          handleTabChange={(tab) => updateTab(tab.id as PortfolioTabs)}
+          handleTabChange={handleTabChange}
           useAsControlled
         />
       </div>

@@ -26,6 +26,7 @@ export const PortfolioWallet: FC<PortfolioWalletProps> = ({
         className={classNames.vaultCarousel}
         vaultsList={vaultsList}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+        carouselId="portfolio-wallet-vaults-carousel"
       />
       {/* <CryptoUtilities /> */}
     </div>

@@ -7,10 +7,12 @@ import {
   Card,
   DataBlock,
   Dropdown,
+  ERROR_TOAST_CONFIG,
   Icon,
   Input,
   SDKChainIdToAAChainMap,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   Text,
   useClientChainId,
   useUserWallet,
@@ -44,7 +46,6 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 
 import {

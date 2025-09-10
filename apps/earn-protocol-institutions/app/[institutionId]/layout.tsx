@@ -36,17 +36,15 @@ export default async function InstitutionMainLayout({
     )
   }
 
-  const [institutionData, userInstitutionsList] = await Promise.all([
+  const [institution, userInstitutionsList] = await Promise.all([
     getInstitutionData(institutionId),
     getUserInstitutionsList(session.sub),
   ])
 
-  if (!institutionId || !institutionData) {
+  if (!institutionId || !institution) {
     // Handle institution not found
     return <div>Institution not found.</div>
   }
-
-  const { institution } = institutionData
 
   return (
     <div className={institutionMainLayoutStyles.institutionPageView}>

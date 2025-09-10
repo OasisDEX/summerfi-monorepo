@@ -1,6 +1,7 @@
 export type { IToken as ITokenStanalone } from './common/interfaces/IToken'
 export type { QuoteData as QuoteDataStanalone } from './swap/implementation/QuoteData'
 export { type AddressValue, isAddressValue } from './common/types/AddressValue'
+export { type AmountValue, isAmountValue } from './common/types/AmountValue'
 export {
   type ChainId,
   ChainIdSchema,

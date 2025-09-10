@@ -1,12 +1,8 @@
-import { readSession } from '@/app/server-handlers/auth/session'
-import { InstitutionsAdminPanel } from '@/features/admin/InstitutionsAdminPanel'
+import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { AdminPanelInstitutions } from '@/features/admin/AdminPanelInstitutions'
 
 export default async function InstitutionsAdminPage() {
-  const session = await readSession()
+  await validateGlobalAdminSession()
 
-  if (!session || !session.user.isGlobalAdmin) {
-    throw new Error('Unauthorized')
-  }
-
-  return <InstitutionsAdminPanel />
+  return <AdminPanelInstitutions />
 }

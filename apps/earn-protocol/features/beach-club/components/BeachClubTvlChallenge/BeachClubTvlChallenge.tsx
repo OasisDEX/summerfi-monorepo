@@ -4,14 +4,17 @@ import { useChain } from '@account-kit/react'
 import {
   BeachClubRewardSimulation,
   Button,
+  ERROR_TOAST_CONFIG,
   Icon,
   MobileDrawer,
   Modal,
   SDKChainIdToAAChainMap,
+  SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useClientChainId,
   useMobileCheck,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
@@ -20,6 +23,7 @@ import {
   formatFiatBalance,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
+import { type MerklReward } from '@summerfi/armada-protocol-common'
 
 import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
 import { delayPerNetwork } from '@/constants/delay-per-network'
@@ -31,12 +35,25 @@ import { type BeachClubReducerAction, type BeachClubState } from '@/features/bea
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
-import { ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@/features/toastify/config'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 import { getBeachClubTvlRewardsCards } from './cards'
 
 import classNames from './BeachClubTvlChallenge.module.css'
+
+const getFeesUSDClaimableNow = (merklRewards: MerklReward[] | undefined) => {
+  if (merklRewards) {
+    return merklRewards.reduce((acc, reward) => {
+      return (
+        acc +
+        Number((Number(reward.amount) / Number(10 ** reward.token.decimals)) * reward.token.price)
+      )
+    }, 0)
+  }
+
+  return 0
+}
 
 interface BeachClubTvlChallengeProps {
   beachClubData: BeachClubData
@@ -55,6 +72,8 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const { isMobile } = useMobileCheck(deviceType)
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
   const [isOptInOpen, setIsOptInOpen] = useState(false)
+  const { userWalletAddress } = useUserWallet()
+  const handleInputEvent = useHandleInputChangeEvent()
 
   const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
@@ -62,7 +81,17 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   })
   const { setChain, isSettingChain } = useChain()
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
+
+  const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
+
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
+
+  const setSimulationValueCallback = (value: string) => {
+    handleInputEvent({
+      inputName: 'portfolio-beach-club-simulation-slider',
+      value,
+    })
+  }
 
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
@@ -101,6 +130,13 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
     network: chainIdToSDKNetwork(clientChainId),
     publicClient,
   })
+
+  const claimableFeesRewardsOnBase =
+    beachClubData.claimableRewardsPerChain.perChain[SupportedNetworkIds.Base]
+
+  const feesUSDclaimableNowOnBase = getFeesUSDClaimableNow(claimableFeesRewardsOnBase)
+
+  const hasClaimableFeesRewardsOnBase = feesUSDclaimableNowOnBase > 0
 
   const handleClaimFees = async () => {
     await claimBeachClubFeesTransaction().catch((err) => {
@@ -150,8 +186,27 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
           Earned Fee&apos;s{' '}
           <Tooltip
-            tooltip="Earned fee's are the total accrued fee's from your Beach Club referrals to date, denominated in dollars."
-            tooltipWrapperStyles={{ minWidth: '200px' }}
+            tooltip={
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--spacing-space-2x-small)',
+                }}
+              >
+                Earned fees are the total accrued fees from your Beach Club referrals to date,
+                denominated in dollars.
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <Text as="p" variant="p3semi">
+                    Claimable now: {formatFiatBalance(feesUSDclaimableNowOnBase)} USD
+                  </Text>
+                  <Text as="p" variant="p3semi">
+                    Earned: {formatFiatBalance(feesRewards)} USD
+                  </Text>
+                </div>
+              </div>
+            }
+            tooltipWrapperStyles={{ minWidth: '230px' }}
           >
             <Icon iconName="info" size={24} />
           </Tooltip>
@@ -171,7 +226,9 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
         disabled:
           isSettingChain ||
           state.claimStatus === UiTransactionStatuses.PENDING ||
-          state.claimStatus === UiTransactionStatuses.COMPLETED,
+          state.claimStatus === UiTransactionStatuses.COMPLETED ||
+          !isOwner ||
+          !hasClaimableFeesRewardsOnBase,
       },
     },
   ]
@@ -207,13 +264,6 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
           </div>
         ))}
       </div>
-      {/* <div className={classNames.leaderboardLink}>
-        <Link href="/" target="_blank" style={{ textAlign: 'center' }}>
-          <WithArrow as="p" variant="p3semi" style={{ color: 'var(--beach-club-link)' }}>
-            See leaderboard
-          </WithArrow>
-        </Link>
-      </div> */}
       <div
         className={classNames.rewardCardsWrapper}
         style={{ marginTop: 'var(--general-space-32)' }}
@@ -226,7 +276,10 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
           />
         ))}
       </div>
-      <BeachClubRewardSimulation tvl={currentGroupTvl} />
+      <BeachClubRewardSimulation
+        tvl={currentGroupTvl}
+        setSimulationValueCallback={setSimulationValueCallback}
+      />
       {isMobile ? (
         <MobileDrawer isOpen={isOptInOpen} onClose={handleOptInOpenClose} height="auto">
           <ClaimDelegateOptInMerkl

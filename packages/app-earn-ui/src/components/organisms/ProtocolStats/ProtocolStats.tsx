@@ -26,7 +26,7 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = f
     },
     {
       title: 'Users',
-      value: '5,000+',
+      value: '6,000+',
     },
     {
       title: 'Markets Optimized',

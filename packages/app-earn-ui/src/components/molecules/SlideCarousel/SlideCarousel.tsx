@@ -1,5 +1,5 @@
 'use client'
-import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import clsx from 'clsx'
 import { type EmblaOptionsType } from 'embla-carousel'
@@ -30,6 +30,8 @@ type PropType = {
   dotsPosition?: SliderCarouselDotsPosition
   withAutoPlay?: boolean
   portalElementId?: string
+  carouselId?: string
+  handleButtonClick?: (buttonName: string) => void
 }
 
 export const SlideCarousel: FC<PropType> = ({
@@ -43,6 +45,8 @@ export const SlideCarousel: FC<PropType> = ({
   dotsPosition = SliderCarouselDotsPosition.TOP,
   withAutoPlay = false,
   portalElementId,
+  carouselId,
+  handleButtonClick,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options)
   const [autoSlideDirection, setAutoSlideDirection] = useState<'prev' | 'next'>('next')
@@ -50,6 +54,16 @@ export const SlideCarousel: FC<PropType> = ({
 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
     usePrevNextButtons(emblaApi)
+
+  const handleOnPrevButtonClick = useCallback(() => {
+    handleButtonClick?.(`${carouselId}-prev-button-click`)
+    onPrevButtonClick()
+  }, [onPrevButtonClick, carouselId, handleButtonClick])
+
+  const handleOnNextButtonClick = useCallback(() => {
+    handleButtonClick?.(`${carouselId}-next-button-click`)
+    onNextButtonClick()
+  }, [onNextButtonClick, carouselId, handleButtonClick])
 
   useEffect(() => {
     if (emblaApi) {
@@ -68,8 +82,8 @@ export const SlideCarousel: FC<PropType> = ({
   useEffect(() => {
     if (withAutoPlay) {
       const directionFn = {
-        prev: () => onPrevButtonClick(),
-        next: () => onNextButtonClick(),
+        prev: () => handleOnPrevButtonClick(),
+        next: () => handleOnNextButtonClick(),
       }
 
       const selfSlideInterval = setInterval(() => {
@@ -101,6 +115,8 @@ export const SlideCarousel: FC<PropType> = ({
     prevBtnDisabled,
     autoSlideDirection,
     withAutoPlay,
+    handleOnPrevButtonClick,
+    handleOnNextButtonClick,
   ])
 
   const portal = useRef<HTMLDivElement>(null)
@@ -121,13 +137,13 @@ export const SlideCarousel: FC<PropType> = ({
       style={{ display: slides.length > 2 ? 'grid' : 'none' }}
     >
       <SlideCarouselButton
-        onClick={onPrevButtonClick}
+        onClick={handleOnPrevButtonClick}
         disabled={prevBtnDisabled}
         direction="left"
         iconVariant="xxs"
       />
       <SlideCarouselButton
-        onClick={onNextButtonClick}
+        onClick={handleOnNextButtonClick}
         disabled={nextBtnDisabled}
         direction="right"
         iconVariant="xxs"

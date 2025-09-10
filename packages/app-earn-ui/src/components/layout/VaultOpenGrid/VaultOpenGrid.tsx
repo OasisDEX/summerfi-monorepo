@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode, useEffect, useState } from 'react'
 import {
+  type IArmadaVaultInfo,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SupportedNetworkIds,
@@ -11,6 +12,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  slugifyVault,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
   ten,
@@ -46,6 +48,7 @@ import vaultOpenGridStyles from './VaultOpenGrid.module.css'
 interface VaultOpenGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  vaultInfo?: IArmadaVaultInfo
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   detailsContent: ReactNode
@@ -62,10 +65,14 @@ interface VaultOpenGridProps {
   }
   disableDropdownOptionsByChainId?: SupportedNetworkIds
   getOptionUrl?: (option: SDKVaultishType) => string
+  tooltipEventHandler: (tooltipName: string) => void
+  buttonClickEventHandler: (buttonName: string) => void
+  dropdownChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
 }
 
 export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   vault,
+  vaultInfo,
   vaults,
   displaySimulationGraph,
   simulationGraph,
@@ -83,6 +90,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   },
   disableDropdownOptionsByChainId,
   getOptionUrl,
+  buttonClickEventHandler,
+  tooltipEventHandler,
+  dropdownChangeHandler,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -154,15 +164,14 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     }
   }, [displaySimulationGraph])
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus(
-    vault.rewardTokens,
-    vault.rewardTokenEmissionsAmount,
+  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
-    vault.totalValueLockedUSD,
-    vault.rewardTokenEmissionsFinish,
-  )
+    totalValueLockedUSD: vault.totalValueLockedUSD,
+  })
 
   const handleUserRefresh = () => {
+    buttonClickEventHandler(`vault-open-refresh-button`)
     onRefresh?.(sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)), vault.id)
     setIsRefreshing(true)
     setTimeout(() => {
@@ -182,7 +191,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Link href={headerLink.href}>
+          <Link
+            href={headerLink.href}
+            onClick={() => buttonClickEventHandler(`vault-open-header-link`)}
+          >
             <Text as="p" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {headerLink.label} / &nbsp;
             </Text>
@@ -210,6 +222,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                   <VaultTitleDropdownContent
                     vault={item}
                     link={getOptionUrl?.(item) ?? getVaultUrl(item)}
+                    linkOnClick={() =>
+                      dropdownChangeHandler({
+                        inputName: 'vault-open-vault-dropdown',
+                        value: slugifyVault(item),
+                      })
+                    }
                     isDisabled={
                       disableDropdownOptionsByChainId &&
                       subgraphNetworkToSDKId(supportedSDKNetwork(item.protocol.network)) !==
@@ -238,15 +256,26 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 // TODO: fill data
                 risk={vault.customFields?.risk ?? 'lower'}
                 networkName={supportedSDKNetwork(vault.protocol.network)}
+                tooltipName="vault-open-risk-label"
+                onTooltipOpen={tooltipEventHandler}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>
               {Number(rawSumrTokenBonus) > 0 && (
                 <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <BonusLabel tokenBonus={sumrTokenBonus} withTokenBonus />
+                  <BonusLabel
+                    tokenBonus={sumrTokenBonus}
+                    withTokenBonus
+                    tooltipName="vault-open-bonus-label"
+                    onTooltipOpen={tooltipEventHandler}
+                  />
                 </Text>
               )}
-              <AdditionalBonusLabel externalTokenBonus={vault.customFields?.bonus} />
+              <AdditionalBonusLabel
+                externalTokenBonus={vault.customFields?.bonus}
+                tooltipName="vault-open-additional-bonus-label"
+                onTooltipOpen={tooltipEventHandler}
+              />
             </div>
           </div>
           <AnimateHeight id="simulation-graph" scale show={displaySimulationGraphStaggered}>
@@ -317,6 +346,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
+                tooltipName="vault-open-30d-apy"
+                onTooltipOpen={tooltipEventHandler}
                 value={
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
@@ -328,6 +359,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 subValue={
                   medianBN && medianDefiYield30DDifference && isVaultAtLeast30dOld ? (
                     <Tooltip
+                      tooltipName="vault-open-30d-apy-median"
+                      onTooltipOpen={tooltipEventHandler}
                       tooltip={
                         <>
                           Median&nbsp;DeFi&nbsp;Yield:&nbsp;
@@ -351,8 +384,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
+                tooltipName="vault-open-live-apy"
+                onTooltipOpen={tooltipEventHandler}
                 title={
                   <Tooltip
+                    tooltipName="vault-open-live-apy-info"
+                    onTooltipOpen={tooltipEventHandler}
                     tooltip={
                       <LiveApyInfo
                         apyCurrent={apyCurrent}
@@ -382,6 +419,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 subValue={
                   medianBN && medianDefiYieldLiveDifference ? (
                     <Tooltip
+                      tooltipName="vault-open-live-apy-median"
+                      onTooltipOpen={tooltipEventHandler}
                       tooltip={
                         <>
                           Median&nbsp;DeFi&nbsp;Yield:&nbsp;

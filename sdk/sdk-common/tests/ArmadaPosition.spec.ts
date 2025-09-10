@@ -2,7 +2,16 @@ import { ArmadaVault } from '../src/common/implementation/ArmadaVault'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaPosition } from '../src/common/implementation/ArmadaPosition'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
-import { Address, ChainFamilyMap, Token, TokenAmount, User, Wallet } from '../src'
+import {
+  Address,
+  ChainFamilyMap,
+  FiatCurrency,
+  FiatCurrencyAmount,
+  Token,
+  TokenAmount,
+  User,
+  Wallet,
+} from '../src'
 
 describe('SDK Common | Armada | ArmadaPosition', () => {
   const chainInfo = ChainFamilyMap.Base.Base
@@ -73,6 +82,16 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         amount: tokenAmount,
         shares: sharesAmount,
         pool: pool,
+        depositsAmount: tokenAmount,
+        withdrawalsAmount: tokenAmount,
+        depositsAmountUSD: FiatCurrencyAmount.createFrom({
+          amount: '34.56',
+          fiat: FiatCurrency.USD,
+        }),
+        withdrawalsAmountUSD: FiatCurrencyAmount.createFrom({
+          amount: '90.12',
+          fiat: FiatCurrency.USD,
+        }),
         deposits: [],
         withdrawals: [],
         claimableSummerToken: tokenAmount,

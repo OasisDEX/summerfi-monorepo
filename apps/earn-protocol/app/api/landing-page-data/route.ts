@@ -1,5 +1,5 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy } from '@summerfi/app-server-handlers'
+import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -83,20 +83,32 @@ const getProtocolsApy = async (): Promise<{
 }
 
 export async function GET() {
-  const [{ vaults }, configRaw, rebalanceActivity, proAppStats, protocolTvls, protocolApys] =
-    await Promise.all([
-      getVaultsList(),
-      unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-        revalidate: REVALIDATION_TIMES.CONFIG,
-      })(),
-      getPaginatedRebalanceActivity({
-        page: 1,
-        limit: 1,
-      }),
-      getProAppStats(),
-      getProtocolsTvl(),
-      getProtocolsApy(),
-    ])
+  const [
+    { vaults },
+    configRaw,
+    rebalanceActivity,
+    proAppStats,
+    protocolTvls,
+    protocolApys,
+    vaultsInfoRaw,
+  ] = await Promise.all([
+    getVaultsList(),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
+    })(),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 1,
+    }),
+    getProAppStats(),
+    getProtocolsTvl(),
+    getProtocolsApy(),
+    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
+    })(),
+  ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -112,6 +124,8 @@ export async function GET() {
     })),
   })
 
+  const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
+
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
 
   return NextResponse.json({
@@ -122,5 +136,6 @@ export async function GET() {
     protocolApys,
     totalRebalanceItemsPerStrategyId,
     proAppStats,
+    vaultsInfo,
   } as LandingPageData)
 }

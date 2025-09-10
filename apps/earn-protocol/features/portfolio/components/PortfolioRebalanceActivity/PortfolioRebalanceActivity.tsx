@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import {
   Card,
@@ -17,14 +17,16 @@ import {
   formatWithSeparators,
   getRebalanceSavedGasCost,
   getRebalanceSavedTimeInHours,
+  slugify,
 } from '@summerfi/app-utils'
 
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
-import { getRebalanceActivity } from '@/features/rebalance-activity/api/get-rebalance-activity'
+import { useRebalanceActivityInfiniteQuery } from '@/features/rebalance-activity/api/get-rebalance-activity'
 import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
+import { useHandleDropdownChangeEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRebalanceActivity.module.css'
 
@@ -43,25 +45,21 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   const { totalItems } = rebalanceActivity.pagination
-  const [hasMoreItems, setHasMoreItems] = useState(true)
 
+  // Portfolio-specific state for filters
   const [strategyFilter, setStrategyFilter] = useState<string[]>([])
   const [tokenFilter, setTokenFilter] = useState<string[]>([])
   const [protocolFilter, setProtocolFilter] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const isFirstRender = useRef(true)
 
   const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
   const savedGasCost = useMemo(
     () => getRebalanceSavedGasCost(rebalanceActivity.totalItemsPerStrategyId),
     [rebalanceActivity.totalItemsPerStrategyId],
   )
-
-  const [currentPage, setCurrentPage] = useState(rebalanceActivity.pagination.currentPage)
-
-  const [currentlyLoadedList, setCurrentlyLoadedList] = useState(rebalanceActivity.data)
 
   const resolvedVaultsList = useMemo(() => {
     const userVaults = positions.map(({ vault }) => getUniqueVaultId(vault))
@@ -74,36 +72,42 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
     [resolvedVaultsList],
   )
 
-  const handleMoreItems = async () => {
-    if (!hasMoreItems) return
+  // Get user's vault strategies for the API call
+  const userVaultStrategies = useMemo(
+    () => positions.map((position) => getUniqueVaultId(position.vault)),
+    [positions],
+  )
 
-    try {
-      const res = await getRebalanceActivity({
-        page: currentPage + 1,
-        sortBy: 'timestamp',
-        orderBy: 'desc',
-        strategies: positions.map((position) => getUniqueVaultId(position.vault)),
-        userAddress: walletAddress,
-      })
+  // For portfolio component, hydrate from server only when no filters are applied
+  // since this component uses local state instead of URL params
+  const shouldHydrateFromServer =
+    strategyFilter.length === 0 && tokenFilter.length === 0 && protocolFilter.length === 0
 
-      if (res.data.length === 0 || currentPage + 1 >= rebalanceActivity.pagination.totalPages) {
-        setHasMoreItems(false)
-      }
+  const { data, isPending, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useRebalanceActivityInfiniteQuery({
+      tokens: tokenFilter,
+      strategies: strategyFilter.length > 0 ? strategyFilter : userVaultStrategies,
+      protocols: protocolFilter,
+      sortBy: 'timestamp',
+      orderBy: 'desc',
+      userAddress: walletAddress,
+      initialData: shouldHydrateFromServer ? rebalanceActivity : undefined,
+    })
 
-      setCurrentlyLoadedList((prev) => [...prev, ...res.data])
-      setCurrentPage((prev) => prev + 1)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error fetching rebalance activity', error)
-      setHasMoreItems(false)
-    }
-  }
+  const currentlyLoadedList = useMemo(
+    () => (data ? data.pages.flatMap((p) => p.data) : rebalanceActivity.data),
+    [data, rebalanceActivity.data],
+  )
 
   const genericMultiSelectFilters = [
     {
       options: strategiesOptions,
       label: 'Strategies',
       onChange: (strategies: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-rebalance-activity-strategy-filter',
+          value: strategies.map(slugify).join(','),
+        })
         setStrategyFilter(strategies)
       },
       initialValues: strategyFilter,
@@ -112,6 +116,10 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       options: tokensOptions,
       label: 'Tokens',
       onChange: (tokens: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-your-rebalance-token-filter',
+          value: tokens.map(slugify).join(','),
+        })
         setTokenFilter(tokens)
       },
       initialValues: tokenFilter,
@@ -120,42 +128,20 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       options: protocolsOptions,
       label: 'Protocols',
       onChange: (protocols: string[]) => {
+        dropdownChangeHandler({
+          inputName: 'portfolio-your-rebalance-network-filter',
+          value: protocols.map(slugify).join(','),
+        })
         setProtocolFilter(protocols)
       },
       initialValues: protocolFilter,
     },
   ]
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-
-      return
-    }
-
-    setIsLoading(true)
-    setHasMoreItems(true)
-
-    getRebalanceActivity({
-      page: 1,
-      tokens: tokenFilter,
-      strategies: strategyFilter,
-      protocols: protocolFilter,
-      sortBy: 'timestamp',
-      orderBy: 'desc',
-    })
-      .then((res) => {
-        setCurrentlyLoadedList(res.data)
-        setCurrentPage(1)
-
-        if (res.data.length === 0 || res.pagination.currentPage >= res.pagination.totalPages) {
-          setHasMoreItems(false)
-        }
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [strategyFilter, tokenFilter, protocolFilter])
+  const handleLoadMore = () => {
+    if (isFetchingNextPage || !hasNextPage) return
+    void fetchNextPage()
+  }
 
   const blocks = [
     {
@@ -169,6 +155,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           <Tooltip
             tooltip="Time user avoid spending on manual position upkeep, estimated at about five minutes for every transaction the keeper network automates."
             tooltipWrapperStyles={{ minWidth: '230px' }}
+            onTooltipOpen={tooltipEventHandler}
+            tooltipName="portfolio-rebalance-activity-user-saved-time"
           >
             <Icon iconName="info" size={18} />
           </Tooltip>
@@ -183,6 +171,8 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
           <Tooltip
             tooltip="Gas fees user sidestep when the keeper handles trades, using typical mainnet-dollar and L2-cent costs for each transaction."
             tooltipWrapperStyles={{ minWidth: '230px' }}
+            onTooltipOpen={tooltipEventHandler}
+            tooltipName="portfolio-rebalance-activity-gas-cost-savings"
           >
             <Icon iconName="info" size={18} />
           </Tooltip>
@@ -223,22 +213,20 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
         ))}
       </div>
       <InfiniteScroll
-        loadMore={handleMoreItems}
-        hasMore={hasMoreItems}
+        loadMore={handleLoadMore}
+        hasMore={!!hasNextPage}
         loader={
-          <LoadingSpinner
-            key="spinner"
-            style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
-          />
+          isFetchingNextPage ? (
+            <LoadingSpinner
+              key="spinner"
+              style={{ margin: '0 auto', marginTop: 'var(--spacing-space-medium)' }}
+            />
+          ) : undefined
         }
       >
-        {/* <PortfolioRebalanceActivityList
-          rebalanceActivityList={currentlyLoadedList}
-          walletAddress={walletAddress}
-        /> */}
         <RebalanceActivityTable
           rebalanceActivityList={currentlyLoadedList}
-          isLoading={isLoading}
+          isLoading={isPending}
           walletAddress={walletAddress}
         />
       </InfiniteScroll>

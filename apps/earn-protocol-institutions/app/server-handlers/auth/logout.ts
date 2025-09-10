@@ -28,5 +28,5 @@ export async function logout() {
     if (c.name.startsWith('institutions_')) jar.delete(c.name)
   }
 
-  redirect('/')
+  redirect(`/`)
 }

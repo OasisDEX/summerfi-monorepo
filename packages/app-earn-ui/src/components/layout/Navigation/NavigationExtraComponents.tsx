@@ -12,12 +12,14 @@ interface NavigationExtraComponentsProps {
   beachClubEnabled?: boolean
   isEarnApp?: boolean
   userWalletAddress?: string
+  onNavItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }
 
 export const NavigationExtraComponents: FC<NavigationExtraComponentsProps> = ({
   beachClubEnabled,
   isEarnApp,
   userWalletAddress,
+  onNavItemClick,
 }) => {
   const host = typeof window !== 'undefined' ? window.location.origin : ''
 
@@ -29,7 +31,10 @@ export const NavigationExtraComponents: FC<NavigationExtraComponentsProps> = ({
   return (
     <>
       {beachClubEnabled && (
-        <Link href={resolvedBeachClubLink}>
+        <Link
+          href={resolvedBeachClubLink}
+          onClick={() => onNavItemClick?.({ buttonName: 'beach-club', isEarnApp })}
+        >
           <Text
             as="div"
             variant="p2semiColorfulBeachClub"
@@ -40,7 +45,11 @@ export const NavigationExtraComponents: FC<NavigationExtraComponentsProps> = ({
           </Text>
         </Link>
       )}
-      <Link href={INTERNAL_LINKS.summerPro} target="_blank">
+      <Link
+        href={INTERNAL_LINKS.summerPro}
+        target="_blank"
+        onClick={() => onNavItemClick?.({ buttonName: 'summer-pro', isEarnApp })}
+      >
         <Text as="p" variant="p2semi" className={clsx(navigationActionsStyles.summerProButton)}>
           Summer.fi Pro
         </Text>

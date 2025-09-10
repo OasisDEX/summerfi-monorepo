@@ -1,5 +1,6 @@
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
-import { subgraphNetworkToId } from '@summerfi/app-utils'
+import { decorateWithFleetConfig, subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
@@ -8,20 +9,31 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
   if (!institutionId) return null
   if (typeof institutionId !== 'string') return null
 
+  const testInstitutionVaults = ['0x29f13a877f3d1a14ac0b15b07536d4423b35e198'].map((vault) =>
+    vault.toLowerCase(),
+  )
+  const testInstitutionNetworks = [SupportedNetworkIds.Base]
+
   try {
+    const systemConfig = await configEarnAppFetcher()
+
     const institutionSdk = getInstitutionsSDK(institutionId)
     const vaultsListByNetwork = await Promise.all(
-      Object.values(SupportedNetworkIds)
-        .filter((networkId): networkId is number => typeof networkId === 'number')
-        .map((networkId) =>
-          institutionSdk.armada.users.getVaultsRaw({
-            chainInfo: getChainInfoByChainId(Number(networkId)),
-          }),
-        ),
+      testInstitutionNetworks.map((networkId) =>
+        institutionSdk.armada.users.getVaultsRaw({
+          chainInfo: getChainInfoByChainId(Number(networkId)),
+        }),
+      ),
     )
 
+    const filteredVaults = vaultsListByNetwork
+      .flatMap(({ vaults }) => vaults)
+      .filter((vault) => testInstitutionVaults.includes(vault.id.toLowerCase()))
+
+    const vaultsWithConfig = decorateWithFleetConfig(filteredVaults, systemConfig)
+
     return {
-      vaults: vaultsListByNetwork.flatMap(({ vaults }) => vaults),
+      vaults: vaultsWithConfig,
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -55,12 +67,21 @@ export const getInstitutionVault = async ({
       fleetAddress,
     })
     const institutionSdk = getInstitutionsSDK(institutionId)
-    const vault = await institutionSdk.armada.users.getVaultRaw({
-      vaultId: poolId,
-    })
+    const [vault, systemConfig] = await Promise.all([
+      institutionSdk.armada.users.getVaultRaw({
+        vaultId: poolId,
+      }),
+      configEarnAppFetcher(),
+    ])
+
+    if (!vault.vault) {
+      return null
+    }
+
+    const vaultWithConfig = decorateWithFleetConfig([vault.vault], systemConfig)
 
     return {
-      vault: vault.vault,
+      vault: vaultWithConfig[0],
     }
   } catch (error) {
     // eslint-disable-next-line no-console

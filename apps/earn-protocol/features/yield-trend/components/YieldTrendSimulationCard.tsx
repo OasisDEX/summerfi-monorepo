@@ -21,6 +21,7 @@ import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { isStablecoin } from '@/helpers/is-stablecoin'
+import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 
 import yieldTrendViewStyles from './YieldTrendView.module.css'
 
@@ -53,6 +54,7 @@ export const YieldTrendSimulationCard = ({
       value: getDisplayToken(selectedVault.inputToken.symbol, { swapUSDT: true }),
     }
   }, [selectedVault])
+  const inputChangeHandler = useHandleInputChangeEvent()
 
   const handleTokenSelection = useCallback(
     (dropdownToken: DropdownRawOption) => {
@@ -125,6 +127,8 @@ export const YieldTrendSimulationCard = ({
       symbol: selectedVaultToken,
     } as unknown as IToken,
     initialAmount: isStablecoin(selectedVaultToken) ? '1000' : '1',
+    inputChangeHandler,
+    inputName: 'yield-trend-calculator-amount',
   })
 
   const earnDifference = useMemo(() => {

@@ -1,14 +1,19 @@
 import { type FC, useState } from 'react'
-import { useUser } from '@account-kit/react'
+import { toast } from 'react-toastify'
+import { useChain, useSigner, useUser } from '@account-kit/react'
 import {
   Button,
   DataBlock,
   Dropdown,
+  ERROR_TOAST_CONFIG,
   Icon,
   isUserSmartAccount,
   LoadableAvatar,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   Text,
+  useTokenTransfer,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
@@ -19,7 +24,6 @@ import {
   safeBTOA,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
-import Link from 'next/link'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -28,6 +32,7 @@ import { TransakWidget } from '@/features/transak/components/TransakWidget/Trans
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
+import { usePublicClient } from '@/hooks/use-public-client'
 
 import classNames from './PortfolioHeader.module.css'
 
@@ -79,6 +84,20 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   const user = useUser()
   const userIsSmartAccount = isUserSmartAccount(user)
 
+  const { publicClient } = usePublicClient({
+    chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
+  })
+  const signer = useSigner()
+  const { chain, setChain } = useChain()
+  // temporary solution
+  const { transferAllBalance, isTransferring, tokenInfo } = useTokenTransfer({
+    tokenAddress: '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58',
+    userWallet: user?.address,
+    receiverWallet: walletAddress,
+    publicClient,
+    signer,
+  })
+
   const { features } = useSystemConfig()
 
   const sendEnabled = !!features?.Send
@@ -127,15 +146,33 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               Send
             </Button>
           )}
-          <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+          {/* Temporary solution to transfer token from AA signer to smart account */}
+          {userIsSmartAccount && tokenInfo && Number(tokenInfo.balance) > 0 && (
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+              disabled={isTransferring}
+              onClick={async () => {
+                if (chain.id !== SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne].id) {
+                  setChain({
+                    chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
+                  })
+                }
+
+                try {
+                  await transferAllBalance()
+                  toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
+                } catch (error) {
+                  toast.error('Transfer failed', ERROR_TOAST_CONFIG)
+                }
+              }}
             >
-              Bridge
+              <Text as="span" variant="p3semi">
+                {isTransferring ? 'Transferring...' : 'Transfer'}
+              </Text>
             </Button>
-          </Link>
+          )}
+
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}

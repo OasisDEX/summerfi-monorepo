@@ -1,10 +1,15 @@
 import { Button, Icon, Text } from '@summerfi/app-earn-ui'
+import { slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import institutionsPromoBlockStyles from './InstitutionsPromoBlock.module.css'
 
 type InstitutionsPromoBlockProps = {
+  id: string
   title: string
   description: string
   bestFor: string
@@ -16,6 +21,7 @@ type InstitutionsPromoBlockProps = {
 }
 
 export const InstitutionsPromoBlock = ({
+  id,
   title,
   description,
   bestFor,
@@ -25,6 +31,14 @@ export const InstitutionsPromoBlock = ({
   secondaryCtaUrl,
   secondaryCtaLabel = 'Learn more',
 }: InstitutionsPromoBlockProps) => {
+  const pathname = usePathname()
+  const handleInstitutionsPromoBlockCtaClick = (buttonName: string) => () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-promo-block-${id}-${slugify(buttonName)}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={institutionsPromoBlockStyles.institutionsPromoBlockWrapper}>
       <div
@@ -48,11 +62,15 @@ export const InstitutionsPromoBlock = ({
           </Text>
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <Link href={ctaUrl}>
+          <Link href={ctaUrl} onClick={handleInstitutionsPromoBlockCtaClick(ctaLabel)}>
             <Button variant="primaryMediumColorful">{ctaLabel}</Button>
           </Link>
           {secondaryCtaUrl && (
-            <Link href={secondaryCtaUrl} target="_blank">
+            <Link
+              href={secondaryCtaUrl}
+              target="_blank"
+              onClick={handleInstitutionsPromoBlockCtaClick(secondaryCtaLabel)}
+            >
               <Button variant="secondaryMedium">{secondaryCtaLabel}</Button>
             </Link>
           )}

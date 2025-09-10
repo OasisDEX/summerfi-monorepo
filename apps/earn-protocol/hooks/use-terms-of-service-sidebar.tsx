@@ -7,10 +7,12 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
+import { slugify } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import { useRiskVerification } from './use-risk-verification'
 
@@ -50,6 +52,7 @@ export const useTermsOfServiceSidebar = ({
   handleGoBack: () => void
 }) => {
   const { deviceType } = useDeviceType()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
   const isMobileOrTablet = isMobile || isTablet
   const { checkRisk } = useRiskVerification({ cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN })
@@ -98,16 +101,23 @@ export const useTermsOfServiceSidebar = ({
       label: getPrimaryButtonLabel(tosState),
       disabled: tosState.status === TOSStatus.LOADING,
       action: () => {
+        buttonClickEventHandler(`terms-of-service-${slugify(getPrimaryButtonLabel(tosState))}`)
         // eslint-disable-next-line no-unused-expressions
         'action' in tosState && tosState.action()
       },
       loading: tosState.status === TOSStatus.LOADING,
     },
-    goBackAction: handleGoBack,
+    goBackAction: () => {
+      buttonClickEventHandler(`terms-of-service-go-back`)
+      handleGoBack()
+    },
     secondaryButton: {
       label: 'Reject',
       disabled: tosState.status === TOSStatus.LOADING,
-      action: () => handleGoBack(),
+      action: () => {
+        buttonClickEventHandler(`terms-of-service-reject`)
+        handleGoBack()
+      },
     },
     isMobileOrTablet,
   }

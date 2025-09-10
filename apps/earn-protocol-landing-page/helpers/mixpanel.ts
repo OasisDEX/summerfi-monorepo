@@ -1,4 +1,16 @@
-import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
+import {
+  type EarnProtocolBaseEventProps,
+  type EarnProtocolButtonClickedEventProps,
+  type EarnProtocolCustomEventProps,
+  type EarnProtocolDropdownChangedEventProps,
+  EarnProtocolEventNames,
+  type EarnProtocolEventPropsMap,
+  type EarnProtocolInputChangedEventProps,
+  type EarnProtocolScrolledEventProps,
+  type EarnProtocolTooltipHoveredEventProps,
+  type EarnProtocolTransactionEventProps,
+  type EarnProtocolViewPositionEventProps,
+} from '@summerfi/app-types'
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash-es'
 
@@ -7,27 +19,42 @@ import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
-const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
+// --- Generic trackEvent helper ---
+export function trackEvent<E extends EarnProtocolEventNames>(
+  ev: E,
+  props: EarnProtocolEventPropsMap[E],
+) {
+  const eventData = {
+    eventName: ev,
+    eventBody: {
+      ...props,
+      timestamp: new Date().toISOString(),
+    },
+  }
 
-const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.TURBOPACK) {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars, @typescript-eslint/prefer-nullish-coalescing
+  if (process.env.TURBOPACK || window.location.hostname.includes('staging')) {
+    // eslint-disable-next-line no-console
+    console.info('Mixpanel event:', JSON.stringify(eventData, null, 2))
+
     return
   }
-  let win: Window
+  const isOptedOut = optedOutCheck()
 
-  if (typeof window === 'undefined') {
-    const loc = { hostname: '' }
-
-    win = {
-      navigator: { userAgent: '' },
-      document: { location: loc, referrer: '' },
-      screen: { width: 0, height: 0 },
-      location: loc,
-    } as Window
-  } else {
-    win = window
+  if (isOptedOut && eventData.eventName !== EarnProtocolEventNames.PageViewed) {
+    // if the user is opted out, we track just the page view event
+    return
   }
+
+  const baseWindowObject = {
+    navigator: { userAgent: '' },
+    document: { location: { hostname: '' }, referrer: '' },
+    screen: { width: 0, height: 0 },
+    location: { href: '' },
+  } as Window
+
+  const win = typeof window !== 'undefined' ? window : baseWindowObject
+
   const { name: browserName, mobile, os, versionNumber } = browserDetect()
   const initialReferrer = mixpanelBrowser.get_property('$initial_referrer')
   const initialReferringDomain = initialReferrer
@@ -43,11 +70,10 @@ const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      eventBody,
-      eventName,
+      ...eventData,
       distinctId: mixpanelBrowser.get_distinct_id(),
       currentUrl: win.location.href,
-      ...(!optedOutCheck() && {
+      ...(!isOptedOut && {
         browser: upperFirst(browserName),
         browserVersion: versionNumber,
         initialReferrer,
@@ -62,29 +88,57 @@ const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) =>
   })
 }
 
-type AppError = {
-  id: string
-  page: string
-  digest?: string
-  message?: string
-  [key: string]: unknown
-}
+// --- Specific Event Handlers ---
 
-// app error - global error handler
-export const trackError = ({ id, page, message, digest, ...rest }: AppError) => {
-  try {
-    const eventBody = {
-      product: MixpanelEventProduct.EarnProtocol,
-      id,
-      page: includeBasePath(page),
-      digest,
-      message,
-      ...rest,
-    }
+export const EarnProtocolEvents = {
+  pageViewed: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.PageViewed, props),
 
-    trackEvent(MixpanelEventTypes.AppError, eventBody)
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error tracking button click', error)
-  }
+  scrolled: (props: EarnProtocolScrolledEventProps) =>
+    trackEvent(EarnProtocolEventNames.Scrolled, props),
+
+  walletConnected: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.WalletConnected, props),
+
+  accountChanged: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.AccountChanged, props),
+
+  walletDisconnected: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.WalletDisconnected, props),
+
+  viewPosition: (props: EarnProtocolViewPositionEventProps) =>
+    trackEvent(EarnProtocolEventNames.ViewPosition, props),
+
+  transactionSimulated: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSimulated, props),
+
+  transactionSubmitted: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSubmitted, props),
+
+  transactionConfirmed: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionConfirmed, props),
+
+  transactionSuccess: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionSuccess, props),
+
+  transactionFailure: (props: EarnProtocolTransactionEventProps) =>
+    trackEvent(EarnProtocolEventNames.TransactionFailure, props),
+
+  buttonClicked: (props: EarnProtocolButtonClickedEventProps) =>
+    trackEvent(EarnProtocolEventNames.ButtonClicked, props),
+
+  inputChanged: (props: EarnProtocolInputChangedEventProps) =>
+    trackEvent(EarnProtocolEventNames.InputChanged, props),
+
+  dropdownChanged: (props: EarnProtocolDropdownChangedEventProps) =>
+    trackEvent(EarnProtocolEventNames.DropdownChanged, props),
+
+  tooltipHovered: (props: EarnProtocolTooltipHoveredEventProps) =>
+    trackEvent(EarnProtocolEventNames.TooltipHovered, props),
+
+  errorOccurred: (props: EarnProtocolBaseEventProps) =>
+    trackEvent(EarnProtocolEventNames.ErrorOccurred, props),
+
+  customEvent: (props: EarnProtocolCustomEventProps) =>
+    trackEvent(EarnProtocolEventNames.CustomEvent, props),
 }

@@ -37,13 +37,16 @@ import {
 } from '@summerfi/app-types'
 import {
   convertWethToEth,
+  findVaultInfo,
   formatCryptoBalance,
   sdkNetworkToHumanNetwork,
+  slugifyVault,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
@@ -54,6 +57,12 @@ import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { revalidateVaultsListData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import {
+  useHandleButtonClickEvent,
+  useHandleDropdownChangeEvent,
+  useHandleInputChangeEvent,
+  useHandleTooltipOpenEvent,
+} from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
@@ -62,6 +71,7 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  vaultsInfo?: IArmadaVaultInfo[]
 }
 
 enum VaultsSorting {
@@ -98,41 +108,18 @@ const VaultsSortingItem = ({ label, style }: { label: string; style?: CSSPropert
   )
 }
 
-const updateQueryParams = (
-  queryParams: ReadonlyURLSearchParams,
-  newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
-) => {
-  // use soft router push to update the URL without reloading the page
-  const newQueryParams = {
-    ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
-    ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
-    ...(newFilters.sorting && {
-      sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
-    }),
-  }
-
-  const nextQueryParams = new URLSearchParams(newQueryParams)
-  const currentQueryParams = new URLSearchParams(queryParams.toString())
-  const mergedQueryParams = new URLSearchParams({
-    ...Object.fromEntries(currentQueryParams.entries()),
-    ...Object.fromEntries(nextQueryParams.entries()),
-  })
-
-  for (const param of ['assets', 'networks', 'sort']) {
-    if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
-      mergedQueryParams.delete(param)
-    }
-  }
-
-  const newUrl = `/earn?${mergedQueryParams.toString()}`
-
-  softRouterPush(newUrl)
-}
-
-export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsListViewProps) => {
+export const VaultsListView = ({
+  vaultsList,
+  vaultsApyByNetworkMap,
+  vaultsInfo,
+}: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
   const queryParams = useSearchParams()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const inputChangeHandler = useHandleInputChangeEvent()
+  const dropdownChangeHandler = useHandleDropdownChangeEvent()
 
   const user = useUser()
   const userIsSmartAccount = isUserSmartAccount(user)
@@ -151,6 +138,60 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   const sdk = useAppSDK()
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
+  const updateQueryParams = useCallback(
+    (
+      params: ReadonlyURLSearchParams,
+      newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
+    ) => {
+      // use soft router push to update the URL without reloading the page
+      const newQueryParams = {
+        ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
+        ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
+        ...(newFilters.sorting && {
+          sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
+        }),
+      }
+
+      const nextQueryParams = new URLSearchParams(newQueryParams)
+      const currentQueryParams = new URLSearchParams(params.toString())
+      const mergedQueryParams = new URLSearchParams({
+        ...Object.fromEntries(currentQueryParams.entries()),
+        ...Object.fromEntries(nextQueryParams.entries()),
+      })
+
+      for (const param of ['assets', 'networks', 'sort']) {
+        if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
+          mergedQueryParams.delete(param)
+        }
+      }
+
+      const isAssetsChange = newFilters.assets !== undefined
+      const isNetworksChange = newFilters.networks !== undefined
+      const isSortingChange = newFilters.sorting !== undefined
+      const dropdownName = isAssetsChange
+        ? 'vaults-list-view-assets'
+        : isNetworksChange
+          ? 'vaults-list-view-networks'
+          : isSortingChange
+            ? 'vaults-list-view-sorting'
+            : ''
+
+      dropdownChangeHandler({
+        inputName: dropdownName,
+        value:
+          newFilters.assets?.join(',') ??
+          newFilters.networks?.join(',') ??
+          newFilters.sorting?.value ??
+          'unknown',
+      })
+
+      const newUrl = `/earn?${mergedQueryParams.toString()}`
+
+      softRouterPush(newUrl)
+    },
+    [dropdownChangeHandler],
+  )
 
   const filterAssetVaults = useCallback(
     (vault: (typeof vaultsList)[number]) => {
@@ -185,20 +226,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     (a: (typeof vaultsList)[number], b: (typeof vaultsList)[number]) => {
       const aTvl = a.totalValueLockedUSD
       const bTvl = b.totalValueLockedUSD
-      const aRewards = getSumrTokenBonus(
-        a.rewardTokens,
-        a.rewardTokenEmissionsAmount,
-        estimatedSumrPrice,
-        aTvl,
-        a.rewardTokenEmissionsFinish,
-      ).rawSumrTokenBonus
-      const bRewards = getSumrTokenBonus(
-        b.rewardTokens,
-        b.rewardTokenEmissionsAmount,
-        estimatedSumrPrice,
-        bTvl,
-        b.rewardTokenEmissionsFinish,
-      ).rawSumrTokenBonus
+
+      const aMerklRewards = findVaultInfo(vaultsInfo, a)?.merklRewards
+      const bMerklRewards = findVaultInfo(vaultsInfo, b)?.merklRewards
+
+      const aRewards = getSumrTokenBonus({
+        merklRewards: aMerklRewards,
+        sumrPrice: estimatedSumrPrice,
+        totalValueLockedUSD: aTvl,
+      }).rawSumrTokenBonus
+      const bRewards = getSumrTokenBonus({
+        merklRewards: bMerklRewards,
+        sumrPrice: estimatedSumrPrice,
+        totalValueLockedUSD: bTvl,
+      }).rawSumrTokenBonus
 
       if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
         return Number(aTvl) > Number(bTvl) ? -1 : 1
@@ -219,7 +260,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
       // default sorting method which is VaultsSorting.HIGHEST_APY
       return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
     },
-    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId],
+    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId, vaultsInfo],
   )
 
   const filteredSafeVaultsList = useMemo(() => {
@@ -320,23 +361,32 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
 
   // wrapper to show skeleton immediately when changing token
   const handleTokenSelectionChangeWrapper = (option: DropdownRawOption) => {
+    dropdownChangeHandler({
+      inputName: `vault-list-token-selector-${slugifyVault(resolvedVaultData)}`,
+      value: option.value,
+    })
     tokenBalances.handleSetTokenBalanceLoading(true)
     handleTokenSelectionChange(option)
   }
 
   const handleChangeVault = (nextselectedVaultId: string) => {
     if (nextselectedVaultId === selectedVaultId) {
+      buttonClickEventHandler(
+        `vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
+      )
       const vaultUrl = getVaultUrl(resolvedVaultData)
 
       push(vaultUrl)
 
       return
     }
+    buttonClickEventHandler(`vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-select`)
     setSelectedVaultId(nextselectedVaultId)
   }
 
   const formattedTotalLiquidity = useMemo(() => {
     return formatCryptoBalance(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       vaultsList.reduce((acc, vault) => acc.plus(vault.withdrawableTotalAssetsUSD ?? zero), zero),
     )
   }, [vaultsList])
@@ -363,6 +413,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     onBlur,
     onFocus,
   } = useAmount({
+    inputName: `vault-list-amount-${slugifyVault(resolvedVaultData)}`,
+    inputChangeHandler,
     tokenDecimals: resolvedVaultData.inputToken.decimals,
     tokenPrice: resolvedVaultData.inputTokenPriceUSD,
     selectedToken:
@@ -459,10 +511,20 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
     return sortingMethod ?? sortingMethods.find(({ id }) => id === 'highest-apy')! // selecting the default one
   }, [sortingMethodId])
 
+  const handleRefresh = () => {
+    buttonClickEventHandler(`vaults-list-refresh-vaults-list`)
+    revalidateVaultsListData()
+  }
+
+  const handleWhatIsLazyClick = () => {
+    buttonClickEventHandler('vaults-list-what-is-lazy')
+  }
+
   return (
     <VaultGrid
       isMobileOrTablet={isMobileOrTablet}
-      onRefresh={revalidateVaultsListData}
+      onRefresh={handleRefresh}
+      onWhatIsLazyClick={handleWhatIsLazyClick}
       topContent={
         <div className={vaultsListViewStyles.topContentGrid}>
           <DataBlock
@@ -470,6 +532,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
             size="large"
             value={`$${formattedTotalAssets}`}
+            tooltipName="vaults-list-protocol-tvl"
+            onTooltipOpen={tooltipEventHandler}
           />
 
           <DataBlock
@@ -477,6 +541,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
             titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}
             size="large"
             value={`$${formattedTotalLiquidity}`}
+            tooltipName="vaults-list-instant-liquidity"
+            onTooltipOpen={tooltipEventHandler}
           />
           <DataBlock
             title="Protocols Supported"
@@ -486,6 +552,8 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
               .join(', ')}`}
             size="large"
             value={formattedProtocolsSupportedCount}
+            tooltipName="vaults-list-protocols-supported"
+            onTooltipOpen={tooltipEventHandler}
           />
         </div>
       }
@@ -574,6 +642,9 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                   ]
                 }
+                tooltipName="vaults-list-vault-card"
+                onTooltipOpen={tooltipEventHandler}
+                merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
               />
             ))
           ) : (
@@ -628,6 +699,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
                     ]
                   }
+                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
                 />
               ))}
             </>
@@ -657,6 +729,7 @@ export const VaultsListView = ({ vaultsList, vaultsApyByNetworkMap }: VaultsList
           positionExists={Boolean(positionExists)}
           userWalletAddress={userWalletAddress}
           isLoading={isLoading}
+          onButtonClick={buttonClickEventHandler}
         />
       }
     />

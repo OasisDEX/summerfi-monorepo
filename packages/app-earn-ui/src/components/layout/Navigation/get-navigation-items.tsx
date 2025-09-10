@@ -7,15 +7,21 @@ export const getNavigationItems = ({
   userWalletAddress,
   isEarnApp = false,
   features,
+  onNavItemClick,
 }: {
   userWalletAddress?: string
   isEarnApp?: boolean
   features?: EarnAppConfigType['features']
+  onNavItemClick?: (params: { buttonName: string; isEarnApp?: boolean }) => void
 }): EarnNavigationProps['links'] => {
   const prefix = !isEarnApp ? `/earn` : ``
   const institutionsEnabled = features?.Institutions
   const teamPageEnabled = features?.Team
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
+
+  const handleButtonClick = (buttonName: string) => () => {
+    onNavItemClick?.({ buttonName, isEarnApp })
+  }
 
   const portfolioLink = userWalletAddress
     ? [
@@ -23,6 +29,7 @@ export const getNavigationItems = ({
           label: 'Portfolio',
           id: 'portfolio',
           link: `${prefix}/portfolio/${userWalletAddress}`,
+          onClick: handleButtonClick('portfolio'),
         },
       ]
     : []
@@ -33,6 +40,7 @@ export const getNavigationItems = ({
       id: 'earn',
       link: !isEarnApp ? `/earn` : `/`,
       prefetchDisabled: !isEarnApp,
+      onClick: handleButtonClick('earn-app'),
     },
     ...portfolioLink,
     {
@@ -46,6 +54,7 @@ export const getNavigationItems = ({
           url: `${prefix}/sumr`,
           icon: 'sumr',
           prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('sumr'),
         },
         {
           url: `${prefix}/user-activity`,
@@ -54,6 +63,7 @@ export const getNavigationItems = ({
           description: 'Transparent view of global user activity',
           icon: 'earn_user_activities',
           prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('user-activity'),
         },
         {
           url: `${prefix}/rebalance-activity`,
@@ -62,6 +72,7 @@ export const getNavigationItems = ({
           description: 'Vault optimizations performed by AI-powered keepers',
           icon: 'earn_rebalance_activities',
           prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('rebalancing-activity'),
         },
         ...(institutionsEnabled
           ? [
@@ -73,6 +84,7 @@ export const getNavigationItems = ({
                 description: 'Crypto native yield, for forward thinking institutions',
                 icon: 'earn_institution' as IconNamesList,
                 prefetchDisabled: !isEarnApp,
+                onClick: handleButtonClick('institutions'),
               },
             ]
           : []),
@@ -86,6 +98,7 @@ export const getNavigationItems = ({
                 description: 'Leadership that’s helped shape DeFi from day 1',
                 icon: 'earn_1_on_1' as IconNamesList,
                 prefetchDisabled: !isEarnApp,
+                onClick: handleButtonClick('team'),
               },
             ]
           : []),
@@ -102,6 +115,7 @@ export const getNavigationItems = ({
       label: 'Support',
       id: 'support',
       dropdownContent: <SupportBox />,
+      onClick: handleButtonClick('support'),
     },
   ]
 }

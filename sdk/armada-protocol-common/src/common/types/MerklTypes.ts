@@ -1,20 +1,35 @@
 /**
- * Represents a single opportunity response
+ * Response type from Merkl API for users rewards
  */
 
-export type MerklOpportunityResponse = {
-  rewardsRecord: MerklRewardsRecord
+import type { ChainId, AddressValue } from '@summerfi/sdk-common'
+
+export type MerklApiUsersResponse = MerklApiUser[]
+
+export type MerklApiUser = {
+  chain: MerklApiChain
+  rewards: MerklApiReward[]
 }
 
 /**
- * Array of opportunities responses
+ * Response type from Merkl API for opportunities
  */
-export type MerklOpportunitiesResponse = Array<MerklOpportunityResponse>
+export type MerklApiOpportunitiesResponse = MerklApiOpportunity[]
+
+export type MerklApiOpportunity = {
+  chainId: number
+  type: string
+  identifier: string
+  status: 'LIVE' | 'PAST'
+  dailyRewards: number
+  chain: MerklApiChain
+  rewardsRecord: MerklApiOpportunityRewardsRecord
+}
 
 /**
  * Complete rewards record structure
  */
-export interface MerklRewardsRecord {
+export interface MerklApiOpportunityRewardsRecord {
   /** Unique identifier for the rewards record */
   id: string
   /** Total rewards value */
@@ -22,15 +37,15 @@ export interface MerklRewardsRecord {
   /** Timestamp when the record was created */
   timestamp: string
   /** Array of individual reward breakdowns */
-  breakdowns: MerklRewardsBreakdown[]
+  breakdowns: MerklApiOpportunityRewardsRecordBreakdown[]
 }
 
 /**
  * Individual reward breakdown entry
  */
-export interface MerklRewardsBreakdown {
+export interface MerklApiOpportunityRewardsRecordBreakdown {
   /** Token information for this reward */
-  token: MerklRewardsToken
+  token: MerklApiOpportunityRewardsRecordBreakdownToken
   /** Amount of tokens as string (to handle large numbers) */
   amount: string
   /** USD value of the reward amount */
@@ -50,7 +65,7 @@ export interface MerklRewardsBreakdown {
 /**
  * Token information for rewards
  */
-export interface MerklRewardsToken {
+export interface MerklApiOpportunityRewardsRecordBreakdownToken {
   /** Unique identifier for the token */
   id: string
   /** Human-readable name of the token */
@@ -79,18 +94,47 @@ export interface MerklRewardsToken {
   price: number | null
 }
 
+export interface MerklApiChain {
+  id: number
+  name: string
+  icon: string
+  liveCampaigns: number
+}
+
+export interface MerklApiReward {
+  root: string
+  recipient: string
+  amount: string
+  claimed: string
+  pending: string
+  proofs: string[]
+  token: MerklApiToken
+  breakdowns: MerklApiRewardBreakdown[]
+}
+
+export type MerklApiToken = {
+  address: string
+  chainId: number
+  symbol: string
+  decimals: number
+  price: number
+}
+
+export interface MerklApiRewardBreakdown {
+  reason: string
+  amount: string
+  claimed: string
+  pending: string
+  campaignId: string
+  subCampaignId?: string
+}
+
 /**
  * Represents a Merkl reward for a user
  */
 export interface MerklReward {
   /** The token address for the reward */
-  token: {
-    chainId: number
-    address: string
-    symbol: string
-    decimals: number
-    price: number
-  }
+  token: MerklApiToken
   /** The merkle root for the reward */
   root: string
   /** The recipient address */
@@ -103,4 +147,16 @@ export interface MerklReward {
   pending: string
   /** The merkle proofs for claiming */
   proofs: string[]
+  /** Breakdown of the reward into components */
+  breakdowns: Record<
+    ChainId,
+    Record<
+      AddressValue,
+      {
+        total: string
+        claimable: string
+        claimed: string
+      }
+    >
+  >
 }

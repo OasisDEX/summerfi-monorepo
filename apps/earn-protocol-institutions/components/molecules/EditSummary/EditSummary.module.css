@@ -1,0 +1,15 @@
+.editSummary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-large);
+  width: 100%;
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-space-medium);
+    width: 100%;
+    margin-top: var(--spacing-space-x-small);
+  }
+}

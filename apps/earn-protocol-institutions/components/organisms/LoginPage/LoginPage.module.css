@@ -1,0 +1,94 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  height: 60vh;
+}
+
+.form {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fieldContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWithValidationIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.inputWithValidationIcon input {
+  position: relative;
+  z-index: 2;
+}
+
+.inputWithValidationIcon svg {
+  position: relative;
+  margin-left: -30px;
+  z-index: 1;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.inputWithValidationIconValidated svg {
+  left: 40px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.button {
+  padding: 24px 32px;
+  margin-top: 30px;
+}
+
+.errorCard {
+  border: 1px solid var(--earn-protocol-critical-50);
+  color: var(--earn-protocol-critical-100);
+  text-align: center;
+  padding: 24px 32px;
+  margin: 30px auto 0 auto;
+  width: fit-content;
+}
+
+.errorText {
+  width: 100%;
+}
+
+.newPasswordRequirements {
+  background: var(--earn-protocol-neutral-100);
+  border: 1px solid var(--earn-protocol-neutral-85);
+  border-radius: 8px;
+  margin-top: 12px;
+  padding: 12px 16px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+    }
+  }
+}

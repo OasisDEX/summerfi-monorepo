@@ -1,10 +1,13 @@
 import { SectionTabs, Text } from '@summerfi/app-earn-ui'
+import { usePathname } from 'next/navigation'
+
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import classNames from './BeachClubAutomatedExposure.module.css'
 
 const sectionTabs = [
   {
-    id: '1',
+    id: 'sustainable-yields',
     title: 'Sustainably higher yields, optimized with AI',
     content: (
       <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
@@ -15,7 +18,7 @@ const sectionTabs = [
     ),
   },
   {
-    id: '2',
+    id: 'transparent-yields',
     title: 'The Power of DeFi, made accessible to everyone',
     content: (
       <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
@@ -26,7 +29,7 @@ const sectionTabs = [
     ),
   },
   {
-    id: '3',
+    id: 'superior-risk-management',
     title: 'Superior risk management by DeFi’s top risk team',
     content: (
       <Text as="p" variant="p1" style={{ color: 'var(--earn-protocol-secondary-70)' }}>
@@ -39,6 +42,14 @@ const sectionTabs = [
 ]
 
 export const BeachClubAutomatedExposure = () => {
+  const pathname = usePathname()
+  const handleSectionTabChange = (sectionId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-beach-club-tabs-${sectionId}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={classNames.beachClubAutomatedExposureWrapper}>
       <Text as="h2" variant="h2" style={{ marginBottom: 'var(--general-space-16)' }}>
@@ -58,6 +69,7 @@ export const BeachClubAutomatedExposure = () => {
         sections={sectionTabs}
         activeSectionColor="p1semiColorfulBeachClub"
         activeTabColor="var(--beach-club-tab-underline)"
+        additionalOnTabChange={handleSectionTabChange}
       />
     </div>
   )

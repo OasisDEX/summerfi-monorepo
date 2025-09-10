@@ -3,15 +3,21 @@ import { type CSSProperties, type FC } from 'react'
 import { Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
+
 import classNames from './SumrTransferabilityCounter.module.css'
 
 interface SumrTransferabilityCounterProps {
   wrapperStyles?: CSSProperties
+  counterId: string
 }
 
 export const SumrTransferabilityCounter: FC<SumrTransferabilityCounterProps> = ({
   wrapperStyles,
+  counterId,
 }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+
   return (
     <div className={classNames.sumrTransferabilityCounterWrapper} style={wrapperStyles}>
       <Text as="p" variant="p3semi" className={classNames.heading}>
@@ -25,6 +31,9 @@ export const SumrTransferabilityCounter: FC<SumrTransferabilityCounterProps> = (
             href="https://forum.summer.fi/t/rfc-when-and-under-what-circumstances-should-sumr-transfers-be-enabled/242"
             target="_blank"
             style={{ color: 'var(--earn-protocol-primary-100)' }}
+            onClick={() => {
+              buttonClickEventHandler(`${counterId}-sumr-transferability-discussion`)
+            }}
           >
             Transferability discussion
           </Link>

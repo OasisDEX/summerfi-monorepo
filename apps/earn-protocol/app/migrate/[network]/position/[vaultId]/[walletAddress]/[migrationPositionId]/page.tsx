@@ -2,6 +2,7 @@ import { REVALIDATION_TAGS, REVALIDATION_TIMES, Text } from '@summerfi/app-earn-
 import {
   configEarnAppFetcher,
   getArksInterestRates,
+  getVaultInfo,
   getVaultsApy,
   getVaultsHistoricalApy,
 } from '@summerfi/app-server-handlers'
@@ -58,6 +59,10 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
   const parsedVaultId = isAddress(vaultId)
     ? vaultId
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
+
+  if (!parsedVaultId) {
+    redirect('/not-found')
+  }
 
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
@@ -118,7 +123,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
 
   const keyParts = [walletAddress, vaultId, paramsNetwork]
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw] = await Promise.all([
+  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw, vaultInfo] = await Promise.all([
     vault?.arks
       ? getArksInterestRates({
           network: parsedNetwork,
@@ -146,6 +151,11 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
+    unstableCache(
+      getVaultInfo,
+      keyParts,
+      cacheConfig,
+    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
@@ -167,10 +177,13 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
   const vaultApyData =
     vaultApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
+  const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
+
   return (
     <MigrationVaultPageView
       vault={vaultWithConfig}
       vaults={allVaultsWithConfig}
+      vaultInfo={vaultInfoParsed}
       latestActivity={latestActivity}
       topDepositors={topDepositors}
       rebalanceActivity={rebalanceActivity}

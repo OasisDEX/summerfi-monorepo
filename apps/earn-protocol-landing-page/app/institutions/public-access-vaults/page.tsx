@@ -15,15 +15,17 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { supportedDefillamaProtocols, supportedDefillamaProtocolsConfig } from '@summerfi/app-types'
-import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent, slugify } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { BigProtocolScroller } from '@/components/layout/LandingPageContent/components/BigProtocolScroller'
 import { FinalCTAElement } from '@/components/layout/LandingPageContent/components/InstitutionsFinalCTA'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useFeatureFlagRedirect } from '@/hooks/use-feature-flag'
 import { useScrolled } from '@/hooks/use-scrolled'
 import blueChipsImage from '@/public/img/institution/blue-chips.svg'
@@ -38,13 +40,7 @@ import howItWorksImage from '@/public/img/institution/how-it-works-diagram.png'
 export default function PublicAccessVaults() {
   const { landingPageData } = useLandingPageData()
   const { isScrolledToTop } = useScrolled()
-  const smoothScrollToId = (id: string) => () => {
-    const element = document.getElementById(id)
-
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
+  const pathname = usePathname()
 
   const protocolsList = useMemo(() => {
     return supportedDefillamaProtocols.map((protocol) => {
@@ -85,6 +81,65 @@ export default function PublicAccessVaults() {
     ? Object.values(landingPageData.protocolTvls).reduce((acc, tvl) => acc + BigInt(tvl), BigInt(0))
     : BigInt(0)
 
+  const handlePublicAccessVaultsFaqSection = (props: { expanded: boolean; title: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-faq-section-${slugify(props.title)}-${props.expanded ? 'expand' : 'collapse'}`,
+      page: pathname,
+    })
+  }
+
+  const handleAuditClick = (auditId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-audit-${auditId}-learn-more`,
+      page: pathname,
+    })
+  }
+
+  const handleGetStartedClick =
+    (position: 'hero' | 'blue-chip' | 'highest-quality-protocols') => () => {
+      EarnProtocolEvents.buttonClicked({
+        buttonName: `lp-public-access-vaults-get-started-${position}`,
+        page: pathname,
+      })
+    }
+
+  const handleReadMoreClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-read-more`,
+      page: pathname,
+    })
+  }
+
+  const smoothScrollToId = (id: string) => () => {
+    const element = document.getElementById(id)
+
+    handleReadMoreClick()
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleTabChange = (tab: { id: string }) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-ai-tab-${tab.id}`,
+      page: pathname,
+    })
+  }
+
+  const handleLearnHowWeUseAIClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-how-we-use-ai`,
+      page: pathname,
+    })
+  }
+
+  const handleSectionTabChange = (sectionId: string) => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-public-access-vaults-transparent-flows-tabs-${sectionId}`,
+      page: pathname,
+    })
+  }
+
   return (
     <div className={publicAccessVaultsStyles.wrapper}>
       <div
@@ -102,10 +157,10 @@ export default function PublicAccessVaults() {
             yield. Capital is rotated automatically into the highest quality strategies, cutting
             operational complexity while targeting superior risk-adjusted returns.
           </Text>
-          <Link href="/earn" target="_blank">
-            <Button variant="primaryLargeColorful" style={{ minWidth: '240px' }}>
+          <Link href="/earn" target="_blank" onClick={handleGetStartedClick('hero')}>
+            <Button variant="primaryLargeColorful" style={{ minWidth: '220px' }}>
               <WithArrow variant="p2semi" style={{ color: 'white' }}>
-                Get started now
+                <span style={{ marginLeft: '-20px' }}>Get started now</span>
               </WithArrow>
             </Button>
           </Link>
@@ -264,7 +319,7 @@ export default function PublicAccessVaults() {
             across the top protocols, ensuring you are earning the best available yields.
           </Text>
           <div className={publicAccessVaultsStyles.blueChipsBlockButtons}>
-            <Link href="/earn" target="_blank">
+            <Link href="/earn" target="_blank" onClick={handleGetStartedClick('blue-chip')}>
               <WithArrow variant="p3semi">Get started</WithArrow>
             </Link>
           </div>
@@ -283,6 +338,7 @@ export default function PublicAccessVaults() {
           How & why we use AI to outperform and improve efficiency
         </Text>
         <TabBar
+          handleTabChange={handleTabChange}
           tabs={[
             {
               label: 'How it works',
@@ -316,8 +372,12 @@ export default function PublicAccessVaults() {
                       </Text>
                     </li>
                   </ul>
-                  <Link href={EXTERNAL_LINKS.BLOG.WHY_AI_MATTERS} target="_blank">
-                    <WithArrow variant="p3semi">Learn how we use AI to works</WithArrow>
+                  <Link
+                    href={EXTERNAL_LINKS.BLOG.WHY_AI_MATTERS}
+                    target="_blank"
+                    onClick={handleLearnHowWeUseAIClick}
+                  >
+                    <WithArrow variant="p3semi">Learn how we use AI</WithArrow>
                   </Link>
                 </Card>
               ),
@@ -343,7 +403,11 @@ export default function PublicAccessVaults() {
           capital touches is vetted for technical excellence and financial soundness.
         </Text>
         <div className={publicAccessVaultsStyles.buttonsBlock}>
-          <Link href="/earn" target="_blank">
+          <Link
+            href="/earn"
+            target="_blank"
+            onClick={handleGetStartedClick('highest-quality-protocols')}
+          >
             <Button variant="primaryLarge">Get started</Button>
           </Link>
           {/* <Button variant="secondaryLarge">View yields</Button> */}
@@ -355,6 +419,7 @@ export default function PublicAccessVaults() {
         </Text>
       </div>
       <SectionTabs
+        additionalOnTabChange={handleSectionTabChange}
         sections={[
           {
             title: 'Never second guess the source of your yield',
@@ -364,7 +429,7 @@ export default function PublicAccessVaults() {
                 automated rebalances, every decision is fully traceable and optimized transparently.
               </Text>
             ),
-            id: 'transparent-flows',
+            id: 'never-second-guess',
           },
           {
             title: 'Superior risk management from DeFi’s top risk team',
@@ -391,7 +456,7 @@ export default function PublicAccessVaults() {
                 </Text>
               </div>
             ),
-            id: 'transparent-flows-2',
+            id: 'superior-risk-management',
           },
         ]}
       />
@@ -407,7 +472,11 @@ export default function PublicAccessVaults() {
             We’re focused on compliance, so you can focus on utility and yield.
           </Text>
         </div>
-        <Audits chainSecurityLogo={chainSecurityLogo} prototechLabsLogo={prototechLabsLogo} />
+        <Audits
+          chainSecurityLogo={chainSecurityLogo}
+          prototechLabsLogo={prototechLabsLogo}
+          onAuditClick={handleAuditClick}
+        />
       </div>
       <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
       <div className={institutionsPageStyles.finalCTAs}>
@@ -416,18 +485,21 @@ export default function PublicAccessVaults() {
         </Text>
         <div className={institutionsPageStyles.finalCTAElementsList}>
           <FinalCTAElement
+            id="institutions-public-access-vaults-schedule-call"
             icon="earn_1_on_1"
             title="15 minute demo call with Summer.fi team"
             url={EXTERNAL_LINKS.BD_CONTACT}
             urlLabel="Schedule call"
           />
           <FinalCTAElement
+            id="institutions-public-access-vaults-self-serve"
             icon="earn_yield_trend"
             title="Self serve vault deposit with Summer.fi dashboard"
             url={`${INTERNAL_LINKS.summerLazy}/earn`}
             urlLabel="Deposit now"
           />
           <FinalCTAElement
+            id="institutions-public-access-vaults-integration-docs"
             icon="earn_user_activities"
             title="Integration docs for Fireblocks, Anchorage and Gnosis Safe"
             url={EXTERNAL_LINKS.KB.HELP}
@@ -441,6 +513,7 @@ export default function PublicAccessVaults() {
         expanderButtonStyles={{
           padding: 'var(--spacing-space-large) 0',
         }}
+        onExpand={handlePublicAccessVaultsFaqSection}
         data={[
           {
             title: 'What is a Public access vault?',

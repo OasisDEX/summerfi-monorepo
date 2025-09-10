@@ -1,3 +1,7 @@
+import {
+  InitiateAuthCommand,
+  type InitiateAuthCommandOutput,
+} from '@aws-sdk/client-cognito-identity-provider'
 import { decodeJwt } from 'jose'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -5,7 +9,44 @@ import { NextResponse } from 'next/server'
 import { createSession, generateSecretHash, readSession } from '@/app/server-handlers/auth/session'
 import { getEnrichedUser } from '@/app/server-handlers/auth/user'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
-import { AuthService } from '@/features/auth/AuthService'
+import { cognitoClient } from '@/features/auth/constants'
+
+/**
+ * Refresh a token for a user
+ * @param refreshToken - The refresh token
+ * @param username - The username of the user
+ * @param secretHash - The secret hash
+ * @returns The access token and id token
+ */
+const serverRefreshToken = async (
+  refreshToken: string,
+  username: string,
+  secretHash: string,
+): Promise<{ accessToken: string; idToken?: string }> => {
+  const clientId = process.env.INSTITUTIONS_COGNITO_CLIENT_ID
+
+  if (!clientId) {
+    throw new Error('Missing Cognito Client ID')
+  }
+
+  const command = new InitiateAuthCommand({
+    ClientId: clientId,
+    AuthFlow: 'REFRESH_TOKEN_AUTH',
+    AuthParameters: {
+      REFRESH_TOKEN: refreshToken,
+      USERNAME: username,
+      SECRET_HASH: secretHash,
+    },
+  })
+  const response: InitiateAuthCommandOutput = await cognitoClient.send(command)
+  const { AccessToken, IdToken } = response.AuthenticationResult ?? {}
+
+  if (!AccessToken) {
+    throw new Error('Token refresh failed')
+  }
+
+  return { accessToken: AccessToken, idToken: IdToken }
+}
 
 export async function POST() {
   const cookieStore = await cookies()
@@ -18,14 +59,16 @@ export async function POST() {
   try {
     const existing = await readSession()
 
-    if (!existing?.user.name) {
-      throw new Error('Missing user email')
+    if (!existing?.user?.email || !existing.sub || !existing.cognitoUsername) {
+      throw new Error('Missing user data')
     }
 
-    // for some reason this needs to be a `name`, instead of `email (like in signup)
-    // no time to debug this right now
-    const secretHash = generateSecretHash(existing.user.name)
-    const { accessToken, idToken } = await AuthService.refreshToken(refreshToken, secretHash)
+    // To ensure consistency with the successful sign-in flow, we must use the
+    // cognito:username for both the USERNAME and the secret hash calculation.
+    const username = existing.cognitoUsername
+    const secretHash = generateSecretHash(existing.cognitoUsername)
+
+    const { accessToken, idToken } = await serverRefreshToken(refreshToken, username, secretHash)
 
     cookieStore.set(ACCESS_TOKEN_COOKIE, accessToken, {
       httpOnly: true,
@@ -43,10 +86,10 @@ export async function POST() {
         name: (payload.name as string | undefined) ?? (payload.email as string),
       })
 
-      await createSession(enriched, payload.sub as string)
+      await createSession(enriched, payload.sub as string, existing.cognitoUsername)
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (existing) {
-      await createSession(existing.user, existing.sub)
+      await createSession(existing.user, existing.sub, existing.cognitoUsername)
     }
 
     return NextResponse.json({ ok: true })

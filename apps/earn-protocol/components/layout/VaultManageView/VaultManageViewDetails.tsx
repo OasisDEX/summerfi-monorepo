@@ -36,6 +36,7 @@ import { vaultExposureColumnsToHideOpenManage } from '@/constants/tables'
 import { LatestActivity } from '@/features/latest-activity/components/LatestActivity/LatestActivity'
 import { RebalancingActivity } from '@/features/rebalance-activity/components/RebalancingActivity/RebalancingActivity'
 import { getManagementFee } from '@/helpers/get-management-fee'
+import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import vaultManageViewStyles from './VaultManageView.module.css'
 
@@ -60,11 +61,17 @@ export const VaultManageViewDetails = ({
   topDepositors: TopDepositorsPagination
   viewWalletAddress?: string
 }) => {
+  const buttonClickEventHandler = useHandleButtonClickEvent()
+  const tooltipEventHandler = useHandleTooltipOpenEvent()
   const managementFee = getManagementFee(vault.inputToken.symbol)
 
   const humanReadableNetwork = capitalize(
     sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
   )
+
+  const handleExpanderToggle = (expanderId: string) => (isOpen: boolean) => {
+    buttonClickEventHandler(`vault-manage-expander-${expanderId}-${isOpen ? 'open' : 'close'}`)
+  }
 
   return [
     <div className={vaultManageViewStyles.leftContentWrapper} key="PerformanceBlock">
@@ -74,7 +81,7 @@ export const VaultManageViewDetails = ({
             Forecasted Market Value
           </Text>
         }
-        defaultExpanded
+        onExpand={handleExpanderToggle('performance')}
       >
         <PositionPerformanceChart
           chartData={performanceChartData}
@@ -137,8 +144,10 @@ export const VaultManageViewDetails = ({
             Historical yield
           </Text>
         }
+        onExpand={handleExpanderToggle('historical-yield')}
       >
         <ArkHistoricalYieldChart
+          chartId="manage-view"
           chartData={arksHistoricalChartData}
           summerVaultName={getVaultNiceName({ vault })}
         />
@@ -149,6 +158,7 @@ export const VaultManageViewDetails = ({
             Vault exposure
           </Text>
         }
+        onExpand={handleExpanderToggle('vault-exposure')}
       >
         <VaultExposureDescription humanReadableNetwork={humanReadableNetwork}>
           <VaultExposure
@@ -156,6 +166,8 @@ export const VaultManageViewDetails = ({
             arksInterestRates={arksInterestRates}
             vaultApyData={vaultApyData}
             columnsToHide={vaultExposureColumnsToHideOpenManage}
+            tableId="vault-manage"
+            buttonClickEventHandler={buttonClickEventHandler}
           />
         </VaultExposureDescription>
       </Expander>
@@ -165,6 +177,7 @@ export const VaultManageViewDetails = ({
             Strategy management fee
           </Text>
         }
+        onExpand={handleExpanderToggle('strategy-management-fee')}
       >
         <Card style={{ flexDirection: 'column', marginTop: 'var(--general-space-16)' }}>
           <Text
@@ -200,10 +213,14 @@ export const VaultManageViewDetails = ({
             Rebalancing activity
           </Text>
         }
+        onExpand={handleExpanderToggle('rebalancing-activity')}
       >
         <RebalancingActivity
           rebalanceActivity={rebalanceActivity}
           vaultId={getUniqueVaultId(vault)}
+          tableId="vault-manage-rebalancing-activity"
+          buttonClickEventHandler={buttonClickEventHandler}
+          tooltipEventHandler={tooltipEventHandler}
         />
       </Expander>
       <Expander
@@ -212,6 +229,7 @@ export const VaultManageViewDetails = ({
             User activity
           </Text>
         }
+        onExpand={handleExpanderToggle('user-activity')}
       >
         <LatestActivity
           latestActivity={latestActivity}
@@ -220,6 +238,8 @@ export const VaultManageViewDetails = ({
           page="manage"
           noHighlight
           walletAddress={viewWalletAddress}
+          tableId="vault-manage-user-activity"
+          buttonClickEventHandler={buttonClickEventHandler}
         />
       </Expander>
     </div>,

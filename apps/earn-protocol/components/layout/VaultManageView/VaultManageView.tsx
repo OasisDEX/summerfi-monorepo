@@ -12,6 +12,7 @@ import {
   type SDKVaultType,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
+import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
@@ -23,6 +24,7 @@ import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 export const VaultManageView = ({
   vault,
+  vaultInfo,
   vaults,
   position,
   latestActivity,
@@ -38,6 +40,7 @@ export const VaultManageView = ({
   systemConfig,
 }: {
   vault: SDKVaultType | SDKVaultishType
+  vaultInfo?: IArmadaVaultInfo
   vaults: SDKVaultsListType
   position: IArmadaPosition
   latestActivity: LatestActivityPagination
@@ -57,6 +60,7 @@ export const VaultManageView = ({
       <VaultManageViewComponent
         systemConfig={systemConfig}
         vault={vault}
+        vaultInfo={vaultInfo}
         vaults={vaults}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         position={position}

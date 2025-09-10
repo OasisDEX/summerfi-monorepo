@@ -6,6 +6,10 @@ query GetUserPositions($accountAddress: String!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
@@ -43,6 +47,8 @@ query GetUserPositions($accountAddress: String!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {
@@ -64,6 +70,10 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
@@ -100,6 +110,8 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {
@@ -121,6 +133,10 @@ query GetPosition($id: ID!) {
     stakedInputTokenBalance
     stakedOutputTokenBalance
     createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
     deposits {
       amount
       amountUSD
@@ -157,6 +173,8 @@ query GetPosition($id: ID!) {
     account {
       id
     }
+    claimedSummerToken
+    claimableSummerToken
     claimedSummerTokenNormalized
     claimableSummerTokenNormalized
     rewards {

@@ -325,15 +325,21 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     merklRewards: { perChain: Partial<Record<ChainId, MerklReward[]>> },
     chainId: number,
   ): bigint {
-    const merklUsage = merklRewards.perChain[chainId as ChainId] || []
-    return merklUsage
-      .filter(
-        (item: MerklReward) =>
-          item.token.address ===
-          this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId as ChainId) }).address
-            .value,
-      )
-      .reduce((sum: bigint, item: MerklReward) => sum + BigInt(item.amount), 0n)
+    const merklRewardsForChain = merklRewards.perChain[chainId as ChainId] || []
+    return (
+      merklRewardsForChain
+        .filter(
+          (item: MerklReward) =>
+            item.token.address ===
+            this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId as ChainId) }).address
+              .value,
+        )
+        // need to subtract claimed to show actual claimable rewards
+        .reduce(
+          (sum: bigint, item: MerklReward) => sum + (BigInt(item.amount) - BigInt(item.claimed)),
+          0n,
+        )
+    )
   }
 
   async getAggregatedRewardsIncludingMerkl(

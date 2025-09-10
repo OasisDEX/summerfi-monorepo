@@ -1,9 +1,6 @@
 name: Deploy New Rays Dashboard Production
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
 
 jobs:
   build:

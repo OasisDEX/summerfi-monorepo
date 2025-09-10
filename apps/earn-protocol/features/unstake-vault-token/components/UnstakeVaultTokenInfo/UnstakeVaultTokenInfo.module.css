@@ -1,0 +1,56 @@
+.unstakeVaultTokenInfoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-x-small);
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+  .iconTextWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-x-small);
+  }
+
+  .actionButton {
+    margin-top: var(--spacing-space-large);
+  }
+
+  .whatAreVaultTokensWrapper {
+    margin-top: var(--spacing-space-large);
+    padding: var(--spacing-space-medium);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-2x-small);
+
+    .title {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--spacing-space-x-small);
+      width: 100%;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-space-x-small);
+      list-style: none;
+      padding: 0;
+      margin-top: var(--spacing-space-medium-large);
+
+      .listItem {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: var(--spacing-space-x-small);
+
+        .icon {
+          transform: translateY(4px);
+          color: var(--earn-protocol-success-100);
+        }
+      }
+    }
+  }
+}

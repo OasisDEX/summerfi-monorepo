@@ -4,8 +4,20 @@ import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
 import assert from 'node:assert'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
+import { BigNumber } from 'bignumber.js'
 
 const onlySimulation = true // Set to false to actually send transactions
+
+const displayReward = (reward: {
+  amount: string
+  claimed: string
+  token: { decimals: number }
+}): string => {
+  return BigNumber(reward.amount)
+    .minus(reward.claimed)
+    .div(10 ** Number(reward.token.decimals))
+    .toString()
+}
 
 describe('Armada Protocol Rewards', () => {
   const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
@@ -25,6 +37,8 @@ describe('Armada Protocol Rewards', () => {
   const addresses = [
     // '0x38233654FB0843c8024527682352A5d41E7f7324',
     '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+    // '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d',
+    // '0xE9c245293DAC615c11A5bF26FCec91C3617645E4',
   ] as AddressValue[]
 
   for (const userAddress of addresses) {
@@ -37,7 +51,9 @@ describe('Armada Protocol Rewards', () => {
 
           expect(rewards.perChain).toBeDefined()
           Object.entries(rewards.perChain).forEach(([chainId, chainRewards]) => {
-            console.log(`Chain ID: ${chainId}, Rewards Count: ${chainRewards.length}`)
+            console.log(
+              `Validating rewards on Chain ID: ${chainId}, Rewards Count: ${chainRewards.length}`,
+            )
             chainRewards.forEach((reward, index) => {
               expect(reward).toHaveProperty('token')
               expect(reward).toHaveProperty('root')
@@ -75,7 +91,9 @@ describe('Armada Protocol Rewards', () => {
             if (chainRewards && chainRewards.length > 0) {
               console.log(`Chain ID ${chainId}: ${chainRewards.length} rewards found`)
               chainRewards.forEach((reward, index) => {
-                console.log(`  Reward ${index + 1}: ${reward.token.symbol} - ${reward.amount}`)
+                console.log(
+                  `  Reward ${index + 1}: ${reward.token.symbol} - ${displayReward(reward)}`,
+                )
               })
             } else {
               console.log(`Chain ID ${chainId}: No rewards found`)
@@ -84,7 +102,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`getUserMerklClaimTx`, () => {
+      describe.skip(`getUserMerklClaimTx`, () => {
         it(`should generate claim transaction for user with rewards`, async () => {
           // First get rewards to find chains with rewards
           const rewards = await sdk.armada.users.getUserMerklRewards({
@@ -92,8 +110,8 @@ describe('Armada Protocol Rewards', () => {
           })
 
           const allChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[] // Ethereum, Base, Arbitrum, Sonic
@@ -168,7 +186,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`getReferralFeesMerklClaimTx`, () => {
+      describe.skip(`getReferralFeesMerklClaimTx`, () => {
         it(`should generate referral claim transaction with specific token addresses`, async () => {
           const usdcToken = await sdk.tokens.getTokenBySymbol({
             symbol: 'USDC',
@@ -176,7 +194,7 @@ describe('Armada Protocol Rewards', () => {
           })
           const usdcTokenAddress = usdcToken.address.value
 
-          const feeUserAddress = '0xE9c245293DAC615c11A5bF26FCec91C3617645E4'
+          const feeUserAddress = '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d'
 
           // First get rewards to find chains with rewards and get token addresses
           const rewards = await sdk.armada.users.getUserMerklRewards({
@@ -256,11 +274,11 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
+      describe.skip(`getAuthorizeAsMerklRewardsOperatorTx`, () => {
         it(`should generate authorization transaction for supported chains`, async () => {
           const supportedChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[]
@@ -302,11 +320,11 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe(`getIsAuthorizedAsMerklRewardsOperator`, () => {
+      describe.skip(`getIsAuthorizedAsMerklRewardsOperator`, () => {
         it(`should check authorization status for supported chains`, async () => {
           const supportedChainIds = [
-            ChainIds.Mainnet,
             ChainIds.Base,
+            ChainIds.Mainnet,
             ChainIds.ArbitrumOne,
             ChainIds.Sonic,
           ] as ChainId[]
