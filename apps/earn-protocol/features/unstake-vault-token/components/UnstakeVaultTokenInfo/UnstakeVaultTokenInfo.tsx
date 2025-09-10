@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { Button, Card, Icon, Text } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 
 import { UnstakeVaultTokenContent } from '@/features/unstake-vault-token/components/UnstakeVaultTokenContent/UnstakeVaultTokenContent'
 import {
@@ -30,7 +30,7 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
   isOnCorrectChain,
 }) => {
   const resolvedAmount = balance.amount ? parseFloat(balance.amount) : 0
-  const usdValue = state.vaultTokenPrice ? state.vaultTokenPrice * resolvedAmount : 0
+  // const usdValue = state.vaultTokenPrice ? state.vaultTokenPrice * resolvedAmount : 0
 
   return (
     <UnstakeVaultTokenContent>
@@ -44,9 +44,9 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
             {formatCryptoBalance(resolvedAmount)} {balance.token?.symbol}
           </Text>
         </div>
-        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+        {/* <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
           ${formatFiatBalance(usdValue)}
-        </Text>
+        </Text> */}
         {state.step !== UnstakeVaultTokenStep.COMPLETED && (
           <Button
             variant="primaryMedium"
