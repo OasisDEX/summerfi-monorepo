@@ -1,13 +1,14 @@
-import { createMainRPCClient } from '../rpc/SDKMainClient'
-import { version as sdkClientVersion } from '../../bundle/package.json'
 import { Signer } from '@ethersproject/abstract-signer'
-import { SDKManagerWithProvider } from './SDKManagerWithProvider'
 
-export type Web3Signer = Signer
+import { createMainRPCClient } from '../rpc/SDKMainClient'
+import { SDKManagerWithSigner } from './SDKManagerWithSigner'
+import { version as sdkClientVersion } from '../../bundle/package.json'
+
+export type SDKSigner = Signer
 
 export type MakeSDKParams = {
   logging?: boolean
-  signer: Web3Signer
+  signer: SDKSigner
 } & ({ apiDomainUrl: string } | { apiURL: string })
 
 /*
@@ -15,7 +16,7 @@ export type MakeSDKParams = {
  * It can take either an apiDomainUrl or a direct apiURL, along with an optional logging flag.
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
-export function makeSDKWithProvider(params: MakeSDKParams) {
+export function makeSDKWithSigner(params: MakeSDKParams) {
   const apiVersion = `v${sdkClientVersion.charAt(0)}`
   let versionedURL: string
   // url based on domain
@@ -39,10 +40,8 @@ export function makeSDKWithProvider(params: MakeSDKParams) {
   })
 
   if (!params.signer) {
-    throw new Error(
-      'No web3 provider provided and no window.ethereum found. Please provide a web3 provider.',
-    )
+    throw new Error('Signer must be provided.')
   }
 
-  return new SDKManagerWithProvider({ rpcClient, signer: params.signer })
+  return new SDKManagerWithSigner({ rpcClient, signer: params.signer })
 }

@@ -7,12 +7,12 @@ import { SwapManagerClient } from './SwapManagerClient'
 import { OracleManagerClient } from './OracleManagerClient'
 import { UsersManager } from './UsersManager'
 import { SimulationManager } from './simulations/SimulationManager'
-import type { Web3Signer } from './MakeSDKWithProvider'
+import type { SDKSigner } from './MakeSDKWithSigner'
 import { IntentSwapClient } from './IntentSwapClient'
 import { TokensManagerClient2 } from './TokensManagerClient2'
 
 /** @see ISDKManager */
-export class SDKManagerWithProvider implements ISDKManager {
+export class SDKManagerWithSigner implements ISDKManager {
   public readonly simulator: SimulationManager
   public readonly chains: ChainsManagerClient
   public readonly tokens: TokensManagerClient2
@@ -23,7 +23,7 @@ export class SDKManagerWithProvider implements ISDKManager {
   public readonly oracle: OracleManagerClient
   public readonly intentSwaps: IntentSwapClient
 
-  public constructor(params: { rpcClient: RPCMainClientType; signer: Web3Signer }) {
+  public constructor(params: { rpcClient: RPCMainClientType; signer: SDKSigner }) {
     this.simulator = new SimulationManager(params)
     this.chains = new ChainsManagerClient(params)
     this.tokens = new TokensManagerClient2(params)

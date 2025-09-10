@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { makeSDKWithProvider } from '@summerfi/sdk-client'
+import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
@@ -33,7 +33,7 @@ describe('Intent swaps', () => {
     amountValue: string
     limitPrice?: string
   }) {
-    const sdk = makeSDKWithProvider({
+    const sdk = makeSDKWithSigner({
       apiDomainUrl: SDKApiUrl,
       signer: wallet,
     })

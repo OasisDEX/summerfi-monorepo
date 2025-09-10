@@ -6,7 +6,7 @@ import {
   type SupportedChainId,
   ALL_SUPPORTED_CHAIN_IDS,
 } from '@cowprotocol/cow-sdk'
-import type { Web3Signer } from './MakeSDKWithProvider'
+import type { SDKSigner } from './MakeSDKWithSigner'
 import { Price } from '@summerfi/sdk-common'
 
 /**
@@ -14,9 +14,9 @@ import { Price } from '@summerfi/sdk-common'
  * @implements IIntentSwapClient
  */
 export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
-  private readonly _signer: Web3Signer
+  private readonly _signer: SDKSigner
 
-  public constructor(params: { rpcClient: RPCMainClientType; signer: Web3Signer }) {
+  public constructor(params: { rpcClient: RPCMainClientType; signer: SDKSigner }) {
     super(params)
     this._signer = params.signer
   }
