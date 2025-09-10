@@ -468,6 +468,7 @@ export const icons = {
   tooltip: customLazy(() => import('./icons/tooltip.svg?react')) as IconExportType,
   trail_of_bits: customLazy(() => import('./icons/trail_of_bits.svg?react')) as IconExportType,
   trailingStopLoss: customLazy(() => import('./icons/stopLoss.svg?react')) as IconExportType,
+  trash: customLazy(() => import('./icons/trash.svg?react')) as IconExportType,
   tusd_circle_color: customLazy(
     () => import('./icons/tusd_circle_color.svg?react'),
   ) as IconExportType,
@@ -914,6 +915,7 @@ export const iconsSync: {
   tooltip: import('./icons/tooltip.svg?react'),
   trail_of_bits: import('./icons/trail_of_bits.svg?react'),
   trailingStopLoss: import('./icons/stopLoss.svg?react'),
+  trash: import('./icons/trash.svg?react'),
   tusd_circle_color: import('./icons/tusd_circle_color.svg?react'),
   tusd_color: import('./icons/tusd_color.svg?react'),
   tusd: import('./icons/tusd.svg?react'),

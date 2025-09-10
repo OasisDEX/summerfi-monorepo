@@ -17,6 +17,10 @@ interface EditSummaryProps {
 }
 
 export const EditSummary: FC<EditSummaryProps> = ({ title, change, onCancel, onConfirm }) => {
+  if (change.length === 0) {
+    return null
+  }
+
   return (
     <div className={styles.editSummary}>
       <Text as="p" variant="p1semi">
