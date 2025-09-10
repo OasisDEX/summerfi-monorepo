@@ -1,0 +1,9 @@
+.editSummaryBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-2x-small);
+  padding: var(--spacing-space-medium);
+  border-radius: var(--radius-medium);
+  flex: 1;
+}
