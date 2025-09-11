@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { isToken, Token, FiatCurrency, isFiatCurrency } from '@summerfi/sdk-common'
+import { isDenomination, isToken, Token, type Denomination } from '@summerfi/sdk-common'
 import { publicProcedure } from '../SDKTRPC'
 
 export const getSpotPrice = publicProcedure
   .input(
     z.object({
       baseToken: z.custom<Token>(isToken),
-      denomination: z.union([z.custom<Token>(isToken), z.custom<FiatCurrency>(isFiatCurrency)]).optional(),
+      denomination: z.custom<Denomination>(isDenomination).optional(),
     }),
   )
   .query(async (opts) => {
