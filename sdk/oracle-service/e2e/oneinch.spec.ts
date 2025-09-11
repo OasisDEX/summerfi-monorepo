@@ -30,7 +30,7 @@ describe('OneInch | OracleManager | Integration', () => {
 
     const spotPriceInfo: ISpotPriceInfo = await oracleManager.getSpotPrice({
       baseToken: WETH,
-      quoteToken: FiatCurrency.USD,
+      denomination: FiatCurrency.USD,
       forceUseProvider: OracleProviderType.OneInch,
     })
 

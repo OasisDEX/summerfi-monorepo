@@ -30,7 +30,7 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
   isOnCorrectChain,
 }) => {
   const resolvedAmount = balance.amount ? parseFloat(balance.amount) : 0
-  const usdValue = state.vaultTokenPrice ? state.vaultTokenPrice * resolvedAmount : 0
+  const usdValue = state.vaultTokenPrice ? state.vaultTokenPrice * resolvedAmount : undefined
 
   return (
     <UnstakeVaultTokenContent>
@@ -44,9 +44,11 @@ export const UnstakeVaultTokenInfo: FC<UnstakeVaultTokenInfoProps> = ({
             {formatCryptoBalance(resolvedAmount)} {balance.token?.symbol}
           </Text>
         </div>
-        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-          ${formatFiatBalance(usdValue)}
-        </Text>
+        {usdValue && (
+          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+            ${formatFiatBalance(usdValue)}
+          </Text>
+        )}
         {state.step !== UnstakeVaultTokenStep.COMPLETED && (
           <Button
             variant="primaryMedium"

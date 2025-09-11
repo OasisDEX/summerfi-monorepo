@@ -20,6 +20,8 @@ interface FloatingBannerProps {
     className?: string
     style?: CSSProperties
     variant?: ButtonVariant
+    target?: string
+    rel?: string
   }
   icon?: ReactNode
 }
@@ -46,7 +48,7 @@ export const FloatingBanner: FC<FloatingBannerProps> = ({
         </div>
         <div className={styles.buttonsWrapper}>
           {button?.link ? (
-            <Link href={button.link}>
+            <Link href={button.link} target={button.target} rel={button.rel}>
               <Button
                 className={button.className}
                 style={button.style}

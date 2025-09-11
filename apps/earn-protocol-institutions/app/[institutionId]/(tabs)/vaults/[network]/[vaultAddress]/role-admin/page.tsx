@@ -18,6 +18,18 @@ export default async function InstitutionVaultRoleAdminPage({
           address: '0x1234567890abcdef1234567890abcdef12345678',
           lastUpdated: Date.now(),
         },
+        [GeneralRoles.SUPER_KEEPER_ROLE]: {
+          address: '0x1234567890abcdef1234567890abcdef12345678',
+          lastUpdated: Date.now(),
+        },
+        [GeneralRoles.GOVERNOR_ROLE]: {
+          address: '0x1234567890abcdef1234567890abcdef12345678',
+          lastUpdated: Date.now(),
+        },
+        [GeneralRoles.DECAY_CONTROLLER_ROLE]: {
+          address: '0x1234567890abcdef1234567890abcdef12345678',
+          lastUpdated: Date.now(),
+        },
       }}
     />
   )

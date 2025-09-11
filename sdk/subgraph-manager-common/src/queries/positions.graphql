@@ -28,6 +28,7 @@ query GetUserPositions($accountAddress: String!) {
       inputTokenPriceUSD
       outputTokenPriceUSD
       rebalanceCount
+      pricePerShare
       inputToken {
         id
         symbol
@@ -91,6 +92,7 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
       inputTokenBalance
       inputTokenPriceUSD
       outputTokenPriceUSD
+      pricePerShare
       inputToken {
         id
         symbol
@@ -154,6 +156,7 @@ query GetPosition($id: ID!) {
       inputTokenBalance
       inputTokenPriceUSD
       outputTokenPriceUSD
+      pricePerShare
       inputToken {
         id
         symbol

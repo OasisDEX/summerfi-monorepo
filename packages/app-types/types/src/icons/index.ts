@@ -221,6 +221,7 @@ export type IconNamesList =
   | 'stopLoss'
   | 'takeProfit'
   | 'trailingStopLoss'
+  | 'trash'
   // other icons
   | 'arrow_backward'
   | 'arrow_decrease'
