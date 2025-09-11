@@ -1,0 +1,23 @@
+.iconMainWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
+
+  .colorfulWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, rgba(255, 73, 164, 0.2) 0%, rgba(176, 73, 255, 0.2) 93%);
+  }
+}
+
+.gradientButton {
+  background: var(--gradient-earn-protocol-dark);
+}
