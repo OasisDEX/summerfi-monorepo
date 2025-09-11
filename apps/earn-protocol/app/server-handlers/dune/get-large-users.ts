@@ -8,13 +8,13 @@ interface LargeUser {
  * @throws An error if the API key is not set.
  */
 export const getLargeUsers = async () => {
-  const apiKey = process.env.DUNE_LAZYSUMMER_ACCOUNT_API_KEY
-
-  if (!apiKey) {
-    throw new Error('DUNE_LAZYSUMMER_ACCOUNT_API_KEY environment variable is required')
-  }
-
   try {
+    const apiKey = process.env.DUNE_LAZYSUMMER_ACCOUNT_API_KEY
+
+    if (!apiKey) {
+      throw new Error('DUNE_LAZYSUMMER_ACCOUNT_API_KEY environment variable is required')
+    }
+
     const response = await fetch('https://api.dune.com/api/v1/query/5729350/results?limit=1000', {
       method: 'GET',
       headers: {
