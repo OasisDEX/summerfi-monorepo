@@ -5,6 +5,7 @@ import {
   Card,
   ERROR_TOAST_CONFIG,
   Expander,
+  getDisplayToken,
   Icon,
   SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
@@ -46,7 +47,7 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
 
   const [state, dispatch] = useReducer(unstakeVaultTokenReducer, {
     ...unstakeVaultTokenState,
-    vaultToken: vault.inputToken.symbol as TokenSymbolsList,
+    vaultToken: getDisplayToken(vault.inputToken.symbol) as TokenSymbolsList,
     vaultTokenPrice,
     vaultChainId: subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
     walletAddress,
