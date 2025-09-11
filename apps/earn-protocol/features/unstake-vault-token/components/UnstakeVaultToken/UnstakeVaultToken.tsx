@@ -36,10 +36,18 @@ interface UnstakeVaultTokenProps {
 }
 
 export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAddress }) => {
+  const vaultInputTokenPriceUSD = vault.inputTokenPriceUSD
+  const vaultPricePerShare = vault.pricePerShare
+
+  const vaultTokenPrice =
+    vaultInputTokenPriceUSD && vaultPricePerShare
+      ? Number(vaultInputTokenPriceUSD) * Number(vaultPricePerShare)
+      : undefined
+
   const [state, dispatch] = useReducer(unstakeVaultTokenReducer, {
     ...unstakeVaultTokenState,
     vaultToken: vault.inputToken.symbol as TokenSymbolsList,
-    vaultTokenPrice: vault.inputTokenPriceUSD ? parseFloat(vault.inputTokenPriceUSD) : undefined,
+    vaultTokenPrice,
     vaultChainId: subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
     walletAddress,
   })
