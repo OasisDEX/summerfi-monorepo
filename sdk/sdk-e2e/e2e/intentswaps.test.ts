@@ -2,7 +2,7 @@
 import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
 import assert from 'assert'
 import { Wallet } from 'ethers'
 
@@ -48,7 +48,7 @@ describe('Intent swaps', () => {
     const toToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
 
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
-      from: userAddress,
+      from: testWalletAddress,
       fromAmount: fromAmount,
       toToken,
       limitPrice,
