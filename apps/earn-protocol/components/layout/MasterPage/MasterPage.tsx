@@ -9,6 +9,7 @@ import {
   Text,
   useAnalyticsCookies,
 } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -68,7 +69,11 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const isSuperLazyVaults = pathname.startsWith('/super')
 
   return (
-    <div className={masterPageStyles.mainContainer}>
+    <div
+      className={clsx(masterPageStyles.mainContainer, {
+        'super-lazy': isSuperLazyVaults,
+      })}
+    >
       {!skipNavigation && <NavigationWrapper />}
       {isSuperLazyVaults && (
         <div

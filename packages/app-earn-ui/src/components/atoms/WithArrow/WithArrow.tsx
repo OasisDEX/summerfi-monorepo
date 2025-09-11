@@ -51,7 +51,7 @@ export function WithArrow({
       <Text
         variant={variant}
         className={clsx(withArrowStyles.withArrow, className)}
-        style={{ whiteSpace: 'nowrap', color: 'var(--earn-protocol-primary-100)', ...style }}
+        style={style}
         {...(as ? { as } : { as: 'span' })}
       >
         {isLoading ? (
