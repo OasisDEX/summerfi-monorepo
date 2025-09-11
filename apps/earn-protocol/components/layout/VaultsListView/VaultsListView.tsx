@@ -13,6 +13,7 @@ import {
   isUserSmartAccount,
   networkNameIconNameMap,
   SUMR_CAP,
+  SuperVaultCard,
   Text,
   useAmount,
   useAmountWithSwap,
@@ -48,7 +49,12 @@ import {
 } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { capitalize } from 'lodash-es'
-import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
+import {
+  type ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
@@ -123,6 +129,8 @@ export const VaultsListView = ({
 
   const user = useUser()
   const userIsSmartAccount = isUserSmartAccount(user)
+  const pathname = usePathname()
+  const isSuperLazyVaults = pathname.startsWith('/super')
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
@@ -369,20 +377,23 @@ export const VaultsListView = ({
     handleTokenSelectionChange(option)
   }
 
-  const handleChangeVault = (nextselectedVaultId: string) => {
-    if (nextselectedVaultId === selectedVaultId) {
-      buttonClickEventHandler(
-        `vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
-      )
-      const vaultUrl = getVaultUrl(resolvedVaultData)
+  const handleChangeVault = useCallback(
+    (nextselectedVaultId: string) => {
+      if (nextselectedVaultId === selectedVaultId) {
+        buttonClickEventHandler(
+          `vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
+        )
+        const vaultUrl = getVaultUrl(resolvedVaultData)
 
-      push(vaultUrl)
+        push(vaultUrl)
 
-      return
-    }
-    buttonClickEventHandler(`vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-select`)
-    setSelectedVaultId(nextselectedVaultId)
-  }
+        return
+      }
+      buttonClickEventHandler(`vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-select`)
+      setSelectedVaultId(nextselectedVaultId)
+    },
+    [buttonClickEventHandler, push, resolvedVaultData, selectedVaultId],
+  )
 
   const formattedTotalLiquidity = useMemo(() => {
     return formatCryptoBalance(
@@ -520,6 +531,97 @@ export const VaultsListView = ({
     buttonClickEventHandler('vaults-list-what-is-lazy')
   }
 
+  const mapVaultCards = useCallback(
+    (vault: SDKVaultishType, vaultIndex: number) => {
+      if (isSuperLazyVaults) {
+        return (
+          <SuperVaultCard
+            key={getUniqueVaultId(vault)}
+            {...vault}
+            withHover
+            deviceType={deviceType}
+            selected={
+              selectedVaultId === getUniqueVaultId(vault) || (!selectedVaultId && vaultIndex === 0)
+            }
+            onClick={(id) => {
+              handleChangeVault(id)
+              // we want to use ETH as native deposit token for WETH vaults
+              const resolvedTokenSymbol = convertWethToEth(
+                vault.inputToken.symbol,
+              ) as TokenSymbolsList
+
+              setSelectedTokenOption({
+                value: resolvedTokenSymbol,
+                label: resolvedTokenSymbol,
+                tokenSymbol: resolvedTokenSymbol,
+              })
+              tokenBalances.handleSetTokenBalanceLoading(true)
+            }}
+            withTokenBonus={sumrNetApyConfig.withSumr}
+            sumrPrice={estimatedSumrPrice}
+            vaultApyData={
+              vaultsApyByNetworkMap[
+                `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+              ]
+            }
+            tooltipName="vaults-list-vault-card"
+            onTooltipOpen={tooltipEventHandler}
+            merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
+          />
+        )
+      }
+
+      return (
+        <VaultCard
+          key={getUniqueVaultId(vault)}
+          {...vault}
+          withHover
+          deviceType={deviceType}
+          selected={
+            selectedVaultId === getUniqueVaultId(vault) || (!selectedVaultId && vaultIndex === 0)
+          }
+          onClick={(id) => {
+            handleChangeVault(id)
+            // we want to use ETH as native deposit token for WETH vaults
+            const resolvedTokenSymbol = convertWethToEth(
+              vault.inputToken.symbol,
+            ) as TokenSymbolsList
+
+            setSelectedTokenOption({
+              value: resolvedTokenSymbol,
+              label: resolvedTokenSymbol,
+              tokenSymbol: resolvedTokenSymbol,
+            })
+            tokenBalances.handleSetTokenBalanceLoading(true)
+          }}
+          withTokenBonus={sumrNetApyConfig.withSumr}
+          sumrPrice={estimatedSumrPrice}
+          vaultApyData={
+            vaultsApyByNetworkMap[
+              `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+            ]
+          }
+          tooltipName="vaults-list-vault-card"
+          onTooltipOpen={tooltipEventHandler}
+          merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
+        />
+      )
+    },
+    [
+      deviceType,
+      estimatedSumrPrice,
+      handleChangeVault,
+      selectedVaultId,
+      setSelectedTokenOption,
+      sumrNetApyConfig.withSumr,
+      tokenBalances,
+      tooltipEventHandler,
+      vaultsApyByNetworkMap,
+      vaultsInfo,
+      isSuperLazyVaults,
+    ],
+  )
+
   return (
     <VaultGrid
       isMobileOrTablet={isMobileOrTablet}
@@ -611,42 +713,7 @@ export const VaultsListView = ({
             </Dropdown>
           </div>
           {filteredAndSortedVaults?.length ? (
-            filteredAndSortedVaults.map((vault, vaultIndex) => (
-              <VaultCard
-                key={getUniqueVaultId(vault)}
-                {...vault}
-                withHover
-                deviceType={deviceType}
-                selected={
-                  selectedVaultId === getUniqueVaultId(vault) ||
-                  (!selectedVaultId && vaultIndex === 0)
-                }
-                onClick={(id) => {
-                  handleChangeVault(id)
-                  // we want to use ETH as native deposit token for WETH vaults
-                  const resolvedTokenSymbol = convertWethToEth(
-                    vault.inputToken.symbol,
-                  ) as TokenSymbolsList
-
-                  setSelectedTokenOption({
-                    value: resolvedTokenSymbol,
-                    label: resolvedTokenSymbol,
-                    tokenSymbol: resolvedTokenSymbol,
-                  })
-                  tokenBalances.handleSetTokenBalanceLoading(true)
-                }}
-                withTokenBonus={sumrNetApyConfig.withSumr}
-                sumrPrice={estimatedSumrPrice}
-                vaultApyData={
-                  vaultsApyByNetworkMap[
-                    `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                  ]
-                }
-                tooltipName="vaults-list-vault-card"
-                onTooltipOpen={tooltipEventHandler}
-                merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-              />
-            ))
+            filteredAndSortedVaults.map(mapVaultCards)
           ) : (
             <div className={vaultsListViewStyles.noVaultsWrapper}>
               <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
@@ -667,43 +734,7 @@ export const VaultsListView = ({
               </Text>
             </div>
           )}
-          {usingSafeVaultsList && (
-            <>
-              {filteredSafeVaultsList.map((vault, vaultIndex) => (
-                <VaultCard
-                  key={getUniqueVaultId(vault)}
-                  {...vault}
-                  withHover
-                  selected={
-                    selectedVaultId === getUniqueVaultId(vault) ||
-                    (!selectedVaultId && vaultIndex === 0)
-                  }
-                  onClick={(id) => {
-                    handleChangeVault(id)
-                    // we want to use ETH as native deposit token for WETH vaults
-                    const resolvedTokenSymbol = convertWethToEth(
-                      vault.inputToken.symbol,
-                    ) as TokenSymbolsList
-
-                    setSelectedTokenOption({
-                      value: resolvedTokenSymbol,
-                      label: resolvedTokenSymbol,
-                      tokenSymbol: resolvedTokenSymbol,
-                    })
-                    tokenBalances.handleSetTokenBalanceLoading(true)
-                  }}
-                  withTokenBonus={sumrNetApyConfig.withSumr}
-                  sumrPrice={estimatedSumrPrice}
-                  vaultApyData={
-                    vaultsApyByNetworkMap[
-                      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                    ]
-                  }
-                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-                />
-              ))}
-            </>
-          )}
+          {usingSafeVaultsList && <>{filteredSafeVaultsList.map(mapVaultCards)}</>}
         </>
       }
       rightContent={

@@ -37,6 +37,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const { features } = useSystemConfig()
   const pathname = usePathname()
+  const isSuperLazyVaults = pathname.startsWith('/super')
   const handleButtonClick = useHandleButtonClickEvent()
 
   useScrollTracker({})
@@ -65,8 +66,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
       })
     }
   }
-
-  const isSuperLazyVaults = pathname.startsWith('/super')
 
   return (
     <div
