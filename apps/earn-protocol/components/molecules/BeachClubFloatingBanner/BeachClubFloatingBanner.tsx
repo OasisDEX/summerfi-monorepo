@@ -4,17 +4,17 @@ import { getCookie, setCookie } from '@summerfi/app-utils'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
 
+import { beachClubCookieName } from './config'
+
 import styles from './BeachClubFloatingBanner.module.css'
 
-const cookieName = 'beach-club-banner'
-
-interface SavedBeachClubBannerSettings {
+export interface SavedBeachClubBannerSettings {
   isClosed: boolean
 }
 
 export const BeachClubFloatingBanner = () => {
   const [isClosed, setIsClosed] = useState(false)
-  const cookie = getCookie(cookieName)
+  const cookie = getCookie(beachClubCookieName)
 
   const { userWalletAddress } = useUserWallet()
 
@@ -27,7 +27,7 @@ export const BeachClubFloatingBanner = () => {
   }, [cookie])
 
   const setValue = (value: SavedBeachClubBannerSettings) => {
-    setCookie(cookieName, JSON.stringify(value), 7, { secure: true })
+    setCookie(beachClubCookieName, JSON.stringify(value), 7, { secure: true })
   }
 
   const host = typeof window !== 'undefined' ? window.location.origin : ''
