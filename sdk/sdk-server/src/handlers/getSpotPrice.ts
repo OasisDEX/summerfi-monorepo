@@ -6,7 +6,7 @@ export const getSpotPrice = publicProcedure
   .input(
     z.object({
       baseToken: z.custom<Token>(isToken),
-      quoteToken: z.custom<Token>(isToken).optional(),
+      denomination: z.custom<Token>(isToken).optional(),
     }),
   )
   .query(async (opts) => {
