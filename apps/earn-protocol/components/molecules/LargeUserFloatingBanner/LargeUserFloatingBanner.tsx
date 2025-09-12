@@ -1,10 +1,18 @@
 'use client'
 
 import { type FC, useMemo, useState } from 'react'
-import { FloatingBanner, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { useChain, useUser } from '@account-kit/react'
+import {
+  FloatingBanner,
+  type FloatingBannerActionType,
+  Text,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
+import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
 import styles from './LargeUserFloatingBanner.module.css'
@@ -22,8 +30,10 @@ interface LargeUserFloatingBannerProps {
 export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ largeUsersData }) => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(cookieName)
-
+  const pathname = usePathname()
+  const user = useUser()
   const { userWalletAddress } = useUserWallet()
+  const { chain } = useChain()
 
   const cookieSettings = useMemo(() => {
     try {
@@ -60,7 +70,14 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
         </Text>
       }
       closeButton={{
-        action: () => {
+        action: (type: FloatingBannerActionType) => {
+          EarnProtocolEvents.buttonClicked({
+            buttonName: `large-user-banner-${type}`,
+            walletAddress: userWalletAddress,
+            connectionMethod: user?.type,
+            network: chain.name,
+            page: pathname,
+          })
           setValue({ isClosed: true })
           setIsClosed(true)
         },

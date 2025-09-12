@@ -7,11 +7,13 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 
 import styles from './FloatingBanner.module.css'
 
+export type FloatingBannerActionType = 'cta' | 'close'
+
 interface FloatingBannerProps {
   title: ReactNode
   description: ReactNode
   closeButton: {
-    action: () => void
+    action: (type: FloatingBannerActionType) => void
   }
   button?: {
     label: string
@@ -53,7 +55,7 @@ export const FloatingBanner: FC<FloatingBannerProps> = ({
                 className={button.className}
                 style={button.style}
                 variant={button.variant}
-                onClick={closeButton.action}
+                onClick={() => closeButton.action('cta')}
               >
                 {button.label}
               </Button>
@@ -70,7 +72,7 @@ export const FloatingBanner: FC<FloatingBannerProps> = ({
               </Button>
             )
           )}
-          <Button onClick={closeButton.action}>
+          <Button onClick={() => closeButton.action('close')}>
             <Icon iconName="close" size={12} color="var(--earn-protocol-neutral-40)" />
           </Button>
         </div>
