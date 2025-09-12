@@ -11,6 +11,7 @@ import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
 import dynamic from 'next/dynamic'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { type SavedBeachClubBannerSettings } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
 import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -22,6 +23,8 @@ type GlobalProviderProps = {
   deviceType: DeviceType
   localConfigContextState: Partial<LocalConfigState>
   analyticsCookie: SavedAnalyticsCookiesSettings | null
+  beachClubCookie: SavedBeachClubBannerSettings | null
+  largeUsersData?: string[]
 }
 
 const AlchemyAccountsProvider = dynamic(
@@ -42,6 +45,8 @@ export const GlobalProvider = ({
   deviceType,
   localConfigContextState,
   analyticsCookie,
+  beachClubCookie,
+  largeUsersData,
 }: GlobalProviderProps) => {
   return (
     <Suspense>
@@ -50,7 +55,13 @@ export const GlobalProvider = ({
           <LocalConfigContextProvider value={localConfigContextState}>
             <AlchemyAccountsProvider initialState={accountKitInitializedState}>
               <GlobalEventTracker />
-              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+              <MasterPage
+                analyticsCookie={analyticsCookie}
+                largeUsersData={largeUsersData}
+                beachClubCookie={beachClubCookie}
+              >
+                {children}
+              </MasterPage>
               <TheGame />
             </AlchemyAccountsProvider>
           </LocalConfigContextProvider>

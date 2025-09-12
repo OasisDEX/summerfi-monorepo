@@ -24,10 +24,13 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { beachClubCookieName } from '@/components/molecules/BeachClubFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { fontInter } from '@/helpers/fonts'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
+
+import { getLargeUsers } from './server-handlers/dune/get-large-users'
 
 export const metadata: Metadata = {
   title: 'The home of the Lazy Summer Protocol',
@@ -50,6 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = 'en'
 
   const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
+  const beachClubCookie = safeParseJson(getServerSideCookies(beachClubCookieName, cookie))
 
   // Get device type from cookie or detect it from user agent
   let deviceType = getServerSideCookies('deviceType', cookie) as DeviceType | ''
@@ -76,7 +80,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <body className={`${fontInter.className} ${fontInter.variable}`}>
           {config.bannerMessage && <GlobalIssueBanner message={config.bannerMessage} />}
           <GoogleTagManager />
-          <MasterPage skipNavigation analyticsCookie={analyticsCookie}>
+          <MasterPage
+            skipNavigation
+            analyticsCookie={analyticsCookie}
+            beachClubCookie={beachClubCookie}
+          >
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
             <Text as="h1" variant="h1" style={{ margin: '3rem 0 1rem', fontWeight: 700 }}>
               Maintenance
@@ -89,6 +97,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </html>
     )
   }
+
+  const largeUsersData = await getLargeUsers()
 
   const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
@@ -128,6 +138,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             slippageConfig,
             sumrNetApyConfig,
           }}
+          largeUsersData={largeUsersData}
+          beachClubCookie={beachClubCookie}
         >
           {children}
         </GlobalProvider>

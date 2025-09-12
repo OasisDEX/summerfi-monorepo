@@ -1,3 +1,4 @@
+'use client'
 import { type CSSProperties, type FC, type ReactNode } from 'react'
 import clsx from 'clsx'
 

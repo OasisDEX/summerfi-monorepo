@@ -13,7 +13,11 @@ import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { BeachClubFloatingBanner } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
+import {
+  BeachClubFloatingBanner,
+  type SavedBeachClubBannerSettings,
+} from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
+import { LargeUserFloatingBanner } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -27,12 +31,16 @@ interface MasterPageProps {
   skipNavigation?: boolean
   noNavMargin?: boolean
   analyticsCookie: SavedAnalyticsCookiesSettings | null
+  beachClubCookie: SavedBeachClubBannerSettings | null
+  largeUsersData?: string[]
 }
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   children,
   skipNavigation = false,
   analyticsCookie,
+  beachClubCookie,
+  largeUsersData,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const { features } = useSystemConfig()
@@ -157,7 +165,10 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
       />
       {/* Condition to show banner after cookie banner */}
       {beachClubEnabled && cookieSettings?.version === analyticsCookieVersion && (
-        <BeachClubFloatingBanner />
+        <>
+          <BeachClubFloatingBanner />
+          {beachClubCookie?.isClosed && <LargeUserFloatingBanner largeUsersData={largeUsersData} />}
+        </>
       )}
     </div>
   )
