@@ -20,7 +20,8 @@ import {
   type UnsignedOrder,
   SigningScheme,
   COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS,
-  ETH_FLOW_ADDRESS,
+  ETH_FLOW_ADDRESSES,
+  WRAPPED_NATIVE_CURRENCIES,
 } from '@cowprotocol/cow-sdk'
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
@@ -244,7 +245,7 @@ export class CowSwapProvider
     return chainId as SupportedChainId
   }
 
-  // Add helper to centralize settlement‐address logic
+  // Add helper to centralize settlement-address logic
   private _getCowAddress(
     supportedChainId: SupportedChainId,
     type: 'settlement' | 'eth_flow',
@@ -255,7 +256,7 @@ export class CowSwapProvider
         value = COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[supportedChainId]
         break
       case 'eth_flow':
-        value = ETH_FLOW_ADDRESS[supportedChainId]
+        value = ETH_FLOW_ADDRESSES[supportedChainId]
         break
       default:
         throw new Error(`Unknown CowSwap address type: ${type}`)

@@ -10,7 +10,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^5.10.3",
+    "@cowprotocol/cow-sdk": "^6.3.2",
     "bignumber.js": "^9.1.2",
     "superjson": "^1.13.3",
     "zod": "3.25.61"

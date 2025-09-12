@@ -19,7 +19,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^5.10.3",
+    "@cowprotocol/cow-sdk": "^6.3.2",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",

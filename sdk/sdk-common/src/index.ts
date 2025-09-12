@@ -200,6 +200,7 @@ export {
   isArmadaProtocol,
 } from './common/interfaces/IArmadaProtocol'
 export type { IArmadaProtocol, IArmadaProtocolData } from './common/interfaces/IArmadaProtocol'
+export { getViemChain } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
   depositToPosition,
