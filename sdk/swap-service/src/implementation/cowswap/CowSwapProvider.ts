@@ -65,24 +65,30 @@ export class CowSwapProvider
     const chainId = params.fromAmount.token.chainInfo.chainId
     const supportedChainId = this._assertSupportedChainId(chainId)
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    // if ETH is being sold, use the wrapped version
+    let sellTokenAddress
+    if (params.fromAmount.token.symbol === 'ETH') {
+      sellTokenAddress = WRAPPED_NATIVE_CURRENCIES[supportedChainId].address
+    } else {
+      sellTokenAddress = params.fromAmount.token.address.value
+    }
+    const buyTokenAddress = params.toToken.address.value
 
-    const sellToken = params.fromAmount.token.address.value
     const sellAmount = params.fromAmount.toSolidityValue().toString()
-    const buyToken = params.toToken.address.value
     const from = params.from.value
     // If receiver is not provided, use the from address as the receiver
     const receiver = params.receiver?.value ?? params.from.value
 
     const quoteRequest: OrderQuoteRequest = {
-      sellToken,
-      buyToken,
+      sellToken: sellTokenAddress,
+      buyToken: buyTokenAddress,
       sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
       from,
       receiver,
     }
 
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
     const { quote } = await orderBookApi.getQuote(quoteRequest)
 
     const order: UnsignedOrder = {
@@ -95,20 +101,21 @@ export class CowSwapProvider
       partiallyFillable: params.partiallyFillable ?? false,
     }
 
-    console.log('Selling:', params.fromAmount.toString())
     let buyAmount = TokenAmount.createFromBaseUnit({
       token: params.toToken,
       amount: quote.buyAmount,
     })
+    console.log('Selling:', params.fromAmount.toString())
+    console.log('Quote buy amount:', buyAmount.toString())
+
+    const quotePrice = Price.createFrom({
+      value: new BigNumber(buyAmount.amount).dividedBy(params.fromAmount.amount).toString(),
+      base: params.fromAmount.token,
+      quote: params.toToken,
+    })
+    console.log('Quote Price:', quotePrice.toString())
 
     if (params.limitPrice) {
-      const quotePrice = Price.createFrom({
-        value: new BigNumber(buyAmount.amount).dividedBy(params.fromAmount.amount).toString(),
-        base: params.fromAmount.token,
-        quote: params.toToken,
-      })
-      console.log('Quote buy amount:', buyAmount.toString())
-      console.log('Quote Price:', quotePrice.toString())
       console.log('Limit Price:', params.limitPrice.toString())
 
       // Calculate new buy amount for the given limit price

@@ -3,7 +3,6 @@ import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
-import assert from 'assert'
 import { Wallet } from 'ethers'
 
 jest.setTimeout(300000)
@@ -17,12 +16,19 @@ const wallet = new Wallet(signerPrivateKey)
 
 describe('Intent swaps', () => {
   it('should test intent swap flow', async () => {
+    // await runTests({
+    //   chainId,
+    //   fromSymbol: 'ETH',
+    //   amountValue: '0.1',
+    //   toSymbol: 'USDC',
+    //   limitPrice: '5000',
+    // })
     await runTests({
       chainId,
-      fromSymbol: 'WETH',
-      amountValue: '0.1',
-      toSymbol: 'USDC',
-      limitPrice: '5000',
+      fromSymbol: 'USDC',
+      amountValue: '480',
+      toSymbol: 'ETH',
+      limitPrice: '0.00028',
     })
   })
 
