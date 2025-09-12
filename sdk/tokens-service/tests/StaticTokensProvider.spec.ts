@@ -3,6 +3,7 @@ import { ChainInfo, Address, AddressType } from '@summerfi/sdk-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
 import assert from 'assert'
 import { StaticTokensProvider } from '../src/implementation/static/StaticTokensProvider'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 
 describe('StaticTokensProvider', () => {
   let staticTokensProvider: ITokensProvider
@@ -15,6 +16,7 @@ describe('StaticTokensProvider', () => {
   beforeEach(() => {
     staticTokensProvider = new StaticTokensProvider({
       configProvider: {} as IConfigurationProvider,
+      blockchainClientProvider: {} as IBlockchainClientProvider,
     })
   })
   it('should return supported chain IDs', async () => {
