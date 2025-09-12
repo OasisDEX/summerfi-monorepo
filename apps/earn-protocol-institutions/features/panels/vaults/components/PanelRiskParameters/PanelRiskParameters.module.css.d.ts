@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "inputContainer": string;
+  readonly "inputImpliedCap": string;
   readonly "inputWrapper": string;
   readonly "inputWrapperPercentage": string;
   readonly "onEdit": string;

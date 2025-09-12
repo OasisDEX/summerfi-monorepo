@@ -31,7 +31,8 @@
     align-items: center;
 
     .inputWrapper,
-    .inputWrapperPercentage {
+    .inputWrapperPercentage,
+    .inputImpliedCap {
       max-width: 178px;
       height: 28px;
       padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
@@ -41,7 +42,11 @@
     }
 
     .inputWrapperPercentage {
-      max-width: 50px;
+      max-width: 60px;
+    }
+
+    .inputImpliedCap {
+      max-width: 118px;
     }
 
     /* Target number inputs with the inputWrapper class */

@@ -80,7 +80,7 @@ export const marketRiskParametersMapper = ({
               <Input
                 variant="withBorder"
                 wrapperClassName={styles.inputContainer}
-                inputWrapperClassName={styles.inputWrapper}
+                inputWrapperClassName={styles.inputImpliedCap}
                 value={updatingMarketRiskImpliedCap || item.impliedCap}
                 onChange={(e) => onChangeImpliedCap(e.target.value)}
               />
@@ -91,7 +91,7 @@ export const marketRiskParametersMapper = ({
         ),
         action: (
           <TableCellText
-            style={{ marginLeft: isUpdating ? '8px' : '40px', gap: 'var(--spacing-space-small)' }}
+            style={{ marginLeft: isUpdating ? '27px' : '40px', gap: 'var(--spacing-space-small)' }}
           >
             {isUpdating && (
               <Button
