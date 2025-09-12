@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.networkIcon {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
+}
+
+.titleRow {
+  display: flex;
+  gap: var(--general-space-8);
+  align-items: center;
+}
+
+.titleText {
+  color: white;
+  font-weight: 600;
+}
+
+.selectedIndicator {
+  width: 24px;
+  height: 24px;
+  background-color: var(--earn-protocol-primary-40);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:global(.super-lazy) {
+  .selectedIndicator {
+    background-color: rgba(236, 142, 52, 0.4);
+  }
+}
+
+.valueContainer {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.tooltip {
+  margin: 0 10px;
+}
+
+.tooltipWrapper {
+  margin-top: 20px;
+}
