@@ -1,11 +1,11 @@
 export const vaultRiskParametersColumns = [
   {
     key: 'parameter',
-    title: '',
+    title: 'Type',
   },
   {
     key: 'value',
-    title: '',
+    title: 'Amount',
   },
   {
     key: 'action',
