@@ -75,7 +75,7 @@ export function trackEvent<E extends EarnProtocolEventNames>(
     body: JSON.stringify({
       ...eventData,
       distinctId: mixpanelBrowser.get_distinct_id(),
-      currentUrl: includeBasePath(win.location.href),
+      currentUrl: win.location.href,
       ...(!isOptedOut && {
         browser: upperFirst(browserName),
         browserVersion: versionNumber,
