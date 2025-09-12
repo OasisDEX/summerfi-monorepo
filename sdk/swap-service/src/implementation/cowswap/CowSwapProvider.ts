@@ -1,4 +1,6 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import type { ITokensManager } from '@summerfi/tokens-common'
 import {
   Address,
   TokenAmount,
@@ -8,6 +10,7 @@ import {
   IntentSwapProviderType,
   Price,
   type ITokenAmount,
+  getChainInfoByChainId,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -22,6 +25,8 @@ import {
   COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS,
   ETH_FLOW_ADDRESSES,
   WRAPPED_NATIVE_CURRENCIES,
+  COW_PROTOCOL_VAULT_RELAYER_ADDRESS,
+  NATIVE_CURRENCY_ADDRESS,
 } from '@cowprotocol/cow-sdk'
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
@@ -42,12 +47,20 @@ export class CowSwapProvider
    * */
 
   private readonly _supportedChainIds: SupportedChainId[]
+  private readonly _allowanceManager: IAllowanceManager
+  private readonly _tokensManager: ITokensManager
 
   /** CONSTRUCTOR */
 
-  constructor(params: { configProvider: IConfigurationProvider }) {
+  constructor(params: {
+    configProvider: IConfigurationProvider
+    allowanceManager: IAllowanceManager
+    tokensManager: ITokensManager
+  }) {
     super({ ...params, type: IntentSwapProviderType.CowSwap })
 
+    this._allowanceManager = params.allowanceManager
+    this._tokensManager = params.tokensManager
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
     ) as SupportedChainId[]
@@ -68,7 +81,7 @@ export class CowSwapProvider
 
     // if ETH is being sold, use the wrapped version
     let sellTokenAddress
-    if (params.fromAmount.token.symbol === 'ETH') {
+    if (params.fromAmount.token.address.value === NATIVE_CURRENCY_ADDRESS) {
       sellTokenAddress = WRAPPED_NATIVE_CURRENCIES[supportedChainId].address
     } else {
       sellTokenAddress = params.fromAmount.token.address.value
@@ -150,18 +163,113 @@ export class CowSwapProvider
   ): ReturnType<IIntentSwapProvider['sendOrder']> {
     const { chainId, order, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
+    const chainInfo = getChainInfoByChainId(supportedChainId)
+
+    // check if the from token is native token
+    if (
+      params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS.toLowerCase()
+    ) {
+      const wrappedNativeCurrencyAddress = WRAPPED_NATIVE_CURRENCIES[supportedChainId].address
+      // check balance for wrapped token
+
+      // check balance using tokens manager
+      const wrappedNativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
+        chainInfo,
+        address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
+        walletAddress: Address.createFromEthereum({ value: order.receiver }),
+      })
+      if (BigInt(wrappedNativeCurrencyBalance.amount) < BigInt(order.sellAmount)) {
+        // insufficient wrapped native currency balance to cover the sell amount
+        // need to wrap more native currency
+        // check native currency balance using tokens manager
+        const nativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
+          chainInfo,
+          address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS }),
+          walletAddress: Address.createFromEthereum({ value: order.receiver }),
+        })
+        if (
+          BigInt(nativeCurrencyBalance.amount) + BigInt(wrappedNativeCurrencyBalance.amount) <
+          BigInt(order.sellAmount)
+        ) {
+          throw new Error(
+            `Insufficient native currency balance to wrap to cover the sell amount. Need at least ${BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)} of native currency to wrap.`,
+          )
+        } else {
+          // need to wrap some native currency using viem
+          const wethAbi = [
+            {
+              type: 'function',
+              name: 'deposit',
+              stateMutability: 'payable',
+              inputs: [],
+              outputs: [],
+            },
+          ] as const
+
+          return {
+            status: 'wrap_to_native',
+            transactionInfo: {
+              transaction: {
+                target: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
+                calldata: encodeFunctionData({
+                  abi: wethAbi,
+                  functionName: 'deposit',
+                }),
+                value: (
+                  BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)
+                ).toString(),
+              },
+              description: `Wrap ${(BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)).toString()} of native currency to cover CowSwap order sell amount`,
+            },
+          }
+        }
+      }
+    }
+
+    const sellTokenAddress = Address.createFromEthereum({ value: order.sellToken })
+    const sellToken = this._tokensManager.getTokenByAddress({
+      chainInfo,
+      address: sellTokenAddress,
+    })
+
+    // Create token amount from sell amount
+    const sellAmount = TokenAmount.createFromBaseUnit({
+      token: sellToken,
+      amount: order.sellAmount,
+    })
+
+    // Check if approval is needed
+    const approval = await this._allowanceManager.getApproval({
+      chainInfo: sellToken.chainInfo,
+      spender: this._getCowAddress(supportedChainId, 'relayer'),
+      amount: sellAmount,
+    })
+
+    if (approval) {
+      return {
+        status: 'allowance_needed',
+        transactionInfo: approval,
+      }
+    }
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
 
-    const orderId = await orderBookApi.sendOrder({
-      ...order,
-      ...signingResult,
-      signature: signingResult.signature,
-      signingScheme: signingResult.signingScheme as unknown as SigningScheme,
-    })
+    try {
+      const orderId = await orderBookApi.sendOrder({
+        ...order,
+        ...signingResult,
+        signature: signingResult.signature,
+        signingScheme: signingResult.signingScheme as unknown as SigningScheme,
+      })
 
-    return {
-      orderId: orderId,
+      return {
+        status: 'order_sent',
+        orderId: orderId,
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error('Error sending order to CowSwap:', e?.body?.errorType)
+      throw new Error(`Failed to send order: ${e?.body?.errorType}`)
     }
   }
 
@@ -264,7 +372,7 @@ export class CowSwapProvider
   // Add helper to centralize settlement-address logic
   private _getCowAddress(
     supportedChainId: SupportedChainId,
-    type: 'settlement' | 'eth_flow',
+    type: 'settlement' | 'eth_flow' | 'relayer',
   ): Address {
     let value: string
     switch (type) {
@@ -273,6 +381,9 @@ export class CowSwapProvider
         break
       case 'eth_flow':
         value = ETH_FLOW_ADDRESSES[supportedChainId]
+        break
+      case 'relayer':
+        value = COW_PROTOCOL_VAULT_RELAYER_ADDRESS[supportedChainId]
         break
       default:
         throw new Error(`Unknown CowSwap address type: ${type}`)

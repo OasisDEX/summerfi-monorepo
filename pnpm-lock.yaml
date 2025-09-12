@@ -3974,6 +3974,9 @@ importers:
       '@cowprotocol/cow-sdk':
         specifier: ^6.3.2
         version: 6.3.2(ethers@5.7.2)(ipfs-only-hash@4.0.0)(multiformats@9.9.0)
+      '@summerfi/allowance-manager-common':
+        specifier: workspace:*
+        version: link:../allowance-manager-common
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -3989,6 +3992,9 @@ importers:
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -4131,6 +4137,9 @@ importers:
 
   sdk/tokens-service:
     dependencies:
+      '@summerfi/blockchain-client-common':
+        specifier: workspace:*
+        version: link:../blockchain-client-common
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common

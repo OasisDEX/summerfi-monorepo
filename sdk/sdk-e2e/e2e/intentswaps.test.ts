@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDKWithSigner } from '@summerfi/sdk-client'
-import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
+import {
+  ChainIds,
+  getChainInfoByChainId,
+  TokenAmount,
+  type ChainId,
+  type TransactionInfo,
+} from '@summerfi/sdk-common'
 
 import { SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
 import { Wallet } from 'ethers'
+import assert from 'assert'
 
 jest.setTimeout(300000)
-
+const sendOrder: boolean = true // set to false to only get quote
 const chainId = ChainIds.Base
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 if (!rpcUrl) {
@@ -16,20 +23,20 @@ const wallet = new Wallet(signerPrivateKey)
 
 describe('Intent swaps', () => {
   it('should test intent swap flow', async () => {
-    // await runTests({
-    //   chainId,
-    //   fromSymbol: 'ETH',
-    //   amountValue: '0.1',
-    //   toSymbol: 'USDC',
-    //   limitPrice: '5000',
-    // })
     await runTests({
       chainId,
-      fromSymbol: 'USDC',
-      amountValue: '480',
-      toSymbol: 'ETH',
-      limitPrice: '0.00028',
+      fromSymbol: 'ETH',
+      amountValue: '0.0009',
+      toSymbol: 'USDC',
+      // limitPrice: '5000',
     })
+    // await runTests({
+    //   chainId,
+    //   fromSymbol: 'USDC',
+    //   amountValue: '4',
+    //   toSymbol: 'ETH',
+    //   limitPrice: '0.0003',
+    // })
   })
 
   async function runTests({
@@ -53,6 +60,9 @@ describe('Intent swaps', () => {
     const chainInfo = getChainInfoByChainId(chainId)
     const chain = await sdk.chains.getChain({ chainInfo })
     const fromToken = await chain.tokens.getTokenBySymbol({ symbol: fromSymbol })
+    // for ETH, we cannot use ETH directly we need to use WETH
+    // there is eth-flow but only smart wallets and no limit orders
+
     const fromAmount = TokenAmount.createFrom({
       amount: amountValue,
       token: fromToken,
@@ -65,25 +75,64 @@ describe('Intent swaps', () => {
       toToken,
       limitPrice,
     })
-    console.log('Sell Order:', sellQuote.order)
+    console.log('Sell Order Quote:', sellQuote.order)
 
-    // const orderId = await sdk.intentSwaps.sendOrder({
-    //   chainId,
-    //   order: sellQuote.order,
-    // })
-    // console.log('Order ID:', orderId)
+    if (sendOrder === false) {
+      console.log('Skipping sending order')
+      return
+    }
 
-    // const orderInfo = await sdk.intentSwaps.checkOrder({
-    //   chainId,
-    //   orderId: orderId.orderId,
-    // })
-    // assert(orderInfo, 'Order info should not be null')
-    // console.log('Order Info:', orderInfo)
+    // check allowance for the token and approve if needed
+    let orderId
+    do {
+      const orderReturn = await sdk.intentSwaps.sendOrder({
+        fromAmount: fromAmount,
+        chainId,
+        order: sellQuote.order,
+      })
+      orderId = await handleOrderReturn(orderReturn)
+    } while (orderId == null)
 
-    // const cancelResult = await sdk.intentSwaps.cancelOrder({
-    //   chainId,
-    //   orderId: orderId.orderId,
-    // })
-    // console.log('Cancel Result:', cancelResult)
+    const orderInfo = await sdk.intentSwaps.checkOrder({
+      chainId,
+      orderId: orderId,
+    })
+    assert(orderInfo, 'Order info should not be null')
+    console.log('Check Order:', orderInfo)
+
+    const cancelResult = await sdk.intentSwaps.cancelOrder({
+      chainId,
+      orderId: orderId,
+    })
+    console.log('Cancel Order:', cancelResult)
   }
 })
+
+const handleOrderReturn = async (
+  orderReturn:
+    | {
+        status: 'wrap_to_native'
+        transactionInfo: TransactionInfo
+      }
+    | {
+        status: 'allowance_needed'
+        transactionInfo: TransactionInfo
+      }
+    | {
+        status: 'order_sent'
+        orderId: string
+      },
+) => {
+  switch (orderReturn.status) {
+    case 'wrap_to_native':
+    case 'allowance_needed':
+      // send tx
+      orderReturn.transactionInfo
+      return
+    case 'order_sent':
+      console.log('Order sent:', orderReturn.orderId)
+      return orderReturn.orderId
+    default:
+      throw new Error(`Unknown order status`)
+  }
+}

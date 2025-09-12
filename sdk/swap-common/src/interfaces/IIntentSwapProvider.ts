@@ -38,10 +38,15 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    * @param signature The signature of the order
    */
   sendOrder(params: {
+    fromAmount: ITokenAmount
     chainId: ChainId
     order: UnsignedOrder
     signingResult: SigningResult
-  }): Promise<{ orderId: string }>
+  }): Promise<
+    | { status: 'wrap_to_native'; transactionInfo: TransactionInfo }
+    | { status: 'allowance_needed'; transactionInfo: TransactionInfo }
+    | { status: 'order_sent'; orderId: string }
+  >
 
   /**
    * @name cancelOrder

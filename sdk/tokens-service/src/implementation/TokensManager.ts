@@ -1,4 +1,3 @@
-import type { IAddress, IChainInfo, IToken } from '@summerfi/sdk-common'
 import { TokensProviderType } from '@summerfi/sdk-common'
 import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
@@ -19,20 +18,42 @@ export class TokensManager
   /** PUBLIC METHODS */
 
   /** @see ITokensManager.getTokenBySymbol */
-  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): IToken {
+  getTokenBySymbol(
+    params: Parameters<ITokensManager['getTokenBySymbol']>[0],
+  ): ReturnType<ITokensManager['getTokenBySymbol']> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     return provider.getTokenBySymbol(params)
   }
 
   /** @see ITokensManager.getTokenByAddress */
-  getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): IToken {
+  getTokenByAddress(
+    params: Parameters<ITokensManager['getTokenByAddress']>[0],
+  ): ReturnType<ITokensManager['getTokenByAddress']> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     return provider.getTokenByAddress(params)
   }
 
   /** @see ITokensManager.getTokenByName */
-  getTokenByName(params: { chainInfo: IChainInfo; name: string }): IToken {
+  getTokenByName(
+    params: Parameters<ITokensManager['getTokenByName']>[0],
+  ): ReturnType<ITokensManager['getTokenByName']> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     return provider.getTokenByName(params)
+  }
+
+  /** @see ITokensManager.getTokenBalanceBySymbol */
+  async getTokenBalanceBySymbol(
+    params: Parameters<ITokensManager['getTokenBalanceBySymbol']>[0],
+  ): ReturnType<ITokensManager['getTokenBalanceBySymbol']> {
+    const provider = this._getBestProvider({ chainInfo: params.chainInfo })
+    return provider.getTokenBalanceBySymbol(params)
+  }
+
+  /** @see ITokensManager.getTokenBalanceByAddress */
+  async getTokenBalanceByAddress(
+    params: Parameters<ITokensManager['getTokenBalanceByAddress']>[0],
+  ): ReturnType<ITokensManager['getTokenBalanceByAddress']> {
+    const provider = this._getBestProvider({ chainInfo: params.chainInfo })
+    return provider.getTokenBalanceByAddress(params)
   }
 }

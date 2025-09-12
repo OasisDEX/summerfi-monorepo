@@ -94,7 +94,10 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
-  const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
+  const tokensManager = TokensManagerFactory.newTokensManager({ 
+    configProvider,
+    blockchainClientProvider
+  })
   const contractsProvider = ContractsProviderFactory.newContractsProvider({
     configProvider,
     blockchainClientProvider,
@@ -112,12 +115,16 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     swapManager,
     addressBookManager,
   })
-  const intentSwapsManager = new CowSwapProvider({ configProvider })
 
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
     contractsProvider,
+  })
+  const intentSwapsManager = new CowSwapProvider({ 
+    configProvider,
+    allowanceManager,
+    tokensManager,
   })
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
   const armadaManager = ArmadaManagerFactory.newArmadaManager({

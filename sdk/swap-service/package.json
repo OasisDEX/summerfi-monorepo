@@ -22,11 +22,13 @@
   "dependencies": {
     "@cowprotocol/contracts": "^1.8.0",
     "@cowprotocol/cow-sdk": "^6.3.2",
+    "@summerfi/allowance-manager-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
+    "@summerfi/tokens-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },

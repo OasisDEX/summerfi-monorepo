@@ -1,4 +1,11 @@
-import type { IToken, ITokenAmount, IntentQuoteData, ChainId, IAddress } from '@summerfi/sdk-common'
+import type {
+  IToken,
+  ITokenAmount,
+  IntentQuoteData,
+  ChainId,
+  IAddress,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
 
 /**
@@ -22,7 +29,15 @@ export interface IIntentSwapClient {
   /**
    * Sends the order to the swap provider
    */
-  sendOrder(params: { chainId: ChainId; order: UnsignedOrder }): Promise<{ orderId: string }>
+  sendOrder(params: {
+    fromAmount: ITokenAmount
+    chainId: ChainId
+    order: UnsignedOrder
+  }): Promise<
+    | { status: 'wrap_to_native'; transactionInfo: TransactionInfo }
+    | { status: 'allowance_needed'; transactionInfo: TransactionInfo }
+    | { status: 'order_sent'; orderId: string }
+  >
 
   /**
    * Cancels an existing order by its ID
