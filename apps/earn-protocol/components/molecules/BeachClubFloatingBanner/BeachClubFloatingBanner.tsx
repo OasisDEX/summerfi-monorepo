@@ -1,6 +1,5 @@
 'use client'
 import { useMemo, useState } from 'react'
-import { useChain, useUser } from '@account-kit/react'
 import {
   FloatingBanner,
   type FloatingBannerActionType,
@@ -10,10 +9,9 @@ import {
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
-import { usePathname } from 'next/navigation'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import { beachClubCookieName } from './config'
 
@@ -26,9 +24,7 @@ export interface SavedBeachClubBannerSettings {
 export const BeachClubFloatingBanner = () => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(beachClubCookieName)
-  const pathname = usePathname()
-  const user = useUser()
-  const { chain } = useChain()
+  const handleButtonClick = useHandleButtonClickEvent()
   const { userWalletAddress } = useUserWallet()
 
   const cookieSettings = useMemo(() => {
@@ -71,21 +67,9 @@ export const BeachClubFloatingBanner = () => {
       }
       closeButton={{
         action: (type: FloatingBannerActionType) => {
-          try {
-            EarnProtocolEvents.buttonClicked({
-              buttonName: `beach-club-banner-${type}`,
-              walletAddress: userWalletAddress,
-              connectionMethod: user?.type,
-              network: chain.name,
-              page: pathname,
-            })
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Error tracking button click', error)
-          } finally {
-            setValue({ isClosed: true })
-            setIsClosed(true)
-          }
+          handleButtonClick(`beach-club-banner-${type}`)
+          setValue({ isClosed: true })
+          setIsClosed(true)
         },
       }}
       button={{

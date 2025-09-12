@@ -1,7 +1,6 @@
 'use client'
 
 import { type FC, useMemo, useState } from 'react'
-import { useChain, useUser } from '@account-kit/react'
 import {
   FloatingBanner,
   type FloatingBannerActionType,
@@ -10,9 +9,8 @@ import {
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
 import styles from './LargeUserFloatingBanner.module.css'
@@ -30,10 +28,9 @@ interface LargeUserFloatingBannerProps {
 export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ largeUsersData }) => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(cookieName)
-  const pathname = usePathname()
-  const user = useUser()
   const { userWalletAddress } = useUserWallet()
-  const { chain } = useChain()
+
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const cookieSettings = useMemo(() => {
     try {
@@ -71,21 +68,9 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
       }
       closeButton={{
         action: (type: FloatingBannerActionType) => {
-          try {
-            EarnProtocolEvents.buttonClicked({
-              buttonName: `large-user-banner-${type}`,
-              walletAddress: userWalletAddress,
-              connectionMethod: user?.type,
-              network: chain.name,
-              page: pathname,
-            })
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Error tracking button click', error)
-          } finally {
-            setValue({ isClosed: true })
-            setIsClosed(true)
-          }
+          handleButtonClick(`large-user-banner-${type}`)
+          setValue({ isClosed: true })
+          setIsClosed(true)
         },
       }}
       button={{
