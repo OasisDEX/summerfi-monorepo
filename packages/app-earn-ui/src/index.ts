@@ -85,6 +85,7 @@ export {
 } from './components/molecules/LinkCard/LinkCard'
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
+export { SuperBonusLabel } from './components/molecules/BonusLabel/SuperBonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
 export { ProjectedEarningsExpanded } from './components/molecules/ProjectedEarnings/ProjectedEarningsExpanded'
 export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'

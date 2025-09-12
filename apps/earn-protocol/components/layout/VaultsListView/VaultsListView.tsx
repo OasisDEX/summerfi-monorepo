@@ -637,7 +637,6 @@ export const VaultsListView = ({
             tooltipName="vaults-list-protocol-tvl"
             onTooltipOpen={tooltipEventHandler}
           />
-
           <DataBlock
             title="Instant Liquidity"
             titleTooltip={`This is the total amount of assets in USD that is instantly withdrawable from the strategies. There are currently ${formattedProtocolsSupportedCount} different protocols or markets supported across all active strategies.`}

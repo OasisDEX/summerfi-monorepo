@@ -15,6 +15,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { type DeviceType } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
 import type CardVariants from '@/components/atoms/Card/Card.module.css'
@@ -76,6 +77,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   showAbove: boolean
   cardVariant?: keyof typeof CardVariants
   generatedId: string
+  className?: string
 }
 
 const TooltipWrapper: FC<TooltipWrapperProps> = ({
@@ -85,17 +87,19 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({
   showAbove,
   cardVariant = 'cardSecondary',
   generatedId,
+  className,
 }) => {
   return (
     <div
       data-tooltip-id={generatedId}
-      className={
+      className={clsx(
         isOpen
           ? showAbove
             ? tooltipStyles.tooltipOpenAbove
             : tooltipStyles.tooltipOpen
-          : tooltipStyles.tooltip
-      }
+          : tooltipStyles.tooltip,
+        className,
+      )}
       style={style}
     >
       <Card
@@ -134,6 +138,7 @@ interface StatefulTooltipProps {
   stopPropagation?: boolean
   tooltipName?: string
   onTooltipOpen?: (tooltipName: string) => void
+  className?: string
 }
 
 const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
@@ -158,6 +163,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   stopPropagation = false,
   onTooltipOpen,
   tooltipName,
+  className,
 }): ReactNode => {
   const generatedId = useRef(tooltipId ?? generateUniqueId()).current
 
@@ -310,6 +316,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       showAbove={showAbove}
       cardVariant={tooltipCardVariant}
       generatedId={generatedId}
+      className={className}
     >
       {tooltipTypeGuard(tooltip) ? tooltip : tooltip(tooltipOpen, handleTooltipOpenState)}
     </TooltipWrapper>,

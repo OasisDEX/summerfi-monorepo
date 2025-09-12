@@ -11,7 +11,7 @@ export type NavigationItemsProps = {
   items: {
     id: string
     title: string
-    description: string
+    description?: string
     url: string
     icon: IconNamesList
     iconSize?: number
@@ -47,9 +47,11 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
               >
                 {item.title}
               </Text>
-              <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                {item.description}
-              </Text>
+              {item.description && (
+                <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                  {item.description}
+                </Text>
+              )}
             </div>
           </div>
         </Link>

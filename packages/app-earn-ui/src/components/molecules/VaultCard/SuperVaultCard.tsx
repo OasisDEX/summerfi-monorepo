@@ -17,12 +17,12 @@ import {
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
-import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Card } from '@/components/atoms/Card/Card'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
-import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
+import { SuperBonusLabel } from '@/components/molecules/BonusLabel/SuperBonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
-import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
@@ -64,7 +64,6 @@ export const SuperVaultCard: FC<SuperVaultCardProps> = (props) => {
     merklRewards,
     withTokenBonus,
     sumrPrice,
-    showCombinedBonus = false,
     vaultApyData,
     wrapperStyle,
     disabled,
@@ -97,11 +96,9 @@ export const SuperVaultCard: FC<SuperVaultCardProps> = (props) => {
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
-  const combinedApr = showCombinedBonus
-    ? formatDecimalAsPercent(Number(vaultApyData.apy) + Number(rawSumrTokenBonus))
-    : undefined
+  const combinedApr = formatDecimalAsPercent(Number(vaultApyData.apy) + Number(rawSumrTokenBonus))
 
-  const apyUpdatedAt = useApyUpdatedAt({
+  const _apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
 
@@ -126,64 +123,90 @@ export const SuperVaultCard: FC<SuperVaultCardProps> = (props) => {
         disabled={disabled}
       >
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
-          <VaultTitleWithRisk
+          <VaultTitle
             symbol={getDisplayToken(inputToken.symbol)}
-            risk={customFields?.risk ?? 'lower'}
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
-            tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
-            onTooltipOpen={onTooltipOpen}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel
-                tokenBonus={sumrTokenBonus}
-                apy={parsedApr}
-                withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
-                combinedApr={combinedApr}
-                apyUpdatedAt={apyUpdatedAt}
+              <SuperBonusLabel
+                bonusContent="X OP + X UNI + 2.1% SUMR"
+                tooltipContent={
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <Text
+                      variant="p4semi"
+                      style={{ color: 'var(--color-text-primary-hover)', display: 'flex', gap: 8 }}
+                    >
+                      <Icon iconName="sumr" size={16} />
+                      SUMR Token Rewards
+                    </Text>
+                    <Text variant="p2semiColorful" style={{ marginBottom: '8px' }}>
+                      {sumrTokenBonus}
+                    </Text>
+                    <Text
+                      variant="p4semi"
+                      style={{ color: 'var(--color-text-primary-hover)', display: 'flex', gap: 8 }}
+                    >
+                      <Icon iconName="op_circle" size={16} />
+                      OP Token Rewards
+                    </Text>
+                    <Text variant="p2semi" style={{ marginBottom: '8px' }}>
+                      xxxxxxxx
+                    </Text>
+                    <Text
+                      variant="p4semi"
+                      style={{ color: 'var(--color-text-primary-hover)', display: 'flex', gap: 8 }}
+                    >
+                      <Icon iconName="uni_circle_color" size={16} />
+                      UNI Token Rewards
+                    </Text>
+                    <Text variant="p2semi" style={{ marginBottom: '8px' }}>
+                      xxxxxxxx
+                    </Text>
+                  </div>
+                }
                 deviceType={deviceType}
                 tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}
                 onTooltipOpen={onTooltipOpen}
               />
             </Text>
-            <AdditionalBonusLabel
-              externalTokenBonus={customFields?.bonus}
-              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
-              onTooltipOpen={onTooltipOpen}
-            />
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Total Assets
+          <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
+            <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+              APY
             </Text>
             <div className={vaultCardStyles.totalAssetsDisplay}>
               <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {parsedTotalValueLocked}&nbsp;{getDisplayToken(inputToken.symbol)}
+                {parsedApr}
               </Text>
-              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-                ${parsedTotalValueLockedUSD}
+              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
+                {combinedApr}
               </Text>
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-              Best For
+          <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
+            <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+              Yield source chains
             </Text>
             <Text
               variant="p2semi"
-              style={{ color: 'var(--earn-protocol-secondary-100)', whiteSpace: 'nowrap' }}
+              style={{
+                color: 'var(--earn-protocol-secondary-100)',
+                whiteSpace: 'nowrap',
+              }}
             >
-              {customFields?.bestFor ?? 'Optimized lending yield'}
+              <Icon iconName="op_circle" size={18} />
+              <Icon iconName="uni_circle_color" size={18} />
             </Text>
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
+            <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
               Total Assets
             </Text>
             <div className={vaultCardStyles.totalAssetsDisplay}>
@@ -195,8 +218,8 @@ export const SuperVaultCard: FC<SuperVaultCardProps> = (props) => {
               </Text>
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
+            <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
               Best For
             </Text>
             <Text

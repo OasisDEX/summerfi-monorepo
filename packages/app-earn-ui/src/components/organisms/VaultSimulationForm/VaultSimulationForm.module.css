@@ -7,9 +7,18 @@
   border: 2px solid transparent;
   border-radius: var(--general-radius-24);
   box-shadow: 0 0 -2px -2px rgba(255, 73, 164, 0.23);
-  background: linear-gradient(#1c1c1c, #1c1c1c) padding-box, linear-gradient(var(--angle), rgba(255, 73, 164, 0.4980392157), rgba(176, 73, 255, 0.4980392157), #1c1c1c) border-box;
+  background: linear-gradient(#1c1c1c, #1c1c1c) padding-box, linear-gradient(var(--angle), rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5), #1c1c1c) border-box;
   animation: 4s rotate linear infinite;
   z-index: -1;
+}
+
+:global(.super-lazy) {
+
+  .cardAnimateGradientBorder {
+    box-shadow: 0 0 -2px -2px rgba(255, 73, 73, 0.23);
+    background: linear-gradient(#1c1c1c, #1c1c1c) padding-box, linear-gradient(var(--angle), rgba(255, 73, 73, 0.5), rgba(255, 73, 140, 0.5), #1c1c1c) border-box;
+  }
+
 }
 
 @keyframes rotate {
@@ -17,20 +26,25 @@
     opacity: 0;
     --angle: 0deg;
   }
+
   25% {
     opacity: 0.75;
   }
+
   50% {
     opacity: 1;
   }
+
   75% {
     opacity: 0.75;
   }
+
   100% {
     opacity: 0;
     --angle: 360deg;
   }
 }
+
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;

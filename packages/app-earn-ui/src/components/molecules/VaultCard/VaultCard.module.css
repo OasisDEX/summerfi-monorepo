@@ -4,6 +4,7 @@
   position: relative;
   padding-bottom: var(--general-space-12);
 }
+
 .vaultCardSelected {
   background: var(--earn-protocol-neutral-80);
 }
@@ -33,6 +34,13 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
+:global(.super-lazy) {
+  .vaultCardAssetsWrapper {
+    margin-bottom: 24px;
+  }
+}
+
 .vaultCardAssetsWrapper .totalAssetsDisplay {
   display: flex;
   flex-direction: row;

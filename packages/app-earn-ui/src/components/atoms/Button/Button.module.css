@@ -100,12 +100,32 @@
   background-color: var(--color-background-primary-hover);
 }
 
+:global(.super-lazy) {
+
+  .primaryLarge:enabled:hover,
+  .primaryMedium:enabled:hover,
+  .primarySmall:enabled:hover {
+    background-color: var(--earn-super-primary-80);
+  }
+
+}
+
 .primaryLarge:disabled,
 .primaryMedium:disabled,
 .primarySmall:disabled {
   background-color: var(--color-background-primary-disabled);
   color: var(--color-text-primary-disabled);
   cursor: not-allowed;
+}
+
+:global(.super-lazy) {
+
+  .primaryLarge:disabled,
+  .primaryMedium:disabled,
+  .primarySmall:disabled {
+    background-color: var(--earn-super-primary-40);
+  }
+
 }
 
 .secondaryLarge,
@@ -196,6 +216,7 @@
 }
 
 .colorful>span {
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
