@@ -26,6 +26,7 @@ import {
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
+import { LoggingService } from 'node_modules/@summerfi/sdk-common/dist'
 
 export class CowSwapProvider
   extends ManagerProviderBase<IntentSwapProviderType>
@@ -105,23 +106,31 @@ export class CowSwapProvider
       token: params.toToken,
       amount: quote.buyAmount,
     })
-    console.log('Selling:', params.fromAmount.toString())
-    console.log('Quote buy amount:', buyAmount.toString())
 
     const quotePrice = Price.createFrom({
       value: new BigNumber(buyAmount.amount).dividedBy(params.fromAmount.amount).toString(),
       base: params.fromAmount.token,
       quote: params.toToken,
     })
-    console.log('Quote Price:', quotePrice.toString())
+    LoggingService.debug(
+      'Selling:',
+      params.fromAmount.toString(),
+      '\nQuote buy amount:',
+      buyAmount.toString(),
+      '\nQuote price:',
+      quotePrice.toString(),
+    )
 
     if (params.limitPrice) {
-      console.log('Limit Price:', params.limitPrice.toString())
-
       // Calculate new buy amount for the given limit price
       // newBuyAmount = fromAmount * limitPrice
       const newBuyAmount: ITokenAmount = params.fromAmount.multiply(params.limitPrice)
-      console.log('Limit buy amount:', newBuyAmount.toString())
+      LoggingService.debug(
+        'Limit price:',
+        params.limitPrice.toString(),
+        '\nLimit buy amount:',
+        newBuyAmount.toString(),
+      )
 
       order.buyAmount = newBuyAmount.toSolidityValue().toString()
       buyAmount = newBuyAmount
