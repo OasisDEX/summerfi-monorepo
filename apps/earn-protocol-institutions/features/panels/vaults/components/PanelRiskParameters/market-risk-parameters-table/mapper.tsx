@@ -65,7 +65,7 @@ export const marketRiskParametersMapper = ({
               <Input
                 variant="withBorder"
                 wrapperClassName={styles.inputContainer}
-                inputWrapperClassName={styles.inputWrapper}
+                inputWrapperClassName={styles.inputWrapperPercentage}
                 value={updatingMarketRiskMaxPercentage || item.maxPercentage}
                 onChange={(e) => onChangeMaxPercentage(e.target.value)}
               />

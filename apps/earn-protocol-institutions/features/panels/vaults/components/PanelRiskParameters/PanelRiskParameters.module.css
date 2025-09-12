@@ -30,13 +30,18 @@
     justify-content: flex-end;
     align-items: center;
 
-    .inputWrapper {
+    .inputWrapper,
+    .inputWrapperPercentage {
       max-width: 178px;
       height: 28px;
       padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
       border-radius: var(--radius-small);
       font-size: 12px;
       text-align: right;
+    }
+
+    .inputWrapperPercentage {
+      max-width: 50px;
     }
 
     /* Target number inputs with the inputWrapper class */
