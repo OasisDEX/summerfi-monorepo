@@ -19,18 +19,24 @@ describe('Intent swaps', () => {
   it('should test intent swap flow', async () => {
     await runTests({
       chainId,
-      amountValue: '1',
-      limitPrice: '1.5',
+      fromSymbol: 'WETH',
+      amountValue: '0.1',
+      toSymbol: 'USDC',
+      limitPrice: '5000',
     })
   })
 
   async function runTests({
     chainId,
+    fromSymbol,
     amountValue,
+    toSymbol,
     limitPrice,
   }: {
     chainId: ChainId
+    fromSymbol: string
     amountValue: string
+    toSymbol: string
     limitPrice?: string
   }) {
     const sdk = makeSDKWithSigner({
@@ -40,12 +46,12 @@ describe('Intent swaps', () => {
 
     const chainInfo = getChainInfoByChainId(chainId)
     const chain = await sdk.chains.getChain({ chainInfo })
-    const fromToken = await chain.tokens.getTokenBySymbol({ symbol: 'USDC' })
+    const fromToken = await chain.tokens.getTokenBySymbol({ symbol: fromSymbol })
     const fromAmount = TokenAmount.createFrom({
       amount: amountValue,
       token: fromToken,
     })
-    const toToken = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
+    const toToken = await chain.tokens.getTokenBySymbol({ symbol: toSymbol })
 
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
       from: testWalletAddress,

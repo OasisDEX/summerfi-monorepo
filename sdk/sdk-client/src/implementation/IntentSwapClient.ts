@@ -28,8 +28,8 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     const limitPrice = params.limitPrice
       ? Price.createFrom({
           value: params.limitPrice,
-          base: params.toToken,
-          quote: params.fromAmount.token,
+          base: params.fromAmount.token,
+          quote: params.toToken,
         })
       : undefined
 

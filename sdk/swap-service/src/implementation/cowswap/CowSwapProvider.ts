@@ -7,6 +7,7 @@ import {
   isChainId,
   IntentSwapProviderType,
   Price,
+  type ITokenAmount,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -93,37 +94,35 @@ export class CowSwapProvider
       partiallyFillable: params.partiallyFillable ?? false,
     }
 
-    if (params.limitPrice) {
-      const buyAmount = TokenAmount.createFromBaseUnit({
-        token: params.toToken,
-        amount: quote.buyAmount,
-      })
+    console.log('Selling:', params.fromAmount.toString())
+    let buyAmount = TokenAmount.createFromBaseUnit({
+      token: params.toToken,
+      amount: quote.buyAmount,
+    })
 
+    if (params.limitPrice) {
       const quotePrice = Price.createFrom({
-        value: new BigNumber(params.fromAmount.amount).dividedBy(buyAmount.amount).toString(),
+        value: new BigNumber(buyAmount.amount).dividedBy(params.fromAmount.amount).toString(),
         base: params.fromAmount.token,
         quote: params.toToken,
       })
-
-      console.log('Selling:', params.fromAmount.toString())
+      console.log('Quote buy amount:', buyAmount.toString())
       console.log('Quote Price:', quotePrice.toString())
       console.log('Limit Price:', params.limitPrice.toString())
-      console.log('Old buy amount:', buyAmount.toString())
 
       // Calculate new buy amount for the given limit price
-      // newBuyAmount = fromAmount / limitPrice
-      const newBuyAmount = buyAmount.multiply(params.limitPrice)
-      console.log('New buy amount for the limit price:', newBuyAmount.toString())
+      // newBuyAmount = fromAmount * limitPrice
+      const newBuyAmount: ITokenAmount = params.fromAmount.multiply(params.limitPrice)
+      console.log('Limit buy amount:', newBuyAmount.toString())
+
       order.buyAmount = newBuyAmount.toSolidityValue().toString()
+      buyAmount = newBuyAmount
     }
 
     return {
       providerType: IntentSwapProviderType.CowSwap,
       fromTokenAmount: params.fromAmount,
-      toTokenAmount: TokenAmount.createFromBaseUnit({
-        token: params.toToken,
-        amount: quote.buyAmount,
-      }),
+      toTokenAmount: buyAmount,
       validTo: quote.validTo,
       order,
     }
