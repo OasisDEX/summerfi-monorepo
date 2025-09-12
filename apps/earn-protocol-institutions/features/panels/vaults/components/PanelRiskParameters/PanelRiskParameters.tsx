@@ -1,17 +1,23 @@
 'use client'
 
+import { useCallback, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
+import { UiSimpleFlowSteps } from '@summerfi/app-types'
 
+import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
+import { usePanelRiskParameters } from '@/providers/PanekRiskParametersProvider/PanelRiskParametersProvider'
+
+import { getPanelRiskChanges } from './helpers/get-panel-risk-changes'
+import { useMarketRiskParameters } from './hooks/use-market-risk-parameters'
+import { useVaultRiskParameters } from './hooks/use-vault-risk-parameters'
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
-import { marketRiskParametersMapper } from './market-risk-parameters-table/mapper'
 import { type MarketRiskParameters } from './market-risk-parameters-table/types'
 import { vaultRiskParametersColumns } from './vault-risk-parameters-table/columns'
-import { vaultRiskParametersMapper } from './vault-risk-parameters-table/mapper'
 import { type VaultRiskParameters } from './vault-risk-parameters-table/types'
 
 import styles from './PanelRiskParameters.module.css'
 
-const dummyRows: MarketRiskParameters[] = [
+const marketRiskParametersDummyRows: MarketRiskParameters[] = [
   {
     id: '1',
     market: 'Aave V3',
@@ -70,23 +76,40 @@ const vaultRiskParametersDummyRows: VaultRiskParameters[] = [
 ]
 
 export const PanelRiskParameters = () => {
-  const marketEditHandler = (item: MarketRiskParameters) => {
-    // TODO: Implement edit handler
-    // eslint-disable-next-line no-console
-    console.log(item)
-  }
+  const { state, dispatch } = usePanelRiskParameters()
 
-  const vaultEditHandler = (item: VaultRiskParameters) => {
-    // TODO: Implement edit handler
-    // eslint-disable-next-line no-console
-    console.log(item)
-  }
-
-  const marketRows = marketRiskParametersMapper({ rawData: dummyRows, onEdit: marketEditHandler })
-  const vaultRows = vaultRiskParametersMapper({
-    rawData: vaultRiskParametersDummyRows,
-    onEdit: vaultEditHandler,
+  const { rows: marketRows, onCancel: marketOnCancel } = useMarketRiskParameters({
+    dispatch,
+    rawData: marketRiskParametersDummyRows,
   })
+
+  const { rows: vaultRows, onCancel: vaultOnCancel } = useVaultRiskParameters({
+    dispatch,
+    rawData: vaultRiskParametersDummyRows,
+  })
+
+  const change = useMemo(
+    () =>
+      getPanelRiskChanges({
+        state,
+        vaultRiskRawData: vaultRiskParametersDummyRows,
+        marketRiskRawData: marketRiskParametersDummyRows,
+      }),
+    [state],
+  )
+
+  const onCancel = useCallback(() => {
+    dispatch({ type: 'reset' })
+    vaultOnCancel()
+    marketOnCancel()
+  }, [dispatch, vaultOnCancel, marketOnCancel])
+
+  const onConfirm = useCallback(() => {
+    dispatch({ type: 'update-step', payload: UiSimpleFlowSteps.PENDING })
+    // TODO: Implement confirm handler
+    // eslint-disable-next-line no-console
+    console.log('confirm')
+  }, [dispatch])
 
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
@@ -112,6 +135,7 @@ export const PanelRiskParameters = () => {
           tableClassName={styles.table}
         />
       </Card>
+      <EditSummary title="Summary" change={change} onCancel={onCancel} onConfirm={onConfirm} />
     </Card>
   )
 }

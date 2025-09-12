@@ -1,0 +1,44 @@
+.editSummaryListChange {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-medium-large);
+  flex-wrap: wrap;
+  width: 100%;
+
+  .boxWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media (min-width: 1200px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .arrowWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(90deg);
+
+      @media (min-width: 1200px) {
+        transform: rotate(0deg);
+      }
+    }
+
+    .editSummaryBox {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-space-2x-small);
+      padding: var(--spacing-space-medium);
+      border-radius: var(--radius-medium);
+      flex: 1;
+    }
+  }
+}
