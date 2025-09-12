@@ -71,15 +71,21 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
       }
       closeButton={{
         action: (type: FloatingBannerActionType) => {
-          EarnProtocolEvents.buttonClicked({
-            buttonName: `large-user-banner-${type}`,
-            walletAddress: userWalletAddress,
-            connectionMethod: user?.type,
-            network: chain.name,
-            page: pathname,
-          })
-          setValue({ isClosed: true })
-          setIsClosed(true)
+          try {
+            EarnProtocolEvents.buttonClicked({
+              buttonName: `large-user-banner-${type}`,
+              walletAddress: userWalletAddress,
+              connectionMethod: user?.type,
+              network: chain.name,
+              page: pathname,
+            })
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Error tracking button click', error)
+          } finally {
+            setValue({ isClosed: true })
+            setIsClosed(true)
+          }
         },
       }}
       button={{
