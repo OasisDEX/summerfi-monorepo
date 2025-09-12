@@ -2,10 +2,10 @@
 
 import { type FC, useCallback, useMemo, useState } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type Address } from '@summerfi/app-types'
+import { type Address, UiSimpleFlowSteps } from '@summerfi/app-types'
 
 import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
-import { PanelAdminStep, usePanelAdmin } from '@/providers/PanelAdminProvider/PanelAdminProvider'
+import { usePanelAdmin } from '@/providers/PanelAdminProvider/PanelAdminProvider'
 import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
@@ -43,7 +43,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
   }, [dispatch])
 
   const onConfirm = useCallback(() => {
-    dispatch({ type: 'update-step', payload: PanelAdminStep.PENDING })
+    dispatch({ type: 'update-step', payload: UiSimpleFlowSteps.PENDING })
     // TODO: Implement confirm handler
     // eslint-disable-next-line no-console
     console.log('confirm')
@@ -52,10 +52,12 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
   const onSave = useCallback(
     (item: InstitutionVaultRole) => {
       setUpdatingRole(null)
-      dispatch({
-        type: 'edit-item',
-        payload: { ...item, address: (updatingRoleAddress as Address) || item.address },
-      })
+      if (updatingRoleAddress.length > 0 && updatingRoleAddress !== item.address) {
+        dispatch({
+          type: 'edit-item',
+          payload: { ...item, address: updatingRoleAddress as Address },
+        })
+      }
       setUpdatingRoleAddress('')
     },
     [updatingRoleAddress, dispatch],
@@ -102,7 +104,6 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
           tableClassName={styles.table}
         />
       </Card>
-
       <EditSummary title="Summary" change={change} onCancel={onCancel} onConfirm={onConfirm} />
     </Card>
   )

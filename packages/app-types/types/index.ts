@@ -213,6 +213,7 @@ export {
   SupportedSDKNetworks,
   UserActivityType,
   UiTransactionStatuses,
+  UiSimpleFlowSteps,
 } from './src/earn-protocol'
 export { DeviceType } from './src/device-type'
 export type { DeviceInfo } from './src/device-type'
