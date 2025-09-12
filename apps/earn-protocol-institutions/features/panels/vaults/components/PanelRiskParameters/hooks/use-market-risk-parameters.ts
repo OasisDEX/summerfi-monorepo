@@ -40,11 +40,14 @@ export const useMarketRiskParameters = ({
       setUpdatingMarketRiskItem(null)
       if (
         (updatingMarketRiskMaxPercentage.length > 0 &&
-          updatingMarketRiskMaxPercentage !== item.maxPercentage.toString()) ||
+          updatingMarketRiskMaxPercentage !== item.maxPercentage.toString() &&
+          Number.isFinite(Number(updatingMarketRiskMaxPercentage))) ||
         (updatingMarketRiskMarketCap.length > 0 &&
-          updatingMarketRiskMarketCap !== item.marketCap.toString()) ||
+          updatingMarketRiskMarketCap !== item.marketCap.toString() &&
+          Number.isFinite(Number(updatingMarketRiskMarketCap))) ||
         (updatingMarketRiskImpliedCap.length > 0 &&
-          updatingMarketRiskImpliedCap !== item.impliedCap.toString())
+          updatingMarketRiskImpliedCap !== item.impliedCap.toString() &&
+          Number.isFinite(Number(updatingMarketRiskImpliedCap)))
       ) {
         dispatch({
           type: 'edit-market-risk-item',

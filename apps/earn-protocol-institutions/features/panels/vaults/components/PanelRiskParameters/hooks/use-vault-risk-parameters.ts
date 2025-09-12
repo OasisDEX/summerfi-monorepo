@@ -39,7 +39,8 @@ export const useVaultRiskParameters = ({
       setUpdatingVaultRiskItem(null)
       if (
         updatingVaultRiskItemValue.length > 0 &&
-        updatingVaultRiskItemValue !== item.value.toString()
+        updatingVaultRiskItemValue !== item.value.toString() &&
+        Number.isFinite(Number(updatingVaultRiskItemValue))
       ) {
         dispatch({
           type: 'edit-vault-risk-item',
