@@ -425,3 +425,4 @@ export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
 
 export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
+export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrencyAddress'

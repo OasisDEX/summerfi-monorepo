@@ -175,7 +175,12 @@ export class CowSwapProvider
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
         walletAddress: Address.createFromEthereum({ value: order.receiver }),
       })
-      if (BigInt(wrappedNativeCurrencyBalance.amount) < BigInt(order.sellAmount)) {
+      LoggingService.debug(
+        `Wrapped native currency balance:`,
+        wrappedNativeCurrencyBalance.toSolidityValue(),
+        `Needed for sell amount: ${new BigNumber(order.sellAmount).toString()}`,
+      )
+      if (BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) < BigInt(order.sellAmount)) {
         // insufficient wrapped native currency balance to cover the sell amount
         // need to wrap more native currency
         // check native currency balance using tokens manager

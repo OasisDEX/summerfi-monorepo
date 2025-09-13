@@ -10,9 +10,11 @@ import {
   TokenAmount,
   TokensProviderType,
   AddressType,
+  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
+import { erc20Abi } from 'viem'
 import assert from 'assert'
 import { StaticTokensData } from './StaticTokensList'
 import { TokenData } from './TokensData'
@@ -135,7 +137,21 @@ export class StaticTokensProvider
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: params.chainInfo,
     })
-    const balance = await client.getBalance({ address: token.address.value })
+
+    // check token address is native currency address
+    let balance: bigint
+    if (token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      // check native currency balance
+      balance = await client.getBalance({ address: params.walletAddress.value })
+    } else {
+      // check erc20 token balance using viem
+      balance = await client.readContract({
+        address: token.address.value,
+        abi: erc20Abi,
+        functionName: 'balanceOf',
+        args: [params.walletAddress.value],
+      })
+    }
 
     return TokenAmount.createFromBaseUnit({
       token,
