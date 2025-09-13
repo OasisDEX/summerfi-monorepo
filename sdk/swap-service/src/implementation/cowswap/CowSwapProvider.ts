@@ -245,6 +245,7 @@ export class CowSwapProvider
       chainInfo: sellToken.chainInfo,
       spender: this._getCowAddress(supportedChainId, 'relayer'),
       amount: sellAmount,
+      owner: Address.createFromEthereum({ value: order.receiver }),
     })
 
     if (approval) {

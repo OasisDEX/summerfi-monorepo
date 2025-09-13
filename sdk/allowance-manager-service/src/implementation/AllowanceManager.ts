@@ -1,7 +1,7 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
-import { TransactionType } from '@summerfi/sdk-common'
+import { ChainInfo, TransactionType } from '@summerfi/sdk-common'
 
 /**
  * @name AllowanceManager
@@ -21,6 +21,7 @@ export class AllowanceManager implements IAllowanceManager {
   }
 
   /** FUNCTIONS */
+  /** @see IAllowanceManager.getApproval */
   async getApproval(
     params: Parameters<IAllowanceManager['getApproval']>[0],
   ): ReturnType<IAllowanceManager['getApproval']> {
@@ -41,6 +42,13 @@ export class AllowanceManager implements IAllowanceManager {
         spender: params.spender,
       }),
     ])
+
+    console.log('allowance check:', {
+      chainInfo: params.chainInfo.name,
+      token: params.amount.token.toString(),
+      allowance: allowance,
+      amount: params.amount.toString(),
+    })
 
     if (allowance != null && allowance.isGreaterOrEqualThan(params.amount)) {
       return undefined

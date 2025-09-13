@@ -16,6 +16,7 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 jest.setTimeout(300000)
 
 const sendOrder: boolean = true // set to false to only get quote
+const cancelOrder: boolean = false // set to false to skip order cancellation
 const simulateOnly = false // set to true to only simulate transactions
 
 const chainId = ChainIds.Base
@@ -32,7 +33,7 @@ describe('Intent swaps', () => {
       fromSymbol: 'ETH',
       amountValue: '0.0005',
       toSymbol: 'USDC',
-      // limitPrice: '5000',
+      limitPrice: '4720',
     })
     // await runTests({
     //   chainId,
@@ -73,6 +74,7 @@ describe('Intent swaps', () => {
     })
     const toToken = await chain.tokens.getTokenBySymbol({ symbol: toSymbol })
 
+    // get sell order quote
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
       sender: testWalletAddress,
       fromAmount: fromAmount,
@@ -86,7 +88,7 @@ describe('Intent swaps', () => {
       return
     }
 
-    // check allowance for the token and approve if needed
+    // loop to check allowance, wrap if needed, and finally send order
     let orderId
     do {
       const orderReturn = await sdk.intentSwaps.sendOrder({
@@ -95,21 +97,27 @@ describe('Intent swaps', () => {
         order: sellQuote.order,
       })
       orderId = await handleOrderReturn(orderReturn)
-      return
     } while (orderId == null)
 
-    // const orderInfo = await sdk.intentSwaps.checkOrder({
-    //   chainId,
-    //   orderId: orderId,
-    // })
-    // assert(orderInfo, 'Order info should not be null')
-    // console.log('Check Order:', orderInfo)
+    // check order status
+    const orderInfo = await sdk.intentSwaps.checkOrder({
+      chainId,
+      orderId: orderId,
+    })
+    assert(orderInfo, 'Order info should not be null')
+    console.log('Check Order:', orderInfo)
 
-    // const cancelResult = await sdk.intentSwaps.cancelOrder({
-    //   chainId,
-    //   orderId: orderId,
-    // })
-    // console.log('Cancel Order:', cancelResult)
+    if (cancelOrder === false) {
+      console.log('Skipping cancelling order')
+      return
+    }
+
+    // cancel order
+    const cancelResult = await sdk.intentSwaps.cancelOrder({
+      chainId,
+      orderId: orderId,
+    })
+    console.log('Cancel Order:', cancelResult)
   }
 })
 
