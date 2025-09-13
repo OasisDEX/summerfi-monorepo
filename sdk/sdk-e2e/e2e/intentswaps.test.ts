@@ -129,7 +129,7 @@ const handleOrderReturn = async (
 ) => {
   switch (orderReturn.status) {
     case 'wrap_to_native':
-    case 'allowance_needed':
+    case 'allowance_needed': {
       // send tx
       const { statuses } = await sendAndLogTransactions({
         chainInfo: getChainInfoByChainId(chainId),
@@ -144,6 +144,7 @@ const handleOrderReturn = async (
         expect(status).toBe('success')
       })
       return
+    }
     case 'order_sent':
       console.log('Order sent:', orderReturn.orderId)
       return orderReturn.orderId
