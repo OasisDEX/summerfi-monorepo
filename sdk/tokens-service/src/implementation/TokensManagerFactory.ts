@@ -38,7 +38,7 @@ export class TokensManagerFactory {
    * @param configProvider The configuration provider used to get environment variables
    * @param blockchainClientProvider The blockchain client provider for blockchain interactions
    */
-  private static initialize(params: { 
+  private static initialize(params: {
     configProvider: IConfigurationProvider
     blockchainClientProvider: IBlockchainClientProvider
   }): void {
@@ -49,9 +49,9 @@ export class TokensManagerFactory {
     const { configProvider, blockchainClientProvider } = params
 
     // Static provider
-    const staticProvider = new StaticTokensProvider({ 
+    const staticProvider = new StaticTokensProvider({
       configProvider: configProvider,
-      blockchainClientProvider: blockchainClientProvider
+      blockchainClientProvider: blockchainClientProvider,
     })
 
     this.providers = [staticProvider]

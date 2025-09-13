@@ -94,9 +94,9 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
-  const tokensManager = TokensManagerFactory.newTokensManager({ 
+  const tokensManager = TokensManagerFactory.newTokensManager({
     configProvider,
-    blockchainClientProvider
+    blockchainClientProvider,
   })
   const contractsProvider = ContractsProviderFactory.newContractsProvider({
     configProvider,
@@ -121,7 +121,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     configProvider,
     contractsProvider,
   })
-  const intentSwapsManager = new CowSwapProvider({ 
+  const intentSwapsManager = new CowSwapProvider({
     configProvider,
     allowanceManager,
     tokensManager,

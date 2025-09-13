@@ -24,6 +24,8 @@ export type { ITokensManagerClient } from './interfaces/ITokensManagerClient'
 export type { IUserClient } from './interfaces/IUserClient'
 export type { IUsersManager } from './interfaces/IUsersManager'
 export { PositionUtils } from './utils/PositionUtils'
+
+// re-exporting SDK internal packages to give access to consumers of the SDK
 export {
   AaveV3LendingPoolId,
   AaveV3LendingPosition,
@@ -58,4 +60,6 @@ export {
   SparkProtocol,
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
-export { GeneralRoles } from '@summerfi/armada-protocol-common'
+export * from '@summerfi/sdk-common'
+export * from '@summerfi/armada-protocol-common'
+export * from '@summerfi/armada-protocol-service'
