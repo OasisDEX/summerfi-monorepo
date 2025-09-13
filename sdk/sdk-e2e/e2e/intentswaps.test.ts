@@ -74,7 +74,7 @@ describe('Intent swaps', () => {
     const toToken = await chain.tokens.getTokenBySymbol({ symbol: toSymbol })
 
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
-      from: testWalletAddress,
+      sender: testWalletAddress,
       fromAmount: fromAmount,
       toToken,
       limitPrice,

@@ -34,7 +34,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     return this.rpcClient.intentSwaps.getSellOrderQuote.query({
       fromAmount: params.fromAmount,
       toToken: params.toToken,
-      from: params.from,
+      sender: params.sender,
       receiver: params.receiver,
       partiallyFillable: params.partiallyFillable,
       limitPrice,

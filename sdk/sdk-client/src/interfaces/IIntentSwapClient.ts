@@ -31,7 +31,7 @@ export interface IIntentSwapClient {
   getSellOrderQuote(params: {
     fromAmount: ITokenAmount
     toToken: IToken
-    from: IAddress
+    sender: IAddress
     receiver?: IAddress
     partiallyFillable?: boolean
     limitPrice?: string

@@ -16,7 +16,7 @@ export const intentSwapsGetSellOrderQuote = publicProcedure
     z.object({
       fromAmount: z.custom<ITokenAmount>(isTokenAmount),
       toToken: z.custom<IToken>(isToken),
-      from: z.custom<IAddress>(isAddress),
+      sender: z.custom<IAddress>(isAddress),
       receiver: z.custom<IAddress>(isAddress).optional(),
       partiallyFillable: z.boolean().optional(),
       limitPrice: z.custom<IPrice>(isPrice).optional(),
