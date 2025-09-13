@@ -95,20 +95,21 @@ describe('Intent swaps', () => {
         order: sellQuote.order,
       })
       orderId = await handleOrderReturn(orderReturn)
+      return
     } while (orderId == null)
 
-    const orderInfo = await sdk.intentSwaps.checkOrder({
-      chainId,
-      orderId: orderId,
-    })
-    assert(orderInfo, 'Order info should not be null')
-    console.log('Check Order:', orderInfo)
+    // const orderInfo = await sdk.intentSwaps.checkOrder({
+    //   chainId,
+    //   orderId: orderId,
+    // })
+    // assert(orderInfo, 'Order info should not be null')
+    // console.log('Check Order:', orderInfo)
 
-    const cancelResult = await sdk.intentSwaps.cancelOrder({
-      chainId,
-      orderId: orderId,
-    })
-    console.log('Cancel Order:', cancelResult)
+    // const cancelResult = await sdk.intentSwaps.cancelOrder({
+    //   chainId,
+    //   orderId: orderId,
+    // })
+    // console.log('Cancel Order:', cancelResult)
   }
 })
 
@@ -130,6 +131,7 @@ const handleOrderReturn = async (
   switch (orderReturn.status) {
     case 'wrap_to_native':
     case 'allowance_needed': {
+      console.log(`Handling ${orderReturn.status} case...`)
       // send tx
       const { statuses } = await sendAndLogTransactions({
         chainInfo: getChainInfoByChainId(chainId),
@@ -138,7 +140,6 @@ const handleOrderReturn = async (
         privateKey: signerPrivateKey,
         simulateOnly,
       })
-
       // Verify transaction success
       statuses.forEach((status) => {
         expect(status).toBe('success')

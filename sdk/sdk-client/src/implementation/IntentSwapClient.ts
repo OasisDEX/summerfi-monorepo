@@ -56,13 +56,6 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       signer,
     )
 
-    console.log(
-      'Order signed with scheme:',
-      signingResult.signingScheme,
-      'Signature:',
-      signingResult.signature,
-    )
-
     return this.rpcClient.intentSwaps.sendOrder.mutate({
       chainId: params.chainId,
       fromAmount: params.fromAmount,

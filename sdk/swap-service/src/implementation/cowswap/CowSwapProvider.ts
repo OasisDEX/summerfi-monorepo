@@ -28,7 +28,7 @@ import {
   WRAPPED_NATIVE_CURRENCIES,
   COW_PROTOCOL_VAULT_RELAYER_ADDRESS,
 } from '@cowprotocol/cow-sdk'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, formatEther } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
 import { LoggingService } from 'node_modules/@summerfi/sdk-common/dist'
@@ -178,11 +178,10 @@ export class CowSwapProvider
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
         walletAddress: Address.createFromEthereum({ value: order.receiver }),
       })
-      LoggingService.debug(
-        `Wrapped native currency balance:`,
-        wrappedNativeCurrencyBalance.toSolidityValue(),
-        `balance needed for sell amount: ${new BigNumber(order.sellAmount).toString()}`,
-      )
+      LoggingService.debug({
+        wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
+        sellAmount: formatEther(BigInt(order.sellAmount)),
+      })
       // if wrapped native currency balance is less than sell amount, need to wrap more
       if (BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) < BigInt(order.sellAmount)) {
         // need to wrap more native currency
@@ -192,14 +191,19 @@ export class CowSwapProvider
           address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS_LOWERCASE }),
           walletAddress: Address.createFromEthereum({ value: order.receiver }),
         })
-        LoggingService.debug(`Native currency balance:`, nativeCurrencyBalance.toSolidityValue())
+        LoggingService.debug({
+          wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
+          nativeCurrencyBalance: nativeCurrencyBalance.toString(),
+          sellAmount: formatEther(BigInt(order.sellAmount)),
+        })
         // if native currency balance + wrapped native currency balance < sell amount, cannot wrap enough
         if (
-          BigInt(nativeCurrencyBalance.amount) + BigInt(wrappedNativeCurrencyBalance.amount) <
+          BigInt(nativeCurrencyBalance.toSolidityValue()) +
+            BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) <
           BigInt(order.sellAmount)
         ) {
           throw new Error(
-            `Insufficient native currency balance to wrap to cover the sell amount. Need at least ${BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)} of native currency to wrap.`,
+            `Insufficient native currency balance to wrap to cover the sell amount. Need at least ${formatEther(BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.toSolidityValue()))} of native currency to wrap.`,
           )
         } else {
           // return transaction info to wrap required amount of native currency
@@ -215,23 +219,22 @@ export class CowSwapProvider
                   functionName: 'deposit',
                 }),
                 value: (
-                  BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)
+                  BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.toSolidityValue())
                 ).toString(),
               },
-              description: `Wrap ${(BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)).toString()} of native currency to cover CowSwap order sell amount`,
+              description: `Wrap ${formatEther(BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.toSolidityValue()))} of native currency to cover CowSwap order sell amount`,
             },
           }
         }
       }
     }
 
+    // Create token amount from sell amount
     const sellTokenAddress = Address.createFromEthereum({ value: order.sellToken })
     const sellToken = this._tokensManager.getTokenByAddress({
       chainInfo,
       address: sellTokenAddress,
     })
-
-    // Create token amount from sell amount
     const sellAmount = TokenAmount.createFromBaseUnit({
       token: sellToken,
       amount: order.sellAmount,
