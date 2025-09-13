@@ -1,30 +1,23 @@
 'use client'
 import { createContext, useContext, useReducer } from 'react'
-import { type UiTransactionStatuses } from '@summerfi/app-types'
+import { UiSimpleFlowSteps, type UiTransactionStatuses } from '@summerfi/app-types'
 
 import { type InstitutionVaultRole } from '@/types/institution-data'
 
-export enum PanelAdminStep {
-  INIT = 'init',
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  ERROR = 'error',
-}
-
 type PanelAdminState = {
-  step: PanelAdminStep
+  step: UiSimpleFlowSteps
   txStatus: UiTransactionStatuses | undefined
   items: InstitutionVaultRole[]
 }
 type PanelAdminAction =
   | { type: 'edit-item'; payload: InstitutionVaultRole }
-  | { type: 'update-step'; payload: PanelAdminStep }
+  | { type: 'update-step'; payload: UiSimpleFlowSteps }
   | { type: 'update-tx-status'; payload: UiTransactionStatuses | undefined }
   | { type: 'partial-reset'; payload?: Partial<PanelAdminState> }
   | { type: 'reset' }
 
 const initialState: PanelAdminState = {
-  step: PanelAdminStep.INIT,
+  step: UiSimpleFlowSteps.INIT,
   txStatus: undefined,
   items: [],
 }

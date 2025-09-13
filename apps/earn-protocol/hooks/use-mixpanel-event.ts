@@ -37,11 +37,16 @@ export const useHandleButtonClickEvent = () => {
     : {}
 
   return debounce((buttonName: string) => {
-    EarnProtocolEvents.buttonClicked({
-      page: pathname,
-      buttonName: `ep-${buttonName}`,
-      ...userData,
-    })
+    try {
+      EarnProtocolEvents.buttonClicked({
+        page: pathname,
+        buttonName: `ep-${buttonName}`,
+        ...userData,
+      })
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error tracking button click', error)
+    }
   }, 500)
 }
 

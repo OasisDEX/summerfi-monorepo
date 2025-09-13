@@ -1,8 +1,17 @@
+'use client'
 import { useMemo, useState } from 'react'
-import { FloatingBanner, Icon, INTERNAL_LINKS, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import {
+  FloatingBanner,
+  type FloatingBannerActionType,
+  Icon,
+  INTERNAL_LINKS,
+  Text,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import { beachClubCookieName } from './config'
 
@@ -15,7 +24,7 @@ export interface SavedBeachClubBannerSettings {
 export const BeachClubFloatingBanner = () => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(beachClubCookieName)
-
+  const handleButtonClick = useHandleButtonClickEvent()
   const { userWalletAddress } = useUserWallet()
 
   const cookieSettings = useMemo(() => {
@@ -57,7 +66,8 @@ export const BeachClubFloatingBanner = () => {
         </Text>
       }
       closeButton={{
-        action: () => {
+        action: (type: FloatingBannerActionType) => {
+          handleButtonClick(`beach-club-banner-${type}`)
           setValue({ isClosed: true })
           setIsClosed(true)
         },

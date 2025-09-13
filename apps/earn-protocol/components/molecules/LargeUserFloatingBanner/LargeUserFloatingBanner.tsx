@@ -1,10 +1,16 @@
 'use client'
 
 import { type FC, useMemo, useState } from 'react'
-import { FloatingBanner, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import {
+  FloatingBanner,
+  type FloatingBannerActionType,
+  Text,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
 
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
 import styles from './LargeUserFloatingBanner.module.css'
@@ -22,8 +28,9 @@ interface LargeUserFloatingBannerProps {
 export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ largeUsersData }) => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(cookieName)
-
   const { userWalletAddress } = useUserWallet()
+
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const cookieSettings = useMemo(() => {
     try {
@@ -60,14 +67,15 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
         </Text>
       }
       closeButton={{
-        action: () => {
+        action: (type: FloatingBannerActionType) => {
+          handleButtonClick(`large-user-banner-${type}`)
           setValue({ isClosed: true })
           setIsClosed(true)
         },
       }}
       button={{
         label: 'Book a call',
-        link: 'https://cal.com/jordan-jackson-d278ib/summer.fi-support-call',
+        link: 'https://calendly.com/oasis-app/lazy-summer-protocol-launch-collaboration',
         variant: 'primaryMedium',
         className: styles.gradientButton,
         target: '_blank',

@@ -84,6 +84,13 @@ export enum UiTransactionStatuses {
   FAILED = 'failed',
 }
 
+export enum UiSimpleFlowSteps {
+  INIT = 'init',
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  ERROR = 'error',
+}
+
 export type EarnAllowanceTypes = 'deposit' | 'custom'
 
 export enum UserActivityType {
