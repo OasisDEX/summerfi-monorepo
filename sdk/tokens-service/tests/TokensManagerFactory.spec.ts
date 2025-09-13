@@ -4,6 +4,7 @@ import assert from 'assert'
 
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { TokensManagerFactory } from '../src'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 
 describe('TokensManagerFactory', () => {
   let tokensManager: ITokensManager
@@ -16,6 +17,7 @@ describe('TokensManagerFactory', () => {
   beforeEach(() => {
     tokensManager = TokensManagerFactory.newTokensManager({
       configProvider: {} as IConfigurationProvider,
+      blockchainClientProvider: {} as IBlockchainClientProvider,
     })
   })
 

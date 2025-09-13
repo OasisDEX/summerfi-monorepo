@@ -17,8 +17,9 @@ export interface IAllowanceManager {
    * @param chainInfo Chain in which the token is
    * @param spender Address of the spender to approve
    * @param amount Amount of tokens to allow the spender to spend
+   * @param owner (optional) Address of the owner of the tokens. If not provided, it will not check the current allowance and will always return the approval transaction
    *
-   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   * @returns The transaction info needed to set the allowance, or undefined if no approval is needed (owner param is required for this)
    */
   getApproval(params: {
     chainInfo: IChainInfo

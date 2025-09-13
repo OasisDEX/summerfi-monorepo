@@ -200,6 +200,7 @@ export {
   isArmadaProtocol,
 } from './common/interfaces/IArmadaProtocol'
 export type { IArmadaProtocol, IArmadaProtocolData } from './common/interfaces/IArmadaProtocol'
+export { getViemChain } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
   depositToPosition,
@@ -402,6 +403,8 @@ export type { SimulationStrategy, StrategyStep } from './simulation/interfaces/S
 export { getValueFromReference, isValueReference } from './simulation/interfaces/ValueReference'
 export type { ReferenceableField, ValueReference } from './simulation/interfaces/ValueReference'
 export { SwapProviderType } from './swap/enums/SwapProviderType'
+export { IntentSwapProviderType } from './swap/enums/IntentSwapProviderType'
+export { type IntentQuoteData } from './swap/implementation/IntentQuoteData'
 export { SwapErrorType } from './swap/enums/SwapErrorType'
 export type { SwapData } from './swap/implementation/SwapData'
 export type { QuoteData, SwapRoute } from './swap/implementation/QuoteData'
@@ -422,3 +425,4 @@ export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
 
 export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
+export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrencyAddress'

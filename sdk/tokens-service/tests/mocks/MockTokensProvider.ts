@@ -8,6 +8,7 @@ import {
   IToken,
   TokensProviderType,
   Token,
+  TokenAmount,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ITokensProvider } from '@summerfi/tokens-common'
@@ -62,6 +63,28 @@ export class MockTokensProvider
       }),
       chainInfo: params.chainInfo,
       decimals: 18,
+    })
+  }
+
+  async getTokenBalanceBySymbol(params: {
+    chainInfo: IChainInfo
+    symbol: string
+    walletAddress: IAddress
+  }) {
+    return TokenAmount.createFrom({
+      token: this.getTokenBySymbol({ chainInfo: params.chainInfo, symbol: params.symbol }),
+      amount: '1000000000000000000',
+    })
+  }
+
+  async getTokenBalanceByAddress(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+    walletAddress: IAddress
+  }) {
+    return TokenAmount.createFrom({
+      token: this.getTokenByAddress({ chainInfo: params.chainInfo, address: params.address }),
+      amount: '1000000000000000000',
     })
   }
 }

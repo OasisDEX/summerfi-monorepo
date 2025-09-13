@@ -2,11 +2,13 @@
 export { Chain } from './implementation/Chain'
 export { ChainsManagerClient } from './implementation/ChainsManager'
 export { makeSDK } from './implementation/MakeSDK'
+export { makeSDKWithSigner } from './implementation/MakeSDKWithSigner'
 export { makeAdminSDK } from './implementation/MakeAdminSDK'
 export { SDKAdminManager } from './implementation/SDKAdminManager'
 export { PortfolioManager } from './implementation/PortfolioManager'
 export { ProtocolsManagerClient } from './implementation/ProtocolsManagerClient'
 export { SDKManager } from './implementation/SDKManager'
+export { SDKManagerWithSigner } from './implementation/SDKManagerWithSigner'
 export { TokensManagerClient } from './implementation/TokensManagerClient'
 export { UserClient } from './implementation/UserClient'
 export { UsersManager } from './implementation/UsersManager'
@@ -22,6 +24,8 @@ export type { ITokensManagerClient } from './interfaces/ITokensManagerClient'
 export type { IUserClient } from './interfaces/IUserClient'
 export type { IUsersManager } from './interfaces/IUsersManager'
 export { PositionUtils } from './utils/PositionUtils'
+
+// re-exporting SDK internal packages to give access to consumers of the SDK
 export {
   AaveV3LendingPoolId,
   AaveV3LendingPosition,
@@ -56,4 +60,6 @@ export {
   SparkProtocol,
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
-export { GeneralRoles } from '@summerfi/armada-protocol-common'
+export * from '@summerfi/sdk-common'
+export * from '@summerfi/armada-protocol-common'
+export * from '@summerfi/armada-protocol-service'

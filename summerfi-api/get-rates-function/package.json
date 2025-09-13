@@ -19,7 +19,7 @@
     "@summerfi/redis-cache": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
-    "graphql": "^16.7.1",
+    "graphql": "^16.8.1",
     "graphql-request": "^6.1.0"
   }
 }

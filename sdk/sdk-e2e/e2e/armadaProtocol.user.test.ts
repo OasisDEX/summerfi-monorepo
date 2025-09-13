@@ -184,7 +184,7 @@ describe('Armada Protocol - User', () => {
     const { statuses } = await sendAndLogTransactions({
       chainInfo,
       transactions: [transaction],
-      rpcUrl: rpcUrl!,
+      rpcUrl: rpcUrl,
       privateKey: signerPrivateKey,
       simulateOnly,
     })
