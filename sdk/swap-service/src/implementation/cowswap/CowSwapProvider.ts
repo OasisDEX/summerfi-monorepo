@@ -12,7 +12,7 @@ import {
   type ITokenAmount,
   getChainInfoByChainId,
 } from '@summerfi/sdk-common'
-import { ManagerProviderBase } from '@summerfi/sdk-server-common'
+import { ManagerProviderBase, type IManagerProvider } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
 import {
   OrderBookApi,
@@ -68,14 +68,12 @@ export class CowSwapProvider
 
   /** PUBLIC */
   /** @see IManagerProvider.getSupportedChainIds */
-  getSupportedChainIds(): ChainId[] {
+  getSupportedChainIds: IManagerProvider<IntentSwapProviderType>['getSupportedChainIds'] = () => {
     return this._supportedChainIds as ChainId[]
   }
 
   /** @see IIntentSwapProvider.getSellOrderQuote */
-  async getSellOrderQuote(
-    params: Parameters<IIntentSwapProvider['getSellOrderQuote']>[0],
-  ): ReturnType<IIntentSwapProvider['getSellOrderQuote']> {
+  getSellOrderQuote: IIntentSwapProvider['getSellOrderQuote'] = async (params) => {
     const chainId = params.fromAmount.token.chainInfo.chainId
     const supportedChainId = this._assertSupportedChainId(chainId)
 
@@ -89,9 +87,9 @@ export class CowSwapProvider
     const buyTokenAddress = params.toToken.address.value
 
     const sellAmount = params.fromAmount.toSolidityValue().toString()
-    const from = params.from.value
+    const from = params.sender.value
     // If receiver is not provided, use the from address as the receiver
-    const receiver = params.receiver?.value ?? params.from.value
+    const receiver = params.receiver?.value ?? params.sender.value
 
     const quoteRequest: OrderQuoteRequest = {
       sellToken: sellTokenAddress,
@@ -137,30 +135,29 @@ export class CowSwapProvider
     if (params.limitPrice) {
       // Calculate new buy amount for the given limit price
       // newBuyAmount = fromAmount * limitPrice
-      const newBuyAmount: ITokenAmount = params.fromAmount.multiply(params.limitPrice)
+      const limitBuyAmount: ITokenAmount = params.fromAmount.multiply(params.limitPrice)
       LoggingService.debug(
-        'Limit price:',
+        'With Limit price:',
         params.limitPrice.toString(),
         '\nLimit buy amount:',
-        newBuyAmount.toString(),
+        limitBuyAmount.toString(),
       )
 
-      order.buyAmount = newBuyAmount.toSolidityValue().toString()
-      buyAmount = newBuyAmount
+      order.buyAmount = limitBuyAmount.toSolidityValue().toString()
+      buyAmount = limitBuyAmount
     }
 
     return {
       providerType: IntentSwapProviderType.CowSwap,
-      fromTokenAmount: params.fromAmount,
-      toTokenAmount: buyAmount,
+      fromAmount: params.fromAmount,
+      toAmount: buyAmount,
       validTo: quote.validTo,
       order,
     }
   }
 
-  async sendOrder(
-    params: Parameters<IIntentSwapProvider['sendOrder']>[0],
-  ): ReturnType<IIntentSwapProvider['sendOrder']> {
+  /** @see IIntentSwapProvider.sendOrder */
+  sendOrder: IIntentSwapProvider['sendOrder'] = async (params) => {
     const { chainId, order, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
     const chainInfo = getChainInfoByChainId(supportedChainId)
@@ -273,9 +270,8 @@ export class CowSwapProvider
     }
   }
 
-  async cancelOrder(
-    params: Parameters<IIntentSwapProvider['cancelOrder']>[0],
-  ): ReturnType<IIntentSwapProvider['cancelOrder']> {
+  /** @see IIntentSwapProvider.cancelOrder */
+  cancelOrder: IIntentSwapProvider['cancelOrder'] = async (params) => {
     const { chainId, orderId, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
@@ -324,9 +320,8 @@ export class CowSwapProvider
     }
   }
 
-  async checkOrder(
-    params: Parameters<IIntentSwapProvider['checkOrder']>[0],
-  ): ReturnType<IIntentSwapProvider['checkOrder']> {
+  /** @see IIntentSwapProvider.checkOrder */
+  checkOrder: IIntentSwapProvider['checkOrder'] = async (params) => {
     const { orderId, chainId } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 

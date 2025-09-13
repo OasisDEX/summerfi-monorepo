@@ -11,9 +11,13 @@ import {
 import { SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
 import { Wallet } from 'ethers'
 import assert from 'assert'
+import { sendAndLogTransactions } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
+
 const sendOrder: boolean = true // set to false to only get quote
+const simulateOnly = false // set to true to only simulate transactions
+
 const chainId = ChainIds.Base
 const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 if (!rpcUrl) {
@@ -26,7 +30,7 @@ describe('Intent swaps', () => {
     await runTests({
       chainId,
       fromSymbol: 'ETH',
-      amountValue: '0.0009',
+      amountValue: '0.0005',
       toSymbol: 'USDC',
       // limitPrice: '5000',
     })
@@ -86,7 +90,7 @@ describe('Intent swaps', () => {
     let orderId
     do {
       const orderReturn = await sdk.intentSwaps.sendOrder({
-        fromAmount: fromAmount,
+        fromAmount: sellQuote.fromAmount,
         chainId,
         order: sellQuote.order,
       })
@@ -127,7 +131,18 @@ const handleOrderReturn = async (
     case 'wrap_to_native':
     case 'allowance_needed':
       // send tx
-      orderReturn.transactionInfo
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo: getChainInfoByChainId(chainId),
+        transactions: [orderReturn.transactionInfo],
+        rpcUrl: rpcUrl,
+        privateKey: signerPrivateKey,
+        simulateOnly,
+      })
+
+      // Verify transaction success
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
       return
     case 'order_sent':
       console.log('Order sent:', orderReturn.orderId)

@@ -22,9 +22,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   }
 
   /** @see IIntentSwapClient.getSellOrderQuote */
-  public async getSellOrderQuote(
-    params: Parameters<IIntentSwapClient['getSellOrderQuote']>[0],
-  ): ReturnType<IIntentSwapClient['getSellOrderQuote']> {
+  getSellOrderQuote: IIntentSwapClient['getSellOrderQuote'] = async (params) => {
     const limitPrice = params.limitPrice
       ? Price.createFrom({
           value: params.limitPrice,
@@ -44,9 +42,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   }
 
   /** @see IIntentSwapClient.sendOrder */
-  public async sendOrder(
-    params: Parameters<IIntentSwapClient['sendOrder']>[0],
-  ): ReturnType<IIntentSwapClient['sendOrder']> {
+  sendOrder: IIntentSwapClient['sendOrder'] = async (params) => {
     // validate chainId
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
       throw new Error(`Unsupported chainId: ${params.chainId}`)
@@ -76,9 +72,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   }
 
   /** @see IIntentSwapClient.cancelOrder */
-  public async cancelOrder(
-    params: Parameters<IIntentSwapClient['cancelOrder']>[0],
-  ): ReturnType<IIntentSwapClient['cancelOrder']> {
+  cancelOrder: IIntentSwapClient['cancelOrder'] = async (params) => {
     // validate chainId
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
       throw new Error(`Unsupported chainId: ${params.chainId}`)
@@ -100,9 +94,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   }
 
   /** @see IIntentSwapClient.checkOrder */
-  public async checkOrder(
-    params: Parameters<IIntentSwapClient['checkOrder']>[0],
-  ): ReturnType<IIntentSwapClient['checkOrder']> {
+  checkOrder: IIntentSwapClient['checkOrder'] = async (params) => {
     // validate chainId
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
       throw new Error(`Unsupported chainId: ${params.chainId}`)

@@ -8,8 +8,8 @@ import type { IntentSwapProviderType } from '../enums/IntentSwapProviderType'
  */
 export type IntentQuoteData = {
   providerType: IntentSwapProviderType
-  fromTokenAmount: ITokenAmount
-  toTokenAmount: ITokenAmount
+  fromAmount: ITokenAmount
+  toAmount: ITokenAmount
   validTo: number // timestamp
   order: UnsignedOrder
 }
