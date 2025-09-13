@@ -1,4 +1,4 @@
-export { CowSwapProvider } from './implementation/cowswap/CowSwapProvider'
+export { CowSwapProvider, CowSwapSendOrderStatus } from './implementation/cowswap/CowSwapProvider'
 export { OneInchSwapProvider } from './implementation/oneinch/OneInchSwapProvider'
 export { OneInchAuthHeaderKey, OneInchSpotAuthHeaderKey } from './implementation/oneinch/types'
 export type {

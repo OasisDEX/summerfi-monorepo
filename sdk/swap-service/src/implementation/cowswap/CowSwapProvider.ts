@@ -11,6 +11,7 @@ import {
   Price,
   type ITokenAmount,
   getChainInfoByChainId,
+  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase, type IManagerProvider } from '@summerfi/sdk-server-common'
 import { type IIntentSwapProvider } from '@summerfi/swap-common'
@@ -26,12 +27,18 @@ import {
   ETH_FLOW_ADDRESSES,
   WRAPPED_NATIVE_CURRENCIES,
   COW_PROTOCOL_VAULT_RELAYER_ADDRESS,
-  NATIVE_CURRENCY_ADDRESS,
 } from '@cowprotocol/cow-sdk'
 import { encodeFunctionData } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
 import { LoggingService } from 'node_modules/@summerfi/sdk-common/dist'
+import { wrappedNativeCurrencyAbi } from './wrappedNativeCurrencyAbi'
+
+export enum CowSwapSendOrderStatus {
+  WrapToNative = 'wrap_to_native',
+  AllowanceNeeded = 'allowance_needed',
+  OrderSent = 'order_sent',
+}
 
 export class CowSwapProvider
   extends ManagerProviderBase<IntentSwapProviderType>
@@ -79,7 +86,7 @@ export class CowSwapProvider
 
     // if ETH is being sold, use the wrapped version
     let sellTokenAddress
-    if (params.fromAmount.token.address.value === NATIVE_CURRENCY_ADDRESS) {
+    if (params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
       sellTokenAddress = WRAPPED_NATIVE_CURRENCIES[supportedChainId].address
     } else {
       sellTokenAddress = params.fromAmount.token.address.value
@@ -162,14 +169,10 @@ export class CowSwapProvider
     const supportedChainId = this._assertSupportedChainId(chainId)
     const chainInfo = getChainInfoByChainId(supportedChainId)
 
-    // check if the from token is native token
-    if (
-      params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS.toLowerCase()
-    ) {
+    // Handle native currency wrapping if needed
+    if (params.fromAmount.token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      // check balance of wrapped native currency
       const wrappedNativeCurrencyAddress = WRAPPED_NATIVE_CURRENCIES[supportedChainId].address
-      // check balance for wrapped token
-
-      // check balance using tokens manager
       const wrappedNativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
         chainInfo,
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
@@ -178,17 +181,19 @@ export class CowSwapProvider
       LoggingService.debug(
         `Wrapped native currency balance:`,
         wrappedNativeCurrencyBalance.toSolidityValue(),
-        `Needed for sell amount: ${new BigNumber(order.sellAmount).toString()}`,
+        `balance needed for sell amount: ${new BigNumber(order.sellAmount).toString()}`,
       )
+      // if wrapped native currency balance is less than sell amount, need to wrap more
       if (BigInt(wrappedNativeCurrencyBalance.toSolidityValue()) < BigInt(order.sellAmount)) {
-        // insufficient wrapped native currency balance to cover the sell amount
         // need to wrap more native currency
-        // check native currency balance using tokens manager
+        // first check native currency balance to see if we have enough to wrap
         const nativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
           chainInfo,
-          address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS }),
+          address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS_LOWERCASE }),
           walletAddress: Address.createFromEthereum({ value: order.receiver }),
         })
+        LoggingService.debug(`Native currency balance:`, nativeCurrencyBalance.toSolidityValue())
+        // if native currency balance + wrapped native currency balance < sell amount, cannot wrap enough
         if (
           BigInt(nativeCurrencyBalance.amount) + BigInt(wrappedNativeCurrencyBalance.amount) <
           BigInt(order.sellAmount)
@@ -197,24 +202,16 @@ export class CowSwapProvider
             `Insufficient native currency balance to wrap to cover the sell amount. Need at least ${BigInt(order.sellAmount) - BigInt(wrappedNativeCurrencyBalance.amount)} of native currency to wrap.`,
           )
         } else {
-          // need to wrap some native currency using viem
-          const wethAbi = [
-            {
-              type: 'function',
-              name: 'deposit',
-              stateMutability: 'payable',
-              inputs: [],
-              outputs: [],
-            },
-          ] as const
+          // return transaction info to wrap required amount of native currency
+          // amount to wrap = sell amount - wrapped native currency balance
 
           return {
-            status: 'wrap_to_native',
+            status: CowSwapSendOrderStatus.WrapToNative,
             transactionInfo: {
               transaction: {
                 target: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
                 calldata: encodeFunctionData({
-                  abi: wethAbi,
+                  abi: wrappedNativeCurrencyAbi,
                   functionName: 'deposit',
                 }),
                 value: (
@@ -249,7 +246,7 @@ export class CowSwapProvider
 
     if (approval) {
       return {
-        status: 'allowance_needed',
+        status: CowSwapSendOrderStatus.AllowanceNeeded,
         transactionInfo: approval,
       }
     }
@@ -265,7 +262,7 @@ export class CowSwapProvider
       })
 
       return {
-        status: 'order_sent',
+        status: CowSwapSendOrderStatus.OrderSent,
         orderId: orderId,
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
