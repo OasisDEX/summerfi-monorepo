@@ -36,7 +36,7 @@ export const SumrClaimSearch = () => {
   const handleButtonClick = () => {
     if (isAddress(resolvedAddress ?? '')) {
       EarnProtocolEvents.buttonClicked({
-        buttonName: 'sumr-claim-search',
+        buttonName: 'ep-sumr-claim-search',
         page: pathname,
       })
 
@@ -45,7 +45,7 @@ export const SumrClaimSearch = () => {
 
     if (!user) {
       EarnProtocolEvents.buttonClicked({
-        buttonName: 'sumr-claim-search',
+        buttonName: 'ep-sumr-claim-search',
         page: pathname,
       })
       openAuthModal()
@@ -55,7 +55,7 @@ export const SumrClaimSearch = () => {
 
     if (resolvedAddress) {
       EarnProtocolEvents.buttonClicked({
-        buttonName: 'sumr-claim-search',
+        buttonName: 'ep-sumr-claim-search',
         page: pathname,
         walletAddress: resolvedAddress,
       })
