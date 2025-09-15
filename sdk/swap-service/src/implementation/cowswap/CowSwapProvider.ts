@@ -31,7 +31,7 @@ import {
 import { encodeFunctionData, formatEther } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
-import { LoggingService } from 'node_modules/@summerfi/sdk-common/dist'
+import { LoggingService } from '@summerfi/sdk-common'
 import { wrappedNativeCurrencyAbi } from './wrappedNativeCurrencyAbi'
 
 export enum CowSwapSendOrderStatus {
@@ -113,9 +113,7 @@ export class CowSwapProvider
     const order: UnsignedOrder = {
       ...quote,
       receiver,
-      sellAmount,
-      // CowSwap protocol does not require a feeAmount to be set; it is always '0' for CowSwap orders.
-      // This field is included only to satisfy the UnsignedOrder type/interface.
+      // CowSwap protocol does not charge a feeAmount; it is always '0' for CowSwap orders.
       feeAmount: '0',
       partiallyFillable: params.partiallyFillable ?? false,
     }
@@ -165,7 +163,7 @@ export class CowSwapProvider
 
   /** @see IIntentSwapProvider.sendOrder */
   sendOrder: IIntentSwapProvider['sendOrder'] = async (params) => {
-    const { chainId, order, signingResult } = params
+    const { chainId, order, signingResult, sender } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
     const chainInfo = getChainInfoByChainId(supportedChainId)
 
@@ -176,7 +174,7 @@ export class CowSwapProvider
       const wrappedNativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
         chainInfo,
         address: Address.createFromEthereum({ value: wrappedNativeCurrencyAddress }),
-        walletAddress: Address.createFromEthereum({ value: order.receiver }),
+        walletAddress: Address.createFromEthereum({ value: sender.value }),
       })
       LoggingService.debug({
         wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
@@ -189,7 +187,7 @@ export class CowSwapProvider
         const nativeCurrencyBalance = await this._tokensManager.getTokenBalanceByAddress({
           chainInfo,
           address: Address.createFromEthereum({ value: NATIVE_CURRENCY_ADDRESS_LOWERCASE }),
-          walletAddress: Address.createFromEthereum({ value: order.receiver }),
+          walletAddress: Address.createFromEthereum({ value: sender.value }),
         })
         LoggingService.debug({
           wrappedNativeCurrencyBalance: wrappedNativeCurrencyBalance.toString(),
@@ -245,7 +243,7 @@ export class CowSwapProvider
       chainInfo: sellToken.chainInfo,
       spender: this._getCowAddress(supportedChainId, 'relayer'),
       amount: sellAmount,
-      owner: Address.createFromEthereum({ value: order.receiver }),
+      owner: Address.createFromEthereum({ value: sender.value }),
     })
 
     if (approval) {

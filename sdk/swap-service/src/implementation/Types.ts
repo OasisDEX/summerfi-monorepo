@@ -1,4 +1,4 @@
-/** Oracle provider configuration */
+/** Swap provider configuration */
 export type SwapProviderConfig = {
   /** provider API URL */
   apiUrl: string

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IAbiProvider } from '@summerfi/abi-provider-common'
 import { AbiProviderFactory } from '@summerfi/abi-provider-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'

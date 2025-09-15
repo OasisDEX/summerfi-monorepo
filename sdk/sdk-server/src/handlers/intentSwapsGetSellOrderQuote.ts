@@ -7,7 +7,7 @@ import {
   type ITokenAmount,
   type IToken,
   type IAddress,
-  IPrice,
+  type IPrice,
   isPrice,
 } from '@summerfi/sdk-common'
 

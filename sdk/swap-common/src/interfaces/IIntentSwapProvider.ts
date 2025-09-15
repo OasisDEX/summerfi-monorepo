@@ -42,6 +42,7 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
    * @description Sends the order to the swap provider
    * @param order The order data for the swap
    * @param fromAmount The amount of tokens to swap
+   * @param sender The address that will send the tokens
    * @param chainId The chain ID where the order will be sent
    * @param signingResult The result of signing the order
    * @returns The result of sending the order, which can be one of:
@@ -55,6 +56,7 @@ export interface IIntentSwapProvider extends IManagerProvider<IntentSwapProvider
   sendOrder(params: {
     chainId: ChainId
     fromAmount: ITokenAmount
+    sender: IAddress
     order: UnsignedOrder
     signingResult: SigningResult
   }): Promise<
