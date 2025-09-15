@@ -22,7 +22,11 @@
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --format=cjs --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:tty --external:zlib --external:bignumber.js --external:@cowprotocol/cow-sdk --external:@ethersproject/abstract-signer --external:@trpc/client --external:@summerfi/sdk-common && tsc --declaration --emitDeclarationOnly -p tsconfig.bundle.json && if [ -f bundle/dist/index.js ]; then sed -i.bak 's#\"@summerfi/sdk-common\"#\"@summer_fi/sdk-common\"#g' bundle/dist/index.js; fi",
+    "bundle:clean": "rm -rf bundle/dist bundle/tsconfig.bundle.tsbuildinfo .cache/tsbuildinfo.json tsconfig.bundle.tsbuildinfo",
+    "bundle:js": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --format=cjs --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:fs --external:http --external:https --external:net --external:os --external:path --external:stream --external:tls --external:tty --external:zlib --external:bignumber.js --external:@cowprotocol/cow-sdk --external:@ethersproject/abstract-signer --external:@trpc/client",
+    "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json",
+    "bundle:types": "pnpm declarations && tsx scripts/generate-declarations.ts",
+    "bundle:npm": "pnpm bundle:clean && pnpm bundle:js && pnpm bundle:types",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
@@ -37,9 +41,11 @@
     "@trpc/client": "11.0.0-rc.844"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.52.13",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "tsx": "^4.19.4"
   }
 }

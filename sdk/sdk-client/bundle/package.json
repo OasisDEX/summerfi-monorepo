@@ -12,8 +12,7 @@
   "dependencies": {
     "@cowprotocol/cow-sdk": "^6.3.2",
     "@ethersproject/abstract-signer": "^5.8.0",
-    "bignumber.js": "^9.1.2",
     "@trpc/client": "11.0.0-rc.844",
-    "@summer_fi/sdk-common": "1.2.0"
+    "bignumber.js": "^9.1.2"
   }
 }

@@ -21,7 +21,8 @@
     "testw:integration": "jest tests/integration --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json"
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json"
   },
   "dependencies": {
     "@summerfi/abis": "workspace:*",
