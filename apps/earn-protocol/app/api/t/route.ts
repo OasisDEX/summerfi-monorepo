@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
       {
         // eslint-disable-next-line camelcase
         distinct_id: distinctId,
-        wholeEventBody: sanitizedEventBody,
+        ...sanitizedEventBody,
       },
       mixpanel,
     )
