@@ -25,41 +25,4 @@ export type { IUserClient } from './interfaces/IUserClient'
 export type { IUsersManager } from './interfaces/IUsersManager'
 export { PositionUtils } from './utils/PositionUtils'
 
-// re-exporting SDK internal packages to give access to consumers of the SDK
-export {
-  AaveV3LendingPoolId,
-  AaveV3LendingPosition,
-  AaveV3LendingPositionId,
-  isAaveV3LendingPoolId,
-  type IAaveV3LendingPoolId,
-  AaveV3Protocol,
-  type IAaveV3Protocol,
-  EmodeType,
-  MakerLendingPoolId,
-  MakerLendingPosition,
-  type MakerLendingPositionParameters,
-  MakerLendingPositionId,
-  type MakerLendingPositionIdParameters,
-  isMakerLendingPoolId,
-  type IMakerLendingPoolId,
-  MakerProtocol,
-  type IMakerProtocol,
-  type ILKType,
-  MorphoLendingPoolId,
-  MorphoLendingPosition,
-  MorphoLendingPositionId,
-  isMorphoLendingPoolId,
-  type IMorphoLendingPoolId,
-  MorphoProtocol,
-  type IMorphoProtocol,
-  SparkLendingPoolId,
-  SparkLendingPosition,
-  SparkLendingPositionId,
-  isSparkLendingPoolId,
-  type ISparkLendingPoolId,
-  SparkProtocol,
-  type ISparkProtocol,
-} from '@summerfi/protocol-plugins'
-export * from '@summerfi/sdk-common'
-export * from '@summerfi/armada-protocol-common'
-export * from '@summerfi/armada-protocol-service'
+export * from './reexports'

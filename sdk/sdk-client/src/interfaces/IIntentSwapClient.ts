@@ -42,6 +42,7 @@ export interface IIntentSwapClient {
    * @description Sends the order to the swap provider
    * @param order The order data for the swap
    * @param fromAmount The amount of tokens to swap
+   * @param sender The address that will send the tokens
    * @param chainId The chain ID where the order will be sent
    * @returns The result of sending the order, which can be one of:
    * - 'wrap_to_native': if the input token is a wrapped native token and needs to be unwrapped before sending the order
@@ -53,6 +54,7 @@ export interface IIntentSwapClient {
    */
   sendOrder(params: {
     fromAmount: ITokenAmount
+    sender: IAddress
     chainId: ChainId
     order: UnsignedOrder
   }): Promise<

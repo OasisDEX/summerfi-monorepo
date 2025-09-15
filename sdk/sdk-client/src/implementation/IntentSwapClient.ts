@@ -57,6 +57,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     )
 
     return this.rpcClient.intentSwaps.sendOrder.mutate({
+      sender: params.sender,
       chainId: params.chainId,
       fromAmount: params.fromAmount,
       order: params.order,
