@@ -82,6 +82,7 @@ export const VaultManageViewDetails = ({
           </Text>
         }
         onExpand={handleExpanderToggle('performance')}
+        defaultExpanded
       >
         <PositionPerformanceChart
           chartData={performanceChartData}
