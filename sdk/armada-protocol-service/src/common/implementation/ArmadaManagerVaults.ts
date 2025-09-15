@@ -1584,10 +1584,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const [config, token, totalDeposits, totalShares, apys, rewardsApys, merklRewards] =
+    const [config, token, assetToken, totalDeposits, totalShares, apys, rewardsApys, merklRewards] =
       await Promise.all([
         fleetContract.config(),
         fleetERC20Contract.getToken(),
+        fleetERC4626Contract.asset(),
         fleetERC4626Contract.totalAssets(),
         fleetERC20Contract.totalSupply(),
         this.getVaultsApys({
@@ -1612,6 +1613,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       token: token,
+      assetToken: assetToken,
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,

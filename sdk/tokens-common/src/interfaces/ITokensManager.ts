@@ -50,7 +50,7 @@ export interface ITokensManager extends IManagerWithProviders<TokensProviderType
    * @param symbol The symbol of the token to retrieve the balance for
    * @param walletAddress The wallet address to retrieve the token balance for
    *
-   * @returns The token balance as a string
+   * @returns The token balance as an ITokenAmount
    */
   getTokenBalanceBySymbol(params: {
     chainInfo: IChainInfo
@@ -66,7 +66,7 @@ export interface ITokensManager extends IManagerWithProviders<TokensProviderType
    * @param address The address of the token to retrieve the balance for
    * @param walletAddress The wallet address to retrieve the token balance for
    *
-   * @returns The token balance as a string
+   * @returns The token balance as an ITokenAmount
    */
   getTokenBalanceByAddress(params: {
     chainInfo: IChainInfo
