@@ -2,11 +2,13 @@
   display: flex;
   flex-direction: column;
 }
+
 @media (max-width: 1025px) {
   .navigationItemsWrapper {
     width: 100%;
   }
 }
+
 .navigationItemsWrapper .navigationItemsItem {
   display: flex;
   flex-direction: row;
@@ -15,18 +17,23 @@
   border-radius: var(--general-radius-16);
   background-color: transparent;
   transition: background-color 0.2s;
+  align-items: center;
 }
+
 .navigationItemsWrapper .navigationItemsItem:last-child {
   margin-bottom: 0;
 }
+
 @media (max-width: 1025px) {
   .navigationItemsWrapper .navigationItemsItem {
     width: 100%;
   }
 }
+
 .navigationItemsWrapper .navigationItemsItem:hover {
   background-color: var(--color-surface-subtler);
 }
+
 .navigationItemsWrapper .navigationItemsItem .navigationItemsIconWrapper {
   display: flex;
   justify-content: center;
@@ -37,6 +44,7 @@
   border-radius: var(--radius-circle);
   margin-right: var(--general-space-12);
 }
+
 .navigationItemsWrapper .navigationItemsItem .navigationItemsIconWrapper img {
   opacity: 1;
   transform: none;

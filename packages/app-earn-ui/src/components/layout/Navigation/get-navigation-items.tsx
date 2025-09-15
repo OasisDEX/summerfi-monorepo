@@ -127,7 +127,7 @@ export const getNavigationItems = ({
                 url: `${currentOrigin}/team`,
                 id: 'team',
                 title: 'Team',
-                description: 'Leadership that’s helped shape DeFi from day 1',
+                description: <>Leadership that’s helped shape DeFi from day&nbsp;1</>,
                 icon: 'earn_1_on_1' as IconNamesList,
                 prefetchDisabled: !isEarnApp,
                 onClick: handleButtonClick('team'),
