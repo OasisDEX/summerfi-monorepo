@@ -105,20 +105,29 @@ const validateSpecialKeys = (obj: { [key: string]: unknown }) => {
   if (!check('$browser', isSafeString)) return false
 
   // $browser_version: number or numeric string or null
-  if (!check('$browser_version', (v) => v === null || isNumericOrNumericString(v))) return false
+  if (
+    !check(
+      '$browser_version',
+      (v) =>
+        v === null ||
+        isNumericOrNumericString(v) ||
+        (typeof v === 'string' && /^\d+(\.\d+){0,5}$/u.test(v.trim())),
+    )
+  )
+    return false
 
   // $initial_referrer & $initial_referring_domain: safe strings (allow "$direct")
   if (
     !check(
       '$initial_referrer',
-      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isSafeString(v))),
+      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isValidUrl(v))),
     )
   )
     return false
   if (
     !check(
       '$initial_referring_domain',
-      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isSafeString(v))),
+      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isValidUrl(v))),
     )
   )
     return false
