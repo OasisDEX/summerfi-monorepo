@@ -16,7 +16,7 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 jest.setTimeout(300000)
 
 const sendOrder: boolean = true // set to false to only get quote
-const cancelOrder: boolean = false // set to false to skip order cancellation
+const cancelOrder: boolean = true // set to false to skip order cancellation
 const simulateOnly = false // set to true to only simulate transactions
 
 const chainId = ChainIds.Base
@@ -92,6 +92,7 @@ describe('Intent swaps', () => {
     let orderId
     do {
       const orderReturn = await sdk.intentSwaps.sendOrder({
+        sender: testWalletAddress,
         fromAmount: sellQuote.fromAmount,
         chainId,
         order: sellQuote.order,
