@@ -63,6 +63,18 @@ const isValidUrl = (value: unknown) => {
   }
 }
 
+const isSafeDomain = (value: unknown) => {
+  if (typeof value !== 'string') return false
+  const v = value.trim()
+
+  if (v.length === 0 || v.length > 200) return false
+  // simple regex to check for valid domain (no protocol, no path, no auth)
+  // eslint-disable-next-line no-useless-escape
+  const DOMAIN_RE = /^(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/iu
+
+  return DOMAIN_RE.test(v)
+}
+
 const isSafeString = (value: unknown) => {
   if (value === null) return true
   if (typeof value !== 'string') return false
@@ -127,7 +139,7 @@ const validateSpecialKeys = (obj: { [key: string]: unknown }) => {
   if (
     !check(
       '$initial_referring_domain',
-      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isValidUrl(v))),
+      (v) => v === null || (typeof v === 'string' && (v === '$direct' || isSafeDomain(v))),
     )
   )
     return false
@@ -183,17 +195,20 @@ export async function POST(request: NextRequest) {
     const currentUrlValue = sanitizedEventBody.$current_url
 
     if (currentUrlValue !== undefined && !isValidUrl(currentUrlValue)) {
-      return NextResponse.json({ status: 400 })
+      return NextResponse.json({ status: 400, message: 'Invalid $current_url' }, { status: 400 })
     }
 
     // validate other special keys
     if (!validateSpecialKeys(sanitizedEventBody)) {
-      return NextResponse.json({ status: 400 })
+      return NextResponse.json({ status: 400, message: 'Invalid special keys' }, { status: 400 })
     }
 
     if (containsSanitized(sanitizedEventBody)) {
       // Drop events that contain sanitized name fields
-      return NextResponse.json({ status: 400 })
+      return NextResponse.json(
+        { status: 400, message: 'Contains sanitized fields' },
+        { status: 400 },
+      )
     }
     // --- end sanitizer & blocking logic ---
 
