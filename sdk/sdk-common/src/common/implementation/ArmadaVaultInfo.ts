@@ -25,6 +25,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   readonly type = PoolType.Armada
   readonly id: IArmadaVaultId
   readonly token: IToken
+  readonly assetToken: IToken
   readonly depositCap: ITokenAmount
   readonly totalDeposits: ITokenAmount
   readonly totalShares: ITokenAmount
@@ -49,6 +50,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
 
     this.id = params.id
     this.token = params.token
+    this.assetToken = params.assetToken
     this.depositCap = params.depositCap
     this.totalDeposits = params.totalDeposits
     this.totalShares = params.totalShares
