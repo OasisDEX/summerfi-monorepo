@@ -1834,12 +1834,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
     const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
-    const opportunitiesPerVault: MerklApiOpportunitiesResponse[] = await Promise.all(
+    const opportunitiesPerVault: MerklApiOpportunitiesResponse[] | undefined = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
           ? fetch(url.replace('{{identifier}}', address)).then((res) => {
               if (!res.ok) {
-                throw new Error(`Failed to fetch rewards for address ${address}`)
+                return undefined
               }
               return res.json()
             })
@@ -1847,11 +1847,21 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ),
     )
 
-    const byFleetAddress = opportunitiesPerVault.reduce(
+    const byFleetAddress: {
+      [fleetAddress: string]:
+        | {
+            token: IToken
+            dailyEmission: string
+          }[]
+        | undefined
+    } = opportunitiesPerVault.reduce(
       (acc, opportunities, index) => {
         const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
         if (!acc[fleetAddress]) {
           acc[fleetAddress] = []
+        }
+        if (opportunities == null) {
+          return acc
         }
         acc[fleetAddress].push({
           dailyEmission: opportunities
@@ -1877,10 +1887,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         return acc
       },
       {} as {
-        [fleetAddress: string]: {
-          token: IToken
-          dailyEmission: string
-        }[]
+        [fleetAddress: string]:
+          | {
+              token: IToken
+              dailyEmission: string
+            }[]
+          | undefined
       },
     )
 
