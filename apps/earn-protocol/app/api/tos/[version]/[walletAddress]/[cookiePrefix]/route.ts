@@ -1,5 +1,9 @@
+import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { getTos, type TOSRequestContext } from '@summerfi/app-tos'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function GET(req: NextRequest, context: TOSRequestContext) {
@@ -12,9 +16,21 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
     )
   }
 
-  const { db } = await getSummerProtocolDB({
-    connectionString,
-  })
+  const [{ db }, configRaw] = await Promise.all([
+    getSummerProtocolDB({
+      connectionString,
+    }),
+    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
+      revalidate: REVALIDATION_TIMES.CONFIG,
+      tags: [REVALIDATION_TAGS.CONFIG],
+    })(),
+  ])
+  const systemConfig = parseServerResponseToClient(configRaw)
+  const whitelistedTos = systemConfig.tosWhitelist
+
+  if (whitelistedTos?.includes(context.params.walletAddress)) {
+    return NextResponse.json({ acceptance: true, authorized: true })
+  }
 
   const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
 
