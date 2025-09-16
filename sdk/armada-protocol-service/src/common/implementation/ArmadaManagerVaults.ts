@@ -33,6 +33,9 @@ import {
   Percentage,
   Price,
   FiatCurrency,
+  type SpotPricesInfo,
+  OracleProviderType,
+  type IPrice,
 } from '@summerfi/sdk-common'
 import { fetchWithTimeout } from '@summerfi/sdk-common/configs/fetch'
 import type { ISwapManager } from '@summerfi/swap-common'
@@ -1742,13 +1745,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardTokens = Array.from(rewardTokensSymbolSet).map((symbol) =>
       this._tokensManager.getTokenBySymbol({ chainInfo, symbol }),
     )
-    // fetch spot prices for unique base tokens
-    const prices = await this._oracleManager.getSpotPrices({
-      chainInfo,
-      baseTokens: rewardTokens,
-    })
+    // fetch spot prices for unique base tokens excluding SUMR as it's not available on 1inch
+    const baseTokens = rewardTokens.filter((token) => token.symbol !== 'SUMR')
+    let prices: { priceByAddress: { [address: string]: IPrice } } = { priceByAddress: {} }
+    if (baseTokens.length > 0) {
+      prices = await this._oracleManager.getSpotPrices({
+        chainInfo,
+        baseTokens,
+      })
+    }
 
-    // TODO: override SUMR price in prices as it's not available from 1inch
+    // override SUMR price in prices as it's not available from 1inch
     const sumrToken = rewardTokens.find((token) => token.symbol === 'SUMR')
     if (sumrToken) {
       prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
