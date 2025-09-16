@@ -909,8 +909,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           description:
             'Withdraw Operations: ' + exitWithdrawMulticall.multicallOperations.join(', '),
           metadata: {
-            fromAmount: finalWithdrawAmount,
-            toAmount: swapToAmount || finalWithdrawAmount,
+            fromAmount: withdrawAmount,
+            toAmount: swapToAmount || withdrawAmount,
             slippage: params.slippage,
             priceImpact,
           },

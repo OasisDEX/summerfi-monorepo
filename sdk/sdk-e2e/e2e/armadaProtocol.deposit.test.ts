@@ -13,40 +13,28 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
-import { DEFAULT_SLIPPAGE_PERCENTAGE, TX_CONFIRMATION_WAIT_TIME } from './utils/constants'
+import {
+  signerPrivateKey,
+  SDKApiUrl,
+  testWalletAddress,
+  FleetAddresses,
+  RpcUrls,
+} from './utils/testConfig'
+import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
-const simulateOnly = false
 
-const ethFleetBase = Address.createFromEthereum({
-  value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
-})
-const usdcFleetBase = Address.createFromEthereum({
-  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-})
-const eurcFleetBase = Address.createFromEthereum({
-  value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-})
-const selfManagedFleetBase = Address.createFromEthereum({
-  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
-})
-const usdtFleetArb = Address.createFromEthereum({
-  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-})
-const usdcFleetSonic = Address.createFromEthereum({
-  value: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
-})
+const simulateOnly = true
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+    const rpcUrl = RpcUrls.Base
     const chainId = ChainIds.Base
-    const fleetAddress = ethFleetBase
+    const fleetAddress = FleetAddresses.Base.usdc
     const userAddress = testWalletAddress
-    const amountValue = '0.003'
-    const symbol = 'ETH'
+    const amountValue = '1'
+    const symbol = 'USDC'
     const swapToSymbol = undefined
 
     await runTests({
@@ -75,7 +63,7 @@ async function runTests({
 }: {
   chainId: ChainId
   swapToSymbol: string | undefined
-  fleetAddress: Address
+  fleetAddress: string
   rpcUrl: string | undefined
   symbol: string
   amountValue: string
@@ -99,7 +87,7 @@ async function runTests({
   })
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress,
+    fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
   })
 
   const vaultInfo = await sdk.armada.users.getVaultInfo({
@@ -132,7 +120,7 @@ async function runTests({
   })
 
   console.log(
-    `deposit ${amountValue.toString()} to fleet at ${fleetAddress.value} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
+    `deposit ${amountValue.toString()} to fleet at ${fleetAddress} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
   )
 
   assert(
