@@ -420,5 +420,6 @@ export type { IUser, IUserData } from './user/interfaces/IUser'
 
 export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'
+export { FETCH_CONFIG, createTimeoutSignal, fetchWithTimeout } from './configs/fetch'
 
 export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'

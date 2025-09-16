@@ -34,6 +34,7 @@ import {
   Price,
   FiatCurrency,
 } from '@summerfi/sdk-common'
+import { fetchWithTimeout } from '@summerfi/sdk-common/configs/fetch'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
@@ -1837,7 +1838,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const opportunitiesPerVault: (MerklApiOpportunitiesResponse | undefined)[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
-          ? fetch(url.replace('{{identifier}}', address))
+          ? fetchWithTimeout(url.replace('{{identifier}}', address))
               .then((res) => (res.ok ? res.json() : undefined))
               .catch(() => undefined)
           : Promise.resolve(undefined),
@@ -1871,7 +1872,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 (b) => b.token.symbol === 'SUMR',
               )
               if (sumrReward) {
-                dailyEmission += BigInt(sumrReward.amount)
+                try {
+                  dailyEmission += BigInt(sumrReward.amount)
+                } catch (error) {
+                  console.error('Error parsing SUMR reward amount:', error)
+                }
               }
               return dailyEmission
             }, 0n)
