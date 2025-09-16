@@ -23,5 +23,5 @@ export function createTimeoutSignal(timeout: number = FETCH_CONFIG.TIMEOUT): Abo
 
 export function fetchWithTimeout(url: string, options?: RequestInit) {
   const signal = createTimeoutSignal()
-  return fetch(url, { ...options, signal })
+  return fetch(url, { signal, ...options })
 }

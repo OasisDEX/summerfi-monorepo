@@ -33,11 +33,9 @@ import {
   Percentage,
   Price,
   FiatCurrency,
-  type SpotPricesInfo,
-  OracleProviderType,
+  fetchWithTimeout,
   type IPrice,
 } from '@summerfi/sdk-common'
-import { fetchWithTimeout } from '@summerfi/sdk-common/configs/fetch'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
