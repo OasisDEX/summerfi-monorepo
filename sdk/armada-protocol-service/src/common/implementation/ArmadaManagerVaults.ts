@@ -1834,15 +1834,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
     const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
-    const opportunitiesPerVault: MerklApiOpportunitiesResponse[] | undefined = await Promise.all(
+    const opportunitiesPerVault: (MerklApiOpportunitiesResponse | undefined)[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
-          ? fetch(url.replace('{{identifier}}', address)).then((res) => {
-              if (!res.ok) {
-                return undefined
-              }
-              return res.json()
-            })
+          ? fetch(url.replace('{{identifier}}', address))
+              .then((res) => (res.ok ? res.json() : undefined))
+              .catch(() => undefined)
           : Promise.resolve(undefined),
       ),
     )
@@ -1857,11 +1854,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     } = opportunitiesPerVault.reduce(
       (acc, opportunities, index) => {
         const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
-        if (!acc[fleetAddress]) {
-          acc[fleetAddress] = []
-        }
         if (opportunities == null) {
           return acc
+        }
+        if (!acc[fleetAddress]) {
+          acc[fleetAddress] = []
         }
         acc[fleetAddress].push({
           dailyEmission: opportunities
