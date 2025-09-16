@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
   const systemConfig = parseServerResponseToClient(configRaw)
   const whitelistedTos = systemConfig.tosWhitelist
 
-  if (whitelistedTos?.includes(context.params.walletAddress)) {
+  if (whitelistedTos?.includes(context.params.walletAddress.toLowerCase())) {
     return NextResponse.json({ acceptance: true, authorized: true })
   }
 
