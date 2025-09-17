@@ -12,32 +12,28 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import {
+  signerPrivateKey,
+  SDKApiUrl,
+  testWalletAddress,
+  FleetAddresses,
+  RpcUrls,
+} from './utils/testConfig'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
 jest.setTimeout(300000)
-const simulateOnly = false
 
-const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
-const usdcFleet = Address.createFromEthereum({
-  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-})
-const eurcFleet = Address.createFromEthereum({
-  value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-})
-const selfManagedFleet = Address.createFromEthereum({
-  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
-})
+const simulateOnly = true
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
-    const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
-    const chainId = ChainIds.Base
-    const fleetAddress = ethFleet
+    const rpcUrl = RpcUrls.ArbitrumOne
+    const chainId = ChainIds.ArbitrumOne
+    const fleetAddress = FleetAddresses.ArbitrumOne.usdt
     const userAddress = testWalletAddress
-    const amountValue = '0.001'
-    const symbol = 'ETH'
+    const amountValue = '1.3'
+    const symbol = 'USDC'
     const swapToSymbol = undefined
 
     await runTests({
@@ -63,7 +59,7 @@ describe('Armada Protocol Withdraw', () => {
     chainId: ChainId
     symbol: string
     swapToSymbol: string | undefined
-    fleetAddress: Address
+    fleetAddress: string
     rpcUrl: string | undefined
     amountValue: string
     userAddress: Address
@@ -85,7 +81,7 @@ describe('Armada Protocol Withdraw', () => {
     })
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
-      fleetAddress,
+      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
 
     const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
@@ -106,7 +102,7 @@ describe('Armada Protocol Withdraw', () => {
       amount: amountValue,
       token: token,
     })
-    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress.value}`)
+    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress}`)
 
     const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
     assert(

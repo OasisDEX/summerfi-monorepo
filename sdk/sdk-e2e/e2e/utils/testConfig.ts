@@ -12,17 +12,51 @@ if (!process.env.TEST_USER_ADDRESS) {
 if (!process.env.E2E_USER_PRIVATE_KEY) {
   throw new Error('Missing E2E_USER_PRIVATE_KEY')
 }
+if (!process.env.E2E_SDK_FORK_URL_MAINNET) {
+  throw new Error('Missing E2E_SDK_FORK_URL_MAINNET')
+}
+if (!process.env.E2E_SDK_FORK_URL_BASE) {
+  throw new Error('Missing E2E_SDK_FORK_URL_BASE')
+}
+if (!process.env.E2E_SDK_FORK_URL_ARBITRUM) {
+  throw new Error('Missing E2E_SDK_FORK_URL_ARBITRUM')
+}
+if (!process.env.E2E_SDK_FORK_URL_SONIC) {
+  throw new Error('Missing E2E_SDK_FORK_URL_SONIC')
+}
+
+export const RpcUrls = {
+  Mainnet: process.env.E2E_SDK_FORK_URL_MAINNET,
+  Base: process.env.E2E_SDK_FORK_URL_BASE,
+  ArbitrumOne: process.env.E2E_SDK_FORK_URL_ARBITRUM,
+  Sonic: process.env.E2E_SDK_FORK_URL_SONIC,
+}
+
+export const FleetAddresses = {
+  Base: {
+    eth: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
+    usdc: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+    eurc: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
+    selfManaged: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+  },
+  ArbitrumOne: {
+    usdt: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+  },
+  Sonic: {
+    usdc: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
+  },
+}
 
 /** TEST CONFIG */
-export const SDKApiUrl = process.env.E2E_SDK_API_URL,
-  signerAddress = process.env.E2E_USER_ADDRESS as AddressValue,
-  signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY as AddressValue,
-  testWalletAddress = Address.createFromEthereum({
-    value: process.env.E2E_USER_ADDRESS as AddressValue,
-  }),
-  privWalletAddress = Address.createFromEthereum({
-    value: process.env.TEST_USER_ADDRESS as AddressValue,
-  })
+export const SDKApiUrl = process.env.E2E_SDK_API_URL
+export const signerAddress = process.env.E2E_USER_ADDRESS as AddressValue
+export const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY as AddressValue
+export const testWalletAddress = Address.createFromEthereum({
+  value: process.env.E2E_USER_ADDRESS as AddressValue,
+})
+export const privWalletAddress = Address.createFromEthereum({
+  value: process.env.TEST_USER_ADDRESS as AddressValue,
+})
 
 export const testConfig = [
   {
@@ -35,34 +69,4 @@ export const testConfig = [
     rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
     userAddress: testWalletAddress,
   },
-  // {
-  //   chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
-  //   symbol: 'USDC.e',
-  //   fleetAddress: Address.createFromEthereum({
-  //     value: '0x2653014Cd3AD332a98B0A80Ccf12473740DF81C2',
-  //   }),
-  //   rpcUrl: process.env.E2E_SDK_FORK_URL_ARBITRUM,
-  //   userAddress,
-  // },
-  // {
-  //   chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  //   symbol: 'USDT',
-  //   swapSymbol: 'USDT',
-  //   fleetAddress: Address.createFromEthereum({
-  //     value: '0xd94d5f8969825c5fBCC127195f08F0762a010BA8',
-  //   }),
-  //   rpcUrl: process.env.E2E_SDK_FORK_URL_MAINNET,
-  //   userAddress,
-  // },
-  // {
-  //   chainInfo: ChainFamilyMap.Sonic.Sonic,
-  //   symbol: 'USDC.e',
-  //   swapSymbol: 'USDC.e',
-  //   fleetAddress: Address.createFromEthereum({
-  //     // summer
-  //     value: '0x507A2D9E87DBD3076e65992049C41270b47964f8',
-  //   }),
-  //   rpcUrl: process.env.E2E_SDK_FORK_URL_SONIC,
-  //   userAddress,
-  // },
 ]

@@ -33,6 +33,8 @@ import {
   Percentage,
   Price,
   FiatCurrency,
+  fetchWithTimeout,
+  type IPrice,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -907,8 +909,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           description:
             'Withdraw Operations: ' + exitWithdrawMulticall.multicallOperations.join(', '),
           metadata: {
-            fromAmount: finalWithdrawAmount,
-            toAmount: swapToAmount || finalWithdrawAmount,
+            fromAmount: withdrawAmount,
+            toAmount: swapToAmount || withdrawAmount,
             slippage: params.slippage,
             priceImpact,
           },
@@ -1743,13 +1745,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardTokens = Array.from(rewardTokensSymbolSet).map((symbol) =>
       this._tokensManager.getTokenBySymbol({ chainInfo, symbol }),
     )
-    // fetch spot prices for unique base tokens
-    const prices = await this._oracleManager.getSpotPrices({
-      chainInfo,
-      baseTokens: rewardTokens,
-    })
+    // fetch spot prices for unique base tokens excluding SUMR as it's not available on 1inch
+    const baseTokens = rewardTokens.filter((token) => token.symbol !== 'SUMR')
+    let prices: { priceByAddress: { [address: string]: IPrice } } = { priceByAddress: {} }
+    if (baseTokens.length > 0) {
+      prices = await this._oracleManager.getSpotPrices({
+        chainInfo,
+        baseTokens,
+      })
+    }
 
-    // TODO: override SUMR price in prices as it's not available from 1inch
+    // override SUMR price in prices as it's not available from 1inch
     const sumrToken = rewardTokens.find((token) => token.symbol === 'SUMR')
     if (sumrToken) {
       prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
@@ -1836,22 +1842,29 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
     // find opportunities by querying merkl api using rewards manager address as id
     const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
-    const opportunitiesPerVault: MerklApiOpportunitiesResponse[] = await Promise.all(
+    const opportunitiesPerVault: (MerklApiOpportunitiesResponse | undefined)[] = await Promise.all(
       rewardsManagerAddresses.map((address) =>
         address
-          ? fetch(url.replace('{{identifier}}', address)).then((res) => {
-              if (!res.ok) {
-                throw new Error(`Failed to fetch rewards for address ${address}`)
-              }
-              return res.json()
-            })
+          ? fetchWithTimeout(url.replace('{{identifier}}', address))
+              .then((res) => (res.ok ? res.json() : undefined))
+              .catch(() => undefined)
           : Promise.resolve(undefined),
       ),
     )
 
-    const byFleetAddress = opportunitiesPerVault.reduce(
+    const byFleetAddress: {
+      [fleetAddress: string]:
+        | {
+            token: IToken
+            dailyEmission: string
+          }[]
+        | undefined
+    } = opportunitiesPerVault.reduce(
       (acc, opportunities, index) => {
         const fleetAddress = vaultIds[index].fleetAddress.value.toLowerCase()
+        if (opportunities == null) {
+          return acc
+        }
         if (!acc[fleetAddress]) {
           acc[fleetAddress] = []
         }
@@ -1866,7 +1879,11 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 (b) => b.token.symbol === 'SUMR',
               )
               if (sumrReward) {
-                dailyEmission += BigInt(sumrReward.amount)
+                try {
+                  dailyEmission += BigInt(sumrReward.amount)
+                } catch (error) {
+                  console.error('Error parsing SUMR reward amount:', error)
+                }
               }
               return dailyEmission
             }, 0n)
@@ -1879,10 +1896,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
         return acc
       },
       {} as {
-        [fleetAddress: string]: {
-          token: IToken
-          dailyEmission: string
-        }[]
+        [fleetAddress: string]:
+          | {
+              token: IToken
+              dailyEmission: string
+            }[]
+          | undefined
       },
     )
 

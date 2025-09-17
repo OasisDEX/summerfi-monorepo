@@ -70,7 +70,7 @@ describe('Armada Protocol - Vault', () => {
                 token: reward.token.toString(),
                 apy: reward.apy?.toString(),
               })),
-              merklRewards: vaultInfo.merklRewards.map((reward) => ({
+              merklRewards: vaultInfo.merklRewards?.map((reward) => ({
                 token: reward.token.toString(),
                 dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
               })),
@@ -108,7 +108,7 @@ describe('Armada Protocol - Vault', () => {
             token: reward.token.toString(),
             apy: reward.apy?.toString(),
           })),
-          merklRewards: vaultInfo.merklRewards.map((reward) => ({
+          merklRewards: vaultInfo.merklRewards?.map((reward) => ({
             token: reward.token.toString(),
             dailyEmission: BigNumber(reward.dailyEmission).div(BigNumber('1e18')).toString(),
           })),
