@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useLayoutEffect, useMemo, useState } from 'react'
 import {
   FloatingBanner,
   type FloatingBannerActionType,
@@ -10,7 +10,7 @@ import {
 import { getCookie, setCookie } from '@summerfi/app-utils'
 import Image from 'next/image'
 
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
+import { useDisplayBannerEvent, useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
 import styles from './LargeUserFloatingBanner.module.css'
@@ -31,6 +31,7 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
   const { userWalletAddress } = useUserWallet()
 
   const handleButtonClick = useHandleButtonClickEvent()
+  const handleDisplayBanner = useDisplayBannerEvent()
 
   const cookieSettings = useMemo(() => {
     try {
@@ -45,6 +46,14 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
   }
 
   const isLargerUser = largeUsersData?.includes(userWalletAddress?.toLowerCase() ?? '')
+
+  useLayoutEffect(() => {
+    if (!cookieSettings.isClosed && isLargerUser) {
+      handleDisplayBanner({
+        bannerName: 'large-user-banner',
+      })
+    }
+  }, [cookieSettings.isClosed, handleDisplayBanner, isLargerUser])
 
   return cookieSettings.isClosed || isClosed || !isLargerUser ? null : (
     <FloatingBanner

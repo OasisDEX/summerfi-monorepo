@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
-import { debounce } from 'lodash-es'
+import { debounce, throttle } from 'lodash-es'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -146,4 +146,33 @@ export const useHandleInputChangeEvent = () => {
   )
 
   return useMemo(() => debounce(handleEvent, 500), [handleEvent])
+}
+
+export const useDisplayBannerEvent: () => ({ bannerName }: { bannerName: string }) => void = () => {
+  const hasFiredRef = useRef(false)
+  const pathname = usePathname()
+  const user = useUser()
+  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
+  const { chain } = useChain()
+
+  const userData = useMemo(() => {
+    return !isLoadingAccount
+      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
+      : {}
+  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+
+  const handleEvent = useCallback(
+    ({ bannerName }: { bannerName: string }) => {
+      if (hasFiredRef.current) return
+      EarnProtocolEvents.customEvent({
+        page: pathname,
+        customEventName: `ep-banner-displayed-${bannerName}`,
+        ...userData,
+      })
+      hasFiredRef.current = true
+    },
+    [pathname, userData],
+  )
+
+  return useMemo(() => throttle(handleEvent, 10000), [handleEvent])
 }

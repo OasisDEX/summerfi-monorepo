@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import {
   FloatingBanner,
   type FloatingBannerActionType,
@@ -11,7 +11,7 @@ import {
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
+import { useDisplayBannerEvent, useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import { beachClubCookieName } from './config'
 
@@ -25,6 +25,7 @@ export const BeachClubFloatingBanner = () => {
   const [isClosed, setIsClosed] = useState(false)
   const cookie = getCookie(beachClubCookieName)
   const handleButtonClick = useHandleButtonClickEvent()
+  const handleDisplayBanner = useDisplayBannerEvent()
   const { userWalletAddress } = useUserWallet()
 
   const cookieSettings = useMemo(() => {
@@ -44,6 +45,14 @@ export const BeachClubFloatingBanner = () => {
   const resolvedBeachClubLink = userWalletAddress
     ? `/portfolio/${userWalletAddress}?tab=${PortfolioTabs.BEACH_CLUB}`
     : `${host}${INTERNAL_LINKS.beachClub}`
+
+  useLayoutEffect(() => {
+    if (!cookieSettings.isClosed && !isClosed) {
+      handleDisplayBanner({
+        bannerName: 'beach-club-banner',
+      })
+    }
+  }, [cookieSettings.isClosed, handleDisplayBanner, isClosed])
 
   return cookieSettings.isClosed || isClosed ? null : (
     <FloatingBanner
