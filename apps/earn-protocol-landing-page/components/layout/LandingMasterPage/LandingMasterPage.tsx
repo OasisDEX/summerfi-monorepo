@@ -1,6 +1,6 @@
 'use client'
 
-import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { type PropsWithChildren, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import {
   BeachClubRadialGradient,
   Footer,
@@ -98,6 +98,12 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
       })
     }
   }
+
+  useLayoutEffect(() => {
+    EarnProtocolEvents.pageViewed({
+      page: pathname,
+    })
+  }, [pathname])
 
   return (
     <div className={landingMasterPageStyles.mainContainer}>
