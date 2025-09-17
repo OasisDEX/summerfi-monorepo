@@ -55,15 +55,13 @@ async function generateDeclarations(): Promise<void> {
     const packagePath = path.resolve(packageFolder)
 
     if (!fs.existsSync(packagePath)) {
-      console.error(`❌ Package folder does not exist: ${packagePath}`)
-      continue
+      throw new Error(`❌ Package folder does not exist: ${packagePath}`)
     }
 
     // Check if package.json exists
     const packageJsonPath = path.join(packagePath, 'package.json')
     if (!fs.existsSync(packageJsonPath)) {
-      console.error(`❌ package.json not found in: ${packagePath}`)
-      continue
+      throw new Error(`❌ package.json not found in: ${packagePath}`)
     }
 
     try {
@@ -72,14 +70,15 @@ async function generateDeclarations(): Promise<void> {
       execSync('pnpm declarations', {
         cwd: packagePath,
         stdio: 'inherit',
-        timeout: 60000, // 60 second timeout
+        timeout: 300000, // 5 min timeout
       })
 
       // Check if declarations folder exists
       const declarationsPath = path.join(packagePath, 'declarations')
       if (!fs.existsSync(declarationsPath)) {
-        console.error(`❌ Declarations folder not found after running command: ${declarationsPath}`)
-        continue
+        throw new Error(
+          `❌ Declarations folder not found after running command: ${declarationsPath}`,
+        )
       }
 
       // Copy declarations to target location
@@ -97,8 +96,7 @@ async function generateDeclarations(): Promise<void> {
       console.log(`   ✅ Successfully processed ${packageName}\n`)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error)
-      console.error(`❌ Error processing ${packageName}:`, errorMessage)
-      console.error(`   Failed at: ${packagePath}\n`)
+      throw new Error(`❌ Error processing ${packagePath} ${packageName}: ${errorMessage}`)
     }
   }
 
@@ -133,7 +131,7 @@ function updateReexportsFile(): void {
     console.log('   ✅ Successfully updated reexports.d.ts')
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    console.error('❌ Error updating reexports.d.ts:', errorMessage)
+    throw new Error(`❌ Error updating reexports.d.ts: ${errorMessage}`)
   }
 }
 
