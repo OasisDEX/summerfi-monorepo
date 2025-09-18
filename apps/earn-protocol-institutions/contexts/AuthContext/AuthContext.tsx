@@ -173,7 +173,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     if (me.user.isGlobalAdmin) {
       replace('/admin/institutions')
     } else if (me.user.institutionsList?.[0]?.name) {
-      replace(`${me.user.institutionsList[0].name}/overview`)
+      replace(`${me.user.institutionsList[0].name}/overview/institution`)
     }
   }
 

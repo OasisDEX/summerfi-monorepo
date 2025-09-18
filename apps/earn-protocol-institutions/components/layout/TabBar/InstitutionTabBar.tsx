@@ -27,7 +27,7 @@ export const InstitutionTabBar = ({
           label: 'Overview',
           url: getInstitutionUrl({
             institutionId,
-            tab: 'overview',
+            tab: 'overview/institution',
           }),
         },
         {

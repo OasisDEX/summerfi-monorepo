@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "cardGradientDark": string;
+  readonly "cardGradientFull": string;
   readonly "cardGradientLight": string;
   readonly "cardPrimary": string;
   readonly "cardPrimaryColorfulBorder": string;

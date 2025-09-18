@@ -8,7 +8,7 @@
   .staticItemsList {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-space-x-large);
+    gap: var(--spacing-space-medium);
     align-items: flex-start;
     margin-bottom: var(--spacing-space-x-large);
 

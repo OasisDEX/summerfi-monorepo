@@ -130,7 +130,7 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({
         )}
       {staticItems && staticItems.length > 0 && (
         <>
-          <div className={styles.panelNavigationSeparator} />
+          {navigation && <div className={styles.panelNavigationSeparator} />}
           <div className={styles.staticItemsList}>
             {staticItems.map((item) => (
               <ButtonOrLink key={item.id} link={item.link} onClick={item.action}>
