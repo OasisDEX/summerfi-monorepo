@@ -122,7 +122,7 @@ console.log(
 ### Create Deposit Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
+import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -202,7 +202,7 @@ const hash = this.walletClient.sendTransaction({
 ### Create Withdraw Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
+import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -495,7 +495,7 @@ chain.
 **Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
+import { ChainIds } from '@summer_fi/sdk-client'
 
 // Check if user has authorized AdmiralsQuarters as operator
 const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
@@ -821,8 +821,7 @@ console.log('Cancel result:', cancelResult.result)
 Here's a complete example demonstrating the full intent swap workflow:
 
 ```tsx
-import { makeSDKWithSigner } from '@summer_fi/sdk-client'
-import { TokenAmount, ChainIds, Address } from '@summer_fi/sdk-common'
+import { makeSDKWithSigner, TokenAmount, ChainIds, Address } from '@summer_fi/sdk-client'
 import { Wallet } from 'ethers'
 
 // Setup
