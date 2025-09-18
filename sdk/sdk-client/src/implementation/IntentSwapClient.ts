@@ -16,6 +16,12 @@ import { Price } from '@summerfi/sdk-common'
 export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   private readonly _signer: SDKSigner
 
+  private _validateChainId(chainId: number) {
+    if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId as SupportedChainId)) {
+      throw new Error(`Unsupported chainId: ${chainId}`)
+    }
+  }
+
   public constructor(params: { rpcClient: RPCMainClientType; signer: SDKSigner }) {
     super(params)
     this._signer = params.signer
@@ -44,9 +50,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   /** @see IIntentSwapClient.sendOrder */
   sendOrder: IIntentSwapClient['sendOrder'] = async (params) => {
     // validate chainId
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
-      throw new Error(`Unsupported chainId: ${params.chainId}`)
-    }
+    this._validateChainId(params.chainId)
 
     const signer = this._signer
 
@@ -68,9 +72,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   /** @see IIntentSwapClient.cancelOrder */
   cancelOrder: IIntentSwapClient['cancelOrder'] = async (params) => {
     // validate chainId
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
-      throw new Error(`Unsupported chainId: ${params.chainId}`)
-    }
+    this._validateChainId(params.chainId)
 
     const signer = this._signer
 
@@ -90,9 +92,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   /** @see IIntentSwapClient.checkOrder */
   checkOrder: IIntentSwapClient['checkOrder'] = async (params) => {
     // validate chainId
-    if (!ALL_SUPPORTED_CHAIN_IDS.includes(params.chainId as SupportedChainId)) {
-      throw new Error(`Unsupported chainId: ${params.chainId}`)
-    }
+    this._validateChainId(params.chainId)
 
     return this.rpcClient.intentSwaps.checkOrder.query({
       chainId: params.chainId,
