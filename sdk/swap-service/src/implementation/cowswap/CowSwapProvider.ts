@@ -123,8 +123,15 @@ export class CowSwapProvider
       amount: quote.buyAmount,
     })
 
+    const fromAmountBN = new BigNumber(params.fromAmount.amount)
+
+    const quotePriceValue =
+      fromAmountBN.isZero() || fromAmountBN.isNaN() || fromAmountBN.isNegative()
+        ? '0'
+        : new BigNumber(buyAmount.amount).dividedBy(fromAmountBN).toString()
+
     const quotePrice = Price.createFrom({
-      value: new BigNumber(buyAmount.amount).dividedBy(params.fromAmount.amount).toString(),
+      value: quotePriceValue,
       base: params.fromAmount.token,
       quote: params.toToken,
     })
@@ -269,7 +276,7 @@ export class CowSwapProvider
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      console.error('Error sending order to CowSwap:', e?.body?.errorType)
+      LoggingService.error('Error sending order to CowSwap:', e?.body?.errorType)
       throw new Error(`Failed to send order: ${e?.body?.errorType}`)
     }
   }

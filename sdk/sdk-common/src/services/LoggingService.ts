@@ -10,4 +10,8 @@ export class LoggingService {
       console.info(...messages)
     }
   }
+
+  static error(...messages: unknown[]) {
+    console.error(...messages)
+  }
 }
