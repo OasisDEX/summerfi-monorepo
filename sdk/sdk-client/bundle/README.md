@@ -194,8 +194,8 @@ if (transactions.length == 2) {
 const txInfo = transactions[0]
 const hash = this.walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
+  value: BigInt(txInfo.transaction.value),
 })
 ```
 
@@ -247,8 +247,8 @@ const transactions = await sdk.armada.users.getWithdrawTx({
 const txInfo = transactions[0]
 const hash = this.walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
+  value: BigInt(txInfo.transaction.value),
 })
 ```
 
@@ -540,7 +540,7 @@ console.log('Authorization transaction:', tx.transaction)
 const result = await wallet.sendTransaction({
   to: tx.transaction.target,
   data: tx.transaction.calldata,
-  value: tx.transaction.value,
+  value: BigInt(tx.transaction.value),
 })
 ```
 
@@ -689,8 +689,7 @@ export const sdk = makeSDKWithSigner({
 Get a quote for swapping tokens with optional limit price:
 
 ```tsx
-import { TokenAmount, ChainIds } from '@summer_fi/sdk-common'
-import { makeSDKWithSigner } from '@summer_fi/sdk-client'
+import { makeSDKWithSigner, TokenAmount, ChainIds, Address } from '@summer_fi/sdk-client'
 
 // Create SDK with signer for intent swaps
 const sdk = makeSDKWithSigner({
@@ -750,7 +749,7 @@ do {
       const wrapTx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
-        value: orderResult.transactionInfo.transaction.value,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
       })
       await wrapTx.wait()
       console.log('Native currency wrapped successfully')
@@ -762,7 +761,7 @@ do {
       const approveTx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
-        value: orderResult.transactionInfo.transaction.value,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
       })
       await approveTx.wait()
       console.log('Token approved successfully')
@@ -874,7 +873,7 @@ async function performIntentSwap() {
       const tx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
-        value: orderResult.transactionInfo.transaction.value,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
       })
       await tx.wait()
       console.log('✅ Native currency wrapped')
@@ -883,6 +882,7 @@ async function performIntentSwap() {
       const tx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
       })
       await tx.wait()
       console.log('✅ Token approved')
@@ -1428,8 +1428,11 @@ enum FiatCurrency {
 
 **Breaking Changes:**
 
-- **SDK Version**: Bumped to v2.0.0 to reflect major new capabilities but there are no breaking
-  changes to existing functionalities
+- `@summerfi/sdk-common` package was deprecated and merged into `@summerfi/sdk-client`
+
+**Migration steps:**
+
+- Update all imports to use `@summerfi/sdk-client` only
 
 ### v1.1.0
 
