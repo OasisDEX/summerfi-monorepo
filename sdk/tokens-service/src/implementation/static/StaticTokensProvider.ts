@@ -5,6 +5,7 @@ import {
   ChainId,
   IChainInfo,
   IToken,
+  IAddress,
   Maybe,
   Token,
   TokenAmount,
@@ -144,7 +145,7 @@ export class StaticTokensProvider
   private async _getTokenBalance(params: {
     chainInfo: IChainInfo
     token: IToken
-    walletAddress: Address
+    walletAddress: IAddress
   }): Promise<bigint> {
     const { chainInfo, token, walletAddress } = params
 
