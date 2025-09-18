@@ -119,57 +119,37 @@ export class StaticTokensProvider
   getTokenBalanceBySymbol: ITokensProvider['getTokenBalanceBySymbol'] = async (params) => {
     const token = this.getTokenBySymbol({ chainInfo: params.chainInfo, symbol: params.symbol })
 
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: params.chainInfo,
-    })
+    const balance = await this._getTokenBalance({ chainInfo: params.chainInfo, token, walletAddress: params.walletAddress })
 
-    // check token address is native currency address
-    let balance: bigint
-    if (token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
-      // check native currency balance
-      balance = await client.getBalance({ address: params.walletAddress.value })
-    } else {
-      // check erc20 token balance using viem
-      balance = await client.readContract({
-        address: token.address.value,
-        abi: erc20Abi,
-        functionName: 'balanceOf',
-        args: [params.walletAddress.value],
-      })
-    }
-
-    return TokenAmount.createFromBaseUnit({
-      token,
-      amount: balance.toString(),
-    })
+    return TokenAmount.createFromBaseUnit({ token, amount: balance.toString() })
   }
 
   /** @see ITokensProvider.getTokenBalanceByAddress */
   getTokenBalanceByAddress: ITokensProvider['getTokenBalanceByAddress'] = async (params) => {
     const token = this.getTokenByAddress({ chainInfo: params.chainInfo, address: params.address })
 
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: params.chainInfo,
-    })
+    const balance = await this._getTokenBalance({ chainInfo: params.chainInfo, token, walletAddress: params.walletAddress })
+
+    return TokenAmount.createFromBaseUnit({ token, amount: balance.toString() })
+  }
+
+  private async _getTokenBalance(params: { chainInfo: IChainInfo; token: IToken; walletAddress: Address; }): Promise<bigint> {
+    const { chainInfo, token, walletAddress } = params
+
+    const client = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
 
     // check token address is native currency address
-    let balance: bigint
     if (token.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
       // check native currency balance
-      balance = await client.getBalance({ address: params.walletAddress.value })
-    } else {
-      // check erc20 token balance using viem
-      balance = await client.readContract({
-        address: token.address.value,
-        abi: erc20Abi,
-        functionName: 'balanceOf',
-        args: [params.walletAddress.value],
-      })
+      return await client.getBalance({ address: walletAddress.value })
     }
 
-    return TokenAmount.createFromBaseUnit({
-      token,
-      amount: balance.toString(),
+    // check erc20 token balance using viem
+    return await client.readContract({
+      address: token.address.value,
+      abi: erc20Abi,
+      functionName: 'balanceOf',
+      args: [walletAddress.value],
     })
   }
 
