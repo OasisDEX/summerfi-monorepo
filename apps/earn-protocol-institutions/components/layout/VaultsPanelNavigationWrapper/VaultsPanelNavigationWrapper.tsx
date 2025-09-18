@@ -95,7 +95,7 @@ export const VaultsPanelNavigationWrapper = ({
       navigation={navigation}
       staticItems={[
         {
-          id: '1',
+          id: 'request-new-market',
           label: (
             <IconWithText iconName="plus" size={20}>
               Request a new market
@@ -105,7 +105,7 @@ export const VaultsPanelNavigationWrapper = ({
           action: () => console.log('Request a new market'),
         },
         {
-          id: '2',
+          id: 'help-support',
           label: (
             <IconWithText iconName="question_o" size={20}>
               Help & Support

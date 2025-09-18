@@ -12,8 +12,8 @@ interface IconWithTextProps {
 export const IconWithText: FC<IconWithTextProps> = ({ iconName, tokenName, children, size }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}>
-      {iconName && <Icon iconName={iconName} size={size} />}
-      {tokenName && <Icon tokenName={tokenName} size={size} />}
+      {iconName && <Icon iconName={iconName} size={size} style={{ width: '24px' }} />}
+      {tokenName && <Icon tokenName={tokenName} size={size} style={{ width: '24px' }} />}
       {children}
     </div>
   )

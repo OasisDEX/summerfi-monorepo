@@ -8,6 +8,7 @@
 .cardSecondaryMediumPaddingsColorfulBorder,
 .cardGradientLight,
 .cardGradientDark,
+.cardGradientFull,
 .cardPrimarySmallPaddings,
 .cardPrimaryMediumPaddings,
 .cardSecondarySmallPaddings,
@@ -29,6 +30,7 @@
   .cardSecondaryMediumPaddingsColorfulBorder,
   .cardGradientLight,
   .cardGradientDark,
+  .cardGradientFull,
   .cardPrimarySmallPaddings,
   .cardPrimaryMediumPaddings,
   .cardSecondarySmallPaddings,
@@ -42,7 +44,8 @@
 .cardSecondary,
 .cardSecondaryColorfulBorder,
 .cardGradientLight,
-.cardGradientDark {
+.cardGradientDark,
+.cardGradientFull {
   padding: var(--general-space-24);
 }
 
@@ -81,6 +84,10 @@
 
 .cardGradientDark {
   background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-dark-10);
+}
+
+.cardGradientFull {
+  background: var(--earn-protocol-neutral-100) var(--gradient-earn-protocol-light);
 }
 
 .cardPrimaryColorfulBorder,
