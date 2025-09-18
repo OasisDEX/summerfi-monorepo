@@ -4,8 +4,8 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "OLD_db:migrate": "dotenv -e ../../.env -e ../../.env.local -- prisma migrate dev",
-    "OLD_prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- prisma generate",
+    "db:migrate": "dotenv -e ../../.env -e ../../.env.local -- prisma migrate dev",
+    "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- prisma generate",
     "db:push": "dotenv -e ../../.env -e ../../.env.local -- prisma db push --skip-generate"
   },
   "dependencies": {
