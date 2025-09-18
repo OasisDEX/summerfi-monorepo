@@ -119,7 +119,11 @@ export class StaticTokensProvider
   getTokenBalanceBySymbol: ITokensProvider['getTokenBalanceBySymbol'] = async (params) => {
     const token = this.getTokenBySymbol({ chainInfo: params.chainInfo, symbol: params.symbol })
 
-    const balance = await this._getTokenBalance({ chainInfo: params.chainInfo, token, walletAddress: params.walletAddress })
+    const balance = await this._getTokenBalance({
+      chainInfo: params.chainInfo,
+      token,
+      walletAddress: params.walletAddress,
+    })
 
     return TokenAmount.createFromBaseUnit({ token, amount: balance.toString() })
   }
@@ -128,12 +132,20 @@ export class StaticTokensProvider
   getTokenBalanceByAddress: ITokensProvider['getTokenBalanceByAddress'] = async (params) => {
     const token = this.getTokenByAddress({ chainInfo: params.chainInfo, address: params.address })
 
-    const balance = await this._getTokenBalance({ chainInfo: params.chainInfo, token, walletAddress: params.walletAddress })
+    const balance = await this._getTokenBalance({
+      chainInfo: params.chainInfo,
+      token,
+      walletAddress: params.walletAddress,
+    })
 
     return TokenAmount.createFromBaseUnit({ token, amount: balance.toString() })
   }
 
-  private async _getTokenBalance(params: { chainInfo: IChainInfo; token: IToken; walletAddress: Address; }): Promise<bigint> {
+  private async _getTokenBalance(params: {
+    chainInfo: IChainInfo
+    token: IToken
+    walletAddress: Address
+  }): Promise<bigint> {
     const { chainInfo, token, walletAddress } = params
 
     const client = this._blockchainClientProvider.getBlockchainClient({ chainInfo })
