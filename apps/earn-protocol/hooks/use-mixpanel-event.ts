@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useRef } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
@@ -7,172 +8,229 @@ import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
-export const useHandleTooltipOpenEvent = () => {
+type EP = typeof EarnProtocolEvents
+type HandlerKey = keyof EP
+type EventArgs<K extends HandlerKey> = K extends HandlerKey ? Parameters<EP[K]>[0] : never
+
+type PendingEvent = {
+  handlerKey: HandlerKey
+  params: {
+    [key: string]: any
+  }
+}
+
+/**
+ * Module-level queue of events fired while account is loading.
+ * Each hook can use `useMixpanelTracker()` to get a `track` function that:
+ * - immediately sends event when account is ready
+ * - enqueues event (including page + minimal params) while account is loading
+ * When any hook observing `isLoadingAccount` sees it switch to false, it flushes the queue
+ * merging the latest userData into each event.
+ */
+
+const pendingQueue: PendingEvent[] = []
+
+const flushPending = (userData: { [key: string]: any } = {}) => {
+  while (pendingQueue.length) {
+    const { handlerKey, params } = pendingQueue.shift() as PendingEvent
+
+    try {
+      const handler = EarnProtocolEvents[handlerKey]
+
+      if (typeof handler === 'function') {
+        // cast to any to avoid TS requiring full event shape for flushed items
+        const fn = handler as unknown as (p: { [key: string]: any }) => void
+
+        fn({
+          ...params,
+          ...userData,
+        })
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('Mixpanel handler missing for', handlerKey)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error tracking flushed event', error)
+    }
+  }
+}
+
+/**
+ * Global hook that adds user/context params and handles queueing while account loads.
+ * Returns a `track` function: (handlerKey, params) => void
+ */
+
+export const useMixpanelTracker = () => {
   const pathname = usePathname()
   const user = useUser()
   const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
   const { chain } = useChain()
 
-  const userData = !isLoadingAccount
-    ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-    : {}
+  const userData = useMemo(() => {
+    if (isLoadingAccount) return {}
 
-  return debounce((tooltipName: string) => {
-    EarnProtocolEvents.tooltipHovered({
-      page: pathname,
-      tooltipName: `ep-${tooltipName}`,
-      ...userData,
-    })
-  }, 500)
+    return {
+      walletAddress,
+      connectionMethod: user?.type ?? null,
+      network: chain.name,
+    } as { [key: string]: any }
+  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+
+  useEffect(() => {
+    if (!isLoadingAccount) {
+      flushPending(userData)
+    }
+  }, [isLoadingAccount, userData])
+
+  const track = useCallback(
+    <K extends HandlerKey>(
+      handlerKey: K,
+      params: Partial<EventArgs<K>> = {} as Partial<EventArgs<K>>,
+    ) => {
+      const baseParams = { page: pathname, ...(params as { [key: string]: any }) }
+
+      if (isLoadingAccount) {
+        pendingQueue.push({ handlerKey, params: baseParams })
+
+        return
+      }
+
+      try {
+        const handler = EarnProtocolEvents[handlerKey]
+
+        if (typeof handler === 'function') {
+          // cast to EventArgs<K> at the callsite — we intentionally accept Partial input and merge userData
+          const fn = handler as unknown as (p: EventArgs<K>) => void
+
+          fn({
+            ...baseParams,
+            ...userData,
+          } as EventArgs<K>)
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn('Mixpanel handler missing for', handlerKey)
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error tracking event', error)
+      }
+    },
+    [isLoadingAccount, pathname, userData],
+  )
+
+  return track
+}
+
+export const useHandleTooltipOpenEvent = () => {
+  const track = useMixpanelTracker()
+
+  return useMemo(
+    () =>
+      debounce((tooltipName: string) => {
+        track('tooltipHovered', { tooltipName: `ep-${tooltipName}` })
+      }, 500) as unknown as (tooltipName: string) => void,
+    [track],
+  )
 }
 
 export const useHandleButtonClickEvent = () => {
-  const pathname = usePathname()
-  const user = useUser()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
+  const track = useMixpanelTracker()
 
-  const userData = !isLoadingAccount
-    ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-    : {}
-
-  return debounce((buttonName: string) => {
-    try {
-      EarnProtocolEvents.buttonClicked({
-        page: pathname,
-        buttonName: `ep-${buttonName}`,
-        ...userData,
-      })
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Error tracking button click', error)
-    }
-  }, 500)
+  return useMemo(
+    () =>
+      debounce((buttonName: string) => {
+        track('buttonClicked', { buttonName: `ep-${buttonName}` })
+      }, 500) as unknown as (buttonName: string) => void,
+    [track],
+  )
 }
 
 export const useHandleTransactionEvent = () => {
-  const pathname = usePathname()
-  const user = useUser()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
+  const track = useMixpanelTracker()
 
-  const userData = !isLoadingAccount
-    ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-    : {}
+  return ({
+    transactionType,
+    txEvent,
+    txAmount,
+    vaultSlug,
+    txHash,
+    result,
+  }: {
+    transactionType: EarnProtocolTransactionEventProps['transactionType']
+    vaultSlug?: EarnProtocolTransactionEventProps['vaultSlug']
+    txHash?: EarnProtocolTransactionEventProps['txHash']
+    txAmount?: EarnProtocolTransactionEventProps['txAmount']
+    result?: EarnProtocolTransactionEventProps['result']
+    txEvent:
+      | 'transactionSimulated'
+      | 'transactionSubmitted'
+      | 'transactionConfirmed'
+      | 'transactionSuccess'
+      | 'transactionFailure'
+  }) => {
+    const handlerKey = txEvent as keyof typeof EarnProtocolEvents
 
-  return debounce(
-    ({
-      transactionType,
-      txEvent,
-      vaultSlug,
-      txHash,
-      result,
-    }: {
-      transactionType: EarnProtocolTransactionEventProps['transactionType']
-      vaultSlug?: EarnProtocolTransactionEventProps['vaultSlug']
-      txHash?: EarnProtocolTransactionEventProps['txHash']
-      result?: EarnProtocolTransactionEventProps['result']
-      txEvent:
-        | 'transactionSimulated'
-        | 'transactionSubmitted'
-        | 'transactionConfirmed'
-        | 'transactionSuccess'
-        | 'transactionFailure'
-    }) => {
-      const eventHandler = EarnProtocolEvents[txEvent]
-
-      eventHandler({
-        page: pathname,
-        transactionType,
-        vaultSlug,
-        txHash,
-        result,
-        ...userData,
-      })
-    },
-    500,
-  )
+    track(handlerKey, { transactionType, vaultSlug, txAmount, txHash, result })
+  }
 }
 
 export const useHandleDropdownChangeEvent = () => {
-  const pathname = usePathname()
-  const user = useUser()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
-
-  const userData = useMemo(() => {
-    return !isLoadingAccount
-      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-      : {}
-  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+  const track = useMixpanelTracker()
 
   const handleEvent = useCallback(
     ({ inputName, value }: { inputName: string; value: string }) => {
-      EarnProtocolEvents.dropdownChanged({
-        page: pathname,
-        dropdownName: `ep-${inputName}`,
-        value,
-        ...userData,
-      })
+      track('dropdownChanged', { dropdownName: `ep-${inputName}`, value })
     },
-    [pathname, userData],
+    [track],
   )
 
-  return useMemo(() => debounce(handleEvent, 500), [handleEvent])
+  return useMemo(
+    () =>
+      debounce(handleEvent, 500) as unknown as (payload: {
+        inputName: string
+        value: string
+      }) => void,
+    [handleEvent],
+  )
 }
 
 export const useHandleInputChangeEvent = () => {
-  const pathname = usePathname()
-  const user = useUser()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
-
-  const userData = useMemo(() => {
-    return !isLoadingAccount
-      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-      : {}
-  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+  const track = useMixpanelTracker()
 
   const handleEvent = useCallback(
     ({ inputName, value }: { inputName: string; value: string }) => {
-      EarnProtocolEvents.inputChanged({
-        page: pathname,
-        inputName: `ep-${inputName}`,
-        value,
-        ...userData,
-      })
+      track('inputChanged', { inputName: `ep-${inputName}`, value })
     },
-    [pathname, userData],
+    [track],
   )
 
-  return useMemo(() => debounce(handleEvent, 500), [handleEvent])
+  return useMemo(
+    () =>
+      debounce(handleEvent, 500) as unknown as (payload: {
+        inputName: string
+        value: string
+      }) => void,
+    [handleEvent],
+  )
 }
 
 export const useDisplayBannerEvent: () => ({ bannerName }: { bannerName: string }) => void = () => {
+  const track = useMixpanelTracker()
   const hasFiredRef = useRef(false)
-  const pathname = usePathname()
-  const user = useUser()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
-
-  const userData = useMemo(() => {
-    return !isLoadingAccount
-      ? { walletAddress, connectionMethod: user?.type, network: chain.name }
-      : {}
-  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
 
   const handleEvent = useCallback(
     ({ bannerName }: { bannerName: string }) => {
       if (hasFiredRef.current) return
-      EarnProtocolEvents.customEvent({
-        page: pathname,
-        customEventName: `ep-banner-displayed-${bannerName}`,
-        ...userData,
-      })
+      track('customEvent', { customEventName: `ep-banner-displayed-${bannerName}` })
       hasFiredRef.current = true
     },
-    [pathname, userData],
+    [track],
   )
 
-  return useMemo(() => throttle(handleEvent, 10000), [handleEvent])
+  return useMemo(
+    () =>
+      throttle(handleEvent, 10000) as unknown as ({ bannerName }: { bannerName: string }) => void,
+    [handleEvent],
+  )
 }

@@ -195,6 +195,7 @@ export const useTransaction = ({
 
         transactionEventHandler({
           transactionType: isWithdraw ? 'withdraw' : 'deposit',
+          txAmount: amount.isGreaterThan(0) ? `${amount.toString()} ${token.symbol}` : undefined,
           txEvent: 'transactionSimulated',
           vaultSlug: slugifyVault(vault),
           result: 'success',
@@ -210,6 +211,7 @@ export const useTransaction = ({
         transactionEventHandler({
           transactionType: isWithdraw ? 'withdraw' : 'deposit',
           txEvent: 'transactionSimulated',
+          txAmount: amount.isGreaterThan(0) ? `${amount.toString()} ${token.symbol}` : undefined,
           vaultSlug: slugifyVault(vault),
           result: 'failure',
         })
@@ -243,6 +245,8 @@ export const useTransaction = ({
         transactionEventHandler({
           transactionType: 'vault-switch',
           txEvent: 'transactionSimulated',
+          txAmount:
+            amount && amount.gt(0) ? `${amount.toString()} ${vaultToken.symbol}` : undefined,
           vaultSlug: slugifyVault(vault),
           result: 'success',
         })
@@ -254,6 +258,8 @@ export const useTransaction = ({
         transactionEventHandler({
           transactionType: 'vault-switch',
           txEvent: 'transactionSimulated',
+          txAmount:
+            amount && amount.gt(0) ? `${amount.toString()} ${vaultToken.symbol}` : undefined,
           vaultSlug: slugifyVault(vault),
           result: 'failure',
         })
@@ -298,6 +304,10 @@ export const useTransaction = ({
       transactionEventHandler({
         transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
         txEvent: 'transactionSubmitted',
+        txAmount:
+          amount && amount.isGreaterThan(0) && token
+            ? `${amount.toString()} ${token.symbol}`
+            : undefined,
         result: 'success',
         txHash: hash,
         vaultSlug: slugifyVault(vault),
@@ -344,6 +354,10 @@ export const useTransaction = ({
       transactionEventHandler({
         transactionType: isWithdraw ? 'withdraw' : isDeposit ? 'deposit' : 'vault-switch',
         txEvent: 'transactionSubmitted',
+        txAmount:
+          amount && amount.isGreaterThan(0) && token
+            ? `${amount.toString()} ${token.symbol}`
+            : undefined,
         result: 'failure',
         vaultSlug: slugifyVault(vault),
       })

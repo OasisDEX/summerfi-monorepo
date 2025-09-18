@@ -59,6 +59,7 @@ export interface EarnProtocolViewPositionEventProps extends EarnProtocolBaseEven
 export interface EarnProtocolTransactionEventProps extends EarnProtocolBaseEventProps {
   transactionType: 'deposit' | 'withdraw' | 'vault-switch' | 'other'
   vaultSlug?: string // vault info
+  txAmount?: string // optional amount + token (e.g. "1000 USDC")
   result?: 'success' | 'failure'
   txHash?: string // only available after submit
   errorMessage?: string // optional if failed
