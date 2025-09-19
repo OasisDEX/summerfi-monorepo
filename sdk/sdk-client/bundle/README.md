@@ -192,7 +192,7 @@ if (transactions.length == 2) {
 
 // example using viem
 const txInfo = transactions[0]
-const hash = this.walletClient.sendTransaction({
+const hash = await walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
   data: txInfo.transaction.calldata,
   value: BigInt(txInfo.transaction.value),
@@ -245,7 +245,7 @@ const transactions = await sdk.armada.users.getWithdrawTx({
 
 // example using viem
 const txInfo = transactions[0]
-const hash = this.walletClient.sendTransaction({
+const hash = await walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
   data: txInfo.transaction.calldata,
   value: BigInt(txInfo.transaction.value),
@@ -404,7 +404,7 @@ if (claimTransactions) {
   console.log('Claim transaction:', tx.transaction)
 
   // Send transaction using your wallet
-  const result = await wallet.sendTransaction({
+  const result = await walletClient.sendTransaction({
     to: tx.transaction.target.value,
     data: tx.transaction.calldata,
     value: BigInt(tx.transaction.value),
@@ -455,7 +455,7 @@ if (claimTransactions) {
   console.log('Claim transaction:', tx.transaction)
 
   // Send transaction using your wallet
-  const result = await wallet.sendTransaction({
+  const result = await walletClient.sendTransaction({
     to: tx.transaction.target.value,
     data: tx.transaction.calldata,
     value: BigInt(tx.transaction.value),
@@ -537,7 +537,7 @@ const tx = authTransactions[0]
 console.log('Authorization transaction:', tx.transaction)
 
 // Send transaction using your wallet
-const result = await wallet.sendTransaction({
+const result = await walletClient.sendTransaction({
   to: tx.transaction.target,
   data: tx.transaction.calldata,
   value: BigInt(tx.transaction.value),
@@ -746,7 +746,7 @@ do {
     case 'wrap_to_native':
       console.log('Need to wrap native currency (ETH) to wrapped version (WETH)')
       // Execute the wrapping transaction
-      const wrapTx = await wallet.sendTransaction({
+      const wrapTx = await walletClient.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
@@ -758,7 +758,7 @@ do {
     case 'allowance_needed':
       console.log('Need to approve token spending')
       // Execute the approval transaction
-      const approveTx = await wallet.sendTransaction({
+      const approveTx = await walletClient.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
@@ -869,7 +869,7 @@ async function performIntentSwap() {
 
     if (orderResult.status === 'wrap_to_native') {
       console.log('Wrapping native currency (ETH) to wrapped version (WETH)...')
-      const tx = await wallet.sendTransaction({
+      const tx = await walletClient.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
@@ -878,7 +878,7 @@ async function performIntentSwap() {
       console.log('✅ Native currency wrapped')
     } else if (orderResult.status === 'allowance_needed') {
       console.log('Approving token...')
-      const tx = await wallet.sendTransaction({
+      const tx = await walletClient.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
