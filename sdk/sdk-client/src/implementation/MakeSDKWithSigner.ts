@@ -3,20 +3,18 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManagerWithSigner } from './SDKManagerWithSigner'
 import { version as sdkClientVersion } from '../../bundle/package.json'
+import type { MakeSDKParams } from './MakeSDK'
 
 export type SDKSigner = Signer
 
-export type MakeSDKParams = {
-  logging?: boolean
-  signer: SDKSigner
-} & ({ apiDomainUrl: string } | { apiURL: string })
+export type MakeSDKWithSignerParams = MakeSDKParams & { signer: SDKSigner }
 
 /*
  * makeSDK is a factory function that creates an instance of SDKManager.
  * It can take either an apiDomainUrl or a direct apiURL, along with an optional logging flag.
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
-export function makeSDKWithSigner(params: MakeSDKParams) {
+export function makeSDKWithSigner(params: MakeSDKWithSignerParams) {
   const apiVersion = `v${sdkClientVersion.charAt(0)}`
   let versionedURL: string
   // url based on domain

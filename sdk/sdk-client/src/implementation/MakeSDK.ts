@@ -2,7 +2,10 @@ import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
 import packageFile from '../../bundle/package.json'
 
-export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | { apiURL: string })
+export type MakeSDKParams = { logging?: boolean; version?: 'v1' | 'v2' } & (
+  | { apiDomainUrl: string }
+  | { apiURL: string }
+)
 
 /*
  * makeSDK is a factory function that creates an instance of SDKManager.
@@ -10,7 +13,7 @@ export type MakeSDKParams = { logging?: boolean } & ({ apiDomainUrl: string } | 
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
 export function makeSDK(params: MakeSDKParams) {
-  const apiVersion = `v${packageFile.version.charAt(0)}`
+  const apiVersion = params.version || `v${packageFile.version.charAt(0)}`
   let versionedURL: string
   // url based on domain
   if ('apiDomainUrl' in params) {

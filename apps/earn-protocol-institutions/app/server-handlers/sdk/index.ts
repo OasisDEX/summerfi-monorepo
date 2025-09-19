@@ -17,6 +17,7 @@ export const getInstitutionsSDK: (institutionId: string) => SDKAdminManager = (
   if (!apiClientsList[institutionId]) {
     apiClientsList[institutionId] = makeAdminSDK({
       clientId: institutionId, // institution ID
+      version: 'v1',
       apiDomainUrl: process.env.SDK_API_URL,
     })
   }
