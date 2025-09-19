@@ -1,7 +1,7 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKAdminManager } from './SDKAdminManager'
-import packageFile from '../../bundle/package.json'
 import type { MakeSDKParams } from './MakeSDK'
+import { getApiVersion } from '../utils/getApiVersion'
 
 export type MakeAdminSDKParams = MakeSDKParams & { clientId: string }
 
@@ -11,7 +11,7 @@ export type MakeAdminSDKParams = MakeSDKParams & { clientId: string }
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
 export function makeAdminSDK(params: MakeAdminSDKParams) {
-  const apiVersion = `v${packageFile.version.charAt(0)}`
+  const apiVersion = getApiVersion(params.version)
   let versionedURL: string
   // url based on domain
   if ('apiDomainUrl' in params) {
