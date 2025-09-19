@@ -1,11 +1,18 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { deleteWholeUser, getUserData } from '@/app/server-handlers/admin/user'
+import {
+  rootAdminActionDeleteWholeUser,
+  rootAdminActionGetUserData,
+} from '@/app/server-handlers/admin/user'
 
 import styles from './AdminPanelUsers.module.css'
 
-const DeleteUserForm = ({ user }: { user: Awaited<ReturnType<typeof getUserData>> }) => {
+const DeleteUserForm = ({
+  user,
+}: {
+  user: Awaited<ReturnType<typeof rootAdminActionGetUserData>>
+}) => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.editUserFormWrapper}>
@@ -13,7 +20,7 @@ const DeleteUserForm = ({ user }: { user: Awaited<ReturnType<typeof getUserData>
         <Text variant="p3">
           Deleting the user will remove: the DB entry in our DB and the cognito user pool entry.
         </Text>
-        <form action={deleteWholeUser} className={styles.editUserForm}>
+        <form action={rootAdminActionDeleteWholeUser} className={styles.editUserForm}>
           <div className={styles.formFields}>
             <input type="hidden" name="userSub" value={user.userSub} />
             <div className={styles.formField}>
@@ -80,7 +87,7 @@ export const AdminPanelUsersDelete = async ({ userDbId }: { userDbId: string }) 
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const user = await getUserData(Number(userDbId))
+  const user = await rootAdminActionGetUserData(Number(userDbId))
 
   return (
     <div className={styles.adminPanelUsers}>

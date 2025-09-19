@@ -1,8 +1,11 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { adminGetInstitutionsList } from '@/app/server-handlers/admin/institution'
-import { createUser, getUsersList } from '@/app/server-handlers/admin/user'
+import { rootAdminActionGetInstitutionsList } from '@/app/server-handlers/admin/institution'
+import {
+  rootAdminActionCreateUser,
+  rootAdminActionGetUsersList,
+} from '@/app/server-handlers/admin/user'
 import { usersAdminPanelColumns } from '@/features/admin/constants'
 import { institutionsAdminPanelDisplayRow } from '@/features/admin/helpers'
 
@@ -11,13 +14,13 @@ import styles from './AdminPanelUsers.module.css'
 const AddUserForm = ({
   institutions,
 }: {
-  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
+  institutions: Awaited<ReturnType<typeof rootAdminActionGetInstitutionsList>>
 }) => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.addUserFormContainer}>
         <Text variant="h4">Add user</Text>
-        <form action={createUser} className={styles.addUserForm}>
+        <form action={rootAdminActionCreateUser} className={styles.addUserForm}>
           <div className={styles.formFields}>
             <div className={styles.formField}>
               <label htmlFor="email" className={styles.formLabel}>
@@ -66,7 +69,11 @@ const AddUserForm = ({
   )
 }
 
-const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>['users'] }) => {
+const UsersList = ({
+  users,
+}: {
+  users: Awaited<ReturnType<typeof rootAdminActionGetUsersList>>['users']
+}) => {
   return (
     <div className={styles.usersSection}>
       {users.length === 0 ? (
@@ -122,7 +129,10 @@ const UsersList = ({ users }: { users: Awaited<ReturnType<typeof getUsersList>>[
 }
 
 export const AdminPanelUsers = async () => {
-  const [{ users }, institutions] = await Promise.all([getUsersList(), adminGetInstitutionsList()])
+  const [{ users }, institutions] = await Promise.all([
+    rootAdminActionGetUsersList(),
+    rootAdminActionGetInstitutionsList(),
+  ])
 
   return (
     <div className={styles.container}>

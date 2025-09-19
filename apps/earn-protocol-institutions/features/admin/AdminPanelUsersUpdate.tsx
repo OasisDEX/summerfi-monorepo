@@ -2,8 +2,11 @@ import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
 import Link from 'next/link'
 
-import { adminGetInstitutionsList } from '@/app/server-handlers/admin/institution'
-import { getUserData, updateUser } from '@/app/server-handlers/admin/user'
+import { rootAdminActionGetInstitutionsList } from '@/app/server-handlers/admin/institution'
+import {
+  rootAdminActionGetUserData,
+  rootAdminActionUpdateUser,
+} from '@/app/server-handlers/admin/user'
 
 import styles from './AdminPanelUsers.module.css'
 
@@ -11,14 +14,14 @@ const UpdateUserForm = ({
   user,
   institutions,
 }: {
-  user: Awaited<ReturnType<typeof getUserData>>
-  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
+  user: Awaited<ReturnType<typeof rootAdminActionGetUserData>>
+  institutions: Awaited<ReturnType<typeof rootAdminActionGetInstitutionsList>>
 }) => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.editUserFormWrapper}>
         <Text variant="h4">Update User</Text>
-        <form action={updateUser} className={styles.editUserForm}>
+        <form action={rootAdminActionUpdateUser} className={styles.editUserForm}>
           <input type="hidden" name="userSub" value={user.userSub} />
           <div className={styles.formFields}>
             <div className={styles.formField}>
@@ -77,8 +80,8 @@ export const AdminPanelUsersUpdate = async ({ userDbId }: { userDbId: string }) 
     throw new Error('userDbId is required')
   }
   const [user, institutions] = await Promise.all([
-    getUserData(Number(userDbId)),
-    adminGetInstitutionsList(),
+    rootAdminActionGetUserData(Number(userDbId)),
+    rootAdminActionGetInstitutionsList(),
   ])
 
   return (

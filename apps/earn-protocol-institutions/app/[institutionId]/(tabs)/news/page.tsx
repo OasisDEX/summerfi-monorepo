@@ -1,4 +1,4 @@
-import { getInstitutionData } from '@/app/server-handlers/institution-data'
+import { getInstitutionData } from '@/app/server-handlers/institution/institution-data'
 import { DashboardNews } from '@/features/dashboard/components/DashboardNews/DashboardNews'
 
 export default async function InstitutionNewsTab({

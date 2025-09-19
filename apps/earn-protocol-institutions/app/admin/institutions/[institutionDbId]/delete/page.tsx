@@ -1,4 +1,4 @@
-import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { AdminPanelInstitutionsDelete } from '@/features/admin/AdminPanelInstitutionsDelete'
 
 export default async function DeleteInstitutionAdminPage({
@@ -8,7 +8,7 @@ export default async function DeleteInstitutionAdminPage({
     institutionDbId: string
   }>
 }) {
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const [awaitedParams] = await Promise.all([params])
 
   return <AdminPanelInstitutionsDelete institutionDbId={awaitedParams.institutionDbId} />

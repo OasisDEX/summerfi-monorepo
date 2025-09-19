@@ -2,7 +2,10 @@ import { Button } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { readSession } from '@/app/server-handlers/auth/session'
-import { getInstitutionData, getUserInstitutionsList } from '@/app/server-handlers/institution-data'
+import {
+  getInstitutionData,
+  getUserInstitutionsList,
+} from '@/app/server-handlers/institution/institution-data'
 import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
 
 import institutionMainLayoutStyles from './InstitutionMainLayout.module.css'

@@ -15,16 +15,22 @@ import {
   getSummerProtocolInstitutionDB,
   type UserRole,
 } from '@summerfi/summer-protocol-institutions-db'
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { getAttr } from '@/app/server-handlers/admin/helpers'
-import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
-export async function deleteCognitoUser(userSub: string) {
+// this is just a simple helper function to extract user attributes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getAttr = (u: any | undefined, key: string) => {
+  const list = u?.Attributes ?? u?.UserAttributes
+
+  return Array.isArray(list) ? list.find((a) => a.Name === key)?.Value : undefined
+}
+
+export async function rootAdminActionDeleteCognitoUser(userSub: string) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -65,9 +71,9 @@ export async function deleteCognitoUser(userSub: string) {
   }
 }
 
-export async function createUser(formData: FormData) {
+export async function rootAdminActionCreateUser(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const email = String(formData.get('email') ?? '')
     .trim()
     .toLowerCase()
@@ -181,9 +187,9 @@ export async function createUser(formData: FormData) {
   }
 }
 
-export async function deleteWholeUser(formData: FormData) {
+export async function rootAdminActionDeleteWholeUser(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -213,7 +219,7 @@ export async function deleteWholeUser(formData: FormData) {
 
     const [deleteDbUserResult, deleteCognitoUserResult] = await Promise.all([
       db.deleteFrom('institutionUsers').where('userSub', '=', userSub).execute(),
-      deleteCognitoUser(userSub),
+      rootAdminActionDeleteCognitoUser(userSub),
     ])
 
     // eslint-disable-next-line no-console
@@ -235,14 +241,13 @@ export async function deleteWholeUser(formData: FormData) {
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
-    revalidateTag('getUsersList')
     redirect('/admin/users')
   }
 }
 
-export async function updateUser(formData: FormData) {
+export async function rootAdminActionUpdateUser(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const fullName = String(formData.get('name') ?? '').trim()
   const roleRaw = formData.get('role')
   const institutionIdRaw = formData.get('institutionId')
@@ -331,14 +336,13 @@ export async function updateUser(formData: FormData) {
   } finally {
     cognitoClient.destroy()
     db.destroy()
-    revalidateTag('getUsersList')
     redirect('/admin/users')
   }
 }
 
-export async function getUsersList() {
+export async function rootAdminActionGetUsersList() {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -415,9 +419,9 @@ export async function getUsersList() {
   }
 }
 
-export async function getUserData(userDbId: number) {
+export async function rootAdminActionGetUserData(userDbId: number) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -481,9 +485,9 @@ export async function getUserData(userDbId: number) {
   }
 }
 
-export async function getGlobalAdminsList() {
+export async function rootAdminActionGetGlobalAdminsList() {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -546,9 +550,9 @@ export async function getGlobalAdminsList() {
   }
 }
 
-export async function getGlobalAdminData(userDbId: number) {
+export async function rootAdminActionGetGlobalAdminData(userDbId: number) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
   const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
   const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
@@ -604,9 +608,9 @@ export async function getGlobalAdminData(userDbId: number) {
   }
 }
 
-export async function createGlobalAdmin(formData: FormData) {
+export async function rootAdminActionCreateGlobalAdmin(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const email = formData.get('email')?.toString()
   const fullName = formData.get('name')?.toString()
 
@@ -676,15 +680,14 @@ export async function createGlobalAdmin(formData: FormData) {
 
     throw new Error('Failed to create global admin')
   } finally {
-    revalidateTag('getGlobalAdminsList')
     cognitoAdminClient.destroy()
     db.destroy()
   }
 }
 
-export async function deleteGlobalAdmin(formData: FormData) {
+export async function rootAdminActionDeleteGlobalAdmin(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const userSub = formData.get('userSub')
 
   if (typeof userSub !== 'string') {
@@ -715,7 +718,7 @@ export async function deleteGlobalAdmin(formData: FormData) {
     await db.deleteFrom('globalAdmins').where('userSub', '=', userSub).execute()
 
     // Delete the user from Cognito
-    await deleteCognitoUser(userSub)
+    await rootAdminActionDeleteCognitoUser(userSub)
 
     // eslint-disable-next-line no-console
     console.log(`Global admin deleted successfully: ${userSub}`)
@@ -726,16 +729,15 @@ export async function deleteGlobalAdmin(formData: FormData) {
 
     throw new Error('Failed to delete global admin')
   } finally {
-    revalidateTag('getGlobalAdminsList')
     cognitoAdminClient.destroy()
     db.destroy()
     redirect('/admin/global-admins')
   }
 }
 
-export async function updateGlobalAdmin(formData: FormData) {
+export async function rootAdminActionUpdateGlobalAdmin(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
   const fullName = formData.get('name')?.toString()
   const cognitoUserName = formData.get('cognitoUserName')
 
@@ -778,7 +780,6 @@ export async function updateGlobalAdmin(formData: FormData) {
 
     throw new Error('Failed to update global admin')
   } finally {
-    revalidateTag('getGlobalAdminsList')
     cognitoAdminClient.destroy()
     redirect('/admin/global-admins')
   }

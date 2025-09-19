@@ -1,7 +1,10 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { createGlobalAdmin, getGlobalAdminsList } from '@/app/server-handlers/admin/user'
+import {
+  rootAdminActionCreateGlobalAdmin,
+  rootAdminActionGetGlobalAdminsList,
+} from '@/app/server-handlers/admin/user'
 import { globalAdminsAdminPanelColumns } from '@/features/admin/constants'
 import { institutionsAdminPanelDisplayRow } from '@/features/admin/helpers'
 
@@ -20,7 +23,7 @@ const AddGlobalAdminForm = () => {
           Introduced by Stan Lee, it originally appeared as a closing narration in the 1962 Amazing
           Fantasy #15, and was later attributed to Uncle Ben as advice to the young Peter Parker.
         </Text>
-        <form action={createGlobalAdmin} className={styles.addUserForm}>
+        <form action={rootAdminActionCreateGlobalAdmin} className={styles.addUserForm}>
           <div className={styles.formFields}>
             <div className={styles.formField}>
               <label htmlFor="email" className={styles.formLabel}>
@@ -47,7 +50,7 @@ const AddGlobalAdminForm = () => {
 const AdminsList = ({
   admins,
 }: {
-  admins: Awaited<ReturnType<typeof getGlobalAdminsList>>['admins']
+  admins: Awaited<ReturnType<typeof rootAdminActionGetGlobalAdminsList>>['admins']
 }) => {
   return (
     <div className={styles.usersSection}>
@@ -103,7 +106,7 @@ const AdminsList = ({
 }
 
 export const AdminPanelGlobalAdmins = async () => {
-  const [{ admins }] = await Promise.all([getGlobalAdminsList()])
+  const [{ admins }] = await Promise.all([rootAdminActionGetGlobalAdminsList()])
 
   return (
     <div className={styles.container}>

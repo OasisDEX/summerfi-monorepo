@@ -1,15 +1,14 @@
 import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider'
 import { getSummerProtocolInstitutionDB } from '@summerfi/summer-protocol-institutions-db'
-import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { deleteCognitoUser } from '@/app/server-handlers/admin/user'
-import { validateGlobalAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { rootAdminActionDeleteCognitoUser } from '@/app/server-handlers/admin/user'
+import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
-export async function createInstitution(formData: FormData) {
+export async function rootAdminActionCreateInstitution(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -61,9 +60,9 @@ export async function createInstitution(formData: FormData) {
   }
 }
 
-export async function updateInstitution(formData: FormData) {
+export async function rootAdminActionUpdateInstitution(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -127,14 +126,14 @@ export async function updateInstitution(formData: FormData) {
     console.error('Error updating institution', error)
   } finally {
     db.destroy()
-    revalidateTag('getInstitutionsList')
+
     redirect('/admin/institutions')
   }
 }
 
-export async function deleteInstitution(formData: FormData) {
+export async function rootAdminActionDeleteInstitution(formData: FormData) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -176,7 +175,7 @@ export async function deleteInstitution(formData: FormData) {
           .deleteFrom('institutionUsers')
           .where('institutionId', '=', parsedInstitutionId)
           .execute(),
-        ...institutionUsers.map((user) => deleteCognitoUser(user.userSub)),
+        ...institutionUsers.map((user) => rootAdminActionDeleteCognitoUser(user.userSub)),
       ])
 
     // eslint-disable-next-line no-console
@@ -199,14 +198,14 @@ export async function deleteInstitution(formData: FormData) {
   } finally {
     db.destroy()
     cognitoAdminClient.destroy()
-    revalidateTag('getInstitutionsList')
+
     redirect('/admin/institutions')
   }
 }
 
-export async function adminGetInstitutionsList() {
+export async function rootAdminActionGetInstitutionsList() {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
@@ -227,9 +226,9 @@ export async function adminGetInstitutionsList() {
   })
 }
 
-export async function getInstitutionData(institutionDbId: number) {
+export async function rootAdminActionGetInstitutionData(institutionDbId: number) {
   'use server'
-  await validateGlobalAdminSession()
+  await rootAdminValidateAdminSession()
 
   const { db } = await getSummerProtocolInstitutionDB({
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,

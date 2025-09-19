@@ -1,6 +1,6 @@
 import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 
-import { getInstitutionVault } from '@/app/server-handlers/institution-vaults'
+import { getInstitutionVault } from '@/app/server-handlers/institution/institution-vaults'
 import { PanelFeeRevenueAdmin } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/PanelFeeRevenueAdmin'
 
 const dummyThirdPartyCosts = [

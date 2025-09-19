@@ -1,6 +1,6 @@
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
-import { getInstitutionVaults } from '@/app/server-handlers/institution-vaults'
+import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
 import { TopBlocks } from '@/components/layout/TopBlocks/TopBlocks'
 import { PanelsProvider } from '@/providers/PanelsProvider/PanelsProvider'

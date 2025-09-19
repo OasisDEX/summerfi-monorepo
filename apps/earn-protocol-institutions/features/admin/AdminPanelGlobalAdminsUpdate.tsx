@@ -1,20 +1,23 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { getGlobalAdminData, updateGlobalAdmin } from '@/app/server-handlers/admin/user'
+import {
+  rootAdminActionGetGlobalAdminData,
+  rootAdminActionUpdateGlobalAdmin,
+} from '@/app/server-handlers/admin/user'
 
 import styles from './AdminPanelUsers.module.css'
 
 const UpdateGlobalAdminForm = ({
   globalAdmin,
 }: {
-  globalAdmin: Awaited<ReturnType<typeof getGlobalAdminData>>
+  globalAdmin: Awaited<ReturnType<typeof rootAdminActionGetGlobalAdminData>>
 }) => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.editUserFormWrapper}>
         <Text variant="h4">Update User</Text>
-        <form action={updateGlobalAdmin} className={styles.editUserForm}>
+        <form action={rootAdminActionUpdateGlobalAdmin} className={styles.editUserForm}>
           <input type="hidden" name="cognitoUserName" value={globalAdmin.cognitoUserName} />
           <div className={styles.formFields}>
             <div className={styles.formField}>
@@ -52,7 +55,7 @@ export const AdminPanelGlobalAdminsUpdate = async ({ userDbId }: { userDbId: str
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const [globalAdmin] = await Promise.all([getGlobalAdminData(Number(userDbId))])
+  const [globalAdmin] = await Promise.all([rootAdminActionGetGlobalAdminData(Number(userDbId))])
 
   return (
     <div className={styles.adminPanelUsers}>

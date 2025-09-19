@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { getInstitutionData } from '@/app/server-handlers/institution-data'
+import { getInstitutionData } from '@/app/server-handlers/institution/institution-data'
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
 import { OverviewPanelNavigationWrapper } from '@/components/layout/VaultsOverviewNavigationWrapper/VaultsOverviewNavigationWrapper'
 

@@ -4,7 +4,7 @@ import { type GeneralRoles } from '@summerfi/sdk-client'
 import {
   type getInstitutionData,
   type getUserInstitutionsList,
-} from '@/app/server-handlers/institution-data'
+} from '@/app/server-handlers/institution/institution-data'
 
 export type InstitutionVaultRoles = {
   [key in GeneralRoles]?: {
