@@ -6,5 +6,6 @@ if (!process.env.SDK_API_URL) {
 
 export const backendSDK: SDKManager = makeSDK({
   apiURL: `${process.env.SDK_API_URL}/sdk/trpc`,
+  version: 'v1',
   logging: process.env.NODE_ENV === 'development',
 })
