@@ -122,7 +122,14 @@ console.log(
 ### Create Deposit Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address, TokenAmount, Percentage } from '@summer_fi/sdk-client'
+import {
+  ArmadaVaultId,
+  ChainIds,
+  User,
+  Address,
+  TokenAmount,
+  Percentage,
+} from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -202,7 +209,14 @@ const hash = await walletClient.sendTransaction({
 ### Create Withdraw Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address, TokenAmount, Percentage } from '@summer_fi/sdk-client'
+import {
+  ArmadaVaultId,
+  ChainIds,
+  User,
+  Address,
+  TokenAmount,
+  Percentage,
+} from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -538,7 +552,7 @@ console.log('Authorization transaction:', tx.transaction)
 
 // Send transaction using your wallet
 const result = await walletClient.sendTransaction({
-  to: tx.transaction.target,
+  to: tx.transaction.target.value,
   data: tx.transaction.calldata,
   value: BigInt(tx.transaction.value),
 })
