@@ -4,20 +4,13 @@ import { jwtVerify, SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 
 import { SESSION_COOKIE } from '@/constants/cookies'
-import { type SignInResponse } from '@/features/auth/types'
+import { type SessionPayload, type SignInResponse } from '@/features/auth/types'
 
 const encoder = new TextEncoder()
 
 // bump to invalidate all sessions after a breaking change
 const SESSION_AUD = 'institutions'
 const SESSION_VERSION = '1'
-
-type SessionPayload = {
-  user: SignInResponse['user']
-  sub: string
-  cognitoUsername: string
-  exp: number
-}
 
 /**
  * Create a cognito session for a user

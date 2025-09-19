@@ -60,3 +60,10 @@ export type JwtClaims = {
   'cognito:username'?: string
   [key: string]: unknown
 }
+
+export type SessionPayload = {
+  user: SignInResponse['user']
+  sub: string
+  cognitoUsername: string
+  exp: number
+}

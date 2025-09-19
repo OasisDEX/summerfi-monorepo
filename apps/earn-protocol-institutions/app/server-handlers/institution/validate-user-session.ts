@@ -8,7 +8,7 @@ export const validateInstitutionUserSession = async (institutionId: string) => {
 
   const hasValidSession = session && session.exp * 1000 > Date.now()
   const isUserInInstitution = session?.user?.institutionsList
-    ?.map(({ id }) => String(id))
+    ?.map(({ name: institutionName }) => institutionName)
     .includes(institutionId)
 
   if (!hasValidSession || !isUserInInstitution) {
