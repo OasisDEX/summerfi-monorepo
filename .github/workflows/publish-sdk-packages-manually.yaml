@@ -19,10 +19,9 @@ on:
         description: 'Select SDK package(s) to publish'
         required: true
         type: choice
-        default: 'all'
+        default: 'sdk-client'
         options:
           - 'all'
-          - 'sdk-common'
           - 'sdk-client'
 
 jobs:
@@ -38,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk_package: [sdk-common, sdk-client]
+        sdk_package: [sdk-client]
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
