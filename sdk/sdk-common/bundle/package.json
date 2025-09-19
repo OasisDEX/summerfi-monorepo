@@ -1,6 +1,7 @@
 {
   "name": "@summer_fi/sdk-common",
-  "version": "1.1.0",
+  "description": "DEPRECATED INJECTED INTE CLIENT PACKAGE",
+  "version": "0.5.0",
   "license": "Apache-2.0",
   "author": {
     "name": "summer.fi",
@@ -10,6 +11,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
+    "@cowprotocol/cow-sdk": "^6.3.2",
     "bignumber.js": "^9.1.2",
     "superjson": "^1.13.3",
     "zod": "3.25.61"

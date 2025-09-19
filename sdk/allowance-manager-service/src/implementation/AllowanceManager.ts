@@ -21,6 +21,7 @@ export class AllowanceManager implements IAllowanceManager {
   }
 
   /** FUNCTIONS */
+  /** @see IAllowanceManager.getApproval */
   async getApproval(
     params: Parameters<IAllowanceManager['getApproval']>[0],
   ): ReturnType<IAllowanceManager['getApproval']> {

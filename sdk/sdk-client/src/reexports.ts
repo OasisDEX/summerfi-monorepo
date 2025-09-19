@@ -1,5 +1,4 @@
-// WORKAROUND: re-exporting protocol-plugins to give FE access to protocol plugins types
-
+// re-exporting SDK internal packages to give access to consumers of the SDK
 export {
   AaveV3LendingPoolId,
   AaveV3LendingPosition,
@@ -34,7 +33,5 @@ export {
   SparkProtocol,
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
-
-// another workaround to re-export the protocol service - FE needs classes for superjson to be registered
-export * from '@summerfi/armada-protocol-common'
-export * from '@summerfi/armada-protocol-service'
+export { GeneralRoles } from '@summerfi/armada-protocol-common'
+export * from '@summerfi/sdk-common'

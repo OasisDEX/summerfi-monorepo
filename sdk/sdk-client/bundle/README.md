@@ -1,6 +1,6 @@
 # SDK API Reference
 
-**Latest version: v1.1.0**
+**Latest version: v2.0.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -10,7 +10,7 @@ For information on installing the SDK, please see the installation guide here �
 ### SDK creation
 
 ```tsx
-// create a local file ./sdk.ts to reuse a single sdk instance
+// create a local file ./sdk.ts to reuse a common sdk instance
 import { makeSDK } from '@summer_fi/sdk-client'
 
 export const sdk = makeSDK({
@@ -122,7 +122,14 @@ console.log(
 ### Create Deposit Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
+import {
+  ArmadaVaultId,
+  ChainIds,
+  User,
+  Address,
+  TokenAmount,
+  Percentage,
+} from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -192,17 +199,24 @@ if (transactions.length == 2) {
 
 // example using viem
 const txInfo = transactions[0]
-const hash = this.walletClient.sendTransaction({
+const hash = await walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
+  value: BigInt(txInfo.transaction.value),
 })
 ```
 
 ### Create Withdraw Transaction
 
 ```tsx
-import { ArmadaVaultId, ChainIds, User, Address } from '@summer_fi/sdk-common'
+import {
+  ArmadaVaultId,
+  ChainIds,
+  User,
+  Address,
+  TokenAmount,
+  Percentage,
+} from '@summer_fi/sdk-client'
 
 import { sdk } from './sdk'
 
@@ -245,10 +259,10 @@ const transactions = await sdk.armada.users.getWithdrawTx({
 
 // example using viem
 const txInfo = transactions[0]
-const hash = this.walletClient.sendTransaction({
+const hash = await walletClient.sendTransaction({
   to: txInfo.transaction.target.value,
-  value: BigInt(txInfo.transaction.value),
   data: txInfo.transaction.calldata,
+  value: BigInt(txInfo.transaction.value),
 })
 ```
 
@@ -404,7 +418,7 @@ if (claimTransactions) {
   console.log('Claim transaction:', tx.transaction)
 
   // Send transaction using your wallet
-  const result = await wallet.sendTransaction({
+  const result = await walletClient.sendTransaction({
     to: tx.transaction.target.value,
     data: tx.transaction.calldata,
     value: BigInt(tx.transaction.value),
@@ -455,7 +469,7 @@ if (claimTransactions) {
   console.log('Claim transaction:', tx.transaction)
 
   // Send transaction using your wallet
-  const result = await wallet.sendTransaction({
+  const result = await walletClient.sendTransaction({
     to: tx.transaction.target.value,
     data: tx.transaction.calldata,
     value: BigInt(tx.transaction.value),
@@ -495,7 +509,7 @@ chain.
 **Example:**
 
 ```typescript
-import { ChainIds } from '@summerfi/sdk-common'
+import { ChainIds } from '@summer_fi/sdk-client'
 
 // Check if user has authorized AdmiralsQuarters as operator
 const isAuthorized = await sdk.armada.users.getIsAuthorizedAsMerklRewardsOperator({
@@ -537,10 +551,10 @@ const tx = authTransactions[0]
 console.log('Authorization transaction:', tx.transaction)
 
 // Send transaction using your wallet
-const result = await wallet.sendTransaction({
-  to: tx.transaction.target,
+const result = await walletClient.sendTransaction({
+  to: tx.transaction.target.value,
   data: tx.transaction.calldata,
-  value: tx.transaction.value,
+  value: BigInt(tx.transaction.value),
 })
 ```
 
@@ -646,6 +660,328 @@ Returns aggregated rewards breakdown including Merkl rewards across different so
   "vaultUsage": "1300000000000000000",
   "merkleDistribution": "800000000000000000",
   "voteDelegation": "100000000000000000"
+}
+```
+
+## Intent-based Swaps using CowSwap
+
+The SDK now supports intent-based swaps through CowSwap integration, enabling gasless trading with
+MEV protection. Intent swaps allow you to create limit orders that are executed by solvers when your
+conditions are met.
+
+### Features
+
+- **Gasless Trading**: No gas fees for order creation (only for approval/wrapping if needed)
+- **MEV Protection**: Orders are protected from MEV through batch auctions
+- **Limit Orders**: Set specific price limits for your trades
+- **Partial Fills**: Orders can be partially filled if desired
+- **Native Currency Support**: Automatic wrapping of chain native currency to ERC-20 when needed
+  (e.g. ETH -> WETH)
+- **Smart Approvals**: Automatic ERC-20 token approval handling when required
+
+### SDK creation with Signer for Intent Swaps
+
+For Intent Swaps functionality, you need to create an SDK instance with a signer to enable order
+signing and transaction operations:
+
+```tsx
+// create a local file ./sdk.ts to reuse a common sdk instance
+import { makeSDKWithSigner } from '@summer_fi/sdk-client'
+import { Wallet } from 'ethers'
+
+const wallet = new Wallet(...) // You can use private key directly or use a provider
+
+export const sdk = makeSDKWithSigner({
+  apiDomainUrl: `https://summer.fi`,
+  signer: wallet,
+  logging: process.env.NODE_ENV === 'development',
+})
+```
+
+### Getting a Quote
+
+Get a quote for swapping tokens with optional limit price:
+
+```tsx
+import { makeSDKWithSigner, TokenAmount, ChainIds, Address } from '@summer_fi/sdk-client'
+
+// Create SDK with signer for intent swaps
+const sdk = makeSDKWithSigner({
+  apiDomainUrl: 'https://summer.fi',
+  signer: wallet, // Your ethers wallet/signer
+})
+
+// Get tokens
+const ethToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId: ChainIds.Base })
+const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId: ChainIds.Base })
+
+// Create amount to swap
+const ethAmount = TokenAmount.createFrom({
+  amount: '0.1', // 0.1 ETH
+  token: ethToken,
+})
+
+// Get sell order quote
+const quote = await sdk.intentSwaps.getSellOrderQuote({
+  sender: Address.createFromEthereum({ value: '0x...' }), // Your wallet address
+  fromAmount: ethAmount,
+  toToken: usdcToken,
+  limitPrice: '3000', // Optional: minimum price (USDC per ETH)
+  partiallyFillable: false, // Optional: allow partial fills
+  receiver: Address.createFromEthereum({ value: '0x...' }), // Optional: different receiver
+})
+
+console.log('Quote:', {
+  fromAmount: quote.fromAmount.toString(),
+  toAmount: quote.toAmount.toString(),
+  validTo: new Date(quote.validTo * 1000),
+  providerType: quote.providerType,
+})
+```
+
+### Sending an Order
+
+Send the order to CowSwap. The method handles chain native currency wrapping and token approvals
+automatically when they are needed:
+
+```tsx
+// Send the order - handles wrapping and approvals automatically
+let orderId: string | undefined
+
+do {
+  const orderResult = await sdk.intentSwaps.sendOrder({
+    sender: Address.createFromEthereum({ value: '0x...' }),
+    fromAmount: quote.fromAmount,
+    chainId: ChainIds.Base,
+    order: quote.order,
+  })
+
+  switch (orderResult.status) {
+    case 'wrap_to_native':
+      console.log('Need to wrap native currency (ETH) to wrapped version (WETH)')
+      // Execute the wrapping transaction
+      const wrapTx = await walletClient.sendTransaction({
+        to: orderResult.transactionInfo.transaction.target.value,
+        data: orderResult.transactionInfo.transaction.calldata,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
+      })
+      await wrapTx.wait()
+      console.log('Native currency wrapped successfully')
+      break
+
+    case 'allowance_needed':
+      console.log('Need to approve token spending')
+      // Execute the approval transaction
+      const approveTx = await walletClient.sendTransaction({
+        to: orderResult.transactionInfo.transaction.target.value,
+        data: orderResult.transactionInfo.transaction.calldata,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
+      })
+      await approveTx.wait()
+      console.log('Token approved successfully')
+      break
+
+    case 'order_sent':
+      orderId = orderResult.orderId
+      console.log('Order sent successfully:', orderId)
+      break
+  }
+} while (!orderId)
+```
+
+### Checking Order Status
+
+Monitor your order status to see if it has been filled:
+
+```tsx
+// Check order status
+const orderInfo = await sdk.intentSwaps.checkOrder({
+  chainId: ChainIds.Base,
+  orderId: orderId,
+})
+
+if (orderInfo) {
+  console.log('Order status:', orderInfo.order.status)
+  console.log('Order details:', {
+    sellToken: orderInfo.order.sellToken,
+    buyToken: orderInfo.order.buyToken,
+    sellAmount: orderInfo.order.sellAmount,
+    buyAmount: orderInfo.order.buyAmount,
+    validTo: new Date(orderInfo.order.validTo * 1000),
+    executedBuyAmount: orderInfo.order.executedBuyAmount,
+    executedSellAmount: orderInfo.order.executedSellAmount,
+  })
+} else {
+  console.log('Order not found')
+}
+```
+
+### Cancelling an Order
+
+Cancel an existing order before it gets filled:
+
+```tsx
+// Cancel the order
+const cancelResult = await sdk.intentSwaps.cancelOrder({
+  chainId: ChainIds.Base,
+  orderId: orderId,
+})
+
+console.log('Cancel result:', cancelResult.result)
+```
+
+### Complete Intent Swap Flow Example
+
+Here's a complete example demonstrating the full intent swap workflow:
+
+```tsx
+import { makeSDKWithSigner, TokenAmount, ChainIds, Address } from '@summer_fi/sdk-client'
+import { Wallet } from 'ethers'
+
+// Setup
+const wallet = new Wallet(process.env.PRIVATE_KEY)
+const sdk = makeSDKWithSigner({
+  apiDomainUrl: 'https://summer.fi',
+  signer: wallet,
+})
+
+async function performIntentSwap() {
+  // Get tokens
+  const ethToken = await sdk.tokens.getTokenBySymbol({ symbol: 'ETH', chainId: ChainIds.Base })
+  const usdcToken = await sdk.tokens.getTokenBySymbol({ symbol: 'USDC', chainId: ChainIds.Base })
+
+  // Create swap amount
+  const swapAmount = TokenAmount.createFrom({
+    amount: '0.1',
+    token: ethToken,
+  })
+
+  const walletAddress = Address.createFromEthereum({ value: await wallet.getAddress() })
+
+  // Step 1: Get quote
+  console.log('Getting quote...')
+  const quote = await sdk.intentSwaps.getSellOrderQuote({
+    sender: walletAddress,
+    fromAmount: swapAmount,
+    toToken: usdcToken,
+    limitPrice: '3000', // Minimum 3000 USDC per ETH
+  })
+
+  console.log(`Quote: ${quote.fromAmount.toString()} → ${quote.toAmount.toString()}`)
+
+  // Step 2: Send order (with automatic handling of wrapping/approvals)
+  console.log('Sending order...')
+  let orderId: string | undefined
+
+  do {
+    const orderResult = await sdk.intentSwaps.sendOrder({
+      sender: walletAddress,
+      fromAmount: quote.fromAmount,
+      chainId: ChainIds.Base,
+      order: quote.order,
+    })
+
+    if (orderResult.status === 'wrap_to_native') {
+      console.log('Wrapping native currency (ETH) to wrapped version (WETH)...')
+      const tx = await walletClient.sendTransaction({
+        to: orderResult.transactionInfo.transaction.target.value,
+        data: orderResult.transactionInfo.transaction.calldata,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
+      })
+      await tx.wait()
+      console.log('✅ Native currency wrapped')
+    } else if (orderResult.status === 'allowance_needed') {
+      console.log('Approving token...')
+      const tx = await walletClient.sendTransaction({
+        to: orderResult.transactionInfo.transaction.target.value,
+        data: orderResult.transactionInfo.transaction.calldata,
+        value: BigInt(orderResult.transactionInfo.transaction.value),
+      })
+      await tx.wait()
+      console.log('✅ Token approved')
+    } else if (orderResult.status === 'order_sent') {
+      orderId = orderResult.orderId
+      console.log('✅ Order sent:', orderId)
+    }
+  } while (!orderId)
+
+  // Step 3: Monitor order status
+  console.log('Monitoring order...')
+  let orderFilled = false
+
+  while (!orderFilled) {
+    const orderInfo = await sdk.intentSwaps.checkOrder({
+      chainId: ChainIds.Base,
+      orderId: orderId,
+    })
+
+    if (orderInfo) {
+      console.log('Order status:', orderInfo.order.status)
+
+      if (orderInfo.order.status === 'fulfilled') {
+        console.log('✅ Order fulfilled!')
+        console.log(`Received: ${orderInfo.order.executedBuyAmount} ${usdcToken.symbol}`)
+        orderFilled = true
+      } else if (orderInfo.order.status === 'cancelled') {
+        console.log('❌ Order was cancelled')
+        orderFilled = true
+      } else if (orderInfo.order.status === 'expired') {
+        console.log('⏰ Order expired')
+        orderFilled = true
+      }
+    }
+
+    if (!orderFilled) {
+      console.log('Waiting 30 seconds before checking again...')
+      await new Promise((resolve) => setTimeout(resolve, 30000))
+    }
+  }
+}
+
+// Run the intent swap
+performIntentSwap().catch(console.error)
+```
+
+### Intent Swap Flow Diagram
+
+The intent swap process follows this flow:
+
+1. **Quote**: Get a quote with your desired parameters
+2. **Native Currency Wrapping** (if needed): Required amount of chain native currency is
+   automatically wrapped to its wrapped version for streamlined usage
+3. **Token Approval** (if needed): ERC-20 tokens are approved for spending by CowSwap
+4. **Order Submission**: Signed order is submitted to CowSwap's orderbook
+5. **Solver Execution**: CowSwap solvers compete to fill your order at the best price
+6. **Settlement**: Your trade is executed as part of a batch with MEV protection
+
+### Supported Networks
+
+Intent swaps are currently supported on:
+
+- Ethereum Mainnet (ChainId: 1)
+- Base (ChainId: 8453)
+- Arbitrum One (ChainId: 42161)
+- Optimism (ChainId: 10)
+
+### Error Handling
+
+The SDK handles common errors automatically:
+
+```tsx
+try {
+  const quote = await sdk.intentSwaps.getSellOrderQuote({
+    sender: walletAddress,
+    fromAmount: swapAmount,
+    toToken: usdcToken,
+  })
+} catch (error) {
+  if (error.message.includes('Unsupported chainId')) {
+    console.error('Chain not supported for intent swaps')
+  } else if (error.message.includes('Insufficient balance')) {
+    console.error('Not enough token balance')
+  } else {
+    console.error('Quote failed:', error.message)
+  }
 }
 ```
 
@@ -1063,6 +1399,54 @@ enum FiatCurrency {
 
 ## Changelog
 
+### v2.0.0
+
+**Major Features:**
+
+- **🆕 Intent-based Swaps using CowSwap**: Full integration with CowSwap protocol for gasless,
+  MEV-protected trading
+
+  - **getSellOrderQuote** - Get quotes for token swaps with optional limit prices
+  - **sendOrder** - Submit orders with automatic chain native currency wrapping and token spending
+    approval
+  - **cancelOrder** - Cancel existing orders before execution
+  - **checkOrder** - Monitor order status and execution details
+  - Supports limit orders, partial fills, and custom receivers
+  - Automatic handling of native currency wrapping (e.g. ETH -> WETH)
+  - Smart ERC-20 token approval management
+
+- **🔐 Signer-enabled SDK**: New `makeSDKWithSigner()` factory function for authenticated operations
+
+  - Required for intent swaps and other signed operations
+  - Supports any ethers.js compatible signer
+  - Maintains backward compatibility with existing `makeSDK()`
+
+- **💰 Enhanced Token Balance Lookups**: New methods for checking token balances
+
+  - `getTokenBalanceBySymbol()` - Get balance by token symbol
+  - `getTokenBalanceByAddress()` - Get balance by token address
+  - Support for both native currencies (ETH) and ERC-20 tokens
+  - Integrated with blockchain client for real-time balance queries
+
+- **🏦 Enhanced Armada Vault Information**: Vault info now includes underlying asset details
+
+  - Added `assetToken` field to `IArmadaVaultInfo` indicating the underlying depositable asset
+  - Distinguishes between vault shares token and underlying asset token
+
+- **🌐 CORS Support**: Added OPTIONS request handling for browser usage compatibility
+
+  - Dedicated OPTIONS handler for preflight requests
+  - Improved SDK usage in web applications
+  - Enhanced CORS headers for better security
+
+**Breaking Changes:**
+
+- `@summerfi/sdk-common` package was deprecated and merged into `@summerfi/sdk-client`
+
+**Migration steps:**
+
+- Update all imports to use `@summerfi/sdk-client` only
+
 ### v1.1.0
 
 Features:
@@ -1124,3 +1508,7 @@ Docs:
 ### v0.3.1
 
 First public release
+
+```
+
+```

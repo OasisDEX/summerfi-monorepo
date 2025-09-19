@@ -2,11 +2,13 @@
 export { Chain } from './implementation/Chain'
 export { ChainsManagerClient } from './implementation/ChainsManager'
 export { makeSDK } from './implementation/MakeSDK'
+export { makeSDKWithSigner } from './implementation/MakeSDKWithSigner'
 export { makeAdminSDK } from './implementation/MakeAdminSDK'
 export { SDKAdminManager } from './implementation/SDKAdminManager'
 export { PortfolioManager } from './implementation/PortfolioManager'
 export { ProtocolsManagerClient } from './implementation/ProtocolsManagerClient'
 export { SDKManager } from './implementation/SDKManager'
+export { SDKManagerWithSigner } from './implementation/SDKManagerWithSigner'
 export { TokensManagerClient } from './implementation/TokensManagerClient'
 export { UserClient } from './implementation/UserClient'
 export { UsersManager } from './implementation/UsersManager'
@@ -22,38 +24,5 @@ export type { ITokensManagerClient } from './interfaces/ITokensManagerClient'
 export type { IUserClient } from './interfaces/IUserClient'
 export type { IUsersManager } from './interfaces/IUsersManager'
 export { PositionUtils } from './utils/PositionUtils'
-export {
-  AaveV3LendingPoolId,
-  AaveV3LendingPosition,
-  AaveV3LendingPositionId,
-  isAaveV3LendingPoolId,
-  type IAaveV3LendingPoolId,
-  AaveV3Protocol,
-  type IAaveV3Protocol,
-  EmodeType,
-  MakerLendingPoolId,
-  MakerLendingPosition,
-  type MakerLendingPositionParameters,
-  MakerLendingPositionId,
-  type MakerLendingPositionIdParameters,
-  isMakerLendingPoolId,
-  type IMakerLendingPoolId,
-  MakerProtocol,
-  type IMakerProtocol,
-  type ILKType,
-  MorphoLendingPoolId,
-  MorphoLendingPosition,
-  MorphoLendingPositionId,
-  isMorphoLendingPoolId,
-  type IMorphoLendingPoolId,
-  MorphoProtocol,
-  type IMorphoProtocol,
-  SparkLendingPoolId,
-  SparkLendingPosition,
-  SparkLendingPositionId,
-  isSparkLendingPoolId,
-  type ISparkLendingPoolId,
-  SparkProtocol,
-  type ISparkProtocol,
-} from '@summerfi/protocol-plugins'
-export { GeneralRoles } from '@summerfi/armada-protocol-common'
+
+export * from './reexports'

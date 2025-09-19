@@ -51,7 +51,8 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
         depositCap,
         totalDeposits,
         totalShares,
-        token: underlyingAsset,
+        token: sharesAsset,
+        assetToken: underlyingAsset,
         apy: Percentage.createFrom({
           value: 0.05,
         }),

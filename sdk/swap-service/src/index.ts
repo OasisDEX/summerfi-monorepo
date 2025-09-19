@@ -1,5 +1,4 @@
-export { SwapManager } from './implementation/SwapManager'
-export { SwapManagerFactory } from './implementation/SwapManagerFactory'
+export { CowSwapProvider, CowSwapSendOrderStatus } from './implementation/cowswap/CowSwapProvider'
 export { OneInchSwapProvider } from './implementation/oneinch/OneInchSwapProvider'
 export { OneInchAuthHeaderKey, OneInchSpotAuthHeaderKey } from './implementation/oneinch/types'
 export type {
@@ -10,3 +9,5 @@ export type {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './implementation/oneinch/types'
+export { SwapManager } from './implementation/SwapManager'
+export { SwapManagerFactory } from './implementation/SwapManagerFactory'

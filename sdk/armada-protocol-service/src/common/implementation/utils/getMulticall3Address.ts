@@ -1,5 +1,4 @@
-import { Address, type ChainId } from '@summerfi/sdk-common'
-import { getViemChain } from './getViemChain'
+import { Address, getViemChain, type ChainId } from '@summerfi/sdk-common'
 
 export const getMulticall3Address = (chainId: ChainId) => {
   const chain = getViemChain(chainId)

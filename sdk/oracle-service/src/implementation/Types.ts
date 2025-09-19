@@ -1,4 +1,4 @@
-/** 1Inch Oracle provider configuration */
+/** Oracle provider configuration */
 export type OracleProviderConfig = {
   /** provider API URL */
   apiUrl: string

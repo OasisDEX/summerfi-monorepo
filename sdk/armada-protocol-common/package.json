@@ -12,7 +12,8 @@
     "watch": "tsc -w",
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "declarations": "tsc --emitDeclarationOnly -p tsconfig.bundle.json"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",

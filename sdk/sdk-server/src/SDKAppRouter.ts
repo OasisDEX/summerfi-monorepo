@@ -65,6 +65,10 @@ import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
 import { getMigratablePositionsApy } from './armada-protocol-handlers/users/getMigratablePositionsApy'
 import { getSpotPrice } from './handlers/getSpotPrice'
 import { getSpotPrices } from './handlers/getSpotPrices'
+import { intentSwapsGetSellOrderQuote } from './handlers/intentSwapsGetSellOrderQuote'
+import { intentSwapsSendOrder } from './handlers/intentSwapsSendOrder'
+import { intentSwapsCancelOrder } from './handlers/intentSwapsCancelOrder'
+import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
@@ -105,6 +109,12 @@ export const sdkAppRouter = router({
   },
   orders: {
     buildOrder: buildOrder,
+  },
+  intentSwaps: {
+    getSellOrderQuote: intentSwapsGetSellOrderQuote,
+    sendOrder: intentSwapsSendOrder,
+    cancelOrder: intentSwapsCancelOrder,
+    checkOrder: intentSwapsCheckOrder,
   },
   swaps: {
     getSwapDataExactInput: getSwapDataExactInput,

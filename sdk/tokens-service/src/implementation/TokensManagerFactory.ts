@@ -1,4 +1,5 @@
 import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
 import { TokensManager } from './TokensManager'
 import { StaticTokensProvider } from './static/StaticTokensProvider'
@@ -17,10 +18,12 @@ export class TokensManagerFactory {
   /**
    * @method newTokensManager
    * @param configProvider The configuration provider used to get environment variables
+   * @param blockchainClientProvider The blockchain client provider for blockchain interactions
    * @returns A new instance of the TokensManager
    */
   public static newTokensManager(params: {
     configProvider: IConfigurationProvider
+    blockchainClientProvider: IBlockchainClientProvider
   }): ITokensManager {
     this.initialize(params)
 
@@ -33,16 +36,23 @@ export class TokensManagerFactory {
    * @method initialize
    * @description Initializes the different providers
    * @param configProvider The configuration provider used to get environment variables
+   * @param blockchainClientProvider The blockchain client provider for blockchain interactions
    */
-  private static initialize(params: { configProvider: IConfigurationProvider }): void {
+  private static initialize(params: {
+    configProvider: IConfigurationProvider
+    blockchainClientProvider: IBlockchainClientProvider
+  }): void {
     if (this.providers.length != 0) {
       return
     }
 
-    const { configProvider } = params
+    const { configProvider, blockchainClientProvider } = params
 
     // Static provider
-    const staticProvider = new StaticTokensProvider({ configProvider: configProvider })
+    const staticProvider = new StaticTokensProvider({
+      configProvider: configProvider,
+      blockchainClientProvider: blockchainClientProvider,
+    })
 
     this.providers = [staticProvider]
   }

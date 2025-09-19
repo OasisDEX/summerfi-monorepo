@@ -1,4 +1,5 @@
 import { Function, type Api, type Bucket, type Stack } from 'sst/constructs'
+import path from 'path'
 import { environmentVariables } from './sst-environment'
 import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
 
@@ -33,6 +34,7 @@ export const createBackend = ({
   console.log(`ENV FUNCTIONS_API_URL: `, environmentVariables.FUNCTIONS_API_URL)
 
   // create and deploy function
+
   const sdkBackend = new Function(stack, `SdkBackendV${nameSuffix}`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
@@ -46,11 +48,22 @@ export const createBackend = ({
   })
   sdkBackend.bind([sdkBucket])
 
+  // Create a separate Lambda for OPTIONS
+  const optionsHandler = new Function(stack, `SdkOptionsHandlerV${nameSuffix}`, {
+    handler: 'sdk-router-function/src/options.handler',
+    runtime: 'nodejs22.x',
+    timeout: '10 seconds',
+    loggingFormat: LoggingFormat.JSON,
+    logRetention: production ? 'one_month' : persistent ? 'one_week' : 'one_day',
+  })
+
   const pathOld = `/api/sdk/${apiVersion}` // Old path for backward compatibility
   const path = `/sdk/trpc/${apiVersion}`
   sdkGateway.addRoutes(stack, {
     [`ANY ${pathOld}/{proxy+}`]: sdkBackend,
     [`ANY ${path}/{proxy+}`]: sdkBackend,
+    [`OPTIONS ${pathOld}/{proxy+}`]: optionsHandler,
+    [`OPTIONS ${path}/{proxy+}`]: optionsHandler,
   })
 
   return {

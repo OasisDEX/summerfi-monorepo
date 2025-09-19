@@ -1,6 +1,6 @@
 {
   "name": "@summer_fi/sdk-client",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "author": {
     "name": "summer.fi",
@@ -10,8 +10,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "bignumber.js": "^9.1.2",
+    "@cowprotocol/cow-sdk": "^6.3.2",
+    "@ethersproject/abstract-signer": "^5.8.0",
     "@trpc/client": "11.0.0-rc.844",
-    "@summer_fi/sdk-common": "^0.5.0"
+    "bignumber.js": "^9.1.2"
   }
 }

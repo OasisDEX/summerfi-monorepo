@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IAbiProvider } from '@summerfi/abi-provider-common'
 import { AbiProviderFactory } from '@summerfi/abi-provider-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
@@ -27,7 +26,7 @@ import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
 import { ISwapManager } from '@summerfi/swap-common'
-import { SwapManagerFactory } from '@summerfi/swap-service'
+import { SwapManagerFactory, CowSwapProvider } from '@summerfi/swap-service'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
 
@@ -54,6 +53,7 @@ export type SDKAppContext = {
   orderPlannerService: IOrderPlannerService
   allowanceManager: IAllowanceManager
   armadaManager: IArmadaManager
+  intentSwapsManager: CowSwapProvider
 }
 
 const quickHashCode = (str: string): string => {
@@ -93,7 +93,10 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
-  const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
+  const tokensManager = TokensManagerFactory.newTokensManager({
+    configProvider,
+    blockchainClientProvider,
+  })
   const contractsProvider = ContractsProviderFactory.newContractsProvider({
     configProvider,
     blockchainClientProvider,
@@ -111,10 +114,16 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     swapManager,
     addressBookManager,
   })
+
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
     contractsProvider,
+  })
+  const intentSwapsManager = new CowSwapProvider({
+    configProvider,
+    allowanceManager,
+    tokensManager,
   })
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
@@ -145,5 +154,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     orderPlannerService,
     allowanceManager,
     armadaManager,
+    intentSwapsManager,
   }
 }
