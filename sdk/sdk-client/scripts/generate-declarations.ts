@@ -102,37 +102,73 @@ async function generateDeclarations(): Promise<void> {
 
   console.log('🎉 Declaration generation process completed!')
 
-  // Update reexports.d.ts file to replace @summerfi imports with relative paths
-  console.log('📝 Updating reexports.d.ts file...')
-  updateReexportsFile()
+  console.log('📝 Updating declaration imports...')
+  // Update all declaration files to replace @summerfi imports with absolute paths
+  updateDeclarationImports()
 }
 
 /**
- * Update reexports.d.ts file to replace @summerfi imports with relative paths
+ * Update all .d.ts files in bundle/dist to replace @summerfi imports with absolute paths
  */
-function updateReexportsFile(): void {
-  const reexportsPath = path.resolve('bundle/dist/reexports.d.ts')
+function updateDeclarationImports(): void {
+  const bundleDistPath = path.resolve('bundle/dist')
 
-  if (!fs.existsSync(reexportsPath)) {
-    console.warn('⚠️  reexports.d.ts file not found, skipping update')
+  if (!fs.existsSync(bundleDistPath)) {
+    console.warn('⚠️  bundle/dist directory not found, skipping declaration updates')
     return
   }
 
   try {
-    // Read the current content
-    const content = fs.readFileSync(reexportsPath, 'utf8')
+    console.log('📝 Updating declaration file imports...')
 
-    // Replace all occurrences of "@summerfi" with "."
-    const updatedContent = content.replace(/@summerfi/g, '.')
+    // Recursively find all .d.ts files
+    const dtsFiles = findDtsFiles(bundleDistPath)
 
-    // Write the updated content back to the file
-    fs.writeFileSync(reexportsPath, updatedContent, 'utf8')
+    for (const filePath of dtsFiles) {
+      // Read the current content
+      let content = fs.readFileSync(filePath, 'utf8')
 
-    console.log('   ✅ Successfully updated reexports.d.ts')
+      // Replace @summerfi imports with absolute paths
+      content = content.replace(/@summerfi\/sdk-common/g, `${bundleDistPath}/sdk-common`)
+      content = content.replace(
+        /@summerfi\/protocol-plugins/g,
+        `${bundleDistPath}/protocol-plugins`,
+      )
+      content = content.replace(
+        /@summerfi\/armada-protocol-common/g,
+        `${bundleDistPath}/armada-protocol-common`,
+      )
+
+      // Write the updated content back to the file
+      fs.writeFileSync(filePath, content, 'utf8')
+    }
+
+    console.log(`   ✅ Successfully updated ${dtsFiles.length} declaration files`)
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
-    throw new Error(`❌ Error updating reexports.d.ts: ${errorMessage}`)
+    throw new Error(`❌ Error updating declaration imports: ${errorMessage}`)
   }
+}
+
+/**
+ * Recursively find all .d.ts files in a directory
+ */
+function findDtsFiles(dir: string): string[] {
+  const dtsFiles: string[] = []
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name)
+
+    if (entry.isDirectory()) {
+      dtsFiles.push(...findDtsFiles(fullPath))
+    } else if (entry.isFile() && entry.name.endsWith('.d.ts')) {
+      dtsFiles.push(fullPath)
+    }
+  }
+
+  return dtsFiles
 }
 
 // Run the script
