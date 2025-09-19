@@ -2,8 +2,8 @@ import { Signer } from '@ethersproject/abstract-signer'
 
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManagerWithSigner } from './SDKManagerWithSigner'
-import { version as sdkClientVersion } from '../../bundle/package.json'
 import type { MakeSDKParams } from './MakeSDK'
+import { getApiVersion } from '../utils/getApiVersion'
 
 export type SDKSigner = Signer
 
@@ -15,7 +15,7 @@ export type MakeSDKWithSignerParams = MakeSDKParams & { signer: SDKSigner }
  * Best to use apiDomainUrl as it provide automatic versioning and routing depending on the client version.
  */
 export function makeSDKWithSigner(params: MakeSDKWithSignerParams) {
-  const apiVersion = `v${sdkClientVersion.charAt(0)}`
+  const apiVersion = getApiVersion(params.version)
   let versionedURL: string
   // url based on domain
   if ('apiDomainUrl' in params) {
