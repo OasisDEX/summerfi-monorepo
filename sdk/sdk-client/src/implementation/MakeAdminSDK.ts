@@ -1,11 +1,9 @@
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKAdminManager } from './SDKAdminManager'
 import packageFile from '../../bundle/package.json'
+import type { MakeSDKParams } from './MakeSDK'
 
-export type MakeAdminSDKParams = { logging?: boolean; clientId: string } & (
-  | { apiDomainUrl: string }
-  | { apiURL: string }
-)
+export type MakeAdminSDKParams = MakeSDKParams & { clientId: string }
 
 /*
  * makeSDK is a factory function that creates an instance of SDKManager.
