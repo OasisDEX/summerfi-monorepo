@@ -15,6 +15,7 @@ import {
   getSummerProtocolInstitutionDB,
   type UserRole,
 } from '@summerfi/summer-protocol-institutions-db'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
