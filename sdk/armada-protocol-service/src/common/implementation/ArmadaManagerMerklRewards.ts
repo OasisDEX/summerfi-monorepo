@@ -289,10 +289,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       }
       users.push(address as `0x${string}`)
       tokens.push(reward.token.address as `0x${string}`)
-      // perform any arithmetic or normalization with BigNumber, then convert to bigint
-      const amountBn = new BigNumber(reward.amount)
-      // ensure integer representation when pushing into calldata (uint256[])
-      amounts.push(BigInt(amountBn.toFixed(0)))
+      amounts.push(BigInt(reward.amount))
       proofs.push(reward.proofs as `0x${string}`[])
       processed++
     }
