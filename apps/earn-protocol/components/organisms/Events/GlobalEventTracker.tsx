@@ -6,10 +6,12 @@ import { accountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { usePageviewEvent } from '@/hooks/use-mixpanel-event'
 
 export const GlobalEventTracker = () => {
   const path = usePathname()
   const user = useUser()
+  const pageViewedEventHandler = usePageviewEvent()
   const { userWalletAddress: userAddress } = useUserWallet()
   const { chain } = useChain()
   const { account, isLoadingAccount } = useAccount({ type: accountType })
@@ -28,11 +30,7 @@ export const GlobalEventTracker = () => {
   // pageview tracking
   useLayoutEffect(() => {
     if (!isLoadingAccount) {
-      EarnProtocolEvents.pageViewed({
-        page: path,
-        walletAddress: userAddress ?? undefined,
-        connectionMethod: user?.type,
-      })
+      pageViewedEventHandler(path)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, isLoadingAccount])

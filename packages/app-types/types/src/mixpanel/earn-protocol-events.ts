@@ -37,6 +37,17 @@ export interface EarnProtocolBaseEventProps {
   connectionMethod?: string // connection method (e.g. "EOA", "SCA")
   errorId?: string // optional error message
   errorMessage?: string // optional error message
+  // UTM / Campaign info (if available)
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_content?: string
+  utm_term?: string
+  utm_id?: string
+  utm_campaign_id?: string
+  utm_source_platform?: string
+  utm_creative_format?: string
+  utm_marketing_tactic?: string
 }
 
 // ---- Specific Event Props ----

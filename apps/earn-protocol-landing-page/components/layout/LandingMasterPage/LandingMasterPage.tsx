@@ -14,6 +14,7 @@ import { usePathname } from 'next/navigation'
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { usePageviewEvent } from '@/hooks/use-mixpanel-event'
 import { useScrollTracker } from '@/hooks/use-scroll-tracker'
 
 import landingMasterPageStyles from '@/components/layout/LandingMasterPage/landingMasterPage.module.css'
@@ -29,6 +30,7 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   const [scrolledAmount, setScrolledAmount] = useState(0)
   const { landingPageData } = useLandingPageData()
   const pathname = usePathname()
+  const pageViewedEventHandler = usePageviewEvent()
 
   useScrollTracker({})
 
@@ -100,9 +102,8 @@ export const LandingMasterPage: React.FC<PropsWithChildren<LandingMasterPageProp
   }
 
   useLayoutEffect(() => {
-    EarnProtocolEvents.pageViewed({
-      page: pathname,
-    })
+    pageViewedEventHandler(pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   return (

@@ -4,7 +4,7 @@ import { useChain, useUser } from '@account-kit/react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
 import { debounce, throttle } from 'lodash-es'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
@@ -18,6 +18,19 @@ type PendingEvent = {
     [key: string]: any
   }
 }
+
+const searchParamsList = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'utm_id',
+  'utm_campaign_id',
+  'utm_source_platform',
+  'utm_creative_format',
+  'utm_marketing_tactic',
+] as const
 
 /**
  * Module-level queue of events fired while account is loading.
@@ -64,6 +77,7 @@ const flushPending = (userData: { [key: string]: any } = {}) => {
 export const useMixpanelTracker = () => {
   const pathname = usePathname()
   const user = useUser()
+  const searchParams = useSearchParams()
   const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
   const { chain } = useChain()
 
@@ -89,6 +103,11 @@ export const useMixpanelTracker = () => {
       params: Partial<EventArgs<K>> = {} as Partial<EventArgs<K>>,
     ) => {
       const baseParams = { page: pathname, ...(params as { [key: string]: any }) }
+      const utmSearchParams = Object.fromEntries(
+        Array.from(searchParams.entries()).filter(([key]) =>
+          searchParamsList.includes(key as (typeof searchParamsList)[number]),
+        ),
+      )
 
       if (isLoadingAccount) {
         pendingQueue.push({ handlerKey, params: baseParams })
@@ -106,6 +125,7 @@ export const useMixpanelTracker = () => {
           fn({
             ...baseParams,
             ...userData,
+            ...utmSearchParams,
           } as EventArgs<K>)
         } else {
           // eslint-disable-next-line no-console
@@ -116,7 +136,7 @@ export const useMixpanelTracker = () => {
         console.error('Error tracking event', error)
       }
     },
-    [isLoadingAccount, pathname, userData],
+    [isLoadingAccount, pathname, userData, searchParams],
   )
 
   return track
@@ -232,5 +252,17 @@ export const useDisplayBannerEvent: () => ({ bannerName }: { bannerName: string 
     () =>
       throttle(handleEvent, 10000) as unknown as ({ bannerName }: { bannerName: string }) => void,
     [handleEvent],
+  )
+}
+
+export const usePageviewEvent = () => {
+  const track = useMixpanelTracker()
+
+  return useMemo(
+    () =>
+      throttle((page: string) => {
+        track('pageViewed', { page })
+      }, 500) as unknown as (page: string) => void,
+    [track],
   )
 }

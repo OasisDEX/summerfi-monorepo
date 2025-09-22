@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
-import { EarnProtocolEvents } from '@/helpers/mixpanel'
+import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './SumrClaimSearch.module.css'
 
@@ -16,6 +16,7 @@ export const SumrClaimSearch = () => {
   const pathname = usePathname()
   const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
+  const handleButtonClick = useHandleButtonClickEvent()
 
   const [inputError, setInputError] = useState('')
   const [inputValue, setInputValue] = useState('')
@@ -33,33 +34,19 @@ export const SumrClaimSearch = () => {
     setInputValue(newInputValue)
   }
 
-  const handleButtonClick = () => {
+  const handleSumrButtonClick = () => {
+    handleButtonClick('ep-sumr-claim-search')
     if (isAddress(resolvedAddress ?? '')) {
-      EarnProtocolEvents.buttonClicked({
-        buttonName: 'ep-sumr-claim-search',
-        page: pathname,
-      })
-
       return
     }
 
     if (!user) {
-      EarnProtocolEvents.buttonClicked({
-        buttonName: 'ep-sumr-claim-search',
-        page: pathname,
-      })
       openAuthModal()
 
       return
     }
 
     if (resolvedAddress) {
-      EarnProtocolEvents.buttonClicked({
-        buttonName: 'ep-sumr-claim-search',
-        page: pathname,
-        walletAddress: resolvedAddress,
-      })
-
       return
     }
     // eslint-disable-next-line no-console
@@ -116,7 +103,7 @@ export const SumrClaimSearch = () => {
           <Button
             variant="primaryLarge"
             style={{ minWidth: 'unset', width: '100%' }}
-            onClick={handleButtonClick}
+            onClick={handleSumrButtonClick}
             disabled={isButtonDisabled}
           >
             {resolvedButtonText}

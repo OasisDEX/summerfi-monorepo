@@ -66,10 +66,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         page: pathname,
       })
     } else {
-      EarnProtocolEvents.buttonClicked({
-        buttonName: 'ep-newsletter-subscribe',
-        page: pathname,
-      })
+      handleButtonClick('ep-newsletter-subscribe')
     }
   }
 
