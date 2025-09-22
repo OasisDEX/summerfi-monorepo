@@ -429,12 +429,6 @@ importers:
       lodash-es:
         specifier: ^4.17.1
         version: 4.17.21
-      mixpanel:
-        specifier: ^0.18.0
-        version: 0.18.0
-      mixpanel-browser:
-        specifier: ^2.53.0
-        version: 2.53.0
       next:
         specifier: 15.5.2
         version: 15.5.2(@babel/core@7.26.0)(react-dom@19.1.0)(react@19.1.0)
@@ -487,9 +481,6 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.1
         version: 4.17.12
-      '@types/mixpanel-browser':
-        specifier: ^2.49.0
-        version: 2.49.0
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.2

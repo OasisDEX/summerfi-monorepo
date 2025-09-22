@@ -85,7 +85,6 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
           arksInterestRates={arkInterestRates}
           vaultApyData={vaultApyData}
           columnsToHide={columnsToHide}
-          // mixpanel events - to be handled later
           tableId="vault-exposure"
           buttonClickEventHandler={() => {}}
         />

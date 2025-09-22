@@ -1,22 +1,12 @@
 'use client' // Error boundaries must be Client Components
 
-import { useEffect } from 'react'
 import { Button, Text } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { trackError } from '@/helpers/mixpanel'
-
 import errorImage from '@/public/img/misc/error.png'
 
 export default function GlobalErrorHandler({ error }: { error: Error & { digest?: string } }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    // eslint-disable-next-line no-console
-    console.error(error)
-    trackError({ id: error.message, page: 'GlobalErrorHandler', digest: error.digest })
-  }, [error])
-
   return (
     <div
       style={{

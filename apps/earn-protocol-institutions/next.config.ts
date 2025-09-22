@@ -27,7 +27,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       '@summerfi/subgraph-manager-common',
       '@tanstack/react-query',
       'graphql-request',
-      'mixpanel-browser',
       'pg',
       'recharts',
       'viem',
