@@ -38,7 +38,10 @@ export const PanelManageEditInternalUser = ({
         variant="cardSecondary"
         className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
       >
-        <Text variant="h2">You do not have permissions to manage users.</Text>
+        <Text variant="h2">Manage Internal Users</Text>
+        <div className={panelManageInternalUsersStyles.usersSection}>
+          <Text>You do not have permission to view this page.</Text>
+        </div>
       </Card>
     )
   }

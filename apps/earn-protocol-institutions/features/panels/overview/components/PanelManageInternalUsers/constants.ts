@@ -1,9 +1,5 @@
 export const usersPanelColumns = [
   {
-    label: 'User name',
-    accessor: 'cognitoUserName',
-  },
-  {
     label: 'Name',
     accessor: 'cognitoName',
   },
