@@ -111,32 +111,38 @@ async function generateDeclarations(): Promise<void> {
  * Update all .d.ts files in bundle/dist to replace @summerfi imports with absolute paths
  */
 function updateDeclarationImports(): void {
-  const bundleDistPath = path.resolve('bundle/dist')
-
-  if (!fs.existsSync(bundleDistPath)) {
-    console.warn('⚠️  bundle/dist directory not found, skipping declaration updates')
-    return
-  }
-
   try {
     console.log('📝 Updating declaration file imports...')
 
     // Recursively find all .d.ts files
+    // find path relative to sdk-client
+    const bundleDistPath = path.relative(process.cwd(), path.resolve('bundle/dist'))
+
+    const cwd = process.cwd()
+    console.log('Current working directory:', cwd)
+    console.log('bundleDistPath:', bundleDistPath)
+    if (!fs.existsSync(bundleDistPath)) {
+      console.warn('⚠️  bundle/dist directory not found, skipping declaration updates')
+      return
+    }
+
     const dtsFiles = findDtsFiles(bundleDistPath)
 
     for (const filePath of dtsFiles) {
       // Read the current content
       let content = fs.readFileSync(filePath, 'utf8')
+      const distRelativeToFile = path.relative(path.dirname(filePath), path.resolve('bundle/dist'))
+      console.log('distRelativeToFile:', distRelativeToFile)
 
       // Replace @summerfi imports with absolute paths
-      content = content.replace(/@summerfi\/sdk-common/g, `${bundleDistPath}/sdk-common`)
+      content = content.replace(/@summerfi\/sdk-common/g, `${distRelativeToFile || '.'}/sdk-common`)
       content = content.replace(
         /@summerfi\/protocol-plugins/g,
-        `${bundleDistPath}/protocol-plugins`,
+        `${distRelativeToFile || '.'}/protocol-plugins`,
       )
       content = content.replace(
         /@summerfi\/armada-protocol-common/g,
-        `${bundleDistPath}/armada-protocol-common`,
+        `${distRelativeToFile || '.'}/armada-protocol-common`,
       )
 
       // Write the updated content back to the file
