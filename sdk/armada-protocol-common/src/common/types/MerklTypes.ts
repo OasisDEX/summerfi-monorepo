@@ -148,15 +148,13 @@ export interface MerklReward {
   /** The merkle proofs for claiming */
   proofs: string[]
   /** Breakdown of the reward into components */
-  breakdowns: Record<
-    ChainId,
-    Record<
-      AddressValue,
-      {
-        total: string
-        claimable: string
-        claimed: string
-      }
-    >
-  >
+  breakdowns: Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>
+  /** List of unknown campaign breakdowns */
+  unknownCampaigns: MerklApiRewardBreakdown[]
+}
+
+export interface MerklRewardBreakdown {
+  amount: string
+  claimed: string
+  pending: string
 }

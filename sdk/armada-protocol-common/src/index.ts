@@ -64,6 +64,7 @@ export {
 export type { IArmadaManagerMerklRewards } from './common/interfaces/IArmadaManagerMerklRewards'
 export type {
   MerklReward,
+  MerklRewardBreakdown,
   MerklApiOpportunitiesResponse,
   MerklApiOpportunity,
   MerklApiOpportunityRewardsRecord,

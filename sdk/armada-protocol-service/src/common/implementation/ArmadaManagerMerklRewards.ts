@@ -5,6 +5,7 @@ import {
   type MerklApiRewardBreakdown,
   type MerklApiUsersResponse,
   type MerklReward,
+  type MerklRewardBreakdown,
 } from '@summerfi/armada-protocol-common'
 import {
   isChainId,
@@ -121,6 +122,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           ) {
             continue
           }
+          const parsedBreakdowns = this._parseBreakdowns(reward.breakdowns)
           rewards.push({
             token: reward.token,
             root: reward.root,
@@ -129,7 +131,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
-            breakdowns: this._parseBreakdowns(reward.breakdowns),
+            breakdowns: parsedBreakdowns.resultByChain,
+            unknownCampaigns: parsedBreakdowns.unknownCampaigns,
           })
         }
 
@@ -139,20 +142,34 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         merklRewardsPerChain[chainId].push(...rewards)
       })
 
-      LoggingService.debug('Successfully fetched Merkl rewards', {
-        address: userAddress,
-        perChain: Object.entries(merklRewardsPerChain).map(([chainId, rewards]) =>
-          JSON.stringify([
+      LoggingService.debug(
+        'Successfully parsed Merkl rewards data',
+        Object.entries(merklRewardsPerChain).map(([chainId, rewards]) =>
+          JSON.stringify({
             chainId,
-            rewards.map((reward) => ({
+            rewards: rewards.map((reward) => ({
               token: reward.token.symbol,
-              amount: reward.amount,
-              claimed: reward.claimed,
-              pending: reward.pending,
+              // use BigNumber for arithmetic/formatting instead of BigInt operations
+              amount: new BigNumber(reward.amount)
+                .div(new BigNumber(10).pow(reward.token.decimals))
+                .toFixed(3),
+              claimed: new BigNumber(reward.claimed)
+                .div(new BigNumber(10).pow(reward.token.decimals))
+                .toFixed(3),
+              unknownCampaignsAmount: reward.unknownCampaigns
+                .map((c) => c.amount)
+                .reduce((a, b) => a.plus(b), new BigNumber(0))
+                .div(new BigNumber(10).pow(reward.token.decimals))
+                .toFixed(3),
+              unknownCampaignsClaimed: reward.unknownCampaigns
+                .map((c) => c.claimed)
+                .reduce((a, b) => a.plus(b), new BigNumber(0))
+                .div(new BigNumber(10).pow(reward.token.decimals))
+                .toFixed(3),
             })),
-          ]),
+          }),
         ),
-      })
+      )
 
       return { perChain: merklRewardsPerChain }
     } catch (error) {
@@ -167,49 +184,56 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
   }
 
-  private _parseBreakdowns(
-    breakdowns: MerklApiRewardBreakdown[],
-  ): Record<ChainId, Record<AddressValue, { total: string; claimable: string; claimed: string }>> {
-    const resultByChain: Record<
-      ChainId,
-      Record<AddressValue, { total: string; claimable: string; claimed: string }>
-    > = Object.values(this._supportedChainIds).reduce(
+  private _parseBreakdowns(breakdowns: MerklApiRewardBreakdown[]): {
+    resultByChain: Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>
+    unknownCampaigns: MerklApiRewardBreakdown[]
+  } {
+    const resultByChain = Object.values(this._supportedChainIds).reduce(
       (acc, chainId) => {
         acc[chainId as ChainId] = {}
         return acc
       },
-      {} as Record<
-        ChainId,
-        Record<AddressValue, { total: string; claimable: string; claimed: string }>
-      >,
+      {} as Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>,
     )
+
+    const unknownCampaigns: MerklApiRewardBreakdown[] = []
+
     // aggregate breakdowns by chainId and fleetAddress
     for (const breakdown of breakdowns) {
       const vault = getVaultByMerklCampaignId(breakdown.campaignId)
-      if (!vault) continue
+
+      // If campaign ID is unknown, log to unknowns
+      if (!vault) {
+        LoggingService.debug('Unknown Merkl campaign ID in breakdown', {
+          campaignId: breakdown.campaignId,
+        })
+        unknownCampaigns.push(breakdown)
+        continue
+      }
+
       const { chainId, fleetAddress } = vault
+      const perChain = (resultByChain[chainId] ||= {} as Record<AddressValue, MerklRewardBreakdown>)
+
       // Normalize fleet address to ensure consistent key usage
-      const normalizedFleetAddress = fleetAddress.toLowerCase() as AddressValue
+      const rewardSourceKey = fleetAddress.toLowerCase() as AddressValue
       // Ensure perChain map exists for this chainId
-      const perChain = (resultByChain[chainId] ||= {} as Record<
-        AddressValue,
-        { total: string; claimable: string; claimed: string }
-      >)
-      const prev = perChain[normalizedFleetAddress]
-      const total = prev
-        ? new BigNumber(prev.total).plus(breakdown.amount)
+      const prev = perChain[rewardSourceKey]
+      const amount = prev
+        ? new BigNumber(prev.amount).plus(breakdown.amount)
         : new BigNumber(breakdown.amount)
       const claimed = prev
         ? new BigNumber(prev.claimed).plus(breakdown.claimed)
         : new BigNumber(breakdown.claimed)
-      perChain[normalizedFleetAddress] = {
-        total: total.toFixed(),
-        claimable: total.minus(claimed).toFixed(),
+      const pending = prev
+        ? new BigNumber(prev.pending).plus(breakdown.pending)
+        : new BigNumber(breakdown.pending)
+      perChain[rewardSourceKey] = {
+        amount: amount.toFixed(),
         claimed: claimed.toFixed(),
+        pending: pending.toFixed(),
       }
-      console.log('resultByChain', perChain[normalizedFleetAddress])
     }
-    return resultByChain
+    return { resultByChain, unknownCampaigns }
   }
 
   async getUserMerklClaimDirectTx(
@@ -217,7 +241,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']> {
     const { address, chainId } = params
 
-    LoggingService.debug('Generating Merkl claim transaction', {
+    LoggingService.debug('Generating getUserMerklClaimDirectTx', {
       address,
       chainId,
     })
@@ -239,7 +263,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
     const chainRewards = rewardsData.perChain[chainId]
     if (!chainRewards || chainRewards.length === 0) {
-      LoggingService.debug('No claimable Merkl rewards found', {
+      LoggingService.debug('Transaction generation skipped, no claimable Merkl rewards', {
         address,
         chainId,
       })
@@ -273,7 +297,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       LoggingService.debug('No matching rewards found', params.rewardsTokens)
       return undefined
     } else {
-      LoggingService.debug('Claiming matching rewards', {
+      LoggingService.debug('Found matching rewards', {
         users,
         tokens,
         amounts,
