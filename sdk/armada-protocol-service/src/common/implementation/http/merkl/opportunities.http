@@ -1,6 +1,6 @@
 ### by Protocol Name
 @name = SUMMER
-https://api.merkl.xyz/v4/opportunities?name={{name}}
+https://api.merkl.xyz/v4/opportunities?name={{name}}&status=PAST
 
 ### by Tag
 @tags = POOL

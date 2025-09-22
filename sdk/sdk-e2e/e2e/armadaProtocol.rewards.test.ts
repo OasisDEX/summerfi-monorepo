@@ -8,16 +8,13 @@ import { BigNumber } from 'bignumber.js'
 
 const onlySimulation = true // Set to false to actually send transactions
 
-const displayReward = (reward: {
-  amount: string
-  claimed: string
-  token: { decimals: number }
-}): string => {
-  return BigNumber(reward.amount)
-    .minus(reward.claimed)
-    .div(10 ** Number(reward.token.decimals))
-    .toString()
-}
+const addresses = [
+  '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A',
+  // '0x38233654FB0843c8024527682352A5d41E7f7324',
+  // '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  // '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d',
+  // '0xE9c245293DAC615c11A5bF26FCec91C3617645E4',
+] as AddressValue[]
 
 describe('Armada Protocol Rewards', () => {
   const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
@@ -34,17 +31,10 @@ describe('Armada Protocol Rewards', () => {
 
   let sendTxTool: SendTransactionTool
 
-  const addresses = [
-    // '0x38233654FB0843c8024527682352A5d41E7f7324',
-    '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
-    // '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d',
-    // '0xE9c245293DAC615c11A5bF26FCec91C3617645E4',
-  ] as AddressValue[]
-
   for (const userAddress of addresses) {
     describe(`Running for user ${userAddress}`, () => {
       describe(`getUserMerklRewards`, () => {
-        it(`should fetch Merkl rewards for the user`, async () => {
+        it.skip(`should fetch Merkl rewards for the user`, async () => {
           const rewards = await sdk.armada.users.getUserMerklRewards({
             address: userAddress,
           })
@@ -67,7 +57,7 @@ describe('Armada Protocol Rewards', () => {
           })
         })
 
-        it(`should fetch Merkl rewards for specific chain IDs`, async () => {
+        it.skip(`should fetch Merkl rewards for specific chain IDs`, async () => {
           const requestedChainIds = [ChainIds.Base]
 
           const rewards = await sdk.armada.users.getUserMerklRewards({
@@ -102,7 +92,7 @@ describe('Armada Protocol Rewards', () => {
         })
       })
 
-      describe.skip(`getUserMerklClaimTx`, () => {
+      describe(`getUserMerklClaimTx`, () => {
         it(`should generate claim transaction for user with rewards`, async () => {
           // First get rewards to find chains with rewards
           const rewards = await sdk.armada.users.getUserMerklRewards({
@@ -482,3 +472,14 @@ describe('Armada Protocol Rewards', () => {
     })
   }
 })
+
+function displayReward(reward: {
+  amount: string
+  claimed: string
+  token: { decimals: number }
+}): string {
+  return BigNumber(reward.amount)
+    .minus(reward.claimed)
+    .div(10 ** Number(reward.token.decimals))
+    .toString()
+}

@@ -34,4 +34,19 @@ export {
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
 export { GeneralRoles } from '@summerfi/armada-protocol-common'
+export type {
+  MerklReward,
+  MerklRewardBreakdown,
+  MerklApiOpportunitiesResponse,
+  MerklApiOpportunity,
+  MerklApiOpportunityRewardsRecord,
+  MerklApiOpportunityRewardsRecordBreakdown,
+  MerklApiOpportunityRewardsRecordBreakdownToken,
+  MerklApiUsersResponse,
+  MerklApiUser,
+  MerklApiChain,
+  MerklApiReward,
+  MerklApiRewardBreakdown,
+  MerklApiToken,
+} from '@summerfi/armada-protocol-common'
 export * from '@summerfi/sdk-common'
