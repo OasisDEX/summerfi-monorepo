@@ -45,12 +45,6 @@ export const mapGraphDataToArmadaPosition =
       })
     }
 
-    const fleetBalance = BigNumber(position.inputTokenBalance.toString()).div(
-      10 ** position.vault.inputToken.decimals,
-    )
-
-    const sharesBalance = BigNumber(position.outputTokenBalance.toString())
-
     const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
       (acc, reward) => {
         const vaultKey = position.vault.id.toLowerCase() as AddressValue
@@ -118,6 +112,9 @@ export const mapGraphDataToArmadaPosition =
       }
     })
 
+    const fleetBalance = BigNumber(position.inputTokenBalance.toString())
+    const sharesBalance = BigNumber(position.outputTokenBalance.toString())
+
     return ArmadaPosition.createFrom({
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
       pool: ArmadaVault.createFrom({
@@ -128,7 +125,7 @@ export const mapGraphDataToArmadaPosition =
           }),
         }),
       }),
-      shares: TokenAmount.createFrom({
+      shares: TokenAmount.createFromBaseUnit({
         amount: sharesBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
@@ -140,7 +137,7 @@ export const mapGraphDataToArmadaPosition =
           decimals: position.vault.outputToken.decimals,
         }),
       }),
-      amount: TokenAmount.createFrom({
+      amount: TokenAmount.createFromBaseUnit({
         amount: fleetBalance.toFixed(),
         token: Token.createFrom({
           chainInfo,
