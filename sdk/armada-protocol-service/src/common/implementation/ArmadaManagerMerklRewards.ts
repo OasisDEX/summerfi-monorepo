@@ -129,7 +129,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
-            breakdowns: this._parseBreakdowns(reward.breakdowns),
+            breakdowns: this._parseBreakdowns(reward.breakdowns).resultByChain,
+            unknownCampaigns: this._parseBreakdowns(reward.breakdowns).unknownCampaigns,
           })
         }
 
@@ -167,9 +168,13 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
   }
 
-  private _parseBreakdowns(
-    breakdowns: MerklApiRewardBreakdown[],
-  ): Record<ChainId, Record<AddressValue, { total: string; claimable: string; claimed: string }>> {
+  private _parseBreakdowns(breakdowns: MerklApiRewardBreakdown[]): {
+    resultByChain: Record<
+      ChainId,
+      Record<AddressValue, { total: string; claimable: string; claimed: string }>
+    >
+    unknownCampaigns: MerklApiRewardBreakdown[]
+  } {
     const resultByChain: Record<
       ChainId,
       Record<AddressValue, { total: string; claimable: string; claimed: string }>
@@ -183,33 +188,46 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         Record<AddressValue, { total: string; claimable: string; claimed: string }>
       >,
     )
+
+    const unknownCampaigns: MerklApiRewardBreakdown[] = []
+
     // aggregate breakdowns by chainId and fleetAddress
     for (const breakdown of breakdowns) {
       const vault = getVaultByMerklCampaignId(breakdown.campaignId)
-      if (!vault) continue
+
+      // If campaign ID is unknown, log to unknowns
+      if (!vault) {
+        LoggingService.debug('Unknown Merkl campaign ID in breakdown', {
+          campaignId: breakdown.campaignId,
+        })
+        unknownCampaigns.push(breakdown)
+        continue
+      }
+
       const { chainId, fleetAddress } = vault
-      // Normalize fleet address to ensure consistent key usage
-      const normalizedFleetAddress = fleetAddress.toLowerCase() as AddressValue
-      // Ensure perChain map exists for this chainId
       const perChain = (resultByChain[chainId] ||= {} as Record<
         AddressValue,
         { total: string; claimable: string; claimed: string }
       >)
-      const prev = perChain[normalizedFleetAddress]
+
+      // Normalize fleet address to ensure consistent key usage
+      const rewardSourceKey = fleetAddress.toLowerCase() as AddressValue
+      // Ensure perChain map exists for this chainId
+      const prev = perChain[rewardSourceKey]
       const total = prev
         ? new BigNumber(prev.total).plus(breakdown.amount)
         : new BigNumber(breakdown.amount)
       const claimed = prev
         ? new BigNumber(prev.claimed).plus(breakdown.claimed)
         : new BigNumber(breakdown.claimed)
-      perChain[normalizedFleetAddress] = {
+      perChain[rewardSourceKey] = {
         total: total.toFixed(),
         claimable: total.minus(claimed).toFixed(),
         claimed: claimed.toFixed(),
       }
-      console.log('resultByChain', perChain[normalizedFleetAddress])
+      console.log('resultByChain', perChain[rewardSourceKey])
     }
-    return resultByChain
+    return { resultByChain, unknownCampaigns }
   }
 
   async getUserMerklClaimDirectTx(

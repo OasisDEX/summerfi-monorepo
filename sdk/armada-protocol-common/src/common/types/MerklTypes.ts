@@ -159,4 +159,6 @@ export interface MerklReward {
       }
     >
   >
+  /** List of unknown campaign breakdowns */
+  unknownCampaigns: MerklApiRewardBreakdown[]
 }
