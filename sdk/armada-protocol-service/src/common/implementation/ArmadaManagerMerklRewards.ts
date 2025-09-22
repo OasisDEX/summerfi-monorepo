@@ -122,6 +122,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           ) {
             continue
           }
+          const parsedBreakdowns = this._parseBreakdowns(reward.breakdowns)
           rewards.push({
             token: reward.token,
             root: reward.root,
@@ -130,8 +131,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
             claimed: reward.claimed,
             pending: reward.pending,
             proofs: reward.proofs,
-            breakdowns: this._parseBreakdowns(reward.breakdowns).resultByChain,
-            unknownCampaigns: this._parseBreakdowns(reward.breakdowns).unknownCampaigns,
+            breakdowns: parsedBreakdowns.resultByChain,
+            unknownCampaigns: parsedBreakdowns.unknownCampaigns,
           })
         }
 
