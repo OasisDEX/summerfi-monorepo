@@ -3,7 +3,6 @@ import { type ChangeEvent, useState } from 'react'
 import { useAuthModal, useUser } from '@account-kit/react'
 import { Button, Input, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { PortfolioTabs } from '@/features/portfolio/types'
@@ -13,7 +12,6 @@ import classNames from './SumrClaimSearch.module.css'
 
 export const SumrClaimSearch = () => {
   const user = useUser()
-  const pathname = usePathname()
   const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
   const handleButtonClick = useHandleButtonClickEvent()

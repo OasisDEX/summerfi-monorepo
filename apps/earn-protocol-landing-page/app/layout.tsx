@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { GlobalStyles, GoogleTagManager } from '@summerfi/app-earn-ui'
 import type { Metadata } from 'next'
 
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GoogleTagManager />
         <LandingPageDataContextProvider>
           <LandingPageBanners />
-          <LandingMasterPage>{children}</LandingMasterPage>
+          <Suspense>
+            <LandingMasterPage>{children}</LandingMasterPage>
+          </Suspense>
         </LandingPageDataContextProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>
