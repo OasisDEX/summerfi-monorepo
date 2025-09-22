@@ -59,7 +59,10 @@ export const mapGraphDataToArmadaPosition =
         }
 
         return {
-          claimableSummerToken: acc.claimableSummerToken + BigInt(positionRewards.claimable || '0'),
+          claimableSummerToken:
+            acc.claimableSummerToken +
+            BigInt(positionRewards.amount || '0') -
+            BigInt(positionRewards.claimed || '0'),
           claimedSummerToken: acc.claimedSummerToken + BigInt(positionRewards.claimed || '0'),
         }
       },
