@@ -188,10 +188,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     resultByChain: Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>
     unknownCampaigns: MerklApiRewardBreakdown[]
   } {
-    const resultByChain: Record<
-      ChainId,
-      Record<AddressValue, Pick<MerklRewardBreakdown, 'amount' | 'claimed' | 'pending'>>
-    > = Object.values(this._supportedChainIds).reduce(
+    const resultByChain = Object.values(this._supportedChainIds).reduce(
       (acc, chainId) => {
         acc[chainId as ChainId] = {}
         return acc
