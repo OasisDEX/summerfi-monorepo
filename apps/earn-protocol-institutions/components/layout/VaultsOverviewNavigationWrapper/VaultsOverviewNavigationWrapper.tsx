@@ -7,7 +7,11 @@ import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getPanelOverviewNavigationTabId } from '@/helpers/get-pathname-tab-id'
 
-export const OverviewPanelNavigationWrapper = ({ institutionId }: { institutionId: string }) => {
+export const OverviewPanelNavigationWrapper = ({
+  institutionName,
+}: {
+  institutionName: string
+}) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const pathname = usePathname()
@@ -27,7 +31,7 @@ export const OverviewPanelNavigationWrapper = ({ institutionId }: { institutionI
           ),
           // eslint-disable-next-line no-console
           action: () => {
-            push(`/${institutionId}/overview/institution`)
+            push(`/${institutionName}/overview/institution`)
           },
           isActive: panelNavigationTabId === 'institution',
         },
@@ -40,7 +44,7 @@ export const OverviewPanelNavigationWrapper = ({ institutionId }: { institutionI
           ),
           // eslint-disable-next-line no-console
           action: () => {
-            push(`/${institutionId}/overview/manage-internal-users`)
+            push(`/${institutionName}/overview/manage-internal-users`)
           },
           isActive: panelNavigationTabId === 'manage-internal-users',
         },

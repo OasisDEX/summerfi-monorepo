@@ -53,7 +53,7 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
     if (nextVault) {
       push(
         getInstitutionVaultUrl({
-          institutionId: institution.name,
+          institutionName: institution.name,
           vault: nextVault,
           page: getPanelVaultNavigationTabId(pathname),
         }),

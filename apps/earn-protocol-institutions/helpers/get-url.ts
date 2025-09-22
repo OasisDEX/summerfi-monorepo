@@ -2,24 +2,24 @@ import { type SDKVaultishType } from '@summerfi/app-types'
 import { sdkNetworkToHumanNetwork, supportedSDKNetwork } from '@summerfi/app-utils'
 
 export const getInstitutionVaultUrl = ({
-  institutionId,
+  institutionName,
   vault,
   page,
 }: {
-  institutionId: string
+  institutionName: string
   vault: SDKVaultishType
   page?: string
 }): string => {
-  return `/${institutionId}/vaults/${sdkNetworkToHumanNetwork(
+  return `/${institutionName}/vaults/${sdkNetworkToHumanNetwork(
     supportedSDKNetwork(vault.protocol.network),
   )}/${vault.id}/${page ?? 'overview'}`
 }
 export const getInstitutionUrl = ({
-  institutionId,
+  institutionName,
   tab,
 }: {
-  institutionId: string
+  institutionName: string
   tab?: string
 }): string => {
-  return `/${institutionId}/${tab ?? 'overview'}`
+  return `/${institutionName}/${tab ?? 'overview'}`
 }

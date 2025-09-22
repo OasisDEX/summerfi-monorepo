@@ -5,9 +5,9 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
-export const getInstitutionVaults = async ({ institutionId }: { institutionId: string }) => {
-  if (!institutionId) return null
-  if (typeof institutionId !== 'string') return null
+export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
+  if (!institutionName) return null
+  if (typeof institutionName !== 'string') return null
 
   const testInstitutionVaults = ['0x29f13a877f3d1a14ac0b15b07536d4423b35e198'].map((vault) =>
     vault.toLowerCase(),
@@ -17,7 +17,7 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
   try {
     const systemConfig = await configEarnAppFetcher()
 
-    const institutionSdk = getInstitutionsSDK(institutionId)
+    const institutionSdk = getInstitutionsSDK(institutionName)
     const vaultsListByNetwork = await Promise.all(
       testInstitutionNetworks.map((networkId) =>
         institutionSdk.armada.users.getVaultsRaw({
@@ -45,15 +45,15 @@ export const getInstitutionVaults = async ({ institutionId }: { institutionId: s
 
 export const getInstitutionVault = async ({
   network,
-  institutionId,
+  institutionName,
   vaultAddress,
 }: {
-  institutionId: string
+  institutionName: string
   network: SupportedSDKNetworks
   vaultAddress: string
 }) => {
-  if (!institutionId) return null
-  if (typeof institutionId !== 'string') return null
+  if (!institutionName) return null
+  if (typeof institutionName !== 'string') return null
 
   try {
     const chainId = subgraphNetworkToId(network)
@@ -66,7 +66,7 @@ export const getInstitutionVault = async ({
       chainInfo,
       fleetAddress,
     })
-    const institutionSdk = getInstitutionsSDK(institutionId)
+    const institutionSdk = getInstitutionsSDK(institutionName)
     const [vault, systemConfig] = await Promise.all([
       institutionSdk.armada.users.getVaultRaw({
         vaultId: poolId,

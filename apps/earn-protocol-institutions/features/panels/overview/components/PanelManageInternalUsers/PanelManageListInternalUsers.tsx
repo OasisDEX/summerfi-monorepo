@@ -1,6 +1,7 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import { addInstitutionUser } from '@/app/server-handlers/institution/institution-users'
 import { type SessionPayload } from '@/features/auth/types'
 import { usersPanelColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/constants'
 import { institutionsInternalUsersDisplayRow } from '@/features/panels/overview/components/PanelManageInternalUsers/helpers'
@@ -21,16 +22,30 @@ type PanelManageListInternalUsersProps = {
     name: string | null
     institutionDisplayName: string | null
   }[]
-  institutionId: string
+  institutionName: string
   session: SessionPayload
 }
 
 export const PanelManageListInternalUsers = ({
   users,
-  institutionId,
+  institutionName,
   session,
 }: PanelManageListInternalUsersProps) => {
-  const { canManageUsers } = getUserPrivileges(session, institutionId)
+  const { canManageUsers } = getUserPrivileges(session, institutionName)
+
+  if (!canManageUsers) {
+    return (
+      <Card
+        variant="cardSecondary"
+        className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
+      >
+        <Text variant="h2">Manage Internal Users</Text>
+        <div className={panelManageInternalUsersStyles.usersSection}>
+          <Text>You do not have permission to view this page.</Text>
+        </div>
+      </Card>
+    )
+  }
 
   return (
     <Card
@@ -68,7 +83,7 @@ export const PanelManageListInternalUsers = ({
                                 <Link
                                   href={
                                     canManageUsers
-                                      ? `/${institutionId}/overview/manage-internal-users/edit/${row.id}`
+                                      ? `/${institutionName}/overview/manage-internal-users/edit/${row.id}`
                                       : '#'
                                   }
                                 >
@@ -79,7 +94,7 @@ export const PanelManageListInternalUsers = ({
                                 <Link
                                   href={
                                     canManageUsers
-                                      ? `/${institutionId}/overview/manage-internal-users/delete/${row.id}`
+                                      ? `/${institutionName}/overview/manage-internal-users/delete/${row.id}`
                                       : '#'
                                   }
                                 >
@@ -104,6 +119,41 @@ export const PanelManageListInternalUsers = ({
           </div>
         )}
       </div>
+      <Text variant="h3">Add user</Text>
+      <form action={addInstitutionUser} className={panelManageInternalUsersStyles.addUserForm}>
+        <input type="hidden" name="institutionName" value={institutionName} />
+        <div className={panelManageInternalUsersStyles.formFields}>
+          <div className={panelManageInternalUsersStyles.formField}>
+            <label htmlFor="email" className={panelManageInternalUsersStyles.formLabel}>
+              Email
+            </label>
+            <input name="email" type="email" placeholder="Email" required />
+          </div>
+          <div className={panelManageInternalUsersStyles.formField}>
+            <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
+              Full name
+            </label>
+            <input name="name" placeholder="Full name" required />
+          </div>
+          <div className={panelManageInternalUsersStyles.formField}>
+            <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
+              Role
+            </label>
+            <select name="role" defaultValue="Viewer">
+              <option value="RoleAdmin">RoleAdmin</option>
+              <option value="SuperAdmin">SuperAdmin</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
+        </div>
+        <Button
+          variant="primarySmall"
+          type="submit"
+          className={panelManageInternalUsersStyles.addUserButton}
+        >
+          Add&nbsp;User
+        </Button>
+      </form>
     </Card>
   )
 }
