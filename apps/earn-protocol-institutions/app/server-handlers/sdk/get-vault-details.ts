@@ -5,15 +5,15 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 import { getInstitutionsSDK } from '.'
 
 export async function getVaultDetails({
-  institutionID,
+  institutionName,
   vaultAddress,
   network,
 }: {
-  institutionID: string
+  institutionName: string
   vaultAddress?: string
   network: SupportedSDKNetworks
 }) {
-  const institutionSDK = getInstitutionsSDK(institutionID)
+  const institutionSDK = getInstitutionsSDK(institutionName)
 
   try {
     if (!vaultAddress) {

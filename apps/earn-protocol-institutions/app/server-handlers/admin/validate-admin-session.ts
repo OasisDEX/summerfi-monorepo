@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { logout } from '@/app/server-handlers/auth/logout'
 import { readSession } from '@/app/server-handlers/auth/session'
 
-export const validateGlobalAdminSession = async () => {
+export const rootAdminValidateAdminSession = async () => {
   const session = await readSession()
 
   if (!session || !session.user?.isGlobalAdmin) {

@@ -60,7 +60,7 @@ export async function POST() {
     const existing = await readSession()
 
     if (!existing?.user?.email || !existing.sub || !existing.cognitoUsername) {
-      throw new Error('Missing user data')
+      return NextResponse.json({ error: 'Invalid session' }, { status: 401 })
     }
 
     // To ensure consistency with the successful sign-in flow, we must use the

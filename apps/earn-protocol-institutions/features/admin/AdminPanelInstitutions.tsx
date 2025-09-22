@@ -3,8 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import {
-  adminGetInstitutionsList,
-  createInstitution,
+  rootAdminActionCreateInstitution,
+  rootAdminActionGetInstitutionsList,
 } from '@/app/server-handlers/admin/institution'
 import { institutionsAdminPanelColumns } from '@/features/admin/constants'
 import {
@@ -19,7 +19,7 @@ const AddInstitutionForm = () => {
     <Card variant="cardGradientDark">
       <div className={styles.addInstitutionFormWrapper}>
         <Text variant="h4">Add Institution</Text>
-        <form action={createInstitution} className={styles.addInstitutionForm}>
+        <form action={rootAdminActionCreateInstitution} className={styles.addInstitutionForm}>
           <div className={styles.formFields}>
             <div className={styles.formField}>
               <label htmlFor="name" className={styles.formLabel}>
@@ -72,7 +72,7 @@ const AddInstitutionForm = () => {
 const InstitutionsListTable = ({
   institutions,
 }: {
-  institutions: Awaited<ReturnType<typeof adminGetInstitutionsList>>
+  institutions: Awaited<ReturnType<typeof rootAdminActionGetInstitutionsList>>
 }) => {
   return (
     <div className={styles.institutionsListWrapper}>
@@ -154,7 +154,7 @@ const InstitutionsListTable = ({
 }
 
 export const AdminPanelInstitutions = async () => {
-  const institutions = await adminGetInstitutionsList()
+  const institutions = await rootAdminActionGetInstitutionsList()
 
   return (
     <div className={styles.adminPanelInstitutions}>

@@ -57,10 +57,10 @@ const panelItems = [
 
 export const VaultsPanelNavigationWrapper = ({
   selectedVault,
-  institutionId,
+  institutionName,
 }: {
   selectedVault: SDKVaultishType
-  institutionId: string
+  institutionName: string
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -78,7 +78,7 @@ export const VaultsPanelNavigationWrapper = ({
         action: () => {
           push(
             getInstitutionVaultUrl({
-              institutionId,
+              institutionName,
               vault: selectedVault,
               page: item.id,
             }),

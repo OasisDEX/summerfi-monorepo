@@ -1,20 +1,23 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { getInstitutionData, updateInstitution } from '@/app/server-handlers/admin/institution'
+import {
+  rootAdminActionGetInstitutionData,
+  rootAdminActionUpdateInstitution,
+} from '@/app/server-handlers/admin/institution'
 
 import styles from './AdminPanelInstitutions.module.css'
 
 const UpdateInstitutionForm = ({
   institution,
 }: {
-  institution: Awaited<ReturnType<typeof getInstitutionData>>
+  institution: Awaited<ReturnType<typeof rootAdminActionGetInstitutionData>>
 }) => {
   return (
     <Card variant="cardGradientDark">
       <div className={styles.editInstitutionFormWrapper}>
         <Text variant="h4">Update Institution</Text>
-        <form action={updateInstitution} className={styles.editInstitutionForm}>
+        <form action={rootAdminActionUpdateInstitution} className={styles.editInstitutionForm}>
           <div className={styles.formFields}>
             <input type="hidden" name="id" value={institution?.id} />
             <div className={styles.formField}>
@@ -91,7 +94,7 @@ export const AdminPanelInstitutionsUpdate = async ({
   if (!institutionDbId || isNaN(Number(institutionDbId))) {
     throw new Error('institutionDbId is required')
   }
-  const institution = await getInstitutionData(Number(institutionDbId))
+  const institution = await rootAdminActionGetInstitutionData(Number(institutionDbId))
 
   return (
     <div className={styles.adminPanelInstitutions}>

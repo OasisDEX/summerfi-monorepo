@@ -1,14 +1,17 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { deleteGlobalAdmin, getGlobalAdminData } from '@/app/server-handlers/admin/user'
+import {
+  rootAdminActionDeleteGlobalAdmin,
+  rootAdminActionGetGlobalAdminData,
+} from '@/app/server-handlers/admin/user'
 
 import styles from './AdminPanelUsers.module.css'
 
 const DeleteUserForm = ({
   globalAdmin,
 }: {
-  globalAdmin: Awaited<ReturnType<typeof getGlobalAdminData>>
+  globalAdmin: Awaited<ReturnType<typeof rootAdminActionGetGlobalAdminData>>
 }) => {
   return (
     <Card variant="cardGradientDark">
@@ -18,7 +21,7 @@ const DeleteUserForm = ({
           Deleting the GLOBAL ADMIN will remove: the DB entry in our DB and the cognito user pool
           entry.
         </Text>
-        <form action={deleteGlobalAdmin} className={styles.editUserForm}>
+        <form action={rootAdminActionDeleteGlobalAdmin} className={styles.editUserForm}>
           <div className={styles.formFields}>
             <input type="hidden" name="userSub" value={globalAdmin.userSub} />
             <div className={styles.formField}>
@@ -72,7 +75,7 @@ export const AdminPanelGlobalAdminsDelete = async ({ userDbId }: { userDbId: str
   if (!userDbId || isNaN(Number(userDbId))) {
     throw new Error('userDbId is required')
   }
-  const globalAdmin = await getGlobalAdminData(Number(userDbId))
+  const globalAdmin = await rootAdminActionGetGlobalAdminData(Number(userDbId))
 
   return (
     <div className={styles.adminPanelUsers}>

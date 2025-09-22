@@ -1,14 +1,17 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { deleteInstitution, getInstitutionData } from '@/app/server-handlers/admin/institution'
+import {
+  rootAdminActionDeleteInstitution,
+  rootAdminActionGetInstitutionData,
+} from '@/app/server-handlers/admin/institution'
 
 import styles from './AdminPanelInstitutions.module.css'
 
 const DeleteInstitutionForm = ({
   institution,
 }: {
-  institution: Awaited<ReturnType<typeof getInstitutionData>>
+  institution: Awaited<ReturnType<typeof rootAdminActionGetInstitutionData>>
 }) => {
   return (
     <Card variant="cardGradientDark">
@@ -18,7 +21,7 @@ const DeleteInstitutionForm = ({
           Deleting the institution will remove: the institution itself and all of the users added to
           that institution (from the DB and cognito user pool)
         </Text>
-        <form action={deleteInstitution} className={styles.editInstitutionForm}>
+        <form action={rootAdminActionDeleteInstitution} className={styles.editInstitutionForm}>
           <div className={styles.formFields}>
             <input type="hidden" name="id" value={institution?.id} />
             <div className={styles.formField}>
@@ -76,7 +79,7 @@ export const AdminPanelInstitutionsDelete = async ({
   if (!institutionDbId || isNaN(Number(institutionDbId))) {
     throw new Error('institutionDbId is required')
   }
-  const institution = await getInstitutionData(Number(institutionDbId))
+  const institution = await rootAdminActionGetInstitutionData(Number(institutionDbId))
 
   return (
     <div className={styles.adminPanelInstitutions}>

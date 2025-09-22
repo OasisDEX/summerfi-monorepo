@@ -8,10 +8,10 @@ import { getMainTabBarTabId } from '@/helpers/get-pathname-tab-id'
 import { getInstitutionUrl, getInstitutionVaultUrl } from '@/helpers/get-url'
 
 export const InstitutionTabBar = ({
-  institutionId,
+  institutionName,
   defaultVault,
 }: {
-  institutionId: string
+  institutionName: string
   defaultVault: SDKVaultishType
 }) => {
   const pathname = usePathname()
@@ -26,7 +26,7 @@ export const InstitutionTabBar = ({
           id: 'overview',
           label: 'Overview',
           url: getInstitutionUrl({
-            institutionId,
+            institutionName,
             tab: 'overview/institution',
           }),
         },
@@ -34,7 +34,7 @@ export const InstitutionTabBar = ({
           id: 'vaults',
           label: 'Vaults',
           url: getInstitutionVaultUrl({
-            institutionId,
+            institutionName,
             vault: defaultVault,
           }),
         },
@@ -42,7 +42,7 @@ export const InstitutionTabBar = ({
           id: 'risk',
           label: 'Risk',
           url: getInstitutionUrl({
-            institutionId,
+            institutionName,
             tab: 'risk',
           }),
         },
@@ -50,7 +50,7 @@ export const InstitutionTabBar = ({
           id: 'fees-revenue',
           label: 'Fees & Revenue',
           url: getInstitutionUrl({
-            institutionId,
+            institutionName,
             tab: 'fees-revenue',
           }),
         },
@@ -58,7 +58,7 @@ export const InstitutionTabBar = ({
           id: 'reports',
           label: 'Reports',
           url: getInstitutionUrl({
-            institutionId,
+            institutionName,
             tab: 'reports',
           }),
         },
@@ -66,7 +66,7 @@ export const InstitutionTabBar = ({
           id: 'news',
           label: 'News',
           url: getInstitutionUrl({
-            institutionId,
+            institutionName,
             tab: 'news',
           }),
         },
