@@ -17,14 +17,8 @@ export const getPositionValues = (portfolioPosition: {
 }) => {
   const netValue = new BigNumber(portfolioPosition.position.amount.amount)
 
-  const depositsSum = portfolioPosition.position.deposits.reduce(
-    (acc, { amount }) => acc.plus(amount.amount),
-    new BigNumber(0),
-  )
-  const withdrawalsSum = portfolioPosition.position.withdrawals.reduce(
-    (acc, { amount }) => acc.plus(amount.amount), // these are NEGATIVE values
-    new BigNumber(0),
-  )
+  const depositsSum = new BigNumber(portfolioPosition.position.depositsAmount.amount)
+  const withdrawalsSum = new BigNumber(portfolioPosition.position.withdrawalsAmount.amount)
 
   const netDeposited = depositsSum.plus(withdrawalsSum)
   const netEarnings = netValue.minus(netDeposited)
