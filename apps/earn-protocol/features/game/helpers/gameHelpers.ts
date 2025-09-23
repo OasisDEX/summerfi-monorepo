@@ -3,7 +3,7 @@ import { createHmac } from 'crypto'
 import { MINIMUM_ROUND_TIME, STARTING_ROUND_TIME } from '@/features/game/helpers/constants'
 import { type CardData, type GameOverParams } from '@/features/game/types'
 
-export function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
+function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
   const points = 20 // Increased from 8 to 20 for more detail
   let y = apy + 2 + Number(Math.random() * 2)
   const trend = apy >= 10 ? 1 : apy <= 3 ? -1 : 0.5
@@ -19,7 +19,7 @@ export function getTrendDataForAPY(apy: number): { x: number; y: number }[] {
   })
 }
 
-export function getRandomToken(): string {
+function getRandomToken(): string {
   const tokens = ['ETH', 'USDC', 'USDT', 'EURC']
 
   return tokens[Math.floor(Math.random() * tokens.length)]
@@ -105,7 +105,7 @@ export const finishGameBackend = async ({
   }
 }
 
-export const hashGameData = (responseTimes: number[], gameId: string): string => {
+const hashGameData = (responseTimes: number[], gameId: string): string => {
   const hmac = createHmac('sha256', gameId)
   const data = responseTimes.join(',')
 

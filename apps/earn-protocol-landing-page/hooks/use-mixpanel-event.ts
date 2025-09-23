@@ -27,7 +27,7 @@ const searchParamsList = [
  * Returns a `track` function: (handlerKey, params) => void
  */
 
-export const useMixpanelTracker = () => {
+const useMixpanelTracker = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 

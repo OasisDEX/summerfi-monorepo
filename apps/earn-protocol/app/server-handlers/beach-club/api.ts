@@ -102,7 +102,8 @@ export const getBeachClubRecruitedUsersServerSide = async ({
           'user_id',
           'in',
           recruitedUsers.length > 0
-            ? recruitedUsers.map((user) => user.id).filter((id): id is string => id !== null)
+            ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              recruitedUsers.map((user) => user.id).filter((id): id is string => id !== null)
             : [''],
         )
         .groupBy('user_id')

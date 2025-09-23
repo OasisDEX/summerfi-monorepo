@@ -1,13 +1,9 @@
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-type ActivePeriod = {
-  openTimestamp: string
-  closeTimestamp: string | undefined
-}
-
-type PositionsActivePeriods = {
-  [vaultId: string]: ActivePeriod[]
-}
+import {
+  type ActivePeriod,
+  type PositionsActivePeriods,
+} from '@/app/server-handlers/tables-data/rebalance-activity/types'
 
 // Helper function to check if balance is effectively zero
 const isBalanceZero = (balance: string): boolean => {
@@ -47,6 +43,7 @@ export const getPositionsActivePeriods = async (walletAddress: string) => {
     const activitiesByVault = userLatestActivity.reduce<{
       [vaultId: string]: typeof userLatestActivity
     }>((acc, activity) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[activity.vaultId]) {
         acc[activity.vaultId] = []
       }
@@ -75,6 +72,7 @@ export const getPositionsActivePeriods = async (walletAddress: string) => {
             periodStart = activity.timestamp
           }
           runningBalance += parseFloat(activity.amount)
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         } else if (activity.actionType === 'withdraw') {
           runningBalance -= Math.abs(parseFloat(activity.amount)) // Withdrawals are negative amounts
 

@@ -21,7 +21,6 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
       '@account-kit/core',
       '@account-kit/infra',
       '@account-kit/react',
-      '@account-kit/signer',
       '@layerzerolabs/scan-client',
       '@safe-global/safe-apps-sdk',
       '@summerfi/app-earn-ui',

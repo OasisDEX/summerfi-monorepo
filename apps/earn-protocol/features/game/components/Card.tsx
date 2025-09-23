@@ -4,7 +4,7 @@ import { Line, LineChart, ResponsiveContainer } from 'recharts'
 
 import styles from './Card.module.css'
 
-export interface CardProps {
+interface CardProps {
   apy: number
   trendData: { x: number; y: number }[]
   selected?: boolean

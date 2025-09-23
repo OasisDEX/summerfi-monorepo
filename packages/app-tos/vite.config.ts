@@ -86,7 +86,6 @@ export default defineConfig(({ mode }) => {
           'viem',
           'viem/chains',
           'graphql',
-          'graphql-tag',
           '@safe-global/safe-apps-sdk',
           'jose',
           '@summerfi/app-types',

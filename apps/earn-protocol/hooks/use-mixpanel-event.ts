@@ -74,7 +74,7 @@ const flushPending = (userData: { [key: string]: any } = {}) => {
  * Returns a `track` function: (handlerKey, params) => void
  */
 
-export const useMixpanelTracker = () => {
+const useMixpanelTracker = () => {
   const pathname = usePathname()
   const user = useUser()
   const searchParams = useSearchParams()

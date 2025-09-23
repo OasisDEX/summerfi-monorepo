@@ -32,7 +32,7 @@ const actionTypeMap: {
   'n/a': { label: 'n/a', icon: 'not_supported_icon' },
 }
 
-export const rebalanceActivityPurposeMapper = (
+const rebalanceActivityPurposeMapper = (
   item: RebalanceActivity,
 ): { label: string; icon: IconNamesList } => {
   return actionTypeMap[item.actionType]
