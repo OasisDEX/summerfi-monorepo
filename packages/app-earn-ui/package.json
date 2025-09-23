@@ -48,7 +48,6 @@
     "@account-kit/core": "^4.52.2",
     "@account-kit/infra": "^4.52.2",
     "@account-kit/react": "^4.52.2",
-    "@account-kit/signer": "^4.52.2",
     "@loadable/component": "^5.16.4",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
