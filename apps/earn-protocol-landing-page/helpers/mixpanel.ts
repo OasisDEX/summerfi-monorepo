@@ -20,10 +20,7 @@ const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
 // --- Generic trackEvent helper ---
-export function trackEvent<E extends EarnProtocolEventNames>(
-  ev: E,
-  props: EarnProtocolEventPropsMap[E],
-) {
+function trackEvent<E extends EarnProtocolEventNames>(ev: E, props: EarnProtocolEventPropsMap[E]) {
   const eventData = {
     eventName: ev,
     eventBody: {
