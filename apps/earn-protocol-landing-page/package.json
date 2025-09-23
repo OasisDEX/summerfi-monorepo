@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "prebuild": "pnpm:generate-module-types",
+    "prebuild": "pnpm generate-module-types",
     "dev": "dotenv -e ../../.env -e ../../.env.local -- concurrently \"next dev -p 3003 --turbopack\" \"pnpm:generate-module-types-watch\"",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3003",
