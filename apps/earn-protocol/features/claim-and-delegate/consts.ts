@@ -19,7 +19,7 @@ interface SumrDelegate {
   picture: string | undefined
 }
 
-export interface SumrDelegateWithDecayFactor extends SumrDelegate {
+interface SumrDelegateWithDecayFactor extends SumrDelegate {
   decayFactor: number
 }
 

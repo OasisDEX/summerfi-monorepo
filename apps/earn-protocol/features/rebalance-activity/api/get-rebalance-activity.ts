@@ -19,7 +19,7 @@ import { normalizeQueryTableFilters } from '@/helpers/normalize-query-table-filt
  *
  * @returns {Promise<RebalanceActivityPagination>} A promise resolving to the API response in JSON format.
  */
-export const getRebalanceActivity = async ({
+const getRebalanceActivity = async ({
   page,
   limit = 50,
   tokens,

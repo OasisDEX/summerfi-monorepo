@@ -20,15 +20,6 @@ export interface BeachClubRewardBalance {
   total_claimed: string
 }
 
-export type BeachClubRecruitedUsersRewards = {
-  [key: string]: {
-    id: string
-    referral_code: string | null
-    tvl: string
-    rewards: BeachClubRewardBalance[]
-  }
-}
-
 export type BeachClubRecruitedUsersPagination = {
   data: BeachClubReferralList
   pagination: {

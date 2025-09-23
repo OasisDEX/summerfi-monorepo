@@ -287,7 +287,7 @@ function scheduleNote(noteTime: number) {
     if (currentIntensityLevel >= 2 && current16thNote % 8 === 0) {
       const distortion = audioContext.createWaveShaper()
 
-      distortion.curve = makeDistortionCurve(20) // Mild distortion
+      distortion.curve = makeDistortionCurve(20) as Float32Array<ArrayBuffer> // Mild distortion
       noteGain.connect(distortion)
       distortion.connect(mainGainNode)
     } else {
@@ -881,15 +881,6 @@ export function stopMusic() {
 
   // Clear delay nodes when stopping music
   delayNodes = {}
-}
-
-// Function to ensure AudioContext is resumed after user interaction
-export function ensureAudioContextResumed() {
-  if (!initAudioContext()) return
-  if (audioContext && audioContext.state === 'suspended') {
-    // eslint-disable-next-line no-console
-    audioContext.resume().catch((e) => console.error('Error resuming AudioContext:', e))
-  }
 }
 
 export function setMusicVolume(volume: number) {

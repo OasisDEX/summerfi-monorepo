@@ -7,8 +7,6 @@ export enum NetworkNames {
   arbitrumMainnet = 'arbitrum',
   optimismMainnet = 'optimism',
   baseMainnet = 'base',
-  baseGoerli = 'base_goerli',
-
   sonicMainnet = 'sonic',
 }
 

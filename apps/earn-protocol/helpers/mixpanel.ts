@@ -22,7 +22,7 @@ const optedOutCheck = () =>
 const includeBasePath = (path: string) => `/earn${path.replace(/\/$/u, '')}`
 
 // --- Generic trackEvent helper ---
-export function trackEvent<E extends EarnProtocolEventNames>(
+function trackEvent<E extends EarnProtocolEventNames>(
   ev: E,
   props: EarnProtocolEventPropsMap[E],
 ) {
