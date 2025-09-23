@@ -298,8 +298,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
         if (chainInfo.chainId === this._hubChainInfo.chainId) {
           // on hubchain we add delegation and distribution rewards
-          perChain[chainInfo.chainId] =
-            usageRewards.total + voteDelegationRewards + merkleDistributionRewards
+          perChain[chainInfo.chainId] = usageRewards.total + merkleDistributionRewards
         } else {
           // on other chains we add only protocol usage rewards
           perChain[chainInfo.chainId] = usageRewards.total
@@ -527,8 +526,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     params: Parameters<IArmadaManagerClaims['getAggregatedClaimsForChainTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTx']> {
     const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
-
     const govRewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+
+    LoggingService.debug(
+      `Generating aggregated claim tx on ${params.chainInfo.toString() + isHubChain ? ' (on hub chain)' : ''} for user ${params.user.wallet.address.value}` +
+        (params.includeMerkl ? ' including merkl rewards' : ''),
+    )
 
     const multicallArgs: HexData[] = []
     const multicallOperations: string[] = []
@@ -643,6 +646,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     LoggingService.debug(
       'Multicall with claims on: ' + params.chainInfo.toString(),
       multicallOperations,
+      multicallArgs.length,
     )
 
     return [
@@ -650,7 +654,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         type: TransactionType.Claim,
         description:
           'Claiming aggregated rewards' +
-          (params.includeMerkl ? ' including merkl rewards: ' : ': '),
+          (params.includeMerkl ? ' including merkl rewards: ' : ': ') +
+          multicallOperations.join(', '),
         transaction: {
           target: admiralsQuartersAddress,
           calldata: multicallCalldata,
