@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import { Button, Card, Icon, LoadingSpinner, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, LoadingSpinner, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -10,6 +10,7 @@ import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToClaimProps {
   earned: string
+  claimableRaw: number
   earnedInUSD: string
   balance: string
   chainId: SupportedNetworkIds
@@ -23,6 +24,7 @@ interface ClaimDelegateToClaimProps {
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   earned,
+  claimableRaw,
   balance,
   chainId,
   onClaim,
@@ -71,9 +73,18 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
           <Icon tokenName="SUMR" size={36} />
         </div>
         <div className={classNames.valueWrapper}>
-          <Text as="h2" variant="h2">
-            {earned}
-          </Text>
+          <Tooltip
+            tooltip={<>{claimableRaw.toFixed(2)}&nbsp;SUMR</>}
+            tooltipName="claimable-sumr-tooltip"
+            showAbove
+            tooltipWrapperStyles={{
+              top: '-40px',
+            }}
+          >
+            <Text as="h2" variant="h2">
+              {earned}
+            </Text>
+          </Tooltip>
         </div>
       </div>
       <div className={classNames.walletBalanceWrapper}>

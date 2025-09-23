@@ -30,8 +30,16 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
       .reduce<ClaimableBalances>((acc, chainId) => {
         const numericChainId = chainId as SupportedNetworkIds
 
+        const baseAdditionalRewards =
+          numericChainId === SupportedNetworkIds.Base
+            ? Number(externalData.sumrToClaim.voteRewards + externalData.sumrToClaim.merklRewards)
+            : 0
+
         acc[numericChainId] =
-          externalData.sumrToClaim.aggregatedRewards.perChain[numericChainId] || 0
+          Number(
+            externalData.sumrToClaim.aggregatedRewards.perChain[numericChainId] +
+              baseAdditionalRewards,
+          ) || 0
 
         return acc
       }, {} as ClaimableBalances),

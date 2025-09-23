@@ -53,6 +53,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
     <ClaimDelegateToClaim
       chainId={chainId}
       earned={formattedClaimable}
+      claimableRaw={claimableAmount}
       balance={formattedBalance}
       earnedInUSD={formatFiatBalance(claimableAmount * estimatedSumrPrice)}
       onClaim={onClaim}

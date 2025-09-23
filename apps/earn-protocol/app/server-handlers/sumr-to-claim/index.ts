@@ -10,6 +10,8 @@ export interface SumrToClaimData {
     total: number
     perChain: { [key: number]: number }
   }
+  merklRewards: number
+  voteRewards: number
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
 
@@ -54,6 +56,8 @@ export const getSumrToClaim = async ({
         ]),
       ),
     },
+    merklRewards: Number(aggregatedRewards.merkleDistribution) / 10 ** 18,
+    voteRewards: Number(aggregatedRewards.voteDelegation) / 10 ** 18,
     merklIsAuthorizedPerChain: Object.fromEntries(
       chains.map((chainId, index) => [chainId, isAuthorizedAsMerklRewardsOperatorPerChain[index]]),
     ),
