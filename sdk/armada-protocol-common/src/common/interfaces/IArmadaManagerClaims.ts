@@ -5,6 +5,7 @@ import type {
   IChainInfo,
   IUser,
 } from '@summerfi/sdk-common'
+import type { Claim } from '../../distributions'
 
 /**
  * @name IArmadaManagerClaims
@@ -31,6 +32,7 @@ export interface IArmadaManagerClaims {
    */
   hasClaimedDistributions: (params: {
     user: IUser
+    merkleClaims: Claim[]
   }) => Promise<Record<string, Record<string, boolean>>>
 
   /**

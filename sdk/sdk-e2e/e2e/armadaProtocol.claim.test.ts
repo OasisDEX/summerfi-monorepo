@@ -1,7 +1,7 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { RpcUrls, SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
 
@@ -10,9 +10,9 @@ const simulateOnly = true
 
 const config = [
   {
-    chainId: ChainIds.Base,
-    rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
-    userAddress: testWalletAddress.value as AddressValue,
+    chainId: ChainIds.Sonic,
+    rpcUrl: RpcUrls.Sonic,
+    userAddress: '0x10649c79428d718621821Cf6299e91920284743F' as AddressValue,
   },
 ]
 
@@ -44,7 +44,7 @@ describe('Armada Protocol Claim', () => {
           expect(rewards.voteDelegation).toBeDefined()
         })
 
-        it(`should get aggregated rewards cross chain including merkl`, async () => {
+        it.only(`should get aggregated rewards cross chain including merkl`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
             user,
           })

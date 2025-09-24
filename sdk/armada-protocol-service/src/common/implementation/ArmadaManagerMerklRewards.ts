@@ -170,6 +170,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
                 .reduce((a, b) => a.plus(b), new BigNumber(0))
                 .div(new BigNumber(10).pow(reward.token.decimals))
                 .toFixed(3),
+              breakdowns: Object.entries(reward.breakdowns).map(([chainId, breakdowns]) => ({
+                chainId,
+                breakdowns: Object.entries(breakdowns).length,
+              })),
             })),
           }),
         ),
