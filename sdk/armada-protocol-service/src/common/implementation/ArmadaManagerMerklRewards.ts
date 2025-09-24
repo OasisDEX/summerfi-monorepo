@@ -18,6 +18,7 @@ import {
   TransactionType,
   Address,
   type AddressValue,
+  ChainIds,
 } from '@summerfi/sdk-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { encodeFunctionData } from 'viem'
@@ -36,7 +37,7 @@ import { BigNumber } from 'bignumber.js'
  * @description Implementation of the IArmadaManagerMerklRewards interface for managing Merkl rewards
  */
 export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
-  private _supportedChainIds: number[]
+  private _supportedChainIds: ChainId[]
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
   private _tokensManager: ITokensManager
@@ -67,13 +68,18 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   async getUserMerklRewards(
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
   ): ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']> {
-    const { address, chainIds = this._supportedChainIds } = params
+    const {
+      address,
+      chainIds = this._supportedChainIds,
+      rewardsTokensAddresses = [
+        this.getSummerToken({ chainInfo: getChainInfoByChainId(ChainIds.Base) }).address.value,
+      ],
+    } = params
     const userAddress = address
 
     try {
-      // Build the URL with chain ID filters
-      const chainIdParam = chainIds.join(',')
-      const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=${chainIdParam}&claimableOnly=true`
+      // Build the URL with hardcoded chainId=8453 (Base) as Merkl rewards are only on Base for now
+      const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=8453&claimableOnly=true`
 
       LoggingService.log('Making request to Merkl API', { url })
 
@@ -93,10 +99,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         throw new Error(`Merkl API request failed: ${response.status} ${response.statusText}`)
       }
 
-      const data = (await response.json()) as MerklApiUsersResponse
+      const merklApiUsers = (await response.json()) as MerklApiUsersResponse
 
-      if (!data || !Array.isArray(data)) {
-        LoggingService.debug('Invalid response from Merkl API', { data })
+      if (!merklApiUsers || !Array.isArray(merklApiUsers)) {
+        LoggingService.debug('Invalid response from Merkl API', { data: merklApiUsers })
         throw new Error('Invalid response from Merkl API')
       }
 
@@ -104,25 +110,22 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       const merklRewardsPerChain: Partial<Record<ChainId, MerklReward[]>> = {}
 
       // Pre-normalize rewardsTokensAddresses to lowercase Set for case-insensitive comparison
-      const normalizedRewardsTokensSet = params.rewardsTokensAddresses
-        ? new Set(params.rewardsTokensAddresses.map((address) => address.toLowerCase()))
+      const normalizedRewardsTokensSet = rewardsTokensAddresses
+        ? new Set(rewardsTokensAddresses.map((address) => address.toLowerCase()))
         : null
 
-      data.forEach((item) => {
-        const chainId = item.chain.id
-        if (!isChainId(chainId)) {
-          throw new Error(`Invalid chain ID: ${chainId}`)
-        }
-
+      merklApiUsers.forEach((merklApiUser) => {
         const rewards: MerklReward[] = []
-        for (const reward of item.rewards) {
+        // parsing user rewards
+        for (const reward of merklApiUser.rewards) {
+          // check if reward.token.address is in requested rewardsTokensAddresses
           if (
             normalizedRewardsTokensSet &&
             !normalizedRewardsTokensSet.has(reward.token.address.toLowerCase())
           ) {
             continue
           }
-          const parsedBreakdowns = this._parseBreakdowns(reward.breakdowns)
+          const parsedBreakdowns = this._parseBreakdowns(reward.breakdowns, chainIds)
           rewards.push({
             token: reward.token,
             root: reward.root,
@@ -136,10 +139,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           })
         }
 
-        if (!merklRewardsPerChain[chainId]) {
-          merklRewardsPerChain[chainId] = []
+        if (!merklRewardsPerChain[ChainIds.Base]) {
+          merklRewardsPerChain[ChainIds.Base] = []
         }
-        merklRewardsPerChain[chainId].push(...rewards)
+        merklRewardsPerChain[ChainIds.Base]!.push(...rewards)
       })
 
       LoggingService.debug(
@@ -184,7 +187,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     }
   }
 
-  private _parseBreakdowns(breakdowns: MerklApiRewardBreakdown[]): {
+  private _parseBreakdowns(
+    breakdowns: MerklApiRewardBreakdown[],
+    chainIds: ChainId[],
+  ): {
     resultByChain: Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>
     unknownCampaigns: MerklApiRewardBreakdown[]
   } {
@@ -212,6 +218,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       }
 
       const { chainId, fleetAddress } = vault
+      if (!isChainId(chainId) || !chainIds.includes(chainId)) {
+        // Skip unsupported or unrequested chain IDs
+        continue
+      }
       const perChain = (resultByChain[chainId] ||= {} as Record<AddressValue, MerklRewardBreakdown>)
 
       // Normalize fleet address to ensure consistent key usage
@@ -239,7 +249,9 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   async getUserMerklClaimDirectTx(
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']>[0],
   ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']> {
-    const { address, chainId } = params
+    const { address } = params
+
+    const chainId = ChainIds.Base // Merkl rewards are only on Base for now
 
     LoggingService.debug('Generating getUserMerklClaimDirectTx', {
       address,
@@ -258,7 +270,6 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     // Get user's Merkl rewards for this specific chain
     const rewardsData = await this.getUserMerklRewards({
       address,
-      chainIds: [chainId],
     })
 
     const chainRewards = rewardsData.perChain[chainId]

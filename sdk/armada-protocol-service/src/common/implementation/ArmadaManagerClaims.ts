@@ -15,7 +15,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
-  getChainInfoByChainId,
+  ChainIds,
   LoggingService,
   TransactionType,
   type ChainId,
@@ -320,24 +320,27 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  private getMerklRewardsForChain(
+  private calculateClaimableAmountForChain(
     merklRewards: { perChain: Partial<Record<ChainId, MerklReward[]>> },
-    chainId: number,
+    chainIdString: string,
   ): bigint {
-    const merklRewardsForChain = merklRewards.perChain[chainId as ChainId] || []
+    // only on base for now
+    const sumrMerklRewards = merklRewards.perChain[ChainIds.Base] || []
+    const chainId = parseInt(chainIdString, 10) as ChainId
     return (
-      merklRewardsForChain
-        .filter(
-          (item: MerklReward) =>
-            item.token.address ===
-            this.getSummerToken({ chainInfo: getChainInfoByChainId(chainId as ChainId) }).address
-              .value,
-        )
-        // need to subtract claimed to show actual claimable rewards
-        .reduce(
-          (sum: bigint, item: MerklReward) => sum + (BigInt(item.amount) - BigInt(item.claimed)),
-          0n,
-        )
+      sumrMerklRewards
+        // reduce all SUMR rewards on base chain
+        .reduce((sum: bigint, item: MerklReward) => {
+          // for each reward, take only breakdowns from the requested chain
+          const aggregatedBreakdownsForChain = Object.values(item.breakdowns[chainId]).reduce(
+            (acc, breakdown) => {
+              // need to subtract claimed to show actual claimable rewards
+              return acc + (BigInt(breakdown.amount) - BigInt(breakdown.claimed))
+            },
+            0n,
+          )
+          return sum + aggregatedBreakdownsForChain
+        }, 0n)
     )
   }
 
@@ -353,7 +356,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const vaultUsagePerChain: Record<number, bigint> = {}
     for (const [chainId, vaultUsageRewards] of Object.entries(rewards.vaultUsagePerChain)) {
-      const merklRewards = this.getMerklRewardsForChain(userMerklRewards, Number(chainId))
+      const merklRewards = this.calculateClaimableAmountForChain(userMerklRewards, chainId)
       vaultUsagePerChain[Number(chainId)] = vaultUsageRewards + merklRewards
     }
 

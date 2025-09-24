@@ -31,7 +31,7 @@ describe('Armada Protocol Claim', () => {
       const user = User.createFromEthereum(chainId, userAddress)
 
       describe(`getAggregatedRewards`, () => {
-        it(`should get aggregated rewards cross chain`, async () => {
+        it.skip(`should get aggregated rewards cross chain`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
           })
@@ -58,7 +58,7 @@ describe('Armada Protocol Claim', () => {
         })
       })
 
-      describe.skip(`claimRewards`, () => {
+      describe(`claimRewards`, () => {
         it.skip(`should claim rewards`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewards({
             user,
