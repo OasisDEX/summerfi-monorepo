@@ -58,6 +58,9 @@ export async function getEnrichedUser(params: {
         role: inst.role as UserRole,
       })),
     }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching enriched user data:', err)
   } finally {
     db.destroy()
   }

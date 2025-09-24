@@ -122,13 +122,16 @@ export async function POST(request: NextRequest) {
     }
 
     if ('id' in result && result.accessToken && result.refreshToken && result.cognitoUsername) {
-      const enriched = await getEnrichedUser({
-        sub: result.id,
-        email: lowercasedEmail,
-        name: result.name,
-      })
+      const [enriched, cookieStore] = await Promise.all([
+        getEnrichedUser({
+          sub: result.id,
+          email: lowercasedEmail,
+          name: result.name,
+        }),
+        cookies(),
+      ])
 
-      const cookieStore = await cookies()
+      await createSession(enriched, result.id, result.cognitoUsername)
 
       cookieStore.set(ACCESS_TOKEN_COOKIE, result.accessToken, {
         httpOnly: true,
@@ -145,8 +148,6 @@ export async function POST(request: NextRequest) {
         path: '/',
         maxAge: 60 * 60 * 24 * 7,
       })
-
-      await createSession(enriched, result.id, result.cognitoUsername)
 
       return NextResponse.json({ user: enriched } as SignInResponse)
     } else {

@@ -32,14 +32,15 @@ export const createSession = async (
   }
 
   const exp = dayjs().unix() + ttlSeconds
-  const token = await new SignJWT({ user, sub, cognitoUsername, ver: SESSION_VERSION })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt() // helps verification and debugging
-    .setAudience(SESSION_AUD)
-    .setExpirationTime(exp)
-    .sign(encoder.encode(secret))
-
-  const cookieStore = await cookies()
+  const [token, cookieStore] = await Promise.all([
+    await new SignJWT({ user, sub, cognitoUsername, ver: SESSION_VERSION })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt() // helps verification and debugging
+      .setAudience(SESSION_AUD)
+      .setExpirationTime(exp)
+      .sign(encoder.encode(secret)),
+    cookies(),
+  ])
 
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
