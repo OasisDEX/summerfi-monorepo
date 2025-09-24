@@ -308,12 +308,10 @@ export async function generateMetadata({
         })
       : { netValue: 0 }
 
-  const sumrReward = position?.rewards.find((reward) => {
-    return reward.claimed.token.symbol === 'SUMR'
-  })
-
-  const totalSUMREarned = sumrReward
-    ? new BigNumber(sumrReward.claimable.amount).plus(new BigNumber(sumrReward.claimed.amount))
+  const totalSUMREarned = position
+    ? new BigNumber(position.claimableSummerToken.amount).plus(
+        new BigNumber(position.claimedSummerToken.amount),
+      )
     : zero
 
   let ogImageUrl = ''

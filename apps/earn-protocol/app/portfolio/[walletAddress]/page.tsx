@@ -306,16 +306,10 @@ export async function generateMetadata({
   )
 
   const totalSUMREarned = positionsWithVault.reduce((acc, { position }) => {
-    const sumrReward = position.rewards.find((reward) => {
-      return reward.claimed.token.symbol === 'SUMR'
-    })
-
-    if (!sumrReward) {
-      return zero
-    }
-
     return acc.plus(
-      new BigNumber(sumrReward.claimable.amount).plus(new BigNumber(sumrReward.claimed.amount)),
+      new BigNumber(position.claimableSummerToken.amount).plus(
+        new BigNumber(position.claimedSummerToken.amount),
+      ),
     )
   }, zero)
 
