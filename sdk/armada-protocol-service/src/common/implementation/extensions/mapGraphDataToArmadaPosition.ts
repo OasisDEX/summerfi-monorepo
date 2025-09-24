@@ -16,6 +16,7 @@ import {
   type AddressValue,
   FiatCurrencyAmount,
   FiatCurrency,
+  ChainIds,
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { BigNumber } from 'bignumber.js'
@@ -23,13 +24,11 @@ import { BigNumber } from 'bignumber.js'
 export const mapGraphDataToArmadaPosition =
   ({
     user,
-    chainInfo,
     summerToken,
     getTokenBySymbol,
     merklSummerRewards,
   }: {
     user: IUser
-    chainInfo: IChainInfo
     summerToken: IToken
     getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
     merklSummerRewards: {
@@ -37,6 +36,7 @@ export const mapGraphDataToArmadaPosition =
     }
   }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
+    const chainInfo = user.chainInfo
     if (position.vault.outputToken == null) {
       throw SDKError.createFrom({
         message: 'outputToken is null on position' + JSON.stringify(position.id),
@@ -44,8 +44,8 @@ export const mapGraphDataToArmadaPosition =
         type: SDKErrorType.ArmadaError,
       })
     }
-
-    const merklSummerRewardsForPosition = merklSummerRewards.perChain[chainInfo.chainId]?.reduce(
+    // merkl rewards are only on base for now
+    const merklSummerRewardsForPosition = merklSummerRewards.perChain[ChainIds.Base]?.reduce(
       (acc, reward) => {
         const vaultKey = position.vault.id.toLowerCase() as AddressValue
         // Guard against missing breakdowns for this chain

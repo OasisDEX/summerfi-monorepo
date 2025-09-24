@@ -23,8 +23,6 @@ export const parseGetUserPositionsQuery = async ({
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
   ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
 }): Promise<IArmadaPosition[]> => {
-  const chainInfo = user.chainInfo
-
   const merklSummerRewards = await getUserMerklRewards({
     address: user.wallet.address.value,
     chainIds: [user.chainInfo.chainId],
@@ -34,7 +32,6 @@ export const parseGetUserPositionsQuery = async ({
   return query.positions.map(
     mapGraphDataToArmadaPosition({
       user,
-      chainInfo,
       summerToken,
       getTokenBySymbol,
       merklSummerRewards,
