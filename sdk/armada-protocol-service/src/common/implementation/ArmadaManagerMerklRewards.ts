@@ -147,6 +147,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
       LoggingService.debug(
         'Successfully parsed Merkl rewards data',
+        normalizedRewardsTokensSet,
         Object.entries(merklRewardsPerChain).map(([chainId, rewards]) =>
           JSON.stringify({
             chainId,

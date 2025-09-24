@@ -1,39 +1,32 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import {
-  Address,
-  ArmadaVaultId,
-  ChainIds,
-  getChainInfoByChainId,
-  User,
-  Wallet,
-} from '@summerfi/sdk-common'
+import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { SDKApiUrl, testWalletAddress, signerPrivateKey } from './utils/testConfig'
+import {
+  SDKApiUrl,
+  testWalletAddress,
+  signerPrivateKey,
+  FleetAddresses,
+  RpcUrls,
+} from './utils/testConfig'
 import assert from 'assert'
 
 jest.setTimeout(300000)
+
 const simulateOnly = true
 
-const chainId = ChainIds.Base
-const rpcUrl = process.env.E2E_SDK_FORK_URL_MAINNET
-
-const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
-const usdcFleet = Address.createFromEthereum({
-  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-})
-const eurcFleet = Address.createFromEthereum({
-  value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-})
-const selfManagedFleet = Address.createFromEthereum({
-  value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
-})
-const mainnetFleet = Address.createFromEthereum({
-  value: '0x17ee2d03e88b55e762c66c76ec99c3a28a54ad8d',
-})
-
 describe('Armada Protocol - User', () => {
-  const fleetAddress = mainnetFleet
+  const chainId = ChainIds.Sonic
+  const rpcUrl = RpcUrls.Sonic
+
+  const user = User.createFromEthereum(chainId, '0x88a135D9aC7583Eb45C1c140fBF6cE474f1f7789')
+  const fleetAddress = Address.createFromEthereum({ value: FleetAddresses.Sonic.usdc })
+
+  const chainInfo = getChainInfoByChainId(chainId)
+  const vaultId = ArmadaVaultId.createFrom({
+    chainInfo,
+    fleetAddress,
+  })
 
   const sdk: SDKManager = makeSDK({
     apiDomainUrl: SDKApiUrl,
@@ -42,23 +35,9 @@ describe('Armada Protocol - User', () => {
     throw new Error('Missing rpc url')
   }
 
-  const chainInfo = getChainInfoByChainId(chainId)
-
-  const user = User.createFrom({
-    chainInfo,
-    wallet: Wallet.createFrom({
-      // address: testWalletAddress,
-      address: Address.createFromEthereum({ value: '0xbddC796b7156F3816c6d004FC25aB04362FAE77a' }),
-    }),
-  })
-  const vaultId = ArmadaVaultId.createFrom({
-    chainInfo,
-    fleetAddress,
-  })
-
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
-  it(`should get all user positions: ${fleetAddress.value}`, async () => {
+  it(`should get all user positions`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
       user,
     })
@@ -89,7 +68,7 @@ describe('Armada Protocol - User', () => {
     })
   })
 
-  it.skip(`should get user position for a specific fleet: ${fleetAddress.value}`, async () => {
+  it.skip(`should get user position for a specific fleet`, async () => {
     const position = await sdk.armada.users.getUserPosition({
       user: user,
       fleetAddress,
@@ -128,7 +107,7 @@ describe('Armada Protocol - User', () => {
     console.log('User Merkle rewards:', JSON.stringify(rewards, null, 2))
   })
 
-  it.skip(`should get user fleet and staked balance for vault: ${fleetAddress.value}`, async () => {
+  it.skip(`should get user fleet and staked balance for vault`, async () => {
     const _user = user
 
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
@@ -148,7 +127,7 @@ describe('Armada Protocol - User', () => {
     )
   })
 
-  it.skip(`should unstake all fleet tokens for vault: ${fleetAddress.value}`, async () => {
+  it.skip(`should unstake all fleet tokens for vault`, async () => {
     // Check initial balances
     const fleetAmountBefore = await sdk.armada.users.getFleetBalance({
       user,

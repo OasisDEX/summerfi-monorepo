@@ -26,7 +26,6 @@ export const parseGetUserPositionsQuery = async ({
   const merklSummerRewards = await getUserMerklRewards({
     address: user.wallet.address.value,
     chainIds: [user.chainInfo.chainId],
-    rewardsTokensAddresses: [summerToken.address.value],
   })
 
   return query.positions.map(
