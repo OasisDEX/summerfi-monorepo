@@ -323,26 +323,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  private calculateClaimableAmountForChain(
-    merklRewards: { perChain: Partial<Record<ChainId, MerklReward[]>> },
-    chainIdString: string,
-  ): bigint {
+  private calculateTotalClaimableSumrOnMerkl(merklRewards: {
+    perChain: Partial<Record<ChainId, MerklReward[]>>
+  }): bigint {
     // only on base for now
     const sumrMerklRewards = merklRewards.perChain[ChainIds.Base] || []
-    const chainId = parseInt(chainIdString, 10) as ChainId
     return (
       sumrMerklRewards
         // reduce all SUMR rewards on base chain
         .reduce((sum: bigint, item: MerklReward) => {
-          // for each reward, take only breakdowns from the requested chain
-          const aggregatedBreakdownsForChain = Object.values(item.breakdowns[chainId]).reduce(
-            (acc, breakdown) => {
-              // need to subtract claimed to show actual claimable rewards
-              return acc + (BigInt(breakdown.amount) - BigInt(breakdown.claimed))
-            },
-            0n,
-          )
-          return sum + aggregatedBreakdownsForChain
+          return sum + BigInt(item.amount) - BigInt(item.claimed)
         }, 0n)
     )
   }
@@ -362,11 +352,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       userMerklRewards,
     })
 
-    const vaultUsagePerChain: Record<number, bigint> = {}
-    for (const [chainId, vaultUsageRewards] of Object.entries(rewards.vaultUsagePerChain)) {
-      const merklRewards = this.calculateClaimableAmountForChain(userMerklRewards, chainId)
-      vaultUsagePerChain[Number(chainId)] = vaultUsageRewards + merklRewards
-    }
+    const vaultUsagePerChain = rewards.vaultUsagePerChain
+    // add merkl rewards only on base chain
+    const merklRewards = this.calculateTotalClaimableSumrOnMerkl(userMerklRewards)
+    vaultUsagePerChain[ChainIds.Base] = (vaultUsagePerChain[ChainIds.Base] || 0n) + merklRewards
 
     const vaultUsage = Object.values(vaultUsagePerChain).reduce((acc, usage) => acc + usage, 0n)
     const total = rewards.merkleDistribution + rewards.voteDelegation + vaultUsage

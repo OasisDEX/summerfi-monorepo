@@ -44,7 +44,7 @@ describe('Armada Protocol Claim', () => {
           expect(rewards.voteDelegation).toBeDefined()
         })
 
-        it.only(`should get aggregated rewards cross chain including merkl`, async () => {
+        it(`should get aggregated rewards cross chain including merkl`, async () => {
           const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
             user,
           })
