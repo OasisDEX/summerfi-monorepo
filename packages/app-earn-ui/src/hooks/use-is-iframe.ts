@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 
 const checkIframe = () => {
   try {
@@ -25,7 +25,7 @@ const checkIframe = () => {
 export const useIsIframe = (): boolean => {
   const [isIframe, setIsIframe] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window !== 'undefined') {
       setIsIframe(checkIframe())
     }

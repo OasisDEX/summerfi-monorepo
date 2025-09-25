@@ -257,6 +257,9 @@ importers:
       wagmi:
         specifier: 2.10.9
         version: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@19.0.8)(immer@9.0.21)(react-dom@19.1.0)(react-native@0.78.0)(react@19.1.0)(rollup@4.44.2)(typescript@5.7.3)(viem@2.29.2)(zod@3.25.61)
+      websocket:
+        specifier: ^1.0.35
+        version: 1.0.35
       zod:
         specifier: 3.25.61
         version: 3.25.61
@@ -14936,7 +14939,7 @@ packages:
       '@types/json-stable-stringify': 1.0.36
       '@whatwg-node/fetch': 0.9.17
       chalk: 4.1.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.4.0
       dotenv: 16.5.0
       graphql: 16.11.0
       graphql-request: 6.1.0(graphql@16.11.0)
@@ -47449,6 +47452,7 @@ packages:
   /yaeti@0.0.6:
     resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
     engines: {node: '>=0.10.32'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     requiresBuild: true
     dev: false
 
