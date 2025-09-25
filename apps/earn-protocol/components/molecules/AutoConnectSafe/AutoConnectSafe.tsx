@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-disable no-console */
 import { useCallback, useLayoutEffect, useState } from 'react'
 import { useChain, useConnect } from '@account-kit/react'
