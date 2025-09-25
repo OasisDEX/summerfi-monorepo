@@ -180,15 +180,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
                 variant="secondaryMedium"
                 style={{ minWidth: 'unset' }}
                 disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
-                onClick={async () => {
-                  if (chain.id !== SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne].id) {
-                    setChain({
-                      chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
-                    })
-                  }
-                  await transferAllBalance()
-                  toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
-                }}
               >
                 Bridge
               </Button>
