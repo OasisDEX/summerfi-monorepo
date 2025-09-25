@@ -24,6 +24,7 @@ import {
   safeBTOA,
 } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import Link from 'next/link'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -171,6 +172,27 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
                 {isTransferring ? 'Transferring...' : 'Transfer'}
               </Text>
             </Button>
+          )}
+          {/* Bringing pack the SUMR bridge view */}
+          {userIsSmartAccount && tokenInfo && Number(tokenInfo.balance) > 0 && (
+            <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+              <Button
+                variant="secondaryMedium"
+                style={{ minWidth: 'unset' }}
+                disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+                onClick={async () => {
+                  if (chain.id !== SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne].id) {
+                    setChain({
+                      chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
+                    })
+                  }
+                  await transferAllBalance()
+                  toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
+                }}
+              >
+                Bridge
+              </Button>
+            </Link>
           )}
 
           <Dropdown
