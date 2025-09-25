@@ -174,7 +174,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             </Button>
           )}
           {/* Bringing pack the SUMR bridge view */}
-          {userIsSmartAccount && tokenInfo && Number(tokenInfo.balance) > 0 && (
+          {tokenInfo && Number(tokenInfo.balance) > 0 && (
             <Link href={`/bridge/${walletAddress}?via=portfolio`}>
               <Button
                 variant="secondaryMedium"
