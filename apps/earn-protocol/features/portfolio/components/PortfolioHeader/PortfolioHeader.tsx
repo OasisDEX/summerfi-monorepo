@@ -174,17 +174,15 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             </Button>
           )}
           {/* Bringing pack the SUMR bridge view */}
-          {tokenInfo && Number(tokenInfo.balance) > 0 && (
-            <Link href={`/bridge/${walletAddress}?via=portfolio`}>
-              <Button
-                variant="secondaryMedium"
-                style={{ minWidth: 'unset' }}
-                disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
-              >
-                Bridge
-              </Button>
-            </Link>
-          )}
+          <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+            <Button
+              variant="secondaryMedium"
+              style={{ minWidth: 'unset' }}
+              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+            >
+              Bridge
+            </Button>
+          </Link>
 
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
