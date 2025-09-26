@@ -49,6 +49,11 @@ export const useWalletRole = ({ institutionName }: { institutionName: string }) 
           setConnectedRoles(null)
         }
       })
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      abortControllerRef.current?.abort()
+    }
   }, [isLoadingAccount, userWalletAddress, institutionName])
 
   const connectedRolesLabel = useMemo(() => {
