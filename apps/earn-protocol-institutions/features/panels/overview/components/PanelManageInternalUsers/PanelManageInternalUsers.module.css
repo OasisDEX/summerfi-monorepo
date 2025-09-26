@@ -19,21 +19,34 @@
 .table {
   border-collapse: collapse;
   width: 100%;
+  border-bottom-left-radius: var(--radius-large);
+  border-bottom-right-radius: var(--radius-large);
+  overflow: hidden;
+}
+
+.tableRow:nth-child(odd):hover {
+  background-color: rgba(20, 20, 20, 0.5);
+}
+
+.tableRow:nth-child(even) {
+  background-color: rgba(30, 30, 30, 0.5);
+}
+
+.tableRow:nth-child(even):hover {
+  background-color: rgba(20, 20, 20, 0.5);
 }
 
 .tableHeader {
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(30, 30, 30, 0.5);
   padding: 8px;
   font-weight: 600;
 }
 
 .tableCell {
-  border-bottom: 1px solid #f0f0f0;
   padding: 8px;
   vertical-align: middle;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .tableCellContent {
@@ -42,14 +55,13 @@
   gap: 8px;
 }
 
-
 .addUserForm,
 .removeUserForm,
 .editUserForm {
   display: flex;
-  flex-direction: column;
   gap: 30px;
   width: 100%;
+  align-items: flex-end;
 }
 
 .submitButton {
@@ -59,6 +71,7 @@
 
 .formFields {
   display: flex;
+  width: 100%;
   justify-content: space-between;
   gap: 10px;
 }

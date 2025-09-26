@@ -31,7 +31,7 @@ export const useClientChainId: () => { clientChainId: SupportedNetworkIds } = ()
       if (window.ethereum && user?.type === AccountKitAccountType.EOA && !isIframe) {
         const _eoaChainId = await window.ethereum.request({ method: 'eth_chainId' })
         const accounts: string[] = await window.ethereum.request({
-          method: 'eth_requestAccounts',
+          method: 'eth_accounts',
         })
 
         // Additonal check to ensure that the injected ethereum account is the same as user address

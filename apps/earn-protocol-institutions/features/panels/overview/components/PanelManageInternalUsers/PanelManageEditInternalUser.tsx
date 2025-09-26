@@ -52,41 +52,46 @@ export const PanelManageEditInternalUser = ({
       className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
     >
       <Text variant="h2">Editing user</Text>
-      <form action={updateInstitutionUser} className={panelManageInternalUsersStyles.editUserForm}>
-        <input type="hidden" name="userSub" value={user.userSub} />
-        <input type="hidden" name="institutionId" value={user.institutionId} />
-        <div className={panelManageInternalUsersStyles.formFields}>
-          <div className={panelManageInternalUsersStyles.formField}>
-            <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
-              Full name
-            </label>
-            <input name="name" placeholder="Full name" required defaultValue={user.cognitoName} />
+      <Card variant="cardPrimaryMediumPaddings">
+        <form
+          action={updateInstitutionUser}
+          className={panelManageInternalUsersStyles.editUserForm}
+        >
+          <input type="hidden" name="userSub" value={user.userSub} />
+          <input type="hidden" name="institutionId" value={user.institutionId} />
+          <div className={panelManageInternalUsersStyles.formFields}>
+            <div className={panelManageInternalUsersStyles.formField}>
+              <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
+                Full name
+              </label>
+              <input name="name" placeholder="Full name" required defaultValue={user.cognitoName} />
+            </div>
+            <div className={panelManageInternalUsersStyles.formField}>
+              <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
+                Role
+              </label>
+              <select name="role" defaultValue={user.role as UserRole}>
+                <option value="RoleAdmin">RoleAdmin</option>
+                <option value="SuperAdmin">SuperAdmin</option>
+                <option value="Viewer">Viewer</option>
+              </select>
+            </div>
           </div>
-          <div className={panelManageInternalUsersStyles.formField}>
-            <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
-              Role
-            </label>
-            <select name="role" defaultValue={user.role as UserRole}>
-              <option value="RoleAdmin">RoleAdmin</option>
-              <option value="SuperAdmin">SuperAdmin</option>
-              <option value="Viewer">Viewer</option>
-            </select>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <Button
+              variant="primarySmall"
+              type="submit"
+              style={{ alignSelf: 'flex-start' }}
+              className={panelManageInternalUsersStyles.submitButton}
+            >
+              Update&nbsp;User
+            </Button>
+            <Link href={`/${institutionName}/overview/manage-internal-users`}>
+              <Button variant="secondarySmall">Go&nbsp;back</Button>
+            </Link>
           </div>
-        </div>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <Button
-            variant="primarySmall"
-            type="submit"
-            style={{ alignSelf: 'flex-start' }}
-            className={panelManageInternalUsersStyles.submitButton}
-          >
-            Update&nbsp;User
-          </Button>
-          <Link href={`/${institutionName}/overview/manage-internal-users`}>
-            <Button variant="secondarySmall">Go back</Button>
-          </Link>
-        </div>
-      </form>
+        </form>
+      </Card>
     </Card>
   )
 }

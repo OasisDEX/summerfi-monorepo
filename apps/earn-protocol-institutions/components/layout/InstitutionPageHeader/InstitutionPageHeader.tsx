@@ -2,12 +2,11 @@
 import { type FC, type ReactNode } from 'react'
 import { Dropdown, Icon, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
-import { GeneralRoles } from '@summerfi/sdk-client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
-import { walletRolesToHuman } from '@/helpers/roles-to-human'
+import { useWalletRole } from '@/hooks/useWalletRole'
 import { type InstitutionData, type InstitutionsList } from '@/types/institution-data'
 
 import styles from './InstitutionPageHeader.module.css'
@@ -16,9 +15,6 @@ interface InstitutionPageHeaderProps {
   selectedInstitution: InstitutionData
   institutionsList: InstitutionsList
 }
-
-// todo to be replaced with the actual connected role & mapping from backend per wallet address
-const connectedRole = GeneralRoles.ADMIRALS_QUARTERS_ROLE
 
 const DropdownContent: FC<{ children: ReactNode }> = ({ children }) => {
   return (
@@ -44,11 +40,13 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
   institutionsList,
 }) => {
   const { push } = useRouter()
+  const { connectedRolesLabel } = useWalletRole({
+    institutionName: selectedInstitution.name,
+  })
 
   const { user } = useAuth()
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const walletRole = connectedRole ? walletRolesToHuman(connectedRole) : 'No role connected'
   const institutionUserRole = user
     ? user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)?.role
     : 'No role connected'
@@ -102,7 +100,7 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
             Wallet role:&nbsp;
           </Text>
           <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-link)' }}>
-            {walletRole}
+            {connectedRolesLabel}
           </Text>
         </div>
       </div>

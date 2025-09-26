@@ -51,45 +51,50 @@ export const PanelManageDeleteInternalUser = ({
       className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
     >
       <Text variant="h2">Deleting user</Text>
-      <form action={removeInstitutionUser} className={panelManageInternalUsersStyles.editUserForm}>
-        <div className={panelManageInternalUsersStyles.formFields}>
-          <input type="hidden" name="userSub" value={user.userSub} />
-          <input type="hidden" name="institutionName" value={institutionName} />
-          <div className={panelManageInternalUsersStyles.formField}>
-            <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
-              Email
-            </label>
-            <input id="email" name="email" defaultValue={user.cognitoEmail} disabled required />
-          </div>
+      <Card variant="cardPrimaryMediumPaddings">
+        <form
+          action={removeInstitutionUser}
+          className={panelManageInternalUsersStyles.editUserForm}
+        >
+          <div className={panelManageInternalUsersStyles.formFields}>
+            <input type="hidden" name="userSub" value={user.userSub} />
+            <input type="hidden" name="institutionName" value={institutionName} />
+            <div className={panelManageInternalUsersStyles.formField}>
+              <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
+                Email
+              </label>
+              <input id="email" name="email" defaultValue={user.cognitoEmail} disabled required />
+            </div>
 
-          <div className={panelManageInternalUsersStyles.formField}>
-            <label htmlFor="displayName" className={panelManageInternalUsersStyles.formLabel}>
-              Name
-            </label>
-            <input
-              id="displayName"
-              name="displayName"
-              defaultValue={user.cognitoName}
-              disabled
-              required
-              placeholder="Human Friendly Name"
-            />
+            <div className={panelManageInternalUsersStyles.formField}>
+              <label htmlFor="displayName" className={panelManageInternalUsersStyles.formLabel}>
+                Name
+              </label>
+              <input
+                id="displayName"
+                name="displayName"
+                defaultValue={user.cognitoName}
+                disabled
+                required
+                placeholder="Human Friendly Name"
+              />
+            </div>
           </div>
-        </div>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <Button
-            variant="primarySmall"
-            type="submit"
-            style={{ alignSelf: 'flex-start' }}
-            className={panelManageInternalUsersStyles.submitButton}
-          >
-            Delete&nbsp;User
-          </Button>
-          <Link href={`/${institutionName}/overview/manage-internal-users`}>
-            <Button variant="secondarySmall">Go back</Button>
-          </Link>
-        </div>
-      </form>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <Button
+              variant="primarySmall"
+              type="submit"
+              style={{ alignSelf: 'flex-start' }}
+              className={panelManageInternalUsersStyles.submitButton}
+            >
+              Delete&nbsp;User
+            </Button>
+            <Link href={`/${institutionName}/overview/manage-internal-users`}>
+              <Button variant="secondarySmall">Go&nbsp;back</Button>
+            </Link>
+          </div>
+        </form>
+      </Card>
     </Card>
   )
 }
