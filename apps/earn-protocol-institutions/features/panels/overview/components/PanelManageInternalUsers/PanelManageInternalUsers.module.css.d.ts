@@ -13,6 +13,7 @@ declare const styles: {
   readonly "tableCellContent": string;
   readonly "tableContainer": string;
   readonly "tableHeader": string;
+  readonly "tableRow": string;
   readonly "usersSection": string;
 };
 export = styles;

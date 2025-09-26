@@ -50,10 +50,8 @@ export const institutionsAdminPanelDetectMimeFromBuffer = (buffer: Buffer | Uint
   }
   // SVG (rough check)
   try {
-    const head = Buffer.from(b.slice(0, 256) as Uint8Array)
-      .toString('utf8')
-      .trim()
-      .toLowerCase()
+    const decoder = new TextDecoder('utf8')
+    const head = decoder.decode(b.slice(0, 256)).trim().toLowerCase()
 
     if (head.startsWith('<svg') || head.includes('<svg')) return 'image/svg+xml'
   } catch {
