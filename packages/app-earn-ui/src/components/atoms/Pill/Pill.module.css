@@ -34,6 +34,12 @@
   border-radius: var(--radius-roundish);
 }
 
+.superBackground {
+  background-color: #EC8E34;
+  opacity: 0.16;
+  border-radius: var(--radius-roundish);
+}
+
 /* On hover, change opacity to make the second gradient appear */
 .default:hover .background1 {
   opacity: 0;
@@ -43,8 +49,13 @@
   opacity: 1;
 }
 
+.default:hover .superBackground {
+  opacity: 0.4;
+}
+
 .background1,
-.background2 {
+.background2,
+.superBackground {
   position: absolute;
   top: 0;
   left: 0;
