@@ -6,20 +6,24 @@ export const getUserData = async ({
 }: {
   walletAddress: string
   institutionName: string
-}) => {
-  return (await fetch(`/api/user/user-details`, {
+}): Promise<
+  | {
+      walletAddressRoles: GeneralRoles[]
+      roles: { [key in GeneralRoles]: boolean }
+    }
+  | undefined
+> => {
+  const res = await fetch(`/api/user/user-details`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ walletAddress, institutionName }),
-  }).then((res) => res.json())) as Promise<
-    | {
-        walletAddressRoles: GeneralRoles[]
-        roles: {
-          [key in GeneralRoles]: boolean
-        }
-      }
-    | undefined
-  >
+  })
+
+  if (!res.ok) return undefined
+  const data = (await res.json()) as {
+    walletAddressRoles: GeneralRoles[]
+    roles: { [key in GeneralRoles]: boolean }
+  } | null
+
+  return data ?? undefined
 }

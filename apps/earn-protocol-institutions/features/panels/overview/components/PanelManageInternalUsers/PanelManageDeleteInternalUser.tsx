@@ -60,7 +60,7 @@ export const PanelManageDeleteInternalUser = ({
             <input type="hidden" name="userSub" value={user.userSub} />
             <input type="hidden" name="institutionName" value={institutionName} />
             <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
+              <label htmlFor="email" className={panelManageInternalUsersStyles.formLabel}>
                 Email
               </label>
               <input id="email" name="email" defaultValue={user.cognitoEmail} disabled required />

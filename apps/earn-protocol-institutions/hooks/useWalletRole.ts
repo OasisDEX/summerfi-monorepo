@@ -20,24 +20,30 @@ export const useWalletRole = ({ institutionName }: { institutionName: string }) 
 
       return
     }
+    // Store the current wallet address in case it changes while the async call is in flight
+    const currentWallet = userWalletAddress
 
     getUserData({
       walletAddress: userWalletAddress,
       institutionName,
     })
       .then((data) => {
-        if (data?.walletAddressRoles) {
-          setConnectedRoles(data.walletAddressRoles)
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('No role found for wallet address')
-          setConnectedRoles(null)
+        if (userWalletAddress === currentWallet) {
+          if (data?.walletAddressRoles) {
+            setConnectedRoles(data.walletAddressRoles)
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('No role found for wallet address')
+            setConnectedRoles(null)
+          }
         }
       })
       .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error fetching user data', err)
-        setConnectedRoles(null)
+        if (userWalletAddress === currentWallet) {
+          // eslint-disable-next-line no-console
+          console.error('Error fetching user data', err)
+          setConnectedRoles(null)
+        }
       })
   }, [isLoadingAccount, userWalletAddress, institutionName])
 

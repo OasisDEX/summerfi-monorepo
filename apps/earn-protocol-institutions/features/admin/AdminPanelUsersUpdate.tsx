@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
 import Link from 'next/link'
 
 import { rootAdminActionGetInstitutionsList } from '@/app/server-handlers/admin/institution'
@@ -34,7 +33,10 @@ const UpdateUserForm = ({
               <label htmlFor="role" className={styles.formLabel}>
                 Role
               </label>
-              <select name="role" defaultValue={user.role as UserRole}>
+              <select name="role" defaultValue={user.role ?? ''} required>
+                <option value="" disabled hidden>
+                  Select role
+                </option>
                 <option value="RoleAdmin">RoleAdmin</option>
                 <option value="SuperAdmin">SuperAdmin</option>
                 <option value="Viewer">Viewer</option>

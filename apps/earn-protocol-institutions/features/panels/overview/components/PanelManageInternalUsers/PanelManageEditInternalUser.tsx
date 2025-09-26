@@ -1,5 +1,4 @@
 import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
 import Link from 'next/link'
 
 import { updateInstitutionUser } from '@/app/server-handlers/institution/institution-users'
@@ -70,7 +69,10 @@ export const PanelManageEditInternalUser = ({
               <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
                 Role
               </label>
-              <select name="role" defaultValue={user.role as UserRole}>
+              <select name="role" defaultValue={user.role ?? ''} required>
+                <option value="" disabled hidden>
+                  Select role
+                </option>
                 <option value="RoleAdmin">RoleAdmin</option>
                 <option value="SuperAdmin">SuperAdmin</option>
                 <option value="Viewer">Viewer</option>
