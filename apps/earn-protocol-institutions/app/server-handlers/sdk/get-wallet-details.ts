@@ -21,10 +21,19 @@ export const getWalletDetails: (props: {
     const { ADMIRALS_QUARTERS_ROLE, DECAY_CONTROLLER_ROLE, GOVERNOR_ROLE, SUPER_KEEPER_ROLE } =
       await getInstitutionRoles({ institutionName })
 
-    const hasAdmiralsQuartersRole = ADMIRALS_QUARTERS_ROLE.wallets.includes(walletAddress)
-    const hasDecayControllerRole = DECAY_CONTROLLER_ROLE.wallets.includes(walletAddress)
-    const hasGovernorRole = GOVERNOR_ROLE.wallets.includes(walletAddress)
-    const hasSuperKeeperRole = SUPER_KEEPER_ROLE.wallets.includes(walletAddress)
+    const normalizedWalletAddress = walletAddress.toLowerCase()
+    const hasAdmiralsQuartersRole = ADMIRALS_QUARTERS_ROLE.wallets.some(
+      (address) => address.toLowerCase() === normalizedWalletAddress,
+    )
+    const hasDecayControllerRole = DECAY_CONTROLLER_ROLE.wallets.some(
+      (address) => address.toLowerCase() === normalizedWalletAddress,
+    )
+    const hasGovernorRole = GOVERNOR_ROLE.wallets.some(
+      (address) => address.toLowerCase() === normalizedWalletAddress,
+    )
+    const hasSuperKeeperRole = SUPER_KEEPER_ROLE.wallets.some(
+      (address) => address.toLowerCase() === normalizedWalletAddress,
+    )
 
     const walletAddressRoles = [] as GeneralRoles[]
 
