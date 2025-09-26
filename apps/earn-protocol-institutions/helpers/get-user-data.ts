@@ -3,9 +3,11 @@ import { type GeneralRoles } from '@summerfi/sdk-client'
 export const getUserData = async ({
   walletAddress,
   institutionName,
+  signal,
 }: {
   walletAddress: string
   institutionName: string
+  signal?: AbortSignal
 }): Promise<
   | {
       walletAddressRoles: GeneralRoles[]
@@ -17,6 +19,7 @@ export const getUserData = async ({
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ walletAddress, institutionName }),
+    signal,
   })
 
   if (!res.ok) return undefined

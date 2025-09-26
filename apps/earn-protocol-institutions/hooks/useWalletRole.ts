@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type GeneralRoles } from '@summerfi/sdk-client'
 
@@ -8,6 +8,7 @@ import { walletRolesToHuman } from '@/helpers/roles-to-human'
 export const useWalletRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GeneralRoles[] | null>(null)
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     if (isLoadingAccount && userWalletAddress) {
@@ -20,26 +21,29 @@ export const useWalletRole = ({ institutionName }: { institutionName: string }) 
 
       return
     }
-    // Store the current wallet address in case it changes while the async call is in flight
-    const currentWallet = userWalletAddress
+    // Abort any previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    // Create a new controller for this request
+    abortControllerRef.current = new AbortController()
 
     getUserData({
       walletAddress: userWalletAddress,
       institutionName,
+      signal: abortControllerRef.current.signal,
     })
       .then((data) => {
-        if (userWalletAddress === currentWallet) {
-          if (data?.walletAddressRoles) {
-            setConnectedRoles(data.walletAddressRoles)
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('No role found for wallet address')
-            setConnectedRoles(null)
-          }
+        if (data?.walletAddressRoles) {
+          setConnectedRoles(data.walletAddressRoles)
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('No role found for wallet address')
+          setConnectedRoles(null)
         }
       })
       .catch((err) => {
-        if (userWalletAddress === currentWallet) {
+        if (err.name !== 'AbortError') {
           // eslint-disable-next-line no-console
           console.error('Error fetching user data', err)
           setConnectedRoles(null)
