@@ -26,10 +26,17 @@ export const MFASetting = () => {
       const res = await fetch('/api/mfa')
       const json = await res.json()
 
-      if (json.ok) setMfaInfo(json.data)
-      else setMessage(json.error ?? 'Failed to fetch')
+      if (json.ok) {
+        setMfaInfo(json.data)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('MFA fetch failed', json.error)
+        setMessage('Something went wrong. Please retry.')
+      }
     } catch (err: unknown) {
-      setMessage(String(err))
+      // eslint-disable-next-line no-console
+      console.error('MFA fetch failed', err)
+      setMessage('Something went wrong. Please retry.')
     } finally {
       setLoading(false)
     }
@@ -126,7 +133,9 @@ export const MFASetting = () => {
         setMessage('Verification failed')
       }
     } catch (err: unknown) {
-      setMessage(String(err))
+      // eslint-disable-next-line no-console
+      console.error('MFA verification failed', err)
+      setMessage('Something went wrong. Please retry.')
     } finally {
       setLoading(false)
     }
@@ -150,7 +159,9 @@ export const MFASetting = () => {
       setMessage('MFA disabled')
       await fetchStatus()
     } catch (err: unknown) {
-      setMessage(String(err))
+      // eslint-disable-next-line no-console
+      console.error('MFA disable failed', err)
+      setMessage('Something went wrong. Please retry.')
     } finally {
       setLoading(false)
     }
@@ -250,7 +261,11 @@ export const MFASetting = () => {
                 marginBottom: '12px',
               }}
             />
-            <Button variant="primaryMedium" onClick={verifyCode} disabled={code.length !== 6}>
+            <Button
+              variant="primaryMedium"
+              onClick={verifyCode}
+              disabled={code.length !== 6 || loading}
+            >
               Verify & enable
             </Button>
           </div>

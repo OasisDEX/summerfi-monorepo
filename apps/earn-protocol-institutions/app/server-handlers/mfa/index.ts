@@ -68,13 +68,11 @@ export async function setUserMfaAction(mfa: 'SOFTWARE_TOKEN_MFA' | 'SMS_MFA') {
     AccessToken: accessToken,
     SMSMfaSettings: { Enabled: false, PreferredMfa: false },
     SoftwareTokenMfaSettings: { Enabled: false, PreferredMfa: false },
-    PreferredMfa: 'NOMFA',
   }
 
   if (mfa === 'SOFTWARE_TOKEN_MFA') {
     payload.SoftwareTokenMfaSettings = { Enabled: true, PreferredMfa: true }
     payload.SMSMfaSettings = { Enabled: false, PreferredMfa: false }
-    payload.PreferredMfa = 'SOFTWARE_TOKEN_MFA'
   } else {
     throw new Error('Only SOFTWARE_TOKEN_MFA is supported')
   }

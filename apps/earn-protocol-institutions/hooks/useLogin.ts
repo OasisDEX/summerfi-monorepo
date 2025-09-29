@@ -93,7 +93,9 @@ export const useLogin = () => {
       const signInComplete = await signIn(email, password)
 
       if (!signInComplete) {
-        // If there's a challenge, we don't proceed to fetch user data yet
+        // MFA or NEW_PASSWORD challenge
+        setIsLoadingLoginView(false)
+
         return
       }
       const me = await authFetchMe()
@@ -104,6 +106,7 @@ export const useLogin = () => {
       } else {
         // eslint-disable-next-line no-console
         console.log('No user data returned after sign in.')
+        setIsLoadingLoginView(false)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
