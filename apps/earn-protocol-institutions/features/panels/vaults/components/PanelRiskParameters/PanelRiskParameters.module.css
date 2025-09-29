@@ -48,16 +48,5 @@
     .inputImpliedCap {
       max-width: 118px;
     }
-
-    /* Target number inputs with the inputWrapper class */
-    .inputWrapper[type='number']::-webkit-outer-spin-button,
-    .inputWrapper[type='number']::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    .inputWrapper[type='number'] {
-      -moz-appearance: textfield;
-    }
   }
 }
