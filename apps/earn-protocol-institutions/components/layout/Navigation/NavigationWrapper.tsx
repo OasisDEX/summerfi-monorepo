@@ -8,13 +8,13 @@ import {
   Navigation,
   NavigationConfig,
   SkeletonLine,
-  Text,
   useMobileCheck,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { MFASetting } from '@/components/molecules/MFASetting/MFASetting'
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -74,9 +74,7 @@ export const NavigationWrapper: FC = () => {
           <NavigationConfig isMobileOrTablet={isMobileOrTablet}>
             {() => (
               <Card style={{ minWidth: '200px' }}>
-                <Text as="p" variant="p2semi">
-                  TBD
-                </Text>
+                <MFASetting />
               </Card>
             )}
           </NavigationConfig>

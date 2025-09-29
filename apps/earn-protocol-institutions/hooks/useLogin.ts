@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
+import { authFetchMe } from '@/contexts/AuthContext/helpers'
+import { type SignInResponse } from '@/features/auth/types'
 
 const passwordMeetsRequirements = (password: string) => {
   // Password minimum length
@@ -42,6 +44,7 @@ const passwordMeetsRequirementsDetailed = (password: string, confirmedPassword: 
 export const useLogin = () => {
   const urlQueryParams = useSearchParams()
   const isUnauthorized = urlQueryParams.get('error') === 'unauthorized'
+  const [successfulLogin, setSuccessfulLogin] = useState(false)
   const [email, setEmail] = useState('')
   const [isEmailValid, setIsEmailValid] = useState(false)
   const [password, setPassword] = useState('')
@@ -53,6 +56,22 @@ export const useLogin = () => {
   const [isLoadingChangePasswordView, setIsLoadingChangePasswordView] = useState(false)
 
   const { signIn, challengeData, setChallengeData } = useAuth()
+
+  const [mfaCode, setMfaCode] = useState('')
+  const [isLoadingMfaView, setIsLoadingMfaView] = useState(false)
+  const { replace } = useRouter()
+
+  const handleRedirect = (userData: SignInResponse['user']) => {
+    // Redirection logic
+    if (userData?.isGlobalAdmin) {
+      replace('/admin/institutions')
+    } else if (userData?.institutionsList?.[0]?.name) {
+      replace(`${userData.institutionsList[0].name}/overview/institution`)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('No valid redirection path found for the user.')
+    }
+  }
 
   const handleSetEmail = (nextEmail: string) => {
     setError('')
@@ -71,7 +90,21 @@ export const useLogin = () => {
     setError('')
     setIsLoadingLoginView(true)
     try {
-      await signIn(email, password)
+      const signInComplete = await signIn(email, password)
+
+      if (!signInComplete) {
+        // If there's a challenge, we don't proceed to fetch user data yet
+        return
+      }
+      const me = await authFetchMe()
+
+      if (me.user) {
+        setSuccessfulLogin(true)
+        handleRedirect(me.user)
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('No user data returned after sign in.')
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed')
       setIsLoadingLoginView(false)
@@ -121,11 +154,58 @@ export const useLogin = () => {
         throw new Error(data.error || 'Password change failed')
       }
       setChallengeData(null)
-      // Redirect or update UI here
+      setSuccessfulLogin(true)
+      handleRedirect(data.user)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Password change failed')
     } finally {
       setIsLoadingChangePasswordView(false)
+    }
+  }
+
+  const handleRespondToSoftwareToken = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    if (!challengeData) {
+      setError('No challenge data available')
+
+      return
+    }
+
+    if (!mfaCode || mfaCode.length < 6) {
+      setError('Enter a valid 6 digit code')
+
+      return
+    }
+
+    setIsLoadingMfaView(true)
+
+    try {
+      const response = await fetch('/api/auth/respond-challenge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: challengeData.email,
+          session: challengeData.session,
+          code: mfaCode,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'MFA verification failed')
+      }
+
+      // Clear challenge data on success
+      setChallengeData(null)
+      setSuccessfulLogin(true)
+      handleRedirect(data.user)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'MFA verification failed')
+    } finally {
+      setIsLoadingMfaView(false)
     }
   }
 
@@ -146,6 +226,12 @@ export const useLogin = () => {
     isLoadingChangePasswordView,
     handleLoginSubmit,
     handleSetNewPassword,
+    // MFA challenge handling
+    mfaCode,
+    setMfaCode,
+    isLoadingMfaView,
+    handleRespondToSoftwareToken,
     challengeData,
+    successfulLogin,
   }
 }

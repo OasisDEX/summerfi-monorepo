@@ -1,0 +1,58 @@
+.mfaWrapper {
+  min-width: 320px;
+}
+
+.mfaActions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.mfaScanQrWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.headingText {
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.cardCenter {
+  text-align: center;
+  padding: 0 14px;
+}
+
+.qrInstruction {
+  margin: 4px auto;
+}
+
+.qrImage {
+  margin: 8px auto;
+  display: block;
+}
+
+.secretTextarea {
+  max-width: 280px;
+  height: 100px;
+  border: 1px solid rgba(25, 25, 25, 0.5);
+  padding: 12px;
+  margin: 0 auto 16px auto;
+  border-radius: 12px;
+  resize: none;
+  text-align: center;
+}
+
+.statusText {
+  margin: 32px auto;
+}
+
+.mfaMessage {
+  width: 100%;
+  margin: 16px auto;
+  text-align: center;
+}
