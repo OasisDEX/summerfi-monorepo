@@ -54,7 +54,7 @@ export const vaultRiskParametersMapper = ({
         action: (
           <TableCellText
             style={{
-              marginLeft: isUpdating ? '35px' : '40px',
+              marginLeft: isUpdating ? '36px' : '40px',
               gap: 'var(--spacing-space-small)',
             }}
           >

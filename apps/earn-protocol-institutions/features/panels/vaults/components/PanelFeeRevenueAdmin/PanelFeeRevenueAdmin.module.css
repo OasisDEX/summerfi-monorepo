@@ -16,5 +16,43 @@
         transition: opacity 0.2s ease-in-out;
       }
     }
+
+    .tableWrapper {
+      overflow-x: auto;
+
+      .table {
+        min-width: 600px;
+      }
+    }
+
+    .tableCellNodeUpdating {
+      margin-top: -4px;
+      margin-bottom: -4px;
+    }
+
+    .inputContainer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .inputWrapper,
+      .inputWrapperPercentage,
+      .inputImpliedCap {
+        max-width: 178px;
+        height: 28px;
+        padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
+        border-radius: var(--radius-small);
+        font-size: 12px;
+        text-align: right;
+      }
+
+      .inputWrapperPercentage {
+        max-width: 60px;
+      }
+
+      .inputImpliedCap {
+        max-width: 118px;
+      }
+    }
   }
 }

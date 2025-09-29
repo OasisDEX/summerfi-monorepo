@@ -14,7 +14,11 @@ export const TopBlocks = ({ blocks }: TopBlocksProps) => {
   return (
     <div className={topBlocksStyles.topBlocksWrapper}>
       {blocks.map((block) => (
-        <Card key={block.title} variant={block.colorful ? 'cardGradientFull' : 'cardSecondary'}>
+        <Card
+          key={block.title}
+          variant={block.colorful ? 'cardGradientFull' : 'cardSecondary'}
+          className={topBlocksStyles.tobBlockItem}
+        >
           <DataBlock
             title={block.title}
             titleSize="medium"
