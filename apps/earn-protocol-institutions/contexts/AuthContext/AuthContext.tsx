@@ -9,7 +9,7 @@ import { type ChallengeResponse, type SignInResponse } from '@/features/auth/typ
 interface AuthContextType {
   user: SignInResponse['user'] | null
   isLoading: boolean
-  signIn: (email: string, password: string) => Promise<void>
+  signIn: (email: string, password: string) => Promise<boolean>
   signOut: () => Promise<void>
   challengeData: { challenge: string; session: string; email: string } | null
   setChallengeData: React.Dispatch<
@@ -126,7 +126,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<boolean> => {
     const response = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -148,33 +148,22 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     if (
       'challenge' in data &&
       'email' in data &&
-      data.challenge === 'NEW_PASSWORD_REQUIRED' &&
       data.session &&
       data.email &&
       typeof data.email === 'string'
     ) {
-      // Store challenge data so the UI can render the new password form
-      setChallengeData({ challenge: data.challenge, session: data.session, email: data.email })
+      // Store challenge data so the UI can render the appropriate challenge form
+      // This covers NEW_PASSWORD_REQUIRED and SOFTWARE_TOKEN_MFA (and others if needed)
+      setChallengeData({
+        challenge: data.challenge ?? '',
+        session: data.session,
+        email: data.email,
+      })
 
-      return
+      return false
     }
 
-    // Normal successful sign in -> fetch /me to set user and schedule token refresh
-    const me = await authFetchMe()
-
-    if (!me.user) {
-      throw new Error('User not found')
-    }
-
-    setUser(me.user)
-    scheduleRefresh(me.exp)
-
-    // Redirection logic
-    if (me.user.isGlobalAdmin) {
-      replace('/admin/institutions')
-    } else if (me.user.institutionsList?.[0]?.name) {
-      replace(`${me.user.institutionsList[0].name}/overview/institution`)
-    }
+    return true
   }
 
   const signOut = async () => {

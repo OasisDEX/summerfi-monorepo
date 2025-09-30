@@ -31,8 +31,23 @@ export const LoginPage = () => {
     isLoadingLoginView,
     handleLoginSubmit,
     handleSetNewPassword,
+    // MFA
+    mfaCode,
+    setMfaCode,
+    isLoadingMfaView,
+    handleRespondToSoftwareToken,
     challengeData,
+    successfulLogin,
   } = useLogin()
+
+  if (successfulLogin) {
+    return (
+      <div className={styles.container}>
+        <Text variant="h1colorful">Login Successful</Text>
+        <Text variant="h4">Redirecting to your dashboard...</Text>
+      </div>
+    )
+  }
 
   if (challengeData?.challenge === 'NEW_PASSWORD_REQUIRED') {
     const buttonChallengeDisabled =
@@ -213,6 +228,45 @@ export const LoginPage = () => {
             className={styles.button}
           >
             {isLoadingChangePasswordView ? 'Setting Password...' : 'Set New Password'}
+          </Button>
+        </form>
+      </div>
+    )
+  }
+
+  if (challengeData?.challenge === 'SOFTWARE_TOKEN_MFA') {
+    const mfaButtonDisabled = isLoadingMfaView || !challengeData
+
+    return (
+      <div className={styles.container}>
+        <Text variant="h1colorful">Two-factor authentication</Text>
+        <Text variant="h4">Enter the 6-digit code from your authenticator app</Text>
+
+        <form onSubmit={handleRespondToSoftwareToken} className={styles.form}>
+          <div className={styles.fieldContainer}>
+            <label htmlFor="mfaCode" className={styles.label}>
+              Authentication Code
+            </label>
+            <Input
+              variant="dark"
+              type="text"
+              id="mfaCode"
+              value={mfaCode}
+              onChange={(e) => setMfaCode(e.target.value)}
+              required
+              maxLength={6}
+            />
+          </div>
+
+          {error && <div className={styles.error}>{error}</div>}
+
+          <Button
+            type="submit"
+            disabled={mfaButtonDisabled}
+            variant={mfaButtonDisabled ? 'secondaryMedium' : 'primaryMedium'}
+            className={styles.button}
+          >
+            {isLoadingMfaView ? <LoadingSpinner size={14} /> : 'Verify'}
           </Button>
         </form>
       </div>
