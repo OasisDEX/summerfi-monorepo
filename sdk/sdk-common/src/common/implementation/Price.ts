@@ -75,7 +75,7 @@ export class Price implements IPrice {
       throw new Error('Token amounts must be on the same chain')
     }
     // when div by zero return 0
-    if (params.denominator.amount === '0') {
+    if (params.denominator.isZero()) {
       return new Price({
         value: '0',
         base: params.denominator.token,
