@@ -83,8 +83,8 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
         },
       }}
       button={{
-        label: 'Book a call',
-        link: 'https://calendly.com/oasis-app/lazy-summer-protocol-launch-collaboration',
+        label: 'Get in touch',
+        link: 'https://form.typeform.com/to/N5U0v7Qc',
         variant: 'primaryMedium',
         className: styles.gradientButton,
         target: '_blank',
