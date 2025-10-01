@@ -70,6 +70,19 @@ export class Price implements IPrice {
     numerator: ITokenAmount
     denominator: ITokenAmount
   }): IPrice {
+    // check same chain
+    if (params.numerator.token.chainInfo.chainId !== params.denominator.token.chainInfo.chainId) {
+      throw new Error('Token amounts must be on the same chain')
+    }
+    // when div by zero return 0
+    if (params.denominator.isZero()) {
+      return new Price({
+        value: '0',
+        base: params.denominator.token,
+        quote: params.numerator.token,
+      })
+    }
+
     return new Price({
       value: new BigNumber(params.numerator.amount).div(params.denominator.amount).toString(),
       base: params.denominator.token,

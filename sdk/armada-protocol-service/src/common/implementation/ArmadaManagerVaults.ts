@@ -1612,6 +1612,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     if (!apysForVault) {
       throw new Error(`APY not found for vault ${params.vaultId.fleetAddress.value}`)
     }
+
+    const sharePrice = Price.createFromAmountsRatio({
+      numerator: totalDeposits,
+      denominator: totalShares,
+    })
+
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       token: token,
@@ -1619,6 +1625,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       depositCap: depositCap,
       totalDeposits: totalDeposits,
       totalShares: totalShares,
+      sharePrice: sharePrice,
       apy: apysForVault.apy,
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
       merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
