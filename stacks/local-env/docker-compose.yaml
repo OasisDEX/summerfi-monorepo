@@ -1,25 +1,6 @@
 name: summerfi-api-local
 
 services:
-  rays-db:
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_DB: rays
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: localhost
-    healthcheck:
-      test:
-        ['CMD-SHELL', "sh -c 'pg_isready --dbname=$${POSTGRES_DB} --username=$${POSTGRES_USER}'"]
-      interval: 3s
-      timeout: 30s
-      retries: 10
-    ports:
-      - '5500:5432'
-    volumes:
-      - rays-db-pg-v16-data:/var/lib/postgresql/data
   redis-cache:
     image: redis:7.2.4
     restart: always
@@ -111,8 +92,6 @@ services:
     volumes:
       - summer-institutions-db-pg-v16-data:/var/lib/postgresql/data
 volumes:
-  rays-db-pg-v16-data:
-    driver: local
   redis-cache-v7-data:
     driver: local
   oasis-borrow-pg-v12-data:

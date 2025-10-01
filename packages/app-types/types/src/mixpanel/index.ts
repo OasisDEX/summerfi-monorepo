@@ -9,13 +9,11 @@ export enum MixpanelEventTypes {
   SwapWidgetEvent = 'swap-widget-event',
   TopBannerEvent = 'top-banner-event',
   ProductHubChange = 'product-hub-change',
-  RaysTopClimbers = 'rays-top-climbers',
   AppError = 'app-error',
   GameFinished = 'game-finished',
   VaultSwitched = 'vault-switched',
 }
 
 export enum MixpanelEventProduct {
-  Rays = 'Rays',
   EarnProtocol = 'EarnProtocol',
 }

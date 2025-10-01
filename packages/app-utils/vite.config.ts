@@ -53,7 +53,6 @@ export default defineConfig(({ mode }) => {
       lib: {
         entry: {
           index: resolve(__dirname, 'src/index.ts'),
-          rays: resolve(__dirname, 'src/rays/index.ts'),
         },
         formats: ['es'],
       },

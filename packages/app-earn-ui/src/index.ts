@@ -252,7 +252,7 @@ export {
 } from './contexts/LocalConfigContext/local-config-reducer'
 
 // constants
-export { SUMR_CAP, RAYS_TO_SUMR_CONVERSION_RATE } from './constants/earn-protocol'
+export { SUMR_CAP } from './constants/earn-protocol'
 export { REVALIDATION_TIMES, REVALIDATION_TAGS } from './constants/revalidation'
 export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
 export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'

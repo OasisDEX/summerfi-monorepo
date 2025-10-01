@@ -8,18 +8,15 @@ import navigationActionStyles from '@/components/layout/Navigation/NavigationAct
 
 interface NavigationActionsProps {
   walletConnectionComponent?: React.ReactNode
-  raysCountComponent?: React.ReactNode
   toggleMobileMenu: () => void
 }
 
 export const NavigationActions = ({
   walletConnectionComponent,
-  raysCountComponent,
   toggleMobileMenu,
 }: NavigationActionsProps): React.ReactNode => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
-      {raysCountComponent}
       <div className={navigationActionStyles.mobileMenuButton}>
         <Button
           variant="secondarySmall"

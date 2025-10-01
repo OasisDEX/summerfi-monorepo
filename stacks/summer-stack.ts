@@ -6,7 +6,6 @@ import { addMorpho } from './morpho'
 import { addApyConfig } from './apy'
 import { attachVPC } from './vpc'
 import { SummerStackContext } from './summer-stack-context'
-import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
 import { addSummerProtocolConfig } from './summer-protocol'
 import { addSummerEarnAppTablesConfig } from './summer-earn-app-tables'
@@ -48,7 +47,6 @@ export function API(stackContext: StackContext) {
   addPortfolioConfig(summerContext)
   addMorpho(summerContext)
   addApyConfig(summerContext)
-  addRaysConfig(summerContext)
   addSummerProtocolConfig(summerContext)
   addSummerEarnAppTablesConfig(summerContext)
   addSummerProAppProductHubConfig(summerContext)
