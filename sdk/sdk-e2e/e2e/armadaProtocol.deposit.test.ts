@@ -25,16 +25,16 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
+const simulateOnly = false
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const rpcUrl = RpcUrls.Base
-    const chainId = ChainIds.Base
-    const fleetAddress = FleetAddresses.Base.usdc
+    const rpcUrl = RpcUrls.ArbitrumOne
+    const chainId = ChainIds.ArbitrumOne
+    const fleetAddress = FleetAddresses.ArbitrumOne.usdt
     const userAddress = testWalletAddress
     const amountValue = '1'
-    const symbol = 'USDC'
+    const symbol = 'USD₮0'
     const swapToSymbol = undefined
 
     await runTests({

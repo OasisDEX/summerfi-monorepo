@@ -4,6 +4,7 @@ import type { IArmadaVaultId } from '../interfaces/IArmadaVaultId'
 import type { IArmadaVaultInfo, IArmadaVaultInfoData } from '../interfaces/IArmadaVaultInfo'
 import { __signature__ } from '../interfaces/IArmadaVaultInfo'
 import type { IPercentage } from '../interfaces/IPercentage'
+import type { IPrice } from '../interfaces/IPrice'
 import type { IToken } from '../interfaces/IToken'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
 import { PoolInfo } from './PoolInfo'
@@ -29,6 +30,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   readonly depositCap: ITokenAmount
   readonly totalDeposits: ITokenAmount
   readonly totalShares: ITokenAmount
+  readonly sharePrice: IPrice
   readonly apy: IPercentage | null
   readonly rewardsApys: Array<{
     token: IToken
@@ -56,6 +58,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
     this.depositCap = params.depositCap
     this.totalDeposits = params.totalDeposits
     this.totalShares = params.totalShares
+    this.sharePrice = params.sharePrice
     this.apy = params.apy
     this.rewardsApys = params.rewardsApys
     this.merklRewards = params.merklRewards

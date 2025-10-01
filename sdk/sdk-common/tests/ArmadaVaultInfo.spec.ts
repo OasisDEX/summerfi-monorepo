@@ -1,4 +1,4 @@
-import { ChainFamilyMap, Address, Token, TokenAmount, Percentage } from '../src'
+import { ChainFamilyMap, Address, Token, TokenAmount, Percentage, Price } from '../src'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaVaultInfo } from '../src/common/implementation/ArmadaVaultInfo'
 
@@ -51,6 +51,11 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
         depositCap,
         totalDeposits,
         totalShares,
+        sharePrice: Price.createFrom({
+          value: '1',
+          base: sharesAsset,
+          quote: underlyingAsset,
+        }),
         token: sharesAsset,
         assetToken: underlyingAsset,
         apy: Percentage.createFrom({
