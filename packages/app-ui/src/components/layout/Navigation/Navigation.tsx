@@ -22,7 +22,6 @@ interface NavigationProps extends WithNavigationModules {
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
   walletConnectionComponent?: ReactNode
-  raysCountComponent?: ReactNode
   onLogoClick?: () => void
   additionalModule?: ReactNode
 }
@@ -33,7 +32,6 @@ export const Navigation: FC<NavigationProps> = ({
   links,
   panels,
   currentPath,
-  raysCountComponent,
   walletConnectionComponent,
   navigationModules,
   onLogoClick,
@@ -68,7 +66,6 @@ export const Navigation: FC<NavigationProps> = ({
           />
         )}
         <NavigationActions
-          raysCountComponent={raysCountComponent}
           walletConnectionComponent={walletConnectionComponent}
           toggleMobileMenu={toggleMobileMenu}
         />

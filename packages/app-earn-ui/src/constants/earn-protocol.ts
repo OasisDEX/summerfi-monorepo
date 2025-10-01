@@ -2,7 +2,6 @@ import { SupportedSDKNetworks } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
 export const SUMR_CAP = 1000000000
-export const RAYS_TO_SUMR_CONVERSION_RATE = 2.26 // 1 RAY = 2.26 SUMR
 
 export const networkWarnings: {
   [key in SupportedSDKNetworks]?: {

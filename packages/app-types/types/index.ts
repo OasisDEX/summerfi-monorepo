@@ -3,13 +3,6 @@ export {
   type EarnAppConfigType,
   type EarnAppFleetCustomConfigType,
 } from './src/generated/earn-app-config'
-export {
-  type AppRaysConfigType,
-  type ProductNetworkConfig,
-  type Products,
-  type ProductsConfig,
-  emptyConfig as raysEmptyConfig,
-} from './src/generated/rays-config'
 export { AutomationFeatures, AutomationKinds } from './src/automation'
 export type {
   DropdownOption,
@@ -34,7 +27,6 @@ export type {
   WithNavigationModules,
 } from './src/components'
 export type { IconNamesList, TokenConfig, TokenSymbolsList } from './src/icons'
-export type { LeaderboardItem, LeaderboardResponse } from './src/leaderboard'
 export type { PortfolioMigrations } from './src/migrations'
 export { LendingProtocol, lendingProtocolMap } from './src/lending-protocol'
 export { MixpanelEventProduct, MixpanelEventTypes } from './src/mixpanel'
@@ -149,7 +141,6 @@ export type {
   ProductHubTags,
   ProductHubTooltipType,
 } from './src/product-hub'
-export type { RaysApiResponse } from './src/server-handlers'
 export type { TranslatableType } from './src/translatable'
 export { TOSStatus } from './src/terms-of-service'
 export type {

@@ -21,7 +21,6 @@ jobs:
       AWS_REGION: eu-central-1
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
-      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
       CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
@@ -94,15 +93,6 @@ jobs:
             'apps/earn-protocol-landing-page/**/*.tsx') }}
           restore-keys:
             ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
-
-      - name: Setup Rays Dashboard App Next.js Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/apps/rays-dashboard/.next/cache
-          key:
-            ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
-            hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
-          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |

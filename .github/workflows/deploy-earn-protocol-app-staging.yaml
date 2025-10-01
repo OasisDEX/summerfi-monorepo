@@ -53,7 +53,6 @@ jobs:
       CLUSTER_NAME: summer-fi-earn-dev
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
-      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
@@ -200,7 +199,6 @@ jobs:
                        --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
-                       --build-arg CONFIG_URL_RAYS=${{ secrets.CONFIG_URL_RAYS }} \
                        --build-arg FUNCTIONS_API_URL=${{ env.FUNCTIONS_API_URL }} \
                        --build-arg EARN_MIXPANEL_KEY=${{ secrets.EARN_MIXPANEL_KEY }} \
                        --build-arg SUBGRAPH_BASE=${{ secrets.SUBGRAPH_BASE }} \

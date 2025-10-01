@@ -5,8 +5,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/rays/*": ["./src/rays/*"]
+      "@/*": ["./src/*"]
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "typeRoots": [],

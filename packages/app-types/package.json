@@ -6,12 +6,11 @@
   "scripts": {
     "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
     "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
-    "get-config-types": "concurrently \"node scripts/get-config-types.js\" \"node scripts/get-rays-config-types.js\" \"node scripts/get-earn-config-types.js\""
+    "get-config-types": "concurrently \"node scripts/get-config-types.js\" \"node scripts/get-earn-config-types.js\""
   },
   "dependencies": {
     "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/app-db": "workspace:*",
-    "@summerfi/rays-db": "workspace:*",
     "@summerfi/sdk-client-react": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",

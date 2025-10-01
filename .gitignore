@@ -83,6 +83,5 @@ sdk/.sst
 cdk.context.json
 
 # apps specific
-/apps/rays-dashboard/types/generated
 /apps/earn-protocol/types/generated
 /apps/earn-protocol-landing-page/types/generated

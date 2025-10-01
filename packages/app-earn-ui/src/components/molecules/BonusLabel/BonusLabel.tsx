@@ -17,7 +17,6 @@ interface BonulsLabelProps {
   isLoading?: boolean
   tokenBonus?: string
   apy?: string
-  rays?: string
   raw?: ReactNode
   withTokenBonus?: boolean
   combinedApr?: string
@@ -34,7 +33,6 @@ interface BonulsLabelProps {
 export const BonusLabel: FC<BonulsLabelProps> = ({
   tokenBonus,
   apy,
-  rays,
   raw,
   withTokenBonus = true,
   combinedApr,
@@ -113,9 +111,9 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
             <Icon iconName="stars" size={24} color="white" />
             <SkeletonLine height={20} width={90} style={{ opacity: 0.5 }} />
           </Pill>
-        ) : !!tokenBonus || !!apy || !!rays || !!raw ? (
+        ) : !!tokenBonus || !!apy || !!raw ? (
           <Pill>
-            {tokenBonus ?? rays ? <Icon iconName="stars" size={24} color="white" /> : null}
+            {tokenBonus ? <Icon iconName="stars" size={24} color="white" /> : null}
             {combinedApr ? (
               <Text variant="p3semi" as="span">
                 {combinedApr} APY
@@ -131,7 +129,6 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
                 )}
                 {tokenBonus && withTokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
                 {tokenBonus && withTokenBonus ? <>{tokenBonus}&nbsp;SUMR</> : ''}
-                {rays ? `${rays} RAYS` : ''}
                 {raw ? raw : ''}
               </span>
             )}

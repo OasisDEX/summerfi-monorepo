@@ -73,7 +73,7 @@ const checkIfDockerComposeIsRunning = async () => {
     const { stdout } =
       await $`docker compose --file ./stacks/local-env/docker-compose.yaml  ps --services --filter "status=running"`
     const services = (stdout ?? '').trim().split('\n').filter(Boolean)
-    return services.length === 3 // 3 services are expected to be running - rays-db, redis-cache, oasis-borrow-db
+    return services.length === 2 // 2 services are expected to be running - redis-cache, oasis-borrow-db
   } catch (error) {
     return false
   }

@@ -33,7 +33,6 @@ module.exports = {
     'out/',
     'types/generated/*',
     'scripts/get-config-types.js',
-    'scripts/get-rays-config-types.js',
   ],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
   plugins: [
