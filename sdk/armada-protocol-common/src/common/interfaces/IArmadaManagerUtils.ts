@@ -13,6 +13,8 @@ import {
   type AddressValue,
   type TransactionInfo,
   type AmountValue,
+  type ChainId,
+  type Erc20TransferTransactionInfo,
 } from '@summerfi/sdk-common'
 import type {
   GetGlobalRebalancesQuery,
@@ -260,4 +262,22 @@ export interface IArmadaManagerUtils {
     vaultId: IArmadaVaultId
     amountValue?: AmountValue
   }): Promise<TransactionInfo>
+
+  /**
+   * @name getErc20TokenTransferTx
+   * @description Generates a transaction for transferring ERC20 tokens
+   *
+   * @param chainId Chain identifier where the token exists
+   * @param token ERC20 token contract address
+   * @param recipient Address to receive the tokens
+   * @param amount Amount of tokens to transfer
+   *
+   * @returns Erc20TransferTransactionInfo Transaction information for the transfer
+   */
+  getErc20TokenTransferTx(params: {
+    chainId: ChainId
+    token: IAddress
+    recipient: IAddress
+    amount: ITokenAmount
+  }): Promise<Erc20TransferTransactionInfo[]>
 }

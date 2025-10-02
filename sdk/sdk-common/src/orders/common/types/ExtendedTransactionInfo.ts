@@ -20,6 +20,7 @@ export enum TransactionType {
   Migration = 'Migration',
   Bridge = 'Bridge',
   Send = 'Send',
+  Erc20Transfer = 'Erc20Transfer',
   VaultSwitch = 'VaultSwitch',
   MerklClaim = 'MerklClaim',
   ToggleAQasMerklRewardsOperator = 'ToggleAQasMerklRewardsOperator',
@@ -120,4 +121,14 @@ export type MerklClaimTransactionInfo = TransactionInfo & {
 
 export type ToggleAQasMerklRewardsOperatorTransactionInfo = TransactionInfo & {
   type: TransactionType.ToggleAQasMerklRewardsOperator
+}
+
+export type Erc20TransferTransactionInfo = TransactionInfo & {
+  type: TransactionType.Erc20Transfer
+  metadata: TransactionMetadataErc20Transfer
+}
+export type TransactionMetadataErc20Transfer = {
+  token: IAddress
+  recipient: IAddress
+  amount: ITokenAmount
 }

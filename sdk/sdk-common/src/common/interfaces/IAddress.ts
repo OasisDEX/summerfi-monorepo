@@ -1,9 +1,9 @@
 import { isHex } from 'viem'
 import { z } from 'zod'
-import { AddressValue } from '../types/AddressValue'
 import { AddressType } from '../enums/AddressType'
-import { IPrintable } from './IPrintable'
-import { IValueConverter } from './IValueConverter'
+import type { AddressValue } from '../types/AddressValue'
+import type { IPrintable } from './IPrintable'
+import type { ISolidityValue } from './ISolidityValue'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -16,7 +16,7 @@ export const __signature__: unique symbol = Symbol()
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddress extends IAddressData, IValueConverter, IPrintable {
+export interface IAddress extends IAddressData, IPrintable, ISolidityValue<AddressValue> {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The address value in the format specified by type */

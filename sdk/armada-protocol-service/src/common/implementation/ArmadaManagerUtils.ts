@@ -17,6 +17,7 @@ import {
   LoggingService,
   Price,
   TokenAmount,
+  TransactionType,
   type ChainInfo,
   type HexData,
   type IPercentage,
@@ -28,10 +29,11 @@ import {
   type IArmadaVaultId,
   type AddressValue,
   type TransactionInfo,
+  type Erc20TransferTransactionInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
-import { encodeFunctionData, zeroAddress } from 'viem'
+import { encodeFunctionData, erc20Abi, zeroAddress } from 'viem'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -519,5 +521,36 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       transaction,
       description,
     }
+  }
+
+  async getErc20TokenTransferTx(
+    params: Parameters<IArmadaManagerUtils['getErc20TokenTransferTx']>[0],
+  ): ReturnType<IArmadaManagerUtils['getErc20TokenTransferTx']> {
+    const calldata = encodeFunctionData({
+      abi: erc20Abi,
+      functionName: 'transfer',
+      args: [
+        params.recipient.toSolidityValue(), // to address
+        params.amount.toSolidityValue(), // amount in base units
+      ],
+    })
+
+    // 4. Return transaction info
+    return [
+      {
+        type: TransactionType.Erc20Transfer,
+        description: `Transfer ${params.amount.toString()} to ${params.recipient.toString()}`,
+        transaction: {
+          target: params.token,
+          calldata: calldata,
+          value: '0',
+        },
+        metadata: {
+          token: params.token,
+          recipient: params.recipient,
+          amount: params.amount,
+        },
+      },
+    ]
   }
 }

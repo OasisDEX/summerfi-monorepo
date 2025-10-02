@@ -61,12 +61,12 @@ export class Address implements IAddress {
 
   /** PUBLIC METHODS */
   equals(address: Address): boolean {
-    return this.value.toLowerCase() === address.value.toLowerCase() && this.type === address.type
+    return this.toSolidityValue() === address.toSolidityValue() && this.type === address.type
   }
 
   /** @see IValueConverter.toBigNumber */
-  toSolidityValue(_: { decimals: number }): bigint {
-    return BigInt(this.value)
+  toSolidityValue(): AddressValue {
+    return this.value.toLowerCase() as AddressValue
   }
 
   /** @see IValueConverter.toBigNumber */

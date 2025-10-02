@@ -308,6 +308,7 @@ export type {
   TransactionMetadataVaultSwitch,
   TransactionMetadataBridge,
   TransactionMetadataMigration,
+  TransactionMetadataErc20Transfer,
   ApproveTransactionInfo,
   DepositTransactionInfo,
   WithdrawTransactionInfo,
@@ -320,6 +321,7 @@ export type {
   VaultSwitchTransactionInfo,
   MerklClaimTransactionInfo,
   ToggleAQasMerklRewardsOperatorTransactionInfo,
+  Erc20TransferTransactionInfo,
 } from './orders/common/types/ExtendedTransactionInfo'
 export type { Order } from './orders/common/types/Order'
 export type { TransactionInfo } from './orders/common/types/TransactionInfo'
