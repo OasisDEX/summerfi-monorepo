@@ -332,6 +332,7 @@ export type LandingPageData = {
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   proAppStats: ProAppStats
   vaultsInfo: IArmadaVaultInfo[] | undefined
+  totalUniqueUsers: number
 }
 
 export enum SupportedNetworkIds {
