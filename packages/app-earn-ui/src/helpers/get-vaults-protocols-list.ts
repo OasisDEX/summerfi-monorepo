@@ -14,8 +14,35 @@ import { getArkNiceName } from '@/helpers/get-ark-nice-name'
  * @param vaultsList - List of vaults containing ark configurations
  * @returns An array of unique protocol names
  */
-export const getVaultsProtocolsList = (vaultsList: SDKVaultsListType): string[] => {
-  return [
+
+const getTopWordsUsed = (protocols: string[], topN: number): string[] => {
+  const wordCount: { [key: string]: number } = {}
+
+  protocols.forEach((protocol) => {
+    const words = protocol.replace('WETH', '').split(' ')
+
+    words.forEach((word) => {
+      const cleanedWord = word.replace(/[^a-zA-Z0-9]/gu, '').toLowerCase()
+
+      if (cleanedWord) {
+        wordCount[cleanedWord] = (wordCount[cleanedWord] || 0) + 1
+      }
+    })
+  })
+
+  return Object.entries(wordCount)
+    .sort(([, countA], [, countB]) => countB - countA)
+    .slice(0, topN)
+    .map(([word]) => word)
+}
+
+export const getVaultsProtocolsList = (
+  vaultsList: SDKVaultsListType,
+): {
+  topProtocols: string[]
+  allVaultsProtocols: string[]
+} => {
+  const allVaultsProtocols = [
     ...new Set(
       vaultsList.reduce<string[]>(
         (acc, { arks }) => [
@@ -32,4 +59,11 @@ export const getVaultsProtocolsList = (vaultsList: SDKVaultsListType): string[] 
       ),
     ),
   ]
+  // the list is getting too long, so we will return only top 3 "most used" protocols names
+  const topProtocols = getTopWordsUsed(allVaultsProtocols, 5)
+
+  return {
+    topProtocols,
+    allVaultsProtocols,
+  }
 }

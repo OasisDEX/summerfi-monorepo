@@ -16,7 +16,7 @@ interface ProtocolStatsProps {
 }
 
 export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = false }) => {
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
   const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
 
   const data = [

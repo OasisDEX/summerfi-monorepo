@@ -402,7 +402,7 @@ export const VaultsListView = ({
     [vaultsList],
   )
 
-  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.length
+  const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.allVaultsProtocols.length
 
   const {
     amountParsed,
@@ -547,9 +547,15 @@ export const VaultsListView = ({
           <DataBlock
             title="Protocols Supported"
             // TODO: fill data (this is just a placeholder)
-            titleTooltip={`Protocols supported: ${Array.from(formattedProtocolsSupportedList)
+            titleTooltip={`Protocols supported: ${Array.from(
+              formattedProtocolsSupportedList.topProtocols,
+            )
               .filter((item) => item !== 'BufferArk')
-              .join(', ')}`}
+              .map(capitalize)
+              .join(', ')}, and ${
+              formattedProtocolsSupportedList.allVaultsProtocols.length -
+              formattedProtocolsSupportedList.topProtocols.length
+            } more.`}
             size="large"
             value={formattedProtocolsSupportedCount}
             tooltipName="vaults-list-protocols-supported"
