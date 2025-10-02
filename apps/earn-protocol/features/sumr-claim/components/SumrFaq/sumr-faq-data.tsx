@@ -216,7 +216,7 @@ export const sumrFaqData = [
         <Text as="p" variant="p2" style={{}}>
           Season 2 will commence on January 30 2025, where eligible $RAYS position types on
           Summer.fi Pro will accrue $RAYS, that will be claimable for $SUMR. $RAYS Season 2
-          conclusion date is to be announced.
+          concluded in June 2025.
         </Text>
       </>
     ),
