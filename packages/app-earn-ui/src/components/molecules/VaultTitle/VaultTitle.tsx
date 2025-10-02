@@ -17,6 +17,8 @@ import { networkIdIconNameMap, networkNameIconNameMap } from '@/constants/icon-m
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getTokenGuarded } from '@/tokens/helpers'
 
+import vaultTitleStyles from './VaultTitle.module.css'
+
 interface VaultTitleProps {
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
@@ -44,8 +46,8 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
 
   return (
-    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+    <div className={vaultTitleStyles.container}>
+      <div className={vaultTitleStyles.iconContainer}>
         {isLoading ? (
           <SkeletonLine height={iconSize} width={iconSize} />
         ) : isIconDefined ? (
@@ -55,13 +57,11 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           <GenericTokenIcon symbol={resolvedSymbol} customSize={32} />
         )}
         {(networkId ?? networkName) && (
-          <div
-            style={{ position: 'absolute', top: '-3px', left: '-3px' }}
-            data-testid="vault-network"
-          >
+          <div className={vaultTitleStyles.networkIcon} data-testid="vault-network">
             {networkId && networkIdIconNameMap[networkId] && (
               <Icon iconName={networkIdIconNameMap[networkId]} size={16} />
             )}
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {networkName && networkNameIconNameMap[networkName] && (
               <Icon iconName={networkNameIconNameMap[networkName]} size={16} />
             )}
@@ -69,39 +69,27 @@ export const VaultTitle: FC<VaultTitleProps> = ({
         )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-4)' }}>
-        <div style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}>
+      <div className={vaultTitleStyles.textContainer}>
+        <div className={vaultTitleStyles.titleRow}>
           <Text
             as="h4"
             variant={titleVariant}
-            style={{ color: 'white', fontWeight: 600 }}
+            className={vaultTitleStyles.titleText}
             data-testid="vault-token"
           >
             {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
           </Text>
           {selected && (
-            <div
-              style={{
-                width: '24px',
-                height: '24px',
-                backgroundColor: 'var(--earn-protocol-primary-40)',
-                borderRadius: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <div className={vaultTitleStyles.selectedIndicator}>
               <Icon iconName="checkmark" size={12} />
             </div>
           )}
         </div>
-        {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
+        {value && <div className={vaultTitleStyles.valueContainer}>{value}</div>}
       </div>
       {!isVaultCard && networkName && networkWarnings[networkName]?.enabled ? (
         <Tooltip
-          style={{
-            margin: '0 10px',
-          }}
+          className={vaultTitleStyles.tooltip}
           tooltipWrapperStyles={{
             marginTop: '20px',
           }}

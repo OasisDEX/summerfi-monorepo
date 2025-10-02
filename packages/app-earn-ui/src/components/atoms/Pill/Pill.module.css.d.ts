@@ -6,6 +6,7 @@ declare const styles: {
   readonly "smallLeftPadding": string;
   readonly "smallRightPadding": string;
   readonly "smallXPaddings": string;
+  readonly "superBackground": string;
 };
 export = styles;
 

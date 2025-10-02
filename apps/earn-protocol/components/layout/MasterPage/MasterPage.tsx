@@ -9,6 +9,7 @@ import {
   Text,
   useAnalyticsCookies,
 } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -44,6 +45,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const { features } = useSystemConfig()
   const pathname = usePathname()
+  const isSuperLazyVaults = pathname.startsWith('/super')
   const handleButtonClick = useHandleButtonClickEvent()
 
   useScrollTracker({})
@@ -71,8 +73,21 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   }
 
   return (
-    <div className={masterPageStyles.mainContainer}>
+    <div
+      className={clsx(masterPageStyles.mainContainer, {
+        'super-lazy': isSuperLazyVaults,
+      })}
+    >
       {!skipNavigation && <NavigationWrapper />}
+      <div
+        className={clsx(masterPageStyles.superBanner, {
+          [masterPageStyles.superBannerActive]: isSuperLazyVaults,
+        })}
+      >
+        <Text variant="h1" className={masterPageStyles.superBannerText}>
+          SuperLazy Vaults
+        </Text>
+      </div>
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{

@@ -16,6 +16,8 @@ export const getNavigationItems = ({
 }): EarnNavigationProps['links'] => {
   const prefix = !isEarnApp ? `/earn` : ``
   const institutionsEnabled = features?.Institutions
+
+  const superLazyVaultsEnabled = features?.SuperLazyVaults
   const teamPageEnabled = features?.Team
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
@@ -33,15 +35,45 @@ export const getNavigationItems = ({
         },
       ]
     : []
+  const earnLink = superLazyVaultsEnabled
+    ? [
+        {
+          label: 'Earn',
+          id: 'earn',
+          itemsList: [
+            {
+              title: 'Lazy Summer',
+              id: 'lazy-summer',
+              url: !isEarnApp ? `/earn` : `/`,
+              icon: 'sumr' as IconNamesList,
+              iconSize: 20,
+              prefetchDisabled: !isEarnApp,
+              onClick: handleButtonClick('lazy-summer'),
+            },
+            {
+              title: 'Super Lazy Vaults',
+              id: 'super-lazy-vaults',
+              url: !isEarnApp ? `/earn/super` : `/super`,
+              icon: 'sumr' as IconNamesList,
+              iconSize: 20,
+              prefetchDisabled: !isEarnApp,
+              onClick: handleButtonClick('super-lazy-vaults'),
+            },
+          ],
+        },
+      ]
+    : [
+        {
+          label: 'Earn',
+          id: 'earn',
+          link: !isEarnApp ? `/earn` : `/`,
+          prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('earn-app'),
+        },
+      ]
 
   return [
-    {
-      label: 'Earn',
-      id: 'earn',
-      link: !isEarnApp ? `/earn` : `/`,
-      prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('earn-app'),
-    },
+    ...earnLink,
     ...portfolioLink,
     {
       label: 'Explore',
@@ -95,7 +127,7 @@ export const getNavigationItems = ({
                 url: `${currentOrigin}/team`,
                 id: 'team',
                 title: 'Team',
-                description: 'Leadership that’s helped shape DeFi from day 1',
+                description: <>Leadership that’s helped shape DeFi from day&nbsp;1</>,
                 icon: 'earn_1_on_1' as IconNamesList,
                 prefetchDisabled: !isEarnApp,
                 onClick: handleButtonClick('team'),
