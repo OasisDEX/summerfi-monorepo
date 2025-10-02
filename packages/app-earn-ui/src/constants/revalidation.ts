@@ -11,6 +11,11 @@ export const REVALIDATION_TIMES = {
   MEDIAN_DEFI_YIELD: 3600,
   MIGRATION_DATA: 30,
   PRO_APP_STATS: 3600,
+  LP_VAULTS_APY: 300,
+  LP_REBALANCE_ACTIVITY: 300,
+  LP_SUMMER_PRO_STATS: 3600,
+  LP_PROTOCOLS_TVL: 3600,
+  LP_PROTOCOLS_APY: 3600,
 }
 
 export const REVALIDATION_TAGS = {
@@ -22,4 +27,9 @@ export const REVALIDATION_TAGS = {
   CONFIG: 'config',
   MIGRATION_DATA: 'migration-data',
   PRO_APP_STATS: 'pro-app-stats',
+  LP_VAULTS_APY: 'lp-vaults-apy',
+  LP_REBALANCE_ACTIVITY: 'lp-rebalance-activity',
+  LP_SUMMER_PRO_STATS: 'lp-summer-pro-stats',
+  LP_PROTOCOLS_TVL: 'lp-protocols-tvl',
+  LP_PROTOCOLS_APY: 'lp-protocols-apy',
 }

@@ -97,13 +97,25 @@ export async function GET() {
       revalidate: REVALIDATION_TIMES.CONFIG,
       tags: [REVALIDATION_TAGS.CONFIG],
     })(),
-    getPaginatedRebalanceActivity({
+    unstableCache(getPaginatedRebalanceActivity, [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY], {
+      revalidate: REVALIDATION_TIMES.LP_REBALANCE_ACTIVITY,
+      tags: [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY],
+    })({
       page: 1,
       limit: 1,
     }),
-    getProAppStats(),
-    getProtocolsTvl(),
-    getProtocolsApy(),
+    unstableCache(getProAppStats, [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS], {
+      revalidate: REVALIDATION_TIMES.LP_SUMMER_PRO_STATS,
+      tags: [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS],
+    })(),
+    unstableCache(getProtocolsTvl, [REVALIDATION_TAGS.LP_PROTOCOLS_TVL], {
+      revalidate: REVALIDATION_TIMES.LP_PROTOCOLS_TVL,
+      tags: [REVALIDATION_TAGS.LP_PROTOCOLS_TVL],
+    })(),
+    unstableCache(getProtocolsApy, [REVALIDATION_TAGS.LP_PROTOCOLS_APY], {
+      revalidate: REVALIDATION_TIMES.LP_PROTOCOLS_APY,
+      tags: [REVALIDATION_TAGS.LP_PROTOCOLS_APY],
+    })(),
     unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
       revalidate: REVALIDATION_TIMES.VAULTS_LIST,
       tags: [REVALIDATION_TAGS.VAULTS_LIST],
@@ -117,7 +129,14 @@ export async function GET() {
     vaults,
   })
 
-  const vaultsApyByNetworkMap = await getVaultsApy({
+  const vaultsApyByNetworkMap = await unstableCache(
+    getVaultsApy,
+    [REVALIDATION_TAGS.LP_VAULTS_APY],
+    {
+      revalidate: REVALIDATION_TIMES.LP_VAULTS_APY,
+      tags: [REVALIDATION_TAGS.LP_VAULTS_APY],
+    },
+  )({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
