@@ -248,7 +248,7 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
     return vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
   }, [vaultsList])
 
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
 
   const sectionTabs = useMemo(() => {
     if (!vaultsList || !totalAssets || !totalRebalances || !totalVaultsCount || !totalLiquidity) {

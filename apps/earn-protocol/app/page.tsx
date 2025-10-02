@@ -75,7 +75,7 @@ export async function generateMetadata({
   const tvl = formatCryptoBalance(
     vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
   )
-  const protocolsSupported = getVaultsProtocolsList(vaults)
+  const { allVaultsProtocols: protocolsSupported } = getVaultsProtocolsList(vaults)
 
   let ogImageUrl = ''
 

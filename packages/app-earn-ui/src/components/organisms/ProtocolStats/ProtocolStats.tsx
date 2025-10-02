@@ -21,7 +21,7 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({
   totalUniqueUsers,
   noMargin = false,
 }) => {
-  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).length
+  const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
   const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
   const flooredTotalUniqueUsers = totalUniqueUsers
     ? Math.floor(totalUniqueUsers / 1000) * 1000
