@@ -59,7 +59,7 @@ export const getVaultsProtocolsList = (
       ),
     ),
   ]
-  // the list is getting too long, so we will return only top 3 "most used" protocols names
+  // the list is getting too long, so we will return only top 5 "most used" protocols names
   const topProtocols = getTopWordsUsed(allVaultsProtocols, 5)
 
   return {
