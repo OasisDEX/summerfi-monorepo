@@ -18,6 +18,7 @@ import { getMedianDefiProjectYield } from '@/app/server-handlers/defillama/get-m
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-stats'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
@@ -87,6 +88,7 @@ export async function GET() {
     { vaults },
     configRaw,
     rebalanceActivity,
+    latestActivity,
     proAppStats,
     protocolTvls,
     protocolApys,
@@ -100,6 +102,13 @@ export async function GET() {
     unstableCache(getPaginatedRebalanceActivity, [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY], {
       revalidate: REVALIDATION_TIMES.LP_REBALANCE_ACTIVITY,
       tags: [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY],
+    })({
+      page: 1,
+      limit: 1,
+    }),
+    unstableCache(getPaginatedLatestActivity, [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS], {
+      revalidate: REVALIDATION_TIMES.LP_SUMMER_PRO_STATS,
+      tags: [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS],
     })({
       page: 1,
       limit: 1,
@@ -146,6 +155,7 @@ export async function GET() {
   const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
 
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
+  const { totalUniqueUsers } = latestActivity
 
   return NextResponse.json({
     systemConfig,
@@ -156,5 +166,6 @@ export async function GET() {
     totalRebalanceItemsPerStrategyId,
     proAppStats,
     vaultsInfo,
+    totalUniqueUsers,
   } as LandingPageData)
 }
