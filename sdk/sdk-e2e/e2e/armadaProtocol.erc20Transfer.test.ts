@@ -95,9 +95,9 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
 
         // Assert: Validate metadata
         expect(tx.metadata).toBeDefined()
-        expect(tx.metadata.token).toBe(token.address)
-        expect(tx.metadata.recipient).toBe(recipient)
-        expect(tx.metadata.amount).toBe(amount)
+        expect(tx.metadata.token.toSolidityValue()).toStrictEqual(token.address.toSolidityValue())
+        expect(tx.metadata.recipient.toSolidityValue()).toStrictEqual(recipient.toSolidityValue())
+        expect(tx.metadata.amount.toSolidityValue()).toStrictEqual(amount.toSolidityValue())
 
         console.log(`\nTransaction Generated:`)
         console.log(`  Type: ${tx.type}`)
@@ -160,7 +160,9 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         expect(transactions).toBeDefined()
         expect(transactions.length).toBeGreaterThan(0)
         expect(transactions[0].type).toBe('Erc20Transfer')
-        expect(transactions[0].metadata.amount).toBe(smallAmount)
+        expect(transactions[0].metadata.amount.toSolidityValue()).toStrictEqual(
+          smallAmount.toSolidityValue(),
+        )
       })
 
       it('should handle large transfer amounts', async () => {
@@ -184,7 +186,9 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         expect(transactions).toBeDefined()
         expect(transactions.length).toBeGreaterThan(0)
         expect(transactions[0].type).toBe('Erc20Transfer')
-        expect(transactions[0].metadata.amount).toBe(largeAmount)
+        expect(transactions[0].metadata.amount.toSolidityValue()).toEqual(
+          largeAmount.toSolidityValue(),
+        )
       })
     })
   }
