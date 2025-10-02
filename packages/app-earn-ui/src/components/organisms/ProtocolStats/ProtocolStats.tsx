@@ -1,6 +1,6 @@
 import { type FC, Fragment } from 'react'
 import { type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -12,12 +12,20 @@ import classNames from './ProtocolStats.module.css'
 
 interface ProtocolStatsProps {
   vaultsList?: SDKVaultsListType
+  totalUniqueUsers?: number
   noMargin?: boolean
 }
 
-export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = false }) => {
+export const ProtocolStats: FC<ProtocolStatsProps> = ({
+  vaultsList,
+  totalUniqueUsers,
+  noMargin = false,
+}) => {
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
   const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
+  const flooredTotalUniqueUsers = totalUniqueUsers
+    ? Math.floor(totalUniqueUsers / 1000) * 1000
+    : 6000
 
   const data = [
     {
@@ -26,7 +34,7 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({ vaultsList, noMargin = f
     },
     {
       title: 'Users',
-      value: '6,000+',
+      value: `${formatWithSeparators(flooredTotalUniqueUsers)}+`,
     },
     {
       title: 'Markets Optimized',

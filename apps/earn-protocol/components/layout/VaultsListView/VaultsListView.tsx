@@ -8,6 +8,7 @@ import {
   GenericMultiselect,
   getSumrTokenBonus,
   getUniqueVaultId,
+  getVaultPositionUrl,
   getVaultsProtocolsList,
   getVaultUrl,
   isUserSmartAccount,
@@ -374,7 +375,14 @@ export const VaultsListView = ({
       buttonClickEventHandler(
         `vaults-list-vault-card-${slugifyVault(resolvedVaultData)}-double-click`,
       )
-      const vaultUrl = getVaultUrl(resolvedVaultData)
+      const vaultUrl =
+        positionExists && userWalletAddress
+          ? getVaultPositionUrl({
+              network: supportedSDKNetwork(resolvedVaultData.protocol.network),
+              vaultId: resolvedVaultData.id,
+              walletAddress: userWalletAddress,
+            })
+          : getVaultUrl(resolvedVaultData)
 
       push(vaultUrl)
 

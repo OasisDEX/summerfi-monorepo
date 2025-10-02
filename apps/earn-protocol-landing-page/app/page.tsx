@@ -72,7 +72,10 @@ export default function HomePage() {
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
       />
-      <ProtocolStats vaultsList={landingPageData?.vaultsWithConfig} />
+      <ProtocolStats
+        vaultsList={landingPageData?.vaultsWithConfig}
+        totalUniqueUsers={landingPageData?.totalUniqueUsers}
+      />
       <SummerFiProBox />
       <BigGradientBox>
         <EffortlessAccessBlock uiImage={summerEarnUi} />

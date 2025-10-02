@@ -13,22 +13,31 @@ import Image from 'next/image'
 import { OkxClientComponents } from '@/app/campaigns/okx/components/ClientComponents'
 import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 import okxHeaderImage from '@/public/img/campaigns/header-okx.svg'
 
 import campaignPageStyles from '@/app/campaigns/CampaignPage.module.css'
 
 export default async function OkxCampaignPage() {
-  const [{ vaults }, configRaw] = await Promise.all([
+  const [{ vaults }, configRaw, latestActivity] = await Promise.all([
     getVaultsList(),
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
     })(),
+    unstableCache(getPaginatedLatestActivity, [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS], {
+      revalidate: REVALIDATION_TIMES.LP_SUMMER_PRO_STATS,
+      tags: [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS],
+    })({
+      page: 1,
+      limit: 1,
+    }),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+  const { totalUniqueUsers } = latestActivity
 
   return (
     <div className={campaignPageStyles.wrapper}>
@@ -52,7 +61,7 @@ export default async function OkxCampaignPage() {
         </Text>
         <OkxConnectButton />
       </div>
-      <ProtocolStats vaultsList={vaultsWithConfig} noMargin />
+      <ProtocolStats vaultsList={vaultsWithConfig} noMargin totalUniqueUsers={totalUniqueUsers} />
       <OkxClientComponents />
     </div>
   )
