@@ -1,4 +1,4 @@
-import type { IAddress } from '@summerfi/sdk-common'
+import type { AddressValue } from '@summerfi/sdk-common'
 
 /**
  * @name RebalanceDataSolidity
@@ -6,9 +6,9 @@ import type { IAddress } from '@summerfi/sdk-common'
  */
 export interface RebalanceDataSolidity {
   /** Ark where the tokens are taken from */
-  fromArk: IAddress
+  fromArk: AddressValue
   /** Ark where the tokens are moved to */
-  toArk: IAddress
+  toArk: AddressValue
   /** Amount of tokens to be moved */
   amount: bigint
 }
