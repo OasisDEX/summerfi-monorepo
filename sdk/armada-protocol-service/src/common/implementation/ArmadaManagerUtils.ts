@@ -530,7 +530,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       abi: erc20Abi,
       functionName: 'transfer',
       args: [
-        params.recipient.toSolidityValue(), // to address
+        params.recipientAddress.toSolidityValue(), // to address
         params.amount.toSolidityValue(), // amount in base units
       ],
     })
@@ -539,15 +539,15 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     return [
       {
         type: TransactionType.Erc20Transfer,
-        description: `Transfer ${params.amount.toString()} to ${params.recipient.toString()}`,
+        description: `Transfer ${params.amount.toString()} to ${params.recipientAddress.toString()}`,
         transaction: {
-          target: params.token,
+          target: params.tokenAddress,
           calldata: calldata,
           value: '0',
         },
         metadata: {
-          token: params.token,
-          recipient: params.recipient,
+          token: params.tokenAddress,
+          recipient: params.recipientAddress,
           amount: params.amount,
         },
       },

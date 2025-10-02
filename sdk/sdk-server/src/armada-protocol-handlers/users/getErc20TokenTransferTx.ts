@@ -13,8 +13,8 @@ export const getErc20TokenTransferTx = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      token: z.custom<IAddress>(isAddress),
-      recipient: z.custom<IAddress>(isAddress),
+      tokenAddress: z.custom<IAddress>(isAddress),
+      recipientAddress: z.custom<IAddress>(isAddress),
       amount: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )

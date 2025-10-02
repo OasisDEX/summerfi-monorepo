@@ -372,16 +372,16 @@ export interface IArmadaManagerUsersClient {
    * @see IArmadaManagerUtils.getErc20TokenTransferTx
    *
    * @param chainId Chain identifier where the token exists
-   * @param token ERC20 token contract address
-   * @param recipient Address to receive the tokens
+   * @param tokenAddress ERC20 token contract address
+   * @param recipientAddress Address to receive the tokens
    * @param amount Amount of tokens to transfer
    *
    * @returns Erc20TransferTransactionInfo Transaction information for the transfer
    */
   getErc20TokenTransferTx(params: {
     chainId: ChainId
-    token: IAddress
-    recipient: IAddress
+    tokenAddress: IAddress
+    recipientAddress: IAddress
     amount: ITokenAmount
   }): Promise<Erc20TransferTransactionInfo[]>
 

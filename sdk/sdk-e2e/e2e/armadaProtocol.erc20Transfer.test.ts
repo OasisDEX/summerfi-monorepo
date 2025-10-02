@@ -1,14 +1,5 @@
 import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
-import {
-  Address,
-  ChainIds,
-  getChainInfoByChainId,
-  TokenAmount,
-  User,
-  Wallet,
-  type AddressValue,
-  type ChainId,
-} from '@summerfi/sdk-common'
+import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import {
@@ -72,8 +63,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         // Act: Generate transfer transaction
         const transactions = await sdk.armada.users.getErc20TokenTransferTx({
           chainId,
-          token: token.address,
-          recipient,
+          tokenAddress: token.address,
+          recipientAddress: recipient,
           amount,
         })
 
@@ -118,8 +109,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         // Act: Generate and simulate transaction
         const transactions = await sdk.armada.users.getErc20TokenTransferTx({
           chainId,
-          token: token.address,
-          recipient,
+          tokenAddress: token.address,
+          recipientAddress: recipient,
           amount,
         })
 
@@ -151,8 +142,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         // Act: Generate transfer transaction
         const transactions = await sdk.armada.users.getErc20TokenTransferTx({
           chainId,
-          token: token.address,
-          recipient,
+          tokenAddress: token.address,
+          recipientAddress: recipient,
           amount: smallAmount,
         })
 
@@ -177,8 +168,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         // Act: Generate transfer transaction
         const transactions = await sdk.armada.users.getErc20TokenTransferTx({
           chainId,
-          token: token.address,
-          recipient,
+          tokenAddress: token.address,
+          recipientAddress: recipient,
           amount: largeAmount,
         })
 
@@ -209,8 +200,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       await expect(
         sdk.armada.users.getErc20TokenTransferTx({
           chainId: 999999 as ChainId, // Invalid chain ID
-          token: token.address,
-          recipient,
+          tokenAddress: token.address,
+          recipientAddress: recipient,
           amount,
         }),
       ).rejects.toThrow()
@@ -250,8 +241,8 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       console.log('\n=== Step 3: Generate transfer transaction ===')
       const transactions = await sdk.armada.users.getErc20TokenTransferTx({
         chainId,
-        token: token.address,
-        recipient,
+        tokenAddress: token.address,
+        recipientAddress: recipient,
         amount,
       })
       console.log(`  Generated ${transactions.length} transaction(s)`)
