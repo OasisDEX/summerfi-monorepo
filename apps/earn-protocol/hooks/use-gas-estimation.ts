@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
-  type Address,
   type BridgeTransactionInfo,
   ChainIds,
   type ExtendedTransactionInfo,
   type HexData,
+  type IAddress,
   type MigrationTransactionInfo,
 } from '@summerfi/sdk-common'
 import { formatEther, type PublicClient } from 'viem'
@@ -13,7 +13,7 @@ import { useAppSDK } from './use-app-sdk'
 
 type ClientTransaction = {
   transaction: {
-    target: Address
+    target: IAddress
     calldata: HexData
     value: string
   }
