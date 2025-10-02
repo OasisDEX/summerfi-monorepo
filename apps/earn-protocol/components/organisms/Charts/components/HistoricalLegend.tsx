@@ -38,7 +38,12 @@ const LegendBlock = ({
         {title}
       </Text>
     </div>
-    <div className={historicalLegendStyles.historicalLegendItemValue}>{value}</div>
+    <div
+      className={historicalLegendStyles.historicalLegendItemValue}
+      data-testid="historical-legend-item-value"
+    >
+      {value}
+    </div>
   </div>
 )
 
