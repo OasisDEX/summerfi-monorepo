@@ -21,3 +21,11 @@
     padding: 0;
   }
 }
+
+.nowTradingLabel {
+  display: inline-block;
+  background: var(--gradient-earn-protocol-dark);
+  padding: 0 8px;
+  border-radius: 4px;
+  color: white;
+}
