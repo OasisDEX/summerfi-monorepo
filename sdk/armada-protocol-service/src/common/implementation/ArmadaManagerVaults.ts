@@ -6,7 +6,6 @@ import {
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
   type MerklApiOpportunitiesResponse,
-  type VaultApys,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -36,6 +35,7 @@ import {
   FiatCurrency,
   fetchWithTimeout,
   type IPrice,
+  type VaultApys,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'

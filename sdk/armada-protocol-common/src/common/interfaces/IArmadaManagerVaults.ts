@@ -11,8 +11,8 @@ import {
   type VaultSwitchTransactionInfo,
   type IArmadaVaultInfo,
   type ChainId,
+  type VaultApys,
 } from '@summerfi/sdk-common'
-import type { VaultApys } from '../types/VaultApys'
 
 export interface IArmadaManagerVaults {
   /** USER TRANSACTIONS */
