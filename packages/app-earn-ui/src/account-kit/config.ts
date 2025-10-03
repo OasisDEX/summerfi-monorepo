@@ -5,6 +5,7 @@ import {
   cookieStorage,
   createConfig,
 } from '@account-kit/react'
+import { narval } from '@narval-xyz/connect/wagmi'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
@@ -97,7 +98,14 @@ export const getAccountKitConfig = ({
         rpcUrl: `${resolvedBasePath}/api/rpc`,
       },
       enablePopupOauth: true,
-      connectors: [safe()],
+      connectors: [
+        safe(),
+        narval({
+          config: {
+            clientId: 'summerfi-earn-protocol-test',
+          },
+        }),
+      ],
       chain: {
         [SupportedNetworkIds.ArbitrumOne]: arbitrum,
         [SupportedNetworkIds.Base]: base,

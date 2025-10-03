@@ -126,6 +126,7 @@ export default defineConfig(({ mode }) => {
           '@account-kit/react',
           '@loadable/component',
           '@summerfi/app-icons',
+          '@narval-xyz/connect',
           '@summerfi/armada-protocol-common',
           '@summerfi/summer-earn-rates-subgraph',
           '@tanstack/react-query',
