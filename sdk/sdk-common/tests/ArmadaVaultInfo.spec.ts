@@ -61,6 +61,12 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
         apy: Percentage.createFrom({
           value: 0.05,
         }),
+        apys: {
+          live: Percentage.createFrom({ value: 0.05 }),
+          sma24h: Percentage.createFrom({ value: 0.049 }),
+          sma7day: Percentage.createFrom({ value: 0.048 }),
+          sma30day: Percentage.createFrom({ value: 0.047 }),
+        },
         rewardsApys: [],
         merklRewards: [],
       })
@@ -70,6 +76,11 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
       expect(poolInfo.depositCap).toEqual(depositCap)
       expect(poolInfo.totalDeposits).toEqual(totalDeposits)
       expect(poolInfo.totalShares).toEqual(totalShares)
+      expect(poolInfo.apys).toBeDefined()
+      expect(poolInfo.apys.live).toBeDefined()
+      expect(poolInfo.apys.sma24h).toBeDefined()
+      expect(poolInfo.apys.sma7day).toBeDefined()
+      expect(poolInfo.apys.sma30day).toBeDefined()
     })
   })
 })

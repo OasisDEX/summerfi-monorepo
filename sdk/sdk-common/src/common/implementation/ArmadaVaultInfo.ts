@@ -7,6 +7,7 @@ import type { IPercentage } from '../interfaces/IPercentage'
 import type { IPrice } from '../interfaces/IPrice'
 import type { IToken } from '../interfaces/IToken'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import type { VaultApys } from '../types/VaultApys'
 import { PoolInfo } from './PoolInfo'
 
 /**
@@ -32,6 +33,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   readonly totalShares: ITokenAmount
   readonly sharePrice: IPrice
   readonly apy: IPercentage | null
+  readonly apys: VaultApys
   readonly rewardsApys: Array<{
     token: IToken
     apy: IPercentage | null
@@ -60,6 +62,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
     this.totalShares = params.totalShares
     this.sharePrice = params.sharePrice
     this.apy = params.apy
+    this.apys = params.apys
     this.rewardsApys = params.rewardsApys
     this.merklRewards = params.merklRewards
   }
