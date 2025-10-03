@@ -19,7 +19,7 @@ const getTopWordsUsed = (protocols: string[], topN: number): string[] => {
   const wordCount: { [key: string]: number } = {}
 
   protocols.forEach((protocol) => {
-    const words = protocol.replace('WETH', '').split(' ')
+    const words = protocol.replace(/WETH/giu, '').replace(/usdc/giu, '').split(' ')
 
     words.forEach((word) => {
       const cleanedWord = word.replace(/[^a-zA-Z0-9]/gu, '').toLowerCase()
