@@ -1,5 +1,11 @@
 import { ActionCall } from '@summerfi/protocol-plugins-common'
-import { Address, HexData, Maybe, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common'
+import {
+  HexData,
+  Maybe,
+  IPositionsManager,
+  TransactionInfo,
+  type IAddress,
+} from '@summerfi/sdk-common'
 import { encodeFunctionData, parseAbi } from 'viem'
 
 function encodeForExecutor(params: { strategyName: string; actions: ActionCall[] }): HexData {
@@ -17,7 +23,7 @@ function encodeForExecutor(params: { strategyName: string; actions: ActionCall[]
   })
 }
 
-export function encodeForPositionsManager(params: { target: Address; data: HexData }): HexData {
+export function encodeForPositionsManager(params: { target: IAddress; data: HexData }): HexData {
   const { target, data } = params
 
   const abi = parseAbi(['function execute(address _target, bytes memory _data)'])
@@ -31,7 +37,7 @@ export function encodeForPositionsManager(params: { target: Address; data: HexDa
 
 export function encodeStrategy(params: {
   strategyName: string
-  strategyExecutor: Address
+  strategyExecutor: IAddress
   positionsManager: IPositionsManager
   actions: ActionCall[]
 }): Maybe<TransactionInfo> {

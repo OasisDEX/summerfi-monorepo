@@ -17,7 +17,8 @@
     "e2e:rewards": "jest --roots e2e -- ./e2e/armadaProtocol.rewards.test.ts",
     "e2e:access": "jest --roots e2e -- ./e2e/armadaProtocol.accessControl.test.ts",
     "e2e:admin": "jest --roots e2e -- ./e2e/armadaProtocol.admin.test.ts",
-    "e2e:oracle": "jest --roots e2e -- ./e2e/oracle.test.ts"
+    "e2e:oracle": "jest --roots e2e -- ./e2e/oracle.test.ts",
+    "e2e:transfer": "jest --roots e2e -- ./e2e/armadaProtocol.erc20Transfer.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

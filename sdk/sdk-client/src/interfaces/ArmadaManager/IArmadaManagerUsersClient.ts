@@ -34,6 +34,7 @@ import {
   type StakeTransactionInfo,
   type ToggleAQasMerklRewardsOperatorTransactionInfo,
   type TransactionInfo,
+  type Erc20TransferTransactionInfo,
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,
   type WithdrawTransactionInfo,
@@ -364,6 +365,25 @@ export interface IArmadaManagerUsersClient {
    * @returns The transaction information
    */
   getDelegateTx(params: { user: IUser }): Promise<[DelegateTransactionInfo]>
+
+  /**
+   * @method getErc20TokenTransferTx
+   * @description Generates a transaction for transferring ERC20 tokens
+   * @see IArmadaManagerUtils.getErc20TokenTransferTx
+   *
+   * @param chainId Chain identifier where the token exists
+   * @param tokenAddress ERC20 token contract address
+   * @param recipientAddress Address to receive the tokens
+   * @param amount Amount of tokens to transfer
+   *
+   * @returns Erc20TransferTransactionInfo Transaction information for the transfer
+   */
+  getErc20TokenTransferTx(params: {
+    chainId: ChainId
+    tokenAddress: IAddress
+    recipientAddress: IAddress
+    amount: ITokenAmount
+  }): Promise<Erc20TransferTransactionInfo[]>
 
   /**
    * @method getUndelegateTx

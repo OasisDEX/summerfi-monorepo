@@ -156,6 +156,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getDelegateTx.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getErc20TokenTransferTx */
+  async getErc20TokenTransferTx(
+    params: Parameters<IArmadaManagerUsersClient['getErc20TokenTransferTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getErc20TokenTransferTx']> {
+    return this.rpcClient.armada.users.getErc20TokenTransferTx.query(params)
+  }
+
   async getUndelegateTx(): ReturnType<IArmadaManagerUsersClient['getUndelegateTx']> {
     return this.rpcClient.armada.users.getUndelegateTx.query()
   }
