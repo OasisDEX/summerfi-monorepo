@@ -6,6 +6,7 @@ import {
   type IArmadaManagerUtils,
   createVaultSwitchTransaction,
   type MerklApiOpportunitiesResponse,
+  type VaultApys,
 } from '@summerfi/armada-protocol-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { AdmiralsQuartersAbi } from '@summerfi/armada-protocol-abis'
@@ -1626,7 +1627,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       totalDeposits: totalDeposits,
       totalShares: totalShares,
       sharePrice: sharePrice,
-      apy: apysForVault.apy,
+      apy: apysForVault.live,
+      apys: apysForVault,
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
       merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
     })
@@ -1709,20 +1711,34 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const byFleetAddress = data.rates.reduce(
       (result, rate) => {
         const fleetAddress = rate.fleetAddress
-        const apy = rate.rates[0]?.rate || null
-        result[fleetAddress.toLowerCase()] = {
-          apy: apy
+        const latestApy = rate.rates[0]?.rate || null
+        const apys = {
+          live: latestApy
             ? Percentage.createFrom({
-                value: Number(apy),
+                value: Number(latestApy),
+              })
+            : null,
+          sma24h: rate.sma.sma24h
+            ? Percentage.createFrom({
+                value: Number(rate.sma.sma24h),
+              })
+            : null,
+          sma7day: rate.sma.sma7d
+            ? Percentage.createFrom({
+                value: Number(rate.sma.sma7d),
+              })
+            : null,
+          sma30day: rate.sma.sma30d
+            ? Percentage.createFrom({
+                value: Number(rate.sma.sma30d),
               })
             : null,
         }
+        result[fleetAddress.toLowerCase()] = apys
         return result
       },
       {} as {
-        [fleetAddress: string]: {
-          apy: IPercentage | null
-        }
+        [fleetAddress: string]: VaultApys
       },
     )
 

@@ -12,6 +12,7 @@ import {
   type IArmadaVaultInfo,
   type ChainId,
 } from '@summerfi/sdk-common'
+import type { VaultApys } from '../types/VaultApys'
 
 export interface IArmadaManagerVaults {
   /** USER TRANSACTIONS */
@@ -129,9 +130,7 @@ export interface IArmadaManagerVaults {
 
   getVaultsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
     byFleetAddress: {
-      [fleetAddress: string]: {
-        apy: IPercentage | null
-      }
+      [fleetAddress: string]: VaultApys
     }
   }>
 

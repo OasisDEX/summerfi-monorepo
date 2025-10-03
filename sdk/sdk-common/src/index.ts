@@ -429,3 +429,4 @@ export { FETCH_CONFIG, createTimeoutSignal, fetchWithTimeout } from './configs/f
 
 export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
 export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrencyAddress'
+export type { VaultApys } from './common/types/VaultApys'

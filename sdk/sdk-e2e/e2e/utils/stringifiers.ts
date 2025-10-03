@@ -13,6 +13,12 @@ export function stringifyArmadaVaultInfo(vaultInfo: IArmadaVaultInfo): string {
       totalShares: vaultInfo.totalShares.toString(),
       sharePrice: vaultInfo.sharePrice.toString(),
       apy: vaultInfo.apy?.toString(),
+      apys: {
+        live: vaultInfo.apys.live?.toString(),
+        sma24h: vaultInfo.apys.sma24h?.toString(),
+        sma7day: vaultInfo.apys.sma7day?.toString(),
+        sma30day: vaultInfo.apys.sma30day?.toString(),
+      },
       rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
         token: reward.token.toString(),
         apy: reward.apy?.toString(),

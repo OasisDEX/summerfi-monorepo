@@ -6,6 +6,7 @@ import { PoolType } from '../enums/PoolType'
 import { isPercentage, type IPercentage } from './IPercentage'
 import { isToken, type IToken } from './IToken'
 import { isPrice, type IPrice } from './IPrice'
+import type { VaultApys } from '../types/VaultApys'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -35,6 +36,8 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   readonly sharePrice: IPrice
   /** Vault apy */
   readonly apy: IPercentage | null
+  /** Vault apys for different time periods */
+  readonly apys: VaultApys
   /** Vault SUMR rewards apy */
   readonly rewardsApys: Array<{
     token: IToken
@@ -65,6 +68,12 @@ export const ArmadaVaultInfoDataSchema = z.object({
   totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   sharePrice: z.custom<IPrice>((val) => isPrice(val)),
   apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+  apys: z.object({
+    live: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma24h: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma7day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+    sma30day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+  }),
   rewardsApys: z.array(
     z.object({
       token: z.custom<IToken>((val) => isToken(val)),
