@@ -49,6 +49,7 @@
     "@account-kit/infra": "^4.52.2",
     "@account-kit/react": "^4.52.2",
     "@loadable/component": "^5.16.4",
+    "@narval-xyz/connect": "0.0.4-rc.1",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
