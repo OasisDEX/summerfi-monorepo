@@ -77,4 +77,3 @@ export type {
   MerklApiRewardBreakdown,
   MerklApiToken,
 } from './common/types/MerklTypes'
-export type { VaultApys } from './common/types/VaultApys'
