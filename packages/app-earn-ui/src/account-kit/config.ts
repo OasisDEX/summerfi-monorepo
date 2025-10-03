@@ -14,6 +14,15 @@ import { safe } from 'wagmi/connectors'
 
 export const queryClient: QueryClient = new QueryClient()
 
+const connectors = [
+  safe(),
+  narval({
+    config: {
+      clientId: 'summerfi-earn-protocol-test',
+    },
+  }),
+]
+
 export const customAAKitSonicConfig: Chain = {
   ...sonic,
   rpcUrls: {
@@ -98,14 +107,7 @@ export const getAccountKitConfig = ({
         rpcUrl: `${resolvedBasePath}/api/rpc`,
       },
       enablePopupOauth: true,
-      connectors: [
-        safe(),
-        narval({
-          config: {
-            clientId: 'summerfi-earn-protocol-test',
-          },
-        }),
-      ],
+      connectors,
       chain: {
         [SupportedNetworkIds.ArbitrumOne]: arbitrum,
         [SupportedNetworkIds.Base]: base,
