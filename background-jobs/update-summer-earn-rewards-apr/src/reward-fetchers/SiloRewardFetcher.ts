@@ -11,7 +11,7 @@ interface SiloProgram {
 
 interface SiloVaultReward {
   vaultAddress: string
-  programs?: SiloProgram[]
+  rewards?: SiloProgram[]
 
   chainKey?: string
   protocolKey?: string
@@ -84,12 +84,12 @@ export class SiloRewardFetcher implements IRewardFetcher {
         (acc, product) => {
           const vaultData = productToSiloResponse[product.id]
 
-          if (!vaultData || !vaultData.programs || !Array.isArray(vaultData.programs)) {
+          if (!vaultData || !vaultData.rewards || !Array.isArray(vaultData.rewards)) {
             acc[product.id] = []
             return acc
           }
 
-          acc[product.id] = vaultData.programs
+          acc[product.id] = vaultData.rewards
             .filter((program) => program.rewardTokenSymbol && program.apr)
             .map((program, index) => {
               // Convert APR from 18 decimals and multiply by 100 for percentage
