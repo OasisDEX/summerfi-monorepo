@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-16);
+}
+
+.portfolioYourStakedSumrCardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+
+.portfolioYourStakedSumrCardsWrapper .cardWrapper {
+  flex: 1;
+  min-width: 250px;
+}
+
+@media (min-width: 768px) {
+  .portfolioYourStakedSumrCardsWrapper .cardWrapper {
+    min-width: 420px;
+  }
+}

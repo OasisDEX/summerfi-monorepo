@@ -57,7 +57,10 @@ interface PortfolioRewardsCardsV2Props {
   dispatch: Dispatch<ClaimDelegateReducerAction>
 }
 
-interface SumrPriceProps {}
+interface SumrPriceProps {
+  // to be extended in the future
+}
+
 const TrendDatablock = ({
   timespan,
   value,
