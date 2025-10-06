@@ -58,6 +58,39 @@ interface PortfolioRewardsCardsV2Props {
 }
 
 interface SumrPriceProps {}
+const TrendDatablock = ({
+  timespan,
+  value,
+  trend,
+}: {
+  timespan: string
+  value: string
+  trend: 'positive' | 'negative'
+}) => {
+  return (
+    <DataBlock
+      wrapperClassName={classNames.sumrPriceDataBlock}
+      title={`${timespan} Trend`}
+      size="xsmall"
+      value={
+        <span>
+          {value}&nbsp;
+          <Icon
+            iconName="arrow_forward"
+            style={{
+              transform:
+                trend === 'positive'
+                  ? 'rotate(-45deg) translateX(-1px)'
+                  : 'rotate(45deg) translateX(1px)',
+            }}
+            size={16}
+          />
+        </span>
+      }
+      valueType={trend}
+    />
+  )
+}
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -334,17 +367,6 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   )
 }
 
-const arrowUp = (
-  <Icon
-    iconName="arrow_forward"
-    style={{ transform: 'rotate(-45deg) translateX(-1px)' }}
-    size={16}
-  />
-)
-const arrowDown = (
-  <Icon iconName="arrow_forward" style={{ transform: 'rotate(45deg) translateX(1px)' }} size={16} />
-)
-
 const SumrPrice: FC<SumrPriceProps> = () => {
   return (
     <DataModule
@@ -388,29 +410,11 @@ const SumrPrice: FC<SumrPriceProps> = () => {
               value="44,323"
             />
             <div className={classNames.sumrPriceDataBlocksDivider} />
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="7d Trends"
-              size="xsmall"
-              value={<span>2.34%&nbsp;{arrowUp}</span>}
-              valueType="positive"
-            />
+            <TrendDatablock timespan="7d" value="1.34% " trend="positive" />
             <div className={classNames.sumrPriceDataBlocksDivider} />
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="30d Trend"
-              size="xsmall"
-              value={<span>3.34%&nbsp;{arrowDown}</span>}
-              valueType="negative"
-            />
+            <TrendDatablock timespan="30d" value="3.34% " trend="negative" />
             <div className={classNames.sumrPriceDataBlocksDivider} />
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="90d Trend"
-              size="xsmall"
-              value={<span>14.34%&nbsp;{arrowUp}</span>}
-              valueType="positive"
-            />
+            <TrendDatablock timespan="90d" value="14.34% " trend="positive" />
           </div>
         ),
         titleStyle: {
