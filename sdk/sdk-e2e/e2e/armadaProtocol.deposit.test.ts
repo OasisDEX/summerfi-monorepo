@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -20,17 +19,18 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const simulateOnly = false
+const simulateOnly = true
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const rpcUrl = RpcUrls.ArbitrumOne
-    const chainId = ChainIds.ArbitrumOne
-    const fleetAddress = FleetAddresses.ArbitrumOne.usdt
+    const rpcUrl = RpcUrls.Base
+    const chainId = ChainIds.Base
+    const fleetAddress = FleetAddresses.Base.selfManaged
     const userAddress = testWalletAddress
     const amountValue = '1'
-    const symbol = 'USD₮0'
+    const symbol = 'USDC'
     const swapToSymbol = undefined
+    const stake = false
 
     await runTests({
       rpcUrl,
@@ -40,7 +40,7 @@ describe('Armada Protocol Deposit', () => {
       symbol,
       amountValue,
       swapToSymbol,
-      stake: true,
+      stake,
     })
   })
 })
@@ -66,7 +66,7 @@ async function runTests({
   stake?: boolean
   referralCode?: string
 }) {
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
   if (!rpcUrl) {
     throw new Error('Missing rpc url')
   }

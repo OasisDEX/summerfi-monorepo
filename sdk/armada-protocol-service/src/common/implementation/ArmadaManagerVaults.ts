@@ -612,7 +612,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       chainId: params.vaultId.chainInfo.chainId,
       contractName: 'admiralsQuarters',
     })
-
+    console.log('admiralsQuartersAddress', admiralsQuartersAddress)
     let approveTransaction: ApproveTransactionInfo | undefined
     // Approval for AQ
     if (!fromEth) {

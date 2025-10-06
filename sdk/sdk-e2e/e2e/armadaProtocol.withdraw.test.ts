@@ -23,11 +23,11 @@ const simulateOnly = true
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
-    const rpcUrl = RpcUrls.ArbitrumOne
-    const chainId = ChainIds.ArbitrumOne
-    const fleetAddress = FleetAddresses.ArbitrumOne.usdt
+    const rpcUrl = RpcUrls.Base
+    const chainId = ChainIds.Base
+    const fleetAddress = FleetAddresses.Base.selfManaged
     const userAddress = testWalletAddress
-    const amountValue = '1.3'
+    const amountValue = '0.1'
     const symbol = 'USDC'
     const swapToSymbol = undefined
 
@@ -59,7 +59,7 @@ describe('Armada Protocol Withdraw', () => {
     amountValue: string
     userAddress: Address
   }) {
-    const sdk: SDKManager = createTestSDK()
+    const sdk = createTestSDK()
     if (!rpcUrl) {
       throw new Error('Missing rpc url')
     }
@@ -91,24 +91,25 @@ describe('Armada Protocol Withdraw', () => {
       user,
     })
 
-    const amount = TokenAmount.createFrom({
-      amount: amountValue,
-      token: token,
-    })
-    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress}`)
-
-    const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
-    assert(
-      totalAssetsBefore.toSolidityValue() >= amount.toSolidityValue(),
-      `Fleet balance is not enough: ${totalAssetsBefore.toString()} < ${amount.toString()}`,
-    )
-
     console.log(
       'assets before:',
       '\n - wallet',
       fleetAmountBefore.assets.toSolidityValue(),
       '\n - staked',
       stakedAmountBefore.assets.toSolidityValue(),
+    )
+
+    const amount = TokenAmount.createFrom({
+      amount: amountValue,
+      token: token,
+    })
+
+    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress}`)
+
+    const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
+    assert(
+      totalAssetsBefore.toSolidityValue() >= amount.toSolidityValue(),
+      `Fleet balance is not enough: ${totalAssetsBefore.toString()} < ${amount.toString()}`,
     )
 
     const transactions = await sdk.armada.users.getWithdrawTx({
