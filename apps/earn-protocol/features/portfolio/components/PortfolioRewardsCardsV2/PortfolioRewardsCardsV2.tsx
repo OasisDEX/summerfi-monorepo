@@ -3,6 +3,7 @@ import { type Dispatch, type FC } from 'react'
 import { useAuthModal } from '@account-kit/react'
 import {
   Button,
+  DataBlock,
   DataModule,
   getVotingPowerColor,
   Icon,
@@ -13,11 +14,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
+  formatAsShorthandNumbers,
   formatCryptoBalance,
-  formatDecimalAsPercent,
   formatFiatBalance,
   formatShorthandNumber,
 } from '@summerfi/app-utils'
+import clsx from 'clsx'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -35,6 +37,27 @@ import classNames from './PortfolioRewardsCardsV2.module.css'
 interface SumrAvailableToClaimProps {
   rewardsData: ClaimDelegateExternalData
 }
+
+interface SumrAvailableToStakeProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+interface YourTotalSumrProps {
+  rewardsData: ClaimDelegateExternalData
+}
+
+interface YourDelegateProps {
+  rewardsData: ClaimDelegateExternalData
+  state: ClaimDelegateState
+}
+
+interface PortfolioRewardsCardsV2Props {
+  rewardsData: ClaimDelegateExternalData
+  state: ClaimDelegateState
+  dispatch: Dispatch<ClaimDelegateReducerAction>
+}
+
+interface SumrPriceProps {}
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -96,7 +119,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
       actionable={
         !userWalletAddress ? (
           <Button variant="primarySmall" onClick={handleConnect}>
-            Claim
+            Claim $SUMR
           </Button>
         ) : (
           <Link href={`/claim/${walletAddress}`} prefetch onClick={handleClaimEventButton}>
@@ -107,7 +130,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
                 userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()
               }
             >
-              Claim
+              Claim $SUMR
             </Button>
           </Link>
         )
@@ -116,23 +139,28 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   )
 }
 
-interface StakedAndDelegatedSumrProps {
-  rewardsData: ClaimDelegateExternalData
-}
-
-const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }) => {
+const SumrAvailableToStake: FC<SumrAvailableToStakeProps> = ({ rewardsData }) => {
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
-  const resolvedWalletAddress = walletAddress as string
   const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
+
+  const resolvedWalletAddress = walletAddress as string
+  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const sumrAvailableToStake = Number(rewardsData.sumrBalances.base)
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
   const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
   const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
 
-  const value = formatCryptoBalance(rawStaked)
-  const apy = formatDecimalAsPercent(rawApy * rawDecayFactor)
+  const value = `${formatCryptoBalance(sumrAvailableToStake)} SUMR`
+  const apyRaw = Number(rawApy * rawDecayFactor)
+  const sumrPerYear = (Number(rawStaked) + sumrAvailableToStake) * apyRaw
+
+  const subvalue = `${formatAsShorthandNumbers(sumrPerYear, {
+    precision: 2,
+  })} $SUMR/Year ($${formatFiatBalance(sumrPerYear * assumedSumrPriceRaw)})`
 
   const handleStakeAndDelegateEventButton = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
@@ -148,13 +176,9 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   return (
     <DataModule
       dataBlock={{
-        title: 'Staked $SUMR',
+        title: 'SUMR Available to stake',
         value,
-        subValue: (
-          <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-            Earning {apy} APR
-          </Text>
-        ),
+        subValue: <Text variant="p3semi">{subvalue}</Text>,
         titleSize: 'medium',
         valueSize: 'large',
       }}
@@ -162,7 +186,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
         !userWalletAddress ? (
           <Button variant="unstyled" onClick={handleConnect}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Add stake or remove stake
+              Stake SUMR
             </Text>
           </Button>
         ) : (
@@ -176,7 +200,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
               disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
             >
               <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-                Add stake or remove stake
+                Stake SUMR
               </Text>
             </Button>
           </Link>
@@ -186,16 +210,10 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   )
 }
 
-interface YourTotalSumrProps {
-  rewardsData: ClaimDelegateExternalData
-}
-
 const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
   const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const assumedMarketCap = formatCryptoBalance(sumrNetApyConfig.dilutedValuation)
 
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
 
   const rawTotalSumr =
     Number(rewardsData.sumrBalances.total) +
@@ -221,22 +239,8 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
         titleSize: 'medium',
         valueSize: 'large',
       }}
-      actionable={
-        <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-          Assumed Market Cap: {assumedMarketCap}
-          <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-            {' '}
-            • 1 $SUMR = ${assumedSumrPrice}
-          </span>
-        </Text>
-      }
     />
   )
-}
-
-interface YourDelegateProps {
-  rewardsData: ClaimDelegateExternalData
-  state: ClaimDelegateState
 }
 
 const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
@@ -330,10 +334,94 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   )
 }
 
-interface PortfolioRewardsCardsV2Props {
-  rewardsData: ClaimDelegateExternalData
-  state: ClaimDelegateState
-  dispatch: Dispatch<ClaimDelegateReducerAction>
+const arrowUp = (
+  <Icon
+    iconName="arrow_forward"
+    style={{ transform: 'rotate(-45deg) translateX(-1px)' }}
+    size={16}
+  />
+)
+const arrowDown = (
+  <Icon iconName="arrow_forward" style={{ transform: 'rotate(45deg) translateX(1px)' }} size={16} />
+)
+
+const SumrPrice: FC<SumrPriceProps> = () => {
+  return (
+    <DataModule
+      dataBlock={{
+        title: (
+          <div className={classNames.sumrPriceTitle}>
+            <Text variant="p2semi">$SUMR Price</Text>
+            <Link href="#">
+              <Button variant="unstyled">
+                <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+                  View SUMR Analytics
+                </Text>
+              </Button>
+            </Link>
+          </div>
+        ),
+        titleWithIconClassName: classNames.titleWithIconFullWidth,
+        value: '$1.33 SUMR/USD',
+        titleSize: 'medium',
+        valueSize: 'large',
+        subValue: (
+          <div className={classNames.sumrPriceDataBlocks}>
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="Market Cap"
+              size="xsmall"
+              value="$1,330,000,000"
+            />
+            <div className={classNames.sumrPriceDataBlocksDivider} />
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="Fully Diluted Valuation"
+              size="xsmall"
+              value="$12,330,000,000"
+            />
+            <div className={classNames.sumrPriceDataBlocksDivider} />
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="SUMR Holders"
+              size="xsmall"
+              value="44,323"
+            />
+            <div className={classNames.sumrPriceDataBlocksDivider} />
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="7d Trends"
+              size="xsmall"
+              value={<span>2.34%&nbsp;{arrowUp}</span>}
+              valueType="positive"
+            />
+            <div className={classNames.sumrPriceDataBlocksDivider} />
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="30d Trend"
+              size="xsmall"
+              value={<span>3.34%&nbsp;{arrowDown}</span>}
+              valueType="negative"
+            />
+            <div className={classNames.sumrPriceDataBlocksDivider} />
+            <DataBlock
+              wrapperClassName={classNames.sumrPriceDataBlock}
+              title="90d Trend"
+              size="xsmall"
+              value={<span>14.34%&nbsp;{arrowUp}</span>}
+              valueType="positive"
+            />
+          </div>
+        ),
+        titleStyle: {
+          width: '100%',
+        },
+        wrapperStyles: {
+          width: '100%',
+        },
+      }}
+    />
+  )
 }
 
 export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
@@ -352,7 +440,10 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
         <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <StakedAndDelegatedSumr rewardsData={rewardsData} />
+        <SumrAvailableToStake rewardsData={rewardsData} />
+      </div>
+      <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
+        <SumrPrice />
       </div>
     </div>
   )
