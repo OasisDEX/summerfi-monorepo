@@ -1,22 +1,15 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import {
-  signerPrivateKey,
-  SDKApiUrl,
-  testWalletAddress,
-  privWalletAddress,
-  RpcUrls,
-} from './utils/testConfig'
+import { signerPrivateKey, testWalletAddress, privWalletAddress, RpcUrls } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 
 jest.setTimeout(300000)
 const simulateOnly = true
 
 describe('Armada Protocol - ERC20 Token Transfer', () => {
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   const testConfigs = [
     {

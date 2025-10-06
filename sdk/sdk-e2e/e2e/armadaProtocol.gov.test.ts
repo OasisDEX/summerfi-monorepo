@@ -1,17 +1,16 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { User, Wallet } from '@summerfi/sdk-common'
 import { zeroAddress } from 'viem'
 import assert from 'assert'
 
-import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
+import { signerPrivateKey, testConfig } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
 describe.skip('Armada Protocol Gov', () => {
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
     if (!rpcUrl) {

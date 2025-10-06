@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 
-import { FleetAddresses, RpcUrls, SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import { FleetAddresses, RpcUrls, testWalletAddress } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 
@@ -20,9 +21,7 @@ describe('Armada Protocol - Vault', () => {
 
   console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
 
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   it('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({

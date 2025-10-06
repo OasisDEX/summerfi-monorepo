@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { makeSDK } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
 
-import { SDKApiUrl } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 
 jest.setTimeout(300000)
 
@@ -20,9 +19,7 @@ describe('Oracle Tests', () => {
   })
 
   async function runTests({ chainId }: { chainId: ChainId }) {
-    const sdk = makeSDK({
-      apiDomainUrl: SDKApiUrl,
-    })
+    const sdk = createTestSDK()
 
     const chainInfo = getChainInfoByChainId(chainId)
     const chain = await sdk.chains.getChain({ chainInfo })

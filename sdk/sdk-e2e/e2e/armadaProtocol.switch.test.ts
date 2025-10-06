@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -12,7 +12,8 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, SDKApiUrl, testWalletAddress } from './utils/testConfig'
+import { signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
@@ -66,9 +67,7 @@ describe('Armada Protocol Switch', () => {
     amountValue?: string
     stake?: boolean
   }) {
-    const sdk: SDKManager = makeSDK({
-      apiDomainUrl: SDKApiUrl,
-    })
+    const sdk: SDKManager = createTestSDK()
     if (!rpcUrl) {
       throw new Error('Missing fork url')
     }

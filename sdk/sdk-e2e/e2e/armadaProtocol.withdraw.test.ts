@@ -1,4 +1,4 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -12,13 +12,8 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import {
-  signerPrivateKey,
-  SDKApiUrl,
-  testWalletAddress,
-  FleetAddresses,
-  RpcUrls,
-} from './utils/testConfig'
+import { signerPrivateKey, testWalletAddress, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 
@@ -64,9 +59,7 @@ describe('Armada Protocol Withdraw', () => {
     amountValue: string
     userAddress: Address
   }) {
-    const sdk: SDKManager = makeSDK({
-      apiDomainUrl: SDKApiUrl,
-    })
+    const sdk: SDKManager = createTestSDK()
     if (!rpcUrl) {
       throw new Error('Missing rpc url')
     }

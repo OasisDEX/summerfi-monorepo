@@ -1,7 +1,8 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { ArmadaMigrationType, ArmadaVaultId, Percentage, User, Wallet } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, testConfig } from './utils/testConfig'
+import { signerPrivateKey, testConfig } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
@@ -9,9 +10,7 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 jest.setTimeout(300000)
 
 describe('Armada Protocol Migration', () => {
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   for (const { chainInfo, rpcUrl, userAddress, fleetAddress } of testConfig) {
     if (!rpcUrl) {

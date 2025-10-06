@@ -1,4 +1,4 @@
-import { makeSDK, type ISDKManager, type SDKManager } from '@summerfi/sdk-client'
+import { type ISDKManager, type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -11,13 +11,8 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import {
-  SDKApiUrl,
-  testWalletAddress,
-  signerPrivateKey,
-  FleetAddresses,
-  RpcUrls,
-} from './utils/testConfig'
+import { testWalletAddress, signerPrivateKey, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaPosition } from './utils/stringifiers'
 
@@ -40,9 +35,7 @@ describe('Armada Protocol - User', () => {
 
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   it(`should get all user positions`, async () => {
     const positions = await sdk.armada.users.getUserPositions({

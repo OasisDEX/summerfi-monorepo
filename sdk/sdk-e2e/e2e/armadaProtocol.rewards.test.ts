@@ -1,7 +1,8 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey } from './utils/testConfig'
+import { signerPrivateKey } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import assert from 'node:assert'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 import { BigNumber } from 'bignumber.js'
@@ -22,12 +23,7 @@ describe('Armada Protocol Rewards', () => {
     throw new Error('E2E_SDK_FORK_URL_BASE environment variable not set')
   }
 
-  if (!SDKApiUrl) {
-    throw new Error('E2E_SDK_API_URL environment variable not set')
-  }
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   let sendTxTool: SendTransactionTool
 

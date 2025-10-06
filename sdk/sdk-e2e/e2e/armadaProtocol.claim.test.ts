@@ -1,7 +1,8 @@
-import { makeSDK, type SDKManager } from '@summerfi/sdk-client'
+import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
-import { RpcUrls, SDKApiUrl, signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { RpcUrls, signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
 
@@ -17,9 +18,7 @@ const config = [
 ]
 
 describe('Armada Protocol Claim', () => {
-  const sdk: SDKManager = makeSDK({
-    apiDomainUrl: SDKApiUrl,
-  })
+  const sdk: SDKManager = createTestSDK()
 
   for (const { chainId, rpcUrl, userAddress } of config) {
     if (!rpcUrl) {
