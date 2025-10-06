@@ -156,9 +156,10 @@ export async function GET() {
 
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
   const { totalUniqueUsers } = latestActivity
+  const { tosWhitelist: _tosWhitelist, ...cleanSystemConfig } = systemConfig
 
   return NextResponse.json({
-    systemConfig,
+    systemConfig: cleanSystemConfig,
     vaultsWithConfig,
     vaultsApyByNetworkMap,
     protocolTvls,
