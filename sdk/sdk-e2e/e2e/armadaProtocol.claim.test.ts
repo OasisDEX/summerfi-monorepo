@@ -1,7 +1,7 @@
 import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
-import { RpcUrls, signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { RpcUrls, signerPrivateKey, e2eWalletAddress } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'

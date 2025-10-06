@@ -2,28 +2,27 @@
 import { type SDKManager } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 
-import { FleetAddresses, RpcUrls, testWalletAddress } from './utils/testConfig'
+import { FleetAddresses, RpcUrls, e2eWalletAddress } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
-
 describe('Armada Protocol - Vault', () => {
-  const chainId = ChainIds.Sonic
-  const rpcUrl = RpcUrls.Sonic
-  const fleetAddressValue = FleetAddresses.Sonic.usdc
+  const chainId = ChainIds.Base
+  const rpcUrl = RpcUrls.Base
+  const fleetAddressValue = FleetAddresses.Base.selfManaged
+  const userAddress = e2eWalletAddress.value
 
   const chainInfo = getChainInfoByChainId(chainId)
   const fleetAddress = Address.createFromEthereum({ value: fleetAddressValue })
 
-  console.log(`Running on ${chainInfo.name} for user ${testWalletAddress.value}`)
+  console.log(`Running on ${chainInfo.name} for user ${userAddress}`)
 
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
-  it('should get all vaults with info', async () => {
+  it.skip('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
     })

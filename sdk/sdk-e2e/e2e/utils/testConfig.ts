@@ -51,10 +51,11 @@ export const FleetAddresses = {
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
 export const signerAddress = process.env.E2E_USER_ADDRESS as AddressValue
 export const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY as AddressValue
-export const testWalletAddress = Address.createFromEthereum({
+
+export const e2eWalletAddress = Address.createFromEthereum({
   value: process.env.E2E_USER_ADDRESS as AddressValue,
 })
-export const privWalletAddress = Address.createFromEthereum({
+export const testWalletAddress = Address.createFromEthereum({
   value: process.env.TEST_USER_ADDRESS as AddressValue,
 })
 
@@ -67,6 +68,6 @@ export const testConfig = [
       value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     }),
     rpcUrl: process.env.E2E_SDK_FORK_URL_BASE,
-    userAddress: testWalletAddress,
+    userAddress: e2eWalletAddress,
   },
 ]

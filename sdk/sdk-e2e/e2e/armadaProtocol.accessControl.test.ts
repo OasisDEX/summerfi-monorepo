@@ -1,7 +1,7 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { GeneralRoles, ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { SDKApiUrl, testWalletAddress, privWalletAddress } from './utils/testConfig'
+import { SDKApiUrl, e2eWalletAddress, testWalletAddress } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
@@ -44,7 +44,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const hasGeneralRole = await sdk.armada.accessControl.hasGeneralRole({
         chainId,
         role: GeneralRoles.GOVERNOR_ROLE,
-        targetAddress: testWalletAddress,
+        targetAddress: e2eWalletAddress,
       })
       expect(hasGeneralRole).toBe(true)
     })
@@ -59,7 +59,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
           chainId,
           role: ContractSpecificRoleName.WHITELISTED_ROLE,
           contractAddress: permissionedFleetAddressUsdc,
-          targetAddress: testWalletAddress,
+          targetAddress: e2eWalletAddress,
         })
         expect(grantTxInfo).toBeDefined()
         const grantStatus = await governorSendTxTool(grantTxInfo)
@@ -72,7 +72,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
           chainId,
           role: ContractSpecificRoleName.WHITELISTED_ROLE,
           contractAddress: permissionedFleetAddressUsdc,
-          targetAddress: testWalletAddress,
+          targetAddress: e2eWalletAddress,
         })
         expect(revokeTxInfo).toBeDefined()
         const revokeStatus = await governorSendTxTool(revokeTxInfo)
@@ -89,7 +89,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       })
       expect(hasContractSpecificRole).toBe(false)
       console.log(
-        `Address ${testWalletAddress.value} has whitelisted role for contract ${permissionedFleetAddressUsdc.value}: ${hasContractSpecificRole}`,
+        `Address ${e2eWalletAddress.value} has whitelisted role for contract ${permissionedFleetAddressUsdc.value}: ${hasContractSpecificRole}`,
       )
     })
 
@@ -98,7 +98,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const isGovernorBefore = await sdk.armada.accessControl.hasGeneralRole({
         chainId,
         role: governorRole,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
 
       if (isGovernorBefore === false) {
@@ -107,7 +107,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
         const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
           chainId,
           role: governorRole,
-          targetAddress: privWalletAddress,
+          targetAddress: testWalletAddress,
         })
         expect(grantTxInfo).toBeDefined()
         const grantStatus = await governorSendTxTool(grantTxInfo)
@@ -120,7 +120,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const isGovernorAfterGrant = await sdk.armada.accessControl.hasGeneralRole({
         chainId,
         role: governorRole,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       expect(isGovernorAfterGrant).toBe(true)
 
@@ -129,7 +129,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
         chainId,
         role: governorRole,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       expect(revokeTxInfo).toBeDefined()
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
@@ -139,7 +139,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const isGovernorAfterRevoke = await sdk.armada.accessControl.hasGeneralRole({
         chainId,
         role: governorRole,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       expect(isGovernorAfterRevoke).toBe(false)
     })
@@ -152,7 +152,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
         chainId,
         role: ContractSpecificRoleName.WHITELISTED_ROLE,
         contractAddress: contractAddress,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
 
       if (isWhitelistedInitially === false) {
@@ -162,7 +162,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
           chainId,
           role: ContractSpecificRoleName.WHITELISTED_ROLE,
           contractAddress: contractAddress,
-          targetAddress: privWalletAddress,
+          targetAddress: testWalletAddress,
         })
         expect(grantTxInfo).toBeDefined()
         const grantStatus = await governorSendTxTool(grantTxInfo)
@@ -172,7 +172,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
           chainId,
           role: ContractSpecificRoleName.WHITELISTED_ROLE,
           contractAddress: contractAddress,
-          targetAddress: privWalletAddress,
+          targetAddress: testWalletAddress,
         })
         expect(isWhitelistedAfterGrant).toBe(true)
       } else {
@@ -184,7 +184,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
         chainId,
         role: ContractSpecificRoleName.WHITELISTED_ROLE,
         contractAddress: contractAddress,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       expect(revokeTxInfo).toBeDefined()
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
@@ -194,7 +194,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
         chainId,
         role: ContractSpecificRoleName.WHITELISTED_ROLE,
         contractAddress: contractAddress,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       expect(isWhitelistedAfterRevoke).toBe(false)
     })
@@ -211,7 +211,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
 
       // The test wallet should have governor role
       const testWalletHasRole = addressesWithGovernorRole.some(
-        (address) => address.toLowerCase() === testWalletAddress.value.toLowerCase(),
+        (address) => address.toLowerCase() === e2eWalletAddress.value.toLowerCase(),
       )
       expect(testWalletHasRole).toBe(true)
 
@@ -280,7 +280,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
 
       const initialCount = initialAddresses.length
       const targetAddressHasRoleInitially = initialAddresses.some(
-        (address) => address.toLowerCase() === privWalletAddress.value.toLowerCase(),
+        (address) => address.toLowerCase() === testWalletAddress.value.toLowerCase(),
       )
 
       console.log(`Initial addresses with ${aqTargetRole}: ${initialCount}`)
@@ -291,7 +291,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
         const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
           chainId,
           role: aqTargetRole,
-          targetAddress: privWalletAddress,
+          targetAddress: testWalletAddress,
         })
         const grantStatus = await governorSendTxTool(grantTxInfo)
         expect(grantStatus).toBe('success')
@@ -304,7 +304,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
 
         expect(addressesAfterGrant.length).toBe(initialCount + 1)
         const targetAddressHasRoleAfterGrant = addressesAfterGrant.some(
-          (address) => address.toLowerCase() === privWalletAddress.value.toLowerCase(),
+          (address) => address.toLowerCase() === testWalletAddress.value.toLowerCase(),
         )
         expect(targetAddressHasRoleAfterGrant).toBe(true)
       }
@@ -313,7 +313,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
         chainId,
         role: aqTargetRole,
-        targetAddress: privWalletAddress,
+        targetAddress: testWalletAddress,
       })
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
       expect(revokeStatus).toBe('success')
@@ -325,7 +325,7 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
       })
 
       const targetAddressHasRoleAfterRevoke = addressesAfterRevoke.some(
-        (address) => address.toLowerCase() === privWalletAddress.value.toLowerCase(),
+        (address) => address.toLowerCase() === testWalletAddress.value.toLowerCase(),
       )
       expect(targetAddressHasRoleAfterRevoke).toBe(false)
 

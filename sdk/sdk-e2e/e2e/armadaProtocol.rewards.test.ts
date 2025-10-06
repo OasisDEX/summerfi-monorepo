@@ -23,7 +23,7 @@ describe('Armada Protocol Rewards', () => {
     throw new Error('E2E_SDK_FORK_URL_BASE environment variable not set')
   }
 
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
   let sendTxTool: SendTransactionTool
 

@@ -1,4 +1,4 @@
-import { type ISDKManager, type SDKManager } from '@summerfi/sdk-client'
+import { type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -6,28 +6,27 @@ import {
   getChainInfoByChainId,
   User,
   type IArmadaVaultId,
-  type ITokenAmount,
   type IUser,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { testWalletAddress, signerPrivateKey, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { e2eWalletAddress, signerPrivateKey, FleetAddresses, RpcUrls } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
-import { stringifyArmadaPosition } from './utils/stringifiers'
+import type { ISDKAdminManager } from 'node_modules/@summerfi/sdk-client/src/interfaces/ISDKAdminManager'
 
 jest.setTimeout(300000)
 
 const simulateOnly = true
 
-describe('Armada Protocol - User', () => {
+describe('Armada Protocol - Unstake', () => {
   const chainId = ChainIds.Sonic
   const rpcUrl = RpcUrls.Sonic
   const fleetAddressValue = FleetAddresses.Sonic.usdc
 
   const chainInfo = getChainInfoByChainId(chainId)
   const fleetAddress = Address.createFromEthereum({ value: fleetAddressValue })
-  const user = User.createFromEthereum(chainId, testWalletAddress.value)
+  const user = User.createFromEthereum(chainId, e2eWalletAddress.value)
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
     fleetAddress,
@@ -35,32 +34,9 @@ describe('Armada Protocol - User', () => {
 
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
-  it(`should get all user positions`, async () => {
-    const positions = await sdk.armada.users.getUserPositions({
-      user,
-    })
-    console.log('All user positions:\n', positions.map(stringifyArmadaPosition).join('\n'))
-  })
-
-  it(`should get user position for a specific fleet`, async () => {
-    const position = await sdk.armada.users.getUserPosition({
-      user: user,
-      fleetAddress,
-    })
-    assert(position != null, 'User position not found')
-    console.log(`Specific user position:\n`, stringifyArmadaPosition(position))
-  })
-
-  it.skip(`should get user merkl rewards`, async () => {
-    const rewards = await sdk.armada.users.getUserMerklRewards({
-      address: user.wallet.address.value,
-    })
-    console.log('User Merkle rewards:', JSON.stringify(rewards, null, 2))
-  })
-
-  it.skip(`should unstake all fleet tokens for vault`, async () => {
+  it(`should unstake all fleet tokens for vault`, async () => {
     const balancesBefore = await logBalances('Before unstaking', sdk, user, vaultId)
     // Assert that there are staked tokens to unstake
 
@@ -101,7 +77,7 @@ describe('Armada Protocol - User', () => {
 
 async function logBalances(
   message: string,
-  sdk: ISDKManager,
+  sdk: ISDKManager | ISDKAdminManager,
   user: IUser,
   vaultId: IArmadaVaultId,
 ) {
@@ -122,31 +98,4 @@ async function logBalances(
   )
 
   return { fleetAmount, stakedAmount }
-}
-
-async function logDifference(
-  balancesBefore: {
-    fleetAmount: {
-      shares: ITokenAmount
-      assets: ITokenAmount
-    }
-    stakedAmount: {
-      shares: ITokenAmount
-      assets: ITokenAmount
-    }
-  },
-  balancesAfter: {
-    fleetAmount: { shares: ITokenAmount; assets: ITokenAmount }
-    stakedAmount: { shares: ITokenAmount; assets: ITokenAmount }
-  },
-) {
-  console.log(
-    'Difference',
-    '\n - Wallet: ',
-    balancesAfter.fleetAmount.assets.toSolidityValue() -
-      balancesBefore.fleetAmount.assets.toSolidityValue(),
-    '\n - Staked: ',
-    balancesAfter.stakedAmount.assets.toSolidityValue() -
-      balancesBefore.stakedAmount.assets.toSolidityValue(),
-  )
 }

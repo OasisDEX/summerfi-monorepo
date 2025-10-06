@@ -12,7 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, testWalletAddress, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { signerPrivateKey, e2eWalletAddress, FleetAddresses, RpcUrls } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
@@ -26,7 +26,7 @@ describe('Armada Protocol Deposit', () => {
     const rpcUrl = RpcUrls.Base
     const chainId = ChainIds.Base
     const fleetAddress = FleetAddresses.Base.selfManaged
-    const userAddress = testWalletAddress
+    const userAddress = e2eWalletAddress
     const amountValue = '1'
     const symbol = 'USDC'
     const swapToSymbol = undefined
