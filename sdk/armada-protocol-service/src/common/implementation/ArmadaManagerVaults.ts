@@ -1629,8 +1629,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       sharePrice: sharePrice,
       apy: apysForVault.live,
       apys: apysForVault,
-      rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
-      merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()],
+      rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
+      merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
     })
   }
 

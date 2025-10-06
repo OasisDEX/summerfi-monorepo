@@ -8,7 +8,7 @@ import {
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, e2eWalletAddress } from './utils/testConfig'
+import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
 import { Wallet } from 'ethers'
 import assert from 'assert'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -76,7 +76,7 @@ describe('Intent swaps', () => {
 
     // get sell order quote
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
-      sender: e2eWalletAddress,
+      sender: userAddress,
       fromAmount: fromAmount,
       toToken,
       limitPrice,
@@ -92,7 +92,7 @@ describe('Intent swaps', () => {
     let orderId
     do {
       const orderReturn = await sdk.intentSwaps.sendOrder({
-        sender: e2eWalletAddress,
+        sender: userAddress,
         fromAmount: sellQuote.fromAmount,
         chainId,
         order: sellQuote.order,

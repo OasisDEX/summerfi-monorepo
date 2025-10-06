@@ -2,7 +2,6 @@ import { type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
-  ChainIds,
   getChainInfoByChainId,
   User,
   type IArmadaVaultId,
@@ -10,7 +9,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { e2eWalletAddress, signerPrivateKey, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { signerPrivateKey, TestConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import type { ISDKAdminManager } from 'node_modules/@summerfi/sdk-client/src/interfaces/ISDKAdminManager'
@@ -20,16 +19,13 @@ jest.setTimeout(300000)
 const simulateOnly = true
 
 describe('Armada Protocol - Unstake', () => {
-  const chainId = ChainIds.Sonic
-  const rpcUrl = RpcUrls.Sonic
-  const fleetAddressValue = FleetAddresses.Sonic.usdc
+  const { rpcUrl, chainId, fleetAddress, userAddress } = TestConfigs.Sonic
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const fleetAddress = Address.createFromEthereum({ value: fleetAddressValue })
-  const user = User.createFromEthereum(chainId, e2eWalletAddress.value)
+  const user = User.createFromEthereum(chainId, userAddress)
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress,
+    fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
   })
 
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
@@ -58,7 +54,7 @@ describe('Armada Protocol - Unstake', () => {
     const { statuses } = await sendAndLogTransactions({
       chainInfo,
       transactions: [transaction],
-      rpcUrl: rpcUrl,
+      rpcUrl,
       privateKey: signerPrivateKey,
       simulateOnly,
     })

@@ -39,10 +39,12 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
   /** Vault apys for different time periods */
   readonly apys: VaultApys
   /** Vault SUMR rewards apy */
-  readonly rewardsApys: Array<{
-    token: IToken
-    apy: IPercentage | null
-  }>
+  readonly rewardsApys:
+    | Array<{
+        token: IToken
+        apy: IPercentage | null
+      }>
+    | undefined
   /** Vault Merkl rewards apy */
   readonly merklRewards:
     | Array<{
@@ -74,12 +76,14 @@ export const ArmadaVaultInfoDataSchema = z.object({
     sma7day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
     sma30day: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
   }),
-  rewardsApys: z.array(
-    z.object({
-      token: z.custom<IToken>((val) => isToken(val)),
-      apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
-    }),
-  ),
+  rewardsApys: z
+    .array(
+      z.object({
+        token: z.custom<IToken>((val) => isToken(val)),
+        apy: z.custom<IPercentage | null>((val) => isPercentage(val) || val === null),
+      }),
+    )
+    .optional(),
   merklRewards: z
     .array(
       z.object({
