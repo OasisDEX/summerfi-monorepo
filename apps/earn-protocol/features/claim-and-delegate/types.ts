@@ -111,3 +111,9 @@ export type ClaimDelegateExternalData = {
   sumrStakingInfo: SumrStakingInfoData
   tallyDelegates: TallyDelegate[]
 }
+
+export interface SumrUserStakeInfoData {
+  sumrStakeInfo: SumrDelegateStakeData
+  sumrBalances: SumrBalancesData
+  sumrStakingInfo: SumrStakingInfoData
+}
