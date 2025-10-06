@@ -80,7 +80,7 @@ describe('Armada Protocol Migration', () => {
             console.log(`- migrating position ${i}: `, id)
           })
 
-          const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
+          const [tx1, tx2] = await sdk.armada.users.getMigrationTx({
             vaultId,
             user,
             positionIds: positionIdsToMigrate,
@@ -150,7 +150,7 @@ describe('Armada Protocol Migration', () => {
             console.log(`- migrating position ${i}: `, id)
           })
 
-          const [tx1, tx2] = await sdk.armada.users.getMigrationTX({
+          const [tx1, tx2] = await sdk.armada.users.getMigrationTx({
             vaultId,
             user,
             positionIds: positionIdsToMigrate,
