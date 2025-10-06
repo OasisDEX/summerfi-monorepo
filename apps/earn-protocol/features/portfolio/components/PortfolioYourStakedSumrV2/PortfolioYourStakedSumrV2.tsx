@@ -1,8 +1,8 @@
 import { Card, DataModule, Expander, Icon, Text } from '@summerfi/app-earn-ui'
 
-import portfolioYourStakedSumrStyles from './PortfolioYourStakedSumr.module.css'
+import portfolioYourStakedSumrStyles from './PortfolioYourStakedSumrV2.module.css'
 
-export const PortfolioYourStakedSumr = () => {
+export const PortfolioYourStakedSumrV2 = () => {
   return (
     <div className={portfolioYourStakedSumrStyles.wrapper}>
       <Text variant="h4">Your staked SUMR</Text>

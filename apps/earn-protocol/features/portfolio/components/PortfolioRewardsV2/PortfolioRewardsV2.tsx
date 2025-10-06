@@ -5,8 +5,9 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
+import { PortfolioLockedSumrInfoV2 } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/PortfolioLockedSumrInfoV2'
 import { PortfolioRewardsCardsV2 } from '@/features/portfolio/components/PortfolioRewardsCardsV2/PortfolioRewardsCardsV2'
-import { PortfolioYourStakedSumr } from '@/features/portfolio/components/PortfolioYourStakedSumr/PortfolioYourStakedSumr'
+import { PortfolioYourStakedSumrV2 } from '@/features/portfolio/components/PortfolioYourStakedSumrV2/PortfolioYourStakedSumrV2'
 
 import classNames from './PortfolioRewardsV2.module.css'
 
@@ -24,7 +25,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   return (
     <div className={classNames.wrapper}>
       <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
-      <PortfolioYourStakedSumr />
+      <PortfolioYourStakedSumrV2 />
+      <PortfolioLockedSumrInfoV2 />
     </div>
   )
 }
