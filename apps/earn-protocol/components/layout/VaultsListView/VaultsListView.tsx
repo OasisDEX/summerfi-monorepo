@@ -14,6 +14,7 @@ import {
   isUserSmartAccount,
   networkNameIconNameMap,
   SUMR_CAP,
+  SumrStakeCard,
   Text,
   useAmount,
   useAmountWithSwap,
@@ -52,6 +53,8 @@ import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
@@ -121,9 +124,30 @@ export const VaultsListView = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
+  const { userWalletAddress } = useUserWallet()
+  const { features } = useSystemConfig()
+  const {
+    state: { sumrNetApyConfig, slippageConfig },
+  } = useLocalConfig()
 
   const user = useUser()
   const userIsSmartAccount = isUserSmartAccount(user)
+
+  const { sumrStakeInfo } = useUserStakeInfo()
+
+  const stakingV2Enabled = !!features?.StakingV2
+
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
+  const sumrAvailableToStake =
+    Number(sumrStakeInfo?.sumrBalances.total ?? 0) -
+    Number(sumrStakeInfo?.sumrStakeInfo.stakedAmount ?? 0)
+
+  const sumrStakeRawApy = sumrStakeInfo?.sumrStakingInfo.sumrStakingApy ?? 0
+  const sumrStakeDecayFactor = sumrStakeInfo?.sumrStakeInfo.delegatedToDecayFactor ?? 1
+  const sumrStakeApy = sumrStakeRawApy * sumrStakeDecayFactor
+
+  const sumrAvailableToStakeUSD = sumrAvailableToStake * estimatedSumrPrice
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
@@ -133,12 +157,7 @@ export const VaultsListView = ({
     [queryParams],
   )
 
-  const {
-    state: { sumrNetApyConfig, slippageConfig },
-  } = useLocalConfig()
-
   const sdk = useAppSDK()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const updateQueryParams = useCallback(
     (
@@ -339,8 +358,6 @@ export const VaultsListView = ({
       }
     }
   }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId, usingSafeVaultsList])
-
-  const { userWalletAddress } = useUserWallet()
 
   const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
@@ -680,6 +697,23 @@ export const VaultsListView = ({
                 You might like these:
               </Text>
             </div>
+          )}
+          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
+            <SumrStakeCard
+              availableToStake={sumrAvailableToStake}
+              availableToStakeUSD={sumrAvailableToStakeUSD}
+              // TODO: fill data or remove (not decided yet)
+              yieldTokenApy="0.072"
+              yieldToken="USDC"
+              yieldTokenUsdPerYear="100"
+              apy={sumrStakeApy}
+              tooltipName="sumr-stake-bonus-label"
+              onTooltipOpen={tooltipEventHandler}
+              handleClick={() => {
+                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
+                push(`/portfolio/${userWalletAddress}?tab=rewards`)
+              }}
+            />
           )}
           {usingSafeVaultsList && (
             <>
