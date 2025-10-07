@@ -8,7 +8,11 @@ import { stringifyArmadaPosition } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Positions', () => {
-  const { chainId, fleetAddress, userAddress } = TestConfigs.SelfManaged
+  const {
+    chainId,
+    fleetAddressValue: fleetAddress,
+    userAddressValue: userAddress,
+  } = TestConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
   const user = User.createFromEthereum(chainId, userAddress)

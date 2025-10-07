@@ -18,7 +18,12 @@ jest.setTimeout(300000)
 const simulateOnly = true
 
 describe('Armada Protocol - Unstake', () => {
-  const { rpcUrl, chainId, fleetAddress, userAddress } = TestConfigs.Sonic
+  const {
+    rpcUrl,
+    chainId,
+    fleetAddressValue: fleetAddress,
+    userAddressValue: userAddress,
+  } = TestConfigs.Sonic
 
   const chainInfo = getChainInfoByChainId(chainId)
   const user = User.createFromEthereum(chainId, userAddress)

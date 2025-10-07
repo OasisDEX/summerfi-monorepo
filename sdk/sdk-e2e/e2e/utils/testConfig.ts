@@ -49,32 +49,32 @@ export const FleetAddresses = {
 
 /** TEST CONFIG */
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
-export const signerAddress = process.env.E2E_USER_ADDRESS as AddressValue
-export const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY as AddressValue
+export const signerAddress = process.env.TEST_USER_ADDRESS as AddressValue
+export const signerPrivateKey = process.env.TEST_USER_PRIVATE_KEY as AddressValue
 
-// export const userAddress: AddressValue = process.env.TEST_USER_ADDRESS
-export const userAddress: AddressValue = '0x4eb7f19d6efcace59eaed70220da5002709f9b71'
+export const userAddress: AddressValue = process.env.TEST_USER_ADDRESS as AddressValue
+// export const userAddress: AddressValue = '0x4eb7f19d6efcace59eaed70220da5002709f9b71'
 
 export const TestConfigs = {
   Base: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
-    fleetAddress: FleetAddresses.Base.usdc,
+    fleetAddressValue: FleetAddresses.Base.usdc,
     symbol: 'USDC',
-    userAddress: userAddress,
+    userAddressValue: userAddress,
   },
   SelfManaged: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
-    fleetAddress: FleetAddresses.Base.selfManaged,
+    fleetAddressValue: FleetAddresses.Base.selfManaged,
     symbol: 'USDC',
-    userAddress: userAddress,
+    userAddressValue: userAddress,
   },
   Sonic: {
     rpcUrl: RpcUrls.Sonic,
     chainId: ChainIds.Sonic,
-    fleetAddress: FleetAddresses.Sonic.usdc,
+    fleetAddressValue: FleetAddresses.Sonic.usdc,
     symbol: 'USDC',
-    userAddress: userAddress,
+    userAddressValue: userAddress,
   },
 }

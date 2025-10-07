@@ -21,7 +21,13 @@ const simulateOnly = true
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
-    const { rpcUrl, chainId, fleetAddress, userAddress, symbol } = TestConfigs.SelfManaged
+    const {
+      rpcUrl,
+      chainId,
+      fleetAddressValue: fleetAddress,
+      userAddressValue: userAddress,
+      symbol,
+    } = TestConfigs.SelfManaged
 
     const amountValue = '0.5'
     const swapToSymbol = undefined

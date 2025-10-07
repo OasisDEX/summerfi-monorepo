@@ -3,11 +3,6 @@ import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId } from '@summer
 import { SDKApiUrl } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
-jest.setTimeout(300000)
-
-/**
- * @group e2e
- */
 describe('Armada Protocol - Admin E2E Tests', () => {
   const sdk = makeAdminSDK({
     clientId: 'test-client',

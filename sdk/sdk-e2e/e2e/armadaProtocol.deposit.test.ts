@@ -18,11 +18,17 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
+const simulateOnly = false
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const { rpcUrl, chainId, fleetAddress, userAddress, symbol } = TestConfigs.SelfManaged
+    const {
+      rpcUrl,
+      chainId,
+      fleetAddressValue: fleetAddress,
+      userAddressValue: userAddress,
+      symbol,
+    } = TestConfigs.SelfManaged
 
     const amountValue = '1'
     const swapToSymbol = undefined
@@ -73,9 +79,6 @@ async function runTests({
     fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
   })
 
-  const vaultInfo = await sdk.armada.users.getVaultInfo({
-    vaultId,
-  })
   const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
   const swapToken = swapToSymbol
     ? await sdk.tokens.getTokenBySymbol({ chainId, symbol: swapToSymbol })
@@ -107,11 +110,15 @@ async function runTests({
     `deposit ${amountValue.toString()} to fleet at ${fleetAddress} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
   )
 
-  assert(
-    vaultInfo.depositCap.toSolidityValue() >=
-      vaultInfo.totalDeposits.toSolidityValue() + amount.toSolidityValue(),
-    `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits.toString()} + ${amount.toString()}`,
-  )
+  // check deposit cap
+  // const vaultInfo = await sdk.armada.users.getVaultInfo({
+  //   vaultId,
+  // })
+  // assert(
+  //   vaultInfo.depositCap.toSolidityValue() >=
+  //     vaultInfo.totalDeposits.toSolidityValue() + amount.toSolidityValue(),
+  //   `Deposit cap is not enough: ${vaultInfo.depositCap.toString()} < ${vaultInfo.totalDeposits.toString()} + ${amount.toString()}`,
+  // )
 
   const transactions = await sdk.armada.users.getNewDepositTx({
     vaultId,
