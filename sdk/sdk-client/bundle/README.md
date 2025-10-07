@@ -1,6 +1,6 @@
 # SDK API Reference
 
-**Latest version: v2.0.0**
+**Latest version: v2.1.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -117,6 +117,97 @@ console.log(
     }
   ]
 }
+```
+
+### Retrieve Historical Rates for Vaults
+
+Retrieve historical rate data for one or more vaults across different time periods (hourly, daily,
+weekly).
+
+**Parameters:**
+
+- **fleets**: Array of fleet objects, each containing:
+  - **fleetAddress**: The vault's fleet address (as string)
+  - **chainId**: The chain ID where the vault is deployed
+
+**Example:**
+
+```typescript
+import { ChainIds } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Fetch historical rates for multiple vaults
+const historicalRates = await sdk.armada.users.getVaultsHistoricalRates({
+  fleets: [
+    {
+      fleetAddress: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+      chainId: ChainIds.Base,
+    },
+    {
+      fleetAddress: '0xa0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a76',
+      chainId: ChainIds.Sonic,
+    },
+  ],
+})
+
+console.log('Historical rates:', JSON.stringify(historicalRates, null, 2))
+```
+
+**Response:**
+
+Returns an array of `HistoricalFleetRateResult` objects, one for each requested fleet.
+
+```json
+[
+  {
+    "chainId": "8453",
+    "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+    "rates": {
+      "dailyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-01-15",
+          "averageRate": "3.52",
+          "date": "2025-01-15",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "hourlyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-01-15T10:00:00Z",
+          "averageRate": "3.48",
+          "date": "2025-01-15T10:00:00Z",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "weeklyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-W02",
+          "averageRate": "3.55",
+          "date": "2025-W02",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "latestRate": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-1736935200",
+          "rate": "3.52",
+          "timestamp": 1736935200,
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "146",
+    "fleetAddress": "0xa0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a76",
+    "rates": {
+      "dailyRates": [],
+      "hourlyRates": [],
+      "weeklyRates": [],
+      "latestRate": []
+    }
+  }
+]
 ```
 
 ### Create Deposit Transaction
@@ -1399,9 +1490,24 @@ enum FiatCurrency {
 
 ## Changelog
 
+### v2.1.0
+
+**Features:**
+
+- **📊 Historical Vault Rates**: New method to retrieve historical rate data for one or more vaults
+  across all supported chains
+  - Supports multiple time granularities: hourly, daily, and weekly aggregated rates
+  - Includes latest rate snapshot for real-time data
+  - Cross-chain support - query vaults from different chains in a single request
+  - Returns structured data with `HistoricalFleetRateResult` type including:
+    - `dailyRates`: Daily aggregated average rates
+    - `hourlyRates`: Hourly aggregated average rates
+    - `weeklyRates`: Weekly aggregated average rates
+    - `latestRate`: Most recent rate snapshot
+
 ### v2.0.0
 
-**Major Features:**
+**Features:**
 
 - **🆕 Intent-based Swaps using CowSwap**: Full integration with CowSwap protocol for gasless,
   MEV-protected trading
@@ -1449,7 +1555,7 @@ enum FiatCurrency {
 
 ### v1.1.0
 
-Features:
+**Features:**
 
 - Added several new flows related to rewards handling:
   - **getUserMerklRewards** - retrieves Merkl rewards for a user across specified chains
@@ -1508,7 +1614,3 @@ Docs:
 ### v0.3.1
 
 First public release
-
-```
-
-```
