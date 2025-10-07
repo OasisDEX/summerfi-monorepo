@@ -7,7 +7,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Checking', () => {
-  const { sdk, chainId, userAddress } = createAccessControlTestSetup()
+  const { sdk, chainId, userAddress, governorSendTxTool } = createAccessControlTestSetup()
 
   const role = GeneralRoles.SUPER_KEEPER_ROLE
 
@@ -23,7 +23,6 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
         targetAddress: userAddress,
       })
       expect(grantTxInfo).toBeDefined()
-      const { governorSendTxTool } = createAccessControlTestSetup()
       const grantStatus = await governorSendTxTool(grantTxInfo)
       expect(grantStatus).toBe('success')
     }
@@ -36,7 +35,6 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
         targetAddress: userAddress,
       })
       expect(revokeTxInfo).toBeDefined()
-      const { governorSendTxTool } = createAccessControlTestSetup()
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
       expect(revokeStatus).toBe('success')
     }
