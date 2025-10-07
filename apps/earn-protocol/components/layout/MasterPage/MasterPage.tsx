@@ -12,12 +12,9 @@ import {
 import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import {
-  BeachClubFloatingBanner,
-  type SavedBeachClubBannerSettings,
-} from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
-import { LargeUserFloatingBanner } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { type SavedBeachClubBannerSettings } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
+import { FloatingBanners } from '@/components/molecules/FloatingBanners/FloatingBanners'
+import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
@@ -31,6 +28,7 @@ interface MasterPageProps {
   noNavMargin?: boolean
   analyticsCookie: SavedAnalyticsCookiesSettings | null
   beachClubCookie: SavedBeachClubBannerSettings | null
+  largeUsersCookie: SavedLargeUserBannerSettings | null
   largeUsersData?: string[]
 }
 
@@ -39,16 +37,15 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   skipNavigation = false,
   analyticsCookie,
   beachClubCookie,
+  largeUsersCookie,
   largeUsersData,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
-  const { features } = useSystemConfig()
   const pathname = usePathname()
   const handleButtonClick = useHandleButtonClickEvent()
 
   useScrollTracker({})
 
-  const beachClubEnabled = !!features?.BeachClub
   const onFooterItemClick = ({ buttonName }: { buttonName: string }) => {
     handleButtonClick(buttonName)
   }
@@ -130,11 +127,12 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         manageCookie={manageAnalyticsCookies}
       />
       {/* Condition to show banner after cookie banner */}
-      {beachClubEnabled && cookieSettings?.version === analyticsCookieVersion && (
-        <>
-          <BeachClubFloatingBanner />
-          {beachClubCookie?.isClosed && <LargeUserFloatingBanner largeUsersData={largeUsersData} />}
-        </>
+      {cookieSettings?.version === analyticsCookieVersion && (
+        <FloatingBanners
+          largeUsersData={largeUsersData}
+          largeUsersCookie={largeUsersCookie}
+          beachClubCookie={beachClubCookie}
+        />
       )}
     </div>
   )
