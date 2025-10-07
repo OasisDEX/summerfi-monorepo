@@ -29,7 +29,6 @@ import {
   type IArmadaVaultId,
   type AddressValue,
   type TransactionInfo,
-  type Erc20TransferTransactionInfo,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
@@ -300,6 +299,12 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       shares: fleetBalance.shares.add(stakedBalance.shares),
       assets: fleetBalance.assets.add(stakedBalance.assets),
     }
+  }
+
+  async getVaultsHistoricalRates(
+    params: Parameters<IArmadaManagerUtils['getVaultsHistoricalRates']>[0],
+  ): ReturnType<IArmadaManagerUtils['getVaultsHistoricalRates']> {
+    throw new Error('Method not implemented.')
   }
 
   /** @see IArmadaManagerUtils.convertToShares */

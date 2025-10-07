@@ -24,6 +24,7 @@ import type {
   GetUserActivityQuery,
   Position_Filter,
 } from '@summerfi/subgraph-manager-common'
+import type { HistoricalFleetRateResult } from '../types/HistoricalFleetRateResult'
 /**
  * @name IArmadaManagerUtils
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
@@ -246,6 +247,10 @@ export interface IArmadaManagerUtils {
     fromAmount: ITokenAmount
     toAmount: ITokenAmount
   }): Promise<TransactionPriceImpact>
+
+  getVaultsHistoricalRates(params: {
+    fleets: { fleetAddress: AddressValue; chainId: ChainId }[]
+  }): Promise<HistoricalFleetRateResult[]>
 
   /**
    * @name getUnstakeFleetTokensTx
