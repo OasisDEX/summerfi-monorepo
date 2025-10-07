@@ -24,7 +24,7 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
-import { beachClubCookieName } from '@/components/molecules/BeachClubFloatingBanner/config'
+import { largeUsersCookieName } from '@/components/molecules/LargeUserFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { fontInter } from '@/helpers/fonts'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = 'en'
 
   const analyticsCookie = safeParseJson(getServerSideCookies(analyticsCookieName, cookie))
-  const beachClubCookie = safeParseJson(getServerSideCookies(beachClubCookieName, cookie))
+  const largeUsersCookie = safeParseJson(getServerSideCookies(largeUsersCookieName, cookie))
 
   // Get device type from cookie or detect it from user agent
   let deviceType = getServerSideCookies('deviceType', cookie) as DeviceType | ''
@@ -83,7 +83,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <MasterPage
             skipNavigation
             analyticsCookie={analyticsCookie}
-            beachClubCookie={beachClubCookie}
+            largeUsersCookie={largeUsersCookie}
           >
             <Image src={logoMaintenance} alt="Summer.fi" width={200} style={{ margin: '4rem' }} />
             <Text as="h1" variant="h1" style={{ margin: '3rem 0 1rem', fontWeight: 700 }}>
@@ -139,7 +139,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             sumrNetApyConfig,
           }}
           largeUsersData={largeUsersData}
-          beachClubCookie={beachClubCookie}
+          largeUsersCookie={largeUsersCookie}
         >
           {children}
         </GlobalProvider>

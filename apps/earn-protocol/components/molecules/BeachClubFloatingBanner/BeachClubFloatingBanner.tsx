@@ -10,6 +10,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { useDisplayBannerEvent, useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
@@ -27,6 +28,9 @@ export const BeachClubFloatingBanner = () => {
   const handleButtonClick = useHandleButtonClickEvent()
   const handleDisplayBanner = useDisplayBannerEvent()
   const { userWalletAddress } = useUserWallet()
+  const { features } = useSystemConfig()
+
+  const beachClubEnabled = !!features?.BeachClub
 
   const cookieSettings = useMemo(() => {
     try {
@@ -54,7 +58,7 @@ export const BeachClubFloatingBanner = () => {
     }
   }, [cookieSettings.isClosed, handleDisplayBanner, isClosed])
 
-  return cookieSettings.isClosed || isClosed ? null : (
+  return cookieSettings.isClosed || isClosed || !beachClubEnabled ? null : (
     <FloatingBanner
       icon={
         <div className={styles.iconMainWrapper}>

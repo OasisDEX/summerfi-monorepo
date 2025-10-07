@@ -13,11 +13,11 @@ import Image from 'next/image'
 import { useDisplayBannerEvent, useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import summerLogo from '@/public/img/branding/dot-dark.svg'
 
+import { largeUsersCookieName } from './config'
+
 import styles from './LargeUserFloatingBanner.module.css'
 
-const cookieName = 'large-user-banner'
-
-interface SavedLargeUserBannerSettings {
+export interface SavedLargeUserBannerSettings {
   isClosed: boolean
 }
 
@@ -27,7 +27,7 @@ interface LargeUserFloatingBannerProps {
 
 export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ largeUsersData }) => {
   const [isClosed, setIsClosed] = useState(false)
-  const cookie = getCookie(cookieName)
+  const cookie = getCookie(largeUsersCookieName)
   const { userWalletAddress } = useUserWallet()
 
   const handleButtonClick = useHandleButtonClickEvent()
@@ -42,7 +42,7 @@ export const LargeUserFloatingBanner: FC<LargeUserFloatingBannerProps> = ({ larg
   }, [cookie])
 
   const setValue = (value: SavedLargeUserBannerSettings) => {
-    setCookie(cookieName, JSON.stringify(value), 7, { secure: true })
+    setCookie(largeUsersCookieName, JSON.stringify(value), 7, { secure: true })
   }
 
   const isLargerUser = largeUsersData?.includes(userWalletAddress?.toLowerCase() ?? '')

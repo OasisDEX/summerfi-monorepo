@@ -11,7 +11,7 @@ import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
 import dynamic from 'next/dynamic'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
-import { type SavedBeachClubBannerSettings } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
+import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -23,7 +23,7 @@ type GlobalProviderProps = {
   deviceType: DeviceType
   localConfigContextState: Partial<LocalConfigState>
   analyticsCookie: SavedAnalyticsCookiesSettings | null
-  beachClubCookie: SavedBeachClubBannerSettings | null
+  largeUsersCookie: SavedLargeUserBannerSettings | null
   largeUsersData?: string[]
 }
 
@@ -45,8 +45,8 @@ export const GlobalProvider = ({
   deviceType,
   localConfigContextState,
   analyticsCookie,
-  beachClubCookie,
   largeUsersData,
+  largeUsersCookie,
 }: GlobalProviderProps) => {
   return (
     <Suspense>
@@ -58,7 +58,7 @@ export const GlobalProvider = ({
               <MasterPage
                 analyticsCookie={analyticsCookie}
                 largeUsersData={largeUsersData}
-                beachClubCookie={beachClubCookie}
+                largeUsersCookie={largeUsersCookie}
               >
                 {children}
               </MasterPage>
