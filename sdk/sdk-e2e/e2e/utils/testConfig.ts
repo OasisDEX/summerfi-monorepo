@@ -30,7 +30,7 @@ export const RpcUrls = {
   Base: process.env.E2E_SDK_FORK_URL_BASE,
   ArbitrumOne: process.env.E2E_SDK_FORK_URL_ARBITRUM,
   Sonic: process.env.E2E_SDK_FORK_URL_SONIC,
-}
+} as const
 
 export const FleetAddresses = {
   Base: {
@@ -45,7 +45,7 @@ export const FleetAddresses = {
   Sonic: {
     usdc: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
-}
+} as const
 
 /** TEST CONFIG */
 export const SDKApiUrl = process.env.E2E_SDK_API_URL

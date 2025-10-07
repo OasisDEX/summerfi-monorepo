@@ -8,14 +8,10 @@ import { stringifyArmadaPosition } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Positions', () => {
-  const {
-    chainId,
-    fleetAddressValue: fleetAddress,
-    userAddressValue: userAddress,
-  } = TestConfigs.SelfManaged
+  const { chainId, fleetAddressValue, userAddressValue } = TestConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
-  const user = User.createFromEthereum(chainId, userAddress)
+  const user = User.createFromEthereum(chainId, userAddressValue)
 
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
@@ -31,7 +27,7 @@ describe('Armada Protocol - Positions', () => {
   it(`should get user position for a specific fleet`, async () => {
     const position = await sdk.armada.users.getUserPosition({
       user: user,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+      fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
     })
     assert(position != null, 'User position not found')
     console.log(`Specific user position:\n`, stringifyArmadaPosition(position))

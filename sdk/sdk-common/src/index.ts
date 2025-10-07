@@ -16,6 +16,12 @@ export type { HexData } from './common/types/HexData'
 export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
+export type {
+  HistoricalFleetRateResult,
+  HistoricalFleetRates,
+  FleetRate,
+  AggregatedFleetRate,
+} from './common/types/HistoricalFleetRateResult'
 export { AddressType } from './common/enums/AddressType'
 export {
   ChainFamilyName,

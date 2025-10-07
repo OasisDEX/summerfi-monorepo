@@ -24,7 +24,7 @@ describe('Armada Protocol Withdraw', () => {
     const {
       rpcUrl,
       chainId,
-      fleetAddressValue: fleetAddress,
+      fleetAddressValue,
       userAddressValue: userAddress,
       symbol,
     } = TestConfigs.SelfManaged
@@ -35,7 +35,7 @@ describe('Armada Protocol Withdraw', () => {
     await runTests({
       rpcUrl,
       chainId,
-      fleetAddress,
+      fleetAddressValue,
       userAddress,
       amountValue,
       symbol,
@@ -47,7 +47,7 @@ describe('Armada Protocol Withdraw', () => {
     chainId,
     symbol,
     swapToSymbol,
-    fleetAddress,
+    fleetAddressValue,
     rpcUrl,
     amountValue,
     userAddress,
@@ -55,7 +55,7 @@ describe('Armada Protocol Withdraw', () => {
     chainId: ChainId
     symbol: string
     swapToSymbol: string | undefined
-    fleetAddress: string
+    fleetAddressValue: string
     rpcUrl: string
     amountValue: string
     userAddress: AddressValue
@@ -68,7 +68,7 @@ describe('Armada Protocol Withdraw', () => {
 
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
-      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+      fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
     })
 
     const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
@@ -98,7 +98,7 @@ describe('Armada Protocol Withdraw', () => {
       token: token,
     })
 
-    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddress}`)
+    console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddressValue}`)
 
     const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
     assert(

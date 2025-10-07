@@ -18,6 +18,7 @@ import { adjustBuffer } from './armada-protocol-handlers/admin/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/admin/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
+import { getVaultsHistoricalRates } from './armada-protocol-handlers/users/getVaultsHistoricalRates'
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
 import { getVaultInfo } from './armada-protocol-handlers/users/getVaultInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
@@ -134,6 +135,7 @@ export const sdkAppRouter = router({
       getUserActivityRaw: getUserActivityRaw,
       getVaultInfo: getVaultInfo,
       getVaultInfoList: getVaultInfoList,
+      getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,

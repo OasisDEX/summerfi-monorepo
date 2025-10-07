@@ -24,7 +24,7 @@ import type {
   GetUserActivityQuery,
   Position_Filter,
 } from '@summerfi/subgraph-manager-common'
-import type { HistoricalFleetRateResult } from '../types/HistoricalFleetRateResult'
+import type { HistoricalFleetRateResult } from '@summerfi/sdk-common'
 /**
  * @name IArmadaManagerUtils
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
