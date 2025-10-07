@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IArmadaPosition, IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
@@ -19,7 +20,7 @@ export function stringifyArmadaVaultInfo(vaultInfo: IArmadaVaultInfo): string {
         sma7day: vaultInfo.apys.sma7day?.toString(),
         sma30day: vaultInfo.apys.sma30day?.toString(),
       },
-      rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
+      rewardsApys: vaultInfo.rewardsApys?.map((reward) => ({
         token: reward.token.toString(),
         apy: reward.apy?.toString(),
       })),

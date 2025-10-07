@@ -1,18 +1,16 @@
-import { type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
-  ChainIds,
   getChainInfoByChainId,
   Percentage,
   TokenAmount,
   User,
-  Wallet,
+  type AddressValue,
   type ChainId,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, testWalletAddress, FleetAddresses, RpcUrls } from './utils/testConfig'
+import { signerPrivateKey, TestConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
@@ -23,12 +21,15 @@ const simulateOnly = true
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
-    const rpcUrl = RpcUrls.Base
-    const chainId = ChainIds.Base
-    const fleetAddress = FleetAddresses.Base.selfManaged
-    const userAddress = testWalletAddress
-    const amountValue = '0.1'
-    const symbol = 'USDC'
+    const {
+      rpcUrl,
+      chainId,
+      fleetAddressValue: fleetAddress,
+      userAddressValue: userAddress,
+      symbol,
+    } = TestConfigs.SelfManaged
+
+    const amountValue = '0.5'
     const swapToSymbol = undefined
 
     await runTests({
@@ -55,23 +56,16 @@ describe('Armada Protocol Withdraw', () => {
     symbol: string
     swapToSymbol: string | undefined
     fleetAddress: string
-    rpcUrl: string | undefined
+    rpcUrl: string
     amountValue: string
-    userAddress: Address
+    userAddress: AddressValue
   }) {
     const sdk = createTestSDK()
-    if (!rpcUrl) {
-      throw new Error('Missing rpc url')
-    }
 
     const chainInfo = getChainInfoByChainId(chainId)
 
-    const user = User.createFrom({
-      chainInfo,
-      wallet: Wallet.createFrom({
-        address: userAddress,
-      }),
-    })
+    const user = User.createFromEthereum(chainId, userAddress)
+
     const vaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
@@ -125,7 +119,7 @@ describe('Armada Protocol Withdraw', () => {
     const { statuses } = await sendAndLogTransactions({
       chainInfo,
       transactions: transactions,
-      rpcUrl: rpcUrl,
+      rpcUrl,
       privateKey: signerPrivateKey,
       simulateOnly,
     })

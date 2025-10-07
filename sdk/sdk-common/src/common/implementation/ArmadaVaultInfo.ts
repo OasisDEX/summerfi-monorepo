@@ -34,10 +34,12 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
   readonly sharePrice: IPrice
   readonly apy: IPercentage | null
   readonly apys: VaultApys
-  readonly rewardsApys: Array<{
-    token: IToken
-    apy: IPercentage | null
-  }>
+  readonly rewardsApys:
+    | Array<{
+        token: IToken
+        apy: IPercentage | null
+      }>
+    | undefined
   readonly merklRewards:
     | Array<{
         token: IToken

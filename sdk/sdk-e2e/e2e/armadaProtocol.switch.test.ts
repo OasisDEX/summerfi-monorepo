@@ -12,7 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, testWalletAddress } from './utils/testConfig'
+import { signerPrivateKey, userAddress } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
@@ -76,7 +76,7 @@ describe('Armada Protocol Switch', () => {
 
     const user = User.createFrom({
       wallet: Wallet.createFrom({
-        address: testWalletAddress,
+        address: userAddress,
       }),
       chainInfo,
     })

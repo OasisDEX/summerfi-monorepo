@@ -8,11 +8,11 @@ describe('e2e', () => {
   const configurationProvider = new ConfigurationProvider()
 
   const userAddress = configurationProvider.getConfigurationItem<AddressValue>({
-    name: 'E2E_USER_ADDRESS',
+    name: 'TEST_USER_ADDRESS',
   })
 
   if (!userAddress) {
-    throw new Error('E2E_USER_ADDRESS not defined in .env')
+    throw new Error('TEST_USER_ADDRESS not defined in .env')
   }
 
   const walletAddress = Address.createFromEthereum({

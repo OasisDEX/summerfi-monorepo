@@ -4,7 +4,7 @@ import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
 export const testClientConfig: DeploymentProviderConfig = {
   deployedContracts: {
     admiralsQuarters: {
-      [ChainIds.Base]: '0x',
+      [ChainIds.Base]: '0x4e92071F9BC94011419Dc03fEaCA32D11241313a',
       [ChainIds.ArbitrumOne]: '0x',
       [ChainIds.Mainnet]: '0x',
       [ChainIds.Sonic]: '0x',
