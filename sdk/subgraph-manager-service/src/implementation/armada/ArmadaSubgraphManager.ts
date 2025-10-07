@@ -70,7 +70,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
     return this._getClient(user.chainInfo.chainId).GetUserPositions({
-      accountAddress: user.wallet.address.value,
+      accountAddress: user.wallet.address.toSolidityValue(),
     })
   }
 
@@ -79,14 +79,14 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     fleetAddress,
   }: Parameters<IArmadaSubgraphManager['getUserPosition']>[0]) {
     return this._getClient(user.chainInfo.chainId).GetUserPosition({
-      accountAddress: user.wallet.address.value,
-      vaultId: fleetAddress.value.toLowerCase() as string,
+      accountAddress: user.wallet.address.toSolidityValue(),
+      vaultId: fleetAddress.toSolidityValue(),
     })
   }
 
   getPosition(params: Parameters<IArmadaSubgraphManager['getPosition']>[0]) {
     return this._getClient(params.positionId.user.chainInfo.chainId).GetPosition({
-      id: params.positionId.id,
+      id: params.positionId.id.toLowerCase(),
     })
   }
 
