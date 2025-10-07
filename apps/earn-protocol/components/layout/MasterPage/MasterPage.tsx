@@ -12,7 +12,6 @@ import {
 import { usePathname } from 'next/navigation'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
-import { type SavedBeachClubBannerSettings } from '@/components/molecules/BeachClubFloatingBanner/BeachClubFloatingBanner'
 import { FloatingBanners } from '@/components/molecules/FloatingBanners/FloatingBanners'
 import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeUserFloatingBanner/LargeUserFloatingBanner'
 import { manageAnalyticsCookies } from '@/features/manage-analytics-cookies/manage-analytics-cookies'
@@ -27,7 +26,6 @@ interface MasterPageProps {
   skipNavigation?: boolean
   noNavMargin?: boolean
   analyticsCookie: SavedAnalyticsCookiesSettings | null
-  beachClubCookie: SavedBeachClubBannerSettings | null
   largeUsersCookie: SavedLargeUserBannerSettings | null
   largeUsersData?: string[]
 }
@@ -36,7 +34,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   children,
   skipNavigation = false,
   analyticsCookie,
-  beachClubCookie,
   largeUsersCookie,
   largeUsersData,
 }) => {
