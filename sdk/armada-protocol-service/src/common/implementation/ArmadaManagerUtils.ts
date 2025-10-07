@@ -29,7 +29,7 @@ import {
   type IArmadaVaultId,
   type AddressValue,
   type TransactionInfo,
-  type Erc20TransferTransactionInfo,
+  type HistoricalFleetRateResult,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
@@ -41,6 +41,7 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
 import type { IDeploymentProvider } from '../..'
+import { createTimeoutSignal } from '@summerfi/sdk-common/configs/fetch'
 
 /**
  * @name ArmadaManagerUtils
@@ -49,6 +50,7 @@ import type { IDeploymentProvider } from '../..'
 export class ArmadaManagerUtils implements IArmadaManagerUtils {
   private _supportedChains: ChainInfo[]
   private _rewardsRedeemerAddress: IAddress
+  private _functionsUrl: string
 
   private _hubChainInfo: ChainInfo
   private _configProvider: IConfigurationProvider
@@ -101,6 +103,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     })
     this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
     this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
+    this._functionsUrl = this._configProvider.getConfigurationItem({
+      name: 'FUNCTIONS_API_URL',
+    })
   }
 
   getSummerToken(
@@ -300,6 +305,33 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       shares: fleetBalance.shares.add(stakedBalance.shares),
       assets: fleetBalance.assets.add(stakedBalance.assets),
     }
+  }
+
+  async getVaultsHistoricalRates(
+    params: Parameters<IArmadaManagerUtils['getVaultsHistoricalRates']>[0],
+  ): ReturnType<IArmadaManagerUtils['getVaultsHistoricalRates']> {
+    const input = {
+      fleets: params.fleets,
+    }
+
+    const res = await fetch(this._functionsUrl + '/api/vault/historicalRates', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(input),
+      signal: createTimeoutSignal(),
+    })
+
+    // handle res errors
+    if (!res.ok) {
+      const text = await res.text()
+      throw new Error(`Error fetching vault historical rates (${res.status}): ${text}`)
+    }
+
+    const data: { rates: HistoricalFleetRateResult[] } = await res.json()
+
+    return data.rates
   }
 
   /** @see IArmadaManagerUtils.convertToShares */

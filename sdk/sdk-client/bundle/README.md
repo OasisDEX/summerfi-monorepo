@@ -1,6 +1,6 @@
 # SDK API Reference
 
-**Latest version: v2.0.0**
+**Latest version: v2.1.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -38,7 +38,14 @@ console.log(
           depositCap: vaultInfo.depositCap.toString(),
           totalDeposits: vaultInfo.totalDeposits.toString(),
           totalShares: vaultInfo.totalShares.toString(),
+          sharePrice: vaultInfo.sharePrice.toString(),
           apy: vaultInfo.apy?.toString(),
+          apys: {
+            live: vaultInfo.apys.live?.toString(),
+            sma24h: vaultInfo.apys.sma24h?.toString(),
+            sma7day: vaultInfo.apys.sma7day?.toString(),
+            sma30day: vaultInfo.apys.sma30day?.toString(),
+          },
           rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
             token: reward.token.toString(),
             apy: reward.apy?.toString(),
@@ -58,7 +65,14 @@ console.log(
   "depositCap": "4500 WETH",
   "totalDeposits": "2023.221718764654726475 WETH",
   "totalShares": "2022.094615580704722886 LVWETH",
+  "sharePrice": "1.000557823094 WETH per LVWETH",
   "apy": "3.522884827325959%",
+  "apys": {
+    "live": "3.522884827325959%",
+    "sma24h": "3.48%",
+    "sma7day": "3.55%",
+    "sma30day": "3.45%"
+  },
   "rewardsApys": [
     {
       "token": "SUMR (SummerToken)",
@@ -91,7 +105,14 @@ console.log(
       depositCap: vaultInfo.depositCap.toString(),
       totalDeposits: vaultInfo.totalDeposits.toString(),
       totalShares: vaultInfo.totalShares.toString(),
+      sharePrice: vaultInfo.sharePrice.toString(),
       apy: vaultInfo.apy?.toString(),
+      apys: {
+        live: vaultInfo.apys.live?.toString(),
+        sma24h: vaultInfo.apys.sma24h?.toString(),
+        sma7day: vaultInfo.apys.sma7day?.toString(),
+        sma30day: vaultInfo.apys.sma30day?.toString(),
+      },
       rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
         token: reward.token.toString(),
         apy: reward.apy?.toString(),
@@ -109,7 +130,14 @@ console.log(
   "depositCap": "4500 WETH",
   "totalDeposits": "2948.876393083458875336 WETH",
   "totalShares": "2946.948828922528865601 LVWETH",
+  "sharePrice": "1.000653712538 WETH per LVWETH",
   "apy": "2.997274534331705%",
+  "apys": {
+    "live": "2.997274534331705%",
+    "sma24h": "3.02%",
+    "sma7day": "3.15%",
+    "sma30day": "2.95%"
+  },
   "rewardsApys": [
     {
       "token": "SUMR (SummerToken)",
@@ -117,6 +145,97 @@ console.log(
     }
   ]
 }
+```
+
+### Retrieve Historical Rates for Vaults
+
+Retrieve historical rate data for one or more vaults across different time periods (hourly, daily,
+weekly).
+
+**Parameters:**
+
+- **fleets**: Array of fleet objects, each containing:
+  - **fleetAddress**: The vault's fleet address (as string)
+  - **chainId**: The chain ID where the vault is deployed
+
+**Example:**
+
+```typescript
+import { ChainIds } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Fetch historical rates for multiple vaults
+const historicalRates = await sdk.armada.users.getVaultsHistoricalRates({
+  fleets: [
+    {
+      fleetAddress: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+      chainId: ChainIds.Base,
+    },
+    {
+      fleetAddress: '0xa0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a76',
+      chainId: ChainIds.Sonic,
+    },
+  ],
+})
+
+console.log('Historical rates:', JSON.stringify(historicalRates, null, 2))
+```
+
+**Response:**
+
+Returns an array of `HistoricalFleetRateResult` objects, one for each requested fleet.
+
+```json
+[
+  {
+    "chainId": "8453",
+    "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+    "rates": {
+      "dailyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-01-15",
+          "averageRate": "3.52",
+          "date": "2025-01-15",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "hourlyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-01-15T10:00:00Z",
+          "averageRate": "3.48",
+          "date": "2025-01-15T10:00:00Z",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "weeklyRates": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-2025-W02",
+          "averageRate": "3.55",
+          "date": "2025-W02",
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ],
+      "latestRate": [
+        {
+          "id": "0x742d35cc6633c0532925a3b8d84c94f8855c4ba2-1736935200",
+          "rate": "3.52",
+          "timestamp": 1736935200,
+          "fleetAddress": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2"
+        }
+      ]
+    }
+  },
+  {
+    "chainId": "146",
+    "fleetAddress": "0xa0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a76",
+    "rates": {
+      "dailyRates": [],
+      "hourlyRates": [],
+      "weeklyRates": [],
+      "latestRate": []
+    }
+  }
+]
 ```
 
 ### Create Deposit Transaction
@@ -331,6 +450,80 @@ if (transactions.length === 3) {
 }
 ```
 
+### Generate ERC20 Token Transfer Transaction
+
+Generate a transaction to transfer ERC20 tokens to a specified recipient address.
+
+**Parameters:**
+
+- **chainId**: The chain ID where the token transfer should occur
+- **tokenAddress**: The address of the ERC20 token to transfer
+- **recipientAddress**: The recipient's wallet address
+- **amount**: The amount of tokens to transfer (as ITokenAmount)
+
+**Example:**
+
+```typescript
+import { Address, ChainIds, TokenAmount } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Get the token you want to transfer
+const token = await sdk.tokens.getTokenBySymbol({
+  chainId: ChainIds.Base,
+  symbol: 'USDC',
+})
+
+// Create the transfer amount
+const amount = TokenAmount.createFrom({
+  amount: '100', // 100 USDC
+  token,
+})
+
+// Create recipient address
+const recipient = Address.createFromEthereum({
+  value: '0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2',
+})
+
+// Generate the transfer transaction
+const transactions = await sdk.armada.users.getErc20TokenTransferTx({
+  chainId: ChainIds.Base,
+  tokenAddress: token.address,
+  recipientAddress: recipient,
+  amount,
+})
+
+// Execute the transaction
+const tx = transactions[0]
+const hash = await walletClient.sendTransaction({
+  to: tx.transaction.target.value,
+  data: tx.transaction.calldata,
+  value: BigInt(tx.transaction.value),
+})
+```
+
+**Response:**
+
+Returns an array containing a single ERC20 transfer transaction.
+
+```json
+[
+  {
+    "type": "Erc20Transfer",
+    "description": "Transfer 100 USDC to 0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+    "transaction": {
+      "target": IAddress,
+      "calldata": string,
+      "value": string
+    },
+    "metadata": {
+      "token": IAddress,
+      "recipient": IAddress,
+      "amount": ITokenAmount
+    }
+  }
+]
+```
+
 ### Check rewards for Vault deposits
 
 Get rewards data for a user across all vaults on specified chains.
@@ -437,9 +630,9 @@ exist for the specified chain.
     "type": "MerklClaim",
     "description": "Claiming Merkl rewards for 1 token(s) on Base",
     "transaction": {
-      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
-      "calldata": "0x2f49ae08000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba2000000000000000000000000a0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a760000000000000000000000000000000000000000000000000000000000000001",
-      "value": "0"
+      "target": IAddress,
+      "calldata": string,
+      "value": string
     }
   }
 ]
@@ -488,9 +681,9 @@ exist for the specified chain.
     "type": "MerklClaim",
     "description": "Claiming Merkl rewards for 2 token(s) on Base",
     "transaction": {
-      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
-      "calldata": "0x2f49ae08000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba2000000000000000000000000a0b86a33e6d9fdb91b23dc0a4dd9a7b0d2d15a760000000000000000000000000000000000000000000000000000000000000002",
-      "value": "0"
+      "target": IAddress,
+      "calldata": string,
+      "value": string
     }
   }
 ]
@@ -568,9 +761,9 @@ Returns an array containing the authorization transaction.
     "type": "ToggleAQasMerklRewardsOperator",
     "description": "Authorize AdmiralsQuarters as Merkl rewards operator",
     "transaction": {
-      "target": "0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae",
-      "calldata": "0xa9059cbb000000000000000000000000742d35cc6633c0532925a3b8d84c94f8855c4ba20000000000000000000000000000000000000000000000000000000000000001",
-      "value": "0"
+      "target": IAddress,
+      "calldata": string,
+      "value": string
     }
   }
 ]
@@ -1399,9 +1592,52 @@ enum FiatCurrency {
 
 ## Changelog
 
+### v2.1.0
+
+**Features:**
+
+- **📊 Historical Vault Rates**: New method to retrieve historical rate data for vaults
+
+  - **getVaultsHistoricalRates** - Fetch historical rates for one or more vaults across different
+    time periods
+  - Supports multiple time granularities: hourly, daily, and weekly aggregated rates
+  - Includes latest rate snapshot for real-time data
+  - Cross-chain support - query vaults from different chains in a single request
+  - Returns structured data with `HistoricalFleetRateResult` type including:
+    - `dailyRates`: Daily aggregated average rates
+    - `hourlyRates`: Hourly aggregated average rates
+    - `weeklyRates`: Weekly aggregated average rates
+    - `latestRate`: Most recent rate snapshot
+
+- **💸 ERC20 Token Transfers**: New method for generating ERC20 token transfer transactions
+
+  - **getErc20TokenTransferTx** - Generate transaction to transfer ERC20 tokens to any address
+  - Cross-chain support for all supported networks (Base, Arbitrum, Optimism, Mainnet, Sonic)
+  - Simple interface requiring only chainId, token address, recipient, and amount
+  - Returns properly formatted transaction with complete metadata
+  - Useful for programmatic token distributions, payments, and transfers
+
+- **📈 Enhanced Vault APY Data**: Vault info now includes multiple APY time periods
+
+  - Added `apys` property to `IArmadaVaultInfo` with granular APY data:
+    - `live`: Current real-time APY
+    - `sma24h`: 24-hour simple moving average APY
+    - `sma7day`: 7-day simple moving average APY
+    - `sma30day`: 30-day simple moving average APY
+  - Provides better insights into vault performance trends over different time periods
+  - All APY values are nullable IPercentage types
+  - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
+
+- **💎 Vault Share Price**: Vault info now includes current share price
+  - Added `sharePrice` property to `IArmadaVaultInfo` showing the current price per share
+  - Expressed as an `IPrice` type (e.g., "1.000557823094 WETH per LVWETH")
+  - Represents the current value of one vault share in terms of the underlying asset
+  - Useful for calculating the current value of user positions and tracking vault performance
+  - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
+
 ### v2.0.0
 
-**Major Features:**
+**Features:**
 
 - **🆕 Intent-based Swaps using CowSwap**: Full integration with CowSwap protocol for gasless,
   MEV-protected trading
@@ -1449,7 +1685,7 @@ enum FiatCurrency {
 
 ### v1.1.0
 
-Features:
+**Features:**
 
 - Added several new flows related to rewards handling:
   - **getUserMerklRewards** - retrieves Merkl rewards for a user across specified chains
@@ -1508,7 +1744,3 @@ Docs:
 ### v0.3.1
 
 First public release
-
-```
-
-```

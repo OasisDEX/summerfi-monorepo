@@ -14,7 +14,6 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, TestConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
-import assert from 'assert'
 
 jest.setTimeout(300000)
 
@@ -22,13 +21,7 @@ const simulateOnly = false
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const {
-      rpcUrl,
-      chainId,
-      fleetAddressValue: fleetAddress,
-      userAddressValue: userAddress,
-      symbol,
-    } = TestConfigs.SelfManaged
+    const { rpcUrl, chainId, fleetAddressValue, userAddressValue, symbol } = TestConfigs.SelfManaged
 
     const amountValue = '1'
     const swapToSymbol = undefined
@@ -37,8 +30,8 @@ describe('Armada Protocol Deposit', () => {
     await runTests({
       rpcUrl,
       chainId,
-      fleetAddress,
-      userAddress,
+      fleetAddressValue,
+      userAddressValue,
       symbol,
       amountValue,
       swapToSymbol,
@@ -50,21 +43,21 @@ describe('Armada Protocol Deposit', () => {
 async function runTests({
   chainId,
   swapToSymbol,
-  fleetAddress,
+  fleetAddressValue,
   rpcUrl,
   symbol,
   amountValue,
-  userAddress,
+  userAddressValue: userAddress,
   stake,
   referralCode,
 }: {
   chainId: ChainId
   swapToSymbol: string | undefined
-  fleetAddress: string
+  fleetAddressValue: AddressValue
   rpcUrl: string
   symbol: string
   amountValue: string
-  userAddress: AddressValue
+  userAddressValue: AddressValue
   stake?: boolean
   referralCode?: string
 }) {
@@ -76,7 +69,7 @@ async function runTests({
 
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+    fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
   })
 
   const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol })
@@ -107,7 +100,7 @@ async function runTests({
   })
 
   console.log(
-    `deposit ${amountValue.toString()} to fleet at ${fleetAddress} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
+    `deposit ${amountValue.toString()} to fleet at ${fleetAddressValue} ${stake ? 'with staking' : 'without staking'} ${swapToken ? ', swapping to ' + swapToken.symbol : ''} ${referralCode ? 'with referral code ' + referralCode : ''}`,
   )
 
   // check deposit cap

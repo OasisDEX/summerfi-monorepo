@@ -38,6 +38,7 @@ import {
   type UnstakeTransactionInfo,
   type VaultSwitchTransactionInfo,
   type WithdrawTransactionInfo,
+  type HistoricalFleetRateResult,
 } from '@summerfi/sdk-common'
 
 /**
@@ -133,6 +134,16 @@ export interface IArmadaManagerUsersClient {
   getVaultInfoList(params: { chainId: ChainId }): Promise<{
     list: IArmadaVaultInfo[]
   }>
+
+  /**
+   * @method getVaultsHistoricalRates
+   * @description Retrieves historical rates for a list of fleets across chains
+   * @param params.fleets Array of fleet descriptors with fleetAddress and chainId
+   * @returns Array of HistoricalFleetRateResult per fleet
+   */
+  getVaultsHistoricalRates(params: {
+    fleets: { fleetAddress: AddressValue; chainId: ChainId }[]
+  }): Promise<HistoricalFleetRateResult[]>
 
   /**
    * @name getUserPositions

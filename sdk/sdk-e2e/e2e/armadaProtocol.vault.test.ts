@@ -9,19 +9,15 @@ import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vault', () => {
-  const {
-    chainId,
-    fleetAddressValue: fleetAddress,
-    userAddressValue: userAddress,
-  } = TestConfigs.SelfManaged
+  const { chainId, fleetAddressValue, userAddressValue } = TestConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+    fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
   })
 
-  console.log(`Running on ${chainInfo.name} for user ${userAddress}`)
+  console.log(`Running on ${chainInfo.name} for user ${userAddressValue}`)
 
   const sdk = createTestSDK()
 

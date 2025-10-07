@@ -274,4 +274,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerUsersClient['getUnstakeFleetTokensTx']> {
     return this.rpcClient.armada.users.getUnstakeFleetTokensTx.query(params)
   }
+
+  /** @see IArmadaManagerUsersClient.getVaultsHistoricalRates */
+  async getVaultsHistoricalRates(
+    params: Parameters<IArmadaManagerUsersClient['getVaultsHistoricalRates']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getVaultsHistoricalRates']> {
+    return this.rpcClient.armada.users.getVaultsHistoricalRates.query(params)
+  }
 }
