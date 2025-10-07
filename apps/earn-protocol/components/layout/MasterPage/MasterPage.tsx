@@ -128,11 +128,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
       />
       {/* Condition to show banner after cookie banner */}
       {cookieSettings?.version === analyticsCookieVersion && (
-        <FloatingBanners
-          largeUsersData={largeUsersData}
-          largeUsersCookie={largeUsersCookie}
-          beachClubCookie={beachClubCookie}
-        />
+        <FloatingBanners largeUsersData={largeUsersData} largeUsersCookie={largeUsersCookie} />
       )}
     </div>
   )
