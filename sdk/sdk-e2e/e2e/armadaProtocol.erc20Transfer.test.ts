@@ -1,15 +1,20 @@
-import { type SDKManager } from '@summerfi/sdk-client'
-import { ChainIds, getChainInfoByChainId, TokenAmount, type ChainId } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainIds,
+  getChainInfoByChainId,
+  TokenAmount,
+  type ChainId,
+} from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, userAddress, userAddress, RpcUrls } from './utils/testConfig'
+import { signerPrivateKey, userAddress, RpcUrls } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 
 jest.setTimeout(300000)
 const simulateOnly = true
 
 describe('Armada Protocol - ERC20 Token Transfer', () => {
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
   const testConfigs = [
     {
@@ -28,6 +33,9 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
     },
   ]
 
+  // Arrange: Define recipient (using test wallet for e2e)
+  const recipient = Address.createFromEthereum({ value: userAddress })
+
   for (const config of testConfigs) {
     describe(config.description, () => {
       const { chainId, rpcUrl, tokenSymbol, transferAmount } = config
@@ -37,9 +45,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       it('should generate ERC20 transfer transaction', async () => {
         // Arrange: Get token information
         const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol: tokenSymbol })
-
-        // Arrange: Define recipient (using test wallet for e2e)
-        const recipient = userAddress
 
         // Arrange: Create transfer amount
         const amount = TokenAmount.createFrom({
@@ -93,7 +98,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       it('should execute ERC20 transfer transaction (simulate only)', async () => {
         // Arrange: Get token and create transfer amount
         const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol: tokenSymbol })
-        const recipient = userAddress
         const amount = TokenAmount.createFrom({
           amount: transferAmount,
           token,
@@ -126,7 +130,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       it('should handle small transfer amounts', async () => {
         // Arrange: Use minimal transfer amount (0.01 tokens)
         const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol: tokenSymbol })
-        const recipient = userAddress
         const smallAmount = TokenAmount.createFrom({
           amount: '0.01',
           token,
@@ -152,7 +155,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
       it('should handle large transfer amounts', async () => {
         // Arrange: Use larger transfer amount (1000 tokens)
         const token = await sdk.tokens.getTokenBySymbol({ chainId, symbol: tokenSymbol })
-        const recipient = userAddress
         const largeAmount = TokenAmount.createFrom({
           amount: '1000',
           token,
@@ -183,7 +185,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         chainId: ChainIds.Base,
         symbol: 'USDC',
       })
-      const recipient = userAddress
       const amount = TokenAmount.createFrom({
         amount: '1',
         token,
@@ -223,7 +224,6 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
 
       // Step 2: User specifies transfer details
       console.log('\n=== Step 2: User specifies transfer details ===')
-      const recipient = userAddress
       const amount = TokenAmount.createFrom({
         amount: '5',
         token,

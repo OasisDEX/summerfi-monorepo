@@ -1,7 +1,7 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
-import { Address, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, ChainIds } from '@summerfi/sdk-common'
 import { GeneralRoles, ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { SDKApiUrl, userAddress, userAddress } from './utils/testConfig'
+import { SDKApiUrl, userAddress as userAddressValue } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
@@ -14,6 +14,8 @@ describe('Armada Protocol - Access Control E2E Tests', () => {
     clientId: 'test-client',
     apiDomainUrl: SDKApiUrl,
   })
+
+  const userAddress = Address.createFromEthereum({ value: userAddressValue })
 
   const chainId = ChainIds.Base
   const permissionedFleetAddressUsdc = Address.createFromEthereum({

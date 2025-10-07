@@ -1,4 +1,4 @@
-import { type ISDKManager } from '@summerfi/sdk-client'
+import { type ISDKManager, type ISDKAdminManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -12,7 +12,6 @@ import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { signerPrivateKey, TestConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
-import type { ISDKAdminManager } from 'node_modules/@summerfi/sdk-client/src/interfaces/ISDKAdminManager'
 
 jest.setTimeout(300000)
 
