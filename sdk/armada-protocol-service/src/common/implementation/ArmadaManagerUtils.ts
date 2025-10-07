@@ -329,9 +329,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       throw new Error(`Error fetching vault historical rates: ${JSON.stringify(error)}`)
     }
 
-    const data: HistoricalFleetRateResult[] = await res.json()
+    const data: { rates: HistoricalFleetRateResult[] } = await res.json()
 
-    return data
+    return data.rates
   }
 
   /** @see IArmadaManagerUtils.convertToShares */

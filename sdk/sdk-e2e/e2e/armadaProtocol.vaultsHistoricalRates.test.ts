@@ -30,6 +30,8 @@ describe('Armada Protocol - Vaults Historical Rates', () => {
       ],
     })
 
+    console.log('Historical rates result:', JSON.stringify(result))
+
     // basic assertions on the shape
     assert(Array.isArray(result), 'Result should be an array')
     if (result.length > 0) {
@@ -41,6 +43,5 @@ describe('Armada Protocol - Vaults Historical Rates', () => {
       assert(typeof r.fleetAddress === 'string', 'fleetAddress should be present')
       assert(r.rates != null, 'rates should be present')
     }
-    console.log('Historical rates result:', JSON.stringify(result, null, 2))
   })
 })
