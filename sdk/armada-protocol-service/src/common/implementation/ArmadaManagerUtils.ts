@@ -325,8 +325,8 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
     // handle res errors
     if (!res.ok) {
-      const error = await res.json()
-      throw new Error(`Error fetching vault historical rates: ${JSON.stringify(error)}`)
+      const text = await res.text()
+      throw new Error(`Error fetching vault historical rates (${res.status}): ${text}`)
     }
 
     const data: { rates: HistoricalFleetRateResult[] } = await res.json()
