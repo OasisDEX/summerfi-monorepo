@@ -6,6 +6,7 @@ import {
   Icon,
   NonOwnerPortfolioBanner,
   TabBar,
+  Text,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
@@ -31,6 +32,7 @@ import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
+import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRewardsV2/PortfolioRewardsV2'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
@@ -96,6 +98,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   })
 
   const beachClubEnabled = !!features?.BeachClub
+  const stakingV2Enabled = !!features?.StakingV2
 
   const handleTabChange = (tab: { id: string }) => {
     handleButtonClick(`portfolio-tab-${tab.id}`)
@@ -157,11 +160,32 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
         />
       ),
     },
-    {
-      id: PortfolioTabs.REWARDS,
-      label: '$SUMR Rewards',
-      content: <PortfolioRewards rewardsData={rewardsData} state={state} dispatch={dispatch} />,
-    },
+    ...(stakingV2Enabled
+      ? [
+          {
+            id: PortfolioTabs.REWARDS,
+            label: (
+              <>
+                SUMR Rewards{' '}
+                <Text variant="p4semi" className={classNames.nowTradingLabel}>
+                  Now Trading
+                </Text>
+              </>
+            ),
+            content: (
+              <PortfolioRewardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
+            ),
+          },
+        ]
+      : [
+          {
+            id: PortfolioTabs.REWARDS,
+            label: '$SUMR Rewards',
+            content: (
+              <PortfolioRewards rewardsData={rewardsData} state={state} dispatch={dispatch} />
+            ),
+          },
+        ]),
     ...(beachClubEnabled
       ? [
           {

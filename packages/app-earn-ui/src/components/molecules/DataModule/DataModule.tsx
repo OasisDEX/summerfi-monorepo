@@ -29,7 +29,7 @@ export const DataModule: FC<DataModuleProps> = ({
       variant={cardVariant}
     >
       <DataBlock {...dataBlock} />
-      <div className={classNames.actionable}>{actionable}</div>
+      {actionable && <div className={classNames.actionable}>{actionable}</div>}
     </Card>
   )
 }

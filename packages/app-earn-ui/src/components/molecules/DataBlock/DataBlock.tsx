@@ -10,14 +10,15 @@ import dataBlockStyles from './DataBlock.module.css'
 export type DataBlockProps = {
   title: ReactNode
   titleTooltip?: string
-  size?: 'small' | 'large'
-  titleSize?: 'small' | 'medium' | 'large'
+  size?: 'xsmall' | 'small' | 'large'
+  titleSize?: 'xsmall' | 'small' | 'medium' | 'large'
   titleStyle?: CSSProperties
   titleWrapperStyles?: CSSProperties
-  subValueSize?: 'small' | 'medium' | 'large'
-  valueSize?: 'small' | 'medium' | 'large' | 'largeColorful'
+  subValueSize?: 'xsmall' | 'small' | 'medium' | 'large'
+  valueSize?: 'xsmall' | 'small' | 'medium' | 'large' | 'largeColorful'
   valueStyle?: CSSProperties
   value: ReactNode
+  valueType?: 'positive' | 'negative' | 'neutral'
   subValue?: ReactNode
   subValueType?: 'positive' | 'negative' | 'neutral'
   centered?: boolean
@@ -28,6 +29,7 @@ export type DataBlockProps = {
   wrapperClassName?: string
   onTooltipOpen?: (tooltipName: string) => void
   tooltipName?: string
+  titleWithIconClassName?: string
 }
 
 export const DataBlock = ({
@@ -39,6 +41,7 @@ export const DataBlock = ({
   size = 'small',
   value,
   valueSize,
+  valueType,
   valueStyle,
   centered,
   subValue,
@@ -51,14 +54,17 @@ export const DataBlock = ({
   wrapperClassName,
   onTooltipOpen,
   tooltipName,
+  titleWithIconClassName,
 }: DataBlockProps): React.ReactNode => {
   const titleVariant = {
+    xsmall: 'p4semi' as const,
     small: 'p3semi' as const,
     medium: 'p2semi' as const,
     large: 'p1semi' as const,
   }[titleSize ?? size]
 
   const valueVariant = {
+    xsmall: 'p3semi' as const,
     small: 'p1semi' as const,
     medium: 'h5' as const,
     large: 'h4' as const,
@@ -66,6 +72,7 @@ export const DataBlock = ({
   }[valueSize ?? size]
 
   const subValueVariant = {
+    xsmall: 'p4semi' as const, // not used but for consistency
     small: 'p4semi' as const,
     medium: 'p2semi' as const,
     large: 'h5' as const,
@@ -91,9 +98,20 @@ export const DataBlock = ({
           tooltipWrapperStyles={{ minWidth: '230px', left: '-120px' }}
           onTooltipOpen={onTooltipOpen}
           tooltipName={tooltipName}
+          className={titleWithIconClassName}
         />
       </div>
-      <Text variant={valueVariant} style={valueStyle}>
+      <Text
+        variant={valueVariant}
+        style={{
+          color: {
+            positive: 'var(--color-background-success-bold)',
+            negative: 'var(--color-background-critical-bold)',
+            neutral: 'var(--color-text-secondary)',
+          }[valueType ?? 'neutral'],
+          ...valueStyle,
+        }}
+      >
         {value}
       </Text>
       {subValue && (
