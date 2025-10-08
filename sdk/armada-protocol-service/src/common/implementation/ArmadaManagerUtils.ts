@@ -30,6 +30,7 @@ import {
   type AddressValue,
   type TransactionInfo,
   type HistoricalFleetRateResult,
+  createTimeoutSignal,
 } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
@@ -41,7 +42,6 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
 import type { IDeploymentProvider } from '../..'
-import { createTimeoutSignal } from '@summerfi/sdk-common/configs/fetch'
 
 /**
  * @name ArmadaManagerUtils
