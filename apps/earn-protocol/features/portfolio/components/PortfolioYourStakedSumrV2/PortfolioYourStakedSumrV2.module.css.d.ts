@@ -6,6 +6,11 @@ declare const styles: {
   readonly "expanderContent": string;
   readonly "expanderDescription": string;
   readonly "expanderTitle": string;
+  readonly "noSumrBanner": string;
+  readonly "noSumrCount": string;
+  readonly "noSumrGradientBox": string;
+  readonly "noSumrInner": string;
+  readonly "noSumrTextDisabled": string;
   readonly "portfolioYourStakedSumrCardsWrapper": string;
   readonly "stakeButton": string;
   readonly "textSuccess": string;

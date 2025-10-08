@@ -12,6 +12,25 @@ import Link from 'next/link'
 
 import portfolioYourStakedSumrStyles from './PortfolioYourStakedSumrV2.module.css'
 
+const NoSumrBanner = () => {
+  return (
+    <GradientBox selected className={portfolioYourStakedSumrStyles.noSumrGradientBox}>
+      <Card variant="cardPrimary" className={portfolioYourStakedSumrStyles.noSumrBanner}>
+        <Text variant="p1semi" className={portfolioYourStakedSumrStyles.noSumrTextDisabled}>
+          You don’t have earned SUMR yet
+          <div className={portfolioYourStakedSumrStyles.noSumrInner}>
+            <Icon iconName="sumr" size={44} />
+            <Text variant="h2" className={portfolioYourStakedSumrStyles.noSumrCount}>
+              45,232
+            </Text>
+          </div>
+        </Text>
+        <Button variant="primaryMedium">Claim & Stake your SUMR</Button>
+      </Card>
+    </GradientBox>
+  )
+}
+
 const WhyStakeSumr = () => {
   const whyStakeSumrCards = [
     {
@@ -95,6 +114,7 @@ export const PortfolioYourStakedSumrV2 = () => {
     <div className={portfolioYourStakedSumrStyles.wrapper}>
       <Text variant="h4">Your staked SUMR</Text>
       <WhyStakeSumr />
+      <NoSumrBanner />
       <div className={portfolioYourStakedSumrStyles.portfolioYourStakedSumrCardsWrapper}>
         <div className={portfolioYourStakedSumrStyles.cardWrapper}>
           <DataModule

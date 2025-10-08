@@ -95,3 +95,33 @@
 .textSuccess {
   color: var(--color-text-success);
 }
+
+.noSumrBanner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 32px 0;
+  gap: 24px;
+}
+
+.noSumrGradientBox {
+  cursor: unset !important;
+}
+
+.noSumrTextDisabled {
+  color: var(--color-text-primary-disabled);
+}
+
+.noSumrInner {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.noSumrCount {
+  color: white;
+}
