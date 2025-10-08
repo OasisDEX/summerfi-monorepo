@@ -7,9 +7,10 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Checking', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAccessControlTestSetup()
+  const { sdk, chainId, governorAddress, governorSendTxTool } = createAccessControlTestSetup()
 
-  const role = GeneralRoles.SUPER_KEEPER_ROLE
+  const targetAddress = governorAddress
+  const role = GeneralRoles.GOVERNOR_ROLE
 
   test('should check if address has a role', async () => {
     const shouldGrant = false
@@ -20,7 +21,7 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
       const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
         chainId,
         role,
-        targetAddress: userAddress,
+        targetAddress,
       })
       expect(grantTxInfo).toBeDefined()
       const grantStatus = await governorSendTxTool(grantTxInfo)
@@ -32,7 +33,7 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
       const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
         chainId,
         role,
-        targetAddress: userAddress,
+        targetAddress,
       })
       expect(revokeTxInfo).toBeDefined()
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
@@ -42,10 +43,10 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
     const hasGeneralRole = await sdk.armada.accessControl.hasGeneralRole({
       chainId,
       role,
-      targetAddress: userAddress,
+      targetAddress,
     })
     console.log(
-      `Address ${userAddress.value} ${hasGeneralRole ? 'has' : 'does not have'} ${role} role: `,
+      `Address ${targetAddress.value} ${hasGeneralRole ? 'has' : 'does not have'} ${role} role`,
     )
   })
 })

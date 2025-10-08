@@ -11,7 +11,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, TestConfigs } from './utils/testConfig'
+import { signerPrivateKey, ChainConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
@@ -21,7 +21,8 @@ const simulateOnly = false
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const { rpcUrl, chainId, fleetAddressValue, userAddressValue, symbol } = TestConfigs.SelfManaged
+    const { rpcUrl, chainId, fleetAddressValue, userAddressValue, symbol } =
+      ChainConfigs.SelfManaged
 
     const amountValue = '1'
     const swapToSymbol = undefined

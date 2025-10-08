@@ -1,7 +1,7 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, signerPrivateKey, TestConfigs } from './testConfig'
-import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
+import { SDKApiUrl, ChainConfigs, SharedConfig } from './testConfig'
+import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
  * Shared setup for Armada Protocol Access Control tests
@@ -12,24 +12,37 @@ export function createAccessControlTestSetup() {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const { chainId, rpcUrl, userAddressValue, fleetAddressValue } = TestConfigs.SelfManaged
+  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.SelfManaged
 
-  const userAddress = Address.createFromEthereum({ value: userAddressValue })
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,
   })
+  const userAddress = Address.createFromEthereum({
+    value: SharedConfig.userAddressValue,
+  })
+  const governorAddress = Address.createFromEthereum({
+    value: SharedConfig.governorAddressValue,
+  })
 
-  const governorSendTxTool: SendTransactionTool = createSendTransactionTool({
+  const userSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    signerPrivateKey: signerPrivateKey,
+    signerPrivateKey: SharedConfig.userPrivateKey,
+  })
+
+  const governorSendTxTool = createSendTransactionTool({
+    chainId: chainId,
+    rpcUrl,
+    signerPrivateKey: SharedConfig.governorPrivateKey,
   })
 
   return {
     sdk,
     chainId,
-    userAddress,
     fleetAddress,
+    userAddress,
+    governorAddress,
+    userSendTxTool,
     governorSendTxTool,
   }
 }

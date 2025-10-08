@@ -1,6 +1,6 @@
 import { Address, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 
-import { TestConfigs } from './utils/testConfig'
+import { ChainConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaPosition } from './utils/stringifiers'
@@ -8,7 +8,7 @@ import { stringifyArmadaPosition } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Positions', () => {
-  const { chainId, fleetAddressValue, userAddressValue } = TestConfigs.SelfManaged
+  const { chainId, fleetAddressValue, userAddressValue } = ChainConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
   const user = User.createFromEthereum(chainId, userAddressValue)

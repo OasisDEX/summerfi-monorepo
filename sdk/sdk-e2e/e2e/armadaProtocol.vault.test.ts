@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { TestConfigs } from './utils/testConfig'
+import { ChainConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
@@ -9,7 +9,7 @@ import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vault', () => {
-  const { chainId, fleetAddressValue, userAddressValue } = TestConfigs.SelfManaged
+  const { chainId, fleetAddressValue, userAddressValue } = ChainConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
   const vaultId = ArmadaVaultId.createFrom({

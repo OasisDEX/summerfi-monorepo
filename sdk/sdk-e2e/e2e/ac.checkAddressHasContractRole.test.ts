@@ -49,7 +49,7 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
       targetAddress: userAddress,
     })
     console.log(
-      `Address ${userAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ContractSpecificRoleName ${role} for contract ${fleetAddress.value}`,
+      `Address ${userAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${fleetAddress.value}`,
     )
   })
 })
