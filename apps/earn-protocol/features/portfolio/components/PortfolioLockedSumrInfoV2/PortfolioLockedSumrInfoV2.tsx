@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   DataModule,
+  Expander,
   Icon,
   TabBar,
   Table,
@@ -9,6 +10,14 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
+import {
+  Cell,
+  type DefaultLegendContentProps,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+} from 'recharts'
 
 import { yourLockedSumrPositionsTableColumns } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/constants'
 import { type LockedSumrPositionsTableColumns } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
@@ -23,7 +32,7 @@ const TableRightCell = ({ children }: { children: React.ReactNode }) => {
   return <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
 }
 
-const LockedSumrPositionsCards = () => {
+const YourLockedSumrPositionsCards = () => {
   return (
     <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
@@ -77,7 +86,7 @@ const LockedSumrPositionsCards = () => {
   )
 }
 
-const LockedSumrPositionsTable = () => {
+const YourLockedSumrPositionsTable = () => {
   return (
     <Table<LockedSumrPositionsTableColumns>
       columns={yourLockedSumrPositionsTableColumns}
@@ -189,11 +198,161 @@ const LockedSumrPositionsTable = () => {
   )
 }
 
-const LockedSumrPositions = () => {
+const YourLockedSumrPositions = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsWrapper}>
-      <LockedSumrPositionsCards />
-      <LockedSumrPositionsTable />
+    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
+      <YourLockedSumrPositionsCards />
+      <YourLockedSumrPositionsTable />
+    </div>
+  )
+}
+
+const AllLockedSumrPositionsCards = () => {
+  return (
+    <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsCardsWrapper}>
+      <DataModule
+        dataBlock={{
+          title: 'Avg. SUMR Lock Period',
+          value: '2 years',
+          valueSize: 'large',
+          titleSize: 'medium',
+        }}
+        cardVariant="cardPrimary"
+      />
+      <DataModule
+        dataBlock={{
+          title: 'Total SUMR Staked',
+          value: '63.3m SUMR ',
+          valueSize: 'large',
+          titleSize: 'medium',
+        }}
+        cardVariant="cardPrimary"
+      />
+      <DataModule
+        dataBlock={{
+          title: '% of circulating SUMR supply Staked',
+          value: '76.3%',
+          valueSize: 'large',
+          titleSize: 'medium',
+        }}
+        cardVariant="cardPrimary"
+      />
+    </div>
+  )
+}
+
+const AllLockedSumrPositionsPieChart = () => {
+  const data = [
+    { name: 'Less than 2 weeks', value: 42 },
+    { name: '2 weeks - 6 months', value: 21 },
+    { name: '6 months - 1 year', value: 10 },
+    { name: '1 year - 2 years', value: 3 },
+    { name: 'More than 2 years', value: 3 },
+  ]
+  const COLORS = ['#ff80bf', '#fa52a6', '#ff4da6', '#ff1a8c', '#cc0066']
+
+  const renderLegend = (props: DefaultLegendContentProps) => {
+    const items = props.payload ?? []
+
+    return (
+      <div style={{ marginRight: '24px' }}>
+        {items.map((entry, index) => {
+          const itemName = String(entry.value ?? '')
+          // prefer payload.value when provided; fall back to entry.value
+          const rawValue = entry.payload?.value ?? entry.value
+          const valueText = `${rawValue}%`
+
+          return (
+            <div
+              key={`item-${index}`}
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                  marginBottom: 12,
+                }}
+              >
+                <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
+                  {itemName}
+                </Text>
+                <Text variant="p2semi">{valueText}</Text>
+              </div>
+              <div
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: entry.color,
+                  userSelect: 'none',
+                }}
+              />
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  return (
+    <Card style={{ padding: '32px 16px', minHeight: '440px', width: '60%' }}>
+      <ResponsiveContainer width="100%" height={440}>
+        <PieChart>
+          <Pie
+            data={data}
+            innerRadius={90}
+            outerRadius={220}
+            fill="#ff0000"
+            stroke="none"
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${entry.name}`}
+                fill={COLORS[index % COLORS.length]}
+                style={{
+                  userSelect: 'none',
+                  outline: 'none',
+                }}
+              />
+            ))}
+          </Pie>
+
+          <Legend verticalAlign="top" align="right" layout="vertical" content={renderLegend} />
+        </PieChart>
+      </ResponsiveContainer>
+    </Card>
+  )
+}
+
+const AllLockedSumrPositionsData = () => {
+  return (
+    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
+      <Expander title="Overview" defaultExpanded>
+        <AllLockedSumrPositionsPieChart />
+      </Expander>
+      <Expander title="All staked positions">
+        <Text variant="p2" style={{ marginBottom: '16px' }}>
+          There are a total of 12,345 SUMR staking positions with a total of 63.3m SUMR staked. The
+          average lock period is 2 years and the average boost multiple is 3.2x.
+        </Text>
+      </Expander>
+    </div>
+  )
+}
+
+const AllLockedSumrPositions = () => {
+  return (
+    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
+      <AllLockedSumrPositionsCards />
+      <AllLockedSumrPositionsData />
     </div>
   )
 }
@@ -207,12 +366,12 @@ export const PortfolioLockedSumrInfoV2 = () => {
             {
               id: 'your-locked-sumr-positions',
               label: 'Your Locked SUMR Positions',
-              content: <LockedSumrPositions />,
+              content: <YourLockedSumrPositions />,
             },
             {
               id: 'all-locked-sumr-positions',
               label: 'All Locked SUMR Positions',
-              content: <>All Locked SUMR Positions content</>,
+              content: <AllLockedSumrPositions />,
             },
           ]}
         />

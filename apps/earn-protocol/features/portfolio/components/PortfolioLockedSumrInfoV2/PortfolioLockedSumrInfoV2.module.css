@@ -3,11 +3,6 @@
   flex-direction: column;
 }
 
-.lockedSumrPositionsWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
 .lockedSumrPositionsCardsWrapper {
   display: flex;
   gap: 16px;
