@@ -1,16 +1,18 @@
-import { type SDKManager } from '@summerfi/sdk-client'
 import { User, Wallet } from '@summerfi/sdk-common'
 import { zeroAddress } from 'viem'
 import assert from 'assert'
 
-import { signerPrivateKey, testConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
+const simulateOnly = true
+const privateKey = SharedConfig.userPrivateKey
+
 describe.skip('Armada Protocol Gov', () => {
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
   for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
     if (!rpcUrl) {
@@ -77,7 +79,8 @@ describe.skip('Armada Protocol Gov', () => {
             chainInfo,
             transactions: delegateTx,
             rpcUrl: rpcUrl,
-            privateKey: signerPrivateKey,
+            privateKey,
+            simulateOnly,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')
@@ -121,7 +124,8 @@ describe.skip('Armada Protocol Gov', () => {
             chainInfo,
             transactions: stakeTx,
             rpcUrl: rpcUrl,
-            privateKey: signerPrivateKey,
+            privateKey,
+            simulateOnly,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')
@@ -160,7 +164,8 @@ describe.skip('Armada Protocol Gov', () => {
             chainInfo,
             transactions: unstakeTx,
             rpcUrl: rpcUrl,
-            privateKey: signerPrivateKey,
+            privateKey,
+            simulateOnly,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')
@@ -198,7 +203,8 @@ describe.skip('Armada Protocol Gov', () => {
             chainInfo,
             transactions: undelegateTx,
             rpcUrl: rpcUrl,
-            privateKey: signerPrivateKey,
+            privateKey,
+            simulateOnly,
           })
           statuses.forEach((status) => {
             expect(status).toBe('success')

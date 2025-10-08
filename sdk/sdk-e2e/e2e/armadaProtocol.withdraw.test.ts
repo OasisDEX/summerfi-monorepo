@@ -10,7 +10,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, ChainConfigs } from './utils/testConfig'
+import { ChainConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
@@ -18,16 +18,12 @@ import assert from 'assert'
 jest.setTimeout(300000)
 
 const simulateOnly = true
+const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol Withdraw', () => {
   it('should withdraw from fleet', async () => {
-    const {
-      rpcUrl,
-      chainId,
-      fleetAddressValue,
-      userAddressValue: userAddress,
-      symbol,
-    } = ChainConfigs.SelfManaged
+    const { rpcUrl, chainId, fleetAddressValue, symbol } = ChainConfigs.SelfManaged
+    const userAddress = SharedConfig.userAddressValue
 
     const amountValue = '0.5'
     const swapToSymbol = undefined
@@ -120,7 +116,7 @@ describe('Armada Protocol Withdraw', () => {
       chainInfo,
       transactions: transactions,
       rpcUrl,
-      privateKey: signerPrivateKey,
+      privateKey,
       simulateOnly,
     })
     statuses.forEach((status) => {

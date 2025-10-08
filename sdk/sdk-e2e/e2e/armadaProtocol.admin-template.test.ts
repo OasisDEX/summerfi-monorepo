@@ -1,7 +1,6 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address, ArmadaVaultId, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { SDKApiUrl } from './utils/testConfig'
-import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 
 describe('Armada Protocol - Admin E2E Tests', () => {
   const sdk = makeAdminSDK({
@@ -15,8 +14,6 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     value: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198', // Using a known fleet address
   })
 
-  let governorSendTxTool: SendTransactionTool
-
   beforeAll(async () => {
     const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
     const signerPrivateKey = process.env.E2E_USER_PRIVATE_KEY
@@ -26,12 +23,6 @@ describe('Armada Protocol - Admin E2E Tests', () => {
         'Environment variables E2E_USER_PRIVATE_KEY and E2E_SDK_FORK_URL_BASE must be set',
       )
     }
-
-    governorSendTxTool = createSendTransactionTool({
-      chainId: chainId,
-      rpcUrl,
-      signerPrivateKey,
-    })
   })
 
   it('should fetch the list of available arks', async () => {
