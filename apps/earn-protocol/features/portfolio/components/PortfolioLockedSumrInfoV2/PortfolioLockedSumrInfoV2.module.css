@@ -2,3 +2,14 @@
   display: flex;
   flex-direction: column;
 }
+
+.lockedSumrPositionsWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.lockedSumrPositionsCardsWrapper {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0 32px 0;
+}
