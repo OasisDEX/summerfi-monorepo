@@ -33,6 +33,17 @@
   margin-top: var(--general-space-24);
 }
 
+@media (max-width: 744px) {
+  .portfolioRewardsCardsWrapper .sumrPriceDataBlocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .portfolioRewardsCardsWrapper .sumrPriceDataBlocksDivider {
+    display: none;
+  }
+}
+
 .portfolioRewardsCardsWrapper .sumrPriceDataBlock {
   min-width: 120px;
 }

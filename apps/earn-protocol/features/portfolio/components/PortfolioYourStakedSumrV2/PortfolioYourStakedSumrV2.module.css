@@ -20,3 +20,78 @@
     min-width: 420px;
   }
 }
+
+.whyCard {
+  padding: 8px 14px;
+}
+
+.expanderTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expanderContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 8px;
+}
+
+.expanderDescription {
+  color: var(--color-text-secondary);
+}
+
+.whyCardsRow {
+  display: flex;
+  gap: 24px;
+}
+
+@media (max-width: 744px) {
+  .whyCardsRow {
+    flex-direction: column;
+  }
+}
+
+.whyGradientBox {
+  pointer-events: none;
+}
+
+.whyCardInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.whyCardButton {
+  min-width: auto;
+  padding: 20px;
+}
+
+.centerText {
+  text-align: center;
+}
+
+.stakeButton {
+  min-width: unset;
+  width: fit-content;
+  margin: 0 auto 12px;
+}
+
+.actionableCritical {
+  color: var(--color-text-critical);
+  cursor: pointer;
+}
+
+.actionablePrimary {
+  color: var(--earn-protocol-primary-100);
+  cursor: pointer;
+}
+
+.textSuccess {
+  color: var(--color-text-success);
+}

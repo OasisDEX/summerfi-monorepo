@@ -1,37 +1,100 @@
-import { Card, DataModule, Expander, Icon, Text } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  DataModule,
+  Expander,
+  GradientBox,
+  Icon,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import Link from 'next/link'
 
 import portfolioYourStakedSumrStyles from './PortfolioYourStakedSumrV2.module.css'
+
+const WhyStakeSumr = () => {
+  const whyStakeSumrCards = [
+    {
+      id: 1,
+      title: <>Earn SUMR and real USD Yield for staking.</>,
+    },
+    {
+      id: 2,
+      title: <>Boost your rewards with time bound lockups. </>,
+    },
+    {
+      id: 3,
+      title: (
+        <>
+          Earn a share of real
+          <br />
+          protocol revenue.
+        </>
+      ),
+    },
+  ]
+
+  return (
+    <Card variant="cardGradientDark" className={portfolioYourStakedSumrStyles.whyCard}>
+      <Expander
+        title={
+          <Text variant="p3semi" className={portfolioYourStakedSumrStyles.expanderTitle}>
+            <Icon iconName="sumr" size={26} />
+            Why Stake your SUMR
+          </Text>
+        }
+      >
+        <div className={portfolioYourStakedSumrStyles.expanderContent}>
+          <Text
+            as="div"
+            variant="p2semi"
+            className={portfolioYourStakedSumrStyles.expanderDescription}
+          >
+            Stake SUMR to earn boosted rewards, share in protocol revenues, and gain real governance
+            power—all while turning your tokens into a yield-bearing asset.
+          </Text>
+          <Link href="#">
+            <WithArrow>Read the details</WithArrow>
+          </Link>
+          <div className={portfolioYourStakedSumrStyles.whyCardsRow}>
+            {whyStakeSumrCards.map((card) => (
+              <GradientBox
+                selected
+                className={portfolioYourStakedSumrStyles.whyGradientBox}
+                key={card.id}
+              >
+                <Card
+                  variant="cardGradientLight"
+                  className={portfolioYourStakedSumrStyles.whyCardInner}
+                >
+                  <Button
+                    variant="primaryLarge"
+                    className={portfolioYourStakedSumrStyles.whyCardButton}
+                  >
+                    {card.id}
+                  </Button>
+                  <Text variant="p1semi" className={portfolioYourStakedSumrStyles.centerText}>
+                    {card.title}
+                  </Text>
+                </Card>
+              </GradientBox>
+            ))}
+          </div>
+          <Button variant="primaryLarge" className={portfolioYourStakedSumrStyles.stakeButton}>
+            Stake SUMR
+            <Icon iconName="stars" />
+          </Button>
+        </div>
+      </Expander>
+    </Card>
+  )
+}
 
 export const PortfolioYourStakedSumrV2 = () => {
   return (
     <div className={portfolioYourStakedSumrStyles.wrapper}>
       <Text variant="h4">Your staked SUMR</Text>
-      <Card
-        variant="cardGradientDark"
-        style={{
-          padding: '8px 14px',
-        }}
-      >
-        <Expander
-          title={
-            <Text
-              variant="p3semi"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-              }}
-            >
-              <Icon iconName="sumr" size={26} />
-              Why Stake your SUMR
-            </Text>
-          }
-        >
-          <div style={{ padding: '0 24px' }}>
-            <Text variant="p4">Yeah, why?</Text>
-          </div>
-        </Expander>
-      </Card>
+      <WhyStakeSumr />
       <div className={portfolioYourStakedSumrStyles.portfolioYourStakedSumrCardsWrapper}>
         <div className={portfolioYourStakedSumrStyles.cardWrapper}>
           <DataModule
@@ -43,10 +106,7 @@ export const PortfolioYourStakedSumrV2 = () => {
               valueSize: 'large',
             }}
             actionable={
-              <Text
-                variant="p3semi"
-                style={{ color: 'var(--color-text-critical)', cursor: 'pointer' }}
-              >
+              <Text variant="p3semi" className={portfolioYourStakedSumrStyles.actionableCritical}>
                 Remove stake
               </Text>
             }
@@ -59,7 +119,7 @@ export const PortfolioYourStakedSumrV2 = () => {
               value: '45.32%',
               subValue: (
                 <Text variant="p3semi">
-                  <span style={{ color: 'var(--color-text-success)' }}>
+                  <span className={portfolioYourStakedSumrStyles.textSuccess}>
                     Earned: 20.3k SUMR ($33,122.63)
                   </span>
                   &nbsp;|&nbsp;
@@ -79,7 +139,9 @@ export const PortfolioYourStakedSumrV2 = () => {
               value: '5.32% ',
               subValue: (
                 <Text variant="p3semi">
-                  <span style={{ color: 'var(--color-text-success)' }}>Earned: $33,322.13</span>
+                  <span className={portfolioYourStakedSumrStyles.textSuccess}>
+                    Earned: $33,322.13
+                  </span>
                   &nbsp;|&nbsp;
                   <span>$251,323 /Year </span>
                 </Text>
@@ -100,10 +162,7 @@ export const PortfolioYourStakedSumrV2 = () => {
               valueSize: 'large',
             }}
             actionable={
-              <Text
-                variant="p3semi"
-                style={{ color: 'var(--earn-protocol-primary-100)', cursor: 'pointer' }}
-              >
+              <Text variant="p3semi" className={portfolioYourStakedSumrStyles.actionablePrimary}>
                 Simulate USD yield payoff
               </Text>
             }

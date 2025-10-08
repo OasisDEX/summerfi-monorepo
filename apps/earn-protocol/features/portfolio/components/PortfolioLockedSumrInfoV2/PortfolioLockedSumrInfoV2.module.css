@@ -8,3 +8,17 @@
   gap: 16px;
   margin: 8px 0 32px 0;
 }
+
+@media (max-width: 744px) {
+  .lockedSumrPositionsCardsWrapper {
+    flex-direction: column;
+  }
+
+  .tableResponsiveWrapper {
+    overflow-x: auto;
+  }
+
+  .tableResponsiveWrapper table {
+    min-width: 900px;
+  }
+}

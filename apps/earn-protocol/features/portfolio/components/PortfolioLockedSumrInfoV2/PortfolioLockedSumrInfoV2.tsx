@@ -94,119 +94,121 @@ const YourLockedSumrPositionsCards = () => {
 
 const YourLockedSumrPositionsTable = () => {
   return (
-    <Table<LockedSumrPositionsTableColumns>
-      columns={yourLockedSumrPositionsTableColumns}
-      rows={[
-        {
-          id: 'position-1',
-          content: {
-            position: '#1 - 2025-09-09 ',
-            staked: <TableRightCell>58,558.03</TableRightCell>,
-            lockPeriod: <TableCenterCell>0</TableCenterCell>,
-            rewards: <TableCenterCell>0</TableCenterCell>,
-            usdEarnings: <TableCenterCell>0</TableCenterCell>,
-            removeStakePenalty: (
-              <TableRightCell>
-                <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                  n/a
-                </Text>
-              </TableRightCell>
-            ),
-            action: (
-              <TableCenterCell>
-                <Button
-                  variant="primarySmall"
-                  style={{
-                    height: '28px',
-                    fontSize: '11px',
-                  }}
-                >
-                  Stake SUMR
-                </Button>
-              </TableCenterCell>
-            ),
+    <div className={portfolioLockedSumrInfoV2Styles.tableResponsiveWrapper}>
+      <Table<LockedSumrPositionsTableColumns>
+        columns={yourLockedSumrPositionsTableColumns}
+        rows={[
+          {
+            id: 'position-1',
+            content: {
+              position: '#1 - 2025-09-09 ',
+              staked: <TableRightCell>58,558.03</TableRightCell>,
+              lockPeriod: <TableCenterCell>0</TableCenterCell>,
+              rewards: <TableCenterCell>0</TableCenterCell>,
+              usdEarnings: <TableCenterCell>0</TableCenterCell>,
+              removeStakePenalty: (
+                <TableRightCell>
+                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+                    n/a
+                  </Text>
+                </TableRightCell>
+              ),
+              action: (
+                <TableCenterCell>
+                  <Button
+                    variant="primarySmall"
+                    style={{
+                      height: '28px',
+                      fontSize: '11px',
+                    }}
+                  >
+                    Stake SUMR
+                  </Button>
+                </TableCenterCell>
+              ),
+            },
           },
-        },
-        {
-          id: 'position-2',
-          content: {
-            position: '#2 - 2025-09-09 ',
-            staked: <TableRightCell>117,116.06</TableRightCell>,
-            lockPeriod: <TableCenterCell>2 years</TableCenterCell>,
-            rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
-            usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
-            removeStakePenalty: (
-              <TableRightCell>
-                <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                  -32,323 (83.3%) SUMR
-                </Text>
-              </TableRightCell>
-            ),
-            action: (
-              <TableCenterCell>
-                <Link href="#">
-                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                    Remove stake
-                  </WithArrow>
-                </Link>
-              </TableCenterCell>
-            ),
+          {
+            id: 'position-2',
+            content: {
+              position: '#2 - 2025-09-09 ',
+              staked: <TableRightCell>117,116.06</TableRightCell>,
+              lockPeriod: <TableCenterCell>2 years</TableCenterCell>,
+              rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
+              usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
+              removeStakePenalty: (
+                <TableRightCell>
+                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+                    -32,323 (83.3%) SUMR
+                  </Text>
+                </TableRightCell>
+              ),
+              action: (
+                <TableCenterCell>
+                  <Link href="#">
+                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                      Remove stake
+                    </WithArrow>
+                  </Link>
+                </TableCenterCell>
+              ),
+            },
           },
-        },
-        {
-          id: 'position-3',
-          content: {
-            position: '#3 - 2025-09-09 ',
-            staked: <TableRightCell>58,558.03</TableRightCell>,
-            lockPeriod: <TableCenterCell>4 years</TableCenterCell>,
-            rewards: <TableCenterCell>75,343 SUMR (4x)</TableCenterCell>,
-            usdEarnings: <TableCenterCell>$3,343 (4x)</TableCenterCell>,
-            removeStakePenalty: (
-              <TableRightCell>
-                <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                  -45,212 (93.6%) SUMR
-                </Text>
-              </TableRightCell>
-            ),
-            action: (
-              <TableCenterCell>
-                <Link href="#">
-                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                    Remove stake
-                  </WithArrow>
-                </Link>
-              </TableCenterCell>
-            ),
+          {
+            id: 'position-3',
+            content: {
+              position: '#3 - 2025-09-09 ',
+              staked: <TableRightCell>58,558.03</TableRightCell>,
+              lockPeriod: <TableCenterCell>4 years</TableCenterCell>,
+              rewards: <TableCenterCell>75,343 SUMR (4x)</TableCenterCell>,
+              usdEarnings: <TableCenterCell>$3,343 (4x)</TableCenterCell>,
+              removeStakePenalty: (
+                <TableRightCell>
+                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+                    -45,212 (93.6%) SUMR
+                  </Text>
+                </TableRightCell>
+              ),
+              action: (
+                <TableCenterCell>
+                  <Link href="#">
+                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                      Remove stake
+                    </WithArrow>
+                  </Link>
+                </TableCenterCell>
+              ),
+            },
           },
-        },
-        {
-          id: 'position-4',
-          content: {
-            position: '#4 - 2027-09-22 ',
-            staked: <TableRightCell>320,007.88</TableRightCell>,
-            lockPeriod: <TableCenterCell>1 years</TableCenterCell>,
-            rewards: <TableCenterCell>25,343 SUMR (1.5x)</TableCenterCell>,
-            usdEarnings: <TableCenterCell>$6,343 (1.5x)</TableCenterCell>,
-            removeStakePenalty: (
-              <TableRightCell>
-                <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                  -145,223 (54.6%) SUMR
-                </Text>
-              </TableRightCell>
-            ),
-            action: (
-              <TableCenterCell>
-                <Link href="#">
-                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                    Remove stake
-                  </WithArrow>
-                </Link>
-              </TableCenterCell>
-            ),
+          {
+            id: 'position-4',
+            content: {
+              position: '#4 - 2027-09-22 ',
+              staked: <TableRightCell>320,007.88</TableRightCell>,
+              lockPeriod: <TableCenterCell>1 years</TableCenterCell>,
+              rewards: <TableCenterCell>25,343 SUMR (1.5x)</TableCenterCell>,
+              usdEarnings: <TableCenterCell>$6,343 (1.5x)</TableCenterCell>,
+              removeStakePenalty: (
+                <TableRightCell>
+                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+                    -145,223 (54.6%) SUMR
+                  </Text>
+                </TableRightCell>
+              ),
+              action: (
+                <TableCenterCell>
+                  <Link href="#">
+                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                      Remove stake
+                    </WithArrow>
+                  </Link>
+                </TableCenterCell>
+              ),
+            },
           },
-        },
-      ]}
-    />
+        ]}
+      />
+    </div>
   )
 }
 
