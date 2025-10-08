@@ -7,13 +7,14 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Checking', () => {
-  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } =
+  const { sdk, chainId, userAddress, fleetAddress, aqAddress, governorSendTxTool } =
     createAccessControlTestSetup()
-
+  const contractAddress = fleetAddress
+  const targetAddress = aqAddress
   const role = ContractSpecificRoleName.WHITELISTED_ROLE // 3
 
   test('should check contract-specific role', async () => {
-    const shouldGrant = false
+    const shouldGrant = true
     const shouldRevoke = false
 
     if (shouldGrant) {
@@ -21,8 +22,8 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
       const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
         chainId,
         role,
-        contractAddress: fleetAddress,
-        targetAddress: userAddress,
+        contractAddress,
+        targetAddress,
       })
       expect(grantTxInfo).toBeDefined()
       const grantStatus = await governorSendTxTool(grantTxInfo)
@@ -34,8 +35,8 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
       const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
         chainId,
         role,
-        contractAddress: fleetAddress,
-        targetAddress: userAddress,
+        contractAddress,
+        targetAddress,
       })
       expect(revokeTxInfo).toBeDefined()
       const revokeStatus = await governorSendTxTool(revokeTxInfo)
@@ -45,11 +46,11 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
     const hasContractSpecificRole = await sdk.armada.accessControl.hasContractSpecificRole({
       chainId,
       role,
-      contractAddress: fleetAddress,
-      targetAddress: userAddress,
+      contractAddress,
+      targetAddress,
     })
     console.log(
-      `Address ${userAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${fleetAddress.value}`,
+      `Address ${targetAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${contractAddress.value}`,
     )
   })
 })

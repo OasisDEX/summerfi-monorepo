@@ -1,13 +1,12 @@
-import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
-import { signerPrivateKey } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'node:assert'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 import { BigNumber } from 'bignumber.js'
+import { SharedConfig } from './utils/testConfig'
 
-const onlySimulation = true // Set to false to actually send transactions
+const signerPrivateKey = SharedConfig.userPrivateKey
 
 const addresses = [
   '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A',
@@ -240,8 +239,7 @@ describe('Armada Protocol Rewards', () => {
           sendTxTool = createSendTransactionTool({
             chainId: testChainId,
             rpcUrl,
-            signerPrivateKey: signerPrivateKey,
-            onlySimulation,
+            signerPrivateKey,
           })
 
           const status = await sendTxTool(claimTx)
@@ -362,7 +360,7 @@ describe('Armada Protocol Rewards', () => {
           sendTxTool = createSendTransactionTool({
             chainId: testChainId,
             rpcUrl,
-            signerPrivateKey: signerPrivateKey,
+            signerPrivateKey,
           })
 
           console.log(`Step 0: Checking user rewards on chain ${testChainId}...`)

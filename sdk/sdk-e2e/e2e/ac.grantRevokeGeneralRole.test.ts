@@ -7,8 +7,10 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAccessControlTestSetup()
+  const { sdk, chainId, userAddress, aqAddress, governorSendTxTool } =
+    createAccessControlTestSetup()
 
+  const targetAddress = aqAddress
   const role = GeneralRoles.ADMIRALS_QUARTERS_ROLE
 
   test('should grant and revoke general role', async () => {
@@ -29,7 +31,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
         chainId,
         role,
-        targetAddress: userAddress,
+        targetAddress,
       })
       const grantStatus = await governorSendTxTool(grantTxInfo)
       expect(grantStatus).toBe('success')
@@ -40,6 +42,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
         role: role,
       })
       expect(addressesAfterGrant).toContain(userAddress.value.toLowerCase())
+      console.log('Role successfully granted and verified.')
     } else {
       console.log('Address already has role, skipping grant step.')
     }
@@ -47,8 +50,8 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     // Revoke role
     const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
       chainId,
-      role: role,
-      targetAddress: userAddress,
+      role,
+      targetAddress,
     })
     const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
@@ -59,5 +62,6 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       role: role,
     })
     expect(addressesAfterRevoke).not.toContain(userAddress.value.toLowerCase())
+    console.log('Role successfully revoked and verified.')
   })
 })

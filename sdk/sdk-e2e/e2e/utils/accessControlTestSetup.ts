@@ -17,6 +17,10 @@ export function createAccessControlTestSetup() {
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,
   })
+  const aqAddress = Address.createFromEthereum({
+    value: '0x92176c8Ce4F6c9925ba2dbFAe0E2a395f03512c0',
+  })
+
   const userAddress = Address.createFromEthereum({
     value: SharedConfig.userAddressValue,
   })
@@ -28,18 +32,21 @@ export function createAccessControlTestSetup() {
     chainId: chainId,
     rpcUrl,
     signerPrivateKey: SharedConfig.userPrivateKey,
+    simulateOnly: false,
   })
 
   const governorSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
     signerPrivateKey: SharedConfig.governorPrivateKey,
+    simulateOnly: false,
   })
 
   return {
     sdk,
     chainId,
     fleetAddress,
+    aqAddress,
     userAddress,
     governorAddress,
     userSendTxTool,
