@@ -1,4 +1,7 @@
-import { type LockedSumrPositionsTableColumns } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
+import {
+  type AllLockedSumrPositionsTableColumns,
+  type LockedSumrPositionsTableColumns,
+} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
 
 export const yourLockedSumrPositionsTableColumns: {
   title: string
@@ -31,5 +34,28 @@ export const yourLockedSumrPositionsTableColumns: {
   {
     title: 'Actions',
     key: 'action',
+  },
+]
+
+export const allLockedSumrPositionsTableColumns: {
+  title: string
+  key: AllLockedSumrPositionsTableColumns
+}[] = [
+  {
+    title: 'SUMR Staked',
+    key: 'staked',
+  },
+  { title: 'Share of SUMR Staked / Supply', key: 'shareOfSumrStaked' },
+  {
+    title: 'SUMR Stake Time',
+    key: 'stakeTime',
+  },
+  {
+    title: 'Owner address',
+    key: 'ownerAddress',
+  },
+  {
+    title: 'USD Value earning in Lazy Summer',
+    key: 'usdValueEarningInLazySummer',
   },
 ]

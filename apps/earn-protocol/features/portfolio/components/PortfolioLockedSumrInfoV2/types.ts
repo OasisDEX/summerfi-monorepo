@@ -6,3 +6,10 @@ export type LockedSumrPositionsTableColumns =
   | 'usdEarnings'
   | 'removeStakePenalty'
   | 'action'
+
+export type AllLockedSumrPositionsTableColumns =
+  | 'staked'
+  | 'shareOfSumrStaked'
+  | 'stakeTime'
+  | 'ownerAddress'
+  | 'usdValueEarningInLazySummer'

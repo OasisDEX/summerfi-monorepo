@@ -19,8 +19,14 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-import { yourLockedSumrPositionsTableColumns } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/constants'
-import { type LockedSumrPositionsTableColumns } from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
+import {
+  allLockedSumrPositionsTableColumns,
+  yourLockedSumrPositionsTableColumns,
+} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/constants'
+import {
+  type AllLockedSumrPositionsTableColumns,
+  type LockedSumrPositionsTableColumns,
+} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
 
 import portfolioLockedSumrInfoV2Styles from './PortfolioLockedSumrInfoV2.module.css'
 
@@ -75,9 +81,9 @@ const YourLockedSumrPositionsCards = () => {
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
-            <WithArrow>
-              <Link href="#">Buy SUMR</Link>
-            </WithArrow>
+            <Link href="#">
+              <WithArrow>Buy SUMR</WithArrow>
+            </Link>
           ),
         }}
         cardVariant="cardPrimary"
@@ -138,9 +144,11 @@ const YourLockedSumrPositionsTable = () => {
             ),
             action: (
               <TableCenterCell>
-                <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                  <Link href="#">Remove stake</Link>
-                </WithArrow>
+                <Link href="#">
+                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                    Remove stake
+                  </WithArrow>
+                </Link>
               </TableCenterCell>
             ),
           },
@@ -162,9 +170,11 @@ const YourLockedSumrPositionsTable = () => {
             ),
             action: (
               <TableCenterCell>
-                <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                  <Link href="#">Remove stake</Link>
-                </WithArrow>
+                <Link href="#">
+                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                    Remove stake
+                  </WithArrow>
+                </Link>
               </TableCenterCell>
             ),
           },
@@ -186,9 +196,11 @@ const YourLockedSumrPositionsTable = () => {
             ),
             action: (
               <TableCenterCell>
-                <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                  <Link href="#">Remove stake</Link>
-                </WithArrow>
+                <Link href="#">
+                  <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+                    Remove stake
+                  </WithArrow>
+                </Link>
               </TableCenterCell>
             ),
           },
@@ -332,6 +344,30 @@ const AllLockedSumrPositionsPieChart = () => {
   )
 }
 
+const AllLockedSumrPositionsTable = () => {
+  return (
+    <Table<AllLockedSumrPositionsTableColumns>
+      columns={allLockedSumrPositionsTableColumns}
+      rows={Array(6).fill({
+        content: {
+          staked: '89,323,322.3 SUMR',
+          shareOfSumrStaked: <TableRightCell>12%</TableRightCell>,
+          stakeTime: <TableRightCell>2 years</TableRightCell>,
+          ownerAddress: <TableRightCell>0x5d...c94</TableRightCell>,
+          usdValueEarningInLazySummer: (
+            <TableRightCell>
+              24.32m&nbsp;
+              <Link href="#">
+                <WithArrow style={{ margin: '0 18px' }}>View</WithArrow>
+              </Link>
+            </TableRightCell>
+          ),
+        },
+      })}
+    />
+  )
+}
+
 const AllLockedSumrPositionsData = () => {
   return (
     <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
@@ -339,10 +375,7 @@ const AllLockedSumrPositionsData = () => {
         <AllLockedSumrPositionsPieChart />
       </Expander>
       <Expander title="All staked positions">
-        <Text variant="p2" style={{ marginBottom: '16px' }}>
-          There are a total of 12,345 SUMR staking positions with a total of 63.3m SUMR staked. The
-          average lock period is 2 years and the average boost multiple is 3.2x.
-        </Text>
+        <AllLockedSumrPositionsTable />
       </Expander>
     </div>
   )
