@@ -27,7 +27,7 @@ describe('Armada Protocol - Vault', () => {
 
   const sdk = createTestSDK()
 
-  it.skip('should get all vaults with info', async () => {
+  it('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
     })
@@ -35,16 +35,15 @@ describe('Armada Protocol - Vault', () => {
     console.log('All vaults info:\n', vaults.list.map(stringifyArmadaVaultInfo).join('\n'))
 
     vaults.list.forEach(validateApys)
-
-    it('should get a specific vault info', async () => {
-      const vaultInfo = await sdk.armada.users.getVaultInfo({
-        vaultId,
-      })
-      assert(vaultInfo != null, 'Vault not found')
-      console.log('Specific vault info:\n', stringifyArmadaVaultInfo(vaultInfo))
-
-      validateApys(vaultInfo)
+  })
+  it('should get a specific vault info', async () => {
+    const vaultInfo = await sdk.armada.users.getVaultInfo({
+      vaultId,
     })
+    assert(vaultInfo != null, 'Vault not found')
+    console.log('Specific vault info:\n', stringifyArmadaVaultInfo(vaultInfo))
+
+    validateApys(vaultInfo)
   })
 })
 

@@ -16,6 +16,7 @@ export function createTestSDK() {
     return makeAdminSDK({
       apiDomainUrl: SDKApiUrl,
       clientId,
+      // version: 'v1',
     })
   }
 
