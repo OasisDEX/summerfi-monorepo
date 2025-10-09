@@ -11,7 +11,7 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
     createAccessControlTestSetup()
 
   const contractAddress = fleetAddress
-  const targetAddress = aqAddress
+  const targetAddress = userAddress
   const role = ContractSpecificRoleName.WHITELISTED_ROLE
 
   test('should grant and revoke contract-specific role', async () => {

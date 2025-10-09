@@ -17,7 +17,7 @@ import assert from 'assert'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
+const simulateOnly = false
 const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol Withdraw', () => {
