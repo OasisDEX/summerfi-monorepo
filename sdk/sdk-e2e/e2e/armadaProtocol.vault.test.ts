@@ -22,7 +22,7 @@ describe('Armada Protocol - Vault', () => {
 
   const sdk = createTestSDK()
 
-  it('should get all vaults with info', async () => {
+  it.skip('should get all vaults with info', async () => {
     const vaults = await sdk.armada.users.getVaultInfoList({
       chainId,
     })

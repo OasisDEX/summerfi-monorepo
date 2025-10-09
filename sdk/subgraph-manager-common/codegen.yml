@@ -1,5 +1,5 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-protocol'
+schema: 'https://subgraph.satsuma-prod.com/233a9183430a/summer-fi/summer-protocol-base/version/1.4.4-tracking-institutional-demo-fleet/api'
 documents: './src/**/*.graphql'
 generates:
   src/generated/client.ts:

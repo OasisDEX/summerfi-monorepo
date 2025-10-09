@@ -238,7 +238,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
     const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
     const stakingRewardsManagerAddresses = vaults.vaults.map(
-      (vault) => vault.rewardsManager.id as `0x${string}`,
+      (vault) => vault.rewardsManager?.id as `0x${string}` | undefined,
     )
     // readContract summer token abi
 
@@ -248,10 +248,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       functionName: 'earned'
     }[] = []
     for (let index = 0; index < fleetCommanderAddresses.length; index++) {
+      const stakingRewardsManagerAddress = stakingRewardsManagerAddresses[index]
+      if (!stakingRewardsManagerAddress) {
+        continue
+      }
       // read earned staking rewards from rewards manager
       const earnedCall = {
         abi: StakingRewardsManagerBaseAbi,
-        address: stakingRewardsManagerAddresses[index],
+        address: stakingRewardsManagerAddress,
         functionName: 'earned',
         args: [user.wallet.address.value, summerTokenAddress.value],
       } as const
