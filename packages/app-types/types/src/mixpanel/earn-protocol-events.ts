@@ -37,6 +37,7 @@ export interface EarnProtocolBaseEventProps {
   connectionMethod?: string // connection method (e.g. "EOA", "SCA")
   errorId?: string // optional error message
   errorMessage?: string // optional error message
+  digest?: string // optional error digest or code
   // UTM / Campaign info (if available)
   utm_source?: string
   utm_medium?: string
