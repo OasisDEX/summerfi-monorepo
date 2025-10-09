@@ -1,13 +1,15 @@
-# SDK Admin API Reference
+# SDK Admin API Reference v2
 
-**Latest version: v2.1.1**
+**Latest version: v2.1.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
 
-## AdminSDK creation
+## Main Flows
 
-```tsx
+### AdminSDK Creation
+
+```typescript
 // create a local file ./sdk.ts to reuse a common sdk instance
 import { makeAdminSDK } from '@summer_fi/sdk-client'
 
@@ -28,25 +30,17 @@ the `WHITELISTED_ROLE` (a contract-specific role).
 This is useful for frontends or operational scripts that need to gate deposit and withdrawal actions
 behind allowlists.
 
-#### Method Description
+**Parameters:**
 
-`sdk.armada.accessControl.hasContractSpecificRole(params)`
+- **chainId**: The chain where the contract (fleet) is deployed
+- **role**: The contract-specific role to check. Use `ContractSpecificRoleName.WHITELISTED_ROLE` for
+  whitelist checks
+- **contractAddress**: The target contract (e.g. Fleet / LazyVault) address you are checking against
+- **targetAddress**: The address (EOA or contract) whose role membership you want to verify
 
-Returns a boolean indicating whether `targetAddress` currently has the given
-`ContractSpecificRoleName` for the provided `contractAddress` on `chainId`.
+**Example:**
 
-#### Parameters
-
-| Name            | Type                       | Description                                                                                                |
-| --------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| chainId         | `ChainId`                  | The chain where the contract (fleet) is deployed.                                                          |
-| role            | `ContractSpecificRoleName` | The contract-specific role to check. Use `ContractSpecificRoleName.WHITELISTED_ROLE` for whitelist checks. |
-| contractAddress | `IAddress`                 | The target contract (e.g. Fleet / LazyVault) address you are checking against.                             |
-| targetAddress   | `IAddress`                 | The address (EOA or contract) whose role membership you want to verify.                                    |
-
-#### Example
-
-```tsx
+```typescript
 import { ChainIds, Address } from '@summer_fi/sdk-client'
 import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
 import { sdk } from './sdk'
@@ -69,18 +63,19 @@ console.log(
 )
 ```
 
-#### Response
+**Response:**
 
-Returns: `Promise<boolean>`
+Returns a boolean value indicating whether the target address has the specified role.
 
-- `true` if the `targetAddress` has the specified `role` for the given `contractAddress`.
-- `false` otherwise.
+```json
+true
+```
 
-#### Notes
+**Notes:**
 
 - Roles are managed by governor; if you need to add/remove addresses use the corresponding
-  `grantContractSpecificRole` / `revokeContractSpecificRole` methods (see future sections).
-- The same method can check other contract-specific roles by swapping the `role` value.
+  `grantContractSpecificRole` / `revokeContractSpecificRole` methods (see future sections)
+- The same method can check other contract-specific roles by swapping the `role` value
 
 ## Changelog
 
