@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 'use server'
 
 /**
@@ -73,7 +74,7 @@ export async function handleNewsletterSubscription({
       method: 'GET',
     })
 
-    if (!memberResponse.ok && memberResponse.status === 404) {
+    if (!memberResponse.ok && memberResponse?.status === 404) {
       // New subscription
       const subscriptionResponse = await fetch(SUBSCRIBE_POST_ENDPOINT, {
         method: 'POST',
@@ -92,16 +93,16 @@ export async function handleNewsletterSubscription({
 
     const memberData: SubscriptionResponse = await memberResponse.json()
 
-    if (memberData.data.status === 'pending') {
+    if (memberData.data?.status === 'pending') {
       return { status: 409, error: 'emailPending' }
     }
 
-    if (memberData.data.status === 'active') {
+    if (memberData.data?.status === 'active') {
       return { status: 409, error: 'emailAlreadyExists' }
     }
 
     // Resubscribe if inactive
-    if (memberData.data.status === 'inactive') {
+    if (memberData.data?.status === 'inactive') {
       const resubscribeResponse = await fetch(SUBSCRIBE_POST_ENDPOINT, {
         method: 'POST',
         headers,
