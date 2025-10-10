@@ -1,4 +1,5 @@
-import { getInstitutionUsers } from '@/app/server-handlers/institution/institution-users'
+import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
+import { PanelInstitutionOverview } from '@/features/panels/overview/components/PanelInstitutionOverview/PanelInstitutionOverview'
 
 export default async function InstitutionOverviewTab({
   params,
@@ -10,7 +11,12 @@ export default async function InstitutionOverviewTab({
   if (!institutionName) {
     return <div>Institution ID not provided.</div>
   }
-  const institutionUsersList = await getInstitutionUsers(institutionName)
+  const institutionVaults = await getInstitutionVaults({ institutionName })
 
-  return <div>Users count: {JSON.stringify(institutionUsersList.users.length)}</div>
+  return (
+    <PanelInstitutionOverview
+      institutionName={institutionName}
+      institutionVaults={institutionVaults?.vaults ?? []}
+    />
+  )
 }

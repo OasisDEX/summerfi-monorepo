@@ -1,12 +1,15 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import { Button, Card, Table, type TableRow, Text } from '@summerfi/app-earn-ui'
 import { type UserRole } from '@summerfi/summer-protocol-institutions-db'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { addInstitutionUser } from '@/app/server-handlers/institution/institution-users'
 import { type SessionPayload } from '@/features/auth/types'
 import { usersPanelColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/constants'
-import { institutionsInternalUsersDisplayRow } from '@/features/panels/overview/components/PanelManageInternalUsers/helpers'
+import { type UserListColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/types'
 import { getUserPrivileges } from '@/features/user/get-user-privileges'
+import { getUserRoleColor } from '@/helpers/get-user-role-color'
 
 import panelManageInternalUsersStyles from './PanelManageInternalUsers.module.css'
 
@@ -27,12 +30,60 @@ type PanelManageListInternalUsersProps = {
   session: SessionPayload
 }
 
+const TableCellRightAlign = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
+)
+
+const mapUsersToTableRows: (
+  users: PanelManageListInternalUsersProps['users'],
+  institutionName: string,
+  canManageUsers: boolean,
+) => TableRow<UserListColumns>[] = (users, institutionName, canManageUsers) => {
+  return users.map((user) => ({
+    id: user.userSub,
+    content: {
+      cognitoName: user.cognitoName,
+      cognitoEmail: <TableCellRightAlign>{user.cognitoEmail}</TableCellRightAlign>,
+      role: (
+        <TableCellRightAlign>
+          <span style={{ fontWeight: 'bold', color: getUserRoleColor(user.role as UserRole) }}>
+            {user.role}
+          </span>
+        </TableCellRightAlign>
+      ),
+      createdAt: (
+        <TableCellRightAlign>
+          {dayjs(user.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+        </TableCellRightAlign>
+      ),
+      actions: (
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <Link href={`/${institutionName}/overview/manage-internal-users/edit/${user.id}`}>
+            <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
+              Edit
+            </Button>
+          </Link>
+          <Link href={`/${institutionName}/overview/manage-internal-users/delete/${user.id}`}>
+            <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
+              Delete
+            </Button>
+          </Link>
+        </div>
+      ),
+    },
+  }))
+}
+
 export const PanelManageListInternalUsers = ({
   users,
   institutionName,
   session,
 }: PanelManageListInternalUsersProps) => {
   const { canManageUsers } = getUserPrivileges(session, institutionName)
+  const userPanelListRows = useMemo(
+    () => mapUsersToTableRows(users, institutionName, canManageUsers),
+    [users, institutionName, canManageUsers],
+  )
 
   if (!canManageUsers) {
     return (
@@ -60,62 +111,7 @@ export const PanelManageListInternalUsers = ({
             <Text>No users found.</Text>
           ) : (
             <div className={panelManageInternalUsersStyles.tableContainer}>
-              <table className={panelManageInternalUsersStyles.table}>
-                <thead>
-                  <tr>
-                    {usersPanelColumns.map((col) => (
-                      <th key={col.accessor} className={panelManageInternalUsersStyles.tableHeader}>
-                        {col.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((row) => {
-                    const key = `${row.userSub}-${row.id}`
-
-                    return (
-                      <tr key={key} className={panelManageInternalUsersStyles.tableRow}>
-                        {usersPanelColumns.map(({ accessor }) => (
-                          <td key={accessor} className={panelManageInternalUsersStyles.tableCell}>
-                            <div className={panelManageInternalUsersStyles.tableCellContent}>
-                              {accessor === 'institutionId' && row.institutionDisplayName}
-                              {accessor === 'actions' && (
-                                <>
-                                  <Link
-                                    href={`/${institutionName}/overview/manage-internal-users/edit/${row.id}`}
-                                  >
-                                    <Button
-                                      variant="textSecondaryMedium"
-                                      disabled={!canManageUsers}
-                                    >
-                                      Edit
-                                    </Button>
-                                  </Link>
-                                  <Link
-                                    href={`/${institutionName}/overview/manage-internal-users/delete/${row.id}`}
-                                  >
-                                    <Button
-                                      variant="textSecondaryMedium"
-                                      disabled={!canManageUsers}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Link>
-                                </>
-                              )}
-                              {institutionsInternalUsersDisplayRow(
-                                (row as { [key: string]: unknown })[accessor],
-                                accessor,
-                              )}
-                            </div>
-                          </td>
-                        ))}
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+              <Table rows={userPanelListRows} columns={usersPanelColumns} />
             </div>
           )}
         </div>

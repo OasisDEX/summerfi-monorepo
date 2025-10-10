@@ -163,11 +163,19 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
       return false
     }
 
+    if (!('user' in data) || !data.user) {
+      throw new Error('No user data returned after sign in.')
+    }
+
+    setUser(data.user)
+    setChallengeData(null)
+
     return true
   }
 
   const signOut = async () => {
     await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' })
+
     setUser(null)
     clearRefreshTimer()
     replace('/')
