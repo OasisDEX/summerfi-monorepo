@@ -7,6 +7,8 @@ import { decodeJwt } from 'jose'
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { createSession } from '@/app/server-handlers/auth/session'
+import { getEnrichedUser } from '@/app/server-handlers/auth/user'
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '@/constants/cookies'
 import { cognitoClient } from '@/features/auth/constants'
 import { getNameFromPayload } from '@/features/auth/helpers'
@@ -109,7 +111,16 @@ export async function POST(request: NextRequest) {
 
     if ('id' in user && user.accessToken && user.refreshToken) {
       // Set secure HTTP-only cookies
-      const cookieStore = await cookies()
+      const [enriched, cookieStore] = await Promise.all([
+        getEnrichedUser({
+          sub: user.id,
+          email: user.email,
+          name: user.name,
+        }),
+        cookies(),
+      ])
+
+      await createSession(enriched, user.id, user.cognitoUsername)
 
       cookieStore.set(ACCESS_TOKEN_COOKIE, user.accessToken, {
         httpOnly: true,
@@ -125,13 +136,7 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 30, // 30 days
       })
 
-      return NextResponse.json({
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        },
-      })
+      return NextResponse.json({ user: enriched })
     } else {
       return NextResponse.json({ error: 'Password change failed' }, { status: 400 })
     }
