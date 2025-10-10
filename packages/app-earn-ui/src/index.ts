@@ -144,7 +144,12 @@ export { DateRangePicker } from './components/molecules/DateRangePicker/DateRang
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
-export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
+export {
+  Table,
+  type TableSortedColumn,
+  type TableRow,
+  type TableColumn,
+} from './components/organisms/Table/Table'
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
 export { PortfolioPosition } from './components/organisms/PortfolioPosition/PortfolioPosition'
 export { Newsletter, type NewsletterPropsType } from './components/organisms/Newsletter/Newsletter'

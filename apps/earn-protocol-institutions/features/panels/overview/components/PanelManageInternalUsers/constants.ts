@@ -1,22 +1,26 @@
-export const usersPanelColumns = [
+import { type TableColumn } from '@summerfi/app-earn-ui'
+
+import { type UserListColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/types'
+
+export const usersPanelColumns: TableColumn<UserListColumns>[] = [
   {
-    label: 'Name',
-    accessor: 'cognitoName',
+    title: 'Name',
+    key: 'cognitoName',
   },
   {
-    label: 'Email',
-    accessor: 'cognitoEmail',
+    title: 'Email',
+    key: 'cognitoEmail',
   },
   {
-    label: 'Role',
-    accessor: 'role',
+    title: 'Role',
+    key: 'role',
   },
   {
-    label: 'Created At',
-    accessor: 'createdAt',
+    title: 'Created At',
+    key: 'createdAt',
   },
   {
-    label: 'Actions',
-    accessor: 'actions',
+    title: 'Actions',
+    key: 'actions',
   },
 ]
