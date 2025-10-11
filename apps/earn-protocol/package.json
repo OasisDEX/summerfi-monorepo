@@ -23,6 +23,7 @@
     "@account-kit/react": "^4.52.2",
     "@layerzerolabs/scan-client": "^0.0.8",
     "@loadable/component": "^5.16.4",
+    "@narval-xyz/connect": "0.0.4-rc.1",
     "@number-flow/react": "^0.5.10",
     "@safe-global/safe-apps-sdk": "^9.0.0",
     "@summerfi/app-earn-ui": "workspace:*",
