@@ -11,7 +11,11 @@ import { type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, getVaultNiceName } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
+import { AumChart } from '@/features/charts/AumChart'
+import {
+  mockedAumChartData,
+  vaultsListColumns,
+} from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 
@@ -66,7 +70,11 @@ export const PanelInstitutionOverview = ({
 
   return (
     <div className={panelInstitutionOverviewStyles.wrapper}>
-      <Card variant="cardSecondary">AUM graph placeholder</Card>
+      <Card variant="cardSecondary">
+        <Card variant="cardPrimary">
+          <AumChart chartData={mockedAumChartData} />
+        </Card>
+      </Card>
       <Card variant="cardSecondary" className={panelInstitutionOverviewStyles.yourVaultsWrapper}>
         <Text variant="h5">Your Vaults</Text>
         <Card variant="cardPrimary">
