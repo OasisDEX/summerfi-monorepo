@@ -1,4 +1,4 @@
-import type { AddressValue } from '@summerfi/sdk-common'
+import type { AddressValue, HexData } from '@summerfi/sdk-common'
 
 /**
  * @name RebalanceDataSolidity
@@ -11,4 +11,8 @@ export interface RebalanceDataSolidity {
   toArk: AddressValue
   /** Amount of tokens to be moved */
   amount: bigint
+  /** Data for the boarding process */
+  boardData: HexData
+  /** Data for the disembarking process */
+  disembarkData: HexData
 }

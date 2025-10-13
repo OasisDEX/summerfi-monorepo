@@ -32,7 +32,9 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
       address: params.vaultId.fleetAddress,
     })
 
-    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
+    const a = fleetContract.rebalance({ rebalanceData: params.rebalanceData })
+    console.log('rebalance', a)
+    return a
   }
 
   /** @see IArmadaManagerAdmin.adjustBuffer */

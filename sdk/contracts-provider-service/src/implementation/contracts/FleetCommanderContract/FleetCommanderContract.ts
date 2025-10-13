@@ -23,6 +23,7 @@ import { ContractWrapper } from '../ContractWrapper'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import { encodeFunctionData } from 'viem'
 
 /**
  * @name FleetCommanderContract
@@ -151,11 +152,21 @@ export class FleetCommanderContract<
     const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
       rebalanceData: params.rebalanceData,
     })
-    return this._createTransaction({
+
+    const calldata = encodeFunctionData({
+      abi: this.getAbi(),
       functionName: 'rebalance',
       args: [rebalanceDataSolidity],
-      description: 'Rebalance the assets of the fleet',
     })
+
+    return {
+      transaction: {
+        target: this.address,
+        calldata: calldata,
+        value: String(0),
+      },
+      description: 'Rebalance the assets of the fleet',
+    }
   }
 
   /** @see IFleetCommanderContract.adjustBuffer */
@@ -366,6 +377,8 @@ export class FleetCommanderContract<
       fromArk: data.fromArk.toSolidityValue(),
       toArk: data.toArk.toSolidityValue(),
       amount: data.amount.toSolidityValue(),
+      boardData: data.boardData ?? '0x',
+      disembarkData: data.disembarkData ?? '0x',
     }))
   }
 }
