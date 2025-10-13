@@ -85,4 +85,5 @@ true
 
 **Features:**
 
-- Access Control - Check Whitelisted Addresses.
+- Access Control - Check Whitelisted Addresses
+- Ark Rebalance - TODO
