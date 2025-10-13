@@ -56,8 +56,8 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     expect(rebalance).toBeDefined()
     console.log('Rebalance Transaction:', rebalance)
 
-    // const rebalanceStatus = await governorSendTxTool(rebalance)
-    // expect(rebalanceStatus).toBe('success')
-    // console.log('Rebalance Successful')
+    const rebalanceStatus = await governorSendTxTool(rebalance)
+    expect(rebalanceStatus).toBe('success')
+    console.log('Rebalance Successful')
   })
 })
