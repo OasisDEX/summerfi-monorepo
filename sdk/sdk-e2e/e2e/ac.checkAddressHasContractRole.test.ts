@@ -1,5 +1,6 @@
 import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import type { ContractRoleScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -19,14 +20,7 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
   const contractAddress = fleetAddress
 
   // Configure test scenarios here
-  type Scenario = {
-    role: ContractSpecificRoleName
-    targetAddress: typeof userAddress
-    shouldGrant?: boolean
-    shouldRevoke?: boolean
-  }
-
-  const scenarios: Scenario[] = [
+  const scenarios: ContractRoleScenario[] = [
     {
       role: ContractSpecificRoleName.WHITELISTED_ROLE,
       targetAddress: userAddress,
