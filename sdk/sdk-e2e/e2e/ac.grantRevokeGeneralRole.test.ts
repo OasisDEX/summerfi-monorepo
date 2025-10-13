@@ -1,5 +1,5 @@
 import { GeneralRoles } from '@summerfi/armada-protocol-common'
-import { createAccessControlTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)
 
@@ -7,8 +7,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, aqAddress, governorSendTxTool } =
-    createAccessControlTestSetup()
+  const { sdk, chainId, userAddress, aqAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
   const targetAddress = aqAddress
   const role = GeneralRoles.ADMIRALS_QUARTERS_ROLE

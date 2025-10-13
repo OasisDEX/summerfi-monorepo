@@ -6,7 +6,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
 /**
  * Shared setup for Armada Protocol Access Control tests
  */
-export function createAccessControlTestSetup() {
+export function createAdminSdkTestSetup() {
   const sdk = makeAdminSDK({
     clientId: 'test-client',
     apiDomainUrl: SDKApiUrl,

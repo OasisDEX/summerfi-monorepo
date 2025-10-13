@@ -1,5 +1,5 @@
 import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { createAccessControlTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)
 
@@ -7,7 +7,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Get Addresses with Contract-Specific Role', () => {
-  const { sdk, chainId, fleetAddress } = createAccessControlTestSetup()
+  const { sdk, chainId, fleetAddress } = createAdminSdkTestSetup()
   const contractAddress = fleetAddress
 
   test('should get all addresses for each contract-specific role for a specific contract', async () => {
