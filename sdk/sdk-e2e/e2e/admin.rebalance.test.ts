@@ -1,6 +1,5 @@
 import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
-import { assert } from 'console'
 
 describe('Armada Protocol - Admin E2E Tests', () => {
   const { sdk, chainId, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup()
