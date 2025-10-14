@@ -7,7 +7,7 @@ jest.setTimeout(300000)
 /**
  * @group e2e
  */
-describe('Armada Protocol - Access Control General Role Checking', () => {
+describe('Armada Protocol - Access Control Global Role Checking', () => {
   const { sdk, chainId, userAddress, governorAddress, governorSendTxTool } =
     createAdminSdkTestSetup()
 
