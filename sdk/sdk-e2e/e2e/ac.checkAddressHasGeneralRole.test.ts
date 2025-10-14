@@ -19,6 +19,12 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
       shouldGrant: false,
       shouldRevoke: false,
     },
+    {
+      role: GeneralRoles.SUPER_KEEPER_ROLE,
+      targetAddress: governorAddress,
+      shouldGrant: true,
+      shouldRevoke: false,
+    },
   ]
 
   test.each(scenarios)(

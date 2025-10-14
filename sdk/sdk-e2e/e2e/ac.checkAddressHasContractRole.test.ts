@@ -30,7 +30,7 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
     {
       role: ContractSpecificRoleName.CURATOR_ROLE,
       targetAddress: governorAddress,
-      shouldGrant: true,
+      shouldGrant: false,
       shouldRevoke: false,
     },
   ]
