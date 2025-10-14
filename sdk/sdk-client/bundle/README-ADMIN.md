@@ -140,7 +140,7 @@ const rebalanceTxInfo = await sdk.armada.admin.rebalance({
 
 **Response (TransactionInfo):**
 
-Please refer to the TransactionInfo structure in the main SDK documentation.
+Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Related Methods:**
 
@@ -231,19 +231,26 @@ const txInfo = await sdk.armada.accessControl.grantContractSpecificRole({
 
 ## Self Managed Vaults - Access Control
 
-### Access Control - Check Whitelisted Addresses
+### Check if Address Has Contract-Specific Role
 
-Check if a given address is whitelisted for a specific vault (fleet contract) by verifying it holds
-the `WHITELISTED_ROLE` (a contract-specific role).
+Check if a given address has a specific contract-specific role for a vault (fleet contract).
+Contract-specific roles are tied to individual contracts and include roles like `WHITELISTED_ROLE`,
+`KEEPER_ROLE`, and `CURATOR_ROLE`.
 
-This is useful for frontends or operational scripts that need to gate deposit and withdrawal actions
-behind allowlists.
+This is useful for frontends or operational scripts that need to verify permissions before allowing
+certain actions.
 
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to check. Use `ContractSpecificRoleName.WHITELISTED_ROLE` for
-  whitelist checks
+- **role**: The contract-specific role to check. Available roles:
+  - `ContractSpecificRoleName.WHITELISTED_ROLE` - For deposit/withdrawal permissions
+  - `ContractSpecificRoleName.KEEPER_ROLE` - For keeper operations like rebalancing
+  - `ContractSpecificRoleName.CURATOR_ROLE` - For curator operations like managing arks
+  - `ContractSpecificRoleName.COMMANDER_ROLE` - For commander operations on arks (boarding,
+    disembarking, moving funds between arks, and configuring ark parameters like deposit caps and
+    rebalance limits). This role is typically held by the FleetCommander contract that manages the
+    ark.
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address you are checking against
 - **targetAddress**: The address (EOA or contract) whose role membership you want to verify
 
@@ -260,6 +267,7 @@ const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 // User / target address to check
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
+// Check for whitelisted role
 const hasWhitelistRole = await sdk.armada.accessControl.hasContractSpecificRole({
   chainId: ChainIds.Base,
   role: ContractSpecificRoleName.WHITELISTED_ROLE,
@@ -274,31 +282,37 @@ console.log(
 
 **Response:**
 
-Returns a boolean value indicating whether the target address has the specified role.
-
-```json
-true
-```
+Boolean value indicating whether the target address has the specified role.
 
 **Notes:**
 
-- Roles are managed by governor; if you need to add/remove addresses use the corresponding
-  `grantContractSpecificRole` / `revokeContractSpecificRole` methods (see sections below)
-- The same method can check other contract-specific roles by swapping the `role` value
+- Contract-specific roles are managed by governor
+- Use `grantContractSpecificRole` / `revokeContractSpecificRole` methods to manage roles (see
+  sections below)
+- The same method works for all contract-specific roles by changing the `role` parameter
 
-### Access Control - Grant Whitelisted Role
+### Grant Contract-Specific Role to Address
 
-Grant the whitelisted role to a specific address for a vault (fleet contract). This allows the
-address to perform deposits and withdrawals on a whitelisted fleet.
+Grant a contract-specific role to an address for a vault (fleet contract). This allows the address
+to perform role-specific operations on that contract.
 
-**Required Role:** The executing address must have the `GOVERNOR_ROLE` to grant roles to other
-addresses.
+Common use cases:
+
+- `WHITELISTED_ROLE`: Allows deposits and withdrawals on a whitelisted fleet
+- `KEEPER_ROLE`: Allows keeper operations like rebalancing for a specific fleet
+- `CURATOR_ROLE`: Allows curator operations for a specific fleet
+
+**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to grant roles to
+other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to grant. Use `ContractSpecificRoleName.WHITELISTED_ROLE` for
-  whitelist grants
+- **role**: The contract-specific role to grant. Use one of:
+  - `ContractSpecificRoleName.WHITELISTED_ROLE`
+  - `ContractSpecificRoleName.KEEPER_ROLE`
+  - `ContractSpecificRoleName.CURATOR_ROLE`
+  - `ContractSpecificRoleName.COMMANDER_ROLE`
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address
 - **targetAddress**: The address (EOA or contract) to grant the role to
 
@@ -312,9 +326,10 @@ import { sdk } from './sdk'
 // Fleet (vault) deployment address
 const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 
-// Address to grant the whitelisted role to
+// Address to grant the role to
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
+// Grant whitelisted role
 const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
   chainId: ChainIds.Base,
   role: ContractSpecificRoleName.WHITELISTED_ROLE,
@@ -323,6 +338,7 @@ const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
 })
 
 // Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(grantTxInfo)
 ```
 
 **Response (TransactionInfo):**
@@ -332,23 +348,26 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 **Notes:**
 
 - Only addresses with the general `GOVERNOR_ROLE` can grant roles
-- After granting, you can verify the role using `hasContractSpecificRole` method
-- The same method can grant other contract-specific roles (KEEPER_ROLE, CURATOR_ROLE, etc.) by
-  changing the `role` parameter
+- After granting, verify the role using `hasContractSpecificRole` method
+- Contract-specific roles are scoped to individual contracts, not global
+- Each role type grants different permissions on the contract
 
-### Access Control - Revoke Whitelisted Role
+### Revoke Contract-Specific Role from Address
 
-Revoke the whitelisted role from a specific address for a vault (fleet contract). This removes the
-address's ability to perform deposits and withdrawals on a whitelisted fleet.
+Revoke a contract-specific role from an address for a vault (fleet contract). This removes the
+address's ability to perform role-specific operations on that contract.
 
-**Required Role:** The executing address must have the `GOVERNOR_ROLE` to revoke roles from other
-addresses.
+**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to revoke roles from
+other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to revoke. Use `ContractSpecificRoleName.WHITELISTED_ROLE`
-  for whitelist revocations
+- **role**: The contract-specific role to revoke. Use one of:
+  - `ContractSpecificRoleName.WHITELISTED_ROLE`
+  - `ContractSpecificRoleName.KEEPER_ROLE`
+  - `ContractSpecificRoleName.CURATOR_ROLE`
+  - `ContractSpecificRoleName.COMMANDER_ROLE`
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address
 - **targetAddress**: The address (EOA or contract) to revoke the role from
 
@@ -362,9 +381,10 @@ import { sdk } from './sdk'
 // Fleet (vault) deployment address
 const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 
-// Address to revoke the whitelisted role from
+// Address to revoke the role from
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
+// Revoke whitelisted role
 const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
   chainId: ChainIds.Base,
   role: ContractSpecificRoleName.WHITELISTED_ROLE,
@@ -373,6 +393,7 @@ const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
 })
 
 // Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(revokeTxInfo)
 ```
 
 **Response (TransactionInfo):**
@@ -382,14 +403,14 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 **Notes:**
 
 - Only addresses with the general `GOVERNOR_ROLE` can revoke roles
-- After revoking, you can verify the role removal using `hasContractSpecificRole` method
-- The same method can revoke other contract-specific roles by changing the `role` parameter
+- After revoking, verify the role removal using `hasContractSpecificRole` method
+- Revoking a role immediately removes associated permissions
 
-### Access Control - Grant Super Keeper Role
+### Grant General Role to Address (Super Keeper)
 
-Grant the Super Keeper role to a specific address. The Super Keeper role is a general (global) role
-that allows the address to perform keeper operations on any fleet without needing fleet-specific
-KEEPER_ROLE grants.
+Grant a general role to a specific address. General roles are global and apply across all contracts
+in the protocol. The Super Keeper role is a general (global) role that allows the address to perform
+keeper operations on any fleet without needing fleet-specific KEEPER_ROLE grants.
 
 **Required Role:** The executing address must have the general `GOVERNOR_ROLE` to grant general
 roles to other addresses.
@@ -397,7 +418,11 @@ roles to other addresses.
 **Parameters:**
 
 - **chainId**: The chain where the protocol is deployed
-- **role**: The general role to grant. Use `GeneralRoles.SUPER_KEEPER_ROLE` for super keeper grants
+- **role**: The general role to grant. Available general roles:
+  - `GeneralRoles.SUPER_KEEPER_ROLE` - For global keeper operations
+  - `GeneralRoles.GOVERNOR_ROLE` - For governance operations
+  - `GeneralRoles.DECAY_CONTROLLER_ROLE` - For decay control operations
+  - `GeneralRoles.ADMIRALS_QUARTERS_ROLE` - For Admiral's Quarters operations
 - **targetAddress**: The address (EOA or contract) to grant the role to
 
 **Example:**
@@ -427,15 +452,14 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 **Notes:**
 
 - Only addresses with the general `GOVERNOR_ROLE` can grant general roles
-- Super Keeper role allows performing keeper operations (like rebalancing) on any fleet globally
-- After granting, you can verify the role using `hasGeneralRole` method
-- Other general roles that can be granted: `GOVERNOR_ROLE`, `DECAY_CONTROLLER_ROLE`,
-  `ADMIRALS_QUARTERS_ROLE`
+- General roles apply globally across all contracts in the protocol
+- Super Keeper role allows performing keeper operations (like rebalancing) on any fleet
+- After granting, verify the role using `hasGeneralRole` method
 
-### Access Control - Revoke Super Keeper Role
+### Revoke General Role from Address (Super Keeper)
 
-Revoke the Super Keeper role from a specific address. This removes the address's ability to perform
-keeper operations globally across all fleets.
+Revoke a general role from a specific address. This removes the address's ability to perform
+role-specific operations globally across all contracts in the protocol.
 
 **Required Role:** The executing address must have the general `GOVERNOR_ROLE` to revoke general
 roles from other addresses.
@@ -443,8 +467,11 @@ roles from other addresses.
 **Parameters:**
 
 - **chainId**: The chain where the protocol is deployed
-- **role**: The general role to revoke. Use `GeneralRoles.SUPER_KEEPER_ROLE` for super keeper
-  revocations
+- **role**: The general role to revoke. Available general roles:
+  - `GeneralRoles.SUPER_KEEPER_ROLE` - For global keeper operations
+  - `GeneralRoles.GOVERNOR_ROLE` - For governance operations
+  - `GeneralRoles.DECAY_CONTROLLER_ROLE` - For decay control operations
+  - `GeneralRoles.ADMIRALS_QUARTERS_ROLE` - For Admiral's Quarters operations
 - **targetAddress**: The address (EOA or contract) to revoke the role from
 
 **Example:**
@@ -474,8 +501,8 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 **Notes:**
 
 - Only addresses with the general `GOVERNOR_ROLE` can revoke general roles
-- After revoking, you can verify the role removal using `hasGeneralRole` method
-- The same method can revoke other general roles by changing the `role` parameter
+- General roles apply globally across all contracts in the protocol
+- After revoking, verify the role removal using `hasGeneralRole` method
 
 ## Changelog
 
@@ -491,8 +518,8 @@ Refer to the TransactionInfo structure in the main SDK documentation.
   - Set Ark Max Rebalance Outflow
   - Set Ark Max Rebalance Inflow
   - Execute Rebalance Operation
-- Access Control - Check Whitelisted Addresses
-- Access Control - Grant Whitelisted Role
-- Access Control - Revoke Whitelisted Role
-- Access Control - Grant Super Keeper Role
-- Access Control - Revoke Super Keeper Role
+- Access Control - Check if Address Has Contract-Specific Role
+- Access Control - Grant Contract-Specific Role to Address
+- Access Control - Revoke Contract-Specific Role from Address
+- Access Control - Grant General Role to Address (Super Keeper)
+- Access Control - Revoke General Role from Address (Super Keeper)
