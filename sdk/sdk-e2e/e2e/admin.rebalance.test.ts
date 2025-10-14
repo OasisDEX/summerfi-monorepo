@@ -1,19 +1,18 @@
 import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
+jest.setTimeout(5 * 60 * 1000) // 5 minutes
+
 describe('Armada Protocol - Admin E2E Tests', () => {
   const { sdk, chainId, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
   const chainInfo = getChainInfoByChainId(chainId)
+  const vaultId = ArmadaVaultId.createFrom({
+    chainInfo,
+    fleetAddress,
+  })
 
   test('should fetch the list of available arks', async () => {
-    // const arks = await sdk.armada.admin.arks({
-    //   vaultId: ArmadaVaultId.createFrom({
-    //     chainInfo,
-    //     fleetAddress,
-    //   }),
-    // })
-
     const bufferArk = Address.createFromEthereum({
       value: '0x04acEf9ca748ABD2c2053beD4a7b6dbF8BdCCc31',
     })
@@ -45,15 +44,17 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     // validate maxRebalanceOutflow on fromArk
     const fromArkConfig = await sdk.armada.admin.arkConfig({
       chainId,
-      arkAddress: fromArk.toSolidityValue(),
+      arkAddressValue: fromArk.toSolidityValue(),
     })
-    if (fromArkConfig.maxRebalanceOutflow.lt(amount.toSolidityValue())) {
+    console.log('fromArkConfig', fromArkConfig)
+
+    if (BigInt(fromArkConfig.maxRebalanceOutflow) < amount.toSolidityValue()) {
       console.log('fromArk maxRebalanceOutflow too low, sending tx to update it')
       // need to set maxRebalanceOutflow on fromArk
       const setMaxRebalanceOutflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceOutflow({
-        chainId,
-        arkAddress: fromArk.toSolidityValue(),
-        maxRebalanceOutflow: amount.toSolidityValue(),
+        vaultId,
+        ark: fromArk,
+        maxRebalanceOutflow: amount,
       })
       expect(setMaxRebalanceOutflowTxInfo).toBeDefined()
       const setMaxRebalanceOutflowStatus = await governorSendTxTool(setMaxRebalanceOutflowTxInfo)
@@ -64,28 +65,30 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     // validate deposit cap and maxRebalanceInflow on toArk
     const toArkConfig = await sdk.armada.admin.arkConfig({
       chainId,
-      arkAddress: toArk.toSolidityValue(),
+      arkAddressValue: toArk.toSolidityValue(),
     })
-    if (toArkConfig.depositCap.lt(amount.toSolidityValue())) {
+    console.log('toArkConfig', toArkConfig)
+
+    if (BigInt(toArkConfig.depositCap) < amount.toSolidityValue()) {
       console.log('toArk depositCap too low, sending tx to update it')
       // need to set depositCap on toArk
       const setDepositCapTxInfo = await sdk.armada.admin.setArkDepositCap({
-        chainId,
-        arkAddress: toArk.toSolidityValue(),
-        depositCap: amount.toSolidityValue(),
+        vaultId,
+        ark: toArk,
+        cap: amount,
       })
       expect(setDepositCapTxInfo).toBeDefined()
       const setDepositCapStatus = await governorSendTxTool(setDepositCapTxInfo)
       expect(setDepositCapStatus).toBe('success')
       console.log('Set depositCap on toArk Successful')
     }
-    if (toArkConfig.maxRebalanceInflow.lt(amount.toSolidityValue())) {
+    if (BigInt(toArkConfig.maxRebalanceInflow) < amount.toSolidityValue()) {
       console.log('toArk maxRebalanceInflow too low, sending tx to update it')
       // need to set maxRebalanceInflow on toArk
       const setMaxRebalanceInflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceInflow({
-        chainId,
-        arkAddress: toArk.toSolidityValue(),
-        maxRebalanceInflow: amount.toSolidityValue(),
+        vaultId,
+        ark: toArk,
+        maxRebalanceInflow: amount,
       })
       expect(setMaxRebalanceInflowTxInfo).toBeDefined()
       const setMaxRebalanceInflowStatus = await governorSendTxTool(setMaxRebalanceInflowTxInfo)
@@ -94,10 +97,7 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     }
 
     const rebalance = await sdk.armada.admin.rebalance({
-      vaultId: ArmadaVaultId.createFrom({
-        chainInfo,
-        fleetAddress,
-      }),
+      vaultId,
       rebalanceData: [
         {
           fromArk,
