@@ -4,8 +4,6 @@ import {
   IErc4626Contract,
   IFleetCommanderContract,
   RebalanceDataSolidity,
-  type IFleetConfig,
-  type IRebalanceData,
 } from '@summerfi/contracts-provider-common'
 import {
   Address,
@@ -17,6 +15,8 @@ import {
   SDKErrorType,
   TokenAmount,
   TransactionInfo,
+  type IFleetConfig,
+  type IRebalanceData,
 } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 

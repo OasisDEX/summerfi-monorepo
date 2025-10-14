@@ -6,8 +6,8 @@ import type {
   IArmadaVaultId,
   ChainId,
   AddressValue,
+  IRebalanceData,
 } from '@summerfi/sdk-common'
-import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 
 /**
  * @name IArmadaManagerAdmin

@@ -22,6 +22,10 @@ export type {
   FleetRate,
   AggregatedFleetRate,
 } from './common/types/HistoricalFleetRateResult'
+export type { IArkConfig } from './common/types/IArkConfig'
+export type { IFleetConfig } from './common/types/IFleetConfig'
+export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceData'
+export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
 export { AddressType } from './common/enums/AddressType'
 export {
   ChainFamilyName,

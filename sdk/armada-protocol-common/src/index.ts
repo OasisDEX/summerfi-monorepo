@@ -1,4 +1,3 @@
-export type { IRebalanceData } from '@summerfi/contracts-provider-common'
 export { ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
 export type {
   GetVaultsQuery,

@@ -44,7 +44,7 @@ describe('Armada Protocol - Admin E2E Tests', () => {
 
     // validate maxRebalanceOutflow on fromArk
     const fromArkConfig = await sdk.armada.admin.arkConfig({
-      chainId
+      chainId,
       arkAddress: fromArk.toSolidityValue(),
     })
     if (fromArkConfig.maxRebalanceOutflow.lt(amount.toSolidityValue())) {
