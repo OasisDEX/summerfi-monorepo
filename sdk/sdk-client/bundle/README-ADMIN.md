@@ -385,6 +385,98 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 - After revoking, you can verify the role removal using `hasContractSpecificRole` method
 - The same method can revoke other contract-specific roles by changing the `role` parameter
 
+### Access Control - Grant Super Keeper Role
+
+Grant the Super Keeper role to a specific address. The Super Keeper role is a general (global) role
+that allows the address to perform keeper operations on any fleet without needing fleet-specific
+KEEPER_ROLE grants.
+
+**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to grant general
+roles to other addresses.
+
+**Parameters:**
+
+- **chainId**: The chain where the protocol is deployed
+- **role**: The general role to grant. Use `GeneralRoles.SUPER_KEEPER_ROLE` for super keeper grants
+- **targetAddress**: The address (EOA or contract) to grant the role to
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { GeneralRoles } from '@summerfi/armada-protocol-common'
+import { sdk } from './sdk'
+
+// Address to grant the Super Keeper role to
+const keeperAddress = Address.createFromEthereum({ value: '0xKEEPERADDRESS...' })
+
+const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
+  chainId: ChainIds.Base,
+  role: GeneralRoles.SUPER_KEEPER_ROLE,
+  targetAddress: keeperAddress,
+})
+
+// Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(grantTxInfo)
+```
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+**Notes:**
+
+- Only addresses with the general `GOVERNOR_ROLE` can grant general roles
+- Super Keeper role allows performing keeper operations (like rebalancing) on any fleet globally
+- After granting, you can verify the role using `hasGeneralRole` method
+- Other general roles that can be granted: `GOVERNOR_ROLE`, `DECAY_CONTROLLER_ROLE`,
+  `ADMIRALS_QUARTERS_ROLE`
+
+### Access Control - Revoke Super Keeper Role
+
+Revoke the Super Keeper role from a specific address. This removes the address's ability to perform
+keeper operations globally across all fleets.
+
+**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to revoke general
+roles from other addresses.
+
+**Parameters:**
+
+- **chainId**: The chain where the protocol is deployed
+- **role**: The general role to revoke. Use `GeneralRoles.SUPER_KEEPER_ROLE` for super keeper
+  revocations
+- **targetAddress**: The address (EOA or contract) to revoke the role from
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { GeneralRoles } from '@summerfi/armada-protocol-common'
+import { sdk } from './sdk'
+
+// Address to revoke the Super Keeper role from
+const keeperAddress = Address.createFromEthereum({ value: '0xKEEPERADDRESS...' })
+
+const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
+  chainId: ChainIds.Base,
+  role: GeneralRoles.SUPER_KEEPER_ROLE,
+  targetAddress: keeperAddress,
+})
+
+// Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(revokeTxInfo)
+```
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+**Notes:**
+
+- Only addresses with the general `GOVERNOR_ROLE` can revoke general roles
+- After revoking, you can verify the role removal using `hasGeneralRole` method
+- The same method can revoke other general roles by changing the `role` parameter
+
 ## Changelog
 
 ### v2.1.0
@@ -402,3 +494,5 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 - Access Control - Check Whitelisted Addresses
 - Access Control - Grant Whitelisted Role
 - Access Control - Revoke Whitelisted Role
+- Access Control - Grant Super Keeper Role
+- Access Control - Revoke Super Keeper Role
