@@ -18,7 +18,7 @@ export const getInstitutionRoles: ({ institutionName }: { institutionName: strin
           await Promise.all(
             rolesList.map(async (role) => {
               const wallets =
-                await institutionSDK.armada.accessControl.getAllAddressesWithGeneralRole({
+                await institutionSDK.armada.accessControl.getAllAddressesWithGlobalRole({
                   role,
                   chainId: ChainIds.Base,
                 })
