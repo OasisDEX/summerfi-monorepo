@@ -122,4 +122,11 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerAdminClient['arks']> {
     return this.rpcClient.armada.admin.arks.query(params)
   }
+
+  /** @see IArmadaManagerAdminClient.arkConfig */
+  async arkConfig(
+    params: Parameters<IArmadaManagerAdminClient['arkConfig']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['arkConfig']> {
+    return this.rpcClient.armada.admin.arkConfig.query(params)
+  }
 }

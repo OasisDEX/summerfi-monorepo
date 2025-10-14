@@ -5,3 +5,4 @@ export { Erc4626Contract } from './implementation/contracts/Erc4626Contract/Erc4
 export { FleetCommanderContract } from './implementation/contracts/FleetCommanderContract/FleetCommanderContract'
 export { ProtocolAccessManagerWhiteListContract } from './implementation/contracts/ProtocolAccessManagerWhiteListContract/ProtocolAccessManagerWhiteListContract'
 export { GenericContractWrapper } from './implementation/contracts/GenericContract'
+export { ArkContract } from './implementation/contracts/ArkContract'

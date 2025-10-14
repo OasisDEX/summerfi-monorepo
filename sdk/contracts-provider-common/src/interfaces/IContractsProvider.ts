@@ -3,6 +3,7 @@ import { IErc20Contract } from './contracts/IErc20Contract'
 import { IErc4626Contract } from './contracts/IErc4626Contract'
 import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
 import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAccessManagerWhiteListContract'
+import { IArkContract } from './contracts/IArkContract'
 
 /**
  * @name IContractsProvider
@@ -67,4 +68,15 @@ export interface IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IProtocolAccessManagerWhiteListContract>
+
+  /**
+   * @name getArkContract
+   * @description Returns an Ark contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the Ark contract
+   *
+   * @returns {IArkContract}
+   */
+  getArkContract(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IArkContract>
 }
