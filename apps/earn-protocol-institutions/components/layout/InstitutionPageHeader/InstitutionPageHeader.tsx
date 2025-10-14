@@ -46,7 +46,6 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
 
   const { user } = useAuth()
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const institutionUserRole = user
     ? user.institutionsList?.find((institution) => institution.id === selectedInstitution.id)?.role
     : 'No role connected'

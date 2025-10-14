@@ -8,7 +8,7 @@ import styles from './TabBar.module.css'
 
 interface Tab {
   id: string
-  label: string
+  label: ReactNode
   icon?: ReactNode
   content?: ReactNode
   activeColor?: string

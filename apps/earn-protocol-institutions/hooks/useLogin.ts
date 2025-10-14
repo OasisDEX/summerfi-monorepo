@@ -10,13 +10,13 @@ const passwordMeetsRequirements = (password: string) => {
   // 8 character(s)
   // Password requirements
   // Contains at least 1 number
-  // Contains at least 1 special character (^$*.[]{}()?-"!@#%&/\,><':;|_~`+=)
+  // Contains at least 1 special character (not A-Za-z0-9])
   // Contains at least 1 uppercase letter
   // Contains at least 1 lowercase letter
   return (
     password.length >= 8 &&
     /[0-9]/u.test(password) &&
-    /[\^$*.-[\]{}(?)"!@#%&/\\,><':;|_~`+=]/u.test(password) &&
+    /[^A-Za-z0-9]/u.test(password) &&
     /[A-Z]/u.test(password) &&
     /[a-z]/u.test(password)
   )
@@ -27,13 +27,13 @@ const passwordMeetsRequirementsDetailed = (password: string, confirmedPassword: 
   // 8 character(s)
   // Password requirements
   // Contains at least 1 number
-  // Contains at least 1 special character (^$*.[]{}()?-"!@#%&/\,><':;|_~`+=)
+  // Contains at least 1 special character (not A-Za-z0-9])
   // Contains at least 1 uppercase letter
   // Contains at least 1 lowercase letter
   return {
     length: password.length >= 8,
     hasNumber: /[0-9]/u.test(password),
-    hasSpecialCharacter: /[\^$*.-[\]{}(?)"!@#%&/\\,><':;|_~`+=]/u.test(password),
+    hasSpecialCharacter: /[^A-Za-z0-9]/u.test(password),
     hasUppercase: /[A-Z]/u.test(password),
     hasLowercase: /[a-z]/u.test(password),
     isTheSame: password.length >= 8 && password === confirmedPassword,

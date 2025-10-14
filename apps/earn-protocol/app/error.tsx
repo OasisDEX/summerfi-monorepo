@@ -26,6 +26,7 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
         page: pathname,
         errorMessage,
         walletAddress: userWalletAddress,
+        digest: error.digest,
       })
     } catch {
       // swallow analytics errors

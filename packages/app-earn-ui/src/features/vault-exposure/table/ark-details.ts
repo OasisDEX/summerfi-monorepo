@@ -10,7 +10,6 @@ export const arkDetailsMap: {
   }
 } = {
   [SupportedSDKNetworks.Mainnet]: {
-    // ETH Strategies
     '0x1a91e4bc8b5dc910bc58c3ddf35405edb9c2022e': {
       description:
         'Built on time-tested infrastructure, delivering efficient ETH yield optimization with a strong track record of reliability and security.',
@@ -98,8 +97,6 @@ export const arkDetailsMap: {
         'A dynamically managed ETH strategy, adjusting to market conditions in real time to ensure optimal capital performance.',
       link: 'https://fluid.instadapp.io/lending/1',
     },
-
-    // USDT Strategies
     '0x26c50781f592cf4c7389615a38dc927c81f8a0a4': {
       description:
         'A strategy designed to ensure capital efficiency while reducing unnecessary exposure to volatility or structural risks.',
@@ -164,8 +161,6 @@ export const arkDetailsMap: {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
-
-    // USDC Strategies
     '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
       description:
         'A structured USDC strategy, optimized for long-term stability and avoiding unnecessary market inefficiencies.',
@@ -340,6 +335,102 @@ export const arkDetailsMap: {
         'USDC goes into a Silo market backed by restaking tokens, staked-stable LPs, yield stables, treasury PTs, and a small WBTC sleeve. Separate caps and oracles fence off each asset, keeping risk isolated while spare capacity preserves stable yields. All curated by Apostro.',
       link: 'https://app.term.finance/vaults/0xa9ca4909700505585b1ad2a1579da3b670ffa9c4/1',
     },
+    '0xdc931f070dfe8680ce0c76e16d8b626ab7b49ce9': {
+      description:
+        'A WETH vault curated by Alterscope, designed for advanced liquid restaking strategies with real-time risk management across chains, protocols, and liquidity pools.',
+    },
+    '0xbc7070bc34ab83f15fda79cda0c90a30f352eea6': {
+      description:
+        'A high-risk, high-reward USDC vault in the Frontier series, collateralized by Falcon ecosystem assets, enabling capital-efficient borrowing and yield strategies while staying liquid.',
+    },
+    '0x068df9a153948b4be0d4dcc074c3a44ba787b26c': {
+      description:
+        'Hyperwave USDC	A volatile USDC vault in the Frontier series, curated for higher risk profiles with dynamic market exposure.',
+    },
+    '0x205ae98cd205b64ec0840d93d80e32114a75f793': {
+      description:
+        'An experimental USDC vault in the Frontier series, for innovative yield opportunities.',
+    },
+    '0x5d8ad79abc9a48ff199c73fc909cb1eb9f5fbeb5': {
+      description:
+        "A WETH vault in the Frontier series, combining Euler lending with Puffer's liquid restaking to enhance yield through modular architecture.",
+    },
+    '0x0264f3a10526b5eb5f75eb4004df6e3ccc3b45e3': {
+      description:
+        'An isolated WETH vault in the Frontier series with higher risk/reward, supporting deposits for maximized yield composition across DeFi.',
+    },
+    '0x0fa036c6476e16d68a664c0e2da2be7e85ac29c8': {
+      description:
+        'A research driven USDC vault in the Frontier series, focused on optimized yield generation through curated strategies.',
+    },
+    '0x46955bc1eecd65bf6c5c764eb158e2618db72d47': {
+      description:
+        'A higher-risk USDC pool on Gearbox Protocol curated by Invariant, leveraging deep on-chain participation and protocol experience for DeFi growth and resilience.',
+    },
+    '0xa6fb46b115ae21e19475d8ee58c2f3e08b23c84c': {
+      description:
+        'A USDC lending pool on Gearbox Permissionless curated by Invariant; supplies credit to levered strategies (e.g., LP/points/staked positions) for elevated lender APRs.',
+    },
+    '0xe0212ebbbffade416c5dabaea2ea6c7a921c950f': {
+      description:
+        'A USDC vault curated by Gauntlet, designed to optimize risk-adjusted returns by lending to Real World Asset (RWA) collateral markets.',
+    },
+    '0x756ca6d02523c908972c4f82a4821c15f740d275': {
+      description:
+        'A USDC vault curated by Hyperithm, maximizing yield by integrating unique collaterals and active optimization for high-return borrower opportunities.',
+    },
+    '0xe399c348b679fd111b51f3f4d3c1159701df76a8': {
+      description:
+        'A USDC vault curated by MEV Capital, focusing on Principal Tokens (PTs) collateral markets with active rebalancing for optimized risk-adjusted returns.',
+    },
+    '0x59c6282f9797eeb3c8622243595303f80131039a': {
+      description:
+        'A USDC vault curated by RE7, lending against assets in the f(x) Protocol ecosystem in partnership with Aladdin DAO for enhanced yield.',
+    },
+    '0x43aa3980d07c3343a815202cf400d5027b0bcb59': {
+      description:
+        "A USDC vault curated by Steakhouse, lending against InfiniFi ecosystem collateral to optimize yields using Morpho's protection features.",
+    },
+    '0x2b8078ed8b642dc3bf8691c4d1493822f4917524': {
+      description:
+        'A USDC vault curated by TAC (9Summits), allocating to a range of liquid assets for the best risk-adjusted yield.',
+    },
+    '0x679794389b05b0db3cbedacc908ff8fb531fa53f': {
+      description:
+        'A USDC vault curated be Vault Bridge, optimizing risk-adjusted yield across high-liquidity collateral markets.',
+    },
+    '0xe885a960a34841bd639c03e70e9b55150f456e2b': {
+      description:
+        'A WETH vault curated by Alpha, investing in blue-chip yield-bearing DeFi assets with proven track records and real protocol earnings.',
+    },
+    '0x8c98788cda451c9a4ccd4cd93a5bf67147f12ab9': {
+      description:
+        'A WETH vault curated by Avantgarde, optimizing risk-adjusted yields through dynamic allocation with a balanced focus on diversification and sustainable yield generation.',
+    },
+    '0xf38a864a23c553694bee0cc3a73a2d9022f77daa': {
+      description:
+        'The High Yield ETH (hyETH) vault curated by Index Coop, providing high-yield ETH exposure through smart, risk-adjusted lending strategies managed by Gauntlet.',
+    },
+    '0x2e8a733d044dd96bca3584caab61c5cbb69b50bc': {
+      description:
+        'A WETH vault curated by SingularV, maximizing return with limited risk through thorough evaluation of collateral and oracles.',
+    },
+    '0xf2b2cf1c1f211cc5d31b4cd9d33615fc3e3ee114': {
+      description:
+        'A WETH vault curated by TAC (9Summits), allocating to a range of liquid assets for the best risk-adjusted yield.',
+    },
+    '0xb5bc81fcc36c2e4320b8fa9a268728c309019716': {
+      description:
+        'A WETH vault curated by Yearn, lending to moderate-risk markets with automatic algorithmic optimization.',
+    },
+    '0x219ccbf0d3990e1cdaaf3ea840c7b233553c86a3': {
+      description:
+        'An automated redemption manager (ARM) vault that arbitrages stETH by buying it at a discount when depegged and redeeming for ETH, providing yield on WETH/stETH positions.',
+    },
+    '0x61d7063041d83c8ca3e42c39181dfd14b3bc76c2': {
+      description:
+        'A USDC growth vault managed by Varlamore on Silo, providing high APY through optimized stablecoin yield strategies for yield-seekers.',
+    },
   },
   [SupportedSDKNetworks.ArbitrumOne]: {
     '0xc9dd080c9eccfcdbf379714d84cdc8bd01046ae1': {
@@ -390,6 +481,26 @@ export const arkDetailsMap: {
         'Converts USDC to interest-bearing sUSDC, powered by Sky, a blue chip DeFi protocol.',
       link: 'https://app.sky.money',
     },
+    '0xd17c91ddd4bf4ccd34402901697e5af1927213ce': {
+      description:
+        'A USDC vault on Arbitrum, collateralized by other vaults in the Euler Arbitrum Yield cluster for aggregated and optimized yield.',
+    },
+    '0x106b67d2621113fdd8f6e58f5ebee418400197d3': {
+      description:
+        'A USDC vault curated by Gauntlet, optimizing risk-adjusted yield across a blend of blue-chip and small-cap collateral markets.',
+    },
+    '0x525360007383bd0e6ba9deedd376c931c47135ad': {
+      description:
+        'A USDC vault curated by Gauntlet, focusing on large-cap, high-liquidity collateral markets for risk-adjusted yield.',
+    },
+    '0x54749c15751137be18768288d3945c4934fcb800': {
+      description:
+        'A managed USDC vault on Silo for the Swaap Lend market (susdx 127), earning yield through lending in a specific Silo V2 market optimized risk adjusted yield.',
+    },
+    '0x125dae47930c1118cf2db5a140877c64b408783c': {
+      description:
+        'A USDC vault managed by Varlamore on Silo, designed for stable lending income with automatic yield optimization.',
+    },
   },
   [SupportedSDKNetworks.Base]: {
     '0x165d1accc5c6326e7ee4deef75ac3ffc8ce4d79b': {
@@ -438,6 +549,10 @@ export const arkDetailsMap: {
       link: 'https://app.compound.finance/markets/usdc-basemainnet',
     },
     '0x106cbb1f445f0bffa7894f4199ee940bf7f6dd2b': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+    '0x72d41714153a05d9e41c5346256e0db2728bd302': {
       description:
         'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
@@ -530,6 +645,22 @@ export const arkDetailsMap: {
         'Large-TVL core pool provides liquidity ballast and steady base rate when peer matches exhaust.',
       link: 'https://moonwell.fi/markets/supply/base/usdc',
     },
+    '0xf23e13c573a3ed690eb2d033c4ed45adf10458ac': {
+      description:
+        'A USDC vault curated by Extrafi XLend with Gauntlet, targeting high-demand collateral markets on Base for optimized risk-adjusted yield.',
+    },
+    '0xece30ebeaa765472895e77deac35a09ddae9f8c7': {
+      description:
+        'A WETH vault curated by Extrafi XLend with Gauntlet, optimizing risk-adjusted yield across high-demand collateral markets on Base.',
+    },
+    '0xec3cc472e176d65b7b17e2bb6178317ad8da7822': {
+      description:
+        'A WETH vault curated by Gauntlet, optimizing risk-adjusted yield across a range of liquid collateral markets with a blend of blue-chip and small-cap assets.',
+    },
+    '0x55bd40ffdbfe45869969a3c10b39c11152a735bc': {
+      description:
+        'A WETH vault curated by Yearn, lending to moderate-risk markets with automatic algorithmic optimization.',
+    },
   },
   [SupportedSDKNetworks.SonicMainnet]: {
     '0x809a0c98fac68a0c4319f3a3e864540c772562af': {
@@ -575,6 +706,10 @@ export const arkDetailsMap: {
       description:
         'RE7 Labs automates pool rebalancing, boosting capital efficiency for passive USDC-E yield.',
       link: 'https://v2.silo.finance/earn',
+    },
+    '0x8faf711962e89047cb26fb4b4f8dbd578069db53': {
+      description:
+        'A WETH vault curated by Yearn, lending to moderate-risk markets with automatic algorithmic optimization.',
     },
   },
 }

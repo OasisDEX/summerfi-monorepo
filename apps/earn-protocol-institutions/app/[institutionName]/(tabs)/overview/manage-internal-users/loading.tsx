@@ -1,3 +1,5 @@
+import { PanelManageListInternalUsersLoading } from '@/features/panels/overview/components/PanelManageInternalUsers/PanelManageListInternalUsersLoading'
+
 export default function ManageInternalUsersLoadingTab() {
-  return <div>ManageInternalUsersLoadingTab</div>
+  return <PanelManageListInternalUsersLoading />
 }

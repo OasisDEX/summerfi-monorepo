@@ -6,7 +6,11 @@ import {
   type SupportedSDKNetworks,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  sdkNetworkToHumanNetwork,
+} from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { memoize } from 'lodash-es'
@@ -123,6 +127,12 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(`Error fetching ark details for ${item.id} on ${vaultNetwork}`, error)
+    }
+    if (!arkDetails) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `No ark details found for ${protocolLabel} - ${item.id} on ${sdkNetworkToHumanNetwork(vaultNetwork)}`,
+      )
     }
 
     const arkDaysSinceCreated = dayjs().diff(dayjs(Number(item.createdTimestamp) * 1000), 'day')

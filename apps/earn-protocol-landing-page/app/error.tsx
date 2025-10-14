@@ -21,6 +21,7 @@ export default function GlobalErrorHandler({ error }: { error: Error & { digest?
       page: pathname,
       errorId: `lp-global-error-${error.digest}`,
       errorMessage: `${error.name}${error.digest ? `:${error.digest}` : ''}`,
+      digest: error.digest,
     })
   }, [error, pathname])
 

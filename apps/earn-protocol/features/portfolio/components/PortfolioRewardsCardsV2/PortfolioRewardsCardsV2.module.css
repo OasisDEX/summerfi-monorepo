@@ -1,0 +1,66 @@
+.portfolioRewardsCardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--general-space-16);
+}
+
+.portfolioRewardsCardsWrapper .cardWrapper {
+  flex: 1;
+  min-width: 250px;
+}
+
+@media (min-width: 768px) {
+  .portfolioRewardsCardsWrapper .cardWrapper {
+    min-width: 420px;
+  }
+}
+
+.portfolioRewardsCardsWrapper .cardWrapperFullWidth {
+  flex: 1 1 100%;
+}
+
+.portfolioRewardsCardsWrapper .sumrPriceTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.portfolioRewardsCardsWrapper .sumrPriceDataBlocks {
+  display: flex;
+  gap: var(--general-space-8);
+  justify-content: space-between;
+  margin-top: var(--general-space-24);
+}
+
+@media (max-width: 744px) {
+  .portfolioRewardsCardsWrapper .sumrPriceDataBlocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .portfolioRewardsCardsWrapper .sumrPriceDataBlocksDivider {
+    display: none;
+  }
+}
+
+.portfolioRewardsCardsWrapper .sumrPriceDataBlock {
+  min-width: 120px;
+}
+
+.portfolioRewardsCardsWrapper .sumrPriceDataBlocksDivider {
+  /* margin-top: 20px; */
+  width: 1px;
+  height: 50px;
+  background-color: var(--color-border);
+}
+
+.titleWithIconFullWidth {
+  width: 100%;
+}
+
+.portfolioRewardsCardsWrapper .votingPower {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-4);
+}

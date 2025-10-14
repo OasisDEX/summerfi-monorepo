@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Card, getDisplayToken, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { type ForecastData, type SDKVaultishType, type TimeframesType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
 import { OpenPositionForecastChart } from '@/components/organisms/Charts/OpenPositionForecastChart'
@@ -79,13 +79,19 @@ export const VaultSimulationGraph = ({
     })
   }, [forecast, timeframe, isLoadingForecast])
 
-  const maxEarnInTimeframeToken = useMemo(() => {
+  const earningsInTimeframe = useMemo(() => {
     if (!parsedData.length || !amountCached || isLoadingForecast) {
       return undefined
     }
 
-    // if we want to show the true earned, not deposit + earned
-    // return new BigNumber(parsedData[parsedData.length - 1].forecast).minus(amountCached).toString()
+    return new BigNumber(parsedData[parsedData.length - 1].forecast).minus(amountCached).toString()
+  }, [amountCached, parsedData, isLoadingForecast])
+
+  const earningsAfterTimeframe = useMemo(() => {
+    if (!parsedData.length || !amountCached || isLoadingForecast) {
+      return undefined
+    }
+
     return parsedData[parsedData.length - 1].forecast
   }, [amountCached, parsedData, isLoadingForecast])
 
@@ -115,8 +121,8 @@ export const VaultSimulationGraph = ({
           marginBottom: 'var(--general-space-4)',
         }}
       >
-        {maxEarnInTimeframeToken ? (
-          `${formatCryptoBalance(maxEarnInTimeframeToken)} ${getDisplayToken(vault.inputToken.symbol)}`
+        {earningsInTimeframe ? (
+          `${formatCryptoBalance(earningsInTimeframe)} ${getDisplayToken(vault.inputToken.symbol)}`
         ) : (
           <SkeletonLine style={{ display: 'inline-block' }} width={150} height={20} />
         )}
@@ -128,6 +134,14 @@ export const VaultSimulationGraph = ({
           marginBottom: 'var(--general-space-8)',
         }}
       >
+        {earningsAfterTimeframe ? (
+          <>
+            {formatCryptoBalance(earningsAfterTimeframe)}&nbsp;
+            {getDisplayToken(vault.inputToken.symbol)}&nbsp;
+          </>
+        ) : (
+          ''
+        )}
         after {timeframeLabels[timeframe]}
       </Text>
       <OpenPositionForecastChart

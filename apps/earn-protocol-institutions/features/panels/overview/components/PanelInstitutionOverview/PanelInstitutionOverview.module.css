@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.yourVaultsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
