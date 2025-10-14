@@ -1,4 +1,3 @@
-export { ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
 export type {
   GetVaultsQuery,
   GetVaultQuery,
@@ -48,7 +47,6 @@ export type { IArmadaManagerVaults } from './common/interfaces/IArmadaManagerVau
 export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtils'
 export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
 export type { IArmadaManagerAccessControl } from './common/interfaces/IArmadaManagerAccessControl'
-export { GeneralRoles, GENERAL_ROLE_HASHES } from './common/types/GeneralRoles'
 export {
   setTestDeployment,
   isTestDeployment,

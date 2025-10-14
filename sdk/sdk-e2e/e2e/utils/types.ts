@@ -1,5 +1,9 @@
-import type { ContractSpecificRoleName, GeneralRoles } from '@summerfi/armada-protocol-common'
-import type { Address, ChainInfo } from '@summerfi/sdk-common'
+import type {
+  Address,
+  ChainInfo,
+  ContractSpecificRoleName,
+  GeneralRoles,
+} from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
   role: ContractSpecificRoleName

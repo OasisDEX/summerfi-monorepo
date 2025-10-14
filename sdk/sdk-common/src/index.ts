@@ -26,6 +26,8 @@ export type { IArkConfig } from './common/types/IArkConfig'
 export type { IFleetConfig } from './common/types/IFleetConfig'
 export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceData'
 export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
+export { GeneralRoles, GENERAL_ROLE_HASHES } from './common/types/GeneralRoles'
+export { ContractSpecificRoleName } from './common/types/ContractSpecificRoleName'
 export { AddressType } from './common/enums/AddressType'
 export {
   ChainFamilyName,

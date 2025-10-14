@@ -33,7 +33,6 @@ export {
   SparkProtocol,
   type ISparkProtocol,
 } from '@summerfi/protocol-plugins'
-export { GeneralRoles } from '@summerfi/armada-protocol-common'
 export type {
   MerklReward,
   MerklRewardBreakdown,

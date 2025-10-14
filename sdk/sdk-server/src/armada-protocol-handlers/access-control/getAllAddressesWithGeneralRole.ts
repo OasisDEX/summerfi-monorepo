@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { GeneralRoles } from '@summerfi/armada-protocol-common'
-import { isChainId, type ChainId } from '@summerfi/sdk-common'
+import { isChainId, type ChainId, GeneralRoles } from '@summerfi/sdk-common'
 
 export const getAllAddressesWithGeneralRole = publicProcedure
   .input(

@@ -1,12 +1,10 @@
-import { IAddress, TransactionInfo, type HexData } from '@summerfi/sdk-common'
+import {
+  IAddress,
+  TransactionInfo,
+  type HexData,
+  type ContractSpecificRoleName,
+} from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
-
-export enum ContractSpecificRoleName {
-  CURATOR_ROLE,
-  KEEPER_ROLE,
-  COMMANDER_ROLE,
-  WHITELISTED_ROLE,
-}
 
 /**
  * @name IProtocolAccessManagerWhiteListContract

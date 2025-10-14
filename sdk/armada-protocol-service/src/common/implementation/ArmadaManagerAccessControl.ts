@@ -1,7 +1,6 @@
 import type { IArmadaManagerAccessControl } from '@summerfi/armada-protocol-common'
-import { GeneralRoles, GENERAL_ROLE_HASHES } from '@summerfi/armada-protocol-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider, ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   IAddress,
@@ -13,6 +12,9 @@ import {
   type AddressValue,
   Address,
   LoggingService,
+  GeneralRoles,
+  GENERAL_ROLE_HASHES,
+  ContractSpecificRoleName,
 } from '@summerfi/sdk-common'
 
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'

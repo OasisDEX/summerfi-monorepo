@@ -1,5 +1,11 @@
-import type { ChainId, IAddress, TransactionInfo, AddressValue } from '@summerfi/sdk-common'
-import type { ContractSpecificRoleName, GeneralRoles } from '@summerfi/armada-protocol-common'
+import type {
+  ChainId,
+  IAddress,
+  TransactionInfo,
+  AddressValue,
+  ContractSpecificRoleName,
+  GeneralRoles,
+} from '@summerfi/sdk-common'
 
 /**
  * @name IArmadaManagerClientAccessControl

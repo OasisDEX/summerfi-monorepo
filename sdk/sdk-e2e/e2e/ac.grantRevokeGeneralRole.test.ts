@@ -1,4 +1,4 @@
-import { GeneralRoles } from '@summerfi/armada-protocol-common'
+import { GeneralRoles } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)

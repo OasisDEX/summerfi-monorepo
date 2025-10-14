@@ -1,4 +1,4 @@
-import type { HexData } from '@summerfi/sdk-common'
+import type { HexData } from './HexData'
 
 /**
  * @name GeneralRoles
