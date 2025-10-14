@@ -2,7 +2,7 @@ import type {
   Address,
   ChainInfo,
   ContractSpecificRoleName,
-  GeneralRoles,
+  GlobalRoles,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -12,8 +12,8 @@ export type ContractRoleScenario = {
   shouldRevoke?: boolean
 }
 
-export type GeneralRoleScenario = {
-  role: GeneralRoles
+export type GlobalRoleScenario = {
+  role: GlobalRoles
   targetAddress: Address
   shouldGrant?: boolean
   shouldRevoke?: boolean

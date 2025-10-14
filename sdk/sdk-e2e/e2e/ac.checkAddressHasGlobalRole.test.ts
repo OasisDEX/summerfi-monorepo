@@ -1,6 +1,6 @@
-import { GeneralRoles } from '@summerfi/sdk-common'
+import { GlobalRoles } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
-import type { GeneralRoleScenario } from './utils/types'
+import type { GlobalRoleScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -12,15 +12,15 @@ describe('Armada Protocol - Access Control General Role Checking', () => {
     createAdminSdkTestSetup()
 
   // Configure test scenarios here
-  const scenarios: GeneralRoleScenario[] = [
+  const scenarios: GlobalRoleScenario[] = [
     {
-      role: GeneralRoles.GOVERNOR_ROLE,
+      role: GlobalRoles.GOVERNOR_ROLE,
       targetAddress: governorAddress,
       shouldGrant: false,
       shouldRevoke: false,
     },
     {
-      role: GeneralRoles.SUPER_KEEPER_ROLE,
+      role: GlobalRoles.SUPER_KEEPER_ROLE,
       targetAddress: governorAddress,
       shouldGrant: true,
       shouldRevoke: false,

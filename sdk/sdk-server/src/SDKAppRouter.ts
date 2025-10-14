@@ -79,13 +79,13 @@ import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMer
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
 import { getAuthorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/getAuthorizeAsMerklRewardsOperatorTx'
 import { getIsAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/getIsAuthorizedAsMerklRewardsOperator'
-import { hasGeneralRole } from './armada-protocol-handlers/access-control/hasGeneralRole'
+import { hasGlobalRole } from './armada-protocol-handlers/access-control/hasGlobalRole'
 import { hasContractSpecificRole } from './armada-protocol-handlers/access-control/hasContractSpecificRole'
-import { grantGeneralRole } from './armada-protocol-handlers/access-control/grantGeneralRole'
-import { revokeGeneralRole } from './armada-protocol-handlers/access-control/revokeGeneralRole'
+import { grantGlobalRole } from './armada-protocol-handlers/access-control/grantGlobalRole'
+import { revokeGlobalRole } from './armada-protocol-handlers/access-control/revokeGlobalRole'
 import { grantContractSpecificRole } from './armada-protocol-handlers/access-control/grantContractSpecificRole'
 import { revokeContractSpecificRole } from './armada-protocol-handlers/access-control/revokeContractSpecificRole'
-import { getAllAddressesWithGeneralRole } from './armada-protocol-handlers/access-control/getAllAddressesWithGeneralRole'
+import { getAllAddressesWithGlobalRole } from './armada-protocol-handlers/access-control/getAllAddressesWithGlobalRole'
 import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handlers/access-control/getAllAddressesWithContractSpecificRole'
 
 /**
@@ -193,13 +193,13 @@ export const sdkAppRouter = router({
       arkConfig: arkConfig,
     },
     accessControl: {
-      hasGeneralRole: hasGeneralRole,
+      hasGlobalRole: hasGlobalRole,
       hasContractSpecificRole: hasContractSpecificRole,
-      grantGeneralRole: grantGeneralRole,
-      revokeGeneralRole: revokeGeneralRole,
+      grantGlobalRole: grantGlobalRole,
+      revokeGlobalRole: revokeGlobalRole,
       grantContractSpecificRole: grantContractSpecificRole,
       revokeContractSpecificRole: revokeContractSpecificRole,
-      getAllAddressesWithGeneralRole: getAllAddressesWithGeneralRole,
+      getAllAddressesWithGlobalRole: getAllAddressesWithGlobalRole,
       getAllAddressesWithContractSpecificRole: getAllAddressesWithContractSpecificRole,
     },
   },

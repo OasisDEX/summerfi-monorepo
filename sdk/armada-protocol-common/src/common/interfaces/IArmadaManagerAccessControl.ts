@@ -3,7 +3,7 @@ import type {
   IAddress,
   TransactionInfo,
   AddressValue,
-  GeneralRoles,
+  GlobalRoles,
   ContractSpecificRoleName,
 } from '@summerfi/sdk-common'
 
@@ -13,18 +13,18 @@ import type {
  */
 export interface IArmadaManagerAccessControl {
   /**
-   * @name hasGeneralRole
-   * @description Checks if an address has a specific general protocol role
+   * @name hasGlobalRole
+   * @description Checks if an address has a specific global protocol role
    *
    * @param chainId The chain ID to check the role on
-   * @param role The general role to check
+   * @param role The global role to check
    * @param targetAddress The address to check for the role
    *
    * @returns Promise<boolean> True if the address has the role
    */
-  hasGeneralRole(params: {
+  hasGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<boolean>
 
@@ -47,34 +47,34 @@ export interface IArmadaManagerAccessControl {
   }): Promise<boolean>
 
   /**
-   * @name grantGeneralRole
-   * @description Grants a general protocol role to an address
+   * @name grantGlobalRole
+   * @description Grants a global protocol role to an address
    *
    * @param chainId The chain ID to grant the role on
-   * @param role The general role to grant
+   * @param role The global role to grant
    * @param targetAddress The address to grant the role to
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantGeneralRole(params: {
+  grantGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<TransactionInfo>
 
   /**
-   * @name revokeGeneralRole
-   * @description Revokes a general protocol role from an address
+   * @name revokeGlobalRole
+   * @description Revokes a global protocol role from an address
    *
    * @param chainId The chain ID to revoke the role on
-   * @param role The general role to revoke
+   * @param role The global role to revoke
    * @param targetAddress The address to revoke the role from
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeGeneralRole(params: {
+  revokeGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<TransactionInfo>
 
@@ -115,17 +115,17 @@ export interface IArmadaManagerAccessControl {
   }): Promise<TransactionInfo>
 
   /**
-   * @name getAllAddressesWithGeneralRole
-   * @description Gets all addresses that currently have a specific general protocol role
+   * @name getAllAddressesWithGlobalRole
+   * @description Gets all addresses that currently have a specific global protocol role
    *
    * @param chainId The chain ID to check the role on
-   * @param role The general role to check for
+   * @param role The global role to check for
    *
    * @returns Promise<AddressValue[]> Array of addresses that have the role
    */
-  getAllAddressesWithGeneralRole(params: {
+  getAllAddressesWithGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
   }): Promise<AddressValue[]>
 
   /**

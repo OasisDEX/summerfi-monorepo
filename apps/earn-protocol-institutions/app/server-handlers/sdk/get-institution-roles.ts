@@ -1,12 +1,12 @@
-import { ChainIds, GeneralRoles } from '@summerfi/sdk-client'
+import { ChainIds, GlobalRoles } from '@summerfi/sdk-client'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
-const rolesList = Object.values(GeneralRoles)
+const rolesList = Object.values(GlobalRoles)
 
 export const getInstitutionRoles: ({ institutionName }: { institutionName: string }) => Promise<{
-  [role in GeneralRoles]: { wallets: string[] }
+  [role in GlobalRoles]: { wallets: string[] }
 }> = async ({ institutionName }) => {
   const institutionSDK = getInstitutionsSDK(institutionName)
 

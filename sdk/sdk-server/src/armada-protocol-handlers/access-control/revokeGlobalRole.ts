@@ -5,17 +5,17 @@ import {
   isChainId,
   type ChainId,
   type IAddress,
-  GeneralRoles,
+  GlobalRoles,
 } from '@summerfi/sdk-common'
 
-export const grantGeneralRole = publicProcedure
+export const revokeGlobalRole = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      role: z.nativeEnum(GeneralRoles),
+      role: z.nativeEnum(GlobalRoles),
       targetAddress: z.custom<IAddress>(isAddress),
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.accessControl.grantGeneralRole(opts.input)
+    return opts.ctx.armadaManager.accessControl.revokeGlobalRole(opts.input)
   })

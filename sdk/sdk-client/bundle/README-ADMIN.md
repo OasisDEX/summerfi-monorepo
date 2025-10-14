@@ -448,15 +448,15 @@ roles to other addresses.
 
 ```typescript
 import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { GeneralRoles } from '@summerfi/armada-protocol-common'
+import { GlobalRoles } from '@summerfi/armada-protocol-common'
 import { sdk } from './sdk'
 
 // Address to grant the Super Keeper role to
 const keeperAddress = Address.createFromEthereum({ value: '0xKEEPERADDRESS...' })
 
-const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
+const grantTxInfo = await sdk.armada.accessControl.grantGlobalRole({
   chainId: ChainIds.Base,
-  role: GeneralRoles.SUPER_KEEPER_ROLE,
+  role: GlobalRoles.SUPER_KEEPER_ROLE,
   targetAddress: keeperAddress,
 })
 
@@ -495,15 +495,15 @@ roles from other addresses.
 
 ```typescript
 import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { GeneralRoles } from '@summerfi/armada-protocol-common'
+import { GlobalRoles } from '@summerfi/armada-protocol-common'
 import { sdk } from './sdk'
 
 // Address to revoke the Super Keeper role from
 const keeperAddress = Address.createFromEthereum({ value: '0xKEEPERADDRESS...' })
 
-const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
+const revokeTxInfo = await sdk.armada.accessControl.revokeGlobalRole({
   chainId: ChainIds.Base,
-  role: GeneralRoles.SUPER_KEEPER_ROLE,
+  role: GlobalRoles.SUPER_KEEPER_ROLE,
   targetAddress: keeperAddress,
 })
 

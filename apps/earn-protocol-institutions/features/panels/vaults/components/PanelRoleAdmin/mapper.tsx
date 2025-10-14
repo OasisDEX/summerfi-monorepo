@@ -1,6 +1,6 @@
 import { Button, Icon, Input, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
-import { type GeneralRoles } from '@summerfi/sdk-client'
+import { type GlobalRoles } from '@summerfi/sdk-client'
 import dayjs from 'dayjs'
 
 import { walletRolesToHuman } from '@/helpers/roles-to-human'
@@ -34,7 +34,7 @@ export const roleAdminMapper = ({
       const resolvedItem = {
         address: item.address,
         lastUpdated: item.lastUpdated,
-        role: role as GeneralRoles,
+        role: role as GlobalRoles,
       }
 
       if (isUpdating) {
@@ -46,7 +46,7 @@ export const roleAdminMapper = ({
 
     return {
       content: {
-        role: <TableCellText>{walletRolesToHuman(role as GeneralRoles)}</TableCellText>,
+        role: <TableCellText>{walletRolesToHuman(role as GlobalRoles)}</TableCellText>,
         address: (
           <TableCellNodes className={isUpdating ? styles.tableCellNodeUpdating : ''}>
             {isUpdating ? (

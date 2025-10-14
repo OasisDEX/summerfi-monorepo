@@ -1,5 +1,5 @@
 import { type Address } from '@summerfi/app-types'
-import { type GeneralRoles } from '@summerfi/sdk-client'
+import { type GlobalRoles } from '@summerfi/sdk-client'
 
 import {
   type getInstitutionData,
@@ -7,7 +7,7 @@ import {
 } from '@/app/server-handlers/institution/institution-data'
 
 export type InstitutionVaultRoles = {
-  [key in GeneralRoles]?: {
+  [key in GlobalRoles]?: {
     address: Address
     lastUpdated: number
   }
@@ -40,7 +40,7 @@ export type InstitutionVaultFeeRevenueData = {
 export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
 export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
 
-export type InstitutionVaultRole = { address: Address; lastUpdated: number; role: GeneralRoles }
+export type InstitutionVaultRole = { address: Address; lastUpdated: number; role: GlobalRoles }
 
 export type InstitutionDataBasic = {
   id: InstitutionData['id']
