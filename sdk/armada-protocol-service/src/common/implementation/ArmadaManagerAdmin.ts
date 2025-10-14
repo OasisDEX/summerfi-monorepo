@@ -226,7 +226,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   ): ReturnType<IArmadaManagerAdmin['arkConfig']> {
     const chainInfo = getChainInfoByChainId(params.chainId)
     const arkAddress = Address.createFromEthereum({ value: params.arkAddressValue })
-    
+
     const arkContract = await this._contractsProvider.getArkContract({
       chainInfo: chainInfo,
       address: arkAddress,
