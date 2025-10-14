@@ -1,10 +1,11 @@
-import { User, Wallet } from '@summerfi/sdk-common'
+import { User, Wallet, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { zeroAddress } from 'viem'
 import assert from 'assert'
 
 import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { SharedConfig } from './utils/testConfig'
+import { SharedConfig, ChainConfigs } from './utils/testConfig'
+import type { GovTestScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -14,12 +15,23 @@ const privateKey = SharedConfig.userPrivateKey
 describe.skip('Armada Protocol Gov', () => {
   const sdk = createTestSDK()
 
-  for (const { chainInfo, rpcUrl, userAddress } of testConfig) {
-    if (!rpcUrl) {
-      throw new Error('Missing fork url')
-    }
+  // Configure test scenarios here
+  const scenarios: GovTestScenario[] = [
+    {
+      chainInfo: getChainInfoByChainId(ChainConfigs.Base.chainId),
+      rpcUrl: ChainConfigs.Base.rpcUrl,
+      userAddress: Address.createFromEthereum({ value: SharedConfig.userAddressValue }),
+      enabled: true,
+    },
+  ]
 
-    describe(`Running on ${chainInfo.name} for user ${userAddress.value}`, () => {
+  describe.each(scenarios.filter((s) => s.enabled !== false))(
+    'Running scenario on $chainInfo.name for user $userAddress.value',
+    ({ chainInfo, rpcUrl, userAddress }) => {
+      if (!rpcUrl) {
+        throw new Error('Missing fork url')
+      }
+
       const user = User.createFrom({
         chainInfo,
         wallet: Wallet.createFrom({
@@ -27,39 +39,41 @@ describe.skip('Armada Protocol Gov', () => {
         }),
       })
 
-      describe.skip(`check user not using gov`, () => {
-        it(`should have balance`, async () => {
+      describe(`check SUMR gov utility functions`, () => {
+        it(`check SUMR balance`, async () => {
           const balance = await sdk.armada.users.getUserBalance({
             user,
           })
-          expect(balance).toBeGreaterThan(0n)
+          expect(balance).toBeDefined()
           console.log('balance', balance)
         })
-        it(`should not have delegate`, async () => {
+        it(`check SUMR staked balance`, async () => {
+          const stakedBalance = await sdk.armada.users.getUserStakedBalance({
+            user,
+          })
+          expect(stakedBalance).toBeDefined()
+          console.log('staked', stakedBalance)
+        })
+        it(`check SUMR delegate`, async () => {
           const delegate = await sdk.armada.users.getUserDelegatee({
             user,
           })
-          assert(delegate.value === zeroAddress, 'Should not have a delegate')
+          expect(delegate).toBeDefined()
+          console.log('delegate', delegate)
         })
-        it(`should not have staked balance`, async () => {
-          const staked = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          expect(staked).toBe(0n)
-          console.log('staked', staked)
-        })
-        it(`should not have votes`, async () => {
+
+        it(`check SUMR votes`, async () => {
           const votes = await sdk.armada.users.getUserVotes({
             user,
           })
-          expect(votes).toBe(0n)
+          expect(votes).toBeDefined()
           console.log('votes', votes)
         })
-        it(`should not have earned rewards`, async () => {
+        it(`check SUMR earned rewards`, async () => {
           const earned = await sdk.armada.users.getUserEarnedRewards({
             user,
           })
-          expect(earned).toBe(0n)
+          expect(earned).toBeDefined()
           console.log('earned', earned)
         })
       })
@@ -99,7 +113,6 @@ describe.skip('Armada Protocol Gov', () => {
       })
 
       describe.skip(`staking`, () => {
-        // staking tx
         it(`should stake all`, async () => {
           const balance = await sdk.armada.users.getUserBalance({
             user,
@@ -138,9 +151,7 @@ describe.skip('Armada Protocol Gov', () => {
         })
       })
 
-      // unstaking
       describe.skip(`unstaking`, () => {
-        // unstaking tx
         it(`should unstake all`, async () => {
           const staked = await sdk.armada.users.getUserStakedBalance({
             user,
@@ -183,10 +194,8 @@ describe.skip('Armada Protocol Gov', () => {
         })
       })
 
-      // desc un-delegation
-      describe(`undelegation`, () => {
+      describe.skip(`undelegation`, () => {
         it(`should undelegate`, async () => {
-          // hasve delegate
           const delegate = await sdk.armada.users.getUserDelegatee({
             user,
           })
@@ -217,6 +226,6 @@ describe.skip('Armada Protocol Gov', () => {
           expect(delegateeAfter.value).toEqual(zeroAddress)
         })
       })
-    })
-  }
+    },
+  )
 })

@@ -7,7 +7,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, aqAddress, governorSendTxTool } = createAdminSdkTestSetup()
+  const { sdk, chainId, aqAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
   const targetAddress = aqAddress
   const role = GeneralRoles.ADMIRALS_QUARTERS_ROLE
@@ -20,7 +20,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     })
 
     const hasRoleAtStart = roleAddresses.some(
-      (address) => address.toLowerCase() === userAddress.value.toLowerCase(),
+      (address) => address.toLowerCase() === targetAddress.value.toLowerCase(),
     )
     console.log(`Target address ${hasRoleAtStart ? 'has' : 'does not have'} role initially`)
 
@@ -40,7 +40,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
         chainId,
         role: role,
       })
-      expect(addressesAfterGrant).toContain(userAddress.value.toLowerCase())
+      expect(addressesAfterGrant).toContain(targetAddress.value.toLowerCase())
       console.log('Role successfully granted and verified.')
     } else {
       console.log('Address already has role, skipping grant step.')
@@ -60,7 +60,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       chainId,
       role: role,
     })
-    expect(addressesAfterRevoke).not.toContain(userAddress.value.toLowerCase())
+    expect(addressesAfterRevoke).not.toContain(targetAddress.value.toLowerCase())
     console.log('Role successfully revoked and verified.')
   })
 })
