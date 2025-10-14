@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
     )
   }
 
-  const [{ db }, configRaw] = await Promise.all([
+  const [{ db }, configRaw, params] = await Promise.all([
     getSummerProtocolDB({
       connectionString,
     }),
@@ -24,11 +24,12 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
       revalidate: REVALIDATION_TIMES.CONFIG,
       tags: [REVALIDATION_TAGS.CONFIG],
     })(),
+    context.params,
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
   const whitelistedTos = systemConfig.tosWhitelist
 
-  if (whitelistedTos?.includes(context.params.walletAddress.toLowerCase())) {
+  if (whitelistedTos?.includes(params.walletAddress.toLowerCase())) {
     return NextResponse.json({ acceptance: true, authorized: true })
   }
 
