@@ -224,9 +224,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           logger,
         )
 
-    logger.info('Initializing rates service')
-    await ratesService.init()
-
     const path = event.requestContext.http.path
     const httpMethod = event.requestContext.http.method
 
@@ -291,6 +288,8 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
       let allCombinedRates: { [productId: string]: CombinedRate[] } = {}
 
       // Fetch all DB rates in one batch query
+      logger.info('Initializing rates service')
+      await ratesService.initIfNeeded()
       const dbRatesByProductId = await ratesService.getLatestRatesBatch(batchRequests)
 
       // Fetch and combine rates for each chain
@@ -386,6 +385,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     }
 
     if (path.includes('/rates')) {
+      await ratesService.initIfNeeded()
       const cacheKey = generateCacheKey({
         prefix: 'get-rates',
         productIds: [productId],
@@ -467,6 +467,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           }
         }
       }
+      await ratesService.initIfNeeded()
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetInterestRates({ productId }), {
           retries: 3,
