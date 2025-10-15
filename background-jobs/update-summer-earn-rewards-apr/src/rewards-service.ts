@@ -6,6 +6,7 @@ import { Protocol } from '.'
 import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
+import { CompoundRewardFetcher } from './reward-fetchers/CompoundRewardFetcher'
 
 interface AaveMeritResponse {
   previousAPR: number | null
@@ -110,11 +111,13 @@ export class RewardsService {
   private readonly logger: Logger
   private readonly ratesSubgraphClient: RatesSubgraphClient
   private readonly siloRewardFetcher: SiloRewardFetcher
+  private readonly compoundRewardFetcher: CompoundRewardFetcher
 
   constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
     this.ratesSubgraphClient = ratesSubgraphClient
     this.siloRewardFetcher = new SiloRewardFetcher(logger)
+    this.compoundRewardFetcher = new CompoundRewardFetcher(logger)
   }
 
   async getRewardRates(
@@ -175,6 +178,14 @@ export class RewardsService {
         chainId,
       )
       Object.assign(results, siloResults)
+    }
+
+    if (protocolGroups[Protocol.CompoundV3]?.length) {
+      const compoundResults = await this.compoundRewardFetcher.getRewardRates(
+        protocolGroups[Protocol.CompoundV3],
+        chainId,
+      )
+      Object.assign(results, compoundResults)
     }
 
     // we call it for all arks i ncase there are additional rewards calcualted with onchian data
