@@ -9,12 +9,14 @@ import { type ChallengeResponse, type SignInResponse } from '@/features/auth/typ
 interface AuthContextType {
   user: SignInResponse['user'] | null
   isLoading: boolean
-  signIn: (email: string, password: string) => Promise<boolean>
-  signOut: () => Promise<void>
   challengeData: { challenge: string; session: string; email: string } | null
   setChallengeData: React.Dispatch<
     React.SetStateAction<{ challenge: string; session: string; email: string } | null>
   >
+  authSignInHandler: (email: string, password: string) => Promise<SignInResponse | null>
+  authSignOutHandler: () => Promise<void>
+  authSetPasswordHandler: (params: { newPassword: string }) => Promise<SignInResponse | null>
+  authRespondToMfaHandler: (code: string) => Promise<SignInResponse | null>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -126,7 +128,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const signIn = async (email: string, password: string): Promise<boolean> => {
+  const authSignInHandler = async (email: string, password: string) => {
     const response = await fetch('/api/auth/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -160,7 +162,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         email: data.email,
       })
 
-      return false
+      return null
     }
 
     if (!('user' in data) || !data.user) {
@@ -170,10 +172,10 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     setUser(data.user)
     setChallengeData(null)
 
-    return true
+    return data
   }
 
-  const signOut = async () => {
+  const authSignOutHandler = async () => {
     await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' })
 
     setUser(null)
@@ -181,9 +183,71 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     replace('/')
   }
 
+  const authSetPasswordHandler = async ({ newPassword }: { newPassword: string }) => {
+    if (!challengeData) {
+      throw new Error('No challenge data available')
+    }
+    const response = await fetch('/api/auth/set-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: challengeData.email,
+        newPassword,
+        session: challengeData.session,
+      }),
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+      // eslint-disable-next-line no-console
+      console.error('Password change failed', data)
+
+      return null
+    }
+    setUser(data.user)
+    setChallengeData(null)
+
+    return data
+  }
+
+  const authRespondToMfaHandler = async (code: string) => {
+    if (!challengeData) {
+      throw new Error('No challenge data available')
+    }
+
+    const response = await fetch('/api/auth/respond-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: challengeData.email,
+        session: challengeData.session,
+        code,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.error || 'MFA verification failed')
+    }
+    setUser(data.user)
+    setChallengeData(null)
+
+    return data
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, signIn, signOut, challengeData, setChallengeData }}
+      value={{
+        user,
+        isLoading,
+        authSignInHandler,
+        authSignOutHandler,
+        authRespondToMfaHandler,
+        challengeData,
+        setChallengeData,
+        authSetPasswordHandler,
+      }}
     >
       {children}
     </AuthContext.Provider>

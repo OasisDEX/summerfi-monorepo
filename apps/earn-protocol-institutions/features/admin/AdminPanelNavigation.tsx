@@ -3,7 +3,6 @@ import { Button, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { logout } from '@/app/server-handlers/auth/logout'
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
 
 import adminPanelNavigationStyles from './AdminPanelNavigation.module.css'
@@ -35,11 +34,6 @@ export const AdminPanelNavigation = () => {
             </Link>
           ))}
         </div>
-        <form action={logout}>
-          <Button variant="secondarySmall" type="submit">
-            Log out ({user.user?.email})
-          </Button>
-        </form>
       </div>
     </div>
   )

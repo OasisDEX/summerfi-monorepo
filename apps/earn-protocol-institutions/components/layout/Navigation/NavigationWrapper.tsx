@@ -35,7 +35,7 @@ export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
-  const { signOut } = useAuth()
+  const { authSignOutHandler, user } = useAuth()
 
   const isLoginPage = currentPath === '/'
 
@@ -51,11 +51,11 @@ export const NavigationWrapper: FC = () => {
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <Button
               variant="secondaryMedium"
-              onClick={signOut}
+              onClick={authSignOutHandler}
               style={{ display: 'flex', gap: '14px', alignItems: 'center' }}
             >
               <Icon iconName="user" size={14} />
-              Log out
+              Log out ({user?.email})
             </Button>
             <WalletLabel buttonVariant="secondaryMedium" />
           </div>

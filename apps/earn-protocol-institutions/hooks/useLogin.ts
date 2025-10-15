@@ -55,7 +55,13 @@ export const useLogin = () => {
   const [isLoadingLoginView, setIsLoadingLoginView] = useState(false)
   const [isLoadingChangePasswordView, setIsLoadingChangePasswordView] = useState(false)
 
-  const { signIn, challengeData, setChallengeData } = useAuth()
+  const {
+    authSignInHandler,
+    authRespondToMfaHandler,
+    authSetPasswordHandler,
+    challengeData,
+    setChallengeData,
+  } = useAuth()
 
   const [mfaCode, setMfaCode] = useState('')
   const [isLoadingMfaView, setIsLoadingMfaView] = useState(false)
@@ -90,7 +96,7 @@ export const useLogin = () => {
     setError('')
     setIsLoadingLoginView(true)
     try {
-      const signInComplete = await signIn(email, password)
+      const signInComplete = await authSignInHandler(email, password)
 
       if (!signInComplete) {
         // MFA or NEW_PASSWORD challenge
@@ -141,20 +147,10 @@ export const useLogin = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/set-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: challengeData.email,
-          newPassword,
-          session: challengeData.session,
-        }),
-      })
+      const data = await authSetPasswordHandler({ newPassword })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Password change failed')
+      if (!data) {
+        throw new Error('Password change failed')
       }
       setChallengeData(null)
       setSuccessfulLogin(true)
@@ -185,20 +181,10 @@ export const useLogin = () => {
     setIsLoadingMfaView(true)
 
     try {
-      const response = await fetch('/api/auth/respond-challenge', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: challengeData.email,
-          session: challengeData.session,
-          code: mfaCode,
-        }),
-      })
+      const data = await authRespondToMfaHandler(mfaCode)
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'MFA verification failed')
+      if (!data) {
+        throw new Error('MFA verification failed')
       }
 
       // Clear challenge data on success
