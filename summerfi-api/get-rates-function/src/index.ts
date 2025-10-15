@@ -18,6 +18,7 @@ const logger = new Logger({
   logLevel: 'INFO',
 })
 const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
+const ratesService = new RatesService()
 
 /**
  * Generates a cache key based on a prefix and a list of product IDs.
@@ -29,9 +30,8 @@ const clients = getAllClients(process.env.SUBGRAPH_BASE || '')
  * @returns {string} The generated cache key.
  */
 const generateCacheKey = ({ prefix, productIds }: { prefix: string; productIds: string[] }) => {
-  const sortedProductIds = productIds.sort()
+  const sortedProductIds = [...productIds].sort()
   const hash = createHash('sha256').update(sortedProductIds.join(',')).digest('hex')
-
   return `${prefix}-${hash}`
 }
 
@@ -167,6 +167,38 @@ function combineLatestRates(subgraphRate: LatestInterestRate, dbRates: DBHistori
   }
 }
 
+let cachedDistributedCache: DistributedCache | null | undefined = undefined
+async function getCacheInstance(): Promise<DistributedCache> {
+  if (cachedDistributedCache && cachedDistributedCache !== undefined) {
+    return cachedDistributedCache
+  }
+  const REDIS_CACHE_URL = process.env.REDIS_CACHE_URL
+  const REDIS_CACHE_USER = process.env.REDIS_CACHE_USER
+  const REDIS_CACHE_PASSWORD = process.env.REDIS_CACHE_PASSWORD
+  const STAGE = process.env.STAGE
+
+  if (!REDIS_CACHE_URL || !STAGE) {
+    logger.warn('Redis not configured, using noop cache')
+    cachedDistributedCache = {
+      get: async () => null,
+      set: async () => {},
+    } as DistributedCache
+    return cachedDistributedCache
+  }
+
+  cachedDistributedCache = await getRedisInstance(
+    {
+      url: REDIS_CACHE_URL,
+      ttlInSeconds: 60 * 2,
+      username: REDIS_CACHE_USER,
+      password: REDIS_CACHE_PASSWORD,
+      stage: STAGE,
+    },
+    logger,
+  )
+  return cachedDistributedCache
+}
+
 interface RatesRequest {
   productIds: string[]
 }
@@ -185,8 +217,6 @@ interface BatchRateRequest {
 }
 
 async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
-  const ratesService = new RatesService()
-
   const REDIS_CACHE_URL = process.env.REDIS_CACHE_URL
   const REDIS_CACHE_USER = process.env.REDIS_CACHE_USER
   const REDIS_CACHE_PASSWORD = process.env.REDIS_CACHE_PASSWORD
@@ -207,25 +237,14 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
   try {
     const withCacheRaw = event.queryStringParameters?.withCache
     const withCache = withCacheRaw ? Boolean(withCacheRaw) : false
+    const hasCacheSettings = REDIS_CACHE_URL && STAGE
+    if (withCache && !hasCacheSettings) {
+      logger.warn(
+        'Cache is requested via withCache=true but REDIS_CACHE_URL or STAGE is not set, proceeding without cache',
+      )
+    }
 
-    const cache = !REDIS_CACHE_URL
-      ? ({
-          get: async () => null,
-          set: async () => {},
-        } as DistributedCache)
-      : await getRedisInstance(
-          {
-            url: REDIS_CACHE_URL,
-            ttlInSeconds: 60 * 2, // 2 minutes
-            username: REDIS_CACHE_USER,
-            password: REDIS_CACHE_PASSWORD,
-            stage: STAGE,
-          },
-          logger,
-        )
-
-    logger.info('Initializing rates service')
-    await ratesService.init()
+    const cache = await getCacheInstance()
 
     const path = event.requestContext.http.path
     const httpMethod = event.requestContext.http.method
@@ -253,6 +272,8 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         prefix: 'post-rates',
         productIds,
       })
+
+      logger.info('POST Request received for path: /api/rates', { productIds, cacheKey, withCache })
 
       if (withCache) {
         const cached = await cache.get(cacheKey)
@@ -291,6 +312,8 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
       let allCombinedRates: { [productId: string]: CombinedRate[] } = {}
 
       // Fetch all DB rates in one batch query
+      logger.info('Initializing rates service')
+      await ratesService.initIfNeeded()
       const dbRatesByProductId = await ratesService.getLatestRatesBatch(batchRequests)
 
       // Fetch and combine rates for each chain
@@ -358,7 +381,9 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     const productId = event.queryStringParameters?.productId
     const chainId = event.pathParameters?.chainId
 
-    logger.info(`Request received for path: ${path}, productId: ${productId}, chainId: ${chainId}`)
+    logger.info(
+      `GET Request received for path: ${path}, productId: ${productId}, chainId: ${chainId} (withCache: ${withCache})`,
+    )
 
     if (!chainId) {
       return {
@@ -402,6 +427,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           }
         }
       }
+      await ratesService.initIfNeeded()
       // Get rates from both sources
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetArkRates({ productId }), {
@@ -467,6 +493,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           }
         }
       }
+      await ratesService.initIfNeeded()
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetInterestRates({ productId }), {
           retries: 3,

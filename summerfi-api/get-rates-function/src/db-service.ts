@@ -78,6 +78,12 @@ export class RatesService {
     }
   }
 
+  async initIfNeeded() {
+    if (!this.db?.db) {
+      await this.init()
+    }
+  }
+
   private async initializeDB() {
     logger.info('Initializing database connection, getting env')
     if (!process.env.EARN_PROTOCOL_DB_CONNECTION_STRING) {
