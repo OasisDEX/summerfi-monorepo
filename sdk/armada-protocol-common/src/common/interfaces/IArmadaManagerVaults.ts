@@ -130,7 +130,7 @@ export interface IArmadaManagerVaults {
 
   getVaultsApys(params: { chainId: ChainId; vaultIds: IArmadaVaultId[] }): Promise<{
     byFleetAddress: {
-      [fleetAddress: string]: VaultApys
+      [fleetAddress: string]: VaultApys | undefined
     }
   }>
 

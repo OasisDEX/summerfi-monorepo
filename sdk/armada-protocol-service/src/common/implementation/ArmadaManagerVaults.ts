@@ -1610,9 +1610,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const { depositCap } = config
 
     const apysForVault = apys.byFleetAddress[params.vaultId.fleetAddress.value.toLowerCase()]
-    if (!apysForVault) {
-      throw new Error(`APY not found for vault ${params.vaultId.fleetAddress.value}`)
-    }
 
     const sharePrice = Price.createFromAmountsRatio({
       numerator: totalDeposits,
@@ -1627,8 +1624,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       totalDeposits: totalDeposits,
       totalShares: totalShares,
       sharePrice: sharePrice,
-      apy: apysForVault.live,
-      apys: apysForVault,
+      apy: apysForVault?.live || null,
+      apys: apysForVault || {
+        live: null,
+        sma24h: null,
+        sma7day: null,
+        sma30day: null,
+      },
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
       merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
     })
@@ -1683,64 +1685,67 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     // handle res errors
     if (!res.ok) {
       const error = await res.json()
-      throw new Error(`Error fetching vault rates: ${JSON.stringify(error)}`)
+      console.error(`Error fetching /api/vault/rates from lambda: ${JSON.stringify(error)}`)
     }
 
-    const data: {
-      rates: Array<{
-        chainId: number
-        fleetAddress: string
-        sma: {
-          sma24h: string | null
-          sma7d: string | null
-          sma30d: string | null
+    const data:
+      | {
+          rates?: Array<{
+            chainId: number
+            fleetAddress: string
+            sma: {
+              sma24h: string | null
+              sma7d: string | null
+              sma30d: string | null
+            }
+            rates:
+              | [
+                  {
+                    id: string
+                    rate: string
+                    timestamp: number
+                    fleetAddress: string
+                  },
+                ]
+              | []
+          }>
         }
-        rates:
-          | [
-              {
-                id: string
-                rate: string
-                timestamp: number
-                fleetAddress: string
-              },
-            ]
-          | []
-      }>
-    } = await res.json()
+      | undefined = await res.json()
 
-    const byFleetAddress = data.rates.reduce(
-      (result, rate) => {
-        const fleetAddress = rate.fleetAddress
-        const latestApy = rate.rates[0]?.rate || null
-        const apys = {
-          live: latestApy
-            ? Percentage.createFrom({
-                value: Number(latestApy),
-              })
-            : null,
-          sma24h: rate.sma.sma24h
-            ? Percentage.createFrom({
-                value: Number(rate.sma.sma24h),
-              })
-            : null,
-          sma7day: rate.sma.sma7d
-            ? Percentage.createFrom({
-                value: Number(rate.sma.sma7d),
-              })
-            : null,
-          sma30day: rate.sma.sma30d
-            ? Percentage.createFrom({
-                value: Number(rate.sma.sma30d),
-              })
-            : null,
-        }
-        result[fleetAddress.toLowerCase()] = apys
-        return result
-      },
-      {} as {
-        [fleetAddress: string]: VaultApys
-      },
-    )
+    const byFleetAddress =
+      data?.rates?.reduce(
+        (result, rate) => {
+          const fleetAddress = rate.fleetAddress
+          const latestApy = rate.rates[0]?.rate || null
+          const apys = {
+            live: latestApy
+              ? Percentage.createFrom({
+                  value: Number(latestApy),
+                })
+              : null,
+            sma24h: rate.sma.sma24h
+              ? Percentage.createFrom({
+                  value: Number(rate.sma.sma24h),
+                })
+              : null,
+            sma7day: rate.sma.sma7d
+              ? Percentage.createFrom({
+                  value: Number(rate.sma.sma7d),
+                })
+              : null,
+            sma30day: rate.sma.sma30d
+              ? Percentage.createFrom({
+                  value: Number(rate.sma.sma30d),
+                })
+              : null,
+          }
+          result[fleetAddress.toLowerCase()] = apys
+          return result
+        },
+        {} as {
+          [fleetAddress: string]: VaultApys
+        },
+      ) || {}
 
     return { byFleetAddress }
   }
