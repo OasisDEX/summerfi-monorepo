@@ -207,6 +207,12 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
   try {
     const withCacheRaw = event.queryStringParameters?.withCache
     const withCache = withCacheRaw ? Boolean(withCacheRaw) : false
+    const hasCacheSettings = REDIS_CACHE_URL && STAGE
+    if (withCache && !hasCacheSettings) {
+      logger.warn(
+        'Cache is requested via withCache=true but REDIS_CACHE_URL or STAGE is not set, proceeding without cache',
+      )
+    }
 
     const cache = !REDIS_CACHE_URL
       ? ({
@@ -250,6 +256,8 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
         prefix: 'post-rates',
         productIds,
       })
+
+      logger.info('POST Request received for path: /api/rates', { productIds, cacheKey, withCache })
 
       if (withCache) {
         const cached = await cache.get(cacheKey)
@@ -357,7 +365,9 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     const productId = event.queryStringParameters?.productId
     const chainId = event.pathParameters?.chainId
 
-    logger.info(`Request received for path: ${path}, productId: ${productId}, chainId: ${chainId}`)
+    logger.info(
+      `GET Request received for path: ${path}, productId: ${productId}, chainId: ${chainId} (withCache: ${withCache})`,
+    )
 
     if (!chainId) {
       return {
