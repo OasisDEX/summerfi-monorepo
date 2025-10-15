@@ -3,13 +3,10 @@ import { Button, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { useAuth } from '@/contexts/AuthContext/AuthContext'
-
 import adminPanelNavigationStyles from './AdminPanelNavigation.module.css'
 
 export const AdminPanelNavigation = () => {
   const pathname = usePathname()
-  const user = useAuth()
 
   const links = [
     { href: '/admin/institutions', label: <>Institutions</> },
