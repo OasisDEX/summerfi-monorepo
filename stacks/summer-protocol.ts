@@ -27,7 +27,7 @@ export function addSummerProtocolConfig({ stack, vpc, app }: SummerStackContext)
   const updateEarnRewardsAprCronFunctionProps: FunctionProps = {
     handler: 'background-jobs/update-summer-earn-rewards-apr/src/index.handler',
     runtime: 'nodejs20.x',
-    timeout: '100 seconds',
+    timeout: '500 seconds',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       EARN_PROTOCOL_DB_CONNECTION_STRING,
