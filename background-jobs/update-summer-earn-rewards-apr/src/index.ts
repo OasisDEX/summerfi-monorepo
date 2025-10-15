@@ -29,6 +29,7 @@ export enum Protocol {
   Gearbox = 'Gearbox',
   Moonwell = 'Moonwell',
   Silo = 'Silo',
+  CompoundV3 = 'CompoundV3',
 }
 const supportedProtocols = [
   Protocol.Morpho,
@@ -37,6 +38,7 @@ const supportedProtocols = [
   Protocol.Gearbox,
   Protocol.Moonwell,
   Protocol.Silo,
+  Protocol.CompoundV3,
 ]
 
 export interface NetworkStatus {
