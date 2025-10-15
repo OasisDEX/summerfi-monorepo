@@ -218,8 +218,6 @@ interface BatchRateRequest {
 
 async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   const REDIS_CACHE_URL = process.env.REDIS_CACHE_URL
-  const REDIS_CACHE_USER = process.env.REDIS_CACHE_USER
-  const REDIS_CACHE_PASSWORD = process.env.REDIS_CACHE_PASSWORD
   const STAGE = process.env.STAGE
 
   if (!REDIS_CACHE_URL) {
