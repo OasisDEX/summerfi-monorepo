@@ -1,5 +1,6 @@
 import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { createAccessControlTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import type { ContractRoleScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -7,49 +8,71 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Checking', () => {
-  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } =
-    createAccessControlTestSetup()
+  const {
+    sdk,
+    chainId,
+    userAddress,
+    fleetAddress,
+    aqAddress,
+    governorAddress,
+    governorSendTxTool,
+  } = createAdminSdkTestSetup()
+  const contractAddress = fleetAddress
 
-  const role = ContractSpecificRoleName.WHITELISTED_ROLE // 3
-
-  test('should check contract-specific role', async () => {
-    const shouldGrant = false
-    const shouldRevoke = false
-
-    if (shouldGrant) {
-      // Grant the role if not already granted
-      const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
-        chainId,
-        role,
-        contractAddress: fleetAddress,
-        targetAddress: userAddress,
-      })
-      expect(grantTxInfo).toBeDefined()
-      const grantStatus = await governorSendTxTool(grantTxInfo)
-      expect(grantStatus).toBe('success')
-    }
-
-    if (shouldRevoke) {
-      // Revoke the role if it was granted
-      const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
-        chainId,
-        role,
-        contractAddress: fleetAddress,
-        targetAddress: userAddress,
-      })
-      expect(revokeTxInfo).toBeDefined()
-      const revokeStatus = await governorSendTxTool(revokeTxInfo)
-      expect(revokeStatus).toBe('success')
-    }
-
-    const hasContractSpecificRole = await sdk.armada.accessControl.hasContractSpecificRole({
-      chainId,
-      role,
-      contractAddress: fleetAddress,
+  // Configure test scenarios here
+  const scenarios: ContractRoleScenario[] = [
+    {
+      role: ContractSpecificRoleName.WHITELISTED_ROLE,
       targetAddress: userAddress,
-    })
-    console.log(
-      `Address ${userAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ContractSpecificRoleName ${role} for contract ${fleetAddress.value}`,
-    )
-  })
+      shouldGrant: false,
+      shouldRevoke: false,
+    },
+    {
+      role: ContractSpecificRoleName.CURATOR_ROLE,
+      targetAddress: governorAddress,
+      shouldGrant: false,
+      shouldRevoke: false,
+    },
+  ]
+
+  test.each(scenarios)(
+    'should check contract-specific role: $role for address',
+    async ({ role, targetAddress, shouldGrant = false, shouldRevoke = false }) => {
+      if (shouldGrant) {
+        // Grant the role if not already granted
+        const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
+          chainId,
+          role,
+          contractAddress,
+          targetAddress,
+        })
+        expect(grantTxInfo).toBeDefined()
+        const grantStatus = await governorSendTxTool(grantTxInfo)
+        expect(grantStatus).toBe('success')
+      }
+
+      if (shouldRevoke) {
+        // Revoke the role if it was granted
+        const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
+          chainId,
+          role,
+          contractAddress,
+          targetAddress,
+        })
+        expect(revokeTxInfo).toBeDefined()
+        const revokeStatus = await governorSendTxTool(revokeTxInfo)
+        expect(revokeStatus).toBe('success')
+      }
+
+      const hasContractSpecificRole = await sdk.armada.accessControl.hasContractSpecificRole({
+        chainId,
+        role,
+        contractAddress,
+        targetAddress,
+      })
+      console.log(
+        `Address ${targetAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${contractAddress.value}`,
+      )
+    },
+  )
 })

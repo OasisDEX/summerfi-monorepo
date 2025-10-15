@@ -9,16 +9,18 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, TestConfigs } from './utils/testConfig'
+import { ChainConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 
 jest.setTimeout(300000)
 
 const simulateOnly = true
+const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol - Unstake', () => {
-  const { rpcUrl, chainId, fleetAddressValue, userAddressValue } = TestConfigs.Sonic
+  const { rpcUrl, chainId, fleetAddressValue } = ChainConfigs.Sonic
+  const userAddressValue = SharedConfig.userAddressValue
 
   const chainInfo = getChainInfoByChainId(chainId)
   const user = User.createFromEthereum(chainId, userAddressValue)
@@ -54,7 +56,7 @@ describe('Armada Protocol - Unstake', () => {
       chainInfo,
       transactions: [transaction],
       rpcUrl,
-      privateKey: signerPrivateKey,
+      privateKey,
       simulateOnly,
     })
 

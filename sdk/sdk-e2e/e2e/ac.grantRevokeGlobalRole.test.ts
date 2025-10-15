@@ -1,5 +1,5 @@
-import { GeneralRoles } from '@summerfi/armada-protocol-common'
-import { createAccessControlTestSetup } from './utils/accessControlTestSetup'
+import { GlobalRoles } from '@summerfi/sdk-common'
+import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)
 
@@ -7,9 +7,10 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAccessControlTestSetup()
+  const { sdk, chainId, aqAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
-  const role = GeneralRoles.ADMIRALS_QUARTERS_ROLE
+  const targetAddress = aqAddress
+  const role = GlobalRoles.ADMIRALS_QUARTERS_ROLE
 
   test('should grant and revoke general role', async () => {
     // Get initial addresses with the role
@@ -19,7 +20,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     })
 
     const hasRoleAtStart = roleAddresses.some(
-      (address) => address.toLowerCase() === userAddress.value.toLowerCase(),
+      (address) => address.toLowerCase() === targetAddress.value.toLowerCase(),
     )
     console.log(`Target address ${hasRoleAtStart ? 'has' : 'does not have'} role initially`)
 
@@ -29,7 +30,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
         chainId,
         role,
-        targetAddress: userAddress,
+        targetAddress,
       })
       const grantStatus = await governorSendTxTool(grantTxInfo)
       expect(grantStatus).toBe('success')
@@ -39,7 +40,8 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
         chainId,
         role: role,
       })
-      expect(addressesAfterGrant).toContain(userAddress.value.toLowerCase())
+      expect(addressesAfterGrant).toContain(targetAddress.value.toLowerCase())
+      console.log('Role successfully granted and verified.')
     } else {
       console.log('Address already has role, skipping grant step.')
     }
@@ -47,8 +49,8 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     // Revoke role
     const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
       chainId,
-      role: role,
-      targetAddress: userAddress,
+      role,
+      targetAddress,
     })
     const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
@@ -58,6 +60,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       chainId,
       role: role,
     })
-    expect(addressesAfterRevoke).not.toContain(userAddress.value.toLowerCase())
+    expect(addressesAfterRevoke).not.toContain(targetAddress.value.toLowerCase())
+    console.log('Role successfully revoked and verified.')
   })
 })

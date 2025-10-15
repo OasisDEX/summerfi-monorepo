@@ -1,10 +1,9 @@
-import {
-  AddressDataSchema,
-  IAddress,
-  ITokenAmount,
-  TokenAmountDataSchema,
-} from '@summerfi/sdk-common'
 import { z } from 'zod'
+import { AddressDataSchema } from '../interfaces/IAddress'
+import type { IAddress } from '../interfaces/IAddress'
+import { TokenAmountDataSchema } from '../interfaces/ITokenAmount'
+import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import type { HexData } from './HexData'
 
 /**
  * @name IRebalanceData
@@ -18,6 +17,10 @@ export interface IRebalanceData {
   readonly toArk: IAddress
   /** Amount of tokens to be moved */
   readonly amount: ITokenAmount
+  /** Board data */
+  readonly boardData?: HexData
+  /** Disembark data */
+  readonly disembarkData?: HexData
 }
 
 /**

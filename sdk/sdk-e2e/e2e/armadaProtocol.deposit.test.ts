@@ -11,17 +11,19 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, TestConfigs } from './utils/testConfig'
+import { ChainConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
 
 const simulateOnly = false
+const privateKey = SharedConfig.userPrivateKey
+const userAddressValue = SharedConfig.userAddressValue
 
 describe('Armada Protocol Deposit', () => {
   it('should make deposits to fleet', async () => {
-    const { rpcUrl, chainId, fleetAddressValue, userAddressValue, symbol } = TestConfigs.SelfManaged
+    const { rpcUrl, chainId, fleetAddressValue, symbol } = ChainConfigs.SelfManaged
 
     const amountValue = '1'
     const swapToSymbol = undefined
@@ -128,7 +130,7 @@ async function runTests({
     chainInfo,
     transactions,
     rpcUrl,
-    privateKey: signerPrivateKey,
+    privateKey,
     simulateOnly,
   })
   statuses.forEach((status) => {

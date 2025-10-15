@@ -7,14 +7,16 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, userAddress, RpcUrls } from './utils/testConfig'
+import { RpcUrls, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 
 jest.setTimeout(300000)
 const simulateOnly = true
+const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol - ERC20 Token Transfer', () => {
   const sdk = createTestSDK()
+  const userAddress = SharedConfig.userAddressValue
 
   const testConfigs = [
     {
@@ -115,7 +117,7 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
           chainInfo,
           transactions,
           rpcUrl: rpcUrl,
-          privateKey: signerPrivateKey,
+          privateKey,
           simulateOnly,
         })
 
@@ -253,7 +255,7 @@ describe('Armada Protocol - ERC20 Token Transfer', () => {
         chainInfo,
         transactions,
         rpcUrl: rpcUrl,
-        privateKey: signerPrivateKey,
+        privateKey,
         simulateOnly,
       })
 

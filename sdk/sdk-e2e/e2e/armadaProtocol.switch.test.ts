@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { type SDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -8,17 +7,17 @@ import {
   Percentage,
   TokenAmount,
   User,
-  Wallet,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { signerPrivateKey, userAddress } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
+import { SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 const simulateOnly = false
+const privateKey = SharedConfig.userPrivateKey
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -67,19 +66,14 @@ describe('Armada Protocol Switch', () => {
     amountValue?: string
     stake?: boolean
   }) {
-    const sdk: SDKManager = createTestSDK()
+    const sdk = createTestSDK()
     if (!rpcUrl) {
       throw new Error('Missing fork url')
     }
 
     const chainInfo = getChainInfoByChainId(chainId)
 
-    const user = User.createFrom({
-      wallet: Wallet.createFrom({
-        address: userAddress,
-      }),
-      chainInfo,
-    })
+    const user = User.createFromEthereum(chainId, SharedConfig.userAddressValue)
     const sourceVaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: sourceFleetAddress,
@@ -164,7 +158,7 @@ describe('Armada Protocol Switch', () => {
       chainInfo,
       transactions,
       rpcUrl: rpcUrl,
-      privateKey: signerPrivateKey,
+      privateKey,
       simulateOnly,
     })
     statuses.forEach((status) => {

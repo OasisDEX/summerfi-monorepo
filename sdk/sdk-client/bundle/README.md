@@ -1,4 +1,4 @@
-# SDK API Reference
+# SDK API Reference v2
 
 **Latest version: v2.1.0**
 
@@ -46,9 +46,13 @@ console.log(
             sma7day: vaultInfo.apys.sma7day?.toString(),
             sma30day: vaultInfo.apys.sma30day?.toString(),
           },
-          rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
+          rewardsApys: vaultInfo.rewardsApys?.map((reward) => ({
             token: reward.token.toString(),
             apy: reward.apy?.toString(),
+          })),
+          merklRewards: vaultInfo.merklRewards?.map((reward) => ({
+            token: reward.token.toString(),
+            dailyEmission: reward.dailyEmission,
           })),
         },
         null,
@@ -77,6 +81,12 @@ console.log(
     {
       "token": "SUMR (SummerToken)",
       "apy": "52.35132807274111%"
+    }
+  ],
+  "merklRewards": [
+    {
+      "token": "SUMR (SummerToken)",
+      "dailyEmission": "1500000000000000000000"
     }
   ]
 }, ...]
@@ -113,9 +123,13 @@ console.log(
         sma7day: vaultInfo.apys.sma7day?.toString(),
         sma30day: vaultInfo.apys.sma30day?.toString(),
       },
-      rewardsApys: vaultInfo.rewardsApys.map((reward) => ({
+      rewardsApys: vaultInfo.rewardsApys?.map((reward) => ({
         token: reward.token.toString(),
         apy: reward.apy?.toString(),
+      })),
+      merklRewards: vaultInfo.merklRewards?.map((reward) => ({
+        token: reward.token.toString(),
+        dailyEmission: reward.dailyEmission,
       })),
     },
     null,
@@ -142,6 +156,12 @@ console.log(
     {
       "token": "SUMR (SummerToken)",
       "apy": "32.71121350084195%"
+    }
+  ],
+  "merklRewards": [
+    {
+      "token": "SUMR (SummerToken)",
+      "dailyEmission": "1500000000000000000000"
     }
   ]
 }
@@ -1324,11 +1344,20 @@ IArmadaVaultId = {
 IArmadaVaultInfo = {
   id: IArmadaVaultId
   token: IToken
+  assetToken: IToken
   depositCap: ITokenAmount
   totalDeposits: ITokenAmount
   totalShares: ITokenAmount
+  sharePrice: IPrice
   apy: IPercentage | null
-	rewardsApys: Array<{ token: IToken, apy: IPercentage | null }>
+  apys: {
+    live: IPercentage | null
+    sma24h: IPercentage | null
+    sma7day: IPercentage | null
+    sma30day: IPercentage | null
+  }
+  rewardsApys?: Array<{ token: IToken, apy: IPercentage | null }>
+  merklRewards?: Array<{ token: IToken, dailyEmission: string }>
 }
 ```
 
@@ -1686,6 +1715,15 @@ enum FiatCurrency {
 ### v1.1.0
 
 **Features:**
+
+- **Merkl Rewards Information**: Vault info now includes Merkl rewards data
+
+  - Added `merklRewards` property to `IArmadaVaultInfo` with Merkl rewards information:
+    - `token`: The reward token information (IToken type)
+    - `dailyEmission`: Daily emission amount as a string (in wei, e.g., "1500000000000000000000")
+  - Provides insights into additional rewards from Merkl campaigns
+  - only present when vault has active Merkl rewards, otherwise undefined
+  - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
 
 - Added several new flows related to rewards handling:
   - **getUserMerklRewards** - retrieves Merkl rewards for a user across specified chains

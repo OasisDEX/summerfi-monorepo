@@ -1862,7 +1862,8 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ),
     )
     // get rewards manager addresses of the provided vaults
-    const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager.id)
+    const rewardsManagerAddresses = vaultsData.map((vault) => vault.vault?.rewardsManager?.id)
+
     // find opportunities by querying merkl api using rewards manager address as id
     const url = `https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=${chainId}`
     const opportunitiesPerVault: (MerklApiOpportunitiesResponse | undefined)[] = await Promise.all(

@@ -1,5 +1,5 @@
 import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
-import { createAccessControlTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)
 
@@ -7,9 +7,11 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
-  const { sdk, chainId, userAddress, fleetAddress, governorSendTxTool } =
-    createAccessControlTestSetup()
+  const { sdk, chainId, userAddress, fleetAddress, aqAddress, governorSendTxTool } =
+    createAdminSdkTestSetup()
 
+  const contractAddress = fleetAddress
+  const targetAddress = userAddress
   const role = ContractSpecificRoleName.WHITELISTED_ROLE
 
   test('should grant and revoke contract-specific role', async () => {
@@ -31,8 +33,8 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
       const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
         chainId,
         role,
-        contractAddress: fleetAddress,
-        targetAddress: userAddress,
+        contractAddress,
+        targetAddress,
       })
       const grantStatus = await governorSendTxTool(grantTxInfo)
       expect(grantStatus).toBe('success')
@@ -42,9 +44,10 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
         await sdk.armada.accessControl.getAllAddressesWithContractSpecificRole({
           chainId,
           role,
-          contractAddress: fleetAddress,
+          contractAddress,
         })
       expect(addressesAfterGrant).toContain(userAddress.value.toLowerCase())
+      console.log('Role successfully granted and verified.')
     } else {
       console.log('Address already has role, skipping grant step.')
     }
@@ -53,8 +56,8 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
     const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
       chainId,
       role,
-      contractAddress: fleetAddress,
-      targetAddress: userAddress,
+      contractAddress,
+      targetAddress,
     })
     const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
@@ -64,8 +67,9 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
       await sdk.armada.accessControl.getAllAddressesWithContractSpecificRole({
         chainId,
         role,
-        contractAddress: fleetAddress,
+        contractAddress,
       })
     expect(addressesAfterRevoke).not.toContain(userAddress.value.toLowerCase())
+    console.log('Role successfully revoked and verified.')
   })
 })

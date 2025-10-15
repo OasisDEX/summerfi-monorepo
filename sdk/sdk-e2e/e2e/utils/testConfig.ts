@@ -1,4 +1,4 @@
-import { ChainIds, type AddressValue } from '@summerfi/sdk-common'
+import { ChainIds, type AddressValue, type HexData } from '@summerfi/sdk-common'
 
 if (!process.env.E2E_SDK_API_URL) {
   throw new Error('Missing E2E_SDK_API_URL')
@@ -6,11 +6,14 @@ if (!process.env.E2E_SDK_API_URL) {
 if (!process.env.E2E_USER_ADDRESS!) {
   throw new Error('Missing E2E_USER_ADDRESS')
 }
+if (!process.env.E2E_USER_PRIVATE_KEY) {
+  throw new Error('Missing E2E_USER_PRIVATE_KEY')
+}
 if (!process.env.TEST_USER_ADDRESS) {
   throw new Error('Missing TEST_USER_ADDRESS')
 }
-if (!process.env.E2E_USER_PRIVATE_KEY) {
-  throw new Error('Missing E2E_USER_PRIVATE_KEY')
+if (!process.env.TEST_USER_PRIVATE_KEY) {
+  throw new Error('Missing TEST_USER_PRIVATE_KEY')
 }
 if (!process.env.E2E_SDK_FORK_URL_MAINNET) {
   throw new Error('Missing E2E_SDK_FORK_URL_MAINNET')
@@ -49,32 +52,31 @@ export const FleetAddresses = {
 
 /** TEST CONFIG */
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
-export const signerAddress = process.env.TEST_USER_ADDRESS as AddressValue
-export const signerPrivateKey = process.env.TEST_USER_PRIVATE_KEY as AddressValue
 
-export const userAddress: AddressValue = process.env.TEST_USER_ADDRESS as AddressValue
-// export const userAddress: AddressValue = '0x4eb7f19d6efcace59eaed70220da5002709f9b71'
+export const SharedConfig = {
+  userAddressValue: process.env.TEST_USER_ADDRESS as AddressValue,
+  userPrivateKey: process.env.TEST_USER_PRIVATE_KEY as HexData,
+  governorAddressValue: process.env.E2E_USER_ADDRESS as AddressValue,
+  governorPrivateKey: process.env.E2E_USER_PRIVATE_KEY as HexData,
+} as const
 
-export const TestConfigs = {
+export const ChainConfigs = {
   Base: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.usdc,
     symbol: 'USDC',
-    userAddressValue: userAddress,
   },
   SelfManaged: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.selfManaged,
     symbol: 'USDC',
-    userAddressValue: userAddress,
   },
   Sonic: {
     rpcUrl: RpcUrls.Sonic,
     chainId: ChainIds.Sonic,
     fleetAddressValue: FleetAddresses.Sonic.usdc,
     symbol: 'USDC',
-    userAddressValue: userAddress,
   },
 }

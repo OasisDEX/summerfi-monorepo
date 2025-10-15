@@ -22,6 +22,12 @@ export type {
   FleetRate,
   AggregatedFleetRate,
 } from './common/types/HistoricalFleetRateResult'
+export type { IArkConfig } from './common/types/IArkConfig'
+export type { IFleetConfig } from './common/types/IFleetConfig'
+export { RebalanceDataSchema, isRebalanceData } from './common/types/IRebalanceData'
+export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalanceData'
+export { GlobalRoles, GLOBAL_ROLE_HASHES } from './common/types/GlobalRoles'
+export { ContractSpecificRoleName } from './common/types/ContractSpecificRoleName'
 export { AddressType } from './common/enums/AddressType'
 export {
   ChainFamilyName,
@@ -436,3 +442,4 @@ export { FETCH_CONFIG, createTimeoutSignal, fetchWithTimeout } from './configs/f
 export type { ExtendedTransactionInfo } from './orders/common/types/DEPRECATED'
 export { NATIVE_CURRENCY_ADDRESS_LOWERCASE } from './common/utils/nativeCurrencyAddress'
 export type { VaultApys } from './common/types/VaultApys'
+export { MAX_UINT256_STRING } from './common/utils/constants'

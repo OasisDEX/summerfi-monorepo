@@ -14,11 +14,11 @@ export class ArmadaManagerClientAccessControl
     super(params)
   }
 
-  /** @see IArmadaManagerClientAccessControl.hasGeneralRole */
-  async hasGeneralRole(
-    params: Parameters<IArmadaManagerClientAccessControl['hasGeneralRole']>[0],
-  ): ReturnType<IArmadaManagerClientAccessControl['hasGeneralRole']> {
-    return this.rpcClient.armada.accessControl.hasGeneralRole.query(params)
+  /** @see IArmadaManagerClientAccessControl.hasGlobalRole */
+  async hasGlobalRole(
+    params: Parameters<IArmadaManagerClientAccessControl['hasGlobalRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['hasGlobalRole']> {
+    return this.rpcClient.armada.accessControl.hasGlobalRole.query(params)
   }
 
   /** @see IArmadaManagerClientAccessControl.hasContractSpecificRole */
@@ -28,18 +28,18 @@ export class ArmadaManagerClientAccessControl
     return this.rpcClient.armada.accessControl.hasContractSpecificRole.query(params)
   }
 
-  /** @see IArmadaManagerClientAccessControl.grantGeneralRole */
-  async grantGeneralRole(
-    params: Parameters<IArmadaManagerClientAccessControl['grantGeneralRole']>[0],
-  ): ReturnType<IArmadaManagerClientAccessControl['grantGeneralRole']> {
-    return this.rpcClient.armada.accessControl.grantGeneralRole.query(params)
+  /** @see IArmadaManagerClientAccessControl.grantGlobalRole */
+  async grantGlobalRole(
+    params: Parameters<IArmadaManagerClientAccessControl['grantGlobalRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['grantGlobalRole']> {
+    return this.rpcClient.armada.accessControl.grantGlobalRole.query(params)
   }
 
-  /** @see IArmadaManagerClientAccessControl.revokeGeneralRole */
-  async revokeGeneralRole(
-    params: Parameters<IArmadaManagerClientAccessControl['revokeGeneralRole']>[0],
-  ): ReturnType<IArmadaManagerClientAccessControl['revokeGeneralRole']> {
-    return this.rpcClient.armada.accessControl.revokeGeneralRole.query(params)
+  /** @see IArmadaManagerClientAccessControl.revokeGlobalRole */
+  async revokeGlobalRole(
+    params: Parameters<IArmadaManagerClientAccessControl['revokeGlobalRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['revokeGlobalRole']> {
+    return this.rpcClient.armada.accessControl.revokeGlobalRole.query(params)
   }
 
   /** @see IArmadaManagerClientAccessControl.grantContractSpecificRole */
@@ -56,11 +56,11 @@ export class ArmadaManagerClientAccessControl
     return this.rpcClient.armada.accessControl.revokeContractSpecificRole.query(params)
   }
 
-  /** @see IArmadaManagerClientAccessControl.getAllAddressesWithGeneralRole */
-  async getAllAddressesWithGeneralRole(
-    params: Parameters<IArmadaManagerClientAccessControl['getAllAddressesWithGeneralRole']>[0],
-  ): ReturnType<IArmadaManagerClientAccessControl['getAllAddressesWithGeneralRole']> {
-    return this.rpcClient.armada.accessControl.getAllAddressesWithGeneralRole.query(params)
+  /** @see IArmadaManagerClientAccessControl.getAllAddressesWithGlobalRole */
+  async getAllAddressesWithGlobalRole(
+    params: Parameters<IArmadaManagerClientAccessControl['getAllAddressesWithGlobalRole']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['getAllAddressesWithGlobalRole']> {
+    return this.rpcClient.armada.accessControl.getAllAddressesWithGlobalRole.query(params)
   }
 
   /** @see IArmadaManagerClientAccessControl.getAllAddressesWithContractSpecificRole */
