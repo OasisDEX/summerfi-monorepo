@@ -44,12 +44,13 @@ This flow includes:
 - **rebalanceData**: Array of rebalance operations, each containing:
   - **fromArk**: The ark address to withdraw funds from
   - **toArk**: The ark address to deposit funds to
-  - **amount**: The amount of tokens to move (as TokenAmount)
+  - **amount**: The amount of tokens to move (as TokenAmount), to transfer the entire available
+    balance use `MAX_UINT256_STRING` (see example below)
 
 **Example:**
 
 ```typescript
-import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summer_fi/sdk-client'
+import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount, MAX_UINT256_STRING } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 const chainId = ChainIds.Base
@@ -82,6 +83,16 @@ const usdc = await sdk.tokens.getTokenBySymbol({
 // Create the amount to rebalance
 const amount = TokenAmount.createFrom({
   amount: '1000',
+  token: usdc,
+})
+
+// Special case: transfer the entire available balance (avoid leaving dust)
+// If you want to transfer the full available balance and avoid leaving a small "dust"
+// amount (which can occur due to rounding or because assets increase in value between
+// operations), pass the maximum uint256 value as the amount.
+// Example using the decimal string representation of MaxUint256:
+const amountAll = TokenAmount.createFromBaseUnit({
+  amount: MAX_UINT256_STRING,
   token: usdc,
 })
 
