@@ -9,9 +9,10 @@ export const createSendTransactionTool = (params: {
   chainId: ChainId
   rpcUrl: string
   signerPrivateKey: string
-  onlySimulation?: boolean
+  simulateOnly?: boolean
 }) => {
   const signerPrivateKey = params.signerPrivateKey
+  const simulateOnly = params.simulateOnly ?? true
 
   if (!isHex(signerPrivateKey)) {
     throw new Error('Signer privateKey is not a hex string')
@@ -63,7 +64,7 @@ export const createSendTransactionTool = (params: {
       }
 
       // Send the transaction
-      if (!params.onlySimulation) {
+      if (simulateOnly === false) {
         try {
           const receipt = await transactionUtils.sendTransactionWithReceipt({
             transaction: transaction.transaction,

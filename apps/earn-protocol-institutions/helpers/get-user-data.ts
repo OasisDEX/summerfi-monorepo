@@ -1,4 +1,4 @@
-import { type GeneralRoles } from '@summerfi/sdk-client'
+import { type GlobalRoles } from '@summerfi/sdk-client'
 
 export const getUserData = async ({
   walletAddress,
@@ -10,8 +10,8 @@ export const getUserData = async ({
   signal?: AbortSignal
 }): Promise<
   | {
-      walletAddressRoles: GeneralRoles[]
-      roles: { [key in GeneralRoles]: boolean }
+      walletAddressRoles: GlobalRoles[]
+      roles: { [key in GlobalRoles]: boolean }
     }
   | undefined
 > => {
@@ -24,8 +24,8 @@ export const getUserData = async ({
 
   if (!res.ok) return undefined
   const data = (await res.json()) as {
-    walletAddressRoles: GeneralRoles[]
-    roles: { [key in GeneralRoles]: boolean }
+    walletAddressRoles: GlobalRoles[]
+    roles: { [key in GlobalRoles]: boolean }
   } | null
 
   return data ?? undefined

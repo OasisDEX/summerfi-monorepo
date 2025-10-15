@@ -2,6 +2,7 @@ import type { IArmadaManagerAdmin } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 /**
  * @name ArmadaManagerAdmin
@@ -217,5 +218,20 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
       address: params.vaultId.fleetAddress,
     })
     return fleetContract.arks()
+  }
+
+  /** @see IArmadaManagerAdmin.arkConfig */
+  async arkConfig(
+    params: Parameters<IArmadaManagerAdmin['arkConfig']>[0],
+  ): ReturnType<IArmadaManagerAdmin['arkConfig']> {
+    const chainInfo = getChainInfoByChainId(params.chainId)
+    const arkAddress = Address.createFromEthereum({ value: params.arkAddressValue })
+
+    const arkContract = await this._contractsProvider.getArkContract({
+      chainInfo: chainInfo,
+      address: arkAddress,
+    })
+
+    return arkContract.config()
   }
 }

@@ -1,7 +1,6 @@
 import type { IArmadaManagerAccessControl } from '@summerfi/armada-protocol-common'
-import { GeneralRoles, GENERAL_ROLE_HASHES } from '@summerfi/armada-protocol-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider, ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   IAddress,
@@ -13,6 +12,9 @@ import {
   type AddressValue,
   Address,
   LoggingService,
+  GlobalRoles,
+  GLOBAL_ROLE_HASHES,
+  ContractSpecificRoleName,
 } from '@summerfi/sdk-common'
 
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
@@ -28,7 +30,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
-  private _roleHashes: Record<GeneralRoles, HexData | null> = { ...GENERAL_ROLE_HASHES }
+  private _roleHashes: Record<GlobalRoles, HexData | null> = { ...GLOBAL_ROLE_HASHES }
 
   /**
    * @description Block numbers from which to start fetching events for each chain
@@ -75,10 +77,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   }
 
   /**
-   * @description Gets the general role hash for a given role
+   * @description Gets the global role hash for a given role
    * This method caches the role hashes to avoid redundant contract calls
    */
-  private async _getGeneralRoleHash(chainId: ChainId, role: GeneralRoles): Promise<HexData> {
+  private async _getGlobalRoleHash(chainId: ChainId, role: GlobalRoles): Promise<HexData> {
     if (this._roleHashes[role] !== null) {
       return this._roleHashes[role] as HexData
     }
@@ -96,20 +98,20 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the role hash based on the role type
     let roleHash: HexData
     switch (role) {
-      case GeneralRoles.GOVERNOR_ROLE:
+      case GlobalRoles.GOVERNOR_ROLE:
         roleHash = await protocolAccessManagerContract.GOVERNOR_ROLE()
         break
-      case GeneralRoles.SUPER_KEEPER_ROLE:
+      case GlobalRoles.SUPER_KEEPER_ROLE:
         roleHash = await protocolAccessManagerContract.SUPER_KEEPER_ROLE()
         break
-      case GeneralRoles.DECAY_CONTROLLER_ROLE:
+      case GlobalRoles.DECAY_CONTROLLER_ROLE:
         roleHash = await protocolAccessManagerContract.DECAY_CONTROLLER_ROLE()
         break
-      case GeneralRoles.ADMIRALS_QUARTERS_ROLE:
+      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
         roleHash = await protocolAccessManagerContract.ADMIRALS_QUARTERS_ROLE()
         break
       default:
-        throw new Error(`Unsupported general role: ${role}`)
+        throw new Error(`Unsupported global role: ${role}`)
     }
 
     // Cache the result
@@ -117,13 +119,13 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     return roleHash
   }
 
-  /** @see IArmadaManagerAccessControl.hasGeneralRole */
-  async hasGeneralRole(params: {
+  /** @see IArmadaManagerAccessControl.hasGlobalRole */
+  async hasGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<boolean> {
-    const roleHash = await this._getGeneralRoleHash(params.chainId, params.role)
+    const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
 
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
@@ -170,10 +172,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
   }
 
-  /** @see IArmadaManagerAccessControl.grantGeneralRole */
-  async grantGeneralRole(params: {
+  /** @see IArmadaManagerAccessControl.grantGlobalRole */
+  async grantGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<TransactionInfo> {
     // Get the chain info from the provided chainId
@@ -188,19 +190,19 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
 
     // Use the appropriate grant method based on the role
     switch (params.role) {
-      case GeneralRoles.GOVERNOR_ROLE:
+      case GlobalRoles.GOVERNOR_ROLE:
         return protocolAccessManagerContract.grantGovernorRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.SUPER_KEEPER_ROLE:
+      case GlobalRoles.SUPER_KEEPER_ROLE:
         return protocolAccessManagerContract.grantSuperKeeperRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.DECAY_CONTROLLER_ROLE:
+      case GlobalRoles.DECAY_CONTROLLER_ROLE:
         return protocolAccessManagerContract.grantDecayControllerRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.ADMIRALS_QUARTERS_ROLE:
+      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
         return protocolAccessManagerContract.grantAdmiralsQuartersRole({
           account: params.targetAddress,
         })
@@ -209,10 +211,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     }
   }
 
-  /** @see IArmadaManagerAccessControl.revokeGeneralRole */
-  async revokeGeneralRole(params: {
+  /** @see IArmadaManagerAccessControl.revokeGlobalRole */
+  async revokeGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
     targetAddress: IAddress
   }): Promise<TransactionInfo> {
     // Get the chain info from the provided chainId
@@ -227,19 +229,19 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
 
     // Use the appropriate revoke method based on the role
     switch (params.role) {
-      case GeneralRoles.GOVERNOR_ROLE:
+      case GlobalRoles.GOVERNOR_ROLE:
         return protocolAccessManagerContract.revokeGovernorRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.SUPER_KEEPER_ROLE:
+      case GlobalRoles.SUPER_KEEPER_ROLE:
         return protocolAccessManagerContract.revokeSuperKeeperRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.DECAY_CONTROLLER_ROLE:
+      case GlobalRoles.DECAY_CONTROLLER_ROLE:
         return protocolAccessManagerContract.revokeDecayControllerRole({
           account: params.targetAddress,
         })
-      case GeneralRoles.ADMIRALS_QUARTERS_ROLE:
+      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
         return protocolAccessManagerContract.revokeAdmiralsQuartersRole({
           account: params.targetAddress,
         })
@@ -336,10 +338,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     }
   }
 
-  /** @see IArmadaManagerAccessControl.getAllAddressesWithGeneralRole */
-  async getAllAddressesWithGeneralRole(params: {
+  /** @see IArmadaManagerAccessControl.getAllAddressesWithGlobalRole */
+  async getAllAddressesWithGlobalRole(params: {
     chainId: ChainId
-    role: GeneralRoles
+    role: GlobalRoles
   }): Promise<AddressValue[]> {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
@@ -352,8 +354,8 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the protocol access manager contract address
     const contractAddress = this._getProtocolAccessManagerAddress(chainInfo)
 
-    // Get the role hash for the general role
-    const roleHash = await this._getGeneralRoleHash(params.chainId, params.role)
+    // Get the role hash for the global role
+    const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
 
     // Get the starting block for this chain, throws if not configured
     const fromBlock = this._getStartBlockForEvents(params.chainId)

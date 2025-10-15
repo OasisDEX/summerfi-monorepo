@@ -15,6 +15,7 @@ const coreAbis = [
   'FleetCommander.sol',
   'StakingRewardsManagerBase.sol',
   'HarborCommand.sol',
+  'Ark.sol',
 ]
 const rewardsAbis = ['SummerRewardsRedeemer.sol']
 const govAbis = [
@@ -27,9 +28,9 @@ const accessContracts = ['ProtocolAccessManagerWhiteList.sol']
 
 const foldersDict = {
   'core-contracts': coreAbis,
-  'gov-contracts': govAbis,
-  'rewards-contracts': rewardsAbis,
-  'access-contracts': accessContracts,
+  // 'gov-contracts': govAbis,
+  // 'rewards-contracts': rewardsAbis,
+  // 'access-contracts': accessContracts,
 }
 
 const dest = 'armada-protocol/abis/src'

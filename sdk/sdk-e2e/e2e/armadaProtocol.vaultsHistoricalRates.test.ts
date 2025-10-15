@@ -1,14 +1,13 @@
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { TestConfigs } from './utils/testConfig'
+import { ChainConfigs } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vaults Historical Rates', () => {
-  const { chainId, fleetAddressValue } = TestConfigs.Base
-  const { chainId: sonicChainId, fleetAddressValue: sonicFleetAddressValue } = TestConfigs.Sonic
+  const { chainId, fleetAddressValue } = ChainConfigs.SelfManaged
 
   const chainInfo = getChainInfoByChainId(chainId)
 
@@ -22,10 +21,6 @@ describe('Armada Protocol - Vaults Historical Rates', () => {
         {
           fleetAddress: fleetAddressValue,
           chainId,
-        },
-        {
-          fleetAddress: sonicFleetAddressValue,
-          chainId: sonicChainId,
         },
       ],
     })

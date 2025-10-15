@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { isRebalanceData, type IRebalanceData } from '@summerfi/contracts-provider-common'
-import { type IArmadaVaultId, isArmadaVaultId } from '@summerfi/sdk-common'
+import {
+  type IArmadaVaultId,
+  isArmadaVaultId,
+  isRebalanceData,
+  type IRebalanceData,
+} from '@summerfi/sdk-common'
 
 export const adjustBuffer = publicProcedure
   .input(

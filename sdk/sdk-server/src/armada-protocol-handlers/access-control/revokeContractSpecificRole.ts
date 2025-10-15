@@ -1,7 +1,12 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { ContractSpecificRoleName } from '@summerfi/contracts-provider-common'
-import { isAddress, isChainId, type ChainId, type IAddress } from '@summerfi/sdk-common'
+import {
+  ContractSpecificRoleName,
+  isAddress,
+  isChainId,
+  type ChainId,
+  type IAddress,
+} from '@summerfi/sdk-common'
 
 export const revokeContractSpecificRole = publicProcedure
   .input(

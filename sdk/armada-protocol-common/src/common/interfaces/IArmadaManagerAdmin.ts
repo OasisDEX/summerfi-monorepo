@@ -6,8 +6,9 @@ import type {
   IArmadaVaultId,
   ChainId,
   AddressValue,
+  IRebalanceData,
+  IArkConfig,
 } from '@summerfi/sdk-common'
-import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 
 /**
  * @name IArmadaManagerAdmin
@@ -220,4 +221,15 @@ export interface IArmadaManagerAdmin {
    * @returns Promise<IAddress[]> The list of active ark addresses
    */
   arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
+
+  /**
+   * @name arkConfig
+   * @description Gets the configuration of an ark. Used to fetch data from the blockchain
+   *
+   * @param chainId The chain ID where the ark is deployed
+   * @param arkAddressValue The address of the ark
+   *
+   * @returns Promise<IArkConfig> The ark configuration
+   */
+  arkConfig(params: { chainId: ChainId; arkAddressValue: AddressValue }): Promise<IArkConfig>
 }

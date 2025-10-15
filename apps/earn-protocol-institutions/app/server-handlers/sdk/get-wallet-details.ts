@@ -1,4 +1,4 @@
-import { type GeneralRoles } from '@summerfi/sdk-client'
+import { type GlobalRoles } from '@summerfi/sdk-client'
 
 import { getInstitutionRoles } from '@/app/server-handlers/sdk/get-institution-roles'
 
@@ -7,9 +7,9 @@ export const getWalletDetails: (props: {
   walletAddress?: string
 }) => Promise<
   | {
-      walletAddressRoles: GeneralRoles[]
+      walletAddressRoles: GlobalRoles[]
       roles: {
-        [key in GeneralRoles]: boolean
+        [key in GlobalRoles]: boolean
       }
     }
   | undefined
@@ -35,19 +35,19 @@ export const getWalletDetails: (props: {
       (address) => address.toLowerCase() === normalizedWalletAddress,
     )
 
-    const walletAddressRoles = [] as GeneralRoles[]
+    const walletAddressRoles = [] as GlobalRoles[]
 
     if (hasAdmiralsQuartersRole) {
-      walletAddressRoles.push('ADMIRALS_QUARTERS_ROLE' as GeneralRoles)
+      walletAddressRoles.push('ADMIRALS_QUARTERS_ROLE' as GlobalRoles)
     }
     if (hasDecayControllerRole) {
-      walletAddressRoles.push('DECAY_CONTROLLER_ROLE' as GeneralRoles)
+      walletAddressRoles.push('DECAY_CONTROLLER_ROLE' as GlobalRoles)
     }
     if (hasGovernorRole) {
-      walletAddressRoles.push('GOVERNOR_ROLE' as GeneralRoles)
+      walletAddressRoles.push('GOVERNOR_ROLE' as GlobalRoles)
     }
     if (hasSuperKeeperRole) {
-      walletAddressRoles.push('SUPER_KEEPER_ROLE' as GeneralRoles)
+      walletAddressRoles.push('SUPER_KEEPER_ROLE' as GlobalRoles)
     }
 
     return {

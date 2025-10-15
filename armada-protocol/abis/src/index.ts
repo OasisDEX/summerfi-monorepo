@@ -1,4 +1,5 @@
 export * from './AdmiralsQuarters.sol';
+export * from './Ark.sol';
 export * from './FleetCommander.sol';
 export * from './GovernanceRewardsManager.sol';
 export * from './HarborCommand.sol';
