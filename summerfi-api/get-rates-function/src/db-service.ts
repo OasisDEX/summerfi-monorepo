@@ -79,7 +79,7 @@ export class RatesService {
   }
 
   async initIfNeeded() {
-    if (!this.db) {
+    if (!this.db?.db) {
       await this.init()
     }
   }
