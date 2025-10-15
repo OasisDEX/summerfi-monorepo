@@ -385,7 +385,6 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
     }
 
     if (path.includes('/rates')) {
-      await ratesService.initIfNeeded()
       const cacheKey = generateCacheKey({
         prefix: 'get-rates',
         productIds: [productId],
@@ -402,6 +401,7 @@ async function baseHandler(event: APIGatewayProxyEventV2): Promise<APIGatewayPro
           }
         }
       }
+      await ratesService.initIfNeeded()
       // Get rates from both sources
       const [subgraphRates, dbRates] = await Promise.all([
         retrySubgraphQuery(() => client.GetArkRates({ productId }), {
