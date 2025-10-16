@@ -25,6 +25,11 @@
     margin-bottom: -4px;
   }
 
+  .tableCellAddress {
+    font-family: monospace;
+    font-weight: 500;
+  }
+
   .inputContainer {
     display: flex;
     justify-content: flex-end;

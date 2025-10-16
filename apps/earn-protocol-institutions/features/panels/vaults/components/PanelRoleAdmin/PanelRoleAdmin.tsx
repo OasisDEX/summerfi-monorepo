@@ -6,7 +6,7 @@ import { type Address, UiSimpleFlowSteps } from '@summerfi/app-types'
 
 import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
 import { usePanelAdmin } from '@/providers/PanelAdminProvider/PanelAdminProvider'
-import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
+import { type InstitutionVaultRole } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
 import { roleAdminMapper } from './mapper'
@@ -14,7 +14,7 @@ import { roleAdminMapper } from './mapper'
 import styles from './PanelRoleAdmin.module.css'
 
 interface PanelRoleAdminProps {
-  roles: InstitutionVaultRoles
+  roles: InstitutionVaultRole[]
 }
 
 export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
@@ -79,8 +79,8 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
 
   const change = useMemo(
     () =>
-      state.items.map((item) => {
-        const from = roles[item.role]?.address ?? 'n/a'
+      state.items.map(({ role }) => {
+        const from = roles[role]?.address ?? 'n/a'
 
         return {
           title: item.role,
