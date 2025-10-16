@@ -13,7 +13,7 @@ describe('Armada Protocol - Access Control Get Addresses with General Role', () 
     const roles = Object.values(GlobalRoles) as GlobalRoles[]
 
     for (const role of roles) {
-      const addresses = await sdk.armada.accessControl.getAllAddressesWithGeneralRole({
+      const addresses = await sdk.armada.accessControl.getAllAddressesWithGlobalRole({
         chainId,
         role,
       })

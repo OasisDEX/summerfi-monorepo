@@ -1,4 +1,4 @@
-import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
+import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
 
 jest.setTimeout(300000)

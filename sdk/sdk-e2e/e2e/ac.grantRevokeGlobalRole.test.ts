@@ -14,7 +14,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
 
   test('should grant and revoke general role', async () => {
     // Get initial addresses with the role
-    const roleAddresses = await sdk.armada.accessControl.getAllAddressesWithGeneralRole({
+    const roleAddresses = await sdk.armada.accessControl.getAllAddressesWithGlobalRole({
       chainId,
       role,
     })
@@ -27,7 +27,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     // Grant role if target doesn't have it
     if (!hasRoleAtStart) {
       console.log('Granting role because the address does not have it...')
-      const grantTxInfo = await sdk.armada.accessControl.grantGeneralRole({
+      const grantTxInfo = await sdk.armada.accessControl.grantGlobalRole({
         chainId,
         role,
         targetAddress,
@@ -36,7 +36,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
       expect(grantStatus).toBe('success')
 
       // Check addresses after grant
-      const addressesAfterGrant = await sdk.armada.accessControl.getAllAddressesWithGeneralRole({
+      const addressesAfterGrant = await sdk.armada.accessControl.getAllAddressesWithGlobalRole({
         chainId,
         role: role,
       })
@@ -47,7 +47,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     }
 
     // Revoke role
-    const revokeTxInfo = await sdk.armada.accessControl.revokeGeneralRole({
+    const revokeTxInfo = await sdk.armada.accessControl.revokeGlobalRole({
       chainId,
       role,
       targetAddress,
@@ -56,7 +56,7 @@ describe('Armada Protocol - Access Control General Role Grant/Revoke', () => {
     expect(revokeStatus).toBe('success')
 
     // Check addresses after revoke
-    const addressesAfterRevoke = await sdk.armada.accessControl.getAllAddressesWithGeneralRole({
+    const addressesAfterRevoke = await sdk.armada.accessControl.getAllAddressesWithGlobalRole({
       chainId,
       role: role,
     })
