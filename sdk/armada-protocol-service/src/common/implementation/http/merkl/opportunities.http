@@ -12,4 +12,8 @@ https://api.merkl.xyz/v4/opportunities/{{opportunityId}}
 
 ### by Identifier (rewards manager)
 @identifier = 0xB1A851b8c70A4749408754d398702153A61DFc78
-https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId=8453
+@chainId = 1
+# @chainId = 8453
+# @chainId = 42161
+# @chainId = 146
+https://api.merkl.xyz/v4/opportunities?identifier={{identifier}}&chainId={{chainId}}

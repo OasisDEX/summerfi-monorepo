@@ -44,6 +44,7 @@ import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
 import type { IDeploymentProvider } from '../..'
+import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
 
 export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -1881,6 +1882,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       ),
     )
 
+    const sumrToken = this._tokensManager.getTokenBySymbol({
+      chainInfo: getChainInfoByChainId(params.chainId),
+      symbol: 'SUMR',
+    })
+
+    // temporary fallback is enabled
     const byFleetAddress: {
       [fleetAddress: string]:
         | {
@@ -1917,10 +1924,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               return dailyEmission
             }, 0n)
             .toString(),
-          token: this._tokensManager.getTokenBySymbol({
-            chainInfo: getChainInfoByChainId(params.chainId),
-            symbol: 'SUMR',
-          }),
+          token: sumrToken,
         })
         return acc
       },
@@ -1935,7 +1939,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     )
 
     return {
-      byFleetAddress,
+      byFleetAddress: getByFleetAddressFallback(chainId, sumrToken),
     }
   }
 }
