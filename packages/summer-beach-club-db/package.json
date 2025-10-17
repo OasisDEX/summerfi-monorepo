@@ -18,13 +18,13 @@
   },
   "dependencies": {
     "kysely": "^0.28.2",
-    "pg": "^8.16.0",
+    "pg": "^8.15.5",
     "@summerfi/abstractions": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/pg": "^8.11.11",
+    "@types/pg": "^8.15.5",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "kysely-codegen": "^0.18.5",
