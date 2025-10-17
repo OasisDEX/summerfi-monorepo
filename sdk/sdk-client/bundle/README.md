@@ -1293,16 +1293,22 @@ IArmadaPosition = {
   pool: IArmadaVault;
   amount: ITokenAmount
   shares: ITokenAmount
-  // Total deposits and withdrawals (aggregated)
-  depositsAmount: ITokenAmount
-  depositsAmountUSD: IFiatCurrencyAmount
-  withdrawalsAmount: ITokenAmount
-  withdrawalsAmountUSD: IFiatCurrencyAmount
   claimedSummerToken: ITokenAmount
   claimableSummerToken: ITokenAmount
   rewards: {
     claimed: ITokenAmount
     claimable: ITokenAmount
+  }[]
+
+  @deprecated
+  deposits: {
+    amount: ITokenAmount;
+    timestamp: number;
+  }[]
+  @deprecated
+  withdrawals: {
+    amount: ITokenAmount;
+    timestamp: number;
   }[]
 }
 ```
@@ -1396,17 +1402,6 @@ ITokenAmount = {
   token: IToken
 
   createFrom({ token: IToken, amount: string }): ITokenAmount
-}
-```
-
-### IFiatCurrencyAmount
-
-```tsx
-IFiatCurrencyAmount = {
-  amount: string
-  fiat: FiatCurrency
-
-  createFrom({ amount: string, fiat: FiatCurrency }): IFiatCurrencyAmount
 }
 ```
 
@@ -1668,22 +1663,6 @@ enum FiatCurrency {
   - Represents the current value of one vault share in terms of the underlying asset
   - Useful for calculating the current value of user positions and tracking vault performance
   - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
-
-**Breaking Changes:**
-
-- **Removed `deposits` and `withdrawals` arrays from `IArmadaPosition`** - These arrays are no
-  longer available in the position object
-
-**Migration Guide:**
-
-The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts. Use the
-following new fields instead:
-
-- `depositsAmount: ITokenAmount` - Total amount deposited (replaces summing up `deposits` array)
-- `withdrawalsAmount: ITokenAmount` - Total amount withdrawn (replaces summing up `withdrawals`
-  array)
-- `depositsAmountUSD: IFiatCurrencyAmount` - Total deposits in USD
-- `withdrawalsAmountUSD: IFiatCurrencyAmount` - Total withdrawals in USD
 
 ### v2.0.0
 
