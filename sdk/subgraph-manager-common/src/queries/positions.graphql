@@ -10,18 +10,6 @@ query GetUserPositions($accountAddress: String!) {
     inputTokenWithdrawals
     inputTokenDepositsNormalizedInUSD
     inputTokenWithdrawalsNormalizedInUSD
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
     vault {
       id
       inputTokenBalance
@@ -75,18 +63,6 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
     inputTokenWithdrawals
     inputTokenDepositsNormalizedInUSD
     inputTokenWithdrawalsNormalizedInUSD
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
     vault {
       id
       inputTokenBalance
@@ -139,18 +115,6 @@ query GetPosition($id: ID!) {
     inputTokenWithdrawals
     inputTokenDepositsNormalizedInUSD
     inputTokenWithdrawalsNormalizedInUSD
-    deposits {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
-    withdrawals {
-      amount
-      amountUSD
-      inputTokenBalance
-      timestamp
-    }
     vault {
       id
       inputTokenBalance
