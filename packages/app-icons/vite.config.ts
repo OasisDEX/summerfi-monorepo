@@ -48,12 +48,18 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: false,
       lib: {
         // eslint-disable-next-line no-undef
-        entry: resolve(__dirname, 'src/index.ts'),
+        entry: {
+          index: resolve(__dirname, 'src/index.ts'),
+          static: resolve(__dirname, 'src/static.ts'),
+        },
         formats: ['es'],
       },
       rollupOptions: {
         external: ['react', 'react/jsx-runtime'],
-        input: resolve(__dirname, 'src/index.ts'),
+        input: {
+          index: resolve(__dirname, 'src/index.ts'),
+          static: resolve(__dirname, 'src/static.ts'),
+        },
         output: {
           assetFileNames: 'assets/[name][extname]',
           entryFileNames: '[name].js',

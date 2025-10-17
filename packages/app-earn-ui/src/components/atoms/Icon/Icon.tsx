@@ -1,10 +1,10 @@
 import { type FC, Suspense, useMemo } from 'react'
 import { icons } from '@summerfi/app-icons'
-import { type TokenSymbolsList } from '@summerfi/app-types'
+import { type IconsList, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { getTokenGuarded } from '@/tokens/helpers'
 
-export type IconNamesList = keyof typeof icons
+export type IconNamesList = IconsList
 
 export type IconVariant = 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
 

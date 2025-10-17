@@ -8,10 +8,6 @@ export const roleAdminColumns = [
     title: 'Address',
   },
   {
-    key: 'last-updated',
-    title: 'Last Updated',
-  },
-  {
     key: 'action',
     title: '',
   },

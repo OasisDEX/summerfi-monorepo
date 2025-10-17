@@ -4,6 +4,7 @@ declare const styles: {
   readonly "onEdit": string;
   readonly "panelRoleAdminWrapper": string;
   readonly "table": string;
+  readonly "tableCellAddress": string;
   readonly "tableCellNodeUpdating": string;
   readonly "tableWrapper": string;
 };

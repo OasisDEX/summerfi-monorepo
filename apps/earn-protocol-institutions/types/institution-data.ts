@@ -1,17 +1,11 @@
-import { type Address } from '@summerfi/app-types'
-import { type GlobalRoles } from '@summerfi/sdk-client'
+import { type ContractSpecificRoleName } from '@summerfi/sdk-client'
 
 import {
   type getInstitutionData,
   type getUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
 
-export type InstitutionVaultRoles = {
-  [key in GlobalRoles]?: {
-    address: Address
-    lastUpdated: number
-  }
-}
+export type InstitutionVaultRoleType = keyof typeof ContractSpecificRoleName
 
 export type InstitutionVaultThirdPartyCost = {
   type: string
@@ -40,7 +34,10 @@ export type InstitutionVaultFeeRevenueData = {
 export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
 export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
 
-export type InstitutionVaultRole = { address: Address; lastUpdated: number; role: GlobalRoles }
+export type InstitutionVaultRole = {
+  address: string
+  role: InstitutionVaultRoleType
+}
 
 export type InstitutionDataBasic = {
   id: InstitutionData['id']

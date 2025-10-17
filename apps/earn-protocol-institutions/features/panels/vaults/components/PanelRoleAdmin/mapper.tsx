@@ -1,10 +1,7 @@
 import { Button, Icon, Input, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
-import { type GlobalRoles } from '@summerfi/sdk-client'
-import dayjs from 'dayjs'
 
 import { walletRolesToHuman } from '@/helpers/roles-to-human'
-import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
+import { type InstitutionVaultRole, type InstitutionVaultRoleType } from '@/types/institution-data'
 
 import styles from './PanelRoleAdmin.module.css'
 
@@ -17,7 +14,7 @@ export const roleAdminMapper = ({
   onChange,
   onRowEditCancel,
 }: {
-  roles: InstitutionVaultRoles
+  roles: InstitutionVaultRole[]
   updatingRole: InstitutionVaultRole | null
   updatingRoleAddress: string
   onEdit: (item: InstitutionVaultRole) => void
@@ -25,16 +22,13 @@ export const roleAdminMapper = ({
   onChange: (value: string) => void
   onRowEditCancel: () => void
 }) => {
-  return Object.entries(roles).map((entry) => {
-    const [role, item] = entry
-
+  return roles.map(({ address, role }) => {
     const isUpdating = updatingRole?.role === role
 
     const resolvedOnClick = () => {
       const resolvedItem = {
-        address: item.address,
-        lastUpdated: item.lastUpdated,
-        role: role as GlobalRoles,
+        address,
+        role: role as InstitutionVaultRoleType,
       }
 
       if (isUpdating) {
@@ -46,24 +40,23 @@ export const roleAdminMapper = ({
 
     return {
       content: {
-        role: <TableCellText>{walletRolesToHuman(role as GlobalRoles)}</TableCellText>,
+        role: <TableCellText>{walletRolesToHuman(role as InstitutionVaultRoleType)}</TableCellText>,
         address: (
-          <TableCellNodes className={isUpdating ? styles.tableCellNodeUpdating : ''}>
+          <TableCellNodes
+            className={isUpdating ? styles.tableCellNodeUpdating : styles.tableCellAddress}
+          >
             {isUpdating ? (
               <Input
                 variant="withBorder"
                 wrapperClassName={styles.inputContainer}
                 inputWrapperClassName={styles.inputWrapper}
-                value={updatingRoleAddress || item.address}
+                value={updatingRoleAddress || address}
                 onChange={(e) => onChange(e.target.value)}
               />
             ) : (
-              formatAddress(item.address, { first: 10, last: 10 })
+              address
             )}
           </TableCellNodes>
-        ),
-        'last-updated': (
-          <TableCellText>{dayjs(item.lastUpdated).format('MMMM D, YYYY')}</TableCellText>
         ),
         action: (
           <TableCellText
