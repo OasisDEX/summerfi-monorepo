@@ -26,11 +26,11 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: BigNumber('18992').shiftedBy(token.decimals).toFixed() },
         ],
         // eth high risk
-        '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca2': [
+        '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10': [
           { token, dailyEmission: BigNumber('37603').shiftedBy(token.decimals).toFixed() },
         ],
         // eth low risk
-        '0x5c0f66f3d1e3ad6f2b4aa3f3b8b5f6b2c4c8e3f0': [
+        '0x67e536797570b3d8919df052484273815a0ab506': [
           { token, dailyEmission: BigNumber('97837').shiftedBy(token.decimals).toFixed() },
         ],
       }
