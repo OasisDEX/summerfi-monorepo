@@ -131,6 +131,7 @@ export const VaultManageViewComponent = ({
   vault,
   vaults,
   vaultInfo,
+  noOfDeposits,
   position,
   latestActivity,
   topDepositors,
@@ -148,6 +149,7 @@ export const VaultManageViewComponent = ({
   vaults: SDKVaultsListType
   position: IArmadaPosition
   vaultInfo?: IArmadaVaultInfo
+  noOfDeposits: number
   topDepositors: TopDepositorsPagination
   latestActivity: LatestActivityPagination
   rebalanceActivity: RebalanceActivityPagination
@@ -826,6 +828,7 @@ export const VaultManageViewComponent = ({
           </>
         }
         isMobile={isMobile}
+        noOfDeposits={noOfDeposits}
       />
     </>
   )

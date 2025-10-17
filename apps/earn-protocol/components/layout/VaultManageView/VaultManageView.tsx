@@ -38,6 +38,7 @@ export const VaultManageView = ({
   migratablePositions,
   migrationBestVaultApy,
   systemConfig,
+  noOfDeposits,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaultInfo?: IArmadaVaultInfo
@@ -54,6 +55,7 @@ export const VaultManageView = ({
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
+  noOfDeposits: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -73,6 +75,7 @@ export const VaultManageView = ({
         arksInterestRates={arksInterestRates}
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
+        noOfDeposits={noOfDeposits}
       />
     </SDKContextProvider>
   )

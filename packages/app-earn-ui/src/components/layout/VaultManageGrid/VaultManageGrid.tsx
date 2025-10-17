@@ -66,6 +66,7 @@ interface VaultManageGridProps {
   tooltipEventHandler: (tooltipName: string) => void
   buttonClickEventHandler: (buttonName: string) => void
   dropdownChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
+  noOfDeposits: number
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -87,6 +88,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   buttonClickEventHandler,
   tooltipEventHandler,
   dropdownChangeHandler,
+  noOfDeposits,
 }) => {
   const isAltPressed = useHoldAlt()
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -131,8 +133,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
-
-  const noOfDeposits = position.deposits.length.toString()
 
   useEffect(() => {
     const timer = setTimeout(() => {

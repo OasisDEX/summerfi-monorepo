@@ -256,6 +256,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}
+      noOfDeposits={positionHistory.noOfDeposits}
     />
   )
 }
