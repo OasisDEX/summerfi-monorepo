@@ -1,6 +1,9 @@
 import { ChainIds, type ChainId, type IToken } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
+// Just a static fallback data for Merkl rewards emissions by fleet address
+// Use for quick solution while Merkl is failing to provide data via their API
+// Updated manually when needed
 export const getByFleetAddressFallback = (
   chainId: ChainId,
   token: IToken,

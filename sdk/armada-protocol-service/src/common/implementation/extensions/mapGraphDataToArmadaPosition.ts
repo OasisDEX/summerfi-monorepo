@@ -184,46 +184,8 @@ export const mapGraphDataToArmadaPosition =
         amount: position.inputTokenWithdrawalsNormalizedInUSD,
         fiat: FiatCurrency.USD,
       }),
-      deposits: position.deposits.map((deposit) => {
-        const amount = TokenAmount.createFrom({
-          amount: BigNumber(deposit.amount.toString())
-            .div(10 ** position.vault.inputToken.decimals)
-            .toFixed(),
-          token: Token.createFrom({
-            chainInfo,
-            address: Address.createFromEthereum({
-              value: position.vault.inputToken.id,
-            }),
-            name: position.vault.inputToken.name,
-            symbol: position.vault.inputToken.symbol,
-            decimals: position.vault.inputToken.decimals,
-          }),
-        })
-        return {
-          amount,
-          timestamp: Number(deposit.timestamp),
-        }
-      }),
-      withdrawals: position.withdrawals.map((withdrawal) => {
-        const amount = TokenAmount.createFrom({
-          amount: BigNumber(withdrawal.amount.toString())
-            .div(10 ** position.vault.inputToken.decimals)
-            .toFixed(),
-          token: Token.createFrom({
-            chainInfo,
-            address: Address.createFromEthereum({
-              value: position.vault.inputToken.id,
-            }),
-            name: position.vault.inputToken.name,
-            symbol: position.vault.inputToken.symbol,
-            decimals: position.vault.inputToken.decimals,
-          }),
-        })
-        return {
-          amount,
-          timestamp: Number(withdrawal.timestamp),
-        }
-      }),
+      deposits: [],
+      withdrawals: [],
       claimedSummerToken,
       claimableSummerToken,
       rewards,
