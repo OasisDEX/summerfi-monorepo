@@ -73,7 +73,6 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     }),
     dbInstance.db
       .selectFrom('latestActivity')
-      .selectAll()
       .where('userAddress', '=', address.toLowerCase())
       .where('vaultId', '=', vault.id)
       .where('network', '=', networkDbNameMap[network])
