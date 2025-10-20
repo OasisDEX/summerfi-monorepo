@@ -5,7 +5,6 @@ declare const styles: {
   readonly "panelRoleAdminWrapper": string;
   readonly "table": string;
   readonly "tableCellAddress": string;
-  readonly "tableCellNodeUpdating": string;
   readonly "tableWrapper": string;
 };
 export = styles;

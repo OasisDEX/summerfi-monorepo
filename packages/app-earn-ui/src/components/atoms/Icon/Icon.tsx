@@ -4,7 +4,7 @@ import { type IconsList, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { getTokenGuarded } from '@/tokens/helpers'
 
-export type IconNamesList = IconsList
+export type IconNamesList = keyof typeof IconsList
 
 export type IconVariant = 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
 

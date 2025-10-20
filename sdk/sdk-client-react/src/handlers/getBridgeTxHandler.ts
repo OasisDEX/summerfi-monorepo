@@ -1,8 +1,8 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { IAddress, IChainInfo, ITokenAmount, type IUser } from '@summerfi/sdk-common'
 
 export const getBridgeTxHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     user,
     recipient,

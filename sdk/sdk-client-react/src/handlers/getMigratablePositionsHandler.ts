@@ -1,4 +1,4 @@
-import { ISDKManager } from '@summerfi/sdk-client'
+import { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { Address, Wallet, User, IChainInfo } from '@summerfi/sdk-common'
 
 /**
@@ -14,7 +14,7 @@ import { Address, Wallet, User, IChainInfo } from '@summerfi/sdk-common'
  * @returns {Promise<{chainInfo: IChainInfo; positions: ArmadaMigratablePosition[]}[]>} The promise resolving to an array of chain-specific migratable positions
  */
 export const getMigratablePositionsHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({ walletAddress, chainInfo }: { walletAddress: string; chainInfo: IChainInfo }) => {
     const address = Address.createFromEthereum({ value: walletAddress })
 

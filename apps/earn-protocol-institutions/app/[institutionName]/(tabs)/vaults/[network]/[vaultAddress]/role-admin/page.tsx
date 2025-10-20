@@ -24,7 +24,5 @@ export default async function InstitutionVaultRoleAdminPage({
     chainId,
   })
 
-  console.log('rolesList', rolesList)
-
-  return <PanelRoleAdmin roles={rolesList} />
+  return <PanelRoleAdmin roles={rolesList} institutionName={institutionName} />
 }

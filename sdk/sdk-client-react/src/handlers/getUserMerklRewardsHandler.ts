@@ -1,4 +1,4 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { ChainId, type AddressValue, type IUser } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import { ChainId, type AddressValue, type IUser } from '@summerfi/sdk-common'
  * @param params.rewardsTokensAddresses Optional array of token addresses to filter rewards (default: all tokens)
  */
 export const getUserMerklRewardsHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     user,
     chainIds,

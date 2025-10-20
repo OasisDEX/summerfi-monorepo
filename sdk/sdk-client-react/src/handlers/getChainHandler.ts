@@ -1,7 +1,7 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKManager, ISDKAdminManager } from '@summerfi/sdk-client'
 
 export const getChainHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   ({ chainId }: { chainId: number }) =>
     sdk.chains
       .getChainById({

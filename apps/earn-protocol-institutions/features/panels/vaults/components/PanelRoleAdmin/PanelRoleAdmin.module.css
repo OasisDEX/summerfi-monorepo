@@ -20,11 +20,6 @@
     }
   }
 
-  .tableCellNodeUpdating {
-    margin-top: -4px;
-    margin-bottom: -4px;
-  }
-
   .tableCellAddress {
     font-family: monospace;
     font-weight: 500;

@@ -1,8 +1,8 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { type IToken, Percentage, TokenAmount } from '@summerfi/sdk-common'
 
 export const getSwapQuoteHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     fromAmount,
     fromToken,

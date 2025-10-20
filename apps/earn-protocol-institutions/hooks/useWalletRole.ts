@@ -3,7 +3,7 @@ import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type GlobalRoles } from '@summerfi/sdk-client'
 
 import { getUserData } from '@/helpers/get-user-data'
-import { walletRolesToHuman } from '@/helpers/roles-to-human'
+import { walletRolesToHuman } from '@/helpers/wallet-roles'
 
 export const useWalletRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GlobalRoles[] | null>(null)

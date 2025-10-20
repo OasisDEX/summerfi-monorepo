@@ -1,86 +1,23 @@
-import { Button, Icon, Input, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
+import { Button, Icon, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
 
-import { walletRolesToHuman } from '@/helpers/roles-to-human'
+import { walletRolesToHuman } from '@/helpers/wallet-roles'
 import { type InstitutionVaultRole, type InstitutionVaultRoleType } from '@/types/institution-data'
 
 import styles from './PanelRoleAdmin.module.css'
 
-export const roleAdminMapper = ({
-  roles,
-  updatingRole,
-  updatingRoleAddress,
-  onEdit,
-  onSave,
-  onChange,
-  onRowEditCancel,
-}: {
-  roles: InstitutionVaultRole[]
-  updatingRole: InstitutionVaultRole | null
-  updatingRoleAddress: string
-  onEdit: (item: InstitutionVaultRole) => void
-  onSave: (item: InstitutionVaultRole) => void
-  onChange: (value: string) => void
-  onRowEditCancel: () => void
-}) => {
+export const roleAdminMapper = ({ roles }: { roles: InstitutionVaultRole[] }) => {
   return roles.map(({ address, role }) => {
-    const isUpdating = updatingRole?.role === role
-
-    const resolvedOnClick = () => {
-      const resolvedItem = {
-        address,
-        role: role as InstitutionVaultRoleType,
-      }
-
-      if (isUpdating) {
-        onSave(resolvedItem)
-      } else {
-        onEdit(resolvedItem)
-      }
-    }
-
     return {
       content: {
         role: <TableCellText>{walletRolesToHuman(role as InstitutionVaultRoleType)}</TableCellText>,
-        address: (
-          <TableCellNodes
-            className={isUpdating ? styles.tableCellNodeUpdating : styles.tableCellAddress}
-          >
-            {isUpdating ? (
-              <Input
-                variant="withBorder"
-                wrapperClassName={styles.inputContainer}
-                inputWrapperClassName={styles.inputWrapper}
-                value={updatingRoleAddress || address}
-                onChange={(e) => onChange(e.target.value)}
-              />
-            ) : (
-              address
-            )}
-          </TableCellNodes>
-        ),
+        address: <TableCellNodes className={styles.tableCellAddress}>{address}</TableCellNodes>,
         action: (
-          <TableCellText
-            style={{ marginLeft: isUpdating ? '8px' : '40px', gap: 'var(--spacing-space-small)' }}
-          >
-            {isUpdating && (
-              <Button
-                variant="unstyled"
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                onClick={onRowEditCancel}
-              >
-                <Icon iconName="trash" size={20} className={styles.onEdit} />
-              </Button>
-            )}
+          <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
             <Button
               variant="unstyled"
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              onClick={resolvedOnClick}
             >
-              <Icon
-                iconName={isUpdating ? 'checkmark' : 'edit'}
-                size={16}
-                className={styles.onEdit}
-              />
+              <Icon iconName="trash" size={16} className={styles.onEdit} />
             </Button>
           </TableCellText>
         ),
