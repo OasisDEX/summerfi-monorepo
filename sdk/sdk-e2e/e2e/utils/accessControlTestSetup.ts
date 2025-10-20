@@ -1,6 +1,6 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, ChainConfigs, SharedConfig } from './testConfig'
+import { SDKApiUrl, ChainConfigs, SharedConfig, clientId } from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
@@ -8,7 +8,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
  */
 export function createAdminSdkTestSetup() {
   const sdk = makeAdminSDK({
-    clientId: 'test-client',
+    clientId: clientId,
     apiDomainUrl: SDKApiUrl,
   })
 

@@ -8,7 +8,8 @@ import { IArmadaManager, setTestDeployment } from '@summerfi/armada-protocol-com
 import {
   ArmadaManagerFactory,
   DeploymentProvider,
-  fetchDeploymentProviderConfig,
+  fetchPublicDeploymentProviderConfig,
+  fetchInstiDeploymentProviderConfig,
   type DeploymentProviderConfig,
   type IDeploymentProvider,
 } from '@summerfi/armada-protocol-service'
@@ -33,7 +34,7 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { readDeploymentProviderConfig } from '@summerfi/armada-protocol-service'
+import { isChainId } from '@summerfi/sdk-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -69,27 +70,40 @@ const quickHashCode = (str: string): string => {
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   const configProvider = new ConfigurationProvider()
+
   const summerDeployment = configProvider.getConfigurationItem({
     name: 'SUMMER_DEPLOYMENT_CONFIG',
   })
   setTestDeployment(summerDeployment)
 
-  let deploymentProviderConfig: DeploymentProviderConfig
+  const publicDeploymentChainIds = configProvider
+    .getConfigurationItem({
+      name: 'SUMMER_DEPLOYED_CHAINS_ID',
+    })
+    .split(',')
+    .map((chainId) => {
+      if (!isChainId(chainId)) {
+        throw new Error(`Invalid chainId in SUMMER_DEPLOYMENT_CONFIG: ${chainId}`)
+      }
+      return chainId
+    })
+
+  let deploymentProviderConfigs: DeploymentProviderConfig[]
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
   if (clientId) {
     try {
-      deploymentProviderConfig = await fetchDeploymentProviderConfig(clientId)
+      deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(clientId)
     } catch (error) {
       console.error(`Failed to fetch integrator config:`, error)
       throw new Error(`ClientId ${clientId} does not exist`)
     }
   } else {
     // if no Client-Id header, use default deployment provider config
-    deploymentProviderConfig = readDeploymentProviderConfig()
+    deploymentProviderConfigs = fetchPublicDeploymentProviderConfig(publicDeploymentChainIds)
   }
 
-  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfig)
+  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfigs)
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })

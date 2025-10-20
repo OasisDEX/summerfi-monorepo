@@ -80,3 +80,5 @@ export const ChainConfigs = {
     symbol: 'USDC',
   },
 }
+
+export const clientId = 'testB'

@@ -1,7 +1,5 @@
 import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
-import { SDKApiUrl } from './testConfig'
-
-const clientId = 'test-client'
+import { SDKApiUrl, clientId } from './testConfig'
 
 /**
  * Creates a configured SDK instance for e2e tests
