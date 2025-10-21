@@ -8,3 +8,14 @@ query GetInstitutions {
     protocolAccessManager
   }
 }
+
+query GetInstitutionById($id: ID!) {
+  institutions(where: { id: $id }) {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}

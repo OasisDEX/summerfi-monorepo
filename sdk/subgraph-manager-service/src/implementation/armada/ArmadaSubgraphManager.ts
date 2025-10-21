@@ -110,6 +110,13 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutions()
   }
 
+  getInstitutionById(params: Parameters<IArmadaSubgraphManager['getInstitutionById']>[0]) {
+    const id = params.id.toLowerCase()
+    return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutionById({
+      id,
+    })
+  }
+
   /** PRIVATE */
   _getClient<T extends SubgraphType>(
     graph: T,

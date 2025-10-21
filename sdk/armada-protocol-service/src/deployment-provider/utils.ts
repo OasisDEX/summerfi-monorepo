@@ -1,14 +1,14 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { getDeploymentsJsonConfig } from '@summerfi/armada-protocol-common'
 import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
 export async function fetchInstiDeploymentProviderConfig(
+  subgraphProvider: IArmadaSubgraphManager,
+  chainId: ChainId,
   clientId: string,
 ): Promise<DeploymentProviderConfig[]> {
-  // TODO:
-  // 1) inject graph provider
-  // 2) fetch and return institution data from subgraph based on clientId
-}
+  const institutionsData = await subgraphProvider.getInstitutions({chainId})
 
 export const fetchPublicDeploymentProviderConfig = (
   deployedChainIds: ChainId[],

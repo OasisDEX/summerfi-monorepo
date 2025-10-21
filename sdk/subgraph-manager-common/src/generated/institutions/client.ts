@@ -12006,10 +12006,29 @@ export type GetInstitutionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetInstitutionsQuery = { __typename?: 'Query', institutions: Array<{ __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string }> };
 
+export type GetInstitutionByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetInstitutionByIdQuery = { __typename?: 'Query', institutions: Array<{ __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string }> };
+
 
 export const GetInstitutionsDocument = gql`
     query GetInstitutions {
   institutions {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}
+    `;
+export const GetInstitutionByIdDocument = gql`
+    query GetInstitutionById($id: ID!) {
+  institutions(where: {id: $id}) {
     id
     active
     harborCommand
@@ -12029,6 +12048,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetInstitutions(variables?: GetInstitutionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetInstitutionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetInstitutionsQuery>({ document: GetInstitutionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetInstitutions', 'query', variables);
+    },
+    GetInstitutionById(variables: GetInstitutionByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetInstitutionByIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetInstitutionByIdQuery>({ document: GetInstitutionByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetInstitutionById', 'query', variables);
     }
   };
 }

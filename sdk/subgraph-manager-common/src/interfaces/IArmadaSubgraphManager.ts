@@ -10,7 +10,10 @@ import type {
   Position_Filter,
   GetPositionQuery,
 } from '../generated/protocol/client'
-import type { GetInstitutionsQuery } from '../generated/institutions/client'
+import type {
+  GetInstitutionByIdQuery,
+  GetInstitutionsQuery,
+} from '../generated/institutions/client'
 
 /**
  * @name IArmadaSubgraphManager
@@ -132,4 +135,18 @@ export interface IArmadaSubgraphManager {
    *
    */
   getInstitutions(params: { chainId: ChainId }): Promise<GetInstitutionsQuery>
+
+  /**
+   * @name getInstitutionById
+   * @description Get a specific institution by ID
+   *
+   * @param chainId target chain
+   * @param id institution ID
+   *
+   * @returns GetInstitutionByIdQuery
+   *
+   * @throws Error
+   *
+   */
+  getInstitutionById(params: { chainId: ChainId; id: string }): Promise<GetInstitutionByIdQuery>
 }
