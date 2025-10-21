@@ -11,7 +11,8 @@ config({ path: ['../.env', '.env'], override: true, debug: false, ignore: ['MISS
 
 export default {
   config(input) {
-    const stage = input.stage ?? process.env.SST_USER
+    // AWS CF config
+    const stage = input.stage ?? `SST-v2-${process.env.SST_USER}`
     if (!stage) {
       throw new Error('Please specify stage or set SST_USER env variable')
     }
@@ -19,11 +20,12 @@ export default {
     return {
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
-      stage: `SST-v2-${stage}`,
+      stage: stage, // AWS CF stack name
       name: 'versioned-sdk',
     }
   },
   stacks(app) {
+    // AWS CDK stacks
     if (isPersistentStage(app.stage)) {
       app.setDefaultRemovalPolicy('retain')
     } else {
