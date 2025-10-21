@@ -1,9 +1,9 @@
 overwrite: true
-# schema: 'https://subgraph.satsuma-prod.com/233a9183430a/summer-fi/summer-protocol-base/version/1.4.4-tracking-institutional-demo-fleet/api'
-schema: 'https://subgraph.staging.oasisapp.dev/summer-protocol-base'
-documents: './src/**/*.graphql'
+schema: 'https://subgraph.satsuma-prod.com/233a9183430a/summer-fi/summer-institutions-base/version/0.0.19-roles/api'
+# schema: 'https://subgraph.staging.oasisapp.dev/summer-institution-base'
+documents: './src/queries/institutions/*.graphql'
 generates:
-  src/generated/client.ts:
+  src/generated/institutions/client.ts:
     plugins:
       - add:
           content:

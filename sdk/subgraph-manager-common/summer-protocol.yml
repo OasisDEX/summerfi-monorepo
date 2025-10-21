@@ -1,0 +1,51 @@
+overwrite: true
+# schema: 'https://subgraph.satsuma-prod.com/233a9183430a/summer-fi/summer-protocol-base/version/1.4.4-tracking-institutional-demo-fleet/api'
+schema: 'https://subgraph.staging.oasisapp.dev/summer-protocol-base'
+documents: './src/queries/protocol/*.graphql'
+generates:
+  src/generated/protocol/client.ts:
+    plugins:
+      - add:
+          content:
+            - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'
+      - typescript:
+          strictScalars: true
+          scalars:
+            BigDecimal: string
+            BigInt: bigint
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-operations:
+          strictScalars: true
+          scalars:
+            BigDecimal: string
+            BigInt: bigint
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-graphql-request
