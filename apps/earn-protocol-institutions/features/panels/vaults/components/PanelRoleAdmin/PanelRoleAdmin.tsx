@@ -41,7 +41,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
 
   const onRevokeContractSpecificRole = useCallback(
     ({ address, role }: InstitutionVaultRole) => {
-      const transactionId = getRevokeContractRoleTransactionId(address, role)
+      const transactionId = getRevokeContractRoleTransactionId({ address, role, chainId })
 
       try {
         addTransaction(
@@ -77,7 +77,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
 
   const onGrantContractSpecificRole = useCallback(
     ({ address, role }: InstitutionVaultRole) => {
-      const transactionId = getGrantContractRoleTransactionId(address, role)
+      const transactionId = getGrantContractRoleTransactionId({ address, role, chainId })
 
       try {
         addTransaction(
@@ -117,8 +117,9 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         roles,
         transactionQueue,
         onRevokeContractSpecificRole,
+        chainId,
       }),
-    [roles, transactionQueue, onRevokeContractSpecificRole],
+    [roles, transactionQueue, onRevokeContractSpecificRole, chainId],
   )
 
   return (

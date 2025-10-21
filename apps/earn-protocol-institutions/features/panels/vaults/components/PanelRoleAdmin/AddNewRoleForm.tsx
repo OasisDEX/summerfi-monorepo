@@ -15,7 +15,7 @@ export const AddNewRoleForm = ({
 }: {
   onAddRole: ({ address, role }: { address: string; role: InstitutionVaultRoleType }) => void
 }) => {
-  const [isAddressValid, setIsAddressValid] = useState(true)
+  const [isAddressValid, setIsAddressValid] = useState(false)
   const [newRoleAddress, setNewRoleAddress] = useState('')
   const [newRoleName, setNewRoleName] = useState<InstitutionVaultRoleType>('CURATOR_ROLE')
 
@@ -37,6 +37,7 @@ export const AddNewRoleForm = ({
   }
 
   const handleAddRole = () => {
+    if (!newRoleAddress || !isAddressValid) return
     onAddRole({
       address: newRoleAddress,
       role: newRoleName,
@@ -103,7 +104,7 @@ export const AddNewRoleForm = ({
       </div>
       <Button
         variant="primaryLarge"
-        disabled={!isAddressValid}
+        disabled={!newRoleAddress || !isAddressValid}
         onClick={handleAddRole}
         style={{ minWidth: 'fit-content' }}
       >

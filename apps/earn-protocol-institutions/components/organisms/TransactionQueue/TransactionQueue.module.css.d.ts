@@ -5,7 +5,7 @@ declare const styles: {
   readonly "title": string;
   readonly "transactionActions": string;
   readonly "transactionItem": string;
-  readonly "transactionItemheightFadeIn": string;
+  readonly "transactionItemHeightFadeIn": string;
 };
 export = styles;
 

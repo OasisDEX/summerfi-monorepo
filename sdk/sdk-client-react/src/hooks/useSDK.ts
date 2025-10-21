@@ -36,7 +36,7 @@ import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandl
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
-import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRoleHandler'
+import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 
 type UseSdk = {
   walletAddress?: string

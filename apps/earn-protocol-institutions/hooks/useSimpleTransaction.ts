@@ -157,7 +157,7 @@ export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds
       const txParams = {
         data: transaction.txData.transaction.calldata,
         target: transaction.txData.transaction.target.value,
-        value: BigInt(transaction.txData.transaction.value) ?? 0n,
+        value: BigInt(transaction.txData.transaction.value ?? 0),
       }
 
       const resolvedOverrides = await getGasSponsorshipOverride({

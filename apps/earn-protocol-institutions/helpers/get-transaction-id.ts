@@ -1,7 +1,23 @@
-export const getRevokeContractRoleTransactionId = (address: string, role: string) => {
-  return `revoke-role-${address}-${role}`
+export const getRevokeContractRoleTransactionId = ({
+  address,
+  role,
+  chainId,
+}: {
+  address: string
+  role: string
+  chainId: number
+}) => {
+  return `revoke-role-${address}-${role}-${chainId}`
 }
 
-export const getGrantContractRoleTransactionId = (address: string, role: string) => {
-  return `grant-role-${address}-${role}`
+export const getGrantContractRoleTransactionId = ({
+  address,
+  role,
+  chainId,
+}: {
+  address: string
+  role: string
+  chainId: number
+}) => {
+  return `grant-role-${address}-${role}-${chainId}`
 }

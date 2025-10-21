@@ -11,17 +11,18 @@ type RoleAdminMapperParams = {
   roles: InstitutionVaultRole[]
   transactionQueue: SDKTransactionItem[]
   onRevokeContractSpecificRole: (params: InstitutionVaultRole) => void
+  chainId: number
 }
 
 export const roleAdminMapper = ({
   roles,
   transactionQueue,
   onRevokeContractSpecificRole,
+  chainId,
 }: RoleAdminMapperParams) => {
   return roles.map(({ address, role }) => {
-    const idDisabled = transactionQueue.some((tx) =>
-      tx.id.includes(getRevokeContractRoleTransactionId(address, role)),
-    )
+    const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
+    const idDisabled = transactionQueue.some((tx) => tx.id === revokeId)
 
     return {
       content: {

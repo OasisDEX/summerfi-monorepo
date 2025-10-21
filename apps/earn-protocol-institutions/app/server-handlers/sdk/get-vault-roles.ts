@@ -1,4 +1,4 @@
-import { Address, type ChainIds } from '@summerfi/sdk-client'
+import { Address, type ChainId } from '@summerfi/sdk-client'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
@@ -12,7 +12,7 @@ export const getVaultSpecificRoles: ({
 }: {
   institutionName: string
   vaultAddress: string
-  chainId: (typeof ChainIds)[keyof typeof ChainIds]
+  chainId: ChainId
 }) => Promise<InstitutionVaultRole[]> = async ({ institutionName, vaultAddress, chainId }) => {
   const institutionSDK = getInstitutionsSDK(institutionName)
 
@@ -39,7 +39,7 @@ export const getVaultSpecificRoles: ({
 
       return results.flat()
     },
-    [institutionName],
+    [institutionName, vaultAddress, String(chainId)],
     { tags: [`institution-vault-roles-${institutionName}-${vaultAddress}-${chainId}`] },
   )()
 }

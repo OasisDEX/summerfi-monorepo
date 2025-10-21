@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { AnimateHeight, Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
