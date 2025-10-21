@@ -1,22 +1,21 @@
-import type { ContractSpecificRoleName, ISDKAdminManager } from '@summerfi/sdk-client'
-import { IUser, Address, IChainInfo } from '@summerfi/sdk-common'
+import type { ChainId, ContractSpecificRoleName, ISDKAdminManager } from '@summerfi/sdk-client'
+import { Address } from '@summerfi/sdk-common'
 
 export const revokeContractSpecificRoleHandler =
   (sdk: ISDKAdminManager) =>
   async ({
     contractAddress,
-    chainInfo,
+    chainId,
     role,
     targetAddress,
   }: {
-    user: IUser
     targetAddress: string
     contractAddress: string
-    chainInfo: IChainInfo
+    chainId: ChainId
     role: ContractSpecificRoleName
   }) => {
     return sdk.armada.accessControl.revokeContractSpecificRole({
-      chainId: chainInfo.chainId,
+      chainId,
       contractAddress: Address.createFromEthereum({ value: contractAddress }),
       role,
       targetAddress: Address.createFromEthereum({ value: targetAddress }),

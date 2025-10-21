@@ -23,6 +23,7 @@
   .tableCellAddress {
     font-family: monospace;
     font-weight: 500;
+    user-select: auto;
   }
 
   .inputContainer {
@@ -39,4 +40,12 @@
       text-align: right;
     }
   }
+}
+
+.addRoleForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-large);
+  width: 100%;
 }

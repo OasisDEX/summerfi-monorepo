@@ -35,8 +35,8 @@ import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesM
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
-import { grantContractSpecificRoleHandler } from 'src/handlers/grantContractSpecificRole'
-import { revokeContractSpecificRoleHandler } from 'src/handlers/revokeContractSpecificRoleHandler'
+import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
+import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRoleHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -48,7 +48,7 @@ export const useSDK = (params: UseSdk) => {
   const { apiURL } = useSDKContext()
   const sdk = useMemo(() => {
     if (params.clientId) {
-      return makeAdminSDK({ apiDomainUrl: apiURL, clientId: params.clientId })
+      return makeAdminSDK({ apiURL, clientId: params.clientId })
     }
     return makeSDK({ apiURL })
   }, [apiURL, params.clientId])

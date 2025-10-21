@@ -24,5 +24,12 @@ export default async function InstitutionVaultRoleAdminPage({
     chainId,
   })
 
-  return <PanelRoleAdmin roles={rolesList} institutionName={institutionName} />
+  return (
+    <PanelRoleAdmin
+      roles={rolesList}
+      vaultAddress={vaultAddress}
+      network={network}
+      institutionName={institutionName}
+    />
+  )
 }
