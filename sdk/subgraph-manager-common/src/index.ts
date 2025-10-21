@@ -1,5 +1,6 @@
 export type { IArmadaSubgraphManager } from './interfaces/IArmadaSubgraphManager'
-export { createGraphQLClient } from './utils/createGraphQLClient'
+export { createProtocolGraphQLClient } from './utils/createProtocolGraphQLClient'
+export { createInstitutionsGraphQLClient } from './utils/createInstitutionsGraphQLClient'
 export type { Institution, GetInstitutionsQuery } from './generated/institutions/client'
 export type {
   GetUserPositionQuery,
