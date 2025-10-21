@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { useAuth } from '@/contexts/AuthContext/AuthContext'
-import { useWalletRole } from '@/hooks/useWalletRole'
+import { useWalletGlobalRole } from '@/hooks/useWalletRole'
 import { type InstitutionData, type InstitutionsList } from '@/types/institution-data'
 
 import styles from './InstitutionPageHeader.module.css'
@@ -40,7 +40,7 @@ export const InstitutionPageHeader: FC<InstitutionPageHeaderProps> = ({
   institutionsList,
 }) => {
   const { push } = useRouter()
-  const { connectedRolesLabel } = useWalletRole({
+  const { connectedRolesLabel } = useWalletGlobalRole({
     institutionName: selectedInstitution.name,
   })
 

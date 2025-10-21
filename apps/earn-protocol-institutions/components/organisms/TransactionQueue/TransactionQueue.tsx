@@ -3,7 +3,7 @@ import { AnimateHeight, Button, Card, Icon, Text, useUserWallet } from '@summerf
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
-import { SimpleTransactionButton } from '@/components/organisms/TransactionQueue/SimpleTransactionButton'
+import { SimpleTransactionButton } from '@/components/organisms/SimpleTransactionButton/SimpleTransactionButton'
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
 import transactionQueueStyles from './TransactionQueue.module.css'

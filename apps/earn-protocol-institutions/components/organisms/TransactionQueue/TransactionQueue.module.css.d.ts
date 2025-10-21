@@ -4,7 +4,6 @@ declare const styles: {
   readonly "noTransactionsIcon": string;
   readonly "title": string;
   readonly "transactionActions": string;
-  readonly "transactionActionsSubmitButton": string;
   readonly "transactionItem": string;
   readonly "transactionItemheightFadeIn": string;
 };

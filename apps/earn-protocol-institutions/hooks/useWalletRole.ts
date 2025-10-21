@@ -3,9 +3,9 @@ import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type GlobalRoles } from '@summerfi/sdk-client'
 
 import { getUserData } from '@/helpers/get-user-data'
-import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
+import { globalRoleToHuman } from '@/helpers/wallet-roles'
 
-export const useWalletRole = ({ institutionName }: { institutionName: string }) => {
+export const useWalletGlobalRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GlobalRoles[] | null>(null)
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -67,7 +67,7 @@ export const useWalletRole = ({ institutionName }: { institutionName: string }) 
       return 'No role'
     }
 
-    return connectedRoles.map(contractSpecificRolesToHuman).join(', ')
+    return connectedRoles.map(globalRoleToHuman).join(', ')
   }, [connectedRoles, isLoadingAccount, userWalletAddress])
 
   return {

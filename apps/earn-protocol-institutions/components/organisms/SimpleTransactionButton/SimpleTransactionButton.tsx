@@ -1,12 +1,12 @@
 'use client'
 import { useCallback, useMemo } from 'react'
-import { Button, LoadingSpinner, Tooltip } from '@summerfi/app-earn-ui'
+import { Button, LoadingSpinner, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 import { useSimpleTransaction } from '@/hooks/useSimpleTransaction'
 
-import transactionQueueStyles from './TransactionQueue.module.css'
+import transactionButtonStyles from './SimpleTransactionButton.module.css'
 
 export const SimpleTransactionButton = ({
   txItem,
@@ -18,13 +18,6 @@ export const SimpleTransactionButton = ({
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
   })
-  /**
-    'idle'
-    'txError'
-    'txInProgress'
-    'txSuccess'
-   */
-
   const isLoading = useMemo(() => {
     const isLoadingTransaction = !txItem.txError && !txItem.txData?.transaction
 
@@ -41,7 +34,18 @@ export const SimpleTransactionButton = ({
     }
     if (txStatus === 'txError') {
       return (
-        <Tooltip tooltip={<div>{txError}</div>}>
+        <Tooltip
+          tooltip={
+            <div className={transactionButtonStyles.tooltipContent}>
+              <Text variant="p3semi">Click to try again.</Text>
+              <Text variant="p4">{txError}</Text>
+            </div>
+          }
+          showAbove
+          tooltipWrapperStyles={{
+            top: '-150px',
+          }}
+        >
           <span>Transaction Error</span>
         </Tooltip>
       )
@@ -64,10 +68,18 @@ export const SimpleTransactionButton = ({
     return undefined
   }, [executeTransaction, isLoading, txItem])
 
+  const buttonVariant = useMemo(() => {
+    if (txStatus === 'txError') {
+      return 'neutralSmall'
+    }
+
+    return txItem.txData?.transaction ? 'primarySmall' : 'neutralSmall'
+  }, [txItem.txData?.transaction, txStatus])
+
   return (
     <Button
-      variant={txItem.txData?.transaction ? 'primarySmall' : 'neutralSmall'}
-      className={transactionQueueStyles.transactionActionsSubmitButton}
+      variant={buttonVariant}
+      className={transactionButtonStyles.transactionActionsSubmitButton}
       disabled={buttonDisabled}
       onClick={buttonAction}
     >

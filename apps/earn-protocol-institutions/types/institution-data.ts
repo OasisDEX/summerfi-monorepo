@@ -1,4 +1,4 @@
-import { type ContractSpecificRoleName } from '@summerfi/sdk-client'
+import { type ContractSpecificRoleName, type GlobalRoles } from '@summerfi/sdk-client'
 
 import {
   type getInstitutionData,
@@ -6,6 +6,7 @@ import {
 } from '@/app/server-handlers/institution/institution-data'
 
 export type InstitutionVaultRoleType = keyof typeof ContractSpecificRoleName
+export type InstitutionGlobalRoleType = keyof typeof GlobalRoles
 
 export type InstitutionVaultThirdPartyCost = {
   type: string
