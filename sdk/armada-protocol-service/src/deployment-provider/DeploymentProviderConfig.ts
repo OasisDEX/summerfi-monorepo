@@ -4,9 +4,9 @@ export type DeploymentProviderConfig = {
   chainId: ChainId
   active: boolean
   contracts: {
-    harborCommand: Record<ChainId, AddressValue>
-    admiralsQuarters: Record<ChainId, AddressValue>
-    configurationManager: Record<ChainId, AddressValue>
-    protocolAccessManager: Record<ChainId, AddressValue>
+    harborCommand: AddressValue
+    admiralsQuarters: AddressValue
+    configurationManager: AddressValue
+    protocolAccessManager: AddressValue
   }
 }

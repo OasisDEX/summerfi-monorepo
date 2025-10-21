@@ -34,7 +34,7 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { isChainId } from '@summerfi/sdk-common'
+import { isChainId, type ChainId } from '@summerfi/sdk-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -70,30 +70,40 @@ const quickHashCode = (str: string): string => {
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   const configProvider = new ConfigurationProvider()
+  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
 
   const summerDeployment = configProvider.getConfigurationItem({
     name: 'SUMMER_DEPLOYMENT_CONFIG',
   })
   setTestDeployment(summerDeployment)
 
-  const publicDeploymentChainIds = configProvider
+  const publicDeploymentChainIds: ChainId[] = configProvider
     .getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID',
     })
     .split(',')
-    .map((chainId) => {
-      if (!isChainId(chainId)) {
-        throw new Error(`Invalid chainId in SUMMER_DEPLOYMENT_CONFIG: ${chainId}`)
-      }
-      return chainId
-    })
+    .map(Number)
+    .filter(isChainId)
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
-  if (clientId) {
+  const instiChainIdsString =
+    opts.event.headers['Insti-Chain-Ids'] || opts.event.headers['insti-chain-ids'] || undefined
+  const instiChainIds: ChainId[] | undefined = instiChainIdsString
+    ? instiChainIdsString.split(',').map(Number).filter(isChainId)
+    : undefined
+
+  if (clientId && instiChainIds) {
+    if (instiChainIds.length === 0) {
+      throw new Error('Insti-Chain-Ids header is empty or invalid')
+    }
     try {
-      deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(clientId)
+      deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
+        armadaSubgraphManager,
+        instiChainIds,
+        clientId,
+      )
     } catch (error) {
       console.error(`Failed to fetch integrator config:`, error)
       throw new Error(`ClientId ${clientId} does not exist`)
@@ -139,7 +149,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     allowanceManager,
     tokensManager,
   })
-  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
+
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
     deploymentProvider,
