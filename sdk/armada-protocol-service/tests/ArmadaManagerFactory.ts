@@ -17,6 +17,11 @@ describe('SDK Common | Armada | ArmadaManagerFactory', () => {
         allowanceManager,
         contractsProvider,
         subgraphManager,
+        blockchainClientProvider: {} as any,
+        deploymentProvider: {} as any,
+        swapManager: {} as any,
+        oracleManager: {} as any,
+        tokensManager: {} as any,
       })
 
       expect(armadaManager).toBeDefined()

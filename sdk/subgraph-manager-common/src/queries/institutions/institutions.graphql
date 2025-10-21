@@ -1,0 +1,10 @@
+query GetInstitutions {
+  institutions {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}

@@ -90,6 +90,10 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
+  getInstitutions(params: Parameters<IArmadaSubgraphManager['getInstitutions']>[0]) {
+    return this._getClient(params.chainId).GetInstitutions()
+  }
+
   /** PRIVATE */
   _getClient(chainId: ChainId): ReturnType<typeof createGraphQLClient> {
     const subgraphApiUrl = this._subgraphConfig.urlPerChain[chainId]
