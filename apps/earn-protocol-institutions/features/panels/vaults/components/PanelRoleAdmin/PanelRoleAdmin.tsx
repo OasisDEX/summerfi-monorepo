@@ -1,12 +1,21 @@
 'use client'
 
-import { type FC, useCallback, useMemo, useState } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type Address, UiSimpleFlowSteps } from '@summerfi/app-types'
+import { type NetworkNames } from '@summerfi/app-types'
+import { networkNameToSDKId } from '@summerfi/app-utils'
+import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
-import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
-import { usePanelAdmin } from '@/providers/PanelAdminProvider/PanelAdminProvider'
-import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
+import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
+import {
+  getGrantContractRoleTransactionId,
+  getRevokeContractRoleTransactionId,
+} from '@/helpers/get-transaction-id'
+import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
+import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
+import { type InstitutionVaultRole } from '@/types/institution-data'
 
 import { roleAdminColumns } from './columns'
 import { roleAdminMapper } from './mapper'
@@ -14,81 +23,103 @@ import { roleAdminMapper } from './mapper'
 import styles from './PanelRoleAdmin.module.css'
 
 interface PanelRoleAdminProps {
-  roles: InstitutionVaultRoles
+  roles: InstitutionVaultRole[]
+  institutionName: string
+  vaultAddress: string
+  network: NetworkNames
 }
 
-export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
-  const { state, dispatch } = usePanelAdmin()
+export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
+  roles,
+  institutionName,
+  vaultAddress,
+  network,
+}) => {
+  const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
+  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const chainId = networkNameToSDKId(network)
 
-  const [updatingRole, setUpdatingRole] = useState<InstitutionVaultRole | null>(null)
-  const [updatingRoleAddress, setUpdatingRoleAddress] = useState('')
+  const onRevokeContractSpecificRole = useCallback(
+    ({ address, role }: InstitutionVaultRole) => {
+      const transactionId = getRevokeContractRoleTransactionId({ address, role, chainId })
 
-  const onChange = useCallback((value: string) => {
-    setUpdatingRoleAddress(value)
-  }, [])
-
-  const onEdit = useCallback((item: InstitutionVaultRole) => {
-    setUpdatingRole(item)
-  }, [])
-
-  const onRowEditCancel = useCallback(() => {
-    setUpdatingRole(null)
-    setUpdatingRoleAddress('')
-  }, [])
-
-  const onCancel = useCallback(() => {
-    dispatch({ type: 'reset' })
-    setUpdatingRole(null)
-    setUpdatingRoleAddress('')
-  }, [dispatch])
-
-  const onConfirm = useCallback(() => {
-    dispatch({ type: 'update-step', payload: UiSimpleFlowSteps.PENDING })
-    // TODO: Implement confirm handler
-    // eslint-disable-next-line no-console
-    console.log('confirm')
-  }, [dispatch])
-
-  const onSave = useCallback(
-    (item: InstitutionVaultRole) => {
-      setUpdatingRole(null)
-      if (updatingRoleAddress.length > 0 && updatingRoleAddress !== item.address) {
-        dispatch({
-          type: 'edit-item',
-          payload: { ...item, address: updatingRoleAddress as Address },
-        })
+      try {
+        addTransaction(
+          {
+            id: transactionId,
+            txDescription: (
+              <Text variant="p3">
+                Revoke&nbsp;
+                <Text as="span" variant="p3semi">
+                  {contractSpecificRolesToHuman(role)}
+                </Text>
+                &nbsp; role from&nbsp;
+                <Text as="span" variant="p3semi" style={{ fontFamily: 'monospace' }}>
+                  {address}
+                </Text>
+              </Text>
+            ),
+          },
+          revokeContractSpecificRole({
+            contractAddress: vaultAddress,
+            chainId,
+            role: ContractSpecificRoleName[role],
+            targetAddress: address,
+          }),
+        )
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to add transaction to queue', error)
       }
-      setUpdatingRoleAddress('')
     },
-    [updatingRoleAddress, dispatch],
+    [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
+  )
+
+  const onGrantContractSpecificRole = useCallback(
+    ({ address, role }: InstitutionVaultRole) => {
+      const transactionId = getGrantContractRoleTransactionId({ address, role, chainId })
+
+      try {
+        addTransaction(
+          {
+            id: transactionId,
+            txDescription: (
+              <Text variant="p3">
+                Grant&nbsp;
+                <Text as="span" variant="p3semi">
+                  {contractSpecificRolesToHuman(role)}
+                </Text>
+                &nbsp;role to&nbsp;
+                <Text as="span" variant="p3semi" style={{ fontFamily: 'monospace' }}>
+                  {address}
+                </Text>
+              </Text>
+            ),
+          },
+          grantContractSpecificRole({
+            contractAddress: vaultAddress,
+            chainId,
+            role: ContractSpecificRoleName[role],
+            targetAddress: address,
+          }),
+        )
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to add transaction to queue', error)
+      }
+    },
+    [addTransaction, chainId, grantContractSpecificRole, vaultAddress],
   )
 
   const rows = useMemo(
     () =>
       roleAdminMapper({
         roles,
-        onEdit,
-        onSave,
-        updatingRole,
-        onRowEditCancel,
-        onChange,
-        updatingRoleAddress,
+        transactionQueue,
+        onRevokeContractSpecificRole,
+        chainId,
       }),
-    [roles, onEdit, onSave, updatingRole, onRowEditCancel, onChange, updatingRoleAddress],
-  )
-
-  const change = useMemo(
-    () =>
-      state.items.map((item) => {
-        const from = roles[item.role]?.address ?? 'n/a'
-
-        return {
-          title: item.role,
-          from,
-          to: item.address,
-        }
-      }),
-    [state.items, roles],
+    [roles, transactionQueue, onRevokeContractSpecificRole, chainId],
   )
 
   return (
@@ -104,7 +135,20 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({ roles }) => {
           tableClassName={styles.table}
         />
       </Card>
-      <EditSummary title="Summary" change={change} onCancel={onCancel} onConfirm={onConfirm} />
+      <Text as="h5" variant="h5">
+        Add new role
+      </Text>
+      <Card>
+        <AddNewRoleForm onAddRole={onGrantContractSpecificRole} />
+      </Card>
+      <Text as="h5" variant="h5">
+        Transaction Queue
+      </Text>
+      <TransactionQueue
+        transactionQueue={transactionQueue}
+        chainId={chainId}
+        removeTransaction={removeTransaction}
+      />
     </Card>
   )
 }

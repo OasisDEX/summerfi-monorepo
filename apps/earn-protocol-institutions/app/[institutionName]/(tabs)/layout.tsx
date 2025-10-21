@@ -21,7 +21,7 @@ export default async function InstitutionTabLayout({
   }
 
   return (
-    <PanelsProvider>
+    <>
       <TopBlocks
         blocks={[
           {
@@ -53,7 +53,9 @@ export default async function InstitutionTabLayout({
         institutionName={institutionName}
         defaultVault={institutionVaults.vaults[0]}
       />
-      <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
-    </PanelsProvider>
+      <PanelsProvider>
+        <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
+      </PanelsProvider>
+    </>
   )
 }

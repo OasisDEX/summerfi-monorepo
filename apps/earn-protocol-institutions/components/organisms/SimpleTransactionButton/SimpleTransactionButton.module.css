@@ -1,0 +1,11 @@
+.tooltipContent {
+  max-width: 300px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transactionActionsSubmitButton {
+  min-width: 100px;
+}

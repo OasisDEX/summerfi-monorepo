@@ -1,36 +1,35 @@
-import { GlobalRoles } from '@summerfi/sdk-client'
+import { type NetworkNames } from '@summerfi/app-types'
+import { networkNameToSDKId } from '@summerfi/app-utils'
 
+import { getVaultSpecificRoles } from '@/app/server-handlers/sdk/get-vault-roles'
 import { PanelRoleAdmin } from '@/features/panels/vaults/components/PanelRoleAdmin/PanelRoleAdmin'
 
 export default async function InstitutionVaultRoleAdminPage({
   params,
 }: {
-  params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
+  params: Promise<{ institutionName: string; vaultAddress: string; network: NetworkNames }>
 }) {
-  const _params = await params
+  const { institutionName, vaultAddress, network } = await params
 
-  // get roles here
+  const chainId = networkNameToSDKId(network)
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!chainId) {
+    throw new Error(`Unsupported network: ${network}`)
+  }
+
+  const rolesList = await getVaultSpecificRoles({
+    institutionName,
+    vaultAddress,
+    chainId,
+  })
 
   return (
     <PanelRoleAdmin
-      roles={{
-        [GlobalRoles.ADMIRALS_QUARTERS_ROLE]: {
-          address: '0x1234567890abcdef1234567890abcdef12345678',
-          lastUpdated: Date.now(),
-        },
-        [GlobalRoles.SUPER_KEEPER_ROLE]: {
-          address: '0x1234567890abcdef1234567890abcdef12345678',
-          lastUpdated: Date.now(),
-        },
-        [GlobalRoles.GOVERNOR_ROLE]: {
-          address: '0x1234567890abcdef1234567890abcdef12345678',
-          lastUpdated: Date.now(),
-        },
-        [GlobalRoles.DECAY_CONTROLLER_ROLE]: {
-          address: '0x1234567890abcdef1234567890abcdef12345678',
-          lastUpdated: Date.now(),
-        },
-      }}
+      roles={rolesList}
+      vaultAddress={vaultAddress}
+      network={network}
+      institutionName={institutionName}
     />
   )
 }

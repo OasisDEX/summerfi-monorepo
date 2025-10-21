@@ -26,6 +26,7 @@ export type {
   TimeframesType,
   WithNavigationModules,
 } from './src/components'
+export { IconsList, type IconExportType } from './src/components/Icons'
 export type { IconNamesList, TokenConfig, TokenSymbolsList } from './src/icons'
 export type { PortfolioMigrations } from './src/migrations'
 export { LendingProtocol, lendingProtocolMap } from './src/lending-protocol'

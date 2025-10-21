@@ -1,4 +1,4 @@
-import { ISDKManager } from '@summerfi/sdk-client'
+import { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { IChainInfo } from '@summerfi/sdk-common'
 
 /**
@@ -16,7 +16,7 @@ import { IChainInfo } from '@summerfi/sdk-common'
  * @returns {Function} A handler function that accepts chain info and position IDs and returns a promise resolving to migratable positions APY
  */
 export const getMigratablePositionsHandlerApy =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({ chainInfo, positionIds }: { chainInfo: IChainInfo; positionIds: `0x${string}`[] }) => {
     return sdk.armada.users.getMigratablePositionsApy({ chainInfo, positionIds })
   }
