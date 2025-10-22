@@ -31,7 +31,7 @@ const panelItems = [
   },
   {
     id: DashboardVaultsPanel.ASSET_RELOCATION,
-    label: 'Asset rellocation',
+    label: 'Asset relocation',
   },
   {
     id: DashboardVaultsPanel.RISK_PARAMETERS,
