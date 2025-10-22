@@ -1,12 +1,12 @@
-name: 'Deploy SDK Infra'
+name: "Deploy SDK Infra"
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment environment'
+        description: "Deployment environment"
         required: true
-        default: 'staging'
+        default: "staging"
         type: choice
         options:
           - staging
@@ -37,6 +37,7 @@ jobs:
       ONE_INCH_API_SPOT_KEY: ${{ secrets.ONE_INCH_API_SPOT_KEY }}
       ONE_INCH_API_SPOT_AUTH_HEADER: ${{ secrets.ONE_INCH_API_SPOT_AUTH_HEADER }}
       SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE_PROD: ${{ vars.SUBGRAPH_BASE_PROD }}
       SUMMER_HUB_CHAIN_ID: ${{ vars.SDK_HUB_CHAIN_ID }}
       SUMMER_DEPLOYED_CHAINS_ID: ${{ vars.SUMMER_DEPLOYED_CHAINS_ID }}
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
@@ -95,7 +96,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install

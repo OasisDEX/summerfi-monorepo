@@ -26,9 +26,9 @@ jobs:
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
-      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
-        ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE_PROD: ${{ vars.SUBGRAPH_BASE_PROD }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
     steps:
       - name: Check out code
@@ -58,7 +58,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Setup Earn Protocol App Next.js Cache
         uses: actions/cache@v4
@@ -77,8 +77,7 @@ jobs:
             ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol-institutions/**/*.ts',
             'apps/earn-protocol-institutions/**/*.tsx') }}
-          restore-keys:
-            ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-
+          restore-keys: ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Setup Earn Protocol LP App Next.js Cache
         uses: actions/cache@v4
@@ -88,8 +87,7 @@ jobs:
             ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol-landing-page/**/*.ts',
             'apps/earn-protocol-landing-page/**/*.tsx') }}
-          restore-keys:
-            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
+          restore-keys: ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |
@@ -139,8 +137,7 @@ jobs:
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           E2E_SDK_FORK_URL_MAINNET: ${{ secrets.MAINNET_RPC_URL }}
-          BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
-            ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+          BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
 
       - name: Coverage
         run: pnpm coverage:total

@@ -8,21 +8,21 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch to publish from'
+        description: "Branch to publish from"
         required: true
         type: choice
-        default: 'dev'
+        default: "dev"
         options:
-          - 'dev'
-          - 'main'
+          - "dev"
+          - "main"
       sdk_package:
-        description: 'Select SDK package(s) to publish'
+        description: "Select SDK package(s) to publish"
         required: true
         type: choice
-        default: 'sdk-client'
+        default: "sdk-client"
         options:
-          - 'all'
-          - 'sdk-client'
+          - "all"
+          - "sdk-client"
 
 jobs:
   print-inputs:
@@ -41,7 +41,8 @@ jobs:
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE_PROD: ${{ vars.SUBGRAPH_BASE_PROD }}
 
     steps:
       - name: Checkout all files
