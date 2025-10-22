@@ -34,7 +34,12 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { isChainId, type ChainId } from '@summerfi/sdk-common'
+import {
+  getChainInfoByChainId,
+  isChainId,
+  type ChainId,
+  type IChainInfo,
+} from '@summerfi/sdk-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -69,36 +74,36 @@ const quickHashCode = (str: string): string => {
 
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
-  const configProvider = new ConfigurationProvider()
-  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
+  // check for Client-Id header in request and fetch integrator config if present
+  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  const initSdkForInstitutions = Boolean(clientId)
 
+  const configProvider = new ConfigurationProvider()
   const summerDeployment = configProvider.getConfigurationItem({
     name: 'SUMMER_DEPLOYMENT_CONFIG',
   })
   setTestDeployment(summerDeployment)
 
-  const publicDeploymentChainIds: ChainId[] = configProvider
-    .getConfigurationItem({
-      name: 'SUMMER_DEPLOYED_CHAINS_ID',
-    })
-    .split(',')
-    .map(Number)
-    .filter(isChainId)
+  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
+    configProvider,
+    initSdkForInstitutions,
+  })
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
-  // check for Client-Id header in request and fetch integrator config if present
-  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
-  const instiChainIdsString =
-    opts.event.headers['Insti-Chain-Ids'] || opts.event.headers['insti-chain-ids'] || undefined
-  const instiChainIds: ChainId[] | undefined = instiChainIdsString
-    ? instiChainIdsString.split(',').map(Number).filter(isChainId)
-    : undefined
-
-  if (clientId && instiChainIds) {
-    if (instiChainIds.length === 0) {
-      throw new Error('Insti-Chain-Ids header is empty or invalid')
-    }
+  let supportedChains: IChainInfo[]
+  if (initSdkForInstitutions) {
+    const instiChainIds: ChainId[] = configProvider
+      .getConfigurationItem({
+        name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
+      })
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+    supportedChains = instiChainIds.map(getChainInfoByChainId)
     try {
+      if (!clientId) {
+        throw new Error('ClientId is empty')
+      }
       deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
         armadaSubgraphManager,
         instiChainIds,
@@ -110,6 +115,15 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     }
   } else {
     // if no Client-Id header, use default deployment provider config
+    const publicDeploymentChainIds: ChainId[] = configProvider
+      .getConfigurationItem({
+        name: 'SUMMER_DEPLOYED_CHAINS_ID',
+      })
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+    supportedChains = publicDeploymentChainIds.map(getChainInfoByChainId)
+
     deploymentProviderConfigs = fetchPublicDeploymentProviderConfig(publicDeploymentChainIds)
   }
 
@@ -160,6 +174,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     swapManager,
     oracleManager,
     tokensManager,
+    supportedChains,
   })
 
   return {

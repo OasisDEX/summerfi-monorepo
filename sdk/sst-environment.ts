@@ -26,6 +26,7 @@ const envSchema = z.object({
   FUNCTIONS_API_URL: z.string().nonempty(),
   SDK_RPC_GATEWAY: z.string().nonempty(),
   SDK_SUBGRAPH_CONFIG: z.json(),
+  SDK_SUBGRAPH_CONFIG_INSTI: z.json(),
   SDK_LOGGING_ENABLED: z.string().default('false'),
   SDK_DEBUG_ENABLED: z.string().default('false'),
   SDK_DISTRIBUTIONS_BASE_URL: z.string().nonempty(),

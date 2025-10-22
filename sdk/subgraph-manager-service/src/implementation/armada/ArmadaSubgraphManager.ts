@@ -12,47 +12,41 @@ export const SubgraphTypes = {
 } as const
 export type SubgraphType = keyof typeof SubgraphTypes
 
-export interface SubgraphConfig {
-  protocolGraphUrl: Record<ChainId, string>
-  institutionsGraphUrl: Record<ChainId, string>
-}
-
 /**
  * @name ArmadaSubgraphManager
  * @implements IArmadaSubgraphManager
  */
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
-  private readonly _subgraphConfig: SubgraphConfig
+  private readonly _initSdkForInstitutions: boolean
+  private readonly _urlMap: Record<
+    ChainId,
+    {
+      protocol: string
+      institutions?: string
+    }
+  >
 
   /** CONSTRUCTOR */
-  constructor(params: { configProvider: IConfigurationProvider }) {
-    let protocolGraphUrl, institutionsGraphUrl
-    try {
-      protocolGraphUrl = JSON.parse(
-        params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG' }),
-      )
-    } catch (error: unknown) {
-      throw new Error('Invalid format of SDK_SUBGRAPH_CONFIG')
-    }
-    try {
-      institutionsGraphUrl = JSON.parse(
-        params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG_INSTI' }),
-      )
-    } catch (error: unknown) {
-      throw new Error('Invalid format of SDK_SUBGRAPH_CONFIG_INSTI')
-    }
+  constructor(params: {
+    configProvider: IConfigurationProvider
+    initSdkForInstitutions?: boolean
+  }) {
+    this._initSdkForInstitutions = params.initSdkForInstitutions ?? false
 
-    if (!protocolGraphUrl) {
+    let urlMap
+    try {
+      const name = this._initSdkForInstitutions
+        ? 'SDK_SUBGRAPH_CONFIG_INSTI'
+        : 'SDK_SUBGRAPH_CONFIG'
+      urlMap = JSON.parse(params.configProvider.getConfigurationItem({ name }))
+    } catch (error: unknown) {
+      throw new Error(`Invalid format of ${name}`)
+    }
+    if (!urlMap) {
       throw new Error('No subgraph config in env')
     }
-    if (!institutionsGraphUrl) {
-      throw new Error('No institutions subgraph config in env')
-    }
 
-    this._subgraphConfig = {
-      protocolGraphUrl: protocolGraphUrl,
-      institutionsGraphUrl: institutionsGraphUrl,
-    }
+    this._urlMap = urlMap
   }
 
   getVaults({ chainId }: Parameters<IArmadaSubgraphManager['getVaults']>[0]) {
@@ -139,24 +133,17 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       [SubgraphTypes.institutions]: typeof createInstitutionsGraphQLClient
     }[T]
   > {
-    const protocolSubgraphApiUrl = this._subgraphConfig.protocolGraphUrl[chainId]
-    const institutionsSubgraphApiUrl = this._subgraphConfig.institutionsGraphUrl[chainId]
-
-    if (!protocolSubgraphApiUrl) {
-      throw new Error(`No protocol subgraph url found for chainId: ${chainId}`)
-    }
-    if (!institutionsSubgraphApiUrl) {
-      throw new Error(`No institutions subgraph url found for chainId: ${chainId}`)
+    const urlMapForChain = this._urlMap[chainId]
+    if (!urlMapForChain) {
+      throw new Error(`No subgraph urls found for chainId: ${chainId}`)
     }
 
     const client = {
-      [SubgraphTypes.protocol]: createProtocolGraphQLClient(protocolSubgraphApiUrl),
-      [SubgraphTypes.institutions]: createInstitutionsGraphQLClient(institutionsSubgraphApiUrl),
+      [SubgraphTypes.protocol]: createProtocolGraphQLClient(urlMapForChain.protocol),
+      [SubgraphTypes.institutions]: this._initSdkForInstitutions
+        ? createInstitutionsGraphQLClient(urlMapForChain.institutions!)
+        : undefined,
     }[graph]
-
-    if (!client) {
-      throw new Error(`Failed to create subgraph client for graph: ${graph}`)
-    }
 
     return client as ReturnType<
       {

@@ -18,7 +18,7 @@ import {
   Price,
   TokenAmount,
   TransactionType,
-  type ChainInfo,
+  type IChainInfo,
   type HexData,
   type IPercentage,
   type IToken,
@@ -48,11 +48,11 @@ import type { IDeploymentProvider } from '../..'
  * @description This class is the implementation of the IArmadaManagerUtils interface.
  */
 export class ArmadaManagerUtils implements IArmadaManagerUtils {
-  private _supportedChains: ChainInfo[]
+  private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
   private _functionsUrl: string
 
-  private _hubChainInfo: ChainInfo
+  private _hubChainInfo: IChainInfo
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
@@ -77,6 +77,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     deploymentProvider: IDeploymentProvider
+    supportedChains: IChainInfo[]
     getUserMerklRewards: (
       params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
     ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
@@ -92,12 +93,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     this._deploymentProvider = params.deploymentProvider
     this._getUserMerklRewards = params.getUserMerklRewards
 
-    this._supportedChains = this._configProvider
-      .getConfigurationItem({
-        name: 'SUMMER_DEPLOYED_CHAINS_ID',
-      })
-      .split(',')
-      .map((chainId) => getChainInfoByChainId(Number(chainId)))
+    this._supportedChains = params.supportedChains
     const _hubChainId = this._configProvider.getConfigurationItem({
       name: 'SUMMER_HUB_CHAIN_ID',
     })
