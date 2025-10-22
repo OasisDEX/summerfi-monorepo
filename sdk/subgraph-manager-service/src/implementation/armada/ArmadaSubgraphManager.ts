@@ -13,7 +13,8 @@ export const SubgraphTypes = {
 export type SubgraphType = keyof typeof SubgraphTypes
 
 export interface SubgraphConfig {
-  urlPerChain: Record<ChainId, string>
+  protocolGraphUrl: Record<ChainId, string>
+  institutionsGraphUrl: Record<ChainId, string>
 }
 
 /**
@@ -25,21 +26,32 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    let urlPerChain
+    let protocolGraphUrl, institutionsGraphUrl
     try {
-      urlPerChain = JSON.parse(
+      protocolGraphUrl = JSON.parse(
         params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG' }),
       )
     } catch (error: unknown) {
       throw new Error('Invalid format of SDK_SUBGRAPH_CONFIG')
     }
+    try {
+      institutionsGraphUrl = JSON.parse(
+        params.configProvider.getConfigurationItem({ name: 'SDK_SUBGRAPH_CONFIG_INSTI' }),
+      )
+    } catch (error: unknown) {
+      throw new Error('Invalid format of SDK_SUBGRAPH_CONFIG_INSTI')
+    }
 
-    if (!urlPerChain) {
+    if (!protocolGraphUrl) {
       throw new Error('No subgraph config in env')
+    }
+    if (!institutionsGraphUrl) {
+      throw new Error('No institutions subgraph config in env')
     }
 
     this._subgraphConfig = {
-      urlPerChain,
+      protocolGraphUrl: protocolGraphUrl,
+      institutionsGraphUrl: institutionsGraphUrl,
     }
   }
 
@@ -127,22 +139,20 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
       [SubgraphTypes.institutions]: typeof createInstitutionsGraphQLClient
     }[T]
   > {
-    const subgraphApiUrl = this._subgraphConfig.urlPerChain[chainId]
+    const protocolSubgraphApiUrl = this._subgraphConfig.protocolGraphUrl[chainId]
+    const institutionsSubgraphApiUrl = this._subgraphConfig.institutionsGraphUrl[chainId]
 
-    if (!this._subgraphConfig.urlPerChain[chainId]) {
-      throw new Error(
-        `Chain ID ${chainId} is not supported. Supported chains are: ${Object.keys(this._subgraphConfig.urlPerChain).join(', ')}`,
-      )
+    if (!protocolSubgraphApiUrl) {
+      throw new Error(`No protocol subgraph url found for chainId: ${chainId}`)
     }
-
-    if (!subgraphApiUrl) {
-      throw new Error(`No subgraph url found for chainId: ${chainId}`)
+    if (!institutionsSubgraphApiUrl) {
+      throw new Error(`No institutions subgraph url found for chainId: ${chainId}`)
     }
 
     const client = {
-      [SubgraphTypes.protocol]: createProtocolGraphQLClient,
-      [SubgraphTypes.institutions]: createInstitutionsGraphQLClient,
-    }[graph](subgraphApiUrl)
+      [SubgraphTypes.protocol]: createProtocolGraphQLClient(protocolSubgraphApiUrl),
+      [SubgraphTypes.institutions]: createInstitutionsGraphQLClient(institutionsSubgraphApiUrl),
+    }[graph]
 
     if (!client) {
       throw new Error(`Failed to create subgraph client for graph: ${graph}`)

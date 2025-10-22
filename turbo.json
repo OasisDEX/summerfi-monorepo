@@ -1,8 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.v2.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
   "globalEnv": [
     "SUBGRAPH_BASE",
+    "SUBGRAPH_BASE_PROD",
     "DEBANK_API_KEY",
     "DEBANK_API_URL",
     "RPC_GATEWAY",
@@ -61,6 +64,7 @@
     "COINGECKO_SUPPORTED_CHAIN_IDS",
     "SDK_RPC_GATEWAY",
     "SDK_SUBGRAPH_CONFIG",
+    "SDK_SUBGRAPH_CONFIG_INSTI",
     "SDK_LOGGING_ENABLED",
     "SDK_DEBUG_ENABLED",
     "SUMMER_HUB_CHAIN_ID",
@@ -129,7 +133,10 @@
       "persistent": true
     },
     "prebuild": {
-      "dependsOn": ["^prebuild", "^prebuild:nocache"],
+      "dependsOn": [
+        "^prebuild",
+        "^prebuild:nocache"
+      ],
       "outputs": [
         "src/types/graphql/generated.ts",
         "src/generated",
@@ -140,11 +147,16 @@
       ]
     },
     "prebuild:nocache": {
-      "dependsOn": ["^prebuild:nocache"],
+      "dependsOn": [
+        "^prebuild:nocache"
+      ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["prebuild", "^build"],
+      "dependsOn": [
+        "prebuild",
+        "^build"
+      ],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
@@ -156,7 +168,11 @@
       ]
     },
     "build:apps": {
-      "dependsOn": ["prebuild", "^build", "^build:apps"],
+      "dependsOn": [
+        "prebuild",
+        "^build",
+        "^build:apps"
+      ],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
@@ -169,22 +185,44 @@
       ]
     },
     "test": {
-      "dependsOn": ["prebuild", "build", "^test"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^test"
+      ]
     },
     "test:integration": {
-      "dependsOn": ["prebuild", "build", "^test:integration"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^test:integration"
+      ]
     },
     "lint": {
-      "dependsOn": ["prebuild", "build", "^lint"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^lint"
+      ]
     },
     "format": {
-      "dependsOn": ["prebuild", "build", "^format"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^format"
+      ]
     },
     "check-circular": {
-      "dependsOn": ["prebuild", "build", "^check-circular"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "^check-circular"
+      ]
     },
     "db:migrate": {
-      "dependsOn": ["prebuild"],
+      "dependsOn": [
+        "prebuild"
+      ],
       "cache": false
     },
     "cicheck": {
@@ -199,7 +237,10 @@
       ]
     },
     "deploy:staging": {
-      "dependsOn": ["cicheck", "^deploy:staging"]
+      "dependsOn": [
+        "cicheck",
+        "^deploy:staging"
+      ]
     }
   }
 }
