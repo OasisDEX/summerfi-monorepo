@@ -7,7 +7,7 @@ export const getDeployedContractAddress = (params: {
   contractName: keyof DeploymentProviderConfig['contracts']
   chainId: ChainId
 }): Address => {
-  const address = params.config.contracts[params.contractName][params.chainId]
+  const address = params.config.contracts[params.contractName]
   if (!address) {
     throw new Error(`Contract ${params.contractName} not deployed on chain ${params.chainId}`)
   }
