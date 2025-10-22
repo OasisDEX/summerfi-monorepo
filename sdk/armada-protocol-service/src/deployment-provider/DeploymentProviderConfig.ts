@@ -1,4 +1,4 @@
-import type { ChainId, AddressValue } from '@summerfi/sdk-common/index'
+import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 
 export type DeploymentProviderConfig = {
   chainId: ChainId
