@@ -133,7 +133,7 @@ export const YieldsChart = ({
               ) : (
                 <Line
                   key={dataName}
-                  type={data.length > 100 ? 'linear' : 'natural'}
+                  type="monotone"
                   animationId={dataIndex}
                   animationDuration={300}
                   animationBegin={dataIndex * 50}
@@ -147,7 +147,6 @@ export const YieldsChart = ({
                   }}
                   opacity={highlightedProtocol && highlightedProtocol !== dataName ? 0.1 : 1}
                   dot={false}
-                  connectNulls
                 />
               )
             })}
