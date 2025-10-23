@@ -3,11 +3,15 @@ import { type ArkDetailsType, type SDKVaultishType, type SDKVaultType } from '@s
 export const getArkProductId = (
   ark: SDKVaultishType['arks'][number] | SDKVaultType['arks'][number],
 ): string | false => {
+  if (ark.productId) {
+    return ark.productId
+  }
   if (!ark.details || ark.name === 'BufferArk') {
     return false
   }
   const parsedDetails = JSON.parse(ark.details as string) as ArkDetailsType
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const resolvedPool = parsedDetails.pool || parsedDetails.vault
 
   if (!resolvedPool) {

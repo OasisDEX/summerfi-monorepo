@@ -23,6 +23,7 @@ query GetVaults {
     pricePerShare
     arks {
       id
+      productId
       name
       details
       depositLimit
@@ -91,6 +92,7 @@ query GetVault($id: ID!) {
     pricePerShare
     arks {
       id
+      productId
       name
       details
       depositLimit
