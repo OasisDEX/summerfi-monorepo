@@ -8,7 +8,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
  */
 export function createAdminSdkTestSetup() {
   const sdk = makeAdminSDK({
-    clientId: clientId,
+    clientId,
     apiDomainUrl: SDKApiUrl,
   })
 
