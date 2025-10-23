@@ -1,7 +1,8 @@
 'use client'
 
 import { type FC, useCallback, useMemo } from 'react'
-import { Card, Table, Text } from '@summerfi/app-earn-ui'
+import { toast } from 'react-toastify'
+import { Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -20,7 +21,7 @@ import { type InstitutionVaultRole } from '@/types/institution-data'
 import { roleAdminColumns } from './columns'
 import { roleAdminMapper } from './mapper'
 
-import styles from './PanelRoleAdmin.module.css'
+import panelRoleStyles from './PanelRoleAdmin.module.css'
 
 interface PanelRoleAdminProps {
   roles: InstitutionVaultRole[]
@@ -49,16 +50,19 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
             id: transactionId,
             txDescription: (
               <Text variant="p3">
-                Revoke&nbsp;
                 <Text as="span" variant="p3semi">
                   {contractSpecificRolesToHuman(role)}
                 </Text>
-                &nbsp; role from&nbsp;
-                <Text as="span" variant="p3semi" style={{ fontFamily: 'monospace' }}>
+                &nbsp;role&nbsp;from&nbsp;
+                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
                   {address}
                 </Text>
               </Text>
             ),
+            txLabel: {
+              label: 'Revoke',
+              charge: 'negative',
+            },
           },
           revokeContractSpecificRole({
             contractAddress: vaultAddress,
@@ -70,6 +74,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
@@ -85,16 +90,19 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
             id: transactionId,
             txDescription: (
               <Text variant="p3">
-                Grant&nbsp;
                 <Text as="span" variant="p3semi">
                   {contractSpecificRolesToHuman(role)}
                 </Text>
                 &nbsp;role to&nbsp;
-                <Text as="span" variant="p3semi" style={{ fontFamily: 'monospace' }}>
+                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
                   {address}
                 </Text>
               </Text>
             ),
+            txLabel: {
+              label: 'Grant',
+              charge: 'positive',
+            },
           },
           grantContractSpecificRole({
             contractAddress: vaultAddress,
@@ -106,6 +114,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, grantContractSpecificRole, vaultAddress],
@@ -123,7 +132,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   )
 
   return (
-    <Card variant="cardSecondary" className={styles.panelRoleAdminWrapper}>
+    <Card variant="cardSecondary" className={panelRoleStyles.panelRoleAdminWrapper}>
       <Text as="h5" variant="h5">
         Roles
       </Text>
@@ -131,8 +140,8 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         <Table
           rows={rows}
           columns={roleAdminColumns}
-          wrapperClassName={styles.tableWrapper}
-          tableClassName={styles.table}
+          wrapperClassName={panelRoleStyles.tableWrapper}
+          tableClassName={panelRoleStyles.table}
         />
       </Card>
       <Text as="h5" variant="h5">

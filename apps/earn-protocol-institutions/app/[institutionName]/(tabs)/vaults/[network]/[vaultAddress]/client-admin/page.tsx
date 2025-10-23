@@ -1,66 +1,35 @@
-import { PanelClientAdmin } from '@/features/panels/vaults/components/PanelClientAdmin/PanelClientAdmin'
-import { type VaultClientAdminUser } from '@/features/panels/vaults/components/PanelClientAdmin/types'
+import { type NetworkNames } from '@summerfi/app-types'
+import { networkNameToSDKId } from '@summerfi/app-utils'
 
-// TODO: replace with actual data
-const getVaultClientAdminData = ({
-  institutionName: _institutionName,
-  vaultAddress: _vaultAddress,
-  network: _network,
-}: {
-  institutionName: string
-  vaultAddress: string
-  network: string
-}): {
-  whitelistedUsers: VaultClientAdminUser[]
-  revokedUsers: VaultClientAdminUser[]
-} => {
-  return {
-    whitelistedUsers: [
-      {
-        name: 'Institution XYZ',
-        address: '0x1234567890123456789012345678901234567890',
-        access: 'Can edit',
-        dateAddedOrRevoked: '01/01/2021',
-        totalBalance: '1000',
-      },
-      {
-        name: 'Company XYZ',
-        address: '0x1234567890123456789012345678901234567890',
-        access: 'Can view',
-        dateAddedOrRevoked: '01/01/2021',
-        totalBalance: '1000',
-      },
-      {
-        name: 'John Kovalsky',
-        address: '0x1234567890123456789012345678901234567890',
-        access: 'Can view',
-        dateAddedOrRevoked: '01/01/2021',
-        totalBalance: '1000',
-      },
-    ],
-    revokedUsers: [
-      {
-        name: 'Jane Doe',
-        address: '0x1234567890123456789012345678901234567890',
-        dateAddedOrRevoked: '01/01/2021',
-        totalBalance: '1000',
-      },
-    ],
-  }
-}
+import { getVaultWhitelist } from '@/app/server-handlers/sdk/get-vault-whitelist'
+import { PanelClientAdmin } from '@/features/panels/vaults/components/PanelClientAdmin/PanelClientAdmin'
 
 export default async function InstitutionVaultClientAdminPage({
   params,
 }: {
-  params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
+  params: Promise<{ institutionName: string; vaultAddress: string; network: NetworkNames }>
 }) {
   const { institutionName, vaultAddress, network } = await params
 
-  const { whitelistedUsers, revokedUsers } = getVaultClientAdminData({
+  const chainId = networkNameToSDKId(network)
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!chainId) {
+    throw new Error(`Unsupported network: ${network}`)
+  }
+
+  const whitelistedWallets = await getVaultWhitelist({
     institutionName,
     vaultAddress,
-    network,
+    chainId,
   })
 
-  return <PanelClientAdmin whitelistedUsers={whitelistedUsers} revokedUsers={revokedUsers} />
+  return (
+    <PanelClientAdmin
+      whitelistedWallets={whitelistedWallets}
+      vaultAddress={vaultAddress}
+      network={network}
+      institutionName={institutionName}
+    />
+  )
 }

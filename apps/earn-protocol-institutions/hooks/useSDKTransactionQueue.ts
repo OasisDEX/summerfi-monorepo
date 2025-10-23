@@ -6,6 +6,10 @@ export type SDKTransactionItem = {
   txDescription: ReactNode
   txData?: TransactionInfo
   txError?: Error
+  txLabel?: {
+    label: string
+    charge: 'positive' | 'negative' | 'neutral'
+  }
 }
 
 export const useSDKTransactionQueue = () => {

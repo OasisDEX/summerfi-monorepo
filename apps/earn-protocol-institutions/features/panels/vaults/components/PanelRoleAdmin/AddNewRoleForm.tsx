@@ -12,7 +12,9 @@ import styles from './PanelRoleAdmin.module.css'
 
 export const AddNewRoleForm = ({
   onAddRole,
+  staticRole,
 }: {
+  staticRole?: InstitutionVaultRoleType
   onAddRole: ({ address, role }: { address: string; role: InstitutionVaultRoleType }) => void
 }) => {
   const [isAddressValid, setIsAddressValid] = useState(false)
@@ -40,7 +42,7 @@ export const AddNewRoleForm = ({
     if (!newRoleAddress || !isAddressValid) return
     onAddRole({
       address: newRoleAddress,
-      role: newRoleName,
+      role: staticRole ? staticRole : newRoleName,
     })
     setNewRoleAddress('')
     setNewRoleName('CURATOR_ROLE')
@@ -72,35 +74,37 @@ export const AddNewRoleForm = ({
             border: newRoleAddress && !isAddressValid ? '1px solid red' : undefined,
           }}
         />
-        <Dropdown
-          options={dropdownOptions}
-          dropdownValue={{
-            content: (
-              <Text as="p" variant="p3">
-                {newRoleName}
-              </Text>
-            ),
-            value: String(
-              ContractSpecificRoleName[newRoleName as keyof typeof ContractSpecificRoleName],
-            ),
-          }}
-          dropdownChildrenStyle={{
-            padding: 'var(--general-space-12) var(--general-space-16)',
-            minWidth: '150px',
-          }}
-          dropdownOptionsStyle={{
-            minWidth: '150px',
-          }}
-          dropdownWrapperStyle={{
-            minWidth: '150px',
-          }}
-          asPill
-          onChange={handleRoleChange}
-        >
-          <Text as="p" variant="p3">
-            {contractSpecificRolesToHuman(newRoleName)}
-          </Text>
-        </Dropdown>
+        {!staticRole && (
+          <Dropdown
+            options={dropdownOptions}
+            dropdownValue={{
+              content: (
+                <Text as="p" variant="p3">
+                  {newRoleName}
+                </Text>
+              ),
+              value: String(
+                ContractSpecificRoleName[newRoleName as keyof typeof ContractSpecificRoleName],
+              ),
+            }}
+            dropdownChildrenStyle={{
+              padding: 'var(--general-space-12) var(--general-space-16)',
+              minWidth: '150px',
+            }}
+            dropdownOptionsStyle={{
+              minWidth: '150px',
+            }}
+            dropdownWrapperStyle={{
+              minWidth: '150px',
+            }}
+            asPill
+            onChange={handleRoleChange}
+          >
+            <Text as="p" variant="p3">
+              {contractSpecificRolesToHuman(newRoleName)}
+            </Text>
+          </Dropdown>
+        )}
       </div>
       <Button
         variant="primaryLarge"
@@ -108,7 +112,9 @@ export const AddNewRoleForm = ({
         onClick={handleAddRole}
         style={{ minWidth: 'fit-content' }}
       >
-        <Text variant="p4">Add&nbsp;Role</Text>
+        <Text variant="p4">
+          Add&nbsp;{staticRole ? contractSpecificRolesToHuman(staticRole) : 'Role'}
+        </Text>
       </Button>
     </div>
   )
