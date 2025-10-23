@@ -3,6 +3,13 @@ import { getDeploymentsJsonConfig } from '@summerfi/armada-protocol-common'
 import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
+const chainIdToNetwork = {
+  [ChainIds.Base]: 'base',
+  [ChainIds.ArbitrumOne]: 'arbitrum',
+  [ChainIds.Mainnet]: 'mainnet',
+  [ChainIds.Sonic]: 'sonic',
+} as const
+
 export async function fetchInstiDeploymentProviderConfig(
   subgraphManager: IArmadaSubgraphManager,
   instiChainIds: ChainId[],
@@ -40,24 +47,17 @@ export const fetchPublicDeploymentProviderConfig = (
   }
 
   const config: DeploymentProviderConfig[] = deployedChainIds.map((chainId) => {
-    const network = {
-      [ChainIds.Base]: 'base',
-      [ChainIds.ArbitrumOne]: 'arbitrum',
-      [ChainIds.Mainnet]: 'mainnet',
-      [ChainIds.Sonic]: 'sonic',
-    } as const
-
     return {
       chainId,
       active: true,
       contracts: {
-        harborCommand: jsonConfig[network[chainId]].deployedContracts.core.harborCommand
+        harborCommand: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core.harborCommand
           .address as AddressValue,
-        admiralsQuarters: jsonConfig[network[chainId]].deployedContracts.core.admiralsQuarters
-          .address as AddressValue,
-        configurationManager: jsonConfig[network[chainId]].deployedContracts.core
+        admiralsQuarters: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core
+          .admiralsQuarters.address as AddressValue,
+        configurationManager: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core
           .configurationManager.address as AddressValue,
-        protocolAccessManager: jsonConfig[network[chainId]].deployedContracts.gov
+        protocolAccessManager: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.gov
           .protocolAccessManager.address as AddressValue,
       },
     }
