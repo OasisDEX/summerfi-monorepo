@@ -22,8 +22,8 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
   // Configure test scenarios here
   const scenarios: ContractRoleScenario[] = [
     {
-      role: ContractSpecificRoleName.WHITELISTED_ROLE,
-      targetAddress: userAddress,
+      role: ContractSpecificRoleName.COMMANDER_ROLE,
+      targetAddress: fleetAddress,
       shouldGrant: false,
       shouldRevoke: false,
     },

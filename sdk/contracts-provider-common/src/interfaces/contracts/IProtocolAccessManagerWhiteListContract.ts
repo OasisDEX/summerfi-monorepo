@@ -105,30 +105,6 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
   revokeSuperKeeperRole(params: { account: IAddress }): Promise<TransactionInfo>
 
   /**
-   * @name grantWhitelistedRole
-   * @description Grants the whitelisted role to an account for a specific fleet commander
-   * @param fleetCommanderAddress The fleet commander contract address
-   * @param account The account to grant the role to
-   * @returns Promise<TransactionInfo> The transaction information
-   */
-  grantWhitelistedRole(params: {
-    fleetCommanderAddress: IAddress
-    account: IAddress
-  }): Promise<TransactionInfo>
-
-  /**
-   * @name revokeWhitelistedRole
-   * @description Revokes the whitelisted role from an account for a specific fleet commander
-   * @param fleetCommanderAddress The fleet commander contract address
-   * @param account The account to revoke the role from
-   * @returns Promise<TransactionInfo> The transaction information
-   */
-  revokeWhitelistedRole(params: {
-    fleetCommanderAddress: IAddress
-    account: IAddress
-  }): Promise<TransactionInfo>
-
-  /**
    * @name grantCuratorRole
    * @description Grants the curator role to an account for a specific fleet commander
    * @param fleetCommanderAddress The fleet commander contract address
@@ -179,20 +155,26 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
   /**
    * @name grantCommanderRole
    * @description Grants the commander role to an account for a specific ark
-   * @param arkAddress The ark contract address
+   * @param fleetCommanderAddress The ark contract address
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
-  grantCommanderRole(params: { arkAddress: IAddress; account: IAddress }): Promise<TransactionInfo>
+  grantCommanderRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
+  }): Promise<TransactionInfo>
 
   /**
    * @name revokeCommanderRole
    * @description Revokes the commander role from an account for a specific ark
-   * @param arkAddress The ark contract address
+   * @param fleetCommanderAddress The ark contract address
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
-  revokeCommanderRole(params: { arkAddress: IAddress; account: IAddress }): Promise<TransactionInfo>
+  revokeCommanderRole(params: {
+    fleetCommanderAddress: IAddress
+    account: IAddress
+  }): Promise<TransactionInfo>
 
   /**
    * @name grantDecayControllerRole

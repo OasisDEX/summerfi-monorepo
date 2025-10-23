@@ -12,10 +12,10 @@ describe('Armada Protocol - Access Control Contract Role Grant/Revoke', () => {
 
   const contractAddress = fleetAddress
   const targetAddress = userAddress
-  const role = ContractSpecificRoleName.WHITELISTED_ROLE
+  const role = ContractSpecificRoleName.COMMANDER_ROLE
 
   test('should grant and revoke contract-specific role', async () => {
-    // Check if the address has the whitelisted role initially
+    // Check if the address has the commander role initially
     const roleAddresses = await sdk.armada.accessControl.getAllAddressesWithContractSpecificRole({
       chainId,
       role,

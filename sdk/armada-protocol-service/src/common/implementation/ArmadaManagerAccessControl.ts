@@ -319,15 +319,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
       case ContractSpecificRoleName.COMMANDER_ROLE:
         return protocolAccessManagerContract.grantCommanderRole({
           account: params.targetAddress,
-          arkAddress: params.contractAddress,
+          fleetCommanderAddress: params.contractAddress,
         })
       case ContractSpecificRoleName.CURATOR_ROLE:
         return protocolAccessManagerContract.grantCuratorRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.WHITELISTED_ROLE:
-        return protocolAccessManagerContract.grantWhitelistedRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })
@@ -360,15 +355,10 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
       case ContractSpecificRoleName.COMMANDER_ROLE:
         return protocolAccessManagerContract.revokeCommanderRole({
           account: params.targetAddress,
-          arkAddress: params.contractAddress,
+          fleetCommanderAddress: params.contractAddress,
         })
       case ContractSpecificRoleName.CURATOR_ROLE:
         return protocolAccessManagerContract.revokeCuratorRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.WHITELISTED_ROLE:
-        return protocolAccessManagerContract.revokeWhitelistedRole({
           account: params.targetAddress,
           fleetCommanderAddress: params.contractAddress,
         })

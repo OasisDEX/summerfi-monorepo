@@ -215,8 +215,8 @@ export class ProtocolAccessManagerWhiteListContract<
   ): ReturnType<IProtocolAccessManagerWhiteListContract['grantCommanderRole']> {
     return this._createTransaction({
       functionName: 'grantCommanderRole',
-      args: [params.arkAddress.value, params.account.value],
-      description: `Grant Commander role to ${params.account.value} for Ark ${params.arkAddress.value}`,
+      args: [params.fleetCommanderAddress.value, params.account.value],
+      description: `Grant Commander role to ${params.account.value} for Ark ${params.fleetCommanderAddress.value}`,
     })
   }
 
@@ -226,8 +226,8 @@ export class ProtocolAccessManagerWhiteListContract<
   ): ReturnType<IProtocolAccessManagerWhiteListContract['revokeCommanderRole']> {
     return this._createTransaction({
       functionName: 'revokeCommanderRole',
-      args: [params.arkAddress.value, params.account.value],
-      description: `Revoke Commander role from ${params.account.value} for Ark ${params.arkAddress.value}`,
+      args: [params.fleetCommanderAddress.value, params.account.value],
+      description: `Revoke Commander role from ${params.account.value} for Ark ${params.fleetCommanderAddress.value}`,
     })
   }
 
