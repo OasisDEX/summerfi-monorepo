@@ -33,14 +33,14 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }) {
     this._initSdkForInstitutions = params.initSdkForInstitutions ?? false
 
+    const envName = this._initSdkForInstitutions
+      ? 'SDK_SUBGRAPH_CONFIG_INSTI'
+      : 'SDK_SUBGRAPH_CONFIG'
     let urlMap
     try {
-      const name = this._initSdkForInstitutions
-        ? 'SDK_SUBGRAPH_CONFIG_INSTI'
-        : 'SDK_SUBGRAPH_CONFIG'
-      urlMap = JSON.parse(params.configProvider.getConfigurationItem({ name }))
+      urlMap = JSON.parse(params.configProvider.getConfigurationItem({ name: envName }))
     } catch (error: unknown) {
-      throw new Error(`Invalid format of ${name}`)
+      throw new Error(`Invalid format of env ${envName} for sdk subgraph config`)
     }
     if (!urlMap) {
       throw new Error('No subgraph config in env')
