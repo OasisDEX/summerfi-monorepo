@@ -4,6 +4,7 @@ import { IErc4626Contract } from './contracts/IErc4626Contract'
 import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
 import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAccessManagerWhiteListContract'
 import { IArkContract } from './contracts/IArkContract'
+import { IAdmiralsQuartersContract } from './contracts/IAdmiralsQuartersContract'
 
 /**
  * @name IContractsProvider
@@ -79,4 +80,18 @@ export interface IContractsProvider {
    * @returns {IArkContract}
    */
   getArkContract(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IArkContract>
+
+  /**
+   * @name getAdmiralsQuartersContract
+   * @description Returns an AdmiralsQuarters contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the AdmiralsQuarters contract
+   *
+   * @returns {IAdmiralsQuartersContract}
+   */
+  getAdmiralsQuartersContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IAdmiralsQuartersContract>
 }

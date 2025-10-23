@@ -87,6 +87,9 @@ import { grantContractSpecificRole } from './armada-protocol-handlers/access-con
 import { revokeContractSpecificRole } from './armada-protocol-handlers/access-control/revokeContractSpecificRole'
 import { getAllAddressesWithGlobalRole } from './armada-protocol-handlers/access-control/getAllAddressesWithGlobalRole'
 import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handlers/access-control/getAllAddressesWithContractSpecificRole'
+import { isWhitelisted } from './armada-protocol-handlers/access-control/isWhitelisted'
+import { setWhitelisted } from './armada-protocol-handlers/access-control/setWhitelisted'
+import { setWhitelistedBatch } from './armada-protocol-handlers/access-control/setWhitelistedBatch'
 
 /**
  * Server
@@ -201,6 +204,9 @@ export const sdkAppRouter = router({
       revokeContractSpecificRole: revokeContractSpecificRole,
       getAllAddressesWithGlobalRole: getAllAddressesWithGlobalRole,
       getAllAddressesWithContractSpecificRole: getAllAddressesWithContractSpecificRole,
+      isWhitelisted: isWhitelisted,
+      setWhitelisted: setWhitelisted,
+      setWhitelistedBatch: setWhitelistedBatch,
     },
   },
 })

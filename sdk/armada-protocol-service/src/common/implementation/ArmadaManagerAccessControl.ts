@@ -4,7 +4,6 @@ import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   IAddress,
-  TransactionInfo,
   getChainInfoByChainId,
   type HexData,
   type ChainInfo,
@@ -51,6 +50,8 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
   }
+
+  /** PRIVATE METHODS **/
 
   /**
    * @description Gets the protocol access manager contract address from deployment config
@@ -119,332 +120,6 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     return roleHash
   }
 
-  /** @see IArmadaManagerAccessControl.hasGlobalRole */
-  async hasGlobalRole(params: {
-    chainId: ChainId
-    role: GlobalRoles
-    targetAddress: IAddress
-  }): Promise<boolean> {
-    const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
-
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    return protocolAccessManagerContract.hasRole({
-      role: roleHash,
-      account: params.targetAddress,
-    })
-  }
-
-  /** @see IArmadaManagerAccessControl.hasContractSpecificRole */
-  async hasContractSpecificRole(params: {
-    chainId: ChainId
-    role: ContractSpecificRoleName
-    contractAddress: IAddress
-    targetAddress: IAddress
-  }): Promise<boolean> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    // Generate the role hash for the contract-specific role
-    const roleHash = await protocolAccessManagerContract.generateRole({
-      roleName: params.role,
-      roleTargetContract: params.contractAddress,
-    })
-
-    return protocolAccessManagerContract.hasRole({
-      role: roleHash,
-      account: params.targetAddress,
-    })
-  }
-
-  /** @see IArmadaManagerAccessControl.grantGlobalRole */
-  async grantGlobalRole(params: {
-    chainId: ChainId
-    role: GlobalRoles
-    targetAddress: IAddress
-  }): Promise<TransactionInfo> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    // Use the appropriate grant method based on the role
-    switch (params.role) {
-      case GlobalRoles.GOVERNOR_ROLE:
-        return protocolAccessManagerContract.grantGovernorRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.SUPER_KEEPER_ROLE:
-        return protocolAccessManagerContract.grantSuperKeeperRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.DECAY_CONTROLLER_ROLE:
-        return protocolAccessManagerContract.grantDecayControllerRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
-        return protocolAccessManagerContract.grantAdmiralsQuartersRole({
-          account: params.targetAddress,
-        })
-      default:
-        throw new Error(`Grant method not implemented for role: ${params.role}`)
-    }
-  }
-
-  /** @see IArmadaManagerAccessControl.revokeGlobalRole */
-  async revokeGlobalRole(params: {
-    chainId: ChainId
-    role: GlobalRoles
-    targetAddress: IAddress
-  }): Promise<TransactionInfo> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    // Use the appropriate revoke method based on the role
-    switch (params.role) {
-      case GlobalRoles.GOVERNOR_ROLE:
-        return protocolAccessManagerContract.revokeGovernorRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.SUPER_KEEPER_ROLE:
-        return protocolAccessManagerContract.revokeSuperKeeperRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.DECAY_CONTROLLER_ROLE:
-        return protocolAccessManagerContract.revokeDecayControllerRole({
-          account: params.targetAddress,
-        })
-      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
-        return protocolAccessManagerContract.revokeAdmiralsQuartersRole({
-          account: params.targetAddress,
-        })
-      default:
-        throw new Error(`Revoke method not implemented for role: ${params.role}`)
-    }
-  }
-
-  /** @see IArmadaManagerAccessControl.grantContractSpecificRole */
-  async grantContractSpecificRole(params: {
-    chainId: ChainId
-    role: ContractSpecificRoleName
-    contractAddress: IAddress
-    targetAddress: IAddress
-  }): Promise<TransactionInfo> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    switch (params.role) {
-      case ContractSpecificRoleName.KEEPER_ROLE:
-        return protocolAccessManagerContract.grantKeeperRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.COMMANDER_ROLE:
-        return protocolAccessManagerContract.grantCommanderRole({
-          account: params.targetAddress,
-          arkAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.CURATOR_ROLE:
-        return protocolAccessManagerContract.grantCuratorRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.WHITELISTED_ROLE:
-        return protocolAccessManagerContract.grantWhitelistedRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      default:
-        // If the role is unknown, throw an error
-        throw new Error(`Grant method not implemented for role: ${params.role}`)
-    }
-  }
-
-  /** @see IArmadaManagerAccessControl.revokeContractSpecificRole */
-  async revokeContractSpecificRole(params: {
-    chainId: ChainId
-    role: ContractSpecificRoleName
-    contractAddress: IAddress
-    targetAddress: IAddress
-  }): Promise<TransactionInfo> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the protocol access manager contract
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: this._getProtocolAccessManagerAddress(chainInfo),
-      })
-
-    switch (params.role) {
-      case ContractSpecificRoleName.KEEPER_ROLE:
-        return protocolAccessManagerContract.revokeKeeperRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.COMMANDER_ROLE:
-        return protocolAccessManagerContract.revokeCommanderRole({
-          account: params.targetAddress,
-          arkAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.CURATOR_ROLE:
-        return protocolAccessManagerContract.revokeCuratorRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      case ContractSpecificRoleName.WHITELISTED_ROLE:
-        return protocolAccessManagerContract.revokeWhitelistedRole({
-          account: params.targetAddress,
-          fleetCommanderAddress: params.contractAddress,
-        })
-      default:
-        // If the role is unknown, throw an error
-        throw new Error(`Revoke method not implemented for role: ${params.role}`)
-    }
-  }
-
-  /** @see IArmadaManagerAccessControl.getAllAddressesWithGlobalRole */
-  async getAllAddressesWithGlobalRole(params: {
-    chainId: ChainId
-    role: GlobalRoles
-  }): Promise<AddressValue[]> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the blockchain client
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: chainInfo,
-    })
-
-    // Get the protocol access manager contract address
-    const contractAddress = this._getProtocolAccessManagerAddress(chainInfo)
-
-    // Get the role hash for the global role
-    const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
-
-    // Get the starting block for this chain, throws if not configured
-    const fromBlock = this._getStartBlockForEvents(params.chainId)
-
-    // Fetch RoleGranted and RoleRevoked events for this specific role in parallel
-    const [roleGrantedLogs, roleRevokedLogs] = await Promise.all([
-      client.getLogs({
-        address: contractAddress.value,
-        event: AccessControlAbi.RoleGranted,
-        args: {
-          role: roleHash,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      }),
-      client.getLogs({
-        address: contractAddress.value,
-        event: AccessControlAbi.RoleRevoked,
-        args: {
-          role: roleHash,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      }),
-    ])
-
-    // Process events to determine current role holders
-    return this._processRoleEvents(roleGrantedLogs, roleRevokedLogs)
-  }
-
-  /** @see IArmadaManagerAccessControl.getAllAddressesWithContractSpecificRole */
-  async getAllAddressesWithContractSpecificRole(params: {
-    chainId: ChainId
-    role: ContractSpecificRoleName
-    contractAddress: IAddress
-  }): Promise<AddressValue[]> {
-    // Get the chain info from the provided chainId
-    const chainInfo = getChainInfoByChainId(Number(params.chainId))
-
-    // Get the blockchain client
-    const client = this._blockchainClientProvider.getBlockchainClient({
-      chainInfo: chainInfo,
-    })
-
-    // Get the protocol access manager contract address
-    const protocolAccessManagerAddress = this._getProtocolAccessManagerAddress(chainInfo)
-
-    // Get the protocol access manager contract to generate the role hash
-    const protocolAccessManagerContract =
-      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
-        chainInfo: chainInfo,
-        address: protocolAccessManagerAddress,
-      })
-
-    // Generate the role hash for the contract-specific role
-    const roleHash = await protocolAccessManagerContract.generateRole({
-      roleName: params.role,
-      roleTargetContract: params.contractAddress,
-    })
-
-    // Get the starting block for this chain, throws if not configured
-    const fromBlock = this._getStartBlockForEvents(params.chainId)
-
-    // Fetch RoleGranted and RoleRevoked events for this specific role in parallel
-    const [roleGrantedLogs, roleRevokedLogs] = await Promise.all([
-      client.getLogs({
-        address: protocolAccessManagerAddress.value,
-        event: AccessControlAbi.RoleGranted,
-        args: {
-          role: roleHash,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      }),
-      client.getLogs({
-        address: protocolAccessManagerAddress.value,
-        event: AccessControlAbi.RoleRevoked,
-        args: {
-          role: roleHash,
-        },
-        fromBlock,
-        toBlock: 'latest',
-      }),
-    ])
-
-    // Process events to determine current role holders
-    return this._processRoleEvents(roleGrantedLogs, roleRevokedLogs)
-  }
-
   /**
    * @description Processes RoleGranted and RoleRevoked events to determine current role holders by lastest state
    * @param grantedEvents Array of RoleGranted event logs
@@ -501,5 +176,373 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     return Array.from(addressRoleState.entries())
       .filter(([_, hasRole]) => hasRole)
       .map(([address, _]) => Address.createFromEthereum({ value: address }).value)
+  }
+
+  /** METHODS */
+
+  /** @see IArmadaManagerAccessControl.hasGlobalRole */
+  hasGlobalRole: IArmadaManagerAccessControl['hasGlobalRole'] = async (params) => {
+    const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
+
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    return protocolAccessManagerContract.hasRole({
+      role: roleHash,
+      account: params.targetAddress,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.hasContractSpecificRole */
+  hasContractSpecificRole: IArmadaManagerAccessControl['hasContractSpecificRole'] = async (
+    params,
+  ) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    // Generate the role hash for the contract-specific role
+    const roleHash = await protocolAccessManagerContract.generateRole({
+      roleName: params.role,
+      roleTargetContract: params.contractAddress,
+    })
+
+    return protocolAccessManagerContract.hasRole({
+      role: roleHash,
+      account: params.targetAddress,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.grantGlobalRole */
+  grantGlobalRole: IArmadaManagerAccessControl['grantGlobalRole'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    // Use the appropriate grant method based on the role
+    switch (params.role) {
+      case GlobalRoles.GOVERNOR_ROLE:
+        return protocolAccessManagerContract.grantGovernorRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.SUPER_KEEPER_ROLE:
+        return protocolAccessManagerContract.grantSuperKeeperRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.DECAY_CONTROLLER_ROLE:
+        return protocolAccessManagerContract.grantDecayControllerRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
+        return protocolAccessManagerContract.grantAdmiralsQuartersRole({
+          account: params.targetAddress,
+        })
+      default:
+        throw new Error(`Grant method not implemented for role: ${params.role}`)
+    }
+  }
+
+  /** @see IArmadaManagerAccessControl.revokeGlobalRole */
+  revokeGlobalRole: IArmadaManagerAccessControl['revokeGlobalRole'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    // Use the appropriate revoke method based on the role
+    switch (params.role) {
+      case GlobalRoles.GOVERNOR_ROLE:
+        return protocolAccessManagerContract.revokeGovernorRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.SUPER_KEEPER_ROLE:
+        return protocolAccessManagerContract.revokeSuperKeeperRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.DECAY_CONTROLLER_ROLE:
+        return protocolAccessManagerContract.revokeDecayControllerRole({
+          account: params.targetAddress,
+        })
+      case GlobalRoles.ADMIRALS_QUARTERS_ROLE:
+        return protocolAccessManagerContract.revokeAdmiralsQuartersRole({
+          account: params.targetAddress,
+        })
+      default:
+        throw new Error(`Revoke method not implemented for role: ${params.role}`)
+    }
+  }
+
+  /** @see IArmadaManagerAccessControl.grantContractSpecificRole */
+  grantContractSpecificRole: IArmadaManagerAccessControl['grantContractSpecificRole'] = async (
+    params,
+  ) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    switch (params.role) {
+      case ContractSpecificRoleName.KEEPER_ROLE:
+        return protocolAccessManagerContract.grantKeeperRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.COMMANDER_ROLE:
+        return protocolAccessManagerContract.grantCommanderRole({
+          account: params.targetAddress,
+          arkAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.CURATOR_ROLE:
+        return protocolAccessManagerContract.grantCuratorRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.WHITELISTED_ROLE:
+        return protocolAccessManagerContract.grantWhitelistedRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      default:
+        // If the role is unknown, throw an error
+        throw new Error(`Grant method not implemented for role: ${params.role}`)
+    }
+  }
+
+  /** @see IArmadaManagerAccessControl.revokeContractSpecificRole */
+  revokeContractSpecificRole: IArmadaManagerAccessControl['revokeContractSpecificRole'] = async (
+    params,
+  ) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the protocol access manager contract
+    const protocolAccessManagerContract =
+      await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+        chainInfo: chainInfo,
+        address: this._getProtocolAccessManagerAddress(chainInfo),
+      })
+
+    switch (params.role) {
+      case ContractSpecificRoleName.KEEPER_ROLE:
+        return protocolAccessManagerContract.revokeKeeperRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.COMMANDER_ROLE:
+        return protocolAccessManagerContract.revokeCommanderRole({
+          account: params.targetAddress,
+          arkAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.CURATOR_ROLE:
+        return protocolAccessManagerContract.revokeCuratorRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      case ContractSpecificRoleName.WHITELISTED_ROLE:
+        return protocolAccessManagerContract.revokeWhitelistedRole({
+          account: params.targetAddress,
+          fleetCommanderAddress: params.contractAddress,
+        })
+      default:
+        // If the role is unknown, throw an error
+        throw new Error(`Revoke method not implemented for role: ${params.role}`)
+    }
+  }
+
+  /** @see IArmadaManagerAccessControl.getAllAddressesWithGlobalRole */
+  getAllAddressesWithGlobalRole: IArmadaManagerAccessControl['getAllAddressesWithGlobalRole'] =
+    async (params) => {
+      // Get the chain info from the provided chainId
+      const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+      // Get the blockchain client
+      const client = this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: chainInfo,
+      })
+
+      // Get the protocol access manager contract address
+      const contractAddress = this._getProtocolAccessManagerAddress(chainInfo)
+
+      // Get the role hash for the global role
+      const roleHash = await this._getGlobalRoleHash(params.chainId, params.role)
+
+      // Get the starting block for this chain, throws if not configured
+      const fromBlock = this._getStartBlockForEvents(params.chainId)
+
+      // Fetch RoleGranted and RoleRevoked events for this specific role in parallel
+      const [roleGrantedLogs, roleRevokedLogs] = await Promise.all([
+        client.getLogs({
+          address: contractAddress.value,
+          event: AccessControlAbi.RoleGranted,
+          args: {
+            role: roleHash,
+          },
+          fromBlock,
+          toBlock: 'latest',
+        }),
+        client.getLogs({
+          address: contractAddress.value,
+          event: AccessControlAbi.RoleRevoked,
+          args: {
+            role: roleHash,
+          },
+          fromBlock,
+          toBlock: 'latest',
+        }),
+      ])
+
+      // Process events to determine current role holders
+      return this._processRoleEvents(roleGrantedLogs, roleRevokedLogs)
+    }
+
+  /** @see IArmadaManagerAccessControl.getAllAddressesWithContractSpecificRole */
+  getAllAddressesWithContractSpecificRole: IArmadaManagerAccessControl['getAllAddressesWithContractSpecificRole'] =
+    async (params) => {
+      // Get the chain info from the provided chainId
+      const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+      // Get the blockchain client
+      const client = this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: chainInfo,
+      })
+
+      // Get the protocol access manager contract address
+      const protocolAccessManagerAddress = this._getProtocolAccessManagerAddress(chainInfo)
+
+      // Get the protocol access manager contract to generate the role hash
+      const protocolAccessManagerContract =
+        await this._contractsProvider.getProtocolAccessManagerWhiteListContract({
+          chainInfo: chainInfo,
+          address: protocolAccessManagerAddress,
+        })
+
+      // Generate the role hash for the contract-specific role
+      const roleHash = await protocolAccessManagerContract.generateRole({
+        roleName: params.role,
+        roleTargetContract: params.contractAddress,
+      })
+
+      // Get the starting block for this chain, throws if not configured
+      const fromBlock = this._getStartBlockForEvents(params.chainId)
+
+      // Fetch RoleGranted and RoleRevoked events for this specific role in parallel
+      const [roleGrantedLogs, roleRevokedLogs] = await Promise.all([
+        client.getLogs({
+          address: protocolAccessManagerAddress.value,
+          event: AccessControlAbi.RoleGranted,
+          args: {
+            role: roleHash,
+          },
+          fromBlock,
+          toBlock: 'latest',
+        }),
+        client.getLogs({
+          address: protocolAccessManagerAddress.value,
+          event: AccessControlAbi.RoleRevoked,
+          args: {
+            role: roleHash,
+          },
+          fromBlock,
+          toBlock: 'latest',
+        }),
+      ])
+
+      // Process events to determine current role holders
+      return this._processRoleEvents(roleGrantedLogs, roleRevokedLogs)
+    }
+
+  /** @see IArmadaManagerAccessControl.isWhitelisted */
+  isWhitelisted: IArmadaManagerAccessControl['isWhitelisted'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address from deployment config
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'admiralsQuarters',
+      chainId: params.chainId,
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.isWhitelisted({ account: params.account })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelisted */
+  setWhitelisted: IArmadaManagerAccessControl['setWhitelisted'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address from deployment config
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'admiralsQuarters',
+      chainId: params.chainId,
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.setWhitelisted({
+      account: params.account,
+      allowed: params.allowed,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelistedBatch */
+  setWhitelistedBatch: IArmadaManagerAccessControl['setWhitelistedBatch'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address from deployment config
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'admiralsQuarters',
+      chainId: params.chainId,
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.setWhitelistedBatch({
+      accounts: params.accounts,
+      allowed: params.allowed,
+    })
   }
 }
