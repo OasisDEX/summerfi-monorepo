@@ -5,6 +5,7 @@ import {
   createInstitutionsGraphQLClient,
 } from '@summerfi/subgraph-manager-common'
 import { type ChainId } from '@summerfi/sdk-common'
+import { toHex, pad } from 'viem'
 
 export const SubgraphTypes = {
   protocol: 'protocol',
@@ -117,7 +118,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getInstitutionById(params: Parameters<IArmadaSubgraphManager['getInstitutionById']>[0]) {
-    const id = params.id.toLowerCase()
+    const id = toHex(params.id, { size: 32 })
     return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutionById({
       id,
     })

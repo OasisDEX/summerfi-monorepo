@@ -22,6 +22,7 @@ const envSchema = z.object({
   ONE_INCH_API_SPOT_AUTH_HEADER: z.string().nonempty(),
   SUMMER_HUB_CHAIN_ID: z.string().nonempty(),
   SUMMER_DEPLOYED_CHAINS_ID: z.string().nonempty(),
+  SUMMER_DEPLOYED_CHAINS_ID_INSTI: z.string().nonempty(),
   SUMMER_DEPLOYMENT_CONFIG: z.string().nonempty(),
   FUNCTIONS_API_URL: z.string().nonempty(),
   SDK_RPC_GATEWAY: z.string().nonempty(),

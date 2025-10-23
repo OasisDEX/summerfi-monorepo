@@ -10,7 +10,7 @@ query GetInstitutions {
 }
 
 query GetInstitutionById($id: ID!) {
-  institutions(where: { id: $id }) {
+  institution(id: $id) {
     id
     active
     harborCommand

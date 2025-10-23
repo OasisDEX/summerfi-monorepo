@@ -25,3 +25,10 @@ export type GovTestScenario = {
   userAddress: Address
   enabled?: boolean
 }
+
+export type WhitelistScenario = {
+  targetAddress: Address
+  description: string
+  shouldWhitelist?: boolean
+  shouldRemoveFromWhitelist?: boolean
+}

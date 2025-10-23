@@ -19,7 +19,7 @@ export async function fetchInstiDeploymentProviderConfig(
 
   for (const chainId of instiChainIds) {
     const institutionsData = await subgraphManager.getInstitutionById({ chainId, id: clientId })
-    const institution = institutionsData.institutions[0]
+    const institution = institutionsData.institution
     if (!institution) {
       throw new Error(`No institution found for clientId ${clientId} on chainId ${chainId}`)
     }

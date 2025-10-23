@@ -22,6 +22,7 @@
     "e2e:ac:getaddressesglobal": "jest --roots e2e -- ./e2e/ac.getAddressesGlobalRoles.test.ts",
     "e2e:ac:grantrevokecontract": "jest --roots e2e -- ./e2e/ac.grantRevokeContractRole.test.ts",
     "e2e:ac:grantrevokeglobal": "jest --roots e2e -- ./e2e/ac.grantRevokeGlobalRole.test.ts",
+    "e2e:ac:whitelist": "jest --roots e2e -- ./e2e/armadaProtocol.accessControl.whitelist.test.ts",
     "e2e:admin:rebalance": "jest --roots e2e -- ./e2e/admin.rebalance.test.ts",
     "e2e:oracle": "jest --roots e2e -- ./e2e/oracle.test.ts",
     "e2e:transfer": "jest --roots e2e -- ./e2e/armadaProtocol.erc20Transfer.test.ts",

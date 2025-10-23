@@ -81,4 +81,4 @@ export const ChainConfigs = {
   },
 }
 
-export const clientId = 'testB'
+export const clientId = 'ACME'

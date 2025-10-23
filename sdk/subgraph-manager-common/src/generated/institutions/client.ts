@@ -12011,7 +12011,7 @@ export type GetInstitutionByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetInstitutionByIdQuery = { __typename?: 'Query', institutions: Array<{ __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string }> };
+export type GetInstitutionByIdQuery = { __typename?: 'Query', institution?: { __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string } | null };
 
 
 export const GetInstitutionsDocument = gql`
@@ -12028,7 +12028,7 @@ export const GetInstitutionsDocument = gql`
     `;
 export const GetInstitutionByIdDocument = gql`
     query GetInstitutionById($id: ID!) {
-  institutions(where: {id: $id}) {
+  institution(id: $id) {
     id
     active
     harborCommand
