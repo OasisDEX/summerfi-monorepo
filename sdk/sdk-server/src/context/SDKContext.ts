@@ -91,19 +91,16 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
-  if (initSdkForInstitutions) {
-    const instiChainIds: ChainId[] = configProvider
-      .getConfigurationItem({
-        name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
-      })
-      .split(',')
-      .map(Number)
-      .filter(isChainId)
+  if (initSdkForInstitutions && clientId) {
+    const rawInstiChainIds = configProvider.getConfigurationItem({
+      name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
+    })
+    if (!rawInstiChainIds) {
+      throw new Error('SUMMER_DEPLOYED_CHAINS_ID_INSTI is not set in configuration')
+    }
+    const instiChainIds: ChainId[] = rawInstiChainIds.split(',').map(Number).filter(isChainId)
     supportedChains = instiChainIds.map(getChainInfoByChainId)
     try {
-      if (!clientId) {
-        throw new Error('ClientId is empty')
-      }
       deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
         armadaSubgraphManager,
         instiChainIds,
