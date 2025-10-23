@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { AnimateHeight, Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 
@@ -38,6 +38,32 @@ export const TransactionQueue = ({
   }
 
   const userConnected = !!userWalletAddress
+  const getTxLabel = useCallback((txItem: SDKTransactionItem) => {
+    if (!txItem.txDescription) return null
+
+    return (
+      <>
+        {txItem.txLabel ? (
+          <Text
+            as="span"
+            variant="p2semi"
+            style={{
+              color: {
+                positive: 'var(--earn-protocol-success-50)',
+                negative: 'var(--earn-protocol-critical-100)',
+                neutral: 'var(--earn-protocol-secondary-70)',
+              }[txItem.txLabel.charge],
+            }}
+          >
+            {txItem.txLabel.label}&nbsp;
+          </Text>
+        ) : (
+          ''
+        )}
+        {txItem.txDescription}&nbsp;
+      </>
+    )
+  }, [])
 
   return (
     <Card className={transactionQueueStyles.cardWrapper}>
@@ -57,37 +83,31 @@ export const TransactionQueue = ({
           <WalletLabel />
         </div>
       </AnimateHeight>
-      <AnimateHeight
-        id="transaction-queue-items"
-        show={transactionQueue.length > 0 && userConnected}
-        keepChildrenRendered
-      >
-        {transactionQueue.map((txItem) => (
-          <AnimateHeight
-            key={txItem.id}
-            id={txItem.id}
-            show={!transactionRemovedLocally.some((tx) => tx.id === txItem.id)}
-            fade
-          >
-            <div className={transactionQueueStyles.transactionItem}>
-              <Text as="p" variant="p2">
-                {txItem.txDescription}
-              </Text>
-              <div className={transactionQueueStyles.transactionActions}>
-                <SimpleTransactionButton txItem={txItem} chainId={chainId} />
-                <Button
-                  variant="textSecondarySmall"
-                  onClick={() => handleTransactionRemove(txItem.id)}
-                  style={{ marginLeft: 8 }}
-                  disabled={transactionRemovedLocally.some((tx) => tx.id === txItem.id)}
-                >
-                  <Icon iconName="trash" size={14} />
-                </Button>
-              </div>
+      {transactionQueue.map((txItem) => (
+        <AnimateHeight
+          key={txItem.id}
+          id={txItem.id}
+          show={!transactionRemovedLocally.some((tx) => tx.id === txItem.id)}
+          fade
+        >
+          <div className={transactionQueueStyles.transactionItem}>
+            <Text as="p" variant="p2">
+              {getTxLabel(txItem)}
+            </Text>
+            <div className={transactionQueueStyles.transactionActions}>
+              <SimpleTransactionButton txItem={txItem} chainId={chainId} />
+              <Button
+                variant="textSecondarySmall"
+                onClick={() => handleTransactionRemove(txItem.id)}
+                style={{ marginLeft: 8 }}
+                disabled={transactionRemovedLocally.some((tx) => tx.id === txItem.id)}
+              >
+                <Icon iconName="trash" size={14} />
+              </Button>
             </div>
-          </AnimateHeight>
-        ))}
-      </AnimateHeight>
+          </div>
+        </AnimateHeight>
+      ))}
       <AnimateHeight
         id="transaction-queue-no-items"
         show={transactionQueue.length === 0 && userConnected}
@@ -96,7 +116,7 @@ export const TransactionQueue = ({
       >
         <Icon
           iconName="search_icon"
-          size={32}
+          size={24}
           className={transactionQueueStyles.noTransactionsIcon}
         />
         <Text as="p" variant="p2">

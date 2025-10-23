@@ -43,12 +43,13 @@
 }
 
 .noTransactions {
+  display: flex;
+  justify-content: center;
   text-align: center;
-  padding: 16px 0;
   color: var(--color-text-secondary);
 }
 
 .noTransactionsIcon {
-  margin-bottom: 8px;
-  opacity: 0.4;
+  margin-right: 8px;
+  opacity: 0.6;
 }

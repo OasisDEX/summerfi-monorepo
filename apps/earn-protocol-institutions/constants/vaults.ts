@@ -18,8 +18,4 @@ export const vaultSpecificRolesList: {
     role: ContractSpecificRoleName.KEEPER_ROLE,
     roleName: 'KEEPER_ROLE',
   },
-  {
-    role: ContractSpecificRoleName.WHITELISTED_ROLE,
-    roleName: 'WHITELISTED_ROLE',
-  },
 ]

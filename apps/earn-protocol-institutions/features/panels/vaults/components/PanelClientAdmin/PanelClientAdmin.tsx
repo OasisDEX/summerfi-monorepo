@@ -1,148 +1,155 @@
 'use client'
 
-import { type FC, useMemo, useState } from 'react'
-import { Button, Card, Icon, Input, Table, Text } from '@summerfi/app-earn-ui'
+import { type FC, useCallback, useMemo } from 'react'
+import { toast } from 'react-toastify'
+import { Card, Table, Text, WARNING_TOAST_CONFIG } from '@summerfi/app-earn-ui'
+import { type NetworkNames } from '@summerfi/app-types'
+import { networkNameToSDKId } from '@summerfi/app-utils'
+import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
-import { revokedUsersTableColumns } from './revoked-users-table/columns'
-import { revokedUsersTableMapper } from './revoked-users-table/mapper'
-import { type VaultClientAdminUser } from './types'
-import { whitelistedUsersTableColumns } from './whitelisted-users-table/columns'
-import { filterClientAdminUsers } from './whitelisted-users-table/helpers'
-import { whitelistedUsersTableMapper } from './whitelisted-users-table/mapper'
+import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
+import { clientAdminColumns } from '@/features/panels/vaults/components/PanelClientAdmin/columns'
+import { clientAdminMapper } from '@/features/panels/vaults/components/PanelClientAdmin/mapper'
+import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
+import { getGrantWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
+import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
-import styles from './PanelClient.module.css'
-
-interface LabelWrapperProps {
-  children: React.ReactNode
-  htmlFor: string
-}
-
-const LabelWrapper = ({ children, htmlFor }: LabelWrapperProps) => {
-  return (
-    <label htmlFor={htmlFor}>
-      <Text as="p" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-        {children}
-      </Text>
-    </label>
-  )
-}
-
-const NoDataAvailable = () => {
-  return (
-    <div className={styles.noDataAvailable}>
-      <Text as="p" variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
-        No data available
-      </Text>
-    </div>
-  )
-}
+import panelClientStyles from './PanelClient.module.css'
 
 interface PanelClientAdminProps {
-  whitelistedUsers: VaultClientAdminUser[]
-  revokedUsers: VaultClientAdminUser[]
+  whitelistedWallets: string[]
+  institutionName: string
+  vaultAddress: string
+  network: NetworkNames
 }
 
-export const PanelClientAdmin: FC<PanelClientAdminProps> = ({ whitelistedUsers, revokedUsers }) => {
-  const [search, setSearch] = useState('')
-  const [isAddingUser, setIsAddingUser] = useState(false)
+export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
+  whitelistedWallets,
+  institutionName,
+  vaultAddress,
+  network,
+}) => {
+  const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
+  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const chainId = networkNameToSDKId(network)
 
-  const filteredWhitelistedUsers = useMemo(
-    () => filterClientAdminUsers(whitelistedUsers, search),
-    [whitelistedUsers, search],
+  const onRevokeWhitelist = useCallback(
+    ({ address }: { address: string }) => {
+      const transactionId = getRevokeWhitelistId({ address, chainId })
+
+      try {
+        addTransaction(
+          {
+            id: transactionId,
+            txDescription: (
+              <Text variant="p3">
+                whitelist&nbsp;from&nbsp;
+                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                  {address}
+                </Text>
+              </Text>
+            ),
+            txLabel: {
+              label: 'Revoke',
+              charge: 'negative',
+            },
+          },
+          revokeContractSpecificRole({
+            contractAddress: vaultAddress,
+            chainId,
+            role: ContractSpecificRoleName.WHITELISTED_ROLE,
+            targetAddress: address,
+          }),
+        )
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to add transaction to queue', error)
+      }
+    },
+    [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
   )
-  const filteredRevokedUsers = useMemo(
-    () => filterClientAdminUsers(revokedUsers, search),
-    [revokedUsers, search],
+
+  const onGrantWhitelist = useCallback(
+    ({ address }: { address: string }) => {
+      const transactionId = getGrantWhitelistId({ address, chainId })
+
+      if (whitelistedWallets.includes(address)) {
+        toast.error(`Address ${address} is already whitelisted`, WARNING_TOAST_CONFIG)
+
+        return
+      }
+
+      try {
+        addTransaction(
+          {
+            id: transactionId,
+            txDescription: (
+              <Text variant="p3">
+                whitelist&nbsp;to&nbsp;
+                <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                  {address}
+                </Text>
+              </Text>
+            ),
+            txLabel: {
+              label: 'Grant',
+              charge: 'positive',
+            },
+          },
+          grantContractSpecificRole({
+            contractAddress: vaultAddress,
+            chainId,
+            role: ContractSpecificRoleName.WHITELISTED_ROLE,
+            targetAddress: address,
+          }),
+        )
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to add transaction to queue', error)
+      }
+    },
+    [addTransaction, chainId, grantContractSpecificRole, vaultAddress, whitelistedWallets],
   )
 
-  const whitelistedUsersTableRows = whitelistedUsersTableMapper(filteredWhitelistedUsers)
-  const revokedUsersTableRows = revokedUsersTableMapper(filteredRevokedUsers)
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
-  }
-
-  const handleOpenAddUserForm = () => {
-    setIsAddingUser((prev) => !prev)
-  }
-
-  const handleAddUser = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    // TODO: add user
-    // eslint-disable-next-line no-console
-    console.log('add user')
-  }
+  const rows = useMemo(
+    () =>
+      clientAdminMapper({
+        whitelistedWallets,
+        transactionQueue,
+        onRevokeWhitelist,
+        chainId,
+      }),
+    [whitelistedWallets, transactionQueue, onRevokeWhitelist, chainId],
+  )
 
   return (
-    <Card variant="cardSecondary" className={styles.panelClientAdminWrapper}>
-      <div className={styles.header}>
-        <Text as="h5" variant="h5">
-          Client admin
-        </Text>
-        <Button variant="primaryMedium" onClick={handleOpenAddUserForm}>
-          <Icon iconName="plus" size={20} />
-          Whitelist a new user
-        </Button>
-      </div>
-      {isAddingUser && (
-        <Card className={styles.card}>
-          <form onSubmit={handleAddUser} className={styles.form}>
-            <div className={styles.inputWrapper}>
-              <LabelWrapper htmlFor="address">Address</LabelWrapper>
-              <Input
-                placeholder="0x..."
-                variant="withBorder"
-                className={styles.input}
-                id="address"
-              />
-            </div>
-            <div className={styles.inputWrapper}>
-              <LabelWrapper htmlFor="username">User name (optional)</LabelWrapper>
-              <Input
-                placeholder="John Doe"
-                variant="withBorder"
-                className={styles.input}
-                id="username"
-              />
-            </div>
-            <div className={styles.buttonsWrapper}>
-              <Button variant="secondaryMedium" onClick={() => setIsAddingUser(false)}>
-                Cancel
-              </Button>
-              <Button variant="primaryMedium" type="submit">
-                Confirm
-              </Button>
-            </div>
-          </form>
-        </Card>
-      )}
-      <Input
-        placeholder="Search for a user"
-        variant="withBorder"
-        className={styles.input}
-        icon={{ name: 'search_icon', size: 20 }}
-        iconWrapperClassName={styles.iconWrapper}
-        value={search}
-        onChange={handleSearch}
+    <Card variant="cardSecondary" className={panelClientStyles.panelClientAdminWrapper}>
+      <Text as="h5" variant="h5">
+        Client admin
+      </Text>
+      <Card>
+        <Table
+          rows={rows}
+          columns={clientAdminColumns}
+          wrapperClassName={panelClientStyles.tableWrapper}
+          tableClassName={panelClientStyles.table}
+        />
+      </Card>
+      <Text as="h5" variant="h5">
+        Add new client
+      </Text>
+      <Card>
+        <AddNewRoleForm onAddRole={onGrantWhitelist} staticRole="WHITELISTED_ROLE" />
+      </Card>
+      <Text as="h5" variant="h5">
+        Transaction Queue
+      </Text>
+      <TransactionQueue
+        transactionQueue={transactionQueue}
+        chainId={chainId}
+        removeTransaction={removeTransaction}
       />
-      <Card className={styles.card}>
-        <Text as="p" variant="p4semi">
-          Whitelisted users
-        </Text>
-        <div className={styles.tableWrapper}>
-          <Table columns={whitelistedUsersTableColumns} rows={whitelistedUsersTableRows} />
-          {whitelistedUsersTableRows.length === 0 && <NoDataAvailable />}
-        </div>
-      </Card>
-      <Card className={styles.card}>
-        <Text as="p" variant="p4semi">
-          Currently revoked users
-        </Text>
-        <div className={styles.tableWrapper}>
-          <Table columns={revokedUsersTableColumns} rows={revokedUsersTableRows} />
-          {revokedUsersTableRows.length === 0 && <NoDataAvailable />}
-        </div>
-      </Card>
     </Card>
   )
 }

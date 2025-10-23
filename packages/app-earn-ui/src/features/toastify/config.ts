@@ -1,6 +1,6 @@
 import { type ToastOptions } from 'react-toastify'
 
-const BASIC_TOAST_CONFIG: ToastOptions = {
+export const BASIC_TOAST_CONFIG: ToastOptions = {
   position: 'bottom-right',
   autoClose: 5000,
   hideProgressBar: false,
@@ -32,5 +32,14 @@ export const ERROR_TOAST_CONFIG: ToastOptions = {
     ...BASIC_TOAST_CONFIG.style,
     backgroundColor: 'var(--earn-protocol-critical-10)',
     color: 'var(--earn-protocol-critical-100)',
+  },
+}
+
+export const WARNING_TOAST_CONFIG: ToastOptions = {
+  ...BASIC_TOAST_CONFIG,
+  style: {
+    ...BASIC_TOAST_CONFIG.style,
+    backgroundColor: 'var(--earn-protocol-warning-10)',
+    color: 'var(--earn-protocol-warning-100)',
   },
 }

@@ -21,3 +21,17 @@ export const getGrantContractRoleTransactionId = ({
 }) => {
   return `grant-role-${address}-${role}-${chainId}`
 }
+
+export const getRevokeWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `revoke-whitelist-${address}-${chainId}`
+}
+
+export const getGrantWhitelistId = ({ address, chainId }: { address: string; chainId: number }) => {
+  return `grant-whitelist-${address}-${chainId}`
+}

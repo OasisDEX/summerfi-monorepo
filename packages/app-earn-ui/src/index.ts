@@ -286,4 +286,9 @@ export { VaultExposureTable } from './features/vault-exposure/components/VaultEx
 export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'
 export { vaultExposureFilter } from './features/vault-exposure/table/filters/filters'
 
-export { SUCCESS_TOAST_CONFIG, ERROR_TOAST_CONFIG } from './features/toastify/config'
+export {
+  SUCCESS_TOAST_CONFIG,
+  ERROR_TOAST_CONFIG,
+  BASIC_TOAST_CONFIG,
+  WARNING_TOAST_CONFIG,
+} from './features/toastify/config'

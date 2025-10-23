@@ -1,43 +1,36 @@
 import { Button, Icon, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
 
-import { getRevokeContractRoleTransactionId } from '@/helpers/get-transaction-id'
-import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
+import { getRevokeWhitelistId } from '@/helpers/get-transaction-id'
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
-import { type InstitutionVaultRole, type InstitutionVaultRoleType } from '@/types/institution-data'
 
-import styles from './PanelRoleAdmin.module.css'
+import styles from './PanelClient.module.css'
 
-type RoleAdminMapperParams = {
-  roles: InstitutionVaultRole[]
+type ClientMapperParams = {
+  whitelistedWallets: string[]
   transactionQueue: SDKTransactionItem[]
-  onRevokeContractSpecificRole: (params: InstitutionVaultRole) => void
+  onRevokeWhitelist: (params: { address: string }) => void
   chainId: number
 }
 
-export const roleAdminMapper = ({
-  roles,
+export const clientAdminMapper = ({
+  whitelistedWallets,
   transactionQueue,
-  onRevokeContractSpecificRole,
+  onRevokeWhitelist,
   chainId,
-}: RoleAdminMapperParams) => {
-  return roles.map(({ address, role }) => {
-    const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
+}: ClientMapperParams) => {
+  return whitelistedWallets.map((address) => {
+    const revokeId = getRevokeWhitelistId({ address, chainId })
     const idDisabled = transactionQueue.some((tx) => tx.id === revokeId)
 
     return {
       content: {
-        role: (
-          <TableCellText>
-            {contractSpecificRolesToHuman(role as InstitutionVaultRoleType)}
-          </TableCellText>
-        ),
         address: <TableCellNodes className={styles.tableCellAddress}>{address}</TableCellNodes>,
         action: (
           <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
             <Button
               variant="unstyled"
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              onClick={() => onRevokeContractSpecificRole({ address, role })}
+              onClick={() => onRevokeWhitelist({ address })}
               disabled={idDisabled}
             >
               <Icon
