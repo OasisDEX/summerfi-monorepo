@@ -15,35 +15,7 @@ import { IErc4626Contract } from './IErc4626Contract'
  * @description Interface for the FleetCommander contract wrapper
  */
 export interface IFleetCommanderContract extends IContractWrapper {
-  /** READ METHODS */
-
-  /**
-   * @name arks
-   * @description Returns the list of available arks
-   */
-  arks(): Promise<IAddress[]>
-
-  /**
-   * @name config
-   * @description Returns the configuration of the fleet
-   */
-  config(): Promise<IFleetConfig>
-
-  /**
-   * @name maxDeposit
-   * @description Returns the maximum amount of assets that a user can deposit in the fleet at
-   *              the current moment
-   */
-  maxDeposit(params: { user: IAddress }): Promise<ITokenAmount>
-
-  /**
-   * @name maxWithdraw
-   * @description Returns the maximum amount of assets that a user can withdraw from the fleet at
-   *              the current moment
-   */
-  maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
-
-  /** USER WRITE METHODS */
+  /** WRITE METHODS */
 
   /**
    * @name deposit
@@ -72,8 +44,6 @@ export interface IFleetCommanderContract extends IContractWrapper {
     owner: IAddress
   }): Promise<TransactionInfo>
 
-  /** KEEPERS WRITE METHODS */
-
   /**
    * @name rebalance
    * @description Rebalances the assets of the fleet. Used by the keepers of the fleet
@@ -96,8 +66,6 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
 
-  /** GOVERNANCE WRITE METHODS */
-
   /**
    * @name setFleetDepositCap
    * @description Sets the deposit cap of the fleet. Used by the governance
@@ -107,6 +75,16 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @returns The transaction information
    */
   setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setMaxRebalanceOperations
+   * @description Sets the maximum number of rebalance operations per rebalance. Used by the governance
+   *
+   * @param maxOperations The new maximum number of rebalance operations
+   *
+   * @returns The transaction information
+   */
+  setMaxRebalanceOperations(params: { maxOperations: number }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
@@ -158,6 +136,20 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @returns The transaction information
    */
   setArkDepositCap(params: { ark: IAddress; cap: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setArkMaxDepositPercentageOfTVL
+   * @description Sets the maximum deposit percentage of TVL for an ark
+   *
+   * @param ark The address of the ark
+   * @param maxDepositPercentageOfTVL The new maximum deposit percentage of TVL
+   *
+   * @returns The transaction information
+   */
+  setArkMaxDepositPercentageOfTVL(params: {
+    ark: IAddress
+    maxDepositPercentageOfTVL: IPercentage
+  }): Promise<TransactionInfo>
 
   /**
    * @name setArkMaxRebalanceOutflow
@@ -225,6 +217,34 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @returns The transaction information
    */
   emergencyShutdown(): Promise<TransactionInfo>
+
+  /** READ METHODS */
+
+  /**
+   * @name arks
+   * @description Returns the list of available arks
+   */
+  arks(): Promise<IAddress[]>
+
+  /**
+   * @name config
+   * @description Returns the configuration of the fleet
+   */
+  config(): Promise<IFleetConfig>
+
+  /**
+   * @name maxDeposit
+   * @description Returns the maximum amount of assets that a user can deposit in the fleet at
+   *              the current moment
+   */
+  maxDeposit(params: { user: IAddress }): Promise<ITokenAmount>
+
+  /**
+   * @name maxWithdraw
+   * @description Returns the maximum amount of assets that a user can withdraw from the fleet at
+   *              the current moment
+   */
+  maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
 
   /** CASTING METHODS */
 

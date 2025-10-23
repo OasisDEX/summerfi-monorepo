@@ -39,13 +39,7 @@ export class FleetCommanderContract<
 {
   readonly _erc4626Contract: IErc4626Contract
 
-  /** FACTORY METHOD */
-
-  /**
-   * Creates a new instance of the Erc4626Contract
-   *
-   * @see constructor
-   */
+  /** STATIC CONSTRUCTOR */
   static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
     blockchainClient: TClient
     tokensManager: ITokensManager
@@ -76,60 +70,7 @@ export class FleetCommanderContract<
     this._erc4626Contract = params.erc4626Contract
   }
 
-  /** READ METHODS */
-
-  /** @see IFleetCommanderContract.arks */
-  async arks(): Promise<IAddress[]> {
-    const arks = await this.contract.read.getActiveArks()
-
-    return arks.map((ark) => Address.createFromEthereum({ value: ark }))
-  }
-
-  /** @see IFleetCommanderContract.config */
-  async config(): Promise<IFleetConfig> {
-    const [
-      [
-        bufferArkAddress,
-        minimumBufferBalance,
-        depositCap,
-        maxRebalanceOperations,
-        stakingRewardsManager,
-      ],
-      token,
-    ] = await Promise.all([this.contract.read.config(), this._erc4626Contract.asset()])
-    return {
-      bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
-      minimumBufferBalance: TokenAmount.createFromBaseUnit({
-        token,
-        amount: String(minimumBufferBalance),
-      }),
-      depositCap: TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) }),
-      maxRebalanceOperations: String(maxRebalanceOperations),
-      stakingRewardsManager: Address.createFromEthereum({ value: stakingRewardsManager }),
-    }
-  }
-
-  /** @see IFleetCommanderContract.maxDeposit */
-  async maxDeposit(params: { user: IAddress }): Promise<ITokenAmount> {
-    const [token, maxDeposit] = await Promise.all([
-      this._erc4626Contract.asset(),
-      this.contract.read.maxDeposit([params.user.value]),
-    ])
-
-    return TokenAmount.createFromBaseUnit({ token, amount: String(maxDeposit) })
-  }
-
-  /** @see IFleetCommanderContract.maxWithdraw */
-  async maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount> {
-    const [token, maxWithdraw] = await Promise.all([
-      this._erc4626Contract.asset(),
-      this.contract.read.maxWithdraw([params.user.value]),
-    ])
-
-    return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
-  }
-
-  /** USERS WRITE METHODS */
+  /** WRITE METHODS */
 
   /** @see IFleetCommanderContract.deposit */
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
@@ -144,8 +85,6 @@ export class FleetCommanderContract<
   }): Promise<TransactionInfo> {
     return this.asErc4626().withdraw(params)
   }
-
-  /** KEEPERS WRITE METHODS */
 
   /** @see IFleetCommanderContract.rebalance */
   async rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
@@ -181,8 +120,6 @@ export class FleetCommanderContract<
     })
   }
 
-  /** GOVERNANCE WRITE METHODS */
-
   /** @see IFleetCommanderContract.setFleetDepositCap */
   async setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo> {
     const asset = await this._erc4626Contract.asset()
@@ -199,6 +136,15 @@ export class FleetCommanderContract<
       functionName: 'setFleetDepositCap',
       args: [params.cap.toSolidityValue()],
       description: `Set the fleet deposit cap to ${params.cap}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setMaxRebalanceOperations */
+  setMaxRebalanceOperations(params: { maxOperations: number }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setMaxRebalanceOperations',
+      args: [params.maxOperations],
+      description: `Set the maximum number of rebalance operations to ${params.maxOperations}`,
     })
   }
 
@@ -255,6 +201,21 @@ export class FleetCommanderContract<
       functionName: 'setArkDepositCap',
       args: [params.ark.toSolidityValue(), params.cap.toSolidityValue()],
       description: `Set the deposit cap of the ark ${params.ark} to ${params.cap}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setArkMaxDepositPercentageOfTVL */
+  setArkMaxDepositPercentageOfTVL(params: {
+    ark: IAddress
+    maxDepositPercentageOfTVL: IPercentage
+  }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setArkMaxDepositPercentageOfTVL',
+      args: [
+        params.ark.toSolidityValue(),
+        params.maxDepositPercentageOfTVL.toSolidityValue({ decimals: 18 }),
+      ],
+      description: `Set the max deposit percentage of TVL of the ark ${params.ark} to ${params.maxDepositPercentageOfTVL}`,
     })
   }
 
@@ -350,6 +311,59 @@ export class FleetCommanderContract<
       args: [],
       description: 'Emergency shutdown of the fleet',
     })
+  }
+
+  /** READ METHODS */
+
+  /** @see IFleetCommanderContract.arks */
+  async arks(): Promise<IAddress[]> {
+    const arks = await this.contract.read.getActiveArks()
+
+    return arks.map((ark) => Address.createFromEthereum({ value: ark }))
+  }
+
+  /** @see IFleetCommanderContract.config */
+  async config(): Promise<IFleetConfig> {
+    const [
+      [
+        bufferArkAddress,
+        minimumBufferBalance,
+        depositCap,
+        maxRebalanceOperations,
+        stakingRewardsManager,
+      ],
+      token,
+    ] = await Promise.all([this.contract.read.config(), this._erc4626Contract.asset()])
+    return {
+      bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
+      minimumBufferBalance: TokenAmount.createFromBaseUnit({
+        token,
+        amount: String(minimumBufferBalance),
+      }),
+      depositCap: TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) }),
+      maxRebalanceOperations: String(maxRebalanceOperations),
+      stakingRewardsManager: Address.createFromEthereum({ value: stakingRewardsManager }),
+    }
+  }
+
+  /** @see IFleetCommanderContract.maxDeposit */
+  async maxDeposit(params: { user: IAddress }): Promise<ITokenAmount> {
+    const [token, maxDeposit] = await Promise.all([
+      this._erc4626Contract.asset(),
+      this.contract.read.maxDeposit([params.user.value]),
+    ])
+
+    return TokenAmount.createFromBaseUnit({ token, amount: String(maxDeposit) })
+  }
+
+  /** @see IFleetCommanderContract.maxWithdraw */
+  async maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount> {
+    const [token, maxWithdraw] = await Promise.all([
+      this._erc4626Contract.asset(),
+      this.contract.read.maxWithdraw([params.user.value]),
+    ])
+
+    return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
   }
 
   /** CASTING METHODS */

@@ -15,70 +15,7 @@ import type {
  * @description Interface for the Armada Manager Admin which handles administrative operations
  */
 export interface IArmadaManagerAdmin {
-  /**
-   * @name rebalance
-   * @description Rebalances the assets of the fleet
-   *
-   * @param vaultId The ID of the vault
-   * @param rebalanceData Data of the rebalance
-   *
-   * @returns TransactionInfo The transaction information
-   */
-  rebalance(params: {
-    vaultId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo>
-
-  /**
-   * @name adjustBuffer
-   * @description Adjusts the buffer of the fleet
-   *
-   * @param vaultId The ID of the vault
-   * @param rebalanceData Data of the rebalance
-   *
-   * @returns TransactionInfo The transaction information
-   */
-  adjustBuffer(params: {
-    vaultId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo>
-
-  /**
-   * @name setFleetDepositCap
-   * @description Sets the deposit cap of the Fleet
-   *
-   * @param vaultId The ID of the vault
-   * @param cap The new deposit cap
-   *
-   * @returns TransactionInfo The transaction information
-   */
-  setFleetDepositCap(params: {
-    vaultId: IArmadaVaultId
-    cap: ITokenAmount
-  }): Promise<TransactionInfo>
-
-  /**
-   * @name setTipJar
-   * @description Updates the tip jar for the Fleet
-   *
-   * @param params.chainId The chain ID
-   * @param params.addressValue The new address of the tip jar
-   *
-   * @returns TransactionInfo The transaction information
-   */
-  setTipJar(params: { chainId: ChainId; addressValue: AddressValue }): Promise<TransactionInfo>
-
-  /**
-   * @name setTipRate
-   * @description Sets the tip rate of the fleet. Used by the governance
-   *
-   * @param vaultId The ID of the vault
-   * @param rate The new tip rate
-   *
-   * @returns The transaction information
-   */
-  setTipRate(params: { vaultId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
-
+  /** WRITE OPERATIONS */
   /**
    * @name addArk
    * @description Adds a new ark to the fleet. Used by the governance
@@ -100,6 +37,34 @@ export interface IArmadaManagerAdmin {
    * @returns The transaction information
    */
   addArks(params: { vaultId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
+
+  /**
+   * @name adjustBuffer
+   * @description Adjusts the buffer of the fleet
+   *
+   * @param vaultId The ID of the vault
+   * @param rebalanceData Data of the rebalance
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  adjustBuffer(params: {
+    vaultId: IArmadaVaultId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name rebalance
+   * @description Rebalances the assets of the fleet
+   *
+   * @param vaultId The ID of the vault
+   * @param rebalanceData Data of the rebalance
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  rebalance(params: {
+    vaultId: IArmadaVaultId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
 
   /**
    * @name removeArk
@@ -129,19 +94,19 @@ export interface IArmadaManagerAdmin {
   }): Promise<TransactionInfo>
 
   /**
-   * @name setArkMaxRebalanceOutflow
-   * @description Sets the maximum rebalance outflow of an ark. Used by the governance
+   * @name setArkMaxDepositPercentageOfTVL
+   * @description Sets the maximum deposit percentage of TVL for an ark
    *
    * @param vaultId The ID of the vault
    * @param ark The address of the ark
-   * @param maxRebalanceOutflow The new maximum rebalance outflow
+   * @param percentage The new maximum deposit percentage of TVL
    *
    * @returns The transaction information
    */
-  setArkMaxRebalanceOutflow(params: {
+  setArkMaxDepositPercentageOfTVL(params: {
     vaultId: IArmadaVaultId
     ark: IAddress
-    maxRebalanceOutflow: ITokenAmount
+    maxDepositPercentageOfTVL: IPercentage
   }): Promise<TransactionInfo>
 
   /**
@@ -161,6 +126,50 @@ export interface IArmadaManagerAdmin {
   }): Promise<TransactionInfo>
 
   /**
+   * @name setArkMaxRebalanceOutflow
+   * @description Sets the maximum rebalance outflow of an ark. Used by the governance
+   *
+   * @param vaultId The ID of the vault
+   * @param ark The address of the ark
+   * @param maxRebalanceOutflow The new maximum rebalance outflow
+   *
+   * @returns The transaction information
+   */
+  setArkMaxRebalanceOutflow(params: {
+    vaultId: IArmadaVaultId
+    ark: IAddress
+    maxRebalanceOutflow: ITokenAmount
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setFleetDepositCap
+   * @description Sets the deposit cap of the Fleet
+   *
+   * @param vaultId The ID of the vault
+   * @param cap The new deposit cap
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  setFleetDepositCap(params: {
+    vaultId: IArmadaVaultId
+    cap: ITokenAmount
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setMaxRebalanceOperations
+   * @description Sets the maximum number of rebalance operations for the fleet
+   *
+   * @param vaultId The ID of the vault
+   * @param maxRebalanceOperations The new maximum number of rebalance operations
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  setMaxRebalanceOperations(params: {
+    vaultId: IArmadaVaultId
+    maxRebalanceOperations: number
+  }): Promise<TransactionInfo>
+
+  /**
    * @name setMinimumBufferBalance
    * @description Sets the minimum buffer balance of the fleet. Used by the governance
    *
@@ -173,6 +182,28 @@ export interface IArmadaManagerAdmin {
     vaultId: IArmadaVaultId
     minimumBufferBalance: ITokenAmount
   }): Promise<TransactionInfo>
+
+  /**
+   * @name setTipJar
+   * @description Updates the tip jar for the Fleet
+   *
+   * @param params.chainId The chain ID
+   * @param params.addressValue The new address of the tip jar
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  setTipJar(params: { chainId: ChainId; addressValue: AddressValue }): Promise<TransactionInfo>
+
+  /**
+   * @name setTipRate
+   * @description Sets the tip rate of the fleet. Used by the governance
+   *
+   * @param vaultId The ID of the vault
+   * @param rate The new tip rate
+   *
+   * @returns The transaction information
+   */
+  setTipRate(params: { vaultId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
 
   /**
    * @name updateRebalanceCooldown
@@ -212,15 +243,7 @@ export interface IArmadaManagerAdmin {
    */
   emergencyShutdown(params: { vaultId: IArmadaVaultId }): Promise<TransactionInfo>
 
-  /**
-   * @name arks
-   * @description Gets the list of active arks for a fleet. Used to fetch data from the blockchain
-   *
-   * @param vaultId The ID of the vault
-   *
-   * @returns Promise<IAddress[]> The list of active ark addresses
-   */
-  arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
+  /** READ OPERATIONS */
 
   /**
    * @name arkConfig
@@ -232,4 +255,14 @@ export interface IArmadaManagerAdmin {
    * @returns Promise<IArkConfig> The ark configuration
    */
   arkConfig(params: { chainId: ChainId; arkAddressValue: AddressValue }): Promise<IArkConfig>
+
+  /**
+   * @name arks
+   * @description Gets the list of active arks for a fleet. Used to fetch data from the blockchain
+   *
+   * @param vaultId The ID of the vault
+   *
+   * @returns Promise<IAddress[]> The list of active ark addresses
+   */
+  arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
 }
