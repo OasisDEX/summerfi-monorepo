@@ -16,27 +16,15 @@ export const getVaultWhitelist: ({
 
   return await unstableCache(
     async () => {
-      const results = await Promise.all(
-        [
-          {
-            role: ContractSpecificRoleName.WHITELISTED_ROLE,
-          },
-        ].map(async ({ role }) => {
-          const contractAddress = Address.createFromEthereum({
-            value: vaultAddress,
-          })
-          const wallets =
-            await institutionSDK.armada.accessControl.getAllAddressesWithContractSpecificRole({
-              role,
-              contractAddress,
-              chainId,
-            })
+      const contractAddress = Address.createFromEthereum({
+        value: vaultAddress,
+      })
 
-          return wallets
-        }),
-      )
-
-      return results.flat()
+      return await institutionSDK.armada.accessControl.getAllAddressesWithContractSpecificRole({
+        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        contractAddress,
+        chainId,
+      })
     },
     [institutionName, vaultAddress, String(chainId)],
     { tags: [`institution-vault-whitelist-${institutionName}-${vaultAddress}-${chainId}`] },

@@ -2,7 +2,7 @@
 
 import { type FC, useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
-import { Card, Table, Text, WARNING_TOAST_CONFIG } from '@summerfi/app-earn-ui'
+import { Card, ERROR_TOAST_CONFIG, Table, Text, WARNING_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -65,6 +65,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
@@ -75,7 +76,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
       const transactionId = getGrantWhitelistId({ address, chainId })
 
       if (whitelistedWallets.includes(address)) {
-        toast.error(`Address ${address} is already whitelisted`, WARNING_TOAST_CONFIG)
+        toast.info(`Address ${address} is already whitelisted`, WARNING_TOAST_CONFIG)
 
         return
       }
@@ -107,6 +108,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, grantContractSpecificRole, vaultAddress, whitelistedWallets],

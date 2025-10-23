@@ -1,7 +1,8 @@
 'use client'
 
 import { type FC, useCallback, useMemo } from 'react'
-import { Card, Table, Text } from '@summerfi/app-earn-ui'
+import { toast } from 'react-toastify'
+import { Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -73,6 +74,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
@@ -112,6 +114,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to add transaction to queue', error)
+        toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
     [addTransaction, chainId, grantContractSpecificRole, vaultAddress],
