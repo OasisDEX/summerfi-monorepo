@@ -7,7 +7,6 @@ const contractSpecificRoleMap: { [key in InstitutionVaultRoleType]: string } = {
   COMMANDER_ROLE: 'Commander',
   CURATOR_ROLE: 'Curator',
   KEEPER_ROLE: 'Keeper',
-  WHITELISTED_ROLE: 'Whitelist',
 }
 
 const globalRoleMap: { [key in InstitutionGlobalRoleType]: string } = {

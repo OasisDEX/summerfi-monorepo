@@ -21,7 +21,7 @@ export const getVaultWhitelist: ({
       })
 
       return await institutionSDK.armada.accessControl.getAllAddressesWithContractSpecificRole({
-        role: ContractSpecificRoleName.WHITELISTED_ROLE,
+        role: ContractSpecificRoleName.CURATOR_ROLE,
         contractAddress,
         chainId,
       })
