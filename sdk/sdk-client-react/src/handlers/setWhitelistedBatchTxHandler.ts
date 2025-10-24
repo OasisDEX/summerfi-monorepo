@@ -1,4 +1,4 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import type { ChainId, AddressValue } from '@summerfi/sdk-common'
  * @param params.allowed The whitelist statuses to set (must match the length of accounts)
  */
 export const setWhitelistedBatchTxHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     chainId,
     accounts,

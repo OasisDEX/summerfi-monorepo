@@ -1,4 +1,4 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import type { ChainId, AddressValue } from '@summerfi/sdk-common'
 
 /**
@@ -8,7 +8,7 @@ import type { ChainId, AddressValue } from '@summerfi/sdk-common'
  * @param params.account The address to check for whitelist status
  */
 export const isWhitelistedHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({ chainId, account }: { chainId: ChainId; account: AddressValue }) => {
     return sdk.armada.accessControl.isWhitelisted({ chainId, account })
   }
