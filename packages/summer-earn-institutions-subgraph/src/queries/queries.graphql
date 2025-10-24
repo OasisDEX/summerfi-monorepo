@@ -1,0 +1,183 @@
+fragment RoleFragment on Role {
+  id
+  owner
+  name
+  accessController
+  targetContract
+  institution {
+    id
+  }
+}
+
+query UserPositions($userAddress: String!) {
+  positions(where: { account: $userAddress }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
+    claimedSummerTokenNormalized
+    account {
+      id
+      claimedSummerTokenNormalized
+    }
+    vault {
+      institution {
+        id
+      }
+    }
+  }
+}
+query UsersPositions($userAddresses: [String!]) {
+  positions(where: { account_in: $userAddresses }, first: 5000) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    inputTokenBalanceNormalized
+    inputTokenBalanceNormalizedInUSD
+    claimedSummerTokenNormalized
+    account {
+      id
+      claimedSummerTokenNormalized
+    }
+    vault {
+      institution {
+        id
+      }
+    }
+  }
+}
+query Vaults {
+  vaults(first: 1000) {
+    id
+    name
+    totalValueLockedUSD
+    arks {
+      id
+      name
+      details
+      productId
+      totalValueLockedUSD
+      vault {
+        id
+      }
+    }
+  }
+}
+
+query Users($first: Int, $skip: Int) {
+  accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
+    id
+    claimedSummerTokenNormalized
+  }
+}
+
+query HistoricalVaults($blockNumber: Int!) {
+  vaults(block: { number: $blockNumber }, first: 1000) {
+    id
+    name
+    totalValueLockedUSD
+    arks {
+      id
+      name
+      details
+      productId
+      totalValueLockedUSD
+      vault {
+        id
+      }
+    }
+  }
+}
+
+query Institutions {
+  institutions(first: 100) {
+    id
+    protocolAccessManager
+    harborCommand
+    configurationManager
+    vaults(first: 100) {
+      id
+    }
+  }
+}
+
+query InstitutionById($id: ID!) {
+  institution(id: $id) {
+    id
+    protocolAccessManager
+    harborCommand
+    configurationManager
+    vaults(first: 100) {
+      id
+    }
+  }
+}
+
+query InstitutionVaults($id: ID!) {
+  institution(id: $id) {
+    vaults(first: 100) {
+      id
+      name
+      totalValueLockedUSD
+      arks {
+        id
+        name
+        details
+        productId
+        totalValueLockedUSD
+        vault {
+          id
+        }
+      }
+    }
+  }
+}
+
+query AllRoles($lastID: ID) {
+  roles(first: 1000, where: { id_gt: $lastID }, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByName($name: String!, $lastID: ID) {
+  roles(first: 1000, where: { name: $name, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByTargetContract($targetContract: String!, $lastID: ID) {
+  roles(first: 1000, where: { targetContract: $targetContract, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByOwner($owner: String!, $lastID: ID) {
+  roles(first: 1000, where: { owner: $owner, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByInstitution($institutionId: String, $lastID: ID) {
+  roles(first: 1000, where: { institution: $institutionId, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByInstitutionAndTargetContract($institutionId: String, $targetContract: String!, $lastID: ID) {
+  roles(first: 1000, where: { institution: $institutionId, targetContract: $targetContract, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByInstitutionAndOwner($institutionId: String, $owner: String!, $lastID: ID) {
+  roles(first: 1000, where: { institution: $institutionId, owner: $owner, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}
+
+query RolesByInstitutionAndName($institutionId: String, $name: String!, $lastID: ID) {
+  roles(first: 1000, where: { institution: $institutionId, name: $name, id_gt: $lastID}, orderBy: id, orderDirection: asc) {
+    ...RoleFragment
+  }
+}

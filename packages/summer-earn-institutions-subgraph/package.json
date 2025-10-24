@@ -1,0 +1,40 @@
+{
+  "name": "@summerfi/summer-earn-institutions-subgraph",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "build:disabled": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -v -w tsconfig.build.json",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-graphql-request": "^6.2.0",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.12.7"
+  },
+  "dependencies": {
+    "@summerfi/serverless-shared": "workspace:*",
+    "graphql-request": "^6.1.0",
+    "graphql-tag": "^2.12.6"
+  }
+}
