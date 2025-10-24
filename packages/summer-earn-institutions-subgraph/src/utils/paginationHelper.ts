@@ -15,18 +15,23 @@ export interface PaginationParams {
  * @param client - The GraphQL client
  * @returns Array of all paginated results
  */
-export async function paginateRoles<TParams, TResult extends PaginatedResult<any>>(
+export async function paginateRoles<
+  TParams,
+  TItem extends { id: string },
+  TResult extends PaginatedResult<TItem>,
+>(
   queryFn: (
     client: ReturnType<typeof getSdk>,
     params: TParams & { lastID: string },
   ) => Promise<TResult>,
   params: TParams,
   client: ReturnType<typeof getSdk>,
-): Promise<TResult['roles']> {
-  const allRoles: TResult['roles'] = []
+): Promise<TItem[]> {
+  const allRoles: TItem[] = []
   let lastID = ''
+  let hasMore = true
 
-  while (true) {
+  while (hasMore) {
     const result = await queryFn(client, { ...params, lastID } as TParams & { lastID: string })
 
     if (result.roles.length === 0) {
@@ -36,12 +41,12 @@ export async function paginateRoles<TParams, TResult extends PaginatedResult<any
     allRoles.push(...result.roles)
 
     // If we got less than 1000 results, we've reached the end
-    if (result.roles.length < 1000) {
-      break
-    }
+    hasMore = result.roles.length === 1000
 
-    // Set lastID for next iteration
-    lastID = result.roles[result.roles.length - 1].id
+    if (hasMore) {
+      // Set lastID for next iteration
+      lastID = result.roles[result.roles.length - 1].id
+    }
   }
 
   return allRoles

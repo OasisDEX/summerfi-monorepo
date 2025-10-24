@@ -1,4 +1,4 @@
-import { RolesByOwnerQuery, getSdk } from '../generated/client'
+import { RolesByOwnerQuery } from '../generated/client'
 import { createClient } from '../createClient'
 import { SubgraphClientConfig } from '../types'
 import { paginateRoles } from '../utils'

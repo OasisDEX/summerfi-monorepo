@@ -1,4 +1,4 @@
-import { RolesByTargetContractQuery, getSdk } from '../generated/client'
+import { RolesByTargetContractQuery } from '../generated/client'
 import { createClient } from '../createClient'
 import { SubgraphClientConfig } from '../types'
 import { paginateRoles } from '../utils'
