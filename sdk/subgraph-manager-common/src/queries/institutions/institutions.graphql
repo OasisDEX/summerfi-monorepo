@@ -1,0 +1,21 @@
+query GetInstitutions {
+  institutions {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}
+
+query GetInstitutionById($id: ID!) {
+  institution(id: $id) {
+    id
+    active
+    harborCommand
+    admiralsQuarters
+    configurationManager
+    protocolAccessManager
+  }
+}

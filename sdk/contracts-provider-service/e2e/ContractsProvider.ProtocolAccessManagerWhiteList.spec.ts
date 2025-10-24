@@ -2,9 +2,14 @@ import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import {
   IContractsProvider,
   IProtocolAccessManagerWhiteListContract,
-  ContractSpecificRoleName,
 } from '@summerfi/contracts-provider-common'
-import { Address, ChainFamilyMap, ChainInfo, type HexData } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainFamilyMap,
+  ChainInfo,
+  ContractSpecificRoleName,
+  type HexData,
+} from '@summerfi/sdk-common'
 import { Tenderly, type Vnet } from '@summerfi/tenderly-utils'
 import {
   BlockchainClientProviderMock,
@@ -70,6 +75,7 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
 
     const tokensManager = TokensManagerFactory.newTokensManager({
       configProvider: configurationProvider,
+      blockchainClientProvider,
     })
 
     // Contracts Provider
@@ -110,8 +116,6 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     expect(protocolAccessManagerWhiteListContract.revokeGovernorRole).toBeDefined()
     expect(protocolAccessManagerWhiteListContract.grantSuperKeeperRole).toBeDefined()
     expect(protocolAccessManagerWhiteListContract.revokeSuperKeeperRole).toBeDefined()
-    expect(protocolAccessManagerWhiteListContract.grantWhitelistedRole).toBeDefined()
-    expect(protocolAccessManagerWhiteListContract.revokeWhitelistedRole).toBeDefined()
     expect(protocolAccessManagerWhiteListContract.grantCuratorRole).toBeDefined()
     expect(protocolAccessManagerWhiteListContract.revokeCuratorRole).toBeDefined()
     expect(protocolAccessManagerWhiteListContract.grantKeeperRole).toBeDefined()
@@ -189,47 +193,47 @@ describe('Contracts Provider Service - ProtocolAccessManagerWhiteList Contract',
     expect(isRevoked).toBe(false)
   })
 
-  // test whitelisted role for address 0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17
-  it('should check whitelisted role', async () => {
+  // test commander role for address 0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17
+  it('should check commander role', async () => {
     const roleTargetContract = Address.createFromEthereum({
       value: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
     })
-    const whitelistedRole = await protocolAccessManagerWhiteListContract.generateRole({
-      roleName: ContractSpecificRoleName.WHITELISTED_ROLE,
+    const commanderRole = await protocolAccessManagerWhiteListContract.generateRole({
+      roleName: ContractSpecificRoleName.COMMANDER_ROLE,
       roleTargetContract,
     })
-    const isWhitelistedInitially = await protocolAccessManagerWhiteListContract.hasRole({
-      role: whitelistedRole,
+    const isCommanderInitially = await protocolAccessManagerWhiteListContract.hasRole({
+      role: commanderRole,
       account: testAddress,
     })
-    expect(isWhitelistedInitially).toBe(false)
+    expect(isCommanderInitially).toBe(false)
 
     // assign role
-    const grantTxInfo = await protocolAccessManagerWhiteListContract.grantWhitelistedRole({
+    const grantTxInfo = await protocolAccessManagerWhiteListContract.grantCommanderRole({
       fleetCommanderAddress: roleTargetContract,
       account: testAddress,
     })
     expect(grantTxInfo).toBeDefined()
     const grantStatus = await governorSendTxTool(grantTxInfo)
     expect(grantStatus).toBe('success')
-    const isWhitelistedPostGrant = await protocolAccessManagerWhiteListContract.hasRole({
-      role: whitelistedRole,
+    const isCommanderPostGrant = await protocolAccessManagerWhiteListContract.hasRole({
+      role: commanderRole,
       account: testAddress,
     })
-    expect(isWhitelistedPostGrant).toBe(true)
+    expect(isCommanderPostGrant).toBe(true)
 
     // revoke role
-    const revokeTxInfo = await protocolAccessManagerWhiteListContract.revokeWhitelistedRole({
+    const revokeTxInfo = await protocolAccessManagerWhiteListContract.revokeCommanderRole({
       fleetCommanderAddress: roleTargetContract,
       account: testAddress,
     })
     expect(revokeTxInfo).toBeDefined()
     const revokeStatus = await governorSendTxTool(revokeTxInfo)
     expect(revokeStatus).toBe('success')
-    const isWhitelistedPostRevocation = await protocolAccessManagerWhiteListContract.hasRole({
-      role: whitelistedRole,
+    const isCommanderPostRevocation = await protocolAccessManagerWhiteListContract.hasRole({
+      role: commanderRole,
       account: testAddress,
     })
-    expect(isWhitelistedPostRevocation).toBe(false)
+    expect(isCommanderPostRevocation).toBe(false)
   })
 })

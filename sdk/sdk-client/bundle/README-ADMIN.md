@@ -29,7 +29,7 @@ to another to optimize yield or manage risk. The keeper must ensure proper confi
 set before executing a rebalance.
 
 **Required Role:** The executing address must have the `KEEPER_ROLE` contract-specific role for the
-target fleet (FleetCommander contract), or the `SUPER_KEEPER_ROLE` general role which allows keeper
+target fleet (FleetCommander contract), or the `SUPER_KEEPER_ROLE` global role which allows keeper
 operations on any fleet. See [Roles Overview](#roles-overview) for details.
 
 This flow includes:
@@ -246,9 +246,9 @@ const txInfo = await sdk.armada.accessControl.grantContractSpecificRole({
 
 The Armada Protocol uses a role-based access control system with two categories of roles:
 
-#### General Roles (Global)
+#### Global Roles
 
-General roles apply across all contracts in the protocol:
+Global roles apply across all contracts in the protocol:
 
 - **SUPER_KEEPER_ROLE**: Allows keeper operations on any fleet without needing fleet-specific
   KEEPER_ROLE grants. Use this for trusted keeper addresses that manage multiple fleets.
@@ -262,8 +262,6 @@ General roles apply across all contracts in the protocol:
 
 Contract-specific roles are scoped to individual contracts (e.g., a specific Fleet):
 
-- **WHITELISTED_ROLE**: Allows deposits and withdrawals on a whitelisted fleet. Use this to control
-  which addresses can interact with private/permissioned vaults.
 - **KEEPER_ROLE**: Allows keeper operations for a specific fleet, including: executing rebalances
   between arks, requesting and claiming withdrawals for arks that require withdrawal requests (e.g.,
   Fluid, Origin, Syrup arks), whitelisting Merkl operators for reward claiming, and sweeping idle
@@ -287,8 +285,8 @@ certain actions.
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to check. Available roles: `WHITELISTED_ROLE`, `KEEPER_ROLE`,
-  `CURATOR_ROLE` or `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for details.
+- **role**: The contract-specific role to check. Available roles: `KEEPER_ROLE`, `CURATOR_ROLE` or
+  `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for details.
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address you are checking against
 - **targetAddress**: The address (EOA or contract) whose role membership you want to verify
 
@@ -305,16 +303,16 @@ const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 // User / target address to check
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
-// Check for whitelisted role
-const hasWhitelistRole = await sdk.armada.accessControl.hasContractSpecificRole({
+// Check for curator role
+const hasCuratorRole = await sdk.armada.accessControl.hasContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.WHITELISTED_ROLE,
+  role: ContractSpecificRoleName.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })
 
 console.log(
-  `Address ${userAddress.value} ${hasWhitelistRole ? 'IS' : 'is NOT'} whitelisted for fleet ${fleetAddress.value}`,
+  `Address ${userAddress.value} ${hasCuratorRole ? 'IS' : 'is NOT'} a curator for fleet ${fleetAddress.value}`,
 )
 ```
 
@@ -337,14 +335,14 @@ to perform role-specific operations on that contract.
 
 See [Roles Overview](#roles-overview) for detailed descriptions of each role and their use cases.
 
-**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to grant roles to
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` to grant roles to
 other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to grant. Available roles: `WHITELISTED_ROLE`, `KEEPER_ROLE`,
-  `CURATOR_ROLE` or `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for details.
+- **role**: The contract-specific role to grant. Available roles: `KEEPER_ROLE`, `CURATOR_ROLE` or
+  `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for details.
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address
 - **targetAddress**: The address (EOA or contract) to grant the role to
 
@@ -361,10 +359,10 @@ const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 // Address to grant the role to
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
-// Grant whitelisted role
+// Grant curator role
 const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.WHITELISTED_ROLE,
+  role: ContractSpecificRoleName.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })
@@ -379,7 +377,7 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Notes:**
 
-- Only addresses with the general `GOVERNOR_ROLE` can grant roles
+- Only addresses with the global `GOVERNOR_ROLE` can grant roles
 - After granting, verify the role using `hasContractSpecificRole` method
 - Contract-specific roles are scoped to individual contracts, not global
 - See [Roles Overview](#roles-overview) for details on each role's permissions
@@ -389,15 +387,14 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 Revoke a contract-specific role from an address for a vault (fleet contract). This removes the
 address's ability to perform role-specific operations on that contract.
 
-**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to revoke roles from
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` to revoke roles from
 other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the contract (fleet) is deployed
-- **role**: The contract-specific role to revoke. Available roles: `WHITELISTED_ROLE`,
-  `KEEPER_ROLE`, `CURATOR_ROLE` or `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for
-  details.
+- **role**: The contract-specific role to revoke. Available roles: `KEEPER_ROLE`, `CURATOR_ROLE` or
+  `COMMANDER_ROLE`. See [Roles Overview](#roles-overview) for details.
 - **contractAddress**: The target contract (e.g. Fleet / LazyVault) address
 - **targetAddress**: The address (EOA or contract) to revoke the role from
 
@@ -414,10 +411,10 @@ const fleetAddress = Address.createFromEthereum({ value: '0xFLEETADDRESS...' })
 // Address to revoke the role from
 const userAddress = Address.createFromEthereum({ value: '0xUSERADDRESS...' })
 
-// Revoke whitelisted role
+// Revoke curator role
 const revokeTxInfo = await sdk.armada.accessControl.revokeContractSpecificRole({
   chainId: ChainIds.Base,
-  role: ContractSpecificRoleName.WHITELISTED_ROLE,
+  role: ContractSpecificRoleName.CURATOR_ROLE,
   contractAddress: fleetAddress,
   targetAddress: userAddress,
 })
@@ -432,27 +429,27 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Notes:**
 
-- Only addresses with the general `GOVERNOR_ROLE` can revoke roles
+- Only addresses with the global `GOVERNOR_ROLE` can revoke roles
 - After revoking, verify the role removal using `hasContractSpecificRole` method
 - Revoking a role immediately removes associated permissions
 - See [Roles Overview](#roles-overview) for details on each role's permissions
 
-### Grant General Role to Address
+### Grant Global Role to Address
 
-Grant a general role to a specific address. General roles are global and apply across all contracts
-in the protocol.
+Grant a global role to a specific address. Global roles are applicable across all contracts in the
+protocol.
 
 See [Roles Overview](#roles-overview) for detailed descriptions of each role and their use cases.
 
-**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to grant general
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` to grant other global
 roles to other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the protocol is deployed
-- **role**: The general role to grant. Available general roles: `SUPER_KEEPER_ROLE`,
-  `GOVERNOR_ROLE`, `DECAY_CONTROLLER_ROLE` or `ADMIRALS_QUARTERS_ROLE`. See
-  [Roles Overview](#roles-overview) for details.
+- **role**: The global role to grant. Available global roles: `SUPER_KEEPER_ROLE`, `GOVERNOR_ROLE`,
+  `DECAY_CONTROLLER_ROLE` or `ADMIRALS_QUARTERS_ROLE`. See [Roles Overview](#roles-overview) for
+  details.
 - **targetAddress**: The address (EOA or contract) to grant the role to
 
 **Example:**
@@ -481,25 +478,25 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Notes:**
 
-- Only addresses with the general `GOVERNOR_ROLE` can grant general roles
-- General roles apply globally across all contracts in the protocol
-- After granting, verify the role using `hasGeneralRole` method
+- Only addresses with the global `GOVERNOR_ROLE` can grant global roles
+- Global roles apply globally across all contracts in the protocol
+- After granting, verify the role using `hasGlobalRole` method
 - See [Roles Overview](#roles-overview) for details on each role's permissions
 
-### Revoke General Role from Address
+### Revoke Global Role from Address
 
-Revoke a general role from a specific address. This removes the address's ability to perform
+Revoke a global role from a specific address. This removes the address's ability to perform
 role-specific operations globally across all contracts in the protocol.
 
-**Required Role:** The executing address must have the general `GOVERNOR_ROLE` to revoke general
-roles from other addresses.
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` to revoke global roles
+from other addresses.
 
 **Parameters:**
 
 - **chainId**: The chain where the protocol is deployed
-- **role**: The general role to revoke. Available general roles: `SUPER_KEEPER_ROLE`,
-  `GOVERNOR_ROLE`, `DECAY_CONTROLLER_ROLE` or `ADMIRALS_QUARTERS_ROLE`. See
-  [Roles Overview](#roles-overview) for details.
+- **role**: The global role to revoke. Available global roles: `SUPER_KEEPER_ROLE`, `GOVERNOR_ROLE`,
+  `DECAY_CONTROLLER_ROLE` or `ADMIRALS_QUARTERS_ROLE`. See [Roles Overview](#roles-overview) for
+  details.
 - **targetAddress**: The address (EOA or contract) to revoke the role from
 
 **Example:**
@@ -528,9 +525,9 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Notes:**
 
-- Only addresses with the general `GOVERNOR_ROLE` can revoke general roles
-- General roles apply globally across all contracts in the protocol
-- After revoking, verify the role removal using `hasGeneralRole` method
+- Only addresses with the global `GOVERNOR_ROLE` can revoke global roles
+- Global roles apply globally across all contracts in the protocol
+- After revoking, verify the role removal using `hasGlobalRole` method
 - See [Roles Overview](#roles-overview) for details on each role's permissions
 
 ## Changelog
@@ -550,5 +547,5 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 - Access Control - Check if Address Has Contract-Specific Role
 - Access Control - Grant Contract-Specific Role to Address
 - Access Control - Revoke Contract-Specific Role from Address
-- Access Control - Grant General Role to Address (Super Keeper)
-- Access Control - Revoke General Role from Address (Super Keeper)
+- Access Control - Grant Global Role to Address (Super Keeper)
+- Access Control - Revoke Global Role from Address (Super Keeper)

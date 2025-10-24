@@ -58,7 +58,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
           revokeContractSpecificRole({
             contractAddress: vaultAddress,
             chainId,
-            role: ContractSpecificRoleName.WHITELISTED_ROLE,
+            role: ContractSpecificRoleName.CURATOR_ROLE,
             targetAddress: address,
           }),
         )
@@ -101,7 +101,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
           grantContractSpecificRole({
             contractAddress: vaultAddress,
             chainId,
-            role: ContractSpecificRoleName.WHITELISTED_ROLE,
+            role: ContractSpecificRoleName.CURATOR_ROLE,
             targetAddress: address,
           }),
         )
@@ -142,7 +142,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
         Add new client
       </Text>
       <Card>
-        <AddNewRoleForm onAddRole={onGrantWhitelist} staticRole="WHITELISTED_ROLE" />
+        <AddNewRoleForm onAddRole={onGrantWhitelist} staticRole="CURATOR_ROLE" />
       </Card>
       <Text as="h5" variant="h5">
         Transaction Queue

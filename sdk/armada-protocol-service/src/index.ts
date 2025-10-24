@@ -10,8 +10,7 @@ export { ArmadaSimulator } from './simulator/implementation/ArmadaSimulator'
 export { type IDeploymentProvider } from './deployment-provider/IDeploymentProvider'
 export { DeploymentProvider } from './deployment-provider/DeploymentProvider'
 export {
-  fetchDeploymentProviderConfig,
-  readDeploymentProviderConfig,
-  type DeploymentProviderDeployedContracts,
-  type DeploymentProviderConfig,
-} from './deployment-provider/DeploymentProviderConfig'
+  fetchInstiDeploymentProviderConfig,
+  fetchPublicDeploymentProviderConfig,
+} from './deployment-provider/utils'
+export { type DeploymentProviderConfig } from './deployment-provider/DeploymentProviderConfig'

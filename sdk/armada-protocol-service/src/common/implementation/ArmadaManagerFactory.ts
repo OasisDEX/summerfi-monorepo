@@ -9,6 +9,7 @@ import type { IOracleManager } from '@summerfi/oracle-common'
 import { ArmadaManager } from './ArmadaManager'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import type { IChainInfo } from '@summerfi/sdk-common'
 
 /**
  * @name ArmadaManagerFactory
@@ -25,6 +26,7 @@ export class ArmadaManagerFactory {
     swapManager: ISwapManager
     oracleManager: IOracleManager
     tokensManager: ITokensManager
+    supportedChains: IChainInfo[]
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

@@ -1,9 +1,9 @@
 import type { Address, ChainId } from '@summerfi/sdk-common'
-import type { DeploymentProviderDeployedContracts } from './DeploymentProviderConfig'
+import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
 
 export interface IDeploymentProvider {
   getDeployedContractAddress: (params: {
-    contractName: keyof DeploymentProviderDeployedContracts
+    contractName: keyof DeploymentProviderConfig['contracts']
     chainId: ChainId
   }) => Address
 }

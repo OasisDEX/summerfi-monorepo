@@ -4,7 +4,7 @@ import {
   type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
-import type { GetUserPositionQuery, GetPositionQuery } from '@summerfi/subgraph-manager-common'
+import type { GetPositionQuery, GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { mapGraphDataToArmadaPosition } from './mapGraphDataToArmadaPosition'
 import type { IArmadaManagerMerklRewards } from '@summerfi/armada-protocol-common'
 

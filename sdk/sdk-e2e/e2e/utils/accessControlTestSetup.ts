@@ -1,6 +1,6 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, ChainConfigs, SharedConfig } from './testConfig'
+import { SDKApiUrl, ChainConfigs, SharedConfig, clientId } from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
@@ -8,7 +8,7 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
  */
 export function createAdminSdkTestSetup() {
   const sdk = makeAdminSDK({
-    clientId: 'test-client',
+    clientId,
     apiDomainUrl: SDKApiUrl,
   })
 
@@ -18,14 +18,14 @@ export function createAdminSdkTestSetup() {
     value: fleetAddressValue,
   })
   const aqAddress = Address.createFromEthereum({
-    value: '0x92176c8Ce4F6c9925ba2dbFAe0E2a395f03512c0',
+    value: '0xaae3f78433a13e3c2aa440600cbd22081b579d15',
   })
 
   const userAddress = Address.createFromEthereum({
     value: SharedConfig.userAddressValue,
   })
   const governorAddress = Address.createFromEthereum({
-    value: SharedConfig.governorAddressValue,
+    value: SharedConfig.userAddressValue,
   })
 
   const userSendTxTool = createSendTransactionTool({
@@ -38,7 +38,7 @@ export function createAdminSdkTestSetup() {
   const governorSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    signerPrivateKey: SharedConfig.governorPrivateKey,
+    signerPrivateKey: SharedConfig.userPrivateKey,
     simulateOnly: false,
   })
 

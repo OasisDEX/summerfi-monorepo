@@ -7,6 +7,7 @@ import {
   IFleetCommanderContract,
   IProtocolAccessManagerWhiteListContract,
   IArkContract,
+  IAdmiralsQuartersContract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -15,6 +16,7 @@ import { Erc4626Contract } from './contracts/Erc4626Contract/Erc4626Contract'
 import { FleetCommanderContract } from './contracts/FleetCommanderContract/FleetCommanderContract'
 import { ProtocolAccessManagerWhiteListContract } from './contracts/ProtocolAccessManagerWhiteListContract/ProtocolAccessManagerWhiteListContract'
 import { ArkContract } from './contracts/ArkContract'
+import { AdmiralsQuartersContract } from './contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
 
 /**
  * @name ContractsProvider
@@ -107,6 +109,20 @@ export class ContractsProvider implements IContractsProvider {
         chainInfo: params.chainInfo,
       }),
       tokensManager: this._tokensManager,
+      chainInfo: params.chainInfo,
+      address: params.address,
+    })
+  }
+
+  /** @see IContractsProvider.getAdmiralsQuartersContract */
+  async getAdmiralsQuartersContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IAdmiralsQuartersContract> {
+    return AdmiralsQuartersContract.create({
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.chainInfo,
+      }),
       chainInfo: params.chainInfo,
       address: params.address,
     })

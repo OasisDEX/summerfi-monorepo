@@ -7,6 +7,7 @@ import { ArmadaSubgraphManager } from './armada/ArmadaSubgraphManager'
  */
 export class SubgraphManagerFactory {
   public static newArmadaSubgraph(params: {
+    initSdkForInstitutions?: boolean
     configProvider: IConfigurationProvider
   }): ArmadaSubgraphManager {
     return new ArmadaSubgraphManager(params)

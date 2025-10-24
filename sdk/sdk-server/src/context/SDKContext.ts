@@ -8,7 +8,8 @@ import { IArmadaManager, setTestDeployment } from '@summerfi/armada-protocol-com
 import {
   ArmadaManagerFactory,
   DeploymentProvider,
-  fetchDeploymentProviderConfig,
+  fetchPublicDeploymentProviderConfig,
+  fetchInstiDeploymentProviderConfig,
   type DeploymentProviderConfig,
   type IDeploymentProvider,
 } from '@summerfi/armada-protocol-service'
@@ -33,7 +34,12 @@ import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { readDeploymentProviderConfig } from '@summerfi/armada-protocol-service'
+import {
+  getChainInfoByChainId,
+  isChainId,
+  type ChainId,
+  type IChainInfo,
+} from '@summerfi/sdk-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -68,28 +74,57 @@ const quickHashCode = (str: string): string => {
 
 // context for each request
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
+  // check for Client-Id header in request and fetch integrator config if present
+  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  const initSdkForInstitutions = Boolean(clientId)
+
   const configProvider = new ConfigurationProvider()
   const summerDeployment = configProvider.getConfigurationItem({
     name: 'SUMMER_DEPLOYMENT_CONFIG',
   })
   setTestDeployment(summerDeployment)
 
-  let deploymentProviderConfig: DeploymentProviderConfig
-  // check for Client-Id header in request and fetch integrator config if present
-  const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
-  if (clientId) {
+  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
+    configProvider,
+    initSdkForInstitutions,
+  })
+
+  let deploymentProviderConfigs: DeploymentProviderConfig[]
+  let supportedChains: IChainInfo[]
+  if (initSdkForInstitutions && clientId) {
+    const rawInstiChainIds = configProvider.getConfigurationItem({
+      name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
+    })
+    if (!rawInstiChainIds) {
+      throw new Error('SUMMER_DEPLOYED_CHAINS_ID_INSTI is not set in configuration')
+    }
+    const instiChainIds: ChainId[] = rawInstiChainIds.split(',').map(Number).filter(isChainId)
+    supportedChains = instiChainIds.map(getChainInfoByChainId)
     try {
-      deploymentProviderConfig = await fetchDeploymentProviderConfig(clientId)
+      deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
+        armadaSubgraphManager,
+        instiChainIds,
+        clientId,
+      )
     } catch (error) {
       console.error(`Failed to fetch integrator config:`, error)
-      throw new Error(`ClientId ${clientId} does not exist`)
+      throw new Error(`Failed to fetch integrator config for Client-Id ${clientId}`)
     }
   } else {
     // if no Client-Id header, use default deployment provider config
-    deploymentProviderConfig = readDeploymentProviderConfig()
+    const publicDeploymentChainIds: ChainId[] = configProvider
+      .getConfigurationItem({
+        name: 'SUMMER_DEPLOYED_CHAINS_ID',
+      })
+      .split(',')
+      .map(Number)
+      .filter(isChainId)
+    supportedChains = publicDeploymentChainIds.map(getChainInfoByChainId)
+
+    deploymentProviderConfigs = fetchPublicDeploymentProviderConfig(publicDeploymentChainIds)
   }
 
-  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfig)
+  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfigs)
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
@@ -125,7 +160,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     allowanceManager,
     tokensManager,
   })
-  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
+
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
     deploymentProvider,
@@ -136,6 +171,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     swapManager,
     oracleManager,
     tokensManager,
+    supportedChains,
   })
 
   return {

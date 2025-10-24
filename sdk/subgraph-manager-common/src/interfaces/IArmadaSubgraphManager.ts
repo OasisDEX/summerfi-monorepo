@@ -9,7 +9,11 @@ import type {
   GetUserActivityQuery,
   Position_Filter,
   GetPositionQuery,
-} from '../generated/client'
+} from '../generated/protocol/client'
+import type {
+  GetInstitutionByIdQuery,
+  GetInstitutionsQuery,
+} from '../generated/institutions/client'
 
 /**
  * @name IArmadaSubgraphManager
@@ -118,4 +122,31 @@ export interface IArmadaSubgraphManager {
     vaultId: string
     accountAddress: string
   }): Promise<GetUserActivityQuery>
+
+  /**
+   * @name getInstitutions
+   * @description Get all institutions
+   *
+   * @param chainId target chain
+   *
+   * @returns GetInstitutionsQuery
+   *
+   * @throws Error
+   *
+   */
+  getInstitutions(params: { chainId: ChainId }): Promise<GetInstitutionsQuery>
+
+  /**
+   * @name getInstitutionById
+   * @description Get a specific institution by ID
+   *
+   * @param chainId target chain
+   * @param id institution ID
+   *
+   * @returns GetInstitutionByIdQuery
+   *
+   * @throws Error
+   *
+   */
+  getInstitutionById(params: { chainId: ChainId; id: string }): Promise<GetInstitutionByIdQuery>
 }

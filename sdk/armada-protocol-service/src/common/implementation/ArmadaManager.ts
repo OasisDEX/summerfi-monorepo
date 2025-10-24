@@ -14,7 +14,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
-import { getChainInfoByChainId, IAddress, type ChainInfo } from '@summerfi/sdk-common'
+import { getChainInfoByChainId, IAddress, type IChainInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -46,10 +46,10 @@ export class ArmadaManager implements IArmadaManager {
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
 
-  private _supportedChains: ChainInfo[]
+  private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
 
-  private _hubChainInfo: ChainInfo
+  private _hubChainInfo: IChainInfo
   private _configProvider: IConfigurationProvider
   private _deploymentProvider: IDeploymentProvider
   private _allowanceManager: IAllowanceManager
@@ -71,6 +71,7 @@ export class ArmadaManager implements IArmadaManager {
     swapManager: ISwapManager
     oracleManager: IOracleManager
     tokensManager: ITokensManager
+    supportedChains: IChainInfo[]
   }) {
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
@@ -82,12 +83,7 @@ export class ArmadaManager implements IArmadaManager {
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
 
-    this._supportedChains = this._configProvider
-      .getConfigurationItem({
-        name: 'SUMMER_DEPLOYED_CHAINS_ID',
-      })
-      .split(',')
-      .map((chainId) => getChainInfoByChainId(Number(chainId)))
+    this._supportedChains = params.supportedChains
     const _hubChainId = this._configProvider.getConfigurationItem({
       name: 'SUMMER_HUB_CHAIN_ID',
     })
@@ -110,6 +106,7 @@ export class ArmadaManager implements IArmadaManager {
       subgraphManager: this._subgraphManager,
       swapManager: this._swapManager,
       deploymentProvider: this._deploymentProvider,
+      supportedChains: this._supportedChains,
       getUserMerklRewards: this.merklRewards.getUserMerklRewards.bind(this.merklRewards),
     })
     this.claims = new ArmadaManagerClaims({

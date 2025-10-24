@@ -24,62 +24,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     this._blockchainClientProvider = params.blockchainClientProvider
   }
 
-  /** @see IArmadaManagerAdmin.rebalance */
-  async rebalance(
-    params: Parameters<IArmadaManagerAdmin['rebalance']>[0],
-  ): ReturnType<IArmadaManagerAdmin['rebalance']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManagerAdmin.adjustBuffer */
-  async adjustBuffer(
-    params: Parameters<IArmadaManagerAdmin['adjustBuffer']>[0],
-  ): ReturnType<IArmadaManagerAdmin['adjustBuffer']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
-  }
-
-  /** @see IArmadaManagerAdmin.setFleetDepositCap */
-  async setFleetDepositCap(
-    params: Parameters<IArmadaManagerAdmin['setFleetDepositCap']>[0],
-  ): ReturnType<IArmadaManagerAdmin['setFleetDepositCap']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setFleetDepositCap({ cap: params.cap })
-  }
-
-  /** @see IArmadaManagerAdmin.setTipJar */
-  async setTipJar(
-    params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
-  ): ReturnType<IArmadaManagerAdmin['setTipJar']> {
-    throw new Error(
-      'setTipJar method is not implemented in ArmadaManagerAdmin' + JSON.stringify(params),
-    )
-  }
-
-  /** @see IArmadaManagerAdmin.setTipRate */
-  async setTipRate(
-    params: Parameters<IArmadaManagerAdmin['setTipRate']>[0],
-  ): ReturnType<IArmadaManagerAdmin['setTipRate']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.setTipRate({ rate: params.rate })
-  }
+  /** WRITE OPERATIONS */
 
   /** @see IArmadaManagerAdmin.addArk */
   async addArk(
@@ -103,6 +48,30 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     })
 
     return fleetContract.addArks({ arks: params.arks })
+  }
+
+  /** @see IArmadaManagerAdmin.adjustBuffer */
+  async adjustBuffer(
+    params: Parameters<IArmadaManagerAdmin['adjustBuffer']>[0],
+  ): ReturnType<IArmadaManagerAdmin['adjustBuffer']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
+  }
+
+  /** @see IArmadaManagerAdmin.rebalance */
+  async rebalance(
+    params: Parameters<IArmadaManagerAdmin['rebalance']>[0],
+  ): ReturnType<IArmadaManagerAdmin['rebalance']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
   }
 
   /** @see IArmadaManagerAdmin.removeArk */
@@ -129,18 +98,18 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
   }
 
-  /** @see IArmadaManagerAdmin.setArkMaxRebalanceOutflow */
-  async setArkMaxRebalanceOutflow(
-    params: Parameters<IArmadaManagerAdmin['setArkMaxRebalanceOutflow']>[0],
-  ): ReturnType<IArmadaManagerAdmin['setArkMaxRebalanceOutflow']> {
+  /** @see IArmadaManagerAdmin.setArkMaxDepositPercentageOfTVL */
+  async setArkMaxDepositPercentageOfTVL(
+    params: Parameters<IArmadaManagerAdmin['setArkMaxDepositPercentageOfTVL']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setArkMaxDepositPercentageOfTVL']> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
     })
 
-    return fleetContract.setArkMaxRebalanceOutflow({
+    return fleetContract.setArkMaxDepositPercentageOfTVL({
       ark: params.ark,
-      maxRebalanceOutflow: params.maxRebalanceOutflow,
+      maxDepositPercentageOfTVL: params.maxDepositPercentageOfTVL,
     })
   }
 
@@ -159,6 +128,45 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     })
   }
 
+  /** @see IArmadaManagerAdmin.setArkMaxRebalanceOutflow */
+  async setArkMaxRebalanceOutflow(
+    params: Parameters<IArmadaManagerAdmin['setArkMaxRebalanceOutflow']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setArkMaxRebalanceOutflow']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setArkMaxRebalanceOutflow({
+      ark: params.ark,
+      maxRebalanceOutflow: params.maxRebalanceOutflow,
+    })
+  }
+
+  /** @see IArmadaManagerAdmin.setFleetDepositCap */
+  async setFleetDepositCap(
+    params: Parameters<IArmadaManagerAdmin['setFleetDepositCap']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setFleetDepositCap']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setFleetDepositCap({ cap: params.cap })
+  }
+
+  /** @see IArmadaManagerAdmin.setMaxRebalanceOperations */
+  async setMaxRebalanceOperations(
+    params: Parameters<IArmadaManagerAdmin['setMaxRebalanceOperations']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setMaxRebalanceOperations']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setMaxRebalanceOperations({ maxOperations: params.maxRebalanceOperations })
+  }
+
   /** @see IArmadaManagerAdmin.setMinimumBufferBalance */
   async setMinimumBufferBalance(
     params: Parameters<IArmadaManagerAdmin['setMinimumBufferBalance']>[0],
@@ -171,6 +179,25 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     return fleetContract.setMinimumBufferBalance({
       minimumBufferBalance: params.minimumBufferBalance,
     })
+  }
+
+  /** @see IArmadaManagerAdmin.setTipJar */
+  async setTipJar(
+    params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setTipJar']> {
+    throw new Error('setTipJar method is not implemented in ArmadaManagerAdmin')
+  }
+
+  /** @see IArmadaManagerAdmin.setTipRate */
+  async setTipRate(
+    params: Parameters<IArmadaManagerAdmin['setTipRate']>[0],
+  ): ReturnType<IArmadaManagerAdmin['setTipRate']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.setTipRate({ rate: params.rate })
   }
 
   /** @see IArmadaManagerAdmin.updateRebalanceCooldown */
@@ -209,16 +236,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     return fleetContract.emergencyShutdown()
   }
 
-  /** @see IArmadaManagerAdmin.arks */
-  async arks(
-    params: Parameters<IArmadaManagerAdmin['arks']>[0],
-  ): ReturnType<IArmadaManagerAdmin['arks']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-    return fleetContract.arks()
-  }
+  /** READ OPERATIONS */
 
   /** @see IArmadaManagerAdmin.arkConfig */
   async arkConfig(
@@ -233,5 +251,16 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     })
 
     return arkContract.config()
+  }
+
+  /** @see IArmadaManagerAdmin.arks */
+  async arks(
+    params: Parameters<IArmadaManagerAdmin['arks']>[0],
+  ): ReturnType<IArmadaManagerAdmin['arks']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    return fleetContract.arks()
   }
 }

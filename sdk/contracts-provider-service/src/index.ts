@@ -6,3 +6,4 @@ export { FleetCommanderContract } from './implementation/contracts/FleetCommande
 export { ProtocolAccessManagerWhiteListContract } from './implementation/contracts/ProtocolAccessManagerWhiteListContract/ProtocolAccessManagerWhiteListContract'
 export { GenericContractWrapper } from './implementation/contracts/GenericContract'
 export { ArkContract } from './implementation/contracts/ArkContract'
+export { AdmiralsQuartersContract } from './implementation/contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'

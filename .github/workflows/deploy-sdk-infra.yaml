@@ -1,12 +1,12 @@
-name: 'Deploy SDK Infra'
+name: "Deploy SDK Infra"
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment environment'
+        description: "Deployment environment"
         required: true
-        default: 'staging'
+        default: "staging"
         type: choice
         options:
           - staging
@@ -37,8 +37,10 @@ jobs:
       ONE_INCH_API_SPOT_KEY: ${{ secrets.ONE_INCH_API_SPOT_KEY }}
       ONE_INCH_API_SPOT_AUTH_HEADER: ${{ secrets.ONE_INCH_API_SPOT_AUTH_HEADER }}
       SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE_PROD: ${{ vars.SUBGRAPH_BASE_PROD }}
       SUMMER_HUB_CHAIN_ID: ${{ vars.SDK_HUB_CHAIN_ID }}
       SUMMER_DEPLOYED_CHAINS_ID: ${{ vars.SUMMER_DEPLOYED_CHAINS_ID }}
+      SUMMER_DEPLOYED_CHAINS_ID_INSTI: ${{ vars.SUMMER_DEPLOYED_CHAINS_ID_INSTI }}
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
       FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
       SDK_DEBUG_ENABLED: ${{ vars.SDK_DEBUG_ENABLED }}
@@ -49,6 +51,7 @@ jobs:
       SDK_DISTRIBUTIONS_FILES: ${{ vars.SDK_DISTRIBUTIONS_FILES }}
       SDK_NAMED_REFERRALS_FILE: ${{ vars.SDK_NAMED_REFERRALS_FILE }}
       SDK_SUBGRAPH_CONFIG: ${{ vars.SDK_SUBGRAPH_CONFIG }}
+      SDK_SUBGRAPH_CONFIG_INSTI: ${{ vars.SDK_SUBGRAPH_CONFIG_INSTI }}
 
     steps:
       - name: Send start notification to Discord
@@ -95,7 +98,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install

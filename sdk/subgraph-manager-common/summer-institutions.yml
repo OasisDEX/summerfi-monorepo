@@ -1,0 +1,51 @@
+overwrite: true
+schema: '${SUBGRAPH_BASE_PROD}/summer-institutions-base/version/0.1.0-add-institutions/api'
+# schema: '${SUBGRAPH_BASE}/summer-institution-base'
+documents: './src/queries/institutions/*.graphql'
+generates:
+  src/generated/institutions/client.ts:
+    plugins:
+      - add:
+          content:
+            - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'
+      - typescript:
+          strictScalars: true
+          scalars:
+            BigDecimal: string
+            BigInt: bigint
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-operations:
+          strictScalars: true
+          scalars:
+            BigDecimal: string
+            BigInt: bigint
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-graphql-request
