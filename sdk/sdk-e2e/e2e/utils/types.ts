@@ -5,6 +5,7 @@ import type {
   GlobalRoles,
   AddressValue,
   GraphRoleName,
+  ChainId,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -43,4 +44,30 @@ export type GetAllRolesScenario = {
   first?: number
   skip?: number
   expectedMinimumCount?: number
+}
+
+export type DepositScenario = {
+  description: string
+  chainConfig: {
+    rpcUrl: string
+    chainId: ChainId
+    fleetAddressValue: AddressValue
+    symbol: string
+  }
+  amountValue: string
+  swapToSymbol?: string
+  stake?: boolean
+  referralCode?: string
+}
+
+export type WithdrawScenario = {
+  description: string
+  chainConfig: {
+    rpcUrl: string
+    chainId: ChainId
+    fleetAddressValue: AddressValue
+    symbol: string
+  }
+  amountValue: string
+  swapToSymbol?: string
 }
