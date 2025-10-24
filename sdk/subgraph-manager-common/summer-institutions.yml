@@ -1,5 +1,5 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-institution-base'
+schema: '${SUBGRAPH_BASE}/summer-institutions-base'
 documents: './src/queries/institutions/*.graphql'
 generates:
   src/generated/institutions/client.ts:
