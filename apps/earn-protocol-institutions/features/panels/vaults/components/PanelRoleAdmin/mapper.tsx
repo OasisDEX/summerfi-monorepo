@@ -1,92 +1,52 @@
-import { Button, Icon, Input, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
-import { formatAddress } from '@summerfi/app-utils'
-import { type GlobalRoles } from '@summerfi/sdk-client'
-import dayjs from 'dayjs'
+import { Button, Icon, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
 
-import { walletRolesToHuman } from '@/helpers/roles-to-human'
-import { type InstitutionVaultRole, type InstitutionVaultRoles } from '@/types/institution-data'
+import { getRevokeContractRoleTransactionId } from '@/helpers/get-transaction-id'
+import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
+import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
+import { type InstitutionVaultRole, type InstitutionVaultRoleType } from '@/types/institution-data'
 
 import styles from './PanelRoleAdmin.module.css'
 
+type RoleAdminMapperParams = {
+  roles: InstitutionVaultRole[]
+  transactionQueue: SDKTransactionItem[]
+  onRevokeContractSpecificRole: (params: InstitutionVaultRole) => void
+  chainId: number
+}
+
 export const roleAdminMapper = ({
   roles,
-  updatingRole,
-  updatingRoleAddress,
-  onEdit,
-  onSave,
-  onChange,
-  onRowEditCancel,
-}: {
-  roles: InstitutionVaultRoles
-  updatingRole: InstitutionVaultRole | null
-  updatingRoleAddress: string
-  onEdit: (item: InstitutionVaultRole) => void
-  onSave: (item: InstitutionVaultRole) => void
-  onChange: (value: string) => void
-  onRowEditCancel: () => void
-}) => {
-  return Object.entries(roles).map((entry) => {
-    const [role, item] = entry
-
-    const isUpdating = updatingRole?.role === role
-
-    const resolvedOnClick = () => {
-      const resolvedItem = {
-        address: item.address,
-        lastUpdated: item.lastUpdated,
-        role: role as GlobalRoles,
-      }
-
-      if (isUpdating) {
-        onSave(resolvedItem)
-      } else {
-        onEdit(resolvedItem)
-      }
-    }
+  transactionQueue,
+  onRevokeContractSpecificRole,
+  chainId,
+}: RoleAdminMapperParams) => {
+  return roles.map(({ address, role }) => {
+    const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
+    const idDisabled = transactionQueue.some((tx) => tx.id === revokeId)
 
     return {
       content: {
-        role: <TableCellText>{walletRolesToHuman(role as GlobalRoles)}</TableCellText>,
-        address: (
-          <TableCellNodes className={isUpdating ? styles.tableCellNodeUpdating : ''}>
-            {isUpdating ? (
-              <Input
-                variant="withBorder"
-                wrapperClassName={styles.inputContainer}
-                inputWrapperClassName={styles.inputWrapper}
-                value={updatingRoleAddress || item.address}
-                onChange={(e) => onChange(e.target.value)}
-              />
-            ) : (
-              formatAddress(item.address, { first: 10, last: 10 })
-            )}
-          </TableCellNodes>
+        role: (
+          <TableCellText>
+            {contractSpecificRolesToHuman(role as InstitutionVaultRoleType)}
+          </TableCellText>
         ),
-        'last-updated': (
-          <TableCellText>{dayjs(item.lastUpdated).format('MMMM D, YYYY')}</TableCellText>
-        ),
+        address: <TableCellNodes className={styles.tableCellAddress}>{address}</TableCellNodes>,
         action: (
-          <TableCellText
-            style={{ marginLeft: isUpdating ? '8px' : '40px', gap: 'var(--spacing-space-small)' }}
-          >
-            {isUpdating && (
-              <Button
-                variant="unstyled"
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                onClick={onRowEditCancel}
-              >
-                <Icon iconName="trash" size={20} className={styles.onEdit} />
-              </Button>
-            )}
+          <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
             <Button
               variant="unstyled"
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              onClick={resolvedOnClick}
+              onClick={() => onRevokeContractSpecificRole({ address, role })}
+              disabled={idDisabled}
             >
               <Icon
-                iconName={isUpdating ? 'checkmark' : 'edit'}
+                iconName="trash"
                 size={16}
-                className={styles.onEdit}
+                className={styles.trashButton}
+                style={{
+                  opacity: idDisabled ? 0.5 : 1,
+                }}
               />
             </Button>
           </TableCellText>

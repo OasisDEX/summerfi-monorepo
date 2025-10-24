@@ -1,4 +1,4 @@
-import { type ISDKManager } from '@summerfi/sdk-client'
+import { ISDKAdminManager, type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
   ArmadaVaultId,
@@ -12,7 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 
 export const getWithdrawTXHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     fleetAddress,
     walletAddress,

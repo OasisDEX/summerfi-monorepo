@@ -1,4 +1,4 @@
-import { ISDKManager } from '@summerfi/sdk-client'
+import { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { Percentage, Address, IChainInfo, User, Wallet, ArmadaVaultId } from '@summerfi/sdk-common'
 
 /**
@@ -14,7 +14,7 @@ import { Percentage, Address, IChainInfo, User, Wallet, ArmadaVaultId } from '@s
  */
 
 export const getMigrateTxHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   ({
     walletAddress,
     chainInfo,

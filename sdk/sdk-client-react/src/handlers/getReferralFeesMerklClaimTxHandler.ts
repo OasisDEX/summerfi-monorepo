@@ -1,4 +1,4 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { type AddressValue, type IChainInfo, type IUser } from '@summerfi/sdk-common'
 
 /**
@@ -9,7 +9,7 @@ import { type AddressValue, type IChainInfo, type IUser } from '@summerfi/sdk-co
  * @param params.rewardsTokensAddresses Optional array of token addresses to claim (default: all tokens)
  */
 export const getReferralFeesMerklClaimTxHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     user,
     chainInfo,

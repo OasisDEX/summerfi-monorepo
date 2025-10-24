@@ -1,8 +1,8 @@
-import type { ISDKManager } from '@summerfi/sdk-client'
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
 import { type IChainInfo, type IUser } from '@summerfi/sdk-common'
 
 export const getAggregatedClaimsForChainTXHandler =
-  (sdk: ISDKManager) =>
+  (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     user,
     chainInfo,

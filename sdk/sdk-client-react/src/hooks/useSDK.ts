@@ -1,4 +1,4 @@
-import { makeSDK } from '@summerfi/sdk-client'
+import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
 import { useCallback, useMemo } from 'react'
 import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
@@ -38,15 +38,23 @@ import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetToken
 import { isWhitelistedHandler } from '../handlers/isWhitelistedHandler'
 import { setWhitelistedTxHandler } from '../handlers/setWhitelistedTxHandler'
 import { setWhitelistedBatchTxHandler } from '../handlers/setWhitelistedBatchTxHandler'
+import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
+import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 
 type UseSdk = {
   walletAddress?: string
   chainId?: number
+  clientId?: string
 }
 
 export const useSDK = (params: UseSdk) => {
   const { apiURL } = useSDKContext()
-  const sdk = useMemo(() => makeSDK({ apiURL }), [apiURL])
+  const sdk = useMemo(() => {
+    if (params.clientId) {
+      return makeAdminSDK({ apiURL, clientId: params.clientId })
+    }
+    return makeSDK({ apiURL })
+  }, [apiURL, params.clientId])
 
   const { chainId, walletAddress: walletAddressString } = params
 
@@ -121,6 +129,10 @@ export const useSDK = (params: UseSdk) => {
   const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
   const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
 
+  // region Admin Handlers
+  const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
+  const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
+
   const memo = useMemo(
     () => ({
       getCurrentUser,
@@ -160,6 +172,8 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      grantContractSpecificRole,
+      revokeContractSpecificRole,
     }),
     [
       getCurrentUser,
@@ -199,6 +213,9 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      // region Admin Handlers
+      grantContractSpecificRole,
+      revokeContractSpecificRole,
     ],
   )
 

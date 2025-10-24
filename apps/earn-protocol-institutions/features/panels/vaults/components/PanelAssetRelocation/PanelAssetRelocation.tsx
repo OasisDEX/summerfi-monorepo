@@ -98,7 +98,7 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
   return (
     <Card variant="cardSecondary" className={styles.panelAssetRelocationWrapper}>
       <Text as="h5" variant="h5">
-        Asset rellocation
+        Asset relocation
       </Text>
       <Card className={styles.contentWrapper}>
         <Table

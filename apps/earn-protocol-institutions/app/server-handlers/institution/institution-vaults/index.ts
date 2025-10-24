@@ -5,30 +5,25 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
+const supportedInstitutionNetworks = [SupportedNetworkIds.Base]
+
 export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
   if (!institutionName) return null
   if (typeof institutionName !== 'string') return null
-
-  const testInstitutionVaults = ['0x29f13a877f3d1a14ac0b15b07536d4423b35e198'].map((vault) =>
-    vault.toLowerCase(),
-  )
-  const testInstitutionNetworks = [SupportedNetworkIds.Base]
 
   try {
     const systemConfig = await configEarnAppFetcher()
 
     const institutionSdk = getInstitutionsSDK(institutionName)
     const vaultsListByNetwork = await Promise.all(
-      testInstitutionNetworks.map((networkId) =>
+      supportedInstitutionNetworks.map((networkId) =>
         institutionSdk.armada.users.getVaultsRaw({
           chainInfo: getChainInfoByChainId(Number(networkId)),
         }),
       ),
     )
 
-    const filteredVaults = vaultsListByNetwork
-      .flatMap(({ vaults }) => vaults)
-      .filter((vault) => testInstitutionVaults.includes(vault.id.toLowerCase()))
+    const filteredVaults = vaultsListByNetwork.flatMap(({ vaults }) => vaults)
 
     const vaultsWithConfig = decorateWithFleetConfig(filteredVaults, systemConfig)
 
