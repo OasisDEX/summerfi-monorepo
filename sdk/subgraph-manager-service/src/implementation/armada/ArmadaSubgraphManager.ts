@@ -4,8 +4,8 @@ import {
   createProtocolGraphQLClient,
   createInstitutionsGraphQLClient,
 } from '@summerfi/subgraph-manager-common'
-import { type ChainId } from '@summerfi/sdk-common'
-import { toHex, pad } from 'viem'
+import { LoggingService, type ChainId } from '@summerfi/sdk-common'
+import { toHex } from 'viem'
 
 export const SubgraphTypes = {
   protocol: 'protocol',
@@ -46,6 +46,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     if (!urlMap) {
       throw new Error('No subgraph config in env')
     }
+    LoggingService.debug(`Loaded subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
 
     this._urlMap = urlMap
   }
@@ -121,6 +122,18 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     const id = toHex(params.id, { size: 32 })
     return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutionById({
       id,
+    })
+  }
+
+  getAllRoles(params: Parameters<IArmadaSubgraphManager['getAllRoles']>[0]) {
+    const id = toHex(params.institutionId, { size: 32 })
+    return this._getClient(SubgraphTypes.institutions, params.chainId).GetRoles({
+      id,
+      first: params.first ?? 1000,
+      skip: params.skip ?? 0,
+      name: params.name,
+      targetContract: params.targetContract,
+      owner: params.owner,
     })
   }
 

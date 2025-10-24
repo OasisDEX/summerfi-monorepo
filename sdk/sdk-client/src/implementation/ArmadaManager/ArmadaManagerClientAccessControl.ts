@@ -92,4 +92,11 @@ export class ArmadaManagerClientAccessControl
   ): ReturnType<IArmadaManagerClientAccessControl['setWhitelistedBatch']> {
     return this.rpcClient.armada.accessControl.setWhitelistedBatch.query(params)
   }
+
+  /** @see IArmadaManagerClientAccessControl.getAllRoles */
+  async getAllRoles(
+    params: Parameters<IArmadaManagerClientAccessControl['getAllRoles']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['getAllRoles']> {
+    return this.rpcClient.armada.accessControl.getAllRoles.query(params)
+  }
 }

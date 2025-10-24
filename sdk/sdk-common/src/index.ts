@@ -16,6 +16,7 @@ export type { HexData } from './common/types/HexData'
 export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
+export type { Role, RolesResponse } from './common/types/Role'
 export type {
   HistoricalFleetRateResult,
   HistoricalFleetRates,

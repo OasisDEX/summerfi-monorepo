@@ -159,6 +159,7 @@ export class ArmadaManager implements IArmadaManager {
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
       deploymentProvider: this._deploymentProvider,
+      subgraphManager: this._subgraphManager,
     })
   }
 }

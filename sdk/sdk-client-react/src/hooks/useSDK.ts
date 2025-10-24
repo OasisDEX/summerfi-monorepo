@@ -40,6 +40,7 @@ import { setWhitelistedTxHandler } from '../handlers/setWhitelistedTxHandler'
 import { setWhitelistedBatchTxHandler } from '../handlers/setWhitelistedBatchTxHandler'
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
+import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -132,6 +133,7 @@ export const useSDK = (params: UseSdk) => {
   // region Admin Handlers
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
   const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
+  const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -174,6 +176,7 @@ export const useSDK = (params: UseSdk) => {
       setWhitelistedBatchTx,
       grantContractSpecificRole,
       revokeContractSpecificRole,
+      getAllRoles,
     }),
     [
       getCurrentUser,
@@ -216,6 +219,7 @@ export const useSDK = (params: UseSdk) => {
       // region Admin Handlers
       grantContractSpecificRole,
       revokeContractSpecificRole,
+      getAllRoles,
     ],
   )
 

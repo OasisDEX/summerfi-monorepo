@@ -2,6 +2,7 @@ import type { IArmadaManagerAccessControl } from '@summerfi/armada-protocol-comm
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import {
   IAddress,
   getChainInfoByChainId,
@@ -29,6 +30,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
+  private _subgraphManager: IArmadaSubgraphManager
   private _roleHashes: Record<GlobalRoles, HexData | null> = { ...GLOBAL_ROLE_HASHES }
 
   /**
@@ -44,11 +46,13 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
+    subgraphManager: IArmadaSubgraphManager
   }) {
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
+    this._subgraphManager = params.subgraphManager
   }
 
   /** PRIVATE METHODS **/
@@ -534,5 +538,27 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
       accounts: params.accounts,
       allowed: params.allowed,
     })
+  }
+
+  /** @see IArmadaManagerAccessControl.getAllRoles */
+  getAllRoles: IArmadaManagerAccessControl['getAllRoles'] = async (params) => {
+    try {
+      const result = await this._subgraphManager.getAllRoles({
+        chainId: params.chainId,
+        institutionId: params.institutionId,
+        first: params.first ?? 1000,
+        skip: params.skip ?? 0,
+        name: params.name,
+        targetContract: params.targetContract,
+        owner: params.owner,
+      })
+
+      return result
+    } catch (error) {
+      LoggingService.error('Error fetching roles from subgraph:', error)
+      throw new Error(
+        `Failed to get roles: ${(error as { message: string } | undefined)?.message ?? error}`,
+      )
+    }
   }
 }

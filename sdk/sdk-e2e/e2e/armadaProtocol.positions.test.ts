@@ -8,7 +8,7 @@ import { stringifyArmadaPosition } from './utils/stringifiers'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Positions', () => {
-  const { chainId, fleetAddressValue } = ChainConfigs.SelfManaged
+  const { chainId, fleetAddressValue } = ChainConfigs.Base
   const userAddressValue = SharedConfig.userAddressValue
 
   const chainInfo = getChainInfoByChainId(chainId)
@@ -18,7 +18,7 @@ describe('Armada Protocol - Positions', () => {
 
   const sdk = createTestSDK()
 
-  it.skip(`should get all user positions`, async () => {
+  it(`should get all user positions`, async () => {
     const positions = await sdk.armada.users.getUserPositions({
       user,
     })

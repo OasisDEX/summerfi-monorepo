@@ -12013,6 +12013,18 @@ export type GetInstitutionByIdQueryVariables = Exact<{
 
 export type GetInstitutionByIdQuery = { __typename?: 'Query', institution?: { __typename?: 'Institution', id: string, active: boolean, harborCommand: string, admiralsQuarters: string, configurationManager: string, protocolAccessManager: string } | null };
 
+export type GetRolesQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  targetContract?: InputMaybe<Scalars['String']['input']>;
+  owner?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: string, name: string, owner: string, targetContract: string, institution: { __typename?: 'Institution', id: string } }> };
+
 
 export const GetInstitutionsDocument = gql`
     query GetInstitutions {
@@ -12038,6 +12050,23 @@ export const GetInstitutionByIdDocument = gql`
   }
 }
     `;
+export const GetRolesDocument = gql`
+    query GetRoles($id: ID!, $first: Int = 1000, $skip: Int = 0, $name: String, $targetContract: String, $owner: String) {
+  roles(
+    first: $first
+    skip: $skip
+    where: {institution_: {id: $id}, name: $name, targetContract: $targetContract, owner: $owner}
+  ) {
+    id
+    name
+    owner
+    targetContract
+    institution {
+      id
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -12051,6 +12080,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetInstitutionById(variables: GetInstitutionByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetInstitutionByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetInstitutionByIdQuery>({ document: GetInstitutionByIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetInstitutionById', 'query', variables);
+    },
+    GetRoles(variables: GetRolesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRolesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRolesQuery>({ document: GetRolesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRoles', 'query', variables);
     }
   };
 }

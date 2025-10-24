@@ -5,6 +5,7 @@ import type {
   AddressValue,
   GlobalRoles,
   ContractSpecificRoleName,
+  RolesResponse,
 } from '@summerfi/sdk-common'
 
 /**
@@ -186,4 +187,28 @@ export interface IArmadaManagerAccessControl {
     accounts: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
+
+  /**
+   * @name getAllRoles
+   * @description Gets all roles for a given chainId with pagination and filtering support
+   *
+   * @param chainId The chain ID to get roles for
+   * @param institutionId The institution ID to filter roles by
+   * @param first Number of items to return (default: 1000)
+   * @param skip Number of items to skip for pagination (default: 0)
+   * @param name Optional role name filter
+   * @param targetContract Optional target contract address filter
+   * @param owner Optional owner address filter
+   *
+   * @returns Promise with array of role objects containing id, name, owner, targetContract, and institution
+   */
+  getAllRoles(params: {
+    chainId: ChainId
+    institutionId: string
+    first?: number
+    skip?: number
+    name?: string
+    targetContract?: AddressValue
+    owner?: AddressValue
+  }): Promise<RolesResponse>
 }

@@ -13,6 +13,7 @@ import type {
 import type {
   GetInstitutionByIdQuery,
   GetInstitutionsQuery,
+  GetRolesQuery,
 } from '../generated/institutions/client'
 
 /**
@@ -149,4 +150,31 @@ export interface IArmadaSubgraphManager {
    *
    */
   getInstitutionById(params: { chainId: ChainId; id: string }): Promise<GetInstitutionByIdQuery>
+
+  /**
+   * @name getAllRoles
+   * @description Get all roles for a given chainId with pagination and filtering
+   *
+   * @param chainId target chain
+   * @param institutionId institution ID to filter roles by
+   * @param first number of items to return (default: 1000)
+   * @param skip number of items to skip for pagination (default: 0)
+   * @param name optional role name filter
+   * @param targetContract optional target contract address filter
+   * @param owner optional owner address filter
+   *
+   * @returns GetRolesQuery
+   *
+   * @throws Error
+   *
+   */
+  getAllRoles(params: {
+    chainId: ChainId
+    institutionId: string
+    first?: number
+    skip?: number
+    name?: string
+    targetContract?: string
+    owner?: string
+  }): Promise<GetRolesQuery>
 }
