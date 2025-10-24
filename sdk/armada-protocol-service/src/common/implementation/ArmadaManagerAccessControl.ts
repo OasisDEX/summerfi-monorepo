@@ -482,19 +482,15 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
-    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    // Get the AdmiralsQuarters contract
-    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: chainInfo,
-      address: admiralsQuartersAddress,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
     })
 
-    return admiralsQuartersContract.isWhitelisted({ account: params.account })
+    return fleetCommanderContract.isWhitelisted({
+      account: Address.createFromEthereum({ value: params.account }),
+    })
   }
 
   /** @see IArmadaManagerAccessControl.setWhitelisted */
@@ -502,20 +498,14 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
-    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    // Get the AdmiralsQuarters contract
-    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: chainInfo,
-      address: admiralsQuartersAddress,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
     })
 
-    return admiralsQuartersContract.setWhitelisted({
-      account: params.account,
+    return fleetCommanderContract.setWhitelisted({
+      account: Address.createFromEthereum({ value: params.account }),
       allowed: params.allowed,
     })
   }
@@ -525,20 +515,14 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
-    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    // Get the AdmiralsQuarters contract
-    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: chainInfo,
-      address: admiralsQuartersAddress,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
     })
 
-    return admiralsQuartersContract.setWhitelistedBatch({
-      accounts: params.accounts,
+    return fleetCommanderContract.setWhitelistedBatch({
+      accounts: params.accounts.map((account) => Address.createFromEthereum({ value: account })),
       allowed: params.allowed,
     })
   }

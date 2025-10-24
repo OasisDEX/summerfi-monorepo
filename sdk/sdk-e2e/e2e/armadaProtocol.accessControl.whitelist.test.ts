@@ -8,7 +8,8 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Whitelist', () => {
-  const { sdk, chainId, userAddress, governorSendTxTool } = createAdminSdkTestSetup()
+  const { sdk, chainId, fleetAddress, userAddress, governorSendTxTool } =
+    createAdminSdkTestSetup()
 
   const testAddress = Address.createFromEthereum({
     value: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
@@ -39,6 +40,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
       async ({ targetAddress }) => {
         const isWhitelisted = await sdk.armada.accessControl.isWhitelisted({
           chainId,
+          fleetCommanderAddress: fleetAddress.value,
           account: targetAddress.value,
         })
 
@@ -55,6 +57,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
         // Get initial status
         const alreadyWhitelisted = await sdk.armada.accessControl.isWhitelisted({
           chainId,
+          fleetCommanderAddress: fleetAddress.value,
           account: targetAddress.value,
         })
         console.log(`Initial whitelist status for ${targetAddress.value}: ${alreadyWhitelisted}`)
@@ -70,6 +73,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
             console.log(`Adding ${targetAddress.value} to whitelist...`)
             const whitelistTxInfo = await sdk.armada.accessControl.setWhitelisted({
               chainId,
+              fleetCommanderAddress: fleetAddress.value,
               account: targetAddress.value,
               allowed: true,
             })
@@ -81,6 +85,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
             // Verify the address is now whitelisted
             const afterWhitelistStatus = await sdk.armada.accessControl.isWhitelisted({
               chainId,
+              fleetCommanderAddress: fleetAddress.value,
               account: targetAddress.value,
             })
             console.log(`After whitelisting ${targetAddress.value}: ${afterWhitelistStatus}`)
@@ -92,6 +97,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
           // Get current status to check if we need to remove
           const currentStatus = await sdk.armada.accessControl.isWhitelisted({
             chainId,
+            fleetCommanderAddress: fleetAddress.value,
             account: targetAddress.value,
           })
 
@@ -105,6 +111,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
             console.log(`Removing ${targetAddress.value} from whitelist...`)
             const removeWhitelistTxInfo = await sdk.armada.accessControl.setWhitelisted({
               chainId,
+              fleetCommanderAddress: fleetAddress.value,
               account: targetAddress.value,
               allowed: false,
             })
@@ -116,6 +123,7 @@ describe('Armada Protocol - Access Control Whitelist', () => {
             // Verify the address is no longer whitelisted
             const finalStatus = await sdk.armada.accessControl.isWhitelisted({
               chainId,
+              fleetCommanderAddress: fleetAddress.value,
               account: targetAddress.value,
             })
             console.log(`Final whitelist status for ${targetAddress.value}: ${finalStatus}`)

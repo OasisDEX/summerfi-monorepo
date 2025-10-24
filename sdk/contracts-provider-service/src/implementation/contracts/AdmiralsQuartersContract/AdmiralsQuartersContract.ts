@@ -2,7 +2,7 @@ import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IAdmiralsQuartersContract } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, TransactionInfo, type AddressValue } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
-import { AdmiralsQuartersWhitelistAbi } from './AdmiralsQuartersWhitelistAbi'
+import { AdmiralsQuartersWhitelistAbi } from '@summerfi/armada-protocol-abis'
 
 /**
  * @name AdmiralsQuartersContract

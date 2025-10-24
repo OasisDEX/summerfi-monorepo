@@ -2,7 +2,7 @@
  * @name AdmiralsQuartersWhitelistAbi
  * @description Minimal ABI for whitelist functions in AdmiralsQuarters contract
  */
-export const AdmiralsQuartersWhitelistAbi = [
+export const WhitelistAbi = [
   {
     type: 'function',
     name: 'isWhitelisted',

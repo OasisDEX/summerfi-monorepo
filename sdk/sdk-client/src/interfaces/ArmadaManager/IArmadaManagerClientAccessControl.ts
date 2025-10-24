@@ -147,20 +147,26 @@ export interface IArmadaManagerClientAccessControl {
 
   /**
    * @name isWhitelisted
-   * @description Checks if an address is whitelisted in the AdmiralsQuarters contract
+   * @description Checks if an address is whitelisted in the FleetCommander contract
    *
    * @param chainId The chain ID to check the whitelist status on
+   * @param fleetCommanderAddress The FleetCommander contract address
    * @param account The address to check for whitelist status
    *
    * @returns Promise<boolean> True if the address is whitelisted
    */
-  isWhitelisted(params: { chainId: ChainId; account: AddressValue }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetCommanderAddress: AddressValue
+    account: AddressValue
+  }): Promise<boolean>
 
   /**
    * @name setWhitelisted
-   * @description Sets the whitelist status for an address in the AdmiralsQuarters contract
+   * @description Sets the whitelist status for an address in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
+   * @param fleetCommanderAddress The FleetCommander contract address
    * @param account The address to set the whitelist status for
    * @param allowed The whitelist status to set
    *
@@ -168,15 +174,17 @@ export interface IArmadaManagerClientAccessControl {
    */
   setWhitelisted(params: {
     chainId: ChainId
+    fleetCommanderAddress: AddressValue
     account: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
   /**
    * @name setWhitelistedBatch
-   * @description Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
+   * @description Sets the whitelist status for multiple addresses in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
+   * @param fleetCommanderAddress The FleetCommander contract address
    * @param accounts The addresses to set the whitelist status for
    * @param allowed The whitelist statuses to set (must match the length of accounts)
    *
@@ -184,6 +192,7 @@ export interface IArmadaManagerClientAccessControl {
    */
   setWhitelistedBatch(params: {
     chainId: ChainId
+    fleetCommanderAddress: AddressValue
     accounts: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
