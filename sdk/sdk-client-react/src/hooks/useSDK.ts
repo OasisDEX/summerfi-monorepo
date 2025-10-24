@@ -38,6 +38,9 @@ import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetToken
 import { isWhitelistedHandler } from '../handlers/isWhitelistedHandler'
 import { setWhitelistedTxHandler } from '../handlers/setWhitelistedTxHandler'
 import { setWhitelistedBatchTxHandler } from '../handlers/setWhitelistedBatchTxHandler'
+import { isWhitelistedAQHandler } from '../handlers/isWhitelistedAQHandler'
+import { setWhitelistedAQTxHandler } from '../handlers/setWhitelistedAQTxHandler'
+import { setWhitelistedBatchAQTxHandler } from '../handlers/setWhitelistedBatchAQTxHandler'
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
@@ -129,6 +132,9 @@ export const useSDK = (params: UseSdk) => {
   const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
   const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
   const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
+  const isWhitelistedAQ = useMemo(() => isWhitelistedAQHandler(sdk), [sdk])
+  const setWhitelistedAQTx = useMemo(() => setWhitelistedAQTxHandler(sdk), [sdk])
+  const setWhitelistedBatchAQTx = useMemo(() => setWhitelistedBatchAQTxHandler(sdk), [sdk])
 
   // region Admin Handlers
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
@@ -174,6 +180,9 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
@@ -216,6 +225,9 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
       // region Admin Handlers
       grantContractSpecificRole,
       revokeContractSpecificRole,

@@ -90,6 +90,9 @@ import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handl
 import { isWhitelisted } from './armada-protocol-handlers/access-control/isWhitelisted'
 import { setWhitelisted } from './armada-protocol-handlers/access-control/setWhitelisted'
 import { setWhitelistedBatch } from './armada-protocol-handlers/access-control/setWhitelistedBatch'
+import { isWhitelistedAQ } from './armada-protocol-handlers/access-control/isWhitelistedAQ'
+import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setWhitelistedAQ'
+import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
 import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
 
 /**
@@ -208,6 +211,9 @@ export const sdkAppRouter = router({
       isWhitelisted: isWhitelisted,
       setWhitelisted: setWhitelisted,
       setWhitelistedBatch: setWhitelistedBatch,
+      isWhitelistedAQ: isWhitelistedAQ,
+      setWhitelistedAQ: setWhitelistedAQ,
+      setWhitelistedBatchAQ: setWhitelistedBatchAQ,
       getAllRoles: getAllRoles,
     },
   },

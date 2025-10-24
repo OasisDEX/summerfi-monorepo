@@ -198,6 +198,49 @@ export interface IArmadaManagerAccessControl {
   }): Promise<TransactionInfo>
 
   /**
+   * @name isWhitelistedAQ
+   * @description Checks if an address is whitelisted in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to check the whitelist status on
+   * @param account The address to check for whitelist status
+   *
+   * @returns Promise<boolean> True if the address is whitelisted
+   */
+  isWhitelistedAQ(params: { chainId: ChainId; account: AddressValue }): Promise<boolean>
+
+  /**
+   * @name setWhitelistedAQ
+   * @description Sets the whitelist status for an address in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to set the whitelist status on
+   * @param account The address to set the whitelist status for
+   * @param allowed The whitelist status to set
+   *
+   * @returns Promise<TransactionInfo> The transaction information
+   */
+  setWhitelistedAQ(params: {
+    chainId: ChainId
+    account: AddressValue
+    allowed: boolean
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setWhitelistedBatchAQ
+   * @description Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to set the whitelist status on
+   * @param accounts The addresses to set the whitelist status for
+   * @param allowed The whitelist statuses to set (must match the length of accounts)
+   *
+   * @returns Promise<TransactionInfo> The transaction information
+   */
+  setWhitelistedBatchAQ(params: {
+    chainId: ChainId
+    accounts: AddressValue[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo>
+
+  /**
    * @name getAllRoles
    * @description Gets all roles for a given chainId with pagination and filtering support
    *

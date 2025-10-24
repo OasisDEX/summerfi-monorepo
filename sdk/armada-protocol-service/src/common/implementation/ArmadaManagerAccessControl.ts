@@ -527,6 +527,74 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
   }
 
+  /** @see IArmadaManagerAccessControl.isWhitelistedAQ */
+  isWhitelistedAQ: IArmadaManagerAccessControl['isWhitelistedAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainId,
+      contractName: 'admiralsQuarters',
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.isWhitelisted({
+      account: params.account,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelistedAQ */
+  setWhitelistedAQ: IArmadaManagerAccessControl['setWhitelistedAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainId,
+      contractName: 'admiralsQuarters',
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.setWhitelisted({
+      account: params.account,
+      allowed: params.allowed,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelistedBatchAQ */
+  setWhitelistedBatchAQ: IArmadaManagerAccessControl['setWhitelistedBatchAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainId,
+      contractName: 'admiralsQuarters',
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.setWhitelistedBatch({
+      accounts: params.accounts,
+      allowed: params.allowed,
+    })
+  }
+
   /** @see IArmadaManagerAccessControl.getAllRoles */
   getAllRoles: IArmadaManagerAccessControl['getAllRoles'] = async (params) => {
     try {

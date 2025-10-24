@@ -93,6 +93,27 @@ export class ArmadaManagerClientAccessControl
     return this.rpcClient.armada.accessControl.setWhitelistedBatch.query(params)
   }
 
+  /** @see IArmadaManagerClientAccessControl.isWhitelistedAQ */
+  async isWhitelistedAQ(
+    params: Parameters<IArmadaManagerClientAccessControl['isWhitelistedAQ']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['isWhitelistedAQ']> {
+    return this.rpcClient.armada.accessControl.isWhitelistedAQ.query(params)
+  }
+
+  /** @see IArmadaManagerClientAccessControl.setWhitelistedAQ */
+  async setWhitelistedAQ(
+    params: Parameters<IArmadaManagerClientAccessControl['setWhitelistedAQ']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['setWhitelistedAQ']> {
+    return this.rpcClient.armada.accessControl.setWhitelistedAQ.query(params)
+  }
+
+  /** @see IArmadaManagerClientAccessControl.setWhitelistedBatchAQ */
+  async setWhitelistedBatchAQ(
+    params: Parameters<IArmadaManagerClientAccessControl['setWhitelistedBatchAQ']>[0],
+  ): ReturnType<IArmadaManagerClientAccessControl['setWhitelistedBatchAQ']> {
+    return this.rpcClient.armada.accessControl.setWhitelistedBatchAQ.query(params)
+  }
+
   /** @see IArmadaManagerClientAccessControl.getAllRoles */
   async getAllRoles(
     params: Parameters<IArmadaManagerClientAccessControl['getAllRoles']>[0],
