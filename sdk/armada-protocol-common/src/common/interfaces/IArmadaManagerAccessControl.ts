@@ -193,7 +193,6 @@ export interface IArmadaManagerAccessControl {
    * @description Gets all roles for a given chainId with pagination and filtering support
    *
    * @param chainId The chain ID to get roles for
-   * @param institutionId The institution ID to filter roles by
    * @param first Number of items to return (default: 1000)
    * @param skip Number of items to skip for pagination (default: 0)
    * @param name Optional role name filter
@@ -204,7 +203,6 @@ export interface IArmadaManagerAccessControl {
    */
   getAllRoles(params: {
     chainId: ChainId
-    institutionId: string
     first?: number
     skip?: number
     name?: string

@@ -7,12 +7,12 @@ import type {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
-  Position_Filter,
   GetPositionQuery,
+  Position_Filter,
 } from '../generated/protocol/client'
 import type {
-  GetInstitutionByIdQuery,
   GetInstitutionsQuery,
+  GetInstitutionByIdQuery,
   GetRolesQuery,
 } from '../generated/institutions/client'
 
@@ -169,8 +169,8 @@ export interface IArmadaSubgraphManager {
    *
    */
   getAllRoles(params: {
-    chainId: ChainId
     institutionId: string
+    chainId: ChainId
     first?: number
     skip?: number
     name?: string

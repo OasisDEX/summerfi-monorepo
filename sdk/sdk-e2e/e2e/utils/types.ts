@@ -3,6 +3,8 @@ import type {
   ChainInfo,
   ContractSpecificRoleName,
   GlobalRoles,
+  AddressValue,
+  GraphRoleName,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -31,4 +33,14 @@ export type WhitelistScenario = {
   description: string
   shouldWhitelist?: boolean
   shouldRemoveFromWhitelist?: boolean
+}
+
+export type GetAllRolesScenario = {
+  description: string
+  roleName?: GraphRoleName
+  targetContract?: AddressValue
+  owner?: AddressValue
+  first?: number
+  skip?: number
+  expectedMinimumCount?: number
 }

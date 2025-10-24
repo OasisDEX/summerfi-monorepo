@@ -31,6 +31,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
   private _subgraphManager: IArmadaSubgraphManager
+  private _clientId?: string
   private _roleHashes: Record<GlobalRoles, HexData | null> = { ...GLOBAL_ROLE_HASHES }
 
   /**
@@ -47,12 +48,14 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
     subgraphManager: IArmadaSubgraphManager
+    clientId?: string
   }) {
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
     this._subgraphManager = params.subgraphManager
+    this._clientId = params.clientId
   }
 
   /** PRIVATE METHODS **/
@@ -543,9 +546,12 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   /** @see IArmadaManagerAccessControl.getAllRoles */
   getAllRoles: IArmadaManagerAccessControl['getAllRoles'] = async (params) => {
     try {
+      if (!this._clientId) {
+        throw new Error('Client ID is not set for ArmadaManagerAccessControl')
+      }
       const result = await this._subgraphManager.getAllRoles({
         chainId: params.chainId,
-        institutionId: params.institutionId,
+        institutionId: this._clientId,
         first: params.first ?? 1000,
         skip: params.skip ?? 0,
         name: params.name,

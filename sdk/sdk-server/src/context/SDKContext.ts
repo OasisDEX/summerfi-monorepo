@@ -172,6 +172,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     oracleManager,
     tokensManager,
     supportedChains,
+    clientId,
   })
 
   return {
