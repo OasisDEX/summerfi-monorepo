@@ -10,23 +10,9 @@ jest.setTimeout(300000)
 describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
   const { sdk, chainId, userAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
-  const randomAddress = Address.createFromEthereum({
-    value: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-  })
-
   const addressZero = Address.createFromEthereum({
     value: '0x0000000000000000000000000000000000000000',
   })
-
-  // Configure test scenarios here
-  const whitelistCheckScenarios: WhitelistScenario[] = [
-    {
-      targetAddress: randomAddress,
-      description: 'random address - not whitelisted',
-      shouldWhitelist: false,
-      shouldRemoveFromWhitelist: false,
-    },
-  ]
 
   const whitelistModificationScenarios: WhitelistScenario[] = [
     {
@@ -35,24 +21,13 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
       shouldWhitelist: true,
       shouldRemoveFromWhitelist: false,
     },
+    {
+      targetAddress: userAddress,
+      description: 'user address - whitelist',
+      shouldWhitelist: true,
+      shouldRemoveFromWhitelist: false,
+    },
   ]
-
-  describe('isWhitelistedAQ - checking AdmiralsQuarters whitelist status', () => {
-    test.each(whitelistCheckScenarios)(
-      'should check if $description is whitelisted in AdmiralsQuarters',
-      async ({ targetAddress }) => {
-        const isWhitelisted = await sdk.armada.accessControl.isWhitelistedAQ({
-          chainId,
-          account: targetAddress.value,
-        })
-
-        console.log(
-          `Address ${targetAddress.value} ${isWhitelisted ? 'is' : 'is not'} whitelisted in AdmiralsQuarters`,
-        )
-        expect(typeof isWhitelisted).toBe('boolean')
-      },
-    )
-  })
 
   describe('setWhitelistedAQ - modifying AdmiralsQuarters whitelist status', () => {
     test.each(whitelistModificationScenarios)(
