@@ -1,6 +1,6 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE_PROD}/summer-institutions-base/version/0.1.0-add-institutions/api'
-# schema: '${SUBGRAPH_BASE}/summer-institution-base'
+# schema: '${SUBGRAPH_BASE_PROD}/summer-institutions-base/version/0.1.0-add-institutions/api'
+schema: '${SUBGRAPH_BASE}/summer-institution-base'
 documents: './src/queries/institutions/*.graphql'
 generates:
   src/generated/institutions/client.ts:
