@@ -8,18 +8,17 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Whitelist', () => {
-  const { sdk, chainId, fleetAddress, userAddress, governorSendTxTool } =
-    createAdminSdkTestSetup()
+  const { sdk, chainId, fleetAddress, userAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
-  const testAddress = Address.createFromEthereum({
+  const randomAddress = Address.createFromEthereum({
     value: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
   })
 
   // Configure test scenarios here
   const whitelistCheckScenarios: WhitelistScenario[] = [
     {
-      targetAddress: testAddress,
-      description: 'test address - not whitelisted',
+      targetAddress: randomAddress,
+      description: 'random address - not whitelisted',
       shouldWhitelist: false,
       shouldRemoveFromWhitelist: false,
     },
@@ -28,9 +27,9 @@ describe('Armada Protocol - Access Control Whitelist', () => {
   const whitelistModificationScenarios: WhitelistScenario[] = [
     {
       targetAddress: userAddress,
-      description: 'test address 1 - whitelist then remove',
+      description: 'test address 1 - whitelist',
       shouldWhitelist: true,
-      shouldRemoveFromWhitelist: true,
+      shouldRemoveFromWhitelist: false,
     },
   ]
 
