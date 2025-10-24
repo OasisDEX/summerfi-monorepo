@@ -14,6 +14,7 @@
     "@aws-lambda-powertools/tracer": "^2.0.2",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
+    "@summerfi/summer-earn-institutions-subgraph": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
     "graphql-tag": "^2.12.6",

@@ -12,6 +12,10 @@ import {
   getAllClients as getAllProtocolSubgraphClients,
   VaultsQuery,
 } from '@summerfi/summer-earn-protocol-subgraph'
+import {
+  getAllClients as getAllInstitutionsSubgraphClients,
+  VaultsQuery as InstitutionsVaultsQuery,
+} from '@summerfi/summer-earn-institutions-subgraph'
 
 import { RewardsService } from './rewards-service'
 import { Transaction } from 'kysely'
@@ -53,6 +57,18 @@ export const DAY_IN_SECONDS = 86400
 export const WEEK_IN_SECONDS = 604800
 export const EPOCH_WEEK_OFFSET = 345600 // 4 days
 export const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
+
+type VaultsForApr = {
+  vaults: Array<{
+    id: string
+    arks: Array<{
+      id: string
+      productId: string
+      totalValueLockedUSD: number
+      vault: { id: string }
+    }>
+  }>
+}
 
 export async function retrySubgraphQuery<TResponse>(
   operation: () => Promise<TResponse>,
@@ -103,7 +119,7 @@ export async function updateVaultAprs(
   trx: Transaction<Database>,
   network: NetworkStatus,
   updateStartTimestamp: number,
-  vaults: VaultsQuery,
+  vaults: VaultsForApr,
   rateSubgraphClients: Record<ChainId, RatesSubgraphClient>,
 ) {
   const chainId = mapDbNetworkToChainId(network.network)
@@ -691,6 +707,7 @@ export const handler = async (
   try {
     const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
     const protocolSubgraphClients = getAllProtocolSubgraphClients(SUBGRAPH_BASE)
+    const institutionsSubgraphClients = getAllInstitutionsSubgraphClients(SUBGRAPH_BASE)
 
     // rounded to full minutes
     const updateStartTimestamp = Math.floor(Date.now() / 1000 / 60) * 60
@@ -809,6 +826,18 @@ export const handler = async (
             try {
               const protocolSubgraphClient =
                 protocolSubgraphClients[mapDbNetworkToChainId(network.network)]
+              const institutionsSubgraphClient =
+                institutionsSubgraphClients[mapDbNetworkToChainId(network.network)]
+              const institutionsVaults = await retrySubgraphQuery<InstitutionsVaultsQuery>(
+                () => institutionsSubgraphClient.Vaults(),
+                {
+                  logger,
+                  context: {
+                    operation: 'GetInstitutions',
+                    network: network.network,
+                  },
+                },
+              )
               const vaults = await retrySubgraphQuery<VaultsQuery>(
                 () => protocolSubgraphClient.Vaults(),
                 {
@@ -819,7 +848,15 @@ export const handler = async (
                   },
                 },
               )
-
+              if (institutionsVaults.vaults.length > 0) {
+                await updateVaultAprs(
+                  trx,
+                  network,
+                  updateStartTimestamp,
+                  institutionsVaults,
+                  ratesSubgraphClients,
+                )
+              }
               if (vaults.vaults.length > 0) {
                 await updateVaultAprs(
                   trx,

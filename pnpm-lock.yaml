@@ -706,6 +706,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/summer-earn-institutions-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-institutions-subgraph
       '@summerfi/summer-earn-protocol-subgraph':
         specifier: workspace:*
         version: link:../../packages/summer-earn-protocol-subgraph
