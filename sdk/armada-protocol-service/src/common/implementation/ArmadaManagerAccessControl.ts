@@ -121,7 +121,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   }
 
   /**
-   * @description Processes RoleGranted and RoleRevoked events to determine current role holders by lastest state
+   * @description Processes RoleGranted and RoleRevoked events to determine current role holders by latest state
    * @param grantedEvents Array of RoleGranted event logs
    * @param revokedEvents Array of RoleRevoked event logs
    * @returns Array of addresses that currently have the role

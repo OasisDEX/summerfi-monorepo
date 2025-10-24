@@ -185,9 +185,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   async setTipJar(
     params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
   ): ReturnType<IArmadaManagerAdmin['setTipJar']> {
-    throw new Error(
-      'setTipJar method is not implemented in ArmadaManagerAdmin' + JSON.stringify(params),
-    )
+    throw new Error('setTipJar method is not implemented in ArmadaManagerAdmin')
   }
 
   /** @see IArmadaManagerAdmin.setTipRate */

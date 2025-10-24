@@ -154,8 +154,8 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
 
   /**
    * @name grantCommanderRole
-   * @description Grants the commander role to an account for a specific ark
-   * @param fleetCommanderAddress The ark contract address
+   * @description Grants the commander role to an account for a specific fleet commander
+   * @param fleetCommanderAddress The fleet commander contract address
    * @param account The account to grant the role to
    * @returns Promise<TransactionInfo> The transaction information
    */
@@ -166,8 +166,8 @@ export interface IProtocolAccessManagerWhiteListContract extends IContractWrappe
 
   /**
    * @name revokeCommanderRole
-   * @description Revokes the commander role from an account for a specific ark
-   * @param fleetCommanderAddress The ark contract address
+   * @description Revokes the commander role from an account for a specific fleet commander
+   * @param fleetCommanderAddress The fleet commander contract address
    * @param account The account to revoke the role from
    * @returns Promise<TransactionInfo> The transaction information
    */
