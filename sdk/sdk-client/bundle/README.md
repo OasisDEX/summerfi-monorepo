@@ -411,8 +411,6 @@ const hash = await walletClient.sendTransaction({
 // create a user using chainId and wallet address
 const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
-// when you have deposited some assets to the vault
-
 // you can retrieve all user positions on a particular chain
 const positions = await sdk.armada.users.getUserPositions({
   user,
@@ -423,6 +421,28 @@ const position = await sdk.armada.users.getUserPosition({
   user,
   fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
+
+// Access position data
+if (position) {
+  console.log('Position Details:', {
+    // Asset holdings
+    assets: position.assets.toString(), // Current balance
+    assetsUSD: position.assetsUSD.toString(), // Value in USD
+    shares: position.shares.toString(), // Vault shares held
+
+    // Deposit/Withdrawal totals
+    depositsAmount: position.depositsAmount.toString(),
+    withdrawalsAmount: position.withdrawalsAmount.toString(),
+
+    // Calculated metrics
+    netDeposits: position.netDeposits.toString(), // deposits - withdrawals
+    earnings: position.earnings.toString(), // assets - netDeposits (profit/loss)
+    earningsUSD: position.earningsUSD.toString(),
+
+    // Rewards
+    claimableSummerToken: position.claimableSummerToken.toString(),
+  })
+}
 ```
 
 ### Retrieve Position History
@@ -1811,14 +1831,20 @@ enum FiatCurrency {
 
 **Migration Guide:**
 
-The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts. Use the
-following new fields instead:
+The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts and new
+calculated metrics:
+
+**For deposit/withdrawal totals:**
 
 - `depositsAmount: ITokenAmount` - Total amount deposited (replaces summing up `deposits` array)
 - `withdrawalsAmount: ITokenAmount` - Total amount withdrawn (replaces summing up `withdrawals`
   array)
 - `depositsAmountUSD: IFiatCurrencyAmount` - Total deposits in USD
 - `withdrawalsAmountUSD: IFiatCurrencyAmount` - Total withdrawals in USD
+
+**For current position value:**
+
+- Use `assets` instead of deprecated `amount` property
 
 ### v2.0.0
 
