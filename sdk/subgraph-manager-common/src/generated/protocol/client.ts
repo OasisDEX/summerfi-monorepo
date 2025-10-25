@@ -11496,6 +11496,13 @@ export type GetLatestActivityQueryVariables = Exact<{
 
 export type GetLatestActivityQuery = { __typename?: 'Query', deposits: Array<{ __typename?: 'Deposit', hash: string, timestamp: bigint, amount: bigint, amountUSD: string, position: { __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }>, withdraws: Array<{ __typename?: 'Withdraw', hash: string, timestamp: bigint, amount: bigint, amountUSD: string, position: { __typename?: 'Position', inputTokenBalance: bigint, inputTokenBalanceNormalized: string, inputTokenBalanceNormalizedInUSD: string, account: { __typename?: 'Account', id: string }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputTokenPriceUSD?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, decimals: number }, protocol: { __typename?: 'YieldAggregator', network: Network } } } }> };
 
+export type GetPositionHistoryQueryVariables = Exact<{
+  positionId: Scalars['ID']['input'];
+}>;
+
+
+export type GetPositionHistoryQuery = { __typename?: 'Query', position?: { __typename?: 'Position', hourlyPositionHistory: Array<{ __typename?: 'PositionHourlySnapshot', timestamp: bigint, netValue: string, deposits: string, withdrawals: string }>, dailyPositionHistory: Array<{ __typename?: 'PositionDailySnapshot', timestamp: bigint, netValue: string, deposits: string, withdrawals: string }>, weeklyPositionHistory: Array<{ __typename?: 'PositionWeeklySnapshot', timestamp: bigint, netValue: string, deposits: string, withdrawals: string }> } | null };
+
 export type GetUserPositionsQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
 }>;
@@ -11681,6 +11688,42 @@ export const GetLatestActivityDocument = gql`
           network
         }
       }
+    }
+  }
+}
+    `;
+export const GetPositionHistoryDocument = gql`
+    query GetPositionHistory($positionId: ID!) {
+  position(id: $positionId) {
+    hourlyPositionHistory: hourlySnapshots(
+      first: 721
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
+    }
+    dailyPositionHistory: dailySnapshots(
+      first: 366
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
+    }
+    weeklyPositionHistory: weeklySnapshots(
+      first: 157
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
     }
   }
 }
@@ -12164,6 +12207,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetLatestActivityQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>({ document: GetLatestActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetLatestActivity', 'query', variables);
+    },
+    GetPositionHistory(variables: GetPositionHistoryQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPositionHistoryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPositionHistoryQuery>({ document: GetPositionHistoryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPositionHistory', 'query', variables);
     },
     GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetUserPositionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>({ document: GetUserPositionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetUserPositions', 'query', variables);

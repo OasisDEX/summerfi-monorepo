@@ -1,0 +1,35 @@
+query GetPositionHistory($positionId: ID!) {
+  # {wallet_address}-{fleet_address}
+  position(id: $positionId) {
+    hourlyPositionHistory: hourlySnapshots(
+      first: 721 # 30 days in hours + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
+    }
+    dailyPositionHistory: dailySnapshots(
+      first: 366 # 1 year in days + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
+    }
+    weeklyPositionHistory: weeklySnapshots(
+      first: 157 # 3 years in weeks + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      deposits: inputTokenDepositsNormalized
+      withdrawals: inputTokenWithdrawalsNormalized
+      timestamp
+    }
+  }
+}

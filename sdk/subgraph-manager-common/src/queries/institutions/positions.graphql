@@ -1,0 +1,156 @@
+query GetUserPositions($accountAddress: String!) {
+  positions(where: { account_contains_nocase: $accountAddress }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    stakedInputTokenBalance
+    stakedOutputTokenBalance
+    createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
+    vault {
+      id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
+      rebalanceCount
+      pricePerShare
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+    claimedSummerToken
+    claimableSummerToken
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
+    }
+  }
+}
+
+query GetUserPosition($accountAddress: String!, $vaultId: String!) {
+  positions(where: { account_contains_nocase: $accountAddress, vault: $vaultId }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    stakedInputTokenBalance
+    stakedOutputTokenBalance
+    createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
+    vault {
+      id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
+      pricePerShare
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+    claimedSummerToken
+    claimableSummerToken
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
+    }
+  }
+}
+
+query GetPosition($id: ID!) {
+  positions(where: { id: $id }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    stakedInputTokenBalance
+    stakedOutputTokenBalance
+    createdTimestamp
+    inputTokenDeposits
+    inputTokenWithdrawals
+    inputTokenDepositsNormalizedInUSD
+    inputTokenWithdrawalsNormalizedInUSD
+    vault {
+      id
+      inputTokenBalance
+      inputTokenPriceUSD
+      outputTokenPriceUSD
+      pricePerShare
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+    claimedSummerToken
+    claimableSummerToken
+    claimedSummerTokenNormalized
+    claimableSummerTokenNormalized
+    rewards {
+      claimedNormalized
+      claimableNormalized
+      rewardToken {
+        symbol
+        lastPriceUSD
+      }
+    }
+  }
+}

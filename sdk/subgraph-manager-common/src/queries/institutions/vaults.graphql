@@ -1,0 +1,138 @@
+query GetVaults {
+  vaults {
+    protocol {
+      network
+    }
+    id
+    name
+    rewardsManager {
+      id
+    }
+    rewardTokens {
+      id
+      token {
+        id
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsAmount
+    rewardTokenEmissionsFinish
+    rewardTokenEmissionsUSD
+    rebalanceCount
+    pricePerShare
+    arks {
+      id
+      productId
+      name
+      details
+      depositLimit
+      depositCap
+      cumulativeEarnings
+      inputTokenBalance
+      maxDepositPercentageOfTVL
+      inputToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      createdTimestamp
+      lastUpdateTimestamp
+    }
+    inputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    inputTokenBalance
+    inputTokenPriceUSD
+    outputTokenPriceUSD
+    depositLimit
+    depositCap
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
+  }
+}
+query GetVault($id: ID!) {
+  vault(id: $id) {
+    protocol {
+      network
+    }
+    id
+    name
+    rewardsManager {
+      id
+    }
+    rewardTokens {
+      id
+      token {
+        id
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsAmount
+    rewardTokenEmissionsFinish
+    rewardTokenEmissionsUSD
+    rebalanceCount
+    pricePerShare
+    arks {
+      id
+      productId
+      name
+      details
+      depositLimit
+      depositCap
+      cumulativeEarnings
+      inputTokenBalance
+      maxDepositPercentageOfTVL
+      inputToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      createdTimestamp
+      lastUpdateTimestamp
+    }
+    inputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    inputTokenBalance
+    inputTokenPriceUSD
+    outputTokenPriceUSD
+    depositLimit
+    depositCap
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
+  }
+}
