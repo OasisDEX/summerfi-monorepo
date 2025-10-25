@@ -37,6 +37,7 @@ export const mapGraphDataToArmadaPosition =
   }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
     const chainInfo = user.chainInfo
+
     if (position.vault.outputToken == null) {
       throw SDKError.createFrom({
         message: 'outputToken is null on position' + JSON.stringify(position.id),
@@ -44,6 +45,18 @@ export const mapGraphDataToArmadaPosition =
         type: SDKErrorType.ArmadaError,
       })
     }
+
+    const id = ArmadaPositionId.createFrom({ id: position.id, user: user })
+
+    const pool = ArmadaVault.createFrom({
+      id: ArmadaVaultId.createFrom({
+        chainInfo,
+        fleetAddress: Address.createFromEthereum({
+          value: position.vault.id,
+        }),
+      }),
+    })
+
     // merkl rewards are only on base for now
     const merklSummerRewardsForPosition = merklSummerRewards.perChain[ChainIds.Base]?.reduce(
       (acc, reward) => {
@@ -118,76 +131,109 @@ export const mapGraphDataToArmadaPosition =
     const fleetBalance = BigNumber(position.inputTokenBalance.toString())
     const sharesBalance = BigNumber(position.outputTokenBalance.toString())
 
+    const shares = TokenAmount.createFromBaseUnit({
+      amount: sharesBalance.toFixed(),
+      token: Token.createFrom({
+        chainInfo,
+        address: Address.createFromEthereum({
+          value: position.vault.outputToken.id,
+        }),
+        name: position.vault.outputToken.name,
+        symbol: position.vault.outputToken.symbol,
+        decimals: position.vault.outputToken.decimals,
+      }),
+    })
+
+    const assetToken = Token.createFrom({
+      chainInfo,
+      address: Address.createFromEthereum({
+        value: position.vault.inputToken.id,
+      }),
+      name: position.vault.inputToken.name,
+      symbol: position.vault.inputToken.symbol,
+      decimals: position.vault.inputToken.decimals,
+    })
+
+    const assetPriceUSD = FiatCurrencyAmount.createFrom({
+      amount: position.vault.inputTokenPriceUSD || '0',
+      fiat: FiatCurrency.USD,
+    })
+
+    const assets = TokenAmount.createFromBaseUnit({
+      amount: fleetBalance.toFixed(),
+      token: assetToken,
+    })
+
+    const assetsUSDAmount = assets.toBigNumber().multipliedBy(assetPriceUSD.toBigNumber()).toFixed()
+    const assetsUSD = FiatCurrencyAmount.createFrom({
+      amount: assetsUSDAmount,
+      fiat: FiatCurrency.USD,
+    })
+
+    const depositsAmount = TokenAmount.createFromBaseUnit({
+      amount: position.inputTokenDeposits.toString(),
+      token: assetToken,
+    })
+
+    const withdrawalsAmount = TokenAmount.createFromBaseUnit({
+      amount: position.inputTokenWithdrawals.toString(),
+      token: assetToken,
+    })
+
+    const depositsAmountUSD = FiatCurrencyAmount.createFrom({
+      amount: position.inputTokenDepositsNormalizedInUSD,
+      fiat: FiatCurrency.USD,
+    })
+
+    const withdrawalsAmountUSD = FiatCurrencyAmount.createFrom({
+      amount: position.inputTokenWithdrawalsNormalizedInUSD,
+      fiat: FiatCurrency.USD,
+    })
+
+    // Calculate net deposits: deposits - withdrawals
+    const netDeposits = TokenAmount.createFromBaseUnit({
+      amount: depositsAmount.add(withdrawalsAmount).toSolidityValue().toString(),
+      token: assetToken,
+    })
+
+    // Calculate net deposits USD: depositsUSD - withdrawalsUSD
+    const netDepositsUSD = FiatCurrencyAmount.createFrom({
+      amount: depositsAmountUSD.add(withdrawalsAmountUSD).toBigNumber().toFixed(),
+      fiat: FiatCurrency.USD,
+    })
+
+    // Calculate earnings: assets - netDeposits
+    const earnings = TokenAmount.createFromBaseUnit({
+      amount: assets.subtract(netDeposits).toSolidityValue().toString(),
+      token: assetToken,
+    })
+
+    // Calculate earnings USD: assetsUSD - netDepositsUSD
+    const earningsUSD = FiatCurrencyAmount.createFrom({
+      amount: assetsUSD.subtract(netDepositsUSD).toBigNumber().toFixed(),
+      fiat: FiatCurrency.USD,
+    })
+
     return ArmadaPosition.createFrom({
-      id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
-      pool: ArmadaVault.createFrom({
-        id: ArmadaVaultId.createFrom({
-          chainInfo,
-          fleetAddress: Address.createFromEthereum({
-            value: position.vault.id,
-          }),
-        }),
-      }),
-      shares: TokenAmount.createFromBaseUnit({
-        amount: sharesBalance.toFixed(),
-        token: Token.createFrom({
-          chainInfo,
-          address: Address.createFromEthereum({
-            value: position.vault.outputToken.id,
-          }),
-          name: position.vault.outputToken.name,
-          symbol: position.vault.outputToken.symbol,
-          decimals: position.vault.outputToken.decimals,
-        }),
-      }),
-      amount: TokenAmount.createFromBaseUnit({
-        amount: fleetBalance.toFixed(),
-        token: Token.createFrom({
-          chainInfo,
-          address: Address.createFromEthereum({
-            value: position.vault.inputToken.id,
-          }),
-          name: position.vault.inputToken.name,
-          symbol: position.vault.inputToken.symbol,
-          decimals: position.vault.inputToken.decimals,
-        }),
-      }),
-      depositsAmount: TokenAmount.createFromBaseUnit({
-        amount: position.inputTokenDeposits.toString(),
-        token: Token.createFrom({
-          chainInfo,
-          address: Address.createFromEthereum({
-            value: position.vault.inputToken.id,
-          }),
-          name: position.vault.inputToken.name,
-          symbol: position.vault.inputToken.symbol,
-          decimals: position.vault.inputToken.decimals,
-        }),
-      }),
-      withdrawalsAmount: TokenAmount.createFromBaseUnit({
-        amount: position.inputTokenWithdrawals.toString(),
-        token: Token.createFrom({
-          chainInfo,
-          address: Address.createFromEthereum({
-            value: position.vault.inputToken.id,
-          }),
-          name: position.vault.inputToken.name,
-          symbol: position.vault.inputToken.symbol,
-          decimals: position.vault.inputToken.decimals,
-        }),
-      }),
-      depositsAmountUSD: FiatCurrencyAmount.createFrom({
-        amount: position.inputTokenDepositsNormalizedInUSD,
-        fiat: FiatCurrency.USD,
-      }),
-      withdrawalsAmountUSD: FiatCurrencyAmount.createFrom({
-        amount: position.inputTokenWithdrawalsNormalizedInUSD,
-        fiat: FiatCurrency.USD,
-      }),
-      deposits: [],
-      withdrawals: [],
+      id,
+      pool,
+      assets,
+      assetPriceUSD,
+      assetsUSD,
+      shares,
+      depositsAmount,
+      depositsAmountUSD,
+      withdrawalsAmount,
+      withdrawalsAmountUSD,
+      netDeposits,
+      netDepositsUSD,
+      earnings,
+      earningsUSD,
       claimedSummerToken,
       claimableSummerToken,
       rewards,
+      amount: assets,
+      deposits: [],
+      withdrawals: [],
     })
   }
