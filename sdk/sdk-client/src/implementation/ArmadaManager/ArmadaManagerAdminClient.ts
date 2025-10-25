@@ -129,4 +129,11 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerAdminClient['arkConfig']> {
     return this.rpcClient.armada.admin.arkConfig.query(params)
   }
+
+  /** @see IArmadaManagerAdminClient.getFeeRevenueConfig */
+  async getFeeRevenueConfig(
+    params: Parameters<IArmadaManagerAdminClient['getFeeRevenueConfig']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['getFeeRevenueConfig']> {
+    return this.rpcClient.armada.admin.getFeeRevenueConfig.query(params)
+  }
 }

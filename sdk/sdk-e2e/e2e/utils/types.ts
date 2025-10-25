@@ -71,3 +71,11 @@ export type WithdrawScenario = {
   amountValue: string
   swapToSymbol?: string
 }
+
+export type RebalanceScenario = {
+  description: string
+  fromArk: Address
+  toArk: Address
+  amount: string
+  tokenSymbol: string
+}

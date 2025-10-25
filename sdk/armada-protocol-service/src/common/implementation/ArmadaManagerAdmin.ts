@@ -2,7 +2,7 @@ import type { IArmadaManagerAdmin } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
-import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, getChainInfoByChainId, Percentage } from '@summerfi/sdk-common'
 
 /**
  * @name ArmadaManagerAdmin
@@ -262,5 +262,19 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
       address: params.vaultId.fleetAddress,
     })
     return fleetContract.arks()
+  }
+
+  /** @see IArmadaManagerAdmin.getFeeRevenueConfig */
+  async getFeeRevenueConfig(
+    _params: Parameters<IArmadaManagerAdmin['getFeeRevenueConfig']>[0],
+  ): ReturnType<IArmadaManagerAdmin['getFeeRevenueConfig']> {
+    // Return hardcoded values per chain
+    // TODO: Replace placeholder address with actual fee receiver address
+    return {
+      vaultFeeReceiverAddress: '0x0000000000000000000000000000000000000000',
+      vaultFeeAmount: Percentage.createFrom({
+        value: 2,
+      }),
+    }
   }
 }

@@ -1,9 +1,13 @@
 import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import type { RebalanceScenario } from './utils/types'
 
 jest.setTimeout(5 * 60 * 1000) // 5 minutes
 
-describe('Armada Protocol - Admin E2E Tests', () => {
+/**
+ * @group e2e
+ */
+describe('Armada Protocol - Admin Rebalance E2E Tests', () => {
   const { sdk, chainId, fleetAddress, governorSendTxTool } = createAdminSdkTestSetup()
 
   const chainInfo = getChainInfoByChainId(chainId)
@@ -12,106 +16,144 @@ describe('Armada Protocol - Admin E2E Tests', () => {
     fleetAddress,
   })
 
-  test('should fetch the list of available arks', async () => {
-    const bufferArk = Address.createFromEthereum({
-      value: '0x04acEf9ca748ABD2c2053beD4a7b6dbF8BdCCc31',
-    })
-    const aaveArk = Address.createFromEthereum({
-      value: '0xC01348b33Dd2431980688DBd0D1956BA1e642172',
-    })
-    const compArk = Address.createFromEthereum({
-      value: '0xBc2d7A8793159F40FB80e8CACcE00c8FdC7c4b42',
-    })
-    const morphoArk = Address.createFromEthereum({
-      value: '0x0016087243e69BE85570f48fde1A33316aB1AA44',
-    })
-    const moonwellArk = Address.createFromEthereum({
-      value: '0x0C2ccA4B3ba72Df9c2C8aC8d9e1a17066088c597',
-    })
+  const bufferArk = Address.createFromEthereum({
+    value: '0x04acEf9ca748ABD2c2053beD4a7b6dbF8BdCCc31',
+  })
+  const aaveArk = Address.createFromEthereum({
+    value: '0xC01348b33Dd2431980688DBd0D1956BA1e642172',
+  })
 
-    const usdc = await sdk.tokens.getTokenBySymbol({
-      chainId,
-      symbol: 'USDC',
-    })
-
-    const fromArk = bufferArk
-    const toArk = aaveArk
-    const amount = TokenAmount.createFrom({
+  const rebalanceScenarios: RebalanceScenario[] = [
+    {
+      description: 'Buffer ark to Aave ark',
+      fromArk: bufferArk,
+      toArk: aaveArk,
       amount: '0.5',
-      token: usdc,
-    })
+      tokenSymbol: 'USDC',
+    },
+  ]
 
-    // validate maxRebalanceOutflow on fromArk
-    const fromArkConfig = await sdk.armada.admin.arkConfig({
-      chainId,
-      arkAddressValue: fromArk.toSolidityValue(),
-    })
-    console.log('fromArkConfig', fromArkConfig)
+  describe('rebalance - transferring funds between arks', () => {
+    test.each(rebalanceScenarios)(
+      'should rebalance funds from $description',
+      async ({ description, fromArk, toArk, amount: amountValue, tokenSymbol }) => {
+        console.log(`\n=== Starting rebalance scenario: ${description} ===`)
 
-    if (BigInt(fromArkConfig.maxRebalanceOutflow) < amount.toSolidityValue()) {
-      console.log('fromArk maxRebalanceOutflow too low, sending tx to update it')
-      // need to set maxRebalanceOutflow on fromArk
-      const setMaxRebalanceOutflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceOutflow({
-        vaultId,
-        ark: fromArk,
-        maxRebalanceOutflow: amount,
-      })
-      expect(setMaxRebalanceOutflowTxInfo).toBeDefined()
-      const setMaxRebalanceOutflowStatus = await governorSendTxTool(setMaxRebalanceOutflowTxInfo)
-      expect(setMaxRebalanceOutflowStatus).toBe('success')
-      console.log('Set maxRebalanceOutflow on fromArk Successful')
-    }
+        const usdc = await sdk.tokens.getTokenBySymbol({
+          chainId,
+          symbol: tokenSymbol,
+        })
 
-    // validate deposit cap and maxRebalanceInflow on toArk
-    const toArkConfig = await sdk.armada.admin.arkConfig({
-      chainId,
-      arkAddressValue: toArk.toSolidityValue(),
-    })
-    console.log('toArkConfig', toArkConfig)
+        const amount = TokenAmount.createFrom({
+          amount: amountValue,
+          token: usdc,
+        })
 
-    if (BigInt(toArkConfig.depositCap) < amount.toSolidityValue()) {
-      console.log('toArk depositCap too low, sending tx to update it')
-      // need to set depositCap on toArk
-      const setDepositCapTxInfo = await sdk.armada.admin.setArkDepositCap({
-        vaultId,
-        ark: toArk,
-        cap: amount,
-      })
-      expect(setDepositCapTxInfo).toBeDefined()
-      const setDepositCapStatus = await governorSendTxTool(setDepositCapTxInfo)
-      expect(setDepositCapStatus).toBe('success')
-      console.log('Set depositCap on toArk Successful')
-    }
-    if (BigInt(toArkConfig.maxRebalanceInflow) < amount.toSolidityValue()) {
-      console.log('toArk maxRebalanceInflow too low, sending tx to update it')
-      // need to set maxRebalanceInflow on toArk
-      const setMaxRebalanceInflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceInflow({
-        vaultId,
-        ark: toArk,
-        maxRebalanceInflow: amount,
-      })
-      expect(setMaxRebalanceInflowTxInfo).toBeDefined()
-      const setMaxRebalanceInflowStatus = await governorSendTxTool(setMaxRebalanceInflowTxInfo)
-      expect(setMaxRebalanceInflowStatus).toBe('success')
-      console.log('Set maxRebalanceInflow on toArk Successful')
-    }
+        console.log(
+          `Rebalancing ${amountValue} ${tokenSymbol} from ${fromArk.value} to ${toArk.value}`,
+        )
 
-    const rebalance = await sdk.armada.admin.rebalance({
-      vaultId,
-      rebalanceData: [
-        {
-          fromArk,
-          toArk,
-          amount,
-        },
-      ],
-    })
+        // Validate and configure fromArk (source)
+        console.log('\n--- Validating source ark configuration ---')
+        const fromArkConfig = await sdk.armada.admin.arkConfig({
+          chainId,
+          arkAddressValue: fromArk.toSolidityValue(),
+        })
+        console.log(`Source ark (${fromArk.value}) config:`, {
+          maxRebalanceOutflow: fromArkConfig.maxRebalanceOutflow,
+          depositCap: fromArkConfig.depositCap,
+        })
 
-    expect(rebalance).toBeDefined()
-    console.log('Rebalance Transaction:', rebalance)
+        if (BigInt(fromArkConfig.maxRebalanceOutflow) < amount.toSolidityValue()) {
+          console.log(
+            `Source ark maxRebalanceOutflow (${fromArkConfig.maxRebalanceOutflow}) is below required amount (${amount.toSolidityValue()}), updating...`,
+          )
 
-    const rebalanceStatus = await governorSendTxTool(rebalance)
-    expect(rebalanceStatus).toBe('success')
-    console.log('Rebalance Successful')
+          const setMaxRebalanceOutflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceOutflow({
+            vaultId,
+            ark: fromArk,
+            maxRebalanceOutflow: amount,
+          })
+          expect(setMaxRebalanceOutflowTxInfo).toBeDefined()
+
+          const setMaxRebalanceOutflowStatus = await governorSendTxTool(
+            setMaxRebalanceOutflowTxInfo,
+          )
+          expect(setMaxRebalanceOutflowStatus).toBe('success')
+          console.log('✓ Updated source ark maxRebalanceOutflow')
+        } else {
+          console.log('✓ Source ark maxRebalanceOutflow is sufficient')
+        }
+
+        // Validate and configure toArk (destination)
+        console.log('\n--- Validating destination ark configuration ---')
+        const toArkConfig = await sdk.armada.admin.arkConfig({
+          chainId,
+          arkAddressValue: toArk.toSolidityValue(),
+        })
+        console.log(`Destination ark (${toArk.value}) config:`, {
+          depositCap: toArkConfig.depositCap,
+          maxRebalanceInflow: toArkConfig.maxRebalanceInflow,
+        })
+
+        if (BigInt(toArkConfig.depositCap) < amount.toSolidityValue()) {
+          console.log(
+            `Destination ark depositCap (${toArkConfig.depositCap}) is below required amount (${amount.toSolidityValue()}), updating...`,
+          )
+
+          const setDepositCapTxInfo = await sdk.armada.admin.setArkDepositCap({
+            vaultId,
+            ark: toArk,
+            cap: amount,
+          })
+          expect(setDepositCapTxInfo).toBeDefined()
+
+          const setDepositCapStatus = await governorSendTxTool(setDepositCapTxInfo)
+          expect(setDepositCapStatus).toBe('success')
+          console.log('✓ Updated destination ark depositCap')
+        } else {
+          console.log('✓ Destination ark depositCap is sufficient')
+        }
+
+        if (BigInt(toArkConfig.maxRebalanceInflow) < amount.toSolidityValue()) {
+          console.log(
+            `Destination ark maxRebalanceInflow (${toArkConfig.maxRebalanceInflow}) is below required amount (${amount.toSolidityValue()}), updating...`,
+          )
+
+          const setMaxRebalanceInflowTxInfo = await sdk.armada.admin.setArkMaxRebalanceInflow({
+            vaultId,
+            ark: toArk,
+            maxRebalanceInflow: amount,
+          })
+          expect(setMaxRebalanceInflowTxInfo).toBeDefined()
+
+          const setMaxRebalanceInflowStatus = await governorSendTxTool(setMaxRebalanceInflowTxInfo)
+          expect(setMaxRebalanceInflowStatus).toBe('success')
+          console.log('✓ Updated destination ark maxRebalanceInflow')
+        } else {
+          console.log('✓ Destination ark maxRebalanceInflow is sufficient')
+        }
+
+        // Execute rebalance
+        console.log('\n--- Executing rebalance ---')
+        const rebalance = await sdk.armada.admin.rebalance({
+          vaultId,
+          rebalanceData: [
+            {
+              fromArk,
+              toArk,
+              amount,
+            },
+          ],
+        })
+
+        expect(rebalance).toBeDefined()
+        console.log('Rebalance transaction prepared')
+
+        const rebalanceStatus = await governorSendTxTool(rebalance)
+        expect(rebalanceStatus).toBe('success')
+        console.log(`✓ Rebalance successful for ${description}\n`)
+      },
+    )
   })
 })

@@ -8,6 +8,7 @@ import {
   type IArmadaVaultId,
   type IArkConfig,
   type IRebalanceData,
+  type IFeeRevenueConfig,
 } from '@summerfi/sdk-common'
 
 /**
@@ -248,4 +249,14 @@ export interface IArmadaManagerAdminClient {
    * @returns Promise<IArkConfig> The ark configuration
    */
   arkConfig(params: { chainId: ChainId; arkAddressValue: AddressValue }): Promise<IArkConfig>
+
+  /**
+   * @name getFeeRevenueConfig
+   * @description Gets the fee revenue configuration with hardcoded values per chain
+   *
+   * @param chainId The chain ID to get fee revenue configuration for
+   *
+   * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
+   */
+  getFeeRevenueConfig(params: { chainId: ChainId }): Promise<IFeeRevenueConfig>
 }

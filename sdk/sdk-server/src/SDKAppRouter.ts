@@ -6,6 +6,7 @@ import { arkConfig } from './armada-protocol-handlers/admin/arkConfig'
 import { addArks } from './armada-protocol-handlers/admin/addArks'
 import { emergencyShutdown } from './armada-protocol-handlers/admin/emergencyShutdown'
 import { forceRebalance } from './armada-protocol-handlers/admin/forceRebalance'
+import { getFeeRevenueConfig } from './armada-protocol-handlers/admin/getFeeRevenueConfig'
 import { removeArk } from './armada-protocol-handlers/admin/removeArk'
 import { setArkDepositCap } from './armada-protocol-handlers/admin/setArkDepositCap'
 import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceInflow'
@@ -198,6 +199,7 @@ export const sdkAppRouter = router({
       emergencyShutdown: emergencyShutdown,
       arks: arks,
       arkConfig: arkConfig,
+      getFeeRevenueConfig: getFeeRevenueConfig,
     },
     accessControl: {
       hasGlobalRole: hasGlobalRole,

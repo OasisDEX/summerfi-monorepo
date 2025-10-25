@@ -8,6 +8,7 @@ import type {
   AddressValue,
   IRebalanceData,
   IArkConfig,
+  IFeeRevenueConfig,
 } from '@summerfi/sdk-common'
 
 /**
@@ -265,4 +266,14 @@ export interface IArmadaManagerAdmin {
    * @returns Promise<IAddress[]> The list of active ark addresses
    */
   arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
+
+  /**
+   * @name getFeeRevenueConfig
+   * @description Gets the fee revenue configuration with hardcoded values per chain
+   *
+   * @param chainId The chain ID to get fee revenue configuration for
+   *
+   * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
+   */
+  getFeeRevenueConfig(params: { chainId: ChainId }): Promise<IFeeRevenueConfig>
 }
