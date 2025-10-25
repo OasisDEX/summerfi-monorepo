@@ -86,9 +86,7 @@ export interface IArmadaManagerUtils {
    *
    * @returns GetPositionHistoryQuery containing position history snapshots
    */
-  getPositionHistory(params: {
-    positionId: IArmadaPositionId
-  }): Promise<GetPositionHistoryQuery>
+  getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /** VAULT */
 

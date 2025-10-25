@@ -6,18 +6,18 @@ import type { ChainId, AddressValue } from '@summerfi/sdk-common'
  * @description Checks if an address is whitelisted in the FleetCommander contract
  * @param params.chainId The chain ID to check the whitelist status on
  * @param params.fleetCommanderAddress The FleetCommander contract address
- * @param params.account The address to check for whitelist status
+ * @param params.targetAddress The address to check for whitelist status
  */
 export const isWhitelistedHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
   async ({
     chainId,
     fleetCommanderAddress,
-    account,
+    targetAddress,
   }: {
     chainId: ChainId
     fleetCommanderAddress: AddressValue
-    account: AddressValue
+    targetAddress: AddressValue
   }) => {
-    return sdk.armada.accessControl.isWhitelisted({ chainId, fleetCommanderAddress, account })
+    return sdk.armada.accessControl.isWhitelisted({ chainId, fleetCommanderAddress, targetAddress })
   }

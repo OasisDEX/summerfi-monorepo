@@ -42,7 +42,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
         // Get initial status
         const isAlreadyWhitelisted = await sdk.armada.accessControl.isWhitelistedAQ({
           chainId,
-          account: targetAddress.value,
+          targetAddress: targetAddress.value,
         })
         console.log(
           `Initial AdmiralsQuarters whitelist status for ${targetAddress.value}: ${isAlreadyWhitelisted}`,
@@ -61,7 +61,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
             )
             const whitelistTxInfo = await sdk.armada.accessControl.setWhitelistedAQ({
               chainId,
-              account: targetAddress.value,
+              targetAddress: targetAddress.value,
               allowed: true,
             })
 
@@ -72,7 +72,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
             // Verify the address is now whitelisted
             const afterWhitelistStatus = await sdk.armada.accessControl.isWhitelistedAQ({
               chainId,
-              account: targetAddress.value,
+              targetAddress: targetAddress.value,
             })
             console.log(
               `Status after whitelisting ${description} (${targetAddress.value}) in AdmiralsQuarters: ${afterWhitelistStatus}`,
@@ -85,7 +85,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
           // Get current status to check if we need to remove
           const currentStatus = await sdk.armada.accessControl.isWhitelistedAQ({
             chainId,
-            account: targetAddress.value,
+            targetAddress: targetAddress.value,
           })
 
           // Skip if already not whitelisted
@@ -100,7 +100,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
             )
             const removeWhitelistTxInfo = await sdk.armada.accessControl.setWhitelistedAQ({
               chainId,
-              account: targetAddress.value,
+              targetAddress: targetAddress.value,
               allowed: false,
             })
 
@@ -111,7 +111,7 @@ describe('Armada Protocol - Access Control AdmiralsQuarters Whitelist', () => {
             // Verify the address is no longer whitelisted
             const finalStatus = await sdk.armada.accessControl.isWhitelistedAQ({
               chainId,
-              account: targetAddress.value,
+              targetAddress: targetAddress.value,
             })
             console.log(
               `Final AdmiralsQuarters whitelist status for ${description} (${targetAddress.value}): ${finalStatus}`,

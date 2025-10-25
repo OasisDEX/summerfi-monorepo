@@ -489,7 +489,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return fleetCommanderContract.isWhitelisted({
-      account: Address.createFromEthereum({ value: params.account }),
+      account: Address.createFromEthereum({ value: params.targetAddress }),
     })
   }
 
@@ -505,7 +505,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return fleetCommanderContract.setWhitelisted({
-      account: Address.createFromEthereum({ value: params.account }),
+      account: Address.createFromEthereum({ value: params.targetAddress }),
       allowed: params.allowed,
     })
   }
@@ -522,7 +522,9 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return fleetCommanderContract.setWhitelistedBatch({
-      accounts: params.accounts.map((account) => Address.createFromEthereum({ value: account })),
+      accounts: params.targetAddresses.map((account) =>
+        Address.createFromEthereum({ value: account }),
+      ),
       allowed: params.allowed,
     })
   }
@@ -545,7 +547,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return admiralsQuartersContract.isWhitelisted({
-      account: params.account,
+      account: params.targetAddress,
     })
   }
 
@@ -567,7 +569,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return admiralsQuartersContract.setWhitelisted({
-      account: params.account,
+      account: params.targetAddress,
       allowed: params.allowed,
     })
   }
@@ -590,7 +592,7 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return admiralsQuartersContract.setWhitelistedBatch({
-      accounts: params.accounts,
+      accounts: params.targetAddresses,
       allowed: params.allowed,
     })
   }

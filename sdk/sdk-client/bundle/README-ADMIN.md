@@ -22,6 +22,43 @@ export const sdk = makeAdminSDK({
 
 ## Self Managed Vaults - Admin
 
+### Get Fee Revenue Configuration
+
+Retrieves the fee revenue configuration for a specific chain. This includes the vault fee receiver
+address and the vault fee percentage.
+
+**Parameters:**
+
+- **chainId**: The chain ID to get the fee revenue configuration for (e.g., `ChainIds.Base`,
+  `ChainIds.ArbitrumOne`)
+
+**Example:**
+
+```typescript
+import { ChainIds } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+const chainId = ChainIds.Base
+
+// Get fee revenue configuration
+const config = await sdk.armada.admin.getFeeRevenueConfig({
+  chainId,
+})
+
+console.log('Fee Receiver Address:', config.vaultFeeReceiverAddress)
+console.log('Fee Amount (%):', config.vaultFeeAmount.value)
+console.log('Fee Amount (solidity format):', config.vaultFeeAmount.toSolidityValue())
+```
+
+**Response:**
+
+```typescript
+{
+  vaultFeeReceiverAddress: string, // Address that receives vault fees
+  vaultFeeAmount: Percentage // Fee percentage
+}
+```
+
 ### Rebalance Assets Between Arks
 
 Rebalances assets between arks (yield sources) in a fleet. This operation moves funds from one ark
@@ -530,6 +567,252 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 - After revoking, verify the role removal using `hasGlobalRole` method
 - See [Roles Overview](#roles-overview) for details on each role's permissions
 
+## Self Managed Vaults - Whitelisting
+
+### Check if Address is Whitelisted (Fleet Level)
+
+Check if a specific address is whitelisted for a fleet (vault). Whitelisting controls which
+addresses can deposit into a fleet.
+
+**Parameters:**
+
+- **chainId**: The chain where the fleet is deployed
+- **fleetCommanderAddress**: The address of the FleetCommander contract (fleet address)
+- **targetAddress**: The address to check whitelist status for
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+const chainId = ChainIds.Base
+
+// Fleet address
+const fleetAddress = Address.createFromEthereum({
+  value: '0xFLEETADDRESS...',
+})
+
+// Address to check
+const userAddress = Address.createFromEthereum({
+  value: '0xUSERADDRESS...',
+})
+
+const isWhitelisted = await sdk.armada.accessControl.isWhitelisted({
+  chainId,
+  fleetCommanderAddress: fleetAddress.value,
+  targetAddress: userAddress.value,
+})
+
+console.log(`Address ${userAddress.value} is ${isWhitelisted ? '' : 'NOT '}whitelisted`)
+```
+
+**Response:**
+
+Boolean value indicating whether the address is whitelisted.
+
+### Set Whitelist Status (Fleet Level)
+
+Set the whitelist status for a specific address on a fleet (vault). This controls whether the
+address can deposit into the fleet.
+
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` or the `CURATOR_ROLE`
+for the specific fleet.
+
+**Parameters:**
+
+- **chainId**: The chain where the fleet is deployed
+- **fleetCommanderAddress**: The address of the FleetCommander contract (fleet address)
+- **targetAddress**: The address to set whitelist status for
+- **allowed**: Boolean indicating whether to allow (true) or disallow (false) the address
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+const chainId = ChainIds.Base
+
+// Fleet address
+const fleetAddress = Address.createFromEthereum({
+  value: '0xFLEETADDRESS...',
+})
+
+// Address to whitelist
+const userAddress = Address.createFromEthereum({
+  value: '0xUSERADDRESS...',
+})
+
+// Add to whitelist
+const whitelistTxInfo = await sdk.armada.accessControl.setWhitelisted({
+  chainId,
+  fleetCommanderAddress: fleetAddress.value,
+  targetAddress: userAddress.value,
+  allowed: true,
+})
+
+// Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(whitelistTxInfo)
+
+// Remove from whitelist
+const removeWhitelistTxInfo = await sdk.armada.accessControl.setWhitelisted({
+  chainId,
+  fleetCommanderAddress: fleetAddress.value,
+  targetAddress: userAddress.value,
+  allowed: false,
+})
+```
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+**Notes:**
+
+- Only addresses with the global `GOVERNOR_ROLE` or the `CURATOR_ROLE` for the specific fleet can
+  modify whitelist status
+- Changes take effect immediately upon transaction confirmation
+
+### Batch Set Whitelist Status (Fleet Level)
+
+Set the whitelist status for multiple addresses on a fleet (vault) in a single transaction. This is
+more gas-efficient than calling `setWhitelisted` multiple times.
+
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` or the `CURATOR_ROLE`
+for the specific fleet.
+
+**Parameters:**
+
+- **chainId**: The chain where the fleet is deployed
+- **fleetCommanderAddress**: The address of the FleetCommander contract (fleet address)
+- **targetAddresses**: Array of addresses to set whitelist status for
+- **allowed**: Array of boolean values indicating whether to allow (true) or disallow (false) each
+  corresponding address
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+### Check if Address is Whitelisted (Admiral's Quarters Level)
+
+Check if a specific address is whitelisted for Admiral's Quarters. Admiral's Quarters is the
+protocol-level staking/rewards contract.
+
+**Parameters:**
+
+- **chainId**: The chain where Admiral's Quarters is deployed
+- **targetAddress**: The address to check whitelist status for
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+const chainId = ChainIds.Base
+
+// Address to check
+const userAddress = Address.createFromEthereum({
+  value: '0xUSERADDRESS...',
+})
+
+const isWhitelisted = await sdk.armada.accessControl.isWhitelistedAQ({
+  chainId,
+  targetAddress: userAddress.value,
+})
+
+console.log(
+  `Address ${userAddress.value} is ${isWhitelisted ? '' : 'NOT '}whitelisted for Admiral's Quarters`,
+)
+```
+
+**Response:**
+
+Boolean value indicating whether the address is whitelisted for Admiral's Quarters.
+
+### Set Whitelist Status (Admiral's Quarters Level)
+
+Set the whitelist status for a specific address on Admiral's Quarters. This controls whether the
+address can interact with Admiral's Quarters functionality.
+
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` or the
+`ADMIRALS_QUARTERS_ROLE`.
+
+**Parameters:**
+
+- **chainId**: The chain where Admiral's Quarters is deployed
+- **targetAddress**: The address to set whitelist status for
+- **allowed**: Boolean indicating whether to allow (true) or disallow (false) the address
+
+**Example:**
+
+```typescript
+import { ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+const chainId = ChainIds.Base
+
+// Address to whitelist
+const userAddress = Address.createFromEthereum({
+  value: '0xUSERADDRESS...',
+})
+
+// Add to whitelist
+const whitelistTxInfo = await sdk.armada.accessControl.setWhitelistedAQ({
+  chainId,
+  targetAddress: userAddress.value,
+  allowed: true,
+})
+
+// Send transaction (implementation depends on your setup)
+// const txHash = await sendTransaction(whitelistTxInfo)
+
+// Remove from whitelist
+const removeWhitelistTxInfo = await sdk.armada.accessControl.setWhitelistedAQ({
+  chainId,
+  targetAddress: userAddress.value,
+  allowed: false,
+})
+```
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+**Notes:**
+
+- Only addresses with the global `GOVERNOR_ROLE` or the `ADMIRALS_QUARTERS_ROLE` can modify
+  Admiral's Quarters whitelist status
+- **Special Case**: If `address(0)` is set to `allowed: true`, the whitelist becomes open and all
+  addresses are considered allowed. This open whitelist mode works only on the Admiral's Quarters
+  level.
+- Changes take effect immediately upon transaction confirmation
+
+### Batch Set Whitelist Status (Admiral's Quarters Level)
+
+Set the whitelist status for multiple addresses on Admiral's Quarters in a single transaction. This
+is more gas-efficient than calling `setWhitelistedAQ` multiple times.
+
+**Required Role:** The executing address must have the global `GOVERNOR_ROLE` or the
+`ADMIRALS_QUARTERS_ROLE`.
+
+**Parameters:**
+
+- **chainId**: The chain where Admiral's Quarters is deployed
+- **targetAddresses**: Array of addresses to set whitelist status for
+- **allowed**: Array of boolean values indicating whether to allow (true) or disallow (false) each
+  corresponding address
+
+**Response (TransactionInfo):**
+
+Refer to the TransactionInfo structure in the main SDK documentation.
+
+**Notes:**
+
+- Including `address(0)` with `allowed: true` in the batch will enable open whitelist mode for all
+  addresses
+
 ## Changelog
 
 ### v2.1.0
@@ -538,6 +821,7 @@ Refer to the TransactionInfo structure in the main SDK documentation.
 
 **Features:**
 
+- Armada Protocol - Get Fee Revenue Configuration
 - Armada Protocol - Rebalance Assets Between Arks
   - Get Ark Configuration
   - Set Ark Deposit Cap

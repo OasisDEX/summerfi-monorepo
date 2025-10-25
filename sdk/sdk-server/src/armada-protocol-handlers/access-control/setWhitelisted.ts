@@ -7,7 +7,7 @@ export const setWhitelisted = publicProcedure
     z.object({
       chainId: z.custom<ChainId>(isChainId),
       fleetCommanderAddress: z.custom<AddressValue>(isAddressValue),
-      account: z.custom<AddressValue>(isAddressValue),
+      targetAddress: z.custom<AddressValue>(isAddressValue),
       allowed: z.boolean(),
     }),
   )

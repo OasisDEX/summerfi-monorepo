@@ -6,7 +6,7 @@ import type { ChainId, AddressValue } from '@summerfi/sdk-common'
  * @description Sets the whitelist status for an address in the FleetCommander contract
  * @param params.chainId The chain ID to set the whitelist status on
  * @param params.fleetCommanderAddress The FleetCommander contract address
- * @param params.account The address to set the whitelist status for
+ * @param params.targetAddress The address to set the whitelist status for
  * @param params.allowed The whitelist status to set
  */
 export const setWhitelistedTxHandler =
@@ -14,18 +14,18 @@ export const setWhitelistedTxHandler =
   async ({
     chainId,
     fleetCommanderAddress,
-    account,
+    targetAddress,
     allowed,
   }: {
     chainId: ChainId
     fleetCommanderAddress: AddressValue
-    account: AddressValue
+    targetAddress: AddressValue
     allowed: boolean
   }) => {
     return sdk.armada.accessControl.setWhitelisted({
       chainId,
       fleetCommanderAddress,
-      account,
+      targetAddress,
       allowed,
     })
   }
