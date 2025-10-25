@@ -10,6 +10,7 @@ export type {
   GetUsersActivityQuery,
   GetUserActivityQuery,
   GetPositionQuery,
+  GetPositionHistoryQuery,
   Position_Filter,
   Position,
   Deposit,

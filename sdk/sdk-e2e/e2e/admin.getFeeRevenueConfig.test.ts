@@ -1,5 +1,5 @@
 import { ChainIds } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 
 jest.setTimeout(300000)
 

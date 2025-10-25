@@ -8,6 +8,7 @@ import type {
   GetUsersActivityQuery,
   GetUserActivityQuery,
   GetPositionQuery,
+  GetPositionHistoryQuery,
   Position_Filter,
 } from '../generated/protocol/client'
 import type {
@@ -96,6 +97,19 @@ export interface IArmadaSubgraphManager {
    *
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<GetPositionQuery>
+
+  /**
+   * @name getPositionHistory
+   * @description Get position history snapshots for a given position
+   *
+   * @param positionId Position ID (format: {wallet_address}-{fleet_address})
+   *
+   * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
+   *
+   * @throws Error if position not found or query fails
+   *
+   */
+  getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
    * @name getUsersActivity

@@ -22,6 +22,7 @@ import type {
   GetVaultsQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  GetPositionHistoryQuery,
   Position_Filter,
 } from '@summerfi/subgraph-manager-common'
 import type { HistoricalFleetRateResult } from '@summerfi/sdk-common'
@@ -76,6 +77,18 @@ export interface IArmadaManagerUtils {
    *
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
+
+  /**
+   * @name getPositionHistory
+   * @description Get historical snapshots of a position including hourly, daily, and weekly data
+   *
+   * @param positionId ID of the position to retrieve history for
+   *
+   * @returns GetPositionHistoryQuery containing position history snapshots
+   */
+  getPositionHistory(params: {
+    positionId: IArmadaPositionId
+  }): Promise<GetPositionHistoryQuery>
 
   /** VAULT */
 

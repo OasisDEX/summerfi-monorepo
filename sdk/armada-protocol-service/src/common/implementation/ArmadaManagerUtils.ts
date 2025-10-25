@@ -32,7 +32,10 @@ import {
   type HistoricalFleetRateResult,
   createTimeoutSignal,
 } from '@summerfi/sdk-common'
-import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import {
+  IArmadaSubgraphManager,
+  type GetPositionHistoryQuery,
+} from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData, erc20Abi, zeroAddress } from 'viem'
 import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
@@ -202,6 +205,15 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       summerToken,
       getTokenBySymbol,
       getUserMerklRewards: this._getUserMerklRewards,
+    })
+  }
+
+  /** @see IArmadaManagerUtils.getPositionHistory */
+  async getPositionHistory(
+    params: Parameters<IArmadaManagerUtils['getPositionHistory']>[0],
+  ): Promise<GetPositionHistoryQuery> {
+    return this._subgraphManager.getPositionHistory({
+      positionId: params.positionId,
     })
   }
 

@@ -96,6 +96,15 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
+  getPositionHistory(params: Parameters<IArmadaSubgraphManager['getPositionHistory']>[0]) {
+    return this._getClient(
+      this._getSubgraphTypeByIsAdminSdk(),
+      params.positionId.user.chainInfo.chainId,
+    ).GetPositionHistory({
+      positionId: params.positionId.id.toLowerCase(),
+    })
+  }
+
   getInstitutions(params: Parameters<IArmadaSubgraphManager['getInstitutions']>[0]) {
     return this._getClient(SubgraphTypes.institutions, params.chainId).GetInstitutions()
   }

@@ -1,4 +1,4 @@
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { WhitelistScenario } from './utils/types'
 
 jest.setTimeout(300000)

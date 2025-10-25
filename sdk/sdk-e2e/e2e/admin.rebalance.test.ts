@@ -1,5 +1,5 @@
 import { Address, ArmadaVaultId, getChainInfoByChainId, TokenAmount } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { RebalanceScenario } from './utils/types'
 
 jest.setTimeout(5 * 60 * 1000) // 5 minutes

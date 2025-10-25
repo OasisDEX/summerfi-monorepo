@@ -5,8 +5,9 @@ import {
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
   type MerklReward,
+  type GetPositionHistoryQuery,
+  type Position_Filter,
 } from '@summerfi/armada-protocol-common'
-import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
   BridgeTransactionInfo,
   ITokenAmount,
@@ -179,6 +180,15 @@ export interface IArmadaManagerUsersClient {
    * @returns The position of the user in the corresponding Armada pool
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
+
+  /**
+   * @method getPositionHistory
+   * @description Retrieves historical snapshots of a position
+   *
+   * @param positionId The ID of the position to retrieve history for
+   * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
+   */
+  getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
    * @method getNewDepositTx

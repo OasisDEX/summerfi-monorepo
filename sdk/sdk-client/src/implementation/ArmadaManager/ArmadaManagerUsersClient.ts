@@ -74,6 +74,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getPositionHistory */
+  async getPositionHistory(
+    params: Parameters<IArmadaManagerUsersClient['getPositionHistory']>[0],
+  ) {
+    return this.rpcClient.armada.users.getPositionHistory.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getNewDepositTx */
   async getNewDepositTx(
     params: Parameters<IArmadaManagerUsersClient['getNewDepositTx']>[0],

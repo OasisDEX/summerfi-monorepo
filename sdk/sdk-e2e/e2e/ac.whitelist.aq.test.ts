@@ -1,5 +1,5 @@
 import { Address } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { WhitelistScenario } from './utils/types'
 import { zeroAddress } from 'viem'
 
