@@ -1,0 +1,135 @@
+.portfolioStakingInfoCardWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-space-x-large);
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
+  gap: 24px;
+}
+
+.lighterCardGradient {
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
+}
+
+.header {
+  display: flex;
+  gap: 8px;
+}
+
+.yieldSourcesWrapper {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-end;
+}
+
+.yieldSourceLabel {
+  width: fit-content;
+  border-radius: 4px;
+  padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
+}
+
+.yieldSourceCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 12px;
+}
+
+.yieldSourceTitleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.titleDataLinkColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.halfCardsRow {
+  display: flex;
+  gap: 32px;
+
+  >div {
+    width: 100%;
+  }
+}
+
+.whyStakeSumrDescription {
+  display: flex;
+  flex-direction: column;
+
+  >p {
+    max-width: 800px;
+  }
+
+  a {
+    color: var(--color-text-link);
+  }
+}
+
+.whyStakeSumrBlocks {
+  display: flex;
+  gap: 24px;
+}
+
+.whyStakeSumrColumnBlocks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+.whyStakeSumrBlock {
+  display: flex;
+  gap: 8px;
+
+  .whyStakeSumrBlockDescription {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-2x-small);
+  }
+}
+
+.stakingStatsWrapper {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+
+  .stakingStatsBlock {
+    width: 100%;
+  }
+}
+
+.sumrAvailableToStakeBigBlock {
+  display: flex;
+  flex-direction: column;
+  padding: 64px;
+  gap: 10px;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 73, 164, 0.2);
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
+
+  span,
+  p {
+    color: var(--color-text-secondary);
+  }
+
+  h4 {
+    color: var(--color-text-primary);
+    padding: 0;
+    margin: 0;
+  }
+
+  a {
+    margin: 0 auto;
+  }
+
+  a button {
+    padding: 0 25px;
+  }
+}
