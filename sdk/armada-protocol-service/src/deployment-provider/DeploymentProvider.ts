@@ -18,7 +18,9 @@ export const getDeployedContractAddress = (params: {
 
 const checkSupportedChainId = (supportedChainIds: ChainId[], chainId: ChainId) => {
   if (!supportedChainIds.includes(chainId)) {
-    throw new Error(`Provided chain (${chainId}) is not supported`)
+    throw new Error(
+      `Chain ${chainId} is not supported. Supported chains: ${supportedChainIds.join(', ')}`,
+    )
   }
 }
 

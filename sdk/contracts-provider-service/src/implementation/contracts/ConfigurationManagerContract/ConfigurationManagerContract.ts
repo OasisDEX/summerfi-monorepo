@@ -40,7 +40,7 @@ export class ConfigurationManagerContract<
 
   /** @see IConfigurationManagerContract.treasury */
   async treasury(): Promise<AddressValue> {
-    return this._contract.read.treasury()
+    return this.contract.read.treasury()
   }
 
   /** PUBLIC METHODS */
