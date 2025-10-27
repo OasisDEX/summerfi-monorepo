@@ -48,8 +48,7 @@ describe('Armada Protocol - Vault', () => {
     async ({ description, useAdminSdk = false, testSpecificVault = false }) => {
       // Choose SDK setup based on scenario
       const setup = useAdminSdk ? createAdminSdkTestSetup() : createSdkTestSetup()
-      const sdk = useAdminSdk ? setup.sdk : createTestSDK()
-      const { chainId, fleetAddress, userAddress } = setup
+      const { sdk, chainId, fleetAddress, userAddress } = setup
 
       const chainInfo = getChainInfoByChainId(chainId)
       const sdkType = useAdminSdk ? 'Admin SDK' : 'User SDK'
