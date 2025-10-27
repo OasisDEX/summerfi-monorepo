@@ -1,0 +1,27 @@
+query GetRoles(
+  $id: ID!
+  $first: Int = 1000
+  $skip: Int = 0
+  $name: String
+  $targetContract: String
+  $owner: String
+) {
+  roles(
+    first: $first
+    skip: $skip
+    where: {
+      institution_: { id: $id }
+      name: $name
+      targetContract: $targetContract
+      owner: $owner
+    }
+  ) {
+    id
+    name
+    owner
+    targetContract
+    institution {
+      id
+    }
+  }
+}

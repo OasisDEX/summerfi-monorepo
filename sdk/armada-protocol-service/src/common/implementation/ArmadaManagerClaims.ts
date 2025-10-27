@@ -237,9 +237,13 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
     const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
-    const stakingRewardsManagerAddresses = vaults.vaults.map(
-      (vault) => vault.rewardsManager?.id as `0x${string}` | undefined,
-    )
+    const stakingRewardsManagerAddresses = vaults.vaults.map((vault) => {
+      if ('rewardsManager' in vault) {
+        return vault.rewardsManager?.id as `0x${string}` | undefined
+      } else {
+        return undefined
+      }
+    })
     // readContract summer token abi
 
     const contractCalls: {

@@ -1,5 +1,5 @@
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { ContractRoleScenario } from './utils/types'
 
 jest.setTimeout(300000)

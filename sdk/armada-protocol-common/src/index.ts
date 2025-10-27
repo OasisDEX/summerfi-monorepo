@@ -4,6 +4,10 @@ export type {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
+  GetPositionHistoryQuery,
+  Position_Filter,
+  GetVaultQueryInstitutions,
+  GetVaultsQueryInstitutions,
 } from '@summerfi/subgraph-manager-common'
 export {
   ArmadaParametersDataSchema,

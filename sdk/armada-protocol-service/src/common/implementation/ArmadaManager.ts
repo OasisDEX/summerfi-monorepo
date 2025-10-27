@@ -48,6 +48,7 @@ export class ArmadaManager implements IArmadaManager {
 
   private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
+  private _clientId?: string
 
   private _hubChainInfo: IChainInfo
   private _configProvider: IConfigurationProvider
@@ -72,6 +73,7 @@ export class ArmadaManager implements IArmadaManager {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
+    clientId?: string
   }) {
     this._configProvider = params.configProvider
     this._deploymentProvider = params.deploymentProvider
@@ -82,6 +84,7 @@ export class ArmadaManager implements IArmadaManager {
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
+    this._clientId = params.clientId
 
     this._supportedChains = params.supportedChains
     const _hubChainId = this._configProvider.getConfigurationItem({
@@ -153,12 +156,15 @@ export class ArmadaManager implements IArmadaManager {
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
+      subgraphManager: this._subgraphManager,
     })
     this.accessControl = new ArmadaManagerAccessControl({
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
       deploymentProvider: this._deploymentProvider,
+      subgraphManager: this._subgraphManager,
+      clientId: this._clientId,
     })
   }
 }

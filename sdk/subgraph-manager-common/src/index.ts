@@ -1,7 +1,6 @@
 export type { IArmadaSubgraphManager } from './interfaces/IArmadaSubgraphManager'
 export { createProtocolGraphQLClient } from './utils/createProtocolGraphQLClient'
 export { createInstitutionsGraphQLClient } from './utils/createInstitutionsGraphQLClient'
-export type { Institution, GetInstitutionsQuery } from './generated/institutions/client'
 export type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -11,6 +10,7 @@ export type {
   GetUsersActivityQuery,
   GetUserActivityQuery,
   GetPositionQuery,
+  GetPositionHistoryQuery,
   Position_Filter,
   Position,
   Deposit,
@@ -24,3 +24,11 @@ export {
   GetRebalancesDocument,
   Network,
 } from './generated/protocol/client'
+export type {
+  GetVaultQuery as GetVaultQueryInstitutions,
+  GetVaultsQuery as GetVaultsQueryInstitutions,
+  GetInstitutionsQuery,
+  GetInstitutionByIdQuery,
+  Institution,
+  GetRolesQuery,
+} from './generated/institutions/client'

@@ -20,7 +20,7 @@ import {
 } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
-import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
+import { FleetCommanderWhitelistAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
@@ -34,7 +34,7 @@ export class FleetCommanderContract<
     const TClient extends IBlockchainClient,
     TAddress extends IAddress,
   >
-  extends ContractWrapper<typeof FleetCommanderAbi, TClient, TAddress>
+  extends ContractWrapper<typeof FleetCommanderWhitelistAbi, TClient, TAddress>
   implements IFleetCommanderContract
 {
   readonly _erc4626Contract: IErc4626Contract
@@ -313,7 +313,34 @@ export class FleetCommanderContract<
     })
   }
 
+  /** @see IFleetCommanderContract.setWhitelisted */
+  setWhitelisted(params: { account: IAddress; allowed: boolean }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setWhitelisted',
+      args: [params.account.toSolidityValue(), params.allowed],
+      description: `Set whitelist status for ${params.account} to ${params.allowed}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setWhitelistedBatch */
+  setWhitelistedBatch(params: {
+    accounts: IAddress[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo> {
+    const accountsSolidity = params.accounts.map((account) => account.toSolidityValue())
+    return this._createTransaction({
+      functionName: 'setWhitelistedBatch',
+      args: [accountsSolidity, params.allowed],
+      description: `Batch set whitelist status for ${params.accounts.length} accounts`,
+    })
+  }
+
   /** READ METHODS */
+
+  /** @see IFleetCommanderContract.isWhitelisted */
+  async isWhitelisted(params: { account: IAddress }): Promise<boolean> {
+    return this.contract.read.isWhitelisted([params.account.value])
+  }
 
   /** @see IFleetCommanderContract.arks */
   async arks(): Promise<IAddress[]> {
@@ -379,8 +406,8 @@ export class FleetCommanderContract<
   }
 
   /** @see IContractWrapper.getAbi */
-  getAbi(): typeof FleetCommanderAbi {
-    return FleetCommanderAbi
+  getAbi(): typeof FleetCommanderWhitelistAbi {
+    return FleetCommanderWhitelistAbi
   }
 
   /** PRIVATE */

@@ -2,6 +2,7 @@ import type { IArmadaManagerAccessControl } from '@summerfi/armada-protocol-comm
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import {
   IAddress,
   getChainInfoByChainId,
@@ -29,6 +30,8 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
+  private _subgraphManager: IArmadaSubgraphManager
+  private _clientId?: string
   private _roleHashes: Record<GlobalRoles, HexData | null> = { ...GLOBAL_ROLE_HASHES }
 
   /**
@@ -44,11 +47,15 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
+    subgraphManager: IArmadaSubgraphManager
+    clientId?: string
   }) {
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
+    this._subgraphManager = params.subgraphManager
+    this._clientId = params.clientId
   }
 
   /** PRIVATE METHODS **/
@@ -475,19 +482,15 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
-    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    // Get the AdmiralsQuarters contract
-    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: chainInfo,
-      address: admiralsQuartersAddress,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
     })
 
-    return admiralsQuartersContract.isWhitelisted({ account: params.account })
+    return fleetCommanderContract.isWhitelisted({
+      account: Address.createFromEthereum({ value: params.targetAddress }),
+    })
   }
 
   /** @see IArmadaManagerAccessControl.setWhitelisted */
@@ -495,20 +498,14 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
-    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
-      chainId: params.chainId,
-    })
-
-    // Get the AdmiralsQuarters contract
-    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: chainInfo,
-      address: admiralsQuartersAddress,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
     })
 
-    return admiralsQuartersContract.setWhitelisted({
-      account: params.account,
+    return fleetCommanderContract.setWhitelisted({
+      account: Address.createFromEthereum({ value: params.targetAddress }),
       allowed: params.allowed,
     })
   }
@@ -518,10 +515,74 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     // Get the chain info from the provided chainId
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
-    // Get the AdmiralsQuarters contract address from deployment config
+    // Get the FleetCommander contract
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: chainInfo,
+      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
+    })
+
+    return fleetCommanderContract.setWhitelistedBatch({
+      accounts: params.targetAddresses.map((account) =>
+        Address.createFromEthereum({ value: account }),
+      ),
+      allowed: params.allowed,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.isWhitelistedAQ */
+  isWhitelistedAQ: IArmadaManagerAccessControl['isWhitelistedAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
     const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
-      contractName: 'admiralsQuarters',
       chainId: params.chainId,
+      contractName: 'admiralsQuarters',
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.isWhitelisted({
+      account: params.targetAddress,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelistedAQ */
+  setWhitelistedAQ: IArmadaManagerAccessControl['setWhitelistedAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainId,
+      contractName: 'admiralsQuarters',
+    })
+
+    // Get the AdmiralsQuarters contract
+    const admiralsQuartersContract = await this._contractsProvider.getAdmiralsQuartersContract({
+      chainInfo: chainInfo,
+      address: admiralsQuartersAddress,
+    })
+
+    return admiralsQuartersContract.setWhitelisted({
+      account: params.targetAddress,
+      allowed: params.allowed,
+    })
+  }
+
+  /** @see IArmadaManagerAccessControl.setWhitelistedBatchAQ */
+  setWhitelistedBatchAQ: IArmadaManagerAccessControl['setWhitelistedBatchAQ'] = async (params) => {
+    // Get the chain info from the provided chainId
+    const chainInfo = getChainInfoByChainId(Number(params.chainId))
+
+    // Get the AdmiralsQuarters contract address
+    const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
+      chainId: params.chainId,
+      contractName: 'admiralsQuarters',
     })
 
     // Get the AdmiralsQuarters contract
@@ -531,8 +592,33 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
     })
 
     return admiralsQuartersContract.setWhitelistedBatch({
-      accounts: params.accounts,
+      accounts: params.targetAddresses,
       allowed: params.allowed,
     })
+  }
+
+  /** @see IArmadaManagerAccessControl.getAllRoles */
+  getAllRoles: IArmadaManagerAccessControl['getAllRoles'] = async (params) => {
+    try {
+      if (!this._clientId) {
+        throw new Error('Client ID is not set for ArmadaManagerAccessControl')
+      }
+      const result = await this._subgraphManager.getAllRoles({
+        chainId: params.chainId,
+        institutionId: this._clientId,
+        first: params.first ?? 1000,
+        skip: params.skip ?? 0,
+        name: params.name,
+        targetContract: params.targetContract,
+        owner: params.owner,
+      })
+
+      return result
+    } catch (error) {
+      LoggingService.error('Error fetching roles from subgraph:', error)
+      throw new Error(
+        `Failed to get roles: ${(error as { message: string } | undefined)?.message ?? error}`,
+      )
+    }
   }
 }

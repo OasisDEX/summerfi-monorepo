@@ -27,6 +27,7 @@ export class ArmadaManagerFactory {
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     supportedChains: IChainInfo[]
+    clientId?: string
   }): ArmadaManager {
     return new ArmadaManager(params)
   }

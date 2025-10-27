@@ -6,6 +6,7 @@ import { arkConfig } from './armada-protocol-handlers/admin/arkConfig'
 import { addArks } from './armada-protocol-handlers/admin/addArks'
 import { emergencyShutdown } from './armada-protocol-handlers/admin/emergencyShutdown'
 import { forceRebalance } from './armada-protocol-handlers/admin/forceRebalance'
+import { getFeeRevenueConfig } from './armada-protocol-handlers/admin/getFeeRevenueConfig'
 import { removeArk } from './armada-protocol-handlers/admin/removeArk'
 import { setArkDepositCap } from './armada-protocol-handlers/admin/setArkDepositCap'
 import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceInflow'
@@ -23,6 +24,7 @@ import { getVaultsHistoricalRates } from './armada-protocol-handlers/users/getVa
 import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
 import { getVaultInfo } from './armada-protocol-handlers/users/getVaultInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
+import { getPositionHistory } from './armada-protocol-handlers/users/getPositionHistory'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
 import { getWithdrawTx } from './armada-protocol-handlers/users/getWithdrawTxTx'
@@ -90,6 +92,10 @@ import { getAllAddressesWithContractSpecificRole } from './armada-protocol-handl
 import { isWhitelisted } from './armada-protocol-handlers/access-control/isWhitelisted'
 import { setWhitelisted } from './armada-protocol-handlers/access-control/setWhitelisted'
 import { setWhitelistedBatch } from './armada-protocol-handlers/access-control/setWhitelistedBatch'
+import { isWhitelistedAQ } from './armada-protocol-handlers/access-control/isWhitelistedAQ'
+import { setWhitelistedAQ } from './armada-protocol-handlers/access-control/setWhitelistedAQ'
+import { setWhitelistedBatchAQ } from './armada-protocol-handlers/access-control/setWhitelistedBatchAQ'
+import { getAllRoles } from './armada-protocol-handlers/access-control/getAllRoles'
 
 /**
  * Server
@@ -141,6 +147,7 @@ export const sdkAppRouter = router({
       getVaultInfoList: getVaultInfoList,
       getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
+      getPositionHistory: getPositionHistory,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
       getDepositTx: getDepositTx,
@@ -194,6 +201,7 @@ export const sdkAppRouter = router({
       emergencyShutdown: emergencyShutdown,
       arks: arks,
       arkConfig: arkConfig,
+      getFeeRevenueConfig: getFeeRevenueConfig,
     },
     accessControl: {
       hasGlobalRole: hasGlobalRole,
@@ -207,6 +215,10 @@ export const sdkAppRouter = router({
       isWhitelisted: isWhitelisted,
       setWhitelisted: setWhitelisted,
       setWhitelistedBatch: setWhitelistedBatch,
+      isWhitelistedAQ: isWhitelistedAQ,
+      setWhitelistedAQ: setWhitelistedAQ,
+      setWhitelistedBatchAQ: setWhitelistedBatchAQ,
+      getAllRoles: getAllRoles,
     },
   },
 })

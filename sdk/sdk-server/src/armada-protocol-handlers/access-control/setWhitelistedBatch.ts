@@ -6,7 +6,8 @@ export const setWhitelistedBatch = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      accounts: z.array(z.custom<AddressValue>(isAddressValue)),
+      fleetCommanderAddress: z.custom<AddressValue>(isAddressValue),
+      targetAddresses: z.array(z.custom<AddressValue>(isAddressValue)),
       allowed: z.array(z.boolean()),
     }),
   )

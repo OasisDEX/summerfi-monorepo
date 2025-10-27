@@ -80,6 +80,15 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
       const position = ArmadaPosition.createFrom({
         id: positionId,
         amount: tokenAmount,
+        assets: tokenAmount,
+        assetPriceUSD: FiatCurrencyAmount.createFrom({
+          amount: '1.23',
+          fiat: FiatCurrency.USD,
+        }),
+        assetsUSD: FiatCurrencyAmount.createFrom({
+          amount: '151.84',
+          fiat: FiatCurrency.USD,
+        }),
         shares: sharesAmount,
         pool: pool,
         depositsAmount: tokenAmount,
@@ -97,6 +106,16 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
         claimableSummerToken: tokenAmount,
         claimedSummerToken: tokenAmount,
         rewards: [],
+        earnings: tokenAmount,
+        earningsUSD: FiatCurrencyAmount.createFrom({
+          amount: '78.90',
+          fiat: FiatCurrency.USD,
+        }),
+        netDeposits: tokenAmount,
+        netDepositsUSD: FiatCurrencyAmount.createFrom({
+          amount: '12.34',
+          fiat: FiatCurrency.USD,
+        }),
       })
 
       expect(position).toBeDefined()

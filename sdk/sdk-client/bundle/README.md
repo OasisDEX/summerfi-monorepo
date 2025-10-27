@@ -411,8 +411,6 @@ const hash = await walletClient.sendTransaction({
 // create a user using chainId and wallet address
 const user = User.createFromEthereum(ChainIds.Base, '0x.........')
 
-// when you have deposited some assets to the vault
-
 // you can retrieve all user positions on a particular chain
 const positions = await sdk.armada.users.getUserPositions({
   user,
@@ -423,6 +421,122 @@ const position = await sdk.armada.users.getUserPosition({
   user,
   fleetAddress: Address.createFromEthereum({ value: '0x.........' }),
 })
+
+// Access position data
+if (position) {
+  console.log('Position Details:', {
+    // Asset holdings
+    assets: position.assets.toString(), // Current balance
+    assetsUSD: position.assetsUSD.toString(), // Value in USD
+    shares: position.shares.toString(), // Vault shares held
+
+    // Deposit/Withdrawal totals
+    depositsAmount: position.depositsAmount.toString(),
+    withdrawalsAmount: position.withdrawalsAmount.toString(),
+
+    // Calculated metrics
+    netDeposits: position.netDeposits.toString(), // deposits - withdrawals
+    earnings: position.earnings.toString(), // assets - netDeposits (profit/loss)
+    earningsUSD: position.earningsUSD.toString(),
+
+    // Rewards
+    claimableSummerToken: position.claimableSummerToken.toString(),
+  })
+}
+```
+
+### Retrieve Position History
+
+Get historical snapshots of a position's value over time, including hourly, daily, and weekly data
+points.
+
+**Parameters:**
+
+- **positionId**: The position ID object containing user and vault information
+
+**Example:**
+
+```typescript
+import { ArmadaPositionId, User, ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Get positionId by using retrieved user positions
+const userPosition = await sdk.armada.users.getUserPosition({ user, fleetAddress })
+const positionId = userPosition?.id
+
+// Get position history
+const history = await sdk.armada.users.getPositionHistory({ positionId })
+
+if (history.position) {
+  console.log('Position History:', {
+    hourly: history.position.hourlyPositionHistory.map((snapshot) => ({
+      timestamp: snapshot.timestamp.toString(),
+      netValue: snapshot.netValue,
+      deposits: snapshot.deposits,
+      withdrawals: snapshot.withdrawals,
+    })),
+    daily: history.position.dailyPositionHistory.map((snapshot) => ({
+      timestamp: snapshot.timestamp.toString(),
+      netValue: snapshot.netValue,
+      deposits: snapshot.deposits,
+      withdrawals: snapshot.withdrawals,
+    })),
+    weekly: history.position.weeklyPositionHistory.map((snapshot) => ({
+      timestamp: snapshot.timestamp.toString(),
+      netValue: snapshot.netValue,
+      deposits: snapshot.deposits,
+      withdrawals: snapshot.withdrawals,
+    })),
+  })
+
+  // Example: Access the most recent hourly snapshot
+  if (history.position.hourlyPositionHistory.length > 0) {
+    const latestSnapshot = history.position.hourlyPositionHistory[0]
+    console.log('Latest snapshot:', {
+      timestamp: latestSnapshot.timestamp.toString(),
+      netValue: latestSnapshot.netValue,
+      deposits: latestSnapshot.deposits,
+      withdrawals: latestSnapshot.withdrawals,
+    })
+  }
+} else {
+  console.log('Position not found or has no activity')
+}
+```
+
+**Response:**
+
+Returns historical position data with snapshots at different time intervals.
+
+```json
+{
+  "position": {
+    "hourlyPositionHistory": [
+      {
+        "timestamp": "1729900000",
+        "netValue": "1000.50",
+        "deposits": "1000.00",
+        "withdrawals": "0.00"
+      }
+    ],
+    "dailyPositionHistory": [
+      {
+        "timestamp": "1729814400",
+        "netValue": "995.75",
+        "deposits": "1000.00",
+        "withdrawals": "0.00"
+      }
+    ],
+    "weeklyPositionHistory": [
+      {
+        "timestamp": "1729209600",
+        "netValue": "980.25",
+        "deposits": "1000.00",
+        "withdrawals": "0.00"
+      }
+    ]
+  }
+}
 ```
 
 ### Switch Vaults
@@ -1289,21 +1403,34 @@ interface IOracleManagerClient {
 
 ```tsx
 IArmadaPosition = {
-  id: IArmadaPositionId;
-  pool: IArmadaVault;
-  amount: ITokenAmount
-  shares: ITokenAmount
-  // Total deposits and withdrawals (aggregated)
-  depositsAmount: ITokenAmount
-  depositsAmountUSD: IFiatCurrencyAmount
-  withdrawalsAmount: ITokenAmount
-  withdrawalsAmountUSD: IFiatCurrencyAmount
-  claimedSummerToken: ITokenAmount
-  claimableSummerToken: ITokenAmount
-  rewards: {
+  id: IArmadaPositionId
+  pool: IArmadaVault
+
+  assets: ITokenAmount        // Current asset balance in the position
+  assetPriceUSD: IFiatCurrencyAmount  // Current price of the asset in USD
+  assetsUSD: IFiatCurrencyAmount      // Current value of assets in USD
+  shares: ITokenAmount        // Number of vault shares held
+
+  depositsAmount: ITokenAmount        // Total amount ever deposited
+  depositsAmountUSD: IFiatCurrencyAmount   // Total deposits in USD
+  withdrawalsAmount: ITokenAmount     // Total amount ever withdrawn
+  withdrawalsAmountUSD: IFiatCurrencyAmount  // Total withdrawals in USD
+
+  netDeposits: ITokenAmount       // deposits - withdrawals
+  netDepositsUSD: IFiatCurrencyAmount   // Net deposits in USD
+  earnings: ITokenAmount          // assets - netDeposits (profit/loss)
+  earningsUSD: IFiatCurrencyAmount      // Earnings in USD
+
+  claimedSummerToken: ITokenAmount     // SUMR tokens already claimed
+  claimableSummerToken: ITokenAmount   // SUMR tokens available to claim
+  rewards: Array<{                     // Other reward tokens
     claimed: ITokenAmount
     claimable: ITokenAmount
-  }[]
+  }>
+
+  // Deprecated Properties (from v1.x)
+  /** @deprecated Use assets instead */
+  amount: ITokenAmount
 }
 ```
 
@@ -1311,7 +1438,8 @@ IArmadaPosition = {
 
 ```tsx
 IArmadaPositionId = {
-  user: IUser;
+  id: string  // Format: {wallet_address}-{fleet_address} (lowercase)
+  user: IUser
 }
 ```
 
@@ -1643,6 +1771,18 @@ enum FiatCurrency {
     - `weeklyRates`: Weekly aggregated average rates
     - `latestRate`: Most recent rate snapshot
 
+- **📈 Position History**: New method to retrieve historical snapshots of position value over time
+
+  - **getPositionHistory** - Fetch historical data for a specific user position
+  - Returns hourly, daily, and weekly position snapshots
+  - Each snapshot includes:
+    - `timestamp`: Unix timestamp of the snapshot
+    - `netValue`: Position value at that time
+    - `deposits`: Cumulative deposits up to that point
+    - `withdrawals`: Cumulative withdrawals up to that point
+  - Useful for tracking position performance and generating historical charts
+  - Returns `null` for positions that don't exist or have no activity
+
 - **💸 ERC20 Token Transfers**: New method for generating ERC20 token transfer transactions
 
   - **getErc20TokenTransferTx** - Generate transaction to transfer ERC20 tokens to any address
@@ -1663,11 +1803,26 @@ enum FiatCurrency {
   - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
 
 - **💎 Vault Share Price**: Vault info now includes current share price
+
   - Added `sharePrice` property to `IArmadaVaultInfo` showing the current price per share
   - Expressed as an `IPrice` type (e.g., "1.000557823094 WETH per LVWETH")
   - Represents the current value of one vault share in terms of the underlying asset
   - Useful for calculating the current value of user positions and tracking vault performance
   - Available in both `getVaultInfo()` and `getVaultInfoList()` responses
+
+- **📊 Enhanced Position Interface**: `IArmadaPosition` now includes comprehensive metrics and
+  earnings tracking
+
+  - **New properties added:**
+    - `assets`: Current asset balance (replaces deprecated `amount`)
+    - `assetPriceUSD`: Current price of the asset in USD
+    - `assetsUSD`: Current value of assets in USD
+    - `netDeposits`: Calculated as deposits - withdrawals
+    - `netDepositsUSD`: Net deposits in USD
+    - `earnings`: Calculated as assets - netDeposits (profit/loss)
+    - `earningsUSD`: Earnings in USD
+  - **Deprecated properties (still available for backward compatibility):**
+    - `amount`: Use `assets` instead
 
 **Breaking Changes:**
 
@@ -1676,14 +1831,20 @@ enum FiatCurrency {
 
 **Migration Guide:**
 
-The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts. Use the
-following new fields instead:
+The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts and new
+calculated metrics:
+
+**For deposit/withdrawal totals:**
 
 - `depositsAmount: ITokenAmount` - Total amount deposited (replaces summing up `deposits` array)
 - `withdrawalsAmount: ITokenAmount` - Total amount withdrawn (replaces summing up `withdrawals`
   array)
 - `depositsAmountUSD: IFiatCurrencyAmount` - Total deposits in USD
 - `withdrawalsAmountUSD: IFiatCurrencyAmount` - Total withdrawals in USD
+
+**For current position value:**
+
+- Use `assets` instead of deprecated `amount` property
 
 ### v2.0.0
 

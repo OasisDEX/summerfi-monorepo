@@ -8,7 +8,10 @@ import type {
   AddressValue,
   IRebalanceData,
   IArkConfig,
+  IFeeRevenueConfig,
+  IChainInfo,
 } from '@summerfi/sdk-common'
+import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IArmadaManagerAdmin
@@ -265,4 +268,34 @@ export interface IArmadaManagerAdmin {
    * @returns Promise<IAddress[]> The list of active ark addresses
    */
   arks(params: { vaultId: IArmadaVaultId }): Promise<IAddress[]>
+
+  /**
+   * @name getFeeRevenueConfig
+   * @description Gets the fee revenue configuration with hardcoded values per chain
+   *
+   * @param chainId The chain ID to get fee revenue configuration for
+   *
+   * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
+   */
+  getFeeRevenueConfig(params: { chainId: ChainId }): Promise<IFeeRevenueConfig>
+
+  /**
+   * @name getVaultsRaw
+   * @description Get all vaults in the protocol
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GetVaultsQuery
+   */
+  getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
+
+  /**
+   * @name getVaultRaw
+   * @description Get the specific vault in the protocol
+   *
+   * @param vaultId ID of the pool to retrieve
+   *
+   * @returns GetVaultQuery
+   */
+  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
 }

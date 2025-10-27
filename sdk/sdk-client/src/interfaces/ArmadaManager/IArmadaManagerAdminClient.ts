@@ -8,7 +8,13 @@ import {
   type IArmadaVaultId,
   type IArkConfig,
   type IRebalanceData,
+  type IFeeRevenueConfig,
+  type IChainInfo,
 } from '@summerfi/sdk-common'
+import type {
+  GetVaultQueryInstitutions,
+  GetVaultsQueryInstitutions,
+} from '@summerfi/armada-protocol-common'
 
 /**
  * @name IArmadaManagerAdminClient
@@ -248,4 +254,34 @@ export interface IArmadaManagerAdminClient {
    * @returns Promise<IArkConfig> The ark configuration
    */
   arkConfig(params: { chainId: ChainId; arkAddressValue: AddressValue }): Promise<IArkConfig>
+
+  /**
+   * @name getFeeRevenueConfig
+   * @description Gets the fee revenue configuration with hardcoded values per chain
+   *
+   * @param chainId The chain ID to get fee revenue configuration for
+   *
+   * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
+   */
+  getFeeRevenueConfig(params: { chainId: ChainId }): Promise<IFeeRevenueConfig>
+
+  /**
+   * @method getVaultsRaw
+   * @description Retrieves all protocol vaults
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns All Armada vaults
+   */
+  getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQueryInstitutions>
+
+  /**
+   * @method getVaultRaw
+   * @description Retrieves a specific protocol vault
+   *
+   * @param vaultId ID of the vault
+   *
+   * @returns The corresponding Armada vault
+   */
+  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQueryInstitutions>
 }

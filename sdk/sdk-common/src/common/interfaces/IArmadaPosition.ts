@@ -22,20 +22,32 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   readonly id: IArmadaPositionId
   /** Pool where the position is opened */
   readonly pool: IArmadaVault
-  /** Amount deposited in the Fleet */
-  readonly amount: ITokenAmount
+  /** Assets balance */
+  readonly assets: ITokenAmount
+  /** Asset price in USD */
+  readonly assetPriceUSD: IFiatCurrencyAmount
+  /** Assets value in USD */
+  readonly assetsUSD: IFiatCurrencyAmount
   /** Number of shares allocated to this position */
   readonly shares: ITokenAmount
 
-  /** Total amount deposited in the Fleet */
+  /** Total assets deposited in the Fleet */
   readonly depositsAmount: ITokenAmount
-  /** Total amount withdrawn from the Fleet */
-  readonly withdrawalsAmount: ITokenAmount
-
-  /** Total amount deposited in the Fleet in USD */
+  /** Total assets deposited in the Fleet in USD */
   readonly depositsAmountUSD: IFiatCurrencyAmount
-  /** Total amount withdrawn from the Fleet in USD */
+  /** Total assets withdrawn from the Fleet */
+  readonly withdrawalsAmount: ITokenAmount
+  /** Total assets withdrawn from the Fleet in USD */
   readonly withdrawalsAmountUSD: IFiatCurrencyAmount
+
+  /** Net deposits (deposits - withdrawals) */
+  readonly netDeposits: ITokenAmount
+  /** Net deposits in USD */
+  readonly netDepositsUSD: IFiatCurrencyAmount
+  /** Earnings (amount - netDeposits) */
+  readonly earnings: ITokenAmount
+  /** Earnings in USD */
+  readonly earningsUSD: IFiatCurrencyAmount
 
   /** Claimed SUMR rewards */
   readonly claimedSummerToken: ITokenAmount
@@ -46,9 +58,11 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
     claimed: ITokenAmount
     claimable: ITokenAmount
   }>
-
   // Re-declaring to narrow the type
   readonly type: PositionType.Armada
+
+  /** @deprecated Use assets instead */
+  readonly amount: ITokenAmount
 }
 
 /**
@@ -58,20 +72,19 @@ export const ArmadaPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
   id: z.custom<IArmadaPositionId>((val) => isArmadaPositionId(val)),
   pool: z.custom<IArmadaVault>((val) => isArmadaVault(val)),
-  amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  assets: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  assetPriceUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
+  assetsUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
   shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   depositsAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   withdrawalsAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   depositsAmountUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
   withdrawalsAmountUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
-  /* @deprecated do not use */
-  deposits: z.array(
-    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
-  ),
-  /* @deprecated do not use */
-  withdrawals: z.array(
-    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
-  ),
+  netDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  netDepositsUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
+  earnings: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  earningsUSD: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
+
   claimedSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   claimableSummerToken: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   rewards: z.array(
@@ -81,6 +94,17 @@ export const ArmadaPositionDataSchema = z.object({
     }),
   ),
   type: z.literal(PositionType.Armada),
+
+  /* @deprecated Use assets instead */
+  amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  /* @deprecated do not use */
+  deposits: z.array(
+    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
+  ),
+  /* @deprecated do not use */
+  withdrawals: z.array(
+    z.object({ amount: z.custom<ITokenAmount>(isTokenAmount), timestamp: z.number() }),
+  ),
 })
 
 /**

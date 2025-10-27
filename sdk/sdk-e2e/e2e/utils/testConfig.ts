@@ -40,7 +40,7 @@ export const FleetAddresses = {
     eth: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
     usdc: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     eurc: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-    selfManaged: '0x29f13a877F3d1A14AC0B15B07536D4423b35E198',
+    selfManaged: '0xfb42001c8c39011c96b6181ced913aefa0d53514',
   },
   ArbitrumOne: {
     usdt: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',

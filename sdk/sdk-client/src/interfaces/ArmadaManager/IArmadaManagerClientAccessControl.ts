@@ -5,6 +5,7 @@ import type {
   AddressValue,
   ContractSpecificRoleName,
   GlobalRoles,
+  RolesResponse,
 } from '@summerfi/sdk-common'
 
 /**
@@ -146,44 +147,118 @@ export interface IArmadaManagerClientAccessControl {
 
   /**
    * @name isWhitelisted
-   * @description Checks if an address is whitelisted in the AdmiralsQuarters contract
+   * @description Checks if an address is whitelisted in the FleetCommander contract
    *
    * @param chainId The chain ID to check the whitelist status on
-   * @param account The address to check for whitelist status
+   * @param fleetCommanderAddress The FleetCommander contract address
+   * @param targetAddress The address to check for whitelist status
    *
    * @returns Promise<boolean> True if the address is whitelisted
    */
-  isWhitelisted(params: { chainId: ChainId; account: AddressValue }): Promise<boolean>
+  isWhitelisted(params: {
+    chainId: ChainId
+    fleetCommanderAddress: AddressValue
+    targetAddress: AddressValue
+  }): Promise<boolean>
 
   /**
    * @name setWhitelisted
-   * @description Sets the whitelist status for an address in the AdmiralsQuarters contract
+   * @description Sets the whitelist status for an address in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
-   * @param account The address to set the whitelist status for
+   * @param fleetCommanderAddress The FleetCommander contract address
+   * @param targetAddress The address to set the whitelist status for
    * @param allowed The whitelist status to set
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
   setWhitelisted(params: {
     chainId: ChainId
-    account: AddressValue
+    fleetCommanderAddress: AddressValue
+    targetAddress: AddressValue
     allowed: boolean
   }): Promise<TransactionInfo>
 
   /**
    * @name setWhitelistedBatch
-   * @description Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
+   * @description Sets the whitelist status for multiple addresses in the FleetCommander contract
    *
    * @param chainId The chain ID to set the whitelist status on
-   * @param accounts The addresses to set the whitelist status for
-   * @param allowed The whitelist statuses to set (must match the length of accounts)
+   * @param fleetCommanderAddress The FleetCommander contract address
+   * @param targetAddresses The addresses to set the whitelist status for
+   * @param allowed The whitelist statuses to set (must match the length of targetAddresses)
    *
    * @returns Promise<TransactionInfo> The transaction information
    */
   setWhitelistedBatch(params: {
     chainId: ChainId
-    accounts: AddressValue[]
+    fleetCommanderAddress: AddressValue
+    targetAddresses: AddressValue[]
     allowed: boolean[]
   }): Promise<TransactionInfo>
+
+  /**
+   * @name isWhitelistedAQ
+   * @description Checks if an address is whitelisted in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to check the whitelist status on
+   * @param targetAddress The address to check for whitelist status
+   *
+   * @returns Promise<boolean> True if the address is whitelisted
+   */
+  isWhitelistedAQ(params: { chainId: ChainId; targetAddress: AddressValue }): Promise<boolean>
+
+  /**
+   * @name setWhitelistedAQ
+   * @description Sets the whitelist status for an address in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to set the whitelist status on
+   * @param targetAddress The address to set the whitelist status for
+   * @param allowed The whitelist status to set
+   *
+   * @returns Promise<TransactionInfo> The transaction information
+   */
+  setWhitelistedAQ(params: {
+    chainId: ChainId
+    targetAddress: AddressValue
+    allowed: boolean
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setWhitelistedBatchAQ
+   * @description Sets the whitelist status for multiple addresses in the AdmiralsQuarters contract
+   *
+   * @param chainId The chain ID to set the whitelist status on
+   * @param targetAddresses The addresses to set the whitelist status for
+   * @param allowed The whitelist statuses to set (must match the length of targetAddresses)
+   *
+   * @returns Promise<TransactionInfo> The transaction information
+   */
+  setWhitelistedBatchAQ(params: {
+    chainId: ChainId
+    targetAddresses: AddressValue[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name getAllRoles
+   * @description Gets all roles for a given chainId with pagination and filtering support
+   *
+   * @param chainId The chain ID to get roles for
+   * @param first Number of items to return (default: 1000)
+   * @param skip Number of items to skip for pagination (default: 0)
+   * @param name Optional role name filter
+   * @param targetContract Optional target contract address filter
+   * @param owner Optional owner address filter
+   *
+   * @returns Promise with array of role objects containing id, name, owner, targetContract, and institution
+   */
+  getAllRoles(params: {
+    chainId: ChainId
+    first?: number
+    skip?: number
+    name?: string
+    targetContract?: AddressValue
+    owner?: AddressValue
+  }): Promise<RolesResponse>
 }

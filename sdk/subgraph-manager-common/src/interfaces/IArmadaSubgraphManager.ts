@@ -7,12 +7,16 @@ import type {
   GetGlobalRebalancesQuery,
   GetUsersActivityQuery,
   GetUserActivityQuery,
-  Position_Filter,
   GetPositionQuery,
+  GetPositionHistoryQuery,
+  Position_Filter,
 } from '../generated/protocol/client'
 import type {
-  GetInstitutionByIdQuery,
+  GetVaultQuery as GetVaultQueryInstitutions,
+  GetVaultsQuery as GetVaultsQueryInstitutions,
   GetInstitutionsQuery,
+  GetInstitutionByIdQuery,
+  GetRolesQuery,
 } from '../generated/institutions/client'
 
 /**
@@ -31,7 +35,7 @@ export interface IArmadaSubgraphManager {
    * @throws Error
    *
    */
-  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery>
+  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
 
   /**
    * @name getVault
@@ -45,7 +49,10 @@ export interface IArmadaSubgraphManager {
    * @throws Error
    *
    */
-  getVault(params: { chainId: ChainId; vaultId: string }): Promise<GetVaultQuery>
+  getVault(params: {
+    chainId: ChainId
+    vaultId: string
+  }): Promise<GetVaultQuery | GetVaultQueryInstitutions>
 
   /**
    * @name getGlobalRebalances
@@ -95,6 +102,19 @@ export interface IArmadaSubgraphManager {
    *
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<GetPositionQuery>
+
+  /**
+   * @name getPositionHistory
+   * @description Get position history snapshots for a given position
+   *
+   * @param positionId Position ID (format: {wallet_address}-{fleet_address})
+   *
+   * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
+   *
+   * @throws Error if position not found or query fails
+   *
+   */
+  getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
    * @name getUsersActivity
@@ -149,4 +169,31 @@ export interface IArmadaSubgraphManager {
    *
    */
   getInstitutionById(params: { chainId: ChainId; id: string }): Promise<GetInstitutionByIdQuery>
+
+  /**
+   * @name getAllRoles
+   * @description Get all roles for a given chainId with pagination and filtering
+   *
+   * @param chainId target chain
+   * @param institutionId institution ID to filter roles by
+   * @param first number of items to return (default: 1000)
+   * @param skip number of items to skip for pagination (default: 0)
+   * @param name optional role name filter
+   * @param targetContract optional target contract address filter
+   * @param owner optional owner address filter
+   *
+   * @returns GetRolesQuery
+   *
+   * @throws Error
+   *
+   */
+  getAllRoles(params: {
+    institutionId: string
+    chainId: ChainId
+    first?: number
+    skip?: number
+    name?: string
+    targetContract?: string
+    owner?: string
+  }): Promise<GetRolesQuery>
 }

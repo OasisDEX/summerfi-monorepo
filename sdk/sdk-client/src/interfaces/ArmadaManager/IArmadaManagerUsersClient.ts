@@ -5,8 +5,9 @@ import {
   type GetUsersActivityQuery,
   type GetUserActivityQuery,
   type MerklReward,
+  type GetPositionHistoryQuery,
+  type Position_Filter,
 } from '@summerfi/armada-protocol-common'
-import type { Position_Filter } from '@summerfi/subgraph-manager-common'
 import {
   BridgeTransactionInfo,
   ITokenAmount,
@@ -17,7 +18,7 @@ import {
   type ArmadaMigratablePositionApy,
   type ArmadaMigrationType,
   type ChainId,
-  type ChainInfo,
+  type IChainInfo,
   type ClaimTransactionInfo,
   type DelegateTransactionInfo,
   type DepositTransactionInfo,
@@ -26,7 +27,6 @@ import {
   type IArmadaPositionId,
   type IArmadaVaultId,
   type IArmadaVaultInfo,
-  type IChainInfo,
   type IPercentage,
   type MerklClaimTransactionInfo,
   type IToken,
@@ -55,7 +55,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The Summer token for the given chain
    */
-  getSummerToken(params: { chainInfo: ChainInfo }): Promise<IToken>
+  getSummerToken(params: { chainInfo: IChainInfo }): Promise<IToken>
 
   /**
    * @method getVaultsRaw
@@ -65,7 +65,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns All Armada vaults
    */
-  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+  getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
 
   /**
    * @method getVaultRaw
@@ -85,7 +85,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns GerRebalancesQuery
    */
-  getGlobalRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetGlobalRebalancesQuery>
+  getGlobalRebalancesRaw(params: { chainInfo: IChainInfo }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getUsersActivityRaw
@@ -96,7 +96,7 @@ export interface IArmadaManagerUsersClient {
    * @returns GerUsersActivityQuery
    */
   getUsersActivityRaw(params: {
-    chainInfo: ChainInfo
+    chainInfo: IChainInfo
     where?: Position_Filter
   }): Promise<GetUsersActivityQuery>
 
@@ -179,6 +179,15 @@ export interface IArmadaManagerUsersClient {
    * @returns The position of the user in the corresponding Armada pool
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition | undefined>
+
+  /**
+   * @method getPositionHistory
+   * @description Retrieves historical snapshots of a position
+   *
+   * @param positionId The ID of the position to retrieve history for
+   * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
+   */
+  getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
 
   /**
    * @method getNewDepositTx
@@ -352,7 +361,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transaction needed to claim the rewards
    */
   getAggregatedClaimsForChainTx(params: {
-    chainInfo: ChainInfo
+    chainInfo: IChainInfo
     user: IUser
     includeMerkl?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>

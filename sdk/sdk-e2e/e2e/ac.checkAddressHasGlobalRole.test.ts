@@ -1,5 +1,5 @@
 import { GlobalRoles } from '@summerfi/sdk-common'
-import { createAdminSdkTestSetup } from './utils/accessControlTestSetup'
+import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { GlobalRoleScenario } from './utils/types'
 
 jest.setTimeout(300000)

@@ -33,13 +33,18 @@ import { getSpotPricesHandler } from '../handlers/getSpotPricesHandler'
 import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuthorizeAsMerklRewardsOperatorTxHandler'
 import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesMerklClaimTxHandler'
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
+import { getPositionHistoryHandler } from '../handlers/getPositionHistoryHandler'
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
 import { isWhitelistedHandler } from '../handlers/isWhitelistedHandler'
 import { setWhitelistedTxHandler } from '../handlers/setWhitelistedTxHandler'
 import { setWhitelistedBatchTxHandler } from '../handlers/setWhitelistedBatchTxHandler'
+import { isWhitelistedAQHandler } from '../handlers/isWhitelistedAQHandler'
+import { setWhitelistedAQTxHandler } from '../handlers/setWhitelistedAQTxHandler'
+import { setWhitelistedBatchAQTxHandler } from '../handlers/setWhitelistedBatchAQTxHandler'
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
+import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -123,15 +128,20 @@ export const useSDK = (params: UseSdk) => {
   )
   const getReferralFeesMerklClaimTx = useMemo(() => getReferralFeesMerklClaimTxHandler(sdk), [sdk])
   const getUserMerklRewards = useMemo(() => getUserMerklRewardsHandler(sdk), [sdk])
+  const getPositionHistory = useMemo(() => getPositionHistoryHandler(sdk), [sdk])
   const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
   const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
   const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
   const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
   const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
+  const isWhitelistedAQ = useMemo(() => isWhitelistedAQHandler(sdk), [sdk])
+  const setWhitelistedAQTx = useMemo(() => setWhitelistedAQTxHandler(sdk), [sdk])
+  const setWhitelistedBatchAQTx = useMemo(() => setWhitelistedBatchAQTxHandler(sdk), [sdk])
 
   // region Admin Handlers
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
   const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
+  const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -145,6 +155,7 @@ export const useSDK = (params: UseSdk) => {
       getWithdrawTx,
       getUserPositions,
       getUserPosition,
+      getPositionHistory,
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
@@ -172,8 +183,12 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
       grantContractSpecificRole,
       revokeContractSpecificRole,
+      getAllRoles,
     }),
     [
       getCurrentUser,
@@ -186,6 +201,7 @@ export const useSDK = (params: UseSdk) => {
       getWithdrawTx,
       getUserPositions,
       getUserPosition,
+      getPositionHistory,
       getSwapQuote,
       getAggregatedRewards,
       getClaimableAggregatedRewards,
@@ -213,9 +229,13 @@ export const useSDK = (params: UseSdk) => {
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
+      isWhitelistedAQ,
+      setWhitelistedAQTx,
+      setWhitelistedBatchAQTx,
       // region Admin Handlers
       grantContractSpecificRole,
       revokeContractSpecificRole,
+      getAllRoles,
     ],
   )
 

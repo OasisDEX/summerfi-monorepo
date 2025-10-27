@@ -129,4 +129,24 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
   ): ReturnType<IArmadaManagerAdminClient['arkConfig']> {
     return this.rpcClient.armada.admin.arkConfig.query(params)
   }
+
+  /** @see IArmadaManagerAdminClient.getFeeRevenueConfig */
+  async getFeeRevenueConfig(
+    params: Parameters<IArmadaManagerAdminClient['getFeeRevenueConfig']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['getFeeRevenueConfig']> {
+    return this.rpcClient.armada.admin.getFeeRevenueConfig.query(params)
+  }
+
+  /** @see IArmadaManagerAdminClient.getVaultsRaw */
+  async getVaultsRaw(
+    params: Parameters<IArmadaManagerAdminClient['getVaultsRaw']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['getVaultsRaw']> {
+    return this.rpcClient.armada.users.getVaultsRaw.query(params)
+  }
+  /** @see IArmadaManagerAdminClient.getVaultRaw */
+  async getVaultRaw(
+    params: Parameters<IArmadaManagerAdminClient['getVaultRaw']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['getVaultRaw']> {
+    return this.rpcClient.armada.users.getVaultRaw.query(params)
+  }
 }

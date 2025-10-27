@@ -6,7 +6,8 @@ export const isWhitelisted = publicProcedure
   .input(
     z.object({
       chainId: z.custom<ChainId>(isChainId),
-      account: z.custom<AddressValue>(isAddressValue),
+      fleetCommanderAddress: z.custom<AddressValue>(isAddressValue),
+      targetAddress: z.custom<AddressValue>(isAddressValue),
     }),
   )
   .query(async (opts) => {

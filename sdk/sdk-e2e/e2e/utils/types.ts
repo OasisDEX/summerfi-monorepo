@@ -3,6 +3,9 @@ import type {
   ChainInfo,
   ContractSpecificRoleName,
   GlobalRoles,
+  AddressValue,
+  GraphRoleName,
+  ChainId,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -31,4 +34,54 @@ export type WhitelistScenario = {
   description: string
   shouldWhitelist?: boolean
   shouldRemoveFromWhitelist?: boolean
+}
+
+export type GetAllRolesScenario = {
+  description: string
+  roleName?: GraphRoleName
+  targetContract?: AddressValue
+  owner?: AddressValue
+  first?: number
+  skip?: number
+  expectedMinimumCount?: number
+}
+
+export type DepositScenario = {
+  description: string
+  chainConfig: {
+    rpcUrl: string
+    chainId: ChainId
+    fleetAddressValue: AddressValue
+    symbol: string
+  }
+  amountValue: string
+  swapToSymbol?: string
+  stake?: boolean
+  referralCode?: string
+}
+
+export type WithdrawScenario = {
+  description: string
+  chainConfig: {
+    rpcUrl: string
+    chainId: ChainId
+    fleetAddressValue: AddressValue
+    symbol: string
+  }
+  amountValue: string
+  swapToSymbol?: string
+}
+
+export type RebalanceScenario = {
+  description: string
+  fromArk: Address
+  toArk: Address
+  amount: string
+  tokenSymbol: string
+}
+
+export type VaultInfoScenario = {
+  description: string
+  useAdminSdk?: boolean
+  testSpecificVault?: boolean
 }

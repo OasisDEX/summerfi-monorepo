@@ -12,7 +12,9 @@ async function copyAbis(contractList, pkg) {
 
 const coreAbis = [
   'AdmiralsQuarters.sol',
+  'AdmiralsQuartersWhitelist.sol',
   'FleetCommander.sol',
+  'FleetCommanderWhitelist.sol',
   'StakingRewardsManagerBase.sol',
   'HarborCommand.sol',
   'Ark.sol',

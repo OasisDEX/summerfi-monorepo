@@ -68,7 +68,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setFleetDepositCap
-   * @description Sets the deposit cap of the fleet. Used by the governance
+   * @description Sets the deposit cap of the fleet.
    *
    * @param cap The new deposit cap
    *
@@ -78,7 +78,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setMaxRebalanceOperations
-   * @description Sets the maximum number of rebalance operations per rebalance. Used by the governance
+   * @description Sets the maximum number of rebalance operations per rebalance.
    *
    * @param maxOperations The new maximum number of rebalance operations
    *
@@ -88,7 +88,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setTipRate
-   * @description Sets the tip rate of the fleet. Used by the governance
+   * @description Sets the tip rate of the fleet.
    *
    * @param rate The new tip rate
    *
@@ -98,7 +98,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name addArk
-   * @description Adds a new ark to the fleet. Used by the governance
+   * @description Adds a new ark to the fleet.
    *
    * @param ark The address of the new ark
    *
@@ -108,7 +108,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name addArks
-   * @description Adds a list of new arks to the fleet. Used by the governance
+   * @description Adds a list of new arks to the fleet.
    *
    * @param arks The list of addresses of the new arks
    *
@@ -118,7 +118,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name removeArk
-   * @description Removes an ark from the fleet. Used by the governance
+   * @description Removes an ark from the fleet.
    *
    * @param ark The address of the ark to remove
    *
@@ -128,7 +128,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setArkDepositCap
-   * @description Sets the deposit cap of an ark. Used by the governance
+   * @description Sets the deposit cap of an ark.
    *
    * @param ark The address of the ark
    * @param cap The new deposit cap
@@ -153,7 +153,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setArkMaxRebalanceOutflow
-   * @description Sets the maximum rebalance outflow of an ark. Used by the governance
+   * @description Sets the maximum rebalance outflow of an ark.
    *
    * @param ark The address of the ark
    * @param maxRebalanceOutflow The new maximum rebalance outflow
@@ -167,7 +167,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setArkMaxRebalanceInflow
-   * @description Sets the maximum rebalance inflow of an ark. Used by the governance
+   * @description Sets the maximum rebalance inflow of an ark.
    *
    * @param ark The address of the ark
    * @param maxRebalanceInflow The new maximum rebalance inflow
@@ -181,7 +181,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setArkMinimumBufferBalance
-   * @description Sets the minimum buffer balance of an ark. Used by the governance
+   * @description Sets the minimum buffer balance of an ark.
    *
    * @param ark The address of the ark
    * @param minimumBufferBalance The new minimum buffer balance
@@ -192,7 +192,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name setRebalanceCooldown
-   * @description Sets the rebalance cooldown of the fleet. Used by the governance
+   * @description Sets the rebalance cooldown of the fleet.
    *
    * @param cooldown The new rebalance cooldown
    *
@@ -202,7 +202,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name forceRebalance
-   * @description Forces a rebalance of the fleet. Used by the governance
+   * @description Forces a rebalance of the fleet.
    *
    * @param rebalanceData The data for the rebalance
    *
@@ -212,13 +212,48 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name emergencyShutdown
-   * @description Shuts down the fleet in case of an emergency. Used by the governance
+   * @description Shuts down the fleet in case of an emergency.
    *
    * @returns The transaction information
    */
   emergencyShutdown(): Promise<TransactionInfo>
 
+  /**
+   * @name setWhitelisted
+   * @description Sets the whitelist status for an account
+   *
+   * @param account The address to set whitelist status for
+   * @param allowed Whether the account should be whitelisted
+   *
+   * @returns The transaction information
+   */
+  setWhitelisted(params: { account: IAddress; allowed: boolean }): Promise<TransactionInfo>
+
+  /**
+   * @name setWhitelistedBatch
+   * @description Sets the whitelist status for multiple accounts.
+   *
+   * @param accounts The list of addresses to set whitelist status for
+   * @param allowed The list of whitelist statuses for each account
+   *
+   * @returns The transaction information
+   */
+  setWhitelistedBatch(params: {
+    accounts: IAddress[]
+    allowed: boolean[]
+  }): Promise<TransactionInfo>
+
   /** READ METHODS */
+
+  /**
+   * @name isWhitelisted
+   * @description Returns whether an account is whitelisted
+   *
+   * @param account The address to check
+   *
+   * @returns True if the account is whitelisted, false otherwise
+   */
+  isWhitelisted(params: { account: IAddress }): Promise<boolean>
 
   /**
    * @name arks
