@@ -15,6 +15,7 @@ import {
   SDKErrorType,
   TokenAmount,
   TransactionInfo,
+  type AddressValue,
   type IFleetConfig,
   type IRebalanceData,
 } from '@summerfi/sdk-common'
@@ -391,6 +392,11 @@ export class FleetCommanderContract<
     ])
 
     return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
+  }
+
+  /** @see IFleetCommanderContract.treasury */
+  async treasury(): Promise<AddressValue> {
+    return await this.contract.read.treasury()
   }
 
   /** CASTING METHODS */

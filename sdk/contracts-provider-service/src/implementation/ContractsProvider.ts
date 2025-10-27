@@ -8,8 +8,9 @@ import {
   IProtocolAccessManagerWhiteListContract,
   IArkContract,
   IAdmiralsQuartersContract,
+  IConfigurationManagerContract,
 } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, getChainInfoByChainId } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from './contracts/Erc20Contract/Erc20Contract'
 import { Erc4626Contract } from './contracts/Erc4626Contract/Erc4626Contract'
@@ -17,6 +18,7 @@ import { FleetCommanderContract } from './contracts/FleetCommanderContract/Fleet
 import { ProtocolAccessManagerWhiteListContract } from './contracts/ProtocolAccessManagerWhiteListContract/ProtocolAccessManagerWhiteListContract'
 import { ArkContract } from './contracts/ArkContract'
 import { AdmiralsQuartersContract } from './contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
+import { ConfigurationManagerContract } from './contracts/ConfigurationManagerContract/ConfigurationManagerContract'
 
 /**
  * @name ContractsProvider
@@ -124,6 +126,22 @@ export class ContractsProvider implements IContractsProvider {
         chainInfo: params.chainInfo,
       }),
       chainInfo: params.chainInfo,
+      address: params.address,
+    })
+  }
+
+  /** @see IContractsProvider.getConfigurationManagerContract */
+  async getConfigurationManagerContract(params: {
+    chainId: number
+    address: IAddress
+  }): Promise<IConfigurationManagerContract> {
+    const chainInfo = getChainInfoByChainId(params.chainId)
+
+    return ConfigurationManagerContract.create({
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo,
+      }),
+      chainInfo,
       address: params.address,
     })
   }

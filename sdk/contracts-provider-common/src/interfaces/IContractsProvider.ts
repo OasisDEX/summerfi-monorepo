@@ -1,10 +1,11 @@
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, type ChainId } from '@summerfi/sdk-common'
 import { IErc20Contract } from './contracts/IErc20Contract'
 import { IErc4626Contract } from './contracts/IErc4626Contract'
 import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
 import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAccessManagerWhiteListContract'
 import { IArkContract } from './contracts/IArkContract'
 import { IAdmiralsQuartersContract } from './contracts/IAdmiralsQuartersContract'
+import { IConfigurationManagerContract } from './contracts/IConfigurationManagerContract'
 
 /**
  * @name IContractsProvider
@@ -94,4 +95,18 @@ export interface IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IAdmiralsQuartersContract>
+
+  /**
+   * @name getConfigurationManagerContract
+   * @description Returns a ConfigurationManager contract wrapper
+   *
+   * @param {ChainId} chainId The chain ID where the contract is deployed
+   * @param {IAddress} address The address of the ConfigurationManager contract
+   *
+   * @returns {IConfigurationManagerContract}
+   */
+  getConfigurationManagerContract(params: {
+    chainId: ChainId
+    address: IAddress
+  }): Promise<IConfigurationManagerContract>
 }

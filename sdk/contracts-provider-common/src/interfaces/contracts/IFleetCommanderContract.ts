@@ -3,6 +3,7 @@ import {
   IPercentage,
   ITokenAmount,
   TransactionInfo,
+  type AddressValue,
   type IFleetConfig,
   type IRebalanceData,
 } from '@summerfi/sdk-common'
@@ -280,6 +281,14 @@ export interface IFleetCommanderContract extends IContractWrapper {
    *              the current moment
    */
   maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
+
+  /**
+   * @name treasury
+   * @description Returns the address of the treasury
+   *
+   * @returns The address value of the treasury
+   */
+  treasury(): Promise<AddressValue>
 
   /** CASTING METHODS */
 

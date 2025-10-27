@@ -1,6 +1,7 @@
 export * from './AdmiralsQuarters.sol';
 export * from './AdmiralsQuartersWhitelist.sol';
 export * from './Ark.sol';
+export * from './ConfigurationManager.sol';
 export * from './FleetCommander.sol';
 export * from './FleetCommanderWhitelist.sol';
 export * from './GovernanceRewardsManager.sol';

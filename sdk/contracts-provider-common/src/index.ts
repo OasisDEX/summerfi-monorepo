@@ -6,4 +6,5 @@ export type { IFleetCommanderContract } from './interfaces/contracts/IFleetComma
 export type { IArkContract } from './interfaces/contracts/IArkContract'
 export type { IProtocolAccessManagerWhiteListContract } from './interfaces/contracts/IProtocolAccessManagerWhiteListContract'
 export type { IAdmiralsQuartersContract } from './interfaces/contracts/IAdmiralsQuartersContract'
+export type { IConfigurationManagerContract } from './interfaces/contracts/IConfigurationManagerContract'
 export type { RebalanceDataSolidity } from './interfaces/types/FleetCommanderTypes'

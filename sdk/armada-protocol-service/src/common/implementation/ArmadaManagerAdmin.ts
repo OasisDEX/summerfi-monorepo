@@ -8,6 +8,7 @@ import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { Address, getChainInfoByChainId, Percentage } from '@summerfi/sdk-common'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 
 /**
  * @name ArmadaManagerAdmin
@@ -17,6 +18,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   private _configProvider: IConfigurationProvider
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _deploymentProvider: IDeploymentProvider
   private _subgraphManager: IArmadaSubgraphManager
 
   /** CONSTRUCTOR */
@@ -24,11 +26,13 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
+    deploymentProvider: IDeploymentProvider
     subgraphManager: IArmadaSubgraphManager
   }) {
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._deploymentProvider = params.deploymentProvider
     this._subgraphManager = params.subgraphManager
   }
 
@@ -274,12 +278,23 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
 
   /** @see IArmadaManagerAdmin.getFeeRevenueConfig */
   async getFeeRevenueConfig(
-    _params: Parameters<IArmadaManagerAdmin['getFeeRevenueConfig']>[0],
+    params: Parameters<IArmadaManagerAdmin['getFeeRevenueConfig']>[0],
   ): ReturnType<IArmadaManagerAdmin['getFeeRevenueConfig']> {
-    // Return hardcoded values per chain
-    // TODO: Replace placeholder address with actual fee receiver address
+    const configurationManagerAddress = this._deploymentProvider.getDeployedContractAddress({
+      contractName: 'configurationManager',
+      chainId: params.chainId,
+    })
+
+    const configurationManagerContract =
+      await this._contractsProvider.getConfigurationManagerContract({
+        chainId: params.chainId,
+        address: configurationManagerAddress,
+      })
+
+    const vaultFeeReceiverAddress = await configurationManagerContract.treasury()
+
     return {
-      vaultFeeReceiverAddress: '0x0000000000000000000000000000000000000000',
+      vaultFeeReceiverAddress,
       vaultFeeAmount: Percentage.createFrom({
         value: 2,
       }),
