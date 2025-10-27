@@ -44,8 +44,11 @@ const sumrStakeInfoSchema = z.object({
   walletAddress: addressSchema,
 })
 
-export async function GET(_request: Request, { params }: { params: { walletAddress: string } }) {
-  const { walletAddress } = params
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ walletAddress: string }> },
+) {
+  const { walletAddress } = await params
 
   const { success } = sumrStakeInfoSchema.safeParse({ walletAddress })
 
