@@ -79,3 +79,9 @@ export type RebalanceScenario = {
   amount: string
   tokenSymbol: string
 }
+
+export type VaultInfoScenario = {
+  description: string
+  useAdminSdk?: boolean
+  testSpecificVault?: boolean
+}
