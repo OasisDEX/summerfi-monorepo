@@ -12,6 +12,8 @@ import type {
   Position_Filter,
 } from '../generated/protocol/client'
 import type {
+  GetVaultQuery as GetVaultQueryInstitutions,
+  GetVaultsQuery as GetVaultsQueryInstitutions,
   GetInstitutionsQuery,
   GetInstitutionByIdQuery,
   GetRolesQuery,
@@ -33,7 +35,7 @@ export interface IArmadaSubgraphManager {
    * @throws Error
    *
    */
-  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery>
+  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
 
   /**
    * @name getVault
@@ -47,7 +49,10 @@ export interface IArmadaSubgraphManager {
    * @throws Error
    *
    */
-  getVault(params: { chainId: ChainId; vaultId: string }): Promise<GetVaultQuery>
+  getVault(params: {
+    chainId: ChainId
+    vaultId: string
+  }): Promise<GetVaultQuery | GetVaultQueryInstitutions>
 
   /**
    * @name getGlobalRebalances

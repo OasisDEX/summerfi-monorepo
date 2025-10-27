@@ -25,8 +25,10 @@ export {
   Network,
 } from './generated/protocol/client'
 export type {
-  Institution,
+  GetVaultQuery as GetVaultQueryInstitutions,
+  GetVaultsQuery as GetVaultsQueryInstitutions,
   GetInstitutionsQuery,
   GetInstitutionByIdQuery,
+  Institution,
   GetRolesQuery,
 } from './generated/institutions/client'

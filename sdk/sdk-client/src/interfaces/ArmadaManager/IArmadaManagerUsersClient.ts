@@ -7,6 +7,8 @@ import {
   type MerklReward,
   type GetPositionHistoryQuery,
   type Position_Filter,
+  type GetVaultsQueryInstitutions,
+  type GetVaultQueryInstitutions,
 } from '@summerfi/armada-protocol-common'
 import {
   BridgeTransactionInfo,
@@ -66,7 +68,9 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns All Armada vaults
    */
-  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+  getVaultsRaw(params: {
+    chainInfo: ChainInfo
+  }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
 
   /**
    * @method getVaultRaw
@@ -76,7 +80,9 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The corresponding Armada vault
    */
-  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
+  getVaultRaw(params: {
+    vaultId: IArmadaVaultId
+  }): Promise<GetVaultQuery | GetVaultQueryInstitutions>
 
   /**
    * @name getGlobalRebalancesRaw

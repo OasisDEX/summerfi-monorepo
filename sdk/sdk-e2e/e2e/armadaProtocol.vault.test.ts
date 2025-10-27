@@ -10,20 +10,20 @@ import { ChainConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
+import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vault', () => {
-  const { chainId, fleetAddressValue } = ChainConfigs.SelfManaged
-  const userAddressValue = SharedConfig.userAddressValue
+  const { chainId, fleetAddress, userAddress } = createSdkTestSetup()
 
   const chainInfo = getChainInfoByChainId(chainId)
   const vaultId = ArmadaVaultId.createFrom({
     chainInfo,
-    fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+    fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
   })
 
-  console.log(`Running on ${chainInfo.name} for user ${userAddressValue}`)
+  console.log(`Running on ${chainInfo.name} for user ${userAddress.value}`)
 
   const sdk = createTestSDK()
 

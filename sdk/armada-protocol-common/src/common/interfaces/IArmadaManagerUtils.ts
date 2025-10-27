@@ -19,7 +19,9 @@ import {
 import type {
   GetGlobalRebalancesQuery,
   GetVaultQuery,
+  GetVaultQueryInstitutions,
   GetVaultsQuery,
+  GetVaultsQueryInstitutions,
   GetUsersActivityQuery,
   GetUserActivityQuery,
   GetPositionHistoryQuery,
@@ -98,7 +100,9 @@ export interface IArmadaManagerUtils {
    *
    * @returns GetVaultsQuery
    */
-  getVaultsRaw(params: { chainInfo: IChainInfo }): Promise<GetVaultsQuery>
+  getVaultsRaw(params: {
+    chainInfo: IChainInfo
+  }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
 
   /**
    * @name getVaultRaw
@@ -108,7 +112,9 @@ export interface IArmadaManagerUtils {
    *
    * @returns GetVaultQuery
    */
-  getVaultRaw(params: { vaultId: IArmadaVaultId }): Promise<GetVaultQuery>
+  getVaultRaw(params: {
+    vaultId: IArmadaVaultId
+  }): Promise<GetVaultQuery | GetVaultQueryInstitutions>
 
   /**
    * @name getGlobalRebalancesRaw
