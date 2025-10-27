@@ -10,7 +10,7 @@ import {
   IAdmiralsQuartersContract,
   IConfigurationManagerContract,
 } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { Erc20Contract } from './contracts/Erc20Contract/Erc20Contract'
 import { Erc4626Contract } from './contracts/Erc4626Contract/Erc4626Contract'
@@ -132,7 +132,7 @@ export class ContractsProvider implements IContractsProvider {
 
   /** @see IContractsProvider.getConfigurationManagerContract */
   async getConfigurationManagerContract(params: {
-    chainId: number
+    chainId: ChainId
     address: IAddress
   }): Promise<IConfigurationManagerContract> {
     const chainInfo = getChainInfoByChainId(params.chainId)
