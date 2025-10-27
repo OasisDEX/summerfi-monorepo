@@ -156,6 +156,7 @@ export class ArmadaManager implements IArmadaManager {
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
+      subgraphManager: this._subgraphManager,
     })
     this.accessControl = new ArmadaManagerAccessControl({
       configProvider: this._configProvider,

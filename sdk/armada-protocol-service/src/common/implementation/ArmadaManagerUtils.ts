@@ -35,6 +35,8 @@ import {
 import {
   IArmadaSubgraphManager,
   type GetPositionHistoryQuery,
+  type GetVaultsQuery,
+  type GetVaultQuery,
 } from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData, erc20Abi, zeroAddress } from 'viem'
@@ -122,7 +124,9 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
   /** @see IArmadaManagerUtils.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManagerUtils['getVaultsRaw']>[0]) {
-    return await this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+    return (await this._subgraphManager.getVaults({
+      chainId: params.chainInfo.chainId,
+    })) as GetVaultsQuery
   }
 
   /** @see IArmadaManagerUtils.getVaultRaw */
@@ -130,7 +134,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
     return this._subgraphManager.getVault({
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
-    })
+    }) as GetVaultQuery
   }
 
   /** @see IArmadaManagerUtils.getGlobalRebalancesRaw */

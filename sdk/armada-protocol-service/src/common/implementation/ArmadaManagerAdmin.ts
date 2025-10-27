@@ -1,8 +1,13 @@
-import type { IArmadaManagerAdmin } from '@summerfi/armada-protocol-common'
+import type {
+  GetVaultQuery,
+  GetVaultsQuery,
+  IArmadaManagerAdmin,
+} from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { Address, getChainInfoByChainId, Percentage } from '@summerfi/sdk-common'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name ArmadaManagerAdmin
@@ -12,16 +17,19 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   private _configProvider: IConfigurationProvider
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _subgraphManager: IArmadaSubgraphManager
 
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
+    subgraphManager: IArmadaSubgraphManager
   }) {
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
+    this._subgraphManager = params.subgraphManager
   }
 
   /** WRITE OPERATIONS */
@@ -183,7 +191,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
 
   /** @see IArmadaManagerAdmin.setTipJar */
   async setTipJar(
-    params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
+    _params: Parameters<IArmadaManagerAdmin['setTipJar']>[0],
   ): ReturnType<IArmadaManagerAdmin['setTipJar']> {
     throw new Error('setTipJar method is not implemented in ArmadaManagerAdmin')
   }
@@ -276,5 +284,20 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
         value: 2,
       }),
     }
+  }
+
+  /** @see IArmadaManagerAdmin.getVaultsRaw */
+  async getVaultsRaw(params: Parameters<IArmadaManagerAdmin['getVaultsRaw']>[0]) {
+    return (await this._subgraphManager.getVaults({
+      chainId: params.chainInfo.chainId,
+    })) as GetVaultsQuery
+  }
+
+  /** @see IArmadaManagerAdmin.getVaultRaw */
+  async getVaultRaw(params: Parameters<IArmadaManagerAdmin['getVaultRaw']>[0]) {
+    return this._subgraphManager.getVault({
+      chainId: params.vaultId.chainInfo.chainId,
+      vaultId: params.vaultId.fleetAddress.value,
+    }) as GetVaultQuery
   }
 }
