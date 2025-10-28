@@ -1,0 +1,24 @@
+.countDown,
+.countDownSmallGaps {
+  display: flex;
+}
+
+.countDown {
+  column-gap: 16px;
+}
+
+@media (min-width: 532px) {
+  .countDown {
+    column-gap: 32px;
+  }
+}
+
+.countDownSmallGaps {
+  column-gap: var(--space-s);
+}
+
+@media (min-width: 532px) {
+  .countDownSmallGaps {
+    column-gap: var(--space-l);
+  }
+}

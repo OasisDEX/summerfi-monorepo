@@ -13,7 +13,6 @@ declare const styles: {
   readonly "whyStakeSumrColumnBlocks": string;
   readonly "whyStakeSumrDescription": string;
   readonly "yieldSourceCard": string;
-  readonly "yieldSourceLabel": string;
   readonly "yieldSourceTitleWithIcon": string;
   readonly "yieldSourcesWrapper": string;
 };

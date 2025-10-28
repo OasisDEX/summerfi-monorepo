@@ -22,13 +22,6 @@
   align-items: flex-end;
 }
 
-.yieldSourceLabel {
-  width: fit-content;
-  border-radius: 4px;
-  padding: var(--spacing-space-2x-small) var(--spacing-space-x-small);
-  background: linear-gradient(90deg, rgba(255, 73, 164, 0.05) 0%, rgba(176, 73, 255, 0.05) 93%);
-}
-
 .yieldSourceCard {
   display: flex;
   flex-direction: column;

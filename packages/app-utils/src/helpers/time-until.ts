@@ -3,6 +3,7 @@ type TimeUntil = {
   days: number
   hours: number
   minutes: number
+  seconds: number
 }
 
 /**
@@ -33,6 +34,7 @@ export const timeUntil = (timestamp: string): TimeUntil => {
       days: 0,
       hours: 0,
       minutes: 0,
+      seconds: 0,
     }
   }
 
@@ -44,11 +46,13 @@ export const timeUntil = (timestamp: string): TimeUntil => {
   const remainingDays: number = days % 7
   const remainingHours: number = hours % 24
   const remainingMinutes: number = minutes % 60
+  const remainingSeconds: number = Math.floor((diff / 1000) % 60)
 
   return {
     weeks,
     days: remainingDays,
     hours: remainingHours,
     minutes: remainingMinutes,
+    seconds: remainingSeconds,
   }
 }

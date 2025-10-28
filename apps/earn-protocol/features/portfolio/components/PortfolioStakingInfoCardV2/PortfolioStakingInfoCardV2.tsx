@@ -7,6 +7,7 @@ import {
   Text,
   Tooltip,
   WithArrow,
+  YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -196,9 +197,7 @@ export const PortfolioStakingInfoCardV2 = ({
           )}
         </div>
         <div className={portfolioStakingInfoCardStyles.yieldSourceCard}>
-          <div className={portfolioStakingInfoCardStyles.yieldSourceLabel}>
-            <Text variant="p4semiColorful">Yield source 1</Text>
-          </div>
+          <YieldSourceLabel label="Yield source 1" />
           <DataModule
             dataBlock={{
               title: (
@@ -227,9 +226,7 @@ export const PortfolioStakingInfoCardV2 = ({
           />
         </div>
         <div className={portfolioStakingInfoCardStyles.yieldSourceCard}>
-          <div className={portfolioStakingInfoCardStyles.yieldSourceLabel}>
-            <Text variant="p4semiColorful">Yield source 2</Text>
-          </div>
+          <YieldSourceLabel label="Yield source 2" />
           <DataModule
             dataBlock={{
               title: (
