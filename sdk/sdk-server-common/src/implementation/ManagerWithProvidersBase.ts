@@ -51,7 +51,11 @@ export class ManagerWithProvidersBase<
     const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
     if (providers.length === 0) {
       throw new Error(
-        `No provider found for chainId: ${params.chainInfo.chainId} ${this._providersByChainId.entries()}`,
+        `No provider found for chainId: ${params.chainInfo.chainId} ${Array.from(
+          this._providersByChainId.entries(),
+        )
+          .map(([key, value]) => `${key}: ${value.length}`)
+          .join(', ')}`,
       )
     }
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import {
+  Address,
   ChainIds,
   getChainInfoByChainId,
   TokenAmount,
@@ -8,7 +9,7 @@ import {
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
+import { SDKApiUrl, SharedConfig } from './utils/testConfig'
 import { Wallet } from 'ethers'
 import assert from 'assert'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -24,7 +25,11 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 if (!rpcUrl) {
   throw new Error('Missing fork url')
 }
+const signerPrivateKey = SharedConfig.userPrivateKey
 const wallet = new Wallet(signerPrivateKey)
+const userAddress = Address.createFromEthereum({
+  value: SharedConfig.userAddressValue,
+})
 
 describe('Intent swaps', () => {
   it('should test intent swap flow', async () => {

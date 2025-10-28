@@ -31,11 +31,11 @@ export interface OneInchSwapResponse extends OneInchBaseResponse {
 }
 
 export interface OneInchQuoteResponse extends OneInchBaseResponse {
-  /* One Inch can provide multiple routes */
-  protocols?: OneInchSwapRoute[]
   fromTokenAmount: string
   toTokenAmount: string
-  estimatedGas: string
+  /* One Inch can provide multiple routes */
+  protocols?: OneInchSwapRoute[]
+  gas?: number
 }
 
 export type OneInchSwapRoute = OneInchSwapHop[]

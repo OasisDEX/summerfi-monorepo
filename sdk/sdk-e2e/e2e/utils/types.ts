@@ -7,6 +7,7 @@ import type {
   GraphRoleName,
   ChainId,
   FiatCurrency,
+  Percentage,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -93,4 +94,13 @@ export type OracleScenario = {
   baseTokenSymbol: string
   denominationTokenSymbol?: string
   denominationFiat?: FiatCurrency
+}
+
+export type SwapScenario = {
+  description: string
+  chainId: ChainId
+  fromTokenSymbol: string
+  toTokenSymbol: string
+  fromAmount: string
+  slippage: Percentage
 }
