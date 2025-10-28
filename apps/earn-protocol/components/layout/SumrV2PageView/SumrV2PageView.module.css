@@ -84,3 +84,38 @@
     }
   }
 }
+
+.innerHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sectionCardWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--spacing-space-large);
+}
+
+.sectionCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-space-medium-large);
+  border: 1px solid #3D3D3D;
+  background: #232323;
+  align-items: center;
+  max-width: 750px;
+
+  .factsSectionText {
+    width: 100%;
+    padding: 16px;
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+
+}

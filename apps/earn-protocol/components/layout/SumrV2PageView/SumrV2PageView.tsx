@@ -1,4 +1,12 @@
-import { Button, Card, CountDown, GradientBox, Text, YieldSourceLabel } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Card,
+  CountDown,
+  GradientBox,
+  SectionTabs,
+  Text,
+  YieldSourceLabel,
+} from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Image from 'next/image'
@@ -6,6 +14,12 @@ import Image from 'next/image'
 import sumrLogo from '@/public/img/branding/logo-dark.svg'
 
 import sumrv2PageViewStyles from './SumrV2PageView.module.css'
+
+import sumrStakingDiagram from '@/public/img/sumr/staking_diagram.png'
+
+const SectionCard = ({ children }: { children: React.ReactNode }) => {
+  return <Card className={sumrv2PageViewStyles.sectionCard}>{children}</Card>
+}
 
 export const SumrV2PageView = () => {
   return (
@@ -71,6 +85,92 @@ export const SumrV2PageView = () => {
           </Card>
         </GradientBox>
       </div>
+      <Text
+        as="h2"
+        variant="h2"
+        className={sumrv2PageViewStyles.innerHeader}
+        style={{
+          marginTop: '140px',
+          marginBottom: '50px',
+        }}
+      >
+        What you need to know
+      </Text>
+      <SectionTabs
+        wrapperStyle={{
+          margin: '0 auto',
+        }}
+        sections={[
+          {
+            id: 'facts',
+            title: 'Facts',
+            content: (
+              <div className={sumrv2PageViewStyles.sectionCardWrapper}>
+                <SectionCard>
+                  <Image
+                    src={sumrStakingDiagram}
+                    alt="SUMR Staking Diagram"
+                    quality={100}
+                    style={{ maxWidth: '85%' }}
+                  />
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Curate the best of DeFi</Text>
+                    <Text as="p" variant="p3">
+                      Approve or off board markets, ensuring only the best and safest yield
+                      opportunities are available.
+                    </Text>
+                  </div>
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Curate the best of DeFi</Text>
+                    <Text as="p" variant="p3">
+                      Approve or off board markets, ensuring only the best and safest yield
+                      opportunities are available.
+                    </Text>
+                  </div>
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Curate the best of DeFi</Text>
+                    <Text as="p" variant="p3">
+                      Approve or off board markets, ensuring only the best and safest yield
+                      opportunities are available.
+                    </Text>
+                  </div>
+                </SectionCard>
+                <Button variant="primarySmall">Stake SUMR</Button>
+              </div>
+            ),
+          },
+          {
+            id: 'timeline',
+            title: 'Timeline',
+            content: (
+              <SectionCard>
+                <Image
+                  src={sumrStakingDiagram}
+                  alt="SUMR Staking Diagram"
+                  quality={100}
+                  style={{ maxWidth: '85%' }}
+                />
+                Huh?
+              </SectionCard>
+            ),
+          },
+          {
+            id: 'faq',
+            title: 'FAQ',
+            content: (
+              <SectionCard>
+                <Image
+                  src={sumrStakingDiagram}
+                  alt="SUMR Staking Diagram"
+                  quality={100}
+                  style={{ maxWidth: '85%' }}
+                />
+                Huh?
+              </SectionCard>
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

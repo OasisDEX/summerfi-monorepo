@@ -1,4 +1,6 @@
 declare const styles: {
+  readonly "factsSectionText": string;
+  readonly "innerHeader": string;
   readonly "leftBlock": string;
   readonly "leftBlockButtons": string;
   readonly "rightBlock": string;
@@ -6,6 +8,8 @@ declare const styles: {
   readonly "rightBlockCountdown": string;
   readonly "rightBlockSumrLogo": string;
   readonly "rightBlockYieldSources": string;
+  readonly "sectionCard": string;
+  readonly "sectionCardWrapper": string;
   readonly "twoColumnHeader": string;
   readonly "twoColumnHeaderBlock": string;
   readonly "wrapper": string;
