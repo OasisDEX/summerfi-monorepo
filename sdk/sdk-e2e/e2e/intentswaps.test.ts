@@ -62,9 +62,7 @@ describe('Intent swaps', () => {
       signer: wallet,
     })
 
-    const chainInfo = getChainInfoByChainId(chainId)
-    const chain = await sdk.chains.getChain({ chainInfo })
-    const fromToken = await chain.tokens.getTokenBySymbol({ symbol: fromSymbol })
+    const fromToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: fromSymbol })
     // for ETH, we cannot use ETH directly we need to use WETH
     // there is eth-flow but only smart wallets and no limit orders
 
@@ -72,7 +70,7 @@ describe('Intent swaps', () => {
       amount: amountValue,
       token: fromToken,
     })
-    const toToken = await chain.tokens.getTokenBySymbol({ symbol: toSymbol })
+    const toToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: toSymbol })
 
     // get sell order quote
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({

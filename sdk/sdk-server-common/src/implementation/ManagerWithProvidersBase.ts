@@ -48,7 +48,6 @@ export class ManagerWithProvidersBase<
       }
       return provider
     }
-
     const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
     if (providers.length === 0) {
       throw new Error(

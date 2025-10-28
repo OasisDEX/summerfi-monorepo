@@ -12,6 +12,8 @@ import {
   LoggingService,
   OracleProviderType,
   isChainId,
+  createTimeoutSignal,
+  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import fetch from 'node-fetch'
@@ -37,6 +39,8 @@ export class CoingeckoOracleProvider
   private readonly _version: string
   private readonly _authHeader: string
   private readonly _supportedChainIds: ChainId[]
+  private readonly _defaultPrecision = '6'
+  private readonly _defaultCurrency = 'usd'
 
   /** CONSTRUCTOR */
 
@@ -67,40 +71,23 @@ export class CoingeckoOracleProvider
   async getSpotPrice(
     params: Parameters<IOracleProvider['getSpotPrice']>[0],
   ): ReturnType<IOracleProvider['getSpotPrice']> {
-    const authHeader = this._getAuthHeader()
-
     if (params.denomination && isToken(params.denomination)) {
       const baseToken = params.baseToken
       const quoteToken = params.denomination
       const quoteCurrencySymbol = FiatCurrency.USD
 
-      const spotUrl = this._formatSpotUrl({
+      const responseData = await this._fetchCoingeckoPrice({
         chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseToken.address, quoteToken.address],
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
+        debugContext: {
+          method: 'getSpotPrice - token denomination',
+          chainId: params.baseToken.chainInfo.chainId,
+          baseToken: params.baseToken.toString(),
+          denomination: params.denomination?.toString(),
+        },
       })
-      LoggingService.debug('CoingeckoSpotPriceUrl', spotUrl)
-
-      const response = await fetch(spotUrl, {
-        headers: authHeader,
-      })
-
-      if (!response.ok) {
-        const errorJSON = await response.text()
-        const errorType = this._parseErrorType(errorJSON)
-
-        throw Error(
-          `Error performing coingecko spot price request: ${JSON.stringify({
-            apiQuery: spotUrl,
-            statusCode: response.status,
-            json: errorJSON,
-            subtype: errorType,
-          })}`,
-        )
-      }
-
-      const responseData = (await response.json()) as CoingeckoResponse
 
       const baseUSDPrice =
         responseData[params.baseToken.address.value.toLowerCase()][
@@ -151,31 +138,17 @@ export class CoingeckoOracleProvider
       const quoteCurrency = params.denomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
 
-      const spotUrl = this._formatSpotUrl({
+      const responseData = await this._fetchCoingeckoPrice({
         chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseToken.address],
         quoteCurrency: quoteCurrency,
+        debugContext: {
+          method: 'getSpotPrice - Fiat denomination',
+          chainId: params.baseToken.chainInfo.chainId,
+          baseToken: params.baseToken.toString(),
+          denomination: quoteCurrency,
+        },
       })
-
-      const response = await fetch(spotUrl, {
-        headers: authHeader,
-      })
-
-      if (!response.ok) {
-        const errorJSON = await response.text()
-        const errorType = this._parseErrorType(errorJSON)
-
-        throw Error(
-          `Error performing coingecko spot price request: ${JSON.stringify({
-            apiQuery: spotUrl,
-            statusCode: response.status,
-            json: errorJSON,
-            subtype: errorType,
-          })}`,
-        )
-      }
-
-      const responseData = (await response.json()) as CoingeckoResponse
 
       const [, price] = Object.entries(responseData)[0]
 
@@ -201,34 +174,18 @@ export class CoingeckoOracleProvider
   async getSpotPrices(
     params: Parameters<IOracleProvider['getSpotPrices']>[0],
   ): ReturnType<IOracleProvider['getSpotPrices']> {
-    const authHeader = this._getAuthHeader()
     const quote = params.quoteCurrency ?? FiatCurrency.USD
 
-    const spotUrl = this._formatSpotUrl({
+    const responseData = await this._fetchCoingeckoPrice({
       chainInfo: params.chainInfo,
       tokenAddresses: params.baseTokens.map((token) => token.address),
       quoteCurrency: params.quoteCurrency,
+      debugContext: {
+        method: 'getSpotPrices',
+        baseTokens: params.baseTokens.map((token) => token.toString()),
+        quoteCurrency: quote,
+      },
     })
-
-    const response = await fetch(spotUrl, {
-      headers: authHeader,
-    })
-
-    if (!response.ok) {
-      const errorJSON = await response.text()
-      const errorType = this._parseErrorType(errorJSON)
-
-      throw Error(
-        `Error performing coingecko spot price request: ${JSON.stringify({
-          apiQuery: spotUrl,
-          statusCode: response.status,
-          json: errorJSON,
-          subtype: errorType,
-        })}`,
-      )
-    }
-
-    const responseData = (await response.json()) as CoingeckoResponse
 
     const priceByAddress = Object.fromEntries(
       Object.entries(responseData).map(([address, price]) => {
@@ -258,6 +215,124 @@ export class CoingeckoOracleProvider
   }
 
   /**
+   * Fetches price data from Coingecko API with error handling
+   * @param chainInfo The chain information
+   * @param tokenAddresses The token addresses to get the spot price for
+   * @param quoteCurrency The quote currency in which the spot prices will be denominated
+   * @param debugContext Context information for logging
+   * @returns The parsed JSON response
+   */
+  private async _fetchCoingeckoPrice(params: {
+    chainInfo: IChainInfo
+    tokenAddresses: IAddress[]
+    quoteCurrency?: FiatCurrency
+    debugContext: Record<string, unknown>
+  }): Promise<CoingeckoResponse> {
+    const authHeader = this._getAuthHeader()
+
+    // split tokenAddresses in two parts, tokens and native coins, check for a 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE address to identify native coins
+    const nativeCoins = params.tokenAddresses.filter(
+      (address) => address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+    )
+    const tokens = params.tokenAddresses.filter(
+      (address) => address.value.toLowerCase() !== NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+    )
+
+    const spotCoinsUrl = nativeCoins.length
+      ? this._formatTokensUrl({
+          chainInfo: params.chainInfo,
+          tokenAddresses: nativeCoins,
+          quoteCurrency: params.quoteCurrency,
+        })
+      : null
+
+    const spotUrl = tokens.length
+      ? this._formatTokensUrl({
+          chainInfo: params.chainInfo,
+          tokenAddresses: tokens,
+          quoteCurrency: params.quoteCurrency,
+        })
+      : null
+
+    LoggingService.debug('CoingeckoOracleProvider - fetching price', {
+      ...params.debugContext,
+      spotUrl,
+      spotCoinsUrl,
+    })
+
+    const spotRequests = []
+    if (spotUrl) {
+      spotRequests.push(
+        fetch(spotUrl, {
+          headers: authHeader,
+          signal: createTimeoutSignal(),
+        }),
+      )
+    }
+    if (spotCoinsUrl) {
+      spotRequests.push(
+        fetch(spotCoinsUrl, {
+          headers: authHeader,
+          signal: createTimeoutSignal(),
+        }),
+      )
+    }
+    // Build a parallel array of request URLs so we can tie responses to URLs for error reporting.
+    const requestUrls: string[] = []
+    if (spotUrl) requestUrls.push(spotUrl)
+    if (spotCoinsUrl) requestUrls.push(spotCoinsUrl)
+
+    const responses = await Promise.all(
+      requestUrls.map((url) =>
+        fetch(url, {
+          headers: authHeader,
+          signal: createTimeoutSignal(),
+        }),
+      ),
+    )
+
+    // Check each response for errors and parse JSON
+    const mergedResult: CoingeckoResponse = {}
+
+    for (let i = 0; i < responses.length; i++) {
+      const resp = responses[i]
+      const url = requestUrls[i]
+
+      if (!resp.ok) {
+        const errorText = await resp.text()
+        const errorType = this._parseErrorType(errorText)
+        throw Error(
+          `Error performing coingecko spot price request: ${JSON.stringify({
+            apiQuery: url,
+            statusCode: resp.status,
+            json: errorText,
+            subtype: errorType,
+          })}`,
+        )
+      }
+
+      const json = (await resp.json()) as Record<string, unknown>
+
+      // If this response is from the coin (native) endpoint, map its coin-id keyed entry
+      // to the native currency address key so callers expecting address keys keep working.
+      if (url === spotCoinsUrl) {
+        const coinId = this._getCoingeckoId(params.chainInfo.chainId)
+        const coinData = (json as Record<string, unknown>)[coinId]
+        if (coinData) {
+          mergedResult[NATIVE_CURRENCY_ADDRESS_LOWERCASE] = coinData as {
+            [currency: string]: number
+          }
+        }
+      } else {
+        // token endpoint returns address -> {currency: value} mapping; merge directly.
+        Object.assign(mergedResult, json as CoingeckoResponse)
+      }
+    }
+
+    return mergedResult
+  }
+
+  /**
    * Returns the authentication header for the 1inch spot price API
    * @returns  The authentication header with the API key
    */
@@ -276,13 +351,21 @@ export class CoingeckoOracleProvider
    *
    * @returns The formatted spot price URL
    */
-  private _formatSpotUrl(params: {
+  private _formatTokensUrl(params: {
     chainInfo: IChainInfo
     tokenAddresses: IAddress[]
     quoteCurrency?: FiatCurrency
   }): string {
     const chainId = params.chainInfo.chainId
     const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())
+    const hasNativeToken = tokenAddresses.includes(NATIVE_CURRENCY_ADDRESS_LOWERCASE)
+
+    // If the list contains the native token address, use the coin endpoint
+    if (hasNativeToken) {
+      return this._formatCoinUrl({ chainId, quoteCurrency: params.quoteCurrency })
+    }
+
+    // Otherwise, use the token_price endpoint
     const platform = this._getPlatform(chainId)
 
     /**
@@ -291,12 +374,63 @@ export class CoingeckoOracleProvider
      * https://portal.1inch.dev/documentation/spot-price/swagger?method=get&path=%2Fv1.1%2F1%2F%7Baddresses%7D
      */
 
-    const currency = params.quoteCurrency
-      ? `&vs_currencies=${params.quoteCurrency.toLowerCase()}`
-      : '&vs_currencies=usd'
-    const precision = `&precision=6`
+    const currencyParam = this._formatCurrencyParam(params.quoteCurrency)
+    const precisionParam = this._formatPrecisionParam()
 
-    return `${this._apiUrl}/${this._version}/simple/token_price/${platform}?contract_addresses=${tokenAddresses.join(',')}${currency}${precision}`
+    return `${this._apiUrl}/${this._version}/simple/token_price/${platform}?contract_addresses=${tokenAddresses.join(',')}${currencyParam}${precisionParam}`
+  }
+
+  /**
+   * Formats the coin price URL for native tokens
+   * @param chainId The chain ID
+   * @param quoteCurrency The quote currency in which the spot prices will be denominated
+   *
+   * @returns The formatted coin price URL
+   */
+  private _formatCoinUrl(params: { chainId: ChainId; quoteCurrency?: FiatCurrency }): string {
+    const id = this._getCoingeckoId(params.chainId)
+    const currencyParam = this._formatCurrencyParam(params.quoteCurrency)
+    const precisionParam = this._formatPrecisionParam()
+
+    return `${this._apiUrl}/${this._version}/simple/price?ids=${id}${currencyParam}${precisionParam}`
+  }
+
+  /**
+   * Formats the currency query parameter
+   * @param quoteCurrency The quote currency
+   * @returns The formatted currency parameter
+   */
+  private _formatCurrencyParam(quoteCurrency?: FiatCurrency): string {
+    const currency = quoteCurrency?.toLowerCase() ?? this._defaultCurrency
+    return `&vs_currencies=${currency}`
+  }
+
+  /**
+   * Formats the precision query parameter
+   * @returns The formatted precision parameter
+   */
+  private _formatPrecisionParam(): string {
+    return `&precision=${this._defaultPrecision}`
+  }
+
+  /**
+   * Maps chain ID to Coingecko coin ID
+   * @param chainId The chain ID
+   * @returns The Coingecko coin ID
+   */
+  private _getCoingeckoId(chainId: ChainId): string {
+    switch (chainId) {
+      case ChainIds.Mainnet:
+        return 'ethereum'
+      case ChainIds.ArbitrumOne:
+        return 'ethereum'
+      case ChainIds.Base:
+        return 'ethereum'
+      case ChainIds.Sonic:
+        return 'sonic-3'
+      default:
+        throw new Error(`Unsupported chainId for native token: ${chainId}`)
+    }
   }
 
   /**

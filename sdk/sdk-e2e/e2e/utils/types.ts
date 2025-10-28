@@ -6,6 +6,7 @@ import type {
   AddressValue,
   GraphRoleName,
   ChainId,
+  FiatCurrency,
 } from '@summerfi/sdk-common'
 
 export type ContractRoleScenario = {
@@ -84,4 +85,12 @@ export type VaultInfoScenario = {
   description: string
   useAdminSdk?: boolean
   testSpecificVault?: boolean
+}
+
+export type OracleScenario = {
+  description: string
+  chainId: ChainId
+  baseTokenSymbol: string
+  denominationTokenSymbol?: string
+  denominationFiat?: FiatCurrency
 }

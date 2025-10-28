@@ -41,7 +41,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     if (!urlMap) {
       throw new Error('No subgraph config in env')
     }
-    LoggingService.debug(`Loaded subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
+    LoggingService.log(`Loaded subgraph config from env ${envName}: ${JSON.stringify(urlMap)}`)
 
     this._urlMap = urlMap
   }
