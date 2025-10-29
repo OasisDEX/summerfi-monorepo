@@ -1013,18 +1013,17 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
               spender: admiralsQuartersAddress,
-              amount: withdrawAmount,
+              amount: finalUnstakeAndWithdrawAmount.finalUnstakeAndWithdrawSharesApprovalAmount,
               owner: params.user.wallet.address,
             }),
             this._getDepositSwapWithdrawMulticall({
               vaultId: params.vaultId,
               slippage: params.slippage,
-              fromAmount: withdrawAmount,
+              fromAmount: finalUnstakeAndWithdrawAmount.finalUnstakeAndWithdrawSharesApprovalAmount,
               toToken: swapToToken,
               toEth,
             }),
           ])
-          console.log('first')
 
           if (_approvalDepositSwapWithdraw) {
             approvalDepositSwapWithdraw = _approvalDepositSwapWithdraw
@@ -1273,7 +1272,6 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       token: params.toToken,
       amount: '0', // all tokens
     })
-    console.log('first1')
     // withdraw swapped assets
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -1289,7 +1287,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     } else {
       multicallOperations.push('withdrawTokens ' + outAmount.toString())
     }
-    console.log('first2')
+
     return {
       multicallArgs: multicallArgs,
       multicallOperations: multicallOperations,
