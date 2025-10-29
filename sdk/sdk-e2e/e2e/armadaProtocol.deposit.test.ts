@@ -28,32 +28,17 @@ describe('Armada Protocol - Deposit', () => {
   // Configure test scenarios here
   const depositScenarios: DepositScenario[] = [
     {
-      description: 'deposit USDC to self-managed fleet without staking',
-      chainConfig: ChainConfigs.SelfManaged,
-      amountValue: '1',
+      description: 'deposit ETH to Base WETH Vault without staking',
+      chainConfig: ChainConfigs.BaseWETH,
+      amountValue: '0.0005',
       stake: false,
     },
-    // Add more scenarios as needed:
-    // {
-    //   description: 'deposit USDC to self-managed fleet with staking',
-    //   chainConfig: ChainConfigs.SelfManaged,
-    //   amountValue: '1',
-    //   stake: true,
-    // },
-    // {
-    //   description: 'deposit with swap and staking',
-    //   chainConfig: ChainConfigs.Base,
-    //   amountValue: '1',
-    //   swapToSymbol: 'ETH',
-    //   stake: true,
-    // },
-    // {
-    //   description: 'deposit with referral code',
-    //   chainConfig: ChainConfigs.Base,
-    //   amountValue: '1',
-    //   stake: false,
-    //   referralCode: 'REF123',
-    // },
+    {
+      description: 'deposit ETH to Base WETH Vault with staking',
+      chainConfig: ChainConfigs.BaseWETH,
+      amountValue: '0.0005',
+      stake: true,
+    },
   ]
 
   describe('getNewDepositTx - deposit to fleet', () => {

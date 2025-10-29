@@ -161,13 +161,11 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
     })
     const [{ status: statusDecimals }, { status: statusSymbol }, { status: statusName }] = results
     if (statusDecimals !== 'success' || statusSymbol !== 'success' || statusName !== 'success') {
-      throw new Error('Error retrieving token info')
+      throw new Error(`Error retrieving token info: ${address}`)
     }
     const [{ result: decimals }, { result: symbol }, { result: name }] = results
     if (!decimals || !symbol || !name) {
-      throw new Error(
-        'Contract reading succeeded but some values are undefined, this should not happen',
-      )
+      throw new Error(`Contract reading succeeded but some values are undefined: ${address}`)
     }
     return {
       decimals: Number(decimals),

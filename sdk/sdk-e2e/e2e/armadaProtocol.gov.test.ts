@@ -18,8 +18,8 @@ describe.skip('Armada Protocol Gov', () => {
   // Configure test scenarios here
   const scenarios: GovTestScenario[] = [
     {
-      chainInfo: getChainInfoByChainId(ChainConfigs.Base.chainId),
-      rpcUrl: ChainConfigs.Base.rpcUrl,
+      chainInfo: getChainInfoByChainId(ChainConfigs.BaseUSDC.chainId),
+      rpcUrl: ChainConfigs.BaseUSDC.rpcUrl,
       userAddress: Address.createFromEthereum({ value: SharedConfig.userAddressValue }),
       enabled: true,
     },

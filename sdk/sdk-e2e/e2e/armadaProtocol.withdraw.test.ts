@@ -29,17 +29,11 @@ describe('Armada Protocol - Withdraw', () => {
   // Configure test scenarios here
   const withdrawScenarios: WithdrawScenario[] = [
     {
-      description: 'withdraw USDC from self-managed fleet',
-      chainConfig: ChainConfigs.SelfManaged,
-      amountValue: '0.5',
+      description: 'withdraw ETH from Base Eth Vault',
+      chainConfig: ChainConfigs.BaseWETH,
+      amountValue: '0.001',
+      swapToSymbol: 'ETH',
     },
-    // Add more scenarios as needed:
-    // {
-    //   description: 'withdraw with swap to different token',
-    //   chainConfig: ChainConfigs.Base,
-    //   amountValue: '0.5',
-    //   swapToSymbol: 'ETH',
-    // },
   ]
 
   describe('getWithdrawTx - withdraw from fleet', () => {

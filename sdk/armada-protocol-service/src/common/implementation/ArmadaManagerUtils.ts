@@ -423,7 +423,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       amount: minTokensReceived.toString(),
     })
 
-    LoggingService.debug('getSwapData', {
+    LoggingService.debug('getSwapCall', {
       fromAmount: swapData.fromTokenAmount.toString(),
       toAmount: swapData.toTokenAmount.toString(),
       minAmount: minAmount.toString(),

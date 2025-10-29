@@ -200,7 +200,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     let approvalForWithdraw: ApproveTransactionInfo | undefined
     let approvalForDeposit: ApproveTransactionInfo | undefined
 
-    // Deposit logic
+    // region Deposit logic
     // should compensate the tip during withdrawal
     const depositAmount = this._compensateAmount(withdrawAmount, 'decrease')
 
@@ -258,12 +258,13 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       depositMulticallOperations.push('stake all (0)')
     }
 
-    // Withdraw logic
+    // region Withdraw logic
 
     // Are fleetShares available at all? (should be greater than dust)
     if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()) {
+        // region only fleet
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
 
@@ -354,6 +355,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 ? [approvalForWithdraw, withdrawTransaction]
                 : [withdrawTransaction]
       } else {
+        // region fleet + staked
         // No. Withdraw all fleetShares and the reminder from stakedShares
         LoggingService.debug('>>> Withdraw all fleetShares and the reminder from stakedShares')
 
@@ -481,6 +483,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 : [vaultSwitchTransaction]
       }
     } else {
+      // region only staked
       // No. Unstake and withdraw everything from stakedShares.
       LoggingService.debug('>>> Unstake and withdraw everything from stakedShares.')
 
@@ -849,10 +852,12 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       contractName: 'admiralsQuarters',
     })
 
+    // region Withdraw logic
     // Are fleetShares available at all? (should be greater than dust)
     if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()) {
+        // region only fleet
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
 
@@ -923,6 +928,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           transactions = [withdrawTransaction]
         }
       } else {
+        // region fleet + staked
         // No. Withdraw all fleetShares and the reminder from stakedShares
         LoggingService.debug('>>> Withdraw all fleetShares and the reminder from stakedShares')
 
@@ -1005,19 +1011,20 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
 
-        if (shouldSwap) {
+        // we need to swap to eth after unstake&withdraw but only the unstaked part
+        if (shouldSwap || toEth) {
           // approval to swap from user EOA
           const [_approvalDepositSwapWithdraw, depositSwapWithdrawMulticall] = await Promise.all([
             this._allowanceManager.getApproval({
               chainInfo: params.vaultId.chainInfo,
               spender: admiralsQuartersAddress,
-              amount: withdrawAmount,
+              amount: finalUnstakeAndWithdrawAmount.finalUnstakeAndWithdrawSharesApprovalAmount,
               owner: params.user.wallet.address,
             }),
             this._getDepositSwapWithdrawMulticall({
               vaultId: params.vaultId,
               slippage: params.slippage,
-              fromAmount: withdrawAmount,
+              fromAmount: finalUnstakeAndWithdrawAmount.finalUnstakeAndWithdrawSharesApprovalAmount,
               toToken: swapToToken,
               toEth,
             }),
@@ -1072,6 +1079,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 : [withdrawTransaction]
       }
     } else {
+      // region only staked
       // No. Unstake and withdraw everything from stakedShares.
       LoggingService.debug('>>> Unstake and withdraw everything from stakedShares.')
 

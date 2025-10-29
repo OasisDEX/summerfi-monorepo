@@ -11,7 +11,7 @@ export function createSdkTestSetup() {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.Base
+  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.BaseUSDC
 
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,
