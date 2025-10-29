@@ -147,6 +147,7 @@ if (BigInt(fromArkConfig.maxRebalanceOutflow) < amount.toSolidityValue()) {
     maxRebalanceOutflow: amount,
   })
   // Send transaction (implementation depends on your setup)
+}
 
 // 3. Check the destination ark configuration
 const toArkConfig = await sdk.armada.admin.arkConfig({
@@ -162,6 +163,7 @@ if (BigInt(toArkConfig.depositCap) < amount.toSolidityValue()) {
     cap: amount,
   })
   // Send transaction
+}
 
 // 5. If maxRebalanceInflow is too low, update it
 if (BigInt(toArkConfig.maxRebalanceInflow) < amount.toSolidityValue()) {
@@ -171,6 +173,7 @@ if (BigInt(toArkConfig.maxRebalanceInflow) < amount.toSolidityValue()) {
     maxRebalanceInflow: amount,
   })
   // Send transaction
+}
 
 // 6. Execute the rebalance
 const rebalanceTxInfo = await sdk.armada.admin.rebalance({
@@ -330,8 +333,7 @@ certain actions.
 **Example:**
 
 ```typescript
-import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
+import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -386,8 +388,7 @@ other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
+import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -438,8 +439,7 @@ other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { ContractSpecificRoleName } from '@summerfi/armada-protocol-common'
+import { ChainIds, Address, ContractSpecificRoleName } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Fleet (vault) deployment address
@@ -492,8 +492,7 @@ roles to other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { GlobalRoles } from '@summerfi/armada-protocol-common'
+import { ChainIds, Address, GlobalRoles } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Address to grant the Super Keeper role to
@@ -539,8 +538,7 @@ from other addresses.
 **Example:**
 
 ```typescript
-import { ChainIds, Address } from '@summer_fi/sdk-client'
-import { GlobalRoles } from '@summerfi/armada-protocol-common'
+import { ChainIds, Address, GlobalRoles } from '@summer_fi/sdk-client'
 import { sdk } from './sdk'
 
 // Address to revoke the Super Keeper role from
