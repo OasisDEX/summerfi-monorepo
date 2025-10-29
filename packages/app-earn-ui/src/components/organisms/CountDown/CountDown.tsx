@@ -36,7 +36,6 @@ export const CountDown: FC<CountDownProps> = ({
       daysProgress: hours / 24,
       hoursProgress: minutes / 60,
       minutesProgress: seconds / 60,
-      secondsProgress: 1,
     }
   }, [hours, minutes, seconds])
 
@@ -60,12 +59,7 @@ export const CountDown: FC<CountDownProps> = ({
         variant={itemVariantFinal}
         progress={progress.minutesProgress}
       />
-      <CountDownItem
-        title="Seconds"
-        value={seconds}
-        variant={itemVariantFinal}
-        progress={progress.secondsProgress}
-      />
+      <CountDownItem title="Seconds" value={seconds} variant={itemVariantFinal} secondsProgress />
     </div>
   )
 }

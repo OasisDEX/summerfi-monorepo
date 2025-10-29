@@ -1,4 +1,5 @@
 import { type CSSProperties, type FC } from 'react'
+import clsx from 'clsx'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 import type textStyles from '@/components/atoms/Text/Text.module.css'
@@ -20,7 +21,8 @@ interface CountDownItemProps {
   title: string
   value: number
   variant: 'large' | 'medium' | 'small'
-  progress: number
+  progress?: number
+  secondsProgress?: boolean
 }
 
 export const CountDownItem: FC<CountDownItemProps> = ({
@@ -28,6 +30,7 @@ export const CountDownItem: FC<CountDownItemProps> = ({
   value,
   variant = 'large',
   progress,
+  secondsProgress,
 }) => {
   const styles = {
     large: {
@@ -66,8 +69,12 @@ export const CountDownItem: FC<CountDownItemProps> = ({
   return (
     <div className={countDownItemStyles.countDownItem}>
       <div
-        className={countDownItemStyles.progress}
-        style={{ ['--progress' as keyof CSSProperties]: `${progress * 100}%` }}
+        className={clsx(countDownItemStyles.progress, {
+          [countDownItemStyles.secondsProgress]: secondsProgress,
+        })}
+        style={{
+          ['--progress' as keyof CSSProperties]: progress ? progress * 100 : 0,
+        }}
         aria-hidden
       >
         <div className={countDownItemStyles.progressInner}>

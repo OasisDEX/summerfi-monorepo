@@ -1,3 +1,9 @@
+@property --progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 .countDownItem {
   display: flex;
   flex-direction: column;
@@ -12,7 +18,8 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: conic-gradient(var(--color-background-primary) var(--progress, 0%), #777576 0%);
+  background: conic-gradient(var(--color-background-primary) 0 calc(var(--progress) * 1%),
+      #777576 calc(var(--progress) * 1%) 100%);
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.02) inset;
 }
 
@@ -32,4 +39,18 @@
   display: inline-block;
   line-height: 1;
   text-align: center;
+}
+
+@keyframes progressAnimation {
+  from {
+    --progress: 100;
+  }
+
+  to {
+    --progress: 0;
+  }
+}
+
+.secondsProgress {
+  animation: progressAnimation 1s linear infinite;
 }
