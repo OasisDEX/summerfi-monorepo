@@ -225,6 +225,7 @@ const AllLockedSumrPositionsCards = () => {
   return (
     <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
+        // TODOStakingV2
         dataBlock={{
           title: 'Avg. SUMR Lock Period',
           value: '2 years',

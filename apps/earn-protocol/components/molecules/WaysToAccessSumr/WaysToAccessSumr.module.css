@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .boxes {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    .box {
+      align-items: flex-start;
+      padding: 32px;
+      gap: 32px;
+
+      .boxHeader {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-space-small);
+      }
+
+      .boxData {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+      }
+
+      .tokenPairIcon {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+
+        >div {
+          position: static !important;
+          margin-right: -10px;
+        }
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+  }
+}

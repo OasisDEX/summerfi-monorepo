@@ -14,7 +14,6 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
-  formatAsShorthandNumbers,
   formatCryptoBalance,
   formatFiatBalance,
   formatShorthandNumber,
@@ -38,7 +37,7 @@ interface SumrAvailableToClaimProps {
   rewardsData: ClaimDelegateExternalData
 }
 
-interface SumrAvailableToStakeProps {
+interface SumrInOldStakingModuleProps {
   rewardsData: ClaimDelegateExternalData
 }
 
@@ -175,30 +174,19 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
   )
 }
 
-const SumrAvailableToStake: FC<SumrAvailableToStakeProps> = ({ rewardsData }) => {
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
+const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }) => {
+  // TODO: this component needs to be updated to allow removing stake from old staking module
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
 
   const resolvedWalletAddress = walletAddress as string
-  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const sumrAvailableToStake = Number(rewardsData.sumrBalances.base)
-  const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
-  const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
-  const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
-  const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
+  const sumrAvailableToStake = Number(rewardsData.sumrStakeDelegate.stakedAmount)
 
   const value = `${formatCryptoBalance(sumrAvailableToStake)} SUMR`
-  const apyRaw = Number(rawApy * rawDecayFactor)
-  const sumrPerYear = (Number(rawStaked) + sumrAvailableToStake) * apyRaw
 
-  const subvalue = `${formatAsShorthandNumbers(sumrPerYear, {
-    precision: 2,
-  })} $SUMR/Year ($${formatFiatBalance(sumrPerYear * assumedSumrPriceRaw)})`
-
-  const handleStakeAndDelegateEventButton = () => {
+  const handleRemoveStakeInOldModule = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
   }
 
@@ -212,9 +200,8 @@ const SumrAvailableToStake: FC<SumrAvailableToStakeProps> = ({ rewardsData }) =>
   return (
     <DataModule
       dataBlock={{
-        title: 'SUMR Available to stake',
+        title: 'SUMR Staked in Old Staking Module',
         value,
-        subValue: <Text variant="p3semi">{subvalue}</Text>,
         titleSize: 'medium',
         valueSize: 'large',
       }}
@@ -222,21 +209,21 @@ const SumrAvailableToStake: FC<SumrAvailableToStakeProps> = ({ rewardsData }) =>
         !userWalletAddress ? (
           <Button variant="unstyled" onClick={handleConnect}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              Stake SUMR
+              Remove Old Staked SUMR
             </Text>
           </Button>
         ) : (
           <Link
             href={`/stake-delegate/${walletAddress}?step=stake`}
             prefetch
-            onClick={handleStakeAndDelegateEventButton}
+            onClick={handleRemoveStakeInOldModule}
           >
             <Button
               variant="unstyled"
               disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
             >
               <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-                Stake SUMR
+                Remove Old Staked SUMR
               </Text>
             </Button>
           </Link>
@@ -380,7 +367,7 @@ const SumrPrice: FC<SumrPriceProps> = () => {
             <Link href="#">
               <Button variant="unstyled">
                 <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-                  View SUMR Analytics
+                  Buy SUMR
                 </Text>
               </Button>
             </Link>
@@ -447,7 +434,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
         <SumrAvailableToClaim rewardsData={rewardsData} />
       </div>
       <div className={classNames.cardWrapper}>
-        <SumrAvailableToStake rewardsData={rewardsData} />
+        <SumrInOldStakingModule rewardsData={rewardsData} />
       </div>
       <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
         <SumrPrice />

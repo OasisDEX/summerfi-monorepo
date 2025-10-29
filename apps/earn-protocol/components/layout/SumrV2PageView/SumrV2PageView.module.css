@@ -1,0 +1,200 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: 115px;
+}
+
+.twoColumnHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+  align-items: center;
+
+  .twoColumnHeaderBlock {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .leftBlock {
+    h2 {
+      margin-right: 50px;
+      margin-bottom: var(--spacing-space-large);
+    }
+
+    p {
+      margin-bottom: var(--spacing-space-x-large);
+      color: var(--color-text-secondary);
+    }
+
+    .leftBlockButtons {
+      display: flex;
+      gap: 32px;
+
+      button {
+        color: white;
+      }
+    }
+  }
+
+  .rightBlock {
+    height: 100%;
+    background: linear-gradient(90deg, #292025 0%, #241f29 100%);
+    box-shadow: 0 0 60px 0 rgba(255, 73, 164, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: auto;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    .rightBlockSumrLogo {
+      margin-bottom: 32px;
+    }
+
+    .rightBlockYieldSources {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 32px;
+
+      .yieldSourceColumn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+
+        h5 {
+          color: var(--color-text-secondary);
+        }
+      }
+    }
+
+    .rightBlockBottomBorder {
+      margin: 42px 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 73, 164, 0.20) 0%, rgba(176, 73, 255, 0.20) 93%);
+    }
+
+    .rightBlockCountdown {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+  }
+}
+
+.innerHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sectionCardWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--spacing-space-large);
+}
+
+.factsSectionText {
+  width: 100%;
+  padding: 16px;
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+.newsListWrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 80px auto;
+
+  .newsListHeader {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .newsListItems {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 32px 8px 16px 8px;
+
+    .newsListItem {
+      .newsListItemTitle {
+        color: var(--color-text-secondary);
+        margin-bottom: 8px;
+        max-width: 960px;
+      }
+
+      .newsListItemDescription {
+        color: var(--color-text-secondary);
+        margin-bottom: 16px;
+        max-width: 960px;
+      }
+    }
+  }
+
+}
+
+.governanceSectionText {
+  width: 100%;
+  padding: 32px;
+  display: flex;
+  gap: var(--spacing-space-large);
+
+  .governanceSectionDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-space-x-small);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+.waysToAccessSumrSection {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.understandingSumr {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+
+  .understandingSumrText {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 74px;
+    gap: 24px;
+
+    h2 {
+      span {
+        color: var(--color-text-link);
+      }
+    }
+
+    button {
+      max-width: fit-content;
+      min-width: fit-content;
+    }
+  }
+}
+
+.faqSection {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}

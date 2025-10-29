@@ -1,0 +1,56 @@
+@property --progress {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.countDownItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.progress {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--color-background-primary) 0 calc(var(--progress) * 1%),
+      #777576 calc(var(--progress) * 1%) 100%);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.02) inset;
+}
+
+
+.progressInner {
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #292025 0%, #241f29 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.progressInner :global(*) {
+  display: inline-block;
+  line-height: 1;
+  text-align: center;
+}
+
+@keyframes progressAnimation {
+  from {
+    --progress: 100;
+  }
+
+  to {
+    --progress: 0;
+  }
+}
+
+.secondsProgress {
+  animation: progressAnimation 1s linear infinite;
+}

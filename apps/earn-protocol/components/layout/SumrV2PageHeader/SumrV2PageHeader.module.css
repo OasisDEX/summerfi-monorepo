@@ -1,0 +1,24 @@
+.sumrPageV2Wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.sumrBigCircle {
+  width: 400px;
+  position: absolute;
+  pointer-events: none;
+  top: -156px;
+  z-index: 1;
+}
+
+.header {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+  margin-top: 110px;
+  margin-bottom: 80px;
+
+}
