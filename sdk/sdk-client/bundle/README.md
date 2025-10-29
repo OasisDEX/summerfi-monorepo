@@ -1349,7 +1349,7 @@ const priceInfo = await sdk.oracle.getSpotPrice({
 const price = priceInfo.price
 ```
 
-## SDK Client Interfaces Definition
+## Client Interfaces Definition
 
 ### ISDKManager
 
@@ -1397,7 +1397,7 @@ interface IOracleManagerClient {
 }
 ```
 
-## SDK Common Interface Definitions
+## Common Interface Definitions
 
 ### IArmadaPosition
 
@@ -1592,7 +1592,7 @@ IWallet = {
 }
 ```
 
-## SDK Common Transaction Types
+## Transaction Types
 
 ```tsx
 /**
@@ -1706,7 +1706,7 @@ export type UnstakeTransactionInfo = TransactionInfo & {
 }
 ```
 
-## SDK Common Enums and Types
+## Enums and Types
 
 ### AddressType
 
@@ -1829,7 +1829,7 @@ enum FiatCurrency {
 - **Removed `deposits` and `withdrawals` arrays from `IArmadaPosition`** - These arrays are no
   longer available in the position object
 
-**Migration Guide:**
+**Migration Steps:**
 
 The `deposits` and `withdrawals` arrays have been replaced with aggregated amounts and new
 calculated metrics:
