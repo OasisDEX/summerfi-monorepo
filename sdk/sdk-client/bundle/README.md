@@ -553,15 +553,15 @@ const switchAmount = TokenAmount.createFrom({
 
 const sourceVaultId = ArmadaVaultId.createFrom({
   chainInfo: user.chainInfo,
-  fleetAddress: sourceFleetAddress,
+  fleetAddress: Address.createFromEthereum({ value: '0x.........' }), // Source vault address
 })
 const destinationVaultId = ArmadaVaultId.createFrom({
   chainInfo: user.chainInfo,
-  fleetAddress: destinationFleetAddress,
+  fleetAddress: Address.createFromEthereum({ value: '0x.........' }), // Destination vault address
 })
 
 const slippage = Percentage.createFrom({
-  value: DEFAULT_SLIPPAGE_PERCENTAGE,
+  value: '0.5', // 0.5% slippage
 })
 
 const transactions = await sdk.armada.users.getVaultSwitchTx({
@@ -1210,7 +1210,7 @@ async function performIntentSwap() {
 
     if (orderResult.status === 'wrap_to_native') {
       console.log('Wrapping native currency (ETH) to wrapped version (WETH)...')
-      const tx = await walletClient.sendTransaction({
+      const tx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
@@ -1219,7 +1219,7 @@ async function performIntentSwap() {
       console.log('✅ Native currency wrapped')
     } else if (orderResult.status === 'allowance_needed') {
       console.log('Approving token...')
-      const tx = await walletClient.sendTransaction({
+      const tx = await wallet.sendTransaction({
         to: orderResult.transactionInfo.transaction.target.value,
         data: orderResult.transactionInfo.transaction.calldata,
         value: BigInt(orderResult.transactionInfo.transaction.value),
