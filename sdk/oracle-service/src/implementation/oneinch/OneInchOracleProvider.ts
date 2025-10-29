@@ -75,7 +75,13 @@ export class OneInchOracleProvider
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
       })
-      LoggingService.debug('OneInchSpotPriceUrl', spotUrl)
+
+      LoggingService.debug('OneInchOracleProvider.getSpotPrice - token denomination', {
+        chainId: params.baseToken.chainInfo.chainId,
+        baseToken: params.baseToken.toString(),
+        denomination: params.denomination?.toString(),
+        spotUrl,
+      })
 
       const response = await fetch(spotUrl, {
         headers: authHeader,
@@ -139,11 +145,19 @@ export class OneInchOracleProvider
     } else {
       const quoteCurrency = params.denomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
+      console.log(`DEBUG:`, { baseToken: baseToken.toString(), denomination: quoteCurrency })
 
       const spotUrl = this._formatSpotUrl({
         chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseToken.address],
         quoteCurrency: quoteCurrency,
+      })
+
+      LoggingService.debug('OneInchOracleProvider.getSpotPrice - Fiat denomination', {
+        chainId: params.baseToken.chainInfo.chainId,
+        baseToken: params.baseToken.toString(),
+        denomination: quoteCurrency,
+        spotUrl,
       })
 
       const response = await fetch(spotUrl, {
@@ -193,7 +207,12 @@ export class OneInchOracleProvider
       tokenAddresses: params.baseTokens.map((token) => token.address),
       quoteCurrency: params.quoteCurrency,
     })
-    LoggingService.debug('OneInchSpotPricesUrl', spotUrl)
+
+    LoggingService.debug('OneInchOracleProvider.getSpotPrices', {
+      baseTokens: params.baseTokens.map((token) => token.toString()),
+      quoteCurrency: quote,
+      spotUrl,
+    })
 
     const response = await fetch(spotUrl, {
       headers: authHeader,

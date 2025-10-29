@@ -105,6 +105,16 @@ function createChainIdToChainFamilyInfoMap(): ChainFamilyInfoById {
 
 const chainIdToChainFamilyInfoMap = createChainIdToChainFamilyInfoMap()
 
+/**
+ * @method getChainFamilyInfoByChainId
+ * @description Retrieves the ChainFamilyInfo for a given chainId
+ *
+ * @param chainId The chainId to retrieve the ChainFamilyInfo for
+ *
+ * @throws Error if the chainId is not supported
+ *
+ * @returns The ChainFamilyInfo for the given chainId
+ */
 export function getChainFamilyInfoByChainId(chainId: number): ChainFamilyInfo {
   const maybe = chainIdToChainFamilyInfoMap[chainId]
   if (!maybe) {
@@ -113,6 +123,16 @@ export function getChainFamilyInfoByChainId(chainId: number): ChainFamilyInfo {
   return maybe
 }
 
+/**
+ * @method getChainInfoByChainId
+ * @description Retrieves the ChainInfo for a given chainId
+ *
+ * @param chainId The chainId to retrieve the ChainInfo for
+ *
+ * @throws Error if the chainId is not supported
+ *
+ * @returns The ChainInfo for the given chainId
+ */
 export function getChainInfoByChainId(chainId: number): ChainInfo {
   const chainFamilyInfo = getChainFamilyInfoByChainId(chainId)
   return chainFamilyInfo.chainInfo

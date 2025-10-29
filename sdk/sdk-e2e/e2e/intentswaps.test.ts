@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import {
+  Address,
   ChainIds,
   getChainInfoByChainId,
   TokenAmount,
@@ -8,7 +9,7 @@ import {
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 
-import { SDKApiUrl, signerPrivateKey, userAddress } from './utils/testConfig'
+import { SDKApiUrl, SharedConfig } from './utils/testConfig'
 import { Wallet } from 'ethers'
 import assert from 'assert'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
@@ -24,7 +25,11 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 if (!rpcUrl) {
   throw new Error('Missing fork url')
 }
+const signerPrivateKey = SharedConfig.userPrivateKey
 const wallet = new Wallet(signerPrivateKey)
+const userAddress = Address.createFromEthereum({
+  value: SharedConfig.userAddressValue,
+})
 
 describe('Intent swaps', () => {
   it('should test intent swap flow', async () => {
@@ -62,9 +67,7 @@ describe('Intent swaps', () => {
       signer: wallet,
     })
 
-    const chainInfo = getChainInfoByChainId(chainId)
-    const chain = await sdk.chains.getChain({ chainInfo })
-    const fromToken = await chain.tokens.getTokenBySymbol({ symbol: fromSymbol })
+    const fromToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: fromSymbol })
     // for ETH, we cannot use ETH directly we need to use WETH
     // there is eth-flow but only smart wallets and no limit orders
 
@@ -72,7 +75,7 @@ describe('Intent swaps', () => {
       amount: amountValue,
       token: fromToken,
     })
-    const toToken = await chain.tokens.getTokenBySymbol({ symbol: toSymbol })
+    const toToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: toSymbol })
 
     // get sell order quote
     const sellQuote = await sdk.intentSwaps.getSellOrderQuote({

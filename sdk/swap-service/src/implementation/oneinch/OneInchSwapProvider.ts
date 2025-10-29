@@ -86,7 +86,11 @@ export class OneInchSwapProvider
       slippage: params.slippage,
     })
 
-    LoggingService.debug('OneInchSwapDataUrl', swapUrl)
+    LoggingService.debug('OneInchSwapQuoteProvider.getSwapDataExactInput', {
+      fromTokenAmount: params.fromAmount,
+      toToken: params.toToken,
+      swapUrl,
+    })
 
     const authHeader = this._getOneInchAuthHeader()
 
@@ -109,7 +113,7 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
-    // LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
+    LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
 
     return {
       provider: SwapProviderType.OneInch,
@@ -135,7 +139,11 @@ export class OneInchSwapProvider
       fromTokenAmount: params.fromAmount,
       toToken: params.toToken,
     })
-    LoggingService.debug('OneInchSwapQuoteUrl', swapUrl)
+    LoggingService.debug('OneInchSwapQuoteProvider.getSwapExactInput', {
+      fromTokenAmount: params.fromAmount,
+      toToken: params.toToken,
+      swapUrl,
+    })
 
     const authHeader = this._getOneInchAuthHeader()
 
@@ -167,7 +175,7 @@ export class OneInchSwapProvider
         amount: responseData.toTokenAmount || responseData.dstAmount,
       }),
       routes: this._extractSwapRoutes(responseData.protocols ?? []),
-      estimatedGas: responseData.estimatedGas,
+      estimatedGas: responseData.gas?.toString() || '0',
     }
   }
 
@@ -256,7 +264,7 @@ export class OneInchSwapProvider
         ? '&excludedProtocols=' + this._excludedSwapProtocols.join(',')
         : ''
 
-    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}${protocolsParam}${excludedProtocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}${protocolsParam}${excludedProtocolsParam}&includeProtocols=true&includeGas=true`
   }
 
   /**

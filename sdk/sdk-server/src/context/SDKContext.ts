@@ -124,7 +124,12 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     deploymentProviderConfigs = fetchPublicDeploymentProviderConfig(publicDeploymentChainIds)
   }
 
-  const deploymentProvider: IDeploymentProvider = DeploymentProvider(deploymentProviderConfigs)
+  const supportedChainIds = supportedChains.map((c) => c.chainId)
+
+  const deploymentProvider: IDeploymentProvider = DeploymentProvider(
+    supportedChainIds,
+    deploymentProviderConfigs,
+  )
 
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })

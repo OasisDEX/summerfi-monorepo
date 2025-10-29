@@ -16,9 +16,21 @@ export const getDeployedContractAddress = (params: {
   })
 }
 
-export const DeploymentProvider = (configs: DeploymentProviderConfig[]) => {
+const checkSupportedChainId = (supportedChainIds: ChainId[], chainId: ChainId) => {
+  if (!supportedChainIds.includes(chainId)) {
+    throw new Error(
+      `Chain ${chainId} is not supported. Supported chains: ${supportedChainIds.join(', ')}`,
+    )
+  }
+}
+
+export const DeploymentProvider = (
+  supportedChainIds: ChainId[],
+  configs: DeploymentProviderConfig[],
+) => {
   return {
     getDeployedContractAddress: (params) => {
+      checkSupportedChainId(supportedChainIds, params.chainId)
       const config = configs.find((c) => c.chainId === params.chainId)
       if (!config) {
         throw new Error(`No deployment config found for chainId ${params.chainId}`)
