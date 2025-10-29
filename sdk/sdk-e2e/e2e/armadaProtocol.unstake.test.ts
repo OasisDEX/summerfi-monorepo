@@ -19,7 +19,7 @@ const simulateOnly = true
 const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol - Unstake', () => {
-  const { rpcUrl, chainId, fleetAddressValue } = ChainConfigs.Sonic
+  const { rpcUrl, chainId, fleetAddressValue } = ChainConfigs.SonicUSDC
   const userAddressValue = SharedConfig.userAddressValue
 
   const chainInfo = getChainInfoByChainId(chainId)

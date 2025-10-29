@@ -113,7 +113,6 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
-    LoggingService.debug('OneInchSwapResponse', swapUrl, responseData)
 
     return {
       provider: SwapProviderType.OneInch,

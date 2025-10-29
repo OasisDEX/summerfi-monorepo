@@ -853,6 +853,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
       if (beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()) {
+        // region only fleet
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
 
@@ -923,6 +924,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
           transactions = [withdrawTransaction]
         }
       } else {
+        // region fleet + staked
         // No. Withdraw all fleetShares and the reminder from stakedShares
         LoggingService.debug('>>> Withdraw all fleetShares and the reminder from stakedShares')
 
@@ -1005,7 +1007,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
 
         let approvalDepositSwapWithdraw: ApproveTransactionInfo | undefined
 
-        if (shouldSwap) {
+        if (shouldSwap || toEth) {
           // approval to swap from user EOA
           const [_approvalDepositSwapWithdraw, depositSwapWithdrawMulticall] = await Promise.all([
             this._allowanceManager.getApproval({
@@ -1022,6 +1024,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
               toEth,
             }),
           ])
+          console.log('first')
 
           if (_approvalDepositSwapWithdraw) {
             approvalDepositSwapWithdraw = _approvalDepositSwapWithdraw
@@ -1072,6 +1075,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
                 : [withdrawTransaction]
       }
     } else {
+      // region only staked
       // No. Unstake and withdraw everything from stakedShares.
       LoggingService.debug('>>> Unstake and withdraw everything from stakedShares.')
 
@@ -1269,6 +1273,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
       token: params.toToken,
       amount: '0', // all tokens
     })
+    console.log('first1')
     // withdraw swapped assets
     const withdrawTokensCalldata = encodeFunctionData({
       abi: AdmiralsQuartersAbi,
@@ -1284,7 +1289,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     } else {
       multicallOperations.push('withdrawTokens ' + outAmount.toString())
     }
-
+    console.log('first2')
     return {
       multicallArgs: multicallArgs,
       multicallOperations: multicallOperations,

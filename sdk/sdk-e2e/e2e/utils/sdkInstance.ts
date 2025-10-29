@@ -1,11 +1,11 @@
 import { makeAdminSDK, makeSDK } from '@summerfi/sdk-client'
-import { SDKApiUrl, clientId } from './testConfig'
+import { SDKApiUrl } from './testConfig'
 
 /**
  * Creates a configured SDK instance for e2e tests
  * @returns Configured SDKManager instance
  */
-export function createTestSDK() {
+export function createTestSDK(clientId?: string) {
   if (!SDKApiUrl) {
     throw new Error('E2E_SDK_API_URL environment variable not set')
   }

@@ -12,7 +12,7 @@ export function createAdminSdkTestSetup() {
     apiDomainUrl: SDKApiUrl,
   })
 
-  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.SelfManaged
+  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.InstiBaseUSDC
 
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,

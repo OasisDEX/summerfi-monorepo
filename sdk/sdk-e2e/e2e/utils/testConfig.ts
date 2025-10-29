@@ -37,20 +37,22 @@ export const RpcUrls = {
 
 export const FleetAddresses = {
   Base: {
-    eth: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
-    usdc: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-    eurc: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-    selfManaged: '0xfb42001c8c39011c96b6181ced913aefa0d53514',
+    ETH: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
+    USDC: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+    EURC: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
+    InstiUSDC: '0xfb42001c8c39011c96b6181ced913aefa0d53514',
   },
   ArbitrumOne: {
-    usdt: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+    USDT: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
   },
   Sonic: {
-    usdc: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
+    USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
 } as const
 
 /** TEST CONFIG */
+export const clientId = 'ACME'
+
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
 
 export const SharedConfig = {
@@ -61,24 +63,34 @@ export const SharedConfig = {
 } as const
 
 export const ChainConfigs = {
-  Base: {
+  BaseWETH: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.usdc,
-    symbol: 'USDC',
+    fleetAddressValue: FleetAddresses.Base.ETH,
+    symbol: 'ETH',
   },
-  SelfManaged: {
+  BaseUSDC: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.selfManaged,
+    fleetAddressValue: FleetAddresses.Base.USDC,
     symbol: 'USDC',
   },
-  Sonic: {
+  ArbitrumUSDT: {
+    rpcUrl: RpcUrls.ArbitrumOne,
+    chainId: ChainIds.ArbitrumOne,
+    fleetAddressValue: FleetAddresses.ArbitrumOne.USDT,
+    symbol: 'USDT',
+  },
+  SonicUSDC: {
     rpcUrl: RpcUrls.Sonic,
     chainId: ChainIds.Sonic,
-    fleetAddressValue: FleetAddresses.Sonic.usdc,
+    fleetAddressValue: FleetAddresses.Sonic.USDC,
+    symbol: 'USDC',
+  },
+  InstiBaseUSDC: {
+    rpcUrl: RpcUrls.Base,
+    chainId: ChainIds.Base,
+    fleetAddressValue: FleetAddresses.Base.InstiUSDC,
     symbol: 'USDC',
   },
 }
-
-export const clientId = 'ACME'

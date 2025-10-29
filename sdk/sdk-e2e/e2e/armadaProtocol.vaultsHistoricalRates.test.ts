@@ -7,7 +7,7 @@ import assert from 'assert'
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vaults Historical Rates', () => {
-  const { chainId, fleetAddressValue } = ChainConfigs.SelfManaged
+  const { chainId, fleetAddressValue } = ChainConfigs.InstiBaseUSDC
 
   const chainInfo = getChainInfoByChainId(chainId)
 
