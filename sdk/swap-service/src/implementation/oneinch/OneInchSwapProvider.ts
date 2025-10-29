@@ -166,7 +166,7 @@ export class OneInchSwapProvider
     }
 
     const responseData = (await response.json()) as OneInchQuoteResponse
-    console.log(`DEBUG OneInchSwapQuoteResponse:`, JSON.stringify(responseData, null, 2))
+
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
