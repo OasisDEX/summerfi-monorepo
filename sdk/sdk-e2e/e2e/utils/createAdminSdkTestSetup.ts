@@ -1,6 +1,6 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, ChainConfigs, SharedConfig, clientId } from './testConfig'
+import { SDKApiUrl, ChainConfigs, SharedConfig, ClientIds } from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
@@ -8,11 +8,11 @@ import { createSendTransactionTool } from '@summerfi/testing-utils'
  */
 export function createAdminSdkTestSetup() {
   const sdk = makeAdminSDK({
-    clientId,
+    clientId: ClientIds.Targen,
     apiDomainUrl: SDKApiUrl,
   })
 
-  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.InstiBaseUSDC
+  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.TargenArbitrumUSDC
 
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,

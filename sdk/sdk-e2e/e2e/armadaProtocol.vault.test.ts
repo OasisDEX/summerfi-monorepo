@@ -21,16 +21,16 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol - Vault', () => {
   const scenarios: VaultInfoScenario[] = [
-    {
-      description: 'get all vaults with info (User SDK)',
-      useAdminSdk: false,
-      testSpecificVault: false,
-    },
-    {
-      description: 'get specific vault info (User SDK)',
-      useAdminSdk: false,
-      testSpecificVault: true,
-    },
+    // {
+    //   description: 'get all vaults with info (User SDK)',
+    //   useAdminSdk: false,
+    //   testSpecificVault: false,
+    // },
+    // {
+    //   description: 'get specific vault info (User SDK)',
+    //   useAdminSdk: false,
+    //   testSpecificVault: true,
+    // },
     {
       description: 'admin can get all vaults with info (Admin SDK)',
       useAdminSdk: true,

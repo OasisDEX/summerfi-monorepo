@@ -100,6 +100,7 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
     }
     const instiChainIds: ChainId[] = rawInstiChainIds.split(',').map(Number).filter(isChainId)
     supportedChains = instiChainIds.map(getChainInfoByChainId)
+
     try {
       deploymentProviderConfigs = await fetchInstiDeploymentProviderConfig(
         armadaSubgraphManager,
