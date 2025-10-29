@@ -1,0 +1,39 @@
+.sumrPriceDataBlocks {
+  display: flex;
+  gap: var(--general-space-8);
+  justify-content: space-between;
+  margin-top: var(--general-space-24);
+}
+
+@media (max-width: 744px) {
+  .sumrPriceDataBlocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .sumrPriceDataBlocksDivider {
+    display: none;
+  }
+}
+
+.sumrPriceDataBlock {
+  min-width: 120px;
+}
+
+.sumrPriceDataBlocksDivider {
+  /* margin-top: 20px; */
+  width: 1px;
+  height: 50px;
+  background-color: var(--color-border);
+}
+
+.sumrPriceTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.titleWithIconFullWidth {
+  width: 100%;
+}
