@@ -1892,7 +1892,8 @@ calculated metrics:
 
 **Migration steps:**
 
-- Update all imports to use `@summerfi/sdk-client` only
+- Update all imports from `@summerfi/sdk-common` to `@summerfi/sdk-client` and remove deprecated
+  `@summerfi/sdk-common` package from your project.
 
 ### v1.1.0
 
