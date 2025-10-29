@@ -260,23 +260,6 @@ export class CoingeckoOracleProvider
       spotCoinsUrl,
     })
 
-    const spotRequests = []
-    if (spotUrl) {
-      spotRequests.push(
-        fetch(spotUrl, {
-          headers: authHeader,
-          signal: createTimeoutSignal(),
-        }),
-      )
-    }
-    if (spotCoinsUrl) {
-      spotRequests.push(
-        fetch(spotCoinsUrl, {
-          headers: authHeader,
-          signal: createTimeoutSignal(),
-        }),
-      )
-    }
     // Build a parallel array of request URLs so we can tie responses to URLs for error reporting.
     const requestUrls: string[] = []
     if (spotUrl) requestUrls.push(spotUrl)
