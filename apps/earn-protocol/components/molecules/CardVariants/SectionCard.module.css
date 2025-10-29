@@ -1,0 +1,9 @@
+.sectionCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-space-medium-large);
+  border: 1px solid #3D3D3D;
+  background: #232323;
+  align-items: center;
+  max-width: 750px;
+}

@@ -66,6 +66,10 @@ export const icons = {
     () => import('./icons/beach_club_rewards.svg?react'),
   ) as IconExportType,
   bridge: customLazy(() => import('./icons/bridge.svg?react')) as IconExportType,
+  big_certificate: customLazy(() => import('./icons/big_certificate.svg?react')) as IconExportType,
+  big_press: customLazy(() => import('./icons/big_press.svg?react')) as IconExportType,
+  big_pot: customLazy(() => import('./icons/big_pot.svg?react')) as IconExportType,
+  big_reload: customLazy(() => import('./icons/big_reload.svg?react')) as IconExportType,
   bsdeth_circle_color: customLazy(
     () => import('./icons/bsdeth_circle_color.svg?react'),
   ) as IconExportType,

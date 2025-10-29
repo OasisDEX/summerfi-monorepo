@@ -42,6 +42,10 @@ export declare const IconsList: {
   beach_club_icon: IconExportType
   beach_club_rewards: IconExportType
   bridge: IconExportType
+  big_certificate: IconExportType
+  big_press: IconExportType
+  big_pot: IconExportType
+  big_reload: IconExportType
   bsdeth_circle_color: IconExportType
   btc_circle_color: IconExportType
   btc_circle_mono: IconExportType

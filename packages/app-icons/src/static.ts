@@ -73,6 +73,12 @@ export const iconsSync = {
     typeof import('*.svg?react')
   >,
   bridge: import('./icons/bridge.svg?react') as Promise<typeof import('*.svg?react')>,
+  big_certificate: import('./icons/big_certificate.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  big_press: import('./icons/big_press.svg?react') as Promise<typeof import('*.svg?react')>,
+  big_pot: import('./icons/big_pot.svg?react') as Promise<typeof import('*.svg?react')>,
+  big_reload: import('./icons/big_reload.svg?react') as Promise<typeof import('*.svg?react')>,
   bsdeth_circle_color: import('./icons/bsdeth_circle_color.svg?react') as Promise<
     typeof import('*.svg?react')
   >,

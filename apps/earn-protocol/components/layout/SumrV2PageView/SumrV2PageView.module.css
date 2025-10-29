@@ -8,6 +8,7 @@
   display: flex;
   justify-content: space-between;
   gap: 60px;
+  align-items: center;
 
   .twoColumnHeaderBlock {
     width: 100%;
@@ -100,22 +101,100 @@
   gap: var(--spacing-space-large);
 }
 
-.sectionCard {
+.factsSectionText {
+  width: 100%;
+  padding: 16px;
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+.newsListWrapper {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-space-medium-large);
-  border: 1px solid #3D3D3D;
-  background: #232323;
-  align-items: center;
-  max-width: 750px;
+  margin: 80px auto;
 
-  .factsSectionText {
-    width: 100%;
-    padding: 16px;
+  .newsListHeader {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
 
-    p {
-      color: var(--color-text-secondary);
+  .newsListItems {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 32px 8px 16px 8px;
+
+    .newsListItem {
+      .newsListItemTitle {
+        color: var(--color-text-secondary);
+        margin-bottom: 8px;
+        max-width: 960px;
+      }
+
+      .newsListItemDescription {
+        color: var(--color-text-secondary);
+        margin-bottom: 16px;
+        max-width: 960px;
+      }
     }
   }
 
+}
+
+.governanceSectionText {
+  width: 100%;
+  padding: 32px;
+  display: flex;
+  gap: var(--spacing-space-large);
+
+  .governanceSectionDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-space-x-small);
+  }
+
+  p {
+    color: var(--color-text-secondary);
+  }
+}
+
+.waysToAccessSumrSection {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.understandingSumr {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+
+  .understandingSumrText {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 74px;
+    gap: 24px;
+
+    h2 {
+      span {
+        color: var(--color-text-link);
+      }
+    }
+
+    button {
+      max-width: fit-content;
+      min-width: fit-content;
+    }
+  }
+}
+
+.faqSection {
+  margin-top: 80px;
+  margin-bottom: 80px;
 }

@@ -12,7 +12,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: conic-gradient(var(--color-background-primary) var(--progress, 0%), var(--color-text-secondary) 0%);
+  background: conic-gradient(var(--color-background-primary) var(--progress, 0%), #777576 0%);
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.02) inset;
 }
 
