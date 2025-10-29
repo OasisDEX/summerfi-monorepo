@@ -1,6 +1,7 @@
 import { GlobalRoles } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { GlobalRoleScenario } from './utils/types'
+import { ClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -8,8 +9,9 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Global Role Checking', () => {
-  const { sdk, chainId, userAddress, governorAddress, governorSendTxTool } =
-    createAdminSdkTestSetup()
+  const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup(
+    ClientIds.ACME,
+  )
 
   // Configure test scenarios here
   const scenarios: GlobalRoleScenario[] = [

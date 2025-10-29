@@ -1,6 +1,7 @@
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { ContractRoleScenario } from './utils/types'
+import { ClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -8,15 +9,8 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Checking', () => {
-  const {
-    sdk,
-    chainId,
-    userAddress,
-    fleetAddress,
-    aqAddress,
-    governorAddress,
-    governorSendTxTool,
-  } = createAdminSdkTestSetup()
+  const { sdk, chainId, fleetAddress, governorAddress, governorSendTxTool } =
+    createAdminSdkTestSetup(ClientIds.ACME)
   const contractAddress = fleetAddress
 
   // Configure test scenarios here

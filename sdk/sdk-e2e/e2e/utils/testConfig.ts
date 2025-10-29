@@ -52,10 +52,6 @@ export const FleetAddresses = {
 } as const
 
 /** TEST CONFIG */
-export enum ClientIds {
-  'ACME' = 'ACME',
-  'Targen' = 'Targen',
-}
 
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
 
@@ -91,16 +87,29 @@ export const ChainConfigs = {
     fleetAddressValue: FleetAddresses.Sonic.USDC,
     symbol: 'USDC',
   },
-  AcmeBaseUSDC: {
+}
+
+/** INSTI CONFIG */
+export enum ClientIds {
+  'ACME' = 'ACME',
+  'Targen' = 'Targen',
+}
+
+export const InstiChainConfigs = {
+  [ClientIds.ACME]: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
-    fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
-    symbol: 'USDC',
+    fleetAddressValue: FleetAddresses.Base.ETH,
+    aqAddressValue: '0xaae3f78433a13e3c2aa440600cbd22081b579d15',
+    userAddressValue: SharedConfig.userAddressValue,
+    symbol: 'ETH',
   },
-  TargenArbitrumUSDC: {
+  [ClientIds.Targen]: {
     rpcUrl: RpcUrls.ArbitrumOne,
     chainId: ChainIds.ArbitrumOne,
-    fleetAddressValue: FleetAddresses.ArbitrumOne.TargenUSDC,
-    symbol: 'USDC',
+    fleetAddressValue: FleetAddresses.ArbitrumOne.USDT,
+    aqAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
+    userAddressValue: '0xFaC0fD1b3E2A6Bf8E3D7F1c2b3A4D5E6F7G8H9I0',
+    symbol: 'USDT',
   },
 }

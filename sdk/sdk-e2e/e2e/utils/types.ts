@@ -9,6 +9,7 @@ import type {
   FiatCurrency,
   Percentage,
 } from '@summerfi/sdk-common'
+import type { ClientIds } from './testConfig'
 
 export type ContractRoleScenario = {
   role: ContractSpecificRoleName
@@ -84,8 +85,14 @@ export type RebalanceScenario = {
 
 export type VaultInfoScenario = {
   description: string
-  useAdminSdk?: boolean
+  clientId?: ClientIds
   testSpecificVault?: boolean
+}
+
+export type PositionsScenario = {
+  description: string
+  clientId?: ClientIds
+  testSpecificFleet?: boolean
 }
 
 export type OracleScenario = {

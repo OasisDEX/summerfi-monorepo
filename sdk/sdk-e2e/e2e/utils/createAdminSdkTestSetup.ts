@@ -1,31 +1,32 @@
 import { makeAdminSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { SDKApiUrl, ChainConfigs, SharedConfig, ClientIds } from './testConfig'
+import { SDKApiUrl, SharedConfig, ClientIds, InstiChainConfigs } from './testConfig'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 /**
  * Shared setup for Armada Protocol Access Control tests
  */
-export function createAdminSdkTestSetup() {
+export function createAdminSdkTestSetup(clientId: ClientIds) {
   const sdk = makeAdminSDK({
-    clientId: ClientIds.Targen,
+    clientId,
     apiDomainUrl: SDKApiUrl,
   })
 
-  const { chainId, rpcUrl, fleetAddressValue } = ChainConfigs.TargenArbitrumUSDC
+  const { chainId, rpcUrl, fleetAddressValue, userAddressValue, aqAddressValue } =
+    InstiChainConfigs[clientId]
 
   const fleetAddress = Address.createFromEthereum({
     value: fleetAddressValue,
   })
   const aqAddress = Address.createFromEthereum({
-    value: '0xaae3f78433a13e3c2aa440600cbd22081b579d15',
+    value: aqAddressValue,
   })
 
   const userAddress = Address.createFromEthereum({
-    value: SharedConfig.userAddressValue,
+    value: userAddressValue,
   })
   const governorAddress = Address.createFromEthereum({
-    value: SharedConfig.userAddressValue,
+    value: userAddressValue,
   })
 
   const userSendTxTool = createSendTransactionTool({

@@ -6,12 +6,12 @@ import {
   type IArmadaVaultInfo,
 } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 import { stringifyArmadaVaultInfo } from './utils/stringifiers'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { VaultInfoScenario } from './utils/types'
+import { ClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -22,36 +22,44 @@ jest.setTimeout(300000)
 describe('Armada Protocol - Vault', () => {
   const scenarios: VaultInfoScenario[] = [
     // {
-    //   description: 'get all vaults with info (User SDK)',
-    //   useAdminSdk: false,
+    //   description: 'get all vaults with info',
     //   testSpecificVault: false,
     // },
     // {
-    //   description: 'get specific vault info (User SDK)',
-    //   useAdminSdk: false,
+    //   description: 'get specific vault info',
     //   testSpecificVault: true,
     // },
     {
-      description: 'admin can get all vaults with info (Admin SDK)',
-      useAdminSdk: true,
+      description: 'get all vaults with info for ACME',
+      clientId: ClientIds.ACME,
       testSpecificVault: false,
     },
     {
-      description: 'admin can get specific vault info (Admin SDK)',
-      useAdminSdk: true,
+      description: 'get specific vault info for ACME',
+      clientId: ClientIds.ACME,
+      testSpecificVault: true,
+    },
+    {
+      description: 'get all vaults with info for Targen',
+      clientId: ClientIds.Targen,
+      testSpecificVault: false,
+    },
+    {
+      description: 'get specific vault info for Targen',
+      clientId: ClientIds.Targen,
       testSpecificVault: true,
     },
   ]
 
   test.each(scenarios)(
     'should $description',
-    async ({ description, useAdminSdk = false, testSpecificVault = false }) => {
+    async ({ description, clientId, testSpecificVault = false }) => {
       // Choose SDK setup based on scenario
-      const setup = useAdminSdk ? createAdminSdkTestSetup() : createSdkTestSetup()
+      const setup = clientId ? createAdminSdkTestSetup(clientId) : createSdkTestSetup()
       const { sdk, chainId, fleetAddress, userAddress } = setup
 
       const chainInfo = getChainInfoByChainId(chainId)
-      const sdkType = useAdminSdk ? 'Admin SDK' : 'User SDK'
+      const sdkType = clientId ? 'Admin SDK' : 'User SDK'
       console.log(`[${sdkType}] Running on ${chainInfo.name} for user ${userAddress.value}`)
 
       if (testSpecificVault) {
