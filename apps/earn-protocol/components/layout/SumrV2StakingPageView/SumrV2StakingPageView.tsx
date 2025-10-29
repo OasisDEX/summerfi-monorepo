@@ -1,12 +1,14 @@
 'use client'
 import { type FC } from 'react'
 import {
+  BigGradientBox,
   Button,
   Card,
   DataBlock,
   FaqSection,
   GradientBox,
   Icon,
+  TabBar,
   Text,
   Tooltip,
   YieldSourceLabel,
@@ -238,6 +240,52 @@ export const SumrV2StakingPageView: FC<SumrV2StakingPageViewProps> = () => {
           ]}
         />
         <SumrPriceBar />
+        <div className={sumrV2PageStyles.stakingTabBarWrapper}>
+          <TabBar
+            tabs={[
+              {
+                id: 'your-staked-sumr-positions',
+                label: 'Your staked SUMR positions',
+                content: (
+                  <BigGradientBox className={sumrV2PageStyles.stakingTabGradient}>
+                    <div className={sumrV2PageStyles.stakingTabContentBox}>
+                      <Text variant="h4">You don’t have any staked SUMR positions yet.</Text>
+                    </div>
+                  </BigGradientBox>
+                ),
+              },
+              {
+                id: 'sumr-staking-stats',
+                label: 'SUMR Staking Stats ',
+                content: (
+                  <Text as="p" variant="p4semi">
+                    SUMR Staking Stats content goes here.
+                  </Text>
+                ),
+              },
+            ]}
+          />
+        </div>
+        <FaqSection
+          data={[
+            {
+              title: 'What is the $SUMR token airdrop?',
+              content: 'Huh??',
+            },
+            {
+              title: 'Who qualifies for the $SUMR token airdrop? ',
+              content: 'Huh?? Huuh??',
+            },
+            {
+              title: 'When will the $SUMR tokens start trading?',
+              content: 'Huh?? Huuh?? Huuuh??',
+            },
+            {
+              title: 'Will the conversion rate for $RAYS in Season 2 be the same as Season 1?',
+              content: 'Huh?? Huuh?? Huuuh?? What? Huh? Huuh??',
+            },
+          ]}
+        />
       </div>
     </SDKContextProvider>
   )
