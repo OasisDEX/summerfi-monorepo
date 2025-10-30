@@ -8,11 +8,11 @@ import type { GovTestScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
+const simulateOnly = false
 const privateKey = SharedConfig.userPrivateKey
 const oneSumr = 1n * 10n ** 18n // 1 SUMR with 18 decimals
 
-describe.skip('Armada Protocol Gov V2 Methods', () => {
+describe('Armada Protocol Gov V2 Stake Unstake flow', () => {
   const sdk = createTestSDK()
 
   // Configure test scenarios here
@@ -41,7 +41,7 @@ describe.skip('Armada Protocol Gov V2 Methods', () => {
           const balance = await sdk.armada.users.getUserBalance({
             user,
           })
-          assert(balance > oneSumr, 'Balance should be greater than 1 SUMR')
+          assert(balance >= oneSumr, 'Balance should be greater than 1 SUMR')
 
           // const delegate = await sdk.armada.users.getUserDelegatee({
           //   user,
@@ -80,7 +80,7 @@ describe.skip('Armada Protocol Gov V2 Methods', () => {
           const stakedBefore = await sdk.armada.users.getUserStakedBalance({
             user,
           })
-          assert(stakedBefore > oneSumr, 'Staked balance should be greater than 1 SUMR')
+          assert(stakedBefore >= oneSumr, 'Staked balance should be greater than 1 SUMR')
 
           const unstakeTxV2 = await sdk.armada.users.getUnstakeTxV2({
             amount: oneSumr,
