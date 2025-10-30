@@ -4,9 +4,9 @@ import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
 
-import { SumrV2StakingLandingPageView } from '@/components/layout/SumrV2StakingLandingPageView/SumrV2StakingLandingPageView'
+import { SumrV2StakingManageView } from '@/components/layout/SumrV2StakingManageView/SumrV2StakingManageView'
 
-const SumrStakingLandingPage = async () => {
+const SumrStakingManagePage = async () => {
   const [configRaw] = await Promise.all([
     unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
       revalidate: REVALIDATION_TIMES.CONFIG,
@@ -15,7 +15,7 @@ const SumrStakingLandingPage = async () => {
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  return systemConfig.features?.StakingV2 ? <SumrV2StakingLandingPageView /> : null
+  return systemConfig.features?.StakingV2 ? <SumrV2StakingManageView /> : null
 }
 
 export function generateMetadata(): Metadata {
@@ -26,4 +26,4 @@ export function generateMetadata(): Metadata {
   }
 }
 
-export default SumrStakingLandingPage
+export default SumrStakingManagePage

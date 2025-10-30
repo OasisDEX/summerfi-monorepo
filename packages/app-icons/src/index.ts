@@ -255,6 +255,7 @@ export const icons = {
   lbtc: customLazy(() => import('./icons/lbtc.svg?react')) as IconExportType,
   ldo_circle: customLazy(() => import('./icons/ldo_circle.svg?react')) as IconExportType,
   ldo: customLazy(() => import('./icons/ldo.svg?react')) as IconExportType,
+  light_bulb: customLazy(() => import('./icons/light_bulb.svg?react')) as IconExportType,
   lightning_colorful: customLazy(
     () => import('./icons/lightning_colorful.svg?react'),
   ) as IconExportType,

@@ -1,11 +1,15 @@
 'use client'
 import { type TagOption, TagRow } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 
 import styles from './QuickActionTags.module.css'
 
 interface QuickActionTagsProps {
   selectedValue: number | null
   onSelect: (percentage: number) => void
+  customOptions?: TagOption[]
+  wrapperClassName?: string
+  tagRowClassName?: string
 }
 
 const quickActionOptions: TagOption[] = [
@@ -14,10 +18,21 @@ const quickActionOptions: TagOption[] = [
   { label: 'Max', value: 100 },
 ]
 
-export const QuickActionTags: React.FC<QuickActionTagsProps> = ({ selectedValue, onSelect }) => {
+export const QuickActionTags: React.FC<QuickActionTagsProps> = ({
+  selectedValue,
+  onSelect,
+  customOptions,
+  wrapperClassName,
+  tagRowClassName,
+}) => {
   return (
-    <div className={styles.quickActionTags}>
-      <TagRow options={quickActionOptions} selectedValue={selectedValue} onChange={onSelect} />
+    <div className={clsx(styles.quickActionTags, wrapperClassName)}>
+      <TagRow
+        options={customOptions ?? quickActionOptions}
+        selectedValue={selectedValue}
+        onChange={onSelect}
+        className={tagRowClassName}
+      />
     </div>
   )
 }
