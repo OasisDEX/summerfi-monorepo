@@ -1,14 +1,12 @@
 'use client'
 import { type FC } from 'react'
 import {
-  BigGradientBox,
   Button,
   Card,
   DataBlock,
   FaqSection,
   GradientBox,
   Icon,
-  TabBar,
   Text,
   Tooltip,
   YieldSourceLabel,
@@ -18,6 +16,7 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import Link from 'next/link'
 
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
+import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import { sdkApiUrl } from '@/constants/sdk'
 import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
@@ -32,31 +31,6 @@ const mockData = {
   sumrStaked: 125000,
   sumrAvailableToClaim: 5420,
   sumrPrice: 0.0412,
-}
-
-const NoStakedPositions: FC = () => {
-  return (
-    <BigGradientBox className={sumrV2PageStyles.noStakedSumrGradient}>
-      <div className={sumrV2PageStyles.noStakedSumrContentBox}>
-        <Text variant="h4">You don’t have any staked SUMR positions yet.</Text>
-        <div className={sumrV2PageStyles.noStakedSumrDataBoxes}>
-          <div className={sumrV2PageStyles.noStakedSumrDataBox}>
-            <Icon iconName="colorful_hamburger" size={48} />
-            <Text variant="h5">
-              Stake multiple positions and diversify your SUMR lockup period.
-            </Text>
-          </div>
-          <div className={sumrV2PageStyles.noStakedSumrDataBox}>
-            <Icon iconName="colorful_arrow" size={48} />
-            <Text variant="h5">
-              Boost your SUMR & USD APY up to 7x across positions with blended boost multiple
-            </Text>
-          </div>
-        </div>
-        <Button variant="primaryLarge">Stake your SUMR</Button>
-      </div>
-    </BigGradientBox>
-  )
 }
 
 export const SumrV2StakingPageView: FC<SumrV2StakingPageViewProps> = () => {
@@ -266,24 +240,7 @@ export const SumrV2StakingPageView: FC<SumrV2StakingPageViewProps> = () => {
         />
         <SumrPriceBar />
         <div className={sumrV2PageStyles.stakingTabBarWrapper}>
-          <TabBar
-            tabs={[
-              {
-                id: 'your-staked-sumr-positions',
-                label: 'Your staked SUMR positions',
-                content: <NoStakedPositions />,
-              },
-              {
-                id: 'sumr-staking-stats',
-                label: 'SUMR Staking Stats ',
-                content: (
-                  <Text as="p" variant="p4semi">
-                    SUMR Staking Stats content goes here.
-                  </Text>
-                ),
-              },
-            ]}
-          />
+          <LockedSumrInfoTabBarV2 />
         </div>
         <FaqSection
           data={[
