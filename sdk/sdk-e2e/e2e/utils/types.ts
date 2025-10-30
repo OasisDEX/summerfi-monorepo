@@ -1,6 +1,5 @@
 import type {
   Address,
-  ChainInfo,
   ContractSpecificRoleName,
   GlobalRoles,
   AddressValue,
@@ -9,7 +8,7 @@ import type {
   FiatCurrency,
   Percentage,
 } from '@summerfi/sdk-common'
-import type { ClientIds } from './testConfig'
+import type { ChainConfigs, ClientIds } from './testConfig'
 
 export type ContractRoleScenario = {
   role: ContractSpecificRoleName
@@ -26,10 +25,7 @@ export type GlobalRoleScenario = {
 }
 
 export type GovTestScenario = {
-  chainInfo: ChainInfo
-  rpcUrl: string
-  userAddress: Address
-  enabled?: boolean
+  chainConfigKey: keyof typeof ChainConfigs
 }
 
 export type WhitelistScenario = {

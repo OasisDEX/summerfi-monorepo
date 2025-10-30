@@ -262,4 +262,16 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
     return num
   }
+
+  async getStakeTxV2(
+    params: Parameters<IArmadaManagerGovernance['getStakeTxV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakeTxV2']> {
+    return this.getStakeTx(params)
+  }
+
+  async getUnstakeTxV2(
+    params: Parameters<IArmadaManagerGovernance['getUnstakeTxV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUnstakeTxV2']> {
+    return this.getUnstakeTx(params)
+  }
 }

@@ -214,6 +214,18 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getDelegationChainLength.query(params)
   }
 
+  async getStakeTxV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakeTxV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakeTxV2']> {
+    return this.rpcClient.armada.users.getStakeTxV2.query(params)
+  }
+
+  async getUnstakeTxV2(
+    params: Parameters<IArmadaManagerUsersClient['getUnstakeTxV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUnstakeTxV2']> {
+    return this.rpcClient.armada.users.getUnstakeTxV2.query(params)
+  }
+
   async getMigratablePositions(
     params: Parameters<IArmadaManagerUsersClient['getMigratablePositions']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getMigratablePositions']> {
