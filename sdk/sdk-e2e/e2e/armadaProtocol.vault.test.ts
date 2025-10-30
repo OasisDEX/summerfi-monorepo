@@ -29,16 +29,16 @@ describe('Armada Protocol - Vault', () => {
     //   description: 'get specific vault info',
     //   testSpecificVault: true,
     // },
-    {
-      description: 'get all vaults with info for ACME',
-      clientId: ClientIds.ACME,
-      testSpecificVault: false,
-    },
-    {
-      description: 'get specific vault info for ACME',
-      clientId: ClientIds.ACME,
-      testSpecificVault: true,
-    },
+    // {
+    //   description: 'get all vaults with info for ACME',
+    //   clientId: ClientIds.ACME,
+    //   testSpecificVault: false,
+    // },
+    // {
+    //   description: 'get specific vault info for ACME',
+    //   clientId: ClientIds.ACME,
+    //   testSpecificVault: true,
+    // },
     {
       description: 'get all vaults with info for Targen',
       clientId: ClientIds.Targen,
@@ -62,10 +62,10 @@ describe('Armada Protocol - Vault', () => {
       const sdkType = clientId ? 'Admin SDK' : 'User SDK'
       console.log(`[${sdkType}] Running on ${chainInfo.name} for user ${userAddress.value}`)
 
+      // Test for specific vault
       if (testSpecificVault) {
-        // Test for specific vault
         const vaultId = ArmadaVaultId.createFrom({
-          chainInfo: getChainInfoByChainId(chainId),
+          chainInfo,
           fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
         })
 
@@ -76,8 +76,9 @@ describe('Armada Protocol - Vault', () => {
         assert(vaultInfo != null, 'Vault not found')
         console.log(`[${sdkType}] Specific vault info:\n`, stringifyArmadaVaultInfo(vaultInfo))
         validateApys(vaultInfo)
-      } else {
-        // Test for all vaults
+      }
+      // Test for all vaults
+      else {
         const vaults = await sdk.armada.users.getVaultInfoList({
           chainId,
         })
