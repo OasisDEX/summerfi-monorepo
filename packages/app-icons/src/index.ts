@@ -128,6 +128,10 @@ export const icons = {
   compound_color: customLazy(() => import('./icons/compound_color.svg?react')) as IconExportType,
   compound: customLazy(() => import('./icons/compound.svg?react')) as IconExportType,
   constantMultiple: customLazy(() => import('./icons/takeProfit.svg?react')) as IconExportType,
+  colorful_hamburger: customLazy(
+    () => import('./icons/colorful_hamburger.svg?react'),
+  ) as IconExportType,
+  colorful_arrow: customLazy(() => import('./icons/colorful_arrow.svg?react')) as IconExportType,
   crv_circle: customLazy(() => import('./icons/crv_circle.svg?react')) as IconExportType,
   crv: customLazy(() => import('./icons/crv.svg?react')) as IconExportType,
   cseth: customLazy(() => import('./icons/cseth.svg?react')) as IconExportType,

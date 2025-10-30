@@ -150,6 +150,12 @@ export const iconsSync = {
   >,
   compound: import('./icons/compound.svg?react') as Promise<typeof import('*.svg?react')>,
   constantMultiple: import('./icons/takeProfit.svg?react') as Promise<typeof import('*.svg?react')>,
+  colorful_hamburger: import('./icons/colorful_hamburger.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
+  colorful_arrow: import('./icons/colorful_arrow.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
   crv_circle: import('./icons/crv_circle.svg?react') as Promise<typeof import('*.svg?react')>,
   crv: import('./icons/crv.svg?react') as Promise<typeof import('*.svg?react')>,
   cseth: import('./icons/cseth.svg?react') as Promise<typeof import('*.svg?react')>,

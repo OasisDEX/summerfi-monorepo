@@ -3,9 +3,11 @@ declare const styles: {
   readonly "cardDataBlock": string;
   readonly "cardDataBlockValue": string;
   readonly "middleFaqSectionWrapper": string;
+  readonly "noStakedSumrContentBox": string;
+  readonly "noStakedSumrDataBox": string;
+  readonly "noStakedSumrDataBoxes": string;
+  readonly "noStakedSumrGradient": string;
   readonly "stakingTabBarWrapper": string;
-  readonly "stakingTabContentBox": string;
-  readonly "stakingTabGradient": string;
   readonly "sumrPageV2Wrapper": string;
   readonly "tokenPairIcon": string;
   readonly "twoCardsWrapper": string;
