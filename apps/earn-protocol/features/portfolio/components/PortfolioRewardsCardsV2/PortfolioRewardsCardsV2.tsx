@@ -3,7 +3,6 @@ import { type Dispatch, type FC } from 'react'
 import { useAuthModal } from '@account-kit/react'
 import {
   Button,
-  DataBlock,
   DataModule,
   getVotingPowerColor,
   Icon,
@@ -22,6 +21,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
   type ClaimDelegateExternalData,
@@ -54,44 +54,6 @@ interface PortfolioRewardsCardsV2Props {
   rewardsData: ClaimDelegateExternalData
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
-}
-
-interface SumrPriceProps {
-  // to be extended in the future
-}
-
-const TrendDatablock = ({
-  timespan,
-  value,
-  trend,
-}: {
-  timespan: string
-  value: string
-  trend: 'positive' | 'negative'
-}) => {
-  return (
-    <DataBlock
-      wrapperClassName={classNames.sumrPriceDataBlock}
-      title={`${timespan} Trend`}
-      size="xsmall"
-      value={
-        <span>
-          {value}&nbsp;
-          <Icon
-            iconName="arrow_forward"
-            style={{
-              transform:
-                trend === 'positive'
-                  ? 'rotate(-45deg) translateX(-1px)'
-                  : 'rotate(45deg) translateX(1px)',
-            }}
-            size={16}
-          />
-        </span>
-      }
-      valueType={trend}
-    />
-  )
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
@@ -357,67 +319,6 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   )
 }
 
-const SumrPrice: FC<SumrPriceProps> = () => {
-  return (
-    <DataModule
-      dataBlock={{
-        title: (
-          <div className={classNames.sumrPriceTitle}>
-            <Text variant="p2semi">$SUMR Price</Text>
-            <Link href="#">
-              <Button variant="unstyled">
-                <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-                  Buy SUMR
-                </Text>
-              </Button>
-            </Link>
-          </div>
-        ),
-        titleWithIconClassName: classNames.titleWithIconFullWidth,
-        value: '$1.33 SUMR/USD',
-        titleSize: 'medium',
-        valueSize: 'large',
-        subValue: (
-          <div className={classNames.sumrPriceDataBlocks}>
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="Market Cap"
-              size="xsmall"
-              value="$1,330,000,000"
-            />
-            <div className={classNames.sumrPriceDataBlocksDivider} />
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="Fully Diluted Valuation"
-              size="xsmall"
-              value="$12,330,000,000"
-            />
-            <div className={classNames.sumrPriceDataBlocksDivider} />
-            <DataBlock
-              wrapperClassName={classNames.sumrPriceDataBlock}
-              title="SUMR Holders"
-              size="xsmall"
-              value="44,323"
-            />
-            <div className={classNames.sumrPriceDataBlocksDivider} />
-            <TrendDatablock timespan="7d" value="1.34% " trend="positive" />
-            <div className={classNames.sumrPriceDataBlocksDivider} />
-            <TrendDatablock timespan="30d" value="3.34% " trend="negative" />
-            <div className={classNames.sumrPriceDataBlocksDivider} />
-            <TrendDatablock timespan="90d" value="14.34% " trend="positive" />
-          </div>
-        ),
-        titleStyle: {
-          width: '100%',
-        },
-        wrapperStyles: {
-          width: '100%',
-        },
-      }}
-    />
-  )
-}
-
 export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   rewardsData,
   state,
@@ -437,7 +338,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
         <SumrInOldStakingModule rewardsData={rewardsData} />
       </div>
       <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
-        <SumrPrice />
+        <SumrPriceBar />
       </div>
     </div>
   )

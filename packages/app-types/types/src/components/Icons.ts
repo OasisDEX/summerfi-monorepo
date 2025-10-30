@@ -81,6 +81,8 @@ export declare const IconsList: {
   compound: IconExportType
   constantMultiple: IconExportType
   crv_circle: IconExportType
+  colorful_hamburger: IconExportType
+  colorful_arrow: IconExportType
   crv: IconExportType
   cseth: IconExportType
   cut: IconExportType

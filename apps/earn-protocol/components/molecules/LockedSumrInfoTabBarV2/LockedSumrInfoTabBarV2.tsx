@@ -1,4 +1,6 @@
+import { type FC } from 'react'
 import {
+  BigGradientBox,
   Button,
   Card,
   DataModule,
@@ -22,13 +24,13 @@ import {
 import {
   allLockedSumrPositionsTableColumns,
   yourLockedSumrPositionsTableColumns,
-} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/constants'
+} from '@/components/molecules/LockedSumrInfoTabBarV2/constants'
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
-} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
+} from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 
-import portfolioLockedSumrInfoV2Styles from './PortfolioLockedSumrInfoV2.module.css'
+import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
 const TableCenterCell = ({ children }: { children: React.ReactNode }) => {
   return <div style={{ display: 'flex', justifyContent: 'center' }}>{children}</div>
@@ -40,7 +42,7 @@ const TableRightCell = ({ children }: { children: React.ReactNode }) => {
 
 const YourLockedSumrPositionsCards = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsCardsWrapper}>
+    <div className={lockedSumrInfoTabBarV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
         dataBlock={{
           title: 'Total SUMR Staking positions',
@@ -94,7 +96,7 @@ const YourLockedSumrPositionsCards = () => {
 
 const YourLockedSumrPositionsTable = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.tableResponsiveWrapper}>
+    <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
       <Table<LockedSumrPositionsTableColumns>
         columns={yourLockedSumrPositionsTableColumns}
         rows={[
@@ -212,18 +214,45 @@ const YourLockedSumrPositionsTable = () => {
   )
 }
 
+const NoStakedPositions: FC = () => {
+  return (
+    <BigGradientBox className={lockedSumrInfoTabBarV2Styles.noStakedSumrGradient}>
+      <div className={lockedSumrInfoTabBarV2Styles.noStakedSumrContentBox}>
+        <Text variant="h4">You don’t have any staked SUMR positions yet.</Text>
+        <div className={lockedSumrInfoTabBarV2Styles.noStakedSumrDataBoxes}>
+          <div className={lockedSumrInfoTabBarV2Styles.noStakedSumrDataBox}>
+            <Icon iconName="colorful_hamburger" size={48} />
+            <Text variant="h5">
+              Stake multiple positions and diversify your SUMR lockup period.
+            </Text>
+          </div>
+          <div className={lockedSumrInfoTabBarV2Styles.noStakedSumrDataBox}>
+            <Icon iconName="colorful_arrow" size={48} />
+            <Text variant="h5">
+              Boost your SUMR & USD APY up to 7x across positions with blended boost multiple
+            </Text>
+          </div>
+        </div>
+        <Button variant="primaryLarge">Stake your SUMR</Button>
+      </div>
+    </BigGradientBox>
+  )
+}
+
 const YourLockedSumrPositions = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
-      <YourLockedSumrPositionsCards />
-      <YourLockedSumrPositionsTable />
-    </div>
+    <Card variant="cardSecondary">
+      <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
+        <YourLockedSumrPositionsCards />
+        <YourLockedSumrPositionsTable />
+      </div>
+    </Card>
   )
 }
 
 const AllLockedSumrPositionsCards = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.lockedSumrPositionsCardsWrapper}>
+    <div className={lockedSumrInfoTabBarV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
         // TODOStakingV2
         dataBlock={{
@@ -373,7 +402,7 @@ const AllLockedSumrPositionsTable = () => {
 
 const AllLockedSumrPositionsData = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
+    <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
       <Expander title="Overview" defaultExpanded>
         <AllLockedSumrPositionsPieChart />
       </Expander>
@@ -386,32 +415,35 @@ const AllLockedSumrPositionsData = () => {
 
 const AllLockedSumrPositions = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
+    <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
       <AllLockedSumrPositionsCards />
       <AllLockedSumrPositionsData />
     </div>
   )
 }
 
-export const PortfolioLockedSumrInfoV2 = () => {
+export const LockedSumrInfoTabBarV2 = () => {
   return (
-    <div className={portfolioLockedSumrInfoV2Styles.wrapper}>
-      <Card variant="cardSecondary">
-        <TabBar
-          tabs={[
-            {
-              id: 'your-locked-sumr-positions',
-              label: 'Your Locked SUMR Positions',
-              content: <YourLockedSumrPositions />,
-            },
-            {
-              id: 'all-locked-sumr-positions',
-              label: 'All Locked SUMR Positions',
-              content: <AllLockedSumrPositions />,
-            },
-          ]}
-        />
-      </Card>
+    <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
+      <TabBar
+        tabs={[
+          {
+            id: 'your-locked-sumr-positions',
+            label: 'Your Locked SUMR Positions (stake)',
+            content: <YourLockedSumrPositions />,
+          },
+          {
+            id: 'your-locked-sumr-positions',
+            label: 'Your Locked SUMR Positions (no stake)',
+            content: <NoStakedPositions />,
+          },
+          {
+            id: 'all-locked-sumr-positions',
+            label: 'All Locked SUMR Positions',
+            content: <AllLockedSumrPositions />,
+          },
+        ]}
+      />
     </div>
   )
 }

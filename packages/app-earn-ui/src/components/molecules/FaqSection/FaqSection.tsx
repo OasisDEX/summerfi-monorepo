@@ -14,10 +14,11 @@ const ExpanderContent = ({ children }: { children: ReactNode }) => {
 
 interface FaqSectionProps {
   data: {
-    title: string
+    id?: string
+    title: ReactNode
     content: ReactNode
   }[]
-  onExpand?: (props: { expanded: boolean; title: string }) => void
+  onExpand?: (props: { expanded: boolean; title: string; id?: string }) => void
   wrapperClassName?: string
   headerClassName?: string
   faqSectionClassName?: string
@@ -36,9 +37,9 @@ export const FaqSection: FC<FaqSectionProps> = ({
   customTitle,
   expanderButtonStyles,
 }) => {
-  const handleOnExpand = (title: string) => (expanded: boolean) => {
+  const handleOnExpand = (title: string, id?: string) => (expanded: boolean) => {
     if (onExpand) {
-      onExpand({ expanded, title })
+      onExpand({ expanded, title, id })
     }
   }
 
@@ -48,12 +49,15 @@ export const FaqSection: FC<FaqSectionProps> = ({
         <Text variant={headerVariant}>{customTitle ?? 'FAQ'}</Text>
       </div>
       <div className={clsx(faqSectionStyles.faqSectionBlockWrapper, faqSectionClassName)}>
-        {data.map(({ title, content }) => (
+        {data.map(({ title, content }, index) => (
           <Expander
             title={title}
-            key={title}
+            key={typeof title === 'string' ? title : index}
             expanderButtonStyles={expanderButtonStyles}
-            onExpand={handleOnExpand(title)}
+            onExpand={handleOnExpand(
+              typeof title === 'string' ? title : String(index),
+              typeof title === 'string' ? undefined : String(index),
+            )}
           >
             <ExpanderContent>{content}</ExpanderContent>
           </Expander>

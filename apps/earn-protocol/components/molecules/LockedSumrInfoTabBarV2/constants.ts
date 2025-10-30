@@ -1,7 +1,7 @@
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
-} from '@/features/portfolio/components/PortfolioLockedSumrInfoV2/types'
+} from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 
 export const yourLockedSumrPositionsTableColumns: {
   title: string
