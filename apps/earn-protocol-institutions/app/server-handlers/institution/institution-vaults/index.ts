@@ -5,7 +5,7 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
-const supportedInstitutionNetworks = [SupportedNetworkIds.Base]
+const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
 
 export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
   if (!institutionName) return null
