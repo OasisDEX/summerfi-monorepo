@@ -2,11 +2,7 @@
 
 import { Suspense } from 'react'
 import { type StoredState } from '@account-kit/core'
-import {
-  LocalConfigContextProvider,
-  type LocalConfigState,
-  type SavedAnalyticsCookiesSettings,
-} from '@summerfi/app-earn-ui'
+import { type SavedAnalyticsCookiesSettings } from '@summerfi/app-earn-ui'
 import { type DeviceType, type EarnAppConfigType } from '@summerfi/app-types'
 import dynamic from 'next/dynamic'
 
@@ -20,7 +16,6 @@ type GlobalProviderProps = {
   accountKitInitializedState: StoredState | undefined
   config: Partial<EarnAppConfigType>
   deviceType: DeviceType
-  localConfigContextState: Partial<LocalConfigState>
   analyticsCookie: SavedAnalyticsCookiesSettings | null
 }
 
@@ -36,7 +31,6 @@ export const GlobalProvider = ({
   config,
   deviceType,
   accountKitInitializedState,
-  localConfigContextState,
   analyticsCookie,
 }: GlobalProviderProps) => {
   return (
@@ -44,11 +38,9 @@ export const GlobalProvider = ({
       <AuthContextProvider>
         <SystemConfigProvider value={config}>
           <DeviceProvider value={deviceType}>
-            <LocalConfigContextProvider value={localConfigContextState}>
-              <AlchemyAccountsProvider initialState={accountKitInitializedState}>
-                <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
-              </AlchemyAccountsProvider>
-            </LocalConfigContextProvider>
+            <AlchemyAccountsProvider initialState={accountKitInitializedState}>
+              <MasterPage analyticsCookie={analyticsCookie}>{children}</MasterPage>
+            </AlchemyAccountsProvider>
           </DeviceProvider>
         </SystemConfigProvider>
       </AuthContextProvider>
