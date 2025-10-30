@@ -21,7 +21,7 @@ import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import { sdkApiUrl } from '@/constants/sdk'
 import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
-import sumrV2PageStyles from './SumrV2StakingPageView.module.css'
+import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
 
 interface SumrV2StakingPageViewProps {}
 
@@ -33,7 +33,7 @@ const mockData = {
   sumrPrice: 0.0412,
 }
 
-export const SumrV2StakingPageView: FC<SumrV2StakingPageViewProps> = () => {
+export const SumrV2StakingLandingPageView: FC<SumrV2StakingPageViewProps> = () => {
   const tooltipEventHandler = useHandleTooltipOpenEvent()
 
   return (
