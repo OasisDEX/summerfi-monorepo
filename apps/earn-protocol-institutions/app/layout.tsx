@@ -10,8 +10,6 @@ import {
   GoogleTagManager,
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
-  slippageConfigCookieName,
-  sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
@@ -97,9 +95,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     (await headers()).get('cookie') ?? undefined,
   )
 
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
-
   // the style on the html tag is needed to prevent a flash of white background on page load
   return (
     <html lang={locale} suppressHydrationWarning style={{ backgroundColor: '#1c1c1c' }}>
@@ -121,10 +116,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           config={config}
           analyticsCookie={analyticsCookie}
           deviceType={resolvedDeviceType}
-          localConfigContextState={{
-            slippageConfig,
-            sumrNetApyConfig,
-          }}
         >
           {children}
         </GlobalProvider>
