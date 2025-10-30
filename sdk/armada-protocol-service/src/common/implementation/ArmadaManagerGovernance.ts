@@ -278,14 +278,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getStakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakeTxV2']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress('rewardsManagerV2')
     return this._getStakeTx(params, rewardsManagerAddress)
   }
 
   async getUnstakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTxV2']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress('rewardsManagerV2')
     return this._getUnstakeTx(params, rewardsManagerAddress)
   }
 }
