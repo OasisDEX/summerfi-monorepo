@@ -58,10 +58,41 @@
       flex-direction: column;
       gap: 24px;
 
-      .cardRightColumnFirstStep {
+      .cardRightColumnStepWrapper {
         display: flex;
         flex-direction: column;
         gap: 16px;
+      }
+
+      .yieldSourcesCards {
+        display: flex;
+        gap: 16px;
+
+        .yieldSourcesCard {
+          display: flex;
+          flex-direction: column;
+          padding: var(--spacing-space-large);
+          gap: var(--spacing-space-medium);
+
+          .yieldDataBlock {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+      }
+
+      .stakingLengthControllers {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .stakingLengthLabels {
+          display: flex;
+          justify-content: space-between;
+          color: var(--color-text-secondary);
+          margin-right: 5px;
+        }
       }
     }
   }
@@ -86,7 +117,6 @@
 
 .quickActionTags {
   width: 100%;
-  margin-top: var(--spacing-space-medium);
 }
 
 .inputWrapper {

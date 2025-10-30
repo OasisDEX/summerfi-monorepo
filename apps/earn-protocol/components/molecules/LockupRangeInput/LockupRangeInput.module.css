@@ -1,0 +1,106 @@
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.inputStyles {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: transparent;
+}
+
+.inputStyles::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.inputStyles::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--earn-protocol-primary-100);
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.15);
+  margin-top: -8px;
+  cursor: pointer;
+  border: none;
+}
+
+.inputStyles::-moz-range-track {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-border);
+}
+
+.inputStyles::-moz-range-progress {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--earn-protocol-primary-100);
+}
+
+.inputStyles::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--earn-protocol-primary-100);
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.15);
+  border: none;
+  cursor: pointer;
+}
+
+.inputStyles::-ms-track {
+  height: 4px;
+  border-radius: 4px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.inputStyles::-ms-fill-lower {
+  background: var(--earn-protocol-primary-100);
+  border-radius: 4px;
+}
+
+.inputStyles::-ms-fill-upper {
+  background: var(--color-border, #3D3D3D);
+  border-radius: 4px;
+}
+
+.inputStyles::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--earn-protocol-primary-100);
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.15);
+  border: none;
+  margin-top: 0;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  top: -44px;
+  transform: translateX(-50%);
+  transition: opacity 120ms ease, visibility 120ms ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.tooltipInner {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  max-width: 240px;
+  padding: 8px;
+  background: var(--earn-protocol-neutral-70);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  justify-content: flex-start;
+  align-items: flex-start;
+  white-space: nowrap;
+}

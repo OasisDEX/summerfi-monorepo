@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import {
   Card,
+  DataBlock,
   Expander,
   Icon,
   InputWithDropdown,
@@ -13,6 +14,7 @@ import {
   useAmount,
   useUserWallet,
   WithArrow,
+  YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
@@ -20,6 +22,7 @@ import { ChainIds } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { LockupRangeInput } from '@/components/molecules/LockupRangeInput/LockupRangeInput'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
@@ -42,6 +45,7 @@ const StepNumber = ({ number }: { number: number }) => {
 const SumrV2StakingManageComponent = () => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
+  const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(90)
 
   const { token: sumrToken } = useToken({
     tokenSymbol: 'SUMMER',
@@ -229,7 +233,7 @@ const SumrV2StakingManageComponent = () => {
           </Expander>
         </div>
         <div className={sumrV2StakingManageViewStyles.cardRightColumn}>
-          <div className={sumrV2StakingManageViewStyles.cardRightColumnFirstStep}>
+          <div className={sumrV2StakingManageViewStyles.cardRightColumnStepWrapper}>
             <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
               <StepNumber number={1} />
               <Text variant="p2semi">How much SUMR would you like to stake?</Text>
@@ -304,9 +308,81 @@ const SumrV2StakingManageComponent = () => {
               }}
             />
           </div>
-          <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-            <StepNumber number={2} />
-            <Text variant="p2semi">How do you want to lock up and boost your SUMR?</Text>
+          <div className={sumrV2StakingManageViewStyles.cardRightColumnStepWrapper}>
+            <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+              <StepNumber number={2} />
+              <Text variant="p2semi">How do you want to lock up and boost your SUMR?</Text>
+            </div>
+            <div className={sumrV2StakingManageViewStyles.yieldSourcesCards}>
+              <Card className={sumrV2StakingManageViewStyles.yieldSourcesCard}>
+                <YieldSourceLabel
+                  label={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Text variant="p4semiColorful">Yield source 1</Text>
+                      <Tooltip tooltip="Huh?">
+                        <Icon iconName="info" size={16} color="#B049FF" />
+                      </Tooltip>
+                    </div>
+                  }
+                />
+                <DataBlock
+                  title={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Icon iconName="usdc_circle_color" size={24} />
+                      <Text variant="p4semi">USDC Yield (Boosted 2.2x)</Text>
+                    </div>
+                  }
+                  value="7.2% APY"
+                  subValue="$4,750.58 a year"
+                  subValueType="positive"
+                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                />
+              </Card>
+              <Card className={sumrV2StakingManageViewStyles.yieldSourcesCard}>
+                <YieldSourceLabel
+                  label={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Text variant="p4semiColorful">Yield source 2</Text>
+                      <Tooltip tooltip="Huh?">
+                        <Icon iconName="info" size={16} color="#B049FF" />
+                      </Tooltip>
+                    </div>
+                  }
+                />
+                <DataBlock
+                  title={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Icon iconName="sumr" size={20} />
+                      <Text variant="p4semi">SUMR Reward APY (Boosted 2.2x)</Text>
+                    </div>
+                  }
+                  value="3.5% APY"
+                  subValue="+7,116.06 SUMR"
+                  subValueType="positive"
+                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                />
+              </Card>
+            </div>
+
+            <Card className={sumrV2StakingManageViewStyles.stakingLengthControllers}>
+              <div className={sumrV2StakingManageViewStyles.stakingLengthLabels}>
+                <Text variant="p3semi">1x</Text>
+                <Text variant="p3semi">Lockup and boost yield</Text>
+                <Text variant="p3semi">7.2x Boost</Text>
+              </div>
+              <LockupRangeInput
+                value={selectedLockupAndBoost}
+                onChange={setSelectedLockupAndBoost}
+              />
+              <div className={sumrV2StakingManageViewStyles.stakingLengthLabels}>
+                <Text variant="p3semi">Years</Text>
+                <Text variant="p3semi" style={{ marginLeft: '-27px' }}>
+                  1
+                </Text>
+                <Text variant="p3semi">2</Text>
+                <Text variant="p3semi">3</Text>
+              </div>
+            </Card>
           </div>
         </div>
       </Card>
