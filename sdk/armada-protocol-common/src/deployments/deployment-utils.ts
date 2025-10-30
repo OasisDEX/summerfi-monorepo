@@ -175,13 +175,18 @@ export const getDeployedRewardsRedeemerAddress = () => {
   return Address.createFromEthereum({ value: maybeAddress })
 }
 
-export const getDeployedGovRewardsManagerAddress = () => {
+export const getDeployedGovRewardsManagerAddress = (
+  version: 'rewardsManager' | 'rewardsManagerV2' = 'rewardsManager',
+) => {
   const config = getDeploymentsJsonConfig()
   const key = getChainKey(ChainFamilyName.Base)
 
   const maybeAddress = (
-    config[key].deployedContracts.gov as { rewardsManager: { address: string | undefined } }
-  ).rewardsManager.address
+    config[key].deployedContracts.gov as {
+      rewardsManager: { address: string | undefined }
+      rewardsManagerV2: { address: string | undefined }
+    }
+  )[version].address
   if (!maybeAddress) {
     throw new Error(
       'Gov rewards manager contract is not available on ' + key + '. It is only on Base.',

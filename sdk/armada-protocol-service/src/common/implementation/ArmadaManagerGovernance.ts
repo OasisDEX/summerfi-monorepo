@@ -179,16 +179,15 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
   }
 
-  async getStakeTx(
+  private async _getStakeTx(
     params: Parameters<IArmadaManagerGovernance['getStakeTx']>[0],
+    rewardsManagerAddress: IAddress,
   ): ReturnType<IArmadaManagerGovernance['getStakeTx']> {
     const calldata = encodeFunctionData({
       abi: GovernanceRewardsManagerAbi,
       functionName: 'stake',
       args: [params.amount],
     })
-
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     const stakeTx = {
       type: TransactionType.Stake,
@@ -219,16 +218,15 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
   }
 
-  async getUnstakeTx(
+  private async _getUnstakeTx(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTx']>[0],
+    rewardsManagerAddress: IAddress,
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTx']> {
     const calldata = encodeFunctionData({
       abi: GovernanceRewardsManagerAbi,
       functionName: 'unstake',
       args: [params.amount],
     })
-
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
 
     return [
       {
@@ -241,6 +239,20 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
         },
       },
     ]
+  }
+
+  async getStakeTx(
+    params: Parameters<IArmadaManagerGovernance['getStakeTx']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakeTx']> {
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    return this._getStakeTx(params, rewardsManagerAddress)
+  }
+
+  async getUnstakeTx(
+    params: Parameters<IArmadaManagerGovernance['getUnstakeTx']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUnstakeTx']> {
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    return this._getUnstakeTx(params, rewardsManagerAddress)
   }
 
   async getDelegationChainLength(
@@ -266,12 +278,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getStakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakeTxV2']> {
-    return this.getStakeTx(params)
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    return this._getStakeTx(params, rewardsManagerAddress)
   }
 
   async getUnstakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTxV2']> {
-    return this.getUnstakeTx(params)
+    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    return this._getUnstakeTx(params, rewardsManagerAddress)
   }
 }

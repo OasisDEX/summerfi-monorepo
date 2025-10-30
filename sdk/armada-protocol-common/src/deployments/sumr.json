@@ -11,6 +11,9 @@
         "rewardsManager": {
           "address": "0xDe61A0a49f48e108079bdE73caeA56E87FfeEF92"
         },
+        "rewardsManagerV2": {
+          "address": "0xDe61A0a49f48e108079bdE73caeA56E87FfeEF92"
+        },
         "timelock": {
           "address": "0x447BF9d1485ABDc4C1778025DfdfbE8b894C3796"
         },
