@@ -1072,6 +1072,15 @@ export const StaticTokensData: TokenListData = {
       chainId: ChainIds.Sonic,
       logoURI: '',
     },
+    // xSUMR 0x49fea727a60469f2c25376ad3c7d5f3810adfd8c on base
+    {
+      name: 'xSUMR',
+      address: '0x49fea727a60469f2c25376ad3c7d5f3810adfd8c',
+      symbol: 'xSUMR',
+      decimals: 18,
+      chainId: ChainIds.Base,
+      logoURI: '',
+    },
     {
       name: 'Sonic',
       address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',

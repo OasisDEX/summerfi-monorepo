@@ -57,6 +57,8 @@ import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
 import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserStakedBalance'
 import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
 import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
+import { getStakeTxV2 } from './armada-protocol-handlers/users/getStakeTxV2'
+import { getUnstakeTxV2 } from './armada-protocol-handlers/users/getUnstakeTxV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
@@ -169,6 +171,8 @@ export const sdkAppRouter = router({
       getUserEarnedRewards: getUserEarnedRewards,
       getStakeTx: getStakeTx,
       getUnstakeTx: getUnstakeTx,
+      getStakeTxV2: getStakeTxV2,
+      getUnstakeTxV2: getUnstakeTxV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,

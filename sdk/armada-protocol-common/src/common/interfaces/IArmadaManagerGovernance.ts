@@ -114,4 +114,28 @@ export interface IArmadaManagerGovernance {
    * @returns The length of the delegation chain
    */
   getDelegationChainLength: (params: { user: IUser }) => Promise<number>
+
+  /**
+   * @method getStakeTxV2
+   * @description Returns the transaction to stake tokens (V2)
+   *
+   * @param user The user
+   * @param amount The amount to stake
+   *
+   * @returns The transaction information
+   */
+  getStakeTxV2: (params: {
+    user: IUser
+    amount: bigint
+  }) => Promise<[ApproveTransactionInfo, StakeTransactionInfo] | [StakeTransactionInfo]>
+
+  /**
+   * @method getUnstakeTxV2
+   * @description Returns the transaction to unstake tokens (V2)
+   *
+   * @param amount The amount to unstake
+   *
+   * @returns The transaction information
+   */
+  getUnstakeTxV2: (params: { amount: bigint }) => Promise<[UnstakeTransactionInfo]>
 }

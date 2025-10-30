@@ -16,8 +16,10 @@ import { getAggregatedRewardsHandler } from '../handlers/getAggregatedRewardsHan
 import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedClaimsForChainTXHandler'
 import { getDelegateTxHandler } from '../handlers/getDelegateTxHandler'
 import { getStakeTxHandler } from '../handlers/getStakeTxHandler'
+import { getStakeTxV2Handler } from '../handlers/getStakeTxV2Handler'
 import { getUndelegateTxHandler } from '../handlers/getUndelegateTxHandler'
 import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
+import { getUnstakeTxV2Handler } from '../handlers/getUnstakeTxV2Handler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
@@ -112,8 +114,10 @@ export const useSDK = (params: UseSdk) => {
   const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
+  const getStakeTxV2 = useMemo(() => getStakeTxV2Handler(sdk), [sdk])
   const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
   const getUnstakeTx = useMemo(() => getUnstakeTxHandler(sdk), [sdk])
+  const getUnstakeTxV2 = useMemo(() => getUnstakeTxV2Handler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
@@ -163,8 +167,10 @@ export const useSDK = (params: UseSdk) => {
       getBridgeTx,
       getDelegateTx,
       getStakeTx,
+      getStakeTxV2,
       getUndelegateTx,
       getUnstakeTx,
+      getUnstakeTxV2,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
@@ -209,8 +215,10 @@ export const useSDK = (params: UseSdk) => {
       getDelegateTx,
       getBridgeTx,
       getStakeTx,
+      getStakeTxV2,
       getUndelegateTx,
       getUnstakeTx,
+      getUnstakeTxV2,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
