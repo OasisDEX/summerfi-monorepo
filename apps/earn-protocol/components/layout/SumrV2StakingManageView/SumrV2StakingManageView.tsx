@@ -49,7 +49,7 @@ const lockBucketAvailabilityMap = {
 }
 
 const mapLockBucketToAvailability = (days: number) => {
-  if (days <= 90) {
+  if (days < 90) {
     return lockBucketAvailabilityMap[90]
   }
   if (days <= 180) {
@@ -66,7 +66,7 @@ const mapLockBucketToAvailability = (days: number) => {
 }
 
 const mapLockBucketToRange = (days: number) => {
-  if (days <= 90) {
+  if (days < 90) {
     return '14 days - 3m'
   }
   if (days <= 180) {
@@ -109,7 +109,11 @@ const StepNumber = ({ number }: { number: number }) => {
   )
 }
 
-const SumrV2StakingManageComponent = () => {
+const SumrV2StakingManageComponent = ({
+  onStake,
+}: {
+  onStake: (params: { amount: BigNumber; lockupDuration: number }) => void
+}) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
   const [warningAccepted, setWarningAccepted] = useState(false)
@@ -209,6 +213,10 @@ const SumrV2StakingManageComponent = () => {
     // eslint-disable-next-line no-console
     console.log('Stake confirmed:', {
       amount: amountDisplay,
+      lockupDuration: selectedLockupAndBoost,
+    })
+    onStake({
+      amount: amountParsed,
       lockupDuration: selectedLockupAndBoost,
     })
   }
@@ -651,23 +659,31 @@ const SumrV2StakingManageComponent = () => {
                     value: '1.0x → 7x', // Huh?
                   },
                   {
-                    label: (
-                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        <Text variant="p3semi">Initial early withdrawal penalty</Text>
-                        <Tooltip tooltip="Huh?">
-                          <Icon iconName="info" size={16} />
-                        </Tooltip>
-                      </div>
-                    ),
-                    value: '11.2%', // Huh?
-                  },
-                  {
                     label: 'SUMR lock positions ',
                     value: '0 → 1 (+1)', // Huh?
                   },
                   {
                     label: '% of available SUMR being locked ',
                     value: '0 → 100%', // Huh?
+                  },
+                  {
+                    label: (
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
+                          Initial early withdrawal penalty
+                        </Text>
+                        <Tooltip tooltip="Huh?">
+                          <Icon iconName="info" size={16} color="var(--color-text-warning)" />
+                        </Tooltip>
+                      </div>
+                    ),
+                    value: (
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
+                          11.2%
+                        </Text>
+                      </div>
+                    ), // Huh?
                   },
                 ]}
               />
@@ -717,10 +733,182 @@ const SumrV2StakingManageComponent = () => {
   )
 }
 
+const SumrV2StakingSuccessComponent = ({
+  txData,
+}: {
+  txData: { amount: BigNumber; lockupDuration: number }
+}) => {
+  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: 'Base',
+  })
+
+  const { tokenBalance: sumrBalanceOnSourceChain, tokenBalanceLoading } = useTokenBalance({
+    chainId: ChainIds.Base,
+    publicClient,
+    tokenSymbol: 'SUMMER',
+    vaultTokenSymbol: 'SUMMER',
+  })
+
+  const isAllTokenStaked = useMemo(() => {
+    if (!sumrBalanceOnSourceChain || isLoadingAccount) {
+      return false
+    }
+
+    // safe-ish assumption
+    return (
+      txData.amount.isEqualTo(sumrBalanceOnSourceChain) || sumrBalanceOnSourceChain.isLessThan(0.1)
+    )
+  }, [txData, sumrBalanceOnSourceChain, isLoadingAccount])
+
+  const lockupExpirationDate = useMemo(() => {
+    if (txData.lockupDuration === 0) {
+      return 'N/A'
+    }
+
+    return dayjs().add(txData.lockupDuration, 'day').format('MMM D, YYYY')
+  }, [txData.lockupDuration])
+
+  const lockTimePeriodSummaryLabel = useMemo(() => {
+    if (txData.lockupDuration === 0) {
+      return 'No lockup'
+    }
+
+    return `${txData.lockupDuration} days (${lockupExpirationDate})`
+  }, [txData.lockupDuration, lockupExpirationDate])
+
+  return (
+    <div className={sumrV2StakingManageViewStyles.finalCardWrapper}>
+      <div className={sumrV2StakingManageViewStyles.title}>
+        {tokenBalanceLoading ? (
+          <SkeletonLine width={32} height={32} />
+        ) : (
+          <Text variant="h3">
+            {isAllTokenStaked
+              ? 'All of your SUMR is staked and locked'
+              : 'Some of your SUMR is staked and locked'}
+          </Text>
+        )}
+      </div>
+      <Card variant="cardSecondary" className={sumrV2StakingManageViewStyles.finalCard}>
+        <div className={sumrV2StakingManageViewStyles.summaryWrapper}>
+          <Text as="p" variant="p1semi">
+            SUMR Staked
+          </Text>
+          <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+            <Icon iconName="sumr" size={38} />
+            <Text as="p" variant="h2">
+              {formatCryptoBalance(txData.amount)} SUMR
+            </Text>
+          </div>
+          <Text as="p" variant="p1semi">
+            $10,000.00
+          </Text>
+        </div>
+        <Card className={sumrV2StakingManageViewStyles.orderSummary}>
+          <Text variant="p3semi" className={sumrV2StakingManageViewStyles.orderSummaryHeader}>
+            Summary of changes
+          </Text>
+          <OrderInformation
+            wrapperStyles={{
+              padding: '0px',
+            }}
+            items={[
+              {
+                label: 'SUMR Being Locked',
+                value: (
+                  <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                    <Icon iconName="sumr" size={16} />
+                    <Text variant="p3semi">{formatCryptoBalance(txData.amount)} SUMR</Text>
+                  </div>
+                ),
+              },
+              {
+                label: 'Lock time period',
+                value: lockTimePeriodSummaryLabel,
+              },
+              {
+                label: 'Yield boost multipler',
+                value: '7x', // Huh?
+              },
+              {
+                label: 'Blended yield boost multipler',
+                value: '1.0x → 7x', // Huh?
+              },
+              {
+                label: 'SUMR lock positions ',
+                value: '0 → 1 (+1)', // Huh?
+              },
+              {
+                label: '% of available SUMR being locked ',
+                value: '0 → 100%', // Huh?
+              },
+              {
+                label: (
+                  <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                    <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
+                      Initial early withdrawal penalty
+                    </Text>
+                    <Tooltip tooltip="Huh?">
+                      <Icon iconName="info" size={16} color="var(--color-text-warning)" />
+                    </Tooltip>
+                  </div>
+                ),
+                value: (
+                  <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                    <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
+                      11.2%
+                    </Text>
+                  </div>
+                ), // Huh?
+              },
+            ]}
+          />
+        </Card>
+        {userWalletAddress ? (
+          <Link href={`/portfolio/${userWalletAddress}`} style={{ marginTop: '24px' }}>
+            <Button variant="primaryLarge">Go to portfolio</Button>
+          </Link>
+        ) : (
+          <Button variant="primaryLarge" disabled>
+            Go to portfolio
+          </Button>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+const SumrV2StakingIntermediary = () => {
+  // Huh?
+  // simple mapping steps, will need to include actual tx logic
+  const [step, setStep] = useState<'init' | 'done'>('init')
+  const [txData, setTxData] = useState<{
+    amount: BigNumber
+    lockupDuration: number
+  }>()
+
+  const onStake = ({ amount, lockupDuration }: { amount: BigNumber; lockupDuration: number }) => {
+    setTxData({ amount, lockupDuration })
+    setStep('done')
+  }
+
+  if (step === 'init') {
+    return <SumrV2StakingManageComponent onStake={onStake} />
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (step === 'done' && txData) {
+    return <SumrV2StakingSuccessComponent txData={txData} />
+  }
+
+  return <Text variant="p2semi">Something went wrong.</Text>
+}
+
 export const SumrV2StakingManageView = () => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <SumrV2StakingManageComponent />
+      <SumrV2StakingIntermediary />
     </SDKContextProvider>
   )
 }

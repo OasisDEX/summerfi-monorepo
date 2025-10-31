@@ -5,6 +5,8 @@ declare const styles: {
   readonly "cardRightColumn": string;
   readonly "cardRightColumnStepWrapper": string;
   readonly "expanderTitleButton": string;
+  readonly "finalCard": string;
+  readonly "finalCardWrapper": string;
   readonly "inlineLittleGap": string;
   readonly "inputWrapper": string;
   readonly "orderInformationDivider": string;
@@ -14,6 +16,7 @@ declare const styles: {
   readonly "stakingLengthControllers": string;
   readonly "stakingLengthLabels": string;
   readonly "stepNumberWrapper": string;
+  readonly "summaryWrapper": string;
   readonly "sumrKeyStakingInfoCard": string;
   readonly "title": string;
   readonly "warningContent": string;

@@ -97,15 +97,16 @@
         }
       }
 
-      .orderSummary {
-        flex-direction: column;
-
-        .orderSummaryHeader {
-          margin-bottom: var(--spacing-space-small);
-          color: var(--color-text-secondary);
-        }
-      }
     }
+  }
+}
+
+.orderSummary {
+  flex-direction: column;
+
+  .orderSummaryHeader {
+    margin-bottom: var(--spacing-space-large);
+    color: var(--color-text-secondary);
   }
 }
 
@@ -153,5 +154,33 @@
     flex-direction: column;
     gap: var(--spacing-space-small);
     letter-spacing: -0.1px;
+  }
+}
+
+.finalCardWrapper {
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .summaryWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 0;
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .finalCard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    padding-bottom: 48px;
   }
 }
