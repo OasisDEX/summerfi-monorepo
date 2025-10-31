@@ -15,7 +15,7 @@
     "@summerfi/abstractions": "workspace:*",
     "kysely": "^0.27.3",
     "kysely-postgres-js": "^2.0.0",
-    "pg": "^8.11.5",
+    "pg": "^8.15.5",
     "postgres": "^3.4.4"
   },
   "devDependencies": {
