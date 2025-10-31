@@ -1,6 +1,5 @@
-import { GraphRoleName } from '@summerfi/sdk-common'
+import { GraphRoleName, AddressValue } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import type { GetAllRolesScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -8,60 +7,65 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Get All Roles', () => {
-  const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup()
-
-  // Configure test scenarios here
-  const scenarios: GetAllRolesScenario[] = [
+  const scenarios: {
+    roleName?: GraphRoleName
+    targetContract?: 'fleetAddress' | 'aqAddress'
+    owner?: AddressValue
+    first?: number
+    skip?: number
+    expectedMinimumCount?: number
+  }[] = [
     {
-      description: 'should fetch all roles without filters',
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch WHITELIST_ROLE roles',
       roleName: GraphRoleName.WHITELIST_ROLE,
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch roles for specific target contract (fleet)',
-      targetContract: fleetAddress.value,
+      targetContract: 'fleetAddress',
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch roles for specific target contract (AQ)',
-      targetContract: aqAddress.value,
+      targetContract: 'aqAddress',
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch WHITELIST_ROLE for fleet contract',
       roleName: GraphRoleName.WHITELIST_ROLE,
-      targetContract: fleetAddress.value,
+      targetContract: 'fleetAddress',
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch roles with pagination (first 5)',
       first: 5,
       expectedMinimumCount: 0,
     },
     {
-      description: 'should fetch roles with pagination (skip 2, first 3)',
       skip: 2,
       first: 3,
       expectedMinimumCount: 0,
     },
   ]
 
-  test.each(scenarios)(
-    '$description',
-    async ({
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const {
       roleName,
-      targetContract,
+      targetContract: targetContractKey,
       owner,
       first,
       skip,
       expectedMinimumCount = 0,
-      description,
-    }) => {
-      console.log(`\n=== Testing: ${description} ===`)
+    } = scenario
+
+    it('should fetch roles', async () => {
+      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup()
+
+      // Resolve targetContract from key
+      const targetContract =
+        targetContractKey === 'fleetAddress'
+          ? fleetAddress.value
+          : targetContractKey === 'aqAddress'
+            ? aqAddress.value
+            : undefined
 
       const result = await sdk.armada.accessControl.getAllRoles({
         chainId,
@@ -136,13 +140,13 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
         expect(result.roles.length).toBeLessThanOrEqual(first)
         console.log(`\n✓ Result respects pagination limit: ${first}`)
       }
+    })
+  })
 
-      console.log(`\n=== Test completed: ${description} ===\n`)
-    },
-  )
-
-  test('should handle combined filters (WHITELIST_ROLE + target contract)', async () => {
+  it('should handle combined filters', async () => {
     console.log('\n=== Testing combined filters ===')
+
+    const { sdk, chainId, aqAddress } = createAdminSdkTestSetup()
 
     const result = await sdk.armada.accessControl.getAllRoles({
       chainId,

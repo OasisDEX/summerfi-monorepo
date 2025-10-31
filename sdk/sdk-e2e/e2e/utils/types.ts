@@ -8,7 +8,7 @@ import type {
   FiatCurrency,
   Percentage,
 } from '@summerfi/sdk-common'
-import type { ChainConfigs, ClientIds } from './testConfig'
+import type { TestConfigs, TestClientIds } from './testConfig'
 
 export type ContractRoleScenario = {
   role: ContractSpecificRoleName
@@ -25,7 +25,7 @@ export type GlobalRoleScenario = {
 }
 
 export type GovTestScenario = {
-  chainConfigKey: keyof typeof ChainConfigs
+  chainConfigKey: keyof typeof TestConfigs
 }
 
 export type WhitelistScenario = {
@@ -79,15 +79,9 @@ export type RebalanceScenario = {
   tokenSymbol: string
 }
 
-export type VaultInfoScenario = {
-  description: string
-  clientId?: ClientIds
-  testSpecificVault?: boolean
-}
-
 export type PositionsScenario = {
   description: string
-  clientId?: ClientIds
+  clientId?: TestClientIds
   testSpecificFleet?: boolean
 }
 

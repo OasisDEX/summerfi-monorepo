@@ -8,7 +8,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { ChainConfigs, SharedConfig } from './utils/testConfig'
+import { TestConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import type { WithdrawScenario } from './utils/types'
@@ -30,7 +30,7 @@ describe('Armada Protocol - Withdraw', () => {
   const withdrawScenarios: WithdrawScenario[] = [
     {
       description: 'withdraw ETH from Base Eth Vault',
-      chainConfig: ChainConfigs.BaseWETH,
+      chainConfig: TestConfigs.BaseWETH,
       amountValue: '0.001',
       swapToSymbol: 'ETH',
     },
