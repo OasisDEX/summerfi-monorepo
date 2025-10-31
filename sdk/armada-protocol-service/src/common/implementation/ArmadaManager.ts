@@ -100,6 +100,7 @@ export class ArmadaManager implements IArmadaManager {
       tokensManager: this._tokensManager,
     })
     this.utils = new ArmadaManagerUtils({
+      clientId: this._clientId,
       configProvider: this._configProvider,
       allowanceManager: this._allowanceManager,
       contractsProvider: this._contractsProvider,

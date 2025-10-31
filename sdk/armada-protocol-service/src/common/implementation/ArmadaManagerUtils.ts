@@ -31,7 +31,6 @@ import {
   type TransactionInfo,
   type HistoricalFleetRateResult,
   createTimeoutSignal,
-  toBytes32InHex,
 } from '@summerfi/sdk-common'
 import {
   IArmadaSubgraphManager,

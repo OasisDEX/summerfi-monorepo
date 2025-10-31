@@ -1,8 +1,4 @@
-import type {
-  GetVaultQuery,
-  GetVaultsQuery,
-  IArmadaManagerAdmin,
-} from '@summerfi/armada-protocol-common'
+import type { IArmadaManagerAdmin } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -302,21 +298,5 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
         value: 2,
       }),
     }
-  }
-
-  /** @see IArmadaManagerAdmin.getVaultsRaw */
-  async getVaultsRaw(params: Parameters<IArmadaManagerAdmin['getVaultsRaw']>[0]) {
-    return (await this._subgraphManager.getVaults({
-      chainId: params.chainInfo.chainId,
-      clientId: this.getClientIdOrUndefined(),
-    })) as GetVaultsQuery
-  }
-
-  /** @see IArmadaManagerAdmin.getVaultRaw */
-  async getVaultRaw(params: Parameters<IArmadaManagerAdmin['getVaultRaw']>[0]) {
-    return this._subgraphManager.getVault({
-      chainId: params.vaultId.chainInfo.chainId,
-      vaultId: params.vaultId.fleetAddress.value,
-    }) as GetVaultQuery
   }
 }

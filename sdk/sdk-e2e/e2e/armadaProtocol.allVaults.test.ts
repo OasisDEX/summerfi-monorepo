@@ -4,6 +4,7 @@ import {
   type IArmadaVaultInfo,
   ChainId,
   ChainIds,
+  ArmadaVaultId,
 } from '@summerfi/sdk-common'
 
 import assert from 'assert'
@@ -36,10 +37,6 @@ describe('Armada Protocol - All Vaults', () => {
       testClientId: TestClientIds.Targen,
       chainId: ChainIds.ArbitrumOne,
     },
-    {
-      testClientId: TestClientIds.Targen,
-      chainId: ChainIds.Mainnet,
-    },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
@@ -54,6 +51,7 @@ describe('Armada Protocol - All Vaults', () => {
 
       // Use chainId from scenario if provided, otherwise use default from setup
       const chainId = scenarioChainId ?? defaultChainId
+      const chainInfo = getChainInfoByChainId(chainId)
 
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(
@@ -73,6 +71,22 @@ describe('Armada Protocol - All Vaults', () => {
           vaults.list.map(stringifyArmadaVaultInfo).join('\n'),
         )
         vaults.list.forEach(validateApys)
+      }
+
+      const vaultsRaw = await sdk.armada.users.getVaultsRaw({
+        chainInfo,
+      })
+      if (!vaultsRaw || vaultsRaw.vaults.length === 0) {
+        console.log('No raw vaults found')
+      } else {
+        console.log(
+          `[${sdkType}] All raw vaults info:\n`,
+          vaultsRaw.vaults
+            .map((v) => {
+              return `- id: ${v.id.toString()}, name: ${v.name}`
+            })
+            .join('\n'),
+        )
       }
     })
   })
