@@ -2,7 +2,7 @@ import type { IArmadaManagerAccessControl } from '@summerfi/armada-protocol-comm
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
-import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import {
   IAddress,
   getChainInfoByChainId,
@@ -20,18 +20,21 @@ import {
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
 import { AccessControlAbi } from './abi'
 import { AccessControlStartBlockConfig } from './configs/AccessControlStartBlockConfig'
+import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 /**
  * @name ArmadaManagerAccessControl
  * @description Implementation of the IArmadaManagerAccessControl interface. Handles role-based access control operations for Armada Protocol
  */
-export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
+export class ArmadaManagerAccessControl
+  extends ArmadaManagerShared
+  implements IArmadaManagerAccessControl
+{
   private _configProvider: IConfigurationProvider
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _deploymentProvider: IDeploymentProvider
   private _subgraphManager: IArmadaSubgraphManager
-  private _clientId?: string
   private _roleHashes: Record<GlobalRoles, HexData | null> = { ...GLOBAL_ROLE_HASHES }
 
   /**
@@ -43,19 +46,20 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
 
   /** CONSTRUCTOR */
   constructor(params: {
+    clientId?: string
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
     subgraphManager: IArmadaSubgraphManager
-    clientId?: string
   }) {
+    super({ clientId: params.clientId })
+
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
     this._deploymentProvider = params.deploymentProvider
     this._subgraphManager = params.subgraphManager
-    this._clientId = params.clientId
   }
 
   /** PRIVATE METHODS **/
@@ -600,12 +604,9 @@ export class ArmadaManagerAccessControl implements IArmadaManagerAccessControl {
   /** @see IArmadaManagerAccessControl.getAllRoles */
   getAllRoles: IArmadaManagerAccessControl['getAllRoles'] = async (params) => {
     try {
-      if (!this._clientId) {
-        throw new Error('Client ID is not set for ArmadaManagerAccessControl')
-      }
       const result = await this._subgraphManager.getAllRoles({
         chainId: params.chainId,
-        institutionId: this._clientId,
+        clientId: this.getClientIdOrThrow(),
         first: params.first ?? 1000,
         skip: params.skip ?? 0,
         name: params.name,

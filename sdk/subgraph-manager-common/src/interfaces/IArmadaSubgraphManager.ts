@@ -1,4 +1,4 @@
-import type { ChainId, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
+import type { ChainId, HexData, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
 import type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -27,15 +27,19 @@ export interface IArmadaSubgraphManager {
   /**
    * @name getVaults
    * @description get all the vaults
-   
-  * @param chainId target chain
+   *
+   * @param chainId target chain
+   * @param clientId target institution ID (for institutions subgraph only)
    *
    * @returns GetVaultsQuery
    *
    * @throws Error
    *
    */
-  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
+  getVaults(params: {
+    chainId: ChainId
+    clientId?: string
+  }): Promise<GetVaultsQuery | GetVaultsQueryInstitutions>
 
   /**
    * @name getVault
@@ -175,7 +179,7 @@ export interface IArmadaSubgraphManager {
    * @description Get all roles for a given chainId with pagination and filtering
    *
    * @param chainId target chain
-   * @param institutionId institution ID to filter roles by
+   * @param clientId institution ID to filter roles by
    * @param first number of items to return (default: 1000)
    * @param skip number of items to skip for pagination (default: 0)
    * @param name optional role name filter
@@ -188,7 +192,7 @@ export interface IArmadaSubgraphManager {
    *
    */
   getAllRoles(params: {
-    institutionId: string
+    clientId: string
     chainId: ChainId
     first?: number
     skip?: number

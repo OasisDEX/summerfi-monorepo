@@ -12054,7 +12054,9 @@ export type GetRolesQueryVariables = Exact<{
 
 export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: string, name: string, owner: string, targetContract: string, institution: { __typename?: 'Institution', id: string } }> };
 
-export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetVaultsQueryVariables = Exact<{
+  institutionId: Scalars['String']['input'];
+}>;
 
 
 export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<bigint>, rewardTokenEmissionsFinish: Array<bigint>, rewardTokenEmissionsUSD?: Array<string> | null, rebalanceCount: bigint, pricePerShare?: string | null, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, depositCap: bigint, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, withdrawableTotalAssets: bigint, withdrawableTotalAssetsUSD: string, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: bigint, depositCap: bigint, cumulativeEarnings: bigint, inputTokenBalance: bigint, maxDepositPercentageOfTVL: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
@@ -12305,8 +12307,8 @@ export const GetRolesDocument = gql`
 }
     `;
 export const GetVaultsDocument = gql`
-    query GetVaults {
-  vaults {
+    query GetVaults($institutionId: String!) {
+  vaults(where: {institution: $institutionId}) {
     protocol {
       network
     }
@@ -12469,7 +12471,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetRoles(variables: GetRolesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRolesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRolesQuery>({ document: GetRolesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRoles', 'query', variables);
     },
-    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
+    GetVaults(variables: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>({ document: GetVaultsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaults', 'query', variables);
     },
     GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultQuery> {
