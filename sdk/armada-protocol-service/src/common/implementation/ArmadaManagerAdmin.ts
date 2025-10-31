@@ -24,7 +24,7 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
 
   /** CONSTRUCTOR */
   constructor(params: {
-    clientId: string
+    clientId: string | undefined
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider

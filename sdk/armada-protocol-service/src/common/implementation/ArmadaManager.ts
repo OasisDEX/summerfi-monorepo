@@ -154,6 +154,7 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     this.admin = new ArmadaManagerAdmin({
+      clientId: this._clientId,
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
