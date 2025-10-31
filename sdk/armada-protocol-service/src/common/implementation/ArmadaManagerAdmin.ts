@@ -9,12 +9,13 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import { Address, getChainInfoByChainId, Percentage } from '@summerfi/sdk-common'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import type { IDeploymentProvider } from '../../deployment-provider/IDeploymentProvider'
+import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 /**
  * @name ArmadaManagerAdmin
  * @description This class is the implementation of the IArmadaManagerAdmin interface. Handles administrative operations for Armada Protocol
  */
-export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
+export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaManagerAdmin {
   private _configProvider: IConfigurationProvider
   private _contractsProvider: IContractsProvider
   private _blockchainClientProvider: IBlockchainClientProvider
@@ -23,12 +24,14 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
 
   /** CONSTRUCTOR */
   constructor(params: {
+    clientId: string
     configProvider: IConfigurationProvider
     contractsProvider: IContractsProvider
     blockchainClientProvider: IBlockchainClientProvider
     deploymentProvider: IDeploymentProvider
     subgraphManager: IArmadaSubgraphManager
   }) {
+    super({ clientId: params.clientId })
     this._configProvider = params.configProvider
     this._contractsProvider = params.contractsProvider
     this._blockchainClientProvider = params.blockchainClientProvider
@@ -305,6 +308,7 @@ export class ArmadaManagerAdmin implements IArmadaManagerAdmin {
   async getVaultsRaw(params: Parameters<IArmadaManagerAdmin['getVaultsRaw']>[0]) {
     return (await this._subgraphManager.getVaults({
       chainId: params.chainInfo.chainId,
+      clientId: this.getClientIdOrUndefined(),
     })) as GetVaultsQuery
   }
 
