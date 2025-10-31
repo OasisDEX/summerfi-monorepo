@@ -21,13 +21,16 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol - All Vaults', () => {
   const scenarios: {
-    testConfigKey?: TestConfigKey
+    chainId: ChainId
     testClientId?: TestClientIds
-    chainId?: ChainId
   }[] = [
-    { testConfigKey: 'BaseUSDC' },
+    { chainId: ChainIds.Base },
+    { chainId: ChainIds.ArbitrumOne },
+    { chainId: ChainIds.Mainnet },
+    { chainId: ChainIds.Sonic },
     {
       testClientId: TestClientIds.ACME,
+      chainId: ChainIds.Base,
     },
     {
       testClientId: TestClientIds.Targen,
@@ -40,23 +43,18 @@ describe('Armada Protocol - All Vaults', () => {
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey, testClientId, chainId: scenarioChainId } = scenario
+    const { testClientId, chainId } = scenario
 
     it('should get all vaults with info', async () => {
       // Choose SDK setup based on scenario
-      const setup = testClientId
-        ? createAdminSdkTestSetup(testClientId)
-        : createSdkTestSetup(testConfigKey)
-      const { sdk, chainId: defaultChainId, userAddress } = setup
+      const setup = testClientId ? createAdminSdkTestSetup(testClientId) : createSdkTestSetup()
+      const { sdk } = setup
 
       // Use chainId from scenario if provided, otherwise use default from setup
-      const chainId = scenarioChainId ?? defaultChainId
       const chainInfo = getChainInfoByChainId(chainId)
 
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
-      console.log(
-        `[${sdkType}] Running on chain ${chainId} for ${testClientId || testConfigKey} with user ${userAddress.value}`,
-      )
+      console.log(`[${sdkType}] Running on chain ${chainId} for ${testClientId}`)
 
       // Test for all vaults
       const vaults = await sdk.armada.users.getVaultInfoList({
