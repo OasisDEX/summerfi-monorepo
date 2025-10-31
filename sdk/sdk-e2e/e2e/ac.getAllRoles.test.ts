@@ -1,5 +1,6 @@
 import { GraphRoleName, AddressValue } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -57,7 +58,7 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
     } = scenario
 
     it('should fetch roles', async () => {
-      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup()
+      const { sdk, chainId, fleetAddress, aqAddress } = createAdminSdkTestSetup(TestClientIds.ACME)
 
       // Resolve targetContract from key
       const targetContract =
@@ -146,7 +147,7 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
   it('should handle combined filters', async () => {
     console.log('\n=== Testing combined filters ===')
 
-    const { sdk, chainId, aqAddress } = createAdminSdkTestSetup()
+    const { sdk, chainId, aqAddress } = createAdminSdkTestSetup(TestClientIds.ACME)
 
     const result = await sdk.armada.accessControl.getAllRoles({
       chainId,
