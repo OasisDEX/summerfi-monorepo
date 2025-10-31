@@ -13,19 +13,49 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
 
   try {
     const systemConfig = await configEarnAppFetcher()
-
     const institutionSdk = getInstitutionsSDK(institutionName)
-    const vaultsListByNetwork = await Promise.all(
+
+    // this is a temporary method
+    // until either `getVaultsRaw` returns only the particular insti vaults
+    // or `getVaultInfoList` is mapped in the frontend components
+    const vaultsInfoArray = await Promise.all(
       supportedInstitutionNetworks.map((networkId) =>
-        institutionSdk.armada.users.getVaultsRaw({
-          chainInfo: getChainInfoByChainId(Number(networkId)),
+        institutionSdk.armada.users.getVaultInfoList({
+          chainId: networkId,
         }),
       ),
     )
 
-    const filteredVaults = vaultsListByNetwork.flatMap(({ vaults }) => vaults)
+    const vaultsInfoByNetwork = supportedInstitutionNetworks.map((networkId, i) => ({
+      list: vaultsInfoArray[i].list,
+      networkId,
+    }))
 
-    const vaultsWithConfig = decorateWithFleetConfig(filteredVaults, systemConfig)
+    const vaultsListByNetwork = (
+      await Promise.all(
+        vaultsInfoByNetwork.map(async ({ list, networkId }) => {
+          const vaults = await Promise.all(
+            list.map(async (vaultInfo) => {
+              const vaultId = ArmadaVaultId.createFrom({
+                chainInfo: getChainInfoByChainId(networkId),
+                fleetAddress: vaultInfo.id.fleetAddress,
+              })
+
+              const vaultDetails = await institutionSdk.armada.users.getVaultRaw({
+                vaultId,
+              })
+
+              return vaultDetails.vault ? vaultDetails.vault : null
+            }),
+          )
+
+          return vaults.filter((vault): vault is NonNullable<typeof vault> => vault !== null).flat()
+        }),
+      )
+    ).flat()
+    // above is a temporary method
+
+    const vaultsWithConfig = decorateWithFleetConfig(vaultsListByNetwork, systemConfig)
 
     return {
       vaults: vaultsWithConfig,
@@ -52,19 +82,16 @@ export const getInstitutionVault = async ({
 
   try {
     const chainId = subgraphNetworkToId(network)
-    const chainInfo = getChainInfoByChainId(chainId)
 
-    const fleetAddress = Address.createFromEthereum({
-      value: vaultAddress,
-    })
-    const poolId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress,
-    })
     const institutionSdk = getInstitutionsSDK(institutionName)
     const [vault, systemConfig] = await Promise.all([
       institutionSdk.armada.users.getVaultRaw({
-        vaultId: poolId,
+        vaultId: ArmadaVaultId.createFrom({
+          chainInfo: getChainInfoByChainId(chainId),
+          fleetAddress: Address.createFromEthereum({
+            value: vaultAddress,
+          }),
+        }),
       }),
       configEarnAppFetcher(),
     ])

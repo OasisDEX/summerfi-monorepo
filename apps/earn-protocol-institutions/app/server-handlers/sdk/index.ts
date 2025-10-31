@@ -7,8 +7,8 @@ const apiClientsList: {
 export const getInstitutionsSDK: (institutionName: string) => SDKAdminManager = (
   institutionName: string,
 ) => {
-  if (!process.env.SDK_API_URL) {
-    throw new Error('SDK_API_URL is not set')
+  if (!process.env.EARN_APP_URL) {
+    throw new Error('EARN_APP_URL is not set')
   }
   if (!institutionName) {
     throw new Error('Institution ID is required')
@@ -17,8 +17,8 @@ export const getInstitutionsSDK: (institutionName: string) => SDKAdminManager = 
   if (!apiClientsList[institutionName]) {
     apiClientsList[institutionName] = makeAdminSDK({
       clientId: institutionName, // institution ID
-      version: 'v1',
-      apiDomainUrl: process.env.SDK_API_URL,
+      version: 'v2',
+      apiDomainUrl: process.env.EARN_APP_URL, // serves as SDK proxy
     })
   }
 
