@@ -1,11 +1,11 @@
-import { type FC } from 'react'
+import { type FC, type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
 import yieldSourceLabelStyles from './YieldSourceLabel.module.css'
 
 export const YieldSourceLabel: FC<{
-  label: string
+  label: ReactNode
 }> = ({ label }) => {
   return (
     <div className={yieldSourceLabelStyles.yieldSourceLabel}>

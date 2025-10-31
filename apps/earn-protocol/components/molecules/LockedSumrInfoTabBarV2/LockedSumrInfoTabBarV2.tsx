@@ -83,7 +83,7 @@ const YourLockedSumrPositionsCards = () => {
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
-            <Link href="#">
+            <Link href="Huh?">
               <WithArrow>Buy SUMR</WithArrow>
             </Link>
           ),
@@ -147,7 +147,7 @@ const YourLockedSumrPositionsTable = () => {
               ),
               action: (
                 <TableCenterCell>
-                  <Link href="#">
+                  <Link href="Huh?">
                     <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
                       Remove stake
                     </WithArrow>
@@ -173,7 +173,7 @@ const YourLockedSumrPositionsTable = () => {
               ),
               action: (
                 <TableCenterCell>
-                  <Link href="#">
+                  <Link href="Huh?">
                     <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
                       Remove stake
                     </WithArrow>
@@ -199,7 +199,7 @@ const YourLockedSumrPositionsTable = () => {
               ),
               action: (
                 <TableCenterCell>
-                  <Link href="#">
+                  <Link href="Huh?">
                     <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
                       Remove stake
                     </WithArrow>
@@ -254,7 +254,7 @@ const AllLockedSumrPositionsCards = () => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
-        // TODOStakingV2
+        // Huh?
         dataBlock={{
           title: 'Avg. SUMR Lock Period',
           value: '2 years',
@@ -389,7 +389,7 @@ const AllLockedSumrPositionsTable = () => {
           usdValueEarningInLazySummer: (
             <TableRightCell>
               24.32m&nbsp;
-              <Link href="#">
+              <Link href="Huh?">
                 <WithArrow style={{ margin: '0 18px' }}>View</WithArrow>
               </Link>
             </TableRightCell>

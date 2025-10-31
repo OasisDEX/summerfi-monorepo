@@ -288,7 +288,7 @@ export const SumrV2PageView = () => {
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <Button variant="primarySmall">Go to Governance</Button>
                   <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
-                    <Link href="#">
+                    <Link href="Huh?">
                       <Text variant="p3semi">Claim $SUMR</Text>
                     </Link>
                   </WithArrow>

@@ -77,9 +77,9 @@ const StartStakingSumrCard = () => {
           power, all while turning your tokens into a yield-bearing asset.
         </Text>
         <WithArrow
-        // TODOStakingV2
+        // Huh?
         >
-          <Link href="#" prefetch>
+          <Link href="Huh?" prefetch>
             <Text as="span" variant="p4semi">
               Read more about SUMR staking
             </Text>
@@ -117,8 +117,8 @@ const AlreadyStakingSumrCard = ({
             ${formatCryptoBalance(sumrAvailableToStake * sumrPrice)}
           </Text>
         </Text>
-        {/* TODOStakingV2 */}
-        <Link href="#" prefetch>
+        {/* Huh? */}
+        <Link href="Huh?" prefetch>
           <Button variant="primarySmall">Stake</Button>
         </Link>
       </div>
@@ -172,8 +172,8 @@ export const PortfolioStakingInfoCardV2 = ({
                 subValue: `$${formatCryptoBalance(sumrUserData.sumrStaked * sumrPrice)}`,
               }}
               actionable={
-                // TODOStakingV2
-                <Link href="#" prefetch>
+                // Huh?
+                <Link href="Huh?" prefetch>
                   <Button variant="textPrimarySmall">View SUMR staking details</Button>
                 </Link>
               }
@@ -187,8 +187,8 @@ export const PortfolioStakingInfoCardV2 = ({
                 subValue: `$${formatCryptoBalance(sumrUserData.sumrAvailableToStake * sumrPrice)}`,
               }}
               actionable={
-                // TODOStakingV2
-                <Link href="#" prefetch>
+                // Huh?
+                <Link href="Huh?" prefetch>
                   <Button variant="primarySmall">Stake</Button>
                 </Link>
               }
@@ -217,7 +217,7 @@ export const PortfolioStakingInfoCardV2 = ({
               ),
               value: `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr)}`,
               subValue: `$${formatCryptoBalance(
-                // TODOStakingV2
+                // Huh?
                 usdcEarnedOnSumr * sumrUserData.sumrAvailableToStake * sumrPrice,
               )} / year`,
               subValueType: 'positive',
@@ -246,7 +246,7 @@ export const PortfolioStakingInfoCardV2 = ({
               ),
               value: `Up to ${formatDecimalAsPercent(sumrRewardApy)}`,
               subValue: `+${formatCryptoBalance(
-                // TODOStakingV2
+                // Huh?
                 sumrUserData.sumrAvailableToStake * sumrRewardApy,
               )} SUMR / year`,
               subValueType: 'positive',
@@ -315,9 +315,9 @@ export const PortfolioStakingInfoCardV2 = ({
           />
         </div>
         <WithArrow
-        // TODOStakingV2
+        // Huh?
         >
-          <Link href="#" prefetch>
+          <Link href="Huh?" prefetch>
             <Text as="span" variant="p4semi">
               View all SUMR analytics
             </Text>

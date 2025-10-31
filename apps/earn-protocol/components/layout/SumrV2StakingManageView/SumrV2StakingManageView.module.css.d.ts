@@ -1,0 +1,31 @@
+declare const styles: {
+  readonly "cardGrid": string;
+  readonly "cardLeftColumn": string;
+  readonly "cardLeftColumnTitle": string;
+  readonly "cardRightColumn": string;
+  readonly "cardRightColumnStepWrapper": string;
+  readonly "expanderTitleButton": string;
+  readonly "finalCard": string;
+  readonly "finalCardWrapper": string;
+  readonly "inlineLittleGap": string;
+  readonly "inputWrapper": string;
+  readonly "orderInformationDivider": string;
+  readonly "orderSummary": string;
+  readonly "orderSummaryHeader": string;
+  readonly "quickActionTags": string;
+  readonly "stakingLengthControllers": string;
+  readonly "stakingLengthLabels": string;
+  readonly "stepNumberWrapper": string;
+  readonly "summaryWrapper": string;
+  readonly "sumrKeyStakingInfoCard": string;
+  readonly "title": string;
+  readonly "warningContent": string;
+  readonly "warningWrapper": string;
+  readonly "wrapper": string;
+  readonly "yieldDataBlock": string;
+  readonly "yieldSourcesCard": string;
+  readonly "yieldSourcesCards": string;
+  readonly "youSelectedCard": string;
+};
+export = styles;
+

@@ -1,0 +1,186 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1080px;
+  margin: 0 auto;
+
+  .title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    a {
+      margin-top: 5px;
+    }
+  }
+
+  .cardGrid {
+    display: grid;
+    grid-template-columns: 1fr 585px;
+    gap: var(--spacing-space-2x-large);
+
+    .cardLeftColumn {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .cardLeftColumnTitle {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 24px;
+
+        p {
+          color: var(--color-text-secondary);
+        }
+      }
+
+      .sumrKeyStakingInfoCard {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .expanderTitleButton {
+        padding-left: 0;
+      }
+
+      .orderInformationDivider {
+        width: 100%;
+        height: 1px;
+        background-color: var(--color-border);
+      }
+    }
+
+    .cardRightColumn {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      .cardRightColumnStepWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .yieldSourcesCards {
+        display: flex;
+        gap: 16px;
+
+        .yieldSourcesCard {
+          display: flex;
+          flex-direction: column;
+          padding: var(--spacing-space-large);
+          gap: var(--spacing-space-medium);
+
+          .yieldDataBlock {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+      }
+
+      .stakingLengthControllers {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 0;
+
+        .stakingLengthLabels {
+          display: flex;
+          justify-content: space-between;
+          color: var(--color-text-secondary);
+          margin-right: 5px;
+          margin-bottom: 20px;
+        }
+      }
+
+    }
+  }
+}
+
+.orderSummary {
+  flex-direction: column;
+
+  .orderSummaryHeader {
+    margin-bottom: var(--spacing-space-large);
+    color: var(--color-text-secondary);
+  }
+}
+
+.stepNumberWrapper {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-rounder);
+  background: var(--Lazy-Summer-Dark, linear-gradient(90deg, #FF49A4 0%, #B049FF 93%));
+}
+
+
+.inlineLittleGap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.quickActionTags {
+  width: 100%;
+}
+
+.inputWrapper {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.youSelectedCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  background-color: var(--earn-protocol-neutral-80);
+  margin-bottom: 14px;
+}
+
+.warningWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  .warningContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-small);
+    letter-spacing: -0.1px;
+  }
+}
+
+.finalCardWrapper {
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-large);
+
+  .summaryWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 0;
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .finalCard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    padding-bottom: 48px;
+  }
+}

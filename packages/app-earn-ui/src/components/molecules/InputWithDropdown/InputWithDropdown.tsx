@@ -72,6 +72,7 @@ interface InputWithDropdownProps {
   tagsRow?: ReactNode
   withSearch?: boolean
   inputPlaceholder?: string
+  wrapperClassName?: string
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
@@ -90,6 +91,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   tagsRow,
   withSearch = false,
   inputPlaceholder = 'Search...',
+  wrapperClassName,
 }) => {
   const handleFocus = (ev: React.FocusEvent<HTMLInputElement>) => {
     if (selectAllOnFocus) {
@@ -100,7 +102,7 @@ export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   }
 
   return (
-    <div className={classNames.wrapper}>
+    <div className={clsx(classNames.wrapper, wrapperClassName)}>
       {heading && (
         <div className={classNames.headingWrapper}>
           <Text as="p" variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>

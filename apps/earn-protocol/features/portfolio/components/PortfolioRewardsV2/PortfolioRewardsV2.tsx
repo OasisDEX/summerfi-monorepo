@@ -25,7 +25,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     <div className={classNames.wrapper}>
       <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
       <PortfolioStakingInfoCardV2
-        // TODOStakingV2
+        // Huh?
         usdcEarnedOnSumr={0.076}
         sumrPrice={0.0432}
         sumrRewardApy={0.035}
@@ -39,7 +39,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           sumrAvailableToStake: 950,
           sumrStaked: 14350,
         }}
-        // TODOStakingV2
+        // Huh?
       />
     </div>
   )

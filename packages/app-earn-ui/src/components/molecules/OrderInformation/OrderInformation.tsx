@@ -11,7 +11,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import classNames from './OrderInformation.module.css'
 
 type OrderInformationItem = {
-  label: string
+  label: ReactNode
   tooltip?: string
   value: ReactNode
   isLoading?: boolean
@@ -70,8 +70,8 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                       classNames.orderInformationListInExpander,
                     )}
                   >
-                    {item.items.map((nestedItem) => (
-                      <li key={nestedItem.label} className={classNames.listItem}>
+                    {item.items.map((nestedItem, index) => (
+                      <li key={`nested-${index}`} className={classNames.listItem}>
                         <Text
                           variant="p3semi"
                           style={{ color: 'var(--earn-protocol-secondary-60)' }}
@@ -98,7 +98,7 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
           }
 
           return (
-            <li key={item.label} className={classNames.listItem}>
+            <li key={item.label?.toString()} className={classNames.listItem}>
               <Text
                 variant="p3semi"
                 style={{ color: 'var(--earn-protocol-secondary-60)' }}

@@ -147,6 +147,7 @@ export declare const IconsList: {
   lbtc: IconExportType
   ldo_circle: IconExportType
   ldo: IconExportType
+  light_bulb: IconExportType
   lightning_colorful: IconExportType
   link_circle_color: IconExportType
   link_circle_mono: IconExportType

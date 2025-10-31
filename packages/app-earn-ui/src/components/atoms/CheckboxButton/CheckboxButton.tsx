@@ -14,6 +14,9 @@ export const CheckboxButton = ({
   className,
   style,
   iconSize = 18,
+  iconColor,
+  labelStyles,
+  labelTextStyles,
 }: {
   name: string
   checked: boolean
@@ -22,24 +25,23 @@ export const CheckboxButton = ({
   className?: string
   style?: React.CSSProperties
   iconSize?: number
+  iconColor?: string
+  labelStyles?: React.CSSProperties
+  labelTextStyles?: React.CSSProperties
 }): React.ReactNode => {
+  const checkedColor = iconColor ?? 'var(--earn-protocol-success-100)'
+
   return (
     <div className={clsx(checkboxButtonStyles.checkboxSectionWrapper, className)} style={style}>
       <div
         className={checkboxButtonStyles.checkmarkWrapper}
         style={{
-          borderColor: checked
-            ? 'var(--earn-protocol-success-100)'
-            : 'var(--earn-protocol-neutral-70)',
+          borderColor: checked ? checkedColor : 'var(--earn-protocol-neutral-70)',
           backgroundColor: checked ? 'var(--earn-protocol-success-10)' : 'unset',
         }}
       >
         {checked ? (
-          <Icon
-            iconName="checkmark"
-            size={iconSize}
-            style={{ color: 'var(--earn-protocol-success-100)' }}
-          />
+          <Icon iconName="checkmark" size={iconSize} style={{ color: checkedColor }} />
         ) : null}
         <input
           type="checkbox"
@@ -51,9 +53,9 @@ export const CheckboxButton = ({
         />
       </div>
       {label && (
-        <label htmlFor={name} className={checkboxButtonStyles.label}>
+        <label htmlFor={name} className={checkboxButtonStyles.label} style={labelStyles}>
           {typeof label === 'string' ? (
-            <Text as="p" variant="p3semi">
+            <Text as="p" variant="p3semi" style={labelTextStyles}>
               {label}
             </Text>
           ) : (

@@ -295,6 +295,7 @@ export const iconsSync = {
   lbtc: import('./icons/lbtc.svg?react') as Promise<typeof import('*.svg?react')>,
   ldo_circle: import('./icons/ldo_circle.svg?react') as Promise<typeof import('*.svg?react')>,
   ldo: import('./icons/ldo.svg?react') as Promise<typeof import('*.svg?react')>,
+  light_bulb: import('./icons/light_bulb.svg?react') as Promise<typeof import('*.svg?react')>,
   lightning_colorful: import('./icons/lightning_colorful.svg?react') as Promise<
     typeof import('*.svg?react')
   >,

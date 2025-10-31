@@ -1,0 +1,47 @@
+.lockupRangeGraph {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .lockupRangeGraphTitle {
+    display: flex;
+    gap: var(--spacing-space-2x-small);
+    color: var(--color-text-secondary);
+  }
+
+  .lockupRangeGraphBars {
+    display: flex;
+    gap: 2px;
+
+    .lockupRangeGraphBar {
+      box-sizing: content-box;
+      height: 4px;
+      border-radius: 4px;
+      text-align: center;
+
+      span {
+        white-space: pre;
+        font-size: 10px;
+        font-weight: 800;
+        margin-top: 5px;
+        color: var(--color-text-secondary);
+      }
+    }
+
+    .gray {
+      background-color: var(--color-border);
+    }
+
+    .low {
+      background-color: var(--color-text-critical);
+    }
+
+    .medium {
+      background-color: var(--color-background-warning-bold);
+    }
+
+    .high {
+      background-color: var(--earn-protocol-success-100);
+    }
+  }
+}

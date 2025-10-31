@@ -14,6 +14,7 @@ declare const styles: {
   readonly "cardSecondaryMediumPaddingsColorfulBorder": string;
   readonly "cardSecondarySmallPaddings": string;
   readonly "cardSecondarySmallPaddingsColorfulBorder": string;
+  readonly "cardWarning": string;
 };
 export = styles;
 
