@@ -134,3 +134,24 @@
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
+.youSelectedCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium);
+  background-color: var(--earn-protocol-neutral-80);
+  margin-bottom: 14px;
+}
+
+.warningWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  .warningContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-small);
+    letter-spacing: -0.1px;
+  }
+}

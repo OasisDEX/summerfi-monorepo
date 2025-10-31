@@ -16,10 +16,13 @@ declare const styles: {
   readonly "stepNumberWrapper": string;
   readonly "sumrKeyStakingInfoCard": string;
   readonly "title": string;
+  readonly "warningContent": string;
+  readonly "warningWrapper": string;
   readonly "wrapper": string;
   readonly "yieldDataBlock": string;
   readonly "yieldSourcesCard": string;
   readonly "yieldSourcesCards": string;
+  readonly "youSelectedCard": string;
 };
 export = styles;
 

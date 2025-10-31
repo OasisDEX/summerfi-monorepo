@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import {
+  AnimateHeight,
+  Button,
   Card,
+  CheckboxButton,
   DataBlock,
   Expander,
   Icon,
@@ -36,6 +39,68 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 
 import sumrV2StakingManageViewStyles from './SumrV2StakingManageView.module.css'
 
+// Huh?
+const lockBucketAvailabilityMap = {
+  90: 300,
+  180: 12000,
+  360: 1000000,
+  720: 1000000,
+  1080: 10000000,
+}
+
+const mapLockBucketToAvailability = (days: number) => {
+  if (days <= 90) {
+    return lockBucketAvailabilityMap[90]
+  }
+  if (days <= 180) {
+    return lockBucketAvailabilityMap[180]
+  }
+  if (days <= 360) {
+    return lockBucketAvailabilityMap[360]
+  }
+  if (days <= 720) {
+    return lockBucketAvailabilityMap[720]
+  }
+
+  return lockBucketAvailabilityMap[1080]
+}
+
+const mapLockBucketToRange = (days: number) => {
+  if (days <= 90) {
+    return '14 days - 3m'
+  }
+  if (days <= 180) {
+    return '3m - 6m'
+  }
+  if (days <= 360) {
+    return '6m - 1y'
+  }
+  if (days <= 720) {
+    return '1y - 2y'
+  }
+
+  return '2y - 3y'
+}
+
+const getAvailabilityLabel: (availability: number) => 'low' | 'medium' | 'high' = (
+  availability,
+) => {
+  if (availability <= 1000) {
+    return 'low'
+  }
+  if (availability < 15000) {
+    return 'medium'
+  }
+
+  return 'high'
+}
+
+const availabilityColorMap: { [key in 'low' | 'medium' | 'high']: string } = {
+  low: 'var(--color-text-critical)',
+  medium: 'var(--color-background-warning-bold)',
+  high: 'var(--earn-protocol-success-100)',
+}
+
 const StepNumber = ({ number }: { number: number }) => {
   return (
     <div className={sumrV2StakingManageViewStyles.stepNumberWrapper}>
@@ -47,6 +112,7 @@ const StepNumber = ({ number }: { number: number }) => {
 const SumrV2StakingManageComponent = () => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
+  const [warningAccepted, setWarningAccepted] = useState(false)
   const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(90)
 
   const { token: sumrToken } = useToken({
@@ -69,6 +135,7 @@ const SumrV2StakingManageComponent = () => {
 
   const {
     amountDisplay,
+    amountParsed,
     amountDisplayUSD,
     manualSetAmount,
     handleAmountChange,
@@ -86,13 +153,65 @@ const SumrV2StakingManageComponent = () => {
     handleAmountChange(e)
   }
 
+  const lockupExpirationDate = useMemo(() => {
+    if (selectedLockupAndBoost === 0) {
+      return 'N/A'
+    }
+
+    return dayjs().add(selectedLockupAndBoost, 'day').format('MMM D, YYYY')
+  }, [selectedLockupAndBoost])
+
   const lockTimePeriodSummaryLabel = useMemo(() => {
     if (selectedLockupAndBoost === 0) {
       return 'No lockup'
     }
 
-    return `${selectedLockupAndBoost} days (${dayjs().add(selectedLockupAndBoost, 'day').format('DD-MM-YYYY')})`
-  }, [selectedLockupAndBoost])
+    return `${selectedLockupAndBoost} days (${lockupExpirationDate})`
+  }, [selectedLockupAndBoost, lockupExpirationDate])
+
+  const enoughBucketAvailability = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!amountParsed) {
+      return false
+    }
+
+    return mapLockBucketToAvailability(selectedLockupAndBoost) >= amountParsed.toNumber()
+  }, [amountParsed, selectedLockupAndBoost])
+
+  const isButtonDisabled = useMemo(() => {
+    if (!amountDisplay || amountParsed.isZero()) {
+      return true
+    }
+
+    if (sumrBalanceOnSourceChain && amountParsed.isGreaterThan(sumrBalanceOnSourceChain)) {
+      return true
+    }
+
+    if (!warningAccepted) {
+      return true
+    }
+
+    if (!enoughBucketAvailability) {
+      return false
+    }
+
+    return false
+  }, [
+    amountDisplay,
+    amountParsed,
+    enoughBucketAvailability,
+    sumrBalanceOnSourceChain,
+    warningAccepted,
+  ])
+
+  const onConfirmStake = () => {
+    // Huh?
+    // eslint-disable-next-line no-console
+    console.log('Stake confirmed:', {
+      amount: amountDisplay,
+      lockupDuration: selectedLockupAndBoost,
+    })
+  }
 
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
@@ -393,22 +512,110 @@ const SumrV2StakingManageComponent = () => {
               </div>
               <LockupRangeGraph
                 lockupMap={{
-                  90: 'low', // 14 days - 3m
-                  180: 'medium', // 3m - 6m
-                  360: 'high', // 6m - 1y
-                  720: 'high', // 1y - 2y
-                  1080: 'high', // 2y - 3y
+                  90: getAvailabilityLabel(mapLockBucketToAvailability(90)), // 14 days - 3m
+                  180: getAvailabilityLabel(mapLockBucketToAvailability(180)), // 3m - 6m
+                  360: getAvailabilityLabel(mapLockBucketToAvailability(360)), // 6m - 1y
+                  720: getAvailabilityLabel(mapLockBucketToAvailability(720)), // 1y - 2y
+                  1080: getAvailabilityLabel(mapLockBucketToAvailability(1080)), // 2y - 3y
                 }}
               />
               <Expander
                 expanderButtonStyles={{
-                  marginTop: '10px',
-                  marginBottom: '10px',
+                  marginTop: '18px',
                   justifyContent: 'center',
                 }}
-                title={<Text variant="p4semi">Avaliablity details</Text>}
+                title={
+                  <Text
+                    variant="p4semi"
+                    style={{
+                      color: !enoughBucketAvailability
+                        ? 'var(--color-text-critical)'
+                        : 'var(--color-text-primary)',
+                    }}
+                  >
+                    Avaliablity details
+                  </Text>
+                }
+                defaultExpanded={!enoughBucketAvailability}
               >
-                <div style={{ marginBottom: '10px' }}>Huh?</div>
+                <Card className={sumrV2StakingManageViewStyles.youSelectedCard}>
+                  <Text variant="p4semi">You selected</Text>
+                  <OrderInformation
+                    wrapperStyles={{
+                      padding: '0px',
+                      backgroundColor: 'transparent',
+                    }}
+                    items={[
+                      {
+                        label: 'Bucket',
+                        value: 'Available',
+                      },
+                      selectedLockupAndBoost > 0
+                        ? {
+                            label: (
+                              <span
+                                style={{
+                                  color:
+                                    availabilityColorMap[
+                                      getAvailabilityLabel(
+                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                      )
+                                    ],
+                                }}
+                              >
+                                {mapLockBucketToRange(selectedLockupAndBoost)}
+                              </span>
+                            ),
+                            value: (
+                              <span
+                                style={{
+                                  color:
+                                    availabilityColorMap[
+                                      getAvailabilityLabel(
+                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                      )
+                                    ],
+                                }}
+                              >
+                                {mapLockBucketToAvailability(
+                                  selectedLockupAndBoost,
+                                ).toLocaleString()}{' '}
+                                SUMR
+                              </span>
+                            ),
+                          }
+                        : {
+                            label: 'No lockup',
+                            value: 'N/A',
+                          },
+                    ]}
+                  />
+                  <AnimateHeight
+                    id="bucket-availability-warning-message"
+                    show={!enoughBucketAvailability}
+                  >
+                    <Card variant="cardWarning" style={{ padding: '16px 16px 24px 16px' }}>
+                      <div className={sumrV2StakingManageViewStyles.warningWrapper}>
+                        <Icon
+                          iconName="warning"
+                          size={20}
+                          color="var(--color-text-warning)"
+                          style={{ marginTop: '3px' }}
+                        />
+                        <div className={sumrV2StakingManageViewStyles.warningContent}>
+                          <Text variant="p3">
+                            Not enough SUMR in this bucket for your deposit. You’ll need to deposit
+                            no more than{' '}
+                            {formatCryptoBalance(
+                              mapLockBucketToAvailability(selectedLockupAndBoost),
+                            )}{' '}
+                            SUMR. Stake the remainder in a different lock bucket.
+                          </Text>
+                        </div>
+                      </div>
+                    </Card>
+                  </AnimateHeight>
+                </Card>
               </Expander>
             </Card>
             <Card className={sumrV2StakingManageViewStyles.orderSummary}>
@@ -465,6 +672,44 @@ const SumrV2StakingManageComponent = () => {
                 ]}
               />
             </Card>
+            <Card variant="cardWarning" style={{ padding: '16px 16px 24px 16px' }}>
+              <div className={sumrV2StakingManageViewStyles.warningWrapper}>
+                <Icon
+                  iconName="warning"
+                  size={20}
+                  color="var(--color-text-warning)"
+                  style={{ marginTop: '3px' }}
+                />
+                <div className={sumrV2StakingManageViewStyles.warningContent}>
+                  <Text variant="p3">
+                    Warning: There is an early withdrawal penalty if you unstake your SUMR before
+                    the lockup has expired. At your current lockup, this starts at 11.2% of the
+                    amount you withdraw and reduces to 2% as you get closer to{' '}
+                    {lockupExpirationDate}.
+                  </Text>
+                  <CheckboxButton
+                    name="warning-acceptance-checkbox"
+                    checked={warningAccepted}
+                    onChange={() => {
+                      setWarningAccepted((prev) => !prev)
+                    }}
+                    iconColor="var(--color-text-warning)"
+                    label="I understand the mechanics of the early withdrawal penalty"
+                    labelStyles={{
+                      paddingLeft: '40px',
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
+            <Button
+              disabled={isButtonDisabled}
+              variant="primaryLarge"
+              style={{ alignSelf: 'flex-end', minWidth: 'auto' }}
+              onClick={onConfirmStake}
+            >
+              Confirm Stake & Lock
+            </Button>
           </div>
         </div>
       </Card>
