@@ -224,7 +224,7 @@ const SumrV2StakingManageComponent = ({
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
       <div className={sumrV2StakingManageViewStyles.title}>
-        <Link href="#">
+        <Link href="Huh?">
           <Icon iconName="arrow_backward" size={32} />
         </Link>
         <Text variant="h3">Stake SUMR to earn rewards</Text>
@@ -240,7 +240,7 @@ const SumrV2StakingManageComponent = ({
               getting governance rights and continued SUMR rewards.
             </Text>
             <WithArrow>
-              <Link href="#">Learn more about SUMR and staking</Link>
+              <Link href="Huh?">Learn more about SUMR and staking</Link>
             </WithArrow>
           </div>
           <Expander
@@ -324,7 +324,7 @@ const SumrV2StakingManageComponent = ({
                     label: 'SUMR Analytics',
                     value: (
                       <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="#">View all</Link>
+                        <Link href="Huh?">View all</Link>
                       </WithArrow>
                     ),
                   },
@@ -332,7 +332,7 @@ const SumrV2StakingManageComponent = ({
                     label: 'Staking contract',
                     value: (
                       <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="#">Go to report</Link>
+                        <Link href="Huh?">Go to report</Link>
                       </WithArrow>
                     ),
                   },

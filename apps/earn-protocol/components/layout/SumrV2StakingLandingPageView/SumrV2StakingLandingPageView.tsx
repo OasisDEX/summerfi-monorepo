@@ -26,7 +26,7 @@ import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
 interface SumrV2StakingPageViewProps {}
 
 const mockData = {
-  // TODOStakingV2
+  // Huh?
   sumrInWallet: 98300,
   sumrStaked: 125000,
   sumrAvailableToClaim: 5420,
@@ -182,7 +182,7 @@ export const SumrV2StakingLandingPageView: FC<SumrV2StakingPageViewProps> = () =
               }}
               subValue="433m Lazy Summer TVL"
             />
-            <Link href="#">
+            <Link href="Huh?">
               <Button variant="textPrimaryMedium" style={{ paddingTop: '2px' }}>
                 Simulate USD yield payoff
               </Button>

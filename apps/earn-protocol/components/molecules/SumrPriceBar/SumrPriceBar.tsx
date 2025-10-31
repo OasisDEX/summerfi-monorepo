@@ -49,7 +49,7 @@ export const SumrPriceBar: FC<SumrPriceBarProps> = () => {
         title: (
           <div className={sumrPriceBarStyles.sumrPriceTitle}>
             <Text variant="p2semi">$SUMR Price</Text>
-            <Link href="#">
+            <Link href="Huh?">
               <Button variant="unstyled">
                 <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
                   Buy SUMR
