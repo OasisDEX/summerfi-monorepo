@@ -139,6 +139,7 @@ export class ArmadaManager implements IArmadaManager {
       utils: this.utils,
     })
     this.vaults = new ArmadaManagerVaults({
+      clientId: this._clientId,
       supportedChains: this._supportedChains,
       blockchainClientProvider: this._blockchainClientProvider,
       configProvider: this._configProvider,
@@ -160,12 +161,12 @@ export class ArmadaManager implements IArmadaManager {
       deploymentProvider: this._deploymentProvider,
     })
     this.accessControl = new ArmadaManagerAccessControl({
+      clientId: this._clientId,
       configProvider: this._configProvider,
       contractsProvider: this._contractsProvider,
       blockchainClientProvider: this._blockchainClientProvider,
       deploymentProvider: this._deploymentProvider,
       subgraphManager: this._subgraphManager,
-      clientId: this._clientId,
     })
   }
 }

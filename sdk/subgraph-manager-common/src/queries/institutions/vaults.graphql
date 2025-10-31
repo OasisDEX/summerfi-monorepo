@@ -1,5 +1,5 @@
-query GetVaults {
-  vaults {
+query GetVaults($institutionId: String!) {
+  vaults(where: { institution: $institutionId }) {
     protocol {
       network
     }

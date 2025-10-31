@@ -1,10 +1,9 @@
 import { Address, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 
-import { ClientIds } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 import { stringifyArmadaPosition } from './utils/stringifiers'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import type { PositionsScenario } from './utils/types'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -14,47 +13,42 @@ jest.setTimeout(300000)
  */
 
 describe('Armada Protocol - Positions', () => {
-  const scenarios: PositionsScenario[] = [
+  const scenarios: { testClientId?: TestClientIds; testSpecificFleet?: boolean }[] = [
     {
-      description: 'get all user positions',
       testSpecificFleet: false,
     },
     {
-      description: 'get user position for specific fleet',
       testSpecificFleet: true,
     },
     {
-      description: 'get all user positions for ACME',
-      clientId: ClientIds.ACME,
+      testClientId: TestClientIds.ACME,
       testSpecificFleet: false,
     },
     {
-      description: 'get user position for specific fleet for ACME',
-      clientId: ClientIds.ACME,
+      testClientId: TestClientIds.ACME,
       testSpecificFleet: true,
     },
     {
-      description: 'get all user positions for Targen',
-      clientId: ClientIds.Targen,
+      testClientId: TestClientIds.Targen,
       testSpecificFleet: false,
     },
     {
-      description: 'get user position for specific fleet for Targen',
-      clientId: ClientIds.Targen,
+      testClientId: TestClientIds.Targen,
       testSpecificFleet: true,
     },
   ]
 
-  test.each(scenarios)(
-    'should $description',
-    async ({ description: _description, clientId, testSpecificFleet = false }) => {
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const { testClientId, testSpecificFleet = false } = scenario
+
+    it('should get user positions', async () => {
       // Choose SDK setup based on scenario
-      const setup = clientId ? createAdminSdkTestSetup(clientId) : createSdkTestSetup()
+      const setup = testClientId ? createAdminSdkTestSetup(testClientId) : createSdkTestSetup()
       const { sdk, chainId, fleetAddress, userAddress } = setup
 
       const chainInfo = getChainInfoByChainId(chainId)
       const user = User.createFromEthereum(chainId, userAddress.value)
-      const sdkType = clientId ? 'Admin SDK' : 'User SDK'
+      const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(`[${sdkType}] Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
       if (testSpecificFleet) {
@@ -77,6 +71,6 @@ describe('Armada Protocol - Positions', () => {
           positions.map(stringifyArmadaPosition).join('\n'),
         )
       }
-    },
-  )
+    })
+  })
 })

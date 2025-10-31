@@ -32,3 +32,9 @@ export type {
   Institution,
   GetRolesQuery,
 } from './generated/institutions/client'
+export {
+  GetInstitutionsDocument,
+  GetInstitutionByIdDocument,
+  GetRolesDocument,
+} from './generated/institutions/client'
+export { SubgraphTypes, type SubgraphType } from './types/SubgraphTypes'

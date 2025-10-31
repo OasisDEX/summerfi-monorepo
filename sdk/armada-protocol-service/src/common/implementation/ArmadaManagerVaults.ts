@@ -45,8 +45,9 @@ import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
 import type { IDeploymentProvider } from '../..'
 import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
+import { ArmadaManagerShared } from './ArmadaManagerShared'
 
-export class ArmadaManagerVaults implements IArmadaManagerVaults {
+export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
   private _blockchainClientProvider: IBlockchainClientProvider
   private _configProvider: IConfigurationProvider
@@ -62,6 +63,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
   private _namedReferralsBucketUrl: string
 
   constructor(params: {
+    clientId?: string
     supportedChains: IChainInfo[]
     blockchainClientProvider: IBlockchainClientProvider
     configProvider: IConfigurationProvider
@@ -74,6 +76,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     subgraphManager: IArmadaSubgraphManager
     deploymentProvider: IDeploymentProvider
   }) {
+    super({ clientId: params.clientId })
     this._supportedChains = params.supportedChains
     this._blockchainClientProvider = params.blockchainClientProvider
     this._configProvider = params.configProvider
@@ -1649,7 +1652,10 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     params: Parameters<IArmadaManagerVaults['getVaultInfoList']>[0],
   ): ReturnType<IArmadaManagerVaults['getVaultInfoList']> {
     const { chainId } = params
-    const queryResult = await this._subgraphManager.getVaults({ chainId })
+    const queryResult = await this._subgraphManager.getVaults({
+      chainId,
+      clientId: this.getClientIdOrUndefined(),
+    })
 
     if (!queryResult || !queryResult.vaults) {
       return { list: [] }
@@ -1770,6 +1776,7 @@ export class ArmadaManagerVaults implements IArmadaManagerVaults {
     const chainInfo = getChainInfoByChainId(params.chainId)
     const vaultsRaw = await this._subgraphManager.getVaults({
       chainId: params.chainId,
+      clientId: this.getClientIdOrUndefined(),
     })
 
     // get unique reward token symbols

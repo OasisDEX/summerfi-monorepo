@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { ChainConfigs, SharedConfig } from './utils/testConfig'
+import { TestConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import assert from 'assert'
 
@@ -19,7 +19,7 @@ const simulateOnly = true
 const privateKey = SharedConfig.userPrivateKey
 
 describe('Armada Protocol - Unstake', () => {
-  const { rpcUrl, chainId, fleetAddressValue } = ChainConfigs.SonicUSDC
+  const { rpcUrl, chainId, fleetAddressValue } = TestConfigs.SonicUSDC
   const userAddressValue = SharedConfig.userAddressValue
 
   const chainInfo = getChainInfoByChainId(chainId)

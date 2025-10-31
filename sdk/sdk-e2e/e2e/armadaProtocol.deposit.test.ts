@@ -8,7 +8,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { ChainConfigs, SharedConfig } from './utils/testConfig'
+import { TestConfigs, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import type { DepositScenario } from './utils/types'
@@ -29,13 +29,13 @@ describe('Armada Protocol - Deposit', () => {
   const depositScenarios: DepositScenario[] = [
     {
       description: 'deposit ETH to Base WETH Vault without staking',
-      chainConfig: ChainConfigs.BaseWETH,
+      chainConfig: TestConfigs.BaseWETH,
       amountValue: '0.0005',
       stake: false,
     },
     {
       description: 'deposit ETH to Base WETH Vault with staking',
-      chainConfig: ChainConfigs.BaseWETH,
+      chainConfig: TestConfigs.BaseWETH,
       amountValue: '0.0005',
       stake: true,
     },

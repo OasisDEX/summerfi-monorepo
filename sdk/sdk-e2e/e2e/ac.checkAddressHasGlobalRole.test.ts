@@ -1,7 +1,6 @@
 import { GlobalRoles } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import type { GlobalRoleScenario } from './utils/types'
-import { ClientIds } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -9,29 +8,43 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Global Role Checking', () => {
-  const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup(
-    ClientIds.ACME,
-  )
-
-  // Configure test scenarios here
-  const scenarios: GlobalRoleScenario[] = [
+  const scenarios: {
+    role: GlobalRoles
+    targetAddress?: 'governorAddress'
+    shouldGrant?: boolean
+    shouldRevoke?: boolean
+  }[] = [
     {
       role: GlobalRoles.GOVERNOR_ROLE,
-      targetAddress: governorAddress,
+      targetAddress: 'governorAddress',
       shouldGrant: false,
       shouldRevoke: false,
     },
     {
       role: GlobalRoles.SUPER_KEEPER_ROLE,
-      targetAddress: governorAddress,
+      targetAddress: 'governorAddress',
       shouldGrant: true,
       shouldRevoke: false,
     },
   ]
 
-  test.each(scenarios)(
-    'should check if address has global role: $role',
-    async ({ role, targetAddress, shouldGrant = false, shouldRevoke = false }) => {
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const {
+      role,
+      targetAddress: targetAddressKey,
+      shouldGrant = false,
+      shouldRevoke = false,
+    } = scenario
+
+    it('should check if address has global role', async () => {
+      const { sdk, chainId, governorAddress, governorSendTxTool } = createAdminSdkTestSetup(
+        TestClientIds.ACME,
+      )
+
+      // Resolve targetAddress from key
+      const targetAddress =
+        targetAddressKey === 'governorAddress' ? governorAddress : governorAddress
+
       if (shouldGrant) {
         // Grant the role if not already granted
         const grantTxInfo = await sdk.armada.accessControl.grantGlobalRole({
@@ -64,6 +77,6 @@ describe('Armada Protocol - Access Control Global Role Checking', () => {
       console.log(
         `Address ${targetAddress.value} ${hasGlobalRole ? 'has' : 'does not have'} ${role} role`,
       )
-    },
-  )
+    })
+  })
 })

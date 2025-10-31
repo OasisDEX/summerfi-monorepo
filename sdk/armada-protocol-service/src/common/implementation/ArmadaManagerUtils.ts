@@ -31,6 +31,7 @@ import {
   type TransactionInfo,
   type HistoricalFleetRateResult,
   createTimeoutSignal,
+  toBytes32InHex,
 } from '@summerfi/sdk-common'
 import {
   IArmadaSubgraphManager,
@@ -47,12 +48,13 @@ import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
 import { BigNumber } from 'bignumber.js'
 import type { IDeploymentProvider } from '../..'
+import { ArmadaManagerShared } from './ArmadaManagerShared'
 
 /**
  * @name ArmadaManagerUtils
  * @description This class is the implementation of the IArmadaManagerUtils interface.
  */
-export class ArmadaManagerUtils implements IArmadaManagerUtils {
+export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaManagerUtils {
   private _supportedChains: IChainInfo[]
   private _rewardsRedeemerAddress: IAddress
   private _functionsUrl: string
@@ -73,6 +75,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
 
   /** CONSTRUCTOR */
   constructor(params: {
+    clientId?: string
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
@@ -87,6 +90,8 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
       params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
     ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
   }) {
+    super({ clientId: params.clientId })
+
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
@@ -126,6 +131,7 @@ export class ArmadaManagerUtils implements IArmadaManagerUtils {
   async getVaultsRaw(params: Parameters<IArmadaManagerUtils['getVaultsRaw']>[0]) {
     return (await this._subgraphManager.getVaults({
       chainId: params.chainInfo.chainId,
+      clientId: this.getClientIdOrUndefined(),
     })) as GetVaultsQuery
   }
 

@@ -4,8 +4,7 @@ import assert from 'assert'
 
 import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { SharedConfig, ChainConfigs } from './utils/testConfig'
-import type { GovTestScenario } from './utils/types'
+import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -15,19 +14,21 @@ const privateKey = SharedConfig.userPrivateKey
 describe.skip('Armada Protocol Gov', () => {
   const sdk = createTestSDK()
 
-  // Configure test scenarios here
-  const scenarios: GovTestScenario[] = [
+  const scenarios: { testConfigKey: TestConfigKey }[] = [
     {
-      chainInfo: getChainInfoByChainId(ChainConfigs.BaseUSDC.chainId),
-      rpcUrl: ChainConfigs.BaseUSDC.rpcUrl,
-      userAddress: Address.createFromEthereum({ value: SharedConfig.userAddressValue }),
-      enabled: true,
+      testConfigKey: 'BaseUSDC',
     },
   ]
 
-  describe.each(scenarios.filter((s) => s.enabled !== false))(
-    'Running scenario on $chainInfo.name for user $userAddress.value',
-    ({ chainInfo, rpcUrl, userAddress }) => {
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const { testConfigKey: chainConfigKey } = scenario
+
+    it('should check SUMR balance', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const rpcUrl = chainConfig.rpcUrl
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
       if (!rpcUrl) {
         throw new Error('Missing fork url')
       }
@@ -39,193 +40,276 @@ describe.skip('Armada Protocol Gov', () => {
         }),
       })
 
-      describe(`check SUMR gov utility functions`, () => {
-        it(`check SUMR balance`, async () => {
-          const balance = await sdk.armada.users.getUserBalance({
-            user,
-          })
-          expect(balance).toBeDefined()
-          console.log('balance', balance)
-        })
-        it(`check SUMR staked balance`, async () => {
-          const stakedBalance = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          expect(stakedBalance).toBeDefined()
-          console.log('staked', stakedBalance)
-        })
-        it(`check SUMR delegate`, async () => {
-          const delegate = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          expect(delegate).toBeDefined()
-          console.log('delegate', delegate)
-        })
+      const balance = await sdk.armada.users.getUserBalance({
+        user,
+      })
+      expect(balance).toBeDefined()
+      console.log('balance', balance)
+    })
 
-        it(`check SUMR votes`, async () => {
-          const votes = await sdk.armada.users.getUserVotes({
-            user,
-          })
-          expect(votes).toBeDefined()
-          console.log('votes', votes)
-        })
-        it(`check SUMR earned rewards`, async () => {
-          const earned = await sdk.armada.users.getUserEarnedRewards({
-            user,
-          })
-          expect(earned).toBeDefined()
-          console.log('earned', earned)
-        })
+    it('should check SUMR staked balance', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
       })
 
-      describe.skip(`delegation`, () => {
-        it(`should delegate`, async () => {
-          const votes = await sdk.armada.users.getUserVotes({
-            user,
-          })
-          assert(votes === 0n, 'Votes should be 0')
+      const stakedBalance = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+      expect(stakedBalance).toBeDefined()
+      console.log('staked', stakedBalance)
+    })
 
-          const delegateTx = await sdk.armada.users.getDelegateTx({
-            user,
-          })
+    it('should check SUMR delegate', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
 
-          const { statuses } = await sendAndLogTransactions({
-            chainInfo,
-            transactions: delegateTx,
-            rpcUrl: rpcUrl,
-            privateKey,
-            simulateOnly,
-          })
-          statuses.forEach((status) => {
-            expect(status).toBe('success')
-          })
-
-          const delegateAfter = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          const votesAfter = await sdk.armada.users.getUserVotes({
-            user,
-          })
-
-          expect(delegateAfter.value).toEqual(user.wallet.address.value)
-          expect(votesAfter).toBeGreaterThan(votes)
-        })
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
       })
 
-      describe.skip(`staking`, () => {
-        it(`should stake all`, async () => {
-          const balance = await sdk.armada.users.getUserBalance({
-            user,
-          })
-          assert(balance > 0n, 'Balance should be greater than 0')
+      const delegate = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+      expect(delegate).toBeDefined()
+      console.log('delegate', delegate)
+    })
 
-          const delegate = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          assert(delegate.value !== zeroAddress, 'Should have a delegate')
+    it('should check SUMR votes', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
 
-          const staked = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-
-          const stakeTx = await sdk.armada.users.getStakeTx({
-            user,
-            amount: balance,
-          })
-
-          const { statuses } = await sendAndLogTransactions({
-            chainInfo,
-            transactions: stakeTx,
-            rpcUrl: rpcUrl,
-            privateKey,
-            simulateOnly,
-          })
-          statuses.forEach((status) => {
-            expect(status).toBe('success')
-          })
-
-          const stakedAfter = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          expect(stakedAfter).toBeGreaterThan(staked)
-        })
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
       })
 
-      describe.skip(`unstaking`, () => {
-        it(`should unstake all`, async () => {
-          const staked = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          assert(staked > 0n, 'Staked balance should be greater than 0')
+      const votes = await sdk.armada.users.getUserVotes({
+        user,
+      })
+      expect(votes).toBeDefined()
+      console.log('votes', votes)
+    })
 
-          const delegate = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          assert(delegate.value !== zeroAddress, 'Should have a delegate')
+    it('should check SUMR earned rewards', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
 
-          const votes = await sdk.armada.users.getUserVotes({
-            user,
-          })
-
-          const unstakeTx = await sdk.armada.users.getUnstakeTx({
-            amount: staked,
-          })
-
-          const { statuses } = await sendAndLogTransactions({
-            chainInfo,
-            transactions: unstakeTx,
-            rpcUrl: rpcUrl,
-            privateKey,
-            simulateOnly,
-          })
-          statuses.forEach((status) => {
-            expect(status).toBe('success')
-          })
-
-          const stakedAfter = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          const votesAfter = await sdk.armada.users.getUserVotes({
-            user,
-          })
-
-          expect(stakedAfter).toBeLessThan(staked)
-          expect(votesAfter).toBeLessThan(votes)
-        })
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
       })
 
-      describe.skip(`undelegation`, () => {
-        it(`should undelegate`, async () => {
-          const delegate = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-          assert(delegate.value !== zeroAddress, 'Should have a delegate')
-
-          const staked = await sdk.armada.users.getUserStakedBalance({
-            user,
-          })
-          assert(staked === 0n, 'should not have staked balance')
-
-          const undelegateTx = await sdk.armada.users.getUndelegateTx()
-
-          const { statuses } = await sendAndLogTransactions({
-            chainInfo,
-            transactions: undelegateTx,
-            rpcUrl: rpcUrl,
-            privateKey,
-            simulateOnly,
-          })
-          statuses.forEach((status) => {
-            expect(status).toBe('success')
-          })
-
-          const delegateeAfter = await sdk.armada.users.getUserDelegatee({
-            user,
-          })
-
-          expect(delegateeAfter.value).toEqual(zeroAddress)
-        })
+      const earned = await sdk.armada.users.getUserEarnedRewards({
+        user,
       })
-    },
-  )
+      expect(earned).toBeDefined()
+      console.log('earned', earned)
+    })
+
+    it.skip('should delegate', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const rpcUrl = chainConfig.rpcUrl
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
+      })
+
+      const votes = await sdk.armada.users.getUserVotes({
+        user,
+      })
+      assert(votes === 0n, 'Votes should be 0')
+
+      const delegateTx = await sdk.armada.users.getDelegateTx({
+        user,
+      })
+
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo,
+        transactions: delegateTx,
+        rpcUrl: rpcUrl,
+        privateKey,
+        simulateOnly,
+      })
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
+
+      const delegateAfter = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+      const votesAfter = await sdk.armada.users.getUserVotes({
+        user,
+      })
+
+      expect(delegateAfter.value).toEqual(user.wallet.address.value)
+      expect(votesAfter).toBeGreaterThan(votes)
+    })
+
+    it.skip('should stake all', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const rpcUrl = chainConfig.rpcUrl
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
+      })
+
+      const balance = await sdk.armada.users.getUserBalance({
+        user,
+      })
+      assert(balance > 0n, 'Balance should be greater than 0')
+
+      const delegate = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+      assert(delegate.value !== zeroAddress, 'Should have a delegate')
+
+      const staked = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+
+      const stakeTx = await sdk.armada.users.getStakeTx({
+        user,
+        amount: balance,
+      })
+
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo,
+        transactions: stakeTx,
+        rpcUrl: rpcUrl,
+        privateKey,
+        simulateOnly,
+      })
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
+
+      const stakedAfter = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+      expect(stakedAfter).toBeGreaterThan(staked)
+    })
+
+    it.skip('should unstake all', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const rpcUrl = chainConfig.rpcUrl
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
+      })
+
+      const staked = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+      assert(staked > 0n, 'Staked balance should be greater than 0')
+
+      const delegate = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+      assert(delegate.value !== zeroAddress, 'Should have a delegate')
+
+      const votes = await sdk.armada.users.getUserVotes({
+        user,
+      })
+
+      const unstakeTx = await sdk.armada.users.getUnstakeTx({
+        amount: staked,
+      })
+
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo,
+        transactions: unstakeTx,
+        rpcUrl: rpcUrl,
+        privateKey,
+        simulateOnly,
+      })
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
+
+      const stakedAfter = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+      const votesAfter = await sdk.armada.users.getUserVotes({
+        user,
+      })
+
+      expect(stakedAfter).toBeLessThan(staked)
+      expect(votesAfter).toBeLessThan(votes)
+    })
+
+    it.skip('should undelegate', async () => {
+      const chainConfig = TestConfigs[chainConfigKey]
+      const chainInfo = getChainInfoByChainId(chainConfig.chainId)
+      const rpcUrl = chainConfig.rpcUrl
+      const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
+      })
+
+      const delegate = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+      assert(delegate.value !== zeroAddress, 'Should have a delegate')
+
+      const staked = await sdk.armada.users.getUserStakedBalance({
+        user,
+      })
+      assert(staked === 0n, 'should not have staked balance')
+
+      const undelegateTx = await sdk.armada.users.getUndelegateTx()
+
+      const { statuses } = await sendAndLogTransactions({
+        chainInfo,
+        transactions: undelegateTx,
+        rpcUrl: rpcUrl,
+        privateKey,
+        simulateOnly,
+      })
+      statuses.forEach((status) => {
+        expect(status).toBe('success')
+      })
+
+      const delegateeAfter = await sdk.armada.users.getUserDelegatee({
+        user,
+      })
+
+      expect(delegateeAfter.value).toEqual(zeroAddress)
+    })
+  })
 })

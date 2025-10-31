@@ -62,7 +62,7 @@ export const SharedConfig = {
   governorPrivateKey: process.env.E2E_USER_PRIVATE_KEY as HexData,
 } as const
 
-export const ChainConfigs = {
+export const TestConfigs = {
   BaseWETH: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
@@ -88,15 +88,17 @@ export const ChainConfigs = {
     symbol: 'USDC',
   },
 }
+export type TestConfigKey = keyof typeof TestConfigs
+export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestConfigKey[]
 
 /** INSTI CONFIG */
-export enum ClientIds {
+export enum TestClientIds {
   'ACME' = 'ACME',
   'Targen' = 'Targen',
 }
 
-export const InstiChainConfigs = {
-  [ClientIds.ACME]: {
+export const InstiTestConfigs = {
+  [TestClientIds.ACME]: {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
@@ -104,7 +106,7 @@ export const InstiChainConfigs = {
     userAddressValue: SharedConfig.userAddressValue,
     symbol: 'ETH',
   },
-  [ClientIds.Targen]: {
+  [TestClientIds.Targen]: {
     rpcUrl: RpcUrls.ArbitrumOne,
     chainId: ChainIds.ArbitrumOne,
     fleetAddressValue: FleetAddresses.ArbitrumOne.TargenUSDC,

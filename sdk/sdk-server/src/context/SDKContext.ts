@@ -76,7 +76,6 @@ const quickHashCode = (str: string): string => {
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
-  const isAdminSdk = Boolean(clientId)
 
   const configProvider = new ConfigurationProvider()
   const summerDeployment = configProvider.getConfigurationItem({
@@ -86,12 +85,12 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
     configProvider,
-    isAdminSdk,
+    clientId,
   })
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
-  if (isAdminSdk && clientId) {
+  if (clientId) {
     const rawInstiChainIds = configProvider.getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',
     })

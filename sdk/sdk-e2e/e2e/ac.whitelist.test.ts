@@ -1,6 +1,6 @@
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
 import type { WhitelistScenario } from './utils/types'
-import { ClientIds } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -9,7 +9,7 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Access Control Whitelist', () => {
   const { sdk, chainId, fleetAddress, userAddress, aqAddress, governorSendTxTool } =
-    createAdminSdkTestSetup(ClientIds.ACME)
+    createAdminSdkTestSetup(TestClientIds.ACME)
 
   const whitelistModificationScenarios: WhitelistScenario[] = [
     {

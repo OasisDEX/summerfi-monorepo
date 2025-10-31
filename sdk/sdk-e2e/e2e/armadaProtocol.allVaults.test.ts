@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Address,
-  ArmadaVaultId,
   getChainInfoByChainId,
   type IArmadaVaultInfo,
+  ChainId,
+  ChainIds,
 } from '@summerfi/sdk-common'
 
 import assert from 'assert'
@@ -18,45 +18,62 @@ jest.setTimeout(300000)
  * @group e2e
  */
 
-describe('Armada Protocol - Specific Vault', () => {
-  const scenarios: { testConfigKey?: TestConfigKey; testClientId?: TestClientIds }[] = [
+describe('Armada Protocol - All Vaults', () => {
+  const scenarios: {
+    testConfigKey?: TestConfigKey
+    testClientId?: TestClientIds
+    chainId?: ChainId
+  }[] = [
     { testConfigKey: 'BaseUSDC' },
     {
       testClientId: TestClientIds.ACME,
     },
     {
       testClientId: TestClientIds.Targen,
+      chainId: ChainIds.Base,
+    },
+    {
+      testClientId: TestClientIds.Targen,
+      chainId: ChainIds.ArbitrumOne,
+    },
+    {
+      testClientId: TestClientIds.Targen,
+      chainId: ChainIds.Mainnet,
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testClientId, testConfigKey } = scenario
+    const { testConfigKey, testClientId, chainId: scenarioChainId } = scenario
 
-    it('should get specific vault info', async () => {
+    it('should get all vaults with info', async () => {
       // Choose SDK setup based on scenario
       const setup = testClientId
         ? createAdminSdkTestSetup(testClientId)
         : createSdkTestSetup(testConfigKey)
-      const { sdk, chainId, fleetAddress, userAddress } = setup
+      const { sdk, chainId: defaultChainId, userAddress } = setup
+
+      // Use chainId from scenario if provided, otherwise use default from setup
+      const chainId = scenarioChainId ?? defaultChainId
 
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(
         `[${sdkType}] Running on chain ${chainId} for ${testClientId || testConfigKey} with user ${userAddress.value}`,
       )
 
-      // Test for specific vault
-      const vaultId = ArmadaVaultId.createFrom({
-        chainInfo: getChainInfoByChainId(chainId),
-        fleetAddress: Address.createFromEthereum({ value: fleetAddress.value }),
+      // Test for all vaults
+      const vaults = await sdk.armada.users.getVaultInfoList({
+        chainId,
       })
 
-      const vaultInfo = await sdk.armada.users.getVaultInfo({
-        vaultId,
-      })
-
-      assert(vaultInfo != null, 'Vault not found')
-      console.log(`[${sdkType}] Specific vault info:\n`, stringifyArmadaVaultInfo(vaultInfo))
-      validateApys(vaultInfo)
+      if (!vaults.list || vaults.list.length === 0) {
+        console.log('No vaults found')
+      } else {
+        console.log(
+          `[${sdkType}] All vaults info:\n`,
+          vaults.list.map(stringifyArmadaVaultInfo).join('\n'),
+        )
+        vaults.list.forEach(validateApys)
+      }
     })
   })
 })

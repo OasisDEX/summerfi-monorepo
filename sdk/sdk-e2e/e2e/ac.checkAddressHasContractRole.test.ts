@@ -1,7 +1,6 @@
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 import { createAdminSdkTestSetup } from './utils/createAdminSdkTestSetup'
-import type { ContractRoleScenario } from './utils/types'
-import { ClientIds } from './utils/testConfig'
+import { TestClientIds } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
@@ -9,29 +8,42 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Access Control Contract Role Checking', () => {
-  const { sdk, chainId, fleetAddress, governorAddress, governorSendTxTool } =
-    createAdminSdkTestSetup(ClientIds.ACME)
-  const contractAddress = fleetAddress
-
-  // Configure test scenarios here
-  const scenarios: ContractRoleScenario[] = [
+  const scenarios: {
+    role: ContractSpecificRoleName
+    targetAddress?: 'fleetAddress' | 'governorAddress'
+    shouldGrant?: boolean
+    shouldRevoke?: boolean
+  }[] = [
     {
       role: ContractSpecificRoleName.COMMANDER_ROLE,
-      targetAddress: fleetAddress,
+      targetAddress: 'fleetAddress',
       shouldGrant: false,
       shouldRevoke: false,
     },
     {
       role: ContractSpecificRoleName.CURATOR_ROLE,
-      targetAddress: governorAddress,
+      targetAddress: 'governorAddress',
       shouldGrant: false,
       shouldRevoke: false,
     },
   ]
 
-  test.each(scenarios)(
-    'should check contract-specific role: $role for address',
-    async ({ role, targetAddress, shouldGrant = false, shouldRevoke = false }) => {
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const {
+      role,
+      targetAddress: targetAddressKey,
+      shouldGrant = false,
+      shouldRevoke = false,
+    } = scenario
+
+    it('should check contract-specific role', async () => {
+      const { sdk, chainId, fleetAddress, governorAddress, governorSendTxTool } =
+        createAdminSdkTestSetup(TestClientIds.ACME)
+      const contractAddress = fleetAddress
+
+      // Resolve targetAddress from key
+      const targetAddress = targetAddressKey === 'fleetAddress' ? fleetAddress : governorAddress
+
       if (shouldGrant) {
         // Grant the role if not already granted
         const grantTxInfo = await sdk.armada.accessControl.grantContractSpecificRole({
@@ -76,6 +88,6 @@ describe('Armada Protocol - Access Control Contract Role Checking', () => {
       console.log(
         `Address ${targetAddress.value} ${hasContractSpecificRole ? 'has' : 'does not have'} ${ContractSpecificRoleName[role]} for contract ${contractAddress.value}`,
       )
-    },
-  )
+    })
+  })
 })
