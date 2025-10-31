@@ -8,6 +8,8 @@ declare const styles: {
   readonly "inlineLittleGap": string;
   readonly "inputWrapper": string;
   readonly "orderInformationDivider": string;
+  readonly "orderSummary": string;
+  readonly "orderSummaryHeader": string;
   readonly "quickActionTags": string;
   readonly "stakingLengthControllers": string;
   readonly "stakingLengthLabels": string;

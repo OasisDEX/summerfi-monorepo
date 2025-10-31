@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Card,
   DataBlock,
@@ -20,8 +20,10 @@ import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { ChainIds } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
+import { LockupRangeGraph } from '@/components/molecules/LockupRangeGraph/LockupRangeGraph'
 import { LockupRangeInput } from '@/components/molecules/LockupRangeInput/LockupRangeInput'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -83,6 +85,14 @@ const SumrV2StakingManageComponent = () => {
     setSelectedPercentage(null)
     handleAmountChange(e)
   }
+
+  const lockTimePeriodSummaryLabel = useMemo(() => {
+    if (selectedLockupAndBoost === 0) {
+      return 'No lockup'
+    }
+
+    return `${selectedLockupAndBoost} days (${dayjs().add(selectedLockupAndBoost, 'day').format('DD-MM-YYYY')})`
+  }, [selectedLockupAndBoost])
 
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
@@ -363,7 +373,6 @@ const SumrV2StakingManageComponent = () => {
                 />
               </Card>
             </div>
-
             <Card className={sumrV2StakingManageViewStyles.stakingLengthControllers}>
               <div className={sumrV2StakingManageViewStyles.stakingLengthLabels}>
                 <Text variant="p3semi">1x</Text>
@@ -382,6 +391,79 @@ const SumrV2StakingManageComponent = () => {
                 <Text variant="p3semi">2</Text>
                 <Text variant="p3semi">3</Text>
               </div>
+              <LockupRangeGraph
+                lockupMap={{
+                  90: 'low', // 14 days - 3m
+                  180: 'medium', // 3m - 6m
+                  360: 'high', // 6m - 1y
+                  720: 'high', // 1y - 2y
+                  1080: 'high', // 2y - 3y
+                }}
+              />
+              <Expander
+                expanderButtonStyles={{
+                  marginTop: '10px',
+                  marginBottom: '10px',
+                  justifyContent: 'center',
+                }}
+                title={<Text variant="p4semi">Avaliablity details</Text>}
+              >
+                <div style={{ marginBottom: '10px' }}>Huh?</div>
+              </Expander>
+            </Card>
+            <Card className={sumrV2StakingManageViewStyles.orderSummary}>
+              <Text variant="p3semi" className={sumrV2StakingManageViewStyles.orderSummaryHeader}>
+                Summary of changes
+              </Text>
+              <OrderInformation
+                wrapperStyles={{
+                  padding: '0px',
+                }}
+                items={[
+                  {
+                    label: 'SUMR Being Locked',
+                    value: (
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Icon iconName="sumr" size={16} />
+                        <Text variant="p3semi">
+                          {formatCryptoBalance(amountDisplay) || '0'} SUMR
+                        </Text>
+                      </div>
+                    ),
+                  },
+                  {
+                    label: 'Lock time period',
+                    value: lockTimePeriodSummaryLabel,
+                  },
+                  {
+                    label: 'Yield boost multipler',
+                    value: '7x', // Huh?
+                  },
+                  {
+                    label: 'Blended yield boost multipler',
+                    value: '1.0x → 7x', // Huh?
+                  },
+                  {
+                    label: (
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Text variant="p3semi">Initial early withdrawal penalty</Text>
+                        <Tooltip tooltip="Huh?">
+                          <Icon iconName="info" size={16} />
+                        </Tooltip>
+                      </div>
+                    ),
+                    value: '11.2%', // Huh?
+                  },
+                  {
+                    label: 'SUMR lock positions ',
+                    value: '0 → 1 (+1)', // Huh?
+                  },
+                  {
+                    label: '% of available SUMR being locked ',
+                    value: '0 → 100%', // Huh?
+                  },
+                ]}
+              />
             </Card>
           </div>
         </div>
