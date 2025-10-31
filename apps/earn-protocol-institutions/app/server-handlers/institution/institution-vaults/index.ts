@@ -15,6 +15,9 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
     const systemConfig = await configEarnAppFetcher()
     const institutionSdk = getInstitutionsSDK(institutionName)
 
+    // this is a temporary method
+    // until either `getVaultsRaw` returns only the particular insti vaults
+    // or `getVaultInfoList` is mapped in the frontend components
     const vaultsInfoArray = await Promise.all(
       supportedInstitutionNetworks.map((networkId) =>
         institutionSdk.armada.users.getVaultInfoList({
@@ -50,6 +53,7 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
         }),
       )
     ).flat()
+    // above is a temporary method
 
     const vaultsWithConfig = decorateWithFleetConfig(vaultsListByNetwork, systemConfig)
 
