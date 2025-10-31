@@ -196,7 +196,7 @@ const SumrV2StakingManageComponent = ({
     }
 
     if (!enoughBucketAvailability) {
-      return false
+      return true
     }
 
     return false
@@ -541,7 +541,7 @@ const SumrV2StakingManageComponent = ({
                         : 'var(--color-text-primary)',
                     }}
                   >
-                    Avaliablity details
+                    Availability details
                   </Text>
                 }
                 defaultExpanded={!enoughBucketAvailability}

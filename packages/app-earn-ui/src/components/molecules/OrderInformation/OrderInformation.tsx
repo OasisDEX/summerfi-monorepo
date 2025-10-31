@@ -70,8 +70,8 @@ export const OrderInformation: FC<OrderInformationProps> = ({ title, items, wrap
                       classNames.orderInformationListInExpander,
                     )}
                   >
-                    {item.items.map((nestedItem) => (
-                      <li key={nestedItem.label?.toString()} className={classNames.listItem}>
+                    {item.items.map((nestedItem, index) => (
+                      <li key={`nested-${index}`} className={classNames.listItem}>
                         <Text
                           variant="p3semi"
                           style={{ color: 'var(--earn-protocol-secondary-60)' }}
