@@ -26,12 +26,13 @@ const govAbis = [
   'GovernanceRewardsManager.sol',
   'SummerVestingWallet.sol',
   'SummerVestingWalletFactory.sol',
+  'SummerStaking.sol',
 ]
 const accessContracts = ['ProtocolAccessManagerWhiteList.sol']
 
 const foldersDict = {
-  'core-contracts': coreAbis,
-  // 'gov-contracts': govAbis,
+  // 'core-contracts': coreAbis,
+  'gov-contracts': govAbis,
   // 'rewards-contracts': rewardsAbis,
   // 'access-contracts': accessContracts,
 }
