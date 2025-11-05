@@ -2,6 +2,7 @@ import { IAddress, IChainInfo, type ChainId } from '@summerfi/sdk-common'
 import { IErc20Contract } from './contracts/IErc20Contract'
 import { IErc4626Contract } from './contracts/IErc4626Contract'
 import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
+import { ISummerStakingContract } from './contracts/ISummerStakingContract'
 import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAccessManagerWhiteListContract'
 import { IArkContract } from './contracts/IArkContract'
 import { IAdmiralsQuartersContract } from './contracts/IAdmiralsQuartersContract'
@@ -109,4 +110,18 @@ export interface IContractsProvider {
     chainId: ChainId
     address: IAddress
   }): Promise<IConfigurationManagerContract>
+
+  /**
+   * @name getSummerStakingContract
+   * @description Returns a SummerStaking contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the SummerStaking contract
+   *
+   * @returns {ISummerStakingContract}
+   */
+  getSummerStakingContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<ISummerStakingContract>
 }

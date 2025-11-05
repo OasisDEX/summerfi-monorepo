@@ -9,6 +9,7 @@ import {
   IArkContract,
   IAdmiralsQuartersContract,
   IConfigurationManagerContract,
+  ISummerStakingContract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -19,6 +20,7 @@ import { ProtocolAccessManagerWhiteListContract } from './contracts/ProtocolAcce
 import { ArkContract } from './contracts/ArkContract'
 import { AdmiralsQuartersContract } from './contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
 import { ConfigurationManagerContract } from './contracts/ConfigurationManagerContract/ConfigurationManagerContract'
+import { SummerStakingContract } from './contracts/SummerStakingContract/SummerStakingContract'
 
 /**
  * @name ContractsProvider
@@ -142,6 +144,20 @@ export class ContractsProvider implements IContractsProvider {
         chainInfo,
       }),
       chainInfo,
+      address: params.address,
+    })
+  }
+
+  /** @see IContractsProvider.getSummerStakingContract */
+  async getSummerStakingContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<ISummerStakingContract> {
+    return SummerStakingContract.create({
+      blockchainClient: this._blockchainClientProvider.getBlockchainClient({
+        chainInfo: params.chainInfo,
+      }),
+      chainInfo: params.chainInfo,
       address: params.address,
     })
   }
