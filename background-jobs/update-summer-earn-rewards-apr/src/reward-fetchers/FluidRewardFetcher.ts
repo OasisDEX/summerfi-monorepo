@@ -33,7 +33,7 @@ export class FluidRewardFetcher implements IRewardFetcher {
 
   constructor(logger: Logger, options?: FluidFetcherOptions) {
     this.logger = logger
-    this.blacklist = new Set((options?.blacklistSymbols || ['FLUID']).map((s) => s.toUpperCase()))
+    this.blacklist = new Set((options?.blacklistSymbols || []).map((s) => s.toUpperCase()))
   }
 
   async getRewardRates(

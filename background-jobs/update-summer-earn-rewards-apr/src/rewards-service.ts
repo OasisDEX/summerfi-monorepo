@@ -120,7 +120,7 @@ export class RewardsService {
     this.ratesSubgraphClient = ratesSubgraphClient
     this.siloRewardFetcher = new SiloRewardFetcher(logger)
     this.compoundRewardFetcher = new CompoundRewardFetcher(logger)
-    this.fluidRewardFetcher = new FluidRewardFetcher(logger, { blacklistSymbols: ['FLUID'] })
+    this.fluidRewardFetcher = new FluidRewardFetcher(logger, { blacklistSymbols: [] })
   }
 
   async getRewardRates(
