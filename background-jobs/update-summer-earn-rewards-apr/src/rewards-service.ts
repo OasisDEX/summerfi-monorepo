@@ -95,7 +95,7 @@ interface RetryConfig {
 
 export class RewardsService {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
-  private readonly EULER_API_URL = 'https://app.euler.finance/api/v2/rewards/merkl?chainId='
+  private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards?chainId='
   private readonly GEARBOX_API_URL =
     'https://api.merkl.xyz/v4/opportunities?mainProtocolId=gearbox&status=LIVE&'
   private readonly DEFAULT_RETRY_CONFIG: RetryConfig = {
@@ -496,7 +496,7 @@ export class RewardsService {
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     try {
-      const MERKL_API_URL = `${this.GEARBOX_API_URL}${chainId}`
+      const MERKL_API_URL = `${this.GEARBOX_API_URL}&chainId=${chainId}`
       const response = await this.fetchWithRetry(MERKL_API_URL)
       const data = (await response.json()) as MerkleDistribution[]
       const rewardRates: Record<string, RewardRate[]> = Object.fromEntries(
