@@ -34,6 +34,7 @@ export enum Protocol {
   Moonwell = 'Moonwell',
   Silo = 'Silo',
   CompoundV3 = 'CompoundV3',
+  Fluid = 'Fluid',
 }
 const supportedProtocols = [
   Protocol.Morpho,
@@ -43,6 +44,7 @@ const supportedProtocols = [
   Protocol.Moonwell,
   Protocol.Silo,
   Protocol.CompoundV3,
+  Protocol.Fluid,
 ]
 
 export interface NetworkStatus {
