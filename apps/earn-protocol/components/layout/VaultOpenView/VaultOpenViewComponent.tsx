@@ -49,6 +49,7 @@ import { type MigratablePosition } from '@/app/server-handlers/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { ControlsApproval, OrderInfoDeposit } from '@/components/molecules/SidebarElements'
@@ -536,6 +537,7 @@ export const VaultOpenViewComponent = ({
   return (
     <>
       <RebalancingNoticeBanner vault={vault} />
+      <ArbitrumNoticeBanner vault={vault} />
       <VaultOpenGrid
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
