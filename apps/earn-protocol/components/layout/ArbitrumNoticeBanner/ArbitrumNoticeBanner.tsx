@@ -10,18 +10,10 @@ export const ArbitrumNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }>
     <GlobalNoticeBanner
       message={
         <>
-          Due to ongoing issues with Arbitrum&apos;s USDC bridge, withdrawals from this vault may be
-          delayed. We are actively working with Arbitrum to resolve the situation. For the latest
-          updates, please visit our{' '}
-          <a
-            href="https://discord.gg/summerfi"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'underline' }}
-          >
-            Discord
-          </a>{' '}
-          or contact support at <a href="mailto:support@summer.fi">support@summer.fi</a>.
+          This unusually high APY is coming from a market with very limited liquidity, where assets
+          cannot be currently withdrawn. At this moment, it is not known when the assets will be
+          redeemed and accessible within the Vault. The Risk Manager has set the deposit caps to
+          this Vault to 0 (Zero) and it is no longer accepting new deposits.
         </>
       }
     />
