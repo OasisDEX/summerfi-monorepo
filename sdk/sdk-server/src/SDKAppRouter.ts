@@ -16,7 +16,6 @@ import { setMinimumBufferBalance } from './armada-protocol-handlers/admin/setMin
 import { setTipJar } from './armada-protocol-handlers/admin/setTipJar'
 import { setTipRate } from './armada-protocol-handlers/admin/setTipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/admin/updateRebalanceCooldown'
-import { adjustBuffer } from './armada-protocol-handlers/admin/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/admin/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
@@ -189,7 +188,6 @@ export const sdkAppRouter = router({
     },
     admin: {
       rebalance: rebalance,
-      adjustBuffer: adjustBuffer,
       setFleetDepositCap: setFleetDepositCap,
       setTipJar: setTipJar,
       setTipRate: setTipRate,

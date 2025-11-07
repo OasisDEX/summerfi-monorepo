@@ -4,10 +4,10 @@ import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
 
 /**
- * @name IFleetCommanderWhitelistedContract
- * @description Interface for the FleetCommanderWhitelisted contract wrapper
+ * @name IFleetCommanderWhitelistContract
+ * @description Interface for the FleetCommanderWhitelist contract wrapper
  */
-export interface IFleetCommanderWhitelistedContract extends IContractWrapper {
+export interface IFleetCommanderWhitelistContract extends IContractWrapper {
   /** WRITE METHODS */
 
   /**

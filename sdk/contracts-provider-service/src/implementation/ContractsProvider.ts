@@ -10,7 +10,7 @@ import {
   IAdmiralsQuartersContract,
   IConfigurationManagerContract,
   ISummerStakingContract,
-  type IFleetCommanderWhitelistedContract,
+  type IFleetCommanderWhitelistContract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -22,7 +22,7 @@ import { ArkContract } from './contracts/ArkContract'
 import { AdmiralsQuartersContract } from './contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
 import { ConfigurationManagerContract } from './contracts/ConfigurationManagerContract/ConfigurationManagerContract'
 import { SummerStakingContract } from './contracts/SummerStakingContract/SummerStakingContract'
-import { FleetCommanderWhitelistedContract } from './contracts/FleetCommanderContract/FleetCommanderWhitelistContract'
+import { FleetCommanderWhitelistContract } from './contracts/FleetCommanderContract/FleetCommanderWhitelistContract'
 
 /**
  * @name ContractsProvider
@@ -91,11 +91,11 @@ export class ContractsProvider implements IContractsProvider {
     })
   }
 
-  async getFleetCommanderWhitelistedContract(params: {
+  async getFleetCommanderWhitelistContract(params: {
     chainInfo: IChainInfo
     address: IAddress
-  }): Promise<IFleetCommanderWhitelistedContract> {
-    return FleetCommanderWhitelistedContract.create({
+  }): Promise<IFleetCommanderWhitelistContract> {
+    return FleetCommanderWhitelistContract.create({
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),

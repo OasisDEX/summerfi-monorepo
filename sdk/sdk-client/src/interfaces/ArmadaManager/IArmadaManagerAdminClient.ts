@@ -36,20 +36,6 @@ export interface IArmadaManagerAdminClient {
   }): Promise<TransactionInfo>
 
   /**
-   * @name adjustBuffer
-   * @description Adjusts the buffer of the fleet. Used by the keeper
-   *
-   * @param vaultId The ID of the pool
-   * @param rebalanceData The data for the rebalance
-   *
-   * @returns The transaction information
-   */
-  adjustBuffer(params: {
-    vaultId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo>
-
-  /**
    * @name setFleetDepositCap
    * @description Sets the deposit cap of the fleet. Used by the governance
    *

@@ -7,6 +7,7 @@ import { IProtocolAccessManagerWhiteListContract } from './contracts/IProtocolAc
 import { IArkContract } from './contracts/IArkContract'
 import { IAdmiralsQuartersContract } from './contracts/IAdmiralsQuartersContract'
 import { IConfigurationManagerContract } from './contracts/IConfigurationManagerContract'
+import type { IFleetCommanderWhitelistContract } from './contracts/IFleetCommanderWhitelistContract'
 
 /**
  * @name IContractsProvider
@@ -57,6 +58,20 @@ export interface IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IFleetCommanderContract>
+
+  /**
+   * @name getFleetCommanderWhitelistContract
+   * @description Returns a FleetCommanderWhitelist contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the FleetCommanderWhitelist contract
+   *
+   * @returns {IFleetCommanderWhitelistContract}
+   */
+  getFleetCommanderWhitelistContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IFleetCommanderWhitelistContract>
 
   /**
    * @name getProtocolAccessManagerWhiteListContract

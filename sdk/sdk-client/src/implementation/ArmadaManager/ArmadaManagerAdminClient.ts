@@ -18,13 +18,6 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.admin.rebalance.query(params)
   }
 
-  /** @see IArmadaManagerAdminClient.adjustBuffer */
-  async adjustBuffer(
-    params: Parameters<IArmadaManagerAdminClient['adjustBuffer']>[0],
-  ): ReturnType<IArmadaManagerAdminClient['adjustBuffer']> {
-    return this.rpcClient.armada.admin.adjustBuffer.query(params)
-  }
-
   /** @see IArmadaManagerAdminClient.setFleetDepositCap */
   async setFleetDepositCap(
     params: Parameters<IArmadaManagerAdminClient['setFleetDepositCap']>[0],

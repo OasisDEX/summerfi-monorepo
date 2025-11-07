@@ -487,10 +487,12 @@ export class ArmadaManagerAccessControl
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
     // Get the FleetCommander contract
-    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: chainInfo,
-      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
-    })
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderWhitelistContract(
+      {
+        chainInfo: chainInfo,
+        address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
+      },
+    )
 
     return fleetCommanderContract.isWhitelisted({
       account: Address.createFromEthereum({ value: params.targetAddress }),
@@ -503,10 +505,12 @@ export class ArmadaManagerAccessControl
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
     // Get the FleetCommander contract
-    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: chainInfo,
-      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
-    })
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderWhitelistContract(
+      {
+        chainInfo: chainInfo,
+        address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
+      },
+    )
 
     return fleetCommanderContract.setWhitelisted({
       account: Address.createFromEthereum({ value: params.targetAddress }),
@@ -520,10 +524,12 @@ export class ArmadaManagerAccessControl
     const chainInfo = getChainInfoByChainId(Number(params.chainId))
 
     // Get the FleetCommander contract
-    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: chainInfo,
-      address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
-    })
+    const fleetCommanderContract = await this._contractsProvider.getFleetCommanderWhitelistContract(
+      {
+        chainInfo: chainInfo,
+        address: Address.createFromEthereum({ value: params.fleetCommanderAddress }),
+      },
+    )
 
     return fleetCommanderContract.setWhitelistedBatch({
       accounts: params.targetAddresses.map((account) =>

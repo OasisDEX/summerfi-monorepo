@@ -2,7 +2,7 @@ import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
   IErc20Contract,
   IErc4626Contract,
-  type IFleetCommanderWhitelistedContract,
+  type IFleetCommanderWhitelistContract,
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, TransactionInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
@@ -12,16 +12,16 @@ import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 import type { ITokensManager } from '@summerfi/tokens-common'
 
 /**
- * @name FleetCommanderWhitelistedContract
- * @description Implementation for the FleetCommanderWhitelisted contract wrapper
- * @implements IFleetCommanderWhitelistedContract
+ * @name FleetCommanderWhitelistContract
+ * @description Implementation for the FleetCommanderWhitelist contract wrapper
+ * @implements IFleetCommanderWhitelistContract
  */
-export class FleetCommanderWhitelistedContract<
+export class FleetCommanderWhitelistContract<
     const TClient extends IBlockchainClient,
     TAddress extends IAddress,
   >
   extends ContractWrapper<typeof FleetCommanderWhitelistAbi, TClient, TAddress>
-  implements IFleetCommanderWhitelistedContract
+  implements IFleetCommanderWhitelistContract
 {
   readonly _erc4626Contract: IErc4626Contract
 
@@ -31,10 +31,10 @@ export class FleetCommanderWhitelistedContract<
     tokensManager: ITokensManager
     chainInfo: IChainInfo
     address: TAddress
-  }): Promise<IFleetCommanderWhitelistedContract> {
+  }): Promise<IFleetCommanderWhitelistContract> {
     const erc4626Contract = await Erc4626Contract.create(params)
 
-    const instance = new FleetCommanderWhitelistedContract({
+    const instance = new FleetCommanderWhitelistContract({
       blockchainClient: params.blockchainClient,
       chainInfo: params.chainInfo,
       address: params.address,
