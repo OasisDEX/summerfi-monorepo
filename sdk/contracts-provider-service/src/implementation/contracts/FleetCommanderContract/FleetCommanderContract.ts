@@ -21,7 +21,7 @@ import {
 } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
-import { FleetCommanderWhitelistAbi } from '@summerfi/armada-protocol-abis'
+import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData } from 'viem'
@@ -35,7 +35,7 @@ export class FleetCommanderContract<
     const TClient extends IBlockchainClient,
     TAddress extends IAddress,
   >
-  extends ContractWrapper<typeof FleetCommanderWhitelistAbi, TClient, TAddress>
+  extends ContractWrapper<typeof FleetCommanderAbi, TClient, TAddress>
   implements IFleetCommanderContract
 {
   readonly _erc4626Contract: IErc4626Contract
@@ -109,18 +109,6 @@ export class FleetCommanderContract<
     }
   }
 
-  /** @see IFleetCommanderContract.adjustBuffer */
-  async adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
-    const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
-      rebalanceData: params.rebalanceData,
-    })
-    return this._createTransaction({
-      functionName: 'adjustBuffer',
-      args: [rebalanceDataSolidity],
-      description: 'Adjust the buffer of the fleet',
-    })
-  }
-
   /** @see IFleetCommanderContract.setFleetDepositCap */
   async setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo> {
     const asset = await this._erc4626Contract.asset()
@@ -144,7 +132,7 @@ export class FleetCommanderContract<
   setMaxRebalanceOperations(params: { maxOperations: number }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'setMaxRebalanceOperations',
-      args: [params.maxOperations],
+      args: [BigInt(params.maxOperations)],
       description: `Set the maximum number of rebalance operations to ${params.maxOperations}`,
     })
   }
@@ -169,12 +157,7 @@ export class FleetCommanderContract<
 
   /** @see IFleetCommanderContract.addArks */
   addArks(params: { arks: IAddress[] }): Promise<TransactionInfo> {
-    const arksSolidity = params.arks.map((ark) => ark.toSolidityValue())
-    return this._createTransaction({
-      functionName: 'addArks',
-      args: [arksSolidity],
-      description: `Add the arks ${params.arks}`,
-    })
+    throw new Error('Method not implemented.' + params.arks.length)
   }
 
   /** @see IFleetCommanderContract.removeArk */
@@ -288,7 +271,7 @@ export class FleetCommanderContract<
   updateRebalanceCooldown(params: { cooldown: number }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'updateRebalanceCooldown',
-      args: [params.cooldown],
+      args: [BigInt(params.cooldown)],
       description: `Update the rebalance cooldown to ${params.cooldown}`,
     })
   }
@@ -305,43 +288,7 @@ export class FleetCommanderContract<
     })
   }
 
-  /** @see IFleetCommanderContract.emergencyShutdown */
-  emergencyShutdown(): Promise<TransactionInfo> {
-    return this._createTransaction({
-      functionName: 'emergencyShutdown',
-      args: [],
-      description: 'Emergency shutdown of the fleet',
-    })
-  }
-
-  /** @see IFleetCommanderContract.setWhitelisted */
-  setWhitelisted(params: { account: IAddress; allowed: boolean }): Promise<TransactionInfo> {
-    return this._createTransaction({
-      functionName: 'setWhitelisted',
-      args: [params.account.toSolidityValue(), params.allowed],
-      description: `Set whitelist status for ${params.account} to ${params.allowed}`,
-    })
-  }
-
-  /** @see IFleetCommanderContract.setWhitelistedBatch */
-  setWhitelistedBatch(params: {
-    accounts: IAddress[]
-    allowed: boolean[]
-  }): Promise<TransactionInfo> {
-    const accountsSolidity = params.accounts.map((account) => account.toSolidityValue())
-    return this._createTransaction({
-      functionName: 'setWhitelistedBatch',
-      args: [accountsSolidity, params.allowed],
-      description: `Batch set whitelist status for ${params.accounts.length} accounts`,
-    })
-  }
-
   /** READ METHODS */
-
-  /** @see IFleetCommanderContract.isWhitelisted */
-  async isWhitelisted(params: { account: IAddress }): Promise<boolean> {
-    return this.contract.read.isWhitelisted([params.account.value])
-  }
 
   /** @see IFleetCommanderContract.arks */
   async arks(): Promise<IAddress[]> {
@@ -412,8 +359,8 @@ export class FleetCommanderContract<
   }
 
   /** @see IContractWrapper.getAbi */
-  getAbi(): typeof FleetCommanderWhitelistAbi {
-    return FleetCommanderWhitelistAbi
+  getAbi(): typeof FleetCommanderAbi {
+    return FleetCommanderAbi
   }
 
   /** PRIVATE */

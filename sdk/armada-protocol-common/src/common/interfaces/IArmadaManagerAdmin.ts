@@ -40,20 +40,6 @@ export interface IArmadaManagerAdmin {
   addArks(params: { vaultId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
 
   /**
-   * @name adjustBuffer
-   * @description Adjusts the buffer of the fleet
-   *
-   * @param vaultId The ID of the vault
-   * @param rebalanceData Data of the rebalance
-   *
-   * @returns TransactionInfo The transaction information
-   */
-  adjustBuffer(params: {
-    vaultId: IArmadaVaultId
-    rebalanceData: IRebalanceData[]
-  }): Promise<TransactionInfo>
-
-  /**
    * @name rebalance
    * @description Rebalances the assets of the fleet
    *

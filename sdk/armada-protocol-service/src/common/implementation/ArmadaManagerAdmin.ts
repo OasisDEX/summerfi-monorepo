@@ -61,18 +61,6 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
     return fleetContract.addArks({ arks: params.arks })
   }
 
-  /** @see IArmadaManagerAdmin.adjustBuffer */
-  async adjustBuffer(
-    params: Parameters<IArmadaManagerAdmin['adjustBuffer']>[0],
-  ): ReturnType<IArmadaManagerAdmin['adjustBuffer']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
-  }
-
   /** @see IArmadaManagerAdmin.rebalance */
   async rebalance(
     params: Parameters<IArmadaManagerAdmin['rebalance']>[0],
@@ -239,12 +227,9 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
   async emergencyShutdown(
     params: Parameters<IArmadaManagerAdmin['emergencyShutdown']>[0],
   ): ReturnType<IArmadaManagerAdmin['emergencyShutdown']> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.vaultId.chainInfo,
-      address: params.vaultId.fleetAddress,
-    })
-
-    return fleetContract.emergencyShutdown()
+    throw new Error(
+      'emergencyShutdown method is not implemented in ArmadaManagerAdmin: ' + params.vaultId,
+    )
   }
 
   /** READ OPERATIONS */
