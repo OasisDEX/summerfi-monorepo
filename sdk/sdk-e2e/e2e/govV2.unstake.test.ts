@@ -6,6 +6,8 @@ import { createSdkTestSetup } from './utils/createSdkTestSetup'
 
 jest.setTimeout(300000)
 
+const SUMR_DECIMALS = 10n ** 18n
+
 describe('Armada Protocol Gov V2 Unstake', () => {
   const scenarios: {
     testConfigKey?: TestConfigKey
@@ -28,7 +30,7 @@ describe('Armada Protocol Gov V2 Unstake', () => {
     const user = User.createFromEthereum(chainId, userAddress.value)
 
     // Convert to contract units
-    const unstakeAmount = (amountSumr ?? 1n) * 10n ** 18n // Convert SUMR to wei
+    const unstakeAmount = (amountSumr ?? 1n) * SUMR_DECIMALS // Convert SUMR to wei
     const stakeIndex = userStakeIndex ?? 0n
 
     it('should unstake from specific stake index using V2 method', async () => {

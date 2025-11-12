@@ -1,18 +1,15 @@
-import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { User } from '@summerfi/sdk-common'
 import assert from 'assert'
 
-import { createTestSDK } from './utils/sdkInstance'
-import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
+import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import { type TestConfigKey } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
-const simulateOnly = false
-const privateKey = SharedConfig.userPrivateKey
+const SUMR_DECIMALS = 10n ** 18n
+const SECONDS_PER_DAY = 24n * 60n * 60n
 
 describe('Armada Protocol Gov V2 Stake', () => {
-  const sdk = createTestSDK()
-
   const scenarios: {
     testConfigKey?: TestConfigKey
     amountSumr?: bigint
@@ -52,15 +49,15 @@ describe('Armada Protocol Gov V2 Stake', () => {
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { testConfigKey: chainConfigKey, amountSumr, lockupDays } = scenario
-    const chainConfig = TestConfigs[chainConfigKey ?? 'BaseUSDC']
-    const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-    const rpcUrl = chainConfig.rpcUrl
-    const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
-    const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
+    // Setup SDK and tools
+    const setup = createSdkTestSetup(chainConfigKey)
+    const { sdk, chainId, userAddress, userSendTxTool } = setup
+
+    const user = User.createFromEthereum(chainId, userAddress.value)
 
     // Convert to contract units
-    const stakeAmount = (amountSumr ?? 1n) * 10n ** 18n // Convert SUMR to wei
-    const stakeLockupPeriod = (lockupDays ?? 14n) * 24n * 60n * 60n // Convert days to seconds
+    const stakeAmount = (amountSumr ?? 1n) * SUMR_DECIMALS // Convert SUMR to wei
+    const stakeLockupPeriod = (lockupDays ?? 0n) * SECONDS_PER_DAY // Convert days to seconds
 
     it('should stake with specified amount and lockup period', async () => {
       const sumrBalanceBefore = await sdk.armada.users.getUserBalance({ user })
@@ -78,16 +75,8 @@ describe('Armada Protocol Gov V2 Stake', () => {
         lockupPeriod: stakeLockupPeriod,
       })
 
-      const { statuses } = await sendAndLogTransactions({
-        chainInfo,
-        transactions: stakeTxV2,
-        rpcUrl: rpcUrl,
-        privateKey,
-        simulateOnly,
-      })
-      statuses.forEach((status) => {
-        expect(status).toBe('success')
-      })
+      const stakeStatus = await userSendTxTool(stakeTxV2)
+      expect(stakeStatus).toBe('success')
 
       // Get balance after staking
       const sumrBalanceAfter = await sdk.armada.users.getUserBalance({ user })
