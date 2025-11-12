@@ -153,4 +153,21 @@ export class SummerStakingContract<TClient extends IBlockchainClient, TAddress e
   async calculateWeightedStake(params: { amount: bigint; lockupPeriod: bigint }): Promise<bigint> {
     return this.contract.read.calculateWeightedStake([params.amount, params.lockupPeriod])
   }
+
+  /** @see ISummerStakingContract.rewardData */
+  async rewardData(params: {
+    rewardToken: AddressValue
+  }): Promise<readonly [bigint, bigint, bigint, bigint, bigint]> {
+    return this.contract.read.rewardData([params.rewardToken])
+  }
+
+  /** @see ISummerStakingContract.totalSupply */
+  async totalSupply(): Promise<bigint> {
+    return this.contract.read.totalSupply()
+  }
+
+  /** @see ISummerStakingContract.balanceOf */
+  async balanceOf(params: { account: AddressValue }): Promise<bigint> {
+    return this.contract.read.balanceOf([params.account])
+  }
 }

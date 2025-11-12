@@ -57,7 +57,13 @@ import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserSt
 import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
 import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
 import { getStakeTxV2 } from './armada-protocol-handlers/users/getStakeTxV2'
+import { getStakeOnBehalfTxV2 } from './armada-protocol-handlers/users/getStakeOnBehalfTxV2'
 import { getUnstakeTxV2 } from './armada-protocol-handlers/users/getUnstakeTxV2'
+import { getUserStakingBalanceV2 } from './armada-protocol-handlers/users/getUserStakingBalanceV2'
+import { getUserStakingWeightedBalanceV2 } from './armada-protocol-handlers/users/getUserStakingWeightedBalanceV2'
+import { getUserStakingEarnedV2 } from './armada-protocol-handlers/users/getUserStakingEarnedV2'
+import { getStakingRewardRatesV2 } from './armada-protocol-handlers/users/getStakingRewardRatesV2'
+import { getStakingBucketsInfoV2 } from './armada-protocol-handlers/users/getStakingBucketsInfoV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
@@ -171,7 +177,13 @@ export const sdkAppRouter = router({
       getStakeTx: getStakeTx,
       getUnstakeTx: getUnstakeTx,
       getStakeTxV2: getStakeTxV2,
+      getStakeOnBehalfTxV2: getStakeOnBehalfTxV2,
       getUnstakeTxV2: getUnstakeTxV2,
+      getUserStakingBalanceV2: getUserStakingBalanceV2,
+      getUserStakingWeightedBalanceV2: getUserStakingWeightedBalanceV2,
+      getUserStakingEarnedV2: getUserStakingEarnedV2,
+      getStakingRewardRatesV2: getStakingRewardRatesV2,
+      getStakingBucketsInfoV2: getStakingBucketsInfoV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,

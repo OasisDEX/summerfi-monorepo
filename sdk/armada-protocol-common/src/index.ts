@@ -44,6 +44,11 @@ export {
 export type { IArmadaManager } from './common/interfaces/IArmadaManager'
 export type { IArmadaManagerMigrations } from './common/interfaces/IArmadaManagerMigrations'
 export type { IArmadaManagerGovernance } from './common/interfaces/IArmadaManagerGovernance'
+export type {
+  UserStakingBalanceByBucket,
+  StakingRewardRates,
+  StakingBucketInfo,
+} from './common/interfaces/IArmadaManagerGovernance'
 export type { IArmadaManagerClaims } from './common/interfaces/IArmadaManagerClaims'
 export { getAllMerkleClaims } from './distributions/index'
 export type { IArmadaManagerBridge } from './common/interfaces/IArmadaManagerBridge'
@@ -58,7 +63,7 @@ export {
   getAaveV3Address,
   getCompoundV3Address,
   getDeployedRewardsRedeemerAddress,
-  getDeployedGovRewardsManagerAddress,
+  getDeployedGovAddress,
   getLayerZeroConfig,
   getDeploymentsJsonConfig,
 } from './deployments/index'

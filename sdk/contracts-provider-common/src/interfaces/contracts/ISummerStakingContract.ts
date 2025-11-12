@@ -152,4 +152,29 @@ export interface ISummerStakingContract extends IContractWrapper {
    * @returns The weighted stake
    */
   calculateWeightedStake(params: { amount: bigint; lockupPeriod: bigint }): Promise<bigint>
+
+  /**
+   * @name rewardData
+   * @description Get reward data for a specific reward token
+   * @param rewardToken The address of the reward token
+   * @returns Tuple: [periodFinish, rewardRate, rewardsDuration, lastUpdateTime, rewardPerTokenStored]
+   */
+  rewardData(params: {
+    rewardToken: AddressValue
+  }): Promise<readonly [bigint, bigint, bigint, bigint, bigint]>
+
+  /**
+   * @name totalSupply
+   * @description Get the total weighted supply of staked tokens
+   * @returns The total weighted supply
+   */
+  totalSupply(): Promise<bigint>
+
+  /**
+   * @name balanceOf
+   * @description Get the raw (unweighted) balance of an account
+   * @param account The address of the account
+   * @returns The raw balance
+   */
+  balanceOf(params: { account: AddressValue }): Promise<bigint>
 }

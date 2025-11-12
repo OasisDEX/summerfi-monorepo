@@ -1,12 +1,20 @@
-import { GovernanceRewardsManagerAbi, SummerTokenAbi } from '@summerfi/armada-protocol-abis'
 import {
-  getDeployedGovRewardsManagerAddress,
+  GovernanceRewardsManagerAbi,
+  SummerStakingAbi,
+  SummerTokenAbi,
+} from '@summerfi/armada-protocol-abis'
+import {
+  getDeployedGovAddress,
   type IArmadaManagerGovernance,
   type IArmadaManagerUtils,
+  type StakingBucketInfo,
+  type UserStakingBalanceByBucket,
   isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  StakingBucket,
+  StakingBucketValues,
   TokenAmount,
   TransactionType,
   type IAddress,
@@ -16,6 +24,9 @@ import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
+import type { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { findBucket } from './findBucket'
+import { BigNumber } from 'bignumber.js'
 
 /**
  * @name ArmadaManager
@@ -25,6 +36,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _blockchainClientProvider: IBlockchainClientProvider
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
+  private _contractsProvider: IContractsProvider
   private _utils: IArmadaManagerUtils
 
   private _hubChainSummerTokenAddress: IAddress
@@ -35,12 +47,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     blockchainClientProvider: IBlockchainClientProvider
     allowanceManager: IAllowanceManager
     tokensManager: ITokensManager
+    contractsProvider: IContractsProvider
     hubChainInfo: IChainInfo
     utils: IArmadaManagerUtils
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._allowanceManager = params.allowanceManager
     this._tokensManager = params.tokensManager
+    this._contractsProvider = params.contractsProvider
     this._hubChainInfo = params.hubChainInfo
     this._utils = params.utils
 
@@ -148,7 +162,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       chainInfo: this._hubChainInfo,
     })
 
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovAddress()
 
     return client.readContract({
       abi: GovernanceRewardsManagerAbi,
@@ -165,7 +179,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       chainInfo: this._hubChainInfo,
     })
 
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovAddress()
 
     // for now reward token is just summer token
     // in future potential partners can be added
@@ -244,14 +258,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakeTx(
     params: Parameters<IArmadaManagerGovernance['getStakeTx']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakeTx']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovAddress()
     return this._getStakeTx(params, rewardsManagerAddress)
   }
 
   async getUnstakeTx(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTx']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTx']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovAddress()
     return this._getUnstakeTx(params, rewardsManagerAddress)
   }
 
@@ -278,14 +292,285 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getStakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakeTxV2']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress('rewardsManagerV2')
-    return this._getStakeTx(params, rewardsManagerAddress)
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const stakeTxInfo = await stakingContract.stakeLockup({
+      amount: params.amount,
+      lockupPeriod: params.lockupPeriod,
+    })
+
+    const stakeTx = {
+      type: TransactionType.Stake,
+      description: stakeTxInfo.description,
+      transaction: stakeTxInfo.transaction,
+    } as const
+
+    const approveToStakeUserTokens = await this._allowanceManager.getApproval({
+      chainInfo: this._hubChainInfo,
+      spender: stakingContractAddress,
+      amount: TokenAmount.createFromBaseUnit({
+        amount: params.amount.toString(),
+        token: this._utils.getSummerToken({
+          chainInfo: this._hubChainInfo,
+        }),
+      }),
+      owner: params.user.wallet.address,
+    })
+
+    if (approveToStakeUserTokens) {
+      return [approveToStakeUserTokens, stakeTx]
+    } else {
+      return [stakeTx]
+    }
+  }
+
+  async getStakeOnBehalfTxV2(
+    params: Parameters<IArmadaManagerGovernance['getStakeOnBehalfTxV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakeOnBehalfTxV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const stakeTxInfo = await stakingContract.stakeLockupOnBehalf({
+      receiver: params.receiver.value,
+      amount: params.amount,
+      lockupPeriod: params.lockupPeriod,
+    })
+
+    const stakeTx = {
+      type: TransactionType.Stake,
+      description: stakeTxInfo.description,
+      transaction: stakeTxInfo.transaction,
+    } as const
+
+    const approveToStakeUserTokens = await this._allowanceManager.getApproval({
+      chainInfo: this._hubChainInfo,
+      spender: stakingContractAddress,
+      amount: TokenAmount.createFromBaseUnit({
+        amount: params.amount.toString(),
+        token: this._utils.getSummerToken({
+          chainInfo: this._hubChainInfo,
+        }),
+      }),
+      owner: params.user.wallet.address,
+    })
+
+    if (approveToStakeUserTokens) {
+      return [approveToStakeUserTokens, stakeTx]
+    } else {
+      return [stakeTx]
+    }
   }
 
   async getUnstakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTxV2']> {
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress('rewardsManagerV2')
-    return this._getUnstakeTx(params, rewardsManagerAddress)
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const unstakeTxInfo = await stakingContract.unstakeLockup({
+      stakeIndex: params.userStakeIndex,
+      amount: params.amount,
+    })
+
+    return [
+      {
+        type: TransactionType.Unstake,
+        description: unstakeTxInfo.description,
+        transaction: unstakeTxInfo.transaction,
+      },
+    ]
+  }
+
+  async getUserStakingBalanceV2(
+    params: Parameters<IArmadaManagerGovernance['getUserStakingBalanceV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakingBalanceV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get the count of user stakes
+    const stakesCount = await stakingContract.getUserStakesCount({
+      user: params.user.wallet.address.value,
+    })
+
+    if (stakesCount === 0n) {
+      // Return empty array with zero balances for all buckets
+      return StakingBucketValues.map((bucket) => ({ bucket: bucket as StakingBucket, amount: 0n }))
+    }
+
+    // Fetch all user stakes
+    const stakesPromises = []
+    for (let i = 0n; i < stakesCount; i++) {
+      stakesPromises.push(
+        stakingContract.getUserStake({
+          user: params.user.wallet.address.value,
+          index: i,
+        }),
+      )
+    }
+
+    const stakesResults = await Promise.all(stakesPromises)
+
+    // Initialize buckets with zero balances
+    const bucketBalances = new Map<StakingBucket, bigint>()
+    for (const bucket of StakingBucketValues) {
+      bucketBalances.set(bucket as StakingBucket, 0n)
+    }
+
+    // Aggregate stakes by bucket
+    stakesResults.forEach((result) => {
+      const [amount, , , lockupPeriod] = result
+      const bucket = findBucket(lockupPeriod)
+      bucketBalances.set(bucket, (bucketBalances.get(bucket) || 0n) + amount)
+    })
+
+    // Convert to array format
+    const resultArray: UserStakingBalanceByBucket[] = []
+    for (const [bucket, amount] of bucketBalances.entries()) {
+      resultArray.push({ bucket, amount })
+    }
+
+    return resultArray
+  }
+
+  async getUserStakingWeightedBalanceV2(
+    params: Parameters<IArmadaManagerGovernance['getUserStakingWeightedBalanceV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakingWeightedBalanceV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    return stakingContract.weightedBalanceOf({
+      account: params.user.wallet.address.value,
+    })
+  }
+
+  async getUserStakingEarnedV2(
+    params: Parameters<IArmadaManagerGovernance['getUserStakingEarnedV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakingEarnedV2']> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
+
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    return client.readContract({
+      abi: SummerStakingAbi,
+      address: stakingContractAddress.value,
+      functionName: 'earned',
+      args: [params.user.wallet.address.value, params.rewardTokenAddress.value],
+    })
+  }
+
+  async getStakingRewardRatesV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingRewardRatesV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingRewardRatesV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Use contract wrapper for all methods
+    const [rewardData, allBucketInfo, userWeightedBalance, _totalWeightedSupply, userRawBalance] =
+      await Promise.all([
+        stakingContract.rewardData({ rewardToken: params.rewardTokenAddress.value }),
+        stakingContract.getAllBucketInfo(),
+        stakingContract.weightedBalanceOf({ account: params.user.wallet.address.value }),
+        stakingContract.totalSupply(),
+        stakingContract.balanceOf({ account: params.user.wallet.address.value }),
+      ])
+
+    const [, , stakedAmounts] = allBucketInfo
+
+    // Calculate total raw staked across all buckets
+    const totalRawStaked = stakedAmounts.reduce((sum: bigint, amount: bigint) => sum + amount, 0n)
+
+    const [, rewardRate] = rewardData
+    const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n
+
+    // Calculate annual rewards
+    const annualRewards = rewardRate * SECONDS_PER_YEAR
+
+    // Calculate APR (Annual Percentage Rate) based on raw staked
+    let summerRewardAPR = 0
+    if (totalRawStaked > 0n) {
+      // APR = (annualRewards / totalRawStaked)
+      // Convert to percentage with precision using BigNumber
+      const annualRewardsBN = new BigNumber(annualRewards.toString())
+      const totalRawStakedBN = new BigNumber(totalRawStaked.toString())
+      summerRewardAPR = annualRewardsBN.dividedBy(totalRawStakedBN).multipliedBy(100).toNumber()
+    }
+
+    // Convert APR to APY (compounding daily)
+    // APY = (1 + APR/365)^365 - 1
+    const compoundingFrequency = 365
+    const summerRewardAPY =
+      Math.pow(1 + summerRewardAPR / 100 / compoundingFrequency, compoundingFrequency) - 1
+
+    // Calculate user's boosted multiplier: weightedBalanceOf(user) / balanceOf(user)
+    let boostedMultiplier = 1
+    if (userRawBalance > 0n) {
+      // Convert to number with precision using BigNumber
+      const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString())
+      const userRawBalanceBN = new BigNumber(userRawBalance.toString())
+      boostedMultiplier = userWeightedBalanceBN.dividedBy(userRawBalanceBN).toNumber()
+    }
+
+    // TODO: For now, USDC yield is a placeholder
+    const usdcYieldAPY = 0
+
+    return {
+      summerRewardAPY: summerRewardAPY * 100, // Convert to percentage
+      usdcYieldAPY,
+      boostedMultiplier,
+    }
+  }
+
+  async getStakingBucketsInfoV2(): ReturnType<IArmadaManagerGovernance['getStakingBucketsInfoV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get all bucket info at once
+    const allBucketInfo = await stakingContract.getAllBucketInfo()
+
+    const [buckets, caps, stakedAmounts, minPeriods, maxPeriods] = allBucketInfo
+
+    const result: StakingBucketInfo[] = []
+    for (let i = 0; i < buckets.length; i++) {
+      result.push({
+        bucket: buckets[i] as StakingBucket,
+        cap: caps[i],
+        totalStaked: stakedAmounts[i],
+        minLockupPeriod: minPeriods[i],
+        maxLockupPeriod: maxPeriods[i],
+      })
+    }
+
+    return result
   }
 }

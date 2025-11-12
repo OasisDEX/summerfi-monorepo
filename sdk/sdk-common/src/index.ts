@@ -64,6 +64,8 @@ export {
   isArmadaMigrationType,
 } from './common/enums/ArmadaMigrationType'
 export { ArmadaMigrationType } from './common/enums/ArmadaMigrationType'
+export { StakingBucketSchema, isStakingBucket } from './common/enums/StakingBucket'
+export { StakingBucket, StakingBucketValues } from './common/enums/StakingBucket'
 export { Address } from './common/implementation/Address'
 export type { AddressParameters } from './common/implementation/Address'
 export { ChainIds, LegacyChainIds } from './common/implementation/ChainIds'

@@ -124,6 +124,7 @@ export class ArmadaManager implements IArmadaManager {
     this.governance = new ArmadaManagerGovernance({
       ...params,
       hubChainInfo: this._hubChainInfo,
+      contractsProvider: this._contractsProvider,
       utils: this.utils,
     })
     this.migrations = new ArmadaManagerMigrations({

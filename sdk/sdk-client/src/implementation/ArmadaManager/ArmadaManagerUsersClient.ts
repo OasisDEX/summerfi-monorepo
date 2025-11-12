@@ -220,10 +220,46 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getStakeTxV2.query(params)
   }
 
+  async getStakeOnBehalfTxV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakeOnBehalfTxV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakeOnBehalfTxV2']> {
+    return this.rpcClient.armada.users.getStakeOnBehalfTxV2.query(params)
+  }
+
   async getUnstakeTxV2(
     params: Parameters<IArmadaManagerUsersClient['getUnstakeTxV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUnstakeTxV2']> {
     return this.rpcClient.armada.users.getUnstakeTxV2.query(params)
+  }
+
+  async getUserStakingBalanceV2(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakingBalanceV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakingBalanceV2']> {
+    return this.rpcClient.armada.users.getUserStakingBalanceV2.query(params)
+  }
+
+  async getUserStakingWeightedBalanceV2(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakingWeightedBalanceV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakingWeightedBalanceV2']> {
+    return this.rpcClient.armada.users.getUserStakingWeightedBalanceV2.query(params)
+  }
+
+  async getUserStakingEarnedV2(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakingEarnedV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakingEarnedV2']> {
+    return this.rpcClient.armada.users.getUserStakingEarnedV2.query(params)
+  }
+
+  async getStakingRewardRatesV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakingRewardRatesV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakingRewardRatesV2']> {
+    return this.rpcClient.armada.users.getStakingRewardRatesV2.query(params)
+  }
+
+  async getStakingBucketsInfoV2(): ReturnType<
+    IArmadaManagerUsersClient['getStakingBucketsInfoV2']
+  > {
+    return this.rpcClient.armada.users.getStakingBucketsInfoV2.query()
   }
 
   async getMigratablePositions(

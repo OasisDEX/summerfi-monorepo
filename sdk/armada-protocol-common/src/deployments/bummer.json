@@ -11,7 +11,7 @@
         "rewardsManager": {
           "address": "0xa563121Fa251E20D7359CD4d8DBDc36810093A51"
         },
-        "rewardsManagerV2": {
+        "summerStaking": {
           "address": "0x902aC48f45FEFEc167Fe65963Bff714287470A3f"
         },
         "timelock": {
