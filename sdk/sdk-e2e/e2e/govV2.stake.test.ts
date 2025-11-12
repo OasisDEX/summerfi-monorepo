@@ -1,5 +1,6 @@
 import { User } from '@summerfi/sdk-common'
 import assert from 'assert'
+import { BigNumber } from 'bignumber.js'
 
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { type TestConfigKey } from './utils/testConfig'
@@ -61,12 +62,21 @@ describe('Armada Protocol Gov V2 Stake', () => {
 
     it('should stake with specified amount and lockup period', async () => {
       const sumrBalanceBefore = await sdk.armada.users.getUserBalance({ user })
-      console.log('SUMR balance before: ', sumrBalanceBefore)
+      console.log(
+        'SUMR balance before: ',
+        BigNumber(sumrBalanceBefore).div(SUMR_DECIMALS).toFixed(),
+      )
       assert(sumrBalanceBefore >= stakeAmount, `Balance should be greater than ${stakeAmount}`)
 
       // Get balance before staking
       const balancesBefore = await sdk.armada.users.getUserStakingBalanceV2({ user })
-      console.log('Staking balances before:', balancesBefore)
+      console.log(
+        'Staking balances before:',
+        balancesBefore.map((b) => ({
+          ...b,
+          amount: BigNumber(b.amount).div(SUMR_DECIMALS).toFixed(),
+        })),
+      )
 
       // Stake with specified lockup period
       const stakeTxV2 = await sdk.armada.users.getStakeTxV2({
