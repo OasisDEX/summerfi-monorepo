@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "e2e": "jest --roots e2e",
-    "e2e:govV2.stakingLockup": "jest --roots e2e -- ./e2e/govV2.stakingLockup.test.ts",
+    "e2e:govV2.stakingInfo": "jest --roots e2e -- ./e2e/govV2.stakingInfo.test.ts",
     "e2e:govV2.stake": "jest --roots e2e -- ./e2e/govV2.stake.test.ts",
     "e2e:govV2.unstake": "jest --roots e2e -- ./e2e/govV2.unstake.test.ts",
     "e2e:intentSwap": "jest --roots e2e -- ./e2e/intentswaps.test.ts",

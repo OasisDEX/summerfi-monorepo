@@ -5,6 +5,9 @@ import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfi
 
 jest.setTimeout(300000)
 
+const SUMR_DECIMALS = 10n ** 18n
+const SECONDS_PER_DAY = 24n * 60n * 60n
+
 describe('Armada Protocol Gov V2 Staking Info', () => {
   const sdk = createTestSDK()
 
@@ -29,11 +32,17 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(bucketsInfo.length).toBeGreaterThan(0)
 
       bucketsInfo.forEach((bucketInfo) => {
+        // Convert to human-readable units
+        const capSumr = bucketInfo.cap / SUMR_DECIMALS
+        const totalStakedSumr = bucketInfo.totalStaked / SUMR_DECIMALS
+        const minLockupDays = bucketInfo.minLockupPeriod / SECONDS_PER_DAY
+        const maxLockupDays = bucketInfo.maxLockupPeriod / SECONDS_PER_DAY
+
         console.log(
-          `Bucket ${bucketInfo.bucket}: cap=${bucketInfo.cap.toString()}, ` +
-            `totalStaked=${bucketInfo.totalStaked.toString()}, ` +
-            `minLockup=${bucketInfo.minLockupPeriod.toString()}s, ` +
-            `maxLockup=${bucketInfo.maxLockupPeriod.toString()}s`,
+          `Bucket ${bucketInfo.bucket}: cap=${capSumr.toString()} SUMR, ` +
+            `totalStaked=${totalStakedSumr.toString()} SUMR, ` +
+            `minLockup=${minLockupDays.toString()} days, ` +
+            `maxLockup=${maxLockupDays.toString()} days`,
         )
       })
     })

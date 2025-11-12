@@ -63,8 +63,9 @@ describe('Armada Protocol Gov V2 Stake', () => {
     const stakeLockupPeriod = (lockupDays ?? 14n) * 24n * 60n * 60n // Convert days to seconds
 
     it('should stake with specified amount and lockup period', async () => {
-      const balance = await sdk.armada.users.getUserBalance({ user })
-      assert(balance >= stakeAmount, `Balance should be greater than ${stakeAmount}`)
+      const sumrBalanceBefore = await sdk.armada.users.getUserBalance({ user })
+      console.log('SUMR balance before: ', sumrBalanceBefore)
+      assert(sumrBalanceBefore >= stakeAmount, `Balance should be greater than ${stakeAmount}`)
 
       // Get balance before staking
       const balancesBefore = await sdk.armada.users.getUserStakingBalanceV2({ user })
@@ -89,8 +90,14 @@ describe('Armada Protocol Gov V2 Stake', () => {
       })
 
       // Get balance after staking
+      const sumrBalanceAfter = await sdk.armada.users.getUserBalance({ user })
       const balancesAfter = await sdk.armada.users.getUserStakingBalanceV2({ user })
-      console.log('Staking balances after:', balancesAfter)
+      console.log(
+        'Staking balances after:',
+        balancesAfter,
+        'Summer balance after: ',
+        sumrBalanceAfter,
+      )
 
       // Verify one of the buckets has increased
       const totalBefore = balancesBefore.reduce((sum, b) => sum + b.amount, 0n)
