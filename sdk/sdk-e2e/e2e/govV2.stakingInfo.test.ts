@@ -2,11 +2,10 @@ import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { createTestSDK } from './utils/sdkInstance'
 import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
+import { formatSumr } from './utils/stringifiers'
+import { SECONDS_PER_DAY } from './utils/constants'
 
 jest.setTimeout(300000)
-
-const SUMR_DECIMALS = 10n ** 18n
-const SECONDS_PER_DAY = 24n * 60n * 60n
 
 describe('Armada Protocol Gov V2 Staking Info', () => {
   const sdk = createTestSDK()
@@ -31,26 +30,52 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(Array.isArray(bucketsInfo)).toBe(true)
       expect(bucketsInfo.length).toBeGreaterThan(0)
 
-      bucketsInfo.forEach((bucketInfo) => {
-        // Convert to human-readable units
-        const capSumr = bucketInfo.cap / SUMR_DECIMALS
-        const totalStakedSumr = bucketInfo.totalStaked / SUMR_DECIMALS
-        const minLockupDays = bucketInfo.minLockupPeriod / SECONDS_PER_DAY
-        const maxLockupDays = bucketInfo.maxLockupPeriod / SECONDS_PER_DAY
+      const bucketMessages = bucketsInfo
+        .map((bucketInfo) => {
+          const capSumr = formatSumr(bucketInfo.cap)
+          const totalStakedSumr = formatSumr(bucketInfo.totalStaked)
+          const minLockupDays = bucketInfo.minLockupPeriod / SECONDS_PER_DAY
+          const maxLockupDays = bucketInfo.maxLockupPeriod / SECONDS_PER_DAY
 
-        console.log(
-          `Bucket ${bucketInfo.bucket}: cap=${capSumr.toString()} SUMR, ` +
-            `totalStaked=${totalStakedSumr.toString()} SUMR, ` +
+          return (
+            `Bucket ${bucketInfo.bucket}: cap=${capSumr} SUMR, ` +
+            `totalStaked=${totalStakedSumr} SUMR, ` +
             `minLockup=${minLockupDays.toString()} days, ` +
-            `maxLockup=${maxLockupDays.toString()} days`,
-        )
-      })
+            `maxLockup=${maxLockupDays.toString()} days`
+          )
+        })
+        .join('\n')
+
+      console.log(bucketMessages)
+    })
+
+    it('should show user SUMR balance', async () => {
+      const sumrBalanceBefore = await sdk.armada.users.getUserBalance({ user })
+      console.log('SUMR balance before: ', formatSumr(sumrBalanceBefore) + ' SUMR')
+    })
+
+    it('should get user staking balance', async () => {
+      const balances = await sdk.armada.users.getUserStakingBalanceV2({ user })
+
+      expect(balances).toBeDefined()
+      expect(Array.isArray(balances)).toBe(true)
+      expect(balances.length).toBeGreaterThan(0)
+
+      const balanceMessages = balances
+        .map((b) => {
+          const amount = formatSumr(b.amount)
+          const bucket = b.bucket
+          return `Bucket ${bucket}: amount=${amount} SUMR`
+        })
+        .join('\n')
+
+      console.log(balanceMessages)
     })
 
     it('should get user weighted staking balance', async () => {
       const weightedBalance = await sdk.armada.users.getUserStakingWeightedBalanceV2({ user })
 
-      console.log('User weighted balance:', weightedBalance.toString())
+      console.log('User weighted balance:', formatSumr(weightedBalance))
       expect(weightedBalance).toBeGreaterThanOrEqual(0n)
     })
 
@@ -63,7 +88,7 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
         rewardTokenAddress: summerToken.address,
       })
 
-      console.log('User earned rewards:', earned.toString())
+      console.log('User earned rewards:', formatSumr(earned))
       expect(earned).toBeGreaterThanOrEqual(0n)
     })
 
