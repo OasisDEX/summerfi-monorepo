@@ -182,9 +182,15 @@ const StepNumber = ({ number }: { number: number }) => {
 const SumrV2StakingManageComponent = ({
   onStake,
   isLoading = false,
+  approveStatus,
+  needsApproval,
+  prepareTxs,
 }: {
   onStake: (params: { amount: BigNumber; lockupDuration: number }) => void
   isLoading?: boolean
+  approveStatus: UiTransactionStatuses | null
+  needsApproval: boolean
+  prepareTxs: (amount: bigint, lockupPeriod: bigint) => Promise<boolean>
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
@@ -255,6 +261,22 @@ const SumrV2StakingManageComponent = ({
     handleAmountChange(e)
   }
 
+  // Prepare transactions when amount or lockup duration changes
+  useEffect(() => {
+    const prepareTransactions = async () => {
+      if (amountParsed.isZero() || amountParsed.isNaN()) {
+        return
+      }
+
+      const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
+      const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
+
+      await prepareTxs(amountBigInt, lockupPeriodSeconds)
+    }
+
+    void prepareTransactions()
+  }, [amountParsed, selectedLockupAndBoost])
+
   const lockupExpirationDate = useMemo(() => {
     if (selectedLockupAndBoost === 0) {
       return 'N/A'
@@ -319,13 +341,18 @@ const SumrV2StakingManageComponent = ({
     isLoading,
   ])
 
+  const getButtonLabel = () => {
+    if (approveStatus === UiTransactionStatuses.PENDING) {
+      return needsApproval ? 'Approving...' : 'Staking...'
+    }
+    if (approveStatus !== UiTransactionStatuses.COMPLETED && needsApproval) {
+      return 'Approve SUMR'
+    }
+
+    return 'Confirm Stake & Lock'
+  }
+
   const onConfirmStake = () => {
-    // Huh?
-    // eslint-disable-next-line no-console
-    console.log('Stake confirmed:', {
-      amount: amountDisplay,
-      lockupDuration: selectedLockupAndBoost,
-    })
     onStake({
       amount: amountParsed,
       lockupDuration: selectedLockupAndBoost,
@@ -870,7 +897,7 @@ const SumrV2StakingManageComponent = ({
               style={{ alignSelf: 'flex-end', minWidth: 'auto' }}
               onClick={onConfirmStake}
             >
-              {isLoading ? 'Processing...' : 'Confirm Stake & Lock'}
+              {getButtonLabel()}
             </Button>
           </div>
         </div>
@@ -1033,6 +1060,7 @@ const SumrV2StakingIntermediary = () => {
   }>()
   const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
   const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
+  // todo
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
     useStakeSumrTransactionV2({
@@ -1121,6 +1149,9 @@ const SumrV2StakingIntermediary = () => {
           approveStatus === UiTransactionStatuses.PENDING ||
           stakeStatus === UiTransactionStatuses.PENDING
         }
+        approveStatus={approveStatus}
+        needsApproval={!!approveSumrTransaction}
+        prepareTxs={prepareTxs}
       />
     )
   }
