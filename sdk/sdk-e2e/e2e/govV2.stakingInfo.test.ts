@@ -104,8 +104,13 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       console.log('Reward rates for user:', rewardRates)
       expect(rewardRates).toBeDefined()
       expect(rewardRates.summerRewardAPY).toBeGreaterThanOrEqual(0)
-      expect(rewardRates.usdcYieldAPY).toBeGreaterThanOrEqual(0)
       expect(rewardRates.boostedMultiplier).toBeGreaterThanOrEqual(1) // Should be >= 1x
+      expect(rewardRates.baseApy).toBeGreaterThanOrEqual(0)
+      expect(rewardRates.maxApy).toBeGreaterThanOrEqual(0)
+      // maxApy should be baseApy * MAX_MULTIPLE (7.2655)
+      if (rewardRates.baseApy > 0) {
+        expect(rewardRates.maxApy).toBeCloseTo(rewardRates.baseApy * 7.2655, 2)
+      }
     })
 
     it('should calculate weighted stake for a given amount and lockup period', async () => {

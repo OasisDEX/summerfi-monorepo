@@ -543,13 +543,44 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       boostedMultiplier = userWeightedBalanceBN.dividedBy(userRawBalanceBN).toNumber()
     }
 
-    // TODO: For now, USDC yield is a placeholder
-    const usdcYieldAPY = 0
+    // Get staking revenue share to calculate baseApy
+    const revenueShare = await this.getStakingRevenueShareV2()
+    const stakingRevenueAmount = revenueShare.amount // in USD
+
+    // Get SUMR token and its decimals
+    const sumrToken = this._utils.getSummerToken({
+      chainInfo: this._hubChainInfo,
+    })
+    const sumrDecimals = sumrToken.decimals
+
+    // Get SUMR price from utils
+    const sumrPrice = this._utils.getSummerPrice()
+
+    let baseApy = 0
+    let maxApy = 0
+
+    if (totalRawStaked > 0n && stakingRevenueAmount > 0 && sumrPrice > 0) {
+      // Convert totalRawStaked from wei to token amount using actual decimals
+      const totalRawStakedTokens = new BigNumber(totalRawStaked.toString()).dividedBy(
+        new BigNumber(10).pow(sumrDecimals),
+      )
+
+      // baseApy = staking revenue amount / staked sumr value
+      const stakedSumrValue = new BigNumber(sumrPrice).multipliedBy(totalRawStakedTokens)
+      baseApy = new BigNumber(stakingRevenueAmount)
+        .dividedBy(stakedSumrValue)
+        .multipliedBy(100)
+        .toNumber() // Convert to percentage
+
+      // maxApy = baseApy * MAX_MULTIPLE
+      maxApy = baseApy * MAX_MULTIPLE
+    }
 
     return {
       summerRewardAPY: summerRewardAPY * 100, // Convert to percentage
-      usdcYieldAPY,
       boostedMultiplier,
+      baseApy,
+      maxApy,
     }
   }
 

@@ -22,8 +22,9 @@ export interface UserStakingBalanceByBucket {
  */
 export interface StakingRewardRates {
   summerRewardAPY: number
-  usdcYieldAPY: number
   boostedMultiplier: number
+  baseApy: number
+  maxApy: number
 }
 
 /**
