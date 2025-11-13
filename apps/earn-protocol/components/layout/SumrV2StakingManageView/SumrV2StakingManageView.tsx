@@ -1,17 +1,20 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   AnimateHeight,
   Button,
   Card,
   CheckboxButton,
   DataBlock,
+  ERROR_TOAST_CONFIG,
   Expander,
   Icon,
   InputWithDropdown,
   OrderInformation,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useAmount,
@@ -19,7 +22,8 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { UiTransactionStatuses } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalToBigInt } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
@@ -32,6 +36,7 @@ import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
+import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -176,8 +181,10 @@ const StepNumber = ({ number }: { number: number }) => {
 
 const SumrV2StakingManageComponent = ({
   onStake,
+  isLoading = false,
 }: {
   onStake: (params: { amount: BigNumber; lockupDuration: number }) => void
+  isLoading?: boolean
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
@@ -297,6 +304,10 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
+    if (isLoading) {
+      return true
+    }
+
     return false
   }, [
     amountDisplay,
@@ -305,6 +316,7 @@ const SumrV2StakingManageComponent = ({
     sumrBalanceOnSourceChain,
     warningAccepted,
     bucketsLoading,
+    isLoading,
   ])
 
   const onConfirmStake = () => {
@@ -858,7 +870,7 @@ const SumrV2StakingManageComponent = ({
               style={{ alignSelf: 'flex-end', minWidth: 'auto' }}
               onClick={onConfirmStake}
             >
-              Confirm Stake & Lock
+              {isLoading ? 'Processing...' : 'Confirm Stake & Lock'}
             </Button>
           </div>
         </div>
@@ -1014,21 +1026,105 @@ const SumrV2StakingSuccessComponent = ({
 }
 
 const SumrV2StakingIntermediary = () => {
-  // Huh?
-  // simple mapping steps, will need to include actual tx logic
   const [step, setStep] = useState<'init' | 'done'>('init')
   const [txData, setTxData] = useState<{
     amount: BigNumber
     lockupDuration: number
   }>()
+  const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
+  const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
 
-  const onStake = ({ amount, lockupDuration }: { amount: BigNumber; lockupDuration: number }) => {
+  const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
+    useStakeSumrTransactionV2({
+      onStakeSuccess: () => {
+        setStakeStatus(UiTransactionStatuses.COMPLETED)
+        setStep('done')
+        toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onApproveSuccess: () => {
+        setApproveStatus(UiTransactionStatuses.COMPLETED)
+        toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onStakeError: () => {
+        setStakeStatus(UiTransactionStatuses.FAILED)
+        toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+      onApproveError: () => {
+        setApproveStatus(UiTransactionStatuses.FAILED)
+        toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+    })
+
+  const onStake = async ({
+    amount,
+    lockupDuration,
+  }: {
+    amount: BigNumber
+    lockupDuration: number
+  }) => {
+    if (amount.isZero() || amount.isNaN()) {
+      toast.error('Invalid staking amount', ERROR_TOAST_CONFIG)
+
+      return
+    }
+
     setTxData({ amount, lockupDuration })
-    setStep('done')
+
+    try {
+      // Convert amount to bigint with proper decimals
+      const amountBigInt = formatDecimalToBigInt(amount.toString())
+      // Convert lockup duration from days to seconds
+      const lockupPeriodSeconds = BigInt(lockupDuration * 24 * 60 * 60)
+
+      // Prepare the transactions
+      const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
+
+      if (!prepared) {
+        toast.error('Failed to prepare staking transaction', ERROR_TOAST_CONFIG)
+
+        return
+      }
+
+      // Execute approve transaction first if needed
+      if (approveSumrTransaction && approveStatus !== UiTransactionStatuses.COMPLETED) {
+        setApproveStatus(UiTransactionStatuses.PENDING)
+        await approveSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error approving staking $SUMR:', err)
+
+          throw err
+        })
+
+        return
+      }
+
+      // Execute stake transaction
+      if (stakeSumrTransaction) {
+        setStakeStatus(UiTransactionStatuses.PENDING)
+        await stakeSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error staking $SUMR:', err)
+
+          throw err
+        })
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Staking error:', error)
+    }
   }
 
   if (step === 'init') {
-    return <SumrV2StakingManageComponent onStake={onStake} />
+    return (
+      <SumrV2StakingManageComponent
+        onStake={onStake}
+        isLoading={
+          isLoading ||
+          approveStatus === UiTransactionStatuses.PENDING ||
+          stakeStatus === UiTransactionStatuses.PENDING
+        }
+      />
+    )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
