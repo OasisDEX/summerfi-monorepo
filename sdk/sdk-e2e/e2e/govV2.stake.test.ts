@@ -1,14 +1,12 @@
 import { User } from '@summerfi/sdk-common'
 import assert from 'assert'
-import { BigNumber } from 'bignumber.js'
 
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import { type TestConfigKey } from './utils/testConfig'
+import { formatSumr } from './utils/stringifiers'
+import { SECONDS_PER_DAY, SUMR_DECIMALS } from './utils/constants'
 
 jest.setTimeout(300000)
-
-const SUMR_DECIMALS = 10n ** 18n
-const SECONDS_PER_DAY = 24n * 60n * 60n
 
 describe('Armada Protocol Gov V2 Stake', () => {
   const scenarios: {
@@ -62,10 +60,7 @@ describe('Armada Protocol Gov V2 Stake', () => {
 
     it('should stake with specified amount and lockup period', async () => {
       const sumrBalanceBefore = await sdk.armada.users.getUserBalance({ user })
-      console.log(
-        'SUMR balance before: ',
-        BigNumber(sumrBalanceBefore).div(SUMR_DECIMALS).toFixed(),
-      )
+      console.log('SUMR balance before: ', formatSumr(sumrBalanceBefore) + ' SUMR')
       assert(sumrBalanceBefore >= stakeAmount, `Balance should be greater than ${stakeAmount}`)
 
       // Get balance before staking
@@ -74,7 +69,7 @@ describe('Armada Protocol Gov V2 Stake', () => {
         'Staking balances before:',
         balancesBefore.map((b) => ({
           ...b,
-          amount: BigNumber(b.amount).div(SUMR_DECIMALS).toFixed(),
+          amount: formatSumr(b.amount),
         })),
       )
 

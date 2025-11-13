@@ -3,10 +3,9 @@ import assert from 'assert'
 
 import { type TestConfigKey } from './utils/testConfig'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
+import { SUMR_DECIMALS } from './utils/constants'
 
 jest.setTimeout(300000)
-
-const SUMR_DECIMALS = 10n ** 18n
 
 describe('Armada Protocol Gov V2 Unstake', () => {
   const scenarios: {
