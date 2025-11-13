@@ -88,16 +88,19 @@ describe('Armada Protocol Gov V2 Stake', () => {
       })
 
       const stakeStatus = await userSendTxTool(stakeTxV2)
-      // stakeStatus.forEach((s) => expect(s).toBe('success'))
+      stakeStatus.forEach((s) => expect(s).toBe('success'))
 
       // Get balance after staking
       const sumrBalanceAfter = await sdk.armada.users.getUserBalance({ user })
       const balancesAfter = await sdk.armada.users.getUserStakingBalanceV2({ user })
       console.log(
         'Staking balances after:',
-        balancesAfter,
-        'Summer balance after: ',
-        sumrBalanceAfter,
+        balancesAfter.map((b) => ({
+          ...b,
+          amount: formatSumr(b.amount),
+        })),
+        '\nSummer balance after: ',
+        formatSumr(sumrBalanceAfter),
       )
 
       // Verify one of the buckets has increased
