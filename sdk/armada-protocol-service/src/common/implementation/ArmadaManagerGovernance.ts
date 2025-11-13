@@ -20,8 +20,6 @@ import {
   Percentage,
   type IAddress,
   type IChainInfo,
-  LoggingService,
-  ChainIds,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -30,6 +28,8 @@ import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
+
+const MAX_MULTIPLE = 7.2655
 
 /**
  * @name ArmadaManager
@@ -632,39 +632,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakingRevenueShareV2(): ReturnType<
     IArmadaManagerGovernance['getStakingRevenueShareV2']
   > {
-    // Return static 20% revenue share
-    return Percentage.createFrom({ value: 20 })
-  }
+    const percentage = Percentage.createFrom({ value: 20 })
+    const totalRevenue = await this._vaults.getProtocolRevenue()
+    console.log({
+      totalRevenue,
+      percentage: percentage.toProportion(),
+    })
+    const amount = totalRevenue * percentage.toProportion()
 
-  async getStakingRevenueAmountV2(): ReturnType<
-    IArmadaManagerGovernance['getStakingRevenueAmountV2']
-  > {
-    if (!this._vaults) {
-      throw new Error('Vaults manager not initialized')
-    }
-
-    // Get vaults info list on all chains by creating a promise array
-
-    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
-      this._vaults.getVaultInfoList({ chainId }),
-    )
-    const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
-
-    LoggingService.debug(
-      `getStakingRevenueAmountV2 vaults: ${vaults.map((v) => v.tvlUsd).join(', ')}`,
-    )
-
-    // Calculate revenue for each vault based on token symbol
-    // WETH vaults: 0.3% of TVL
-    // Non-WETH vaults: 1% of TVL
-    const revenueAmount = vaults.reduce((acc, vault) => {
-      const tvlAmount = parseFloat(vault.tvlUsd.amount)
-      const isWETH = vault.token.symbol === 'WETH'
-      const revenuePercentage = isWETH ? 0.003 : 0.01
-      const vaultRevenue = tvlAmount * revenuePercentage
-      return acc + vaultRevenue
-    }, 0)
-
-    return revenueAmount
+    return { percentage, amount }
   }
 }

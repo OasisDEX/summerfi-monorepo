@@ -278,17 +278,9 @@ export interface IArmadaManagerGovernance {
 
   /**
    * @method getStakingRevenueShareV2
-   * @description Returns the revenue share percentage for stakers (V2)
+   * @description Returns the revenue share percentage for stakers and the calculated amount (V2)
    *
-   * @returns The revenue share as a percentage
+   * @returns Object containing the revenue share percentage and calculated amount in USD
    */
-  getStakingRevenueShareV2: () => Promise<IPercentage>
-
-  /**
-   * @method getStakingRevenueAmountV2
-   * @description Calculates the total revenue amount for stakers in USD (V2)
-   *
-   * @returns The revenue amount in USD as a number
-   */
-  getStakingRevenueAmountV2: () => Promise<number>
+  getStakingRevenueShareV2: () => Promise<{ percentage: IPercentage; amount: number }>
 }

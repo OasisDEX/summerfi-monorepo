@@ -138,18 +138,26 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(totalSumrStaked).toBeGreaterThanOrEqual(0n)
     })
 
-    it('should get staking revenue share percentage', async () => {
+    it('should get staking revenue share percentage and amount', async () => {
       const revenueShare = await sdk.armada.users.getStakingRevenueShareV2()
 
-      console.log('Staking revenue share:', revenueShare.value, '%')
-      expect(revenueShare.value).toBeGreaterThan(0)
-      expect(revenueShare.value).toBeLessThanOrEqual(100)
+      console.log(
+        'Staking revenue share:',
+        revenueShare.percentage.value,
+        '%',
+        '\nStaking revenue amount:',
+        revenueShare.amount,
+        'USD',
+      )
+      expect(revenueShare.percentage.value).toBeGreaterThan(0)
+      expect(revenueShare.percentage.value).toBeLessThanOrEqual(100)
+      expect(revenueShare.amount).toBeGreaterThanOrEqual(0)
     })
 
-    it('should get staking revenue amount', async () => {
-      const revenueAmount = await sdk.armada.users.getStakingRevenueAmountV2()
+    it('should get protocol revenue amount', async () => {
+      const revenueAmount = await sdk.armada.users.getProtocolRevenue()
 
-      console.log('Staking revenue amount:', revenueAmount.toLocaleString(), 'USD')
+      console.log('Protocol revenue amount:', revenueAmount.toLocaleString(), 'USD')
       expect(revenueAmount).toBeGreaterThanOrEqual(0)
     })
   })

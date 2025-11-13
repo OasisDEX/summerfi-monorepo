@@ -139,6 +139,14 @@ export interface IArmadaManagerUsersClient {
   }>
 
   /**
+   * @method getProtocolRevenue
+   * @description Calculates the total protocol revenue amount in USD across all vaults and chains
+   *
+   * @returns The revenue amount in USD as a number
+   */
+  getProtocolRevenue(): Promise<number>
+
+  /**
    * @method getVaultsHistoricalRates
    * @description Retrieves historical rates for a list of fleets across chains
    * @param params.fleets Array of fleet descriptors with fleetAddress and chainId
@@ -622,19 +630,11 @@ export interface IArmadaManagerUsersClient {
 
   /**
    * @method getStakingRevenueShareV2
-   * @description Returns the revenue share percentage for stakers
+   * @description Returns the revenue share percentage for stakers and the calculated amount
    *
-   * @returns The revenue share percentage
+   * @returns Object containing the revenue share percentage and calculated amount in USD
    */
-  getStakingRevenueShareV2(): Promise<IPercentage>
-
-  /**
-   * @method getStakingRevenueAmountV2
-   * @description Returns the total revenue amount available for stakers
-   *
-   * @returns The revenue amount in USD
-   */
-  getStakingRevenueAmountV2(): Promise<number>
+  getStakingRevenueShareV2(): Promise<{ percentage: IPercentage; amount: number }>
 
   /**
    * @method getMigratablePositions

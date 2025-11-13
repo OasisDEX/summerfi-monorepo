@@ -37,6 +37,7 @@ import {
   fetchWithTimeout,
   type IPrice,
   type VaultApys,
+  ChainIds,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -1973,5 +1974,26 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     return {
       byFleetAddress: getByFleetAddressFallback(chainId, sumrToken),
     }
+  }
+
+  async getProtocolRevenue(): ReturnType<IArmadaManagerVaults['getProtocolRevenue']> {
+    // Get vaults info list on all chains by creating a promise array
+    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
+      this.getVaultInfoList({ chainId }),
+    )
+    const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
+
+    // Calculate revenue for each vault based on token symbol
+    // WETH vaults: 0.3% of TVL
+    // Non-WETH vaults: 1% of TVL
+    const revenueAmount = vaults.reduce((acc, vault) => {
+      const tvlAmount = parseFloat(vault.tvlUsd.amount)
+      const isWETH = vault.token.symbol === 'WETH'
+      const revenuePercentage = isWETH ? 0.003 : 0.01
+      const vaultRevenue = tvlAmount * revenuePercentage
+      return acc + vaultRevenue
+    }, 0)
+
+    return revenueAmount
   }
 }

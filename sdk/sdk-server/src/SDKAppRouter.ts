@@ -68,7 +68,6 @@ import { getStakingCalculateWeightedStakeV2 } from './armada-protocol-handlers/u
 import { getStakingTotalWeightedSupplyV2 } from './armada-protocol-handlers/users/getStakingTotalWeightedSupplyV2'
 import { getStakingTotalSumrStakedV2 } from './armada-protocol-handlers/users/getStakingTotalSumrStakedV2'
 import { getStakingRevenueShareV2 } from './armada-protocol-handlers/users/getStakingRevenueShareV2'
-import { getStakingRevenueAmountV2 } from './armada-protocol-handlers/users/getStakingRevenueAmountV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
@@ -88,6 +87,7 @@ import { intentSwapsCancelOrder } from './handlers/intentSwapsCancelOrder'
 import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
+import { getProtocolRevenue } from './armada-protocol-handlers/users/getProtocolRevenue'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
@@ -157,6 +157,7 @@ export const sdkAppRouter = router({
       getUserActivityRaw: getUserActivityRaw,
       getVaultInfo: getVaultInfo,
       getVaultInfoList: getVaultInfoList,
+      getProtocolRevenue: getProtocolRevenue,
       getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
       getPositionHistory: getPositionHistory,
@@ -193,7 +194,6 @@ export const sdkAppRouter = router({
       getStakingTotalWeightedSupplyV2: getStakingTotalWeightedSupplyV2,
       getStakingTotalSumrStakedV2: getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2: getStakingRevenueShareV2,
-      getStakingRevenueAmountV2: getStakingRevenueAmountV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,

@@ -32,6 +32,14 @@ import type { HistoricalFleetRateResult } from '@summerfi/sdk-common'
  */
 export interface IArmadaManagerUtils {
   /**
+   * @method getSummerPrice
+   * @description Retrieves the current price of the Summer token
+   *
+   * @returns The current price of the Summer token
+   */
+  getSummerPrice(): number
+
+  /**
    * @method getSummerToken
    * @description Retrieves the Summer token for a given chain
    *

@@ -56,6 +56,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getVaultInfoList.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getProtocolRevenue */
+  async getProtocolRevenue(): ReturnType<IArmadaManagerUsersClient['getProtocolRevenue']> {
+    return this.rpcClient.armada.users.getProtocolRevenue.query()
+  }
+
   /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPositions(params: Parameters<IArmadaManagerUsersClient['getUserPositions']>[0]) {
     return this.rpcClient.armada.users.getUserPositions.query(params)
@@ -284,12 +289,6 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     IArmadaManagerUsersClient['getStakingRevenueShareV2']
   > {
     return this.rpcClient.armada.users.getStakingRevenueShareV2.query()
-  }
-
-  async getStakingRevenueAmountV2(): ReturnType<
-    IArmadaManagerUsersClient['getStakingRevenueAmountV2']
-  > {
-    return this.rpcClient.armada.users.getStakingRevenueAmountV2.query()
   }
 
   async getMigratablePositions(

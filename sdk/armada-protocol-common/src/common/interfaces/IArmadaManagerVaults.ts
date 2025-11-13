@@ -159,4 +159,12 @@ export interface IArmadaManagerVaults {
         | undefined
     }
   }>
+
+  /**
+   * @method getProtocolRevenue
+   * @description Calculates the total protocol revenue amount in USD across all vaults and chains
+   *
+   * @returns The revenue amount in USD as a number
+   */
+  getProtocolRevenue(): Promise<number>
 }

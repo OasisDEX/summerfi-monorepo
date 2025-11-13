@@ -30,7 +30,7 @@ import { getStakingCalculateWeightedStakeV2Handler } from '../handlers/getStakin
 import { getStakingTotalWeightedSupplyV2Handler } from '../handlers/getStakingTotalWeightedSupplyV2Handler'
 import { getStakingTotalSumrStakedV2Handler } from '../handlers/getStakingTotalSumrStakedV2Handler'
 import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueShareV2Handler'
-import { getStakingRevenueAmountV2Handler } from '../handlers/getStakingRevenueAmountV2Handler'
+import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
@@ -148,7 +148,7 @@ export const useSDK = (params: UseSdk) => {
   )
   const getStakingTotalSumrStakedV2 = useMemo(() => getStakingTotalSumrStakedV2Handler(sdk), [sdk])
   const getStakingRevenueShareV2 = useMemo(() => getStakingRevenueShareV2Handler(sdk), [sdk])
-  const getStakingRevenueAmountV2 = useMemo(() => getStakingRevenueAmountV2Handler(sdk), [sdk])
+  const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
@@ -212,7 +212,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalWeightedSupplyV2,
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
-      getStakingRevenueAmountV2,
+      getProtocolRevenue,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
@@ -271,7 +271,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalWeightedSupplyV2,
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
-      getStakingRevenueAmountV2,
+      getProtocolRevenue,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
