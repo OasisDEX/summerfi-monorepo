@@ -33,6 +33,7 @@ import {
   Percentage,
   Price,
   FiatCurrency,
+  FiatCurrencyAmount,
   fetchWithTimeout,
   type IPrice,
   type VaultApys,
@@ -1628,6 +1629,12 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       denominator: totalShares,
     })
 
+    // Calculate tvlUsd from rawVault data or default to 0
+    const tvlUsd = FiatCurrencyAmount.createFrom({
+      fiat: FiatCurrency.USD,
+      amount: params.rawVault?.totalValueLockedUSD ?? '0',
+    })
+
     return ArmadaVaultInfo.createFrom({
       id: params.vaultId,
       token: token,
@@ -1645,6 +1652,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       },
       rewardsApys: rewardsApys.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
       merklRewards: merklRewards.byFleetAddress[params.vaultId.fleetAddress.toSolidityValue()],
+      tvlUsd: tvlUsd,
     })
   }
 
@@ -1668,7 +1676,10 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
         chainInfo,
         fleetAddress: Address.createFromEthereum({ value: rawVault.id }),
       })
-      return this.getVaultInfo({ vaultId })
+      return this.getVaultInfo({
+        vaultId,
+        rawVault: { totalValueLockedUSD: rawVault.totalValueLockedUSD },
+      })
     })
 
     const list = await Promise.all(vaultInfoPromises)

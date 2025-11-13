@@ -7,6 +7,7 @@ import type { IPercentage } from '../interfaces/IPercentage'
 import type { IPrice } from '../interfaces/IPrice'
 import type { IToken } from '../interfaces/IToken'
 import type { ITokenAmount } from '../interfaces/ITokenAmount'
+import type { IFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import type { VaultApys } from '../types/VaultApys'
 import { PoolInfo } from './PoolInfo'
 
@@ -46,6 +47,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
         dailyEmission: string
       }>
     | undefined
+  readonly tvlUsd: IFiatCurrencyAmount
 
   /** FACTORY */
   static createFrom(params: ArmadaVaultInfoParameters): ArmadaVaultInfo {
@@ -67,6 +69,7 @@ export class ArmadaVaultInfo extends PoolInfo implements IArmadaVaultInfo {
     this.apys = params.apys
     this.rewardsApys = params.rewardsApys
     this.merklRewards = params.merklRewards
+    this.tvlUsd = params.tvlUsd
   }
 }
 
