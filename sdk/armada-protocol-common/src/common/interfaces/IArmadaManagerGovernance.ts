@@ -3,6 +3,7 @@ import type {
   DelegateTransactionInfo,
   IAddress,
   IUser,
+  IPercentage,
   StakeTransactionInfo,
   StakingBucket,
   UnstakeTransactionInfo,
@@ -244,4 +245,50 @@ export interface IArmadaManagerGovernance {
    * @returns Array of bucket information
    */
   getStakingBucketsInfoV2: () => Promise<StakingBucketInfo[]>
+
+  /**
+   * @method getStakingCalculateWeightedStakeV2
+   * @description Calculates the weighted stake for a given amount and lockup period (V2)
+   *
+   * @param amount The amount to stake
+   * @param lockupPeriod The lockup period in seconds
+   *
+   * @returns The calculated weighted stake
+   */
+  getStakingCalculateWeightedStakeV2: (params: {
+    amount: bigint
+    lockupPeriod: bigint
+  }) => Promise<bigint>
+
+  /**
+   * @method getStakingTotalWeightedSupplyV2
+   * @description Returns the total weighted supply of staked tokens (V2)
+   *
+   * @returns The total weighted supply
+   */
+  getStakingTotalWeightedSupplyV2: () => Promise<bigint>
+
+  /**
+   * @method getStakingTotalSumrStakedV2
+   * @description Returns the total SUMR staked across all buckets (V2)
+   *
+   * @returns The total SUMR staked
+   */
+  getStakingTotalSumrStakedV2: () => Promise<bigint>
+
+  /**
+   * @method getStakingRevenueShareV2
+   * @description Returns the revenue share percentage for stakers (V2)
+   *
+   * @returns The revenue share as a percentage
+   */
+  getStakingRevenueShareV2: () => Promise<IPercentage>
+
+  /**
+   * @method getStakingRevenueAmountV2
+   * @description Calculates the total revenue amount for stakers in USD (V2)
+   *
+   * @returns The revenue amount in USD as a number
+   */
+  getStakingRevenueAmountV2: () => Promise<number>
 }

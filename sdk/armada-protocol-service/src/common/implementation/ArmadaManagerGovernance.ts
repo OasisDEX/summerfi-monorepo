@@ -17,6 +17,7 @@ import {
   StakingBucketValues,
   TokenAmount,
   TransactionType,
+  Percentage,
   type IAddress,
   type IChainInfo,
 } from '@summerfi/sdk-common'
@@ -38,6 +39,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _tokensManager: ITokensManager
   private _contractsProvider: IContractsProvider
   private _utils: IArmadaManagerUtils
+  private _vaults: import('@summerfi/armada-protocol-common').IArmadaManagerVaults
 
   private _hubChainSummerTokenAddress: IAddress
   private _hubChainInfo: IChainInfo
@@ -50,6 +52,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     contractsProvider: IContractsProvider
     hubChainInfo: IChainInfo
     utils: IArmadaManagerUtils
+    vaults: import('@summerfi/armada-protocol-common').IArmadaManagerVaults
   }) {
     this._blockchainClientProvider = params.blockchainClientProvider
     this._allowanceManager = params.allowanceManager
@@ -57,6 +60,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     this._contractsProvider = params.contractsProvider
     this._hubChainInfo = params.hubChainInfo
     this._utils = params.utils
+    this._vaults = params.vaults
 
     const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
 
@@ -572,5 +576,86 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
 
     return result
+  }
+
+  async getStakingCalculateWeightedStakeV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingCalculateWeightedStakeV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingCalculateWeightedStakeV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    return stakingContract.calculateWeightedStake({
+      amount: params.amount,
+      lockupPeriod: params.lockupPeriod,
+    })
+  }
+
+  async getStakingTotalWeightedSupplyV2(): ReturnType<
+    IArmadaManagerGovernance['getStakingTotalWeightedSupplyV2']
+  > {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    return stakingContract.totalSupply()
+  }
+
+  async getStakingTotalSumrStakedV2(): ReturnType<
+    IArmadaManagerGovernance['getStakingTotalSumrStakedV2']
+  > {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get all bucket info and sum the staked amounts
+    const allBucketInfo = await stakingContract.getAllBucketInfo()
+    const [, , stakedAmounts] = allBucketInfo
+
+    // Sum all staked amounts across buckets
+    const totalStaked = stakedAmounts.reduce((acc, amount) => acc + amount, 0n)
+
+    return totalStaked
+  }
+
+  async getStakingRevenueShareV2(): ReturnType<
+    IArmadaManagerGovernance['getStakingRevenueShareV2']
+  > {
+    // Return static 20% revenue share
+    return Percentage.createFrom({ value: 0.2 })
+  }
+
+  async getStakingRevenueAmountV2(): ReturnType<
+    IArmadaManagerGovernance['getStakingRevenueAmountV2']
+  > {
+    if (!this._vaults) {
+      throw new Error('Vaults manager not initialized')
+    }
+
+    // Get all vaults info using getVaultInfoList from armada manager vaults module
+    const vaultsResult = await this._vaults.getVaultInfoList({
+      chainId: this._hubChainInfo.chainId,
+    })
+
+    // Sum all vault TVL USD values
+    const totalProtocolTvlUsd = vaultsResult.list.reduce((acc, vault) => {
+      const tvlAmount = parseFloat(vault.tvlUsd.amount)
+      return acc + tvlAmount
+    }, 0)
+
+    // Calculate revenue as revenue share percentage of total protocol TVL
+    const revenueShare = await this.getStakingRevenueShareV2()
+    const revenueAmount = totalProtocolTvlUsd * parseFloat(revenueShare.value.toString())
+
+    return revenueAmount
   }
 }

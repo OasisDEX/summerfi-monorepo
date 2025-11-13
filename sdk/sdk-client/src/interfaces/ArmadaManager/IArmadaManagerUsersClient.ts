@@ -592,6 +592,51 @@ export interface IArmadaManagerUsersClient {
   getStakingBucketsInfoV2(): Promise<StakingBucketInfo[]>
 
   /**
+   * @method getStakingCalculateWeightedStakeV2
+   * @description Calculates the weighted stake for a given amount and lockup period
+   *
+   * @param params.amount - The amount to stake
+   * @param params.lockupPeriod - The lockup period in seconds
+   * @returns The weighted stake amount as bigint
+   */
+  getStakingCalculateWeightedStakeV2(params: {
+    amount: bigint
+    lockupPeriod: bigint
+  }): Promise<bigint>
+
+  /**
+   * @method getStakingTotalWeightedSupplyV2
+   * @description Returns the total weighted supply of staked tokens
+   *
+   * @returns The total weighted supply as bigint
+   */
+  getStakingTotalWeightedSupplyV2(): Promise<bigint>
+
+  /**
+   * @method getStakingTotalSumrStakedV2
+   * @description Returns the total amount of SUMR tokens staked across all buckets
+   *
+   * @returns The total staked amount as bigint
+   */
+  getStakingTotalSumrStakedV2(): Promise<bigint>
+
+  /**
+   * @method getStakingRevenueShareV2
+   * @description Returns the revenue share percentage for stakers
+   *
+   * @returns The revenue share percentage
+   */
+  getStakingRevenueShareV2(): Promise<IPercentage>
+
+  /**
+   * @method getStakingRevenueAmountV2
+   * @description Returns the total revenue amount available for stakers
+   *
+   * @returns The revenue amount in USD
+   */
+  getStakingRevenueAmountV2(): Promise<number>
+
+  /**
    * @method getMigratablePositions
    * @description Returns the positions that can be migrated
    *
