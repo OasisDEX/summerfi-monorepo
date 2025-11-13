@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   AnimateHeight,
   Button,
@@ -22,7 +22,7 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { ChainIds } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -32,6 +32,7 @@ import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useToken } from '@/hooks/use-token'
@@ -39,16 +40,30 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 
 import sumrV2StakingManageViewStyles from './SumrV2StakingManageView.module.css'
 
-// Huh?
-const lockBucketAvailabilityMap = {
-  90: 300,
-  180: 12000,
-  360: 1000000,
-  720: 1000000,
-  1080: 10000000,
+export type LockBucketAvailabilityMap = {
+  0: number
+  14: number
+  90: number
+  180: number
+  360: number
+  720: number
+  1080: number
 }
 
-const mapLockBucketToAvailability = (days: number) => {
+const mapLockBucketToAvailability = (
+  lockBucketAvailabilityMap: LockBucketAvailabilityMap | null,
+  days: number,
+) => {
+  if (!lockBucketAvailabilityMap) {
+    return 0
+  }
+
+  if (days === 0) {
+    return lockBucketAvailabilityMap[0]
+  }
+  if (days < 14) {
+    return lockBucketAvailabilityMap[14]
+  }
   if (days < 90) {
     return lockBucketAvailabilityMap[90]
   }
@@ -66,6 +81,12 @@ const mapLockBucketToAvailability = (days: number) => {
 }
 
 const mapLockBucketToRange = (days: number) => {
+  if (days === 0) {
+    return 'No lockup'
+  }
+  if (days < 14) {
+    return 'Up to 14 days'
+  }
   if (days < 90) {
     return '14 days - 3m'
   }
@@ -101,6 +122,50 @@ const availabilityColorMap: { [key in 'low' | 'medium' | 'high']: string } = {
   high: 'var(--earn-protocol-success-100)',
 }
 
+const mapBucketsInfoToAvailabilityMap = (
+  bucketsInfo: { bucket: number; cap: bigint }[],
+): LockBucketAvailabilityMap => {
+  // Map bucket indexes to lockBucketAvailabilityMap keys
+  // Bucket 2 -> 90, Bucket 3 -> 180, Bucket 4 -> 360, Bucket 5 -> 720, Bucket 6 -> 1080
+  const bucketIndexToMapKey: {
+    [key: number]: keyof LockBucketAvailabilityMap
+  } = {
+    0: 0,
+    1: 14,
+    2: 90,
+    3: 180,
+    4: 360,
+    5: 720,
+    6: 1080,
+  }
+
+  const availabilityMap: LockBucketAvailabilityMap = {
+    0: 0,
+    14: 0,
+    90: 0,
+    180: 0,
+    360: 0,
+    720: 0,
+    1080: 0,
+  }
+
+  // Populate the map with bucket caps
+  bucketsInfo.forEach((bucketInfo: { bucket: number; cap: bigint }) => {
+    const bucketIndex = bucketInfo.bucket
+    const mapKey = bucketIndexToMapKey[bucketIndex]
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (mapKey !== undefined) {
+      // Convert BigInt cap to number (assuming it's in token units)
+      availabilityMap[mapKey] = new BigNumber(bucketInfo.cap.toString())
+        .shiftedBy(-SUMR_DECIMALS)
+        .toNumber()
+    }
+  })
+
+  return availabilityMap
+}
+
 const StepNumber = ({ number }: { number: number }) => {
   return (
     <div className={sumrV2StakingManageViewStyles.stepNumberWrapper}>
@@ -118,6 +183,32 @@ const SumrV2StakingManageComponent = ({
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
   const [warningAccepted, setWarningAccepted] = useState(false)
   const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(90)
+
+  const [lockBucketAvailabilityMap, setLockBucketAvailabilityMap] =
+    useState<LockBucketAvailabilityMap | null>(null)
+  const [bucketsLoading, setBucketsLoading] = useState(true)
+
+  const { getStakingBucketsInfoV2 } = useAppSDK()
+
+  // Fetch staking buckets info on mount
+  useEffect(() => {
+    const fetchBucketsInfo = async () => {
+      try {
+        setBucketsLoading(true)
+        const bucketsInfo = await getStakingBucketsInfoV2()
+        const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
+
+        setLockBucketAvailabilityMap(availabilityMap)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch staking buckets info:', error)
+      } finally {
+        setBucketsLoading(false)
+      }
+    }
+
+    void fetchBucketsInfo()
+  }, [getStakingBucketsInfoV2])
 
   const { token: sumrToken } = useToken({
     tokenSymbol: 'SUMMER',
@@ -175,12 +266,15 @@ const SumrV2StakingManageComponent = ({
 
   const enoughBucketAvailability = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!amountParsed) {
+    if (!amountParsed || !lockBucketAvailabilityMap) {
       return false
     }
 
-    return mapLockBucketToAvailability(selectedLockupAndBoost) >= amountParsed.toNumber()
-  }, [amountParsed, selectedLockupAndBoost])
+    return (
+      mapLockBucketToAvailability(lockBucketAvailabilityMap, selectedLockupAndBoost) >=
+      amountParsed.toNumber()
+    )
+  }, [amountParsed, selectedLockupAndBoost, lockBucketAvailabilityMap])
 
   const isButtonDisabled = useMemo(() => {
     if (!amountDisplay || amountParsed.isZero()) {
@@ -199,6 +293,10 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
+    if (bucketsLoading) {
+      return true
+    }
+
     return false
   }, [
     amountDisplay,
@@ -206,6 +304,7 @@ const SumrV2StakingManageComponent = ({
     enoughBucketAvailability,
     sumrBalanceOnSourceChain,
     warningAccepted,
+    bucketsLoading,
   ])
 
   const onConfirmStake = () => {
@@ -377,7 +476,7 @@ const SumrV2StakingManageComponent = ({
             </div>
             <Card>
               {!userWalletAddress ? (
-                isLoadingAccount ? (
+                isLoadingAccount || bucketsLoading ? (
                   <SkeletonLine width={200} height={50} />
                 ) : (
                   <div
@@ -519,13 +618,34 @@ const SumrV2StakingManageComponent = ({
                 <Text variant="p3semi">3</Text>
               </div>
               <LockupRangeGraph
-                lockupMap={{
-                  90: getAvailabilityLabel(mapLockBucketToAvailability(90)), // 14 days - 3m
-                  180: getAvailabilityLabel(mapLockBucketToAvailability(180)), // 3m - 6m
-                  360: getAvailabilityLabel(mapLockBucketToAvailability(360)), // 6m - 1y
-                  720: getAvailabilityLabel(mapLockBucketToAvailability(720)), // 1y - 2y
-                  1080: getAvailabilityLabel(mapLockBucketToAvailability(1080)), // 2y - 3y
-                }}
+                lockupMap={
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  lockBucketAvailabilityMap
+                    ? {
+                        90: getAvailabilityLabel(
+                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 90),
+                        ), // 14 days - 3m
+                        180: getAvailabilityLabel(
+                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 180),
+                        ), // 3m - 6m
+                        360: getAvailabilityLabel(
+                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 360),
+                        ), // 6m - 1y
+                        720: getAvailabilityLabel(
+                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 720),
+                        ), // 1y - 2y
+                        1080: getAvailabilityLabel(
+                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 1080),
+                        ), // 2y - 3y
+                      }
+                    : {
+                        90: 'high',
+                        180: 'high',
+                        360: 'high',
+                        720: 'high',
+                        1080: 'high',
+                      }
+                }
               />
               <Expander
                 expanderButtonStyles={{
@@ -558,7 +678,7 @@ const SumrV2StakingManageComponent = ({
                         label: 'Bucket',
                         value: 'Available',
                       },
-                      selectedLockupAndBoost > 0
+                      selectedLockupAndBoost >= 0
                         ? {
                             label: (
                               <span
@@ -566,7 +686,11 @@ const SumrV2StakingManageComponent = ({
                                   color:
                                     availabilityColorMap[
                                       getAvailabilityLabel(
-                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                        mapLockBucketToAvailability(
+                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                          lockBucketAvailabilityMap!,
+                                          selectedLockupAndBoost,
+                                        ),
                                       )
                                     ],
                                 }}
@@ -580,12 +704,18 @@ const SumrV2StakingManageComponent = ({
                                   color:
                                     availabilityColorMap[
                                       getAvailabilityLabel(
-                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                        mapLockBucketToAvailability(
+                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                          lockBucketAvailabilityMap!,
+                                          selectedLockupAndBoost,
+                                        ),
                                       )
                                     ],
                                 }}
                               >
                                 {mapLockBucketToAvailability(
+                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  lockBucketAvailabilityMap,
                                   selectedLockupAndBoost,
                                 ).toLocaleString()}{' '}
                                 SUMR
@@ -615,7 +745,11 @@ const SumrV2StakingManageComponent = ({
                             Not enough SUMR in this bucket for your deposit. You’ll need to deposit
                             no more than{' '}
                             {formatCryptoBalance(
-                              mapLockBucketToAvailability(selectedLockupAndBoost),
+                              mapLockBucketToAvailability(
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                lockBucketAvailabilityMap,
+                                selectedLockupAndBoost,
+                              ),
                             )}{' '}
                             SUMR. Stake the remainder in a different lock bucket.
                           </Text>
