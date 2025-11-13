@@ -189,7 +189,7 @@ const SumrV2StakingManageComponent = ({
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
   const [warningAccepted, setWarningAccepted] = useState(false)
-  const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(90)
+  const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(0)
 
   const [lockBucketAvailabilityMap, setLockBucketAvailabilityMap] =
     useState<LockBucketAvailabilityMap | null>(null)
@@ -1094,8 +1094,6 @@ const SumrV2StakingIntermediary = () => {
 
           throw err
         })
-
-        return
       }
 
       // Execute stake transaction
