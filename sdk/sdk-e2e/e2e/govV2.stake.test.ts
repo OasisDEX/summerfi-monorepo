@@ -14,22 +14,23 @@ describe('Armada Protocol Gov V2 Stake', () => {
     amountSumr?: bigint
     lockupDays?: bigint
   }[] = [
-    // { // 0
-    //   testConfigKey: 'BaseUSDC',
-    //   amountSumr: 100n,
-    //   lockupDays: 0n,
-    // },
+    {
+      // 0
+      testConfigKey: 'BaseUSDC',
+      amountSumr: 1000n,
+      lockupDays: 0n,
+    },
     // { // 1
     //   testConfigKey: 'BaseUSDC',
     //   amountSumr: 100n,
     //   lockupDays: 1n,
     // },
-    {
-      // 2
-      testConfigKey: 'BaseUSDC',
-      amountSumr: 100n,
-      lockupDays: 15n,
-    },
+    // {
+    //   // 2
+    //   testConfigKey: 'BaseUSDC',
+    //   amountSumr: 100n,
+    //   lockupDays: 15n,
+    // },
     // { // 3
     //   testConfigKey: 'BaseUSDC',
     //   amountSumr: 100n,
@@ -45,12 +46,12 @@ describe('Armada Protocol Gov V2 Stake', () => {
     //   amountSumr: 100n,
     //   lockupDays: 370n,
     // },
-    {
-      // 6
-      testConfigKey: 'BaseUSDC',
-      amountSumr: 100n,
-      lockupDays: 730n,
-    },
+    // {
+    //   // 6
+    //   testConfigKey: 'BaseUSDC',
+    //   amountSumr: 100n,
+    //   lockupDays: 730n,
+    // },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {

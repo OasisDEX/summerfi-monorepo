@@ -20,6 +20,8 @@ import {
   Percentage,
   type IAddress,
   type IChainInfo,
+  LoggingService,
+  ChainIds,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -631,7 +633,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     IArmadaManagerGovernance['getStakingRevenueShareV2']
   > {
     // Return static 20% revenue share
-    return Percentage.createFrom({ value: 0.2 })
+    return Percentage.createFrom({ value: 20 })
   }
 
   async getStakingRevenueAmountV2(): ReturnType<
@@ -641,20 +643,27 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       throw new Error('Vaults manager not initialized')
     }
 
-    // Get all vaults info using getVaultInfoList from armada manager vaults module
-    const vaultsResult = await this._vaults.getVaultInfoList({
-      chainId: this._hubChainInfo.chainId,
-    })
+    // Get vaults info list on all chains by creating a promise array
 
-    // Sum all vault TVL USD values
-    const totalProtocolTvlUsd = vaultsResult.list.reduce((acc, vault) => {
+    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
+      this._vaults.getVaultInfoList({ chainId }),
+    )
+    const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
+
+    LoggingService.debug(
+      `getStakingRevenueAmountV2 vaults: ${vaults.map((v) => v.tvlUsd).join(', ')}`,
+    )
+
+    // Calculate revenue for each vault based on token symbol
+    // WETH vaults: 0.3% of TVL
+    // Non-WETH vaults: 1% of TVL
+    const revenueAmount = vaults.reduce((acc, vault) => {
       const tvlAmount = parseFloat(vault.tvlUsd.amount)
-      return acc + tvlAmount
+      const isWETH = vault.token.symbol === 'WETH'
+      const revenuePercentage = isWETH ? 0.003 : 0.01
+      const vaultRevenue = tvlAmount * revenuePercentage
+      return acc + vaultRevenue
     }, 0)
-
-    // Calculate revenue as revenue share percentage of total protocol TVL
-    const revenueShare = await this.getStakingRevenueShareV2()
-    const revenueAmount = totalProtocolTvlUsd * parseFloat(revenueShare.value.toString())
 
     return revenueAmount
   }

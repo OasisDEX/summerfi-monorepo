@@ -107,5 +107,50 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(rewardRates.usdcYieldAPY).toBeGreaterThanOrEqual(0)
       expect(rewardRates.boostedMultiplier).toBeGreaterThanOrEqual(1) // Should be >= 1x
     })
+
+    it('should calculate weighted stake for a given amount and lockup period', async () => {
+      // Test with 1000 SUMR and 100 days lockup
+      const amount = 1000n * 10n ** 18n // 1000 SUMR (18 decimals)
+      const lockupDays = 666n
+
+      const weightedStake = await sdk.armada.users.getStakingCalculateWeightedStakeV2({
+        amount,
+        lockupPeriod: lockupDays * SECONDS_PER_DAY,
+      })
+
+      console.log(
+        `Weighted stake for ${formatSumr(amount)} SUMR with ${lockupDays} days lockup: ${formatSumr(weightedStake)} weighted SUMR`,
+      )
+      expect(weightedStake).toBeGreaterThanOrEqual(amount) // Weighted stake should be >= original amount
+    })
+
+    it('should get total weighted supply', async () => {
+      const totalWeightedSupply = await sdk.armada.users.getStakingTotalWeightedSupplyV2()
+
+      console.log('Total weighted supply:', formatSumr(totalWeightedSupply), 'weighted SUMR')
+      expect(totalWeightedSupply).toBeGreaterThanOrEqual(0n)
+    })
+
+    it('should get total SUMR staked across all buckets', async () => {
+      const totalSumrStaked = await sdk.armada.users.getStakingTotalSumrStakedV2()
+
+      console.log('Total SUMR staked across all buckets:', formatSumr(totalSumrStaked), 'SUMR')
+      expect(totalSumrStaked).toBeGreaterThanOrEqual(0n)
+    })
+
+    it('should get staking revenue share percentage', async () => {
+      const revenueShare = await sdk.armada.users.getStakingRevenueShareV2()
+
+      console.log('Staking revenue share:', revenueShare.value, '%')
+      expect(revenueShare.value).toBeGreaterThan(0)
+      expect(revenueShare.value).toBeLessThanOrEqual(100)
+    })
+
+    it('should get staking revenue amount', async () => {
+      const revenueAmount = await sdk.armada.users.getStakingRevenueAmountV2()
+
+      console.log('Staking revenue amount:', revenueAmount.toLocaleString(), 'USD')
+      expect(revenueAmount).toBeGreaterThanOrEqual(0)
+    })
   })
 })
