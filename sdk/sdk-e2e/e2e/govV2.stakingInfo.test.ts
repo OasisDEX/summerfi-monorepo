@@ -92,7 +92,7 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(earned).toBeGreaterThanOrEqual(0n)
     })
 
-    it.only('should get staking reward rates', async () => {
+    it('should get staking reward rates', async () => {
       // Get SUMR token address as reward token
       const summerToken = await sdk.armada.users.getSummerToken({ chainInfo })
 
