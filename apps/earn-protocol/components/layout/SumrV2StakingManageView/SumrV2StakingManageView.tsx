@@ -164,6 +164,7 @@ const mapBucketsInfoToAvailabilityMap = (
     if (mapKey !== undefined) {
       // Convert BigInt cap to number (assuming it's in token units)
       availabilityMap[mapKey] = new BigNumber(bucketInfo.cap.toString())
+        .minus(bucketInfo.totalStaked.toString())
         .shiftedBy(-SUMR_DECIMALS)
         .toNumber()
     }
