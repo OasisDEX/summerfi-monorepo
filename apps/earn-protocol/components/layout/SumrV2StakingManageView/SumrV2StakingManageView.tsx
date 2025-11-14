@@ -47,12 +47,12 @@ import sumrV2StakingManageViewStyles from './SumrV2StakingManageView.module.css'
 
 export type LockBucketAvailabilityMap = {
   0: number
-  14: number
-  90: number
-  180: number
-  360: number
-  720: number
-  1080: number
+  1: number
+  2: number
+  3: number
+  4: number
+  5: number
+  6: number
 }
 
 const mapLockBucketToAvailability = (
@@ -67,22 +67,22 @@ const mapLockBucketToAvailability = (
     return lockBucketAvailabilityMap[0]
   }
   if (days < 14) {
-    return lockBucketAvailabilityMap[14]
+    return lockBucketAvailabilityMap[1]
   }
   if (days < 90) {
-    return lockBucketAvailabilityMap[90]
+    return lockBucketAvailabilityMap[2]
   }
-  if (days <= 180) {
-    return lockBucketAvailabilityMap[180]
+  if (days < 180) {
+    return lockBucketAvailabilityMap[3]
   }
-  if (days <= 360) {
-    return lockBucketAvailabilityMap[360]
+  if (days < 365) {
+    return lockBucketAvailabilityMap[4]
   }
-  if (days <= 720) {
-    return lockBucketAvailabilityMap[720]
+  if (days < 730) {
+    return lockBucketAvailabilityMap[5]
   }
 
-  return lockBucketAvailabilityMap[1080]
+  return lockBucketAvailabilityMap[6]
 }
 
 const mapLockBucketToRange = (days: number) => {
@@ -95,13 +95,13 @@ const mapLockBucketToRange = (days: number) => {
   if (days < 90) {
     return '14 days - 3m'
   }
-  if (days <= 180) {
+  if (days < 180) {
     return '3m - 6m'
   }
-  if (days <= 360) {
+  if (days < 365) {
     return '6m - 1y'
   }
-  if (days <= 720) {
+  if (days < 730) {
     return '1y - 2y'
   }
 
@@ -129,34 +129,33 @@ const availabilityColorMap: { [key in 'low' | 'medium' | 'high']: string } = {
 }
 
 const mapBucketsInfoToAvailabilityMap = (
-  bucketsInfo: { bucket: number; cap: bigint }[],
+  bucketsInfo: { bucket: number; cap: bigint; totalStaked: bigint }[],
 ): LockBucketAvailabilityMap => {
   // Map bucket indexes to lockBucketAvailabilityMap keys
-  // Bucket 2 -> 90, Bucket 3 -> 180, Bucket 4 -> 360, Bucket 5 -> 720, Bucket 6 -> 1080
   const bucketIndexToMapKey: {
     [key: number]: keyof LockBucketAvailabilityMap
   } = {
     0: 0,
-    1: 14,
-    2: 90,
-    3: 180,
-    4: 360,
-    5: 720,
-    6: 1080,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
   }
 
   const availabilityMap: LockBucketAvailabilityMap = {
     0: 0,
-    14: 0,
-    90: 0,
-    180: 0,
-    360: 0,
-    720: 0,
-    1080: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
   }
 
   // Populate the map with bucket caps
-  bucketsInfo.forEach((bucketInfo: { bucket: number; cap: bigint }) => {
+  bucketsInfo.forEach((bucketInfo: { bucket: number; cap: bigint; totalStaked: bigint }) => {
     const bucketIndex = bucketInfo.bucket
     const mapKey = bucketIndexToMapKey[bucketIndex]
 
