@@ -550,7 +550,11 @@ const SumrV2StakingManageComponent = ({
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        <Text variant="p3semi">{bucketsLoading ? '-' : `${totalSumrStaked}m`}</Text>
+                        {bucketsLoading ? (
+                          <SkeletonLine width={60} height={16} />
+                        ) : (
+                          <Text variant="p3semi">{`${totalSumrStaked}m`}</Text>
+                        )}
                       </div>
                     ),
                   },
@@ -581,13 +585,21 @@ const SumrV2StakingManageComponent = ({
                 items={[
                   {
                     label: 'Protocol Revenue',
-                    value: bucketsLoading ? '-' : `$${protocolRevenue}m`,
+                    value: bucketsLoading ? (
+                      <SkeletonLine width={80} height={16} />
+                    ) : (
+                      `$${protocolRevenue}m`
+                    ),
                   },
                   {
                     label: 'Revenue Share',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        <Text variant="p3semi">{bucketsLoading ? '-' : `${revenueShare}%`}</Text>
+                        {bucketsLoading ? (
+                          <SkeletonLine width={50} height={16} />
+                        ) : (
+                          <Text variant="p3semi">{`${revenueShare}%`}</Text>
+                        )}
                         <Tooltip tooltip="Huh?">
                           <Icon iconName="info" size={16} />
                         </Tooltip>
@@ -596,7 +608,11 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'USDC Yield APY',
-                    value: bucketsLoading ? '-' : `up to ${maxApy}`,
+                    value: bucketsLoading ? (
+                      <SkeletonLine width={70} height={16} />
+                    ) : (
+                      `up to ${maxApy}`
+                    ),
                   },
                 ]}
               />
@@ -996,13 +1012,19 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'Yield boost multipler',
-                    value: simulationData ? `${simulationData.usdcYieldBoost.toFixed(2)}x` : '-',
+                    value: simulationData ? (
+                      `${simulationData.usdcYieldBoost.toFixed(2)}x`
+                    ) : (
+                      <SkeletonLine width={50} height={16} />
+                    ),
                   },
                   {
                     label: 'Blended yield boost multipler',
-                    value: simulationData
-                      ? `${simulationData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(1)}x`
-                      : '-',
+                    value: simulationData ? (
+                      `${simulationData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                    ) : (
+                      <SkeletonLine width={90} height={16} />
+                    ),
                   },
                   {
                     label: 'SUMR lock positions ',
@@ -1010,7 +1032,7 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: '% of available SUMR being locked ',
-                    value: `0 → ${percentageOfSumrBeingLocked}`,
+                    value: `0% → ${percentageOfSumrBeingLocked}`,
                   },
                   {
                     label: (
@@ -1182,15 +1204,21 @@ const SumrV2StakingSuccessComponent = ({
               },
               {
                 label: 'Yield boost multipler',
-                value: txData.usdcYieldBoost ? `${txData.usdcYieldBoost.toFixed(2)}x` : '-',
+                value: txData.usdcYieldBoost ? (
+                  `${txData.usdcYieldBoost.toFixed(2)}x`
+                ) : (
+                  <SkeletonLine width={50} height={16} />
+                ),
               },
               {
                 label: 'Blended yield boost multipler',
                 value:
                   txData.usdcBlendedYieldBoostFrom !== undefined &&
-                  txData.usdcBlendedYieldBoostTo !== undefined
-                    ? `${txData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${txData.usdcBlendedYieldBoostTo.toFixed(1)}x`
-                    : '-',
+                  txData.usdcBlendedYieldBoostTo !== undefined ? (
+                    `${txData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${txData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                  ) : (
+                    <SkeletonLine width={90} height={16} />
+                  ),
               },
               {
                 label: 'SUMR lock positions ',
