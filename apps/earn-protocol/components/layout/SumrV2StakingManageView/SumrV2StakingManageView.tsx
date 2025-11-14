@@ -347,7 +347,8 @@ const SumrV2StakingManageComponent = ({
     }
 
     void prepareTransactions()
-  }, [amountParsed, selectedLockupAndBoost, prepareTxs])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amountParsed, selectedLockupAndBoost])
 
   // Fetch simulation data when amount or lockup duration changes
   useEffect(() => {
@@ -850,26 +851,11 @@ const SumrV2StakingManageComponent = ({
                   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                   lockBucketAvailabilityMap
                     ? {
-                        90: getAvailabilityLabel(
-                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 90),
-                          amountParsed,
-                        ), // 14 days - 3m
-                        180: getAvailabilityLabel(
-                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 180),
-                          amountParsed,
-                        ), // 3m - 6m
-                        360: getAvailabilityLabel(
-                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 360),
-                          amountParsed,
-                        ), // 6m - 1y
-                        720: getAvailabilityLabel(
-                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 720),
-                          amountParsed,
-                        ), // 1y - 2y
-                        1080: getAvailabilityLabel(
-                          mapLockBucketToAvailability(lockBucketAvailabilityMap, 1080),
-                          amountParsed,
-                        ), // 2y - 3y
+                        90: getAvailabilityLabel(lockBucketAvailabilityMap[2], amountParsed), // 14 days - 3m
+                        180: getAvailabilityLabel(lockBucketAvailabilityMap[3], amountParsed), // 3m - 6m
+                        360: getAvailabilityLabel(lockBucketAvailabilityMap[4], amountParsed), // 6m - 1y
+                        720: getAvailabilityLabel(lockBucketAvailabilityMap[5], amountParsed), // 1y - 2y
+                        1080: getAvailabilityLabel(lockBucketAvailabilityMap[6], amountParsed), // 2y - 3y
                       }
                     : {
                         90: 'high',
