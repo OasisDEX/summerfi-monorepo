@@ -108,13 +108,14 @@ const mapLockBucketToRange = (days: number) => {
   return '2y - 3y'
 }
 
-const getAvailabilityLabel: (availability: number) => 'low' | 'medium' | 'high' = (
-  availability,
-) => {
-  if (availability <= 1000) {
+const getAvailabilityLabel: (
+  availability: number,
+  amount: BigNumber,
+) => 'low' | 'medium' | 'high' = (availability, amount) => {
+  if (availability === 0) {
     return 'low'
   }
-  if (availability < 15000) {
+  if (availability > 0 && amount.gt(availability)) {
     return 'medium'
   }
 
@@ -262,7 +263,8 @@ const SumrV2StakingManageComponent = ({
 
         const totalStakedFormatted = new BigNumber(totalStaked.toString())
           .shiftedBy(-18)
-          .toFormat(1, BigNumber.ROUND_DOWN)
+          .dividedBy(1000000)
+          .toFormat(2, BigNumber.ROUND_DOWN)
 
         setTotalSumrStaked(totalStakedFormatted)
 
@@ -272,7 +274,7 @@ const SumrV2StakingManageComponent = ({
 
         setProtocolRevenue(revenueFormatted)
 
-        setRevenueShare(revenueShareData.percentage.toProportion())
+        setRevenueShare(revenueShareData.percentage.value)
 
         setMaxApy(rewardRates.maxApy.toString())
       } catch (error) {
@@ -740,7 +742,7 @@ const SumrV2StakingManageComponent = ({
                       .decimalPlaces(2, BigNumber.ROUND_DOWN)
                   : new BigNumber(0)
 
-                manualSetAmount(newAmount.toString())
+                manualSetAmount(newAmount.toFixed())
                 // if (!isSourceMatchingDestination) {
                 //   prepareTransaction(newAmount.toString())
                 // }
@@ -850,18 +852,23 @@ const SumrV2StakingManageComponent = ({
                     ? {
                         90: getAvailabilityLabel(
                           mapLockBucketToAvailability(lockBucketAvailabilityMap, 90),
+                          amountParsed,
                         ), // 14 days - 3m
                         180: getAvailabilityLabel(
                           mapLockBucketToAvailability(lockBucketAvailabilityMap, 180),
+                          amountParsed,
                         ), // 3m - 6m
                         360: getAvailabilityLabel(
                           mapLockBucketToAvailability(lockBucketAvailabilityMap, 360),
+                          amountParsed,
                         ), // 6m - 1y
                         720: getAvailabilityLabel(
                           mapLockBucketToAvailability(lockBucketAvailabilityMap, 720),
+                          amountParsed,
                         ), // 1y - 2y
                         1080: getAvailabilityLabel(
                           mapLockBucketToAvailability(lockBucketAvailabilityMap, 1080),
+                          amountParsed,
                         ), // 2y - 3y
                       }
                     : {
@@ -917,6 +924,7 @@ const SumrV2StakingManageComponent = ({
                                           lockBucketAvailabilityMap!,
                                           selectedLockupAndBoost,
                                         ),
+                                        amountParsed,
                                       )
                                     ],
                                 }}
@@ -935,6 +943,7 @@ const SumrV2StakingManageComponent = ({
                                           lockBucketAvailabilityMap!,
                                           selectedLockupAndBoost,
                                         ),
+                                        amountParsed,
                                       )
                                     ],
                                 }}
@@ -1001,7 +1010,7 @@ const SumrV2StakingManageComponent = ({
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
                         <Text variant="p3semi">
-                          {formatCryptoBalance(amountDisplay) || '0'} SUMR
+                          {formatCryptoBalance(amountParsed) || '0'} SUMR
                         </Text>
                       </div>
                     ),
