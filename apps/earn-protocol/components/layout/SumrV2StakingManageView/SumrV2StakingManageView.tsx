@@ -238,40 +238,41 @@ const SumrV2StakingManageComponent = ({
       try {
         setBucketsLoading(true)
 
-        // Fetch buckets info
-        const bucketsInfo = await getStakingBucketsInfoV2()
+        // Fetch summer token first as it's needed for reward rates
+        const summerToken = await getSummerToken({
+          chainInfo: getChainInfoByChainId(ChainIds.Base),
+        })
+
+        // Fetch all data in parallel for better performance
+        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates] =
+          await Promise.all([
+            getStakingBucketsInfoV2(),
+            getStakingTotalSumrStakedV2(),
+            getProtocolRevenue(),
+            getStakingRevenueShareV2(),
+            getStakingRewardRatesV2({
+              rewardTokenAddress: summerToken.address,
+            }),
+          ])
+
+        // Process and set all the data
         const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
 
         setLockBucketAvailabilityMap(availabilityMap)
 
-        // Fetch total SUMR staked
-        const totalStaked = await getStakingTotalSumrStakedV2()
         const totalStakedFormatted = new BigNumber(totalStaked.toString())
           .shiftedBy(-18)
           .toFormat(1, BigNumber.ROUND_DOWN)
 
         setTotalSumrStaked(totalStakedFormatted)
 
-        // Fetch protocol revenue
-        const revenue = await getProtocolRevenue()
         const revenueFormatted = new BigNumber(revenue)
           .dividedBy(1000000)
           .toFormat(2, BigNumber.ROUND_DOWN)
 
         setProtocolRevenue(revenueFormatted)
 
-        // Fetch revenue share
-        const revenueShareData = await getStakingRevenueShareV2()
-
         setRevenueShare(revenueShareData.percentage.toProportion())
-
-        // Fetch reward rates
-        const summerToken = await getSummerToken({
-          chainInfo: getChainInfoByChainId(ChainIds.Base),
-        })
-        const rewardRates = await getStakingRewardRatesV2({
-          rewardTokenAddress: summerToken.address,
-        })
 
         setMaxApy(rewardRates.maxApy.toString())
       } catch (error) {
