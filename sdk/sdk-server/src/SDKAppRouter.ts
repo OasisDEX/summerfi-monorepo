@@ -16,7 +16,6 @@ import { setMinimumBufferBalance } from './armada-protocol-handlers/admin/setMin
 import { setTipJar } from './armada-protocol-handlers/admin/setTipJar'
 import { setTipRate } from './armada-protocol-handlers/admin/setTipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/admin/updateRebalanceCooldown'
-import { adjustBuffer } from './armada-protocol-handlers/admin/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/admin/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
 import { getVaultsRaw } from './armada-protocol-handlers/users/getVaults'
@@ -58,7 +57,18 @@ import { getUserStakedBalance } from './armada-protocol-handlers/users/getUserSt
 import { getStakeTx } from './armada-protocol-handlers/users/getStakeTx'
 import { getUnstakeTx } from './armada-protocol-handlers/users/getUnstakeTx'
 import { getStakeTxV2 } from './armada-protocol-handlers/users/getStakeTxV2'
+import { getStakeOnBehalfTxV2 } from './armada-protocol-handlers/users/getStakeOnBehalfTxV2'
 import { getUnstakeTxV2 } from './armada-protocol-handlers/users/getUnstakeTxV2'
+import { getUserStakingBalanceV2 } from './armada-protocol-handlers/users/getUserStakingBalanceV2'
+import { getUserStakingWeightedBalanceV2 } from './armada-protocol-handlers/users/getUserStakingWeightedBalanceV2'
+import { getUserStakingEarnedV2 } from './armada-protocol-handlers/users/getUserStakingEarnedV2'
+import { getStakingRewardRatesV2 } from './armada-protocol-handlers/users/getStakingRewardRatesV2'
+import { getStakingBucketsInfoV2 } from './armada-protocol-handlers/users/getStakingBucketsInfoV2'
+import { getStakingCalculateWeightedStakeV2 } from './armada-protocol-handlers/users/getStakingCalculateWeightedStakeV2'
+import { getStakingTotalWeightedSupplyV2 } from './armada-protocol-handlers/users/getStakingTotalWeightedSupplyV2'
+import { getStakingTotalSumrStakedV2 } from './armada-protocol-handlers/users/getStakingTotalSumrStakedV2'
+import { getStakingRevenueShareV2 } from './armada-protocol-handlers/users/getStakingRevenueShareV2'
+import { getStakingSimulationDataV2 } from './armada-protocol-handlers/users/getStakingSimulationDataV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
@@ -78,6 +88,7 @@ import { intentSwapsCancelOrder } from './handlers/intentSwapsCancelOrder'
 import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
+import { getProtocolRevenue } from './armada-protocol-handlers/users/getProtocolRevenue'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
@@ -147,6 +158,7 @@ export const sdkAppRouter = router({
       getUserActivityRaw: getUserActivityRaw,
       getVaultInfo: getVaultInfo,
       getVaultInfoList: getVaultInfoList,
+      getProtocolRevenue: getProtocolRevenue,
       getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
       getPositionHistory: getPositionHistory,
@@ -172,7 +184,18 @@ export const sdkAppRouter = router({
       getStakeTx: getStakeTx,
       getUnstakeTx: getUnstakeTx,
       getStakeTxV2: getStakeTxV2,
+      getStakeOnBehalfTxV2: getStakeOnBehalfTxV2,
       getUnstakeTxV2: getUnstakeTxV2,
+      getUserStakingBalanceV2: getUserStakingBalanceV2,
+      getUserStakingWeightedBalanceV2: getUserStakingWeightedBalanceV2,
+      getUserStakingEarnedV2: getUserStakingEarnedV2,
+      getStakingRewardRatesV2: getStakingRewardRatesV2,
+      getStakingBucketsInfoV2: getStakingBucketsInfoV2,
+      getStakingCalculateWeightedStakeV2: getStakingCalculateWeightedStakeV2,
+      getStakingTotalWeightedSupplyV2: getStakingTotalWeightedSupplyV2,
+      getStakingTotalSumrStakedV2: getStakingTotalSumrStakedV2,
+      getStakingRevenueShareV2: getStakingRevenueShareV2,
+      getStakingSimulationDataV2: getStakingSimulationDataV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
@@ -189,7 +212,6 @@ export const sdkAppRouter = router({
     },
     admin: {
       rebalance: rebalance,
-      adjustBuffer: adjustBuffer,
       setFleetDepositCap: setFleetDepositCap,
       setTipJar: setTipJar,
       setTipRate: setTipRate,

@@ -6,6 +6,7 @@ import { PoolType } from '../enums/PoolType'
 import { isPercentage, type IPercentage } from './IPercentage'
 import { isToken, type IToken } from './IToken'
 import { isPrice, type IPrice } from './IPrice'
+import { isFiatCurrencyAmount, type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import type { VaultApys } from '../types/VaultApys'
 
 /**
@@ -52,6 +53,8 @@ export interface IArmadaVaultInfo extends IPoolInfo, IArmadaVaultInfoData {
         dailyEmission: string
       }>
     | undefined
+  /** Total value locked in USD */
+  readonly tvlUsd: IFiatCurrencyAmount
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -92,6 +95,7 @@ export const ArmadaVaultInfoDataSchema = z.object({
       }),
     )
     .optional(),
+  tvlUsd: z.custom<IFiatCurrencyAmount>((val) => isFiatCurrencyAmount(val)),
   type: z.literal(PoolType.Armada),
 })
 

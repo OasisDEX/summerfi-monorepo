@@ -46,6 +46,10 @@ export const FleetAddresses = {
     USDT: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     TargenUSDC: '0x6e23cfe8d830488bc824c0add201a1a2e1dfdbeb',
   },
+  Mainnet: {
+    USDCHighRisk: '0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06',
+    USDCLowRisk: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+  },
   Sonic: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
@@ -80,6 +84,12 @@ export const TestConfigs = {
     chainId: ChainIds.ArbitrumOne,
     fleetAddressValue: FleetAddresses.ArbitrumOne.USDT,
     symbol: 'USDT',
+  },
+  MainnetUSDCLowRisk: {
+    rpcUrl: RpcUrls.Mainnet,
+    chainId: ChainIds.Mainnet,
+    fleetAddressValue: FleetAddresses.Mainnet.USDCLowRisk,
+    symbol: 'USDC',
   },
   SonicUSDC: {
     rpcUrl: RpcUrls.Sonic,

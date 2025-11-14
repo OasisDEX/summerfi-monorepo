@@ -17,9 +17,21 @@ import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedC
 import { getDelegateTxHandler } from '../handlers/getDelegateTxHandler'
 import { getStakeTxHandler } from '../handlers/getStakeTxHandler'
 import { getStakeTxV2Handler } from '../handlers/getStakeTxV2Handler'
+import { getStakeOnBehalfTxV2Handler } from '../handlers/getStakeOnBehalfTxV2Handler'
 import { getUndelegateTxHandler } from '../handlers/getUndelegateTxHandler'
 import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
 import { getUnstakeTxV2Handler } from '../handlers/getUnstakeTxV2Handler'
+import { getUserStakingBalanceV2Handler } from '../handlers/getUserStakingBalanceV2Handler'
+import { getUserStakingWeightedBalanceV2Handler } from '../handlers/getUserStakingWeightedBalanceV2Handler'
+import { getUserStakingEarnedV2Handler } from '../handlers/getUserStakingEarnedV2Handler'
+import { getStakingRewardRatesV2Handler } from '../handlers/getStakingRewardRatesV2Handler'
+import { getStakingBucketsInfoV2Handler } from '../handlers/getStakingBucketsInfoV2Handler'
+import { getStakingCalculateWeightedStakeV2Handler } from '../handlers/getStakingCalculateWeightedStakeV2Handler'
+import { getStakingTotalWeightedSupplyV2Handler } from '../handlers/getStakingTotalWeightedSupplyV2Handler'
+import { getStakingTotalSumrStakedV2Handler } from '../handlers/getStakingTotalSumrStakedV2Handler'
+import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueShareV2Handler'
+import { getStakingSimulationDataV2Handler } from '../handlers/getStakingSimulationDataV2Handler'
+import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
@@ -115,9 +127,30 @@ export const useSDK = (params: UseSdk) => {
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
   const getStakeTxV2 = useMemo(() => getStakeTxV2Handler(sdk), [sdk])
+  const getStakeOnBehalfTxV2 = useMemo(() => getStakeOnBehalfTxV2Handler(sdk), [sdk])
   const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
   const getUnstakeTx = useMemo(() => getUnstakeTxHandler(sdk), [sdk])
   const getUnstakeTxV2 = useMemo(() => getUnstakeTxV2Handler(sdk), [sdk])
+  const getUserStakingBalanceV2 = useMemo(() => getUserStakingBalanceV2Handler(sdk), [sdk])
+  const getUserStakingWeightedBalanceV2 = useMemo(
+    () => getUserStakingWeightedBalanceV2Handler(sdk),
+    [sdk],
+  )
+  const getUserStakingEarnedV2 = useMemo(() => getUserStakingEarnedV2Handler(sdk), [sdk])
+  const getStakingRewardRatesV2 = useMemo(() => getStakingRewardRatesV2Handler(sdk), [sdk])
+  const getStakingBucketsInfoV2 = useMemo(() => getStakingBucketsInfoV2Handler(sdk), [sdk])
+  const getStakingCalculateWeightedStakeV2 = useMemo(
+    () => getStakingCalculateWeightedStakeV2Handler(sdk),
+    [sdk],
+  )
+  const getStakingTotalWeightedSupplyV2 = useMemo(
+    () => getStakingTotalWeightedSupplyV2Handler(sdk),
+    [sdk],
+  )
+  const getStakingTotalSumrStakedV2 = useMemo(() => getStakingTotalSumrStakedV2Handler(sdk), [sdk])
+  const getStakingRevenueShareV2 = useMemo(() => getStakingRevenueShareV2Handler(sdk), [sdk])
+  const getStakingSimulationDataV2 = useMemo(() => getStakingSimulationDataV2Handler(sdk), [sdk])
+  const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
@@ -168,9 +201,21 @@ export const useSDK = (params: UseSdk) => {
       getDelegateTx,
       getStakeTx,
       getStakeTxV2,
+      getStakeOnBehalfTxV2,
       getUndelegateTx,
       getUnstakeTx,
       getUnstakeTxV2,
+      getUserStakingBalanceV2,
+      getUserStakingWeightedBalanceV2,
+      getUserStakingEarnedV2,
+      getStakingRewardRatesV2,
+      getStakingBucketsInfoV2,
+      getStakingCalculateWeightedStakeV2,
+      getStakingTotalWeightedSupplyV2,
+      getStakingTotalSumrStakedV2,
+      getStakingRevenueShareV2,
+      getStakingSimulationDataV2,
+      getProtocolRevenue,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
@@ -216,9 +261,21 @@ export const useSDK = (params: UseSdk) => {
       getBridgeTx,
       getStakeTx,
       getStakeTxV2,
+      getStakeOnBehalfTxV2,
       getUndelegateTx,
       getUnstakeTx,
       getUnstakeTxV2,
+      getUserStakingBalanceV2,
+      getUserStakingWeightedBalanceV2,
+      getUserStakingEarnedV2,
+      getStakingRewardRatesV2,
+      getStakingBucketsInfoV2,
+      getStakingCalculateWeightedStakeV2,
+      getStakingTotalWeightedSupplyV2,
+      getStakingTotalSumrStakedV2,
+      getStakingRevenueShareV2,
+      getStakingSimulationDataV2,
+      getProtocolRevenue,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,

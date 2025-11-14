@@ -111,10 +111,14 @@ export interface IArmadaManagerVaults {
    * @description Retrieves the information of an Armada vault by its ID
    *
    * @param vaultId ID of the vault to retrieve
+   * @param rawVault Optional raw vault data from subgraph containing totalValueLockedUSD
    *
    * @returns The information of the corresponding Armada vault
    */
-  getVaultInfo(params: { vaultId: IArmadaVaultId }): Promise<IArmadaVaultInfo>
+  getVaultInfo(params: {
+    vaultId: IArmadaVaultId
+    rawVault?: { totalValueLockedUSD: string }
+  }): Promise<IArmadaVaultInfo>
 
   /**
    * @method getVaultInfoList
@@ -155,4 +159,12 @@ export interface IArmadaManagerVaults {
         | undefined
     }
   }>
+
+  /**
+   * @method getProtocolRevenue
+   * @description Calculates the total protocol revenue amount in USD across all vaults and chains
+   *
+   * @returns The revenue amount in USD as a number
+   */
+  getProtocolRevenue(): Promise<number>
 }

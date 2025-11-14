@@ -57,17 +57,6 @@ export interface IFleetCommanderContract extends IContractWrapper {
   rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
 
   /**
-   * @name adjustBuffer
-   * @description Adjusts the buffer of the fleet. Used by the keepers of the fleet
-   *              to move assets between the buffer ark and the main arks
-   *
-   * @param rebalanceData The data for the rebalance
-   *
-   * @returns The transaction information
-   */
-  adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
-
-  /**
    * @name setFleetDepositCap
    * @description Sets the deposit cap of the fleet.
    *
@@ -211,50 +200,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
 
-  /**
-   * @name emergencyShutdown
-   * @description Shuts down the fleet in case of an emergency.
-   *
-   * @returns The transaction information
-   */
-  emergencyShutdown(): Promise<TransactionInfo>
-
-  /**
-   * @name setWhitelisted
-   * @description Sets the whitelist status for an account
-   *
-   * @param account The address to set whitelist status for
-   * @param allowed Whether the account should be whitelisted
-   *
-   * @returns The transaction information
-   */
-  setWhitelisted(params: { account: IAddress; allowed: boolean }): Promise<TransactionInfo>
-
-  /**
-   * @name setWhitelistedBatch
-   * @description Sets the whitelist status for multiple accounts.
-   *
-   * @param accounts The list of addresses to set whitelist status for
-   * @param allowed The list of whitelist statuses for each account
-   *
-   * @returns The transaction information
-   */
-  setWhitelistedBatch(params: {
-    accounts: IAddress[]
-    allowed: boolean[]
-  }): Promise<TransactionInfo>
-
   /** READ METHODS */
-
-  /**
-   * @name isWhitelisted
-   * @description Returns whether an account is whitelisted
-   *
-   * @param account The address to check
-   *
-   * @returns True if the account is whitelisted, false otherwise
-   */
-  isWhitelisted(params: { account: IAddress }): Promise<boolean>
 
   /**
    * @name arks

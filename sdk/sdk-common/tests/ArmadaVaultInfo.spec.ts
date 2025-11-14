@@ -1,4 +1,13 @@
-import { ChainFamilyMap, Address, Token, TokenAmount, Percentage, Price } from '../src'
+import {
+  ChainFamilyMap,
+  Address,
+  Token,
+  TokenAmount,
+  Percentage,
+  Price,
+  FiatCurrencyAmount,
+  FiatCurrency,
+} from '../src'
 import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaVaultInfo } from '../src/common/implementation/ArmadaVaultInfo'
 
@@ -69,6 +78,10 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
         },
         rewardsApys: [],
         merklRewards: [],
+        tvlUsd: FiatCurrencyAmount.createFrom({
+          fiat: FiatCurrency.USD,
+          amount: '1000000',
+        }),
       })
 
       expect(poolInfo).toBeDefined()
@@ -81,6 +94,9 @@ describe('SDK Common | Armada | ArmadaVaultInfo', () => {
       expect(poolInfo.apys.sma24h).toBeDefined()
       expect(poolInfo.apys.sma7day).toBeDefined()
       expect(poolInfo.apys.sma30day).toBeDefined()
+      expect(poolInfo.tvlUsd).toBeDefined()
+      expect(poolInfo.tvlUsd.fiat).toEqual(FiatCurrency.USD)
+      expect(poolInfo.tvlUsd.amount).toEqual('1000000')
     })
   })
 })

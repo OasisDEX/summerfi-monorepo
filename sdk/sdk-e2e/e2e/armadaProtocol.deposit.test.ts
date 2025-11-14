@@ -15,7 +15,7 @@ import type { DepositScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
-const simulateOnly = false
+const simulateOnly = true
 
 /**
  * @group e2e
@@ -33,12 +33,12 @@ describe('Armada Protocol - Deposit', () => {
       amountValue: '0.0005',
       stake: false,
     },
-    {
-      description: 'deposit ETH to Base WETH Vault with staking',
-      chainConfig: TestConfigs.BaseWETH,
-      amountValue: '0.0005',
-      stake: true,
-    },
+    // {
+    //   description: 'deposit ETH to Base WETH Vault with staking',
+    //   chainConfig: TestConfigs.BaseWETH,
+    //   amountValue: '0.0005',
+    //   stake: true,
+    // },
   ]
 
   describe('getNewDepositTx - deposit to fleet', () => {

@@ -7,6 +7,7 @@ export const getStakeTxV2 = publicProcedure
     z.object({
       user: z.custom<IUser>(isUser),
       amount: z.bigint(),
+      lockupPeriod: z.bigint(),
     }),
   )
   .query(async (opts) => {

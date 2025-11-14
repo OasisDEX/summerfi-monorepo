@@ -1,17 +1,20 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   AnimateHeight,
   Button,
   Card,
   CheckboxButton,
   DataBlock,
+  ERROR_TOAST_CONFIG,
   Expander,
   Icon,
   InputWithDropdown,
   OrderInformation,
   SkeletonLine,
+  SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useAmount,
@@ -19,10 +22,11 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { UiTransactionStatuses } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalToBigInt } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { ChainIds } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
+import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
@@ -32,6 +36,8 @@ import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
+import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useToken } from '@/hooks/use-token'
@@ -39,56 +45,77 @@ import { useTokenBalance } from '@/hooks/use-token-balance'
 
 import sumrV2StakingManageViewStyles from './SumrV2StakingManageView.module.css'
 
-// Huh?
-const lockBucketAvailabilityMap = {
-  90: 300,
-  180: 12000,
-  360: 1000000,
-  720: 1000000,
-  1080: 10000000,
+export type LockBucketAvailabilityMap = {
+  0: number
+  1: number
+  2: number
+  3: number
+  4: number
+  5: number
+  6: number
 }
 
-const mapLockBucketToAvailability = (days: number) => {
-  if (days < 90) {
-    return lockBucketAvailabilityMap[90]
-  }
-  if (days <= 180) {
-    return lockBucketAvailabilityMap[180]
-  }
-  if (days <= 360) {
-    return lockBucketAvailabilityMap[360]
-  }
-  if (days <= 720) {
-    return lockBucketAvailabilityMap[720]
+const mapLockBucketToAvailability = (
+  lockBucketAvailabilityMap: LockBucketAvailabilityMap | null,
+  days: number,
+) => {
+  if (!lockBucketAvailabilityMap) {
+    return 0
   }
 
-  return lockBucketAvailabilityMap[1080]
+  if (days === 0) {
+    return lockBucketAvailabilityMap[0]
+  }
+  if (days < 14) {
+    return lockBucketAvailabilityMap[1]
+  }
+  if (days < 90) {
+    return lockBucketAvailabilityMap[2]
+  }
+  if (days < 180) {
+    return lockBucketAvailabilityMap[3]
+  }
+  if (days < 365) {
+    return lockBucketAvailabilityMap[4]
+  }
+  if (days < 730) {
+    return lockBucketAvailabilityMap[5]
+  }
+
+  return lockBucketAvailabilityMap[6]
 }
 
 const mapLockBucketToRange = (days: number) => {
+  if (days === 0) {
+    return 'No lockup'
+  }
+  if (days < 14) {
+    return 'Up to 14 days'
+  }
   if (days < 90) {
     return '14 days - 3m'
   }
-  if (days <= 180) {
+  if (days < 180) {
     return '3m - 6m'
   }
-  if (days <= 360) {
+  if (days < 365) {
     return '6m - 1y'
   }
-  if (days <= 720) {
+  if (days < 730) {
     return '1y - 2y'
   }
 
   return '2y - 3y'
 }
 
-const getAvailabilityLabel: (availability: number) => 'low' | 'medium' | 'high' = (
-  availability,
-) => {
-  if (availability <= 1000) {
+const getAvailabilityLabel: (
+  availability: number,
+  amount: BigNumber,
+) => 'low' | 'medium' | 'high' = (availability, amount) => {
+  if (availability === 0) {
     return 'low'
   }
-  if (availability < 15000) {
+  if (availability > 0 && amount.gt(availability)) {
     return 'medium'
   }
 
@@ -101,6 +128,50 @@ const availabilityColorMap: { [key in 'low' | 'medium' | 'high']: string } = {
   high: 'var(--earn-protocol-success-100)',
 }
 
+const mapBucketsInfoToAvailabilityMap = (
+  bucketsInfo: { bucket: number; cap: bigint; totalStaked: bigint }[],
+): LockBucketAvailabilityMap => {
+  // Map bucket indexes to lockBucketAvailabilityMap keys
+  const bucketIndexToMapKey: {
+    [key: number]: keyof LockBucketAvailabilityMap
+  } = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+  }
+
+  const availabilityMap: LockBucketAvailabilityMap = {
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+  }
+
+  // Populate the map with bucket caps
+  bucketsInfo.forEach((bucketInfo: { bucket: number; cap: bigint; totalStaked: bigint }) => {
+    const bucketIndex = bucketInfo.bucket
+    const mapKey = bucketIndexToMapKey[bucketIndex]
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (mapKey !== undefined) {
+      // Convert BigInt cap to number (assuming it's in token units)
+      availabilityMap[mapKey] = new BigNumber(bucketInfo.cap.toString())
+        .minus(bucketInfo.totalStaked.toString())
+        .shiftedBy(-SUMR_DECIMALS)
+        .toNumber()
+    }
+  })
+
+  return availabilityMap
+}
+
 const StepNumber = ({ number }: { number: number }) => {
   return (
     <div className={sumrV2StakingManageViewStyles.stepNumberWrapper}>
@@ -111,13 +182,118 @@ const StepNumber = ({ number }: { number: number }) => {
 
 const SumrV2StakingManageComponent = ({
   onStake,
+  isLoading = false,
+  approveStatus,
+  needsApproval,
+  prepareTxs,
 }: {
-  onStake: (params: { amount: BigNumber; lockupDuration: number }) => void
+  onStake: (params: {
+    amount: BigNumber
+    lockupDuration: number
+    usdcYieldBoost?: number
+    usdcBlendedYieldBoostFrom?: number
+    usdcBlendedYieldBoostTo?: number
+    percentageOfSumrLocked?: string
+  }) => void
+  isLoading?: boolean
+  approveStatus: UiTransactionStatuses | null
+  needsApproval: boolean
+  prepareTxs: (amount: bigint, lockupPeriod: bigint) => Promise<boolean>
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
   const [warningAccepted, setWarningAccepted] = useState(false)
-  const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(90)
+  const [selectedLockupAndBoost, setSelectedLockupAndBoost] = useState<number>(0)
+
+  const [lockBucketAvailabilityMap, setLockBucketAvailabilityMap] =
+    useState<LockBucketAvailabilityMap | null>(null)
+  const [bucketsLoading, setBucketsLoading] = useState(true)
+  const [totalSumrStaked, setTotalSumrStaked] = useState<string>('0')
+  const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
+  const [revenueShare, setRevenueShare] = useState<number>(0)
+  const [maxApy, setMaxApy] = useState<string>('0')
+  const [simulationLoading, setSimulationLoading] = useState(false)
+  const [simulationData, setSimulationData] = useState<{
+    usdcYieldApy: string
+    sumrRewardApy: string
+    usdcYieldBoost: number
+    usdcBlendedYieldBoostFrom: number
+    usdcBlendedYieldBoostTo: number
+    usdcYieldUsdPerYear: string
+    sumrRewardAmount: string
+  } | null>(null)
+
+  const {
+    getStakingBucketsInfoV2,
+    getStakingTotalSumrStakedV2,
+    getProtocolRevenue,
+    getStakingRevenueShareV2,
+    getStakingRewardRatesV2,
+    getStakingSimulationDataV2,
+    getSummerToken,
+  } = useAppSDK()
+
+  // Fetch staking buckets info and other staking data on mount
+  useEffect(() => {
+    const fetchStakingData = async () => {
+      try {
+        setBucketsLoading(true)
+
+        // Fetch summer token first as it's needed for reward rates
+        const summerToken = await getSummerToken({
+          chainInfo: getChainInfoByChainId(ChainIds.Base),
+        })
+
+        // Fetch all data in parallel for better performance
+        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates] =
+          await Promise.all([
+            getStakingBucketsInfoV2(),
+            getStakingTotalSumrStakedV2(),
+            getProtocolRevenue(),
+            getStakingRevenueShareV2(),
+            getStakingRewardRatesV2({
+              rewardTokenAddress: summerToken.address,
+            }),
+          ])
+
+        // Process and set all the data
+        const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
+
+        setLockBucketAvailabilityMap(availabilityMap)
+
+        const totalStakedFormatted = new BigNumber(totalStaked.toString())
+          .shiftedBy(-18)
+          .dividedBy(1000000)
+          .toFormat(2, BigNumber.ROUND_DOWN)
+
+        setTotalSumrStaked(totalStakedFormatted)
+
+        const revenueFormatted = new BigNumber(revenue)
+          .dividedBy(1000000)
+          .toFormat(2, BigNumber.ROUND_DOWN)
+
+        setProtocolRevenue(revenueFormatted)
+
+        setRevenueShare(revenueShareData.percentage.value)
+
+        setMaxApy(rewardRates.maxApy.toString())
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch staking data:', error)
+      } finally {
+        setBucketsLoading(false)
+      }
+    }
+
+    void fetchStakingData()
+  }, [
+    getStakingBucketsInfoV2,
+    getStakingTotalSumrStakedV2,
+    getProtocolRevenue,
+    getStakingRevenueShareV2,
+    getStakingRewardRatesV2,
+    getSummerToken,
+  ])
 
   const { token: sumrToken } = useToken({
     tokenSymbol: 'SUMMER',
@@ -157,6 +333,87 @@ const SumrV2StakingManageComponent = ({
     handleAmountChange(e)
   }
 
+  // Prepare transactions when amount or lockup duration changes
+  useEffect(() => {
+    const prepareTransactions = async () => {
+      if (amountParsed.isZero() || amountParsed.isNaN()) {
+        return
+      }
+
+      const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
+      const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
+
+      await prepareTxs(amountBigInt, lockupPeriodSeconds)
+    }
+
+    void prepareTransactions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amountParsed, selectedLockupAndBoost])
+
+  // Fetch simulation data when amount or lockup duration changes
+  useEffect(() => {
+    const fetchSimulation = async () => {
+      if (amountParsed.isZero() || amountParsed.isNaN() || !userWalletAddress) {
+        setSimulationData(null)
+        setSimulationLoading(false)
+
+        return
+      }
+
+      try {
+        setSimulationLoading(true)
+        const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
+        const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
+        // TODO: Get actual SUMR price from $SUMR valuation or SDK oracle in the future
+        const sumrPriceUsd = 0.2 // fallback price
+
+        const simulation = await getStakingSimulationDataV2({
+          amount: amountBigInt,
+          period: lockupPeriodSeconds,
+          sumrPriceUsd,
+          userAddress: userWalletAddress as AddressValue,
+        })
+
+        // Calculate USD per year for USDC yield
+        const usdcYieldUsdPerYear = amountParsed
+          .times(sumrPriceUsd)
+          .times(simulation.usdcYieldApy.value)
+          .dividedBy(100)
+          .toFormat(2, BigNumber.ROUND_DOWN)
+
+        // Calculate SUMR reward amount per year
+        const sumrRewardAmount = amountParsed
+          .times(simulation.sumrRewardApy.value)
+          .dividedBy(100)
+          .toFormat(2, BigNumber.ROUND_DOWN)
+
+        setSimulationData({
+          usdcYieldApy: simulation.usdcYieldApy.toString(),
+          sumrRewardApy: simulation.sumrRewardApy.toString(),
+          usdcYieldBoost: simulation.usdcYieldBoost,
+          usdcBlendedYieldBoostFrom: simulation.usdcBlendedYieldBoostFrom,
+          usdcBlendedYieldBoostTo: simulation.usdcBlendedYieldBoostTo,
+          usdcYieldUsdPerYear,
+          sumrRewardAmount,
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch simulation data:', error)
+        setSimulationData(null)
+      } finally {
+        setSimulationLoading(false)
+      }
+    }
+
+    void fetchSimulation()
+  }, [
+    amountParsed,
+    selectedLockupAndBoost,
+    userWalletAddress,
+    sumrToken,
+    getStakingSimulationDataV2,
+  ])
+
   const lockupExpirationDate = useMemo(() => {
     if (selectedLockupAndBoost === 0) {
       return 'N/A'
@@ -173,14 +430,27 @@ const SumrV2StakingManageComponent = ({
     return `${selectedLockupAndBoost} days (${lockupExpirationDate})`
   }, [selectedLockupAndBoost, lockupExpirationDate])
 
+  const percentageOfSumrBeingLocked = useMemo(() => {
+    if (!sumrBalanceOnSourceChain || amountParsed.isZero()) {
+      return '0%'
+    }
+
+    const percentage = amountParsed.dividedBy(sumrBalanceOnSourceChain).times(100)
+
+    return `${percentage.toFixed(0)}%`
+  }, [amountParsed, sumrBalanceOnSourceChain])
+
   const enoughBucketAvailability = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!amountParsed) {
+    if (!amountParsed || !lockBucketAvailabilityMap) {
       return false
     }
 
-    return mapLockBucketToAvailability(selectedLockupAndBoost) >= amountParsed.toNumber()
-  }, [amountParsed, selectedLockupAndBoost])
+    return (
+      mapLockBucketToAvailability(lockBucketAvailabilityMap, selectedLockupAndBoost) >=
+      amountParsed.toNumber()
+    )
+  }, [amountParsed, selectedLockupAndBoost, lockBucketAvailabilityMap])
 
   const isButtonDisabled = useMemo(() => {
     if (!amountDisplay || amountParsed.isZero()) {
@@ -199,6 +469,14 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
+    if (bucketsLoading) {
+      return true
+    }
+
+    if (isLoading) {
+      return true
+    }
+
     return false
   }, [
     amountDisplay,
@@ -206,18 +484,29 @@ const SumrV2StakingManageComponent = ({
     enoughBucketAvailability,
     sumrBalanceOnSourceChain,
     warningAccepted,
+    bucketsLoading,
+    isLoading,
   ])
 
+  const getButtonLabel = () => {
+    if (approveStatus === UiTransactionStatuses.PENDING) {
+      return needsApproval ? 'Approving...' : 'Staking...'
+    }
+    if (approveStatus !== UiTransactionStatuses.COMPLETED && needsApproval) {
+      return 'Approve SUMR'
+    }
+
+    return 'Confirm Stake & Lock'
+  }
+
   const onConfirmStake = () => {
-    // Huh?
-    // eslint-disable-next-line no-console
-    console.log('Stake confirmed:', {
-      amount: amountDisplay,
-      lockupDuration: selectedLockupAndBoost,
-    })
     onStake({
       amount: amountParsed,
       lockupDuration: selectedLockupAndBoost,
+      usdcYieldBoost: simulationData?.usdcYieldBoost,
+      usdcBlendedYieldBoostFrom: simulationData?.usdcBlendedYieldBoostFrom,
+      usdcBlendedYieldBoostTo: simulationData?.usdcBlendedYieldBoostTo,
+      percentageOfSumrLocked: percentageOfSumrBeingLocked,
     })
   }
 
@@ -264,26 +553,30 @@ const SumrV2StakingManageComponent = ({
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        <Text variant="p3semi">63.2m</Text>
+                        {bucketsLoading ? (
+                          <SkeletonLine width={60} height={16} />
+                        ) : (
+                          <Text variant="p3semi">{`${totalSumrStaked}m`}</Text>
+                        )}
                       </div>
                     ),
                   },
                   {
                     label: '% of circulating SUMR Staked',
-                    value: '72.8%',
+                    value: 'GRAPH',
                   },
                   {
                     label: 'Total circulating SUMR supply',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        <Text variant="p3semi">74.2m</Text>
+                        <Text variant="p3semi">GRAPH</Text>
                       </div>
                     ),
                   },
                   {
                     label: 'Average SUMR lock duration',
-                    value: '2.3 years',
+                    value: 'GRAPH',
                   },
                 ]}
               />
@@ -295,13 +588,21 @@ const SumrV2StakingManageComponent = ({
                 items={[
                   {
                     label: 'Protocol Revenue',
-                    value: '$1.02m',
+                    value: bucketsLoading ? (
+                      <SkeletonLine width={80} height={16} />
+                    ) : (
+                      `$${protocolRevenue}m`
+                    ),
                   },
                   {
                     label: 'Revenue Share',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        <Text variant="p3semi">20%</Text>
+                        {bucketsLoading ? (
+                          <SkeletonLine width={50} height={16} />
+                        ) : (
+                          <Text variant="p3semi">{`${revenueShare}%`}</Text>
+                        )}
                         <Tooltip tooltip="Huh?">
                           <Icon iconName="info" size={16} />
                         </Tooltip>
@@ -310,7 +611,11 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'USDC Yield APY',
-                    value: 'up to 8.02%',
+                    value: bucketsLoading ? (
+                      <SkeletonLine width={70} height={16} />
+                    ) : (
+                      `up to ${maxApy}`
+                    ),
                   },
                 ]}
               />
@@ -338,7 +643,7 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'Staking contract audit',
-                    value: 'up to 8.02%',
+                    value: 'ADD LINK',
                   },
                 ]}
               />
@@ -377,7 +682,7 @@ const SumrV2StakingManageComponent = ({
             </div>
             <Card>
               {!userWalletAddress ? (
-                isLoadingAccount ? (
+                isLoadingAccount || bucketsLoading ? (
                   <SkeletonLine width={200} height={50} />
                 ) : (
                   <div
@@ -438,7 +743,7 @@ const SumrV2StakingManageComponent = ({
                       .decimalPlaces(2, BigNumber.ROUND_DOWN)
                   : new BigNumber(0)
 
-                manualSetAmount(newAmount.toString())
+                manualSetAmount(newAmount.toFixed())
                 // if (!isSourceMatchingDestination) {
                 //   prepareTransaction(newAmount.toString())
                 // }
@@ -462,18 +767,33 @@ const SumrV2StakingManageComponent = ({
                     </div>
                   }
                 />
-                <DataBlock
-                  title={
-                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                      <Icon iconName="usdc_circle_color" size={24} />
-                      <Text variant="p4semi">USDC Yield (Boosted 2.2x)</Text>
-                    </div>
-                  }
-                  value="7.2% APY"
-                  subValue="$4,750.58 a year"
-                  subValueType="positive"
-                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
-                />
+                {simulationLoading ? (
+                  <div style={{ padding: '16px' }}>
+                    <SkeletonLine width="100%" height={20} style={{ marginBottom: '8px' }} />
+                    <SkeletonLine width="60%" height={32} style={{ marginBottom: '8px' }} />
+                    <SkeletonLine width="80%" height={16} />
+                  </div>
+                ) : (
+                  <DataBlock
+                    title={
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Icon iconName="usdc_circle_color" size={24} />
+                        <Text variant="p4semi">
+                          USDC Yield
+                          {simulationData && simulationData.usdcYieldBoost > 1
+                            ? ` (Boosted ${simulationData.usdcYieldBoost.toFixed(1)}x)`
+                            : ''}
+                        </Text>
+                      </div>
+                    }
+                    value={simulationData ? `${simulationData.usdcYieldApy}` : '-'}
+                    subValue={
+                      simulationData ? `$${simulationData.usdcYieldUsdPerYear} a year` : '-'
+                    }
+                    subValueType="positive"
+                    wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                  />
+                )}
               </Card>
               <Card className={sumrV2StakingManageViewStyles.yieldSourcesCard}>
                 <YieldSourceLabel
@@ -486,18 +806,26 @@ const SumrV2StakingManageComponent = ({
                     </div>
                   }
                 />
-                <DataBlock
-                  title={
-                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                      <Icon iconName="sumr" size={20} />
-                      <Text variant="p4semi">SUMR Reward APY (Boosted 2.2x)</Text>
-                    </div>
-                  }
-                  value="3.5% APY"
-                  subValue="+7,116.06 SUMR"
-                  subValueType="positive"
-                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
-                />
+                {simulationLoading ? (
+                  <div style={{ padding: '16px' }}>
+                    <SkeletonLine width="100%" height={20} style={{ marginBottom: '8px' }} />
+                    <SkeletonLine width="60%" height={32} style={{ marginBottom: '8px' }} />
+                    <SkeletonLine width="80%" height={16} />
+                  </div>
+                ) : (
+                  <DataBlock
+                    title={
+                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                        <Icon iconName="sumr" size={20} />
+                        <Text variant="p4semi">SUMR Reward APY</Text>
+                      </div>
+                    }
+                    value={simulationData ? `${simulationData.sumrRewardApy}` : '-'}
+                    subValue={simulationData ? `+${simulationData.sumrRewardAmount} SUMR` : '-'}
+                    subValueType="positive"
+                    wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                  />
+                )}
               </Card>
             </div>
             <Card className={sumrV2StakingManageViewStyles.stakingLengthControllers}>
@@ -519,13 +847,24 @@ const SumrV2StakingManageComponent = ({
                 <Text variant="p3semi">3</Text>
               </div>
               <LockupRangeGraph
-                lockupMap={{
-                  90: getAvailabilityLabel(mapLockBucketToAvailability(90)), // 14 days - 3m
-                  180: getAvailabilityLabel(mapLockBucketToAvailability(180)), // 3m - 6m
-                  360: getAvailabilityLabel(mapLockBucketToAvailability(360)), // 6m - 1y
-                  720: getAvailabilityLabel(mapLockBucketToAvailability(720)), // 1y - 2y
-                  1080: getAvailabilityLabel(mapLockBucketToAvailability(1080)), // 2y - 3y
-                }}
+                lockupMap={
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  lockBucketAvailabilityMap
+                    ? {
+                        90: getAvailabilityLabel(lockBucketAvailabilityMap[2], amountParsed), // 14 days - 3m
+                        180: getAvailabilityLabel(lockBucketAvailabilityMap[3], amountParsed), // 3m - 6m
+                        360: getAvailabilityLabel(lockBucketAvailabilityMap[4], amountParsed), // 6m - 1y
+                        720: getAvailabilityLabel(lockBucketAvailabilityMap[5], amountParsed), // 1y - 2y
+                        1080: getAvailabilityLabel(lockBucketAvailabilityMap[6], amountParsed), // 2y - 3y
+                      }
+                    : {
+                        90: 'high',
+                        180: 'high',
+                        360: 'high',
+                        720: 'high',
+                        1080: 'high',
+                      }
+                }
               />
               <Expander
                 expanderButtonStyles={{
@@ -558,7 +897,7 @@ const SumrV2StakingManageComponent = ({
                         label: 'Bucket',
                         value: 'Available',
                       },
-                      selectedLockupAndBoost > 0
+                      selectedLockupAndBoost >= 0
                         ? {
                             label: (
                               <span
@@ -566,7 +905,12 @@ const SumrV2StakingManageComponent = ({
                                   color:
                                     availabilityColorMap[
                                       getAvailabilityLabel(
-                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                        mapLockBucketToAvailability(
+                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                          lockBucketAvailabilityMap!,
+                                          selectedLockupAndBoost,
+                                        ),
+                                        amountParsed,
                                       )
                                     ],
                                 }}
@@ -580,12 +924,19 @@ const SumrV2StakingManageComponent = ({
                                   color:
                                     availabilityColorMap[
                                       getAvailabilityLabel(
-                                        mapLockBucketToAvailability(selectedLockupAndBoost),
+                                        mapLockBucketToAvailability(
+                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                          lockBucketAvailabilityMap!,
+                                          selectedLockupAndBoost,
+                                        ),
+                                        amountParsed,
                                       )
                                     ],
                                 }}
                               >
                                 {mapLockBucketToAvailability(
+                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  lockBucketAvailabilityMap,
                                   selectedLockupAndBoost,
                                 ).toLocaleString()}{' '}
                                 SUMR
@@ -615,7 +966,11 @@ const SumrV2StakingManageComponent = ({
                             Not enough SUMR in this bucket for your deposit. You’ll need to deposit
                             no more than{' '}
                             {formatCryptoBalance(
-                              mapLockBucketToAvailability(selectedLockupAndBoost),
+                              mapLockBucketToAvailability(
+                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                lockBucketAvailabilityMap,
+                                selectedLockupAndBoost,
+                              ),
                             )}{' '}
                             SUMR. Stake the remainder in a different lock bucket.
                           </Text>
@@ -641,7 +996,7 @@ const SumrV2StakingManageComponent = ({
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
                         <Text variant="p3semi">
-                          {formatCryptoBalance(amountDisplay) || '0'} SUMR
+                          {formatCryptoBalance(amountParsed) || '0'} SUMR
                         </Text>
                       </div>
                     ),
@@ -652,11 +1007,19 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'Yield boost multipler',
-                    value: '7x', // Huh?
+                    value: simulationData ? (
+                      `${simulationData.usdcYieldBoost.toFixed(2)}x`
+                    ) : (
+                      <SkeletonLine width={50} height={16} />
+                    ),
                   },
                   {
                     label: 'Blended yield boost multipler',
-                    value: '1.0x → 7x', // Huh?
+                    value: simulationData ? (
+                      `${simulationData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                    ) : (
+                      <SkeletonLine width={90} height={16} />
+                    ),
                   },
                   {
                     label: 'SUMR lock positions ',
@@ -664,7 +1027,7 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: '% of available SUMR being locked ',
-                    value: '0 → 100%', // Huh?
+                    value: `0% → ${percentageOfSumrBeingLocked}`,
                   },
                   {
                     label: (
@@ -724,7 +1087,7 @@ const SumrV2StakingManageComponent = ({
               style={{ alignSelf: 'flex-end', minWidth: 'auto' }}
               onClick={onConfirmStake}
             >
-              Confirm Stake & Lock
+              {getButtonLabel()}
             </Button>
           </div>
         </div>
@@ -736,7 +1099,14 @@ const SumrV2StakingManageComponent = ({
 const SumrV2StakingSuccessComponent = ({
   txData,
 }: {
-  txData: { amount: BigNumber; lockupDuration: number }
+  txData: {
+    amount: BigNumber
+    lockupDuration: number
+    usdcYieldBoost?: number
+    usdcBlendedYieldBoostFrom?: number
+    usdcBlendedYieldBoostTo?: number
+    percentageOfSumrLocked?: string
+  }
 }) => {
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { publicClient } = useNetworkAlignedClient({
@@ -829,11 +1199,21 @@ const SumrV2StakingSuccessComponent = ({
               },
               {
                 label: 'Yield boost multipler',
-                value: '7x', // Huh?
+                value: txData.usdcYieldBoost ? (
+                  `${txData.usdcYieldBoost.toFixed(2)}x`
+                ) : (
+                  <SkeletonLine width={50} height={16} />
+                ),
               },
               {
                 label: 'Blended yield boost multipler',
-                value: '1.0x → 7x', // Huh?
+                value:
+                  txData.usdcBlendedYieldBoostFrom !== undefined &&
+                  txData.usdcBlendedYieldBoostTo !== undefined ? (
+                    `${txData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${txData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                  ) : (
+                    <SkeletonLine width={90} height={16} />
+                  ),
               },
               {
                 label: 'SUMR lock positions ',
@@ -841,7 +1221,7 @@ const SumrV2StakingSuccessComponent = ({
               },
               {
                 label: '% of available SUMR being locked ',
-                value: '0 → 100%', // Huh?
+                value: `0 → ${txData.percentageOfSumrLocked ?? '0%'}`,
               },
               {
                 label: (
@@ -880,21 +1260,126 @@ const SumrV2StakingSuccessComponent = ({
 }
 
 const SumrV2StakingIntermediary = () => {
-  // Huh?
-  // simple mapping steps, will need to include actual tx logic
   const [step, setStep] = useState<'init' | 'done'>('init')
   const [txData, setTxData] = useState<{
     amount: BigNumber
     lockupDuration: number
+    usdcYieldBoost?: number
+    usdcBlendedYieldBoostFrom?: number
+    usdcBlendedYieldBoostTo?: number
+    percentageOfSumrLocked?: string
   }>()
+  const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
+  const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
+  // todo
 
-  const onStake = ({ amount, lockupDuration }: { amount: BigNumber; lockupDuration: number }) => {
-    setTxData({ amount, lockupDuration })
-    setStep('done')
+  const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
+    useStakeSumrTransactionV2({
+      onStakeSuccess: () => {
+        setStakeStatus(UiTransactionStatuses.COMPLETED)
+        setStep('done')
+        toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onApproveSuccess: () => {
+        setApproveStatus(UiTransactionStatuses.COMPLETED)
+        toast.success('Approved staking $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+      },
+      onStakeError: () => {
+        setStakeStatus(UiTransactionStatuses.FAILED)
+        toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+      onApproveError: () => {
+        setApproveStatus(UiTransactionStatuses.FAILED)
+        toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+    })
+
+  const onStake = async ({
+    amount,
+    lockupDuration,
+    usdcYieldBoost,
+    usdcBlendedYieldBoostFrom,
+    usdcBlendedYieldBoostTo,
+    percentageOfSumrLocked,
+  }: {
+    amount: BigNumber
+    lockupDuration: number
+    usdcYieldBoost?: number
+    usdcBlendedYieldBoostFrom?: number
+    usdcBlendedYieldBoostTo?: number
+    percentageOfSumrLocked?: string
+  }) => {
+    if (amount.isZero() || amount.isNaN()) {
+      toast.error('Invalid staking amount', ERROR_TOAST_CONFIG)
+
+      return
+    }
+
+    setTxData({
+      amount,
+      lockupDuration,
+      usdcYieldBoost,
+      usdcBlendedYieldBoostFrom,
+      usdcBlendedYieldBoostTo,
+      percentageOfSumrLocked,
+    })
+
+    try {
+      // Convert amount to bigint with proper decimals
+      const amountBigInt = formatDecimalToBigInt(amount.toString())
+      // Convert lockup duration from days to seconds
+      const lockupPeriodSeconds = BigInt(lockupDuration * 24 * 60 * 60)
+
+      // Prepare the transactions
+      const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
+
+      if (!prepared) {
+        toast.error('Failed to prepare staking transaction', ERROR_TOAST_CONFIG)
+
+        return
+      }
+
+      // Execute approve transaction first if needed
+      if (approveSumrTransaction && approveStatus !== UiTransactionStatuses.COMPLETED) {
+        setApproveStatus(UiTransactionStatuses.PENDING)
+        await approveSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error approving staking $SUMR:', err)
+
+          throw err
+        })
+      }
+
+      // Execute stake transaction
+      if (stakeSumrTransaction) {
+        setStakeStatus(UiTransactionStatuses.PENDING)
+        await stakeSumrTransaction().catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error staking $SUMR:', err)
+
+          throw err
+        })
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Staking error:', error)
+    }
   }
 
   if (step === 'init') {
-    return <SumrV2StakingManageComponent onStake={onStake} />
+    return (
+      <SumrV2StakingManageComponent
+        onStake={onStake}
+        isLoading={
+          isLoading ||
+          approveStatus === UiTransactionStatuses.PENDING ||
+          stakeStatus === UiTransactionStatuses.PENDING
+        }
+        approveStatus={approveStatus}
+        needsApproval={!!approveSumrTransaction}
+        prepareTxs={prepareTxs}
+      />
+    )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

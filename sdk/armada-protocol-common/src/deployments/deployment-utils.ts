@@ -175,8 +175,8 @@ export const getDeployedRewardsRedeemerAddress = () => {
   return Address.createFromEthereum({ value: maybeAddress })
 }
 
-export const getDeployedGovRewardsManagerAddress = (
-  version: 'rewardsManager' | 'rewardsManagerV2' = 'rewardsManager',
+export const getDeployedGovAddress = (
+  version: 'rewardsManager' | 'summerStaking' = 'rewardsManager',
 ) => {
   const config = getDeploymentsJsonConfig()
   const key = getChainKey(ChainFamilyName.Base)
@@ -184,7 +184,7 @@ export const getDeployedGovRewardsManagerAddress = (
   const maybeAddress = (
     config[key].deployedContracts.gov as {
       rewardsManager: { address: string | undefined }
-      rewardsManagerV2: { address: string | undefined }
+      summerStaking: { address: string | undefined }
     }
   )[version].address
   if (!maybeAddress) {

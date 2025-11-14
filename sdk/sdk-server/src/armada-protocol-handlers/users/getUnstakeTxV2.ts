@@ -4,6 +4,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getUnstakeTxV2 = publicProcedure
   .input(
     z.object({
+      userStakeIndex: z.bigint(),
       amount: z.bigint(),
     }),
   )

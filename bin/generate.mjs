@@ -10,31 +10,30 @@ async function copyAbis(contractList, pkg) {
   }
 }
 
-const coreAbis = [
-  'AdmiralsQuarters.sol',
-  'AdmiralsQuartersWhitelist.sol',
-  'Ark.sol',
-  'ConfigurationManager.sol',
-  'FleetCommander.sol',
-  'FleetCommanderWhitelist.sol',
-  'StakingRewardsManagerBase.sol',
-  'HarborCommand.sol',
-]
-const rewardsAbis = ['SummerRewardsRedeemer.sol']
-const govAbis = [
-  'SummerToken.sol',
-  'GovernanceRewardsManager.sol',
-  'SummerVestingWallet.sol',
-  'SummerVestingWalletFactory.sol',
-]
-const accessContracts = ['ProtocolAccessManagerWhiteList.sol']
-
-const foldersDict = {
-  'core-contracts': coreAbis,
-  // 'gov-contracts': govAbis,
-  // 'rewards-contracts': rewardsAbis,
-  // 'access-contracts': accessContracts,
+const mainConfig = {
+  'core-contracts': [
+    'AdmiralsQuarters.sol',
+    'Ark.sol',
+    'ConfigurationManager.sol',
+    'FleetCommander.sol',
+    'StakingRewardsManagerBase.sol',
+    'HarborCommand.sol',
+  ],
+  'gov-contracts': [
+    'SummerToken.sol',
+    'GovernanceRewardsManager.sol',
+    'SummerVestingWallet.sol',
+    'SummerVestingWalletFactory.sol',
+  ],
+  'rewards-contracts': ['SummerRewardsRedeemer.sol'],
 }
+const branchConfig = {
+  'core-contracts': ['AdmiralsQuartersWhitelist.sol', 'FleetCommanderWhitelist.sol'],
+  'gov-contracts': ['SummerStaking.sol'],
+  'access-contracts': ['ProtocolAccessManagerWhiteList.sol'],
+}
+
+const config = mainConfig
 
 const dest = 'armada-protocol/abis/src'
 await $`pwd`
@@ -46,12 +45,12 @@ await $`pnpm i`
 cd('../..')
 
 // gen abis
-for (const pkg of Object.keys(foldersDict)) {
+for (const pkg of Object.keys(config)) {
   await $`cd armada-protocol/contracts/packages/${pkg} && forge build --extra-output-files abi`
 }
 
 // copy abis
-for (const [pkg, contractList] of Object.entries(foldersDict)) {
+for (const [pkg, contractList] of Object.entries(config)) {
   await copyAbis(contractList, pkg)
 }
 

@@ -7,3 +7,4 @@ export { ProtocolAccessManagerWhiteListContract } from './implementation/contrac
 export { GenericContractWrapper } from './implementation/contracts/GenericContract'
 export { ArkContract } from './implementation/contracts/ArkContract'
 export { AdmiralsQuartersContract } from './implementation/contracts/AdmiralsQuartersContract/AdmiralsQuartersContract'
+export { SummerStakingContract } from './implementation/contracts/SummerStakingContract/SummerStakingContract'

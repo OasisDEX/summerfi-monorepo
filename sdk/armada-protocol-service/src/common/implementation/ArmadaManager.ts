@@ -121,24 +121,6 @@ export class ArmadaManager implements IArmadaManager {
       utils: this.utils,
       merklRewards: this.merklRewards,
     })
-    this.governance = new ArmadaManagerGovernance({
-      ...params,
-      hubChainInfo: this._hubChainInfo,
-      utils: this.utils,
-    })
-    this.migrations = new ArmadaManagerMigrations({
-      ...params,
-      hubChainInfo: this._hubChainInfo,
-      supportedChains: this._supportedChains,
-      utils: this.utils,
-    })
-    this.bridge = new ArmadaManagerBridge({
-      supportedChains: this._supportedChains,
-      blockchainClientProvider: this._blockchainClientProvider,
-      configProvider: this._configProvider,
-      tokensManager: this._tokensManager,
-      utils: this.utils,
-    })
     this.vaults = new ArmadaManagerVaults({
       clientId: this._clientId,
       supportedChains: this._supportedChains,
@@ -152,6 +134,26 @@ export class ArmadaManager implements IArmadaManager {
       utils: this.utils,
       subgraphManager: this._subgraphManager,
       deploymentProvider: this._deploymentProvider,
+    })
+    this.governance = new ArmadaManagerGovernance({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      contractsProvider: this._contractsProvider,
+      utils: this.utils,
+      vaults: this.vaults,
+    })
+    this.migrations = new ArmadaManagerMigrations({
+      ...params,
+      hubChainInfo: this._hubChainInfo,
+      supportedChains: this._supportedChains,
+      utils: this.utils,
+    })
+    this.bridge = new ArmadaManagerBridge({
+      supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
+      configProvider: this._configProvider,
+      tokensManager: this._tokensManager,
+      utils: this.utils,
     })
 
     this.admin = new ArmadaManagerAdmin({

@@ -10,7 +10,7 @@ import {
   type IArmadaManagerUtils,
   type MerklReward,
   getAllMerkleClaims,
-  getDeployedGovRewardsManagerAddress,
+  getDeployedGovAddress,
   isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -211,7 +211,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: this._hubChainInfo,
     })
 
-    const rewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const rewardsManagerAddress = getDeployedGovAddress()
     const rewardToken = this._utils.getSummerToken({ chainInfo: this._hubChainInfo })
 
     return client.readContract({
@@ -540,7 +540,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     params: Parameters<IArmadaManagerClaims['getAggregatedClaimsForChainTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedClaimsForChainTx']> {
     const isHubChain = params.chainInfo.chainId === this._hubChainInfo.chainId
-    const govRewardsManagerAddress = getDeployedGovRewardsManagerAddress()
+    const govRewardsManagerAddress = getDeployedGovAddress()
 
     LoggingService.debug(
       `Generating aggregated claim tx on ${params.chainInfo.toString() + isHubChain ? ' (on hub chain)' : ''} for user ${params.user.wallet.address.value}` +

@@ -124,6 +124,10 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     })
   }
 
+  getSummerPrice(): ReturnType<IArmadaManagerUtils['getSummerPrice']> {
+    return 0.1
+  }
+
   /** POOLS */
 
   /** @see IArmadaManagerUtils.getVaultsRaw */

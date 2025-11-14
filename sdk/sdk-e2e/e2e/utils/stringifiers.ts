@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IArmadaPosition, IArmadaVaultInfo } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
+import { SUMR_DECIMALS } from './constants'
+
+export function formatSumr(value: bigint): string {
+  return BigNumber(value).div(SUMR_DECIMALS).toFixed()
+}
 
 export function stringifyArmadaVaultInfo(vaultInfo: IArmadaVaultInfo): string {
   return JSON.stringify(
