@@ -10,6 +10,7 @@ import {
   type StakingBucketInfo,
   type UserStakingBalanceByBucket,
   type StakingRewardRates,
+  type StakingSimulationDataV2,
 } from '@summerfi/armada-protocol-common'
 import {
   BridgeTransactionInfo,
@@ -632,6 +633,24 @@ export interface IArmadaManagerUsersClient {
    * @returns Object containing the revenue share percentage and calculated amount in USD
    */
   getStakingRevenueShareV2(): Promise<{ percentage: IPercentage; amount: number }>
+
+  /**
+   * @method getStakingSimulationDataV2
+   * @description Calculates staking simulation data including yield APYs and boosts
+   *
+   * @param amount The amount to stake
+   * @param period The lockup period in seconds
+   * @param sumrPriceUsd The SUMR token price in USD
+   * @param userAddress The user's wallet address
+   *
+   * @returns Simulation data including APYs and yield boosts
+   */
+  getStakingSimulationDataV2(params: {
+    amount: bigint
+    period: bigint
+    sumrPriceUsd: number
+    userAddress: AddressValue
+  }): Promise<StakingSimulationDataV2>
 
   /**
    * @method getMigratablePositions

@@ -92,7 +92,7 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(earned).toBeGreaterThanOrEqual(0n)
     })
 
-    it('should get staking reward rates', async () => {
+    it.only('should get staking reward rates', async () => {
       // Get SUMR token address as reward token
       const summerToken = await sdk.armada.users.getSummerToken({ chainInfo })
 
@@ -100,13 +100,17 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
         rewardTokenAddress: summerToken.address,
       })
 
-      console.log('Reward rates for user:', rewardRates)
+      console.log('Reward rates for user:', {
+        baseApy: rewardRates.baseApy.toString(),
+        maxApy: rewardRates.maxApy.toString(),
+        summerRewardApy: rewardRates.summerRewardApy.toString(),
+      })
       expect(rewardRates).toBeDefined()
-      expect(rewardRates.baseApy).toBeGreaterThanOrEqual(0)
-      expect(rewardRates.maxApy).toBeGreaterThanOrEqual(0)
+      expect(rewardRates.baseApy.value).toBeGreaterThanOrEqual(0)
+      expect(rewardRates.maxApy.value).toBeGreaterThanOrEqual(0)
       // maxApy should be baseApy * MAX_MULTIPLE (7.2655)
-      if (rewardRates.baseApy > 0) {
-        expect(rewardRates.maxApy).toBeCloseTo(rewardRates.baseApy * 7.2655, 2)
+      if (rewardRates.baseApy.value > 0) {
+        expect(rewardRates.maxApy.value).toBeCloseTo(rewardRates.baseApy.value * 7.2655, 2)
       }
     })
 

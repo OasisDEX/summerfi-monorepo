@@ -7,6 +7,7 @@ import type {
   StakeTransactionInfo,
   StakingBucket,
   UnstakeTransactionInfo,
+  AddressValue,
 } from '@summerfi/sdk-common'
 
 /**
@@ -21,9 +22,9 @@ export interface UserStakingBalanceByBucket {
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
-  summerRewardApy: number
-  baseApy: number
-  maxApy: number
+  summerRewardApy: IPercentage
+  baseApy: IPercentage
+  maxApy: IPercentage
 }
 
 /**
@@ -35,6 +36,18 @@ export interface StakingBucketInfo {
   totalStaked: bigint
   minLockupPeriod: bigint
   maxLockupPeriod: bigint
+}
+
+/**
+ * @description Staking simulation data result
+ */
+export interface StakingSimulationDataV2 {
+  sumrRewardApy: IPercentage
+  usdcYieldApy: IPercentage
+  usdcYieldBoost: number
+  usdcBlendedYieldBoostFrom: number
+  usdcBlendedYieldBoostTo: number
+  weightedAmount: bigint
 }
 
 /**
@@ -280,4 +293,22 @@ export interface IArmadaManagerGovernance {
    * @returns Object containing the revenue share percentage and calculated amount in USD
    */
   getStakingRevenueShareV2: () => Promise<{ percentage: IPercentage; amount: number }>
+
+  /**
+   * @method getStakingSimulationDataV2
+   * @description Calculates staking simulation data including yield APYs and boosts
+   *
+   * @param amount The amount to stake
+   * @param period The lockup period in seconds
+   * @param sumrPriceUsd The SUMR token price in USD
+   * @param userAddress The user's wallet address
+   *
+   * @returns Simulation data including APYs and yield boosts
+   */
+  getStakingSimulationDataV2(params: {
+    amount: bigint
+    period: bigint
+    sumrPriceUsd: number
+    userAddress: AddressValue
+  }): Promise<StakingSimulationDataV2>
 }

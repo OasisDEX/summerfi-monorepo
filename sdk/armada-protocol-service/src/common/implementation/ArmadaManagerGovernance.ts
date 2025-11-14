@@ -18,6 +18,8 @@ import {
   TokenAmount,
   TransactionType,
   Percentage,
+  User,
+  Wallet,
   type IAddress,
   type IChainInfo,
 } from '@summerfi/sdk-common'
@@ -512,24 +514,59 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const [, rewardRate] = rewardData
     const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n
 
-    // Calculate annual rewards
+    // Calculate annual rewards in reward token units (wei)
     const annualRewards = rewardRate * SECONDS_PER_YEAR
 
     // Calculate APR (Annual Percentage Rate) based on raw staked
     let summerRewardAPR = 0
-    if (totalRawStaked > 0n) {
-      // APR = (annualRewards / totalRawStaked)
-      // Convert to percentage with precision using BigNumber
-      const annualRewardsBN = new BigNumber(annualRewards.toString())
-      const totalRawStakedBN = new BigNumber(totalRawStaked.toString())
-      summerRewardAPR = annualRewardsBN.dividedBy(totalRawStakedBN).multipliedBy(100).toNumber()
-    }
+    let summerRewardAPY = 0
 
-    // Convert APR to APY (compounding daily)
-    // APY = (1 + APR/365)^365 - 1
-    const compoundingFrequency = 365
-    const summerRewardAPY =
-      Math.pow(1 + summerRewardAPR / 100 / compoundingFrequency, compoundingFrequency) - 1
+    if (totalRawStaked > 0n && annualRewards > 0n) {
+      // Both values are in wei units of their respective tokens
+      // Need to normalize by token decimals for proper comparison
+      
+      // Get reward token decimals
+      const rewardToken = this._tokensManager.getTokenByAddress({
+        chainInfo: this._hubChainInfo,
+        address: params.rewardTokenAddress,
+      })
+      const rewardTokenDecimals = rewardToken?.decimals ?? 18
+
+      // Get staking token (SUMR) decimals
+      const sumrToken = this._utils.getSummerToken({
+        chainInfo: this._hubChainInfo,
+      })
+      const sumrDecimals = sumrToken.decimals
+
+      // Convert to actual token amounts (not wei)
+      const annualRewardsBN = new BigNumber(annualRewards.toString()).dividedBy(
+        new BigNumber(10).pow(rewardTokenDecimals),
+      )
+      const totalRawStakedBN = new BigNumber(totalRawStaked.toString()).dividedBy(
+        new BigNumber(10).pow(sumrDecimals),
+      )
+
+      // APR = (annualRewards / totalRawStaked) * 100
+      summerRewardAPR = annualRewardsBN.dividedBy(totalRawStakedBN).multipliedBy(100).toNumber()
+
+      // Convert APR to APY (compounding daily)
+      // APY = (1 + APR/365)^365 - 1
+      // Only calculate if APR is reasonable (< 1000000%) to avoid infinity
+      if (isFinite(summerRewardAPR) && summerRewardAPR < 1000000) {
+        const compoundingFrequency = 365
+        const aprDecimal = summerRewardAPR / 100
+        const compoundResult = Math.pow(1 + aprDecimal / compoundingFrequency, compoundingFrequency)
+        if (isFinite(compoundResult)) {
+          summerRewardAPY = (compoundResult - 1) * 100
+        } else {
+          // If compounding produces infinity, approximate with APR
+          summerRewardAPY = summerRewardAPR
+        }
+      } else {
+        // For very high APR, approximate APY with APR
+        summerRewardAPY = summerRewardAPR
+      }
+    }
 
     // Get staking revenue share to calculate baseApy
     const revenueShare = await this.getStakingRevenueShareV2()
@@ -565,9 +602,9 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
 
     return {
-      summerRewardApy: summerRewardAPY * 100, // Convert to percentage
-      baseApy,
-      maxApy,
+      summerRewardApy: Percentage.createFrom({ value: summerRewardAPY }),
+      baseApy: Percentage.createFrom({ value: baseApy }),
+      maxApy: Percentage.createFrom({ value: maxApy }),
     }
   }
 
@@ -659,5 +696,98 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const amount = totalRevenue * percentage.toProportion()
 
     return { percentage, amount }
+  }
+
+  async getStakingSimulationDataV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingSimulationDataV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingSimulationDataV2']> {
+    // Create user object for method calls
+    const user = User.createFrom({
+      chainInfo: this._hubChainInfo,
+      wallet: Wallet.createFrom({
+        address: Address.createFromEthereum({ value: params.userAddress }),
+      }),
+    })
+
+    // Get required data
+    const [rewardRates, totalSumrStaked, _totalWeightedSupply, stakingRevenue, userBalances] =
+      await Promise.all([
+        this.getStakingRewardRatesV2({
+          rewardTokenAddress: this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+        }),
+        this.getStakingTotalSumrStakedV2(),
+        this.getStakingTotalWeightedSupplyV2(),
+        this.getStakingRevenueShareV2(),
+        this.getUserStakingBalanceV2({ user }),
+      ])
+
+    const stakingRevAmount = stakingRevenue.amount
+
+    // Calculate weighted amount for the new stake
+    const weightedAmount = await this.getStakingCalculateWeightedStakeV2({
+      amount: params.amount,
+      lockupPeriod: params.period,
+    })
+
+    // Calculate new totals
+    const newTotalSumrStaked = totalSumrStaked + params.amount
+
+    // Calculate user's current balances
+    const userSumrStakedBalance = userBalances.reduce((acc, b) => acc + b.amount, 0n)
+
+    // Get user's current weighted balance
+    const userWeightedBalance = await this.getUserStakingWeightedBalanceV2({ user })
+
+    // Use BigNumber for calculations
+    const sumrPriceUsdBN = new BigNumber(params.sumrPriceUsd)
+    const stakingRevAmountBN = new BigNumber(stakingRevAmount)
+    const newTotalSumrStakedBN = new BigNumber(newTotalSumrStaked.toString())
+    const weightedAmountBN = new BigNumber(weightedAmount.toString())
+    const amountBN = new BigNumber(params.amount.toString())
+    const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString())
+    const userSumrStakedBalanceBN = new BigNumber(userSumrStakedBalance.toString())
+
+    // Get SUMR token decimals
+    const sumrToken = this._utils.getSummerToken({
+      chainInfo: this._hubChainInfo,
+    })
+    const sumrDecimals = sumrToken.decimals
+    const decimalsBN = new BigNumber(10).pow(sumrDecimals)
+
+    // Calculate formulas
+    // usdcYieldBoost = weightedAmount / amount
+    const usdcYieldBoost = weightedAmountBN.dividedBy(amountBN).toNumber()
+
+    // newApyPerWeightedToken = stakingRevAmount / (newTotalSumrStaked * sumrPriceUsd)
+    const newTotalSumrStakedTokens = newTotalSumrStakedBN.dividedBy(decimalsBN)
+    const newApyPerWeightedToken = stakingRevAmountBN
+      .dividedBy(newTotalSumrStakedTokens.multipliedBy(sumrPriceUsdBN))
+      .toNumber()
+
+    // usdcYieldApy = newApyPerWeightedToken * usdcYieldBoost * 100 (convert to percentage)
+    const usdcYieldApy = newApyPerWeightedToken * usdcYieldBoost * 100
+
+    // usdcBlendedYieldBoostFrom = userWeightedBalance / userSumrStakedBalance
+    let usdcBlendedYieldBoostFrom = 0
+    if (userSumrStakedBalanceBN.gt(0)) {
+      usdcBlendedYieldBoostFrom = userWeightedBalanceBN
+        .dividedBy(userSumrStakedBalanceBN)
+        .toNumber()
+    }
+
+    // usdcBlendedYieldBoostTo = (userWeightedBalance + weightedAmount) / (userSumrStakedBalance + amount)
+    const usdcBlendedYieldBoostTo = userWeightedBalanceBN
+      .plus(weightedAmountBN)
+      .dividedBy(userSumrStakedBalanceBN.plus(amountBN))
+      .toNumber()
+
+    return {
+      sumrRewardApy: rewardRates.summerRewardApy,
+      usdcYieldApy: Percentage.createFrom({ value: usdcYieldApy }),
+      usdcYieldBoost,
+      usdcBlendedYieldBoostFrom,
+      usdcBlendedYieldBoostTo,
+      weightedAmount,
+    }
   }
 }

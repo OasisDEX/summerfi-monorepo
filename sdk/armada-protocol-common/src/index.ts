@@ -48,6 +48,7 @@ export type {
   UserStakingBalanceByBucket,
   StakingRewardRates,
   StakingBucketInfo,
+  StakingSimulationDataV2,
 } from './common/interfaces/IArmadaManagerGovernance'
 export type { IArmadaManagerClaims } from './common/interfaces/IArmadaManagerClaims'
 export { getAllMerkleClaims } from './distributions/index'

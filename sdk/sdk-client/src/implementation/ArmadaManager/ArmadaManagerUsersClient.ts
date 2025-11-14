@@ -291,6 +291,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getStakingRevenueShareV2.query()
   }
 
+  async getStakingSimulationDataV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakingSimulationDataV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakingSimulationDataV2']> {
+    return this.rpcClient.armada.users.getStakingSimulationDataV2.query(params)
+  }
+
   async getMigratablePositions(
     params: Parameters<IArmadaManagerUsersClient['getMigratablePositions']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getMigratablePositions']> {

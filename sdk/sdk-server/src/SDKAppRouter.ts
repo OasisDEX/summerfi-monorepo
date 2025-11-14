@@ -68,6 +68,7 @@ import { getStakingCalculateWeightedStakeV2 } from './armada-protocol-handlers/u
 import { getStakingTotalWeightedSupplyV2 } from './armada-protocol-handlers/users/getStakingTotalWeightedSupplyV2'
 import { getStakingTotalSumrStakedV2 } from './armada-protocol-handlers/users/getStakingTotalSumrStakedV2'
 import { getStakingRevenueShareV2 } from './armada-protocol-handlers/users/getStakingRevenueShareV2'
+import { getStakingSimulationDataV2 } from './armada-protocol-handlers/users/getStakingSimulationDataV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
@@ -194,6 +195,7 @@ export const sdkAppRouter = router({
       getStakingTotalWeightedSupplyV2: getStakingTotalWeightedSupplyV2,
       getStakingTotalSumrStakedV2: getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2: getStakingRevenueShareV2,
+      getStakingSimulationDataV2: getStakingSimulationDataV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,

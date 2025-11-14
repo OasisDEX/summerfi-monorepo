@@ -10,6 +10,7 @@
     "e2e:govV2.stakingInfo": "jest --roots e2e -- ./e2e/govV2.stakingInfo.test.ts",
     "e2e:govV2.stake": "jest --roots e2e -- ./e2e/govV2.stake.test.ts",
     "e2e:govV2.unstake": "jest --roots e2e -- ./e2e/govV2.unstake.test.ts",
+    "e2e:govV2.stakingSimulation": "jest --roots e2e -- ./e2e/govV2.stakingSimulation.test.ts",
     "e2e:intentSwap": "jest --roots e2e -- ./e2e/intentswaps.test.ts",
     "e2e:vault": "jest --roots e2e -- ./e2e/armadaProtocol.vault.test.ts",
     "e2e:allVaults": "jest --roots e2e -- ./e2e/armadaProtocol.allVaults.test.ts",
