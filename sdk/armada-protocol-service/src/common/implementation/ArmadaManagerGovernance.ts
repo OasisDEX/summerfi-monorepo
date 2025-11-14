@@ -578,8 +578,8 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
     const sumrDecimals = sumrToken.decimals
 
-    // Get SUMR price from utils
-    const sumrPrice = this._utils.getSummerPrice()
+    // Get SUMR price from params or fallback to utils
+    const sumrPrice = params.sumrPriceUsd ?? this._utils.getSummerPrice()
 
     let baseApy = 0
     let maxApy = 0
@@ -705,11 +705,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       }),
     })
 
+    const sumrPriceUsd = params.sumrPriceUsd ?? this._utils.getSummerPrice()
+
     // Get required data
     const [rewardRates, totalSumrStaked, _totalWeightedSupply, stakingRevenue, userBalances] =
       await Promise.all([
         this.getStakingRewardRatesV2({
           rewardTokenAddress: this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+          sumrPriceUsd,
         }),
         this.getStakingTotalSumrStakedV2(),
         this.getStakingTotalWeightedSupplyV2(),
@@ -735,7 +738,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const userWeightedBalance = await this.getUserStakingWeightedBalanceV2({ user })
 
     // Use BigNumber for calculations
-    const sumrPriceUsdBN = new BigNumber(params.sumrPriceUsd)
+    const sumrPriceUsdBN = new BigNumber(sumrPriceUsd)
     const stakingRevAmountBN = new BigNumber(stakingRevAmount)
     const newTotalSumrStakedBN = new BigNumber(newTotalSumrStaked.toString())
     const weightedAmountBN = new BigNumber(weightedAmount.toString())

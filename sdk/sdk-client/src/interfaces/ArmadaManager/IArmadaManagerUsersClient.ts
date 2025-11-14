@@ -584,10 +584,14 @@ export interface IArmadaManagerUsersClient {
    *
    * @param user The user to calculate boosted multiplier for
    * @param rewardTokenAddress The reward token address
+   * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
-  getStakingRewardRatesV2(params: { rewardTokenAddress: IAddress }): Promise<StakingRewardRates>
+  getStakingRewardRatesV2(params: {
+    rewardTokenAddress: IAddress
+    sumrPriceUsd?: number
+  }): Promise<StakingRewardRates>
 
   /**
    * @method getStakingBucketsInfoV2
@@ -640,7 +644,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @param amount The amount to stake
    * @param period The lockup period in seconds
-   * @param sumrPriceUsd The SUMR token price in USD
+   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
    * @param userAddress The user's wallet address
    *
    * @returns Simulation data including APYs and yield boosts
@@ -648,7 +652,7 @@ export interface IArmadaManagerUsersClient {
   getStakingSimulationDataV2(params: {
     amount: bigint
     period: bigint
-    sumrPriceUsd: number
+    sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
 

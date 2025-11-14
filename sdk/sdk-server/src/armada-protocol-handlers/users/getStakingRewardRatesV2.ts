@@ -6,6 +6,7 @@ export const getStakingRewardRatesV2 = publicProcedure
   .input(
     z.object({
       rewardTokenAddress: z.custom<IAddress>(isAddress),
+      sumrPriceUsd: z.number().optional(),
     }),
   )
   .query(async (opts) => {

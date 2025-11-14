@@ -7,7 +7,7 @@ export const getStakingSimulationDataV2 = publicProcedure
     z.object({
       amount: z.bigint(),
       period: z.bigint(),
-      sumrPriceUsd: z.number(),
+      sumrPriceUsd: z.number().optional(),
       userAddress: z.custom<AddressValue>(isAddressValue),
     }),
   )
