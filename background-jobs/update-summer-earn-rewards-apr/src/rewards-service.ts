@@ -7,6 +7,7 @@ import { ChainId, NetworkByChainID } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
 import { CompoundRewardFetcher } from './reward-fetchers/CompoundRewardFetcher'
+import { FluidRewardFetcher } from './reward-fetchers/FluidRewardFetcher'
 
 interface AaveMeritResponse {
   previousAPR: number | null
@@ -94,7 +95,7 @@ interface RetryConfig {
 
 export class RewardsService {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
-  private readonly EULER_API_URL = 'https://app.euler.finance/api/v2/rewards/merkl?chainId='
+  private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards?chainId='
   private readonly GEARBOX_API_URL =
     'https://api.merkl.xyz/v4/opportunities?mainProtocolId=gearbox&status=LIVE&'
   private readonly DEFAULT_RETRY_CONFIG: RetryConfig = {
@@ -112,12 +113,14 @@ export class RewardsService {
   private readonly ratesSubgraphClient: RatesSubgraphClient
   private readonly siloRewardFetcher: SiloRewardFetcher
   private readonly compoundRewardFetcher: CompoundRewardFetcher
+  private readonly fluidRewardFetcher: FluidRewardFetcher
 
   constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
     this.ratesSubgraphClient = ratesSubgraphClient
     this.siloRewardFetcher = new SiloRewardFetcher(logger)
     this.compoundRewardFetcher = new CompoundRewardFetcher(logger)
+    this.fluidRewardFetcher = new FluidRewardFetcher(logger, { blacklistSymbols: [] })
   }
 
   async getRewardRates(
@@ -186,6 +189,14 @@ export class RewardsService {
         chainId,
       )
       Object.assign(results, compoundResults)
+    }
+
+    if (protocolGroups[Protocol.Fluid]?.length) {
+      const fluidResults = await this.fluidRewardFetcher.getRewardRates(
+        protocolGroups[Protocol.Fluid],
+        chainId,
+      )
+      Object.assign(results, fluidResults)
     }
 
     // we call it for all arks i ncase there are additional rewards calcualted with onchian data
@@ -485,7 +496,7 @@ export class RewardsService {
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     try {
-      const MERKL_API_URL = `${this.GEARBOX_API_URL}${chainId}`
+      const MERKL_API_URL = `${this.GEARBOX_API_URL}&chainId=${chainId}`
       const response = await this.fetchWithRetry(MERKL_API_URL)
       const data = (await response.json()) as MerkleDistribution[]
       const rewardRates: Record<string, RewardRate[]> = Object.fromEntries(
