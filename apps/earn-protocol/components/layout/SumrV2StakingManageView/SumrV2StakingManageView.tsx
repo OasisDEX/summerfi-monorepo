@@ -223,6 +223,9 @@ const SumrV2StakingManageComponent = ({
     sumrRewardAmount: string
   } | null>(null)
 
+  // Huh? Get actual SUMR price from $SUMR valuation or SDK oracle in the future
+  const sumrPriceUsd = 0.2
+
   const {
     getStakingBucketsInfoV2,
     getStakingTotalSumrStakedV2,
@@ -253,6 +256,7 @@ const SumrV2StakingManageComponent = ({
             getStakingRevenueShareV2(),
             getStakingRewardRatesV2({
               rewardTokenAddress: summerToken.address,
+              sumrPriceUsd,
             }),
           ])
 
@@ -364,8 +368,6 @@ const SumrV2StakingManageComponent = ({
         setSimulationLoading(true)
         const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
         const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
-        // TODO: Get actual SUMR price from $SUMR valuation or SDK oracle in the future
-        const sumrPriceUsd = 0.2 // fallback price
 
         const simulation = await getStakingSimulationDataV2({
           amount: amountBigInt,
