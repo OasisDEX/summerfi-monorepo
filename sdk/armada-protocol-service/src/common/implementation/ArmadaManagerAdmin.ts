@@ -228,7 +228,8 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
     params: Parameters<IArmadaManagerAdmin['emergencyShutdown']>[0],
   ): ReturnType<IArmadaManagerAdmin['emergencyShutdown']> {
     throw new Error(
-      'emergencyShutdown method is not implemented in ArmadaManagerAdmin: ' + params.vaultId,
+      'emergencyShutdown method is not implemented in ArmadaManagerAdmin: ' +
+        params.vaultId.fleetAddress.toString(),
     )
   }
 

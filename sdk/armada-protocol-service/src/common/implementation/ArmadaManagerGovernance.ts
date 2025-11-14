@@ -524,7 +524,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     if (totalRawStaked > 0n && annualRewards > 0n) {
       // Both values are in wei units of their respective tokens
       // Need to normalize by token decimals for proper comparison
-      
+
       // Get reward token decimals
       const rewardToken = this._tokensManager.getTokenByAddress({
         chainInfo: this._hubChainInfo,
@@ -689,10 +689,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   > {
     const percentage = Percentage.createFrom({ value: 20 })
     const totalRevenue = await this._vaults.getProtocolRevenue()
-    console.log({
-      totalRevenue,
-      percentage: percentage.toProportion(),
-    })
     const amount = totalRevenue * percentage.toProportion()
 
     return { percentage, amount }
