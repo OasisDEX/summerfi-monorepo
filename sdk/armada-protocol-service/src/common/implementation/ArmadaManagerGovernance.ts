@@ -498,14 +498,11 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
 
     // Use contract wrapper for all methods
-    const [rewardData, allBucketInfo, userWeightedBalance, _totalWeightedSupply, userRawBalance] =
-      await Promise.all([
-        stakingContract.rewardData({ rewardToken: params.rewardTokenAddress.value }),
-        stakingContract.getAllBucketInfo(),
-        stakingContract.weightedBalanceOf({ account: params.user.wallet.address.value }),
-        stakingContract.totalSupply(),
-        stakingContract.balanceOf({ account: params.user.wallet.address.value }),
-      ])
+    const [rewardData, allBucketInfo, _totalWeightedSupply] = await Promise.all([
+      stakingContract.rewardData({ rewardToken: params.rewardTokenAddress.value }),
+      stakingContract.getAllBucketInfo(),
+      stakingContract.totalSupply(),
+    ])
 
     const [, , stakedAmounts] = allBucketInfo
 
@@ -533,15 +530,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const compoundingFrequency = 365
     const summerRewardAPY =
       Math.pow(1 + summerRewardAPR / 100 / compoundingFrequency, compoundingFrequency) - 1
-
-    // Calculate user's boosted multiplier: weightedBalanceOf(user) / balanceOf(user)
-    let boostedMultiplier = 1
-    if (userRawBalance > 0n) {
-      // Convert to number with precision using BigNumber
-      const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString())
-      const userRawBalanceBN = new BigNumber(userRawBalance.toString())
-      boostedMultiplier = userWeightedBalanceBN.dividedBy(userRawBalanceBN).toNumber()
-    }
 
     // Get staking revenue share to calculate baseApy
     const revenueShare = await this.getStakingRevenueShareV2()
@@ -577,8 +565,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
 
     return {
-      summerRewardAPY: summerRewardAPY * 100, // Convert to percentage
-      boostedMultiplier,
+      summerRewardApy: summerRewardAPY * 100, // Convert to percentage
       baseApy,
       maxApy,
     }

@@ -21,8 +21,7 @@ export interface UserStakingBalanceByBucket {
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
-  summerRewardAPY: number
-  boostedMultiplier: number
+  summerRewardApy: number
   baseApy: number
   maxApy: number
 }
@@ -234,10 +233,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
-  getStakingRewardRatesV2: (params: {
-    user: IUser
-    rewardTokenAddress: IAddress
-  }) => Promise<StakingRewardRates>
+  getStakingRewardRatesV2: (params: { rewardTokenAddress: IAddress }) => Promise<StakingRewardRates>
 
   /**
    * @method getStakingBucketsInfoV2

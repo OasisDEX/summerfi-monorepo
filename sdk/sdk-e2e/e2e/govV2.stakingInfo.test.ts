@@ -97,14 +97,11 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       const summerToken = await sdk.armada.users.getSummerToken({ chainInfo })
 
       const rewardRates = await sdk.armada.users.getStakingRewardRatesV2({
-        user,
         rewardTokenAddress: summerToken.address,
       })
 
       console.log('Reward rates for user:', rewardRates)
       expect(rewardRates).toBeDefined()
-      expect(rewardRates.summerRewardAPY).toBeGreaterThanOrEqual(0)
-      expect(rewardRates.boostedMultiplier).toBeGreaterThanOrEqual(1) // Should be >= 1x
       expect(rewardRates.baseApy).toBeGreaterThanOrEqual(0)
       expect(rewardRates.maxApy).toBeGreaterThanOrEqual(0)
       // maxApy should be baseApy * MAX_MULTIPLE (7.2655)

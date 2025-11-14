@@ -586,10 +586,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
-  getStakingRewardRatesV2(params: {
-    user: IUser
-    rewardTokenAddress: IAddress
-  }): Promise<StakingRewardRates>
+  getStakingRewardRatesV2(params: { rewardTokenAddress: IAddress }): Promise<StakingRewardRates>
 
   /**
    * @method getStakingBucketsInfoV2

@@ -1,11 +1,10 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { isAddress, isUser, type IAddress, type IUser } from '@summerfi/sdk-common'
+import { isAddress, type IAddress } from '@summerfi/sdk-common'
 
 export const getStakingRewardRatesV2 = publicProcedure
   .input(
     z.object({
-      user: z.custom<IUser>(isUser),
       rewardTokenAddress: z.custom<IAddress>(isAddress),
     }),
   )
