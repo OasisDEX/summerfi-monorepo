@@ -12,6 +12,9 @@ const REBALANCING_NOTICE_THRESHOLDS = {
 export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }> = ({
   vault,
 }) => {
+  // Temporarily disabled - rebalancing notice banner
+  return null
+
   const { liquidityPercentage } = useMemo(() => {
     if (!vault.inputTokenPriceUSD) {
       return {
