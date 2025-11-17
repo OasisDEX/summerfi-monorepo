@@ -209,6 +209,16 @@ export interface IArmadaManagerGovernance {
   }) => Promise<[ApproveTransactionInfo, UnstakeTransactionInfo] | [UnstakeTransactionInfo]>
 
   /**
+   * @method getUserStakesCount
+   * @description Returns the number of stakes a user has. If the user has no balance in the zero bucket (NoLockup), returns count - 1
+   *
+   * @param user The user
+   *
+   * @returns The number of stakes (adjusted for zero bucket if empty)
+   */
+  getUserStakesCount: (params: { user: IUser }) => Promise<bigint>
+
+  /**
    * @method getUserStakingBalanceV2
    * @description Returns the user's staking balance for each bucket (V2)
    *

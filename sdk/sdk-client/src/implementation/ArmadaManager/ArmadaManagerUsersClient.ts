@@ -237,6 +237,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUnstakeTxV2.query(params)
   }
 
+  async getUserStakesCount(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakesCount']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakesCount']> {
+    return this.rpcClient.armada.users.getUserStakesCount.query(params)
+  }
+
   async getUserStakingBalanceV2(
     params: Parameters<IArmadaManagerUsersClient['getUserStakingBalanceV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserStakingBalanceV2']> {

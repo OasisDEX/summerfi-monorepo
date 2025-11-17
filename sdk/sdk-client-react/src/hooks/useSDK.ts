@@ -21,6 +21,7 @@ import { getStakeOnBehalfTxV2Handler } from '../handlers/getStakeOnBehalfTxV2Han
 import { getUndelegateTxHandler } from '../handlers/getUndelegateTxHandler'
 import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
 import { getUnstakeTxV2Handler } from '../handlers/getUnstakeTxV2Handler'
+import { getUserStakesCountHandler } from '../handlers/getUserStakesCountHandler'
 import { getUserStakingBalanceV2Handler } from '../handlers/getUserStakingBalanceV2Handler'
 import { getUserStakingWeightedBalanceV2Handler } from '../handlers/getUserStakingWeightedBalanceV2Handler'
 import { getUserStakingEarnedV2Handler } from '../handlers/getUserStakingEarnedV2Handler'
@@ -131,6 +132,7 @@ export const useSDK = (params: UseSdk) => {
   const getUndelegateTx = useMemo(() => getUndelegateTxHandler(sdk), [sdk])
   const getUnstakeTx = useMemo(() => getUnstakeTxHandler(sdk), [sdk])
   const getUnstakeTxV2 = useMemo(() => getUnstakeTxV2Handler(sdk), [sdk])
+  const getUserStakesCount = useMemo(() => getUserStakesCountHandler(sdk), [sdk])
   const getUserStakingBalanceV2 = useMemo(() => getUserStakingBalanceV2Handler(sdk), [sdk])
   const getUserStakingWeightedBalanceV2 = useMemo(
     () => getUserStakingWeightedBalanceV2Handler(sdk),
@@ -205,6 +207,7 @@ export const useSDK = (params: UseSdk) => {
       getUndelegateTx,
       getUnstakeTx,
       getUnstakeTxV2,
+      getUserStakesCount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
       getUserStakingEarnedV2,
@@ -265,6 +268,7 @@ export const useSDK = (params: UseSdk) => {
       getUndelegateTx,
       getUnstakeTx,
       getUnstakeTxV2,
+      getUserStakesCount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
       getUserStakingEarnedV2,

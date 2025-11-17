@@ -422,6 +422,34 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     return approveToUnstakeUserTokens ? [approveToUnstakeUserTokens, unstakeTx] : [unstakeTx]
   }
 
+  async getUserStakesCount(
+    params: Parameters<IArmadaManagerGovernance['getUserStakesCount']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakesCount']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get the raw count of user stakes from the contract
+    const stakesCount = await stakingContract.getUserStakesCount({
+      user: params.user.wallet.address.value,
+    })
+
+    // Check if the user has any balance in the zero bucket (NoLockup bucket)
+    const zeroBalances = await this.getUserStakingBalanceV2({ user: params.user })
+    const zeroBalance = zeroBalances.find((balance) => balance.bucket === 0)?.amount || 0n
+
+    // If the balance in the zero bucket is zero, return count - 1
+    // since the zero bucket is always counted but doesn't actually have a stake
+    if (zeroBalance === 0n && stakesCount > 0n) {
+      return stakesCount - 1n
+    }
+
+    return stakesCount
+  }
+
   async getUserStakingBalanceV2(
     params: Parameters<IArmadaManagerGovernance['getUserStakingBalanceV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUserStakingBalanceV2']> {
