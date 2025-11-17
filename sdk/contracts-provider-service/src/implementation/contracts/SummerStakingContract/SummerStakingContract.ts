@@ -170,4 +170,9 @@ export class SummerStakingContract<TClient extends IBlockchainClient, TAddress e
   async balanceOf(params: { account: AddressValue }): Promise<bigint> {
     return this.contract.read.balanceOf([params.account])
   }
+
+  /** @see ISummerStakingContract.stakeSummerTokenAddress */
+  async stakeSummerTokenAddress(): Promise<AddressValue> {
+    return this.contract.read.STAKED_SUMMER_TOKEN()
+  }
 }

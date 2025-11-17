@@ -177,4 +177,11 @@ export interface ISummerStakingContract extends IContractWrapper {
    * @returns The raw balance
    */
   balanceOf(params: { account: AddressValue }): Promise<bigint>
+
+  /**
+   * @name stakeSummerTokenAddress
+   * @description Get the address of the staked summer token (xSUMR)
+   * @returns The address of the staked summer token
+   */
+  stakeSummerTokenAddress(): Promise<AddressValue>
 }

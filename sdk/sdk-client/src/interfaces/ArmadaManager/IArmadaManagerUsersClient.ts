@@ -537,15 +537,17 @@ export interface IArmadaManagerUsersClient {
    * @method getUnstakeTxV2
    * @description Returns the transaction to unstake tokens from a specific stake in the user's portfolio (V2)
    *
+   * @param user The user
    * @param userStakeIndex The index of the stake in the user's stake array (portfolio) to unstake from
    * @param amount The amount to unstake
    *
    * @returns The transaction information
    */
   getUnstakeTxV2(params: {
+    user: IUser
     userStakeIndex: bigint
     amount: bigint
-  }): Promise<[UnstakeTransactionInfo]>
+  }): Promise<[ApproveTransactionInfo, UnstakeTransactionInfo] | [UnstakeTransactionInfo]>
 
   /**
    * @method getUserStakingBalanceV2

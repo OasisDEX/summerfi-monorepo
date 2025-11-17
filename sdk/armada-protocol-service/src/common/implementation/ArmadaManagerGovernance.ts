@@ -22,6 +22,7 @@ import {
   Wallet,
   type IAddress,
   type IChainInfo,
+  Token,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -381,10 +382,11 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getUnstakeTxV2(
     params: Parameters<IArmadaManagerGovernance['getUnstakeTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUnstakeTxV2']> {
+    const chainInfo = this._hubChainInfo
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
 
     const stakingContract = await this._contractsProvider.getSummerStakingContract({
-      chainInfo: this._hubChainInfo,
+      chainInfo,
       address: stakingContractAddress,
     })
 
@@ -393,13 +395,31 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       amount: params.amount,
     })
 
-    return [
-      {
-        type: TransactionType.Unstake,
-        description: unstakeTxInfo.description,
-        transaction: unstakeTxInfo.transaction,
-      },
-    ]
+    const unstakeTx = {
+      type: TransactionType.Unstake,
+      description: unstakeTxInfo.description,
+      transaction: unstakeTxInfo.transaction,
+    } as const
+
+    // approve staked summer token xSUMR
+    const stakeSummerTokenAddress = await stakingContract.stakeSummerTokenAddress()
+    const approveToUnstakeUserTokens = await this._allowanceManager.getApproval({
+      chainInfo,
+      spender: stakingContractAddress,
+      amount: TokenAmount.createFromBaseUnit({
+        amount: params.amount.toString(),
+        token: Token.createFrom({
+          address: Address.createFromEthereum({ value: stakeSummerTokenAddress }),
+          chainInfo,
+          decimals: 18,
+          symbol: 'xSUMR',
+          name: 'StakedSummerToken',
+        }),
+      }),
+      owner: params.user.wallet.address,
+    })
+
+    return approveToUnstakeUserTokens ? [approveToUnstakeUserTokens, unstakeTx] : [unstakeTx]
   }
 
   async getUserStakingBalanceV2(
