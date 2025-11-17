@@ -194,6 +194,8 @@ const SumrV2StakingManageComponent = ({
     usdcBlendedYieldBoostFrom?: number
     usdcBlendedYieldBoostTo?: number
     percentageOfSumrLocked?: string
+    userStakesCountBefore?: string
+    userStakesCountAfter?: string
   }) => void
   isLoading?: boolean
   approveStatus: UiTransactionStatuses | null
@@ -221,6 +223,8 @@ const SumrV2StakingManageComponent = ({
     usdcBlendedYieldBoostTo: number
     usdcYieldUsdPerYear: string
     sumrRewardAmount: string
+    userStakesCountBefore: string
+    userStakesCountAfter: string
   } | null>(null)
 
   // Huh? Get actual SUMR price from $SUMR valuation or SDK oracle in the future
@@ -397,6 +401,8 @@ const SumrV2StakingManageComponent = ({
           usdcBlendedYieldBoostTo: simulation.usdcBlendedYieldBoostTo,
           usdcYieldUsdPerYear,
           sumrRewardAmount,
+          userStakesCountBefore: simulation.userStakesCountBefore.toString(),
+          userStakesCountAfter: simulation.userStakesCountAfter.toString(),
         })
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -509,6 +515,8 @@ const SumrV2StakingManageComponent = ({
       usdcBlendedYieldBoostFrom: simulationData?.usdcBlendedYieldBoostFrom,
       usdcBlendedYieldBoostTo: simulationData?.usdcBlendedYieldBoostTo,
       percentageOfSumrLocked: percentageOfSumrBeingLocked,
+      userStakesCountBefore: simulationData?.userStakesCountBefore,
+      userStakesCountAfter: simulationData?.userStakesCountAfter,
     })
   }
 
@@ -1009,23 +1017,33 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'Yield boost multipler',
-                    value: simulationData ? (
+                    value: simulationLoading ? (
+                      <SkeletonLine width={50} height={16} />
+                    ) : simulationData ? (
                       `${simulationData.usdcYieldBoost.toFixed(2)}x`
                     ) : (
-                      <SkeletonLine width={50} height={16} />
+                      '-'
                     ),
                   },
                   {
                     label: 'Blended yield boost multipler',
-                    value: simulationData ? (
+                    value: simulationLoading ? (
+                      <SkeletonLine width={90} height={16} />
+                    ) : simulationData ? (
                       `${simulationData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(1)}x`
                     ) : (
-                      <SkeletonLine width={90} height={16} />
+                      '-'
                     ),
                   },
                   {
                     label: 'SUMR lock positions ',
-                    value: '0 → 1 (+1)', // Huh?
+                    value: simulationLoading ? (
+                      <SkeletonLine width={90} height={16} />
+                    ) : simulationData ? (
+                      `${simulationData.userStakesCountBefore} → ${simulationData.userStakesCountAfter} (+${Number(simulationData.userStakesCountAfter) - Number(simulationData.userStakesCountBefore)})`
+                    ) : (
+                      '-'
+                    ),
                   },
                   {
                     label: '% of available SUMR being locked ',
@@ -1108,6 +1126,8 @@ const SumrV2StakingSuccessComponent = ({
     usdcBlendedYieldBoostFrom?: number
     usdcBlendedYieldBoostTo?: number
     percentageOfSumrLocked?: string
+    userStakesCountBefore?: string
+    userStakesCountAfter?: string
   }
 }) => {
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
@@ -1219,7 +1239,11 @@ const SumrV2StakingSuccessComponent = ({
               },
               {
                 label: 'SUMR lock positions ',
-                value: '0 → 1 (+1)', // Huh?
+                value:
+                  txData.userStakesCountBefore !== undefined &&
+                  txData.userStakesCountAfter !== undefined
+                    ? `${txData.userStakesCountBefore} → ${txData.userStakesCountAfter} (+${Number(txData.userStakesCountAfter) - Number(txData.userStakesCountBefore)})`
+                    : '-',
               },
               {
                 label: '% of available SUMR being locked ',
@@ -1270,6 +1294,8 @@ const SumrV2StakingIntermediary = () => {
     usdcBlendedYieldBoostFrom?: number
     usdcBlendedYieldBoostTo?: number
     percentageOfSumrLocked?: string
+    userStakesCountBefore?: string
+    userStakesCountAfter?: string
   }>()
   const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
   const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
@@ -1303,6 +1329,8 @@ const SumrV2StakingIntermediary = () => {
     usdcBlendedYieldBoostFrom,
     usdcBlendedYieldBoostTo,
     percentageOfSumrLocked,
+    userStakesCountBefore,
+    userStakesCountAfter,
   }: {
     amount: BigNumber
     lockupDuration: number
@@ -1310,6 +1338,8 @@ const SumrV2StakingIntermediary = () => {
     usdcBlendedYieldBoostFrom?: number
     usdcBlendedYieldBoostTo?: number
     percentageOfSumrLocked?: string
+    userStakesCountBefore?: string
+    userStakesCountAfter?: string
   }) => {
     if (amount.isZero() || amount.isNaN()) {
       toast.error('Invalid staking amount', ERROR_TOAST_CONFIG)
@@ -1324,6 +1354,8 @@ const SumrV2StakingIntermediary = () => {
       usdcBlendedYieldBoostFrom,
       usdcBlendedYieldBoostTo,
       percentageOfSumrLocked,
+      userStakesCountBefore,
+      userStakesCountAfter,
     })
 
     try {
