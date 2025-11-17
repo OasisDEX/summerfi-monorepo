@@ -48,6 +48,8 @@ export interface StakingSimulationDataV2 {
   usdcBlendedYieldBoostFrom: number
   usdcBlendedYieldBoostTo: number
   weightedAmount: bigint
+  userStakesCountBefore: bigint
+  userStakesCountAfter: bigint
 }
 
 /**
@@ -210,13 +212,17 @@ export interface IArmadaManagerGovernance {
 
   /**
    * @method getUserStakesCount
-   * @description Returns the number of stakes a user has. If the user has no balance in the zero bucket (NoLockup), returns count - 1
+   * @description Returns the number of stakes a user has before and after considering a specific bucket
    *
    * @param user The user
+   * @param bucketIndex The bucket index to check
    *
-   * @returns The number of stakes (adjusted for zero bucket if empty)
+   * @returns Object containing userStakesCountBefore and userStakesCountAfter
    */
-  getUserStakesCount: (params: { user: IUser }) => Promise<bigint>
+  getUserStakesCount: (params: {
+    user: IUser
+    bucketIndex: number
+  }) => Promise<{ userStakesCountBefore: bigint; userStakesCountAfter: bigint }>
 
   /**
    * @method getUserStakingBalanceV2

@@ -308,28 +308,29 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
-    const stakeTxInfo = await stakingContract.stakeLockup({
-      amount: params.amount,
-      lockupPeriod: params.lockupPeriod,
-    })
+    const [stakeTxInfo, approveToStakeUserTokens] = await Promise.all([
+      stakingContract.stakeLockup({
+        amount: params.amount,
+        lockupPeriod: params.lockupPeriod,
+      }),
+      this._allowanceManager.getApproval({
+        chainInfo: this._hubChainInfo,
+        spender: stakingContractAddress,
+        amount: TokenAmount.createFromBaseUnit({
+          amount: params.amount.toString(),
+          token: this._utils.getSummerToken({
+            chainInfo: this._hubChainInfo,
+          }),
+        }),
+        owner: params.user.wallet.address,
+      }),
+    ])
 
     const stakeTx = {
       type: TransactionType.Stake,
       description: stakeTxInfo.description,
       transaction: stakeTxInfo.transaction,
     } as const
-
-    const approveToStakeUserTokens = await this._allowanceManager.getApproval({
-      chainInfo: this._hubChainInfo,
-      spender: stakingContractAddress,
-      amount: TokenAmount.createFromBaseUnit({
-        amount: params.amount.toString(),
-        token: this._utils.getSummerToken({
-          chainInfo: this._hubChainInfo,
-        }),
-      }),
-      owner: params.user.wallet.address,
-    })
 
     if (approveToStakeUserTokens) {
       return [approveToStakeUserTokens, stakeTx]
@@ -348,29 +349,30 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
-    const stakeTxInfo = await stakingContract.stakeLockupOnBehalf({
-      receiver: params.receiver.value,
-      amount: params.amount,
-      lockupPeriod: params.lockupPeriod,
-    })
+    const [stakeTxInfo, approveToStakeUserTokens] = await Promise.all([
+      stakingContract.stakeLockupOnBehalf({
+        receiver: params.receiver.value,
+        amount: params.amount,
+        lockupPeriod: params.lockupPeriod,
+      }),
+      this._allowanceManager.getApproval({
+        chainInfo: this._hubChainInfo,
+        spender: stakingContractAddress,
+        amount: TokenAmount.createFromBaseUnit({
+          amount: params.amount.toString(),
+          token: this._utils.getSummerToken({
+            chainInfo: this._hubChainInfo,
+          }),
+        }),
+        owner: params.user.wallet.address,
+      }),
+    ])
 
     const stakeTx = {
       type: TransactionType.Stake,
       description: stakeTxInfo.description,
       transaction: stakeTxInfo.transaction,
     } as const
-
-    const approveToStakeUserTokens = await this._allowanceManager.getApproval({
-      chainInfo: this._hubChainInfo,
-      spender: stakingContractAddress,
-      amount: TokenAmount.createFromBaseUnit({
-        amount: params.amount.toString(),
-        token: this._utils.getSummerToken({
-          chainInfo: this._hubChainInfo,
-        }),
-      }),
-      owner: params.user.wallet.address,
-    })
 
     if (approveToStakeUserTokens) {
       return [approveToStakeUserTokens, stakeTx]
@@ -390,10 +392,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
-    const unstakeTxInfo = await stakingContract.unstakeLockup({
-      stakeIndex: params.userStakeIndex,
-      amount: params.amount,
-    })
+    // approve staked summer token xSUMR
+    const [unstakeTxInfo, stakeSummerTokenAddress] = await Promise.all([
+      stakingContract.unstakeLockup({
+        stakeIndex: params.userStakeIndex,
+        amount: params.amount,
+      }),
+      stakingContract.stakeSummerTokenAddress(),
+    ])
 
     const unstakeTx = {
       type: TransactionType.Unstake,
@@ -401,8 +407,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       transaction: unstakeTxInfo.transaction,
     } as const
 
-    // approve staked summer token xSUMR
-    const stakeSummerTokenAddress = await stakingContract.stakeSummerTokenAddress()
     const approveToUnstakeUserTokens = await this._allowanceManager.getApproval({
       chainInfo,
       spender: stakingContractAddress,
@@ -432,22 +436,22 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
-    // Get the raw count of user stakes from the contract
-    const stakesCount = await stakingContract.getUserStakesCount({
-      user: params.user.wallet.address.value,
-    })
+    // Get the raw count of user stakes from the contract and user balances in parallel
+    const [userStakesCountBefore, balances] = await Promise.all([
+      stakingContract.getUserStakesCount({
+        user: params.user.wallet.address.value,
+      }),
+      this.getUserStakingBalanceV2({ user: params.user }),
+    ])
 
-    // Check if the user has any balance in the zero bucket (NoLockup bucket)
-    const zeroBalances = await this.getUserStakingBalanceV2({ user: params.user })
-    const zeroBalance = zeroBalances.find((balance) => balance.bucket === 0)?.amount || 0n
+    const bucketBalance =
+      balances.find((balance) => balance.bucket === params.bucketIndex)?.amount || 0n
 
-    // If the balance in the zero bucket is zero, return count - 1
-    // since the zero bucket is always counted but doesn't actually have a stake
-    if (zeroBalance === 0n && stakesCount > 0n) {
-      return stakesCount - 1n
-    }
+    // If the provided bucket has zero amount, add 1 to the count
+    const userStakesCountAfter =
+      bucketBalance === 0n ? userStakesCountBefore + 1n : userStakesCountBefore
 
-    return stakesCount
+    return { userStakesCountBefore, userStakesCountAfter }
   }
 
   async getUserStakingBalanceV2(
@@ -755,35 +759,46 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     const sumrPriceUsd = params.sumrPriceUsd ?? this._utils.getSummerPrice()
 
+    // Get bucket index from lockup period
+    const bucketIndex = findBucket(params.period)
+
     // Get required data
-    const [rewardRates, totalSumrStaked, _totalWeightedSupply, stakingRevenue, userBalances] =
-      await Promise.all([
-        this.getStakingRewardRatesV2({
-          rewardTokenAddress: this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address,
-          sumrPriceUsd,
-        }),
-        this.getStakingTotalSumrStakedV2(),
-        this.getStakingTotalWeightedSupplyV2(),
-        this.getStakingRevenueShareV2(),
-        this.getUserStakingBalanceV2({ user }),
-      ])
+    const [
+      rewardRates,
+      totalSumrStaked,
+      _totalWeightedSupply,
+      stakingRevenue,
+      userBalances,
+      weightedAmount,
+      userStakesCount,
+      userWeightedBalance,
+    ] = await Promise.all([
+      this.getStakingRewardRatesV2({
+        rewardTokenAddress: this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address,
+        sumrPriceUsd,
+      }),
+      this.getStakingTotalSumrStakedV2(),
+      this.getStakingTotalWeightedSupplyV2(),
+      this.getStakingRevenueShareV2(),
+      this.getUserStakingBalanceV2({ user }),
+      this.getStakingCalculateWeightedStakeV2({
+        amount: params.amount,
+        lockupPeriod: params.period,
+      }),
+      this.getUserStakesCount({
+        user,
+        bucketIndex,
+      }),
+      this.getUserStakingWeightedBalanceV2({ user }),
+    ])
 
     const stakingRevAmount = stakingRevenue.amount
-
-    // Calculate weighted amount for the new stake
-    const weightedAmount = await this.getStakingCalculateWeightedStakeV2({
-      amount: params.amount,
-      lockupPeriod: params.period,
-    })
 
     // Calculate new totals
     const newTotalSumrStaked = totalSumrStaked + params.amount
 
     // Calculate user's current balances
     const userSumrStakedBalance = userBalances.reduce((acc, b) => acc + b.amount, 0n)
-
-    // Get user's current weighted balance
-    const userWeightedBalance = await this.getUserStakingWeightedBalanceV2({ user })
 
     // Use BigNumber for calculations
     const sumrPriceUsdBN = new BigNumber(sumrPriceUsd)
@@ -835,6 +850,8 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       usdcBlendedYieldBoostFrom,
       usdcBlendedYieldBoostTo,
       weightedAmount,
+      userStakesCountBefore: userStakesCount.userStakesCountBefore,
+      userStakesCountAfter: userStakesCount.userStakesCountAfter,
     }
   }
 }

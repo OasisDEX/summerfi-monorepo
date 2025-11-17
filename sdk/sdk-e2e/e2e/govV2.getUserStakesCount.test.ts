@@ -22,23 +22,61 @@ describe('Armada Protocol Gov V2 getUserStakesCount', () => {
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
     it('should get user stakes count', async () => {
-      const stakesCount = await sdk.armada.users.getUserStakesCount({ user })
+      const bucketIndex = 0 // Test with bucket 0 (NoLockup)
+      const result = await sdk.armada.users.getUserStakesCount({ user, bucketIndex })
 
-      expect(stakesCount).toBeDefined()
-      expect(typeof stakesCount).toBe('bigint')
-      expect(stakesCount).toBeGreaterThanOrEqual(0n)
+      expect(result).toBeDefined()
+      expect(result.userStakesCountBefore).toBeDefined()
+      expect(result.userStakesCountAfter).toBeDefined()
+      expect(typeof result.userStakesCountBefore).toBe('bigint')
+      expect(typeof result.userStakesCountAfter).toBe('bigint')
+      expect(result.userStakesCountBefore).toBeGreaterThanOrEqual(0n)
+      expect(result.userStakesCountAfter).toBeGreaterThanOrEqual(0n)
 
-      console.log('User stakes count:', stakesCount.toString())
+      console.log('User stakes count before:', result.userStakesCountBefore.toString())
+      console.log('User stakes count after:', result.userStakesCountAfter.toString())
 
       // Also get the balance to verify the logic
       const balances = await sdk.armada.users.getUserStakingBalanceV2({ user })
-      const zeroBalance = balances.find((balance) => balance.bucket === 0)?.amount || 0n
+      const bucketBalance = balances.find((balance) => balance.bucket === bucketIndex)?.amount || 0n
 
-      console.log('Zero bucket balance:', zeroBalance.toString())
+      console.log(`Bucket ${bucketIndex} balance:`, bucketBalance.toString())
 
-      // If zero balance is 0, then stakesCount should be rawCount - 1
-      // We can't directly test the rawCount, but we can verify the returned count is reasonable
-      expect(stakesCount).toBeGreaterThanOrEqual(0n)
+      // If bucket balance is 0, then userStakesCountAfter should be userStakesCountBefore + 1
+      if (bucketBalance === 0n) {
+        expect(result.userStakesCountAfter).toBe(result.userStakesCountBefore + 1n)
+      } else {
+        expect(result.userStakesCountAfter).toBe(result.userStakesCountBefore)
+      }
+    })
+
+    it('should get user stakes count', async () => {
+      const bucketIndex = 1 // Test with bucket 1 (SomeLockup)
+      const result = await sdk.armada.users.getUserStakesCount({ user, bucketIndex })
+
+      expect(result).toBeDefined()
+      expect(result.userStakesCountBefore).toBeDefined()
+      expect(result.userStakesCountAfter).toBeDefined()
+      expect(typeof result.userStakesCountBefore).toBe('bigint')
+      expect(typeof result.userStakesCountAfter).toBe('bigint')
+      expect(result.userStakesCountBefore).toBeGreaterThanOrEqual(0n)
+      expect(result.userStakesCountAfter).toBeGreaterThanOrEqual(0n)
+
+      console.log('User stakes count before:', result.userStakesCountBefore.toString())
+      console.log('User stakes count after:', result.userStakesCountAfter.toString())
+
+      // Also get the balance to verify the logic
+      const balances = await sdk.armada.users.getUserStakingBalanceV2({ user })
+      const bucketBalance = balances.find((balance) => balance.bucket === bucketIndex)?.amount || 0n
+
+      console.log(`Bucket ${bucketIndex} balance:`, bucketBalance.toString())
+
+      // If bucket balance is 0, then userStakesCountAfter should be userStakesCountBefore + 1
+      if (bucketBalance === 0n) {
+        expect(result.userStakesCountAfter).toBe(result.userStakesCountBefore + 1n)
+      } else {
+        expect(result.userStakesCountAfter).toBe(result.userStakesCountBefore)
+      }
     })
 
     it('should return 0 for user with no stakes', async () => {
@@ -47,14 +85,20 @@ describe('Armada Protocol Gov V2 getUserStakesCount', () => {
         value: '0x0000000000000000000000000000000000000001',
       })
       const randomUser = User.createFromEthereum(chainInfo.chainId, randomAddress.value)
+      const bucketIndex = 0
 
-      const stakesCount = await sdk.armada.users.getUserStakesCount({ user: randomUser })
+      const result = await sdk.armada.users.getUserStakesCount({ user: randomUser, bucketIndex })
 
-      expect(stakesCount).toBeDefined()
-      expect(typeof stakesCount).toBe('bigint')
-      expect(stakesCount).toBeGreaterThanOrEqual(0n)
+      expect(result).toBeDefined()
+      expect(result.userStakesCountBefore).toBeDefined()
+      expect(result.userStakesCountAfter).toBeDefined()
+      expect(typeof result.userStakesCountBefore).toBe('bigint')
+      expect(typeof result.userStakesCountAfter).toBe('bigint')
+      expect(result.userStakesCountBefore).toBeGreaterThanOrEqual(0n)
+      expect(result.userStakesCountAfter).toBeGreaterThanOrEqual(0n)
 
-      console.log('Random user stakes count:', stakesCount.toString())
+      console.log('Random user stakes count before:', result.userStakesCountBefore.toString())
+      console.log('Random user stakes count after:', result.userStakesCountAfter.toString())
     })
   })
 })
