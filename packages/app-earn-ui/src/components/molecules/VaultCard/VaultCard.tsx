@@ -189,8 +189,8 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             color: 'var(--color-text-primary-hover)',
           }}
         >
-          Deposit cap: {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol} (
-          {formatDecimalAsPercent(depositCapUsed)} used)
+          Deposit cap: {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}{' '}
+          {depositCapInToken.gt(0.1) ? `(${formatDecimalAsPercent(depositCapUsed)} used)` : ''}
         </Text>
       </Card>
     </GradientBox>
