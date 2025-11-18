@@ -1,34 +1,9 @@
 import { getDeviceType } from '@summerfi/app-utils'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { sanitizeReferralCode } from '@/helpers/sanitize-referral-code'
-
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const userAgent = request.headers.get('user-agent')
   const response = NextResponse.next()
-
-  const referrer = request.headers.get('referer')
-
-  if (referrer) {
-    const url = new URL(referrer)
-    const rawReferralCode = url.searchParams.get('referralCode')
-
-    if (rawReferralCode) {
-      const sanitizedCode = sanitizeReferralCode(rawReferralCode)
-
-      if (sanitizedCode) {
-        response.cookies.set({
-          name: 'referralCode',
-          value: sanitizedCode,
-          httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
-          maxAge: 12 * 60 * 60, // 12 hours
-          path: '/earn',
-        })
-      }
-    }
-  }
 
   // Only set device type if we have a user agent
   if (userAgent) {
@@ -57,6 +32,8 @@ export function middleware(request: NextRequest) {
       return new NextResponse(null, { status: 200, headers: response.headers })
     }
   }
+
+  response.headers.set('x-pathname', request.nextUrl.pathname)
 
   return response
 }
