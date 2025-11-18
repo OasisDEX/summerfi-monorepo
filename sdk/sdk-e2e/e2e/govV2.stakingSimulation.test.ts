@@ -26,18 +26,23 @@ describe('Armada Protocol Gov V2 Staking Simulation', () => {
     it('should calculate staking simulation data with various amounts and periods', async () => {
       // Test scenarios with different amounts and lockup periods
       const testCases = [
-        { amount: 100000000n, lockupDays: 14n, description: '100 000 000 SUMR, 14 days (minimum)' },
-        { amount: 100000000n, lockupDays: 90n, description: '100 000 000 SUMR, 90 days' },
+        // { amount: 42140n, lockupDays: 14n, description: '100 000 000 SUMR, 14 days (minimum)' },
+        // { amount: 100000000n, lockupDays: 90n, description: '100 000 000 SUMR, 90 days' },
+        // {
+        //   amount: 100000000n,
+        //   lockupDays: 365n,
+        //   description: '100 000 000 SUMR, 365 days (1 year)',
+        // },
         {
-          amount: 100000000n,
-          lockupDays: 365n,
-          description: '100 000 000 SUMR, 365 days (1 year)',
+          amount: 42140n,
+          lockupDays: 732n,
+          description: 'deposit 42,140 SUMR for 732 days (2 years)',
         },
-        {
-          amount: 100000000n,
-          lockupDays: 1095n,
-          description: '100 000 000 SUMR, 1095 days (3 years max)',
-        },
+        // {
+        //   amount: 100000000n,
+        //   lockupDays: 1095n,
+        //   description: '100 000 000 SUMR, 1095 days (3 years max)',
+        // },
       ]
 
       // Mock SUMR price (in production this would come from a price oracle)

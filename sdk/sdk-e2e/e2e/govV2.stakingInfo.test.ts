@@ -9,6 +9,7 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol Gov V2 Staking Info', () => {
   const sdk = createTestSDK()
+  const summerPriceUsd = 0.2 // Example SUMR price in USD for reward calculations
 
   const scenarios: { testConfigKey: TestConfigKey }[] = [
     {
@@ -98,9 +99,11 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
 
       const rewardRates = await sdk.armada.users.getStakingRewardRatesV2({
         rewardTokenAddress: summerToken.address,
+        sumrPriceUsd: summerPriceUsd,
       })
 
       console.log('Reward rates for user:', {
+        summerPriceUsd,
         baseApy: rewardRates.baseApy.toString(),
         maxApy: rewardRates.maxApy.toString(),
         summerRewardApy: rewardRates.summerRewardApy.toString(),
