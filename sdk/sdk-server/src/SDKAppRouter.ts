@@ -15,6 +15,7 @@ import { setFleetDepositCap } from './armada-protocol-handlers/admin/setFleetDep
 import { setMinimumBufferBalance } from './armada-protocol-handlers/admin/setMinimumBufferBalance'
 import { setTipJar } from './armada-protocol-handlers/admin/setTipJar'
 import { setTipRate } from './armada-protocol-handlers/admin/setTipRate'
+import { tipRate } from './armada-protocol-handlers/admin/tipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/admin/updateRebalanceCooldown'
 import { rebalance } from './armada-protocol-handlers/admin/rebalance'
 import { getDepositTx } from './armada-protocol-handlers/users/getDepositTxTx'
@@ -230,6 +231,7 @@ export const sdkAppRouter = router({
       arks: arks,
       arkConfig: arkConfig,
       getFeeRevenueConfig: getFeeRevenueConfig,
+      tipRate: tipRate,
     },
     accessControl: {
       hasGlobalRole: hasGlobalRole,

@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js'
 import type { IArmadaManagerAdmin } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -267,22 +268,41 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
   ): ReturnType<IArmadaManagerAdmin['getFeeRevenueConfig']> {
     const configurationManagerAddress = this._deploymentProvider.getDeployedContractAddress({
       contractName: 'configurationManager',
-      chainId: params.chainId,
+      chainId: params.vaultId.chainInfo.chainId,
     })
 
     const configurationManagerContract =
       await this._contractsProvider.getConfigurationManagerContract({
-        chainId: params.chainId,
+        chainId: params.vaultId.chainInfo.chainId,
         address: configurationManagerAddress,
       })
 
     const vaultFeeReceiverAddress = await configurationManagerContract.treasury()
 
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: configurationManagerContract.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    const rate = await fleetContract.tipRate()
+
     return {
       vaultFeeReceiverAddress,
       vaultFeeAmount: Percentage.createFrom({
-        value: 2,
+        value: BigNumber(rate).shiftedBy(-16).toNumber(),
       }),
     }
+  }
+
+  /** @see IArmadaManagerAdmin.tipRate */
+  async tipRate(
+    params: Parameters<IArmadaManagerAdmin['tipRate']>[0],
+  ): ReturnType<IArmadaManagerAdmin['tipRate']> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+
+    return fleetContract.tipRate()
   }
 }

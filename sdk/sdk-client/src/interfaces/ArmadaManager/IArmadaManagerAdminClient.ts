@@ -245,11 +245,21 @@ export interface IArmadaManagerAdminClient {
    * @name getFeeRevenueConfig
    * @description Gets the fee revenue configuration with hardcoded values per chain
    *
-   * @param chainId The chain ID to get fee revenue configuration for
+   * @param vaultId The ID of the vault
    *
    * @returns Promise<IFeeRevenueConfig> The fee revenue configuration
    */
-  getFeeRevenueConfig(params: { chainId: ChainId }): Promise<IFeeRevenueConfig>
+  getFeeRevenueConfig(params: { vaultId: IArmadaVaultId }): Promise<IFeeRevenueConfig>
+
+  /**
+   * @name tipRate
+   * @description Gets the tip rate of the fleet. Used to fetch data from the blockchain
+   *
+   * @param vaultId The ID of the vault
+   *
+   * @returns Promise<bigint> The tip rate as a bigint
+   */
+  tipRate(params: { vaultId: IArmadaVaultId }): Promise<bigint>
 
   /**
    * @method getVaultsRaw
