@@ -289,7 +289,7 @@ export class ArmadaManagerAdmin extends ArmadaManagerShared implements IArmadaMa
     return {
       vaultFeeReceiverAddress,
       vaultFeeAmount: Percentage.createFrom({
-        value: Number(BigNumber(rate).shiftedBy(-18).toFixed(0)),
+        value: BigNumber(rate).shiftedBy(-16).toNumber(),
       }),
     }
   }
