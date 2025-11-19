@@ -236,6 +236,11 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   treasury(): Promise<AddressValue>
 
+  /** @name tipRate
+   * @description Returns the tip rate of the fleet
+   */
+  tipRate(): Promise<bigint>
+
   /** CASTING METHODS */
 
   /**

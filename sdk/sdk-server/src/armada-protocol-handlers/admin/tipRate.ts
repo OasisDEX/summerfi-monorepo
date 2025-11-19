@@ -1,13 +1,13 @@
+import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { type IArmadaVaultId, isArmadaVaultId } from '@summerfi/sdk-common'
 
-export const getFeeRevenueConfig = publicProcedure
+export const tipRate = publicProcedure
   .input(
     z.object({
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.admin.getFeeRevenueConfig(opts.input)
+    return opts.ctx.armadaManager.admin.tipRate(opts.input)
   })

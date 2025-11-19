@@ -49,6 +49,7 @@ import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuth
 import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesMerklClaimTxHandler'
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
 import { getPositionHistoryHandler } from '../handlers/getPositionHistoryHandler'
+import { getTipRateHandler } from '../handlers/getTipRateHandler'
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
 import { isWhitelistedHandler } from '../handlers/isWhitelistedHandler'
@@ -168,6 +169,7 @@ export const useSDK = (params: UseSdk) => {
   const getReferralFeesMerklClaimTx = useMemo(() => getReferralFeesMerklClaimTxHandler(sdk), [sdk])
   const getUserMerklRewards = useMemo(() => getUserMerklRewardsHandler(sdk), [sdk])
   const getPositionHistory = useMemo(() => getPositionHistoryHandler(sdk), [sdk])
+  const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
   const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
   const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
   const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
@@ -234,6 +236,7 @@ export const useSDK = (params: UseSdk) => {
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,
+      getTipRate,
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,
@@ -295,6 +298,7 @@ export const useSDK = (params: UseSdk) => {
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,
+      getTipRate,
       isWhitelisted,
       setWhitelistedTx,
       setWhitelistedBatchTx,

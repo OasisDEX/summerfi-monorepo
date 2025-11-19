@@ -346,6 +346,11 @@ export class FleetCommanderContract<
     return await this.contract.read.treasury()
   }
 
+  /** @see IFleetCommanderContract.tipRate */
+  async tipRate(): Promise<bigint> {
+    return await this.contract.read.tipRate()
+  }
+
   /** CASTING METHODS */
 
   /** @see IFleetCommanderContract.asErc20 */

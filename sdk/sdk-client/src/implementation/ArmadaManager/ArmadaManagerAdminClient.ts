@@ -130,6 +130,13 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.admin.getFeeRevenueConfig.query(params)
   }
 
+  /** @see IArmadaManagerAdminClient.tipRate */
+  async tipRate(
+    params: Parameters<IArmadaManagerAdminClient['tipRate']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['tipRate']> {
+    return this.rpcClient.armada.admin.tipRate.query(params)
+  }
+
   /** @see IArmadaManagerAdminClient.getVaultsRaw */
   async getVaultsRaw(
     params: Parameters<IArmadaManagerAdminClient['getVaultsRaw']>[0],
