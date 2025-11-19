@@ -114,7 +114,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getNewDepositTx(
     params: Parameters<IArmadaManagerVaults['getNewDepositTx']>[0],
   ): ReturnType<IArmadaManagerVaults['getNewDepositTx']> {
-    return this._getDepositTX(params)
+    return this._getDepositTx(params)
   }
 
   async getUpdateDepositTx(
@@ -136,7 +136,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getWithdrawTx(
     params: Parameters<IArmadaManagerVaults['getWithdrawTx']>[0],
   ): ReturnType<IArmadaManagerVaults['getWithdrawTx']> {
-    return this._getWithdrawTX(params)
+    return this._getWithdrawTx(params)
   }
 
   async getVaultSwitchTx(params: {
@@ -577,7 +577,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getCrossChainDepositTx(
     params: Parameters<IArmadaManagerVaults['getCrossChainDepositTx']>[0],
   ): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
-    return this._getCrossChainDepositTX(params)
+    return this._getCrossChainDepositTx(params)
   }
 
   /**
@@ -586,7 +586,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getCrossChainWithdrawTx(
     params: Parameters<IArmadaManagerVaults['getCrossChainWithdrawTx']>[0],
   ): ReturnType<IArmadaManagerVaults['getCrossChainWithdrawTx']> {
-    return this._getCrossChainWithdrawTX(params)
+    return this._getCrossChainWithdrawTx(params)
   }
 
   /**
@@ -598,7 +598,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
    *
    * @returns The transactions needed to deposit the tokens
    */
-  private async _getDepositTX(params: {
+  private async _getDepositTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -831,7 +831,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
    *
    * @returns The transactions needed to withdraw the tokens
    */
-  private async _getWithdrawTX(params: {
+  private async _getWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -2034,7 +2034,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
    *
    * @returns The transactions needed to deposit the tokens cross-chain
    */
-  private async _getCrossChainDepositTX(params: {
+  private async _getCrossChainDepositTx(params: {
     fromChainId: ChainId
     vaultId: IArmadaVaultId
     user: IUser
@@ -2211,7 +2211,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
    *
    * @returns The transactions needed to withdraw the tokens cross-chain
    */
-  private async _getCrossChainWithdrawTX(params: {
+  private async _getCrossChainWithdrawTx(params: {
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
@@ -2307,6 +2307,20 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       actions,
     )
 
+    const destinationTokenAmount =
+      ensoBundleData.amountsOut[destinationToken.address.toSolidityValue()]
+    const toAmount = TokenAmount.createFromBaseUnit({
+      token: destinationToken,
+      amount: destinationTokenAmount.toString(),
+    })
+    const priceImpact: TransactionPriceImpact = {
+      impact: Percentage.createFrom({ value: 0 }),
+      price: Price.createFromAmountsRatio({
+        numerator: params.amount,
+        denominator: toAmount,
+      }),
+    }
+
     LoggingService.debug('Cross-chain withdraw Enso bundle data', {
       from: assetTokenSymbol,
       to: destinationToken.symbol,
@@ -2322,9 +2336,9 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       description: `Cross-chain withdraw from ${sourceChainId} to ${destinationChainId}`,
       metadata: {
         fromAmount: params.amount,
-        toAmount: params.amount, // TODO: calculate expected output amount
+        toAmount: toAmount,
         slippage: params.slippage,
-        priceImpact: undefined,
+        priceImpact: priceImpact,
       },
     })
 
