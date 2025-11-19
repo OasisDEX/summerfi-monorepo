@@ -185,8 +185,8 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
         <Text
           variant="p4semi"
           style={{
-            margin: 0,
             color: 'var(--color-text-primary-hover)',
+            margin: 0,
           }}
         >
           Deposit cap: {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}{' '}
