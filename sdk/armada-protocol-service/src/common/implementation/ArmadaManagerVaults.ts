@@ -25,6 +25,7 @@ import {
   IAddress,
   type DepositTransactionInfo,
   type ApproveTransactionInfo,
+  type WithdrawTransactionInfo,
   type IArmadaVaultInfo,
   ArmadaVaultInfo,
   ArmadaVaultId,
@@ -38,6 +39,10 @@ import {
   type IPrice,
   type VaultApys,
   ChainIds,
+  type ChainId,
+  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+  type TransactionPriceImpact,
+  Token,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -48,6 +53,7 @@ import { calculateRewardApy } from './utils/calculate-summer-yield'
 import type { IDeploymentProvider } from '../..'
 import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
+import { EnsoClient, type BundleAction } from '../services/EnsoClient'
 
 export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -563,6 +569,24 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     })
 
     return transactions
+  }
+
+  /**
+   * @see IArmadaManagerVaults.getCrossChainDepositTx
+   */
+  async getCrossChainDepositTx(
+    params: Parameters<IArmadaManagerVaults['getCrossChainDepositTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
+    return this._getCrossChainDepositTX(params)
+  }
+
+  /**
+   * @see IArmadaManagerVaults.getCrossChainWithdrawTx
+   */
+  async getCrossChainWithdrawTx(
+    params: Parameters<IArmadaManagerVaults['getCrossChainWithdrawTx']>[0],
+  ): ReturnType<IArmadaManagerVaults['getCrossChainWithdrawTx']> {
+    return this._getCrossChainWithdrawTX(params)
   }
 
   /**
@@ -1995,5 +2019,337 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     }, 0)
 
     return revenueAmount
+  }
+
+  /**
+   * Internal utility method to generate a cross-chain deposit TX using Enso
+   *
+   * @param fromChainId The source chain ID
+   * @param vaultId The vault for which the deposit is being made
+   * @param user The user making the deposit
+   * @param amount The amount being deposited
+   * @param slippage Maximum slippage tolerance in basis points
+   * @param shouldStake Whether to stake after deposit
+   * @param referralCode Optional referral code
+   *
+   * @returns The transactions needed to deposit the tokens cross-chain
+   */
+  private async _getCrossChainDepositTX(params: {
+    fromChainId: ChainId
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    referralCode?: string
+  }): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
+    const sourceChainId = params.fromChainId
+    const destinationChainId = params.vaultId.chainInfo.chainId
+    const senderAddressValue = params.user.wallet.address.value
+    const fleetAddressValue = params.vaultId.fleetAddress.value
+
+    // Get source and destination tokens
+    const sourceToken = params.amount.token
+    const sourceTokenSymbol = sourceToken.symbol
+    const sourceAmount = params.amount
+
+    // Get the fleet asset token on destination chain
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const [assetToken, fleetToken] = await Promise.all([
+      fleetCommander.asErc4626().asset(),
+      fleetCommander.asErc20().getToken(),
+    ])
+    const assetTokenSymbol = assetToken.symbol
+
+    // Convert slippage from percentage to basis points
+    const slippageBps = Math.floor(parseFloat(params.slippage.value.toString()) * 100)
+
+    const isNative = sourceToken.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE
+
+    // Enso action to swap source token to native currency on source chain
+    const ensoSourceSwapToEth: BundleAction = {
+      protocol: 'enso',
+      action: 'route',
+      args: {
+        tokenIn: sourceToken.address.value,
+        amountIn: sourceAmount.toSolidityValue().toString(),
+        tokenOut: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+        slippage: slippageBps,
+      },
+    }
+
+    // Build Enso bundle actions
+    const actions: BundleAction[] = [
+      ...(!isNative ? [ensoSourceSwapToEth] : []),
+      {
+        protocol: 'stargate',
+        action: 'bridge',
+        args: {
+          primaryAddress: '0xdc181Bd607330aeeBEF6ea62e03e5e1Fb4B6F7C7', // Stargate router
+          destinationChainId: destinationChainId,
+          tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+          amountIn: isNative ? sourceAmount.toSolidityValue().toString() : { useOutputOfCallAt: 0 },
+          receiver: senderAddressValue,
+          callback: [
+            {
+              protocol: 'enso',
+              action: 'balance',
+              args: {
+                token: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+              },
+            },
+            {
+              protocol: 'enso',
+              action: 'route',
+              args: {
+                tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+                amountIn: { useOutputOfCallAt: 0 },
+                tokenOut: assetToken.address.value,
+                slippage: slippageBps,
+              },
+            },
+            {
+              protocol: 'summer-fi',
+              action: 'deposit',
+              args: {
+                tokenIn: assetToken.address.value,
+                tokenOut: fleetAddressValue,
+                amountIn: { useOutputOfCallAt: 1 },
+                primaryAddress: fleetAddressValue,
+                receiver: senderAddressValue,
+              },
+            },
+          ],
+        },
+      },
+    ]
+
+    // Get bundle data from Enso
+    const ensoBundleData = await EnsoClient.getBundleData(
+      {
+        chainId: sourceChainId,
+        fromAddress: senderAddressValue,
+        spender: senderAddressValue,
+        routingStrategy: 'router',
+      },
+      actions,
+    )
+
+    const fleetTokenAmount = ensoBundleData.amountsOut[fleetToken.address.toSolidityValue()]
+    const toAmount = TokenAmount.createFromBaseUnit({
+      token: fleetToken,
+      amount: fleetTokenAmount.toString(),
+    })
+    const priceImpact: TransactionPriceImpact = {
+      impact: Percentage.createFrom({ value: 0 }),
+      price: Price.createFromAmountsRatio({
+        numerator: sourceAmount,
+        denominator: toAmount,
+      }),
+    }
+
+    LoggingService.debug('Cross-chain deposit Enso bundle data', {
+      from: sourceTokenSymbol,
+      to: assetTokenSymbol,
+      sourceChainId,
+      destinationChainId,
+      amount: sourceAmount.toString(),
+    })
+
+    // Create deposit transaction from Enso data
+    const depositTransaction = createDepositTransaction({
+      target: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
+      calldata: ensoBundleData.tx.data as HexData,
+      description: `Cross-chain deposit from ${sourceChainId} to ${destinationChainId}`,
+      value: isNative ? sourceAmount.toSolidityValue() : undefined,
+      metadata: {
+        fromAmount: sourceAmount,
+        toAmount: toAmount, // TODO: calculate expected output amount
+        slippage: params.slippage,
+        priceImpact: priceImpact,
+      },
+    })
+
+    // Check if approval is needed
+    let approveTransaction: ApproveTransactionInfo | undefined
+    if (!isNative) {
+      approveTransaction = await this._allowanceManager.getApproval({
+        chainInfo: getChainInfoByChainId(sourceChainId),
+        spender: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
+        amount: sourceAmount,
+        owner: params.user.wallet.address,
+      })
+    }
+
+    const transactions:
+      | [DepositTransactionInfo]
+      | [ApproveTransactionInfo, DepositTransactionInfo] = approveTransaction
+      ? [approveTransaction, depositTransaction]
+      : [depositTransaction]
+
+    LoggingService.debug('Cross-chain deposit transactions', {
+      transactions: transactions.map(({ description, type, transaction }) => ({
+        description,
+        type,
+        transactionValue: transaction.value,
+      })),
+    })
+
+    return transactions
+  }
+
+  /**
+   * Internal utility method to generate a cross-chain withdraw TX using Enso
+   *
+   * @param vaultId The vault from which to withdraw
+   * @param user The user making the withdrawal
+   * @param amount The amount being withdrawn
+   * @param slippage Maximum slippage tolerance in basis points
+   * @param toChainId The destination chain ID
+   *
+   * @returns The transactions needed to withdraw the tokens cross-chain
+   */
+  private async _getCrossChainWithdrawTX(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    toChainId: ChainId
+  }): ReturnType<IArmadaManagerVaults['getCrossChainWithdrawTx']> {
+    const sourceChainId = params.vaultId.chainInfo.chainId
+    const destinationChainId = params.toChainId
+    const senderAddress = params.user.wallet.address.value
+    const fleetAddress = params.vaultId.fleetAddress.value
+
+    // Get the fleet asset token on source chain
+    const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.vaultId.chainInfo,
+      address: params.vaultId.fleetAddress,
+    })
+    const assetToken = await fleetCommander.asErc4626().asset()
+    const assetTokenSymbol = assetToken.symbol
+
+    // Get destination token (for now, assume same asset on destination chain)
+    const destinationChainInfo = getChainInfoByChainId(destinationChainId)
+    const destinationToken = this._tokensManager.getTokenBySymbol({
+      chainInfo: destinationChainInfo,
+      symbol: assetTokenSymbol,
+    })
+
+    // Convert slippage from percentage to basis points
+    const slippageBps = Math.floor(parseFloat(params.slippage.value.toString()) * 100)
+
+    const isNative =
+      destinationToken.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE
+
+    // Build Enso bundle actions for withdraw + bridge
+    const actions: BundleAction[] = [
+      // Withdraw from vault (using redeem action)
+      {
+        protocol: 'summer-fi',
+        action: 'redeem',
+        args: {
+          tokenIn: fleetAddress,
+          tokenOut: assetToken.address.value,
+          amountIn: params.amount.toSolidityValue().toString(),
+          primaryAddress: fleetAddress,
+        },
+      },
+      // Swap to native for bridging
+      {
+        protocol: 'enso',
+        action: 'route',
+        args: {
+          tokenIn: assetToken.address.value,
+          amountIn: { useOutputOfCallAt: 0 },
+          tokenOut: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+          slippage: slippageBps,
+        },
+      },
+      // Bridge to destination chain
+      {
+        protocol: 'stargate',
+        action: 'bridge',
+        args: {
+          primaryAddress: '0xdc181Bd607330aeeBEF6ea62e03e5e1Fb4B6F7C7', // Stargate router
+          destinationChainId: destinationChainId,
+          tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+          amountIn: { useOutputOfCallAt: 1 },
+          receiver: senderAddress,
+          callback: isNative
+            ? []
+            : [
+                {
+                  protocol: 'enso',
+                  action: 'route',
+                  args: {
+                    tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+                    amountIn: { useOutputOfCallAt: 0 },
+                    tokenOut: destinationToken.address.value,
+                    slippage: slippageBps,
+                  },
+                },
+              ],
+        },
+      },
+    ]
+
+    // Get bundle data from Enso
+    const ensoBundleData = await EnsoClient.getBundleData(
+      {
+        chainId: sourceChainId,
+        fromAddress: senderAddress,
+        spender: senderAddress,
+        routingStrategy: 'router',
+      },
+      actions,
+    )
+
+    LoggingService.debug('Cross-chain withdraw Enso bundle data', {
+      from: assetTokenSymbol,
+      to: destinationToken.symbol,
+      sourceChainId,
+      destinationChainId,
+      amount: params.amount.toString(),
+    })
+
+    // Create withdraw transaction from Enso data
+    const withdrawTransaction = createWithdrawTransaction({
+      target: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
+      calldata: ensoBundleData.tx.data as HexData,
+      description: `Cross-chain withdraw from ${sourceChainId} to ${destinationChainId}`,
+      metadata: {
+        fromAmount: params.amount,
+        toAmount: params.amount, // TODO: calculate expected output amount
+        slippage: params.slippage,
+        priceImpact: undefined,
+      },
+    })
+
+    // Check if approval is needed for the fleet token
+    const approveTransaction = await this._allowanceManager.getApproval({
+      chainInfo: params.vaultId.chainInfo,
+      spender: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
+      amount: params.amount,
+      owner: params.user.wallet.address,
+    })
+
+    const transactions:
+      | [WithdrawTransactionInfo]
+      | [ApproveTransactionInfo, WithdrawTransactionInfo] = approveTransaction
+      ? [approveTransaction, withdrawTransaction]
+      : [withdrawTransaction]
+
+    LoggingService.debug('Cross-chain withdraw transactions', {
+      transactions: transactions.map(({ description, type, transaction }) => ({
+        description,
+        type,
+        transactionValue: transaction.value,
+      })),
+    })
+
+    return transactions
   }
 }
