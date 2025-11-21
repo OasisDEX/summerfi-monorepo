@@ -2,9 +2,9 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 
 import { getVaultWhitelist } from '@/app/server-handlers/sdk/get-vault-whitelist'
-import { PanelClientAdmin } from '@/features/panels/vaults/components/PanelClientAdmin/PanelClientAdmin'
+import { PanelUserAdmin } from '@/features/panels/vaults/components/PanelUserAdmin/PanelUserAdmin'
 
-export default async function InstitutionVaultClientAdminPage({
+export default async function InstitutionVaultUserAdminPage({
   params,
 }: {
   params: Promise<{ institutionName: string; vaultAddress: string; network: NetworkNames }>
@@ -25,7 +25,7 @@ export default async function InstitutionVaultClientAdminPage({
   })
 
   return (
-    <PanelClientAdmin
+    <PanelUserAdmin
       whitelistedWallets={whitelistedWallets}
       vaultAddress={vaultAddress}
       network={network}

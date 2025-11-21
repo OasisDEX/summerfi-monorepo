@@ -1,11 +1,17 @@
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
-import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
+import {
+  type SDKVaultishType,
+  SupportedNetworkIds,
+  type SupportedSDKNetworks,
+} from '@summerfi/app-types'
 import { decorateWithFleetConfig, subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import {
-  VaultApyAverageMap,
-  VaultApyMap,
+  type VaultAdditionalInfo,
+  type VaultApyAverageMap,
+  type VaultApyMap,
+  type VaultSharePriceMap,
 } from '@/app/server-handlers/institution/institution-vaults/types'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 
@@ -59,7 +65,8 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
     ).flat()
 
     // temporary mapping of vaultsInfoArray apys to use on the frontend
-    const vaultApys: VaultApyMap = {}
+    const vaultApyMap: VaultApyMap = {}
+    const vaultSharePriceMap: VaultSharePriceMap = {}
 
     const apyLiveAverageArray: number[] = []
     const apy24hAverageArray: number[] = []
@@ -68,14 +75,15 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
 
     vaultsInfoArray.forEach((vault) => {
       vault.list.forEach((vaultInfo) => {
-        vaultApys[
-          `${vaultInfo.id.fleetAddress.value}-${vaultInfo.id.chainInfo.chainId.toString()}`
-        ] = {
+        const vaultSelector = `${vaultInfo.id.fleetAddress.value}-${vaultInfo.id.chainInfo.chainId.toString()}`
+
+        vaultApyMap[vaultSelector] = {
           apyLive: vaultInfo.apys.live?.value,
           apy24h: vaultInfo.apys.sma24h?.value,
           apy7d: vaultInfo.apys.sma7day?.value,
           apy30d: vaultInfo.apys.sma30day?.value,
         }
+        vaultSharePriceMap[vaultSelector] = vaultInfo.sharePrice.value.toString()
       })
     })
 
@@ -114,7 +122,7 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
         ? apy30dAverageArray.reduce((a, b) => a + b, 0) / apy30dAverageArray.length
         : undefined
 
-    const vaultApysAverage: VaultApyAverageMap = {
+    const vaultsApyAverages: VaultApyAverageMap = {
       apyLive: apyLiveAverage,
       apy24h: apy24hAverage,
       apy7d: apy7dAverage,
@@ -125,11 +133,19 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
 
     const vaultsWithConfig = decorateWithFleetConfig(vaultsListByNetwork, systemConfig)
 
-    return {
+    const returnTyped: {
+      vaults: SDKVaultishType[]
+      vaultsAdditionalInfo: VaultAdditionalInfo
+    } = {
       vaults: vaultsWithConfig,
-      vaultApys,
-      vaultApysAverage,
+      vaultsAdditionalInfo: {
+        vaultApyMap,
+        vaultsApyAverages,
+        vaultSharePriceMap,
+      },
     }
+
+    return returnTyped
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching institution vaults:', error)

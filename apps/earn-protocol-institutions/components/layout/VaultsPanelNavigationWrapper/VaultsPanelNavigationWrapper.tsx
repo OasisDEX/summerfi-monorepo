@@ -15,7 +15,7 @@ enum DashboardVaultsPanel {
   ASSET_RELOCATION = 'asset-relocation',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',
-  CLIENT_ADMIN = 'client-admin',
+  USER_ADMIN = 'user-admin',
   FEE_REVENUE_ADMIN = 'fee-revenue-admin',
   ACTIVITY = 'activity',
 }
@@ -42,8 +42,8 @@ const panelItems = [
     label: 'Role admin',
   },
   {
-    id: DashboardVaultsPanel.CLIENT_ADMIN,
-    label: 'Client admin',
+    id: DashboardVaultsPanel.USER_ADMIN,
+    label: 'User admin',
   },
   {
     id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,

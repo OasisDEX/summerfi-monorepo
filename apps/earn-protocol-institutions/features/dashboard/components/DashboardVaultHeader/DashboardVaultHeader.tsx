@@ -11,8 +11,8 @@ import styles from './DashboardVaultHeader.module.css'
 
 interface DashboardVaultHeaderProps {
   vaultName?: string | null
-  asset: string
-  nav: number
+  liveApy?: number
+  nav: number | string
   aum: number
   fee: number
   inception: number
@@ -20,7 +20,7 @@ interface DashboardVaultHeaderProps {
 
 export const DashboardVaultHeader: FC<DashboardVaultHeaderProps> = ({
   vaultName,
-  asset,
+  liveApy,
   nav,
   aum,
   fee,
@@ -32,20 +32,20 @@ export const DashboardVaultHeader: FC<DashboardVaultHeaderProps> = ({
       value: vaultName ?? 'Unnamed vault',
     },
     {
-      title: 'Asset',
-      value: asset,
+      title: 'Live APY',
+      value: liveApy ? formatDecimalAsPercent(liveApy) : 'n/a',
     },
     {
       title: 'NAV',
-      value: formatWithSeparators(nav, { precision: 3 }),
+      value: nav ? formatWithSeparators(nav, { precision: 3 }) : 'n/a',
     },
     {
       title: 'AUM',
-      value: formatCryptoBalance(aum),
+      value: aum ? formatCryptoBalance(aum) : 'n/a',
     },
     {
       title: 'Fee',
-      value: formatDecimalAsPercent(fee),
+      value: fee ? formatDecimalAsPercent(fee) : 'n/a',
     },
     {
       title: 'Inception',

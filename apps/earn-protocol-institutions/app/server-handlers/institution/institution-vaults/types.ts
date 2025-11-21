@@ -7,9 +7,21 @@ export type VaultApyMap = {
     apy30d: number | undefined
   }
 }
+
+export type VaultSharePriceMap = {
+  // ${string}-${string}` (fleetAddress-chainId)
+  [key: string]: string | undefined
+}
+
 export type VaultApyAverageMap = {
   apyLive: number | undefined
   apy24h: number | undefined
   apy7d: number | undefined
   apy30d: number | undefined
+}
+
+export type VaultAdditionalInfo = {
+  vaultApyMap: VaultApyMap
+  vaultsApyAverages: VaultApyAverageMap
+  vaultSharePriceMap: VaultSharePriceMap
 }

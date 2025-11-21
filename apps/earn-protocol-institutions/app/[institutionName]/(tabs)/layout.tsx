@@ -41,9 +41,12 @@ export default async function InstitutionTabLayout({
           },
           {
             title: '30d avg APY',
-            value: formatPercent(institutionVaults.vaultApysAverage.apy30d ?? 0, {
-              precision: 2,
-            }),
+            value: formatPercent(
+              institutionVaults.vaultsAdditionalInfo.vaultsApyAverages.apy30d ?? 0,
+              {
+                precision: 2,
+              },
+            ),
           },
           {
             title: 'All time performance',

@@ -1,4 +1,4 @@
-.panelClientAdminWrapper {
+.panelUserAdminWrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-large);

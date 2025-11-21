@@ -17,7 +17,7 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type VaultApyMap } from '@/app/server-handlers/institution/institution-vaults/types'
+import { type VaultAdditionalInfo } from '@/app/server-handlers/institution/institution-vaults/types'
 import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
@@ -31,58 +31,66 @@ const TableCellRightAlign = ({ children }: { children: React.ReactNode }) => (
 const mapVaultTableRows: (
   vaults: SDKVaultishType[],
   institutionName: string,
-  vaultApys: VaultApyMap,
-) => TableRow<VaultsListTableColumns>[] = (vaults, institutionName, vaultApys) => {
-  return vaults.map((vault) => ({
-    id: getUniqueVaultId(vault),
-    content: {
-      vault: getVaultNiceName({ vault }),
-      value: (
-        <TableCellRightAlign>${formatCryptoBalance(vault.totalValueLockedUSD)}</TableCellRightAlign>
-      ),
-      '30dAPY': (
-        <TableCellRightAlign>
-          {formatPercent(
-            vaultApys[
-              `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-            ].apy30d ?? 0,
-            {
+  vaultsAdditionalInfo?: VaultAdditionalInfo,
+) => TableRow<VaultsListTableColumns>[] = (vaults, institutionName, vaultsAdditionalInfo) => {
+  return vaults.map((vault) => {
+    const vaultSelector = `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+
+    return {
+      id: getUniqueVaultId(vault),
+      content: {
+        vault: getVaultNiceName({ vault }),
+        value: (
+          <TableCellRightAlign>
+            ${formatCryptoBalance(vault.totalValueLockedUSD)}
+          </TableCellRightAlign>
+        ),
+        '30dAPY': (
+          <TableCellRightAlign>
+            {formatPercent(vaultsAdditionalInfo?.vaultApyMap[vaultSelector].apy30d ?? 0, {
               precision: 2,
-            },
-          )}
-        </TableCellRightAlign>
-      ),
-      NAV: (
-        <TableCellRightAlign>
-          <Link
-            href={getInstitutionVaultUrl({
-              institutionName,
-              vault,
             })}
-            style={{
-              marginRight: '20px',
-            }}
-          >
-            <WithArrow>View</WithArrow>
-          </Link>
-        </TableCellRightAlign>
-      ),
-    },
-  }))
+          </TableCellRightAlign>
+        ),
+        NAV: (
+          <TableCellRightAlign>
+            {vaultsAdditionalInfo?.vaultSharePriceMap[vaultSelector]
+              ? formatCryptoBalance(vaultsAdditionalInfo.vaultSharePriceMap[vaultSelector])
+              : 'n/a'}
+          </TableCellRightAlign>
+        ),
+        action: (
+          <TableCellRightAlign>
+            <Link
+              href={getInstitutionVaultUrl({
+                institutionName,
+                vault,
+              })}
+              style={{
+                marginRight: '20px',
+              }}
+            >
+              <WithArrow>View</WithArrow>
+            </Link>
+          </TableCellRightAlign>
+        ),
+      },
+    }
+  })
 }
 
 export const PanelInstitutionOverview = ({
   institutionName,
   institutionVaults,
-  vaultApys,
+  vaultsAdditionalInfo,
 }: {
   institutionName: string
   institutionVaults: SDKVaultishType[]
-  vaultApys: VaultApyMap
+  vaultsAdditionalInfo?: VaultAdditionalInfo
 }) => {
   const vaultsTableList = useMemo(
-    () => mapVaultTableRows(institutionVaults, institutionName, vaultApys),
-    [institutionVaults, institutionName, vaultApys],
+    () => mapVaultTableRows(institutionVaults, institutionName, vaultsAdditionalInfo),
+    [institutionVaults, institutionName, vaultsAdditionalInfo],
   )
 
   return (
