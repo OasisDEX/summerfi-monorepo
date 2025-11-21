@@ -4,7 +4,7 @@ import { PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
+import { panelNavigationStaticItems } from '@/constants/panel-navigation-static-items'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getPanelVaultNavigationTabId } from '@/helpers/get-pathname-tab-id'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
@@ -93,27 +93,7 @@ export const VaultsPanelNavigationWrapper = ({
     <PanelNavigation
       isMobile={isMobile}
       navigation={navigation}
-      staticItems={[
-        {
-          id: 'request-new-market',
-          label: (
-            <IconWithText iconName="plus" size={20}>
-              Request a new market
-            </IconWithText>
-          ),
-          // eslint-disable-next-line no-console
-          action: () => console.log('Request a new market'),
-        },
-        {
-          id: 'help-support',
-          label: (
-            <IconWithText iconName="question_o" size={20}>
-              Help & Support
-            </IconWithText>
-          ),
-          link: { href: '/', target: '_blank' },
-        },
-      ]}
+      staticItems={panelNavigationStaticItems}
     />
   )
 }
