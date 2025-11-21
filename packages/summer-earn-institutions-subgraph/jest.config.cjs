@@ -1,5 +1,6 @@
 const { compilerOptions } = require('./tsconfig.test')
 const sharedConfig = require('@summerfi/jest-config/jest.base')
+
 require('dotenv').config({ path: '../../.env' })
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
@@ -9,5 +10,7 @@ module.exports = {
     '^@summerfi/serverless-shared$': '<rootDir>/../../packages/serverless-shared/src/index.ts',
     '^@summerfi/(.*)$': '<rootDir>/../../packages/$1/src/index.ts',
   },
-  transformIgnorePatterns: ['node_modules/(?!(@summerfi)/)'],
+  transformIgnorePatterns: ['<rootDir>/node_modules', 'node_modules/(?!(@summerfi)/)'],
 }
+
+
