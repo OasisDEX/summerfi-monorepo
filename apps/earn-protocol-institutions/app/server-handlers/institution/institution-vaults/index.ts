@@ -53,12 +53,37 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
         }),
       )
     ).flat()
+
+    // temporary mapping of vaultsInfoArray apys to use on the frontend
+    const vaultApys: {
+      [key: string]: {
+        apyLive: number | undefined
+        apy24h: number | undefined
+        apy7d: number | undefined
+        apy30d: number | undefined
+      }
+    }[] = [{}]
+
+    vaultsInfoArray.forEach((vault) => {
+      vault.list.forEach((vaultInfo) => {
+        vaultApys.push({
+          [`${vaultInfo.id.fleetAddress.value}-${vaultInfo.id.chainInfo.chainId.toString()}`]: {
+            apyLive: vaultInfo.apys.live?.value,
+            apy24h: vaultInfo.apys.sma24h?.value,
+            apy7d: vaultInfo.apys.sma7day?.value,
+            apy30d: vaultInfo.apys.sma30day?.value,
+          },
+        })
+      })
+    })
+
     // above is a temporary method
 
     const vaultsWithConfig = decorateWithFleetConfig(vaultsListByNetwork, systemConfig)
 
     return {
       vaults: vaultsWithConfig,
+      vaultApys,
     }
   } catch (error) {
     // eslint-disable-next-line no-console
