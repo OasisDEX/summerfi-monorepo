@@ -175,8 +175,8 @@ export async function backfillFleetRates() {
         logger,
         context: { operation: 'GetVaults', network: network.network },
       })
-         const productIds = vaults.vaults.flatMap((vault) => vault.arks.map((ark) => ark.productId))
-  
+      const productIds = vaults.vaults.flatMap((vault) => vault.arks.map((ark) => ark.productId))
+
       // Get all historical rates for this network
       const historicalRates = await retrySubgraphQuery<GetHistoricalArksRatesQuery>(
         () =>
