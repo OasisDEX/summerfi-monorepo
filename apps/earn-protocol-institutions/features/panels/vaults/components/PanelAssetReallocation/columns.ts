@@ -1,4 +1,4 @@
-export const assetRelocationColumns = [
+export const assetReallocationColumns = [
   {
     title: 'Market',
     key: 'market',

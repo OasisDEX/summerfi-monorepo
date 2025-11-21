@@ -12,7 +12,7 @@ import { getInstitutionVaultUrl } from '@/helpers/get-url'
 enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
-  ASSET_RELOCATION = 'asset-relocation',
+  ASSET_REALLOCATION = 'asset-reallocation',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',
   USER_ADMIN = 'user-admin',
@@ -30,8 +30,9 @@ const panelItems = [
     label: 'Vault exposure',
   },
   {
-    id: DashboardVaultsPanel.ASSET_RELOCATION,
-    label: 'Asset relocation',
+    id: DashboardVaultsPanel.ASSET_REALLOCATION,
+    label: 'Asset reallocation',
+    disabled: true,
   },
   {
     id: DashboardVaultsPanel.RISK_PARAMETERS,
@@ -75,6 +76,7 @@ export const VaultsPanelNavigationWrapper = ({
       items: panelItems.map((item) => ({
         id: item.id,
         label: item.label,
+        disabled: item.disabled,
         action: () => {
           push(
             getInstitutionVaultUrl({
