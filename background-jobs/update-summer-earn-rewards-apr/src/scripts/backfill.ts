@@ -21,9 +21,13 @@ import {
   VaultsQuery,
   getAllClients as getAllProtocolSubgraphClients,
 } from '@summerfi/summer-earn-protocol-subgraph'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 const logger = new Logger({ serviceName: 'backfill-fleet-rates' })
 
-const START_BACKFILL_TIMESTAMP = 1739228400
+const START_BACKFILL_TIMESTAMP = 1762531200
 
 export const MIN_UPDATE_INTERVAL = 10 * 60 // 10 minutes in seconds
 
@@ -78,18 +82,10 @@ async function calculateAndStoreFleetRates(
           product.interestRates.map((rate) => [rate.productId, rate.rate]),
         ),
       )
-      logger.info('Product rates map', {
-        network: network.network,
-        vaultId: vault.id,
-        productRatesMap,
-      })
+
       // Create a map of reward rates
       const rewardRatesMap = new Map(rewardRates.map((rate) => [rate.productId, rate.rate]))
-      logger.info('Reward rates map', {
-        network: network.network,
-        vaultId: vault.id,
-        rewardRatesMap,
-      })
+
       // Calculate weighted fleet rate
       weightedFleetRate = fleetArksWithRatios.reduce((acc, ark) => {
         const baseRate = +(productRatesMap.get(ark.productId) || '0')
@@ -164,7 +160,7 @@ export async function backfillFleetRates() {
     logger.info('Starting backfill', { startTimestamp, endTimestamp })
 
     const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
-      (network) => network.network == 'mainnet',
+      (network) => network.network == 'sonic',
     )
 
     const ratesSubgraphClients = getAllRatesSubgraphClients(SUBGRAPH_BASE)
@@ -201,22 +197,28 @@ export async function backfillFleetRates() {
         +rate.blockNumber,
         +rate.timestamp,
       ])
-
+      const TEN_MINUTES_IN_SECONDS = 10 * 60
       // Process each timestamp interval
       for (const blockTimestamp of blockTimestampMap) {
+        console.log('Processing block timestamp', { blockTimestamp })
         try {
+          console.log('Checking for existing data')
           await db.transaction().execute(async (trx) => {
             // Check for existing data
             const existing = await trx
               .selectFrom('fleetInterestRate')
-              .where('timestamp', '=', blockTimestamp[1].toString())
+              .select(['timestamp'])
+              .where('timestamp', '<=', blockTimestamp[1].toString())
+              .where('timestamp', '>', (blockTimestamp[1] - TEN_MINUTES_IN_SECONDS).toString())
               .where('network', '=', network.network)
               .executeTakeFirst()
 
             if (existing) {
-              logger.debug('Data exists, skipping', {
+              logger.info('Data exists, skipping', {
                 block: blockTimestamp[1],
                 network: network.network,
+                timeIso: new Date(blockTimestamp[1] * 1000).toISOString(),
+                existing: existing.timestamp,
               })
               return
             }
@@ -241,7 +243,7 @@ export async function backfillFleetRates() {
               .filter((product): product is NonNullable<typeof product> => product !== null)
             logger.info('Relevant rates', { network: network.network, relevantRates })
             if (relevantRates.length === 0) {
-              logger.debug('No relevant rates found', {
+              logger.info('No relevant rates found', {
                 block: blockTimestamp[1],
                 network: network.network,
               })
@@ -266,6 +268,7 @@ export async function backfillFleetRates() {
                   .select((eb) => eb.fn.max('timestamp').as('maxTimestamp'))
                   .where('network', '=', network.network)
                   .where('timestamp', '<=', blockTimestamp[1].toString())
+                  .where('timestamp', '>=', (blockTimestamp[1] - HOUR_IN_SECONDS).toString()) // Only get rates from last hour
                   .where(
                     'productId',
                     'in',
@@ -282,7 +285,7 @@ export async function backfillFleetRates() {
               )
               .selectAll('rewardRate')
               .execute()
-
+            console.log('xxxRetrieved reward rates', { rewardRates: rewardRates.length })
             await calculateAndStoreFleetRates(
               trx,
               network,
@@ -315,9 +318,10 @@ export async function backfillFleetRates() {
   }
 }
 
-// backfillFleetRates().catch((error) => {
-//     logger.error('Script failed', {
-//         error: error instanceof Error ? error.message : String(error),
-//     })
-//     process.exit(1)
-// })
+backfillFleetRates().catch((error) => {
+  console.error(error)
+  logger.error('Script failed', {
+    error: error instanceof Error ? error.message : String(error),
+  })
+  process.exit(1)
+})
