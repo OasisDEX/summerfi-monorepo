@@ -1,4 +1,4 @@
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 
 import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
@@ -40,12 +40,14 @@ export default async function InstitutionTabLayout({
             value: institutionVaults.vaults.length,
           },
           {
-            title: '30d ave APY',
-            value: '5.25%',
+            title: '30d avg APY',
+            value: formatPercent(institutionVaults.vaultApysAverage.apy30d ?? 0, {
+              precision: 2,
+            }),
           },
           {
             title: 'All time performance',
-            value: '+11.15%',
+            value: 'n/a',
           },
         ]}
       />

@@ -8,14 +8,17 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
-import { formatCryptoBalance, getVaultNiceName } from '@summerfi/app-utils'
+import {
+  formatCryptoBalance,
+  formatPercent,
+  getVaultNiceName,
+  subgraphNetworkToId,
+  supportedSDKNetwork,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { AumChart } from '@/features/charts/AumChart'
-import {
-  mockedAumChartData,
-  vaultsListColumns,
-} from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
+import { type VaultApyMap } from '@/app/server-handlers/institution/institution-vaults/types'
+import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 
@@ -28,7 +31,8 @@ const TableCellRightAlign = ({ children }: { children: React.ReactNode }) => (
 const mapVaultTableRows: (
   vaults: SDKVaultishType[],
   institutionName: string,
-) => TableRow<VaultsListTableColumns>[] = (vaults, institutionName) => {
+  vaultApys: VaultApyMap,
+) => TableRow<VaultsListTableColumns>[] = (vaults, institutionName, vaultApys) => {
   return vaults.map((vault) => ({
     id: getUniqueVaultId(vault),
     content: {
@@ -36,7 +40,18 @@ const mapVaultTableRows: (
       value: (
         <TableCellRightAlign>${formatCryptoBalance(vault.totalValueLockedUSD)}</TableCellRightAlign>
       ),
-      '30dAPY': <TableCellRightAlign>-</TableCellRightAlign>,
+      '30dAPY': (
+        <TableCellRightAlign>
+          {formatPercent(
+            vaultApys[
+              `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+            ].apy30d ?? 0,
+            {
+              precision: 2,
+            },
+          )}
+        </TableCellRightAlign>
+      ),
       NAV: (
         <TableCellRightAlign>
           <Link
@@ -59,22 +74,24 @@ const mapVaultTableRows: (
 export const PanelInstitutionOverview = ({
   institutionName,
   institutionVaults,
+  vaultApys,
 }: {
   institutionName: string
   institutionVaults: SDKVaultishType[]
+  vaultApys: VaultApyMap
 }) => {
   const vaultsTableList = useMemo(
-    () => mapVaultTableRows(institutionVaults, institutionName),
-    [institutionVaults, institutionName],
+    () => mapVaultTableRows(institutionVaults, institutionName, vaultApys),
+    [institutionVaults, institutionName, vaultApys],
   )
 
   return (
     <div className={panelInstitutionOverviewStyles.wrapper}>
-      <Card variant="cardSecondary">
+      {/* <Card variant="cardSecondary">
         <Card variant="cardPrimary">
           <AumChart chartData={mockedAumChartData} />
         </Card>
-      </Card>
+      </Card> */}
       <Card variant="cardSecondary" className={panelInstitutionOverviewStyles.yourVaultsWrapper}>
         <Text variant="h5">Your Vaults</Text>
         <Card variant="cardPrimary">
