@@ -13,7 +13,11 @@ export const ArbitrumNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }>
         <>
           This Vault has suffered from a potential loss on the Silo susdx/usdc 127 market. Please
           read the full details in this{' '}
-          <Link href="https://forum.summer.fi/t/rfc-arbitrum-usdc-vault-next-steps-dealing-with-usdx-bad-debt/458">
+          <Link
+            href="https://forum.summer.fi/t/rfc-arbitrum-usdc-vault-next-steps-dealing-with-usdx-bad-debt/458"
+            style={{ textDecoration: 'underline' }}
+            target="_blank"
+          >
             forum post
           </Link>
         </>
