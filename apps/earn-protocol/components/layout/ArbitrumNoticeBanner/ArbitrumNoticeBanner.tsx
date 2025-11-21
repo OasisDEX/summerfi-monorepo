@@ -1,6 +1,7 @@
 import { type FC } from 'react'
 import { GlobalNoticeBanner } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
+import Link from 'next/link'
 
 export const ArbitrumNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }> = ({ vault }) => {
   const isArbitrumUSDCVault =
@@ -10,10 +11,11 @@ export const ArbitrumNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }>
     <GlobalNoticeBanner
       message={
         <>
-          This unusually high APY is coming from a market with very limited liquidity, where assets
-          cannot be currently withdrawn. At this moment, it is not known when the assets will be
-          redeemed and accessible within the Vault. The Risk Manager has set the deposit caps to
-          this Vault to 0 (Zero) and it is no longer accepting new deposits.
+          This Vault has suffered from a potential loss on the Silo susdx/usdc 127 market. Please
+          read the full details in this{' '}
+          <Link href="https://forum.summer.fi/t/rfc-arbitrum-usdc-vault-next-steps-dealing-with-usdx-bad-debt/458">
+            forum post
+          </Link>
         </>
       }
     />
