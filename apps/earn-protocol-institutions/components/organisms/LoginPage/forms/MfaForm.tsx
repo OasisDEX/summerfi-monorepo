@@ -9,6 +9,7 @@ export const MfaForm = ({
   error,
   isLoadingMfaView,
   mfaButtonDisabled,
+  handleLoginReset,
 }: {
   mfaCode: string
   setMfaCode: (value: string) => void
@@ -16,6 +17,7 @@ export const MfaForm = ({
   error?: string
   isLoadingMfaView: boolean
   mfaButtonDisabled: boolean
+  handleLoginReset: () => void
 }) => {
   return (
     <div className={styles.container}>
@@ -35,19 +37,33 @@ export const MfaForm = ({
             onChange={(e) => setMfaCode(e.target.value)}
             required
             maxLength={6}
+            className={styles.mfaCodeInput}
           />
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
 
-        <Button
-          type="submit"
-          disabled={mfaButtonDisabled}
-          variant={mfaButtonDisabled ? 'secondaryMedium' : 'primaryMedium'}
-          className={styles.button}
-        >
-          {isLoadingMfaView ? <LoadingSpinner size={14} /> : 'Verify'}
-        </Button>
+        <div className={styles.mfaButtons}>
+          <Button
+            type="submit"
+            disabled={mfaButtonDisabled}
+            variant={mfaButtonDisabled ? 'secondaryMedium' : 'primaryMedium'}
+            className={styles.button}
+          >
+            {isLoadingMfaView ? <LoadingSpinner size={14} /> : 'Verify'}
+          </Button>
+          <Button
+            disabled={mfaButtonDisabled}
+            onClick={(e) => {
+              e.preventDefault()
+              handleLoginReset()
+            }}
+            variant={mfaButtonDisabled ? 'textSecondarySmall' : 'textPrimarySmall'}
+            className={styles.button}
+          >
+            Back to Login
+          </Button>
+        </div>
       </form>
     </div>
   )

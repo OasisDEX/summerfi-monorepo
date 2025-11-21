@@ -18,13 +18,18 @@ interface ButtonOrLinkProps {
     href: string
     target?: string
   }
+  disabled?: boolean
   onClick?: () => void
 }
 
-const ButtonOrLink: FC<ButtonOrLinkProps> = ({ children, link, onClick }) => {
+const ButtonOrLink: FC<ButtonOrLinkProps> = ({ children, link, onClick, disabled }) => {
   if (link) {
     return (
-      <Link href={link.href} target={link.target}>
+      <Link
+        href={link.href}
+        target={link.target}
+        onClick={disabled ? (e) => e.preventDefault() : undefined}
+      >
         {children}
       </Link>
     )
@@ -32,7 +37,12 @@ const ButtonOrLink: FC<ButtonOrLinkProps> = ({ children, link, onClick }) => {
 
   if (onClick) {
     return (
-      <Button variant="unstyled" onClick={onClick}>
+      <Button
+        variant="unstyled"
+        onClick={onClick}
+        disabled={disabled}
+        style={{ pointerEvents: disabled ? 'none' : 'auto' }}
+      >
         {children}
       </Button>
     )
@@ -45,6 +55,7 @@ interface PanelNavigationItem {
   id: string
   label: ReactNode
   action?: () => void
+  disabled?: boolean
   isActive?: boolean
   link?: {
     href: string
@@ -96,7 +107,12 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({
             >
               <div className={clsx(styles.itemsList, styles.navigationList)}>
                 {navItem.items.map((item) => (
-                  <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
+                  <ButtonOrLink
+                    key={item.id}
+                    onClick={item.action}
+                    link={item.link}
+                    disabled={item.disabled}
+                  >
                     <Text
                       as="div"
                       variant="p1semi"
@@ -113,7 +129,12 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({
           ) : (
             <div key={navItem.id} className={styles.itemsList}>
               {navItem.items.map((item) => (
-                <ButtonOrLink key={item.id} onClick={item.action} link={item.link}>
+                <ButtonOrLink
+                  key={item.id}
+                  onClick={item.action}
+                  link={item.link}
+                  disabled={item.disabled}
+                >
                   <Text
                     as="div"
                     variant="p1semi"
@@ -133,7 +154,12 @@ export const PanelNavigation: FC<PanelNavigationProps> = ({
           {navigation && <div className={styles.panelNavigationSeparator} />}
           <div className={styles.staticItemsList}>
             {staticItems.map((item) => (
-              <ButtonOrLink key={item.id} link={item.link} onClick={item.action}>
+              <ButtonOrLink
+                key={item.id}
+                link={item.link}
+                onClick={item.action}
+                disabled={item.disabled}
+              >
                 <Text
                   as="div"
                   variant="p1semi"

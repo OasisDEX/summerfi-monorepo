@@ -25,6 +25,7 @@ export const LoginPage = () => {
     isLoadingLoginView,
     handleLoginSubmit,
     handleSetNewPassword,
+    handleLoginReset,
     // MFA
     mfaCode,
     setMfaCode,
@@ -67,6 +68,7 @@ export const LoginPage = () => {
         mfaCode={mfaCode}
         setMfaCode={setMfaCode}
         handleRespondToSoftwareToken={handleRespondToSoftwareToken}
+        handleLoginReset={handleLoginReset}
         error={error}
         isLoadingMfaView={isLoadingMfaView}
         mfaButtonDisabled={isLoadingMfaView || !challengeData}

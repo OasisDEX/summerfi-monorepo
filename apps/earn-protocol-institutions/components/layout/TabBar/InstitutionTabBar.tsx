@@ -38,38 +38,38 @@ export const InstitutionTabBar = ({
             vault: defaultVault,
           }),
         },
-        {
-          id: 'risk',
-          label: 'Risk',
-          url: getInstitutionUrl({
-            institutionName,
-            tab: 'risk',
-          }),
-        },
-        {
-          id: 'fees-revenue',
-          label: 'Fees & Revenue',
-          url: getInstitutionUrl({
-            institutionName,
-            tab: 'fees-revenue',
-          }),
-        },
-        {
-          id: 'reports',
-          label: 'Reports',
-          url: getInstitutionUrl({
-            institutionName,
-            tab: 'reports',
-          }),
-        },
-        {
-          id: 'news',
-          label: 'News',
-          url: getInstitutionUrl({
-            institutionName,
-            tab: 'news',
-          }),
-        },
+        // {
+        //   id: 'risk',
+        //   label: 'Risk',
+        //   url: getInstitutionUrl({
+        //     institutionName,
+        //     tab: 'risk',
+        //   }),
+        // },
+        // {
+        //   id: 'fees-revenue',
+        //   label: 'Fees & Revenue',
+        //   url: getInstitutionUrl({
+        //     institutionName,
+        //     tab: 'fees-revenue',
+        //   }),
+        // },
+        // {
+        //   id: 'reports',
+        //   label: 'Reports',
+        //   url: getInstitutionUrl({
+        //     institutionName,
+        //     tab: 'reports',
+        //   }),
+        // },
+        // {
+        //   id: 'news',
+        //   label: 'News',
+        //   url: getInstitutionUrl({
+        //     institutionName,
+        //     tab: 'news',
+        //   }),
+        // },
       ]}
     />
   )

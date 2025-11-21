@@ -9,6 +9,8 @@ declare const styles: {
   readonly "inputWithValidationIcon": string;
   readonly "inputWithValidationIconValidated": string;
   readonly "label": string;
+  readonly "mfaButtons": string;
+  readonly "mfaCodeInput": string;
   readonly "newPasswordRequirements": string;
 };
 export = styles;

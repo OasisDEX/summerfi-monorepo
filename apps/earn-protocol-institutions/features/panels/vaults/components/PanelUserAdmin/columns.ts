@@ -1,4 +1,4 @@
-export const clientAdminColumns = [
+export const userAdminColumns = [
   {
     key: 'address',
     title: 'Address',

@@ -5,7 +5,7 @@ declare const styles: {
   readonly "contentWrapper": string;
   readonly "inputContainer": string;
   readonly "inputWrapper": string;
-  readonly "panelAssetRelocationWrapper": string;
+  readonly "panelAssetReallocationWrapper": string;
   readonly "summary": string;
   readonly "table": string;
   readonly "tableWrapper": string;

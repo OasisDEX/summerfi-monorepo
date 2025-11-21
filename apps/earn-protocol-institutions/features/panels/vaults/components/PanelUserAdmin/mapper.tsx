@@ -3,21 +3,21 @@ import { Button, Icon, TableCellNodes, TableCellText } from '@summerfi/app-earn-
 import { getRevokeWhitelistId } from '@/helpers/get-transaction-id'
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
-import styles from './PanelClient.module.css'
+import styles from './PanelUser.module.css'
 
-type ClientMapperParams = {
+type UserMapperParams = {
   whitelistedWallets: string[]
   transactionQueue: SDKTransactionItem[]
   onRevokeWhitelist: (params: { address: string }) => void
   chainId: number
 }
 
-export const clientAdminMapper = ({
+export const userAdminMapper = ({
   whitelistedWallets,
   transactionQueue,
   onRevokeWhitelist,
   chainId,
-}: ClientMapperParams) => {
+}: UserMapperParams) => {
   return whitelistedWallets.map((address) => {
     const revokeId = getRevokeWhitelistId({ address, chainId })
     const idDisabled = transactionQueue.some((tx) => tx.id === revokeId)

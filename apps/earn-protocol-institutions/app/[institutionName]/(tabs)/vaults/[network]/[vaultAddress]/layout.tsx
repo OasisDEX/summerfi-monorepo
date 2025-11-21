@@ -1,13 +1,16 @@
 import { type ReactNode } from 'react'
 import {
+  formatCryptoBalance,
   getHumanReadableFleetName,
   humanNetworktoSDKNetwork,
+  subgraphNetworkToId,
   supportedSDKNetwork,
   ten,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { getInstitutionData } from '@/app/server-handlers/institution/institution-data'
+import { getInstitutionVaultFeeRevenueConfig } from '@/app/server-handlers/institution/institution-vault-fee-revenue-config'
 import {
   getInstitutionVault,
   getInstitutionVaults,
@@ -27,15 +30,21 @@ export default async function InstitutionVaultLayout({
   params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
 }) {
   const { institutionName, vaultAddress, network } = await params
-  const [institutionData, institutionVaults, institutionVault] = await Promise.all([
-    getInstitutionData(institutionName),
-    getInstitutionVaults({ institutionName }),
-    getInstitutionVault({
-      institutionName,
-      network: humanNetworktoSDKNetwork(network),
-      vaultAddress,
-    }),
-  ])
+  const [institutionData, institutionVaults, institutionVault, institutionVaultFeeRevenueConfig] =
+    await Promise.all([
+      getInstitutionData(institutionName),
+      getInstitutionVaults({ institutionName }),
+      getInstitutionVault({
+        institutionName,
+        network: humanNetworktoSDKNetwork(network),
+        vaultAddress,
+      }),
+      getInstitutionVaultFeeRevenueConfig({
+        institutionName,
+        network: humanNetworktoSDKNetwork(network),
+        vaultAddress,
+      }),
+    ])
 
   if (!institutionName) {
     return <div>Institution ID not provided.</div>
@@ -61,6 +70,7 @@ export default async function InstitutionVaultLayout({
   const aum = new BigNumber(institutionVault.vault.inputTokenBalance.toString())
     .div(ten.pow(institutionVault.vault.inputToken.decimals))
     .toNumber()
+  const vaultSelector = `${institutionVault.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(institutionVault.vault.protocol.network))}`
 
   return (
     <DashboardContentLayout
@@ -83,10 +93,20 @@ export default async function InstitutionVaultLayout({
             supportedSDKNetwork(institutionVault.vault.protocol.network),
             institutionVault.vault.name,
           )}
-          asset={institutionVault.vault.inputToken.symbol}
-          nav={0}
+          liveApy={
+            institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive
+              ? institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive / 100
+              : undefined
+          }
+          nav={
+            institutionVaults.vaultsAdditionalInfo.vaultSharePriceMap[vaultSelector]
+              ? formatCryptoBalance(
+                  institutionVaults.vaultsAdditionalInfo.vaultSharePriceMap[vaultSelector],
+                )
+              : 'n/a'
+          }
           aum={aum}
-          fee={0}
+          fee={(institutionVaultFeeRevenueConfig?.vaultFeeAmount.value.valueOf() ?? 0) / 100}
           inception={inception}
         />
       }

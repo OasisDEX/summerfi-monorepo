@@ -17,6 +17,7 @@ interface AuthContextType {
   authSignOutHandler: () => Promise<void>
   authSetPasswordHandler: (params: { newPassword: string }) => Promise<SignInResponse | null>
   authRespondToMfaHandler: (code: string) => Promise<SignInResponse | null>
+  handleAuthReset: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -38,6 +39,12 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
       clearTimeout(refreshTimeout.current)
       refreshTimeout.current = null
     }
+  }
+  const handleAuthReset = () => {
+    setUser(null)
+    clearRefreshTimer()
+    setChallengeData(null)
+    setIsLoading(false)
   }
 
   // Self-rescheduling refresher: refresh -> fetchMe -> schedule next run
@@ -247,6 +254,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         challengeData,
         setChallengeData,
         authSetPasswordHandler,
+        handleAuthReset,
       }}
     >
       {children}

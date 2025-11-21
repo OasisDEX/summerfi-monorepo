@@ -19,6 +19,10 @@ export const vaultsListColumns: TableColumn<VaultsListTableColumns>[] = [
   },
   {
     key: 'NAV',
+    title: 'NAV',
+  },
+  {
+    key: 'action',
     title: '',
   },
 ]

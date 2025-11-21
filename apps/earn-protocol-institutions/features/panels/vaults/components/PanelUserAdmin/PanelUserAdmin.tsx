@@ -8,23 +8,23 @@ import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
-import { clientAdminColumns } from '@/features/panels/vaults/components/PanelClientAdmin/columns'
-import { clientAdminMapper } from '@/features/panels/vaults/components/PanelClientAdmin/mapper'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
+import { userAdminColumns } from '@/features/panels/vaults/components/PanelUserAdmin/columns'
+import { userAdminMapper } from '@/features/panels/vaults/components/PanelUserAdmin/mapper'
 import { getGrantWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
-import panelClientStyles from './PanelClient.module.css'
+import panelUserStyles from './PanelUser.module.css'
 
-interface PanelClientAdminProps {
+interface PanelUserAdminProps {
   whitelistedWallets: string[]
   institutionName: string
   vaultAddress: string
   network: NetworkNames
 }
 
-export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
+export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   whitelistedWallets,
   institutionName,
   vaultAddress,
@@ -116,7 +116,7 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
 
   const rows = useMemo(
     () =>
-      clientAdminMapper({
+      userAdminMapper({
         whitelistedWallets,
         transactionQueue,
         onRevokeWhitelist,
@@ -126,20 +126,20 @@ export const PanelClientAdmin: FC<PanelClientAdminProps> = ({
   )
 
   return (
-    <Card variant="cardSecondary" className={panelClientStyles.panelClientAdminWrapper}>
+    <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
       <Text as="h5" variant="h5">
-        Client admin
+        User admin
       </Text>
       <Card>
         <Table
           rows={rows}
-          columns={clientAdminColumns}
-          wrapperClassName={panelClientStyles.tableWrapper}
-          tableClassName={panelClientStyles.table}
+          columns={userAdminColumns}
+          wrapperClassName={panelUserStyles.tableWrapper}
+          tableClassName={panelUserStyles.table}
         />
       </Card>
       <Text as="h5" variant="h5">
-        Add new client
+        Add new user
       </Text>
       <Card>
         <AddNewRoleForm onAddRole={onGrantWhitelist} staticRole="CURATOR_ROLE" />
