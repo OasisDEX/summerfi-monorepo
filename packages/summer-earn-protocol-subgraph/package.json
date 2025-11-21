@@ -14,7 +14,7 @@
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "build:disabled": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "dev": "tsc -b --preserveWatchOutput -v -w tsconfig.build.json",
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
