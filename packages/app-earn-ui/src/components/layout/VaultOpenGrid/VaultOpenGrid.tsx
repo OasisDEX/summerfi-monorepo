@@ -327,7 +327,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       flexWrap: 'wrap',
                     }}
                   >
-                    {formatDecimalAsPercent(depositCapUsed)} filled
+                    {formatDecimalAsPercent(BigNumber.max(depositCapUsed, 100))} filled
                     <ChartBar value={formatDecimalAsPercent(depositCapUsed)} />
                   </div>
                 }
