@@ -52,6 +52,7 @@ jobs:
       SDK_NAMED_REFERRALS_FILE: ${{ vars.SDK_NAMED_REFERRALS_FILE }}
       SDK_SUBGRAPH_CONFIG: ${{ vars.SDK_SUBGRAPH_CONFIG }}
       SDK_SUBGRAPH_CONFIG_INSTI: ${{ vars.SDK_SUBGRAPH_CONFIG_INSTI }}
+      ENSO_API_KEY: ${{ secrets.ENSO_API_KEY }}
 
     steps:
       - name: Send start notification to Discord
