@@ -138,6 +138,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
     systemConfig,
+    userPositions: [position],
   })
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })

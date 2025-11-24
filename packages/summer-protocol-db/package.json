@@ -1,8 +1,16 @@
 {
   "name": "@summerfi/summer-protocol-db",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",

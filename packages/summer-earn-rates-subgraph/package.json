@@ -1,18 +1,21 @@
 {
   "name": "@summerfi/summer-earn-rates-subgraph",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.d.ts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "tsc": "tsc",
     "watch": "tsc -w",
+    "prebuild": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "dev": "tsc -b --preserveWatchOutput -v -w tsconfig.build.json",
     "test": "jest --passWithNoTests",

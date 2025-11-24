@@ -14,6 +14,8 @@ import {
   UserPositionsQuery,
 } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
+import { getVaults as getInstitutionalVaults } from '@summerfi/summer-earn-institutions-subgraph'
+
 import { createPublicClient, http } from 'viem'
 import { mainnet, optimism, arbitrum, base, sonic } from 'viem/chains'
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
@@ -170,9 +172,6 @@ async function fetchRewards(
           chain: getChainConfig(chainId),
           transport: http(getRpcUrl(chainId)),
         })
-        logger.info(
-          `xxx Rewards manager addresses: ${JSON.stringify(rewardsManagerAddresses)} on chain ${chainId} for user ${address} for token ${rewardTokenPerChain[chainId]}`,
-        )
         const rewardsResult = await client.multicall({
           contracts: rewardsManagerAddresses.map((managerAddress) => ({
             abi: fleetRewardsManagerAbi,
@@ -181,7 +180,6 @@ async function fetchRewards(
             args: [address, rewardTokenPerChain[chainId]],
           })),
         })
-        // logger.info(`xxx Rewards result: ${JSON.stringify(rewardsResult)}`)
         const currentRewards = rewardsResult
           .map((result) => result.result)
           .filter((result): result is bigint => typeof result === 'bigint')
@@ -345,8 +343,12 @@ async function handleProtocolRoute(
           chainId,
           urlBase: subgraphBase,
         })
+        const institutionalVaults = await getInstitutionalVaults({
+          chainId,
+          urlBase: subgraphBase,
+        })
         logger.info(`Fetched vaults for chain ID: ${chainId}`)
-        return vaults
+        return { vaults: [...vaults.vaults, ...institutionalVaults.vaults] }
       } catch (error) {
         logger.warn('Failed to fetch vaults for chain', { chainId, error })
         return { vaults: [] }
