@@ -3,6 +3,7 @@ import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { decorateWithFleetConfig, humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
+import { getInstitutionVaultArksImpliedCapsMap } from '@/app/server-handlers/institution/institution-vaults'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters'
 
@@ -42,11 +43,15 @@ export default async function InstitutionVaultRiskParametersPage({
 
   const [vaultWithConfig] = decorateWithFleetConfig([vault], config)
 
-  const bufferArk = vaultWithConfig.arks.find(
-    (ark) => ark.name && ark.name.toLowerCase().includes('buffer'),
-  )
+  const arksImpliedCapsMap = await unstableCache(
+    getInstitutionVaultArksImpliedCapsMap,
+    [institutionName, vaultAddress, parsedNetwork],
+    cacheConfig,
+  )({
+    network: parsedNetwork,
+    arksAddresses: vaultWithConfig.arks.map((ark) => ark.id),
+    fleetCommanderAddress: vaultWithConfig.id,
+  })
 
-  console.log('vaultWithConfig', JSON.stringify(vaultWithConfig))
-
-  return <PanelRiskParameters vault={vaultWithConfig} />
+  return <PanelRiskParameters vault={vaultWithConfig} arksImpliedCapsMap={arksImpliedCapsMap} />
 }

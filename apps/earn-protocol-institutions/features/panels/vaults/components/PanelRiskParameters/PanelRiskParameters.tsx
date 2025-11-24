@@ -1,115 +1,69 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
-import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType, UiSimpleFlowSteps } from '@summerfi/app-types'
+import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
+import BigNumber from 'bignumber.js'
 
-import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
-import { usePanelRiskParameters } from '@/providers/PanekRiskParametersProvider/PanelRiskParametersProvider'
+import { marketRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/mapper'
+import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
 
-import { getPanelRiskChanges } from './helpers/get-panel-risk-changes'
-import { useMarketRiskParameters } from './hooks/use-market-risk-parameters'
-import { useVaultRiskParameters } from './hooks/use-vault-risk-parameters'
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
 import { type MarketRiskParameters } from './market-risk-parameters-table/types'
 import { vaultRiskParametersColumns } from './vault-risk-parameters-table/columns'
-import { type VaultRiskParameters } from './vault-risk-parameters-table/types'
 
 import styles from './PanelRiskParameters.module.css'
 
-const marketRiskParametersDummyRows: MarketRiskParameters[] = [
-  {
-    id: '1',
-    market: 'Aave V3',
-    marketCap: 1000000000,
-    maxPercentage: 0.65,
-    impliedCap: 800000000,
+const mapArksToRiskParameters = (
+  vault: SDKVaultishType,
+  arksImpliedCapsMap: {
+    [x: string]: string | undefined
   },
-  {
-    id: '2',
-    market: 'Origin USDC',
-    marketCap: 3000000000,
-    maxPercentage: 0.65,
-    impliedCap: 800000000,
-  },
-  {
-    id: '3',
-    market: 'Spark USDC',
-    marketCap: 3000000000,
-    maxPercentage: 0.65,
-    impliedCap: 800000000,
-  },
-  {
-    id: '4',
-    market: 'Compound V3 USDC',
-    marketCap: 3000000000,
-    maxPercentage: 0.65,
-    impliedCap: 800000000,
-  },
-  {
-    id: '5',
-    market: 'Euler Prime USDC',
-    marketCap: 0,
-    maxPercentage: 0,
-    impliedCap: 800000000,
-  },
-  {
-    id: '6',
-    market: 'Fluid USDC',
-    marketCap: 3000000000,
-    maxPercentage: 0.65,
-    impliedCap: 800000000,
-  },
-]
+): MarketRiskParameters[] => {
+  return vault.arks
+    .filter((ark) => {
+      return getArkNiceName(ark) !== null
+    })
+    .map((ark) => ({
+      id: ark.id,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      market: <span title={ark.name ?? ark.id}>{getArkNiceName(ark) || 'Unknown Market'}</span>,
+      marketCap: Number(ark.depositCap),
+      maxPercentage: new BigNumber(ark.maxDepositPercentageOfTVL.toString())
+        .shiftedBy(
+          -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
+        )
+        .toNumber(),
+      impliedCap: arksImpliedCapsMap[ark.id],
+    }))
+}
 
-const vaultRiskParametersDummyRows: VaultRiskParameters[] = [
-  {
-    id: '1',
-    parameter: 'Vault Cap',
-    value: 1000000000,
-  },
-  {
-    id: '2',
-    parameter: 'Buffer',
-    value: 100,
-  },
-]
-
-export const PanelRiskParameters = ({ vault }: { vault: SDKVaultishType }) => {
-  const { state, dispatch } = usePanelRiskParameters()
-
-  const { rows: marketRows, onCancel: marketOnCancel } = useMarketRiskParameters({
-    dispatch,
-    rawData: marketRiskParametersDummyRows,
+export const PanelRiskParameters = ({
+  vault,
+  arksImpliedCapsMap,
+}: {
+  vault: SDKVaultishType
+  arksImpliedCapsMap: {
+    [x: string]: string | undefined
+  }
+}) => {
+  const marketRows = marketRiskParametersMapper({
+    rawData: mapArksToRiskParameters(vault, arksImpliedCapsMap),
   })
 
-  const { rows: vaultRows, onCancel: vaultOnCancel } = useVaultRiskParameters({
-    dispatch,
-    rawData: vaultRiskParametersDummyRows,
+  const vaultRows = vaultRiskParametersMapper({
+    rawData: [
+      {
+        id: '1',
+        parameter: 'Vault Cap',
+        value: Number(vault.depositCap.toString()),
+      },
+      {
+        id: '2',
+        parameter: 'Buffer',
+        value: Number(vault.minimumBufferBalance.toString()),
+      },
+    ],
   })
-
-  const change = useMemo(
-    () =>
-      getPanelRiskChanges({
-        state,
-        vaultRiskRawData: vaultRiskParametersDummyRows,
-        marketRiskRawData: marketRiskParametersDummyRows,
-      }),
-    [state],
-  )
-
-  const onCancel = useCallback(() => {
-    dispatch({ type: 'reset' })
-    vaultOnCancel()
-    marketOnCancel()
-  }, [dispatch, vaultOnCancel, marketOnCancel])
-
-  const onConfirm = useCallback(() => {
-    dispatch({ type: 'update-step', payload: UiSimpleFlowSteps.PENDING })
-    // TODO: Implement confirm handler
-    // eslint-disable-next-line no-console
-    console.log('confirm')
-  }, [dispatch])
 
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
@@ -135,7 +89,6 @@ export const PanelRiskParameters = ({ vault }: { vault: SDKVaultishType }) => {
           tableClassName={styles.table}
         />
       </Card>
-      <EditSummary title="Summary" change={change} onCancel={onCancel} onConfirm={onConfirm} />
     </Card>
   )
 }

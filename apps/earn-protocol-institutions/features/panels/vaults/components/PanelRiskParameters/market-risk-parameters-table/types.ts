@@ -1,7 +1,9 @@
+import { type ReactNode } from 'react'
+
 export type MarketRiskParameters = {
   id: string
-  market: string
-  marketCap: number
+  market: ReactNode
+  marketCap: ReactNode
   maxPercentage: number
-  impliedCap: number
+  impliedCap: ReactNode
 }

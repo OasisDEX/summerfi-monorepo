@@ -4,7 +4,6 @@ import { type FC, type PropsWithChildren } from 'react'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
 import { sdkApiUrl } from '@/constants/sdk'
-import { PanelRiskParametersProvider } from '@/providers/PanekRiskParametersProvider/PanelRiskParametersProvider'
 import { PanelFeeRevenueAdminProvider } from '@/providers/PanelFeeRevenueAdminProvider/PanelFeeRevenueAdminProvider'
 import { PanelUserProvider } from '@/providers/PanelUserProvider/PanelUserProvider'
 
@@ -13,7 +12,6 @@ const providers = [
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>{children}</SDKContextProvider>
   ),
   PanelUserProvider,
-  PanelRiskParametersProvider,
   PanelFeeRevenueAdminProvider,
 ]
 

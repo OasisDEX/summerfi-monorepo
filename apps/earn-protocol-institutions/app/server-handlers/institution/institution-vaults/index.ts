@@ -4,7 +4,12 @@ import {
   SupportedNetworkIds,
   type SupportedSDKNetworks,
 } from '@summerfi/app-types'
-import { decorateWithFleetConfig, subgraphNetworkToId } from '@summerfi/app-utils'
+import {
+  decorateWithFleetConfig,
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+} from '@summerfi/app-utils'
+import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import {
@@ -14,6 +19,7 @@ import {
   type VaultSharePriceMap,
 } from '@/app/server-handlers/institution/institution-vaults/types'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
+import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
 
@@ -196,5 +202,47 @@ export const getInstitutionVault = async ({
     console.error('Error fetching institution vault:', error)
 
     return null
+  }
+}
+
+export const getInstitutionVaultArksImpliedCapsMap = async ({
+  network,
+  fleetCommanderAddress,
+  arksAddresses,
+}: {
+  network: SupportedSDKNetworks
+  fleetCommanderAddress: string
+  arksAddresses: string[]
+}) => {
+  if (!fleetCommanderAddress) {
+    throw new Error('Fleet commander address is required')
+  }
+
+  try {
+    const chainId = subgraphNetworkToSDKId(network)
+    const publicClient = await getSSRPublicClient(chainId)
+
+    const arksImpliedCapsMap: { [x: string]: string | undefined } = (
+      await Promise.all(
+        arksAddresses.map(async (arkAddress) => {
+          const impliedCap = await publicClient?.readContract({
+            abi: FleetCommanderAbi,
+            address: fleetCommanderAddress as `0x${string}`,
+            functionName: 'getEffectiveArkDepositCap',
+            args: [arkAddress as `0x${string}`],
+          })
+
+          return {
+            [arkAddress]: impliedCap?.toString(),
+          }
+        }),
+      )
+    ).reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
+    return arksImpliedCapsMap
+  } catch (error) {
+    throw new Error(
+      `Error fetching arks implied caps: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
   }
 }

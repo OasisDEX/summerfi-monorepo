@@ -22,7 +22,7 @@ const dummyFeeRevenueHistory = [
   { monthYear: 'March 2025', income: 100, expense: 123, revenue: 100 },
 ]
 
-const dummyFeeRevenue = [{ name: 'Vult AUM Fee', aumFee: 0.001 }]
+const dummyFeeRevenue = [{ name: 'Vault AUM Fee', aumFee: 0.001 }]
 
 const getVaultFeeRevenueData = async () => {
   return {
