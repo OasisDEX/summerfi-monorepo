@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { UiSimpleFlowSteps } from '@summerfi/app-types'
+import { type SDKVaultishType, UiSimpleFlowSteps } from '@summerfi/app-types'
 
 import { EditSummary } from '@/components/molecules/EditSummary/EditSummary'
 import { usePanelRiskParameters } from '@/providers/PanekRiskParametersProvider/PanelRiskParametersProvider'
@@ -75,7 +75,7 @@ const vaultRiskParametersDummyRows: VaultRiskParameters[] = [
   },
 ]
 
-export const PanelRiskParameters = () => {
+export const PanelRiskParameters = ({ vault }: { vault: SDKVaultishType }) => {
   const { state, dispatch } = usePanelRiskParameters()
 
   const { rows: marketRows, onCancel: marketOnCancel } = useMarketRiskParameters({
