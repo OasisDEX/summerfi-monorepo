@@ -57,6 +57,7 @@ query GetVaults {
     outputTokenPriceUSD
     depositLimit
     depositCap
+    minimumBufferBalance
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
