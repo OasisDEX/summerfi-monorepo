@@ -23,7 +23,7 @@ export type InstitutionVaultFeeRevenueHistoryItem = {
 
 export type InstitutionVaultFeeRevenueItem = {
   name: string
-  aumFee: number
+  aumFee: number | null
 }
 
 export type InstitutionVaultFeeRevenueData = {

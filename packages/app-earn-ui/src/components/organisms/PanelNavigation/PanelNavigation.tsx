@@ -41,7 +41,7 @@ const ButtonOrLink: FC<ButtonOrLinkProps> = ({ children, link, onClick, disabled
         variant="unstyled"
         onClick={onClick}
         disabled={disabled}
-        style={{ pointerEvents: disabled ? 'none' : 'auto' }}
+        style={disabled ? { pointerEvents: 'none', opacity: 0.4 } : {}}
       >
         {children}
       </Button>

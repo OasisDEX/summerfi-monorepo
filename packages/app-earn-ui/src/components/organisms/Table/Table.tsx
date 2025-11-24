@@ -45,6 +45,7 @@ interface TableProps<K extends string> {
   skeletonStyles?: CSSProperties
   wrapperClassName?: string
   tableClassName?: string
+  noRowsContent?: ReactNode
 }
 
 export function Table<K extends string>({
@@ -60,6 +61,7 @@ export function Table<K extends string>({
   skeletonStyles,
   wrapperClassName,
   tableClassName,
+  noRowsContent,
 }: TableProps<K>): React.ReactNode {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
@@ -206,6 +208,9 @@ export function Table<K extends string>({
             ))}
         </tbody>
       </table>
+      {!isLoading && resolvedRows.length === 0 && noRowsContent && (
+        <div className={styles.noRowsContentWrapper}>{noRowsContent}</div>
+      )}
       {isLoading && <TableSkeleton rows={skeletonLines} wrapperStyles={skeletonStyles} />}
     </div>
   )

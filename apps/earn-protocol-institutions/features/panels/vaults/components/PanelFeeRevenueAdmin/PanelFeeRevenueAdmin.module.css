@@ -25,11 +25,6 @@
       }
     }
 
-    .tableCellNodeUpdating {
-      margin-top: -4px;
-      margin-bottom: -4px;
-    }
-
     .inputContainer {
       display: flex;
       justify-content: flex-end;

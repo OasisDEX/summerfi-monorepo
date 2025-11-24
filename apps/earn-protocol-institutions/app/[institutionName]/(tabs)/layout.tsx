@@ -3,7 +3,6 @@ import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
 import { TopBlocks } from '@/components/layout/TopBlocks/TopBlocks'
-import { PanelsProvider } from '@/providers/PanelsProvider/PanelsProvider'
 
 export default async function InstitutionTabLayout({
   children,
@@ -58,9 +57,7 @@ export default async function InstitutionTabLayout({
         institutionName={institutionName}
         defaultVault={institutionVaults.vaults[0]}
       />
-      <PanelsProvider>
-        <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
-      </PanelsProvider>
+      <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
     </>
   )
 }

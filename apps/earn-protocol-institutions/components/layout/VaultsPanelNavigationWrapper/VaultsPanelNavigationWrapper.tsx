@@ -30,29 +30,32 @@ const panelItems = [
     label: 'Vault exposure',
   },
   {
-    id: DashboardVaultsPanel.ASSET_REALLOCATION,
-    label: 'Asset reallocation',
-    disabled: true,
-  },
-  {
     id: DashboardVaultsPanel.RISK_PARAMETERS,
     label: 'Risk Parameters',
-  },
-  {
-    id: DashboardVaultsPanel.ROLE_ADMIN,
-    label: 'Role admin',
-  },
-  {
-    id: DashboardVaultsPanel.USER_ADMIN,
-    label: 'User admin',
   },
   {
     id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,
     label: 'Fee & revenue admin',
   },
   {
+    id: DashboardVaultsPanel.ASSET_REALLOCATION,
+    label: 'Asset reallocation',
+    disabled: true,
+  },
+  {
+    id: DashboardVaultsPanel.ROLE_ADMIN,
+    label: 'Role admin',
+    disabled: true,
+  },
+  {
+    id: DashboardVaultsPanel.USER_ADMIN,
+    label: 'User admin',
+    disabled: true,
+  },
+  {
     id: DashboardVaultsPanel.ACTIVITY,
     label: 'Activity',
+    disabled: true,
   },
 ]
 
