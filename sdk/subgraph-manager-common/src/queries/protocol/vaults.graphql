@@ -127,6 +127,7 @@ query GetVault($id: ID!) {
     outputTokenPriceUSD
     depositLimit
     depositCap
+    minimumBufferBalance
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
