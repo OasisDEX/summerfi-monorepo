@@ -15,7 +15,6 @@ import type {
  * @param params.user user that is trying to deposit
  * @param params.amount Token amount to be deposited from source chain
  * @param params.slippage Maximum slippage allowed for the operation
- * @param params.shouldStake Whether the user wants to stake the deposit
  * @param params.referralCode Optional referral code
  */
 export const getCrossChainDepositTxHandler =

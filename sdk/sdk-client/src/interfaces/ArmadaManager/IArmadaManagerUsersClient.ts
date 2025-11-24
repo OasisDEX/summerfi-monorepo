@@ -255,7 +255,7 @@ export interface IArmadaManagerUsersClient {
    * @param vaultId ID of the pool to deposit in on destination chain
    * @param user user that is trying to deposit
    * @param amount Token amount to be deposited from source chain
-   * @param slippage Maximum slippage allowed for the operation (in basis points)
+   * @param slippage Maximum slippage allowed for the operation
    * @param referralCode Optional referral code
    *
    * @returns The transactions needed to deposit the tokens cross-chain

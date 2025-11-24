@@ -2166,7 +2166,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       value: isNative ? sourceAmount.toSolidityValue() : undefined,
       metadata: {
         fromAmount: sourceAmount,
-        toAmount: toAmount, // TODO: calculate expected output amount
+        toAmount: toAmount,
         slippage: params.slippage,
         priceImpact: priceImpact,
       },

@@ -114,7 +114,7 @@ export interface IArmadaManagerVaults {
    * @param vaultId ID of the pool to deposit in on destination chain
    * @param user Address of the user that is trying to deposit
    * @param amount Token amount to be deposited from source chain
-   * @param slippage Maximum slippage allowed for the operation (in basis points)
+   * @param slippage Maximum slippage allowed for the operation
    * @param referralCode Optional referral code
    *
    * @returns An array of transactions that must be executed
