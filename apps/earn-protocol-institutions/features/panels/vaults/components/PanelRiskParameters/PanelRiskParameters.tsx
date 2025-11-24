@@ -33,7 +33,7 @@ const mapArksToRiskParameters = (
           -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
         )
         .toNumber(),
-      impliedCap: arksImpliedCapsMap[ark.id],
+      impliedCap: arksImpliedCapsMap[ark.id] ?? 'n/a',
     }))
 }
 
