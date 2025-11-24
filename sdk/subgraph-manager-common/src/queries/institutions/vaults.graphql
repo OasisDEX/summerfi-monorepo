@@ -54,6 +54,7 @@ query GetVaults($institutionId: String!) {
     outputTokenPriceUSD
     depositLimit
     depositCap
+    minimumBufferBalance
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
