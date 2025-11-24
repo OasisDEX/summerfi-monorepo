@@ -98,6 +98,20 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getWithdrawTx.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getCrossChainDepositTx */
+  async getCrossChainDepositTx(
+    params: Parameters<IArmadaManagerUsersClient['getCrossChainDepositTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getCrossChainDepositTx']> {
+    return this.rpcClient.armada.users.getCrossChainDepositTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getCrossChainWithdrawTx */
+  async getCrossChainWithdrawTx(
+    params: Parameters<IArmadaManagerUsersClient['getCrossChainWithdrawTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getCrossChainWithdrawTx']> {
+    return this.rpcClient.armada.users.getCrossChainWithdrawTx.query(params)
+  }
+
   async getStakedBalance(
     params: Parameters<IArmadaManagerUsersClient['getStakedBalance']>[0],
   ): Promise<{

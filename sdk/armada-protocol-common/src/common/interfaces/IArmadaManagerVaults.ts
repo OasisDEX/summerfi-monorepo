@@ -107,6 +107,48 @@ export interface IArmadaManagerVaults {
   >
 
   /**
+   * @name getCrossChainDepositTx
+   * @description Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+   *
+   * @param fromChainId Source chain ID where user has tokens
+   * @param vaultId ID of the pool to deposit in on destination chain
+   * @param user Address of the user that is trying to deposit
+   * @param amount Token amount to be deposited from source chain
+   * @param slippage Maximum slippage allowed for the operation
+   * @param referralCode Optional referral code
+   *
+   * @returns An array of transactions that must be executed
+   */
+  getCrossChainDepositTx(params: {
+    fromChainId: ChainId
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    referralCode?: string
+  }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
+
+  /**
+   * @name getCrossChainWithdrawTx
+   * @description Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+   *
+   * @param vaultId ID of the pool to withdraw from
+   * @param user Address of the user that is trying to withdraw
+   * @param amount Token amount to be withdrawn
+   * @param slippage Maximum slippage allowed for the operation (in basis points)
+   * @param toChainId Destination chain ID where user wants to receive tokens
+   *
+   * @returns An array of transactions that must be executed
+   */
+  getCrossChainWithdrawTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    toChainId: ChainId
+  }): Promise<[WithdrawTransactionInfo] | [ApproveTransactionInfo, WithdrawTransactionInfo]>
+
+  /**
    * @method getVaultInfo
    * @description Retrieves the information of an Armada vault by its ID
    *

@@ -2679,6 +2679,9 @@ importers:
 
   sdk/armada-protocol-service:
     dependencies:
+      '@ensofinance/sdk':
+        specifier: ^2.0.11
+        version: 2.0.11
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.67
         version: 3.0.67
@@ -10622,6 +10625,14 @@ packages:
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  /@ensofinance/sdk@2.0.11:
+    resolution: {integrity: sha512-NAbCUO/VI7v559WX9i1YyGUK9ylxF7SuhPDrk0NigeM4SEiHTrKmGTU8Yryjm9HZ7P4Zd3dXZPWOnin4YMMmag==}
+    dependencies:
+      axios: 1.8.4
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /@envelop/core@3.0.6:
     resolution: {integrity: sha512-06t1xCPXq6QFN7W1JUEf68aCwYN0OUDNAIoJe7bAqhaoa2vn7NCcuX1VHkJ/OWpmElUgCsRO6RiBbIru1in0Ig==}

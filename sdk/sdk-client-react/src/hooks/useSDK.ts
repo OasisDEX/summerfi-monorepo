@@ -5,6 +5,8 @@ import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
 import { getUserPositionsHandler } from '../handlers/getUserPositionsHandler'
 import { getUserPositionHandler } from '../handlers/getUserPositionHandler'
 import { getWithdrawTXHandler } from '../handlers/getWithdrawTXHandler'
+import { getCrossChainDepositTxHandler } from '../handlers/getCrossChainDepositTxHandler'
+import { getCrossChainWithdrawTxHandler } from '../handlers/getCrossChainWithdrawTxHandler'
 
 import { useSDKContext } from '../components/SDKContext'
 import { getChainHandler } from '../handlers/getChainHandler'
@@ -103,6 +105,8 @@ export const useSDK = (params: UseSdk) => {
   // ARMADA HANDLERS
   const getWithdrawTx = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
   const getDepositTx = useMemo(() => getDepositTXHandler(sdk), [sdk])
+  const getCrossChainDepositTx = useMemo(() => getCrossChainDepositTxHandler(sdk), [sdk])
+  const getCrossChainWithdrawTx = useMemo(() => getCrossChainWithdrawTxHandler(sdk), [sdk])
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
@@ -202,6 +206,8 @@ export const useSDK = (params: UseSdk) => {
       getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTx,
       getBridgeTx,
+      getCrossChainDepositTx,
+      getCrossChainWithdrawTx,
       getDelegateTx,
       getStakeTx,
       getStakeTxV2,

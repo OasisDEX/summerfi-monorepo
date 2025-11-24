@@ -248,6 +248,48 @@ export interface IArmadaManagerUsersClient {
   >
 
   /**
+   * @method getCrossChainDepositTx
+   * @description Returns the transactions needed to deposit tokens cross-chain into a Fleet using Enso routing
+   *
+   * @param fromChainId Source chain ID where user has tokens
+   * @param vaultId ID of the pool to deposit in on destination chain
+   * @param user user that is trying to deposit
+   * @param amount Token amount to be deposited from source chain
+   * @param slippage Maximum slippage allowed for the operation
+   * @param referralCode Optional referral code
+   *
+   * @returns The transactions needed to deposit the tokens cross-chain
+   */
+  getCrossChainDepositTx(params: {
+    fromChainId: ChainId
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    referralCode?: string
+  }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>
+
+  /**
+   * @method getCrossChainWithdrawTx
+   * @description Returns the transactions needed to withdraw tokens cross-chain from a Fleet using Enso routing
+   *
+   * @param vaultId ID of the pool to withdraw from
+   * @param user user that is trying to withdraw
+   * @param amount Token amount to be withdrawn
+   * @param slippage Maximum slippage allowed for the operation (in basis points)
+   * @param toChainId Destination chain ID where user wants to receive tokens
+   *
+   * @returns The transactions needed to withdraw the tokens cross-chain
+   */
+  getCrossChainWithdrawTx(params: {
+    vaultId: IArmadaVaultId
+    user: IUser
+    amount: ITokenAmount
+    slippage: IPercentage
+    toChainId: ChainId
+  }): Promise<[WithdrawTransactionInfo] | [ApproveTransactionInfo, WithdrawTransactionInfo]>
+
+  /**
    * @method getStakedBalance
    * @description Returns the staked balance of a user in a Fleet
    *

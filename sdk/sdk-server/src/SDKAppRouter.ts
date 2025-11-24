@@ -91,6 +91,8 @@ import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getProtocolRevenue } from './armada-protocol-handlers/users/getProtocolRevenue'
+import { getCrossChainDepositTx } from './armada-protocol-handlers/users/getCrossChainDepositTx'
+import { getCrossChainWithdrawTx } from './armada-protocol-handlers/users/getCrossChainWithdrawTx'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
@@ -168,6 +170,8 @@ export const sdkAppRouter = router({
       getUserPosition: getUserPosition,
       getDepositTx: getDepositTx,
       getWithdrawTx: getWithdrawTx,
+      getCrossChainDepositTx: getCrossChainDepositTx,
+      getCrossChainWithdrawTx: getCrossChainWithdrawTx,
       getFleetBalance: getFleetBalance,
       getStakedBalance: getStakedBalance,
       getTotalBalance: getTotalBalance,
