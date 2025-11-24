@@ -1,9 +1,9 @@
-import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
+import { Card, LoadingSpinner } from '@summerfi/app-earn-ui'
 
 export default function InstitutionOverviewLayoutLoading() {
   return (
-    <DashboardContentLayout panel={<div>Loading state</div>}>
-      <div>Loading state</div>
-    </DashboardContentLayout>
+    <Card variant="cardSecondary">
+      <LoadingSpinner size={32} />
+    </Card>
   )
 }
