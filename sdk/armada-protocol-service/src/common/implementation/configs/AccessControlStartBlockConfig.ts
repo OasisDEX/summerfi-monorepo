@@ -4,4 +4,5 @@
 
 export const AccessControlStartBlockConfig: Partial<Record<number, bigint>> = {
   8453: 33275700n, // Base chain
+  42161: 33275700n, // Arbitrum One chain
 }
