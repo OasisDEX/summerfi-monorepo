@@ -61,6 +61,7 @@ export const useLogin = () => {
     authSetPasswordHandler,
     challengeData,
     setChallengeData,
+    handleAuthReset,
   } = useAuth()
 
   const [mfaCode, setMfaCode] = useState('')
@@ -77,6 +78,15 @@ export const useLogin = () => {
       // eslint-disable-next-line no-console
       console.log('No valid redirection path found for the user.')
     }
+  }
+
+  const handleLoginReset = () => {
+    setEmail('')
+    setIsEmailValid(false)
+    setPassword('')
+    setIsPasswordValid(false)
+    setError('')
+    handleAuthReset()
   }
 
   const handleSetEmail = (nextEmail: string) => {
@@ -222,5 +232,6 @@ export const useLogin = () => {
     handleRespondToSoftwareToken,
     challengeData,
     successfulLogin,
+    handleLoginReset,
   }
 }

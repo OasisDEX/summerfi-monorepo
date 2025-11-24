@@ -7,7 +7,6 @@ declare const styles: {
   readonly "panelFeeRevenueAdminCard": string;
   readonly "panelFeeRevenueAdminWrapper": string;
   readonly "table": string;
-  readonly "tableCellNodeUpdating": string;
   readonly "tableWrapper": string;
 };
 export = styles;

@@ -7,22 +7,25 @@ import { formatWithSeparators } from '@summerfi/app-utils'
 
 import { getArksAllocation } from '@/features/panels/vaults/components/PanelVaultExposure/get-arks-allocation'
 
-import { assetRelocationColumns } from './columns'
-import { getAssetRelocationInitialBalanceState, getAssetRelocationModifiedVault } from './helpers'
-import { assetRelocationMapper } from './mapper'
+import { assetReallocationColumns } from './columns'
+import {
+  getAssetReallocationInitialBalanceState,
+  getAssetReallocationModifiedVault,
+} from './helpers'
+import { assetReallocationMapper } from './mapper'
 
-import styles from './PanelAssetRelocation.module.css'
+import styles from './PanelAssetReallocation.module.css'
 
-interface PanelAssetRelocationProps {
+interface PanelAssetReallocationProps {
   vault: SDKVaultType
 }
 
-export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) => {
+export const PanelAssetReallocation: FC<PanelAssetReallocationProps> = ({ vault }) => {
   const [balanceAddChange, setBalanceAddChange] = useState(
-    getAssetRelocationInitialBalanceState(vault),
+    getAssetReallocationInitialBalanceState(vault),
   )
   const [balanceRemoveChange, setBalanceRemoveChange] = useState(
-    getAssetRelocationInitialBalanceState(vault),
+    getAssetReallocationInitialBalanceState(vault),
   )
 
   const onChange = useCallback(
@@ -49,8 +52,8 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
   )
 
   const onCancel = useCallback(() => {
-    setBalanceAddChange(getAssetRelocationInitialBalanceState(vault))
-    setBalanceRemoveChange(getAssetRelocationInitialBalanceState(vault))
+    setBalanceAddChange(getAssetReallocationInitialBalanceState(vault))
+    setBalanceRemoveChange(getAssetReallocationInitialBalanceState(vault))
   }, [vault])
 
   const onConfirm = useCallback(() => {
@@ -76,7 +79,7 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
     return acc + arkBalanceChange
   }, 0)
 
-  const rows = assetRelocationMapper({
+  const rows = assetReallocationMapper({
     vault,
     onChange,
     balanceAddChange,
@@ -89,21 +92,21 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
 
   // Create a modified vault with user input changes applied
   const modifiedVault = useMemo(
-    () => getAssetRelocationModifiedVault(vault, balanceAddChange, balanceRemoveChange),
+    () => getAssetReallocationModifiedVault(vault, balanceAddChange, balanceRemoveChange),
     [vault, balanceAddChange, balanceRemoveChange],
   )
 
   const afterAllocation = getArksAllocation(modifiedVault)
 
   return (
-    <Card variant="cardSecondary" className={styles.panelAssetRelocationWrapper}>
+    <Card variant="cardSecondary" className={styles.panelAssetReallocationWrapper}>
       <Text as="h5" variant="h5">
-        Asset relocation
+        Asset reallocation
       </Text>
       <Card className={styles.contentWrapper}>
         <Table
           rows={rows}
-          columns={assetRelocationColumns}
+          columns={assetReallocationColumns}
           wrapperClassName={styles.tableWrapper}
           tableClassName={styles.table}
         />
@@ -141,13 +144,13 @@ export const PanelAssetRelocation: FC<PanelAssetRelocationProps> = ({ vault }) =
       </Card>
       <div className={styles.allocationBar}>
         <Text as="p" variant="p4semi" className={styles.allocationHeader}>
-          Before asset relocation
+          Before asset reallocation
         </Text>
         <AllocationBar items={beforeAllocation} variant="large" />
       </div>
       <div className={styles.allocationBar}>
         <Text as="p" variant="p4semi" className={styles.allocationHeader}>
-          After asset relocation
+          After asset reallocation
         </Text>
         <AllocationBar items={afterAllocation} variant="large" />
       </div>

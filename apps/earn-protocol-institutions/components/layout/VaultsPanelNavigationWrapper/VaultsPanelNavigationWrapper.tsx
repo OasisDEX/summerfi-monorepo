@@ -4,7 +4,7 @@ import { PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
+import { panelNavigationStaticItems } from '@/constants/panel-navigation-static-items'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getPanelVaultNavigationTabId } from '@/helpers/get-pathname-tab-id'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
@@ -12,10 +12,10 @@ import { getInstitutionVaultUrl } from '@/helpers/get-url'
 enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
-  ASSET_RELOCATION = 'asset-relocation',
+  ASSET_REALLOCATION = 'asset-reallocation',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',
-  CLIENT_ADMIN = 'client-admin',
+  USER_ADMIN = 'user-admin',
   FEE_REVENUE_ADMIN = 'fee-revenue-admin',
   ACTIVITY = 'activity',
 }
@@ -30,28 +30,32 @@ const panelItems = [
     label: 'Vault exposure',
   },
   {
-    id: DashboardVaultsPanel.ASSET_RELOCATION,
-    label: 'Asset relocation',
-  },
-  {
     id: DashboardVaultsPanel.RISK_PARAMETERS,
     label: 'Risk Parameters',
-  },
-  {
-    id: DashboardVaultsPanel.ROLE_ADMIN,
-    label: 'Role admin',
-  },
-  {
-    id: DashboardVaultsPanel.CLIENT_ADMIN,
-    label: 'Client admin',
   },
   {
     id: DashboardVaultsPanel.FEE_REVENUE_ADMIN,
     label: 'Fee & revenue admin',
   },
   {
+    id: DashboardVaultsPanel.ASSET_REALLOCATION,
+    label: 'Asset reallocation',
+    disabled: true,
+  },
+  {
+    id: DashboardVaultsPanel.ROLE_ADMIN,
+    label: 'Role admin',
+    disabled: true,
+  },
+  {
+    id: DashboardVaultsPanel.USER_ADMIN,
+    label: 'User admin',
+    disabled: true,
+  },
+  {
     id: DashboardVaultsPanel.ACTIVITY,
     label: 'Activity',
+    disabled: true,
   },
 ]
 
@@ -75,6 +79,7 @@ export const VaultsPanelNavigationWrapper = ({
       items: panelItems.map((item) => ({
         id: item.id,
         label: item.label,
+        disabled: item.disabled,
         action: () => {
           push(
             getInstitutionVaultUrl({
@@ -93,27 +98,7 @@ export const VaultsPanelNavigationWrapper = ({
     <PanelNavigation
       isMobile={isMobile}
       navigation={navigation}
-      staticItems={[
-        {
-          id: 'request-new-market',
-          label: (
-            <IconWithText iconName="plus" size={20}>
-              Request a new market
-            </IconWithText>
-          ),
-          // eslint-disable-next-line no-console
-          action: () => console.log('Request a new market'),
-        },
-        {
-          id: 'help-support',
-          label: (
-            <IconWithText iconName="question_o" size={20}>
-              Help & Support
-            </IconWithText>
-          ),
-          link: { href: '/', target: '_blank' },
-        },
-      ]}
+      staticItems={panelNavigationStaticItems}
     />
   )
 }

@@ -6,11 +6,11 @@ import panelManageInternalUsersStyles from './PanelManageInternalUsers.module.cs
 
 const skeletonRows = Array.from({ length: 5 }).map((_) => ({
   content: {
-    actions: <SkeletonLine height={19} style={{ margin: '9px 0' }} />,
-    cognitoEmail: <SkeletonLine height={19} style={{ margin: '9px 0' }} />,
-    cognitoName: <SkeletonLine height={19} style={{ margin: '9px 0' }} />,
-    createdAt: <SkeletonLine height={19} style={{ margin: '9px 0' }} />,
-    role: <SkeletonLine height={19} style={{ margin: '9px 0' }} />,
+    actions: <SkeletonLine height={19} style={{ margin: '4px 0' }} />,
+    cognitoEmail: <SkeletonLine height={19} style={{ margin: '4px 0' }} />,
+    cognitoName: <SkeletonLine height={19} style={{ margin: '4px 0' }} />,
+    createdAt: <SkeletonLine height={19} style={{ margin: '4px 0' }} />,
+    role: <SkeletonLine height={19} style={{ margin: '4px 0' }} />,
   },
 }))
 

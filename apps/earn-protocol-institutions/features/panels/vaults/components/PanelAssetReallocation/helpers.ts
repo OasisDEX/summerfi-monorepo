@@ -5,7 +5,7 @@ import { type SDKVaultType } from '@summerfi/app-types'
  * @param vault - The vault object.
  * @returns An object with the initial balance state for each Ark in the vault.
  */
-export const getAssetRelocationInitialBalanceState = (vault: SDKVaultType) => {
+export const getAssetReallocationInitialBalanceState = (vault: SDKVaultType) => {
   return vault.arks.reduce<{ [key: string]: string }>((acc, ark) => {
     if (ark.id) {
       acc[ark.id] = ''
@@ -22,7 +22,7 @@ export const getAssetRelocationInitialBalanceState = (vault: SDKVaultType) => {
  * @param balanceRemoveChange - The balance changes for the remove operation.
  * @returns A modified vault object with the balance changes applied.
  */
-export const getAssetRelocationModifiedVault = (
+export const getAssetReallocationModifiedVault = (
   vault: SDKVaultType,
   balanceAddChange: { [key: string]: string },
   balanceRemoveChange: { [key: string]: string },

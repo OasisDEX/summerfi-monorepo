@@ -2,9 +2,9 @@ import { getProtocolLabel, Input, TableCellText } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 
-import styles from './PanelAssetRelocation.module.css'
+import styles from './PanelAssetReallocation.module.css'
 
-export const assetRelocationMapper = ({
+export const assetReallocationMapper = ({
   vault,
   onChange,
   balanceAddChange,

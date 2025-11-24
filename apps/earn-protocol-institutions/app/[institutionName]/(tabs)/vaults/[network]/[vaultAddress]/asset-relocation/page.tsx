@@ -3,9 +3,9 @@ import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
-import { PanelAssetRelocation } from '@/features/panels/vaults/components/PanelAssetRelocation/PanelAssetRelocation'
+import { PanelAssetReallocation } from '@/features/panels/vaults/components/PanelAssetReallocation/PanelAssetReallocation'
 
-export default async function InstitutionVaultAssetRelocationPage({
+export default async function InstitutionVaultAssetReallocationPage({
   params,
 }: {
   params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
@@ -35,5 +35,5 @@ export default async function InstitutionVaultAssetRelocationPage({
     return <div>Vault not found</div>
   }
 
-  return <PanelAssetRelocation vault={vault} />
+  return <PanelAssetReallocation vault={vault} />
 }

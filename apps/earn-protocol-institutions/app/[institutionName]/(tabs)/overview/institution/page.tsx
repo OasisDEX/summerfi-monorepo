@@ -17,6 +17,7 @@ export default async function InstitutionOverviewTab({
     <PanelInstitutionOverview
       institutionName={institutionName}
       institutionVaults={institutionVaults?.vaults ?? []}
+      vaultsAdditionalInfo={institutionVaults?.vaultsAdditionalInfo}
     />
   )
 }

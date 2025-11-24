@@ -1,4 +1,4 @@
-.panelAssetRelocationWrapper {
+.panelAssetReallocationWrapper {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-medium-large);

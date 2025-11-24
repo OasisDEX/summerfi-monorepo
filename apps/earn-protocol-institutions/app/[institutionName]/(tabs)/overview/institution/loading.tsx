@@ -1,3 +1,7 @@
+import { PanelInstitutionOverview } from '@/features/panels/overview/components/PanelInstitutionOverview/PanelInstitutionOverview'
+
 export default function InstitutionOverviewLoadingTab() {
-  return <div>InstitutionOverviewLoadingTab</div>
+  return (
+    <PanelInstitutionOverview institutionName="Your institution" institutionVaults={[]} isLoading />
+  )
 }

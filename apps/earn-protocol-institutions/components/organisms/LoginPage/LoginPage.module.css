@@ -92,3 +92,14 @@
     }
   }
 }
+
+.mfaButtons {
+  display: flex;
+  flex-direction: column;
+}
+
+.mfaCodeInput {
+  text-align: center;
+  letter-spacing: 20px;
+  text-indent: 20px;
+}

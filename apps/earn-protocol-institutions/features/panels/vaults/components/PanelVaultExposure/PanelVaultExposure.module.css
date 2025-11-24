@@ -3,19 +3,6 @@
   flex-direction: column;
   gap: var(--spacing-space-large);
 
-  .panelVaultExposureHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--spacing-space-medium);
-
-    .headerButton {
-      /* padding: var(--spacing-space-small); */
-      min-width: unset;
-    }
-  }
-
   .allocationBar {
     display: flex;
     flex-direction: column;

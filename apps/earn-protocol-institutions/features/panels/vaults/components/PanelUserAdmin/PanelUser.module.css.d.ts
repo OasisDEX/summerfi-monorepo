@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "panelClientAdminWrapper": string;
+  readonly "panelUserAdminWrapper": string;
   readonly "table": string;
   readonly "tableCellAddress": string;
   readonly "tableWrapper": string;

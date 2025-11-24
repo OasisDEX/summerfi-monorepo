@@ -248,11 +248,9 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
       ) : (
         <div
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
+          title={`${item.id} on ${vaultNetwork}`}
         >
-          No data available for this ark.
-          <small>
-            {item.id} on {vaultNetwork}
-          </small>
+          No description available for this ark.
         </div>
       ),
     }
