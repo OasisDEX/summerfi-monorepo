@@ -1,0 +1,24 @@
+.arkHistoricalYieldChartCardWrapper {
+  margin-top: 0;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .arkHistoricalYieldChartCardWrapper {
+    padding-left: var(--general-space-24);
+    padding-right: var(--general-space-24);
+  }
+}
+
+.arkHistoricalYieldChart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    justify-content: space-between;
+  }
+}

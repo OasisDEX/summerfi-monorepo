@@ -1,0 +1,27 @@
+.legendWrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--general-space-8);
+  padding-top: var(--general-space-12);
+  user-select: none;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-circle);
+}
+
+.legendItemText {
+  color: var(--color-text-primary);
+  font-size: 14px;
+}

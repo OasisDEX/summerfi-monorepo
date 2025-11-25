@@ -11,14 +11,18 @@ import {
 } from '@summerfi/app-utils'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 import {
+  type InstiVaultPerformanceResponse,
   type VaultAdditionalInfo,
   type VaultApyAverageMap,
   type VaultApyMap,
   type VaultSharePriceMap,
 } from '@/app/server-handlers/institution/institution-vaults/types'
+import { graphqlVaultHistoryClients } from '@/app/server-handlers/institution/utils/graph-ql-clients'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
+import { GetVaultHistoryDocument } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
@@ -245,4 +249,35 @@ export const getInstitutionVaultArksImpliedCapsMap = async ({
       `Error fetching arks implied caps: ${error instanceof Error ? error.message : 'Unknown error'}`,
     )
   }
+}
+
+export const getInstitutionVaultPerformanceData = async ({
+  network,
+  fleetCommanderAddress,
+}: {
+  network: SupportedSDKNetworks
+  fleetCommanderAddress: string
+}) => {
+  if (!fleetCommanderAddress) {
+    throw new Error('Fleet commander address is required')
+  }
+
+  const client = graphqlVaultHistoryClients[network]
+
+  return await unstableCache(
+    () =>
+      client.request<InstiVaultPerformanceResponse>(
+        GetVaultHistoryDocument,
+        {
+          vaultId: fleetCommanderAddress,
+        },
+        {
+          origin: 'earn-protocol-institutions',
+        },
+      ),
+    ['institution-vault-performance-data', fleetCommanderAddress, network],
+    {
+      revalidate: 300, // 5 minutes
+    },
+  )()
 }

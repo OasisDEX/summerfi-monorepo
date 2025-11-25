@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "aumChartWrapper": string;
+  readonly "wrapper": string;
 };
 export = styles;
 

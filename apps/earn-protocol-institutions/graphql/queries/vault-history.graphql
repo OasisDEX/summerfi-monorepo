@@ -1,0 +1,31 @@
+query GetVaultHistory($vaultId: ID!) {
+  vault(id: $vaultId) {
+    hourlyVaultHistory: hourlySnapshots(
+      first: 721 # 30 days in hours + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      navPrice: pricePerShare
+      timestamp
+    }
+    dailyVaultHistory: dailySnapshots(
+      first: 366 # 1 year in days + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      navPrice: pricePerShare
+      timestamp
+    }
+    weeklyVaultHistory: weeklySnapshots(
+      first: 157 # 3 years in weeks + 1 point of leeway
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      netValue: inputTokenBalanceNormalized
+      navPrice: pricePerShare
+      timestamp
+    }
+  }
+}

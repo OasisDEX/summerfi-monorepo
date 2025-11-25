@@ -1,4 +1,8 @@
 import { type TimeframesType } from '@summerfi/app-types'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
+
+const PERCENTAGE_SHORTHAND_THRESHOLD = 1000
 
 export const formatChartCryptoValue = (amount: number) => {
   if (Number.isNaN(amount) || amount < 0) {
@@ -76,6 +80,18 @@ export const formatChartCryptoValue = (amount: number) => {
   }
 
   return `${parseFloat(bValue.toFixed(2))}B`
+}
+
+export const formatChartPercentageValue = (amount: number, detailed: boolean = false) => {
+  if (Number.isNaN(amount) || amount <= 0) {
+    return '0'
+  }
+
+  if (amount > PERCENTAGE_SHORTHAND_THRESHOLD) {
+    return `${formatAsShorthandNumbers(amount, { precision: 3 })}%`
+  }
+
+  return `${new BigNumber(amount).toFixed(detailed ? 2 : 0)}%`
 }
 
 export const CHART_TIMESTAMP_FORMAT_DETAILED = 'YYYY-MM-DD HH:mm:ss' // used for hourly data

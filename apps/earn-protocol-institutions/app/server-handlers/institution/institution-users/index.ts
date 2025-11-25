@@ -16,7 +16,7 @@ import {
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { validateInstitutionUserSession } from '@/app/server-handlers/institution/validate-user-session'
+import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 // this is just a simple helper function to extract user attributes

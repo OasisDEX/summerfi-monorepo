@@ -25,3 +25,17 @@ export type VaultAdditionalInfo = {
   vaultsApyAverages: VaultApyAverageMap
   vaultSharePriceMap: VaultSharePriceMap
 }
+
+export type InstiVaultsPerformanceDataPoint = {
+  netValue: string
+  navPrice: string
+  timestamp: string
+}
+
+export type InstiVaultPerformanceResponse = {
+  vault: {
+    hourlyVaultHistory: InstiVaultsPerformanceDataPoint[]
+    dailyVaultHistory: InstiVaultsPerformanceDataPoint[]
+    weeklyVaultHistory: InstiVaultsPerformanceDataPoint[]
+  }
+}

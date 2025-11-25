@@ -1,0 +1,43 @@
+query GetInterestRates($productId: String!) {
+  # as this query result can get very big very fast
+  # please please reconsider adding more fields
+  dailyInterestRates(
+    where: { productId: $productId }
+    first: 365 # 365 days
+    orderBy: date
+    orderDirection: desc
+  ) {
+    averageRate
+    date
+  }
+  hourlyInterestRates(
+    where: { productId: $productId }
+    first: 720 # 24 * 30 = one month
+    orderBy: date
+    orderDirection: desc
+  ) {
+    averageRate
+    date
+  }
+  weeklyInterestRates(
+    where: { productId: $productId }
+    first: 156 # 52 * 3 = three years
+    orderBy: weekTimestamp
+    orderDirection: desc
+  ) {
+    averageRate
+    date: weekTimestamp
+  }
+  # latest interest rate, used in the arks list
+  latestInterestRate: hourlyInterestRates(
+      where: { productId: $productId }
+      first: 1
+      orderBy: date
+      orderDirection: desc
+    ) {
+    rate: interestRates(first: 1, orderBy: timestamp, orderDirection: desc) {
+      rate
+      timestamp
+    }
+  }
+}

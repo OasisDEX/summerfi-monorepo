@@ -3,4 +3,6 @@
   flex-direction: column;
   gap: var(--spacing-space-medium);
   width: 100%;
+  top: calc(var(--spacing-space-medium) + 45px + 24px);
+  position: sticky;
 }
