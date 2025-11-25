@@ -30,4 +30,5 @@ packages/**/types/generated
 apps/**/types/generated/*
 armada-protocol/contracts/**/*
 apps/earn-protocol/graphql/**/*
+apps/earn-protocol-institutions/graphql/**/*
 apps/earn-protocol-landing-page/graphql/**/*
