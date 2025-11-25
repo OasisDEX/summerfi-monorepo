@@ -715,6 +715,14 @@ export interface IArmadaManagerUsersClient {
   }): Promise<StakingSimulationDataV2>
 
   /**
+   * @method getStakingConfigV2
+   * @description Returns the staking configuration including the staking contract address
+   *
+   * @returns Object containing staking configuration
+   */
+  getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
+
+  /**
    * @method getMigratablePositions
    * @description Returns the positions that can be migrated
    *

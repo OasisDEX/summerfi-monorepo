@@ -210,7 +210,7 @@ const SumrV2StakingManageComponent = ({
 
   const [lockBucketAvailabilityMap, setLockBucketAvailabilityMap] =
     useState<LockBucketAvailabilityMap | null>(null)
-  const [bucketsLoading, setBucketsLoading] = useState(true)
+  const [sdkDataOnMountLoading, setSdkDataOnMountLoading] = useState(true)
   const [totalSumrStaked, setTotalSumrStaked] = useState<string>('0')
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
   const [revenueShare, setRevenueShare] = useState<number>(0)
@@ -227,6 +227,7 @@ const SumrV2StakingManageComponent = ({
     userStakesCountBefore: string
     userStakesCountAfter: string
   } | null>(null)
+  const [stakingContractAddress, setStakingContractAddress] = useState<string>('')
 
   // Calculate price from fully diluted valuation
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -243,13 +244,14 @@ const SumrV2StakingManageComponent = ({
     getStakingRewardRatesV2,
     getStakingSimulationDataV2,
     getSummerToken,
+    getStakingConfigV2,
   } = useAppSDK()
 
   // Fetch staking buckets info and other staking data on mount
   useEffect(() => {
     const fetchStakingData = async () => {
       try {
-        setBucketsLoading(true)
+        setSdkDataOnMountLoading(true)
 
         // Fetch summer token first as it's needed for reward rates
         const summerToken = await getSummerToken({
@@ -257,7 +259,7 @@ const SumrV2StakingManageComponent = ({
         })
 
         // Fetch all data in parallel for better performance
-        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates] =
+        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates, stakingConfig] =
           await Promise.all([
             getStakingBucketsInfoV2(),
             getStakingTotalSumrStakedV2(),
@@ -267,13 +269,14 @@ const SumrV2StakingManageComponent = ({
               rewardTokenAddress: summerToken.address,
               sumrPriceUsd,
             }),
+            getStakingConfigV2(),
           ])
 
         // Process and set all the data
         const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
 
         setLockBucketAvailabilityMap(availabilityMap)
-
+        setStakingContractAddress(stakingConfig.stakingContractAddress)
         const totalStakedFormatted = new BigNumber(totalStaked.toString())
           .shiftedBy(-18)
           .dividedBy(1000000)
@@ -294,7 +297,7 @@ const SumrV2StakingManageComponent = ({
         // eslint-disable-next-line no-console
         console.error('Failed to fetch staking data:', error)
       } finally {
-        setBucketsLoading(false)
+        setSdkDataOnMountLoading(false)
       }
     }
 
@@ -306,6 +309,7 @@ const SumrV2StakingManageComponent = ({
     getStakingRevenueShareV2,
     getStakingRewardRatesV2,
     getSummerToken,
+    getStakingConfigV2,
   ])
 
   const { token: sumrToken } = useToken({
@@ -482,7 +486,7 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
-    if (bucketsLoading) {
+    if (sdkDataOnMountLoading) {
       return true
     }
 
@@ -497,7 +501,7 @@ const SumrV2StakingManageComponent = ({
     enoughBucketAvailability,
     sumrBalanceOnSourceChain,
     warningAccepted,
-    bucketsLoading,
+    sdkDataOnMountLoading,
     isLoading,
   ])
 
@@ -568,7 +572,7 @@ const SumrV2StakingManageComponent = ({
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        {bucketsLoading ? (
+                        {sdkDataOnMountLoading ? (
                           <SkeletonLine width={60} height={16} />
                         ) : (
                           <Text variant="p3semi">{`${totalSumrStaked}m`}</Text>
@@ -603,7 +607,7 @@ const SumrV2StakingManageComponent = ({
                 items={[
                   {
                     label: 'Protocol Revenue',
-                    value: bucketsLoading ? (
+                    value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={80} height={16} />
                     ) : (
                       `$${protocolRevenue}m`
@@ -613,7 +617,7 @@ const SumrV2StakingManageComponent = ({
                     label: 'Revenue Share',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        {bucketsLoading ? (
+                        {sdkDataOnMountLoading ? (
                           <SkeletonLine width={50} height={16} />
                         ) : (
                           <Text variant="p3semi">{`${revenueShare}%`}</Text>
@@ -626,7 +630,7 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'USDC Yield APY',
-                    value: bucketsLoading ? (
+                    value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={70} height={16} />
                     ) : (
                       `up to ${maxApy}`
@@ -644,7 +648,12 @@ const SumrV2StakingManageComponent = ({
                     label: 'Staking contract',
                     value: (
                       <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="Huh?">Go to report</Link>
+                        <Link
+                          href={`https://basescan.org/address/${stakingContractAddress}`}
+                          target="_blank"
+                        >
+                          Go to basescan
+                        </Link>
                       </WithArrow>
                     ),
                   },
@@ -689,7 +698,7 @@ const SumrV2StakingManageComponent = ({
             </div>
             <Card>
               {!userWalletAddress ? (
-                isLoadingAccount || bucketsLoading ? (
+                isLoadingAccount || sdkDataOnMountLoading ? (
                   <SkeletonLine width={200} height={50} />
                 ) : (
                   <div
