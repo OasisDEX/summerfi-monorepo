@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useChain } from '@account-kit/react'
 import {
   AnimateHeight,
   Button,
@@ -13,11 +14,13 @@ import {
   Icon,
   InputWithDropdown,
   OrderInformation,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useAmount,
+  useClientChainId,
   useUserWallet,
   WithArrow,
   YieldSourceLabel,
@@ -187,6 +190,7 @@ const SumrV2StakingManageComponent = ({
   approveStatus,
   needsApproval,
   prepareTxs,
+  isSettingChain = false,
 }: {
   onStake: (params: {
     amount: BigNumber
@@ -202,6 +206,7 @@ const SumrV2StakingManageComponent = ({
   approveStatus: UiTransactionStatuses | null
   needsApproval: boolean
   prepareTxs: (amount: bigint, lockupPeriod: bigint) => Promise<boolean>
+  isSettingChain?: boolean
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
@@ -496,7 +501,7 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
-    if (isLoading) {
+    if (isLoading || isSettingChain) {
       return true
     }
 
@@ -509,9 +514,13 @@ const SumrV2StakingManageComponent = ({
     warningAccepted,
     sdkDataOnMountLoading,
     isLoading,
+    isSettingChain,
   ])
 
   const getButtonLabel = () => {
+    if (isSettingChain) {
+      return 'Switching to Base...'
+    }
     if (approveStatus === UiTransactionStatuses.PENDING) {
       return needsApproval ? 'Approving...' : 'Staking...'
     }
@@ -1311,13 +1320,17 @@ const SumrV2StakingIntermediary = () => {
   }>()
   const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
   const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
-  // todo
+  const [shouldAutoStakeAfterApproval, setShouldAutoStakeAfterApproval] = useState(false)
+
+  const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
     useStakeSumrTransactionV2({
       onStakeSuccess: () => {
         setStakeStatus(UiTransactionStatuses.COMPLETED)
         setStep('done')
+        setShouldAutoStakeAfterApproval(false)
         toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
       },
       onApproveSuccess: () => {
@@ -1326,13 +1339,91 @@ const SumrV2StakingIntermediary = () => {
       },
       onStakeError: () => {
         setStakeStatus(UiTransactionStatuses.FAILED)
+        setShouldAutoStakeAfterApproval(false)
         toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
       },
       onApproveError: () => {
         setApproveStatus(UiTransactionStatuses.FAILED)
+        setShouldAutoStakeAfterApproval(false)
         toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
       },
     })
+
+  // Auto-execute stake after approval completes
+  useEffect(() => {
+    if (
+      shouldAutoStakeAfterApproval &&
+      approveStatus === UiTransactionStatuses.COMPLETED &&
+      stakeSumrTransaction &&
+      !stakeStatus
+    ) {
+      setStakeStatus(UiTransactionStatuses.PENDING)
+      stakeSumrTransaction()
+        .catch((err) => {
+          setStakeStatus(UiTransactionStatuses.FAILED)
+          toast.error('Failed to stake SUMR', ERROR_TOAST_CONFIG)
+          // eslint-disable-next-line no-console
+          console.error('Error staking SUMR:', err)
+        })
+        .finally(() => {
+          setShouldAutoStakeAfterApproval(false)
+        })
+    }
+  }, [shouldAutoStakeAfterApproval, approveStatus, stakeSumrTransaction, stakeStatus])
+
+  // Auto-execute approve/stake after chain switch to Base
+  useEffect(() => {
+    if (
+      shouldAutoStakeAfterApproval &&
+      clientChainId === ChainIds.Base &&
+      !isSettingChain &&
+      !approveStatus &&
+      !stakeStatus &&
+      txData
+    ) {
+      const executeTransactions = async () => {
+        try {
+          const amountBigInt = formatDecimalToBigInt(txData.amount.toString())
+          const lockupPeriodSeconds = BigInt(txData.lockupDuration * 24 * 60 * 60)
+
+          const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
+
+          if (!prepared) {
+            toast.error('Failed to prepare staking transaction', ERROR_TOAST_CONFIG)
+            setShouldAutoStakeAfterApproval(false)
+
+            return
+          }
+
+          if (approveSumrTransaction) {
+            setApproveStatus(UiTransactionStatuses.PENDING)
+            await approveSumrTransaction()
+            // After approval, the first useEffect will handle staking
+          } else if (stakeSumrTransaction) {
+            setShouldAutoStakeAfterApproval(false)
+            setStakeStatus(UiTransactionStatuses.PENDING)
+            await stakeSumrTransaction()
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error executing transactions after chain switch:', error)
+          setShouldAutoStakeAfterApproval(false)
+        }
+      }
+
+      void executeTransactions()
+    }
+  }, [
+    shouldAutoStakeAfterApproval,
+    clientChainId,
+    isSettingChain,
+    approveStatus,
+    stakeStatus,
+    txData,
+    approveSumrTransaction,
+    stakeSumrTransaction,
+    prepareTxs,
+  ])
 
   const onStake = async ({
     amount,
@@ -1370,6 +1461,14 @@ const SumrV2StakingIntermediary = () => {
       userStakesCountAfter,
     })
 
+    // Check if we need to switch to Base network
+    if (clientChainId !== ChainIds.Base) {
+      setShouldAutoStakeAfterApproval(true)
+      setChain({ chain: SDKChainIdToAAChainMap[ChainIds.Base] })
+
+      return
+    }
+
     try {
       // Convert amount to bigint with proper decimals
       const amountBigInt = formatDecimalToBigInt(amount.toString())
@@ -1387,6 +1486,7 @@ const SumrV2StakingIntermediary = () => {
 
       // Execute approve transaction first if needed
       if (approveSumrTransaction && approveStatus !== UiTransactionStatuses.COMPLETED) {
+        setShouldAutoStakeAfterApproval(true)
         setApproveStatus(UiTransactionStatuses.PENDING)
         await approveSumrTransaction().catch((err) => {
           // eslint-disable-next-line no-console
@@ -1394,9 +1494,12 @@ const SumrV2StakingIntermediary = () => {
 
           throw err
         })
+        // Don't proceed to stake yet - wait for approval status to update
+
+        return
       }
 
-      // Execute stake transaction
+      // Execute stake transaction directly if no approval needed
       if (stakeSumrTransaction) {
         setStakeStatus(UiTransactionStatuses.PENDING)
         await stakeSumrTransaction().catch((err) => {
@@ -1424,6 +1527,7 @@ const SumrV2StakingIntermediary = () => {
         approveStatus={approveStatus}
         needsApproval={!!approveSumrTransaction}
         prepareTxs={prepareTxs}
+        isSettingChain={isSettingChain}
       />
     )
   }
