@@ -209,4 +209,12 @@ export interface IArmadaManagerVaults {
    * @returns The revenue amount in USD as a number
    */
   getProtocolRevenue(): Promise<number>
+
+  /**
+   * @method getProtocolTvl
+   * @description Calculates the total protocol TVL in USD across all vaults and chains
+   *
+   * @returns The TVL amount in USD as a number
+   */
+  getProtocolTvl(): Promise<number>
 }

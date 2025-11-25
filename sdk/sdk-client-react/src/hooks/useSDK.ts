@@ -36,6 +36,7 @@ import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueSh
 import { getStakingSimulationDataV2Handler } from '../handlers/getStakingSimulationDataV2Handler'
 import { getStakingConfigV2Handler } from '../handlers/getStakingConfigV2Handler'
 import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
+import { getProtocolTvlHandler } from '../handlers/getProtocolTvlHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
@@ -160,6 +161,7 @@ export const useSDK = (params: UseSdk) => {
   const getStakingSimulationDataV2 = useMemo(() => getStakingSimulationDataV2Handler(sdk), [sdk])
   const getStakingConfigV2 = useMemo(() => getStakingConfigV2Handler(sdk), [sdk])
   const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
+  const getProtocolTvl = useMemo(() => getProtocolTvlHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
@@ -230,6 +232,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingSimulationDataV2,
       getStakingConfigV2,
       getProtocolRevenue,
+      getProtocolTvl,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
@@ -293,6 +296,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingSimulationDataV2,
       getStakingConfigV2,
       getProtocolRevenue,
+      getProtocolTvl,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,

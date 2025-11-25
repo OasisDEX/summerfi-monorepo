@@ -148,6 +148,14 @@ export interface IArmadaManagerUsersClient {
   getProtocolRevenue(): Promise<number>
 
   /**
+   * @method getProtocolTvl
+   * @description Calculates the total protocol TVL in USD across all vaults and chains
+   *
+   * @returns The TVL amount in USD as a number
+   */
+  getProtocolTvl(): Promise<number>
+
+  /**
    * @method getVaultsHistoricalRates
    * @description Retrieves historical rates for a list of fleets across chains
    * @param params.fleets Array of fleet descriptors with fleetAddress and chainId

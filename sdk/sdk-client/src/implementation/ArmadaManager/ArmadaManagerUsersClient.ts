@@ -61,6 +61,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getProtocolRevenue.query()
   }
 
+  /** @see IArmadaManagerUsersClient.getProtocolTvl */
+  async getProtocolTvl(): ReturnType<IArmadaManagerUsersClient['getProtocolTvl']> {
+    return this.rpcClient.armada.users.getProtocolTvl.query()
+  }
+
   /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPositions(params: Parameters<IArmadaManagerUsersClient['getUserPositions']>[0]) {
     return this.rpcClient.armada.users.getUserPositions.query(params)
