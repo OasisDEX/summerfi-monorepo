@@ -11,8 +11,10 @@ import {
 } from '@summerfi/app-utils'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { unstable_cache as unstableCache } from 'next/cache'
 
 import {
+  type InstiVaultPerformanceResponse,
   type VaultAdditionalInfo,
   type VaultApyAverageMap,
   type VaultApyMap,
@@ -24,20 +26,6 @@ import { GetVaultHistoryDocument } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
-
-type InstiVaultsPerformanceDataPoint = {
-  netValue: string
-  navPrice: string
-  timestamp: string
-}
-
-type InstiVaultPerformanceResponse = {
-  vault: {
-    hourlyVaultHistory: InstiVaultsPerformanceDataPoint[]
-    dailyVaultHistory: InstiVaultsPerformanceDataPoint[]
-    weeklyVaultHistory: InstiVaultsPerformanceDataPoint[]
-  }
-}
 
 export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
   if (!institutionName) return null
@@ -266,11 +254,9 @@ export const getInstitutionVaultArksImpliedCapsMap = async ({
 export const getInstitutionVaultPerformanceData = async ({
   network,
   fleetCommanderAddress,
-  // arksAddresses,
 }: {
   network: SupportedSDKNetworks
   fleetCommanderAddress: string
-  // arksAddresses: string[]
 }) => {
   if (!fleetCommanderAddress) {
     throw new Error('Fleet commander address is required')
@@ -278,12 +264,20 @@ export const getInstitutionVaultPerformanceData = async ({
 
   const client = graphqlVaultHistoryClients[network]
 
-  const performanceDataRaw = await client.request<InstiVaultPerformanceResponse>(
-    GetVaultHistoryDocument,
+  return await unstableCache(
+    () =>
+      client.request<InstiVaultPerformanceResponse>(
+        GetVaultHistoryDocument,
+        {
+          vaultId: fleetCommanderAddress,
+        },
+        {
+          origin: 'earn-protocol-institutions',
+        },
+      ),
+    ['institution-vault-performance-data', fleetCommanderAddress],
     {
-      vaultId: fleetCommanderAddress,
+      revalidate: 300, // 5 minutes
     },
-  )
-
-  return performanceDataRaw
+  )()
 }

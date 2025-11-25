@@ -1,0 +1,23 @@
+.navPriceChartCardWrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (min-width: 768px) {
+  .navPriceChartCardWrapper {
+    padding-left: var(--general-space-24);
+    padding-right: var(--general-space-24);
+  }
+}
+
+.navPriceChart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

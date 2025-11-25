@@ -49,6 +49,10 @@ export type HistoryChartData = {
   data: ChartsDataTimeframes
 }
 
+export type NavPriceChartData = {
+  data: ChartsDataTimeframes
+}
+
 export type ArksHistoricalChartData = {
   data: ChartsDataTimeframes
   dataNames: string[]
