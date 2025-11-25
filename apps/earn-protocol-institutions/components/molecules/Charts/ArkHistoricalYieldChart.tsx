@@ -163,7 +163,6 @@ export const ArkHistoricalYieldChart = ({
                   <Line
                     key={dataName}
                     type="monotone"
-                    animationId={dataIndex}
                     animationDuration={300}
                     animationBegin={dataIndex * 50}
                     animationEasing="ease-out"

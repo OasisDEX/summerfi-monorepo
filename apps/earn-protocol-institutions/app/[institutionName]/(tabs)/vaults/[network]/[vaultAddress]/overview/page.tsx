@@ -38,7 +38,7 @@ export default async function InstitutionVaultOverviewPage({
   })
   const parsedVaultAddress = vaultAddress.toLowerCase()
 
-  if (!parsedVaultAddress && !isAddress(vaultId)) {
+  if (!parsedVaultAddress && !isAddress(vaultAddress)) {
     redirect('/not-found')
   }
 

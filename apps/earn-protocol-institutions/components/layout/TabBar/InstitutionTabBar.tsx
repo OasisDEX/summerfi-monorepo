@@ -1,5 +1,6 @@
 'use client'
 
+import { type CSSProperties } from 'react'
 import { TabBarSimple } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname } from 'next/navigation'
@@ -14,7 +15,7 @@ export const InstitutionTabBar = ({
 }: {
   institutionName: string
   defaultVault: SDKVaultishType
-  tabBarStyle?: React.CSSProperties
+  tabBarStyle?: CSSProperties
 }) => {
   const pathname = usePathname()
 

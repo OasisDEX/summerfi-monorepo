@@ -275,7 +275,7 @@ export const getInstitutionVaultPerformanceData = async ({
           origin: 'earn-protocol-institutions',
         },
       ),
-    ['institution-vault-performance-data', fleetCommanderAddress],
+    ['institution-vault-performance-data', fleetCommanderAddress, network],
     {
       revalidate: 300, // 5 minutes
     },

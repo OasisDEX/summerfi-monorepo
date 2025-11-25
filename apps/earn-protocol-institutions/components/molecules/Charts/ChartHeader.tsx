@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react'
 import { Button, Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
 import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'
 
@@ -11,7 +12,7 @@ type ChartHeaderProps = {
   timeframe?: TimeframesType
   timeframes?: TimeframesItem
   setTimeframe?: (timeframe: string) => void
-  wrapperStyle?: React.CSSProperties
+  wrapperStyle?: CSSProperties
   isZoomed?: boolean
   onResetZoom?: () => void
 }
