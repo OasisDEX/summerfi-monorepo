@@ -292,7 +292,7 @@ const SumrV2StakingManageComponent = ({
 
         setRevenueShare(revenueShareData.percentage.value)
 
-        setMaxApy(rewardRates.maxApy.toString())
+        setMaxApy(new BigNumber(rewardRates.maxApy.value).toFormat(2, BigNumber.ROUND_DOWN))
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to fetch staking data:', error)
@@ -403,8 +403,14 @@ const SumrV2StakingManageComponent = ({
           .toFormat(2, BigNumber.ROUND_DOWN)
 
         setSimulationData({
-          usdcYieldApy: simulation.usdcYieldApy.toString(),
-          sumrRewardApy: simulation.sumrRewardApy.toString(),
+          usdcYieldApy: new BigNumber(simulation.usdcYieldApy.value).toFormat(
+            2,
+            BigNumber.ROUND_DOWN,
+          ),
+          sumrRewardApy: new BigNumber(simulation.sumrRewardApy.value).toFormat(
+            2,
+            BigNumber.ROUND_DOWN,
+          ),
           usdcYieldBoost: simulation.usdcYieldBoost,
           usdcBlendedYieldBoostFrom: simulation.usdcBlendedYieldBoostFrom,
           usdcBlendedYieldBoostTo: simulation.usdcBlendedYieldBoostTo,
@@ -633,7 +639,7 @@ const SumrV2StakingManageComponent = ({
                     value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={70} height={16} />
                     ) : (
-                      `up to ${maxApy}`
+                      `up to ${maxApy}%`
                     ),
                   },
                 ]}
@@ -802,7 +808,7 @@ const SumrV2StakingManageComponent = ({
                         </Text>
                       </div>
                     }
-                    value={simulationData ? `${simulationData.usdcYieldApy}` : '-'}
+                    value={simulationData ? `${simulationData.usdcYieldApy}%` : '-'}
                     subValue={
                       simulationData ? `$${simulationData.usdcYieldUsdPerYear} a year` : '-'
                     }
@@ -836,7 +842,7 @@ const SumrV2StakingManageComponent = ({
                         <Text variant="p4semi">SUMR Reward APY</Text>
                       </div>
                     }
-                    value={simulationData ? `${simulationData.sumrRewardApy}` : '-'}
+                    value={simulationData ? `${simulationData.sumrRewardApy}%` : '-'}
                     subValue={simulationData ? `+${simulationData.sumrRewardAmount} SUMR` : '-'}
                     subValueType="positive"
                     wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
