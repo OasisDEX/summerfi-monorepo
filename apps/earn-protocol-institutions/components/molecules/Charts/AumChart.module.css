@@ -1,4 +1,4 @@
-.navPriceChartCardWrapper {
+.aumChartCardWrapper {
   margin-top: var(--spacing-space-medium);
   flex-direction: column;
   padding: 0;
@@ -6,13 +6,13 @@
 }
 
 @media (min-width: 768px) {
-  .navPriceChartCardWrapper {
+  .aumChartCardWrapper {
     padding-left: var(--general-space-24);
     padding-right: var(--general-space-24);
   }
 }
 
-.navPriceChart {
+.aumChart {
   display: flex;
   flex-direction: column;
   align-items: center;

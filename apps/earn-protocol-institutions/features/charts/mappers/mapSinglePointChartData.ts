@@ -1,20 +1,22 @@
 import {
   type ChartsDataTimeframes,
-  type NavPriceChartData,
+  type SinglePointChartData,
 } from '@summerfi/app-types/types/src/earn-protocol'
-import { type IPrice } from '@summerfi/sdk-common'
 import dayjs from 'dayjs'
 
 import { type InstiVaultPerformanceResponse } from '@/app/server-handlers/institution/institution-vaults/types'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/features/charts/helpers'
 
-export const mapNavChartData = ({
+export const mapSinglePointChartData = ({
+  // especially for picking one piece of data from the subgraph response - navPrice and netValue
   performanceData,
-  currentNavPrice,
+  pointName,
+  currentPointValue,
 }: {
   performanceData: InstiVaultPerformanceResponse
-  currentNavPrice: IPrice
-}): NavPriceChartData => {
+  pointName: keyof InstiVaultPerformanceResponse['vault']['hourlyVaultHistory'][number]
+  currentPointValue: string
+}): SinglePointChartData => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')
@@ -89,11 +91,7 @@ export const mapNavChartData = ({
     chartBaseData['7d'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      navValue: isSameHour
-        ? currentNavPrice.value.toString()
-        : existingPoint
-          ? existingPoint.navPrice
-          : 0,
+      [pointName]: isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
     })
   }
 
@@ -109,11 +107,7 @@ export const mapNavChartData = ({
     chartBaseData['30d'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      navValue: isSameHour
-        ? currentNavPrice.value.toString()
-        : existingPoint
-          ? existingPoint.navPrice
-          : 0,
+      [pointName]: isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
     })
   }
 
@@ -130,11 +124,7 @@ export const mapNavChartData = ({
       chartBaseData[timeframe].push({
         timestamp: timestampUnix,
         timestampParsed,
-        navValue: isSameDay
-          ? currentNavPrice.value.toString()
-          : existingPoint
-            ? existingPoint.navPrice
-            : 0,
+        [pointName]: isSameDay ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
       })
     }
   }
@@ -157,11 +147,7 @@ export const mapNavChartData = ({
     chartBaseData['3y'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      navValue: isSameWeek
-        ? currentNavPrice.value.toString()
-        : existingPoint
-          ? existingPoint.navPrice
-          : 0,
+      [pointName]: isSameWeek ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
     })
   }
 

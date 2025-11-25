@@ -1,4 +1,4 @@
-.navPriceChartCardWrapper {
+.arkHistoricalYieldChartCardWrapper {
   margin-top: var(--spacing-space-medium);
   flex-direction: column;
   padding: 0;
@@ -6,20 +6,19 @@
 }
 
 @media (min-width: 768px) {
-  .navPriceChartCardWrapper {
+  .arkHistoricalYieldChartCardWrapper {
     padding-left: var(--general-space-24);
     padding-right: var(--general-space-24);
   }
 }
 
-.navPriceChart {
+.arkHistoricalYieldChart {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
   @media (min-width: 768px) {
-    flex-direction: row;
     justify-content: space-between;
   }
 }

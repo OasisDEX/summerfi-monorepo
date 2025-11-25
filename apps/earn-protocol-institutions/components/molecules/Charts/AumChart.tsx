@@ -14,15 +14,15 @@ import {
   POINTS_REQUIRED_FOR_CHART,
 } from '@/features/charts/helpers'
 
-import navPriceChartStyles from './NavPriceChart.module.css'
+import aumChartStyles from './AumChart.module.css'
 
-type NavPriceChartProps = {
+type AumChartProps = {
   chartData?: SinglePointChartData
   timeframe?: TimeframesType
   syncId?: string
 }
 
-export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartProps) => {
+export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
   const defaultTimeframe = '7d'
 
   const parsedData = useMemo(() => {
@@ -37,8 +37,8 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
   const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe ?? defaultTimeframe]
 
   return (
-    <Card className={navPriceChartStyles.navPriceChartCardWrapper}>
-      <div className={navPriceChartStyles.navPriceChart}>
+    <Card className={aumChartStyles.aumChartCardWrapper}>
+      <div className={aumChartStyles.aumChart}>
         <RechartResponsiveWrapper height="340px">
           <ResponsiveContainer
             width={chartHidden ? '0' : '100%'}
@@ -62,7 +62,7 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
                 left: 10,
                 bottom: 10,
               }}
-              dataKey="navPrice"
+              dataKey="netValue"
             >
               <XAxis
                 dataKey="timestampParsed"
@@ -95,7 +95,7 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
                 formatter={(val, valName) => {
                   return [
                     formatChartCryptoValue(Number(val)),
-                    String(valName).replace('navPrice', 'Net Asset Value'),
+                    String(valName).replace('netValue', 'Assets Under Management'),
                   ]
                 }}
                 wrapperStyle={{
@@ -131,7 +131,7 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
               <Line
                 dot={false}
                 type="monotone"
-                dataKey="navPrice"
+                dataKey="netValue"
                 stroke="#FF80BF"
                 activeDot={false}
                 connectNulls

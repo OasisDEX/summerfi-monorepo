@@ -49,7 +49,11 @@ export type HistoryChartData = {
   data: ChartsDataTimeframes
 }
 
-export type NavPriceChartData = {
+export type SinglePointChartData = {
+  data: ChartsDataTimeframes
+}
+
+export type ApyPriceChartData = {
   data: ChartsDataTimeframes
 }
 

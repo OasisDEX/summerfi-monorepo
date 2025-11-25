@@ -9,7 +9,7 @@ type ChartHeaderProps = {
   checkboxValue?: boolean
   setCheckboxValue?: (value: boolean) => void
   timeframe?: TimeframesType
-  timeframes: TimeframesItem
+  timeframes?: TimeframesItem
   setTimeframe?: (timeframe: string) => void
   wrapperStyle?: React.CSSProperties
   isZoomed?: boolean
@@ -46,7 +46,8 @@ export const ChartHeader = ({
         </Button>
       ) : (
         timeframe &&
-        setTimeframe && (
+        setTimeframe &&
+        timeframes && (
           <Timeframes
             timeframes={timeframes}
             activeTimeframe={timeframe}
