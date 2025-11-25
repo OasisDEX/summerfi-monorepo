@@ -37,6 +37,7 @@ import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
+import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -227,8 +228,12 @@ const SumrV2StakingManageComponent = ({
     userStakesCountAfter: string
   } | null>(null)
 
-  // Huh? Get actual SUMR price from $SUMR valuation or SDK oracle in the future
-  const sumrPriceUsd = 0.2
+  // Calculate price from fully diluted valuation
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+
+  const sumrPriceUsd = new BigNumber(sumrNetApyConfig.dilutedValuation, 10)
+    .dividedBy(1_000_000_000)
+    .toNumber()
 
   const {
     getStakingBucketsInfoV2,
@@ -635,14 +640,6 @@ const SumrV2StakingManageComponent = ({
                   padding: '0px',
                 }}
                 items={[
-                  {
-                    label: 'SUMR Analytics',
-                    value: (
-                      <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="Huh?">View all</Link>
-                      </WithArrow>
-                    ),
-                  },
                   {
                     label: 'Staking contract',
                     value: (
