@@ -39,7 +39,7 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
   return (
     <Card className={navPriceChartStyles.navPriceChartCardWrapper}>
       <div className={navPriceChartStyles.navPriceChart}>
-        <RechartResponsiveWrapper height="340px">
+        <RechartResponsiveWrapper height="300px">
           <ResponsiveContainer
             width={chartHidden ? '0' : '100%'}
             height="100%"

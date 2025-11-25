@@ -1,5 +1,5 @@
 .arkHistoricalYieldChartCardWrapper {
-  margin-top: var(--spacing-space-medium);
+  margin-top: 0;
   flex-direction: column;
   padding: 0;
   position: relative;

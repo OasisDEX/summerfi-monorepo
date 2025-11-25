@@ -71,7 +71,7 @@ export const ArkHistoricalYieldChart = ({
       className={arkHistoricalChartStyles.arkHistoricalYieldChartCardWrapper}
     >
       <div className={arkHistoricalChartStyles.arkHistoricalYieldChart}>
-        <RechartResponsiveWrapper height="350px">
+        <RechartResponsiveWrapper height="300px">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               syncId={syncId}

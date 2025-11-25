@@ -39,7 +39,7 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
   return (
     <Card className={aumChartStyles.aumChartCardWrapper}>
       <div className={aumChartStyles.aumChart}>
-        <RechartResponsiveWrapper height="340px">
+        <RechartResponsiveWrapper height="300px">
           <ResponsiveContainer
             width={chartHidden ? '0' : '100%'}
             height="100%"

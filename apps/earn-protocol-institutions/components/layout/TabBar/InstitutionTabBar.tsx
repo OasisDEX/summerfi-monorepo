@@ -10,9 +10,11 @@ import { getInstitutionUrl, getInstitutionVaultUrl } from '@/helpers/get-url'
 export const InstitutionTabBar = ({
   institutionName,
   defaultVault,
+  tabBarStyle,
 }: {
   institutionName: string
   defaultVault: SDKVaultishType
+  tabBarStyle?: React.CSSProperties
 }) => {
   const pathname = usePathname()
 
@@ -21,6 +23,7 @@ export const InstitutionTabBar = ({
   return (
     <TabBarSimple
       activeTabId={tabId}
+      tabBarStyle={tabBarStyle}
       tabs={[
         {
           id: 'overview',
