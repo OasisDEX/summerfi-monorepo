@@ -315,6 +315,7 @@ const SumrV2StakingManageComponent = ({
     getStakingRewardRatesV2,
     getSummerToken,
     getStakingConfigV2,
+    sumrPriceUsd,
   ])
 
   const { token: sumrToken } = useToken({
@@ -440,6 +441,7 @@ const SumrV2StakingManageComponent = ({
     userWalletAddress,
     sumrToken,
     getStakingSimulationDataV2,
+    sumrPriceUsd,
   ])
 
   const lockupExpirationDate = useMemo(() => {
