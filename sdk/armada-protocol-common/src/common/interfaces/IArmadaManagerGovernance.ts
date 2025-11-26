@@ -333,4 +333,12 @@ export interface IArmadaManagerGovernance {
     sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
+
+  /**
+   * @method getStakingConfigV2
+   * @description Returns the staking configuration including the staking contract address
+   *
+   * @returns Object containing staking configuration
+   */
+  getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
 }

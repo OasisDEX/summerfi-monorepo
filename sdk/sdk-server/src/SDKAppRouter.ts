@@ -71,13 +71,14 @@ import { getStakingTotalWeightedSupplyV2 } from './armada-protocol-handlers/user
 import { getStakingTotalSumrStakedV2 } from './armada-protocol-handlers/users/getStakingTotalSumrStakedV2'
 import { getStakingRevenueShareV2 } from './armada-protocol-handlers/users/getStakingRevenueShareV2'
 import { getStakingSimulationDataV2 } from './armada-protocol-handlers/users/getStakingSimulationDataV2'
+import { getStakingConfigV2 } from './armada-protocol-handlers/users/getStakingConfigV2'
 import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUnstakeFleetTokensTx'
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
+import { getSummerPrice } from './armada-protocol-handlers/users/getSummerPrice'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pingHandler } from './handlers/pingHandler'
-import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
 import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
@@ -91,6 +92,7 @@ import { intentSwapsCheckOrder } from './handlers/intentSwapsCheckOrder'
 import { getVaultSwitchTx } from './armada-protocol-handlers/users/getVaultSwitchTx'
 import { getVaultInfoList } from './armada-protocol-handlers/users/getVaultInfoList'
 import { getProtocolRevenue } from './armada-protocol-handlers/users/getProtocolRevenue'
+import { getProtocolTvl } from './armada-protocol-handlers/users/getProtocolTvl'
 import { getCrossChainDepositTx } from './armada-protocol-handlers/users/getCrossChainDepositTx'
 import { getCrossChainWithdrawTx } from './armada-protocol-handlers/users/getCrossChainWithdrawTx'
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
@@ -163,6 +165,7 @@ export const sdkAppRouter = router({
       getVaultInfo: getVaultInfo,
       getVaultInfoList: getVaultInfoList,
       getProtocolRevenue: getProtocolRevenue,
+      getProtocolTvl: getProtocolTvl,
       getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
       getPositionHistory: getPositionHistory,
@@ -178,7 +181,6 @@ export const sdkAppRouter = router({
       getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
       getAggregatedRewardsIncludingMerkl: getAggregatedRewardsIncludingMerkl,
-      getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
       getDelegateTx: getDelegateTx,
@@ -203,9 +205,11 @@ export const sdkAppRouter = router({
       getStakingTotalSumrStakedV2: getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2: getStakingRevenueShareV2,
       getStakingSimulationDataV2: getStakingSimulationDataV2,
+      getStakingConfigV2: getStakingConfigV2,
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
+      getSummerPrice: getSummerPrice,
       getDelegationChainLength: getDelegationChainLength,
       getMigratablePositions: getMigratablePositions,
       getMigratablePositionsApy: getMigratablePositionsApy,

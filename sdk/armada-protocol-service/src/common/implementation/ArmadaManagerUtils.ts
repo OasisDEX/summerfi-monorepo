@@ -124,7 +124,12 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     })
   }
 
-  getSummerPrice(): ReturnType<IArmadaManagerUtils['getSummerPrice']> {
+  getSummerPrice(
+    params?: Parameters<IArmadaManagerUtils['getSummerPrice']>[0],
+  ): ReturnType<IArmadaManagerUtils['getSummerPrice']> {
+    if (params?.override !== undefined) {
+      return params.override
+    }
     return 0.1
   }
 

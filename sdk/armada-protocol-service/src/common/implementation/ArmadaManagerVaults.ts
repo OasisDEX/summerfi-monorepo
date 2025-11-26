@@ -2021,6 +2021,23 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     return revenueAmount
   }
 
+  /** @see IArmadaManagerVaults.getProtocolTvl */
+  async getProtocolTvl(): ReturnType<IArmadaManagerVaults['getProtocolTvl']> {
+    // Get vaults info list on all chains by creating a promise array
+    const vaultsPromises = Object.values(ChainIds).map((chainId) =>
+      this.getVaultInfoList({ chainId }),
+    )
+    const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
+
+    // Calculate total TVL by summing tvlUsd.amount for all active vaults
+    const totalTvl = vaults.reduce((acc, vault) => {
+      const tvlAmount = parseFloat(vault.tvlUsd.amount)
+      return acc + tvlAmount
+    }, 0)
+
+    return totalTvl
+  }
+
   /**
    * Internal utility method to generate a cross-chain deposit TX using Enso
    *

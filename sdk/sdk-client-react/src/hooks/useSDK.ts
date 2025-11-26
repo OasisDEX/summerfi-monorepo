@@ -15,6 +15,7 @@ import { getCurrentUserHandler } from '../handlers/getCurrentUserHandler'
 import { getChainInfoHandler } from '../handlers/getChainInfoHandler'
 import { getSwapQuoteHandler } from '../handlers/getSwapQuoteHandler'
 import { getAggregatedRewardsHandler } from '../handlers/getAggregatedRewardsHandler'
+import { getAggregatedRewardsIncludingMerklHandler } from '../handlers/getAggregatedRewardsIncludingMerklHandler'
 import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedClaimsForChainTXHandler'
 import { getDelegateTxHandler } from '../handlers/getDelegateTxHandler'
 import { getStakeTxHandler } from '../handlers/getStakeTxHandler'
@@ -34,12 +35,13 @@ import { getStakingTotalWeightedSupplyV2Handler } from '../handlers/getStakingTo
 import { getStakingTotalSumrStakedV2Handler } from '../handlers/getStakingTotalSumrStakedV2Handler'
 import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueShareV2Handler'
 import { getStakingSimulationDataV2Handler } from '../handlers/getStakingSimulationDataV2Handler'
+import { getStakingConfigV2Handler } from '../handlers/getStakingConfigV2Handler'
 import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
+import { getProtocolTvlHandler } from '../handlers/getProtocolTvlHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
-import { getClaimableAggregatedRewardsHandler } from '../handlers/getClaimableAggregatedRewardsHandler'
 import { getBridgeTxHandler } from '../handlers/getBridgeTxHandler'
 import { getMigrateTxHandler } from '../handlers/getMigrateTxHandler'
 import { getVaultSwitchTXHandler } from '../handlers/getVaultSwitchTxHandler'
@@ -54,6 +56,8 @@ import { getPositionHistoryHandler } from '../handlers/getPositionHistoryHandler
 import { getTipRateHandler } from '../handlers/getTipRateHandler'
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
+import { getUserBalanceHandler } from '../handlers/getUserBalanceHandler'
+import { getSummerPriceHandler } from '../handlers/getSummerPriceHandler'
 import { isWhitelistedHandler } from '../handlers/isWhitelistedHandler'
 import { setWhitelistedTxHandler } from '../handlers/setWhitelistedTxHandler'
 import { setWhitelistedBatchTxHandler } from '../handlers/setWhitelistedBatchTxHandler'
@@ -120,8 +124,8 @@ export const useSDK = (params: UseSdk) => {
 
   // CLAIMS
   const getAggregatedRewards = useMemo(() => getAggregatedRewardsHandler(sdk), [sdk])
-  const getClaimableAggregatedRewards = useMemo(
-    () => getClaimableAggregatedRewardsHandler(sdk),
+  const getAggregatedRewardsIncludingMerkl = useMemo(
+    () => getAggregatedRewardsIncludingMerklHandler(sdk),
     [sdk],
   )
   const getAggregatedClaimsForChainTx = useMemo(
@@ -157,7 +161,9 @@ export const useSDK = (params: UseSdk) => {
   const getStakingTotalSumrStakedV2 = useMemo(() => getStakingTotalSumrStakedV2Handler(sdk), [sdk])
   const getStakingRevenueShareV2 = useMemo(() => getStakingRevenueShareV2Handler(sdk), [sdk])
   const getStakingSimulationDataV2 = useMemo(() => getStakingSimulationDataV2Handler(sdk), [sdk])
+  const getStakingConfigV2 = useMemo(() => getStakingConfigV2Handler(sdk), [sdk])
   const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
+  const getProtocolTvl = useMemo(() => getProtocolTvlHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
@@ -176,6 +182,8 @@ export const useSDK = (params: UseSdk) => {
   const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
   const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
   const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
+  const getUserBalance = useMemo(() => getUserBalanceHandler(sdk), [sdk])
+  const getSummerPrice = useMemo(() => getSummerPriceHandler(sdk), [sdk])
   const isWhitelisted = useMemo(() => isWhitelistedHandler(sdk), [sdk])
   const setWhitelistedTx = useMemo(() => setWhitelistedTxHandler(sdk), [sdk])
   const setWhitelistedBatchTx = useMemo(() => setWhitelistedBatchTxHandler(sdk), [sdk])
@@ -203,7 +211,7 @@ export const useSDK = (params: UseSdk) => {
       getPositionHistory,
       getSwapQuote,
       getAggregatedRewards,
-      getClaimableAggregatedRewards,
+      getAggregatedRewardsIncludingMerkl,
       getAggregatedClaimsForChainTx,
       getBridgeTx,
       getCrossChainDepositTx,
@@ -226,11 +234,15 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
+      getStakingConfigV2,
       getProtocolRevenue,
+      getProtocolTvl,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
       getSummerToken,
+      getUserBalance,
+      getSummerPrice,
       getMigrateTx,
       getVaultSwitchTx,
       getMigratablePositions,
@@ -267,7 +279,7 @@ export const useSDK = (params: UseSdk) => {
       getPositionHistory,
       getSwapQuote,
       getAggregatedRewards,
-      getClaimableAggregatedRewards,
+      getAggregatedRewardsIncludingMerkl,
       getAggregatedClaimsForChainTx,
       getDelegateTx,
       getBridgeTx,
@@ -288,11 +300,15 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
+      getStakingConfigV2,
       getProtocolRevenue,
+      getProtocolTvl,
       getUserDelegatee,
       getUserStakedBalance,
       getUserVotes,
       getSummerToken,
+      getUserBalance,
+      getSummerPrice,
       getMigrateTx,
       getVaultSwitchTx,
       getMigratablePositions,

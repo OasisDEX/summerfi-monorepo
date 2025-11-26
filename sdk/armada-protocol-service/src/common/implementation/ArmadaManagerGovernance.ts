@@ -854,4 +854,17 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       userStakesCountAfter: userStakesCount.userStakesCountAfter,
     }
   }
+
+  /**
+   * @method getStakingConfigV2
+   * @description Returns the staking configuration including the staking contract address
+   *
+   * @returns Object containing staking configuration
+   */
+  async getStakingConfigV2(): Promise<{ stakingContractAddress: `0x${string}` }> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+    return {
+      stakingContractAddress: stakingContractAddress.value as `0x${string}`,
+    }
+  }
 }

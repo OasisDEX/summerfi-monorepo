@@ -104,7 +104,7 @@ export const PortfolioOverview = ({
       const aValues = getPositionValues(a)
       const bValues = getPositionValues(b)
 
-      return bValues.netValueUSD.comparedTo(aValues.netValueUSD)
+      return bValues.netValueUSD.comparedTo(aValues.netValueUSD) ?? 0
     })
   }, [filteredPositions])
 

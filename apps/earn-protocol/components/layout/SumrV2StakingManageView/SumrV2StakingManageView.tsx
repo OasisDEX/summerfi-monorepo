@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useChain } from '@account-kit/react'
 import {
   AnimateHeight,
   Button,
@@ -13,11 +14,13 @@ import {
   Icon,
   InputWithDropdown,
   OrderInformation,
+  SDKChainIdToAAChainMap,
   SkeletonLine,
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useAmount,
+  useClientChainId,
   useUserWallet,
   WithArrow,
   YieldSourceLabel,
@@ -37,6 +40,7 @@ import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
+import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -186,6 +190,7 @@ const SumrV2StakingManageComponent = ({
   approveStatus,
   needsApproval,
   prepareTxs,
+  isSettingChain = false,
 }: {
   onStake: (params: {
     amount: BigNumber
@@ -201,6 +206,7 @@ const SumrV2StakingManageComponent = ({
   approveStatus: UiTransactionStatuses | null
   needsApproval: boolean
   prepareTxs: (amount: bigint, lockupPeriod: bigint) => Promise<boolean>
+  isSettingChain?: boolean
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
@@ -209,7 +215,7 @@ const SumrV2StakingManageComponent = ({
 
   const [lockBucketAvailabilityMap, setLockBucketAvailabilityMap] =
     useState<LockBucketAvailabilityMap | null>(null)
-  const [bucketsLoading, setBucketsLoading] = useState(true)
+  const [sdkDataOnMountLoading, setSdkDataOnMountLoading] = useState(true)
   const [totalSumrStaked, setTotalSumrStaked] = useState<string>('0')
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
   const [revenueShare, setRevenueShare] = useState<number>(0)
@@ -226,9 +232,15 @@ const SumrV2StakingManageComponent = ({
     userStakesCountBefore: string
     userStakesCountAfter: string
   } | null>(null)
+  const [stakingContractAddress, setStakingContractAddress] = useState<string>('')
 
-  // Huh? Get actual SUMR price from $SUMR valuation or SDK oracle in the future
-  const sumrPriceUsd = 0.2
+  // Calculate price from fully diluted valuation
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+
+  const sumrPriceUsd = useMemo(
+    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
+    [sumrNetApyConfig.dilutedValuation],
+  )
 
   const {
     getStakingBucketsInfoV2,
@@ -238,13 +250,14 @@ const SumrV2StakingManageComponent = ({
     getStakingRewardRatesV2,
     getStakingSimulationDataV2,
     getSummerToken,
+    getStakingConfigV2,
   } = useAppSDK()
 
   // Fetch staking buckets info and other staking data on mount
   useEffect(() => {
     const fetchStakingData = async () => {
       try {
-        setBucketsLoading(true)
+        setSdkDataOnMountLoading(true)
 
         // Fetch summer token first as it's needed for reward rates
         const summerToken = await getSummerToken({
@@ -252,7 +265,7 @@ const SumrV2StakingManageComponent = ({
         })
 
         // Fetch all data in parallel for better performance
-        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates] =
+        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates, stakingConfig] =
           await Promise.all([
             getStakingBucketsInfoV2(),
             getStakingTotalSumrStakedV2(),
@@ -262,13 +275,14 @@ const SumrV2StakingManageComponent = ({
               rewardTokenAddress: summerToken.address,
               sumrPriceUsd,
             }),
+            getStakingConfigV2(),
           ])
 
         // Process and set all the data
         const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
 
         setLockBucketAvailabilityMap(availabilityMap)
-
+        setStakingContractAddress(stakingConfig.stakingContractAddress)
         const totalStakedFormatted = new BigNumber(totalStaked.toString())
           .shiftedBy(-18)
           .dividedBy(1000000)
@@ -284,12 +298,12 @@ const SumrV2StakingManageComponent = ({
 
         setRevenueShare(revenueShareData.percentage.value)
 
-        setMaxApy(rewardRates.maxApy.toString())
+        setMaxApy(new BigNumber(rewardRates.maxApy.value).toFormat(2, BigNumber.ROUND_DOWN))
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to fetch staking data:', error)
       } finally {
-        setBucketsLoading(false)
+        setSdkDataOnMountLoading(false)
       }
     }
 
@@ -301,6 +315,8 @@ const SumrV2StakingManageComponent = ({
     getStakingRevenueShareV2,
     getStakingRewardRatesV2,
     getSummerToken,
+    getStakingConfigV2,
+    sumrPriceUsd,
   ])
 
   const { token: sumrToken } = useToken({
@@ -394,8 +410,14 @@ const SumrV2StakingManageComponent = ({
           .toFormat(2, BigNumber.ROUND_DOWN)
 
         setSimulationData({
-          usdcYieldApy: simulation.usdcYieldApy.toString(),
-          sumrRewardApy: simulation.sumrRewardApy.toString(),
+          usdcYieldApy: new BigNumber(simulation.usdcYieldApy.value).toFormat(
+            2,
+            BigNumber.ROUND_DOWN,
+          ),
+          sumrRewardApy: new BigNumber(simulation.sumrRewardApy.value).toFormat(
+            2,
+            BigNumber.ROUND_DOWN,
+          ),
           usdcYieldBoost: simulation.usdcYieldBoost,
           usdcBlendedYieldBoostFrom: simulation.usdcBlendedYieldBoostFrom,
           usdcBlendedYieldBoostTo: simulation.usdcBlendedYieldBoostTo,
@@ -420,6 +442,7 @@ const SumrV2StakingManageComponent = ({
     userWalletAddress,
     sumrToken,
     getStakingSimulationDataV2,
+    sumrPriceUsd,
   ])
 
   const lockupExpirationDate = useMemo(() => {
@@ -477,11 +500,11 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
-    if (bucketsLoading) {
+    if (sdkDataOnMountLoading) {
       return true
     }
 
-    if (isLoading) {
+    if (isLoading || isSettingChain) {
       return true
     }
 
@@ -492,11 +515,15 @@ const SumrV2StakingManageComponent = ({
     enoughBucketAvailability,
     sumrBalanceOnSourceChain,
     warningAccepted,
-    bucketsLoading,
+    sdkDataOnMountLoading,
     isLoading,
+    isSettingChain,
   ])
 
   const getButtonLabel = () => {
+    if (isSettingChain) {
+      return 'Switching to Base...'
+    }
     if (approveStatus === UiTransactionStatuses.PENDING) {
       return needsApproval ? 'Approving...' : 'Staking...'
     }
@@ -563,7 +590,7 @@ const SumrV2StakingManageComponent = ({
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        {bucketsLoading ? (
+                        {sdkDataOnMountLoading ? (
                           <SkeletonLine width={60} height={16} />
                         ) : (
                           <Text variant="p3semi">{`${totalSumrStaked}m`}</Text>
@@ -598,7 +625,7 @@ const SumrV2StakingManageComponent = ({
                 items={[
                   {
                     label: 'Protocol Revenue',
-                    value: bucketsLoading ? (
+                    value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={80} height={16} />
                     ) : (
                       `$${protocolRevenue}m`
@@ -608,7 +635,7 @@ const SumrV2StakingManageComponent = ({
                     label: 'Revenue Share',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        {bucketsLoading ? (
+                        {sdkDataOnMountLoading ? (
                           <SkeletonLine width={50} height={16} />
                         ) : (
                           <Text variant="p3semi">{`${revenueShare}%`}</Text>
@@ -621,10 +648,10 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'USDC Yield APY',
-                    value: bucketsLoading ? (
+                    value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={70} height={16} />
                     ) : (
-                      `up to ${maxApy}`
+                      `up to ${maxApy}%`
                     ),
                   },
                 ]}
@@ -636,18 +663,16 @@ const SumrV2StakingManageComponent = ({
                 }}
                 items={[
                   {
-                    label: 'SUMR Analytics',
-                    value: (
-                      <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="Huh?">View all</Link>
-                      </WithArrow>
-                    ),
-                  },
-                  {
                     label: 'Staking contract',
                     value: (
                       <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
-                        <Link href="Huh?">Go to report</Link>
+                        <Link
+                          href={`https://basescan.org/address/${stakingContractAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Go to basescan
+                        </Link>
                       </WithArrow>
                     ),
                   },
@@ -692,7 +717,7 @@ const SumrV2StakingManageComponent = ({
             </div>
             <Card>
               {!userWalletAddress ? (
-                isLoadingAccount || bucketsLoading ? (
+                isLoadingAccount || sdkDataOnMountLoading ? (
                   <SkeletonLine width={200} height={50} />
                 ) : (
                   <div
@@ -796,7 +821,7 @@ const SumrV2StakingManageComponent = ({
                         </Text>
                       </div>
                     }
-                    value={simulationData ? `${simulationData.usdcYieldApy}` : '-'}
+                    value={simulationData ? `${simulationData.usdcYieldApy}%` : '-'}
                     subValue={
                       simulationData ? `$${simulationData.usdcYieldUsdPerYear} a year` : '-'
                     }
@@ -830,7 +855,7 @@ const SumrV2StakingManageComponent = ({
                         <Text variant="p4semi">SUMR Reward APY</Text>
                       </div>
                     }
-                    value={simulationData ? `${simulationData.sumrRewardApy}` : '-'}
+                    value={simulationData ? `${simulationData.sumrRewardApy}%` : '-'}
                     subValue={simulationData ? `+${simulationData.sumrRewardAmount} SUMR` : '-'}
                     subValueType="positive"
                     wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
@@ -1299,13 +1324,17 @@ const SumrV2StakingIntermediary = () => {
   }>()
   const [approveStatus, setApproveStatus] = useState<UiTransactionStatuses | null>(null)
   const [stakeStatus, setStakeStatus] = useState<UiTransactionStatuses | null>(null)
-  // todo
+  const [shouldAutoStakeAfterApproval, setShouldAutoStakeAfterApproval] = useState(false)
+
+  const { setChain, isSettingChain } = useChain()
+  const { clientChainId } = useClientChainId()
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs, isLoading } =
     useStakeSumrTransactionV2({
       onStakeSuccess: () => {
         setStakeStatus(UiTransactionStatuses.COMPLETED)
         setStep('done')
+        setShouldAutoStakeAfterApproval(false)
         toast.success('Staked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
       },
       onApproveSuccess: () => {
@@ -1314,13 +1343,91 @@ const SumrV2StakingIntermediary = () => {
       },
       onStakeError: () => {
         setStakeStatus(UiTransactionStatuses.FAILED)
+        setShouldAutoStakeAfterApproval(false)
         toast.error('Failed to stake $SUMR tokens', ERROR_TOAST_CONFIG)
       },
       onApproveError: () => {
         setApproveStatus(UiTransactionStatuses.FAILED)
+        setShouldAutoStakeAfterApproval(false)
         toast.error('Failed to approve staking $SUMR tokens', ERROR_TOAST_CONFIG)
       },
     })
+
+  // Auto-execute stake after approval completes
+  useEffect(() => {
+    if (
+      shouldAutoStakeAfterApproval &&
+      approveStatus === UiTransactionStatuses.COMPLETED &&
+      stakeSumrTransaction &&
+      !stakeStatus
+    ) {
+      setStakeStatus(UiTransactionStatuses.PENDING)
+      stakeSumrTransaction()
+        .catch((err) => {
+          setStakeStatus(UiTransactionStatuses.FAILED)
+          toast.error('Failed to stake SUMR', ERROR_TOAST_CONFIG)
+          // eslint-disable-next-line no-console
+          console.error('Error staking SUMR:', err)
+        })
+        .finally(() => {
+          setShouldAutoStakeAfterApproval(false)
+        })
+    }
+  }, [shouldAutoStakeAfterApproval, approveStatus, stakeSumrTransaction, stakeStatus])
+
+  // Auto-execute approve/stake after chain switch to Base
+  useEffect(() => {
+    if (
+      shouldAutoStakeAfterApproval &&
+      clientChainId === ChainIds.Base &&
+      !isSettingChain &&
+      !approveStatus &&
+      !stakeStatus &&
+      txData
+    ) {
+      const executeTransactions = async () => {
+        try {
+          const amountBigInt = formatDecimalToBigInt(txData.amount.toString())
+          const lockupPeriodSeconds = BigInt(txData.lockupDuration * 24 * 60 * 60)
+
+          const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
+
+          if (!prepared) {
+            toast.error('Failed to prepare staking transaction', ERROR_TOAST_CONFIG)
+            setShouldAutoStakeAfterApproval(false)
+
+            return
+          }
+
+          if (approveSumrTransaction) {
+            setApproveStatus(UiTransactionStatuses.PENDING)
+            await approveSumrTransaction()
+            // After approval, the first useEffect will handle staking
+          } else if (stakeSumrTransaction) {
+            setShouldAutoStakeAfterApproval(false)
+            setStakeStatus(UiTransactionStatuses.PENDING)
+            await stakeSumrTransaction()
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Error executing transactions after chain switch:', error)
+          setShouldAutoStakeAfterApproval(false)
+        }
+      }
+
+      void executeTransactions()
+    }
+  }, [
+    shouldAutoStakeAfterApproval,
+    clientChainId,
+    isSettingChain,
+    approveStatus,
+    stakeStatus,
+    txData,
+    approveSumrTransaction,
+    stakeSumrTransaction,
+    prepareTxs,
+  ])
 
   const onStake = async ({
     amount,
@@ -1358,6 +1465,14 @@ const SumrV2StakingIntermediary = () => {
       userStakesCountAfter,
     })
 
+    // Check if we need to switch to Base network
+    if (clientChainId !== ChainIds.Base) {
+      setShouldAutoStakeAfterApproval(true)
+      setChain({ chain: SDKChainIdToAAChainMap[ChainIds.Base] })
+
+      return
+    }
+
     try {
       // Convert amount to bigint with proper decimals
       const amountBigInt = formatDecimalToBigInt(amount.toString())
@@ -1375,6 +1490,7 @@ const SumrV2StakingIntermediary = () => {
 
       // Execute approve transaction first if needed
       if (approveSumrTransaction && approveStatus !== UiTransactionStatuses.COMPLETED) {
+        setShouldAutoStakeAfterApproval(true)
         setApproveStatus(UiTransactionStatuses.PENDING)
         await approveSumrTransaction().catch((err) => {
           // eslint-disable-next-line no-console
@@ -1382,9 +1498,12 @@ const SumrV2StakingIntermediary = () => {
 
           throw err
         })
+        // Don't proceed to stake yet - wait for approval status to update
+
+        return
       }
 
-      // Execute stake transaction
+      // Execute stake transaction directly if no approval needed
       if (stakeSumrTransaction) {
         setStakeStatus(UiTransactionStatuses.PENDING)
         await stakeSumrTransaction().catch((err) => {
@@ -1412,6 +1531,7 @@ const SumrV2StakingIntermediary = () => {
         approveStatus={approveStatus}
         needsApproval={!!approveSumrTransaction}
         prepareTxs={prepareTxs}
+        isSettingChain={isSettingChain}
       />
     )
   }

@@ -62,6 +62,16 @@ export interface IArmadaManagerUsersClient {
   getSummerToken(params: { chainInfo: IChainInfo }): Promise<IToken>
 
   /**
+   * @method getSummerPrice
+   * @description Retrieves the current price of the Summer token
+   *
+   * @param params - Optional parameters
+   * @param params.override - Optional price override value
+   * @returns The current price of the Summer token
+   */
+  getSummerPrice(params?: { override?: number }): Promise<{ price: number }>
+
+  /**
    * @method getVaultsRaw
    * @description Retrieves all protocol vaults
    *
@@ -146,6 +156,14 @@ export interface IArmadaManagerUsersClient {
    * @returns The revenue amount in USD as a number
    */
   getProtocolRevenue(): Promise<number>
+
+  /**
+   * @method getProtocolTvl
+   * @description Calculates the total protocol TVL in USD across all vaults and chains
+   *
+   * @returns The TVL amount in USD as a number
+   */
+  getProtocolTvl(): Promise<number>
 
   /**
    * @method getVaultsHistoricalRates
@@ -370,19 +388,6 @@ export interface IArmadaManagerUsersClient {
     vaultUsage: bigint
     merkleDistribution: bigint
     voteDelegation: bigint
-  }>
-
-  /**
-   * @method getClaimableAggregatedRewards
-   * @description Returns the claimable aggregated rewards of a user in a Fleet
-   *
-   * @param user Address of the user to check the rewards for
-   *
-   * @returns The claimable aggregated rewards of the user in the Fleet
-   */
-  getClaimableAggregatedRewards(params: { user: IUser }): Promise<{
-    total: bigint
-    perChain: Record<number, bigint>
   }>
 
   /**
@@ -713,6 +718,14 @@ export interface IArmadaManagerUsersClient {
     sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
+
+  /**
+   * @method getStakingConfigV2
+   * @description Returns the staking configuration including the staking contract address
+   *
+   * @returns Object containing staking configuration
+   */
+  getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
 
   /**
    * @method getMigratablePositions

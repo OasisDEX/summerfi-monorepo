@@ -46,7 +46,7 @@
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@tabler/icons-react": "^3.19.0",
-    "bignumber.js": "^9.1.2",
+    "bignumber.js": "^9.3.0",
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
     "lodash-es": "^4.17.1",
