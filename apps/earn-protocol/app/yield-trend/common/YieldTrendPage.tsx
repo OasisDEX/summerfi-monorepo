@@ -56,10 +56,12 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
 
   const parsedNetwork = supportedSDKNetwork(selectedVault.protocol.network)
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultsApyByNetworkMap] = await Promise.all([
+  const [fullArkInterestRatesMap, vaultInterestRates, vaultsApyByNetworkMap] = await Promise.all([
     getArksInterestRates({
       network: parsedNetwork,
-      arksList: selectedVault.arks,
+      arksList: selectedVault.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
     }),
     getVaultsHistoricalApy({
       // just the vault displayed
@@ -78,7 +80,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: selectedVault,
-    arkInterestRatesMap,
+    arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 

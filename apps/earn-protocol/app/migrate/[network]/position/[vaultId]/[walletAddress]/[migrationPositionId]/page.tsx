@@ -123,11 +123,26 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
 
   const keyParts = [walletAddress, vaultId, paramsNetwork]
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultApyRaw, vaultInfo] = await Promise.all([
+  const [
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
+    vaultInterestRates,
+    vaultApyRaw,
+    vaultInfo,
+  ] = await Promise.all([
+    vault?.arks
+      ? getArksInterestRates({
+          network: parsedNetwork,
+          arksList: vault.arks.filter(
+            (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+          ),
+        })
+      : Promise.resolve({}),
     vault?.arks
       ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
+          justLatestRates: true,
         })
       : Promise.resolve({}),
     unstableCache(
@@ -170,7 +185,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
-    arkInterestRatesMap,
+    arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 
@@ -189,7 +204,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arkInterestRatesMap}
+      arksInterestRates={latestArkInterestRatesMap}
       vaultApyData={vaultApyData}
       migratablePosition={migratablePosition}
       walletAddress={walletAddress}

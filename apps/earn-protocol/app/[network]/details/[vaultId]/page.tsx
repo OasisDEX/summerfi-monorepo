@@ -105,37 +105,45 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 
   const keyParts = [vaultId, network]
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw] = await Promise.all([
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks,
-    }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      keyParts,
-      cacheConfig,
-    )({
-      // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-      })),
-    }),
-    unstableCache(
-      getVaultsApy,
-      keyParts,
-      cacheConfig,
-    )({
-      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-      })),
-    }),
-  ])
+  const [fullArkInterestRatesMap, latestArkInterestRatesMap, vaultInterestRates, vaultsApyRaw] =
+    await Promise.all([
+      getArksInterestRates({
+        network: parsedNetwork,
+        arksList: vault.arks.filter(
+          (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+        ),
+      }),
+      getArksInterestRates({
+        network: parsedNetwork,
+        arksList: vault.arks,
+        justLatestRates: true,
+      }),
+      unstableCache(
+        getVaultsHistoricalApy,
+        keyParts,
+        cacheConfig,
+      )({
+        // just the vault displayed
+        fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
+        })),
+      }),
+      unstableCache(
+        getVaultsApy,
+        keyParts,
+        cacheConfig,
+      )({
+        fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
+        })),
+      }),
+    ])
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
-    arkInterestRatesMap,
+    arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 
@@ -152,7 +160,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
         arksHistoricalChartData={arksHistoricalChartData}
         summerVaultName={summerVaultName}
         vault={vaultWithConfig}
-        arksInterestRates={arkInterestRatesMap}
+        arksInterestRates={latestArkInterestRatesMap}
         vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}
         totalUsers={totalUsers}
