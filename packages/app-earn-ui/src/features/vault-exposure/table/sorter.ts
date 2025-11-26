@@ -40,7 +40,7 @@ export const vaultExposureSorter = ({
     case 'allocated':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance,
+          a: a.inputTokenBalance + (a.depositCap > 0n ? 1n : 0n),
           b: b.inputTokenBalance,
           direction: sortConfig.direction,
         }),
@@ -48,7 +48,7 @@ export const vaultExposureSorter = ({
     case 'liveApy':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.apy.toNumber(),
+          a: a.apy.toNumber() + (a.depositCap > 0n ? 1 : 0),
           b: b.apy.toNumber(),
           direction: sortConfig.direction,
         }),
@@ -56,7 +56,7 @@ export const vaultExposureSorter = ({
     case 'avgApy30d':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.avgApy30d.toNumber(),
+          a: a.avgApy30d.toNumber() + (a.depositCap > 0n ? 1 : 0),
           b: b.avgApy30d.toNumber(),
           direction: sortConfig.direction,
         }),
@@ -64,7 +64,7 @@ export const vaultExposureSorter = ({
     case 'avgApy1y':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.avgApy1y.toNumber(),
+          a: a.avgApy1y.toNumber() + (a.depositCap > 0n ? 1 : 0),
           b: b.avgApy1y.toNumber(),
           direction: sortConfig.direction,
         }),
@@ -72,7 +72,7 @@ export const vaultExposureSorter = ({
     case 'yearlyLow':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.yearlyYieldRange.low.toNumber(),
+          a: a.yearlyYieldRange.low.toNumber() + (a.depositCap > 0n ? 1 : 0),
           b: b.yearlyYieldRange.low.toNumber(),
           direction: sortConfig.direction,
         }),
@@ -80,7 +80,7 @@ export const vaultExposureSorter = ({
     case 'yearlyHigh':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.yearlyYieldRange.high.toNumber(),
+          a: a.yearlyYieldRange.high.toNumber() + (a.depositCap > 0n ? 1 : 0),
           b: b.yearlyYieldRange.high.toNumber(),
           direction: sortConfig.direction,
         }),
@@ -88,7 +88,7 @@ export const vaultExposureSorter = ({
     case 'liquidity':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance,
+          a: a.inputTokenBalance + (a.depositCap > 0n ? 1n : 0n),
           b: b.inputTokenBalance,
           direction: sortConfig.direction,
         }),
@@ -96,7 +96,7 @@ export const vaultExposureSorter = ({
     case 'allocationCap':
       return extendedArks.sort((a, b) => {
         return simpleSort({
-          a: new BigNumber(a.capRatio).toString(),
+          a: new BigNumber(a.capRatio).toString() + (a.depositCap > 0n ? 1 : 0),
           b: new BigNumber(b.capRatio).toString(),
           direction: sortConfig.direction,
         })
@@ -104,7 +104,7 @@ export const vaultExposureSorter = ({
     default:
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance,
+          a: a.inputTokenBalance + (a.depositCap > 0n ? 1n : 0n),
           b: b.inputTokenBalance,
           direction: SortDirection.DESC,
         }),

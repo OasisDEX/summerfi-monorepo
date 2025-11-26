@@ -100,9 +100,15 @@ export const getArkHistoricalChartData = ({
   // that has vault data available, but that might change (in that case just remove the false param)
   const chartsDataRaw = getBaseHistoricalChartsData(false)
 
-  const arksInterestRatesKeys = Object.keys(arkInterestRatesMap).filter(
-    (arkName) => !arkName.toLowerCase().includes('buffer'),
-  ) as string[]
+  // const arksInterestRatesKeys = Object.keys(arkInterestRatesMap).filter(
+  //   (arkName) => !arkName.toLowerCase().includes('buffer'),
+  // ) as string[]
+
+  // we're not filtering the arks here (only on the chart), because on the vault exposure we display the whole list
+  const arksInterestRatesKeys = vault.arks
+    .filter((ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0)
+    .filter((ark) => !(ark.name ?? '').toLowerCase().includes('buffer'))
+    .map((ark) => ark.name) as string[]
 
   // mapping the interest rates for the vault itself
   for (const vaultHourlyInterestRate of vaultsInterestRates.hourlyInterestRates) {

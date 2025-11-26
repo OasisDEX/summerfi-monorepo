@@ -25,10 +25,16 @@ export async function fetchTopDepositors(client: GraphQLClient) {
   let hasMorePositions = true
 
   while (hasMorePositions) {
-    const response = await client.request<GraphQLResponse>(GetTopDepositorsDocument, {
-      first: SUBGRAPH_BATCH_SIZE,
-      skip,
-    })
+    const response = await client.request<GraphQLResponse>(
+      GetTopDepositorsDocument,
+      {
+        first: SUBGRAPH_BATCH_SIZE,
+        skip,
+      },
+      {
+        origin: 'earn-protocol-app',
+      },
+    )
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const positions = response.positions || []

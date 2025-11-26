@@ -3,7 +3,6 @@
 import { type GetInterestRatesParams, type InterestRates } from '@summerfi/app-types'
 import { getArkProductId, getArkRatesBatchUrl } from '@summerfi/app-utils'
 
-import { filterArksWithCapHigherThanZero } from '@/arks-interest-rates/helpers/filter-arks-with-cap-higher-than-zero'
 import { isProperInterestRatesNetwork } from '@/arks-interest-rates/helpers/is-proper-interest-rates-network'
 import { mapArkName } from '@/arks-interest-rates/helpers/map-ark-name'
 import { mapLatestInterestRatesResponse } from '@/arks-interest-rates/helpers/map-latest-interest-rates-response'
@@ -53,9 +52,7 @@ export async function getArksInterestRates({
     throw new Error(`getInterestRates: No endpoint found for network: ${network}`)
   }
 
-  const filteredArksWithCapHigherThanZero = arksList.filter(filterArksWithCapHigherThanZero)
-
-  const arkNamesList = filteredArksWithCapHigherThanZero.map(mapArkName)
+  const arkNamesList = arksList.map(mapArkName)
 
   const functionsApiUrl = process.env.FUNCTIONS_API_URL
 
@@ -66,7 +63,7 @@ export async function getArksInterestRates({
   if (justLatestRates) {
     try {
       // Get all product IDs
-      const productIds = filteredArksWithCapHigherThanZero
+      const productIds = arksList
         .map((ark) => getArkProductId(ark))
         .filter((id): id is string => id !== false)
 
@@ -100,16 +97,14 @@ export async function getArksInterestRates({
       // Return early with the batch response
       return prepareInterestRatesDataResponse({
         arkNamesList,
-        interestRatesMap: filteredArksWithCapHigherThanZero.map(
-          mapLatestInterestRatesResponse(data),
-        ),
+        interestRatesMap: arksList.map(mapLatestInterestRatesResponse(data)),
       })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn('Batch request failed, falling back to individual requests:', error)
       // Fall back to individual requests
       const fallbackResponse = await Promise.all(
-        filteredArksWithCapHigherThanZero.map(
+        arksList.map(
           prepareInterestRatesFallbackCalls({
             network,
             functionsApiUrl,
@@ -127,7 +122,7 @@ export async function getArksInterestRates({
 
   // Proceed with existing historical rates logic
   const historicalResponse = await Promise.all(
-    filteredArksWithCapHigherThanZero.map(
+    arksList.map(
       prepareInterestRatesHistoricalResponse({
         network,
         functionsApiUrl,

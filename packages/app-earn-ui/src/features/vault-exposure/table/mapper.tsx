@@ -47,7 +47,7 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
   yearlyYieldRange: YieldRange
   arkTokenTVL: BigNumber
   allocationRatio: BigNumber | string
-  capRatio: BigNumber | string
+  capRatio: BigNumber
   vaultTvlAllocationCap: BigNumber
   mainAllocationCap: BigNumber
   absoluteAllocationCap: BigNumber | string
@@ -139,10 +139,16 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
 
     const isArkNew = arkDaysSinceCreated < 30
 
+    const isCapZero = item.depositCap.toString() === '0'
+
     return {
       content: {
         vault: (
-          <TableCellNodes>
+          <TableCellNodes
+            style={{
+              opacity: isCapZero ? 0.5 : 1,
+            }}
+          >
             <TableRowAccent backgroundColor={getUniqueColor(protocolLabel)} />
             <Icon tokenName={getDisplayToken(arkTokenSymbol) as TokenSymbolsList} variant="m" />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -168,6 +174,7 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
           <TableCellNodes>
             <TableCellAllocationCap
               isBuffer={isBuffer}
+              isCapZero={isCapZero}
               capPercent={isBuffer ? 'n/a' : formatDecimalAsPercent(item.capRatio)}
               tooltipContent={
                 <div
@@ -304,7 +311,9 @@ export const vaultExposureMapper = (
     ).times(maxPercentageTVL)
     const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
 
-    const capRatio = BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1)
+    const capRatio = BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1).isNaN()
+      ? new BigNumber(0)
+      : BigNumber.minimum(arkTokenTVL.div(mainAllocationCap), 1)
 
     const extendedArk: ExtendedArk = {
       ...ark,

@@ -27,11 +27,17 @@ export async function fetchAllRebalanceActivities(client: GraphQLClient, timesta
   let hasMoreRebalances = true
 
   while (hasMoreRebalances) {
-    const response = await client.request<GraphQLResponse>(GetRebalancesDocument, {
-      timestamp,
-      first: SUBGRAPH_BATCH_SIZE,
-      skip,
-    })
+    const response = await client.request<GraphQLResponse>(
+      GetRebalancesDocument,
+      {
+        timestamp,
+        first: SUBGRAPH_BATCH_SIZE,
+        skip,
+      },
+      {
+        origin: 'earn-protocol-app',
+      },
+    )
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const rebalances = response.rebalances || []

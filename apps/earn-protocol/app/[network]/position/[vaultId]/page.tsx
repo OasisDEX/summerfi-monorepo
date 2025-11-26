@@ -118,11 +118,26 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   }
   const keyParts = [vaultId, paramsNetwork]
 
-  const [arkInterestRatesMap, vaultInterestRates, vaultsApyRaw, vaultInfo] = await Promise.all([
+  const [
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
+    vaultInterestRates,
+    vaultsApyRaw,
+    vaultInfo,
+  ] = await Promise.all([
+    vault?.arks
+      ? getArksInterestRates({
+          network: parsedNetwork,
+          arksList: vault.arks.filter(
+            (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+          ),
+        })
+      : Promise.resolve({}),
     vault?.arks
       ? getArksInterestRates({
           network: parsedNetwork,
           arksList: vault.arks,
+          justLatestRates: true,
         })
       : Promise.resolve({}),
     unstableCache(
@@ -163,7 +178,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
-    arkInterestRatesMap,
+    arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 
@@ -181,7 +196,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       rebalanceActivity={rebalanceActivity}
       medianDefiYield={medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arkInterestRatesMap}
+      arksInterestRates={latestArkInterestRatesMap}
       vaultApyData={vaultApyData}
       vaultsApyRaw={vaultsApyRaw}
       referralCode={referralCode}

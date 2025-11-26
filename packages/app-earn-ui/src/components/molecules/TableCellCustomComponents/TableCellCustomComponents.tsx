@@ -11,24 +11,42 @@ export const TableCellAllocationCap = ({
   capPercent,
   tooltipContent,
   isBuffer = false,
+  isCapZero = false,
 }: {
   capPercent: string
   tooltipContent?: ReactNode
   isBuffer?: boolean
+  isCapZero?: boolean
 }): ReactNode => {
   return (
-    <div className={tableCellCustomComponentsStyles.tableCellAllocationCapWrapper}>
-      <div className={tableCellCustomComponentsStyles.tableCellAllocationCapPercentTooltipWrapper}>
-        <Text variant="p3semi">{!isBuffer ? capPercent : 'n/a'}</Text>
-        {tooltipContent && !isBuffer && (
-          <Tooltip
-            tooltip={tooltipContent}
-            tooltipWrapperStyles={{ maxWidth: '260px', width: '260px' }}
-          >
-            <Icon iconName="info" size={20} color="#777576" />
-          </Tooltip>
-        )}
-      </div>
+    <div
+      className={tableCellCustomComponentsStyles.tableCellAllocationCapWrapper}
+      style={{ opacity: isCapZero ? 0.5 : 1 }}
+    >
+      {isCapZero ? (
+        <Tooltip
+          tooltip="This ark has allocation cap set to 0%. No funds can be allocated to it."
+          tooltipWrapperStyles={{
+            minWidth: '240px',
+          }}
+        >
+          <Icon iconName="info" size={20} color="#777576" />
+        </Tooltip>
+      ) : (
+        <div
+          className={tableCellCustomComponentsStyles.tableCellAllocationCapPercentTooltipWrapper}
+        >
+          <Text variant="p3semi">{!isBuffer ? capPercent : 'n/a'}</Text>
+          {tooltipContent && !isBuffer && (
+            <Tooltip
+              tooltip={tooltipContent}
+              tooltipWrapperStyles={{ maxWidth: '260px', width: '260px' }}
+            >
+              <Icon iconName="info" size={20} color="#777576" />
+            </Tooltip>
+          )}
+        </div>
+      )}
       {!isBuffer && <ChartBar value={capPercent} />}
     </div>
   )

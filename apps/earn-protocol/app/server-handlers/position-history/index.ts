@@ -68,9 +68,15 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
   })
 
   const [positionHistory, noOfDepositsQueryResult] = await Promise.all([
-    networkGraphQlClient.request<GetPositionHistoryQuery>(GetPositionHistoryDocument, {
-      positionId,
-    }),
+    networkGraphQlClient.request<GetPositionHistoryQuery>(
+      GetPositionHistoryDocument,
+      {
+        positionId,
+      },
+      {
+        origin: 'earn-protocol-app',
+      },
+    ),
     dbInstance.db
       .selectFrom('latestActivity')
       .where('userAddress', '=', address.toLowerCase())

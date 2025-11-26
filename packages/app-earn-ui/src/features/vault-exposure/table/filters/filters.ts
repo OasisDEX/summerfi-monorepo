@@ -17,13 +17,22 @@ export const vaultExposureFilter = ({
 }): SDKVaultType => ({
   ...vault,
   arks: vault.arks.filter(
-    (ark) =>
-      // First check if depositCap is greater than 0
-      (Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0) &&
-      (allocationType === VaultExposureFilterType.ALL
-        ? true
-        : allocationType === VaultExposureFilterType.UNALLOCATED
-          ? Number(ark.inputTokenBalance) === 0
-          : Number(ark.inputTokenBalance) > 0),
+    (ark) => {
+      if (allocationType === VaultExposureFilterType.ALL) {
+        return true
+      } else if (allocationType === VaultExposureFilterType.UNALLOCATED) {
+        return Number(ark.inputTokenBalance) === 0
+      } else {
+        // VaultExposureFilterType.ALLOCATED
+        return Number(ark.inputTokenBalance) > 0
+      }
+    },
+    // First check if depositCap is greater than 0
+    // Number(ark.inputTokenBalance) > 0 &&
+    // (allocationType === VaultExposureFilterType.ALL
+    //   ? true
+    //   : allocationType === VaultExposureFilterType.UNALLOCATED
+    //     ? Number(ark.inputTokenBalance) === 0
+    //     : Number(ark.inputTokenBalance) > 0),
   ),
 })

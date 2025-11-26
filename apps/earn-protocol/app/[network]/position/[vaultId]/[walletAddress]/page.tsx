@@ -156,7 +156,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const keyParts = [walletAddress, vaultId, paramsNetwork]
 
   const [
-    arkInterestRatesMap,
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
     vaultInterestRates,
     positionHistory,
     positionForecastResponse,
@@ -166,7 +167,14 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   ] = await Promise.all([
     getArksInterestRates({
       network: parsedNetwork,
+      arksList: vault.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
       arksList: vault.arks,
+      justLatestRates: true,
     }),
     unstableCache(
       getVaultsHistoricalApy,
@@ -228,7 +236,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
-    arkInterestRatesMap,
+    arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 
@@ -253,7 +261,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       rebalanceActivity={rebalanceActivity}
       performanceChartData={performanceChartData}
       arksHistoricalChartData={arksHistoricalChartData}
-      arksInterestRates={arkInterestRatesMap}
+      arksInterestRates={latestArkInterestRatesMap}
       migratablePositions={migratablePositions}
       migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}

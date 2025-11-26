@@ -34,11 +34,17 @@ export async function fetchAllLatestActivities(client: GraphQLClient, timestamp:
   let hasMoreWithdraws = true
 
   while (hasMoreDeposits || hasMoreWithdraws) {
-    const response = await client.request<GraphQLResponse>(GetLatestActivityDocument, {
-      timestamp,
-      first: SUBGRAPH_BATCH_SIZE,
-      skip,
-    })
+    const response = await client.request<GraphQLResponse>(
+      GetLatestActivityDocument,
+      {
+        timestamp,
+        first: SUBGRAPH_BATCH_SIZE,
+        skip,
+      },
+      {
+        origin: 'earn-protocol-app',
+      },
+    )
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const deposits = response.deposits || []

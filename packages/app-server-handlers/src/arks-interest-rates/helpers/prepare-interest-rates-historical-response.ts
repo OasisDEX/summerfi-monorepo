@@ -69,8 +69,14 @@ export const prepareInterestRatesHistoricalResponse =
       console.warn(`Falling back to subgraph for ${productId}:`, error)
       const networkGraphQlClient = graphqlClients[network]
 
-      return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
-        productId,
-      })
+      return networkGraphQlClient.request<GetInterestRatesQuery>(
+        GetInterestRatesDocument,
+        {
+          productId,
+        },
+        {
+          origin: 'earn-protocol-server-call',
+        },
+      )
     }
   }

@@ -80,8 +80,14 @@ export const prepareInterestRatesFallbackCalls =
       console.warn(`Falling back to subgraph for ${productId}:`, fallbackError)
       const networkGraphQlClient = graphqlClients[network]
 
-      return networkGraphQlClient.request<GetInterestRatesQuery>(GetInterestRatesDocument, {
-        productId,
-      })
+      return networkGraphQlClient.request<GetInterestRatesQuery>(
+        GetInterestRatesDocument,
+        {
+          productId,
+        },
+        {
+          origin: 'earn-protocol-server-call',
+        },
+      )
     }
   }
