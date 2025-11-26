@@ -205,7 +205,10 @@ const SumrV2StakingManageComponent = ({
   isLoading?: boolean
   approveStatus: UiTransactionStatuses | null
   needsApproval: boolean
-  prepareTxs: (amount: bigint, lockupPeriod: bigint) => Promise<boolean>
+  prepareTxs: (
+    amount: bigint,
+    lockupPeriod: bigint,
+  ) => Promise<{ approve?: () => Promise<unknown>; stake: () => Promise<unknown> } | null>
   isSettingChain?: boolean
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
@@ -1399,14 +1402,14 @@ const SumrV2StakingIntermediary = () => {
             return
           }
 
-          if (approveSumrTransaction) {
+          if (prepared.approve) {
             setApproveStatus(UiTransactionStatuses.PENDING)
-            await approveSumrTransaction()
+            await prepared.approve()
             // After approval, the first useEffect will handle staking
-          } else if (stakeSumrTransaction) {
+          } else {
             setShouldAutoStakeAfterApproval(false)
             setStakeStatus(UiTransactionStatuses.PENDING)
-            await stakeSumrTransaction()
+            await prepared.stake()
           }
         } catch (error) {
           // eslint-disable-next-line no-console
@@ -1424,8 +1427,6 @@ const SumrV2StakingIntermediary = () => {
     approveStatus,
     stakeStatus,
     txData,
-    approveSumrTransaction,
-    stakeSumrTransaction,
     prepareTxs,
   ])
 
@@ -1489,10 +1490,10 @@ const SumrV2StakingIntermediary = () => {
       }
 
       // Execute approve transaction first if needed
-      if (approveSumrTransaction && approveStatus !== UiTransactionStatuses.COMPLETED) {
+      if (prepared.approve && approveStatus !== UiTransactionStatuses.COMPLETED) {
         setShouldAutoStakeAfterApproval(true)
         setApproveStatus(UiTransactionStatuses.PENDING)
-        await approveSumrTransaction().catch((err) => {
+        await prepared.approve().catch((err) => {
           // eslint-disable-next-line no-console
           console.error('Error approving staking $SUMR:', err)
 
@@ -1504,15 +1505,13 @@ const SumrV2StakingIntermediary = () => {
       }
 
       // Execute stake transaction directly if no approval needed
-      if (stakeSumrTransaction) {
-        setStakeStatus(UiTransactionStatuses.PENDING)
-        await stakeSumrTransaction().catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error('Error staking $SUMR:', err)
+      setStakeStatus(UiTransactionStatuses.PENDING)
+      await prepared.stake().catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error('Error staking $SUMR:', err)
 
-          throw err
-        })
-      }
+        throw err
+      })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Staking error:', error)

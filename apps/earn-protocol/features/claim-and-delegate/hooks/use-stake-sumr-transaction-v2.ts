@@ -15,7 +15,7 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
  * @returns {Object} Object containing transaction functions, loading state, and error state
  * @returns {() => Promise<unknown>} returns.stakeSumrTransaction - Function to execute the stake transaction
  * @returns {() => Promise<unknown>} returns.approveSumrTransaction - Function to execute the approve transaction (if needed)
- * @returns {(amount: bigint, lockupPeriod: bigint) => Promise<boolean>} returns.prepareTxs - Function to prepare the stake transactions
+ * @returns {(amount: bigint, lockupPeriod: bigint) => Promise<{approve?: () => Promise<unknown>, stake: () => Promise<unknown>} | null>} returns.prepareTxs - Function to prepare the stake transactions and return the prepared callbacks
  * @returns {boolean} returns.isFetchingTx - Whether the transactions are being prepared
  * @returns {boolean} returns.isLoading - Whether any transaction is currently being processed
  * @returns {Error | null} returns.error - Error object if any transaction failed, null otherwise
@@ -30,7 +30,17 @@ export const useStakeSumrTransactionV2 = ({
   onApproveSuccess: () => void
   onStakeError: () => void
   onApproveError: () => void
-}) => {
+}): {
+  stakeSumrTransaction: (() => Promise<unknown>) | undefined
+  approveSumrTransaction: (() => Promise<unknown>) | undefined
+  prepareTxs: (
+    amount: bigint,
+    lockupPeriod: bigint,
+  ) => Promise<{ approve?: () => Promise<unknown>; stake: () => Promise<unknown> } | null>
+  isFetchingTx: boolean
+  isLoading: boolean
+  error: Error | null
+} => {
   const { getStakeTxV2, getCurrentUser } = useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -67,7 +77,7 @@ export const useStakeSumrTransactionV2 = ({
   const prepareTxs = useCallback(
     async (amount: bigint, lockupPeriod: bigint) => {
       if (amount === 0n) {
-        return false
+        return null
       }
 
       setIsFetchingTx(true)
@@ -116,7 +126,7 @@ export const useStakeSumrTransactionV2 = ({
           setApproveSumrTransaction(() => _approveSumrTransaction)
           setStakeSumrTransaction(() => _stakeSumrTransaction)
 
-          return true
+          return { approve: _approveSumrTransaction, stake: _stakeSumrTransaction }
         } else {
           const _stakeSumrTransaction = async () => {
             const txParams = {
@@ -139,14 +149,14 @@ export const useStakeSumrTransactionV2 = ({
           setStakeSumrTransaction(() => _stakeSumrTransaction)
           setApproveSumrTransaction(undefined)
 
-          return true
+          return { stake: _stakeSumrTransaction }
         }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Error fetching stake transaction:', error)
         setIsFetchingTx(false)
 
-        return false
+        return null
       } finally {
         setIsFetchingTx(false)
       }
