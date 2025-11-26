@@ -3,6 +3,6 @@
 // Key: ChainId (number), Value: Start block (bigint)
 
 export const AccessControlStartBlockConfig: Partial<Record<number, bigint>> = {
-  8453: 33275700n, // Base chain
-  42161: 33275700n, // Arbitrum One chain
+  8453: 37209520n, // Base chain
+  42161: 394673857n, // Arbitrum One chain
 }
