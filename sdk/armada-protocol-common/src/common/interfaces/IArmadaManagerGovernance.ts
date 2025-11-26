@@ -57,8 +57,8 @@ export interface StakingSimulationDataV2 {
  */
 export interface StakingStatsV2 {
   summerStakedNormalized: string
-  averageLockupPeriod: number | null
-  amountOfLockedStakes: string | null
+  amountOfLockedStakes?: bigint | null
+  averageLockupPeriod?: bigint | null
   circulatingSupply: string
 }
 

@@ -31,8 +31,7 @@ import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { createProtocolGraphQLClient } from '@summerfi/subgraph-manager-common'
-import { governanceStakingStatsQuery } from '../../../../../subgraph-manager-common/src/queries/protocol/governance.graphql'
+import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
 
@@ -47,7 +46,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
   private _contractsProvider: IContractsProvider
-  private _configProvider: IConfigurationProvider
+  private _subgraphManager: IArmadaSubgraphManager
   private _utils: IArmadaManagerUtils
   private _vaults: import('@summerfi/armada-protocol-common').IArmadaManagerVaults
 
@@ -60,7 +59,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     allowanceManager: IAllowanceManager
     tokensManager: ITokensManager
     contractsProvider: IContractsProvider
-    configProvider: IConfigurationProvider
+    subgraphManager: IArmadaSubgraphManager
     hubChainInfo: IChainInfo
     utils: IArmadaManagerUtils
     vaults: import('@summerfi/armada-protocol-common').IArmadaManagerVaults
@@ -69,7 +68,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     this._allowanceManager = params.allowanceManager
     this._tokensManager = params.tokensManager
     this._contractsProvider = params.contractsProvider
-    this._configProvider = params.configProvider
+    this._subgraphManager = params.subgraphManager
     this._hubChainInfo = params.hubChainInfo
     this._utils = params.utils
     this._vaults = params.vaults
@@ -883,35 +882,23 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
    */
   async getStakingStatsV2(): Promise<StakingStatsV2> {
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
-    const id = stakingContractAddress.value.toLowerCase()
 
-    // Get subgraph URL from config
-    const subgraphConfigStr = this._configProvider.getConfigurationItem({
-      name: 'SDK_SUBGRAPH_CONFIG',
+    const response = await this._subgraphManager.getStakingStatsV2({
+      chainId: this._hubChainInfo.chainId,
+      id: stakingContractAddress.value,
     })
-    const subgraphConfig = JSON.parse(subgraphConfigStr)
-    const chainId = this._hubChainInfo.chainId
-    const subgraphUrl = subgraphConfig[chainId]?.protocol
 
-    if (!subgraphUrl) {
-      throw new Error(`No protocol subgraph URL found for chainId: ${chainId}`)
+    if (!response || response.governanceStakings.length !== 1) {
+      throw new Error(`No staking stats found for address: ${stakingContractAddress.value}`)
     }
 
-    // Create GraphQL client and fetch data
-    const client = createProtocolGraphQLClient(subgraphUrl)
-    const response = await client.request(governanceStakingStatsQuery, { id })
-
-    const data = response?.governanceStakings?.[0]
-
-    if (!data) {
-      throw new Error(`No staking stats found for address: ${id}`)
-    }
+    const stats = response.governanceStakings[0]
 
     return {
-      summerStakedNormalized: data.summerStakedNormalized,
-      averageLockupPeriod: data.averageLockupPeriod,
-      amountOfLockedStakes: data.amountOfLockedStakes,
-      circulatingSupply: data.circulatingSupply,
+      summerStakedNormalized: stats.summerStakedNormalized,
+      amountOfLockedStakes: stats.amountOfLockedStakes,
+      averageLockupPeriod: stats.averageLockupPeriod,
+      circulatingSupply: '0',
     }
   }
 }
