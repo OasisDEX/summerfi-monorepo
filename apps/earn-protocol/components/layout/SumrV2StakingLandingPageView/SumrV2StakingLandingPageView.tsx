@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -60,12 +60,12 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     getProtocolTvl,
     getStakingRevenueShareV2,
     getSummerToken,
-    getSummerPrice,
   } = useAppSDK()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const sumrPriceUsd = new BigNumber(sumrNetApyConfig.dilutedValuation, 10)
-    .dividedBy(1_000_000_000)
-    .toNumber()
+  const sumrPriceUsd = useMemo(
+    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
+    [sumrNetApyConfig.dilutedValuation],
+  )
 
   // Fetch all staking data on mount
   useEffect(() => {
@@ -198,7 +198,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     getProtocolTvl,
     getStakingRevenueShareV2,
     getSummerToken,
-    getSummerPrice,
     sumrPriceUsd,
   ])
 
