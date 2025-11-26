@@ -237,9 +237,10 @@ const SumrV2StakingManageComponent = ({
   // Calculate price from fully diluted valuation
   const [sumrNetApyConfig] = useSumrNetApyConfig()
 
-  const sumrPriceUsd = new BigNumber(sumrNetApyConfig.dilutedValuation, 10)
-    .dividedBy(1_000_000_000)
-    .toNumber()
+  const sumrPriceUsd = useMemo(
+    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
+    [sumrNetApyConfig.dilutedValuation],
+  )
 
   const {
     getStakingBucketsInfoV2,
