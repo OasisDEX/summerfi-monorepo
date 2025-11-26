@@ -56,6 +56,14 @@ export default async function InstitutionTabLayout({
       <InstitutionTabBar
         institutionName={institutionName}
         defaultVault={institutionVaults.vaults[0]}
+        tabBarStyle={{
+          paddingTop: 'var(--spacing-space-medium)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10000, // has to be above chart tooltips, otherwise it looks weird
+          backdropFilter: 'blur(20px)',
+          backgroundColor: 'rgba(28,28,28, 0.5)',
+        }}
       />
       <div style={{ padding: 'var(--general-space-24) 0' }}>{children}</div>
     </>

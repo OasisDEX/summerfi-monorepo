@@ -8,4 +8,10 @@
     flex-direction: column;
     gap: var(--spacing-space-large);
   }
+
+  .panelOverviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

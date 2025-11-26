@@ -49,6 +49,14 @@ export type HistoryChartData = {
   data: ChartsDataTimeframes
 }
 
+export type SinglePointChartData = {
+  data: ChartsDataTimeframes
+}
+
+export type ApyPriceChartData = {
+  data: ChartsDataTimeframes
+}
+
 export type ArksHistoricalChartData = {
   data: ChartsDataTimeframes
   dataNames: string[]

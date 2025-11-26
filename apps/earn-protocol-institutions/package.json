@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "license": "Apache-2.0",
   "scripts": {
-    "prebuild": "pnpm generate-module-types",
+    "prebuild": "concurrently \"pnpm:codegen\" \"pnpm:generate-module-types\"",
     "dev": "dotenv -e ../../.env -e ../../.env.local -- concurrently \"next dev -p 3004 --turbopack\" \"pnpm:generate-module-types-watch\"",
     "build:apps": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "dotenv -e ../../.env -e ../../.env.local -- next start -p 3004",
@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix",
     "lint-timing": "TIMING=1 eslint .",
     "knip": "knip",
+    "codegen": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "generate-module-types": "tcm -s -p './+(components|features|app)/**/*.module.css'",
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
@@ -64,6 +65,7 @@
     "zod": "3.25.61"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",

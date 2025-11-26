@@ -1,0 +1,76 @@
+config:
+  namingConvention:
+    enumValues: keep
+generates:
+  ./graphql/clients/rates/client.ts:
+    schema: '${SUBGRAPH_BASE}/summer-earn-protocol-rates-base'
+    documents: './graphql/queries/rates.graphql'
+    plugins:
+      - add:
+          content:
+            - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - typescript
+      - typescript-operations:
+          strictScalars: true
+          immutableTypes: false
+          scalars:
+            BigDecimal: number
+            BigInt: number
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-graphql-request:
+          pureMagicComment: true
+          useTypeImports: true
+          emitLegacyCommonJSImports: false
+          gqlImport: 'graphql-request#gql'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'
+  ./graphql/clients/vault-history/client.ts:
+    schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+    documents: './graphql/queries/vault-history.graphql'
+    plugins:
+      - add:
+          content:
+            - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - typescript
+      - typescript-operations:
+          strictScalars: true
+          immutableTypes: false
+          scalars:
+            BigDecimal: number
+            BigInt: number
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
+      - typescript-graphql-request:
+          pureMagicComment: true
+          useTypeImports: true
+          emitLegacyCommonJSImports: false
+          gqlImport: 'graphql-request#gql'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'

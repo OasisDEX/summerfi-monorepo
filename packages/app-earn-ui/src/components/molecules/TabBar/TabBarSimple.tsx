@@ -19,6 +19,7 @@ interface TabBarProps {
   tabs: Tab[]
   textVariant?: keyof typeof TextClassNames
   tabHeadersStyle?: CSSProperties
+  tabBarStyle?: CSSProperties
   activeTabId?: string
 }
 
@@ -26,10 +27,11 @@ export const TabBarSimple: FC<TabBarProps> = ({
   tabs,
   textVariant = 'p2semi',
   tabHeadersStyle,
+  tabBarStyle,
   activeTabId,
 }) => {
   return (
-    <div className={styles.tabBar}>
+    <div className={styles.tabBar} style={tabBarStyle}>
       <div style={{ position: 'relative', height: 'fit-content', overflow: 'hidden' }}>
         <div className={styles.tabHeaders} style={tabHeadersStyle}>
           {tabs.map((tab) => (
