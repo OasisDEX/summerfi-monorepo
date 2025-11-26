@@ -65,8 +65,6 @@ export const ArkHistoricalYieldChart = ({
     <Card
       style={{
         flexDirection: 'column',
-        padding: 0,
-        position: 'relative',
       }}
       className={arkHistoricalChartStyles.arkHistoricalYieldChartCardWrapper}
     >
@@ -78,7 +76,7 @@ export const ArkHistoricalYieldChart = ({
               data={parsedDataWithCutoff}
               margin={{
                 top: 20,
-                right: 0,
+                right: 20,
                 left: 10,
                 bottom: 10,
               }}

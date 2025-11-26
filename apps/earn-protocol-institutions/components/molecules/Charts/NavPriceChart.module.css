@@ -5,13 +5,6 @@
   position: relative;
 }
 
-@media (min-width: 768px) {
-  .navPriceChartCardWrapper {
-    padding-left: var(--general-space-24);
-    padding-right: var(--general-space-24);
-  }
-}
-
 .navPriceChart {
   display: flex;
   flex-direction: column;

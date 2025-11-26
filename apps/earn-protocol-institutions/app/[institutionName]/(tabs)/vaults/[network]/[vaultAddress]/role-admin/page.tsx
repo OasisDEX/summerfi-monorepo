@@ -2,6 +2,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 
 import { getVaultSpecificRoles } from '@/app/server-handlers/sdk/get-vault-roles'
+import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRoleAdmin } from '@/features/panels/vaults/components/PanelRoleAdmin/PanelRoleAdmin'
 
 export default async function InstitutionVaultRoleAdminPage({
@@ -25,11 +26,13 @@ export default async function InstitutionVaultRoleAdminPage({
   })
 
   return (
-    <PanelRoleAdmin
-      roles={rolesList}
-      vaultAddress={vaultAddress}
-      network={network}
-      institutionName={institutionName}
-    />
+    <ClientSideSdkWrapper>
+      <PanelRoleAdmin
+        roles={rolesList}
+        vaultAddress={vaultAddress}
+        network={network}
+        institutionName={institutionName}
+      />
+    </ClientSideSdkWrapper>
   )
 }

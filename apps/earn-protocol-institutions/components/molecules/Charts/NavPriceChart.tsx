@@ -11,7 +11,6 @@ import {
   CHART_TIMESTAMP_FORMAT_DETAILED,
   CHART_TIMESTAMP_FORMAT_SHORT,
   formatChartCryptoValue,
-  POINTS_REQUIRED_FOR_CHART,
 } from '@/features/charts/helpers'
 
 import navPriceChartStyles from './NavPriceChart.module.css'
@@ -34,31 +33,17 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
     return chartData.data[timeframe ?? defaultTimeframe]
   }, [chartData, timeframe])
 
-  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe ?? defaultTimeframe]
-
   return (
     <Card className={navPriceChartStyles.navPriceChartCardWrapper}>
       <div className={navPriceChartStyles.navPriceChart}>
         <RechartResponsiveWrapper height="300px">
-          <ResponsiveContainer
-            width={chartHidden ? '0' : '100%'}
-            height="100%"
-            style={
-              chartHidden
-                ? {
-                    marginLeft: '0',
-                  }
-                : {
-                    marginLeft: '-20px',
-                  }
-            }
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               syncId={syncId}
               data={parsedData}
               margin={{
-                top: chartHidden ? 0 : 20,
-                right: 0,
+                top: 20,
+                right: 20,
                 left: 10,
                 bottom: 10,
               }}
@@ -71,13 +56,9 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
                 tickFormatter={(timestamp: string) => {
                   return timestamp.split(' ')[0]
                 }}
-                hide={chartHidden}
               />
               <YAxis
                 strokeWidth={0}
-                tickFormatter={(label: string) => {
-                  return formatChartCryptoValue(Number(label))
-                }}
                 interval="preserveStartEnd"
                 scale="linear"
                 width={65}
@@ -89,7 +70,6 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
                     return dataMax + Number(dataMax * 0.001)
                   },
                 ]}
-                hide={chartHidden}
               />
               <Tooltip
                 formatter={(val, valName) => {
@@ -137,7 +117,6 @@ export const NavPriceChart = ({ chartData, timeframe, syncId }: NavPriceChartPro
                 connectNulls
                 animationDuration={400}
                 animateNewValues
-                hide={chartHidden}
               />
             </ComposedChart>
           </ResponsiveContainer>

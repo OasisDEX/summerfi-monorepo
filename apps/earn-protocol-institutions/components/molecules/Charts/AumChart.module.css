@@ -5,13 +5,6 @@
   position: relative;
 }
 
-@media (min-width: 768px) {
-  .aumChartCardWrapper {
-    padding-left: var(--general-space-24);
-    padding-right: var(--general-space-24);
-  }
-}
-
 .aumChart {
   display: flex;
   flex-direction: column;

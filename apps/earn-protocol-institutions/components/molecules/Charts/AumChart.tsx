@@ -11,7 +11,6 @@ import {
   CHART_TIMESTAMP_FORMAT_DETAILED,
   CHART_TIMESTAMP_FORMAT_SHORT,
   formatChartCryptoValue,
-  POINTS_REQUIRED_FOR_CHART,
 } from '@/features/charts/helpers'
 
 import aumChartStyles from './AumChart.module.css'
@@ -34,31 +33,17 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
     return chartData.data[timeframe ?? defaultTimeframe]
   }, [chartData, timeframe])
 
-  const chartHidden = parsedData.length < POINTS_REQUIRED_FOR_CHART[timeframe ?? defaultTimeframe]
-
   return (
     <Card className={aumChartStyles.aumChartCardWrapper}>
       <div className={aumChartStyles.aumChart}>
         <RechartResponsiveWrapper height="300px">
-          <ResponsiveContainer
-            width={chartHidden ? '0' : '100%'}
-            height="100%"
-            style={
-              chartHidden
-                ? {
-                    marginLeft: '0',
-                  }
-                : {
-                    marginLeft: '-20px',
-                  }
-            }
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               syncId={syncId}
               data={parsedData}
               margin={{
-                top: chartHidden ? 0 : 20,
-                right: 0,
+                top: 20,
+                right: 20,
                 left: 10,
                 bottom: 10,
               }}
@@ -71,7 +56,6 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                 tickFormatter={(timestamp: string) => {
                   return timestamp.split(' ')[0]
                 }}
-                hide={chartHidden}
               />
               <YAxis
                 strokeWidth={0}
@@ -89,7 +73,6 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                     return dataMax + Number(dataMax * 0.001)
                   },
                 ]}
-                hide={chartHidden}
               />
               <Tooltip
                 formatter={(val, valName) => {
@@ -137,7 +120,6 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                 connectNulls
                 animationDuration={400}
                 animateNewValues
-                hide={chartHidden}
               />
             </ComposedChart>
           </ResponsiveContainer>
