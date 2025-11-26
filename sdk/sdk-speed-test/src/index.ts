@@ -130,11 +130,4 @@ await testSDKEndpointSpeed('getAggregatedRewards', async () => {
   })
 })
 
-// Test getClaimableAggregatedRewards
-await testSDKEndpointSpeed('getClaimableAggregatedRewards', async () => {
-  return await sdk.armada.users.getClaimableAggregatedRewards({
-    user: userMainnet,
-  })
-})
-
 console.log(`[SDK Speed test] Total time: ${Date.now() - sdkTestStartTime}ms`)

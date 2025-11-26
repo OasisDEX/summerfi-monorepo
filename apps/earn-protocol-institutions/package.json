@@ -39,7 +39,7 @@
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/summer-protocol-institutions-db": "workspace:*",
     "@tanstack/react-query": "^5.51.1",
-    "bignumber.js": "^9.1.2",
+    "bignumber.js": "^9.3.0",
     "boring-avatars": "^2.0.0",
     "browser-detect": "^0.2.28",
     "clsx": "^2.1.1",

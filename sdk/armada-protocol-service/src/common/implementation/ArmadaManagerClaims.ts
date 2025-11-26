@@ -377,12 +377,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     }
   }
 
-  async getClaimableAggregatedRewards(
-    params: Parameters<IArmadaManagerClaims['getClaimableAggregatedRewards']>[0],
-  ): ReturnType<IArmadaManagerClaims['getClaimableAggregatedRewards']> {
-    return this.getAggregatedRewards(params)
-  }
-
   async getClaimDistributionTx(
     params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {

@@ -76,9 +76,9 @@ import { getUnstakeFleetTokensTx } from './armada-protocol-handlers/users/getUns
 import { getUserEarnedRewards } from './armada-protocol-handlers/users/getUserEarnedRewards'
 import { getUserBalance } from './armada-protocol-handlers/users/getUserBalance'
 import { getSummerToken } from './armada-protocol-handlers/users/getSummerToken'
+import { getSummerPrice } from './armada-protocol-handlers/users/getSummerPrice'
 import { getDelegationChainLength } from './armada-protocol-handlers/users/getDelegationChainLength'
 import { pingHandler } from './handlers/pingHandler'
-import { getClaimableAggregatedRewards } from './armada-protocol-handlers/users/getClaimableAggregatedRewards'
 import { getMigratablePositions } from './armada-protocol-handlers/users/getMigratablePositions'
 import { getMigrationTX } from './armada-protocol-handlers/users/getMigrationTX'
 import { getBridgeTx } from './armada-protocol-handlers/users/getBridgeTx'
@@ -181,7 +181,6 @@ export const sdkAppRouter = router({
       getBridgeTx: getBridgeTx,
       getAggregatedRewards: getAggregatedRewards,
       getAggregatedRewardsIncludingMerkl: getAggregatedRewardsIncludingMerkl,
-      getClaimableAggregatedRewards: getClaimableAggregatedRewards,
       getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
       getDelegateTx: getDelegateTx,
@@ -210,6 +209,7 @@ export const sdkAppRouter = router({
       getUnstakeFleetTokensTx: getUnstakeFleetTokensTx,
       getUserBalance: getUserBalance,
       getSummerToken: getSummerToken,
+      getSummerPrice: getSummerPrice,
       getDelegationChainLength: getDelegationChainLength,
       getMigratablePositions: getMigratablePositions,
       getMigratablePositionsApy: getMigratablePositionsApy,

@@ -17,6 +17,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getSummerToken.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getSummerPrice */
+  async getSummerPrice(
+    params?: Parameters<IArmadaManagerUsersClient['getSummerPrice']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getSummerPrice']> {
+    return this.rpcClient.armada.users.getSummerPrice.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaultsRaw']>[0]) {
     return this.rpcClient.armada.users.getVaultsRaw.query(params)
@@ -159,12 +166,6 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getAggregatedRewardsIncludingMerkl']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getAggregatedRewardsIncludingMerkl']> {
     return this.rpcClient.armada.users.getAggregatedRewardsIncludingMerkl.query(params)
-  }
-
-  async getClaimableAggregatedRewards(
-    params: Parameters<IArmadaManagerUsersClient['getClaimableAggregatedRewards']>[0],
-  ): ReturnType<IArmadaManagerUsersClient['getClaimableAggregatedRewards']> {
-    return this.rpcClient.armada.users.getClaimableAggregatedRewards.query(params)
   }
 
   async getAggregatedClaimsForChainTx(

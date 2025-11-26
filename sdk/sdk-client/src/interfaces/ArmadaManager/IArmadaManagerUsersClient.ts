@@ -62,6 +62,16 @@ export interface IArmadaManagerUsersClient {
   getSummerToken(params: { chainInfo: IChainInfo }): Promise<IToken>
 
   /**
+   * @method getSummerPrice
+   * @description Retrieves the current price of the Summer token
+   *
+   * @param params - Optional parameters
+   * @param params.override - Optional price override value
+   * @returns The current price of the Summer token
+   */
+  getSummerPrice(params?: { override?: number }): Promise<{ price: number }>
+
+  /**
    * @method getVaultsRaw
    * @description Retrieves all protocol vaults
    *
@@ -378,19 +388,6 @@ export interface IArmadaManagerUsersClient {
     vaultUsage: bigint
     merkleDistribution: bigint
     voteDelegation: bigint
-  }>
-
-  /**
-   * @method getClaimableAggregatedRewards
-   * @description Returns the claimable aggregated rewards of a user in a Fleet
-   *
-   * @param user Address of the user to check the rewards for
-   *
-   * @returns The claimable aggregated rewards of the user in the Fleet
-   */
-  getClaimableAggregatedRewards(params: { user: IUser }): Promise<{
-    total: bigint
-    perChain: Record<number, bigint>
   }>
 
   /**
