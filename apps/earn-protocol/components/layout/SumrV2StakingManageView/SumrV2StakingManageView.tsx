@@ -669,6 +669,7 @@ const SumrV2StakingManageComponent = ({
                         <Link
                           href={`https://basescan.org/address/${stakingContractAddress}`}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           Go to basescan
                         </Link>
