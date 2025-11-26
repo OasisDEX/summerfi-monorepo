@@ -53,6 +53,16 @@ export interface StakingSimulationDataV2 {
 }
 
 /**
+ * @description Staking stats result from protocol subgraph
+ */
+export interface StakingStatsV2 {
+  summerStakedNormalized: string
+  averageLockupPeriod: number | null
+  amountOfLockedStakes: string | null
+  circulatingSupply: string
+}
+
+/**
  * @name IArmadaManagerGovernance
  * @description Interface for the Armada Manager Token which handles delegating votes
  *
@@ -341,4 +351,12 @@ export interface IArmadaManagerGovernance {
    * @returns Object containing staking configuration
    */
   getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
+
+  /**
+   * @method getStakingStatsV2
+   * @description Returns staking statistics from the protocol subgraph
+   *
+   * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
+   */
+  getStakingStatsV2(): Promise<StakingStatsV2>
 }

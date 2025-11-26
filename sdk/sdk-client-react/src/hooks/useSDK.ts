@@ -36,6 +36,7 @@ import { getStakingTotalSumrStakedV2Handler } from '../handlers/getStakingTotalS
 import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueShareV2Handler'
 import { getStakingSimulationDataV2Handler } from '../handlers/getStakingSimulationDataV2Handler'
 import { getStakingConfigV2Handler } from '../handlers/getStakingConfigV2Handler'
+import { getStakingStatsV2Handler } from '../handlers/getStakingStatsV2Handler'
 import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
 import { getProtocolTvlHandler } from '../handlers/getProtocolTvlHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
@@ -162,6 +163,7 @@ export const useSDK = (params: UseSdk) => {
   const getStakingRevenueShareV2 = useMemo(() => getStakingRevenueShareV2Handler(sdk), [sdk])
   const getStakingSimulationDataV2 = useMemo(() => getStakingSimulationDataV2Handler(sdk), [sdk])
   const getStakingConfigV2 = useMemo(() => getStakingConfigV2Handler(sdk), [sdk])
+  const getStakingStatsV2 = useMemo(() => getStakingStatsV2Handler(sdk), [sdk])
   const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
   const getProtocolTvl = useMemo(() => getProtocolTvlHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
@@ -235,6 +237,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
       getStakingConfigV2,
+      getStakingStatsV2,
       getProtocolRevenue,
       getProtocolTvl,
       getUserDelegatee,

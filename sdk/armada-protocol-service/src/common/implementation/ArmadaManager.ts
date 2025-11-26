@@ -139,6 +139,7 @@ export class ArmadaManager implements IArmadaManager {
       ...params,
       hubChainInfo: this._hubChainInfo,
       contractsProvider: this._contractsProvider,
+      configProvider: this._configProvider,
       utils: this.utils,
       vaults: this.vaults,
     })
