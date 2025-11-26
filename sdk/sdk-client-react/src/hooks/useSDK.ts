@@ -304,6 +304,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
       getStakingConfigV2,
+      getStakingStatsV2,
       getProtocolRevenue,
       getProtocolTvl,
       getUserDelegatee,
