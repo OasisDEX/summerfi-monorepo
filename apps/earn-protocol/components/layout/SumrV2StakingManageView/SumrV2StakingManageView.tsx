@@ -336,7 +336,7 @@ const SumrV2StakingManageComponent = ({
         // Format average lock duration from seconds to days
         if (stakingStats.averageLockupPeriod) {
           const averageDays = new BigNumber(stakingStats.averageLockupPeriod.toString())
-            // .dividedBy(86400) // Convert seconds to days
+            .dividedBy(86400) // Convert seconds to days
             .toFormat(0, BigNumber.ROUND_DOWN)
 
           setAverageLockDuration(averageDays)
