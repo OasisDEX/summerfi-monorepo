@@ -30,7 +30,6 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-comm
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import type { IContractsProvider } from '@summerfi/contracts-provider-common'
-import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
