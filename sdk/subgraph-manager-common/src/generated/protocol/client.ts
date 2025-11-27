@@ -11681,6 +11681,13 @@ export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>
 
 export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', id: string, symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', outputTokenPriceUSD?: string | null, inputTokenPriceUSD?: string | null, id: string, name?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string }, protocol: { __typename?: 'YieldAggregator', network: Network } } }> };
 
+export type GetStakingStatsV2QueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetStakingStatsV2Query = { __typename?: 'Query', governanceStakings: Array<{ __typename?: 'GovernanceStaking', id: string, summerStakedNormalized: string, averageLockupPeriod?: bigint | null, amountOfLockedStakes?: bigint | null }> };
+
 export type GetLatestActivityQueryVariables = Exact<{
   timestamp?: InputMaybe<Scalars['BigInt']['input']>;
   first: Scalars['Int']['input'];
@@ -11721,8 +11728,8 @@ export type GetPositionQuery = { __typename?: 'Query', positions: Array<{ __type
 
 export type GetDepositsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -11730,8 +11737,8 @@ export type GetDepositsQuery = { __typename?: 'Query', position?: { __typename?:
 
 export type GetWithdrawalsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -11831,6 +11838,16 @@ export const GetGlobalRebalancesDocument = gql`
         network
       }
     }
+  }
+}
+    `;
+export const GetStakingStatsV2Document = gql`
+    query GetStakingStatsV2($id: ID!) {
+  governanceStakings(where: {id: $id}) {
+    id
+    summerStakedNormalized
+    averageLockupPeriod
+    amountOfLockedStakes
   }
 }
     `;
@@ -12101,7 +12118,7 @@ export const GetPositionDocument = gql`
 }
     `;
 export const GetDepositsDocument = gql`
-    query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
+    query GetDeposits($id: ID!, $first: Int, $skip: Int) {
   position(id: $id) {
     id
     deposits(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
@@ -12125,7 +12142,7 @@ export const GetDepositsDocument = gql`
 }
     `;
 export const GetWithdrawalsDocument = gql`
-    query GetWithdrawals($id: ID!, $first: Int!, $skip: Int!) {
+    query GetWithdrawals($id: ID!, $first: Int, $skip: Int) {
   position(id: $id) {
     id
     withdrawals(
@@ -12471,6 +12488,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetGlobalRebalances(variables?: GetGlobalRebalancesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetGlobalRebalancesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetGlobalRebalancesQuery>({ document: GetGlobalRebalancesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetGlobalRebalances', 'query', variables);
+    },
+    GetStakingStatsV2(variables: GetStakingStatsV2QueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStakingStatsV2Query> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetStakingStatsV2Query>({ document: GetStakingStatsV2Document, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStakingStatsV2', 'query', variables);
     },
     GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetLatestActivityQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>({ document: GetLatestActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetLatestActivity', 'query', variables);

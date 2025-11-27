@@ -12044,8 +12044,8 @@ export type GetPositionQuery = { __typename?: 'Query', positions: Array<{ __type
 
 export type GetDepositsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -12053,8 +12053,8 @@ export type GetDepositsQuery = { __typename?: 'Query', position?: { __typename?:
 
 export type GetWithdrawalsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
-  first: Scalars['Int']['input'];
-  skip: Scalars['Int']['input'];
+  first?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -12308,7 +12308,7 @@ export const GetPositionDocument = gql`
 }
     `;
 export const GetDepositsDocument = gql`
-    query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
+    query GetDeposits($id: ID!, $first: Int, $skip: Int) {
   position(id: $id) {
     id
     deposits(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
@@ -12332,7 +12332,7 @@ export const GetDepositsDocument = gql`
 }
     `;
 export const GetWithdrawalsDocument = gql`
-    query GetWithdrawals($id: ID!, $first: Int!, $skip: Int!) {
+    query GetWithdrawals($id: ID!, $first: Int, $skip: Int) {
   position(id: $id) {
     id
     withdrawals(
