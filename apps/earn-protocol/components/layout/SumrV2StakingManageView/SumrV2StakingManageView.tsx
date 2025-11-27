@@ -223,9 +223,6 @@ const SumrV2StakingManageComponent = ({
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
   const [revenueShare, setRevenueShare] = useState<number>(0)
   const [maxApy, setMaxApy] = useState<string>('0')
-  const [circulatingSupply, setCirculatingSupply] = useState<string>('0')
-  const [percentageStaked, setPercentageStaked] = useState<string>('0')
-  const [averageLockDuration, setAverageLockDuration] = useState<string>('0')
   const [simulationLoading, setSimulationLoading] = useState(false)
   const [simulationData, setSimulationData] = useState<{
     usdcYieldApy: string
@@ -257,7 +254,6 @@ const SumrV2StakingManageComponent = ({
     getStakingSimulationDataV2,
     getSummerToken,
     getStakingConfigV2,
-    getStakingStatsV2,
   } = useAppSDK()
 
   // Fetch staking buckets info and other staking data on mount
@@ -272,26 +268,18 @@ const SumrV2StakingManageComponent = ({
         })
 
         // Fetch all data in parallel for better performance
-        const [
-          bucketsInfo,
-          totalStaked,
-          revenue,
-          revenueShareData,
-          rewardRates,
-          stakingConfig,
-          stakingStats,
-        ] = await Promise.all([
-          getStakingBucketsInfoV2(),
-          getStakingTotalSumrStakedV2(),
-          getProtocolRevenue(),
-          getStakingRevenueShareV2(),
-          getStakingRewardRatesV2({
-            rewardTokenAddress: summerToken.address,
-            sumrPriceUsd,
-          }),
-          getStakingConfigV2(),
-          getStakingStatsV2(),
-        ])
+        const [bucketsInfo, totalStaked, revenue, revenueShareData, rewardRates, stakingConfig] =
+          await Promise.all([
+            getStakingBucketsInfoV2(),
+            getStakingTotalSumrStakedV2(),
+            getProtocolRevenue(),
+            getStakingRevenueShareV2(),
+            getStakingRewardRatesV2({
+              rewardTokenAddress: summerToken.address,
+              sumrPriceUsd,
+            }),
+            getStakingConfigV2(),
+          ])
 
         // Process and set all the data
         const availabilityMap = mapBucketsInfoToAvailabilityMap(bucketsInfo)
@@ -314,33 +302,6 @@ const SumrV2StakingManageComponent = ({
         setRevenueShare(revenueShareData.percentage.value)
 
         setMaxApy(new BigNumber(rewardRates.maxApy.value).toFormat(2, BigNumber.ROUND_DOWN))
-
-        // Process staking stats
-        const circulatingSupplyFormatted = new BigNumber(stakingStats.circulatingSupply)
-          .dividedBy(1000000)
-          .toFormat(2, BigNumber.ROUND_DOWN)
-
-        setCirculatingSupply(circulatingSupplyFormatted)
-
-        // Calculate percentage of circulating SUMR staked
-        const percentStaked =
-          parseFloat(stakingStats.circulatingSupply) === 0
-            ? '0.00'
-            : new BigNumber(stakingStats.summerStakedNormalized)
-                .dividedBy(stakingStats.circulatingSupply)
-                .times(100)
-                .toFormat(2, BigNumber.ROUND_DOWN)
-
-        setPercentageStaked(percentStaked)
-
-        // Format average lock duration from seconds to days
-        if (stakingStats.averageLockupPeriod) {
-          const averageDays = new BigNumber(stakingStats.averageLockupPeriod.toString())
-            .dividedBy(86400) // Convert seconds to days
-            .toFormat(0, BigNumber.ROUND_DOWN)
-
-          setAverageLockDuration(averageDays)
-        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to fetch staking data:', error)
@@ -358,7 +319,6 @@ const SumrV2StakingManageComponent = ({
     getStakingRewardRatesV2,
     getSummerToken,
     getStakingConfigV2,
-    getStakingStatsV2,
     sumrPriceUsd,
   ])
 
@@ -639,32 +599,20 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: '% of circulating SUMR Staked',
-                    value: sdkDataOnMountLoading ? (
-                      <SkeletonLine width={60} height={16} />
-                    ) : (
-                      `${percentageStaked}%`
-                    ),
+                    value: 'GRAPH',
                   },
                   {
                     label: 'Total circulating SUMR supply',
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Icon iconName="sumr" size={16} />
-                        {sdkDataOnMountLoading ? (
-                          <SkeletonLine width={60} height={16} />
-                        ) : (
-                          <Text variant="p3semi">{`${circulatingSupply}m`}</Text>
-                        )}
+                        <Text variant="p3semi">GRAPH</Text>
                       </div>
                     ),
                   },
                   {
                     label: 'Average SUMR lock duration',
-                    value: sdkDataOnMountLoading ? (
-                      <SkeletonLine width={60} height={16} />
-                    ) : (
-                      `${averageLockDuration} days`
-                    ),
+                    value: 'GRAPH',
                   },
                 ]}
               />

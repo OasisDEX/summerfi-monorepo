@@ -11,7 +11,6 @@ import {
   type UserStakingBalanceByBucket,
   type StakingRewardRates,
   type StakingSimulationDataV2,
-  type StakingStatsV2,
 } from '@summerfi/armada-protocol-common'
 import {
   BridgeTransactionInfo,
@@ -727,14 +726,6 @@ export interface IArmadaManagerUsersClient {
    * @returns Object containing staking configuration
    */
   getStakingConfigV2(): Promise<{ stakingContractAddress: AddressValue }>
-
-  /**
-   * @method getStakingStatsV2
-   * @description Returns staking statistics from the protocol subgraph
-   *
-   * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
-   */
-  getStakingStatsV2(): Promise<StakingStatsV2>
 
   /**
    * @method getMigratablePositions

@@ -153,12 +153,6 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
-  getStakingStatsV2({ chainId, id }: Parameters<IArmadaSubgraphManager['getStakingStatsV2']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetStakingStatsV2({
-      id: id.toLowerCase(),
-    })
-  }
-
   /** PRIVATE */
   _getClient<T extends SubgraphType>(
     subgraphType: T,

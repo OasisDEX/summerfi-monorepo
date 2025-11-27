@@ -1,4 +1,4 @@
-import type { ChainId, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
+import type { ChainId, HexData, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
 import type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -10,7 +10,6 @@ import type {
   GetPositionQuery,
   GetPositionHistoryQuery,
   Position_Filter,
-  GetStakingStatsV2Query,
 } from '../generated/protocol/client'
 import type {
   GetVaultQuery as GetVaultQueryInstitutions,
@@ -201,18 +200,4 @@ export interface IArmadaSubgraphManager {
     targetContract?: string
     owner?: string
   }): Promise<GetRolesQuery>
-
-  /**
-   * @name getStakingStatsV2
-   * @description Get governance staking statistics from the protocol subgraph
-   *
-   * @param chainId target chain
-   * @param id stats record id
-   *
-   * @returns StakingStatsV2
-   *
-   * @throws Error
-   *
-   */
-  getStakingStatsV2(params: { chainId: ChainId; id: string }): Promise<GetStakingStatsV2Query>
 }
