@@ -223,7 +223,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   </>
                 )}
               </Text>
-              <Button variant="primarySmall">Stake your SUMR</Button>
+              <Link href="/staking/manage" prefetch>
+                <Button variant="primarySmall">Stake your SUMR</Button>
+              </Link>
             </Card>
           </GradientBox>
           <GradientBox style={{ cursor: 'auto' }}>
