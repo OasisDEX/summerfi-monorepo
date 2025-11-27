@@ -117,8 +117,7 @@ const AlreadyStakingSumrCard = ({
             ${formatCryptoBalance(sumrAvailableToStake * sumrPrice)}
           </Text>
         </Text>
-        {/* Huh? */}
-        <Link href="Huh?" prefetch>
+        <Link href="/staking/manage" prefetch>
           <Button variant="primarySmall">Stake</Button>
         </Link>
       </div>

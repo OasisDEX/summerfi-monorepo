@@ -230,8 +230,8 @@ const SumrV2StakingManageComponent = ({
     usdcYieldBoost: number
     usdcBlendedYieldBoostFrom: number
     usdcBlendedYieldBoostTo: number
-    usdcYieldUsdPerYear: string
-    sumrRewardAmount: string
+    usdcYieldUsdPerYear: BigNumber
+    sumrRewardAmount: BigNumber
     userStakesCountBefore: string
     userStakesCountAfter: string
   } | null>(null)
@@ -404,13 +404,9 @@ const SumrV2StakingManageComponent = ({
           .times(sumrPriceUsd)
           .times(simulation.usdcYieldApy.value)
           .dividedBy(100)
-          .toFormat(2, BigNumber.ROUND_DOWN)
 
         // Calculate SUMR reward amount per year
-        const sumrRewardAmount = amountParsed
-          .times(simulation.sumrRewardApy.value)
-          .dividedBy(100)
-          .toFormat(2, BigNumber.ROUND_DOWN)
+        const sumrRewardAmount = amountParsed.times(simulation.sumrRewardApy.value).dividedBy(100)
 
         setSimulationData({
           usdcYieldApy: new BigNumber(simulation.usdcYieldApy.value).toFormat(
@@ -826,7 +822,9 @@ const SumrV2StakingManageComponent = ({
                     }
                     value={simulationData ? `${simulationData.usdcYieldApy}%` : '-'}
                     subValue={
-                      simulationData ? `$${simulationData.usdcYieldUsdPerYear} a year` : '-'
+                      simulationData
+                        ? `$${formatCryptoBalance(simulationData.usdcYieldUsdPerYear)} a year`
+                        : '-'
                     }
                     subValueType="positive"
                     wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
@@ -859,7 +857,11 @@ const SumrV2StakingManageComponent = ({
                       </div>
                     }
                     value={simulationData ? `${simulationData.sumrRewardApy}%` : '-'}
-                    subValue={simulationData ? `+${simulationData.sumrRewardAmount} SUMR` : '-'}
+                    subValue={
+                      simulationData
+                        ? `+${formatCryptoBalance(simulationData.sumrRewardAmount)} SUMR`
+                        : '-'
+                    }
                     subValueType="positive"
                     wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
                   />
