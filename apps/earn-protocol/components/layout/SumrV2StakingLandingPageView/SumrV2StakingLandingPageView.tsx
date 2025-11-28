@@ -258,12 +258,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 >
                   <Icon iconName="usdc_circle_color" variant="s" />
                   <Text as="p" variant="p2semi">
-                    SUMR Staking USD Yield
+                    USDC real yield
                   </Text>
                   <Tooltip
                     tooltip={
                       <Text as="p" variant="p4semi">
-                        $SUMR available to claim across all networks. Mainet, Base, and Arbitrum
+                        USDC yield is derived from Lazy Summer Protocol revenues and distributes
+                        weekly directly to your wallet
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
@@ -311,7 +312,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   <Tooltip
                     tooltip={
                       <Text as="p" variant="p4semi">
-                        Huh?
+                        The % yield you are earning on your SUMR based on your lock duration
+                        multiple and SUMR market cap.
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
@@ -360,7 +362,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   <Tooltip
                     tooltip={
                       <Text as="p" variant="p4semi">
-                        Huh?
+                        Annualized revenue derived from fee’s charged to all depositors in the Lazy
+                        Summer Protocol
                       </Text>
                     }
                     tooltipWrapperStyles={{ minWidth: '240px' }}
