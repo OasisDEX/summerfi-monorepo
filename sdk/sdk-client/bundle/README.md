@@ -1,6 +1,6 @@
 # SDK API Reference v2
 
-**Latest version: v2.1.0**
+**Latest version: v2.2.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -443,6 +443,182 @@ if (position) {
     claimableSummerToken: position.claimableSummerToken.toString(),
   })
 }
+```
+
+### Retrieve Position Deposits
+
+Get a list of all deposit transactions for a specific position. Returns detailed information about
+each deposit including amounts, USD values, timestamps, and transaction hashes.
+
+**Parameters:**
+
+- **positionId**: The position ID object containing user and vault information
+- **first** (optional): Number of deposits to retrieve (default: 1000)
+- **skip** (optional): Number of deposits to skip for pagination (default: 0)
+
+**Example:**
+
+```typescript
+import { ArmadaPositionId, User, ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Create user and position ID
+const user = User.createFromEthereum(ChainIds.Base, '0x...')
+const fleetAddress = Address.createFromEthereum({ value: '0x...' })
+
+const positionId = ArmadaPositionId.createFrom({
+  id: `${user.wallet.address.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+  user,
+})
+
+// Get deposits
+const deposits = await sdk.armada.users.getDeposits({ positionId })
+
+// With pagination
+const depositsPage = await sdk.armada.users.getDeposits({
+  positionId,
+  first: 10,
+  skip: 0,
+})
+
+// Access deposit data
+deposits.forEach((deposit) => {
+  console.log('Deposit:', {
+    from: deposit.from, // Address that initiated the deposit
+    to: deposit.to, // Vault address
+    amount: deposit.amount.toString(), // Deposited amount in token units
+    amountUsd: deposit.amountUsd.toString(), // USD value at deposit time
+    timestamp: new Date(deposit.timestamp * 1000).toISOString(),
+    txHash: deposit.txHash, // Transaction hash
+    vaultBalance: deposit.vaultBalance.toString(), // Total vault balance after deposit
+    vaultBalanceUsd: deposit.vaultBalanceUsd.toString(), // Total vault balance in USD
+  })
+})
+```
+
+**Response:**
+
+Returns an array of `IArmadaDeposit` objects.
+
+```json
+[
+  {
+    "from": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+    "to": "0xaBcD1234567890aBcD1234567890aBcD12345678",
+    "amount": {
+      "amount": "1000",
+      "token": {
+        "symbol": "USDC",
+        "decimals": 6
+      }
+    },
+    "amountUsd": {
+      "amount": "1000.00",
+      "fiat": "USD"
+    },
+    "timestamp": 1735401234,
+    "txHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+    "vaultBalance": {
+      "amount": "5000",
+      "token": {
+        "symbol": "USDC",
+        "decimals": 6
+      }
+    },
+    "vaultBalanceUsd": {
+      "amount": "5000.00",
+      "fiat": "USD"
+    }
+  }
+]
+```
+
+### Retrieve Position Withdrawals
+
+Get a list of all withdrawal transactions for a specific position. Returns detailed information
+about each withdrawal including amounts, USD values, timestamps, and transaction hashes.
+
+**Parameters:**
+
+- **positionId**: The position ID object containing user and vault information
+- **first** (optional): Number of withdrawals to retrieve (default: 1000)
+- **skip** (optional): Number of withdrawals to skip for pagination (default: 0)
+
+**Example:**
+
+```typescript
+import { ArmadaPositionId, User, ChainIds, Address } from '@summer_fi/sdk-client'
+import { sdk } from './sdk'
+
+// Create user and position ID
+const user = User.createFromEthereum(ChainIds.Base, '0x...')
+const fleetAddress = Address.createFromEthereum({ value: '0x...' })
+
+const positionId = ArmadaPositionId.createFrom({
+  id: `${user.wallet.address.value.toLowerCase()}-${fleetAddress.value.toLowerCase()}`,
+  user,
+})
+
+// Get withdrawals
+const withdrawals = await sdk.armada.users.getWithdrawals({ positionId })
+
+// With pagination
+const withdrawalsPage = await sdk.armada.users.getWithdrawals({
+  positionId,
+  first: 10,
+  skip: 0,
+})
+
+// Access withdrawal data
+withdrawals.forEach((withdrawal) => {
+  console.log('Withdrawal:', {
+    from: withdrawal.from, // Vault address
+    to: withdrawal.to, // Address receiving the withdrawal
+    amount: withdrawal.amount.toString(), // Withdrawn amount in token units
+    amountUsd: withdrawal.amountUsd.toString(), // USD value at withdrawal time
+    timestamp: new Date(withdrawal.timestamp * 1000).toISOString(),
+    txHash: withdrawal.txHash, // Transaction hash
+    vaultBalance: withdrawal.vaultBalance.toString(), // Total vault balance after withdrawal
+    vaultBalanceUsd: withdrawal.vaultBalanceUsd.toString(), // Total vault balance in USD
+  })
+})
+```
+
+**Response:**
+
+Returns an array of `IArmadaWithdrawal` objects.
+
+```json
+[
+  {
+    "from": "0xaBcD1234567890aBcD1234567890aBcD12345678",
+    "to": "0x742d35Cc6633C0532925a3b8D84c94f8855C4ba2",
+    "amount": {
+      "amount": "500",
+      "token": {
+        "symbol": "USDC",
+        "decimals": 6
+      }
+    },
+    "amountUsd": {
+      "amount": "500.00",
+      "fiat": "USD"
+    },
+    "timestamp": 1735487634,
+    "txHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+    "vaultBalance": {
+      "amount": "4500",
+      "token": {
+        "symbol": "USDC",
+        "decimals": 6
+      }
+    },
+    "vaultBalanceUsd": {
+      "amount": "4500.00",
+      "fiat": "USD"
+    }
+  }
+]
 ```
 
 ### Retrieve Position History
@@ -1753,6 +1929,35 @@ enum FiatCurrency {
 ```
 
 ## Changelog
+
+### v2.2.0
+
+**Features:**
+
+- **📊 Position Transaction History**: New methods to retrieve detailed deposit and withdrawal
+  transaction history
+
+  - **getDeposits** - Fetch all deposit transactions for a specific position
+    - Returns detailed information for each deposit including amounts, USD values, timestamps, and
+      transaction hashes
+    - Includes vault balance after each deposit for tracking position growth
+    - Supports pagination with `first` and `skip` parameters (default: first 1000 records)
+    - Each deposit includes:
+      - `from`: Address that initiated the deposit
+      - `to`: Vault address receiving the deposit
+      - `amount`: Deposited amount as ITokenAmount
+      - `amountUsd`: USD value at deposit time as IFiatCurrencyAmount
+      - `timestamp`: Unix timestamp of the transaction
+      - `txHash`: Transaction hash for blockchain verification
+      - `vaultBalance`: Total vault balance after deposit as ITokenAmount
+      - `vaultBalanceUsd`: Total vault balance in USD after deposit
+  - **getWithdrawals** - Fetch all withdrawal transactions for a specific position
+    - Returns detailed information for each withdrawal with the same structure as deposits
+    - Tracks vault balance after each withdrawal
+    - Supports pagination with `first` and `skip` parameters (default: first 1000 records)
+    - Useful for audit trails, tax reporting, and transaction history analysis
+  - Both methods return empty arrays for positions with no transactions
+  - Results are ordered by timestamp in descending order (newest first)
 
 ### v2.1.0
 
