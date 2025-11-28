@@ -17,6 +17,7 @@
     "e2e:allVaults": "jest --roots e2e -- ./e2e/armadaProtocol.allVaults.test.ts",
     "e2e:positions": "jest --roots e2e -- ./e2e/armadaProtocol.positions.test.ts",
     "e2e:positionsHistory": "jest --roots e2e -- ./e2e/armadaProtocol.positionsHistory.test.ts",
+    "e2e:depositsWithdrawals": "jest --roots e2e -- ./e2e/armadaProtocol.depositsWithdrawals.test.ts",
     "e2e:unstake": "jest --roots e2e -- ./e2e/armadaProtocol.unstake.test.ts",
     "e2e:deposit": "jest --roots e2e -- ./e2e/armadaProtocol.deposit.test.ts",
     "e2e:withdraw": "jest --roots e2e -- ./e2e/armadaProtocol.withdraw.test.ts",

@@ -153,6 +153,28 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
+  getDeposits(params: Parameters<IArmadaSubgraphManager['getDeposits']>[0]) {
+    return this._getClient(
+      this._config.subgraphType,
+      params.positionId.user.chainInfo.chainId,
+    ).GetDeposits({
+      id: params.positionId.id.toLowerCase(),
+      first: params.first ?? 1000,
+      skip: params.skip ?? 0,
+    })
+  }
+
+  getWithdrawals(params: Parameters<IArmadaSubgraphManager['getWithdrawals']>[0]) {
+    return this._getClient(
+      this._config.subgraphType,
+      params.positionId.user.chainInfo.chainId,
+    ).GetWithdrawals({
+      id: params.positionId.id.toLowerCase(),
+      first: params.first ?? 1000,
+      skip: params.skip ?? 0,
+    })
+  }
+
   /** PRIVATE */
   _getClient<T extends SubgraphType>(
     subgraphType: T,

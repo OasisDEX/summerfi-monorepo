@@ -15,6 +15,8 @@ import {
   type AmountValue,
   type ChainId,
   type Erc20TransferTransactionInfo,
+  type IArmadaDeposit,
+  type IArmadaWithdrawal,
 } from '@summerfi/sdk-common'
 import type {
   GetGlobalRebalancesQuery,
@@ -306,4 +308,36 @@ export interface IArmadaManagerUtils {
     recipientAddress: IAddress
     amount: ITokenAmount
   }): Promise<Erc20TransferTransactionInfo[]>
+
+  /**
+   * @name getDeposits
+   * @description Get deposits for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first Optional number of items to return
+   * @param skip Optional number of items to skip for pagination
+   *
+   * @returns Array of deposit transactions with amount, timestamp, and vault balance
+   */
+  getDeposits(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<IArmadaDeposit[]>
+
+  /**
+   * @name getWithdrawals
+   * @description Get withdrawals for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first Optional number of items to return
+   * @param skip Optional number of items to skip for pagination
+   *
+   * @returns Array of withdrawal transactions with amount, timestamp, and vault balance
+   */
+  getWithdrawals(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<IArmadaWithdrawal[]>
 }

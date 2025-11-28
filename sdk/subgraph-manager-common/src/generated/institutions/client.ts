@@ -12042,6 +12042,24 @@ export type GetPositionQueryVariables = Exact<{
 
 export type GetPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: bigint, outputTokenBalance: bigint, stakedInputTokenBalance: bigint, stakedOutputTokenBalance: bigint, createdTimestamp: bigint, inputTokenDeposits: bigint, inputTokenWithdrawals: bigint, inputTokenDepositsNormalizedInUSD: string, inputTokenWithdrawalsNormalizedInUSD: string, claimedSummerToken: bigint, claimableSummerToken: bigint, claimedSummerTokenNormalized: string, claimableSummerTokenNormalized: string, vault: { __typename?: 'Vault', id: string, inputTokenBalance: bigint, inputTokenPriceUSD?: string | null, outputTokenPriceUSD?: string | null, pricePerShare?: string | null, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string }, rewards: Array<{ __typename?: 'PositionRewards', claimedNormalized: string, claimableNormalized: string, rewardToken: { __typename?: 'Token', symbol: string, lastPriceUSD?: string | null } }> }> };
 
+export type GetDepositsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
+
+
+export type GetDepositsQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, deposits: Array<{ __typename?: 'Deposit', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> } | null };
+
+export type GetWithdrawalsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
+
+
+export type GetWithdrawalsQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, withdrawals: Array<{ __typename?: 'Withdraw', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> } | null };
+
 export type GetRolesQueryVariables = Exact<{
   id: Scalars['ID']['input'];
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -12289,6 +12307,59 @@ export const GetPositionDocument = gql`
   }
 }
     `;
+export const GetDepositsDocument = gql`
+    query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
+  position(id: $id) {
+    id
+    deposits(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
+      id
+      from
+      to
+      timestamp
+      hash
+      asset {
+        id
+        symbol
+        name
+        decimals
+      }
+      amount
+      inputTokenBalance
+      amountUSD
+      inputTokenBalanceNormalizedUSD
+    }
+  }
+}
+    `;
+export const GetWithdrawalsDocument = gql`
+    query GetWithdrawals($id: ID!, $first: Int!, $skip: Int!) {
+  position(id: $id) {
+    id
+    withdrawals(
+      first: $first
+      skip: $skip
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      id
+      from
+      to
+      timestamp
+      hash
+      asset {
+        id
+        symbol
+        name
+        decimals
+      }
+      amount
+      inputTokenBalance
+      amountUSD
+      inputTokenBalanceNormalizedUSD
+    }
+  }
+}
+    `;
 export const GetRolesDocument = gql`
     query GetRoles($id: ID!, $first: Int = 1000, $skip: Int = 0, $name: String, $targetContract: String, $owner: String) {
   roles(
@@ -12469,6 +12540,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetPosition(variables: GetPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetPositionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPositionQuery>({ document: GetPositionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetPosition', 'query', variables);
+    },
+    GetDeposits(variables: GetDepositsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetDepositsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetDepositsQuery>({ document: GetDepositsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetDeposits', 'query', variables);
+    },
+    GetWithdrawals(variables: GetWithdrawalsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetWithdrawalsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetWithdrawalsQuery>({ document: GetWithdrawalsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetWithdrawals', 'query', variables);
     },
     GetRoles(variables: GetRolesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetRolesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRolesQuery>({ document: GetRolesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetRoles', 'query', variables);

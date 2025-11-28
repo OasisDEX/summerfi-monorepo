@@ -1,4 +1,4 @@
-import type { ChainId, HexData, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
+import type { ChainId, IAddress, IArmadaPositionId, IUser } from '@summerfi/sdk-common'
 import type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
@@ -10,6 +10,8 @@ import type {
   GetPositionQuery,
   GetPositionHistoryQuery,
   Position_Filter,
+  GetDepositsQuery,
+  GetWithdrawalsQuery,
 } from '../generated/protocol/client'
 import type {
   GetVaultQuery as GetVaultQueryInstitutions,
@@ -200,4 +202,42 @@ export interface IArmadaSubgraphManager {
     targetContract?: string
     owner?: string
   }): Promise<GetRolesQuery>
+
+  /**
+   * @name getDeposits
+   * @description Get deposits for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first number of items to return (optional)
+   * @param skip number of items to skip for pagination (optional)
+   *
+   * @returns GetDepositsQuery
+   *
+   * @throws Error
+   *
+   */
+  getDeposits(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<GetDepositsQuery>
+
+  /**
+   * @name getWithdrawals
+   * @description Get withdrawals for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first number of items to return (optional)
+   * @param skip number of items to skip for pagination (optional)
+   *
+   * @returns GetWithdrawalsQuery
+   *
+   * @throws Error
+   *
+   */
+  getWithdrawals(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<GetWithdrawalsQuery>
 }

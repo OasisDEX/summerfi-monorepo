@@ -43,6 +43,8 @@ import {
   type VaultSwitchTransactionInfo,
   type WithdrawTransactionInfo,
   type HistoricalFleetRateResult,
+  type IArmadaDeposit,
+  type IArmadaWithdrawal,
 } from '@summerfi/sdk-common'
 
 /**
@@ -218,6 +220,38 @@ export interface IArmadaManagerUsersClient {
    * @returns GetPositionHistoryQuery with hourly, daily, and weekly snapshots
    */
   getPositionHistory(params: { positionId: IArmadaPositionId }): Promise<GetPositionHistoryQuery>
+
+  /**
+   * @method getDeposits
+   * @description Get deposits for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first Optional number of items to return
+   * @param skip Optional number of items to skip for pagination
+   *
+   * @returns Array of deposit transactions with amount, timestamp, and vault balance
+   */
+  getDeposits(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<IArmadaDeposit[]>
+
+  /**
+   * @method getWithdrawals
+   * @description Get withdrawals for a given Armada position ID with optional pagination
+   *
+   * @param positionId Position ID
+   * @param first Optional number of items to return
+   * @param skip Optional number of items to skip for pagination
+   *
+   * @returns Array of withdrawal transactions with amount, timestamp, and vault balance
+   */
+  getWithdrawals(params: {
+    positionId: IArmadaPositionId
+    first?: number
+    skip?: number
+  }): Promise<IArmadaWithdrawal[]>
 
   /**
    * @method getNewDepositTx

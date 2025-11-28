@@ -12,7 +12,7 @@ export {
 } from './common/types/ChainId'
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
 export type { DenominationData, Denomination } from './common/types/Denomination'
-export type { HexData } from './common/types/HexData'
+export { type HexData, isHexData } from './common/types/HexData'
 export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
@@ -217,6 +217,13 @@ export {
   isArmadaProtocol,
 } from './common/interfaces/IArmadaProtocol'
 export type { IArmadaProtocol, IArmadaProtocolData } from './common/interfaces/IArmadaProtocol'
+export { ArmadaDepositDataSchema, isArmadaDeposit } from './common/interfaces/IArmadaDeposit'
+export type { IArmadaDeposit } from './common/interfaces/IArmadaDeposit'
+export {
+  ArmadaWithdrawalDataSchema,
+  isArmadaWithdrawal,
+} from './common/interfaces/IArmadaWithdrawal'
+export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
 export { getViemChain } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
