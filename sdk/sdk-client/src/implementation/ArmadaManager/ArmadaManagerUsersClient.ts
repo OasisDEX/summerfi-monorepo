@@ -96,6 +96,16 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getPositionHistory.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getDeposits */
+  async getDeposits(params: Parameters<IArmadaManagerUsersClient['getDeposits']>[0]) {
+    return this.rpcClient.armada.users.getDeposits.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getWithdrawals */
+  async getWithdrawals(params: Parameters<IArmadaManagerUsersClient['getWithdrawals']>[0]) {
+    return this.rpcClient.armada.users.getWithdrawals.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getNewDepositTx */
   async getNewDepositTx(
     params: Parameters<IArmadaManagerUsersClient['getNewDepositTx']>[0],

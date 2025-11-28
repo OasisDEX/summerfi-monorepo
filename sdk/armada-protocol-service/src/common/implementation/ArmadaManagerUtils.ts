@@ -12,11 +12,15 @@ import {
   calculatePriceImpact,
   getChainInfoByChainId,
   IAddress,
+  Address,
+  Token,
   ITokenAmount,
   IUser,
   LoggingService,
   Price,
   TokenAmount,
+  FiatCurrency,
+  FiatCurrencyAmount,
   TransactionType,
   type IChainInfo,
   type HexData,
@@ -610,5 +614,120 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
         },
       },
     ]
+  }
+
+  /** @see IArmadaManagerUtils.getDeposits */
+  async getDeposits(
+    params: Parameters<IArmadaManagerUtils['getDeposits']>[0],
+  ): ReturnType<IArmadaManagerUtils['getDeposits']> {
+    const result = await this._subgraphManager.getDeposits({
+      positionId: params.positionId,
+      first: params.first,
+      skip: params.skip,
+    })
+    console.log('result', result)
+
+    if (!result.position?.deposits) {
+      return []
+    }
+
+    const deposits = result.position.deposits
+
+    console.log('deposits', deposits)
+
+    return deposits.map((deposit) => ({
+      from: deposit.from as AddressValue,
+      to: deposit.to as AddressValue,
+      amount: TokenAmount.createFrom({
+        amount: deposit.amount.toString(),
+        token: Token.createFrom({
+          chainInfo: params.positionId.user.chainInfo,
+          address: Address.createFromEthereum({
+            value: deposit.asset.id as AddressValue,
+          }),
+          symbol: deposit.asset.symbol,
+          name: deposit.asset.name,
+          decimals: deposit.asset.decimals,
+        }),
+      }),
+      amountUsd: FiatCurrencyAmount.createFrom({
+        amount: deposit.amountUSD,
+        fiat: FiatCurrency.USD,
+      }),
+      timestamp: Number(deposit.timestamp),
+      txHash: deposit.hash as HexData,
+      vaultBalance: TokenAmount.createFrom({
+        amount: deposit.inputTokenBalance.toString(),
+        token: Token.createFrom({
+          chainInfo: params.positionId.user.chainInfo,
+          address: Address.createFromEthereum({
+            value: deposit.asset.id as AddressValue,
+          }),
+          symbol: deposit.asset.symbol,
+          name: deposit.asset.name,
+          decimals: deposit.asset.decimals,
+        }),
+      }),
+      vaultBalanceUsd: FiatCurrencyAmount.createFrom({
+        amount: deposit.inputTokenBalanceNormalizedUSD,
+        fiat: FiatCurrency.USD,
+      }),
+    }))
+  }
+
+  /** @see IArmadaManagerUtils.getWithdrawals */
+  async getWithdrawals(
+    params: Parameters<IArmadaManagerUtils['getWithdrawals']>[0],
+  ): ReturnType<IArmadaManagerUtils['getWithdrawals']> {
+    const result = await this._subgraphManager.getWithdrawals({
+      positionId: params.positionId,
+      first: params.first,
+      skip: params.skip,
+    })
+
+    if (!result.position?.withdrawals) {
+      return []
+    }
+
+    const withdrawals = result.position.withdrawals
+
+    return withdrawals.map((withdrawal) => ({
+      from: withdrawal.from as AddressValue,
+      to: withdrawal.to as AddressValue,
+      amount: TokenAmount.createFrom({
+        amount: withdrawal.amount.toString(),
+        token: Token.createFrom({
+          chainInfo: params.positionId.user.chainInfo,
+          address: Address.createFromEthereum({
+            value: withdrawal.asset.id as AddressValue,
+          }),
+          symbol: withdrawal.asset.symbol,
+          name: withdrawal.asset.name,
+          decimals: withdrawal.asset.decimals,
+        }),
+      }),
+      amountUsd: FiatCurrencyAmount.createFrom({
+        amount: withdrawal.amountUSD,
+        fiat: FiatCurrency.USD,
+      }),
+      timestamp: Number(withdrawal.timestamp),
+      txHash: withdrawal.hash as HexData,
+      vaultBalance: TokenAmount.createFrom({
+        amount: withdrawal.inputTokenBalance.toString(),
+        token: Token.createFrom({
+          chainInfo: params.positionId.user.chainInfo,
+          address: Address.createFromEthereum({
+            value: withdrawal.asset.id as AddressValue,
+          }),
+          symbol: withdrawal.asset.symbol,
+          name: withdrawal.asset.name,
+          decimals: withdrawal.asset.decimals,
+        }),
+      }),
+      vaultBalanceUsd: FiatCurrencyAmount.createFrom({
+        amount: withdrawal.inputTokenBalanceNormalizedUSD,
+        fiat: FiatCurrency.USD,
+      }),
+    }))
   }
 }

@@ -11726,7 +11726,7 @@ export type GetDepositsQueryVariables = Exact<{
 }>;
 
 
-export type GetDepositsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, deposits: Array<{ __typename?: 'Deposit', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> }> };
+export type GetDepositsQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, deposits: Array<{ __typename?: 'Deposit', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> } | null };
 
 export type GetWithdrawalsQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -11735,7 +11735,7 @@ export type GetWithdrawalsQueryVariables = Exact<{
 }>;
 
 
-export type GetWithdrawalsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, withdrawals: Array<{ __typename?: 'Withdraw', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> }> };
+export type GetWithdrawalsQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, withdrawals: Array<{ __typename?: 'Withdraw', id: string, from: string, to: string, timestamp: bigint, hash: string, amount: bigint, inputTokenBalance: bigint, amountUSD: string, inputTokenBalanceNormalizedUSD: string, asset: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } }> } | null };
 
 export type GetRebalancesQueryVariables = Exact<{
   timestamp?: InputMaybe<Scalars['BigInt']['input']>;
@@ -12102,7 +12102,7 @@ export const GetPositionDocument = gql`
     `;
 export const GetDepositsDocument = gql`
     query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
-  positions(where: {id: $id}) {
+  position(id: $id) {
     id
     deposits(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       id
@@ -12126,7 +12126,7 @@ export const GetDepositsDocument = gql`
     `;
 export const GetWithdrawalsDocument = gql`
     query GetWithdrawals($id: ID!, $first: Int!, $skip: Int!) {
-  positions(where: {id: $id}) {
+  position(id: $id) {
     id
     withdrawals(
       first: $first

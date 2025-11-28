@@ -156,7 +156,7 @@ query GetPosition($id: ID!) {
 }
 
 query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
-  positions(where: { id: $id }) {
+  position(id: $id) {
     id
     deposits(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       id
@@ -179,7 +179,7 @@ query GetDeposits($id: ID!, $first: Int!, $skip: Int!) {
 }
 
 query GetWithdrawals($id: ID!, $first: Int!, $skip: Int!) {
-  positions(where: { id: $id }) {
+  position(id: $id) {
     id
     withdrawals(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc) {
       id

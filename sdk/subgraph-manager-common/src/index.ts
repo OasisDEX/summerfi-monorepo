@@ -11,6 +11,8 @@ export type {
   GetUserActivityQuery,
   GetPositionQuery,
   GetPositionHistoryQuery,
+  GetDepositsQuery,
+  GetWithdrawalsQuery,
   Position_Filter,
   Position,
   Deposit,

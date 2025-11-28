@@ -53,6 +53,8 @@ import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuth
 import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesMerklClaimTxHandler'
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
 import { getPositionHistoryHandler } from '../handlers/getPositionHistoryHandler'
+import { getDepositsHandler } from '../handlers/getDepositsHandler'
+import { getWithdrawalsHandler } from '../handlers/getWithdrawalsHandler'
 import { getTipRateHandler } from '../handlers/getTipRateHandler'
 import { getStakedBalanceHandler } from '../handlers/getStakedBalanceHandler'
 import { getUnstakeFleetTokensTxHandler } from '../handlers/getUnstakeFleetTokensTxHandler'
@@ -179,6 +181,8 @@ export const useSDK = (params: UseSdk) => {
   const getReferralFeesMerklClaimTx = useMemo(() => getReferralFeesMerklClaimTxHandler(sdk), [sdk])
   const getUserMerklRewards = useMemo(() => getUserMerklRewardsHandler(sdk), [sdk])
   const getPositionHistory = useMemo(() => getPositionHistoryHandler(sdk), [sdk])
+  const getDeposits = useMemo(() => getDepositsHandler(sdk), [sdk])
+  const getWithdrawals = useMemo(() => getWithdrawalsHandler(sdk), [sdk])
   const getTipRate = useMemo(() => getTipRateHandler(sdk), [sdk])
   const getUnstakeFleetTokensTx = useMemo(() => getUnstakeFleetTokensTxHandler(sdk), [sdk])
   const getStakedBalance = useMemo(() => getStakedBalanceHandler(sdk), [sdk])
@@ -209,6 +213,8 @@ export const useSDK = (params: UseSdk) => {
       getUserPositions,
       getUserPosition,
       getPositionHistory,
+      getDeposits,
+      getWithdrawals,
       getSwapQuote,
       getAggregatedRewards,
       getAggregatedRewardsIncludingMerkl,
@@ -277,6 +283,8 @@ export const useSDK = (params: UseSdk) => {
       getUserPositions,
       getUserPosition,
       getPositionHistory,
+      getDeposits,
+      getWithdrawals,
       getSwapQuote,
       getAggregatedRewards,
       getAggregatedRewardsIncludingMerkl,

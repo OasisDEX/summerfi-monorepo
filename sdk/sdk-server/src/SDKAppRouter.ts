@@ -25,6 +25,8 @@ import { getVaultRaw } from './armada-protocol-handlers/users/getVault'
 import { getVaultInfo } from './armada-protocol-handlers/users/getVaultInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getPositionHistory } from './armada-protocol-handlers/users/getPositionHistory'
+import { getDeposits } from './armada-protocol-handlers/users/getDeposits'
+import { getWithdrawals } from './armada-protocol-handlers/users/getWithdrawals'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
 import { getWithdrawTx } from './armada-protocol-handlers/users/getWithdrawTxTx'
@@ -169,6 +171,8 @@ export const sdkAppRouter = router({
       getVaultsHistoricalRates: getVaultsHistoricalRates,
       getPosition: getArmadaPosition,
       getPositionHistory: getPositionHistory,
+      getDeposits: getDeposits,
+      getWithdrawals: getWithdrawals,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
       getDepositTx: getDepositTx,
