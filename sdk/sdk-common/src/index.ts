@@ -12,7 +12,7 @@ export {
 } from './common/types/ChainId'
 export { DenominationDataSchema, isDenomination } from './common/types/Denomination'
 export type { DenominationData, Denomination } from './common/types/Denomination'
-export type { HexData, isHexData } from './common/types/HexData'
+export { type HexData, isHexData } from './common/types/HexData'
 export type { Maybe } from './common/types/Maybe'
 export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePosition'
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'

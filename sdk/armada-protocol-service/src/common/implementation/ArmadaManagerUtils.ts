@@ -625,15 +625,12 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
       first: params.first,
       skip: params.skip,
     })
-    console.log('result', result)
 
     if (!result.position?.deposits) {
       return []
     }
 
     const deposits = result.position.deposits
-
-    console.log('deposits', deposits)
 
     return deposits.map((deposit) => ({
       from: deposit.from as AddressValue,

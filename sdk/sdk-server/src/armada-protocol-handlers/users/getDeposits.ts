@@ -10,8 +10,8 @@ export const getDeposits = publicProcedure
   .input(
     z.object({
       positionId: z.custom<IArmadaPositionId>(isArmadaPositionId),
-      first: z.number().optional(),
-      skip: z.number().optional(),
+      first: z.number().int().min(1).max(1000).optional(),
+      skip: z.number().int().min(0).optional(),
     }),
   )
   .query(async (opts) => {

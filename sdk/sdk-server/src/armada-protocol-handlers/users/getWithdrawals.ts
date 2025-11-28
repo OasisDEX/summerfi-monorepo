@@ -10,8 +10,9 @@ export const getWithdrawals = publicProcedure
   .input(
     z.object({
       positionId: z.custom<IArmadaPositionId>(isArmadaPositionId),
-      first: z.number().optional(),
-      skip: z.number().optional(),
+      // constrain pagination parameters to safe ranges to avoid heavy or invalid queries
+      first: z.number().int().min(1).max(1000).optional(),
+      skip: z.number().int().min(0).optional(),
     }),
   )
   .query(async (opts) => {
