@@ -1,6 +1,6 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE_PROD}/summer-protocol-base/version/1.4.9-add-staking-v2/api'
-# schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+# schema: '${SUBGRAPH_BASE_PROD}/summer-protocol-base/version/1.4.9-add-staking-v2/api'
+schema: '${SUBGRAPH_BASE}/summer-protocol-base'
 documents: './src/queries/protocol/*.graphql'
 generates:
   src/generated/protocol/client.ts:
