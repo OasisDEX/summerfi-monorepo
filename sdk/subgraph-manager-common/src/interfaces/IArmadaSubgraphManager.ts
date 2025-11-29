@@ -12,6 +12,7 @@ import type {
   Position_Filter,
   GetDepositsQuery,
   GetWithdrawalsQuery,
+  GetStakingStatsV2Query,
 } from '../generated/protocol/client'
 import type {
   GetVaultQuery as GetVaultQueryInstitutions,
@@ -240,4 +241,18 @@ export interface IArmadaSubgraphManager {
     first?: number
     skip?: number
   }): Promise<GetWithdrawalsQuery>
+
+  /**
+   * @name getStakingStatsV2
+   * @description Get staking stats for a given Armada position ID
+   *
+   * @param chainId target chain
+   * @param id staking stats record ID
+   *
+   * @returns GetStakingStatsV2Query
+   *
+   * @throws Error
+   *
+   */
+  getStakingStatsV2(params: { chainId: ChainId; id: string }): Promise<GetStakingStatsV2Query>
 }
