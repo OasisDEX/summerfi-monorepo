@@ -1,6 +1,5 @@
 import { type FC } from 'react'
-import { Button, DataBlock, DataModule, Icon, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Button, DataBlock, DataModule, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 
 import sumrPriceBarStyles from './SumrPriceBar.module.css'
 
@@ -49,13 +48,16 @@ export const SumrPriceBar: FC<SumrPriceBarProps> = () => {
         title: (
           <div className={sumrPriceBarStyles.sumrPriceTitle}>
             <Text variant="p2semi">$SUMR Price</Text>
-            <Link href="Huh?">
-              <Button variant="unstyled">
-                <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+            <Button variant="unstyled" style={{ cursor: 'not-allowed' }}>
+              <Tooltip
+                tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
+                tooltipWrapperStyles={{ minWidth: '140px' }}
+              >
+                <Text variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
                   Buy SUMR
                 </Text>
-              </Button>
-            </Link>
+              </Tooltip>
+            </Button>
           </div>
         ),
         titleWithIconClassName: sumrPriceBarStyles.titleWithIconFullWidth,

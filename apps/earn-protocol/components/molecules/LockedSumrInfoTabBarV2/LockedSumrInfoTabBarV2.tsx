@@ -9,6 +9,7 @@ import {
   TabBar,
   Table,
   Text,
+  Tooltip,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
@@ -19,6 +20,7 @@ import {
   Pie,
   PieChart,
   ResponsiveContainer,
+  Tooltip as RechartsTooltip,
 } from 'recharts'
 
 import {
@@ -29,6 +31,7 @@ import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
+import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
@@ -69,7 +72,14 @@ const YourLockedSumrPositionsCards = () => {
                 color: 'var(--earn-protocol-secondary-40)',
               }}
             >
-              <Icon iconName="question_o" size={16} />
+              <Tooltip
+                tooltipWrapperStyles={{
+                  minWidth: '280px',
+                }}
+                tooltip="The maximum boost available for your SUMR rewards for staking SUMR, based on lock duration"
+              >
+                <Icon iconName="question_o" size={16} />
+              </Tooltip>
               Max boost: 7x
             </div>
           ),
@@ -83,9 +93,16 @@ const YourLockedSumrPositionsCards = () => {
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
-            <Link href="Huh?">
-              <WithArrow>Buy SUMR</WithArrow>
-            </Link>
+            <Tooltip
+              tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
+              tooltipWrapperStyles={{ minWidth: '140px' }}
+            >
+              <WithArrow style={{ cursor: 'not-allowed' }}>
+                <Text variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
+                  Buy SUMR
+                </Text>
+              </WithArrow>
+            </Tooltip>
           ),
         }}
         cardVariant="cardPrimary"
@@ -368,6 +385,33 @@ const AllLockedSumrPositionsPieChart = () => {
               />
             ))}
           </Pie>
+          <RechartsTooltip
+            formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
+            wrapperStyle={{
+              zIndex: 1000,
+              backgroundColor: 'var(--color-surface-subtle)',
+              borderRadius: '5px',
+              padding: '10px',
+              paddingTop: 0,
+              marginTop: 0,
+            }}
+            labelStyle={{
+              fontSize: '16px',
+              fontWeight: '700',
+              marginTop: '10px',
+              marginBottom: '10px',
+            }}
+            itemStyle={{
+              color: 'white !important',
+            }}
+            contentStyle={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              fontSize: '13px',
+              lineHeight: '11px',
+              letterSpacing: '-0.5px',
+            }}
+          />
 
           <Legend verticalAlign="top" align="right" layout="vertical" content={renderLegend} />
         </PieChart>

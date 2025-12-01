@@ -1,4 +1,4 @@
-import { Button, DataBlock, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -88,7 +88,14 @@ export const WaysToAccessSumr = ({
         <SectionCard className={waysToAccessSumrStyles.box}>
           <div className={waysToAccessSumrStyles.boxHeader}>
             <Icon iconName="sumr" size={35} />
-            <Text variant="h4">Buy SUMR</Text>
+            <Tooltip
+              tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
+              tooltipWrapperStyles={{ minWidth: '140px' }}
+            >
+              <Text variant="h4" style={{ color: 'var(--color-text-primary-disabled)' }}>
+                Buy SUMR
+              </Text>
+            </Tooltip>
           </div>
           <div className={waysToAccessSumrStyles.boxData}>
             <DataBlock
