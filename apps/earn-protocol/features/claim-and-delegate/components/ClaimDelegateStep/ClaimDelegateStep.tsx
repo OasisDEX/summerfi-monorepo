@@ -30,7 +30,7 @@ import {
   formatFiatBalance,
 } from '@summerfi/app-utils'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
@@ -80,18 +80,21 @@ interface ClaimDelegateStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  isJustDelegate?: boolean
 }
 
 export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   state,
   dispatch,
   externalData,
+  isJustDelegate,
 }) => {
   const { walletAddress } = useParams()
   const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
   const [delegatedTo, setDelegatedTo] = useState<TallyDelegate>()
   const [action, setAction] = useState<ClaimDelegateAction>()
   const { setChain } = useChain()
+  const { push } = useRouter()
   const { clientChainId } = useClientChainId()
 
   const [sortBy, setSortBy] = useState<DropdownRawOption>(
@@ -182,14 +185,22 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
       toast.success('Delegate has been updated', SUCCESS_TOAST_CONFIG)
 
-      if (action === ClaimDelegateAction.REMOVE) {
+      if (action === ClaimDelegateAction.REMOVE && !isJustDelegate) {
         dispatch({ type: 'update-delegatee', payload: ADDRESS_ZERO })
         dispatch({ type: 'update-step', payload: ClaimDelegateSteps.COMPLETED })
 
         return
       }
+      if (action === ClaimDelegateAction.REMOVE && isJustDelegate) {
+        push(`/portfolio/${userWalletAddress}?tab=${PortfolioTabs.REWARDS}`)
 
-      dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
+        return
+      }
+      if (isJustDelegate) {
+        push(`/portfolio/${userWalletAddress}?tab=${PortfolioTabs.REWARDS}`)
+      } else {
+        dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
+      }
     },
     onError: () => {
       dispatch({ type: 'update-delegate-status', payload: UiTransactionStatuses.FAILED })
@@ -519,7 +530,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                     disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                   >
                     <Text variant="p3semi" as="p">
-                      Claim & Forfeit staking yield
+                      {isJustDelegate ? 'Go back to portfolio' : 'Claim & Forfeit staking yield'}
                     </Text>
                   </Button>
                 </Link>

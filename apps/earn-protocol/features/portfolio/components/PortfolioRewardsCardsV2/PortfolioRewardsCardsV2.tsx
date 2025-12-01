@@ -167,11 +167,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
             </Text>
           </Button>
         ) : (
-          <Link
-            href={`/stake-delegate/${walletAddress}?step=stake`}
-            prefetch
-            onClick={handleRemoveStakeInOldModule}
-          >
+          <Link href={`/delegate/${walletAddress}`} prefetch onClick={handleRemoveStakeInOldModule}>
             <Button
               variant="unstyled"
               disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
@@ -291,7 +287,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
           </Button>
         ) : (
           <Link
-            href={`/stake-delegate/${walletAddress}`}
+            href={`/delegate/${walletAddress}`}
             prefetch
             onClick={handleChangeDelegateEventButton}
           >
