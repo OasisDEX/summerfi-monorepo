@@ -1098,7 +1098,7 @@ const SumrV2StakingManageComponent = ({
                     value: lockTimePeriodSummaryLabel,
                   },
                   {
-                    label: 'Yield boost multipler',
+                    label: 'Yield boost multiplier',
                     value: simulationLoading ? (
                       <SkeletonLine width={50} height={16} />
                     ) : simulationData ? (
@@ -1108,7 +1108,7 @@ const SumrV2StakingManageComponent = ({
                     ),
                   },
                   {
-                    label: 'Blended yield boost multipler',
+                    label: 'Blended yield boost multiplier',
                     value: simulationLoading ? (
                       <SkeletonLine width={90} height={16} />
                     ) : simulationData ? (
@@ -1302,7 +1302,7 @@ const SumrV2StakingSuccessComponent = ({
                 value: lockTimePeriodSummaryLabel,
               },
               {
-                label: 'Yield boost multipler',
+                label: 'Yield boost multiplier',
                 value: txData.usdcYieldBoost ? (
                   `${txData.usdcYieldBoost.toFixed(2)}x`
                 ) : (
@@ -1310,7 +1310,7 @@ const SumrV2StakingSuccessComponent = ({
                 ),
               },
               {
-                label: 'Blended yield boost multipler',
+                label: 'Blended yield boost multiplier',
                 value:
                   txData.usdcBlendedYieldBoostFrom !== undefined &&
                   txData.usdcBlendedYieldBoostTo !== undefined ? (

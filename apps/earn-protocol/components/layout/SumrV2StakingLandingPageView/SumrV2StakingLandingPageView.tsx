@@ -11,17 +11,20 @@ import {
   Text,
   Tooltip,
   useUserWallet,
+  WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
+import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
@@ -29,6 +32,8 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
+
+import lockEarningDiagram from '@/public/img/sumr/lock_earn_diagram.png'
 
 interface SumrV2StakingPageViewProps {}
 
@@ -445,7 +450,27 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   <Text variant="p2semi">How you earn 2 sources of yield USDC and SUMR?</Text>
                 </div>
               ),
-              content: 'Huh?',
+              content: (
+                <div className={sumrV2PageStyles.earn2SourcesOfEarningWrapper}>
+                  <Text variant="p2">
+                    Stake SUMR to earn boosted rewards, share in protocol revenues, and gain real
+                    governance power, all while turning your tokens into a yield bearing asset.
+                  </Text>
+                  <WithArrow>
+                    <Link href="https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/ ">
+                      Read the details
+                    </Link>
+                  </WithArrow>
+                  <Image
+                    src={lockEarningDiagram}
+                    alt="Lock and Earn Diagram"
+                    width={0}
+                    height={0}
+                    quality={95}
+                    style={{ width: '100%', height: 'auto', marginTop: 'var(--general-space-8)' }}
+                  />
+                </div>
+              ),
             },
             {
               title: (
@@ -456,7 +481,60 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   <Text variant="p2semi">What is SUMR Staking?</Text>
                 </div>
               ),
-              content: 'Huh? Huuuh? Huuuuuh? What? Huh?',
+              content: (
+                <div className={sumrV2PageStyles.whatIsSumrStakingWrapper}>
+                  <Text variant="p2">
+                    SUMR staking is how your share in the success of the Lazy Summer Protocol. Earn
+                    real yield in USDC from a share of the revenue that the protocol makes, while
+                    getting governance rights and continued SUMR rewards.
+                  </Text>
+                  <WithArrow>
+                    <Link href="Huh?">Read the details</Link>
+                  </WithArrow>
+                  <div className={sumrV2PageStyles.whatIsSumrStakingBlocksWrapper}>
+                    <div className={sumrV2PageStyles.whatIsSumrStakingBlock}>
+                      <Text variant="h5" className={sumrV2PageStyles.whatIsSumrStakingBlockNumber}>
+                        1
+                      </Text>
+                      <Text variant="p1semi">
+                        Earn SUMR and real USD Yield from protocol revenue.
+                      </Text>
+                    </div>
+                    <div className={sumrV2PageStyles.whatIsSumrStakingBlock}>
+                      <Text variant="h5" className={sumrV2PageStyles.whatIsSumrStakingBlockNumber}>
+                        2
+                      </Text>
+                      <Text variant="p1semi">Boost your rewards with time bound lockups.</Text>
+                    </div>
+                    <div className={sumrV2PageStyles.whatIsSumrStakingBlock}>
+                      <Text variant="h5" className={sumrV2PageStyles.whatIsSumrStakingBlockNumber}>
+                        3
+                      </Text>
+                      <Text variant="p1semi">
+                        Take part in governance and help shape the future of the protocol.
+                      </Text>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '24px',
+                    }}
+                  >
+                    {userWalletAddress ? (
+                      <Link href="/staking/manage" prefetch>
+                        <Button variant="primarySmall">Start staking</Button>
+                      </Link>
+                    ) : (
+                      <WalletLabel
+                        buttonVariant="primarySmall"
+                        customLoginLabel="Connect your wallet"
+                      />
+                    )}
+                  </div>
+                </div>
+              ),
             },
           ]}
         />
