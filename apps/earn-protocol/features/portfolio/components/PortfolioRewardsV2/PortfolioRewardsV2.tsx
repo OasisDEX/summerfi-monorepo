@@ -46,8 +46,6 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getSummerToken,
   } = useAppSDK()
 
-  const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
-
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const sumrPriceUsd = useMemo(
     () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
@@ -56,25 +54,26 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
   // Fetch all staking data on mount
   useEffect(() => {
+    if (!userWalletAddress) return
+
+    const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
+
     const fetchStakingData = async () => {
       try {
         // Fetch all data in parallel
         const [userBalance, rewardRates, stakingStats, userStaked] = await Promise.all([
-          userWalletAddress
-            ? getUserBalance({
-                userAddress: userWalletAddress as AddressValue,
-                chainId: ChainIds.Base,
-              })
-            : Promise.resolve(0n),
+          getUserBalance({
+            userAddress: userWalletAddress as AddressValue,
+            chainId: ChainIds.Base,
+          }),
           getStakingRewardRatesV2({
             sumrPriceUsd,
           }),
           getStakingStatsV2(),
-          userWalletAddress
-            ? getUserStakingSumrStaked({
-                user,
-              })
-            : Promise.resolve(0n),
+
+          getUserStakingSumrStaked({
+            user,
+          }),
         ])
 
         // Process user balance
