@@ -1,6 +1,6 @@
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType } from '@summerfi/app-earn-ui'
-import { Address, User, Wallet } from '@summerfi/sdk-common'
+import { type AddressValue } from '@summerfi/sdk-common'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -26,7 +26,7 @@ export const useSumrDelegateTransaction = ({
   isLoading: boolean
   error: Error | null
 } => {
-  const { getDelegateTx, getChainInfo } = useAppSDK()
+  const { getDelegateTxV2 } = useAppSDK()
   const { client } = useSmartAccountClient({ type: accountType })
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
@@ -41,18 +41,7 @@ export const useSumrDelegateTransaction = ({
       throw new Error('Delegate to address is required')
     }
 
-    const chainInfo = getChainInfo()
-
-    const delegateUser = User.createFrom({
-      chainInfo,
-      wallet: Wallet.createFrom({
-        address: Address.createFromEthereum({
-          value: delegateTo,
-        }),
-      }),
-    })
-
-    const tx = await getDelegateTx({ user: delegateUser })
+    const tx = await getDelegateTxV2({ delegateeAddress: delegateTo as AddressValue })
 
     if (tx === undefined) {
       throw new Error('Sumr delegate tx is undefined')

@@ -52,7 +52,9 @@ import { getAggregatedRewards } from './armada-protocol-handlers/users/getAggreg
 import { getAggregatedRewardsIncludingMerkl } from './armada-protocol-handlers/users/getAggregatedRewardsIncludingMerkl'
 import { getAggregatedClaimsForChainTx } from './armada-protocol-handlers/users/getAggregatedClaimsForChainTX'
 import { getUserDelegatee } from './armada-protocol-handlers/users/getUserDelegatee'
+import { getUserDelegateeV2 } from './armada-protocol-handlers/users/getUserDelegateeV2'
 import { getDelegateTx } from './armada-protocol-handlers/users/getDelegateTx'
+import { getDelegateTxV2 } from './armada-protocol-handlers/users/getDelegateTxV2'
 import { getErc20TokenTransferTx } from './armada-protocol-handlers/users/getErc20TokenTransferTx'
 import { getUndelegateTx } from './armada-protocol-handlers/users/getUndelegateTx'
 import { getUserVotes } from './armada-protocol-handlers/users/getUserVotes'
@@ -188,7 +190,9 @@ export const sdkAppRouter = router({
       getAggregatedRewardsIncludingMerkl: getAggregatedRewardsIncludingMerkl,
       getAggregatedClaimsForChainTx: getAggregatedClaimsForChainTx,
       getUserDelegatee: getUserDelegatee,
+      getUserDelegateeV2: getUserDelegateeV2,
       getDelegateTx: getDelegateTx,
+      getDelegateTxV2: getDelegateTxV2,
       getErc20TokenTransferTx: getErc20TokenTransferTx,
       getUndelegateTx: getUndelegateTx,
       getUserVotes: getUserVotes,

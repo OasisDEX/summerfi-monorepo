@@ -190,10 +190,22 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserDelegatee.query(params)
   }
 
+  async getUserDelegateeV2(
+    params: Parameters<IArmadaManagerUsersClient['getUserDelegateeV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserDelegateeV2']> {
+    return this.rpcClient.armada.users.getUserDelegateeV2.query(params)
+  }
+
   async getDelegateTx(
     params: Parameters<IArmadaManagerUsersClient['getDelegateTx']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getDelegateTx']> {
     return this.rpcClient.armada.users.getDelegateTx.query(params)
+  }
+
+  async getDelegateTxV2(
+    params: Parameters<IArmadaManagerUsersClient['getDelegateTxV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getDelegateTxV2']> {
+    return this.rpcClient.armada.users.getDelegateTxV2.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getErc20TokenTransferTx */

@@ -14,6 +14,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
+  AddressValue,
   StakingBucket,
   StakingBucketValues,
   TokenAmount,
@@ -97,6 +98,25 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     return Address.createFromEthereum({ value: addressResult })
   }
 
+  async getUserDelegateeV2(
+    params: Parameters<IArmadaManagerGovernance['getUserDelegateeV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserDelegateeV2']> {
+    const client = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: this._hubChainInfo,
+    })
+
+    const stakedSummerTokenAddress = await this._getStakeSummerTokenAddress()
+
+    const addressResult = await client.readContract({
+      abi: SummerTokenAbi,
+      address: stakedSummerTokenAddress,
+      functionName: 'delegates',
+      args: [params.userAddress],
+    })
+
+    return Address.createFromEthereum({ value: addressResult })
+  }
+
   async getDelegateTx(
     params: Parameters<IArmadaManagerGovernance['getDelegateTx']>[0],
   ): ReturnType<IArmadaManagerGovernance['getDelegateTx']> {
@@ -112,6 +132,30 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
         description: 'Delegating votes',
         transaction: {
           target: Address.createFromEthereum({ value: this._hubChainSummerTokenAddress.value }),
+          calldata: calldata,
+          value: '0',
+        },
+      },
+    ]
+  }
+
+  async getDelegateTxV2(
+    params: Parameters<IArmadaManagerGovernance['getDelegateTxV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getDelegateTxV2']> {
+    const stakedSummerTokenAddress = await this._getStakeSummerTokenAddress()
+
+    const calldata = encodeFunctionData({
+      abi: SummerTokenAbi,
+      functionName: 'delegate',
+      args: [params.delegateeAddress],
+    })
+
+    return [
+      {
+        type: TransactionType.Delegate,
+        description: 'Delegating votes',
+        transaction: {
+          target: Address.createFromEthereum({ value: stakedSummerTokenAddress }),
           calldata: calldata,
           value: '0',
         },
@@ -342,6 +386,17 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     } else {
       return [stakeTx]
     }
+  }
+
+  private async _getStakeSummerTokenAddress(): Promise<AddressValue> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    return stakingContract.stakeSummerTokenAddress()
   }
 
   async getStakeOnBehalfTxV2(
