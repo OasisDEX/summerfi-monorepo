@@ -34,10 +34,10 @@ const StakingInfoCards = () => {
         <Icon iconName="earn_user_activities" size={20} />
         <div className={portfolioStakingInfoCardStyles.whyStakeSumrBlockDescription}>
           <Text as="p" variant="p2semi">
-            Genuine revenue, real yield
+            Genuine revenue, real yield.
           </Text>
           <Text as="p" variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-            Protocol revenue flows seamlessly to SUMR stakers,
+            Protocol revenue flows seamlessly to SUMR stakers.
           </Text>
         </div>
       </div>
@@ -158,7 +158,7 @@ export const PortfolioStakingInfoCardV2 = ({
         <Icon iconName="sumr" size={32} />
         <Text variant="h5">
           {formatCryptoBalance(sumrUserData.sumrAvailableToStake)} SUMR available to stake. In
-          addition earn up to {formatDecimalAsPercent(usdcEarnedOnSumr)} USDC on your SUMR.
+          addition, earn up to {formatDecimalAsPercent(usdcEarnedOnSumr)} USDC yield on your SUMR.
         </Text>
       </div>
       <div className={portfolioStakingInfoCardStyles.yieldSourcesWrapper}>

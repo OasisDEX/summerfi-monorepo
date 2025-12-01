@@ -4,24 +4,16 @@ import { useAuthModal } from '@account-kit/react'
 import {
   Button,
   DataModule,
-  getVotingPowerColor,
   Icon,
   SUMR_CAP,
   Text,
   Tooltip,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import {
-  ADDRESS_ZERO,
-  formatCryptoBalance,
-  formatFiatBalance,
-  formatShorthandNumber,
-} from '@summerfi/app-utils'
-import clsx from 'clsx'
+import { ADDRESS_ZERO, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import {
   type ClaimDelegateExternalData,
@@ -249,27 +241,26 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
 
   const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
 
-  const votingPower = Number(
-    rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
-      ?.votePower ?? 1,
-  )
+  // const votingPower = Number(
+  //   rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
+  //     ?.votePower ?? 1,
+  // )
 
   const subValue =
-    sumrDelegatedTo !== ADDRESS_ZERO ? (
-      <div className={classNames.votingPower}>
-        <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
-          Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
-        </Text>
-        <Tooltip
-          tooltip="Vote and Reward Power reflects a delegates activity within governance. A 1.0 Power will give you full staking rewards. Anything less will reduce your reward amounts."
-          tooltipWrapperStyles={{ minWidth: '230px', left: '-200px' }}
-        >
-          <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
-        </Tooltip>
-      </div>
-    ) : (
-      'You have not delegated'
-    )
+    sumrDelegatedTo !== ADDRESS_ZERO
+      ? // <div className={classNames.votingPower}>
+        //   <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
+        //     Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
+        //   </Text>
+        //   <Tooltip
+        //     tooltip="Vote and Reward Power reflects a delegates activity within governance. A 1.0 Power will give you full staking rewards. Anything less will reduce your reward amounts."
+        //     tooltipWrapperStyles={{ minWidth: '230px', left: '-200px' }}
+        //   >
+        //     <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
+        //   </Tooltip>
+        // </div>
+        null
+      : 'You have not delegated'
 
   const handleChangeDelegateEventButton = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate`)
@@ -337,9 +328,9 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
       <div className={classNames.cardWrapper}>
         <SumrInOldStakingModule rewardsData={rewardsData} />
       </div>
-      <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
+      {/* <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
         <SumrPriceBar />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -168,7 +168,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               <>
                 SUMR Rewards{' '}
                 <Text variant="p4semi" className={classNames.nowTradingLabel}>
-                  Now Trading
+                  Staking V2 - Earn SUMR + USDC
                 </Text>
               </>
             ),

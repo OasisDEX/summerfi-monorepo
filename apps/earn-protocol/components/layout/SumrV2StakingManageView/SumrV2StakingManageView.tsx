@@ -691,7 +691,12 @@ const SumrV2StakingManageComponent = ({
                         ) : (
                           <Text variant="p3semi">{`${revenueShare}%`}</Text>
                         )}
-                        <Tooltip tooltip="Huh?">
+                        <Tooltip
+                          tooltip="USDC yield is derived from Lazy Summer Protocol Revenue. Specifically a % of total protocol revenue, which is 20%."
+                          tooltipWrapperStyles={{
+                            minWidth: '220px',
+                          }}
+                        >
                           <Icon iconName="info" size={16} />
                         </Tooltip>
                       </div>
@@ -744,7 +749,28 @@ const SumrV2StakingManageComponent = ({
             }
             expanderButtonClassName={sumrV2StakingManageViewStyles.expanderTitleButton}
           >
-            <Card className={sumrV2StakingManageViewStyles.sumrKeyStakingInfoCard}>Huh?</Card>
+            <Card className={sumrV2StakingManageViewStyles.sumrKeyStakingInfoCard}>
+              <Text variant="p2semi">You can create multiple positions.</Text>
+              <Text variant="p3">
+                You don’t need to fit everything into one lock. If capacity is limited or you want
+                flexibility, split your SUMR across several positions.
+              </Text>
+              <Text variant="p2semi">Longer locks = higher rewards</Text>
+              <Text variant="p3">
+                Higher conviction? Choose a longer lock to earn more SUMR and boost your earnings
+                over time.
+              </Text>
+              <Text variant="p2semi">Each lock duration has a cap</Text>
+              <Text variant="p3">
+                If one duration is at or near capacity, stake part of your SUMR in other available
+                buckets.
+              </Text>
+              <Text variant="p2semi">Early exits are penalized</Text>
+              <Text variant="p3">
+                Only lock for as long as you’re truly comfortable, exiting early reduces the amount
+                of SUMR you get back.
+              </Text>
+            </Card>
           </Expander>
           <Expander
             title={
@@ -756,7 +782,39 @@ const SumrV2StakingManageComponent = ({
             expanderButtonClassName={sumrV2StakingManageViewStyles.expanderTitleButton}
           >
             <Card className={sumrV2StakingManageViewStyles.sumrKeyStakingInfoCard}>
-              Huh? Huh? Huh? What? Huh? Huh?
+              <Text variant="p2semi">How do I earn yield when I stake?</Text>
+              <Text variant="p3">
+                You earn <strong>dual rewards,</strong>ongoing <strong>SUMR emissions</strong>plus a{' '}
+                <strong>share of protocol yield in USDC</strong>, paid as LV vault tokens that keep
+                compounding.
+              </Text>
+              <Text variant="p2semi">Why stake instead of just holding SUMR?</Text>
+              <Text variant="p3">
+                Holding gives you only price exposure.{' '}
+                <strong>
+                  Staking adds governance power, boosted SUMR rewards, and a direct share of
+                  protocol revenue
+                </strong>
+                on top.
+              </Text>
+              <Text variant="p2semi">How does SUMR earn value over time?</Text>
+              <Text variant="p3">
+                Lazy Summer charges fees on vault AUM. A portion of that{' '}
+                <strong>protocol revenue flows to the treasury and stakers</strong>, so as TVL
+                grows, the potential value to SUMR stakers can grow too (subject to governance).
+              </Text>
+              <Text variant="p2semi">Do I need to stake to use Lazy Summer?</Text>
+              <Text variant="p3">
+                No. Anyone can deposit into vaults without SUMR.{' '}
+                <strong>Staking is optional</strong>and is for users who want governance influence
+                and value capture from protocol growth.
+              </Text>
+              <Text variant="p2semi">What if I need to exit my lock early?</Text>
+              <Text variant="p3">
+                You can exit before your lock ends, but{' '}
+                <strong>an early withdrawal penalty applies</strong>, decreasing as you get closer
+                to the end of your lock.
+              </Text>
             </Card>
           </Expander>
         </div>
