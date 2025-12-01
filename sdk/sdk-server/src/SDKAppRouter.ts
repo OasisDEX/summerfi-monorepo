@@ -68,6 +68,7 @@ import { getUserStakesCount } from './armada-protocol-handlers/users/getUserStak
 import { getUserStakingBalanceV2 } from './armada-protocol-handlers/users/getUserStakingBalanceV2'
 import { getUserStakingWeightedBalanceV2 } from './armada-protocol-handlers/users/getUserStakingWeightedBalanceV2'
 import { getUserStakingEarnedV2 } from './armada-protocol-handlers/users/getUserStakingEarnedV2'
+import { getUserStakingSumrStaked } from './armada-protocol-handlers/users/getUserStakingSumrStaked'
 import { getStakingRewardRatesV2 } from './armada-protocol-handlers/users/getStakingRewardRatesV2'
 import { getStakingBucketsInfoV2 } from './armada-protocol-handlers/users/getStakingBucketsInfoV2'
 import { getStakingCalculateWeightedStakeV2 } from './armada-protocol-handlers/users/getStakingCalculateWeightedStakeV2'
@@ -207,6 +208,7 @@ export const sdkAppRouter = router({
       getUserStakingBalanceV2: getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2: getUserStakingWeightedBalanceV2,
       getUserStakingEarnedV2: getUserStakingEarnedV2,
+      getUserStakingSumrStaked: getUserStakingSumrStaked,
       getStakingRewardRatesV2: getStakingRewardRatesV2,
       getStakingBucketsInfoV2: getStakingBucketsInfoV2,
       getStakingCalculateWeightedStakeV2: getStakingCalculateWeightedStakeV2,

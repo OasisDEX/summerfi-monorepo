@@ -381,4 +381,14 @@ export interface IArmadaManagerGovernance {
    * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
    */
   getStakingStatsV2(): Promise<StakingStatsV2>
+
+  /**
+   * @method getUserStakingSumrStaked
+   * @description Returns the total amount of SUMR tokens staked by the user across all buckets
+   *
+   * @param user The user to get staking balance for
+   *
+   * @returns The total SUMR amount staked
+   */
+  getUserStakingSumrStaked: (params: { user: IUser }) => Promise<bigint>
 }

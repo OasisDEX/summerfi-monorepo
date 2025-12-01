@@ -49,7 +49,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [claimableSumrUsd, setClaimableSumrUsd] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')
   const [maxApyUsdPerYear, setMaxApyUsdPerYear] = useState<string>('0')
-  const [summerRewardApy, setSummerRewardApy] = useState<string>('0')
+  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   const [earnableSumr, setEarnableSumr] = useState<string>('0')
   const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
@@ -150,7 +150,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
           BigNumber.ROUND_DOWN,
         )
 
-        setSummerRewardApy(summerRewardApyValue)
+        setSumrRewardApy(summerRewardApyValue)
 
         // Calculate earnable SUMR per year
         const earnableSumrValue = new BigNumber(availableSumrValue)
@@ -335,7 +335,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{summerRewardApy}%</Text>
+                    <Text variant="h4">{sumrRewardApy}%</Text>
                   </div>
                 )
               }

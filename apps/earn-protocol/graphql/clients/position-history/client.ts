@@ -2833,6 +2833,8 @@ export enum GovernanceRewardsManager_OrderBy {
 export type GovernanceStaking = {
   __typename?: 'GovernanceStaking';
   accounts: Array<Account>;
+  amountOfLockedStakes?: Maybe<Scalars['BigInt']['output']>;
+  averageLockupPeriod?: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['ID']['output'];
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsAmount: Array<Scalars['BigInt']['output']>;
@@ -2875,7 +2877,23 @@ export type GovernanceStaking_Filter = {
   accounts_not?: InputMaybe<Array<Scalars['String']['input']>>;
   accounts_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
   accounts_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
+  amountOfLockedStakes?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amountOfLockedStakes_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_not?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   and?: InputMaybe<Array<InputMaybe<GovernanceStaking_Filter>>>;
+  averageLockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  averageLockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -2936,6 +2954,8 @@ export type GovernanceStaking_Filter = {
 
 export enum GovernanceStaking_OrderBy {
   accounts = 'accounts',
+  amountOfLockedStakes = 'amountOfLockedStakes',
+  averageLockupPeriod = 'averageLockupPeriod',
   id = 'id',
   rewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
   rewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
@@ -5124,6 +5144,8 @@ export type Query = {
   rewardTokens: Array<RewardToken>;
   rewardsManager?: Maybe<RewardsManager>;
   rewardsManagers: Array<RewardsManager>;
+  stakeLockup?: Maybe<StakeLockup>;
+  stakeLockups: Array<StakeLockup>;
   staked?: Maybe<Staked>;
   stakeds: Array<Staked>;
   token?: Maybe<Token>;
@@ -5643,6 +5665,24 @@ export type QueryRewardsManagersArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<RewardsManager_Filter>;
+};
+
+
+export type QueryStakeLockupArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryStakeLockupsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<StakeLockup_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<StakeLockup_Filter>;
 };
 
 
@@ -6557,6 +6597,140 @@ export enum RewardsManager_OrderBy {
   vault__withdrawableTotalAssetsUSD = 'vault__withdrawableTotalAssetsUSD'
 }
 
+export type StakeLockup = {
+  __typename?: 'StakeLockup';
+  account: Account;
+  amount: Scalars['BigInt']['output'];
+  amountNormalized: Scalars['BigDecimal']['output'];
+  endTimestamp: Scalars['BigInt']['output'];
+  id: Scalars['ID']['output'];
+  index: Scalars['BigInt']['output'];
+  lockupPeriod: Scalars['BigInt']['output'];
+  startTimestamp: Scalars['BigInt']['output'];
+  weightedAmount: Scalars['BigInt']['output'];
+  weightedAmountNormalized: Scalars['BigDecimal']['output'];
+};
+
+export type StakeLockup_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  account?: InputMaybe<Scalars['String']['input']>;
+  account_?: InputMaybe<Account_Filter>;
+  account_contains?: InputMaybe<Scalars['String']['input']>;
+  account_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_gt?: InputMaybe<Scalars['String']['input']>;
+  account_gte?: InputMaybe<Scalars['String']['input']>;
+  account_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_lt?: InputMaybe<Scalars['String']['input']>;
+  account_lte?: InputMaybe<Scalars['String']['input']>;
+  account_not?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  amount?: InputMaybe<Scalars['BigInt']['input']>;
+  amountNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  amountNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  amount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  and?: InputMaybe<Array<InputMaybe<StakeLockup_Filter>>>;
+  endTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  endTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  index?: InputMaybe<Scalars['BigInt']['input']>;
+  index_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  index_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  index_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  index_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  index_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  index_not?: InputMaybe<Scalars['BigInt']['input']>;
+  index_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<StakeLockup_Filter>>>;
+  startTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  startTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmountNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weightedAmountNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weightedAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+};
+
+export enum StakeLockup_OrderBy {
+  account = 'account',
+  account__claimedSummerToken = 'account__claimedSummerToken',
+  account__claimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
+  account__id = 'account__id',
+  account__lastUpdateBlock = 'account__lastUpdateBlock',
+  account__referralTimestamp = 'account__referralTimestamp',
+  account__stakedSummerToken = 'account__stakedSummerToken',
+  account__stakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
+  amount = 'amount',
+  amountNormalized = 'amountNormalized',
+  endTimestamp = 'endTimestamp',
+  id = 'id',
+  index = 'index',
+  lockupPeriod = 'lockupPeriod',
+  startTimestamp = 'startTimestamp',
+  weightedAmount = 'weightedAmount',
+  weightedAmountNormalized = 'weightedAmountNormalized'
+}
+
 export type Staked = Event & {
   __typename?: 'Staked';
   /**  Amount of token staked in native units  */
@@ -6964,6 +7138,8 @@ export type Subscription = {
   rewardTokens: Array<RewardToken>;
   rewardsManager?: Maybe<RewardsManager>;
   rewardsManagers: Array<RewardsManager>;
+  stakeLockup?: Maybe<StakeLockup>;
+  stakeLockups: Array<StakeLockup>;
   staked?: Maybe<Staked>;
   stakeds: Array<Staked>;
   token?: Maybe<Token>;
@@ -7483,6 +7659,24 @@ export type SubscriptionRewardsManagersArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<RewardsManager_Filter>;
+};
+
+
+export type SubscriptionStakeLockupArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionStakeLockupsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<StakeLockup_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<StakeLockup_Filter>;
 };
 
 

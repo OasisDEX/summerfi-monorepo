@@ -25,21 +25,19 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     <div className={classNames.wrapper}>
       <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
       <PortfolioStakingInfoCardV2
-        // Huh?
-        usdcEarnedOnSumr={0.076}
-        sumrPrice={0.0432}
-        sumrRewardApy={0.035}
+        usdcEarnedOnSumr={0.076} // maxApy as in staking landing page
+        sumrPrice={0.0432} // sumrPrice as in staking landing page
+        sumrRewardApy={0.035} // sumrRewardApy as in staking landing page
         stats={{
-          totalSumrStaked: 13000000,
-          circulatingSupply: 50000000,
-          percentStaked: 0.265,
-          averageLockDuration: 8240000,
+          totalSumrStaked: 13000000, // totalStaked as in staking manage view
+          circulatingSupply: 50000000, // circulatingSupply as in staking manage view
+          percentStaked: 0.265, // need to calculate as in totalStaked / circulatingSupply
+          averageLockDuration: 8240000, // averageLockDuration as in staking manage view
         }}
         sumrUserData={{
-          sumrAvailableToStake: 950,
-          sumrStaked: 14350,
+          sumrAvailableToStake: 950, // sumrAvailableToStake as in staking manage view
+          sumrStaked: 14350, // fetch using getUserStakingSumrStaked method from the useSdk
         }}
-        // Huh?
       />
     </div>
   )

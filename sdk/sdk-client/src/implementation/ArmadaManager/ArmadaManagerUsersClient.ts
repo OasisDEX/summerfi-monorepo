@@ -303,6 +303,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserStakingEarnedV2.query(params)
   }
 
+  async getUserStakingSumrStaked(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakingSumrStaked']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakingSumrStaked']> {
+    return this.rpcClient.armada.users.getUserStakingSumrStaked.query(params)
+  }
+
   async getStakingRewardRatesV2(
     params: Parameters<IArmadaManagerUsersClient['getStakingRewardRatesV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getStakingRewardRatesV2']> {

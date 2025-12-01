@@ -955,4 +955,16 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       circulatingSupply: '0',
     }
   }
+
+  async getUserStakingSumrStaked(
+    params: Parameters<IArmadaManagerGovernance['getUserStakingSumrStaked']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakingSumrStaked']> {
+    // Get all user staking balances by bucket
+    const balances = await this.getUserStakingBalanceV2({ user: params.user })
+
+    // Sum all amounts across all buckets
+    const totalStaked = balances.reduce((sum, balance) => sum + balance.amount, 0n)
+
+    return totalStaked
+  }
 }
