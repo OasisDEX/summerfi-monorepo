@@ -1,8 +1,9 @@
 import { type Dispatch, type FC, useEffect, useMemo, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
-import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
@@ -45,6 +46,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getSummerToken,
   } = useAppSDK()
 
+  const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
+
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const sumrPriceUsd = useMemo(
     () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
@@ -69,7 +72,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           getStakingStatsV2(),
           userWalletAddress
             ? getUserStakingSumrStaked({
-                userAddress: userWalletAddress as AddressValue,
+                user,
               })
             : Promise.resolve(0n),
         ])
@@ -94,7 +97,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
         // Format average lock duration from seconds to seconds (as expected by the component)
         if (stakingStats.averageLockupPeriod) {
-          setAverageLockDuration(stakingStats.averageLockupPeriod)
+          setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
         }
       } catch (error) {
         // eslint-disable-next-line no-console

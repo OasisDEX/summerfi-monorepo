@@ -6,7 +6,7 @@ export const getUserStakingEarnedV2 = publicProcedure
   .input(
     z.object({
       user: z.custom<IUser>(isUser),
-      rewardTokenAddress: z.custom<IAddress>(isAddress),
+      rewardTokenAddress: z.custom<IAddress>(isAddress).optional(),
     }),
   )
   .query(async (opts) => {

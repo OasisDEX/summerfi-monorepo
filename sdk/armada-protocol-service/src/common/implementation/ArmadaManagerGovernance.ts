@@ -592,12 +592,13 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
 
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
+    const rewardTokenAddress = params.rewardTokenAddress ?? this._hubChainSummerTokenAddress
 
     return client.readContract({
       abi: SummerStakingAbi,
       address: stakingContractAddress.value,
       functionName: 'earned',
-      args: [params.user.wallet.address.value, params.rewardTokenAddress.value],
+      args: [params.user.wallet.address.value, rewardTokenAddress.value],
     })
   }
 

@@ -281,11 +281,14 @@ export interface IArmadaManagerGovernance {
    * @description Returns the user's earned rewards (V2)
    *
    * @param user The user
-   * @param rewardTokenAddress The reward token address
+   * @param rewardTokenAddress The reward token address optional parameter (defaults to SUMR token)
    *
    * @returns The earned rewards
    */
-  getUserStakingEarnedV2: (params: { user: IUser; rewardTokenAddress: IAddress }) => Promise<bigint>
+  getUserStakingEarnedV2: (params: {
+    user: IUser
+    rewardTokenAddress?: IAddress
+  }) => Promise<bigint>
 
   /**
    * @method getStakingRewardRatesV2

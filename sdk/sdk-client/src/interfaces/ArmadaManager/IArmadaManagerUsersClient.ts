@@ -694,7 +694,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The earned rewards
    */
-  getUserStakingEarnedV2(params: { user: IUser; rewardTokenAddress: IAddress }): Promise<bigint>
+  getUserStakingEarnedV2(params: { user: IUser; rewardTokenAddress?: IAddress }): Promise<bigint>
   /**
    * @method getUserStakingSumrStaked
    * @description Returns the total amount of SUMR tokens staked by the user across all buckets
