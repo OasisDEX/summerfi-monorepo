@@ -81,12 +81,8 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
     })
 
     it('should get user staking earned rewards', async () => {
-      // Get SUMR token address as reward token
-      const summerToken = await sdk.armada.users.getSummerToken({ chainInfo })
-
       const earned = await sdk.armada.users.getUserStakingEarnedV2({
         user,
-        rewardTokenAddress: summerToken.address,
       })
 
       console.log('User earned rewards:', formatSumr(earned))
@@ -94,11 +90,7 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
     })
 
     it('should get staking reward rates', async () => {
-      // Get SUMR token address as reward token
-      const summerToken = await sdk.armada.users.getSummerToken({ chainInfo })
-
       const rewardRates = await sdk.armada.users.getStakingRewardRatesV2({
-        rewardTokenAddress: summerToken.address,
         sumrPriceUsd: summerPriceUsd,
       })
 

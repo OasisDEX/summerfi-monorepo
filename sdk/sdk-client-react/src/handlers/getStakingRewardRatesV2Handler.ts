@@ -7,7 +7,7 @@ export const getStakingRewardRatesV2Handler =
     rewardTokenAddress,
     sumrPriceUsd,
   }: {
-    rewardTokenAddress: IAddress
+    rewardTokenAddress?: IAddress
     sumrPriceUsd?: number
   }) => {
     return sdk.armada.users.getStakingRewardRatesV2({ rewardTokenAddress, sumrPriceUsd })

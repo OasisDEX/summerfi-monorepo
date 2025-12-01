@@ -5,7 +5,7 @@ import { isAddress, type IAddress } from '@summerfi/sdk-common'
 export const getStakingRewardRatesV2 = publicProcedure
   .input(
     z.object({
-      rewardTokenAddress: z.custom<IAddress>(isAddress),
+      rewardTokenAddress: z.custom<IAddress>(isAddress).optional(),
       sumrPriceUsd: z.number().optional(),
     }),
   )

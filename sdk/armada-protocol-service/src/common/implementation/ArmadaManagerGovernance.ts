@@ -611,9 +611,12 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
+    // Default to summer token address if not provided
+    const rewardTokenAddress = params.rewardTokenAddress ?? this._hubChainSummerTokenAddress
+
     // Use contract wrapper for all methods
     const [rewardData, allBucketInfo, _totalWeightedSupply] = await Promise.all([
-      stakingContract.rewardData({ rewardToken: params.rewardTokenAddress.value }),
+      stakingContract.rewardData({ rewardToken: rewardTokenAddress.value }),
       stakingContract.getAllBucketInfo(),
       stakingContract.totalSupply(),
     ])
@@ -640,7 +643,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       // Get reward token decimals
       const rewardToken = this._tokensManager.getTokenByAddress({
         chainInfo: this._hubChainInfo,
-        address: params.rewardTokenAddress,
+        address: rewardTokenAddress,
       })
       const rewardTokenDecimals = rewardToken?.decimals ?? 18
 

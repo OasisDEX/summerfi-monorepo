@@ -695,7 +695,6 @@ export interface IArmadaManagerUsersClient {
    * @returns The earned rewards
    */
   getUserStakingEarnedV2(params: { user: IUser; rewardTokenAddress: IAddress }): Promise<bigint>
-
   /**
    * @method getUserStakingSumrStaked
    * @description Returns the total amount of SUMR tokens staked by the user across all buckets
@@ -711,13 +710,13 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the staking reward rates including user-specific boost (V2)
    *
    * @param user The user to calculate boosted multiplier for
-   * @param rewardTokenAddress The reward token address
+   * @param rewardTokenAddress Optional reward token address (defaults to SUMR token)
    * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
   getStakingRewardRatesV2(params: {
-    rewardTokenAddress: IAddress
+    rewardTokenAddress?: IAddress
     sumrPriceUsd?: number
   }): Promise<StakingRewardRates>
 

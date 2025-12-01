@@ -16,7 +16,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -78,11 +78,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       try {
         setIsLoading(true)
 
-        // Fetch summer token for reward rates
-        const summerToken = await getSummerToken({
-          chainInfo: getChainInfoByChainId(ChainIds.Base),
-        })
-
         // Fetch all data in parallel
         const [userBalance, aggregatedRewards, rewardRates, revenue, tvl, revenueShare] =
           await Promise.all([
@@ -101,7 +96,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   total: 0n,
                 }),
             getStakingRewardRatesV2({
-              rewardTokenAddress: summerToken.address,
               sumrPriceUsd,
             }),
             getProtocolRevenue(),
