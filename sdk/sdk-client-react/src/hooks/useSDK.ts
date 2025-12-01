@@ -18,6 +18,7 @@ import { getAggregatedRewardsHandler } from '../handlers/getAggregatedRewardsHan
 import { getAggregatedRewardsIncludingMerklHandler } from '../handlers/getAggregatedRewardsIncludingMerklHandler'
 import { getAggregatedClaimsForChainTXHandler } from '../handlers/getAggregatedClaimsForChainTXHandler'
 import { getDelegateTxHandler } from '../handlers/getDelegateTxHandler'
+import { getDelegateTxV2Handler } from '../handlers/getDelegateTxV2Handler'
 import { getStakeTxHandler } from '../handlers/getStakeTxHandler'
 import { getStakeTxV2Handler } from '../handlers/getStakeTxV2Handler'
 import { getStakeOnBehalfTxV2Handler } from '../handlers/getStakeOnBehalfTxV2Handler'
@@ -40,6 +41,7 @@ import { getStakingStatsV2Handler } from '../handlers/getStakingStatsV2Handler'
 import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
 import { getProtocolTvlHandler } from '../handlers/getProtocolTvlHandler'
 import { getUserDelegateeHandler } from '../handlers/getUserDelegateeHandler'
+import { getUserDelegateeV2Handler } from '../handlers/getUserDelegateeV2Handler'
 import { getUserStakedBalanceHandler } from '../handlers/getUserStakedBalanceHandler'
 import { getUserVotesHandler } from '../handlers/getUserVotesHandler'
 import { getSummerTokenHandler } from '../handlers/getSummerTokenHandler'
@@ -138,6 +140,7 @@ export const useSDK = (params: UseSdk) => {
 
   const getBridgeTx = useMemo(() => getBridgeTxHandler(sdk), [sdk])
   const getDelegateTx = useMemo(() => getDelegateTxHandler(sdk), [sdk])
+  const getDelegateTxV2 = useMemo(() => getDelegateTxV2Handler(sdk), [sdk])
   const getStakeTx = useMemo(() => getStakeTxHandler(sdk), [sdk])
   const getStakeTxV2 = useMemo(() => getStakeTxV2Handler(sdk), [sdk])
   const getStakeOnBehalfTxV2 = useMemo(() => getStakeOnBehalfTxV2Handler(sdk), [sdk])
@@ -169,6 +172,7 @@ export const useSDK = (params: UseSdk) => {
   const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
   const getProtocolTvl = useMemo(() => getProtocolTvlHandler(sdk), [sdk])
   const getUserDelegatee = useMemo(() => getUserDelegateeHandler(sdk), [sdk])
+  const getUserDelegateeV2 = useMemo(() => getUserDelegateeV2Handler(sdk), [sdk])
   const getUserStakedBalance = useMemo(() => getUserStakedBalanceHandler(sdk), [sdk])
   const getUserVotes = useMemo(() => getUserVotesHandler(sdk), [sdk])
   const getSummerToken = useMemo(() => getSummerTokenHandler(sdk), [sdk])
@@ -225,6 +229,7 @@ export const useSDK = (params: UseSdk) => {
       getCrossChainDepositTx,
       getCrossChainWithdrawTx,
       getDelegateTx,
+      getDelegateTxV2,
       getStakeTx,
       getStakeTxV2,
       getStakeOnBehalfTxV2,
@@ -247,6 +252,7 @@ export const useSDK = (params: UseSdk) => {
       getProtocolRevenue,
       getProtocolTvl,
       getUserDelegatee,
+      getUserDelegateeV2,
       getUserStakedBalance,
       getUserVotes,
       getSummerToken,
@@ -293,6 +299,7 @@ export const useSDK = (params: UseSdk) => {
       getAggregatedRewardsIncludingMerkl,
       getAggregatedClaimsForChainTx,
       getDelegateTx,
+      getDelegateTxV2,
       getBridgeTx,
       getStakeTx,
       getStakeTxV2,
@@ -316,6 +323,7 @@ export const useSDK = (params: UseSdk) => {
       getProtocolRevenue,
       getProtocolTvl,
       getUserDelegatee,
+      getUserDelegateeV2,
       getUserStakedBalance,
       getUserVotes,
       getSummerToken,

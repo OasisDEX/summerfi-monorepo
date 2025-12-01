@@ -79,6 +79,16 @@ export interface IArmadaManagerGovernance {
   getUserDelegatee: (params: { user: IUser }) => Promise<IAddress>
 
   /**
+   * @method getUserDelegateeV2
+   * @description Returns delegatee selected in the staked SUMR contract (V2)
+   *
+   * @param userAddress Address whose delegatee should be fetched
+   *
+   * @returns The delegatee address recorded in the staking contract
+   */
+  getUserDelegateeV2: (params: { userAddress: AddressValue }) => Promise<IAddress>
+
+  /**
    * @method getDelegateTx
    * @description Delegates votes from the sender to delegatee
    *
@@ -87,6 +97,16 @@ export interface IArmadaManagerGovernance {
    * @returns The transaction information
    */
   getDelegateTx: (params: { user: IUser }) => Promise<[DelegateTransactionInfo]>
+
+  /**
+   * @method getDelegateTxV2
+   * @description Delegates votes for the staked SUMR token (V2)
+   *
+   * @param delegateeAddress Address that should receive delegated votes
+   *
+   * @returns The transaction information
+   */
+  getDelegateTxV2: (params: { delegateeAddress: AddressValue }) => Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUndelegateTx
