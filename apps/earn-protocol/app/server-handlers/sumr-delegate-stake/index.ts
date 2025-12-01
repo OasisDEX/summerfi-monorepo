@@ -1,6 +1,6 @@
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { SummerTokenAbi, SummerVestingWalletFactoryAbi } from '@summerfi/armada-protocol-abis'
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
+import { ChainIds, getChainInfoByChainId, User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { type Address } from 'viem'
 
@@ -58,25 +58,15 @@ export const getSumrDelegateStake = async ({
     }
 
     try {
-      const [sumrAmountResult, delegatedToResult] = await publicClient.multicall({
-        contracts: [
-          {
-            abi: SummerTokenAbi,
-            address: sumrToken.address.value,
-            functionName: 'balanceOf',
-            args: [resolvedWalletAddress],
-          },
-          {
-            abi: SummerTokenAbi,
-            address: sumrToken.address.value,
-            functionName: 'delegates',
-            args: [resolvedWalletAddress],
-          },
-        ],
-      })
+      const [sumrAmountResult, delegatedToResult] = await Promise.all([
+        backendSDK.armada.users.getUserBalance({
+          user: User.createFromEthereum(ChainIds.Base, resolvedWalletAddress),
+        }),
+        backendSDK.armada.users.getUserDelegateeV2({ userAddress: resolvedWalletAddress }),
+      ])
 
-      const _sumrAmount = sumrAmountResult.result
-      const delegatedTo = delegatedToResult.result
+      const _sumrAmount = sumrAmountResult
+      const delegatedTo = delegatedToResult.toSolidityValue()
 
       if (!delegatedTo) {
         throw new Error('Failed to fetch vesting or staking data or delegated to data')
