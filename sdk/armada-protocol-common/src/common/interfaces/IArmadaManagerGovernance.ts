@@ -106,7 +106,9 @@ export interface IArmadaManagerGovernance {
    *
    * @returns The transaction information
    */
-  getDelegateTxV2: (params: { delegateeAddress: AddressValue }) => Promise<[DelegateTransactionInfo]>
+  getDelegateTxV2: (params: {
+    delegateeAddress: AddressValue
+  }) => Promise<[DelegateTransactionInfo]>
 
   /**
    * @method getUndelegateTx
