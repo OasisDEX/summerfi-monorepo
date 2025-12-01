@@ -711,7 +711,7 @@ export const VaultsListView = ({
               onTooltipOpen={tooltipEventHandler}
               handleClick={() => {
                 buttonClickEventHandler('vaults-list-sumr-stake-card-click')
-                push(`/portfolio/${userWalletAddress}?tab=rewards`)
+                push(`/staking`)
               }}
             />
           )}

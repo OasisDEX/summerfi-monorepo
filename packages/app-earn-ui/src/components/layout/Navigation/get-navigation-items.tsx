@@ -17,6 +17,7 @@ export const getNavigationItems = ({
   const prefix = !isEarnApp ? `/earn` : ``
   const institutionsEnabled = features?.Institutions
   const teamPageEnabled = features?.Team
+  const stakingV2Enabled = features?.StakingV2
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
   const handleButtonClick = (buttonName: string) => () => {
@@ -34,34 +35,52 @@ export const getNavigationItems = ({
       ]
     : []
 
-  return [
-    {
-      label: 'Earn',
-      id: 'earn',
-      link: !isEarnApp ? `/earn` : `/`,
-      prefetchDisabled: !isEarnApp,
-      onClick: handleButtonClick('earn-app'),
-    },
-    ...portfolioLink,
-    {
-      label: 'Explore',
-      id: 'explore',
-      itemsList: [
+  const sumrCategory = stakingV2Enabled
+    ? [
         {
-          title: '$SUMR token',
-          id: 'sumr',
-          description: 'Claim your $SUMR tokens',
-          url: `${prefix}/sumr`,
-          icon: 'sumr',
-          prefetchDisabled: !isEarnApp,
-          onClick: handleButtonClick('sumr'),
+          label: '$SUMR',
+          id: 'sumr-category',
+          itemsList: [
+            {
+              title: 'Learn about $SUMR',
+              id: 'sumr',
+              description: 'Learn about SUMR tokenomics and view key stats.',
+              url: `${prefix}/sumr`,
+              icon: 'sumr' as IconNamesList,
+              prefetchDisabled: !isEarnApp,
+              onClick: handleButtonClick('sumr'),
+            },
+            {
+              title: 'Stake $SUMR',
+              id: 'sumr-stake',
+              description: 'Earn USD yield by staking your SUMR.',
+              url: `${prefix}/staking`,
+              icon: 'earn_user_activities' as IconNamesList,
+              prefetchDisabled: !isEarnApp,
+              onClick: handleButtonClick('sumr-stake'),
+            },
+            {
+              title: 'Governance',
+              id: 'governance',
+              description: 'The onchain decisions shaping Lazy Summer Protocol ',
+              url: `https://gov.summer.fi/dao`,
+              icon: 'earn_rebalance_activities' as IconNamesList,
+              prefetchDisabled: !isEarnApp,
+              onClick: handleButtonClick('governance'),
+            },
+          ],
         },
+      ]
+    : []
+
+  const itemsListExplore = stakingV2Enabled
+    ? [
         {
           url: `${prefix}/user-activity`,
           id: 'user-activity',
           title: 'User Activity',
           description: 'Transparent view of global user activity',
-          icon: 'earn_user_activities',
+          icon: 'earn_user_activities' as IconNamesList,
           prefetchDisabled: !isEarnApp,
           onClick: handleButtonClick('user-activity'),
         },
@@ -70,7 +89,7 @@ export const getNavigationItems = ({
           id: 'rebalancing-activity',
           title: 'Rebalancing Activity',
           description: 'Vault optimizations performed by AI-powered keepers',
-          icon: 'earn_rebalance_activities',
+          icon: 'earn_rebalance_activities' as IconNamesList,
           prefetchDisabled: !isEarnApp,
           onClick: handleButtonClick('rebalancing-activity'),
         },
@@ -102,14 +121,79 @@ export const getNavigationItems = ({
               },
             ]
           : []),
-        // {
-        //   url: `${prefix}/yield-trend`,
-        //   id: 'yield-trend',
-        //   title: 'Yield Trend',
-        //   description: 'Compare median DeFi yield to Lazy Summer AI-Optimized Yield',
-        //   icon: 'earn_yield_trend',
-        // },
-      ],
+      ]
+    : [
+        {
+          title: '$SUMR token',
+          id: 'sumr',
+          description: 'Claim your $SUMR tokens',
+          url: `${prefix}/sumr`,
+          icon: 'sumr' as IconNamesList,
+          prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('sumr'),
+        },
+        {
+          url: `${prefix}/user-activity`,
+          id: 'user-activity',
+          title: 'User Activity',
+          description: 'Transparent view of global user activity',
+          icon: 'earn_user_activities' as IconNamesList,
+          prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('user-activity'),
+        },
+        {
+          url: `${prefix}/rebalance-activity`,
+          id: 'rebalancing-activity',
+          title: 'Rebalancing Activity',
+          description: 'Vault optimizations performed by AI-powered keepers',
+          icon: 'earn_rebalance_activities' as IconNamesList,
+          prefetchDisabled: !isEarnApp,
+          onClick: handleButtonClick('rebalancing-activity'),
+        },
+        ...(institutionsEnabled
+          ? [
+              {
+                // `currentOrigin` is special case for institutions - it is always on the main domain (LP)
+                url: `${currentOrigin}/institutions`,
+                id: 'institutions',
+                title: 'Institutions',
+                description: 'Crypto native yield, for forward thinking institutions',
+                icon: 'earn_institution' as IconNamesList,
+                prefetchDisabled: !isEarnApp,
+                onClick: handleButtonClick('institutions'),
+              },
+            ]
+          : []),
+        ...(teamPageEnabled
+          ? [
+              {
+                // `currentOrigin` is special case for institutions - it is always on the main domain (LP)
+                url: `${currentOrigin}/team`,
+                id: 'team',
+                title: 'Team',
+                description: 'Leadership that’s helped shape DeFi from day 1',
+                icon: 'earn_1_on_1' as IconNamesList,
+                prefetchDisabled: !isEarnApp,
+                onClick: handleButtonClick('team'),
+              },
+            ]
+          : []),
+      ]
+
+  return [
+    {
+      label: 'Earn',
+      id: 'earn',
+      link: !isEarnApp ? `/earn` : `/`,
+      prefetchDisabled: !isEarnApp,
+      onClick: handleButtonClick('earn-app'),
+    },
+    ...portfolioLink,
+    ...sumrCategory,
+    {
+      label: 'Explore',
+      id: 'explore',
+      itemsList: itemsListExplore,
     },
     {
       label: 'Support',
