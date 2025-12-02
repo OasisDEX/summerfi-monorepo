@@ -35,6 +35,7 @@ import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
@@ -143,7 +144,11 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
     id: stake.index.toString(),
     content: {
       position: `#${stake.index} - ${formatTimestamp(stake.lockupEndTime)}`,
-      staked: <TableRightCell>{new BigNumber(stake.amount).div(1e18).toFormat(2)}</TableRightCell>,
+      staked: (
+        <TableRightCell>
+          {new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFormat(2)}
+        </TableRightCell>
+      ),
       lockPeriod: <TableCenterCell>{formatLockPeriod(stake.lockupPeriod)}</TableCenterCell>,
       rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
       usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
