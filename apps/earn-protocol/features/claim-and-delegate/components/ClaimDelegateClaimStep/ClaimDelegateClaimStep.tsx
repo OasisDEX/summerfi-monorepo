@@ -20,7 +20,7 @@ import {
   sdkNetworkToHumanNetwork,
   sdkNetworkToHumanNetworkStrict,
 } from '@summerfi/app-utils'
-import { redirect, useParams, useSearchParams } from 'next/navigation'
+import { redirect, useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
@@ -62,12 +62,14 @@ interface ClaimDelegateClaimStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  isJustClaim?: boolean
 }
 
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   state,
   dispatch,
   externalData: initialExternalData,
+  isJustClaim,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -79,6 +81,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const { walletAddress } = useParams()
+  const { push } = useRouter()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
@@ -234,6 +237,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   const canContinue = (baseBalance > 0 && hasClaimedAtLeastOneChain) || hasReturnedToClaimStep
 
   const handleAccept = () => {
+    if (isJustClaim) {
+      push(`/portfolio/${resolvedWalletAddress}`)
+
+      return
+    }
     dispatch({ type: 'update-step', payload: ClaimDelegateSteps.DELEGATE })
   }
 

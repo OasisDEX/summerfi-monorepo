@@ -19,12 +19,14 @@ interface ClaimDelegateFormContentProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  isJustClaim?: boolean
 }
 
 export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
   state,
   dispatch,
   externalData,
+  isJustClaim,
 }) => {
   const searchParams = useSearchParams()
   const via = searchParams.get('via')
@@ -42,7 +44,12 @@ export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
         <ClaimDelegateAcceptanceStep state={state} dispatch={dispatch} />
       )}
       {state.step === ClaimDelegateSteps.CLAIM && (
-        <ClaimDelegateClaimStep state={state} dispatch={dispatch} externalData={externalData} />
+        <ClaimDelegateClaimStep
+          state={state}
+          dispatch={dispatch}
+          externalData={externalData}
+          isJustClaim={isJustClaim}
+        />
       )}
       {state.step === ClaimDelegateSteps.DELEGATE && (
         <ClaimDelegateStep state={state} dispatch={dispatch} externalData={externalData} />

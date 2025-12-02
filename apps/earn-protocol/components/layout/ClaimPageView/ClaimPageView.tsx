@@ -18,9 +18,14 @@ import classNames from './ClaimPageView.module.css'
 interface ClaimPageViewProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
+  stakingV2Enabled?: boolean
 }
 
-export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalData }) => {
+export const ClaimPageView: FC<ClaimPageViewProps> = ({
+  walletAddress,
+  externalData,
+  stakingV2Enabled,
+}) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
     delegatee: externalData.sumrStakeDelegate.delegatedTo,
@@ -58,8 +63,13 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({ walletAddress, externalD
 
   return (
     <div className={classNames.claimPageWrapper}>
-      <ClaimDelegateHeader state={state} />
-      <ClaimDelegateForm state={state} dispatch={dispatch} externalData={externalData} />
+      <ClaimDelegateHeader state={state} stakingV2Enabled={stakingV2Enabled} />
+      <ClaimDelegateForm
+        state={state}
+        dispatch={dispatch}
+        externalData={externalData}
+        stakingV2Enabled={stakingV2Enabled}
+      />
     </div>
   )
 }
