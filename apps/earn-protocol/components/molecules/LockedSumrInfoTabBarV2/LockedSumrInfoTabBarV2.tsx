@@ -6,12 +6,16 @@ import {
   DataModule,
   Expander,
   Icon,
+  SkeletonLine,
   TabBar,
   Table,
+  type TableRow,
   Text,
   Tooltip,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
+import { BigNumber } from 'bignumber.js'
 import Link from 'next/link'
 import {
   Cell,
@@ -111,121 +115,74 @@ const YourLockedSumrPositionsCards = () => {
   )
 }
 
-const YourLockedSumrPositionsTable = () => {
+const formatTimestamp = (timestamp: bigint): string => {
+  const date = new Date(Number(timestamp) * 1000)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+const formatLockPeriod = (seconds: bigint): string => {
+  const years = Number(seconds) / (365.25 * 24 * 60 * 60)
+
+  return `${years.toFixed(1)} years`
+}
+
+interface YourLockedSumrPositionsTableProps {
+  stakes: UserStakeV2[]
+  isLoading: boolean
+}
+
+const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
+  stakes,
+  isLoading,
+}) => {
+  const rowsData: TableRow<LockedSumrPositionsTableColumns>[] = stakes.map((stake) => ({
+    id: stake.index.toString(),
+    content: {
+      position: `#${stake.index} - ${formatTimestamp(stake.lockupEndTime)}`,
+      staked: <TableRightCell>{new BigNumber(stake.amount).div(1e18).toFormat(2)}</TableRightCell>,
+      lockPeriod: <TableCenterCell>{formatLockPeriod(stake.lockupPeriod)}</TableCenterCell>,
+      rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
+      usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
+      removeStakePenalty: (
+        <TableRightCell>
+          <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+            -32,323 (83.3%) SUMR
+          </Text>
+        </TableRightCell>
+      ),
+      action: (
+        <TableCenterCell>
+          <Link href="Huh?">
+            <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
+              Remove stake
+            </WithArrow>
+          </Link>
+        </TableCenterCell>
+      ),
+    },
+  }))
+
+  if (isLoading) {
+    return (
+      <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <SkeletonLine key={idx} height={60} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
       <Table<LockedSumrPositionsTableColumns>
         columns={yourLockedSumrPositionsTableColumns}
-        rows={[
-          {
-            id: 'position-1',
-            content: {
-              position: '#1 - 2025-09-09 ',
-              staked: <TableRightCell>58,558.03</TableRightCell>,
-              lockPeriod: <TableCenterCell>0</TableCenterCell>,
-              rewards: <TableCenterCell>0</TableCenterCell>,
-              usdEarnings: <TableCenterCell>0</TableCenterCell>,
-              removeStakePenalty: (
-                <TableRightCell>
-                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                    n/a
-                  </Text>
-                </TableRightCell>
-              ),
-              action: (
-                <TableCenterCell>
-                  <Button
-                    variant="primarySmall"
-                    style={{
-                      height: '28px',
-                      fontSize: '11px',
-                    }}
-                  >
-                    Stake SUMR
-                  </Button>
-                </TableCenterCell>
-              ),
-            },
-          },
-          {
-            id: 'position-2',
-            content: {
-              position: '#2 - 2025-09-09 ',
-              staked: <TableRightCell>117,116.06</TableRightCell>,
-              lockPeriod: <TableCenterCell>2 years</TableCenterCell>,
-              rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
-              usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
-              removeStakePenalty: (
-                <TableRightCell>
-                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                    -32,323 (83.3%) SUMR
-                  </Text>
-                </TableRightCell>
-              ),
-              action: (
-                <TableCenterCell>
-                  <Link href="Huh?">
-                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                      Remove stake
-                    </WithArrow>
-                  </Link>
-                </TableCenterCell>
-              ),
-            },
-          },
-          {
-            id: 'position-3',
-            content: {
-              position: '#3 - 2025-09-09 ',
-              staked: <TableRightCell>58,558.03</TableRightCell>,
-              lockPeriod: <TableCenterCell>4 years</TableCenterCell>,
-              rewards: <TableCenterCell>75,343 SUMR (4x)</TableCenterCell>,
-              usdEarnings: <TableCenterCell>$3,343 (4x)</TableCenterCell>,
-              removeStakePenalty: (
-                <TableRightCell>
-                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                    -45,212 (93.6%) SUMR
-                  </Text>
-                </TableRightCell>
-              ),
-              action: (
-                <TableCenterCell>
-                  <Link href="Huh?">
-                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                      Remove stake
-                    </WithArrow>
-                  </Link>
-                </TableCenterCell>
-              ),
-            },
-          },
-          {
-            id: 'position-4',
-            content: {
-              position: '#4 - 2027-09-22 ',
-              staked: <TableRightCell>320,007.88</TableRightCell>,
-              lockPeriod: <TableCenterCell>1 years</TableCenterCell>,
-              rewards: <TableCenterCell>25,343 SUMR (1.5x)</TableCenterCell>,
-              usdEarnings: <TableCenterCell>$6,343 (1.5x)</TableCenterCell>,
-              removeStakePenalty: (
-                <TableRightCell>
-                  <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                    -145,223 (54.6%) SUMR
-                  </Text>
-                </TableRightCell>
-              ),
-              action: (
-                <TableCenterCell>
-                  <Link href="Huh?">
-                    <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-                      Remove stake
-                    </WithArrow>
-                  </Link>
-                </TableCenterCell>
-              ),
-            },
-          },
-        ]}
+        rows={rowsData}
       />
     </div>
   )
@@ -256,12 +213,17 @@ const NoStakedPositions: FC = () => {
   )
 }
 
-const YourLockedSumrPositions = () => {
+interface YourLockedSumrPositionsProps {
+  stakes: UserStakeV2[]
+  isLoading: boolean
+}
+
+const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({ stakes, isLoading }) => {
   return (
     <Card variant="cardSecondary">
       <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
         <YourLockedSumrPositionsCards />
-        <YourLockedSumrPositionsTable />
+        <YourLockedSumrPositionsTable stakes={stakes} isLoading={isLoading} />
       </div>
     </Card>
   )
@@ -466,7 +428,15 @@ const AllLockedSumrPositions = () => {
   )
 }
 
-export const LockedSumrInfoTabBarV2 = () => {
+interface LockedSumrInfoTabBarV2Props {
+  stakes: UserStakeV2[]
+  isLoading?: boolean
+}
+
+export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
+  stakes,
+  isLoading = false,
+}) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
       <TabBar
@@ -474,7 +444,7 @@ export const LockedSumrInfoTabBarV2 = () => {
           {
             id: 'your-locked-sumr-positions',
             label: 'Your Locked SUMR Positions (stake)',
-            content: <YourLockedSumrPositions />,
+            content: <YourLockedSumrPositions stakes={stakes} isLoading={isLoading} />,
           },
           {
             id: 'your-locked-sumr-positions',

@@ -1,5 +1,6 @@
 import { type Dispatch, type FC, useEffect, useMemo, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
+import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
 import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
@@ -38,6 +39,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
   const [sumrAvailableToStake, setSumrAvailableToStake] = useState<number>(0)
   const [sumrStaked, setSumrStaked] = useState<number>(0)
+  const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
+  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
 
   const {
     getUserBalance,
@@ -45,6 +48,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getStakingStatsV2,
     getUserStakingSumrStaked,
     getSummerToken,
+    getUserStakesV2,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -61,21 +65,26 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
     const fetchStakingData = async () => {
       try {
+        setIsLoadingStakes(true)
         // Fetch all data in parallel
-        const [userBalance, rewardRates, stakingStats, userStaked] = await Promise.all([
-          getUserBalance({
-            userAddress: userWalletAddress as AddressValue,
-            chainId: ChainIds.Base,
-          }),
-          getStakingRewardRatesV2({
-            sumrPriceUsd,
-          }),
-          getStakingStatsV2(),
+        const [userBalance, rewardRates, stakingStats, userStaked, userStakesData] =
+          await Promise.all([
+            getUserBalance({
+              userAddress: userWalletAddress as AddressValue,
+              chainId: ChainIds.Base,
+            }),
+            getStakingRewardRatesV2({
+              sumrPriceUsd,
+            }),
+            getStakingStatsV2(),
 
-          getUserStakingSumrStaked({
-            user,
-          }),
-        ])
+            getUserStakingSumrStaked({
+              user,
+            }),
+            getUserStakesV2({
+              user,
+            }),
+          ])
 
         // Process user balance
         const availableSumrValue = new BigNumber(userBalance).shiftedBy(-SUMR_DECIMALS).toNumber()
@@ -99,9 +108,14 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         if (stakingStats.averageLockupPeriod) {
           setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
         }
+
+        // Set user stakes
+        setUserStakes(userStakesData)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error('Failed to fetch staking data:', error)
+      } finally {
+        setIsLoadingStakes(false)
       }
     }
 
@@ -114,6 +128,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getUserStakingSumrStaked,
     getSummerToken,
     sumrPriceUsd,
+    getUserStakesV2,
   ])
 
   // Calculate percentage staked
@@ -141,7 +156,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           sumrStaked,
         }}
       />
-      <LockedSumrInfoTabBarV2 />
+      <LockedSumrInfoTabBarV2 stakes={userStakes} isLoading={isLoadingStakes} />
     </div>
   )
 }
