@@ -1139,7 +1139,12 @@ const SumrV2StakingManageComponent = ({
                                 }}
                                 onClick={() => {
                                   if (bucketAvailability > 0) {
-                                    manualSetAmount(bucketAvailability.toFixed())
+                                    manualSetAmount(
+                                      Math.min(
+                                        sumrBalanceOnSourceChain?.toNumber() ?? 0,
+                                        bucketAvailability,
+                                      ).toFixed(),
+                                    )
                                   }
                                 }}
                               >
