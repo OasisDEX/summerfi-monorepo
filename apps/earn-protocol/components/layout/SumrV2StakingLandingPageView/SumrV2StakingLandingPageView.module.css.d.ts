@@ -8,6 +8,7 @@ declare const styles: {
   readonly "sumrPageV2Wrapper": string;
   readonly "tokenPairIcon": string;
   readonly "twoCardsWrapper": string;
+  readonly "verticalSkeletonLines": string;
   readonly "whatIsSumrStakingBlock": string;
   readonly "whatIsSumrStakingBlockNumber": string;
   readonly "whatIsSumrStakingBlocksWrapper": string;

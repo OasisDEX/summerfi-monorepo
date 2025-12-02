@@ -7,32 +7,63 @@ import { type ClaimDelegateState, ClaimDelegateSteps } from '@/features/claim-an
 
 import classNames from './ClaimDelegateFormHeader.module.css'
 
-const getSteps = (isJustStakeDelegate: boolean) => [
-  ...(!isJustStakeDelegate
-    ? [
-        {
-          label: 'Accept Terms',
-          value: ClaimDelegateSteps.TERMS,
-        },
-        {
-          label: 'Claim $SUMR',
-          value: ClaimDelegateSteps.CLAIM,
-        },
-      ]
-    : []),
-  {
-    label: 'Delegate',
-    value: ClaimDelegateSteps.DELEGATE,
-  },
-  {
-    label: 'Stake',
-    value: ClaimDelegateSteps.STAKE,
-  },
-  {
-    label: 'Completed',
-    value: ClaimDelegateSteps.COMPLETED,
-  },
-]
+const getSteps = (isJustStakeDelegate: boolean, isJustClaim?: boolean) => {
+  if (isJustClaim) {
+    return [
+      {
+        label: 'Accept Terms',
+        value: ClaimDelegateSteps.TERMS,
+      },
+      {
+        label: 'Claim $SUMR',
+        value: ClaimDelegateSteps.CLAIM,
+      },
+      {
+        label: 'Completed',
+        value: ClaimDelegateSteps.COMPLETED,
+      },
+    ]
+  }
+  if (!isJustStakeDelegate) {
+    return [
+      {
+        label: 'Accept Terms',
+        value: ClaimDelegateSteps.TERMS,
+      },
+      {
+        label: 'Claim $SUMR',
+        value: ClaimDelegateSteps.CLAIM,
+      },
+      {
+        label: 'Delegate',
+        value: ClaimDelegateSteps.DELEGATE,
+      },
+      {
+        label: 'Stake',
+        value: ClaimDelegateSteps.STAKE,
+      },
+      {
+        label: 'Completed',
+        value: ClaimDelegateSteps.COMPLETED,
+      },
+    ]
+  }
+
+  return [
+    {
+      label: 'Delegate',
+      value: ClaimDelegateSteps.DELEGATE,
+    },
+    {
+      label: 'Stake',
+      value: ClaimDelegateSteps.STAKE,
+    },
+    {
+      label: 'Completed',
+      value: ClaimDelegateSteps.COMPLETED,
+    },
+  ]
+}
 
 const getIsCompleted = ({
   idx,
@@ -50,13 +81,15 @@ const getIsCompleted = ({
 interface ClaimDelegateFormHeaderProps {
   state: ClaimDelegateState
   isJustStakeDelegate?: boolean
+  isJustClaim?: boolean
 }
 
 export const ClaimDelegateFormHeader: FC<ClaimDelegateFormHeaderProps> = ({
   state,
   isJustStakeDelegate,
+  isJustClaim,
 }) => {
-  const steps = getSteps(!!isJustStakeDelegate)
+  const steps = getSteps(!!isJustStakeDelegate, isJustClaim)
 
   return (
     <div className={classNames.claimDelegateFormHeaderWrapper}>

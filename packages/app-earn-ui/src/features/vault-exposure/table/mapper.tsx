@@ -10,6 +10,7 @@ import {
   formatCryptoBalance,
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
+  subgraphNetworkToId,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
@@ -30,6 +31,7 @@ import { type TableRow, type TableSortedColumn } from '@/components/organisms/Ta
 import { vaultExposureSorter } from '@/features/vault-exposure/table/sorter'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getProtocolLabel } from '@/helpers/get-protocol-label'
+import { getScannerAddressUrl } from '@/helpers/get-scanner-url'
 import { getUniqueColor } from '@/helpers/get-unique-color'
 import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 
@@ -115,6 +117,7 @@ type MapperVaultNetwork =
 const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
   return memoize((item: ExtendedArk): TableRow<string> => {
     const arkTokenSymbol = item.inputToken.symbol
+    const arkScannerUrl = getScannerAddressUrl(subgraphNetworkToId(vaultNetwork), item.id)
 
     const protocol = item.name?.split('-') ?? ['n/a']
     const protocolLabel = getProtocolLabel(protocol)
@@ -240,17 +243,28 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
           >
             {arkDetails.description}
           </Text>
-          {arkDetails.link && (
-            <Link href={arkDetails.link} target="_blank" rel="noreferrer">
+          <div style={{ display: 'flex', gap: 'var(--spacing-space-x-large)' }}>
+            {arkDetails.link && (
+              <Link href={arkDetails.link} target="_blank" rel="noreferrer">
+                <WithArrow
+                  as="p"
+                  variant="p4semi"
+                  style={{ color: 'var(--earn-protocol-primary-100)' }}
+                >
+                  Learn more
+                </WithArrow>
+              </Link>
+            )}
+            <Link href={arkScannerUrl} target="_blank" rel="noreferrer">
               <WithArrow
                 as="p"
                 variant="p4semi"
-                style={{ color: 'var(--earn-protocol-primary-100)' }}
+                style={{ color: 'var(--earn-protocol-secondary-60)' }}
               >
-                Learn more
+                View contract
               </WithArrow>
             </Link>
-          )}
+          </div>
         </div>
       ) : (
         <div

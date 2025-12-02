@@ -9,9 +9,10 @@ import classNames from './ClaimDelegateHeader.module.css'
 
 interface ClaimDelegateHeaderProps {
   state: ClaimDelegateState
+  stakingV2Enabled?: boolean
 }
 
-export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state }) => {
+export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state, stakingV2Enabled }) => {
   return (
     <div className={classNames.claimDelegateHeaderWrapper}>
       {state.step === ClaimDelegateSteps.TERMS && (
@@ -37,13 +38,13 @@ export const ClaimDelegateHeader: FC<ClaimDelegateHeaderProps> = ({ state }) => 
           </Link>{' '}
           /{' '}
           <Text as="p" variant="p2semi">
-            Claim & Delegate
+            {stakingV2Enabled ? 'Claim' : 'Claim & Delegate'}
           </Text>
         </div>
       )}
 
       <Text as="h2" variant="h2">
-        Claim & Delegate
+        {stakingV2Enabled ? 'Claim' : 'Claim & Delegate'}
       </Text>
     </div>
   )

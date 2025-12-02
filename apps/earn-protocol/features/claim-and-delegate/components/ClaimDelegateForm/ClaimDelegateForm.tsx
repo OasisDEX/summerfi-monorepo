@@ -16,18 +16,25 @@ interface ClaimDelegateFormProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  stakingV2Enabled?: boolean
 }
 
 export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({
   state,
   dispatch,
   externalData,
+  stakingV2Enabled,
 }) => {
   return (
     <Card variant="cardSecondary" className={classNames.claimDelegateForm}>
-      <ClaimDelegateFormHeader state={state} />
+      <ClaimDelegateFormHeader state={state} isJustClaim={stakingV2Enabled} />
       <div className={classNames.separator} />
-      <ClaimDelegateFormContent state={state} dispatch={dispatch} externalData={externalData} />
+      <ClaimDelegateFormContent
+        state={state}
+        dispatch={dispatch}
+        externalData={externalData}
+        isJustClaim={stakingV2Enabled}
+      />
     </Card>
   )
 }

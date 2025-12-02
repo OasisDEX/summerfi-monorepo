@@ -15,6 +15,7 @@ declare const styles: {
   readonly "quickActionTags": string;
   readonly "stakingLengthControllers": string;
   readonly "stakingLengthLabels": string;
+  readonly "stakingLengthLabelsBottom": string;
   readonly "stepNumberWrapper": string;
   readonly "summaryWrapper": string;
   readonly "sumrKeyStakingInfoCard": string;

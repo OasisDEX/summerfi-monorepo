@@ -41,6 +41,7 @@ import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/Qu
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { getAvailabilityLabel } from '@/helpers/stakingv2-availability-label'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -112,18 +113,27 @@ const mapLockBucketToRange = (days: number) => {
   return '2y - 3y'
 }
 
-const getAvailabilityLabel: (
-  availability: number,
-  amount: BigNumber,
-) => 'low' | 'medium' | 'high' = (availability, amount) => {
-  if (availability === 0) {
-    return 'low'
+const mapLockBucketToBucketIndex = (days: number) => {
+  if (days === 0) {
+    return -1
   }
-  if (availability > 0 && amount.gt(availability)) {
-    return 'medium'
+  if (days < 14) {
+    return -1
+  }
+  if (days < 90) {
+    return 0
+  }
+  if (days < 180) {
+    return 1
+  }
+  if (days < 365) {
+    return 2
+  }
+  if (days < 730) {
+    return 3
   }
 
-  return 'high'
+  return 4
 }
 
 const availabilityColorMap: { [key in 'low' | 'medium' | 'high']: string } = {
@@ -580,13 +590,35 @@ const SumrV2StakingManageComponent = ({
     })
   }
 
+  const bucketAvailability = mapLockBucketToAvailability(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    lockBucketAvailabilityMap,
+    selectedLockupAndBoost,
+  )
+
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
       <div className={sumrV2StakingManageViewStyles.title}>
-        <Link href="Huh?">
+        <Link
+          href="#"
+          onClick={(e) => {
+            e.preventDefault()
+            // Handle back navigation
+            window.history.back()
+          }}
+        >
           <Icon iconName="arrow_backward" size={32} />
         </Link>
         <Text variant="h3">Stake SUMR to earn rewards</Text>
+        <Button
+          variant="primarySmallColorful"
+          onClick={() => {
+            setSimulationLoading(!simulationLoading)
+            setSdkDataOnMountLoading(!sdkDataOnMountLoading)
+          }}
+        >
+          Toggle loading
+        </Button>
       </div>
       <Card className={sumrV2StakingManageViewStyles.cardGrid} variant="cardSecondary">
         <div className={sumrV2StakingManageViewStyles.cardLeftColumn}>
@@ -844,6 +876,11 @@ const SumrV2StakingManageComponent = ({
                   heading={{
                     label: 'Balance',
                     value: `${tokenBalanceLoading || !sumrBalanceOnSourceChain ? '-' : formatCryptoBalance(sumrBalanceOnSourceChain)} SUMR`,
+                    action: () => {
+                      if (sumrBalanceOnSourceChain) {
+                        manualSetAmount(sumrBalanceOnSourceChain.toFixed())
+                      }
+                    },
                   }}
                   secondaryValue={amountDisplayUSD}
                   handleChange={handleAmountChangeWithPercentage}
@@ -905,35 +942,39 @@ const SumrV2StakingManageComponent = ({
                     </div>
                   }
                 />
-                {simulationLoading ? (
-                  <div style={{ padding: '16px' }}>
-                    <SkeletonLine width="100%" height={20} style={{ marginBottom: '8px' }} />
-                    <SkeletonLine width="60%" height={32} style={{ marginBottom: '8px' }} />
-                    <SkeletonLine width="80%" height={16} />
-                  </div>
-                ) : (
-                  <DataBlock
-                    title={
-                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        <Icon iconName="usdc_circle_color" size={24} />
-                        <Text variant="p4semi">
-                          USDC Yield
-                          {simulationData && simulationData.usdcYieldBoost > 1
-                            ? ` (Boosted ${simulationData.usdcYieldBoost.toFixed(1)}x)`
-                            : ''}
-                        </Text>
-                      </div>
-                    }
-                    value={simulationData ? `${simulationData.usdcYieldApy}%` : '-'}
-                    subValue={
-                      simulationData
-                        ? `$${formatCryptoBalance(simulationData.usdcYieldUsdPerYear)} a year`
-                        : '-'
-                    }
-                    subValueType="positive"
-                    wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
-                  />
-                )}
+                <DataBlock
+                  title={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Icon iconName="usdc_circle_color" size={24} />
+                      <Text variant="p4semi">
+                        USDC Yield
+                        {simulationData && simulationData.usdcYieldBoost > 1
+                          ? ` (Boosted ${simulationData.usdcYieldBoost.toFixed(1)}x)`
+                          : ''}
+                      </Text>
+                    </div>
+                  }
+                  value={
+                    simulationLoading ? (
+                      <SkeletonLine width={160} height={28} style={{ marginBottom: '0' }} />
+                    ) : simulationData ? (
+                      `${simulationData.usdcYieldApy}%`
+                    ) : (
+                      '-'
+                    )
+                  }
+                  subValue={
+                    simulationLoading ? (
+                      <SkeletonLine width={120} height={20} style={{ marginBottom: '0' }} />
+                    ) : simulationData ? (
+                      `$${formatCryptoBalance(simulationData.usdcYieldUsdPerYear)} a year`
+                    ) : (
+                      '-'
+                    )
+                  }
+                  subValueType="positive"
+                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                />
               </Card>
               <Card className={sumrV2StakingManageViewStyles.yieldSourcesCard}>
                 <YieldSourceLabel
@@ -946,37 +987,59 @@ const SumrV2StakingManageComponent = ({
                     </div>
                   }
                 />
-                {simulationLoading ? (
-                  <div style={{ padding: '16px' }}>
-                    <SkeletonLine width="100%" height={20} style={{ marginBottom: '8px' }} />
-                    <SkeletonLine width="60%" height={32} style={{ marginBottom: '8px' }} />
-                    <SkeletonLine width="80%" height={16} />
-                  </div>
-                ) : (
-                  <DataBlock
-                    title={
-                      <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
-                        <Icon iconName="sumr" size={20} />
-                        <Text variant="p4semi">SUMR Reward APY</Text>
-                      </div>
-                    }
-                    value={simulationData ? `${simulationData.sumrRewardApy}%` : '-'}
-                    subValue={
-                      simulationData
-                        ? `+${formatCryptoBalance(simulationData.sumrRewardAmount)} SUMR`
-                        : '-'
-                    }
-                    subValueType="positive"
-                    wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
-                  />
-                )}
+                <DataBlock
+                  title={
+                    <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
+                      <Icon iconName="sumr" size={20} />
+                      <Text variant="p4semi">SUMR Reward APY</Text>
+                    </div>
+                  }
+                  value={
+                    simulationLoading ? (
+                      <SkeletonLine width={160} height={28} style={{ marginBottom: '0' }} />
+                    ) : simulationData ? (
+                      `${simulationData.sumrRewardApy}%`
+                    ) : (
+                      '-'
+                    )
+                  }
+                  subValue={
+                    simulationLoading ? (
+                      <SkeletonLine width={120} height={20} style={{ marginBottom: '0' }} />
+                    ) : simulationData ? (
+                      `+${formatCryptoBalance(simulationData.sumrRewardAmount)} SUMR`
+                    ) : (
+                      '-'
+                    )
+                  }
+                  subValueType="positive"
+                  wrapperClassName={sumrV2StakingManageViewStyles.yieldDataBlock}
+                />
               </Card>
             </div>
             <Card className={sumrV2StakingManageViewStyles.stakingLengthControllers}>
+              <Text
+                variant="p3semi"
+                style={{
+                  textAlign: 'center',
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                Lockup and boost yield
+              </Text>
               <div className={sumrV2StakingManageViewStyles.stakingLengthLabels}>
-                <Text variant="p3semi">1x</Text>
-                <Text variant="p3semi">Lockup and boost yield</Text>
-                <Text variant="p3semi">7.2x Boost</Text>
+                <Text
+                  variant="p3semi"
+                  className={sumrV2StakingManageViewStyles.stakingLengthLabelsBottom}
+                >
+                  1x
+                </Text>
+                <Text
+                  variant="p3semi"
+                  className={sumrV2StakingManageViewStyles.stakingLengthLabelsBottom}
+                >
+                  7.2x Boost
+                </Text>
               </div>
               <LockupRangeInput
                 value={selectedLockupAndBoost}
@@ -1009,6 +1072,10 @@ const SumrV2StakingManageComponent = ({
                         1080: 'high',
                       }
                 }
+                selectedBucketIndex={mapLockBucketToBucketIndex(selectedLockupAndBoost)}
+                onLockupClick={(days: number) => {
+                  setSelectedLockupAndBoost(days)
+                }}
               />
               <Expander
                 expanderButtonStyles={{
@@ -1048,14 +1115,7 @@ const SumrV2StakingManageComponent = ({
                                 style={{
                                   color:
                                     availabilityColorMap[
-                                      getAvailabilityLabel(
-                                        mapLockBucketToAvailability(
-                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                          lockBucketAvailabilityMap!,
-                                          selectedLockupAndBoost,
-                                        ),
-                                        amountParsed,
-                                      )
+                                      getAvailabilityLabel(bucketAvailability, amountParsed)
                                     ],
                                 }}
                               >
@@ -1067,23 +1127,17 @@ const SumrV2StakingManageComponent = ({
                                 style={{
                                   color:
                                     availabilityColorMap[
-                                      getAvailabilityLabel(
-                                        mapLockBucketToAvailability(
-                                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                          lockBucketAvailabilityMap!,
-                                          selectedLockupAndBoost,
-                                        ),
-                                        amountParsed,
-                                      )
+                                      getAvailabilityLabel(bucketAvailability, amountParsed)
                                     ],
+                                  cursor: bucketAvailability > 0 ? 'pointer' : 'default',
+                                }}
+                                onClick={() => {
+                                  if (bucketAvailability > 0) {
+                                    manualSetAmount(bucketAvailability.toFixed())
+                                  }
                                 }}
                               >
-                                {mapLockBucketToAvailability(
-                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                  lockBucketAvailabilityMap,
-                                  selectedLockupAndBoost,
-                                ).toLocaleString()}{' '}
-                                SUMR
+                                {bucketAvailability.toLocaleString()} SUMR
                               </span>
                             ),
                           }

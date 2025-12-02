@@ -4,7 +4,6 @@ import { Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { ClaimDelegateCompletedStep } from '@/features/claim-and-delegate/components/ClaimDelegateCompletedStep/ClaimDelegateCompletedStep'
-import { ClaimDelegateFormHeader } from '@/features/claim-and-delegate/components/ClaimDelegateFormHeader/ClaimDelegateFormHeader'
 import { ClaimDelegateStakeStep } from '@/features/claim-and-delegate/components/ClaimDelegateStakeStep/ClaimDelegateStakeStep'
 import { ClaimDelegateStep } from '@/features/claim-and-delegate/components/ClaimDelegateStep/ClaimDelegateStep'
 import { claimDelegateReducer, claimDelegateState } from '@/features/claim-and-delegate/state'
@@ -14,17 +13,14 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
 
-import classNames from './StakeDelegatePageView.module.css'
+import classNames from './DelegatePageView.module.css'
 
-interface StakeDelegatePageViewProps {
+interface DelegatePageViewProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
 }
 
-export const StakeDelegatePageView: FC<StakeDelegatePageViewProps> = ({
-  walletAddress,
-  externalData,
-}) => {
+export const DelegatePageView: FC<DelegatePageViewProps> = ({ walletAddress, externalData }) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
     step: ClaimDelegateSteps.DELEGATE,
@@ -43,18 +39,21 @@ export const StakeDelegatePageView: FC<StakeDelegatePageViewProps> = ({
           </Link>{' '}
           /{' '}
           <Text as="p" variant="p1">
-            Delegate & Stake
+            Delegate
           </Text>
         </div>
         <Text as="h2" variant="h2">
-          Delegate & Stake
+          Delegate
         </Text>
       </div>
       <Card variant="cardSecondary" className={classNames.stakeDelegateForm}>
-        <ClaimDelegateFormHeader state={state} isJustStakeDelegate />
-        <div className={classNames.separator} />
         {state.step === ClaimDelegateSteps.DELEGATE && (
-          <ClaimDelegateStep state={state} dispatch={dispatch} externalData={externalData} />
+          <ClaimDelegateStep
+            state={state}
+            dispatch={dispatch}
+            externalData={externalData}
+            isJustDelegate
+          />
         )}
         {state.step === ClaimDelegateSteps.STAKE && (
           <ClaimDelegateStakeStep state={state} dispatch={dispatch} externalData={externalData} />
