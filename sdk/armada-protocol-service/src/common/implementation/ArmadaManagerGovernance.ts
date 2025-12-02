@@ -497,19 +497,12 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
 
     // Get the raw count of user stakes from the contract and user balances in parallel
-    const [userStakesCountBefore, balances] = await Promise.all([
-      stakingContract.getUserStakesCount({
-        user: params.user.wallet.address.value,
-      }),
-      this.getUserStakingBalanceV2({ user: params.user }),
-    ])
-
-    const bucketBalance =
-      balances.find((balance) => balance.bucket === params.bucketIndex)?.amount || 0n
+    const userStakesCountBefore = await stakingContract.getUserStakesCount({
+      user: params.user.wallet.address.value,
+    })
 
     // If the provided bucket has zero amount, add 1 to the count
-    const userStakesCountAfter =
-      bucketBalance === 0n ? userStakesCountBefore + 1n : userStakesCountBefore
+    const userStakesCountAfter = userStakesCountBefore + 1n
 
     return { userStakesCountBefore, userStakesCountAfter }
   }
@@ -970,5 +963,60 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const totalStaked = balances.reduce((sum, balance) => sum + balance.amount, 0n)
 
     return totalStaked
+  }
+
+  async getUserStakesV2(
+    params: Parameters<IArmadaManagerGovernance['getUserStakesV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserStakesV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get the count of user stakes
+    const stakesCount = await stakingContract.getUserStakesCount({
+      user: params.user.wallet.address.value,
+    })
+
+    if (stakesCount === 0n) {
+      return []
+    }
+
+    // Fetch all user stakes
+    const stakesPromises = []
+    for (let i = 0n; i < stakesCount; i++) {
+      stakesPromises.push(
+        stakingContract.getUserStake({
+          user: params.user.wallet.address.value,
+          index: i,
+        }),
+      )
+    }
+
+    const stakesResults = await Promise.all(stakesPromises)
+
+    // Map results to UserStakeV2 format
+    const stakes = stakesResults.map((result, index) => {
+      const [amount, weightedAmount, lockupEndTime, lockupPeriod] = result
+      // Calculate multiplier in WAD format (weightedAmount / amount * WAD) using BigNumber
+      const multiplier =
+        amount > 0n
+          ? new BigNumber(weightedAmount.toString())
+              .dividedBy(new BigNumber(amount.toString()))
+              .toNumber()
+          : 0
+      return {
+        index,
+        amount,
+        weightedAmount,
+        lockupEndTime,
+        lockupPeriod,
+        multiplier,
+      }
+    })
+
+    return stakes
   }
 }

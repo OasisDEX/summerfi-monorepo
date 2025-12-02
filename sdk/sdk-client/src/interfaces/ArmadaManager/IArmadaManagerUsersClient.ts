@@ -9,6 +9,7 @@ import {
   type Position_Filter,
   type StakingBucketInfo,
   type UserStakingBalanceByBucket,
+  type UserStakeV2,
   type StakingRewardRates,
   type StakingSimulationDataV2,
   type StakingStatsV2,
@@ -664,6 +665,16 @@ export interface IArmadaManagerUsersClient {
     user: IUser
     bucketIndex: number
   }): Promise<{ userStakesCountBefore: bigint; userStakesCountAfter: bigint }>
+
+  /**
+   * @method getUserStakesV2
+   * @description Returns all staking positions for a user with detailed information
+   *
+   * @param user The user to get staking positions for
+   *
+   * @returns Array of user stake positions
+   */
+  getUserStakesV2(params: { user: IUser }): Promise<UserStakeV2[]>
 
   /**
    * @method getUserStakingBalanceV2

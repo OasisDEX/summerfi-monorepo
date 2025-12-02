@@ -46,6 +46,7 @@ export type { IArmadaManagerMigrations } from './common/interfaces/IArmadaManage
 export type { IArmadaManagerGovernance } from './common/interfaces/IArmadaManagerGovernance'
 export type {
   UserStakingBalanceByBucket,
+  UserStakeV2,
   StakingRewardRates,
   StakingBucketInfo,
   StakingSimulationDataV2,

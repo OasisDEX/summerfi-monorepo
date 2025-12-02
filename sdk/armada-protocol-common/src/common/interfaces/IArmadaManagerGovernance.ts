@@ -19,6 +19,18 @@ export interface UserStakingBalanceByBucket {
 }
 
 /**
+ * @description User stake position details (V2)
+ */
+export interface UserStakeV2 {
+  index: number
+  amount: bigint
+  weightedAmount: bigint
+  lockupEndTime: bigint
+  lockupPeriod: bigint
+  multiplier: number
+}
+
+/**
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
@@ -394,4 +406,14 @@ export interface IArmadaManagerGovernance {
    * @returns The total SUMR amount staked
    */
   getUserStakingSumrStaked: (params: { user: IUser }) => Promise<bigint>
+
+  /**
+   * @method getUserStakesV2
+   * @description Returns all staking positions for a user with detailed information
+   *
+   * @param user The user to get staking positions for
+   *
+   * @returns Array of user stake positions
+   */
+  getUserStakesV2: (params: { user: IUser }) => Promise<UserStakeV2[]>
 }
