@@ -11,6 +11,8 @@
     "e2e:govV2.stake": "jest --roots e2e -- ./e2e/govV2.stake.test.ts",
     "e2e:govV2.unstake": "jest --roots e2e -- ./e2e/govV2.unstake.test.ts",
     "e2e:govV2.getUserStakesCount": "jest --roots e2e -- ./e2e/govV2.getUserStakesCount.test.ts",
+    "e2e:govV2.getUserStakesV2": "jest --roots e2e -- ./e2e/govV2.getUserStakesV2.test.ts",
+    "e2e:govV2.getUserStakingSumrStaked": "jest --roots e2e -- ./e2e/govV2.getUserStakingSumrStaked.test.ts",
     "e2e:govV2.stakingSimulation": "jest --roots e2e -- ./e2e/govV2.stakingSimulation.test.ts",
     "e2e:govV2.delegate": "jest --roots e2e -- ./e2e/govV2.delegate.test.ts",
     "e2e:intentSwap": "jest --roots e2e -- ./e2e/intentswaps.test.ts",
@@ -40,7 +42,8 @@
     "e2e:priceOracle": "jest --roots e2e -- ./e2e/priceOracle.test.ts",
     "e2e:swapQuote": "jest --roots e2e -- ./e2e/swapQuote.test.ts",
     "e2e:transfer": "jest --roots e2e -- ./e2e/armadaProtocol.erc20Transfer.test.ts",
-    "e2e:vaulthistoricalrates": "jest --roots e2e -- ./e2e/armadaProtocol.vaultsHistoricalRates.test.ts"
+    "e2e:vaulthistoricalrates": "jest --roots e2e -- ./e2e/armadaProtocol.vaultsHistoricalRates.test.ts",
+    "e2e:protocoltvl": "jest --roots e2e -- ./e2e/armadaProtocol.getProtocolTvl.test.ts"
   },
   "devDependencies": {
     "@summerfi/armada-protocol-abis": "workspace:*",

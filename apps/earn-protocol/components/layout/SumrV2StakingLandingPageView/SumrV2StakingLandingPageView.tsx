@@ -16,13 +16,12 @@ import {
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
-import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -49,7 +48,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [claimableSumrUsd, setClaimableSumrUsd] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')
   const [maxApyUsdPerYear, setMaxApyUsdPerYear] = useState<string>('0')
-  const [summerRewardApy, setSummerRewardApy] = useState<string>('0')
+  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   const [earnableSumr, setEarnableSumr] = useState<string>('0')
   const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
@@ -78,11 +77,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       try {
         setIsLoading(true)
 
-        // Fetch summer token for reward rates
-        const summerToken = await getSummerToken({
-          chainInfo: getChainInfoByChainId(ChainIds.Base),
-        })
-
         // Fetch all data in parallel
         const [userBalance, aggregatedRewards, rewardRates, revenue, tvl, revenueShare] =
           await Promise.all([
@@ -101,7 +95,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   total: 0n,
                 }),
             getStakingRewardRatesV2({
-              rewardTokenAddress: summerToken.address,
               sumrPriceUsd,
             }),
             getProtocolRevenue(),
@@ -151,7 +144,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
           new BigNumber(rewardRates.summerRewardApy.value).toFixed(2, BigNumber.ROUND_DOWN),
         )
 
-        setSummerRewardApy(summerRewardApyValue)
+        setSumrRewardApy(summerRewardApyValue)
 
         // Calculate earnable SUMR per year
         const earnableSumrValue = new BigNumber(availableSumrValue)
@@ -356,7 +349,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{summerRewardApy}</Text>
+                    <Text variant="h4">{sumrRewardApy}</Text>
                   </div>
                 )
               }
@@ -568,9 +561,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
           ]}
         />
         <SumrPriceBar />
-        <div className={sumrV2PageStyles.stakingTabBarWrapper}>
+        {/* <div className={sumrV2PageStyles.stakingTabBarWrapper}>
           <LockedSumrInfoTabBarV2 />
-        </div>
+        </div> */}
         <FaqSection
           data={[
             {

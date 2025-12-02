@@ -28,7 +28,7 @@ import {
 import { UiTransactionStatuses } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalToBigInt } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -276,11 +276,6 @@ const SumrV2StakingManageComponent = ({
       try {
         setSdkDataOnMountLoading(true)
 
-        // Fetch summer token first as it's needed for reward rates
-        const summerToken = await getSummerToken({
-          chainInfo: getChainInfoByChainId(ChainIds.Base),
-        })
-
         // Fetch all data in parallel for better performance
         const [
           bucketsInfo,
@@ -296,7 +291,6 @@ const SumrV2StakingManageComponent = ({
           getProtocolRevenue(),
           getStakingRevenueShareV2(),
           getStakingRewardRatesV2({
-            rewardTokenAddress: summerToken.address,
             sumrPriceUsd,
           }),
           getStakingConfigV2(),

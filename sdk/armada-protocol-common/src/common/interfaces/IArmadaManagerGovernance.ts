@@ -19,6 +19,18 @@ export interface UserStakingBalanceByBucket {
 }
 
 /**
+ * @description User stake position details (V2)
+ */
+export interface UserStakeV2 {
+  index: number
+  amount: bigint
+  weightedAmount: bigint
+  lockupEndTime: bigint
+  lockupPeriod: bigint
+  multiplier: number
+}
+
+/**
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
@@ -281,24 +293,27 @@ export interface IArmadaManagerGovernance {
    * @description Returns the user's earned rewards (V2)
    *
    * @param user The user
-   * @param rewardTokenAddress The reward token address
+   * @param rewardTokenAddress The reward token address optional parameter (defaults to SUMR token)
    *
    * @returns The earned rewards
    */
-  getUserStakingEarnedV2: (params: { user: IUser; rewardTokenAddress: IAddress }) => Promise<bigint>
+  getUserStakingEarnedV2: (params: {
+    user: IUser
+    rewardTokenAddress?: IAddress
+  }) => Promise<bigint>
 
   /**
    * @method getStakingRewardRatesV2
    * @description Returns the staking reward rates including user-specific boost (V2)
    *
    * @param user The user to calculate boosted multiplier for
-   * @param rewardTokenAddress The reward token address
+   * @param rewardTokenAddress Optional reward token address (defaults to SUMR token)
    * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
    *
    * @returns Reward rates including APR, APY, and user's boosted multiplier
    */
   getStakingRewardRatesV2: (params: {
-    rewardTokenAddress: IAddress
+    rewardTokenAddress?: IAddress
     sumrPriceUsd?: number
   }) => Promise<StakingRewardRates>
 
@@ -381,4 +396,24 @@ export interface IArmadaManagerGovernance {
    * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
    */
   getStakingStatsV2(): Promise<StakingStatsV2>
+
+  /**
+   * @method getUserStakingSumrStaked
+   * @description Returns the total amount of SUMR tokens staked by the user across all buckets
+   *
+   * @param user The user to get staking balance for
+   *
+   * @returns The total SUMR amount staked
+   */
+  getUserStakingSumrStaked: (params: { user: IUser }) => Promise<bigint>
+
+  /**
+   * @method getUserStakesV2
+   * @description Returns all staking positions for a user with detailed information
+   *
+   * @param user The user to get staking positions for
+   *
+   * @returns Array of user stake positions
+   */
+  getUserStakesV2: (params: { user: IUser }) => Promise<UserStakeV2[]>
 }

@@ -1,12 +1,20 @@
-import { type Dispatch, type FC } from 'react'
+import { type Dispatch, type FC, useEffect, useMemo, useState } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
+import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
+import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
+import { BigNumber } from 'bignumber.js'
 
+import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
+import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { PortfolioRewardsCardsV2 } from '@/features/portfolio/components/PortfolioRewardsCardsV2/PortfolioRewardsCardsV2'
 import { PortfolioStakingInfoCardV2 } from '@/features/portfolio/components/PortfolioStakingInfoCardV2/PortfolioStakingInfoCardV2'
+import { useAppSDK } from '@/hooks/use-app-sdk'
 
 import classNames from './PortfolioRewardsV2.module.css'
 
@@ -21,26 +29,134 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   state,
   dispatch,
 }) => {
+  const { userWalletAddress } = useUserWallet()
+
+  // State for fetched data
+  const [maxApy, setMaxApy] = useState<number>(0)
+  const [sumrRewardApy, setSumrRewardApy] = useState<number>(0)
+  const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
+  const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
+  const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
+  const [sumrAvailableToStake, setSumrAvailableToStake] = useState<number>(0)
+  const [sumrStaked, setSumrStaked] = useState<number>(0)
+  const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
+  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
+
+  const {
+    getUserBalance,
+    getStakingRewardRatesV2,
+    getStakingStatsV2,
+    getUserStakingSumrStaked,
+    getSummerToken,
+    getUserStakesV2,
+  } = useAppSDK()
+
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const sumrPriceUsd = useMemo(
+    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
+    [sumrNetApyConfig.dilutedValuation],
+  )
+
+  // Fetch all staking data on mount
+  useEffect(() => {
+    if (!userWalletAddress) return
+
+    const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
+
+    const fetchStakingData = async () => {
+      try {
+        setIsLoadingStakes(true)
+        // Fetch all data in parallel
+        const [userBalance, rewardRates, stakingStats, userStaked, userStakesData] =
+          await Promise.all([
+            getUserBalance({
+              userAddress: userWalletAddress as AddressValue,
+              chainId: ChainIds.Base,
+            }),
+            getStakingRewardRatesV2({
+              sumrPriceUsd,
+            }),
+            getStakingStatsV2(),
+
+            getUserStakingSumrStaked({
+              user,
+            }),
+            getUserStakesV2({
+              user,
+            }),
+          ])
+
+        // Process user balance
+        const availableSumrValue = new BigNumber(userBalance).shiftedBy(-SUMR_DECIMALS).toNumber()
+
+        setSumrAvailableToStake(availableSumrValue)
+
+        // Process user staked amount
+        const stakedSumrValue = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
+
+        setSumrStaked(stakedSumrValue)
+
+        // Process reward rates
+        setMaxApy(new BigNumber(rewardRates.maxApy.value).toNumber())
+        setSumrRewardApy(new BigNumber(rewardRates.summerRewardApy.value).toNumber())
+
+        // Process staking stats
+        setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
+        setCirculatingSupply(new BigNumber(stakingStats.circulatingSupply).toNumber())
+
+        // Format average lock duration from seconds to seconds (as expected by the component)
+        if (stakingStats.averageLockupPeriod) {
+          setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
+        }
+
+        // Set user stakes
+        setUserStakes(userStakesData)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch staking data:', error)
+      } finally {
+        setIsLoadingStakes(false)
+      }
+    }
+
+    void fetchStakingData()
+  }, [
+    userWalletAddress,
+    getUserBalance,
+    getStakingRewardRatesV2,
+    getStakingStatsV2,
+    getUserStakingSumrStaked,
+    getSummerToken,
+    sumrPriceUsd,
+    getUserStakesV2,
+  ])
+
+  // Calculate percentage staked
+  const percentStaked = useMemo(() => {
+    if (circulatingSupply === 0) return 0
+
+    return totalSumrStaked / circulatingSupply
+  }, [totalSumrStaked, circulatingSupply])
+
   return (
     <div className={classNames.wrapper}>
       <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
       <PortfolioStakingInfoCardV2
-        // Huh?
-        usdcEarnedOnSumr={0.076}
-        sumrPrice={0.0432}
-        sumrRewardApy={0.035}
+        usdcEarnedOnSumr={maxApy}
+        sumrPrice={sumrPriceUsd}
+        sumrRewardApy={sumrRewardApy}
         stats={{
-          totalSumrStaked: 13000000,
-          circulatingSupply: 50000000,
-          percentStaked: 0.265,
-          averageLockDuration: 8240000,
+          totalSumrStaked,
+          circulatingSupply,
+          percentStaked,
+          averageLockDuration,
         }}
         sumrUserData={{
-          sumrAvailableToStake: 950,
-          sumrStaked: 14350,
+          sumrAvailableToStake,
+          sumrStaked,
         }}
-        // Huh?
       />
+      <LockedSumrInfoTabBarV2 stakes={userStakes} isLoading={isLoadingStakes} />
     </div>
   )
 }

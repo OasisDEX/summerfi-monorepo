@@ -2010,13 +2010,29 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     // Calculate revenue for each vault based on token symbol
     // WETH vaults: 0.3% of TVL
     // Non-WETH vaults: 1% of TVL
+    const debugLog: Array<{
+      tvlAmount: number
+      isWETH: boolean
+      symbol: string
+      revenuePercentage: number
+      vaultRevenue: number
+    }> = []
     const revenueAmount = vaults.reduce((acc, vault) => {
       const tvlAmount = parseFloat(vault.tvlUsd.amount)
-      const isWETH = vault.token.symbol === 'WETH'
+      const isWETH = vault.assetToken.symbol === 'WETH'
       const revenuePercentage = isWETH ? 0.003 : 0.01
       const vaultRevenue = tvlAmount * revenuePercentage
+      debugLog.push({
+        tvlAmount,
+        isWETH,
+        symbol: vault.assetToken.symbol,
+        revenuePercentage,
+        vaultRevenue,
+      })
       return acc + vaultRevenue
     }, 0)
+
+    LoggingService.debug('Vault Revenue Calculation', JSON.stringify(debugLog, null, 2))
 
     return revenueAmount
   }

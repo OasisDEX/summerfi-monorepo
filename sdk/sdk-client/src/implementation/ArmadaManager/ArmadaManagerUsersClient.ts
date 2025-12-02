@@ -285,6 +285,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserStakesCount.query(params)
   }
 
+  async getUserStakesV2(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakesV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakesV2']> {
+    return this.rpcClient.armada.users.getUserStakesV2.query(params)
+  }
+
   async getUserStakingBalanceV2(
     params: Parameters<IArmadaManagerUsersClient['getUserStakingBalanceV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserStakingBalanceV2']> {
@@ -301,6 +307,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     params: Parameters<IArmadaManagerUsersClient['getUserStakingEarnedV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserStakingEarnedV2']> {
     return this.rpcClient.armada.users.getUserStakingEarnedV2.query(params)
+  }
+
+  async getUserStakingSumrStaked(
+    params: Parameters<IArmadaManagerUsersClient['getUserStakingSumrStaked']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserStakingSumrStaked']> {
+    return this.rpcClient.armada.users.getUserStakingSumrStaked.query(params)
   }
 
   async getStakingRewardRatesV2(
