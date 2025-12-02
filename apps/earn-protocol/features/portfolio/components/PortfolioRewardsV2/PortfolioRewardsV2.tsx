@@ -3,6 +3,7 @@ import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
+import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import {
   type ClaimDelegateExternalData,
@@ -140,6 +141,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           sumrStaked,
         }}
       />
+      <LockedSumrInfoTabBarV2 />
     </div>
   )
 }
