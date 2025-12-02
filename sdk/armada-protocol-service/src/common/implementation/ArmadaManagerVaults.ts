@@ -54,7 +54,6 @@ import type { IDeploymentProvider } from '../..'
 import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { EnsoClient, type BundleAction } from '../services/EnsoClient'
-import { symbol } from 'zod'
 
 export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -2011,25 +2010,29 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     // Calculate revenue for each vault based on token symbol
     // WETH vaults: 0.3% of TVL
     // Non-WETH vaults: 1% of TVL
-    let debugLog = ''
+    const debugLog: Array<{
+      tvlAmount: number
+      isWETH: boolean
+      symbol: string
+      revenuePercentage: number
+      vaultRevenue: number
+    }> = []
     const revenueAmount = vaults.reduce((acc, vault) => {
       const tvlAmount = parseFloat(vault.tvlUsd.amount)
       const isWETH = vault.assetToken.symbol === 'WETH'
       const revenuePercentage = isWETH ? 0.003 : 0.01
       const vaultRevenue = tvlAmount * revenuePercentage
-      debugLog += JSON.stringify({
+      debugLog.push({
         tvlAmount,
         isWETH,
-        symbol: vault.token.symbol,
+        symbol: vault.assetToken.symbol,
         revenuePercentage,
         vaultRevenue,
       })
       return acc + vaultRevenue
     }, 0)
 
-    LoggingService.debug('Vault Revenue Calculation', debugLog)
-
-    return revenueAmount
+    LoggingService.debug('Vault Revenue Calculation', JSON.stringify(debugLog, null, 2))
   }
 
   /** @see IArmadaManagerVaults.getProtocolTvl */
