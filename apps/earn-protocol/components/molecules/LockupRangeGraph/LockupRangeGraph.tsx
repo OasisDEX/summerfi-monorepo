@@ -1,15 +1,20 @@
 import { useMemo } from 'react'
 import { Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 
 import lockupRangeGraphStyles from './LockupRangeGraph.module.css'
 
 export const LockupRangeGraph = ({
   lockupMap,
+  onLockupClick,
+  selectedBucketIndex,
 }: {
   lockupMap: {
     // key is the number of days, starting at 14 (minimum) to 1080 (maximum)
     [key: number]: 'low' | 'medium' | 'high'
   }
+  selectedBucketIndex?: number
+  onLockupClick?: (days: number) => void
 }) => {
   // the minimum lockup is 14 days
 
@@ -54,7 +59,63 @@ export const LockupRangeGraph = ({
     <div className={lockupRangeGraphStyles.lockupRangeGraph}>
       <div className={lockupRangeGraphStyles.lockupRangeGraphTitle}>
         <Text variant="p4semi">Staking availability</Text>
-        <Tooltip tooltip="Huh?">
+        <Tooltip
+          tooltip={
+            <div className={lockupRangeGraphStyles.lockupRangeGraphTooltip}>
+              <Text variant="h5">SUMR Staking is based on availability per bucket.</Text>
+              <Text variant="p3">
+                Lock buckets have fixed slots. What’s left determines your max stake and USD and
+                SUMR APY.
+              </Text>
+              <Text variant="p3">
+                Color’s show how much of your available SUMR fits in each bucket. See details for
+                exact remaining capacity.
+              </Text>
+              <Text variant="p3">
+                If you do not lock all of your available SUMR, you can lock remaining SUMR at
+                different lock buckets.
+              </Text>
+              <Text
+                variant="p3semi"
+                className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChartDescription}
+                style={{ marginTop: '12px' }}
+              >
+                <div
+                  style={{
+                    backgroundColor: 'var(--color-text-success)',
+                  }}
+                  className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
+                />
+                100% of your available SUMR can be locked.
+              </Text>
+              <Text
+                variant="p3semi"
+                className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChartDescription}
+              >
+                <div
+                  style={{
+                    backgroundColor: 'var(--color-text-warning)',
+                  }}
+                  className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
+                />
+                Some of your available SUMR can be locked.
+              </Text>
+              <Text
+                variant="p3semi"
+                className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChartDescription}
+              >
+                <div
+                  style={{
+                    backgroundColor: 'var(--color-text-critical)',
+                  }}
+                  className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
+                />
+                There is no available capacity for your SUMR.
+              </Text>
+            </div>
+          }
+          tooltipWrapperStyles={{ minWidth: '540px' }}
+        >
           <Icon iconName="question_o" size={16} />
         </Tooltip>
       </div>
@@ -66,12 +127,28 @@ export const LockupRangeGraph = ({
             width: `${(14 / (1080 - 14)) * 100}%`,
           }}
         /> */}
-        {calculatedBarWidths.map(({ days, level, widthPercent, timespanLabel }) => (
+        {calculatedBarWidths.map(({ days, level, widthPercent, timespanLabel }, bucketIndex) => (
           <div
             key={days}
-            className={`${lockupRangeGraphStyles.lockupRangeGraphBar} ${lockupRangeGraphStyles[level]}`}
+            className={clsx(
+              lockupRangeGraphStyles.lockupRangeGraphBar,
+              lockupRangeGraphStyles[level],
+              {
+                [lockupRangeGraphStyles.clickable]: Boolean(onLockupClick),
+                [lockupRangeGraphStyles[`highlightAnimation_${level}`]]:
+                  selectedBucketIndex === bucketIndex,
+              },
+            )}
             style={{
               width: `${widthPercent}%`,
+            }}
+            onClick={() => {
+              // calculate the middle of the range for this bucket
+              const previousDays =
+                bucketIndex === 0 ? 14 : calculatedBarWidths[bucketIndex - 1].days
+              const middleDays = Math.round((previousDays + days) / 2)
+
+              onLockupClick?.(middleDays)
             }}
           >
             <span>{timespanLabel}</span>

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-bottom: 16px;
 
   .lockupRangeGraphTitle {
     display: flex;
@@ -25,6 +26,9 @@
         font-weight: 800;
         margin-top: 5px;
         color: var(--color-text-secondary);
+        display: block;
+        padding-top: 2px;
+        width: 100%;
       }
     }
 
@@ -43,5 +47,81 @@
     .high {
       background-color: var(--earn-protocol-success-100);
     }
+  }
+}
+
+@keyframes highlightAnimationCritical {
+  0% {
+    box-shadow: 0;
+  }
+
+  50% {
+    box-shadow: 0 0 15px var(--color-text-critical);
+  }
+
+  100% {
+    box-shadow: 0;
+  }
+}
+
+@keyframes highlightAnimationWarning {
+  0% {
+    box-shadow: 0;
+  }
+
+  50% {
+    box-shadow: 0 0 15px var(--color-background-warning-bold);
+  }
+
+  100% {
+    box-shadow: 0;
+  }
+}
+
+@keyframes highlightAnimationSuccess {
+  0% {
+    box-shadow: 0;
+  }
+
+  50% {
+    box-shadow: 0 0 15px var(--earn-protocol-success-100);
+  }
+
+  100% {
+    box-shadow: 0;
+  }
+}
+
+.highlightAnimation_low {
+  animation: highlightAnimationCritical 0.3s 1;
+}
+
+.highlightAnimation_medium {
+  animation: highlightAnimationWarning 0.3s 1;
+}
+
+.highlightAnimation_high {
+  animation: highlightAnimationSuccess 0.3s 1;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.lockupRangeGraphTooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .lockupRangeGraphTooltipMiniChartDescription {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lockupRangeGraphTooltipMiniChart {
+    width: 16px;
+    height: 4px;
+    border-radius: 4px;
   }
 }

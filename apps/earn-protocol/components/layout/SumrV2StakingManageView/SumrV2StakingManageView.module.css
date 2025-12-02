@@ -94,6 +94,12 @@
           color: var(--color-text-secondary);
           margin-right: 5px;
           margin-bottom: 20px;
+
+          .stakingLengthLabelsBottom {
+            position: relative;
+            top: 10px;
+            margin-bottom: -20px;
+          }
         }
       }
 

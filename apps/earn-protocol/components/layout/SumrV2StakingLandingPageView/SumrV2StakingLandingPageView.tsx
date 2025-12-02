@@ -14,7 +14,7 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type AddressValue, ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
@@ -132,7 +132,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         setClaimableSumrUsd(claimableSumrUsdValue)
 
         // Process reward rates
-        const maxApyValue = new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN)
+        const maxApyValue = formatPercent(
+          new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
+        )
 
         setMaxApy(maxApyValue)
 
@@ -145,9 +147,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         setMaxApyUsdPerYear(maxApyUsdPerYearValue)
 
         // Process SUMR reward APY
-        const summerRewardApyValue = new BigNumber(rewardRates.summerRewardApy.value).toFixed(
-          2,
-          BigNumber.ROUND_DOWN,
+        const summerRewardApyValue = formatPercent(
+          new BigNumber(rewardRates.summerRewardApy.value).toFixed(2, BigNumber.ROUND_DOWN),
         )
 
         setSummerRewardApy(summerRewardApyValue)
@@ -218,7 +219,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               </Text>
               <Text as="h4" variant="h4">
                 {isLoading ? (
-                  <SkeletonLine width={150} height={32} />
+                  <div className={sumrV2PageStyles.verticalSkeletonLines}>
+                    <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
+                    <SkeletonLine width={70} height={20} />
+                  </div>
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(availableSumr).toNumber())} SUMR
@@ -229,7 +233,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 )}
               </Text>
               <Link href="/staking/manage" prefetch>
-                <Button variant="primarySmall">Stake your SUMR</Button>
+                <Button variant="primarySmall" disabled={isLoading}>
+                  Stake your SUMR
+                </Button>
               </Link>
             </Card>
           </GradientBox>
@@ -240,7 +246,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               </Text>
               <Text as="h4" variant="h4">
                 {isLoading ? (
-                  <SkeletonLine width={150} height={32} />
+                  <div className={sumrV2PageStyles.verticalSkeletonLines}>
+                    <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
+                    <SkeletonLine width={70} height={20} />
+                  </div>
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(claimableSumr).toNumber())} SUMR
@@ -250,7 +259,11 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   </>
                 )}
               </Text>
-              <Button variant="secondarySmall">Claim your SUMR</Button>
+              <Link href={`/claim/${userWalletAddress}`} prefetch>
+                <Button variant="secondarySmall" disabled={isLoading}>
+                  Claim your SUMR
+                </Button>
+              </Link>
             </Card>
           </GradientBox>
         </div>
@@ -282,11 +295,15 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }
               value={
                 isLoading ? (
-                  <SkeletonLine width={120} height={32} />
+                  <SkeletonLine
+                    width={150}
+                    height={28}
+                    style={{ marginBottom: '8px', marginTop: '12px' }}
+                  />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{maxApy}%</Text>
+                    <Text variant="h4">{maxApy}</Text>
                   </div>
                 )
               }
@@ -295,7 +312,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }}
               subValue={
                 isLoading ? (
-                  <SkeletonLine width={150} height={16} />
+                  <SkeletonLine width={110} height={20} />
                 ) : (
                   `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} /Year`
                 )
@@ -331,11 +348,15 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }
               value={
                 isLoading ? (
-                  <SkeletonLine width={120} height={32} />
+                  <SkeletonLine
+                    width={150}
+                    height={28}
+                    style={{ marginBottom: '8px', marginTop: '12px' }}
+                  />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{summerRewardApy}%</Text>
+                    <Text variant="h4">{summerRewardApy}</Text>
                   </div>
                 )
               }
@@ -344,7 +365,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }}
               subValue={
                 isLoading ? (
-                  <SkeletonLine width={200} height={16} />
+                  <SkeletonLine width={110} height={20} />
                 ) : (
                   `Up to ${formatCryptoBalance(new BigNumber(earnableSumr).toNumber())} $SUMR /Year ($${formatCryptoBalance(new BigNumber(earnableSumrUsd).toNumber())})`
                 )
@@ -381,7 +402,11 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }
               value={
                 isLoading ? (
-                  <SkeletonLine width={180} height={32} />
+                  <SkeletonLine
+                    width={100}
+                    height={28}
+                    style={{ marginBottom: '8px', marginTop: '12px' }}
+                  />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h4">${protocolRevenue}m</Text>
@@ -393,7 +418,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }}
               subValue={
                 isLoading ? (
-                  <SkeletonLine width={120} height={16} />
+                  <SkeletonLine width={160} height={20} />
                 ) : (
                   `${protocolTvl}m Lazy Summer TVL`
                 )
@@ -414,7 +439,11 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }
               value={
                 isLoading ? (
-                  <SkeletonLine width={80} height={32} />
+                  <SkeletonLine
+                    width={60}
+                    height={28}
+                    style={{ marginBottom: '8px', marginTop: '12px' }}
+                  />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
                     <Text variant="h4">{revenueSharePercentage}%</Text>
@@ -426,7 +455,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               }}
               subValue={
                 isLoading ? (
-                  <SkeletonLine width={100} height={16} />
+                  <SkeletonLine width={90} height={20} />
                 ) : (
                   `$${revenueShareAmount}m a year`
                 )
