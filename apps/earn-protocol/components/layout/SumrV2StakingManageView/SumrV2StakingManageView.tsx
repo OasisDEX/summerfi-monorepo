@@ -610,15 +610,6 @@ const SumrV2StakingManageComponent = ({
           <Icon iconName="arrow_backward" size={32} />
         </Link>
         <Text variant="h3">Stake SUMR to earn rewards</Text>
-        <Button
-          variant="primarySmallColorful"
-          onClick={() => {
-            setSimulationLoading(!simulationLoading)
-            setSdkDataOnMountLoading(!sdkDataOnMountLoading)
-          }}
-        >
-          Toggle loading
-        </Button>
       </div>
       <Card className={sumrV2StakingManageViewStyles.cardGrid} variant="cardSecondary">
         <div className={sumrV2StakingManageViewStyles.cardLeftColumn}>
