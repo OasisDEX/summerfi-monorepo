@@ -8,14 +8,14 @@ import { updateDelegates } from './update-delegates'
 const logger = new Logger({ serviceName: 'update-tally-delegates', logLevel: 'DEBUG' })
 
 const governanceV1Query = `{
-  organizationId: "2439139313007462075"
-  governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
-}`
+          organizationId: "2439139313007462075"
+          governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
+        }` // the tabs are important
 
 const governanceV2Query = `{
-  organizationId: "2734336916672481062"
-  governorId: "eip155:8453:0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274"
-}`
+          organizationId: "2734336916672481062"
+          governorId: "eip155:8453:0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274"
+        }` // the tabs are important
 
 export const handler = async (context: Context): Promise<void> => {
   logger.addContext(context)
