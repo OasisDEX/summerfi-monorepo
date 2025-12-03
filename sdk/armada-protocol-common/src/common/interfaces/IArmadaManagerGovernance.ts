@@ -382,7 +382,7 @@ export interface IArmadaManagerGovernance {
    * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
    * @param userAddress The user's wallet address
    *
-   * @returns Simulation data including APYs and yield boosts
+   * @returns Earnings estimation including SUMR rewards and USD earnings for each stake
    */
   getStakingSimulationDataV2(params: {
     amount: bigint
@@ -398,14 +398,12 @@ export interface IArmadaManagerGovernance {
    * @param amounts The amounts to stake
    * @param periods The lockup periods in seconds
    * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
-   * @param userAddress The user's wallet address
    *
    * @returns Simulation data including APYs and yield boosts
    */
   getStakingEarningsEstimationV2(params: {
     stakes: { amount: bigint; period: bigint; weightedAmount: bigint }[]
     sumrPriceUsd?: number
-    userAddress: AddressValue
   }): Promise<StakingEarningsEstimationForStakesV2>
 
   /**

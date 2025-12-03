@@ -948,7 +948,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
    *
    * @param stakes Array of stake positions with amount, period, and weightedAmount
    * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
-   * @param userAddress The user's wallet address
    *
    * @returns Estimation data with SUMR rewards and USD earnings for each stake
    */
@@ -982,6 +981,14 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const stakes = params.stakes.map((stake) => {
       const weightedAmountBN = new BigNumber(stake.weightedAmount)
       const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply)
+
+      if (totalWeightedSupplyBN.isZero()) {
+        return {
+          sumrRewardsAmount: 0n,
+          usdEarningsAmount: '0.000000',
+        }
+      }
+
       const rewardRateBN = new BigNumber(rewardRate)
       const revenueShareAmountBN = new BigNumber(revenueShareAmount)
 

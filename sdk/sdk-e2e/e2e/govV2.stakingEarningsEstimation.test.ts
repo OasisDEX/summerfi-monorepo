@@ -1,7 +1,5 @@
-import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
-
 import { createTestSDK } from './utils/sdkInstance'
-import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
+import { type TestConfigKey } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY } from './utils/constants'
 
@@ -22,20 +20,14 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
   // Define test stakes with different amounts, periods, and weighted amounts
   const stakes = [
     {
-      amount: 100n * 10n ** 18n, // 42,140 SUMR
+      amount: 100n * 10n ** 18n, // 100 SUMR
       period: 732n * SECONDS_PER_DAY, // 732 days (2 years)
       weightedAmount: 433n * 10n ** 18n, // 2x weight for 2 years
       description: 'Stake 1: 100 SUMR for 2 years (2x weight)',
     },
   ]
 
-  describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testConfigKey: chainConfigKey } = scenario
-    const chainConfig = TestConfigs[chainConfigKey]
-    const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-    const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
-    const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
-
+  describe.each(scenarios)('with scenario %#', (_scenario) => {
     it('should calculate earnings estimation for multiple stake positions', async () => {
       // Mock SUMR price (in production this would come from a price oracle)
       const sumrPriceUsd = 0.25 // Assume $0.25 per SUMR
@@ -48,7 +40,6 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
       const earningsEstimation = await sdk.armada.users.getStakingEarningsEstimationV2({
         stakes,
         sumrPriceUsd,
-        userAddress: user.wallet.address.value,
       })
 
       // Validate the response structure
@@ -109,7 +100,6 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
       const earningsEstimation = await sdk.armada.users.getStakingEarningsEstimationV2({
         stakes,
         // sumrPriceUsd not provided - should use default from utils
-        userAddress: user.wallet.address.value,
       })
 
       expect(earningsEstimation.stakes).toHaveLength(1)

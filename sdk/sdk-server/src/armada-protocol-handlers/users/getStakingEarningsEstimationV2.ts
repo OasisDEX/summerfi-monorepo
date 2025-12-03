@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
-import { isAddressValue, type AddressValue } from '@summerfi/sdk-common'
 
 export const getStakingEarningsEstimationV2 = publicProcedure
   .input(
@@ -13,7 +12,6 @@ export const getStakingEarningsEstimationV2 = publicProcedure
         }),
       ),
       sumrPriceUsd: z.number().optional(),
-      userAddress: z.custom<AddressValue>(isAddressValue),
     }),
   )
   .query(async (opts) => {
