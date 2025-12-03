@@ -2371,9 +2371,15 @@ importers:
       kysely:
         specifier: ^0.27.3
         version: 0.27.3
+      kysely-postgres-js:
+        specifier: ^2.0.0
+        version: 2.0.0(kysely@0.27.3)(postgres@3.4.4)
       pg:
         specifier: ^8.14.1
         version: 8.14.1
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -13467,7 +13473,7 @@ packages:
       '@types/json-stable-stringify': 1.0.36
       '@whatwg-node/fetch': 0.9.17
       chalk: 4.1.2
-      debug: 4.4.0
+      debug: 4.3.4(supports-color@8.1.1)
       dotenv: 16.5.0
       graphql: 16.11.0
       graphql-request: 6.1.0(graphql@16.11.0)

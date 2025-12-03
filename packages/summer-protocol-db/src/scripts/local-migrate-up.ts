@@ -1,10 +1,14 @@
 import * as console from 'node:console'
 import * as process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { getMigrator } from './local-config'
 import { generateTypes } from './generate-types'
 
 import * as dotenv from 'dotenv'
 import path from 'node:path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 dotenv.config({ path: path.join(__dirname, '../../.env') })
 

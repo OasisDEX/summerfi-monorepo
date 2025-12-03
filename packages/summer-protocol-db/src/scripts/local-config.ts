@@ -5,6 +5,10 @@ import { FileMigrationProvider, Kysely, Migrator } from 'kysely'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
 import { PostgresDB } from 'kysely-codegen/dist/dialects/postgres/postgres-db'
+import { fileURLToPath } from 'node:url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export function getMigrator() {
   console.log('Retrieving database connection string from environment variables...')

@@ -3,6 +3,10 @@ import { ExportStatementNode, PostgresDialect, Serializer, Transformer } from 'k
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { PostgresDB } from 'kysely-codegen/dist/dialects/postgres/postgres-db'
+import { fileURLToPath } from 'node:url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export async function generateTypes(db: Kysely<PostgresDB>) {
   const dialect = new PostgresDialect()
