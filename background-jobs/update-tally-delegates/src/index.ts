@@ -39,15 +39,11 @@ export const handler = async (context: Context): Promise<void> => {
     )
 
     const addressesV1 = sumrDelegatesV1.map((delegate) => delegate.account.address)
-    const addressesV2 = sumrDelegatesV2.map((delegate) => delegate.account.address)
     logger.debug('Getting SUMR decay factors')
-    const [sumrDecayFactorsV1, sumrDecayFactorsV2] = await Promise.all([
+    const [sumrDecayFactorsV1] = await Promise.all([
       addressesV1.length > 0 ? getSumrDecayFactor(addressesV1, logger) : Promise.resolve([]),
-      addressesV2.length > 0 ? getSumrDecayFactor(addressesV2, logger) : Promise.resolve([]),
     ])
-    logger.debug(
-      `Fetched SUMR decay factors: ${sumrDecayFactorsV1.length} (V1), ${sumrDecayFactorsV2.length} (V2)`,
-    )
+    logger.debug(`Fetched SUMR decay factors: ${sumrDecayFactorsV1.length} (V1), V2 is skipped`)
 
     await Promise.all([
       updateDelegates({
@@ -58,7 +54,7 @@ export const handler = async (context: Context): Promise<void> => {
       }),
       updateDelegates({
         sumrDelegates: sumrDelegatesV2,
-        sumrDecayFactors: sumrDecayFactorsV2,
+        sumrDecayFactors: [],
         logger,
         table: 'tallyDelegatesV2',
       }),
