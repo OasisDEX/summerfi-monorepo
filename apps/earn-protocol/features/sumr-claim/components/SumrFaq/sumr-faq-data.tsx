@@ -49,8 +49,8 @@ export const sumrFaqData = [
         <ul style={{ listStyleType: 'disc', paddingLeft: '32px' }}>
           <li>
             <Text variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              <strong>Curate the best of DeFi</strong> by approving or off boarding markets,
-              ensuring only the best and safest yield opportunities are available.
+              <strong>Curate the best of DeFi</strong> by approving or offboarding markets, ensuring{' '}
+              only the best and safest yield opportunities are available.
             </Text>
           </li>
           <li>

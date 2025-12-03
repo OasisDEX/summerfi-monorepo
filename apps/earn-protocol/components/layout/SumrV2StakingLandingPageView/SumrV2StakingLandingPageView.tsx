@@ -380,7 +380,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   <Tooltip
                     tooltip={
                       <Text as="p" variant="p4semi">
-                        Annualized revenue derived from fee’s charged to all depositors in the Lazy
+                        Annualized revenue derived from fees charged to all depositors in the Lazy
                         Summer Protocol
                       </Text>
                     }
@@ -401,7 +401,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h4">${protocolRevenue}m</Text>
+                    <Text variant="h4">${protocolRevenue}M</Text>
                   </div>
                 )
               }
@@ -412,13 +412,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={160} height={20} />
                 ) : (
-                  `${protocolTvl}m Lazy Summer TVL`
+                  `${protocolTvl}M Lazy Summer TVL`
                 )
               }
             />
             <Link href="Huh?">
               <Button variant="textPrimaryMedium" style={{ paddingTop: '2px' }}>
-                Simulate USD yield payoff
+                Simulate USDC yield payoff
               </Button>
             </Link>
           </Card>
@@ -449,7 +449,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={90} height={20} />
                 ) : (
-                  `$${revenueShareAmount}m a year`
+                  `$${revenueShareAmount}M a year`
                 )
               }
             />
@@ -478,7 +478,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     governance power, all while turning your tokens into a yield bearing asset.
                   </Text>
                   <WithArrow>
-                    <Link href="https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/ ">
+                    <Link
+                      href="https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/"
+                      target="_blank"
+                    >
                       Read the details
                     </Link>
                   </WithArrow>
@@ -518,7 +521,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                         1
                       </Text>
                       <Text variant="p1semi">
-                        Earn SUMR and real USD Yield from protocol revenue.
+                        Earn SUMR and real USDC yield from protocol revenue.
                       </Text>
                     </div>
                     <div className={sumrV2PageStyles.whatIsSumrStakingBlock}>

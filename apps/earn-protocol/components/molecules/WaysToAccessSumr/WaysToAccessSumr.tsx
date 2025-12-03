@@ -105,7 +105,7 @@ export const WaysToAccessSumr = ({
               wrapperStyles={{ width: '100%' }}
             />
             <DataBlock
-              title="USD Yield"
+              title="USDC Yield"
               value="Huh?"
               valueStyle={{ color: 'white' }}
               wrapperStyles={{ width: '100%' }}

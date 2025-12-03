@@ -709,7 +709,7 @@ const SumrV2StakingManageComponent = ({
                           <Text variant="p3semi">{`${revenueShare}%`}</Text>
                         )}
                         <Tooltip
-                          tooltip="USDC yield is derived from Lazy Summer Protocol Revenue. Specifically a % of total protocol revenue, which is 20%."
+                          tooltip="USDC yield is derived from Lazy Summer Protocol Revenue. Specifically a 20% of total protocol revenue."
                           tooltipWrapperStyles={{
                             minWidth: '220px',
                           }}
@@ -767,7 +767,7 @@ const SumrV2StakingManageComponent = ({
             expanderButtonClassName={sumrV2StakingManageViewStyles.expanderTitleButton}
           >
             <Card className={sumrV2StakingManageViewStyles.sumrKeyStakingInfoCard}>
-              <Text variant="p2semi">You can create multiple positions.</Text>
+              <Text variant="p2semi">You can create multiple positions</Text>
               <Text variant="p3">
                 You don’t need to fit everything into one lock. If capacity is limited or you want
                 flexibility, split your SUMR across several positions.
@@ -801,17 +801,17 @@ const SumrV2StakingManageComponent = ({
             <Card className={sumrV2StakingManageViewStyles.sumrKeyStakingInfoCard}>
               <Text variant="p2semi">How do I earn yield when I stake?</Text>
               <Text variant="p3">
-                You earn <strong>dual rewards,</strong>ongoing <strong>SUMR emissions</strong>plus a{' '}
-                <strong>share of protocol yield in USDC</strong>, paid as LV vault tokens that keep
-                compounding.
+                You earn <strong>dual rewards,</strong> ongoing <strong>SUMR emissions</strong> plus
+                a <strong>share of protocol yield in USDC</strong>, paid as LV vault tokens that
+                keep compounding.
               </Text>
-              <Text variant="p2semi">Why stake instead of just holding SUMR?</Text>
+              <Text variant="p2semi">Why staking instead of just holding SUMR?</Text>
               <Text variant="p3">
                 Holding gives you only price exposure.{' '}
                 <strong>
                   Staking adds governance power, boosted SUMR rewards, and a direct share of
                   protocol revenue
-                </strong>
+                </strong>{' '}
                 on top.
               </Text>
               <Text variant="p2semi">How does SUMR earn value over time?</Text>
@@ -823,7 +823,7 @@ const SumrV2StakingManageComponent = ({
               <Text variant="p2semi">Do I need to stake to use Lazy Summer?</Text>
               <Text variant="p3">
                 No. Anyone can deposit into vaults without SUMR.{' '}
-                <strong>Staking is optional</strong>and is for users who want governance influence
+                <strong>Staking is optional</strong> and is for users who want governance influence
                 and value capture from protocol growth.
               </Text>
               <Text variant="p2semi">What if I need to exit my lock early?</Text>

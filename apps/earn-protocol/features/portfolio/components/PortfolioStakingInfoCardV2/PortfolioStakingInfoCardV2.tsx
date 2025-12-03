@@ -26,7 +26,7 @@ const StakingInfoCards = () => {
             Boosted, multi asset rewards
           </Text>
           <Text as="p" variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
-            Maximize your earnings with both USD yield and SUMR rewards.
+            Maximize your earnings with both USDC yield and SUMR rewards.
           </Text>
         </div>
       </div>
@@ -293,7 +293,7 @@ export const PortfolioStakingInfoCardV2 = ({
             wrapperClassName={portfolioStakingInfoCardStyles.stakingStatsBlock}
           />
           <DataBlock
-            title="% of circulating SUMR Staked"
+            title="% of circulating SUMR staked"
             size="xsmall"
             value={formatDecimalAsPercent(stats.percentStaked)}
             valueSize="medium"
