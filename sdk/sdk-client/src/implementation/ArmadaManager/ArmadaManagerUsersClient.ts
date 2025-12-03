@@ -357,6 +357,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getStakingSimulationDataV2.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getStakingEarningsEstimationV2 */
+  async getStakingEarningsEstimationV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakingEarningsEstimationV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakingEarningsEstimationV2']> {
+    return this.rpcClient.armada.users.getStakingEarningsEstimationV2.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getStakingConfigV2 */
   async getStakingConfigV2(): ReturnType<IArmadaManagerUsersClient['getStakingConfigV2']> {
     return this.rpcClient.armada.users.getStakingConfigV2.query()

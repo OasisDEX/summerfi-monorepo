@@ -75,6 +75,16 @@ export interface StakingStatsV2 {
 }
 
 /**
+ * @description Staking earnings estimation for multiple stakes (V2)
+ */
+export interface StakingEarningsEstimationForStakesV2 {
+  stakes: {
+    sumrRewardsAmount: bigint
+    usdEarningsAmount: string
+  }[]
+}
+
+/**
  * @name IArmadaManagerGovernance
  * @description Interface for the Armada Manager Token which handles delegating votes
  *
@@ -380,6 +390,23 @@ export interface IArmadaManagerGovernance {
     sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
+
+  /**
+   * @method getStakingEarningsEstimationV2
+   * @description Calculates staking rewards estimation for multiple stakes
+   *
+   * @param amounts The amounts to stake
+   * @param periods The lockup periods in seconds
+   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
+   * @param userAddress The user's wallet address
+   *
+   * @returns Simulation data including APYs and yield boosts
+   */
+  getStakingEarningsEstimationV2(params: {
+    stakes: { amount: bigint; period: bigint; weightedAmount: bigint }[]
+    sumrPriceUsd?: number
+    userAddress: AddressValue
+  }): Promise<StakingEarningsEstimationForStakesV2>
 
   /**
    * @method getStakingConfigV2

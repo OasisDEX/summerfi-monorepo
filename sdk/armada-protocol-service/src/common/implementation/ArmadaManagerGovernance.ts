@@ -399,6 +399,36 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     return stakingContract.stakeSummerTokenAddress()
   }
 
+  private async getRewardsData(params: { rewardTokenAddress: IAddress }): Promise<{
+    periodFinish: bigint
+    rewardRate: bigint
+    rewardsDuration: bigint
+    lastUpdateTime: bigint
+    rewardPerTokenStored: bigint
+  }> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const rewardData = await stakingContract.rewardData({
+      rewardToken: params.rewardTokenAddress.value,
+    })
+
+    const [periodFinish, rewardRate, rewardsDuration, lastUpdateTime, rewardPerTokenStored] =
+      rewardData
+
+    return {
+      periodFinish,
+      rewardRate,
+      rewardsDuration,
+      lastUpdateTime,
+      rewardPerTokenStored,
+    }
+  }
+
   async getStakeOnBehalfTxV2(
     params: Parameters<IArmadaManagerGovernance['getStakeOnBehalfTxV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakeOnBehalfTxV2']> {
@@ -610,7 +640,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     // Use contract wrapper for all methods
     const [rewardData, allBucketInfo, _totalWeightedSupply] = await Promise.all([
-      stakingContract.rewardData({ rewardToken: rewardTokenAddress.value }),
+      this.getRewardsData({ rewardTokenAddress: rewardTokenAddress }),
       stakingContract.getAllBucketInfo(),
       stakingContract.totalSupply(),
     ])
@@ -620,7 +650,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     // Calculate total raw staked across all buckets
     const totalRawStaked = stakedAmounts.reduce((sum: bigint, amount: bigint) => sum + amount, 0n)
 
-    const [, rewardRate] = rewardData
+    const rewardRate = rewardData.rewardRate
     const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n
 
     // Calculate annual rewards in reward token units (wei)
@@ -910,6 +940,68 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       userStakesCountBefore: userStakesCount.userStakesCountBefore,
       userStakesCountAfter: userStakesCount.userStakesCountAfter,
     }
+  }
+
+  /**
+   * @method getStakingEarningsEstimationV2
+   * @description Calculates staking rewards estimation for multiple stakes
+   *
+   * @param stakes Array of stake positions with amount, period, and weightedAmount
+   * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
+   * @param userAddress The user's wallet address
+   *
+   * @returns Estimation data with SUMR rewards and USD earnings for each stake
+   */
+  async getStakingEarningsEstimationV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingEarningsEstimationV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingEarningsEstimationV2']> {
+    // Note: sumrPriceUsd is available in params but not currently needed for calculations
+    // The earnings are calculated based on weightedAmount/totalWeightedSupply ratios
+    // Future enhancements may use sumrPriceUsd for additional USD value calculations
+
+    // Get staking contract
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Get required data: totalWeightedSupply, rewardRate, and revenueShare
+    const [totalWeightedSupply, rewardData, revenueShare] = await Promise.all([
+      stakingContract.totalSupply(),
+      this.getRewardsData({
+        rewardTokenAddress: this._hubChainSummerTokenAddress,
+      }),
+      this.getStakingRevenueShareV2(),
+    ])
+
+    const rewardRate = rewardData.rewardRate
+    const revenueShareAmount = revenueShare.amount
+
+    // Calculate earnings for each stake
+    const stakes = params.stakes.map((stake) => {
+      const weightedAmountBN = new BigNumber(stake.weightedAmount)
+      const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply)
+      const rewardRateBN = new BigNumber(rewardRate)
+      const revenueShareAmountBN = new BigNumber(revenueShareAmount)
+
+      // usdEarningsAmount = weightedAmount / totalWeightedSupply * revenueShare
+      const usdEarningsAmount = weightedAmountBN
+        .dividedBy(totalWeightedSupplyBN)
+        .multipliedBy(revenueShareAmountBN)
+
+      // sumrRewardsAmount = weightedAmount / totalWeightedSupply * rewardRate
+      const sumrRewardsAmount = weightedAmountBN
+        .dividedBy(totalWeightedSupplyBN)
+        .multipliedBy(rewardRateBN)
+
+      return {
+        sumrRewardsAmount: BigInt(sumrRewardsAmount.integerValue(BigNumber.ROUND_DOWN).toFixed(0)),
+        usdEarningsAmount: usdEarningsAmount.toFixed(6),
+      }
+    })
+
+    return { stakes }
   }
 
   /**
