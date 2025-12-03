@@ -23,36 +23,23 @@ describe('Armada Protocol Gov V2 Staking Simulation', () => {
     const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
-    it('should calculate staking simulation data with various amounts and periods', async () => {
+    it.only('should calculate staking simulation data with various amounts and periods', async () => {
       // Test scenarios with different amounts and lockup periods
       const testCases = [
-        // { amount: 42140n, lockupDays: 14n, description: '100 000 000 SUMR, 14 days (minimum)' },
-        // { amount: 100000000n, lockupDays: 90n, description: '100 000 000 SUMR, 90 days' },
-        // {
-        //   amount: 100000000n,
-        //   lockupDays: 365n,
-        //   description: '100 000 000 SUMR, 365 days (1 year)',
-        // },
         {
-          amount: 42140n,
-          lockupDays: 732n,
-          description: 'deposit 42,140 SUMR for 732 days (2 years)',
+          amount: 48000n,
+          lockupDays: 1080n, // 3 years
         },
-        // {
-        //   amount: 100000000n,
-        //   lockupDays: 1095n,
-        //   description: '100 000 000 SUMR, 1095 days (3 years max)',
-        // },
       ]
 
       // Mock SUMR price (in production this would come from a price oracle)
-      const sumrPriceUsd = 0.2 // Assume 1 USD for simplicity
+      const sumrPriceUsd = 0.25 // Assume 1 USD for simplicity
 
       for (const testCase of testCases) {
         const amount = testCase.amount * 10n ** 18n // Convert to wei
         const period = testCase.lockupDays * SECONDS_PER_DAY // Convert to seconds
 
-        console.log(`\nTesting: ${testCase.description}`)
+        console.log(`\nTesting: Deposit ${testCase.amount} SUMR for ${testCase.lockupDays} days`)
 
         const simulationData = await sdk.armada.users.getStakingSimulationDataV2({
           amount,

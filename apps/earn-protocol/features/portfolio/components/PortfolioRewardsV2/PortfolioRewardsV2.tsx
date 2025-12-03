@@ -98,7 +98,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
         // Process reward rates
         setMaxApy(new BigNumber(rewardRates.maxApy.value).toNumber())
-        setSumrRewardApy(new BigNumber(rewardRates.summerRewardApy.value).toNumber())
+        setSumrRewardApy(new BigNumber(rewardRates.summerRewardYield.value).toNumber())
 
         // Process staking stats
         setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())

@@ -34,7 +34,8 @@ export interface UserStakeV2 {
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
-  summerRewardApy: IPercentage
+  summerRewardYield: IPercentage
+  maxSummerRewardYield: IPercentage
   baseApy: IPercentage
   maxApy: IPercentage
 }
