@@ -22,7 +22,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
-import { SumrPriceBar } from '@/components/molecules/SumrPriceBar/SumrPriceBar'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
@@ -560,7 +559,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
             },
           ]}
         />
-        <SumrPriceBar />
+        {/* <SumrPriceBar /> */}
         {/* <div className={sumrV2PageStyles.stakingTabBarWrapper}>
           <LockedSumrInfoTabBarV2 />
         </div> */}
