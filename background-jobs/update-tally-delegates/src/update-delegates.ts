@@ -37,10 +37,12 @@ export const updateDelegates = async ({
   sumrDelegates,
   sumrDecayFactors,
   logger,
+  table,
 }: {
   sumrDelegates: SumrDelegates[]
   sumrDecayFactors: SumrDecayFactorData[]
   logger: Logger
+  table: 'tallyDelegates' | 'tallyDelegatesV2'
 }) => {
   const { EARN_PROTOCOL_DB_CONNECTION_STRING } = process.env
 
@@ -82,7 +84,7 @@ export const updateDelegates = async ({
 
       logger.info('Inserting delegates')
       const result = await database.db
-        .insertInto('tallyDelegates')
+        .insertInto(table)
         .values(mappedDelegatesWithDecayFactors)
         .onConflict((oc) =>
           oc.columns(['userAddress']).doUpdateSet({

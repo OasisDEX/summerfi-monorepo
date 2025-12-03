@@ -65,8 +65,18 @@ interface TallyResponse {
  *
  * @see {@link SumrDelegates} for the structure of returned delegate data
  */
-export const getSumrDelegates = async (logger: Logger): Promise<SumrDelegates[]> => {
+export const getSumrDelegates = async ({
+  logger,
+  filtersQuery,
+}: {
+  logger: Logger
+  filtersQuery: string
+}): Promise<SumrDelegates[]> => {
   const apiKey = process.env.TALLY_API_KEY ?? ''
+
+  if (!filtersQuery) {
+    throw new Error('filtersQuery is not set')
+  }
 
   if (!apiKey) {
     throw new Error('TALLY_API_KEY is not set')
@@ -88,10 +98,7 @@ export const getSumrDelegates = async (logger: Logger): Promise<SumrDelegates[]>
     const query = `query {
     delegates(
       input: {
-        filters: {
-          organizationId: "2439139313007462075"
-          governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
-        }
+        filters: ${filtersQuery}
         page: { limit: 20${cursor ? `, afterCursor: "${cursor}"` : ''} }
       }
     ) {

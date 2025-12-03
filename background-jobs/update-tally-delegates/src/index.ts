@@ -7,6 +7,16 @@ import { updateDelegates } from './update-delegates'
 
 const logger = new Logger({ serviceName: 'update-tally-delegates', logLevel: 'DEBUG' })
 
+const governanceV1Query = `{
+  organizationId: "2439139313007462075"
+  governorId: "eip155:8453:0xBE5A4DD68c3526F32B454fE28C9909cA0601e9Fa"
+}`
+
+const governanceV2Query = `{
+  organizationId: "2734336916672481062"
+  governorId: "eip155:8453:0x4cEeE1b6289624d381383C1Bb42B118d5f2c3274"
+}`
+
 export const handler = async (context: Context): Promise<void> => {
   logger.addContext(context)
   logger.debug('update-tally-delegates handler started')
@@ -20,15 +30,39 @@ export const handler = async (context: Context): Promise<void> => {
 
   try {
     logger.debug('Getting SUMR delegates')
-    const sumrDelegates = await getSumrDelegates(logger)
-    logger.debug(`Fetched ${sumrDelegates.length} SUMR delegates`)
+    const [sumrDelegatesV1, sumrDelegatesV2] = await Promise.all([
+      getSumrDelegates({ logger, filtersQuery: governanceV1Query }),
+      getSumrDelegates({ logger, filtersQuery: governanceV2Query }),
+    ])
+    logger.debug(
+      `Fetched SUMR delegates: ${sumrDelegatesV1.length} (V1), ${sumrDelegatesV2.length} (V2)`,
+    )
 
-    const addresses = sumrDelegates.map((delegate) => delegate.account.address)
+    const addressesV1 = sumrDelegatesV1.map((delegate) => delegate.account.address)
+    const addressesV2 = sumrDelegatesV2.map((delegate) => delegate.account.address)
     logger.debug('Getting SUMR decay factors')
-    const sumrDecayFactors = addresses.length > 0 ? await getSumrDecayFactor(addresses, logger) : []
-    logger.debug(`Fetched ${sumrDecayFactors.length} SUMR decay factors`)
+    const [sumrDecayFactorsV1, sumrDecayFactorsV2] = await Promise.all([
+      addressesV1.length > 0 ? getSumrDecayFactor(addressesV1, logger) : Promise.resolve([]),
+      addressesV2.length > 0 ? getSumrDecayFactor(addressesV2, logger) : Promise.resolve([]),
+    ])
+    logger.debug(
+      `Fetched SUMR decay factors: ${sumrDecayFactorsV1.length} (V1), ${sumrDecayFactorsV2.length} (V2)`,
+    )
 
-    await updateDelegates({ sumrDelegates, sumrDecayFactors, logger })
+    await Promise.all([
+      updateDelegates({
+        sumrDelegates: sumrDelegatesV1,
+        sumrDecayFactors: sumrDecayFactorsV1,
+        logger,
+        table: 'tallyDelegates',
+      }),
+      updateDelegates({
+        sumrDelegates: sumrDelegatesV2,
+        sumrDecayFactors: sumrDecayFactorsV2,
+        logger,
+        table: 'tallyDelegatesV2',
+      }),
+    ])
     logger.debug('update-tally-delegates handler completed')
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
