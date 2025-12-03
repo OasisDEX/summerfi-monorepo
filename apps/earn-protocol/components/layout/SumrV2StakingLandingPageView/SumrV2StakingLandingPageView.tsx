@@ -306,7 +306,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={110} height={20} />
                 ) : (
-                  `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} /Year`
+                  `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} / Year`
                 )
               }
               subValueType="positive"
@@ -359,7 +359,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={110} height={20} />
                 ) : (
-                  `Up to ${formatCryptoBalance(new BigNumber(earnableSumr).toNumber())} $SUMR /Year ($${formatCryptoBalance(new BigNumber(earnableSumrUsd).toNumber())})`
+                  `Up to ${formatCryptoBalance(new BigNumber(earnableSumr).toNumber())} SUMR / Year ($${formatCryptoBalance(new BigNumber(earnableSumrUsd).toNumber())})`
                 )
               }
               subValueType="positive"
@@ -375,7 +375,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}
                 >
                   <Text as="p" variant="p2semi">
-                    Lazy Summer Annulized Revenue
+                    Lazy Summer Annualized Revenue
                   </Text>
                   <Tooltip
                     tooltip={

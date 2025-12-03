@@ -218,7 +218,7 @@ export const PortfolioStakingInfoCardV2 = ({
               subValue: `$${formatCryptoBalance(
                 // Huh?
                 usdcEarnedOnSumr * sumrUserData.sumrAvailableToStake * sumrPrice,
-              )} / year`,
+              )} / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
@@ -247,7 +247,7 @@ export const PortfolioStakingInfoCardV2 = ({
               subValue: `+${formatCryptoBalance(
                 // Huh?
                 sumrUserData.sumrAvailableToStake * sumrRewardApy,
-              )} SUMR / year`,
+              )} SUMR / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}

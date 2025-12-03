@@ -78,7 +78,7 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
               className={classNames.sumrStakeCardDataSubValue}
               style={{ color: 'var(--earn-protocol-primary-100)' }}
             >
-              ${formatFiatBalance(yieldTokenUsdPerYear)} / year
+              ${formatFiatBalance(yieldTokenUsdPerYear)} / Year
             </Text>
           </div>
         </div>
