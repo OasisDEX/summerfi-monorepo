@@ -98,17 +98,20 @@ export const useUnstakeV2SumrTransaction = ({
   userAddress,
   userStakeIndex,
   refetchStakingData,
+  onAllTransactionsComplete,
 }: {
   amount: bigint
   userAddress?: string
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
+  onAllTransactionsComplete?: () => void
 }): {
   triggerNextTransaction: () => Promise<unknown>
   isLoading: boolean
   error: Error | null
   transactionQueue: TransactionWithStatus[]
   buttonLabel?: string
+  prepareTransactions: () => Promise<void>
 } => {
   const [isLoadingLocal, setIsLoadingLocal] = useState(false)
   const [transactionQueue, setTransactionQueue] = useState<CustomUnstakeTransactionInfo>()
@@ -143,6 +146,15 @@ export const useUnstakeV2SumrTransaction = ({
       toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
     },
   })
+
+  useEffect(() => {
+    // refetchStakingData after all transactions are executed
+    if (transactionQueue && transactionQueue.every((tx) => tx.executed)) {
+      onAllTransactionsComplete?.()
+      refetchStakingData()
+      setTransactionQueue(undefined)
+    }
+  }, [refetchStakingData, transactionQueue, onAllTransactionsComplete])
 
   const nextTransaction = useMemo(() => {
     if (!transactionQueue) {

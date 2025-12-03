@@ -39,7 +39,8 @@ const RemoveStakeModal: FC<{
   userWalletAddress?: string
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
-}> = ({ stakedAmount, userWalletAddress, userStakeIndex, refetchStakingData }) => {
+  handleOpenClose: () => void
+}> = ({ stakedAmount, userWalletAddress, userStakeIndex, refetchStakingData, handleOpenClose }) => {
   const { chain, setChain } = useChain()
   const inputChangeHandler = useHandleInputChangeEvent()
 
@@ -58,12 +59,12 @@ const RemoveStakeModal: FC<{
     triggerNextTransaction,
     isLoading: isLoadingUnstakeTransaction,
     buttonLabel,
-    prepareTransactions,
   } = useUnstakeV2SumrTransaction({
     amount: BigInt(roundDownToWholeNumber(amountParsed.toString())),
     userAddress: userWalletAddress,
     userStakeIndex,
     refetchStakingData,
+    onAllTransactionsComplete: handleOpenClose,
   })
 
   const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -240,6 +241,7 @@ export const RemoveStakeModalButton: FC<{
             userStakeIndex={userStakeIndex}
             userWalletAddress={userWalletAddress}
             refetchStakingData={refetchStakingData}
+            handleOpenClose={handleOpenClose}
           />
         </MobileDrawer>
       ) : (
@@ -249,6 +251,7 @@ export const RemoveStakeModalButton: FC<{
             userStakeIndex={userStakeIndex}
             userWalletAddress={userWalletAddress}
             refetchStakingData={refetchStakingData}
+            handleOpenClose={handleOpenClose}
           />
         </Modal>
       )}
