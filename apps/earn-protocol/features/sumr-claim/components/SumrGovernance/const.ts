@@ -11,7 +11,7 @@ export const sumrGovernLazySummerData: SumrGovernListData = [
     iconName: 'plant_colorful',
     title: 'Curate the best of Defi',
     description:
-      'Approve or off board markets, ensuring only the best and safest yield opportunities are available.',
+      'Approve or offboard markets, ensuring only the best and safest yield opportunities are available.',
   },
   {
     iconName: 'checkmark_cookie_colorful',

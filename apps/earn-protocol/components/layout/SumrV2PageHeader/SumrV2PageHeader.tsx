@@ -16,7 +16,7 @@ export const SumrV2PageHeader: FC = () => {
         className={sumrV2PageStyles.sumrBigCircle}
       />
       <Text variant="h2" className={sumrV2PageStyles.header}>
-        Stake your SUMR and earn real USD yield
+        Stake your SUMR and earn real USDC yield
         <br />
         from Lazy Summer Protocol revenues.
       </Text>

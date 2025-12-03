@@ -6,19 +6,19 @@ const cards = [
   {
     title: 'Share your link on social',
     description:
-      'Approve or off board markets, ensuring only the best and safest yield opportunities are available.',
+      'Approve or offboard markets, ensuring only the best and safest yield opportunities are available.',
     icons: ['social_x_beach_club', 'social_link_beach_club'],
   },
   {
     title: 'Get your friends to migrate',
     description:
-      'Approve or off board markets, ensuring only the best and safest yield opportunities are available.',
+      'Approve or offboard markets, ensuring only the best and safest yield opportunities are available.',
     icons: ['social_plant_beach_club'],
   },
   {
     title: 'Other ways to share',
     description:
-      'Approve or off board markets, ensuring only the best and safest yield opportunities are available.',
+      'Approve or offboard markets, ensuring only the best and safest yield opportunities are available.',
     icons: ['social_question_beach_club'],
   },
 ]

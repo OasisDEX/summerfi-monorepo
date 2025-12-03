@@ -32,7 +32,7 @@ const TwoColumnHeader = () => {
         className={clsx(sumrv2PageViewStyles.twoColumnHeaderBlock, sumrv2PageViewStyles.leftBlock)}
       >
         <Text as="h2" variant="h2">
-          SUMR: DeFi’s productive asset that powers the leading yield aggregator.
+          SUMR: DeFi’s productive asset that powers the leading yield aggregator
         </Text>
         <Text as="p" variant="p1">
           Earn dual yield sources by Staking SUMR to additional boosted SUMR rewards, and USDC
@@ -63,7 +63,7 @@ const TwoColumnHeader = () => {
                 Up to 7.2%
               </Text>
               <Text as="h5" variant="h5">
-                SUMR USDC
+                USDC yield
               </Text>
             </div>
             <div className={sumrv2PageViewStyles.yieldSourceColumn}>
@@ -112,7 +112,7 @@ const NewsList = ({
                 {description}
               </Text>
               <WithArrow variant="p2semi">
-                <Link href={link}>
+                <Link href={link} target="_blank">
                   <Text variant="p2semi">Read more</Text>
                 </Link>
               </WithArrow>
@@ -213,7 +213,7 @@ export const SumrV2PageView = ({
                   <div className={sumrv2PageViewStyles.factsSectionText}>
                     <Text variant="p2semi">January 21, 2026</Text>
                     <Text as="p" variant="p3">
-                      SUMR Starts trading and can be bought and sold freely. Based on the market
+                      SUMR starts trading and can be bought and sold freely. Based on the market
                       price SUMR APYs may fluctuate, earning you even more.
                     </Text>
                   </div>
@@ -269,7 +269,7 @@ export const SumrV2PageView = ({
                     <div className={sumrv2PageViewStyles.governanceSectionDescription}>
                       <Text variant="h5">Curate the best of DeFi</Text>
                       <Text as="p" variant="p2semi">
-                        Approve or off board markets, ensuring only the best and safest yield
+                        Approve or offboard markets, ensuring only the best and safest yield
                         opportunities are available.
                       </Text>
                     </div>
@@ -394,12 +394,12 @@ export const SumrV2PageView = ({
           {
             title: 'How does SUMR capture value from Lazy Summer?',
             content:
-              'Lazy Summer charges fees on yield generated in its vaults. A portion of this protocol revenue flows to the treasury, and from there to SUMR staker’s (in USDC LV vault tokens) and ecosystem growth, as decided by governance.',
+              'Lazy Summer charges fees on yield generated in its vaults. A portion of this protocol revenue flows to the treasury, and from there to SUMR stakers (in USDC LV vault tokens) and ecosystem growth, as decided by governance.',
           },
           {
             title: 'Do I need SUMR to use Lazy Summer?',
             content:
-              'No. Anyone can deposit into Lazy Summer vaults without holding SUMR. SUMR is for users who want governance influence and economic exposure to protocol growth on top of vault yield.Though, all depositors in Lazy Summer do earn SUMR.',
+              'No. Anyone can deposit into Lazy Summer vaults without holding SUMR. SUMR is for users who want governance influence and economic exposure to protocol growth on top of vault yield. Though, all depositors in Lazy Summer do earn SUMR.',
           },
           {
             title: 'What is SUMR Staking V2?',

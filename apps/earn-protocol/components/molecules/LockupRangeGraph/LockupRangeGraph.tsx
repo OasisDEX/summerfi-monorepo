@@ -62,13 +62,13 @@ export const LockupRangeGraph = ({
         <Tooltip
           tooltip={
             <div className={lockupRangeGraphStyles.lockupRangeGraphTooltip}>
-              <Text variant="h5">SUMR Staking is based on availability per bucket.</Text>
+              <Text variant="h5">SUMR Staking is based on availability per bucket</Text>
               <Text variant="p3">
-                Lock buckets have fixed slots. What’s left determines your max stake and USD and
+                Lock buckets have fixed slots. What’s left determines your max stake and USDC and
                 SUMR APY.
               </Text>
               <Text variant="p3">
-                Color’s show how much of your available SUMR fits in each bucket. See details for
+                Colors show how much of your available SUMR fits in each bucket. See details for
                 exact remaining capacity.
               </Text>
               <Text variant="p3">
@@ -86,7 +86,7 @@ export const LockupRangeGraph = ({
                   }}
                   className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
                 />
-                100% of your available SUMR can be locked.
+                100% of your available SUMR can be locked
               </Text>
               <Text
                 variant="p3semi"
@@ -98,7 +98,7 @@ export const LockupRangeGraph = ({
                   }}
                   className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
                 />
-                Some of your available SUMR can be locked.
+                Some of your available SUMR can be locked
               </Text>
               <Text
                 variant="p3semi"
@@ -110,7 +110,7 @@ export const LockupRangeGraph = ({
                   }}
                   className={lockupRangeGraphStyles.lockupRangeGraphTooltipMiniChart}
                 />
-                There is no available capacity for your SUMR.
+                There is no available capacity for your SUMR
               </Text>
             </div>
           }
