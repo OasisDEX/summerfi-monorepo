@@ -13,7 +13,7 @@ import { VaultExposureTableSection } from '@/features/vault-exposure/components/
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 import { VaultExposureFilterType } from '@/features/vault-exposure/types'
 
-const rowsToDisplay = 5
+const defaultRowsToDisplay = 5
 
 interface VaultExposureProps {
   vault: SDKVaultishType
@@ -35,7 +35,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   const [seeAll, setSeeAll] = useState(false)
 
   // hard to tell how many arks will be per vault therefore limiting it for now to 20
-  const resolvedRowsToDisplay = seeAll ? 20 : rowsToDisplay
+  const resolvedRowsToDisplay = seeAll ? Infinity : defaultRowsToDisplay
 
   const tabs = [
     {
