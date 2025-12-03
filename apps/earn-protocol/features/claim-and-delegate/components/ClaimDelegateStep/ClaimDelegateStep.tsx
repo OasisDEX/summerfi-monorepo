@@ -177,7 +177,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       </Text>
     </Text>
   )
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} SUMR / Year`
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
     onSuccess: () => {

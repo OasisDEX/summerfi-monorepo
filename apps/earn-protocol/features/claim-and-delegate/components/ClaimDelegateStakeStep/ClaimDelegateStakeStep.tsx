@@ -318,7 +318,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
 
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} $SUMR / Year`
+  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} SUMR / Year`
 
   const stakedAmountRaw = Number(externalData.sumrStakeDelegate.stakedAmount)
   const stakedAmountUSD = formatFiatBalance(stakedAmountRaw * estimatedSumrPrice)
