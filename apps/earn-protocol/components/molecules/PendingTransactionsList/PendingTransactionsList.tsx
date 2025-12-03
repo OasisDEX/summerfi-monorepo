@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react'
 import { Expander, getDisplayToken, getScannerUrl, Icon, Text } from '@summerfi/app-earn-ui'
 import { type TransactionWithStatus } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
@@ -11,7 +12,7 @@ const getHumanReadableDescription = (tx: TransactionWithStatus) => {
     case TransactionType.Approve:
       return (
         <>
-          Approve spending&nbsp;
+          Approve&nbsp;
           <b>
             {formatCryptoBalance(tx.metadata.approvalAmount.amount)}&nbsp;
             {getDisplayToken(tx.metadata.approvalAmount.token.symbol)}
@@ -51,23 +52,25 @@ const getHumanReadableDescription = (tx: TransactionWithStatus) => {
         </>
       )
     default:
-      return `Transaction not mapped - (${(tx as TransactionWithStatus).type})`
+      return (tx as TransactionWithStatus).description
   }
 }
 
 export const PendingTransactionsList = ({
   transactions,
   chainId,
+  style,
 }: {
   transactions?: TransactionWithStatus[]
   chainId: number
+  style?: CSSProperties
 }) => {
   const transactionCount = transactions?.length ?? 0
   const pendingTransactions = transactions?.filter((tx) => !tx.executed).length ?? 0
   const executedTransactions = transactions?.filter((tx) => tx.executed).length ?? 0
 
   return transactionCount && pendingTransactions ? (
-    <div style={{ marginTop: '16px' }}>
+    <div style={{ marginTop: '16px', ...style }}>
       <Expander
         title={
           <span>

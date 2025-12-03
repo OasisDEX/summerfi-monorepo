@@ -1,5 +1,6 @@
 'use client'
 import { type FC, type ReactNode, Suspense, useEffect, useMemo, useRef } from 'react'
+import clsx from 'clsx'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -13,6 +14,7 @@ interface ModalProps {
   children: ReactNode
   disableCloseOutside?: boolean
   withCloseButton?: boolean
+  noScroll?: boolean
 }
 
 export const Modal: FC<ModalProps> = ({
@@ -21,6 +23,7 @@ export const Modal: FC<ModalProps> = ({
   children,
   disableCloseOutside = false,
   withCloseButton = true,
+  noScroll = false,
 }) => {
   const ref = useRef<HTMLDialogElement>(null)
   const defaultBodyOverflow = useMemo(() => document.body.style.overflow, [])
@@ -54,7 +57,13 @@ export const Modal: FC<ModalProps> = ({
   }, [openModal, closeModal, disableCloseOutside, defaultBodyOverflow])
 
   return (
-    <dialog ref={ref} onCancel={closeModal} className={modalStyles.dialog}>
+    <dialog
+      ref={ref}
+      onCancel={closeModal}
+      className={clsx(modalStyles.dialog, {
+        [modalStyles.dialogNoScroll]: noScroll,
+      })}
+    >
       <div id="modal-portal" style={{ position: 'absolute' }} />
       <Suspense fallback={<LoadingSpinner size={40} />}>{openModal ? children : null}</Suspense>
       {withCloseButton && (

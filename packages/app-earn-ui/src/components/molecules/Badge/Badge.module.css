@@ -11,17 +11,24 @@
   cursor: pointer;
   flex: 1;
 }
+
 @media screen and (min-width: 768px) {
   .badgeWrapper {
     padding: var(--general-space-8) var(--general-space-24);
   }
 }
+
 .badgeWrapper:hover {
   transition: background-color 0.2s;
   background-color: var(--earn-protocol-neutral-85);
 }
+
 .badgeWrapper.active {
   border: 1px solid transparent;
   transition: border-color 0.1s;
   background-image: linear-gradient(rgb(35, 35, 35), rgb(43, 43, 43)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+}
+
+.disabled {
+  opacity: 0.6;
 }

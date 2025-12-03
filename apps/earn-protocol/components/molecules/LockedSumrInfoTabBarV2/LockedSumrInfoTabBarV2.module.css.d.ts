@@ -4,6 +4,8 @@ declare const styles: {
   readonly "noStakedSumrDataBox": string;
   readonly "noStakedSumrDataBoxes": string;
   readonly "noStakedSumrGradient": string;
+  readonly "percentageButtons": string;
+  readonly "removeStakeModalContent": string;
   readonly "tableResponsiveWrapper": string;
   readonly "wrapper": string;
 };

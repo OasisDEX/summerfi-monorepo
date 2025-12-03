@@ -1,7 +1,19 @@
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+import { accountType, ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
+import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
+import {
+  type ApproveTransactionInfo,
+  type UnstakeTransactionInfo,
+  User,
+} from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
+import { debounce } from 'lodash-es'
 
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -67,5 +79,152 @@ export const useUnstakeSumrTransaction = ({
     unstakeSumrTransaction,
     isLoading: isSendingUserOperation,
     error,
+  }
+}
+
+type CustomUnstakeTransactionInfo =
+  | [
+      ApproveTransactionInfo & {
+        executed: boolean
+      },
+      UnstakeTransactionInfo & {
+        executed: boolean
+      },
+    ]
+  | undefined
+
+export const useUnstakeV2SumrTransaction = ({
+  amount,
+  userAddress,
+  userStakeIndex,
+  refetchStakingData,
+}: {
+  amount: bigint
+  userAddress?: string
+  userStakeIndex: bigint
+  refetchStakingData: () => Promise<void>
+}): {
+  triggerNextTransaction: () => Promise<unknown>
+  isLoading: boolean
+  error: Error | null
+  transactionQueue: TransactionWithStatus[]
+  buttonLabel?: string
+} => {
+  const [isLoadingLocal, setIsLoadingLocal] = useState(false)
+  const [transactionQueue, setTransactionQueue] = useState<CustomUnstakeTransactionInfo>()
+  const { getUnstakeTxV2 } = useAppSDK()
+  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  // debounce amount by 500ms to avoid rapid calls to getUnstakeTxV2
+  const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amount)
+  const debouncedSetAmount = useMemo(
+    () =>
+      debounce((a: bigint) => {
+        setDebouncedAmount(a)
+      }, 500),
+    [],
+  )
+
+  useEffect(() => {
+    debouncedSetAmount(amount)
+
+    return () => {
+      debouncedSetAmount.cancel()
+    }
+  }, [amount, debouncedSetAmount])
+
+  const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
+    client: smartAccountClient,
+    waitForTxn: true,
+    onSuccess: () => {
+      toast.success('Transaction successful', SUCCESS_TOAST_CONFIG)
+      revalidateUser(userAddress)
+    },
+    onError: () => {
+      toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
+    },
+  })
+
+  const nextTransaction = useMemo(() => {
+    if (!transactionQueue) {
+      return undefined
+    }
+
+    return transactionQueue.find((tx) => !tx.executed)
+  }, [transactionQueue])
+
+  const prepareTransactions = useCallback(async () => {
+    setIsLoadingLocal(true)
+    const txs = await getUnstakeTxV2({
+      amount: BigInt(
+        new BigNumber(debouncedAmount).times(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(0),
+      ),
+      user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
+      userStakeIndex,
+    })
+
+    const mappedTransactions = txs.map((tx) => ({
+      ...tx,
+      executed: false,
+      // i dont have time for that
+    })) as unknown as CustomUnstakeTransactionInfo
+
+    setTransactionQueue(mappedTransactions)
+    setIsLoadingLocal(false)
+  }, [debouncedAmount, getUnstakeTxV2, userAddress, userStakeIndex])
+
+  useEffect(() => {
+    if (!userAddress) return
+
+    prepareTransactions()
+  }, [debouncedAmount, getUnstakeTxV2, userAddress, userStakeIndex, prepareTransactions])
+
+  const triggerNextTransaction = useCallback(() => {
+    if (!nextTransaction) {
+      return Promise.resolve(undefined)
+    }
+
+    const txParams = {
+      target: nextTransaction.transaction.target.value,
+      data: nextTransaction.transaction.calldata,
+      value: BigInt(nextTransaction.transaction.value),
+    }
+
+    return getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+      .then((resolvedOverrides) =>
+        sendUserOperationAsync({
+          uo: txParams,
+          overrides: resolvedOverrides,
+        }),
+      )
+      .then((result) => {
+        setTransactionQueue((prevQueue) => {
+          if (!prevQueue) return prevQueue
+
+          const updatedQueue = prevQueue.map((tx) => {
+            if (tx.type === nextTransaction.type) {
+              return { ...tx, executed: true }
+            }
+
+            return tx
+          })
+
+          return updatedQueue as unknown as CustomUnstakeTransactionInfo
+        })
+
+        return result
+      })
+  }, [nextTransaction, sendUserOperationAsync, smartAccountClient])
+
+  return {
+    triggerNextTransaction,
+    // i dont have time for that
+    transactionQueue: transactionQueue as unknown as TransactionWithStatus[],
+    isLoading: isSendingUserOperation || isLoadingLocal,
+    error,
+    buttonLabel: nextTransaction?.type,
+    prepareTransactions,
   }
 }
