@@ -62,8 +62,9 @@ export const getNavigationItems = ({
             {
               title: 'Governance',
               id: 'governance',
-              description: 'The onchain decisions shaping Lazy Summer Protocol ',
+              description: 'Thea onchain decisions shaping Lazy Summer Protocol ',
               url: `https://gov.summer.fi/dao`,
+              target: '_blank',
               icon: 'earn_rebalance_activities' as IconNamesList,
               prefetchDisabled: !isEarnApp,
               onClick: handleButtonClick('governance'),

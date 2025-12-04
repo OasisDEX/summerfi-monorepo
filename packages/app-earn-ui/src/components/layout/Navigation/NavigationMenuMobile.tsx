@@ -104,6 +104,7 @@ export const NavigationMenuMobile = ({
                   [navigationMenuMobileStyles.activeLink]: currentPath === link.link,
                 })}
                 prefetch={!(link.disabled ?? link.prefetchDisabled)}
+                target={link.target}
               >
                 <Button
                   variant="textSecondaryLarge"

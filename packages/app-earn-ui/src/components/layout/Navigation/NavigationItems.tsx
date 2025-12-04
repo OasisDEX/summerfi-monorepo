@@ -15,6 +15,7 @@ export type NavigationItemsProps = {
     url: string
     icon: IconNamesList
     iconSize?: number
+    target?: string
     prefetchDisabled?: boolean
     onClick?: () => void
   }[]
@@ -29,6 +30,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps): R
           href={item.url}
           key={`NavItems_${item.id}`}
           prefetch={!item.prefetchDisabled}
+          target={item.target}
           onClick={item.onClick}
         >
           <div className={navigationItemsStyles.navigationItemsItem}>

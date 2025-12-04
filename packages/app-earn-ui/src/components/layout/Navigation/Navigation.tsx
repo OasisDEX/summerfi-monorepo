@@ -26,6 +26,7 @@ export interface EarnNavigationProps {
     itemsList?: NavigationItemsProps['items']
     dropdownContent?: ReactNode
     link?: string
+    target?: '_blank' | '_self'
     disabled?: boolean
     prefetchDisabled?: boolean
     onClick?: () => void
