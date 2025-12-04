@@ -403,7 +403,7 @@ export interface IArmadaManagerGovernance {
    * @returns Simulation data including APYs and yield boosts
    */
   getStakingEarningsEstimationV2(params: {
-    stakes: { amount: bigint; period: bigint; weightedAmount: bigint }[]
+    stakes: Pick<UserStakeV2, 'weightedAmount'>[]
     sumrPriceUsd?: number
   }): Promise<StakingEarningsEstimationForStakesV2>
 

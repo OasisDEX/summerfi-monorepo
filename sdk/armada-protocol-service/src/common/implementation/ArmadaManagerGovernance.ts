@@ -706,7 +706,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       maxApy: Percentage.createFrom({ value: maxApy }),
     }
   }
-  
+
   async getStakingBucketsInfoV2(): ReturnType<IArmadaManagerGovernance['getStakingBucketsInfoV2']> {
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
 

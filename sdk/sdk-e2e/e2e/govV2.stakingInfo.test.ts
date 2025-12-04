@@ -89,7 +89,7 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       expect(earned).toBeGreaterThanOrEqual(0n)
     })
 
-    it.only('should get staking reward rates', async () => {
+    it('should get staking reward rates', async () => {
       const rewardRates = await sdk.armada.users.getStakingRewardRatesV2({
         sumrPriceUsd: summerPriceUsd,
       })

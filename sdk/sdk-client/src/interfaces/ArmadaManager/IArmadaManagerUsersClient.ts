@@ -805,7 +805,7 @@ export interface IArmadaManagerUsersClient {
    * @returns Earnings estimation including SUMR rewards and USD earnings for each stake
    */
   getStakingEarningsEstimationV2(params: {
-    stakes: { amount: bigint; period: bigint; weightedAmount: bigint }[]
+    stakes: { weightedAmount: bigint }[]
     sumrPriceUsd?: number
   }): Promise<StakingEarningsEstimationForStakesV2>
 

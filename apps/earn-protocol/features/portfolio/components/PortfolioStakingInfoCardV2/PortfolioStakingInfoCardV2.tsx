@@ -132,7 +132,9 @@ export const PortfolioStakingInfoCardV2 = ({
   sumrUserData,
   sumrPrice,
   sumrRewardApy,
+  sumrRewardAmount,
   usdcEarnedOnSumr,
+  usdcEarnedOnSumrAmount,
   stats,
 }: {
   sumrUserData: {
@@ -147,7 +149,9 @@ export const PortfolioStakingInfoCardV2 = ({
   }
   sumrPrice: number
   sumrRewardApy: number
+  sumrRewardAmount: number
   usdcEarnedOnSumr: number
+  usdcEarnedOnSumrAmount: number
 }) => {
   return (
     <Card
@@ -214,11 +218,8 @@ export const PortfolioStakingInfoCardV2 = ({
                   </Tooltip>
                 </div>
               ),
-              value: `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr)}`,
-              subValue: `$${formatCryptoBalance(
-                // Huh?
-                usdcEarnedOnSumr * sumrUserData.sumrAvailableToStake * sumrPrice,
-              )} / Year`,
+              value: `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100)}`,
+              subValue: `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
@@ -243,11 +244,8 @@ export const PortfolioStakingInfoCardV2 = ({
                   </Tooltip>
                 </div>
               ),
-              value: `Up to ${formatDecimalAsPercent(sumrRewardApy)}`,
-              subValue: `+${formatCryptoBalance(
-                // Huh?
-                sumrUserData.sumrAvailableToStake * sumrRewardApy,
-              )} SUMR / Year`,
+              value: `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
+              subValue: `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}

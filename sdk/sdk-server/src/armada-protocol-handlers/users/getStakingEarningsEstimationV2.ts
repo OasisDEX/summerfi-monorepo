@@ -6,8 +6,6 @@ export const getStakingEarningsEstimationV2 = publicProcedure
     z.object({
       stakes: z.array(
         z.object({
-          amount: z.bigint(),
-          period: z.bigint(),
           weightedAmount: z.bigint(),
         }),
       ),
