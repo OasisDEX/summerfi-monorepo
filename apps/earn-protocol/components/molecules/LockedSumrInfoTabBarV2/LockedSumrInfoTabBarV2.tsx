@@ -15,7 +15,10 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
-import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
+import type {
+  StakingEarningsEstimationForStakesV2,
+  UserStakeV2,
+} from '@summerfi/armada-protocol-common'
 import { BigNumber } from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -204,6 +207,7 @@ interface YourLockedSumrPositionsTableProps {
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
@@ -213,6 +217,7 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
+  earningsEstimation,
 }) => {
   if (isLoading) {
     return (
@@ -246,12 +251,25 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
       const penaltyPercentage = penaltyPercentages.find((p) => p.index === stake.index)?.value ?? 0
       const penaltyAmount = penaltyAmounts.find((p) => p.index === stake.index)?.value ?? 0n
 
+      // Find the corresponding earnings data by stake index (array index matches stake index)
+      const stakeEarnings = earningsEstimation?.stakes[stake.index]
+      const sumrRewards = stakeEarnings?.sumrRewardsAmount ?? 0n
+      const usdEarnings = stakeEarnings?.usdEarningsAmount ?? '0'
+
       // Format penalty: "23,232 (12%) SUMR"
       const penaltyAmountFormatted = new BigNumber(penaltyAmount.toString()).shiftedBy(
         -SUMR_DECIMALS,
       )
       const penaltyPercentageFormatted = penaltyPercentage.toFixed(2)
       const penaltyDisplay = `${formatCryptoBalance(penaltyAmountFormatted)} (${penaltyPercentageFormatted}%) SUMR`
+
+      // Format rewards: convert from wei
+      const sumrRewardsFormatted = new BigNumber(sumrRewards.toString()).shiftedBy(-SUMR_DECIMALS)
+      const rewardsDisplay = `${formatCryptoBalance(sumrRewardsFormatted)} (${stake.multiplier.toFixed(2)}x)`
+
+      // Format USD earnings: simple dollar value
+      const usdEarningsFormatted = new BigNumber(usdEarnings)
+      const usdEarningsDisplay = `$${formatCryptoBalance(usdEarningsFormatted)} (${stake.multiplier.toFixed(2)}x)`
 
       return {
         id: stake.index.toString(),
@@ -271,8 +289,8 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
             </TableRightCell>
           ),
           lockPeriod: <TableRightCell>{formatLockPeriod(stake.lockupPeriod)}</TableRightCell>,
-          rewards: <TableCenterCell>n/a</TableCenterCell>,
-          usdEarnings: <TableCenterCell>n/a</TableCenterCell>,
+          rewards: <TableCenterCell>{rewardsDisplay}</TableCenterCell>,
+          usdEarnings: <TableCenterCell>{usdEarningsDisplay}</TableCenterCell>,
           removeStakePenalty: (
             <TableRightCell>
               <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
@@ -336,6 +354,7 @@ interface YourLockedSumrPositionsProps {
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
@@ -345,6 +364,7 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
+  earningsEstimation,
 }) => {
   return (
     <Card variant="cardSecondary">
@@ -357,6 +377,7 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
+          earningsEstimation={earningsEstimation}
         />
       </div>
     </Card>
@@ -488,6 +509,7 @@ interface LockedSumrInfoTabBarV2Props {
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -497,6 +519,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
+  earningsEstimation,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -513,6 +536,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 refetchStakingData={refetchStakingData}
                 penaltyPercentages={penaltyPercentages}
                 penaltyAmounts={penaltyAmounts}
+                earningsEstimation={earningsEstimation}
               />
             ) : stakes.length ? (
               <YourLockedSumrPositions
@@ -522,6 +546,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 refetchStakingData={refetchStakingData}
                 penaltyPercentages={penaltyPercentages}
                 penaltyAmounts={penaltyAmounts}
+                earningsEstimation={earningsEstimation}
               />
             ) : (
               <NoStakedPositions />

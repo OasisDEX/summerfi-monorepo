@@ -227,6 +227,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         refetchStakingData={fetchStakingData}
         penaltyPercentages={penaltyPercentages}
         penaltyAmounts={penaltyAmounts}
+        earningsEstimation={earningsEstimation}
       />
     </div>
   )
