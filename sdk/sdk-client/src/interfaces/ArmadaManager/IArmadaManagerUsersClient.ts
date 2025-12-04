@@ -685,9 +685,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns Array of penalty percentages (IPercentage objects)
    */
-  getCalculatePenaltyPercentage(params: {
-    userStakes: UserStakeV2[]
-  }): Promise<IPercentage[]>
+  getCalculatePenaltyPercentage(params: { userStakes: UserStakeV2[] }): Promise<IPercentage[]>
 
   /**
    * @method getCalculatePenaltyAmount
