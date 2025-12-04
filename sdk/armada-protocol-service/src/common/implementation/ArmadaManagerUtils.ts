@@ -134,7 +134,7 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     if (params?.override !== undefined) {
       return params.override
     }
-    return 0.1
+    return 0.25
   }
 
   /** POOLS */

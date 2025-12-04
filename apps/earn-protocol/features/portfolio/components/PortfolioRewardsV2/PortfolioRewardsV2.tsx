@@ -1,6 +1,9 @@
 import { type Dispatch, type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
-import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
+import type {
+  StakingEarningsEstimationForStakesV2,
+  UserStakeV2,
+} from '@summerfi/armada-protocol-common'
 import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
@@ -32,6 +35,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const { userWalletAddress } = useUserWallet()
 
   // State for fetched data
+  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
   const [maxApy, setMaxApy] = useState<number>(0)
   const [sumrRewardApy, setSumrRewardApy] = useState<number>(0)
   const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
@@ -40,7 +44,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [sumrAvailableToStake, setSumrAvailableToStake] = useState<number>(0)
   const [sumrStaked, setSumrStaked] = useState<number>(0)
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
-  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
+  const [earningsEstimation, setEarningsEstimation] =
+    useState<StakingEarningsEstimationForStakesV2 | null>(null)
 
   const {
     getUserBalance,
@@ -48,6 +53,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getStakingStatsV2,
     getUserStakingSumrStaked,
     getUserStakesV2,
+    getStakingEarningsEstimationV2,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -81,6 +87,12 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           }),
         ])
 
+      const _earningsEstimation = await getStakingEarningsEstimationV2({
+        stakes: userStakesData,
+      })
+
+      setEarningsEstimation(_earningsEstimation)
+
       // Process user balance
       const availableSumrValue = new BigNumber(userBalance).shiftedBy(-SUMR_DECIMALS).toNumber()
 
@@ -92,8 +104,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       setSumrStaked(stakedSumrValue)
 
       // Process reward rates
-      setMaxApy(new BigNumber(rewardRates.maxApy.value).toNumber())
-      setSumrRewardApy(new BigNumber(rewardRates.summerRewardApy.value).toNumber())
+      setMaxApy(rewardRates.maxApy.value)
+      setSumrRewardApy(rewardRates.summerRewardYield.value)
 
       // Process staking stats
       setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
@@ -113,6 +125,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       setIsLoadingStakes(false)
     }
   }, [
+    getStakingEarningsEstimationV2,
     getStakingRewardRatesV2,
     getStakingStatsV2,
     getUserBalance,
@@ -136,13 +149,33 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     return totalSumrStaked / circulatingSupply
   }, [totalSumrStaked, circulatingSupply])
 
+  const usdcEarnedOnSumrAmount = useMemo(() => {
+    return earningsEstimation
+      ? earningsEstimation.stakes.reduce(
+          (acc, stake) => acc + parseFloat(stake.usdEarningsAmount.toString()),
+          0,
+        )
+      : 0
+  }, [earningsEstimation])
+
+  const sumrRewardAmount = useMemo(() => {
+    return earningsEstimation
+      ? earningsEstimation.stakes.reduce(
+          (acc, stake) => acc + parseFloat(stake.sumrRewardsAmount.toString()),
+          0,
+        )
+      : 0
+  }, [earningsEstimation])
+
   return (
     <div className={classNames.wrapper}>
       <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
       <PortfolioStakingInfoCardV2
         usdcEarnedOnSumr={maxApy}
+        usdcEarnedOnSumrAmount={usdcEarnedOnSumrAmount}
         sumrPrice={sumrPriceUsd}
         sumrRewardApy={sumrRewardApy}
+        sumrRewardAmount={sumrRewardAmount}
         stats={{
           totalSumrStaked,
           circulatingSupply,

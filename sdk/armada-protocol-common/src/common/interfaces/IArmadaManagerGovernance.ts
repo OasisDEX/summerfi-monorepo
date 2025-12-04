@@ -34,7 +34,8 @@ export interface UserStakeV2 {
  * @description Staking reward rates
  */
 export interface StakingRewardRates {
-  summerRewardApy: IPercentage
+  summerRewardYield: IPercentage
+  maxSummerRewardYield: IPercentage
   baseApy: IPercentage
   maxApy: IPercentage
 }
@@ -72,6 +73,16 @@ export interface StakingStatsV2 {
   amountOfLockedStakes?: bigint | null
   averageLockupPeriod?: bigint | null
   circulatingSupply: string
+}
+
+/**
+ * @description Staking earnings estimation for multiple stakes (V2)
+ */
+export interface StakingEarningsEstimationForStakesV2 {
+  stakes: {
+    sumrRewardsAmount: bigint
+    usdEarningsAmount: string
+  }[]
 }
 
 /**
@@ -380,6 +391,21 @@ export interface IArmadaManagerGovernance {
     sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
+
+  /**
+   * @method getStakingEarningsEstimationV2
+   * @description Calculates staking rewards estimation for multiple stakes
+   *
+   * @param amounts The amounts to stake
+   * @param periods The lockup periods in seconds
+   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
+   *
+   * @returns Earnings estimation for the provided stakes
+   */
+  getStakingEarningsEstimationV2(params: {
+    stakes: Pick<UserStakeV2, 'weightedAmount'>[]
+    sumrPriceUsd?: number
+  }): Promise<StakingEarningsEstimationForStakesV2>
 
   /**
    * @method getStakingConfigV2

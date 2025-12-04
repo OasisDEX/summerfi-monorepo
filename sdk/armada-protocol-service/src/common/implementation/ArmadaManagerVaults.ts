@@ -2032,7 +2032,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       return acc + vaultRevenue
     }, 0)
 
-    LoggingService.debug('Vault Revenue Calculation', JSON.stringify(debugLog, null, 2))
+    LoggingService.log('Vault Revenue Calculation', JSON.stringify(debugLog, null, 2))
 
     return revenueAmount
   }
