@@ -8,12 +8,13 @@ import type {
   StakingBucket,
   UnstakeTransactionInfo,
   AddressValue,
+  StakingStake,
 } from '@summerfi/sdk-common'
 
 /**
  * @description User staking balance by bucket
  */
-export interface UserStakingBalanceByBucket {
+export interface StakingBalanceByBucket {
   bucket: StakingBucket
   amount: bigint
 }
@@ -21,7 +22,7 @@ export interface UserStakingBalanceByBucket {
 /**
  * @description User stake position details (V2)
  */
-export interface UserStakeV2 {
+export interface UserStakingStake {
   index: number
   amount: bigint
   weightedAmount: bigint
@@ -54,7 +55,7 @@ export interface StakingBucketInfo {
 /**
  * @description Staking simulation data result
  */
-export interface StakingSimulationDataV2 {
+export interface StakingSimulationData {
   sumrRewardApy: IPercentage
   usdcYieldApy: IPercentage
   usdcYieldBoost: number
@@ -68,7 +69,7 @@ export interface StakingSimulationDataV2 {
 /**
  * @description Staking stats result from protocol subgraph
  */
-export interface StakingStatsV2 {
+export interface StakingStats {
   summerStakedNormalized: string
   amountOfLockedStakes?: bigint | null
   averageLockupPeriod?: bigint | null
@@ -78,7 +79,7 @@ export interface StakingStatsV2 {
 /**
  * @description Staking earnings estimation for multiple stakes (V2)
  */
-export interface StakingEarningsEstimationForStakesV2 {
+export interface StakingEarningsEstimationForStakes {
   stakes: {
     sumrRewardsAmount: bigint
     usdEarningsAmount: string
@@ -287,7 +288,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns Array of balances by bucket
    */
-  getUserStakingBalanceV2: (params: { user: IUser }) => Promise<UserStakingBalanceByBucket[]>
+  getUserStakingBalanceV2: (params: { user: IUser }) => Promise<StakingBalanceByBucket[]>
 
   /**
    * @method getUserStakingWeightedBalanceV2
@@ -390,7 +391,7 @@ export interface IArmadaManagerGovernance {
     period: bigint
     sumrPriceUsd?: number
     userAddress: AddressValue
-  }): Promise<StakingSimulationDataV2>
+  }): Promise<StakingSimulationData>
 
   /**
    * @method getStakingEarningsEstimationV2
@@ -403,9 +404,9 @@ export interface IArmadaManagerGovernance {
    * @returns Earnings estimation for the provided stakes
    */
   getStakingEarningsEstimationV2(params: {
-    stakes: Pick<UserStakeV2, 'weightedAmount'>[]
+    stakes: Pick<UserStakingStake, 'weightedAmount'>[]
     sumrPriceUsd?: number
-  }): Promise<StakingEarningsEstimationForStakesV2>
+  }): Promise<StakingEarningsEstimationForStakes>
 
   /**
    * @method getStakingConfigV2
@@ -421,7 +422,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns Object containing staking statistics including total staked, average lockup period, and number of locked stakes
    */
-  getStakingStatsV2(): Promise<StakingStatsV2>
+  getStakingStatsV2(): Promise<StakingStats>
 
   /**
    * @method getUserStakingSumrStaked
@@ -441,7 +442,7 @@ export interface IArmadaManagerGovernance {
    *
    * @returns Array of user stake positions
    */
-  getUserStakesV2: (params: { user: IUser }) => Promise<UserStakeV2[]>
+  getUserStakesV2: (params: { user: IUser }) => Promise<UserStakingStake[]>
 
   /**
    * @method getCalculatePenaltyPercentage
@@ -451,7 +452,9 @@ export interface IArmadaManagerGovernance {
    *
    * @returns Array of penalty percentages (IPercentage objects)
    */
-  getCalculatePenaltyPercentage: (params: { userStakes: UserStakeV2[] }) => Promise<IPercentage[]>
+  getCalculatePenaltyPercentage: (params: {
+    userStakes: UserStakingStake[]
+  }) => Promise<IPercentage[]>
 
   /**
    * @method getCalculatePenaltyAmount
@@ -463,7 +466,7 @@ export interface IArmadaManagerGovernance {
    * @returns Array of penalty amounts in tokens
    */
   getCalculatePenaltyAmount: (params: {
-    userStakes: UserStakeV2[]
+    userStakes: UserStakingStake[]
     amounts: bigint[]
   }) => Promise<bigint[]>
 
@@ -476,4 +479,15 @@ export interface IArmadaManagerGovernance {
    * @returns The user's blended yield boost (userWeightedBalance / userSumrStakedBalance)
    */
   getUserBlendedYieldBoost: (params: { user: IUser }) => Promise<number>
+
+  /**
+   * @method getStakingStakesV2
+   * @description Retrieves all staking stakes for a user from the subgraph manager
+   *
+   * @param first number of items to return (optional, defaults to 1000)
+   * @param skip number of items to skip for pagination (optional, defaults to 0)
+   *
+   * @returns Array of StakingStake objects representing the staking stakes, sorted by lockupPeriod in descending order
+   */
+  getStakingStakesV2: (params: { first?: number; skip?: number }) => Promise<StakingStake[]>
 }

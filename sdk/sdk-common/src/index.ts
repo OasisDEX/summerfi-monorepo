@@ -18,6 +18,7 @@ export type { ArmadaMigratablePosition } from './common/types/ArmadaMigratablePo
 export type { ArmadaMigratablePositionApy } from './common/types/ArmadaMigratablePositionApy'
 export type { Role, RolesResponse } from './common/types/Role'
 export { GraphRoleName } from './common/types/GraphRoleName'
+export type { StakingStake } from './common/types/StakingStake'
 export type {
   HistoricalFleetRateResult,
   HistoricalFleetRates,

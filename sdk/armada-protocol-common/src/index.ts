@@ -45,13 +45,13 @@ export type { IArmadaManager } from './common/interfaces/IArmadaManager'
 export type { IArmadaManagerMigrations } from './common/interfaces/IArmadaManagerMigrations'
 export type { IArmadaManagerGovernance } from './common/interfaces/IArmadaManagerGovernance'
 export type {
-  UserStakingBalanceByBucket,
-  UserStakeV2,
+  StakingBalanceByBucket as UserStakingBalanceByBucket,
+  UserStakingStake as UserStakeV2,
   StakingRewardRates,
   StakingBucketInfo,
-  StakingSimulationDataV2,
-  StakingStatsV2,
-  StakingEarningsEstimationForStakesV2,
+  StakingSimulationData as StakingSimulationDataV2,
+  StakingStats as StakingStatsV2,
+  StakingEarningsEstimationForStakes as StakingEarningsEstimationForStakesV2,
 } from './common/interfaces/IArmadaManagerGovernance'
 export type { IArmadaManagerClaims } from './common/interfaces/IArmadaManagerClaims'
 export { getAllMerkleClaims } from './distributions/index'

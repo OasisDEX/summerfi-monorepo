@@ -291,6 +291,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserStakesV2.query(params)
   }
 
+  async getStakingStakesV2(
+    params: Parameters<IArmadaManagerUsersClient['getStakingStakesV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getStakingStakesV2']> {
+    return this.rpcClient.armada.users.getStakingStakesV2.query(params)
+  }
+
   async getCalculatePenaltyPercentage(
     params: Parameters<IArmadaManagerUsersClient['getCalculatePenaltyPercentage']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getCalculatePenaltyPercentage']> {

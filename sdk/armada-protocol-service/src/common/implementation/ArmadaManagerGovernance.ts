@@ -1206,4 +1206,43 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     return usdcBlendedYieldBoost
   }
+
+  /**
+   * @method getStakingStakesV2
+   * @description Retrieves all staking stakes for a user from the subgraph manager
+   *
+   * @param params Object containing first and skip pagination parameters
+   *
+   * @returns Array of StakingStake objects representing the staking stakes, sorted by lockupPeriod in descending order
+   */
+  async getStakingStakesV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingStakesV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingStakesV2']> {
+    const result = await this._subgraphManager.getStakingStakesV2({
+      chainId: this._hubChainInfo.chainId,
+      first: params.first ?? 1000,
+      skip: params.skip ?? 0,
+    })
+
+    // Map subgraph data to StakingStake interface
+    const stakes = result.stakeLockups.map((lockup) => ({
+      owner: lockup.account.id as AddressValue,
+      index: Number(lockup.index),
+      amount: lockup.amount,
+      weightedAmount: lockup.weightedAmount,
+      weightedAmountNormalized: parseFloat(lockup.weightedAmountNormalized),
+      lockupStartTime: lockup.startTimestamp,
+      lockupEndTime: lockup.endTimestamp,
+      lockupPeriod: lockup.lockupPeriod,
+      multiplier:
+        parseFloat(lockup.weightedAmountNormalized) / parseFloat(lockup.amount.toString()),
+    }))
+
+    // Sort by lockupPeriod in descending order
+    return stakes.sort((a, b) => {
+      if (a.lockupPeriod > b.lockupPeriod) return -1
+      if (a.lockupPeriod < b.lockupPeriod) return 1
+      return 0
+    })
+  }
 }
