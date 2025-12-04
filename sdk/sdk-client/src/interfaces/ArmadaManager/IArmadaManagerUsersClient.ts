@@ -678,6 +678,32 @@ export interface IArmadaManagerUsersClient {
   getUserStakesV2(params: { user: IUser }): Promise<UserStakeV2[]>
 
   /**
+   * @method getCalculatePenaltyPercentage
+   * @description Calculates the penalty percentage for early unstaking of multiple stakes
+   *
+   * @param userStakes Array of user stake details
+   *
+   * @returns Array of penalty percentages (IPercentage objects)
+   */
+  getCalculatePenaltyPercentage(params: {
+    userStakes: UserStakeV2[]
+  }): Promise<IPercentage[]>
+
+  /**
+   * @method getCalculatePenaltyAmount
+   * @description Calculates the penalty amount for early unstaking of specific amounts from multiple stakes
+   *
+   * @param userStakes Array of user stake details
+   * @param amounts Array of amounts to unstake (must match userStakes length)
+   *
+   * @returns Array of penalty amounts in tokens
+   */
+  getCalculatePenaltyAmount(params: {
+    userStakes: UserStakeV2[]
+    amounts: bigint[]
+  }): Promise<bigint[]>
+
+  /**
    * @method getUserStakingBalanceV2
    * @description Returns the user's staking balance for each bucket (V2)
    *

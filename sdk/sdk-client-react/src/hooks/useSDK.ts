@@ -31,6 +31,8 @@ import { getUserStakingBalanceV2Handler } from '../handlers/getUserStakingBalanc
 import { getUserStakingWeightedBalanceV2Handler } from '../handlers/getUserStakingWeightedBalanceV2Handler'
 import { getUserStakingEarnedV2Handler } from '../handlers/getUserStakingEarnedV2Handler'
 import { getUserStakingSumrStakedHandler } from '../handlers/getUserStakingSumrStakedHandler'
+import { getCalculatePenaltyPercentageHandler } from '../handlers/getCalculatePenaltyPercentageHandler'
+import { getCalculatePenaltyAmountHandler } from '../handlers/getCalculatePenaltyAmountHandler'
 import { getStakingRewardRatesV2Handler } from '../handlers/getStakingRewardRatesV2Handler'
 import { getStakingBucketsInfoV2Handler } from '../handlers/getStakingBucketsInfoV2Handler'
 import { getStakingCalculateWeightedStakeV2Handler } from '../handlers/getStakingCalculateWeightedStakeV2Handler'
@@ -152,6 +154,11 @@ export const useSDK = (params: UseSdk) => {
   const getUnstakeTxV2 = useMemo(() => getUnstakeTxV2Handler(sdk), [sdk])
   const getUserStakesCount = useMemo(() => getUserStakesCountHandler(sdk), [sdk])
   const getUserStakesV2 = useMemo(() => getUserStakesV2Handler(sdk), [sdk])
+  const getCalculatePenaltyPercentage = useMemo(
+    () => getCalculatePenaltyPercentageHandler(sdk),
+    [sdk],
+  )
+  const getCalculatePenaltyAmount = useMemo(() => getCalculatePenaltyAmountHandler(sdk), [sdk])
   const getUserStakingBalanceV2 = useMemo(() => getUserStakingBalanceV2Handler(sdk), [sdk])
   const getUserStakingWeightedBalanceV2 = useMemo(
     () => getUserStakingWeightedBalanceV2Handler(sdk),
@@ -247,6 +254,8 @@ export const useSDK = (params: UseSdk) => {
       getUnstakeTxV2,
       getUserStakesCount,
       getUserStakesV2,
+      getCalculatePenaltyPercentage,
+      getCalculatePenaltyAmount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
       getUserStakingEarnedV2,
@@ -321,6 +330,8 @@ export const useSDK = (params: UseSdk) => {
       getUnstakeTxV2,
       getUserStakesCount,
       getUserStakesV2,
+      getCalculatePenaltyPercentage,
+      getCalculatePenaltyAmount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
       getUserStakingEarnedV2,

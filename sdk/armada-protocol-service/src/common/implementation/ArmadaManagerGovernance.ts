@@ -1087,4 +1087,76 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     return stakes
   }
+
+  async getCalculatePenaltyPercentage(
+    params: Parameters<IArmadaManagerGovernance['getCalculatePenaltyPercentage']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getCalculatePenaltyPercentage']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    // Check if penalties are globally disabled
+    const penaltyEnabled = await stakingContract.penaltyEnabled()
+
+    // Get current timestamp using local time
+    const currentTimestamp = BigInt(Math.floor(Date.now() / 1000))
+
+    // Constants from the contract
+    const MIN_PENALTY_PERCENTAGE = BigInt('20000000000000000') // 0.02e18 (2%)
+    const MAX_PENALTY_PERCENTAGE = BigInt('200000000000000000') // 0.2e18 (20%)
+    const FIXED_PENALTY_PERIOD = BigInt(110 * 24 * 60 * 60) // 110 days in seconds
+    const MAX_LOCKUP_PERIOD = BigInt(3 * 365 * 24 * 60 * 60) // 3 years in seconds
+    const WAD = BigInt('1000000000000000000') // 1e18
+
+    return params.userStakes.map((userStake) => {
+      if (!penaltyEnabled) {
+        return Percentage.createFrom({ value: 0 })
+      }
+
+      const lockupEndTime = userStake.lockupEndTime
+
+      // No penalty if lockup has already expired
+      if (currentTimestamp >= lockupEndTime) {
+        return Percentage.createFrom({ value: 0 })
+      }
+
+      // Near-expiry fixed penalty floor to avoid cliff at zero
+      const timeRemaining = lockupEndTime - currentTimestamp
+      if (timeRemaining < FIXED_PENALTY_PERIOD) {
+        // MIN_PENALTY_PERCENTAGE is 0.02e18 (2%)
+        const penaltyValue = (Number(MIN_PENALTY_PERCENTAGE) / Number(WAD)) * 100
+        return Percentage.createFrom({ value: penaltyValue })
+      }
+
+      // Linear ramp to MAX_PENALTY_PERCENTAGE at MAX_LOCKUP_PERIOD
+      const penaltyBigInt = (timeRemaining * MAX_PENALTY_PERCENTAGE) / MAX_LOCKUP_PERIOD
+      const penaltyValue = (Number(penaltyBigInt) / Number(WAD)) * 100
+      return Percentage.createFrom({ value: penaltyValue })
+    })
+  }
+
+  async getCalculatePenaltyAmount(
+    params: Parameters<IArmadaManagerGovernance['getCalculatePenaltyAmount']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getCalculatePenaltyAmount']> {
+    if (params.userStakes.length !== params.amounts.length) {
+      throw new Error('userStakes and amounts arrays must have the same length')
+    }
+
+    // Get penalty percentages for all stakes
+    const penaltyPercentages = await this.getCalculatePenaltyPercentage({
+      userStakes: params.userStakes,
+    })
+
+    // Calculate penalty amounts: (penaltyPercentage * amount) / 100
+    return params.amounts.map((amount, index) => {
+      const penaltyPercentage = penaltyPercentages[index]
+      // Convert percentage (0-100) to decimal and apply to amount
+      const penaltyAmount =
+        (amount * BigInt(Math.floor(penaltyPercentage.value * 100))) / BigInt(10000)
+      return penaltyAmount
+    })
+  }
 }
