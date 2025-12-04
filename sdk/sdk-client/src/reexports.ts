@@ -47,5 +47,6 @@ export type {
   MerklApiReward,
   MerklApiRewardBreakdown,
   MerklApiToken,
+  UserStakeV2,
 } from '@summerfi/armada-protocol-common'
 export * from '@summerfi/sdk-common'

@@ -132,6 +132,11 @@ export class SummerStakingContract<TClient extends IBlockchainClient, TAddress e
     return result as unknown as [number[], bigint[], bigint[], bigint[], bigint[]]
   }
 
+  /** @see ISummerStakingContract.penaltyEnabled */
+  async penaltyEnabled(): Promise<boolean> {
+    return this.contract.read.penaltyEnabled()
+  }
+
   /** @see ISummerStakingContract.calculatePenaltyPercentage */
   async calculatePenaltyPercentage(params: {
     user: AddressValue

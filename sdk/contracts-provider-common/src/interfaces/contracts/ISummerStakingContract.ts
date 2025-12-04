@@ -122,6 +122,13 @@ export interface ISummerStakingContract extends IContractWrapper {
   getAllBucketInfo(): Promise<readonly [number[], bigint[], bigint[], bigint[], bigint[]]>
 
   /**
+   * @name penaltyEnabled
+   * @description Check if early unstake penalties are enabled globally
+   * @returns True if penalties are enabled, false otherwise
+   */
+  penaltyEnabled(): Promise<boolean>
+
+  /**
    * @name calculatePenaltyPercentage
    * @description Calculate penalty percentage for a user's stake
    * @param user The address of the user
