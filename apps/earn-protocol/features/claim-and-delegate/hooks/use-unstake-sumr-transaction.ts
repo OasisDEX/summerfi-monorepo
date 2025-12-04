@@ -152,19 +152,27 @@ export const useUnstakeV2SumrTransaction = ({
 
   const prepareTransactions = useCallback(async () => {
     setIsLoadingTransactions(true)
-    const txs = await getUnstakeTxV2({
-      amount: debouncedAmount,
-      user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
-      userStakeIndex,
-    })
+    try {
+      const txs = await getUnstakeTxV2({
+        amount: debouncedAmount,
+        user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
+        userStakeIndex,
+      })
 
-    const mappedTransactions = txs.map((tx) => ({
-      ...tx,
-      executed: false,
-    }))
+      const mappedTransactions = txs.map((tx) => ({
+        ...tx,
+        executed: false,
+      }))
 
-    setTransactionQueue(mappedTransactions)
-    setIsLoadingTransactions(false)
+      setTransactionQueue(mappedTransactions)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Error preparing unstake transactions:', e)
+
+      throw e
+    } finally {
+      setIsLoadingTransactions(false)
+    }
   }, [debouncedAmount, getUnstakeTxV2, userAddress, userStakeIndex])
 
   useEffect(() => {

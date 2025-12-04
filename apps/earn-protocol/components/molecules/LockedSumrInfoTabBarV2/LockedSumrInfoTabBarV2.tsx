@@ -473,10 +473,17 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
           {
             id: 'your-locked-sumr-positions',
             label: 'Your Locked SUMR Positions',
-            content: stakes.length ? (
+            content: isLoading ? (
               <YourLockedSumrPositions
                 stakes={stakes}
-                isLoading={isLoading}
+                isLoading
+                userWalletAddress={userWalletAddress}
+                refetchStakingData={refetchStakingData}
+              />
+            ) : stakes.length ? (
+              <YourLockedSumrPositions
+                stakes={stakes}
+                isLoading={false}
                 userWalletAddress={userWalletAddress}
                 refetchStakingData={refetchStakingData}
               />
