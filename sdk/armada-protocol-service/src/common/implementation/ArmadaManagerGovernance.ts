@@ -1158,18 +1158,18 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     // Calculate penalty amounts using BigNumber for precision
     return params.amounts.map((amount, index) => {
       const penaltyPercentage = penaltyPercentages[index]
-      
+
       // Convert percentage (0-100) to basis points (x100) with rounding
       const basisPoints = new BigNumber(penaltyPercentage.value)
         .multipliedBy(100)
         .integerValue(BigNumber.ROUND_HALF_UP)
-      
+
       // Calculate: (amount * basisPoints) / 10000
       const penaltyAmount = new BigNumber(amount)
         .multipliedBy(basisPoints)
         .dividedBy(10000)
         .integerValue(BigNumber.ROUND_DOWN)
-      
+
       return BigInt(penaltyAmount.toFixed(0))
     })
   }

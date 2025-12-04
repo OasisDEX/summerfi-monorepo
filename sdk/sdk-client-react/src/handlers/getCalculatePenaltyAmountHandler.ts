@@ -7,7 +7,8 @@ export const getCalculatePenaltyAmountHandler =
     amounts,
   }: {
     userStakes: UserStakeV2[]
-    amounts: bigint[]
+    amounts?: bigint[]
   }): Promise<bigint[]> => {
-    return sdk.armada.users.getCalculatePenaltyAmount({ userStakes, amounts })
+    const amountsWithDefault = amounts ?? userStakes.map((stake) => stake.amount)
+    return sdk.armada.users.getCalculatePenaltyAmount({ userStakes, amounts: amountsWithDefault })
   }
