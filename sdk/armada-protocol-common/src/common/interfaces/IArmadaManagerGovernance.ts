@@ -466,4 +466,14 @@ export interface IArmadaManagerGovernance {
     userStakes: UserStakeV2[]
     amounts: bigint[]
   }) => Promise<bigint[]>
+
+  /**
+   * @method getUserBlendedYieldBoost
+   * @description Returns the user's current blended yield boost based on their weighted balance and staked balance
+   *
+   * @param user The user to get the blended yield boost for
+   *
+   * @returns The user's blended yield boost (userWeightedBalance / userSumrStakedBalance)
+   */
+  getUserBlendedYieldBoost: (params: { user: IUser }) => Promise<number>
 }

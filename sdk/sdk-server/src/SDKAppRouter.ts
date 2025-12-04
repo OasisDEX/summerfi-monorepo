@@ -68,6 +68,7 @@ import { getUserStakesCount } from './armada-protocol-handlers/users/getUserStak
 import { getUserStakesV2 } from './armada-protocol-handlers/users/getUserStakesV2'
 import { getUserStakingBalanceV2 } from './armada-protocol-handlers/users/getUserStakingBalanceV2'
 import { getUserStakingWeightedBalanceV2 } from './armada-protocol-handlers/users/getUserStakingWeightedBalanceV2'
+import { getUserBlendedYieldBoost } from './armada-protocol-handlers/users/getUserBlendedYieldBoost'
 import { getUserStakingEarnedV2 } from './armada-protocol-handlers/users/getUserStakingEarnedV2'
 import { getUserStakingSumrStaked } from './armada-protocol-handlers/users/getUserStakingSumrStaked'
 import { getStakingRewardRatesV2 } from './armada-protocol-handlers/users/getStakingRewardRatesV2'
@@ -212,6 +213,7 @@ export const sdkAppRouter = router({
       getUserStakesV2: getUserStakesV2,
       getUserStakingBalanceV2: getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2: getUserStakingWeightedBalanceV2,
+      getUserBlendedYieldBoost: getUserBlendedYieldBoost,
       getUserStakingEarnedV2: getUserStakingEarnedV2,
       getUserStakingSumrStaked: getUserStakingSumrStaked,
       getCalculatePenaltyPercentage: getCalculatePenaltyPercentage,

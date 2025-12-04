@@ -1173,4 +1173,39 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       return BigInt(penaltyAmount.toFixed(0))
     })
   }
+
+  /**
+   * @method getUserBlendedYieldBoost
+   * @description Returns the user's current blended yield boost based on their weighted balance and staked balance
+   *
+   * @param params Object containing user parameter
+   *
+   * @returns The user's blended yield boost (userWeightedBalance / userSumrStakedBalance), returns 0 if user has no staked balance
+   */
+  async getUserBlendedYieldBoost(
+    params: Parameters<IArmadaManagerGovernance['getUserBlendedYieldBoost']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getUserBlendedYieldBoost']> {
+    // Get user's weighted balance and staked balance in parallel
+    const [userWeightedBalance, userBalances] = await Promise.all([
+      this.getUserStakingWeightedBalanceV2({ user: params.user }),
+      this.getUserStakingBalanceV2({ user: params.user }),
+    ])
+
+    // Calculate user's current total staked balance
+    const userSumrStakedBalance = userBalances.reduce((acc, b) => acc + b.amount, 0n)
+
+    // Convert to BigNumber for calculations
+    const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString())
+    const userSumrStakedBalanceBN = new BigNumber(userSumrStakedBalance.toString())
+
+    // usdcBlendedYieldBoostFrom = userWeightedBalance / userSumrStakedBalance
+    let usdcBlendedYieldBoost = 0
+    if (userSumrStakedBalanceBN.gt(0)) {
+      usdcBlendedYieldBoost = userWeightedBalanceBN
+        .dividedBy(userSumrStakedBalanceBN)
+        .toNumber()
+    }
+
+    return usdcBlendedYieldBoost
+  }
 }

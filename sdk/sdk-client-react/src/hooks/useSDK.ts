@@ -29,6 +29,7 @@ import { getUserStakesCountHandler } from '../handlers/getUserStakesCountHandler
 import { getUserStakesV2Handler } from '../handlers/getUserStakesV2Handler'
 import { getUserStakingBalanceV2Handler } from '../handlers/getUserStakingBalanceV2Handler'
 import { getUserStakingWeightedBalanceV2Handler } from '../handlers/getUserStakingWeightedBalanceV2Handler'
+import { getUserBlendedYieldBoostHandler } from '../handlers/getUserBlendedYieldBoostHandler'
 import { getUserStakingEarnedV2Handler } from '../handlers/getUserStakingEarnedV2Handler'
 import { getUserStakingSumrStakedHandler } from '../handlers/getUserStakingSumrStakedHandler'
 import { getCalculatePenaltyPercentageHandler } from '../handlers/getCalculatePenaltyPercentageHandler'
@@ -164,6 +165,7 @@ export const useSDK = (params: UseSdk) => {
     () => getUserStakingWeightedBalanceV2Handler(sdk),
     [sdk],
   )
+  const getUserBlendedYieldBoost = useMemo(() => getUserBlendedYieldBoostHandler(sdk), [sdk])
   const getUserStakingEarnedV2 = useMemo(() => getUserStakingEarnedV2Handler(sdk), [sdk])
   const getUserStakingSumrStaked = useMemo(() => getUserStakingSumrStakedHandler(sdk), [sdk])
   const getStakingRewardRatesV2 = useMemo(() => getStakingRewardRatesV2Handler(sdk), [sdk])
@@ -258,6 +260,7 @@ export const useSDK = (params: UseSdk) => {
       getCalculatePenaltyAmount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
+      getUserBlendedYieldBoost,
       getUserStakingEarnedV2,
       getUserStakingSumrStaked,
       getStakingRewardRatesV2,
@@ -334,6 +337,7 @@ export const useSDK = (params: UseSdk) => {
       getCalculatePenaltyAmount,
       getUserStakingBalanceV2,
       getUserStakingWeightedBalanceV2,
+      getUserBlendedYieldBoost,
       getUserStakingEarnedV2,
       getUserStakingSumrStaked,
       getStakingRewardRatesV2,

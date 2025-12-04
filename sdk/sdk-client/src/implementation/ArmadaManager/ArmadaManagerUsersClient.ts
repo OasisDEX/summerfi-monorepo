@@ -315,6 +315,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserStakingWeightedBalanceV2.query(params)
   }
 
+  async getUserBlendedYieldBoost(
+    params: Parameters<IArmadaManagerUsersClient['getUserBlendedYieldBoost']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getUserBlendedYieldBoost']> {
+    return this.rpcClient.armada.users.getUserBlendedYieldBoost.query(params)
+  }
+
   async getUserStakingEarnedV2(
     params: Parameters<IArmadaManagerUsersClient['getUserStakingEarnedV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getUserStakingEarnedV2']> {

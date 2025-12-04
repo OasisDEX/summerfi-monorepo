@@ -50,16 +50,18 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     [],
   )
   const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
+  const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
 
   const {
     getUserBalance,
     getStakingRewardRatesV2,
     getStakingStatsV2,
+    getStakingEarningsEstimationV2,
     getUserStakingSumrStaked,
     getUserStakesV2,
-    getStakingEarningsEstimationV2,
     getCalculatePenaltyPercentage,
     getCalculatePenaltyAmount,
+    getUserBlendedYieldBoost,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -74,24 +76,32 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     try {
       setIsLoadingStakes(true)
       // Fetch all data in parallel
-      const [userBalance, rewardRates, stakingStats, userStaked, userStakesData] =
-        await Promise.all([
-          getUserBalance({
-            userAddress: userWalletAddress as AddressValue,
-            chainId: ChainIds.Base,
-          }),
-          getStakingRewardRatesV2({
-            sumrPriceUsd,
-          }),
-          getStakingStatsV2(),
-
-          getUserStakingSumrStaked({
-            user,
-          }),
-          getUserStakesV2({
-            user,
-          }),
-        ])
+      const [
+        userBalance,
+        rewardRates,
+        stakingStats,
+        userStaked,
+        userStakesData,
+        _userBlendedYieldBoost,
+      ] = await Promise.all([
+        getUserBalance({
+          userAddress: userWalletAddress as AddressValue,
+          chainId: ChainIds.Base,
+        }),
+        getStakingRewardRatesV2({
+          sumrPriceUsd,
+        }),
+        getStakingStatsV2(),
+        getUserStakingSumrStaked({
+          user,
+        }),
+        getUserStakesV2({
+          user,
+        }),
+        getUserBlendedYieldBoost({
+          user,
+        }),
+      ])
 
       const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
         await Promise.all([
@@ -107,6 +117,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         ])
 
       setEarningsEstimation(_earningsEstimation)
+      setUserBlendedYieldBoost(_userBlendedYieldBoost)
 
       // Map penalty percentages with stake indices
       setPenaltyPercentages(
@@ -164,6 +175,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getUserStakingSumrStaked,
     getCalculatePenaltyPercentage,
     getCalculatePenaltyAmount,
+    getUserBlendedYieldBoost,
     sumrPriceUsd,
     userWalletAddress,
   ])
@@ -228,6 +240,9 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         penaltyPercentages={penaltyPercentages}
         penaltyAmounts={penaltyAmounts}
         earningsEstimation={earningsEstimation}
+        userBlendedYieldBoost={userBlendedYieldBoost}
+        userSumrStaked={sumrStaked}
+        totalSumrStaked={totalSumrStaked}
       />
     </div>
   )

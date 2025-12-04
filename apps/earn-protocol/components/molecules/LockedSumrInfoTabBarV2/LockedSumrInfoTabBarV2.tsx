@@ -98,14 +98,20 @@ const TableRightCell = ({ children, title }: { title?: string; children: ReactNo
 const YourLockedSumrPositionsCards = ({
   stakes,
   isLoading,
+  userBlendedYieldBoost,
+  userSumrStaked,
+  totalSumrStaked,
 }: {
   stakes: UserStakeV2[]
   isLoading: boolean
+  userBlendedYieldBoost: number
+  userSumrStaked: number
+  totalSumrStaked: number
 }) => {
-  // TODO: userStakedSumr / totalStakedSumr * 100
-  const shareOfTotalStakedSumr = 1
-  // from api
-  const blendedApyBoostMultiple = 1.4
+  const shareOfTotalStakedSumr = (
+    userSumrStaked > 0 && totalSumrStaked > 0 ? (userSumrStaked / totalSumrStaked) * 100 : 0
+  ).toFixed(2)
+  const blendedYieldBoost = userBlendedYieldBoost.toFixed(2)
 
   const nextUnlockStake = useMemo(() => {
     const sortedStakes = stakes
@@ -149,7 +155,7 @@ const YourLockedSumrPositionsCards = ({
       <DataModule
         dataBlock={{
           title: 'Blended APY boost multiple',
-          value: `${blendedApyBoostMultiple}x`,
+          value: `${blendedYieldBoost}x`,
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
@@ -355,6 +361,9 @@ interface YourLockedSumrPositionsProps {
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
   earningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  userBlendedYieldBoost: number
+  userSumrStaked: number
+  totalSumrStaked: number
 }
 
 const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
@@ -365,11 +374,20 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
   penaltyPercentages,
   penaltyAmounts,
   earningsEstimation,
+  userBlendedYieldBoost,
+  userSumrStaked,
+  totalSumrStaked,
 }) => {
   return (
     <Card variant="cardSecondary">
       <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-        <YourLockedSumrPositionsCards stakes={stakes} isLoading={isLoading} />
+        <YourLockedSumrPositionsCards
+          stakes={stakes}
+          isLoading={isLoading}
+          userBlendedYieldBoost={userBlendedYieldBoost}
+          userSumrStaked={userSumrStaked}
+          totalSumrStaked={totalSumrStaked}
+        />
         <YourLockedSumrPositionsTable
           stakes={stakes}
           isLoading={isLoading}
@@ -510,6 +528,9 @@ interface LockedSumrInfoTabBarV2Props {
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
   earningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  userBlendedYieldBoost: number
+  userSumrStaked: number
+  totalSumrStaked: number
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -520,6 +541,9 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   penaltyPercentages,
   penaltyAmounts,
   earningsEstimation,
+  userBlendedYieldBoost,
+  userSumrStaked,
+  totalSumrStaked,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -537,6 +561,9 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 penaltyPercentages={penaltyPercentages}
                 penaltyAmounts={penaltyAmounts}
                 earningsEstimation={earningsEstimation}
+                userBlendedYieldBoost={userBlendedYieldBoost}
+                userSumrStaked={userSumrStaked}
+                totalSumrStaked={totalSumrStaked}
               />
             ) : stakes.length ? (
               <YourLockedSumrPositions
@@ -547,6 +574,9 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 penaltyPercentages={penaltyPercentages}
                 penaltyAmounts={penaltyAmounts}
                 earningsEstimation={earningsEstimation}
+                userBlendedYieldBoost={userBlendedYieldBoost}
+                userSumrStaked={userSumrStaked}
+                totalSumrStaked={totalSumrStaked}
               />
             ) : (
               <NoStakedPositions />
