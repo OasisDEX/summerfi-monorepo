@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 import { type CSSProperties, type FC, type ReactNode } from 'react'
+import clsx from 'clsx'
 
 import { Icon, type IconNamesList } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -12,6 +13,7 @@ interface AlertProps {
   error: ReactNode
   variant?: AlertVariant
   iconName?: IconNamesList
+  noIcon?: boolean
   wrapperStyles?: CSSProperties
 }
 
@@ -36,20 +38,32 @@ const variantToBackgroundMap: Record<AlertVariant, string> = {
   success: 'var(--earn-protocol-success-10)',
 }
 
-export const Alert: FC<AlertProps> = ({ error, variant = 'critical', iconName, wrapperStyles }) => {
+export const Alert: FC<AlertProps> = ({
+  error,
+  variant = 'critical',
+  iconName,
+  wrapperStyles,
+  noIcon,
+}) => {
   const resolvedIconName = variant === 'general' && iconName ? iconName : variantToIconMap[variant]
 
   return (
     <div
-      className={styles.alertWrapper}
+      className={clsx(styles.alertWrapper, noIcon && styles.alertWrapperNoIcon)}
       style={{
         background: variantToBackgroundMap[variant],
         borderRadius: 'var(--radius-medium)',
         ...wrapperStyles,
       }}
     >
-      <div className={styles.content}>
-        <Icon iconName={resolvedIconName} size={20} style={{ color: variantToColorMap[variant] }} />
+      <div className={noIcon ? styles.contentNoIcon : styles.content}>
+        {!noIcon && (
+          <Icon
+            iconName={resolvedIconName}
+            size={20}
+            style={{ color: variantToColorMap[variant] }}
+          />
+        )}
         <div className={styles.alertTextWrapper}>
           {typeof error === 'string' ? (
             <Text variant="p3semi" as="p" style={{ fontWeight: 500 }}>

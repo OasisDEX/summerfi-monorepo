@@ -10,12 +10,25 @@
   padding-right: var(--spacing-space-large);
 }
 
+.alertWrapperNoIcon {
+  display: flex;
+  gap: 0;
+  padding-right: var(--spacing-space-small);
+}
+
 .content {
   display: grid;
   grid-template-columns: 24px 1fr;
   align-items: center;
   gap: var(--spacing-space-medium);
   width: 100%;
+}
+
+.contentNoIcon {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: center;
 }
 
 .alertTextWrapper {

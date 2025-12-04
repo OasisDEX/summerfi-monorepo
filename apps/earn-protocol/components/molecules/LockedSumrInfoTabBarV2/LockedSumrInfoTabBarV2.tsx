@@ -311,6 +311,8 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
                 amount={stake.amount}
                 userStakeIndex={BigInt(stake.index)}
                 refetchStakingData={refetchStakingData}
+                penaltyPercentage={penaltyPercentage}
+                penaltyAmount={penaltyAmount}
               />
             </TableCenterCell>
           ),
@@ -347,7 +349,9 @@ const NoStakedPositions: FC = () => {
             </Text>
           </div>
         </div>
-        <Button variant="primaryLarge">Stake your SUMR</Button>
+        <Link href="/staking/manage" prefetch>
+          <Button variant="primaryLarge">Stake your SUMR</Button>
+        </Link>
       </div>
     </BigGradientBox>
   )

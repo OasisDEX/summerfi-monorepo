@@ -1,6 +1,7 @@
 import { type ChangeEvent, type FC, useCallback, useMemo, useState } from 'react'
 import { useChain } from '@account-kit/react'
 import {
+  Alert,
   Badge,
   Button,
   Card,
@@ -16,6 +17,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { NetworkIds, SupportedNetworkIds } from '@summerfi/app-types'
+import { formatPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -34,7 +36,17 @@ const RemoveStakeModal: FC<{
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
   handleOpenClose: () => void
-}> = ({ stakedAmount, userWalletAddress, userStakeIndex, refetchStakingData, handleOpenClose }) => {
+  penaltyPercentage?: number
+  penaltyAmount?: bigint
+}> = ({
+  stakedAmount,
+  userWalletAddress,
+  userStakeIndex,
+  refetchStakingData,
+  handleOpenClose,
+  penaltyAmount,
+  penaltyPercentage,
+}) => {
   const { chain, setChain } = useChain()
   const inputChangeHandler = useHandleInputChangeEvent()
 
@@ -88,6 +100,16 @@ const RemoveStakeModal: FC<{
     await triggerNextTransaction()
   }, [isCorrectNetwork, setChain, triggerNextTransaction])
 
+  const receivedAmount = useMemo(() => {
+    if (penaltyAmount) {
+      return new BigNumber(amountParsed)
+        .minus(new BigNumber(penaltyAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)))
+        .toFixed(2)
+    }
+
+    return amountParsed.toFixed(2)
+  }, [amountParsed, penaltyAmount])
+
   return (
     <Card variant="cardSecondary" style={{ maxWidth: '446px' }}>
       <div className={removeStakeModalContentStyles.removeStakeModalContent}>
@@ -98,9 +120,10 @@ const RemoveStakeModal: FC<{
         >
           Remove stake #{userStakeIndex.toString()}
         </Text>
-        <Text variant="p3" style={{ marginBottom: 'var(--general-space-20)', textAlign: 'center' }}>
+        <Text variant="p3" style={{ textAlign: 'center' }}>
           Enter the amount of $SUMR you wish to unstake.
-          <br />
+        </Text>
+        <Text variant="p3" style={{ marginBottom: 'var(--general-space-20)', textAlign: 'center' }}>
           You can unstake up to{' '}
           <strong>
             {new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2)}{' '}
@@ -142,6 +165,19 @@ const RemoveStakeModal: FC<{
             />
           ))}
         </div>
+        {penaltyPercentage ? (
+          <Alert
+            variant="warning"
+            noIcon
+            error={
+              <>
+                Unstaking before the lock period ends will incur a penalty of{' '}
+                {penaltyPercentage ? `${formatPercent(penaltyPercentage, { precision: 2 })}` : ''}.
+                You will receive ~{receivedAmount}&nbsp;$SUMR.
+              </>
+            }
+          />
+        ) : null}
         {transactionQueue && !isLoadingTransactions ? (
           <PendingTransactionsList
             chainId={NetworkIds.BASEMAINNET}
@@ -182,7 +218,16 @@ export const RemoveStakeModalButton: FC<{
   userWalletAddress?: string
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
-}> = ({ amount, userWalletAddress, userStakeIndex, refetchStakingData }) => {
+  penaltyPercentage?: number
+  penaltyAmount?: bigint
+}> = ({
+  amount,
+  userWalletAddress,
+  userStakeIndex,
+  refetchStakingData,
+  penaltyPercentage,
+  penaltyAmount,
+}) => {
   const { isSettingChain } = useChain()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
@@ -236,6 +281,8 @@ export const RemoveStakeModalButton: FC<{
             userWalletAddress={userWalletAddress}
             refetchStakingData={refetchStakingData}
             handleOpenClose={handleOpenClose}
+            penaltyPercentage={penaltyPercentage}
+            penaltyAmount={penaltyAmount}
           />
         </MobileDrawer>
       ) : (
@@ -246,6 +293,8 @@ export const RemoveStakeModalButton: FC<{
             userWalletAddress={userWalletAddress}
             refetchStakingData={refetchStakingData}
             handleOpenClose={handleOpenClose}
+            penaltyPercentage={penaltyPercentage}
+            penaltyAmount={penaltyAmount}
           />
         </Modal>
       )}
