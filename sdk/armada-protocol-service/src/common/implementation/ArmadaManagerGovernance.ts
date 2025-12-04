@@ -677,7 +677,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     let summerRewardYield = new BigNumber(0)
     // Only calculate yield if reward period is active
     if (isRewardPeriodActive && totalWeightedSupplyBN.gt(0) && rewardRatePerYearBN.gt(0)) {
-      summerRewardYield = totalWeightedSupplyBN.dividedBy(rewardRatePerYearBN).multipliedBy(100)
+      summerRewardYield = rewardRatePerYearBN.dividedBy(totalWeightedSupplyBN).multipliedBy(100)
     }
 
     // Get staking revenue share to calculate baseApy
