@@ -930,6 +930,10 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       this.getStakingRevenueShareV2(),
     ])
 
+    // Check if rewards period has finished
+    const currentTimestamp = BigInt(Math.floor(Date.now() / 1000))
+    const isRewardPeriodActive = rewardData.periodFinish > currentTimestamp
+
     const revenueShareAmountBN = new BigNumber(revenueShare.amount)
 
     // Calculate earnings for each stake
@@ -944,17 +948,19 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
         }
       }
 
-      const rewardRateBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(-18) // assuming SUMR has 18 decimals
-
       // usdEarningsAmount = weightedAmount / totalWeightedSupply * revenueShare
       const usdEarningsAmount = weightedAmountBN
         .dividedBy(totalWeightedSupplyBN)
         .multipliedBy(revenueShareAmountBN)
 
-      // sumrRewardsAmount = weightedAmount / totalWeightedSupply * rewardRate
-      const sumrRewardsAmount = weightedAmountBN
-        .dividedBy(totalWeightedSupplyBN)
-        .multipliedBy(rewardRateBN)
+      // sumrRewardsAmount = weightedAmount / totalWeightedSupply * rewardRate (only if reward period is active)
+      let sumrRewardsAmount = new BigNumber(0)
+      if (isRewardPeriodActive) {
+        const rewardRateBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(-18) // assuming SUMR has 18 decimals
+        sumrRewardsAmount = weightedAmountBN
+          .dividedBy(totalWeightedSupplyBN)
+          .multipliedBy(rewardRateBN)
+      }
 
       return {
         sumrRewardsAmount: BigInt(sumrRewardsAmount.integerValue(BigNumber.ROUND_DOWN).toFixed(0)),
