@@ -1,10 +1,10 @@
-import { type FC } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import {
+  AllocationBar,
   BigGradientBox,
   Button,
   Card,
   DataModule,
-  Expander,
   Icon,
   SkeletonLine,
   TabBar,
@@ -14,50 +14,126 @@ import {
   Tooltip,
   WithArrow,
 } from '@summerfi/app-earn-ui'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
 import { BigNumber } from 'bignumber.js'
+import clsx from 'clsx'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import Link from 'next/link'
-import {
-  Cell,
-  type DefaultLegendContentProps,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip as RechartsTooltip,
-} from 'recharts'
 
 import {
   allLockedSumrPositionsTableColumns,
   yourLockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/constants'
+import { RemoveStakeModalButton } from '@/components/molecules/LockedSumrInfoTabBarV2/RemoveStakeModalButton'
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
-import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
-const TableCenterCell = ({ children }: { children: React.ReactNode }) => {
-  return <div style={{ display: 'flex', justifyContent: 'center' }}>{children}</div>
+dayjs.extend(relativeTime)
+
+const formatTimestamp = (timestamp: bigint): string => {
+  const date = dayjs.unix(Number(timestamp))
+
+  return date.format('YYYY-MM-DD')
 }
 
-const TableRightCell = ({ children }: { children: React.ReactNode }) => {
-  return <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
+const formatLockPeriod = (seconds: bigint): string => {
+  // returns a nice formatted lock period like "2 years", "6 months", "3 weeks", "5 days"
+  const dayjsNow = dayjs()
+  const timestamp = dayjsNow.add(Number(seconds), 'seconds')
+  const daysCount = timestamp.diff(dayjsNow, 'days')
+  const hoursCount = timestamp.diff(dayjsNow, 'hours')
+  const minutesCount = timestamp.diff(dayjsNow, 'minutes')
+  const minutesClamped = minutesCount % 60
+
+  const hoursLabel = hoursCount === 1 ? 'hour' : `hours`
+  const minutesLabel = minutesClamped === 1 ? 'minute' : `minutes`
+
+  if (Number(seconds) === 0) {
+    return `No lockup`
+  }
+
+  if (daysCount === 0) {
+    // if its zero days its gonna show hours and minutes
+
+    return `${hoursCount > 0 ? `${hoursCount} ${hoursLabel}, ` : ''}${minutesClamped > 0 ? `${minutesClamped} ${minutesLabel}` : ''}`
+  }
+
+  if (daysCount <= 2) {
+    // if its less than two days its gonna show hours
+    return `${hoursCount} ${hoursLabel}`
+  }
+
+  return `${new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 0,
+    useGrouping: true,
+  }).format(Number(daysCount))} days`
 }
 
-const YourLockedSumrPositionsCards = () => {
+const TableCenterCell = ({ children, title }: { title?: string; children: ReactNode }) => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center' }} title={title}>
+      {children}
+    </div>
+  )
+}
+
+const TableRightCell = ({ children, title }: { title?: string; children: ReactNode }) => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'flex-end' }} title={title}>
+      {children}
+    </div>
+  )
+}
+
+const YourLockedSumrPositionsCards = ({
+  stakes,
+  isLoading,
+}: {
+  stakes: UserStakeV2[]
+  isLoading: boolean
+}) => {
+  const nextUnlockStake = useMemo(() => {
+    const sortedStakes = stakes
+      .filter((stake) => stake.amount > 0n && stake.lockupPeriod > 0n)
+      .sort((a, b) => {
+        return Number(a.lockupEndTime - b.lockupEndTime)
+      })
+
+    if (sortedStakes.length === 0) {
+      return 'n/a'
+    }
+    const nextUnlockAmount = new BigNumber(sortedStakes[0].amount).div(
+      new BigNumber(10).pow(SUMR_DECIMALS),
+    )
+    const [nextStake] = sortedStakes
+
+    return `${formatCryptoBalance(nextUnlockAmount)} SUMR @ ${dayjs().add(Number(nextStake.lockupPeriod), 'seconds').format('MMM D, YYYY')}`
+  }, [stakes])
+
   return (
     <div className={lockedSumrInfoTabBarV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
         dataBlock={{
           title: 'Total SUMR Staking positions',
-          value: '4',
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="40px" style={{ margin: '5px 0' }} />
+          ) : (
+            stakes.length.toString()
+          ),
           valueSize: 'large',
           titleSize: 'medium',
-          subValue: 'Next Unlock date: Sep. 22, 2027 (320,007.88 SUMR)',
+          subValue: isLoading ? (
+            <SkeletonLine height="14px" width="150px" style={{ margin: '3px 0' }} />
+          ) : (
+            `Next Unlock: ${nextUnlockStake}`
+          ),
           subValueStyle: { color: 'var(--earn-protocol-secondary-40)' },
         }}
         cardVariant="cardPrimary"
@@ -116,72 +192,85 @@ const YourLockedSumrPositionsCards = () => {
   )
 }
 
-const formatTimestamp = (timestamp: bigint): string => {
-  const date = new Date(Number(timestamp) * 1000)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
-}
-
-const formatLockPeriod = (seconds: bigint): string => {
-  const years = Number(seconds) / (365.25 * 24 * 60 * 60)
-
-  return `${years.toFixed(1)} years`
-}
-
 interface YourLockedSumrPositionsTableProps {
   stakes: UserStakeV2[]
   isLoading: boolean
+  userWalletAddress?: string
+  refetchStakingData: () => Promise<void>
 }
 
 const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
   stakes,
   isLoading,
+  userWalletAddress,
+  refetchStakingData,
 }) => {
-  const rowsData: TableRow<LockedSumrPositionsTableColumns>[] = stakes.map((stake) => ({
-    id: stake.index.toString(),
-    content: {
-      position: `#${stake.index} - ${formatTimestamp(stake.lockupEndTime)}`,
-      staked: (
-        <TableRightCell>
-          {new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFormat(2)}
-        </TableRightCell>
-      ),
-      lockPeriod: <TableCenterCell>{formatLockPeriod(stake.lockupPeriod)}</TableCenterCell>,
-      rewards: <TableCenterCell>35,343 SUMR (2x)</TableCenterCell>,
-      usdEarnings: <TableCenterCell>$5,343 (2x)</TableCenterCell>,
-      removeStakePenalty: (
-        <TableRightCell>
-          <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-            -32,323 (83.3%) SUMR
-          </Text>
-        </TableRightCell>
-      ),
-      action: (
-        <TableCenterCell>
-          <Link href="Huh?">
-            <WithArrow variant="p4semi" style={{ marginRight: '8px' }}>
-              Remove stake
-            </WithArrow>
-          </Link>
-        </TableCenterCell>
-      ),
-    },
-  }))
-
   if (isLoading) {
     return (
       <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {Array.from({ length: 3 }).map((_, idx) => (
-            <SkeletonLine key={idx} height={60} />
-          ))}
-        </div>
+        <Table<LockedSumrPositionsTableColumns>
+          columns={yourLockedSumrPositionsTableColumns}
+          rows={Array(4).fill({
+            content: {
+              position: <SkeletonLine height="20px" width="80px" />,
+              staked: <SkeletonLine height="20px" width="60px" style={{ marginLeft: 'auto' }} />,
+              lockPeriod: (
+                <SkeletonLine height="20px" width="50px" style={{ marginLeft: 'auto' }} />
+              ),
+              rewards: <SkeletonLine height="20px" width="40px" style={{ margin: '0 auto' }} />,
+              usdEarnings: <SkeletonLine height="20px" width="40px" style={{ margin: '0 auto' }} />,
+              removeStakePenalty: (
+                <SkeletonLine height="20px" width="40px" style={{ marginLeft: 'auto' }} />
+              ),
+              action: <SkeletonLine height="20px" width="80px" style={{ margin: '0 auto' }} />,
+            },
+          })}
+        />
       </div>
     )
   }
+
+  const rowsData: TableRow<LockedSumrPositionsTableColumns>[] = stakes
+    .filter((stake) => Number(stake.amount))
+    .map((stake) => ({
+      id: stake.index.toString(),
+      content: {
+        position: (
+          <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+            #{stake.index}&nbsp;-&nbsp;{formatTimestamp(stake.lockupEndTime)}
+          </span>
+        ),
+        staked: (
+          <TableRightCell
+            title={new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2)}
+          >
+            {formatCryptoBalance(
+              new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)),
+            )}
+          </TableRightCell>
+        ),
+        lockPeriod: <TableRightCell>{formatLockPeriod(stake.lockupPeriod)}</TableRightCell>,
+        rewards: <TableCenterCell>n/a</TableCenterCell>,
+        usdEarnings: <TableCenterCell>n/a</TableCenterCell>,
+        removeStakePenalty: (
+          <TableRightCell>
+            <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+              n/a
+            </Text>
+          </TableRightCell>
+        ),
+        action: (
+          <TableCenterCell>
+            <RemoveStakeModalButton
+              userWalletAddress={userWalletAddress}
+              amount={stake.amount}
+              userStakeIndex={BigInt(stake.index)}
+              refetchStakingData={refetchStakingData}
+            />
+          </TableCenterCell>
+        ),
+      },
+    }))
 
   return (
     <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
@@ -221,14 +310,26 @@ const NoStakedPositions: FC = () => {
 interface YourLockedSumrPositionsProps {
   stakes: UserStakeV2[]
   isLoading: boolean
+  userWalletAddress?: string
+  refetchStakingData: () => Promise<void>
 }
 
-const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({ stakes, isLoading }) => {
+const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
+  stakes,
+  isLoading,
+  userWalletAddress,
+  refetchStakingData,
+}) => {
   return (
     <Card variant="cardSecondary">
       <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-        <YourLockedSumrPositionsCards />
-        <YourLockedSumrPositionsTable stakes={stakes} isLoading={isLoading} />
+        <YourLockedSumrPositionsCards stakes={stakes} isLoading={isLoading} />
+        <YourLockedSumrPositionsTable
+          stakes={stakes}
+          isLoading={isLoading}
+          userWalletAddress={userWalletAddress}
+          refetchStakingData={refetchStakingData}
+        />
       </div>
     </Card>
   )
@@ -269,124 +370,6 @@ const AllLockedSumrPositionsCards = () => {
   )
 }
 
-const AllLockedSumrPositionsPieChart = () => {
-  const data = [
-    { name: 'Less than 2 weeks', value: 42 },
-    { name: '2 weeks - 6 months', value: 21 },
-    { name: '6 months - 1 year', value: 10 },
-    { name: '1 year - 2 years', value: 3 },
-    { name: 'More than 2 years', value: 3 },
-  ]
-  const COLORS = ['#ff80bf', '#fa52a6', '#ff4da6', '#ff1a8c', '#cc0066']
-
-  const renderLegend = (props: DefaultLegendContentProps) => {
-    const items = props.payload ?? []
-
-    return (
-      <div style={{ marginRight: '24px' }}>
-        {items.map((entry, index) => {
-          const itemName = String(entry.value ?? '')
-          // prefer payload.value when provided; fall back to entry.value
-          const rawValue = entry.payload?.value ?? entry.value
-          const valueText = `${rawValue}%`
-
-          return (
-            <div
-              key={`item-${index}`}
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  marginBottom: 12,
-                }}
-              >
-                <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                  {itemName}
-                </Text>
-                <Text variant="p2semi">{valueText}</Text>
-              </div>
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  backgroundColor: entry.color,
-                  userSelect: 'none',
-                }}
-              />
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  return (
-    <Card style={{ padding: '32px 16px', minHeight: '440px', width: '60%' }}>
-      <ResponsiveContainer width="100%" height={440}>
-        <PieChart>
-          <Pie
-            data={data}
-            innerRadius={90}
-            outerRadius={220}
-            fill="#ff0000"
-            stroke="none"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${entry.name}`}
-                fill={COLORS[index % COLORS.length]}
-                style={{
-                  userSelect: 'none',
-                  outline: 'none',
-                }}
-              />
-            ))}
-          </Pie>
-          <RechartsTooltip
-            formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-            wrapperStyle={{
-              zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtle)',
-              borderRadius: '5px',
-              padding: '10px',
-              paddingTop: 0,
-              marginTop: 0,
-            }}
-            labelStyle={{
-              fontSize: '16px',
-              fontWeight: '700',
-              marginTop: '10px',
-              marginBottom: '10px',
-            }}
-            itemStyle={{
-              color: 'white !important',
-            }}
-            contentStyle={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              fontSize: '13px',
-              lineHeight: '11px',
-              letterSpacing: '-0.5px',
-            }}
-          />
-
-          <Legend verticalAlign="top" align="right" layout="vertical" content={renderLegend} />
-        </PieChart>
-      </ResponsiveContainer>
-    </Card>
-  )
-}
-
 const AllLockedSumrPositionsTable = () => {
   return (
     <Table<AllLockedSumrPositionsTableColumns>
@@ -412,14 +395,51 @@ const AllLockedSumrPositionsTable = () => {
 }
 
 const AllLockedSumrPositionsData = () => {
+  const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
+  const allocation: {
+    label: string
+    percentage: number
+    color: string
+    tooltip?: ReactNode
+  }[] = [
+    {
+      label: 'Less than 2 weeks',
+      percentage: 0.42,
+      color: COLORS[0],
+    },
+    {
+      label: '2 weeks - 6 months',
+      percentage: 0.2137,
+      color: COLORS[1],
+    },
+    {
+      label: '6 months - 1 year',
+      percentage: 0.3063,
+      color: COLORS[2],
+    },
+    {
+      label: '1 year - 2 years',
+      percentage: 0.03,
+      color: COLORS[3],
+    },
+    {
+      label: 'More than 2 years',
+      percentage: 0.03,
+      color: COLORS[4],
+    },
+  ]
+
   return (
-    <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-      <Expander title="Overview" defaultExpanded>
-        <AllLockedSumrPositionsPieChart />
-      </Expander>
-      <Expander title="All staked positions">
-        <AllLockedSumrPositionsTable />
-      </Expander>
+    <div
+      className={clsx(
+        lockedSumrInfoTabBarV2Styles.wrapper,
+        lockedSumrInfoTabBarV2Styles.allLockedSumrPositionsDataWrapper,
+      )}
+    >
+      <Text variant="h5">SUMR Lock Period Allocation</Text>
+      <AllocationBar items={allocation} variant="large" />
+      <Text variant="h5">All Locked SUMR Positions</Text>
+      <AllLockedSumrPositionsTable />
     </div>
   )
 }
@@ -436,11 +456,15 @@ const AllLockedSumrPositions = () => {
 interface LockedSumrInfoTabBarV2Props {
   stakes: UserStakeV2[]
   isLoading?: boolean
+  userWalletAddress?: string
+  refetchStakingData: () => Promise<void>
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   stakes,
   isLoading = false,
+  userWalletAddress,
+  refetchStakingData,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -448,13 +472,24 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
         tabs={[
           {
             id: 'your-locked-sumr-positions',
-            label: 'Your Locked SUMR Positions (stake)',
-            content: <YourLockedSumrPositions stakes={stakes} isLoading={isLoading} />,
-          },
-          {
-            id: 'your-locked-sumr-positions',
-            label: 'Your Locked SUMR Positions (no stake)',
-            content: <NoStakedPositions />,
+            label: 'Your Locked SUMR Positions',
+            content: isLoading ? (
+              <YourLockedSumrPositions
+                stakes={stakes}
+                isLoading
+                userWalletAddress={userWalletAddress}
+                refetchStakingData={refetchStakingData}
+              />
+            ) : stakes.length ? (
+              <YourLockedSumrPositions
+                stakes={stakes}
+                isLoading={false}
+                userWalletAddress={userWalletAddress}
+                refetchStakingData={refetchStakingData}
+              />
+            ) : (
+              <NoStakedPositions />
+            ),
           },
           {
             id: 'all-locked-sumr-positions',

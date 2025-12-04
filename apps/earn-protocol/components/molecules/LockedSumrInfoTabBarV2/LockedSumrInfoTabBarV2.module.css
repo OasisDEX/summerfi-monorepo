@@ -58,3 +58,34 @@
     }
   }
 }
+
+.removeStakeModalContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.removeStakeModalContent button {
+  min-width: unset;
+}
+
+@media screen and (min-width: 768px) {
+  .removeStakeModalContent {
+    min-width: 321px;
+  }
+}
+
+.percentageButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--general-space-12);
+  margin-bottom: var(--general-space-12);
+  flex-wrap: wrap;
+  gap: var(--general-space-8);
+}
+
+.allLockedSumrPositionsDataWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

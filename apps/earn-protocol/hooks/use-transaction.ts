@@ -152,7 +152,7 @@ export const useTransaction = ({
     return nextTransaction?.type === TransactionType.Approve
       ? nextTransaction.metadata.approvalAmount.token.symbol
       : ''
-  }, [nextTransaction?.metadata, nextTransaction?.type])
+  }, [nextTransaction])
 
   const getTransactionsList = useCallback(async () => {
     // get deposit/withdraw transactions
@@ -665,7 +665,13 @@ export const useTransaction = ({
           [TransactionType.Deposit]: 'Deposit',
           [TransactionType.Withdraw]: 'Withdraw',
           [TransactionType.VaultSwitch]: 'Switch',
-        }[nextTransaction.type],
+        }[
+          nextTransaction.type as
+            | TransactionType.Approve
+            | TransactionType.Deposit
+            | TransactionType.Withdraw
+            | TransactionType.VaultSwitch
+        ],
         action: executeNextTransaction,
       }
     }

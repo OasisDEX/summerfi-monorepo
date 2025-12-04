@@ -453,9 +453,7 @@ export const VaultOpenViewComponent = ({
           transactionFeeLoading={transactionFeeLoading}
         />
       ),
-      [TransactionType.Withdraw]: null, // just for types, withdraw doesn't happen on open view
-      [TransactionType.VaultSwitch]: null, // just for types, switch doesn't happen on open view
-    }[nextTransaction.type]
+    }[nextTransaction.type as TransactionType.Approve | TransactionType.Deposit]
   ) : (
     <ControlsDepositWithdraw
       amountDisplay={amountDisplay}

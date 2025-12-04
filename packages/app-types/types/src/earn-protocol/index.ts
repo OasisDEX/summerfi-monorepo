@@ -10,6 +10,15 @@ import {
   IArmadaPosition,
   VaultSwitchTransactionInfo,
   IArmadaVaultInfo,
+  DepositTransactionInfo,
+  WithdrawTransactionInfo,
+  MigrationTransactionInfo,
+  BridgeTransactionInfo,
+  ClaimTransactionInfo,
+  DelegateTransactionInfo,
+  StakeTransactionInfo,
+  UnstakeTransactionInfo,
+  ApproveTransactionInfo,
 } from '@summerfi/sdk-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { EarnAppConfigType, EarnAppFleetCustomConfigType } from '../generated/earn-app-config'
@@ -194,7 +203,16 @@ export type VaultApyData = {
 export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
 
 // Define a new type for transactions that includes an `executed` property
-export type TransactionWithStatus = (ExtendedTransactionInfo | VaultSwitchTransactionInfo) & {
+export type TransactionWithStatus = (
+  | ApproveTransactionInfo
+  | DepositTransactionInfo
+  | WithdrawTransactionInfo
+  | VaultSwitchTransactionInfo
+  | ClaimTransactionInfo
+  | DelegateTransactionInfo
+  | StakeTransactionInfo
+  | UnstakeTransactionInfo
+) & {
   executed: boolean
   txHash?: string
 }

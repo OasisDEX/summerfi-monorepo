@@ -11,6 +11,7 @@ interface BadgeProps {
   textClassName?: string
   isActive?: boolean
   onClick?: () => void
+  disabled?: boolean
 }
 
 export const Badge: FC<BadgeProps> = ({
@@ -19,13 +20,15 @@ export const Badge: FC<BadgeProps> = ({
   textClassName,
   isActive,
   onClick,
+  disabled,
 }) => {
   return (
     <div
       className={clsx(classNames.badgeWrapper, wrapperClassName, {
         [classNames.active]: isActive,
+        [classNames.disabled]: disabled,
       })}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
     >
       <Text as="p" variant="p4semi" className={textClassName}>
         {value}

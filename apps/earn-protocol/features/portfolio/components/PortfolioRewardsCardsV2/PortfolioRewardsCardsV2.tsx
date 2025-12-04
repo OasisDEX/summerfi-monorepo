@@ -148,7 +148,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
   const { chain, isSettingChain, setChain } = useChain()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { unstakeSumrTransaction, isLoading: isLoadingUnstageTransaction } =
+  const { unstakeSumrTransaction, isLoading: isLoadingUnstakeTransaction } =
     useUnstakeSumrTransaction({
       amount: formatDecimalToBigInt(sumrAvailableToStake, 18),
       onSuccess: () => {
@@ -168,7 +168,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
   const hasOldStakedSumr = sumrAvailableToStake > 0
 
   const isLoading =
-    isLoadingAccount || isLoadingUnstageTransaction || isAuthModalOpen || isSettingChain
+    isLoadingAccount || isLoadingUnstakeTransaction || isAuthModalOpen || isSettingChain
 
   const handleRemoveStakeInOldModule = useCallback(() => {
     if (userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()) {
