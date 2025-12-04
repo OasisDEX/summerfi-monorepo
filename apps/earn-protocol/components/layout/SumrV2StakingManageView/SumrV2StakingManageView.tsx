@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
@@ -12,6 +12,7 @@ import {
   ERROR_TOAST_CONFIG,
   Expander,
   Icon,
+  Input,
   InputWithDropdown,
   OrderInformation,
   SDKChainIdToAAChainMap,
@@ -30,7 +31,9 @@ import { formatCryptoBalance, formatDecimalToBigInt } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
+import clsx from 'clsx'
 import dayjs from 'dayjs'
+import { debounce } from 'lodash-es'
 import Link from 'next/link'
 
 import { LockupRangeGraph } from '@/components/molecules/LockupRangeGraph/LockupRangeGraph'
@@ -270,6 +273,24 @@ const SumrV2StakingManageComponent = ({
     getStakingStatsV2,
   } = useAppSDK()
 
+  const [debouncedSelectedLockupAndBoost, setDebouncedSelectedLockupAndBoost] =
+    useState<number>(selectedLockupAndBoost)
+  const debouncedSetLockupAndBoost = useMemo(
+    () =>
+      debounce((a: number) => {
+        setDebouncedSelectedLockupAndBoost(a)
+      }, 300),
+    [],
+  )
+
+  useEffect(() => {
+    debouncedSetLockupAndBoost(selectedLockupAndBoost)
+
+    return () => {
+      debouncedSetLockupAndBoost.cancel()
+    }
+  }, [selectedLockupAndBoost, debouncedSetLockupAndBoost])
+
   // Fetch staking buckets info and other staking data on mount
   useEffect(() => {
     const fetchStakingData = async () => {
@@ -412,14 +433,14 @@ const SumrV2StakingManageComponent = ({
       }
 
       const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
-      const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
+      const lockupPeriodSeconds = BigInt(debouncedSelectedLockupAndBoost * 24 * 60 * 60)
 
       await prepareTxs(amountBigInt, lockupPeriodSeconds)
     }
 
     void prepareTransactions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amountParsed, selectedLockupAndBoost])
+  }, [amountParsed, debouncedSelectedLockupAndBoost])
 
   // Fetch simulation data when amount or lockup duration changes
   useEffect(() => {
@@ -434,7 +455,7 @@ const SumrV2StakingManageComponent = ({
       try {
         setSimulationLoading(true)
         const amountBigInt = formatDecimalToBigInt(amountParsed.toString())
-        const lockupPeriodSeconds = BigInt(selectedLockupAndBoost * 24 * 60 * 60)
+        const lockupPeriodSeconds = BigInt(debouncedSelectedLockupAndBoost * 24 * 60 * 60)
 
         const simulation = await getStakingSimulationDataV2({
           amount: amountBigInt,
@@ -481,7 +502,7 @@ const SumrV2StakingManageComponent = ({
     void fetchSimulation()
   }, [
     amountParsed,
-    selectedLockupAndBoost,
+    debouncedSelectedLockupAndBoost,
     userWalletAddress,
     sumrToken,
     getStakingSimulationDataV2,
@@ -489,20 +510,20 @@ const SumrV2StakingManageComponent = ({
   ])
 
   const lockupExpirationDate = useMemo(() => {
-    if (selectedLockupAndBoost === 0) {
+    if (debouncedSelectedLockupAndBoost === 0) {
       return 'N/A'
     }
 
-    return dayjs().add(selectedLockupAndBoost, 'day').format('MMM D, YYYY')
-  }, [selectedLockupAndBoost])
+    return dayjs().add(debouncedSelectedLockupAndBoost, 'day').format('MMM D, YYYY')
+  }, [debouncedSelectedLockupAndBoost])
 
   const lockTimePeriodSummaryLabel = useMemo(() => {
-    if (selectedLockupAndBoost === 0) {
+    if (debouncedSelectedLockupAndBoost === 0) {
       return 'No lockup'
     }
 
-    return `${selectedLockupAndBoost} days (${lockupExpirationDate})`
-  }, [selectedLockupAndBoost, lockupExpirationDate])
+    return `${debouncedSelectedLockupAndBoost} days (${lockupExpirationDate})`
+  }, [debouncedSelectedLockupAndBoost, lockupExpirationDate])
 
   const percentageOfSumrBeingLocked = useMemo(() => {
     if (!sumrBalanceOnSourceChain || amountParsed.isZero()) {
@@ -521,10 +542,10 @@ const SumrV2StakingManageComponent = ({
     }
 
     return (
-      mapLockBucketToAvailability(lockBucketAvailabilityMap, selectedLockupAndBoost) >=
+      mapLockBucketToAvailability(lockBucketAvailabilityMap, debouncedSelectedLockupAndBoost) >=
       amountParsed.toNumber()
     )
-  }, [amountParsed, selectedLockupAndBoost, lockBucketAvailabilityMap])
+  }, [amountParsed, debouncedSelectedLockupAndBoost, lockBucketAvailabilityMap])
 
   const isButtonDisabled = useMemo(() => {
     if (!amountDisplay || amountParsed.isZero()) {
@@ -535,7 +556,7 @@ const SumrV2StakingManageComponent = ({
       return true
     }
 
-    if (!warningAccepted) {
+    if (debouncedSelectedLockupAndBoost > 0 && !warningAccepted) {
       return true
     }
 
@@ -561,6 +582,7 @@ const SumrV2StakingManageComponent = ({
     sdkDataOnMountLoading,
     isLoading,
     isSettingChain,
+    debouncedSelectedLockupAndBoost,
   ])
 
   const getButtonLabel = () => {
@@ -580,7 +602,7 @@ const SumrV2StakingManageComponent = ({
   const onConfirmStake = () => {
     onStake({
       amount: amountParsed,
-      lockupDuration: selectedLockupAndBoost,
+      lockupDuration: debouncedSelectedLockupAndBoost,
       usdcYieldBoost: simulationData?.usdcYieldBoost,
       usdcBlendedYieldBoostFrom: simulationData?.usdcBlendedYieldBoostFrom,
       usdcBlendedYieldBoostTo: simulationData?.usdcBlendedYieldBoostTo,
@@ -593,8 +615,27 @@ const SumrV2StakingManageComponent = ({
   const bucketAvailability = mapLockBucketToAvailability(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     lockBucketAvailabilityMap,
-    selectedLockupAndBoost,
+    debouncedSelectedLockupAndBoost,
   )
+
+  const handleManualLockupChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const parsedValue = parseInt(inputValue, 10)
+
+    if (inputValue === '') {
+      setSelectedLockupAndBoost(0)
+
+      return
+    }
+
+    if (parsedValue > 1080) {
+      setSelectedLockupAndBoost(1080)
+    } else if (parsedValue < 0) {
+      setSelectedLockupAndBoost(0)
+    } else {
+      setSelectedLockupAndBoost(parsedValue)
+    }
+  }
 
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
@@ -876,13 +917,7 @@ const SumrV2StakingManageComponent = ({
                   secondaryValue={amountDisplayUSD}
                   handleChange={handleAmountChangeWithPercentage}
                   handleDropdownChange={() => {}}
-                  onBlur={() => {
-                    defaultOnBlur()
-                    // clearTransaction()
-                    // if (!isSourceMatchingDestination) {
-                    //   prepareTransaction()
-                    // }
-                  }}
+                  onBlur={defaultOnBlur}
                   onFocus={defaultOnFocus}
                   options={[{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }]}
                   dropdownValue={{ label: 'SUMR', value: 'SUMR', tokenSymbol: 'SUMR' }}
@@ -910,9 +945,6 @@ const SumrV2StakingManageComponent = ({
                   : new BigNumber(0)
 
                 manualSetAmount(newAmount.toFixed())
-                // if (!isSourceMatchingDestination) {
-                //   prepareTransaction(newAmount.toString())
-                // }
               }}
             />
           </div>
@@ -1027,7 +1059,25 @@ const SumrV2StakingManageComponent = ({
                 </Text>
                 <Text
                   variant="p3semi"
+                  className={clsx(
+                    sumrV2StakingManageViewStyles.stakingLengthLabelsBottom,
+                    sumrV2StakingManageViewStyles.stakingLockupManualInputWrapper,
+                  )}
+                  style={{ display: 'flex', alignItems: 'center', gap: '2px' }}
+                >
+                  <Input
+                    variant="dark"
+                    value={selectedLockupAndBoost}
+                    className={sumrV2StakingManageViewStyles.stakingLockupManualInput}
+                    type="number"
+                    onChange={handleManualLockupChange}
+                  />
+                  days
+                </Text>
+                <Text
+                  variant="p3semi"
                   className={sumrV2StakingManageViewStyles.stakingLengthLabelsBottom}
+                  style={{ textAlign: 'right' }}
                 >
                   7.2x Boost
                 </Text>
@@ -1063,7 +1113,7 @@ const SumrV2StakingManageComponent = ({
                         1080: 'high',
                       }
                 }
-                selectedBucketIndex={mapLockBucketToBucketIndex(selectedLockupAndBoost)}
+                selectedBucketIndex={mapLockBucketToBucketIndex(debouncedSelectedLockupAndBoost)}
                 onLockupClick={(days: number) => {
                   setSelectedLockupAndBoost(days)
                 }}
@@ -1099,7 +1149,7 @@ const SumrV2StakingManageComponent = ({
                         label: 'Bucket',
                         value: 'Available',
                       },
-                      selectedLockupAndBoost >= 0
+                      debouncedSelectedLockupAndBoost >= 0
                         ? {
                             label: (
                               <span
@@ -1110,7 +1160,7 @@ const SumrV2StakingManageComponent = ({
                                     ],
                                 }}
                               >
-                                {mapLockBucketToRange(selectedLockupAndBoost)}
+                                {mapLockBucketToRange(debouncedSelectedLockupAndBoost)}
                               </span>
                             ),
                             value: (
@@ -1163,7 +1213,7 @@ const SumrV2StakingManageComponent = ({
                               mapLockBucketToAvailability(
                                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                 lockBucketAvailabilityMap,
-                                selectedLockupAndBoost,
+                                debouncedSelectedLockupAndBoost,
                               ),
                             )}{' '}
                             SUMR. Stake the remainder in a different lock bucket.
@@ -1255,36 +1305,38 @@ const SumrV2StakingManageComponent = ({
                 ]}
               />
             </Card>
-            <Card variant="cardWarning" style={{ padding: '16px 16px 24px 16px' }}>
-              <div className={sumrV2StakingManageViewStyles.warningWrapper}>
-                <Icon
-                  iconName="warning"
-                  size={20}
-                  color="var(--color-text-warning)"
-                  style={{ marginTop: '3px' }}
-                />
-                <div className={sumrV2StakingManageViewStyles.warningContent}>
-                  <Text variant="p3">
-                    Warning: There is an early withdrawal penalty if you unstake your SUMR before
-                    the lockup has expired. At your current lockup, this starts at 11.2% of the
-                    amount you withdraw and reduces to 2% as you get closer to{' '}
-                    {lockupExpirationDate}.
-                  </Text>
-                  <CheckboxButton
-                    name="warning-acceptance-checkbox"
-                    checked={warningAccepted}
-                    onChange={() => {
-                      setWarningAccepted((prev) => !prev)
-                    }}
-                    iconColor="var(--color-text-warning)"
-                    label="I understand the mechanics of the early withdrawal penalty"
-                    labelStyles={{
-                      paddingLeft: '40px',
-                    }}
+            <AnimateHeight id="warning-acceptance" show={debouncedSelectedLockupAndBoost > 0}>
+              <Card variant="cardWarning" style={{ padding: '16px 16px 24px 16px' }}>
+                <div className={sumrV2StakingManageViewStyles.warningWrapper}>
+                  <Icon
+                    iconName="warning"
+                    size={20}
+                    color="var(--color-text-warning)"
+                    style={{ marginTop: '3px' }}
                   />
+                  <div className={sumrV2StakingManageViewStyles.warningContent}>
+                    <Text variant="p3">
+                      Warning: There is an early withdrawal penalty if you unstake your SUMR before
+                      the lockup has expired. At your current lockup, this starts at 11.2% of the
+                      amount you withdraw and reduces to 2% as you get closer to{' '}
+                      {lockupExpirationDate}.
+                    </Text>
+                    <CheckboxButton
+                      name="warning-acceptance-checkbox"
+                      checked={warningAccepted}
+                      onChange={() => {
+                        setWarningAccepted((prev) => !prev)
+                      }}
+                      iconColor="var(--color-text-warning)"
+                      label="I understand the mechanics of the early withdrawal penalty"
+                      labelStyles={{
+                        paddingLeft: '40px',
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </AnimateHeight>
             <Button
               disabled={isButtonDisabled}
               variant="primaryLarge"
@@ -1456,7 +1508,7 @@ const SumrV2StakingSuccessComponent = ({
           />
         </Card>
         {userWalletAddress ? (
-          <Link href={`/portfolio/${userWalletAddress}`} style={{ marginTop: '24px' }}>
+          <Link href={`/portfolio/${userWalletAddress}?tab=rewards`} style={{ marginTop: '24px' }}>
             <Button variant="primaryLarge">Go to portfolio</Button>
           </Link>
         ) : (

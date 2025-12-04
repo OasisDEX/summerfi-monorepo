@@ -104,9 +104,7 @@ export const LockupRangeInput = ({
         aria-hidden={!showTooltip}
       >
         <div className={lockupRangeInputStyles.tooltipInner}>
-          <Text variant="p4semi">
-            {localValue > 0 ? `Lock up for ${localValue} days` : 'No lockup'}
-          </Text>
+          <Text variant="p4semi">{localValue > 0 ? `${localValue} days` : 'No lockup'}</Text>
         </div>
       </div>
 
