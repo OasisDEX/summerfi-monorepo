@@ -38,6 +38,7 @@ import { getStakingTotalWeightedSupplyV2Handler } from '../handlers/getStakingTo
 import { getStakingTotalSumrStakedV2Handler } from '../handlers/getStakingTotalSumrStakedV2Handler'
 import { getStakingRevenueShareV2Handler } from '../handlers/getStakingRevenueShareV2Handler'
 import { getStakingSimulationDataV2Handler } from '../handlers/getStakingSimulationDataV2Handler'
+import { getStakingEarningsEstimationV2Handler } from '../handlers/getStakingEarningsEstimationV2Handler'
 import { getStakingConfigV2Handler } from '../handlers/getStakingConfigV2Handler'
 import { getStakingStatsV2Handler } from '../handlers/getStakingStatsV2Handler'
 import { getProtocolRevenueHandler } from '../handlers/getProtocolRevenueHandler'
@@ -171,6 +172,10 @@ export const useSDK = (params: UseSdk) => {
   const getStakingTotalSumrStakedV2 = useMemo(() => getStakingTotalSumrStakedV2Handler(sdk), [sdk])
   const getStakingRevenueShareV2 = useMemo(() => getStakingRevenueShareV2Handler(sdk), [sdk])
   const getStakingSimulationDataV2 = useMemo(() => getStakingSimulationDataV2Handler(sdk), [sdk])
+  const getStakingEarningsEstimationV2 = useMemo(
+    () => getStakingEarningsEstimationV2Handler(sdk),
+    [sdk],
+  )
   const getStakingConfigV2 = useMemo(() => getStakingConfigV2Handler(sdk), [sdk])
   const getStakingStatsV2 = useMemo(() => getStakingStatsV2Handler(sdk), [sdk])
   const getProtocolRevenue = useMemo(() => getProtocolRevenueHandler(sdk), [sdk])
@@ -253,6 +258,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
+      getStakingEarningsEstimationV2,
       getStakingConfigV2,
       getStakingStatsV2,
       getProtocolRevenue,
@@ -326,6 +332,7 @@ export const useSDK = (params: UseSdk) => {
       getStakingTotalSumrStakedV2,
       getStakingRevenueShareV2,
       getStakingSimulationDataV2,
+      getStakingEarningsEstimationV2,
       getStakingConfigV2,
       getStakingStatsV2,
       getProtocolRevenue,

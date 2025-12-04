@@ -38,6 +38,7 @@ export type Account = {
   referralData?: Maybe<ReferralData>;
   referralTimestamp?: Maybe<Scalars['BigInt']['output']>;
   rewards: Array<AccountRewards>;
+  stakeLockups: Array<StakeLockup>;
   stakedSummerToken: Scalars['BigInt']['output'];
   stakedSummerTokenNormalized: Scalars['BigDecimal']['output'];
 };
@@ -58,6 +59,15 @@ export type AccountRewardsArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<AccountRewards_Filter>;
+};
+
+
+export type AccountStakeLockupsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<StakeLockup_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<StakeLockup_Filter>;
 };
 
 export type AccountRewards = {
@@ -251,6 +261,7 @@ export type Account_Filter = {
   referralTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   referralTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewards_?: InputMaybe<AccountRewards_Filter>;
+  stakeLockups_?: InputMaybe<StakeLockup_Filter>;
   stakedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   stakedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   stakedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -280,6 +291,7 @@ export enum Account_OrderBy {
   ReferralDataId = 'referralData__id',
   ReferralTimestamp = 'referralTimestamp',
   Rewards = 'rewards',
+  StakeLockups = 'stakeLockups',
   StakedSummerToken = 'stakedSummerToken',
   StakedSummerTokenNormalized = 'stakedSummerTokenNormalized'
 }
@@ -2847,6 +2859,7 @@ export type GovernanceStaking = {
   rewardTokens: Array<Token>;
   summerStaked: Scalars['BigInt']['output'];
   summerStakedNormalized: Scalars['BigDecimal']['output'];
+  weightedAverageLockupPeriod?: Maybe<Scalars['BigInt']['output']>;
 };
 
 
@@ -2950,6 +2963,14 @@ export type GovernanceStaking_Filter = {
   summerStaked_lte?: InputMaybe<Scalars['BigInt']['input']>;
   summerStaked_not?: InputMaybe<Scalars['BigInt']['input']>;
   summerStaked_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAverageLockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAverageLockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export enum GovernanceStaking_OrderBy {
@@ -2963,7 +2984,8 @@ export enum GovernanceStaking_OrderBy {
   RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
   RewardTokens = 'rewardTokens',
   SummerStaked = 'summerStaked',
-  SummerStakedNormalized = 'summerStakedNormalized'
+  SummerStakedNormalized = 'summerStakedNormalized',
+  WeightedAverageLockupPeriod = 'weightedAverageLockupPeriod'
 }
 
 export type HourlyInterestRate = {

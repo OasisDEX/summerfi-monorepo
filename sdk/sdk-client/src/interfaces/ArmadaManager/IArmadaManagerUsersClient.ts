@@ -12,6 +12,7 @@ import {
   type UserStakeV2,
   type StakingRewardRates,
   type StakingSimulationDataV2,
+  type StakingEarningsEstimationForStakesV2,
   type StakingStatsV2,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -793,6 +794,20 @@ export interface IArmadaManagerUsersClient {
     sumrPriceUsd?: number
     userAddress: AddressValue
   }): Promise<StakingSimulationDataV2>
+
+  /**
+   * @method getStakingEarningsEstimationV2
+   * @description Calculates the earnings estimation for multiple stake positions
+   *
+   * @param stakes Array of stake positions with amount, period, and weightedAmount
+   * @param sumrPriceUsd Optional SUMR token price in USD (defaults to current price from utils)
+   *
+   * @returns Earnings estimation including SUMR rewards and USD earnings for each stake
+   */
+  getStakingEarningsEstimationV2(params: {
+    stakes: { weightedAmount: bigint }[]
+    sumrPriceUsd?: number
+  }): Promise<StakingEarningsEstimationForStakesV2>
 
   /**
    * @method getStakingConfigV2
