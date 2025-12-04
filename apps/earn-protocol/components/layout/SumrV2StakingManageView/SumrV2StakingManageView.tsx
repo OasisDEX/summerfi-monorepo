@@ -1063,7 +1063,9 @@ const SumrV2StakingManageComponent = ({
                     sumrV2StakingManageViewStyles.stakingLengthLabelsBottom,
                     sumrV2StakingManageViewStyles.stakingLockupManualInputWrapper,
                   )}
-                  style={{ display: 'flex', alignItems: 'center', gap: '2px' }}
+                  style={{
+                    paddingLeft: selectedLockupAndBoost === 0 ? '8px' : '0',
+                  }}
                 >
                   <Input
                     variant="dark"
@@ -1071,8 +1073,11 @@ const SumrV2StakingManageComponent = ({
                     className={sumrV2StakingManageViewStyles.stakingLockupManualInput}
                     type="number"
                     onChange={handleManualLockupChange}
+                    wrapperStyles={{
+                      display: selectedLockupAndBoost === 0 ? 'none' : 'inline-block',
+                    }}
                   />
-                  days
+                  {selectedLockupAndBoost === 0 ? 'No lockup' : 'days'}
                 </Text>
                 <Text
                   variant="p3semi"

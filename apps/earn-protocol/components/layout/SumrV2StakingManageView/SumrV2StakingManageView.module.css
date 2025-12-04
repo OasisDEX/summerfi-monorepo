@@ -198,6 +198,10 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   padding-right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 30px;
 
   &:hover {
     border-color: rgba(255, 255, 255, 0.2);
