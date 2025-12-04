@@ -1201,9 +1201,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     // usdcBlendedYieldBoostFrom = userWeightedBalance / userSumrStakedBalance
     let usdcBlendedYieldBoost = 0
     if (userSumrStakedBalanceBN.gt(0)) {
-      usdcBlendedYieldBoost = userWeightedBalanceBN
-        .dividedBy(userSumrStakedBalanceBN)
-        .toNumber()
+      usdcBlendedYieldBoost = userWeightedBalanceBN.dividedBy(userSumrStakedBalanceBN).toNumber()
     }
 
     return usdcBlendedYieldBoost
