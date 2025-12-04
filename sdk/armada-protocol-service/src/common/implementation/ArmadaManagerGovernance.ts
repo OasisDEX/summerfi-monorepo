@@ -921,6 +921,13 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       address: stakingContractAddress,
     })
 
+    // Get reward token decimals
+    const rewardToken = this._tokensManager.getTokenByAddress({
+      chainInfo: this._hubChainInfo,
+      address: this._hubChainSummerTokenAddress,
+    })
+    const rewardTokenDecimals = rewardToken.decimals
+
     // Get required data: totalWeightedSupply, rewardRate, and revenueShare
     const [totalWeightedSupply, rewardData, revenueShare] = await Promise.all([
       stakingContract.totalSupply(),
@@ -956,7 +963,9 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       // sumrRewardsAmount = weightedAmount / totalWeightedSupply * rewardRate (only if reward period is active)
       let sumrRewardsAmount = new BigNumber(0)
       if (isRewardPeriodActive) {
-        const rewardRateBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(-18) // assuming SUMR has 18 decimals
+        const rewardRateBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(
+          -rewardTokenDecimals,
+        )
         sumrRewardsAmount = weightedAmountBN
           .dividedBy(totalWeightedSupplyBN)
           .multipliedBy(rewardRateBN)

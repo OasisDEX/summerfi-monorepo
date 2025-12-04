@@ -23,17 +23,17 @@ describe('Armada Protocol Gov V2 Staking Simulation', () => {
     const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
-    it.only('should calculate staking simulation data with various amounts and periods', async () => {
+    it('should calculate staking simulation data with various amounts and periods', async () => {
       // Test scenarios with different amounts and lockup periods
       const testCases = [
         {
           amount: 48000n,
-          lockupDays: 1080n, // 3 years
+          lockupDays: 1080n,
         },
       ]
 
       // Mock SUMR price (in production this would come from a price oracle)
-      const sumrPriceUsd = 0.25 // Assume 1 USD for simplicity
+      const sumrPriceUsd = 0.25
 
       for (const testCase of testCases) {
         const amount = testCase.amount * 10n ** 18n // Convert to wei
