@@ -46,6 +46,10 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
   const [earningsEstimation, setEarningsEstimation] =
     useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
+    [],
+  )
+  const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
 
   const {
     getUserBalance,
@@ -54,6 +58,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getUserStakingSumrStaked,
     getUserStakesV2,
     getStakingEarningsEstimationV2,
+    getCalculatePenaltyPercentage,
+    getCalculatePenaltyAmount,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -87,11 +93,36 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           }),
         ])
 
-      const _earningsEstimation = await getStakingEarningsEstimationV2({
-        stakes: userStakesData,
-      })
+      const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
+        await Promise.all([
+          getStakingEarningsEstimationV2({
+            stakes: userStakesData,
+          }),
+          getCalculatePenaltyPercentage({
+            userStakes: userStakesData,
+          }),
+          getCalculatePenaltyAmount({
+            userStakes: userStakesData,
+          }),
+        ])
 
       setEarningsEstimation(_earningsEstimation)
+
+      // Map penalty percentages with stake indices
+      setPenaltyPercentages(
+        _penaltyCalculationPercentage.map((percentage, idx) => ({
+          value: percentage.value,
+          index: userStakesData[idx].index,
+        })),
+      )
+
+      // Map penalty amounts with stake indices
+      setPenaltyAmounts(
+        _penaltyCalculationAmount.map((amount, idx) => ({
+          value: amount,
+          index: userStakesData[idx].index,
+        })),
+      )
 
       // Process user balance
       const availableSumrValue = new BigNumber(userBalance).shiftedBy(-SUMR_DECIMALS).toNumber()
@@ -131,6 +162,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getUserBalance,
     getUserStakesV2,
     getUserStakingSumrStaked,
+    getCalculatePenaltyPercentage,
+    getCalculatePenaltyAmount,
     sumrPriceUsd,
     userWalletAddress,
   ])
@@ -192,6 +225,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         isLoading={isLoadingStakes}
         userWalletAddress={userWalletAddress}
         refetchStakingData={fetchStakingData}
+        penaltyPercentages={penaltyPercentages}
+        penaltyAmounts={penaltyAmounts}
       />
     </div>
   )

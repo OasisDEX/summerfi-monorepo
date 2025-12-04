@@ -202,6 +202,8 @@ interface YourLockedSumrPositionsTableProps {
   isLoading: boolean
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
+  penaltyPercentages: { value: number; index: number }[]
+  penaltyAmounts: { value: bigint; index: number }[]
 }
 
 const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
@@ -209,6 +211,8 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
   isLoading,
   userWalletAddress,
   refetchStakingData,
+  penaltyPercentages,
+  penaltyAmounts,
 }) => {
   if (isLoading) {
     return (
@@ -236,46 +240,59 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
   }
 
   const rowsData: TableRow<LockedSumrPositionsTableColumns>[] = stakes
-    .filter((stake) => Number(stake.amount))
-    .map((stake) => ({
-      id: stake.index.toString(),
-      content: {
-        position: (
-          <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-            #{stake.index}&nbsp;-&nbsp;{formatTimestamp(stake.lockupEndTime)}
-          </span>
-        ),
-        staked: (
-          <TableRightCell
-            title={new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2)}
-          >
-            {formatCryptoBalance(
-              new BigNumber(stake.amount).div(new BigNumber(10).pow(SUMR_DECIMALS)),
-            )}
-          </TableRightCell>
-        ),
-        lockPeriod: <TableRightCell>{formatLockPeriod(stake.lockupPeriod)}</TableRightCell>,
-        rewards: <TableCenterCell>n/a</TableCenterCell>,
-        usdEarnings: <TableCenterCell>n/a</TableCenterCell>,
-        removeStakePenalty: (
-          <TableRightCell>
-            <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-              n/a
-            </Text>
-          </TableRightCell>
-        ),
-        action: (
-          <TableCenterCell>
-            <RemoveStakeModalButton
-              userWalletAddress={userWalletAddress}
-              amount={stake.amount}
-              userStakeIndex={BigInt(stake.index)}
-              refetchStakingData={refetchStakingData}
-            />
-          </TableCenterCell>
-        ),
-      },
-    }))
+    .filter((stake) => stake.amount > 0n)
+    .map((stake) => {
+      // Find the corresponding penalty data by stake index
+      const penaltyPercentage = penaltyPercentages.find((p) => p.index === stake.index)?.value ?? 0
+      const penaltyAmount = penaltyAmounts.find((p) => p.index === stake.index)?.value ?? 0n
+
+      // Format penalty: "23,232 (12%) SUMR"
+      const penaltyAmountFormatted = new BigNumber(penaltyAmount.toString()).shiftedBy(
+        -SUMR_DECIMALS,
+      )
+      const penaltyPercentageFormatted = penaltyPercentage.toFixed(2)
+      const penaltyDisplay = `${formatCryptoBalance(penaltyAmountFormatted)} (${penaltyPercentageFormatted}%) SUMR`
+
+      return {
+        id: stake.index.toString(),
+        content: {
+          position: (
+            <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+              #{stake.index}&nbsp;-&nbsp;{formatTimestamp(stake.lockupEndTime)}
+            </span>
+          ),
+          staked: (
+            <TableRightCell
+              title={new BigNumber(stake.amount.toString()).shiftedBy(-SUMR_DECIMALS).toFixed(2)}
+            >
+              {formatCryptoBalance(
+                new BigNumber(stake.amount.toString()).shiftedBy(-SUMR_DECIMALS),
+              )}
+            </TableRightCell>
+          ),
+          lockPeriod: <TableRightCell>{formatLockPeriod(stake.lockupPeriod)}</TableRightCell>,
+          rewards: <TableCenterCell>n/a</TableCenterCell>,
+          usdEarnings: <TableCenterCell>n/a</TableCenterCell>,
+          removeStakePenalty: (
+            <TableRightCell>
+              <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
+                {penaltyDisplay}
+              </Text>
+            </TableRightCell>
+          ),
+          action: (
+            <TableCenterCell>
+              <RemoveStakeModalButton
+                userWalletAddress={userWalletAddress}
+                amount={stake.amount}
+                userStakeIndex={BigInt(stake.index)}
+                refetchStakingData={refetchStakingData}
+              />
+            </TableCenterCell>
+          ),
+        },
+      }
+    })
 
   return (
     <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
@@ -317,6 +334,8 @@ interface YourLockedSumrPositionsProps {
   isLoading: boolean
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
+  penaltyPercentages: { value: number; index: number }[]
+  penaltyAmounts: { value: bigint; index: number }[]
 }
 
 const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
@@ -324,6 +343,8 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
   isLoading,
   userWalletAddress,
   refetchStakingData,
+  penaltyPercentages,
+  penaltyAmounts,
 }) => {
   return (
     <Card variant="cardSecondary">
@@ -334,6 +355,8 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
           isLoading={isLoading}
           userWalletAddress={userWalletAddress}
           refetchStakingData={refetchStakingData}
+          penaltyPercentages={penaltyPercentages}
+          penaltyAmounts={penaltyAmounts}
         />
       </div>
     </Card>
@@ -463,6 +486,8 @@ interface LockedSumrInfoTabBarV2Props {
   isLoading?: boolean
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
+  penaltyPercentages: { value: number; index: number }[]
+  penaltyAmounts: { value: bigint; index: number }[]
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -470,6 +495,8 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   isLoading = false,
   userWalletAddress,
   refetchStakingData,
+  penaltyPercentages,
+  penaltyAmounts,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -484,6 +511,8 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 isLoading
                 userWalletAddress={userWalletAddress}
                 refetchStakingData={refetchStakingData}
+                penaltyPercentages={penaltyPercentages}
+                penaltyAmounts={penaltyAmounts}
               />
             ) : stakes.length ? (
               <YourLockedSumrPositions
@@ -491,6 +520,8 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 isLoading={false}
                 userWalletAddress={userWalletAddress}
                 refetchStakingData={refetchStakingData}
+                penaltyPercentages={penaltyPercentages}
+                penaltyAmounts={penaltyAmounts}
               />
             ) : (
               <NoStakedPositions />
