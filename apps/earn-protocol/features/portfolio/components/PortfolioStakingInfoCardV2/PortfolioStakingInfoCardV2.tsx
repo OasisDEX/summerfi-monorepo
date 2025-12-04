@@ -162,7 +162,8 @@ export const PortfolioStakingInfoCardV2 = ({
         <Icon iconName="sumr" size={32} />
         <Text variant="h5">
           {formatCryptoBalance(sumrUserData.sumrAvailableToStake)} SUMR available to stake. In
-          addition, earn up to {formatDecimalAsPercent(usdcEarnedOnSumr)} USDC yield on your SUMR.
+          addition, earn up to {formatDecimalAsPercent(usdcEarnedOnSumr / 100)} USDC yield on your
+          SUMR.
         </Text>
       </div>
       <div className={portfolioStakingInfoCardStyles.yieldSourcesWrapper}>
