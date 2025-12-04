@@ -1135,8 +1135,10 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       }
 
       // Linear ramp to MAX_PENALTY_PERCENTAGE at MAX_LOCKUP_PERIOD
-      const penaltyBigInt = (timeRemaining * MAX_PENALTY_PERCENTAGE) / MAX_LOCKUP_PERIOD
-      const penaltyValue = new BigNumber(penaltyBigInt).dividedBy(WAD).multipliedBy(100).toNumber()
+      const penaltyBigInt = new BigNumber(timeRemaining)
+        .multipliedBy(MAX_PENALTY_PERCENTAGE)
+        .dividedBy(MAX_LOCKUP_PERIOD)
+      const penaltyValue = penaltyBigInt.dividedBy(WAD).multipliedBy(100).toNumber()
       return Percentage.createFrom({ value: penaltyValue })
     })
   }
@@ -1153,13 +1155,22 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       userStakes: params.userStakes,
     })
 
-    // Calculate penalty amounts: (penaltyPercentage * amount) / 100
+    // Calculate penalty amounts using BigNumber for precision
     return params.amounts.map((amount, index) => {
       const penaltyPercentage = penaltyPercentages[index]
-      // Convert percentage (0-100) to decimal and apply to amount
-      const penaltyAmount =
-        (amount * BigInt(Math.floor(penaltyPercentage.value * 100))) / BigInt(10000)
-      return penaltyAmount
+      
+      // Convert percentage (0-100) to basis points (x100) with rounding
+      const basisPoints = new BigNumber(penaltyPercentage.value)
+        .multipliedBy(100)
+        .integerValue(BigNumber.ROUND_HALF_UP)
+      
+      // Calculate: (amount * basisPoints) / 10000
+      const penaltyAmount = new BigNumber(amount)
+        .multipliedBy(basisPoints)
+        .dividedBy(10000)
+        .integerValue(BigNumber.ROUND_DOWN)
+      
+      return BigInt(penaltyAmount.toFixed(0))
     })
   }
 }

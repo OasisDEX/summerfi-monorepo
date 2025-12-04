@@ -1,13 +1,7 @@
-import {
-  ChainIds,
-  getChainInfoByChainId,
-  User,
-  type AddressValue,
-  type ChainId,
-} from '@summerfi/sdk-common'
+import { ChainIds, User, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
 import { createTestSDK } from './utils/sdkInstance'
-import { SharedConfig, TestConfigs } from './utils/testConfig'
+import { SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
