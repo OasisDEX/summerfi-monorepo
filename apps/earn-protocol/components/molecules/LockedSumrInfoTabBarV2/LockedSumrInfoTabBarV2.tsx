@@ -76,7 +76,7 @@ const formatLockPeriod = (seconds: bigint): string => {
   }).format(Number(daysCount))} days`
 }
 
-const TableCenterCell = ({ children, title }: { title?: string; children: React.ReactNode }) => {
+const TableCenterCell = ({ children, title }: { title?: string; children: ReactNode }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }} title={title}>
       {children}
@@ -84,7 +84,7 @@ const TableCenterCell = ({ children, title }: { title?: string; children: React.
   )
 }
 
-const TableRightCell = ({ children, title }: { title?: string; children: React.ReactNode }) => {
+const TableRightCell = ({ children, title }: { title?: string; children: ReactNode }) => {
   return (
     <div style={{ display: 'flex', justifyContent: 'flex-end' }} title={title}>
       {children}
