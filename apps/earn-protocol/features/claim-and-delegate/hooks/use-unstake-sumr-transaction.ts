@@ -4,12 +4,15 @@ import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType, ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
 import { User } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 import { debounce } from 'lodash-es'
+import { waitForTransactionReceipt } from 'viem/actions'
 
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 /**
  * Hook to handle unstaking SUMR tokens through a user operation transaction
@@ -98,10 +101,16 @@ export const useUnstakeV2SumrTransaction = ({
   buttonLabel?: string
   prepareTransactions: () => Promise<void>
 } => {
-  const amountParsed = BigInt(amount) * BigInt(10 ** SUMR_DECIMALS)
+  const amountParsed = BigInt(
+    new BigNumber(amount).multipliedBy(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(0),
+  )
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false)
+  const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
   const [transactionQueue, setTransactionQueue] = useState<TransactionWithStatus[]>()
   const { getUnstakeTxV2 } = useAppSDK()
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: 'Base',
+  })
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
   // debounce amount by 500ms to avoid rapid calls to getUnstakeTxV2
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amountParsed)
@@ -164,7 +173,7 @@ export const useUnstakeV2SumrTransaction = ({
         executed: false,
       }))
 
-      setTransactionQueue(mappedTransactions)
+      setTransactionQueue(mappedTransactions as TransactionWithStatus[])
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Error preparing unstake transactions:', e)
@@ -181,7 +190,7 @@ export const useUnstakeV2SumrTransaction = ({
     prepareTransactions()
   }, [debouncedAmount, getUnstakeTxV2, userAddress, userStakeIndex, prepareTransactions])
 
-  const triggerNextTransaction = useCallback(() => {
+  const triggerNextTransaction = useCallback(async () => {
     if (!nextTransaction) {
       return Promise.resolve(undefined)
     }
@@ -192,7 +201,7 @@ export const useUnstakeV2SumrTransaction = ({
       value: BigInt(nextTransaction.transaction.value),
     }
 
-    return getGasSponsorshipOverride({
+    return await getGasSponsorshipOverride({
       smartAccountClient,
       txParams,
     })
@@ -202,7 +211,14 @@ export const useUnstakeV2SumrTransaction = ({
           overrides: resolvedOverrides,
         }),
       )
-      .then((result) => {
+      .then(async (result) => {
+        setIsLocalTxLoading(true)
+        await waitForTransactionReceipt(publicClient, {
+          hash: result.hash,
+          confirmations: 2,
+        }).finally(() => {
+          setIsLocalTxLoading(false)
+        })
         setTransactionQueue((prevQueue) => {
           if (!prevQueue) return prevQueue
 
@@ -219,13 +235,13 @@ export const useUnstakeV2SumrTransaction = ({
 
         return result
       })
-  }, [nextTransaction, sendUserOperationAsync, smartAccountClient])
+  }, [nextTransaction, sendUserOperationAsync, smartAccountClient, publicClient])
 
   return {
     triggerNextTransaction,
     transactionQueue,
     isLoadingTransactions,
-    isSendingTransaction: isSendingUserOperation,
+    isSendingTransaction: isSendingUserOperation || isLocalTxLoading,
     error,
     buttonLabel: nextTransaction?.type,
     prepareTransactions,

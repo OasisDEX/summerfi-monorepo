@@ -170,7 +170,7 @@ const RemoveStakeModal: FC<{
               : handleRemoveStake
           }
         >
-          {buttonLabel ?? <LoadingSpinner />}
+          {!buttonLabel || isSendingTransaction ? <LoadingSpinner /> : buttonLabel}
         </Button>
       </div>
     </Card>
