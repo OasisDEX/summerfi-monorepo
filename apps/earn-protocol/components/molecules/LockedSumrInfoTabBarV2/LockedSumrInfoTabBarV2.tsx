@@ -46,8 +46,6 @@ import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
 dayjs.extend(relativeTime)
 
-const dayjsNow = dayjs()
-
 const formatTimestamp = (timestamp: bigint): string => {
   const date = dayjs.unix(Number(timestamp))
 
@@ -56,6 +54,7 @@ const formatTimestamp = (timestamp: bigint): string => {
 
 const formatLockPeriod = (seconds: bigint): string => {
   // returns a nice formatted lock period like "2 years", "6 months", "3 weeks", "5 days"
+  const dayjsNow = dayjs()
   const timestamp = dayjsNow.add(Number(seconds), 'seconds')
   const daysCount = timestamp.diff(dayjsNow, 'days')
   const hoursCount = timestamp.diff(dayjsNow, 'hours')

@@ -28,12 +28,6 @@ import removeStakeModalContentStyles from '@/components/molecules/LockedSumrInfo
 
 const percentageButtons = [0.25, 0.5, 0.75, 1]
 
-const roundDownToWholeNumber = (value: string): string => {
-  const bigNumberValue = new BigNumber(value)
-
-  return bigNumberValue.isNaN() ? '0' : bigNumberValue.integerValue(BigNumber.ROUND_DOWN).toString()
-}
-
 const RemoveStakeModal: FC<{
   stakedAmount: bigint
   userWalletAddress?: string
@@ -47,9 +41,7 @@ const RemoveStakeModal: FC<{
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
   const { onBlur, onFocus, manualSetAmount, amountDisplay, amountRaw, amountParsed } = useAmount({
     tokenDecimals: SUMR_DECIMALS,
-    initialAmount: roundDownToWholeNumber(
-      new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2),
-    ),
+    initialAmount: new BigNumber(stakedAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(2),
     inputChangeHandler,
     inputName: 'unstake-sumr-amount',
   })
@@ -57,10 +49,11 @@ const RemoveStakeModal: FC<{
   const {
     transactionQueue,
     triggerNextTransaction,
-    isLoading: isLoadingUnstakeTransaction,
+    isLoadingTransactions,
+    isSendingTransaction,
     buttonLabel,
   } = useUnstakeV2SumrTransaction({
-    amount: BigInt(roundDownToWholeNumber(amountParsed.toString())),
+    amount: amountParsed.toString(),
     userAddress: userWalletAddress,
     userStakeIndex,
     refetchStakingData,
@@ -80,7 +73,7 @@ const RemoveStakeModal: FC<{
 
         return
       }
-      manualSetAmount(roundDownToWholeNumber(ev.target.value))
+      manualSetAmount(ev.target.value)
     } else {
       manualSetAmount('')
     }
@@ -130,29 +123,26 @@ const RemoveStakeModal: FC<{
             <Badge
               value={`${item * 100}%`}
               key={item}
-              disabled={isLoadingUnstakeTransaction}
+              disabled={isLoadingTransactions || isSendingTransaction}
               onClick={() => {
                 const calculatedValue = new BigNumber(stakedAmount)
                   .div(new BigNumber(10).pow(SUMR_DECIMALS))
                   .multipliedBy(item)
                   .toFixed(2)
 
-                manualSetAmount(roundDownToWholeNumber(calculatedValue))
+                manualSetAmount(calculatedValue)
               }}
               isActive={
                 amountRaw ===
-                roundDownToWholeNumber(
-                  new BigNumber(stakedAmount)
-                    .div(new BigNumber(10).pow(SUMR_DECIMALS))
-                    .multipliedBy(item)
-                    .toFixed(2),
-                )
+                new BigNumber(stakedAmount)
+                  .div(new BigNumber(10).pow(SUMR_DECIMALS))
+                  .multipliedBy(item)
+                  .toFixed(2)
               }
             />
           ))}
         </div>
-        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-        {transactionQueue && !isLoadingUnstakeTransaction ? (
+        {transactionQueue && !isLoadingTransactions ? (
           <PendingTransactionsList
             chainId={NetworkIds.BASEMAINNET}
             transactions={transactionQueue}
@@ -172,9 +162,13 @@ const RemoveStakeModal: FC<{
         <Button
           variant="primarySmall"
           style={{ marginTop: '8px' }}
-          disabled={isLoadingUnstakeTransaction || !transactionQueue}
+          disabled={isLoadingTransactions || isSendingTransaction || !transactionQueue}
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          onClick={isLoadingUnstakeTransaction || !transactionQueue ? undefined : handleRemoveStake}
+          onClick={
+            isLoadingTransactions || isSendingTransaction || !transactionQueue
+              ? undefined
+              : handleRemoveStake
+          }
         >
           {buttonLabel ?? <LoadingSpinner />}
         </Button>

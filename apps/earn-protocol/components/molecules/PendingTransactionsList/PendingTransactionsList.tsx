@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import { type CSSProperties } from 'react'
 import { Expander, getDisplayToken, getScannerUrl, Icon, Text } from '@summerfi/app-earn-ui'
 import { type TransactionWithStatus } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'

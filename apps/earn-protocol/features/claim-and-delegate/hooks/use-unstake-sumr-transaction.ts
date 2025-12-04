@@ -3,12 +3,7 @@ import { toast } from 'react-toastify'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { accountType, ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
-import {
-  type ApproveTransactionInfo,
-  type UnstakeTransactionInfo,
-  User,
-} from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
+import { User } from '@summerfi/sdk-common'
 import { debounce } from 'lodash-es'
 
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
@@ -82,17 +77,6 @@ export const useUnstakeSumrTransaction = ({
   }
 }
 
-type CustomUnstakeTransactionInfo =
-  | [
-      ApproveTransactionInfo & {
-        executed: boolean
-      },
-      UnstakeTransactionInfo & {
-        executed: boolean
-      },
-    ]
-  | undefined
-
 export const useUnstakeV2SumrTransaction = ({
   amount,
   userAddress,
@@ -100,25 +84,27 @@ export const useUnstakeV2SumrTransaction = ({
   refetchStakingData,
   onAllTransactionsComplete,
 }: {
-  amount: bigint
+  amount: string
   userAddress?: string
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
   onAllTransactionsComplete?: () => void
 }): {
   triggerNextTransaction: () => Promise<unknown>
-  isLoading: boolean
+  isLoadingTransactions: boolean
+  isSendingTransaction: boolean
   error: Error | null
-  transactionQueue: TransactionWithStatus[]
+  transactionQueue?: TransactionWithStatus[]
   buttonLabel?: string
   prepareTransactions: () => Promise<void>
 } => {
-  const [isLoadingLocal, setIsLoadingLocal] = useState(false)
-  const [transactionQueue, setTransactionQueue] = useState<CustomUnstakeTransactionInfo>()
+  const amountParsed = BigInt(amount) * BigInt(10 ** SUMR_DECIMALS)
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(false)
+  const [transactionQueue, setTransactionQueue] = useState<TransactionWithStatus[]>()
   const { getUnstakeTxV2 } = useAppSDK()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
   // debounce amount by 500ms to avoid rapid calls to getUnstakeTxV2
-  const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amount)
+  const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amountParsed)
   const debouncedSetAmount = useMemo(
     () =>
       debounce((a: bigint) => {
@@ -128,12 +114,12 @@ export const useUnstakeV2SumrTransaction = ({
   )
 
   useEffect(() => {
-    debouncedSetAmount(amount)
+    debouncedSetAmount(amountParsed)
 
     return () => {
       debouncedSetAmount.cancel()
     }
-  }, [amount, debouncedSetAmount])
+  }, [amountParsed, debouncedSetAmount])
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
     client: smartAccountClient,
@@ -165,11 +151,9 @@ export const useUnstakeV2SumrTransaction = ({
   }, [transactionQueue])
 
   const prepareTransactions = useCallback(async () => {
-    setIsLoadingLocal(true)
+    setIsLoadingTransactions(true)
     const txs = await getUnstakeTxV2({
-      amount: BigInt(
-        new BigNumber(debouncedAmount).times(new BigNumber(10).pow(SUMR_DECIMALS)).toFixed(0),
-      ),
+      amount: debouncedAmount,
       user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
       userStakeIndex,
     })
@@ -177,11 +161,10 @@ export const useUnstakeV2SumrTransaction = ({
     const mappedTransactions = txs.map((tx) => ({
       ...tx,
       executed: false,
-      // i dont have time for that
-    })) as unknown as CustomUnstakeTransactionInfo
+    }))
 
     setTransactionQueue(mappedTransactions)
-    setIsLoadingLocal(false)
+    setIsLoadingTransactions(false)
   }, [debouncedAmount, getUnstakeTxV2, userAddress, userStakeIndex])
 
   useEffect(() => {
@@ -223,7 +206,7 @@ export const useUnstakeV2SumrTransaction = ({
             return tx
           })
 
-          return updatedQueue as unknown as CustomUnstakeTransactionInfo
+          return updatedQueue
         })
 
         return result
@@ -232,9 +215,9 @@ export const useUnstakeV2SumrTransaction = ({
 
   return {
     triggerNextTransaction,
-    // i dont have time for that
-    transactionQueue: transactionQueue as unknown as TransactionWithStatus[],
-    isLoading: isSendingUserOperation || isLoadingLocal,
+    transactionQueue,
+    isLoadingTransactions,
+    isSendingTransaction: isSendingUserOperation,
     error,
     buttonLabel: nextTransaction?.type,
     prepareTransactions,
