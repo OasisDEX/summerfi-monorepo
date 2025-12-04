@@ -1127,13 +1127,16 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       const timeRemaining = lockupEndTime - currentTimestamp
       if (timeRemaining < FIXED_PENALTY_PERIOD) {
         // MIN_PENALTY_PERCENTAGE is 0.02e18 (2%)
-        const penaltyValue = (Number(MIN_PENALTY_PERCENTAGE) / Number(WAD)) * 100
+        const penaltyValue = new BigNumber(MIN_PENALTY_PERCENTAGE)
+          .dividedBy(WAD)
+          .multipliedBy(100)
+          .toNumber()
         return Percentage.createFrom({ value: penaltyValue })
       }
 
       // Linear ramp to MAX_PENALTY_PERCENTAGE at MAX_LOCKUP_PERIOD
       const penaltyBigInt = (timeRemaining * MAX_PENALTY_PERCENTAGE) / MAX_LOCKUP_PERIOD
-      const penaltyValue = (Number(penaltyBigInt) / Number(WAD)) * 100
+      const penaltyValue = new BigNumber(penaltyBigInt).dividedBy(WAD).multipliedBy(100).toNumber()
       return Percentage.createFrom({ value: penaltyValue })
     })
   }

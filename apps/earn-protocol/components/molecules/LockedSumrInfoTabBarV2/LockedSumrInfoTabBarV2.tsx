@@ -99,6 +99,11 @@ const YourLockedSumrPositionsCards = ({
   stakes: UserStakeV2[]
   isLoading: boolean
 }) => {
+  // TODO: userStakedSumr / totalStakedSumr * 100
+  const shareOfTotalStakedSumr = 1
+  // from api
+  const blendedApyBoostMultiple = 1.4
+
   const nextUnlockStake = useMemo(() => {
     const sortedStakes = stakes
       .filter((stake) => stake.amount > 0n && stake.lockupPeriod > 0n)
@@ -141,7 +146,7 @@ const YourLockedSumrPositionsCards = ({
       <DataModule
         dataBlock={{
           title: 'Blended APY boost multiple',
-          value: '1.4x',
+          value: `${blendedApyBoostMultiple}x`,
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
@@ -161,7 +166,7 @@ const YourLockedSumrPositionsCards = ({
               >
                 <Icon iconName="question_o" size={16} />
               </Tooltip>
-              Max boost: 7x
+              Max boost: 7.2655x
             </div>
           ),
         }}
@@ -170,7 +175,7 @@ const YourLockedSumrPositionsCards = ({
       <DataModule
         dataBlock={{
           title: 'Share of all staked SUMR',
-          value: '0.79%',
+          value: `${shareOfTotalStakedSumr}%`,
           valueSize: 'large',
           titleSize: 'medium',
           subValue: (
