@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "allLockedSumrPositionsDataWrapper": string;
   readonly "lockedSumrPositionsCardsWrapper": string;
   readonly "noStakedSumrContentBox": string;
   readonly "noStakedSumrDataBox": string;

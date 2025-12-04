@@ -83,3 +83,9 @@
   flex-wrap: wrap;
   gap: var(--general-space-8);
 }
+
+.allLockedSumrPositionsDataWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

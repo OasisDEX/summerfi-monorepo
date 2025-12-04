@@ -1,10 +1,10 @@
-import { type FC, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import {
+  AllocationBar,
   BigGradientBox,
   Button,
   Card,
   DataModule,
-  Expander,
   Icon,
   SkeletonLine,
   TabBar,
@@ -17,18 +17,10 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type { UserStakeV2 } from '@summerfi/armada-protocol-common'
 import { BigNumber } from 'bignumber.js'
+import clsx from 'clsx'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import Link from 'next/link'
-import {
-  Cell,
-  type DefaultLegendContentProps,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip as RechartsTooltip,
-} from 'recharts'
 
 import {
   allLockedSumrPositionsTableColumns,
@@ -40,7 +32,6 @@ import {
   type LockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
-import { formatChartPercentageValue } from '@/features/forecast/chart-formatters'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
@@ -379,124 +370,6 @@ const AllLockedSumrPositionsCards = () => {
   )
 }
 
-const AllLockedSumrPositionsPieChart = () => {
-  const data = [
-    { name: 'Less than 2 weeks', value: 42 },
-    { name: '2 weeks - 6 months', value: 21 },
-    { name: '6 months - 1 year', value: 10 },
-    { name: '1 year - 2 years', value: 3 },
-    { name: 'More than 2 years', value: 3 },
-  ]
-  const COLORS = ['#ff80bf', '#fa52a6', '#ff4da6', '#ff1a8c', '#cc0066']
-
-  const renderLegend = (props: DefaultLegendContentProps) => {
-    const items = props.payload ?? []
-
-    return (
-      <div style={{ marginRight: '24px' }}>
-        {items.map((entry, index) => {
-          const itemName = String(entry.value ?? '')
-          // prefer payload.value when provided; fall back to entry.value
-          const rawValue = entry.payload?.value ?? entry.value
-          const valueText = `${rawValue}%`
-
-          return (
-            <div
-              key={`item-${index}`}
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  marginBottom: 12,
-                }}
-              >
-                <Text variant="p3semi" style={{ color: 'var(--color-text-secondary)' }}>
-                  {itemName}
-                </Text>
-                <Text variant="p2semi">{valueText}</Text>
-              </div>
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  backgroundColor: entry.color,
-                  userSelect: 'none',
-                }}
-              />
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  return (
-    <Card style={{ padding: '32px 16px', minHeight: '440px', width: '60%' }}>
-      <ResponsiveContainer width="100%" height={440}>
-        <PieChart>
-          <Pie
-            data={data}
-            innerRadius={90}
-            outerRadius={220}
-            fill="#ff0000"
-            stroke="none"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${entry.name}`}
-                fill={COLORS[index % COLORS.length]}
-                style={{
-                  userSelect: 'none',
-                  outline: 'none',
-                }}
-              />
-            ))}
-          </Pie>
-          <RechartsTooltip
-            formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
-            wrapperStyle={{
-              zIndex: 1000,
-              backgroundColor: 'var(--color-surface-subtle)',
-              borderRadius: '5px',
-              padding: '10px',
-              paddingTop: 0,
-              marginTop: 0,
-            }}
-            labelStyle={{
-              fontSize: '16px',
-              fontWeight: '700',
-              marginTop: '10px',
-              marginBottom: '10px',
-            }}
-            itemStyle={{
-              color: 'white !important',
-            }}
-            contentStyle={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              fontSize: '13px',
-              lineHeight: '11px',
-              letterSpacing: '-0.5px',
-            }}
-          />
-
-          <Legend verticalAlign="top" align="right" layout="vertical" content={renderLegend} />
-        </PieChart>
-      </ResponsiveContainer>
-    </Card>
-  )
-}
-
 const AllLockedSumrPositionsTable = () => {
   return (
     <Table<AllLockedSumrPositionsTableColumns>
@@ -522,14 +395,51 @@ const AllLockedSumrPositionsTable = () => {
 }
 
 const AllLockedSumrPositionsData = () => {
+  const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
+  const allocation: {
+    label: string
+    percentage: number
+    color: string
+    tooltip?: ReactNode
+  }[] = [
+    {
+      label: 'Less than 2 weeks',
+      percentage: 0.42,
+      color: COLORS[0],
+    },
+    {
+      label: '2 weeks - 6 months',
+      percentage: 0.2137,
+      color: COLORS[1],
+    },
+    {
+      label: '6 months - 1 year',
+      percentage: 0.3063,
+      color: COLORS[2],
+    },
+    {
+      label: '1 year - 2 years',
+      percentage: 0.03,
+      color: COLORS[3],
+    },
+    {
+      label: 'More than 2 years',
+      percentage: 0.03,
+      color: COLORS[4],
+    },
+  ]
+
   return (
-    <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-      <Expander title="Overview" defaultExpanded>
-        <AllLockedSumrPositionsPieChart />
-      </Expander>
-      <Expander title="All staked positions">
-        <AllLockedSumrPositionsTable />
-      </Expander>
+    <div
+      className={clsx(
+        lockedSumrInfoTabBarV2Styles.wrapper,
+        lockedSumrInfoTabBarV2Styles.allLockedSumrPositionsDataWrapper,
+      )}
+    >
+      <Text variant="h5">SUMR Lock Period Allocation</Text>
+      <AllocationBar items={allocation} variant="large" />
+      <Text variant="h5">All Locked SUMR Positions</Text>
+      <AllLockedSumrPositionsTable />
     </div>
   )
 }
