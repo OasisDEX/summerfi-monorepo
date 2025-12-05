@@ -62,8 +62,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [revenueShareAmount, setRevenueShareAmount] = useState<string>('0')
 
   // State for LockedSumrInfoTabBarV2
-  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
-  const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(true)
+  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(false)
+  const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(false)
   const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
   const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
   const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
@@ -78,7 +78,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
   const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
   const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
-  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(true)
+  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(false)
 
   const {
     getUserBalance,
