@@ -347,6 +347,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
+                ) : !userWalletAddress ? (
+                  '-'
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(availableSumr).toNumber())} SUMR
@@ -374,6 +376,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
+                ) : !userWalletAddress ? (
+                  '-'
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(claimableSumr).toNumber())} SUMR
