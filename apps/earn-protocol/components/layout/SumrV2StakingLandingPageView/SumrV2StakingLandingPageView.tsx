@@ -303,6 +303,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch staking data:', error)
+      setIsLoadingStakes(false)
+      setIsLoadingAllStakes(false)
+      setIsLoadingBucketInfo(false)
     } finally {
       setIsLoading(false)
     }
