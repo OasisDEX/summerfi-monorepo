@@ -16,6 +16,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import type {
+  StakingBucketInfo,
   StakingEarningsEstimationForStakesV2,
   UserStakeV2,
 } from '@summerfi/armada-protocol-common'
@@ -407,14 +408,34 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
   )
 }
 
-const AllLockedSumrPositionsCards = () => {
+interface AllLockedSumrPositionsCardsProps {
+  averageLockDuration: number
+  totalSumrStaked: number
+  circulatingSupply: number
+}
+
+const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
+  averageLockDuration,
+  totalSumrStaked,
+  circulatingSupply,
+}) => {
+  // Format average lock duration
+  const averageLockPeriodDisplay = formatLockPeriod(BigInt(averageLockDuration))
+
+  // Format total SUMR staked
+  const totalSumrStakedFormatted = new BigNumber(totalSumrStaked).toFormat(1)
+  const totalSumrStakedDisplay = `${totalSumrStakedFormatted} SUMR`
+
+  // Calculate percentage of circulating supply staked
+  const percentStaked = circulatingSupply > 0 ? (totalSumrStaked / circulatingSupply) * 100 : 0
+  const percentStakedDisplay = `${percentStaked.toFixed(1)}%`
+
   return (
     <div className={lockedSumrInfoTabBarV2Styles.lockedSumrPositionsCardsWrapper}>
       <DataModule
-        // Huh?
         dataBlock={{
           title: 'Avg. SUMR Lock Period',
-          value: '2 years',
+          value: averageLockPeriodDisplay,
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -423,7 +444,7 @@ const AllLockedSumrPositionsCards = () => {
       <DataModule
         dataBlock={{
           title: 'Total SUMR Staked',
-          value: '63.3m SUMR ',
+          value: totalSumrStakedDisplay,
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -432,7 +453,7 @@ const AllLockedSumrPositionsCards = () => {
       <DataModule
         dataBlock={{
           title: '% of circulating SUMR supply Staked',
-          value: '76.3%',
+          value: percentStakedDisplay,
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -529,46 +550,89 @@ interface AllLockedSumrPositionsDataProps {
   stakes: StakingStake[]
   isLoading: boolean
   totalSumrStaked: number
+  bucketInfo: StakingBucketInfo[]
+  isLoadingBucketInfo: boolean
 }
 
 const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
   stakes,
   isLoading,
   totalSumrStaked,
+  bucketInfo,
+  isLoadingBucketInfo,
 }) => {
-  const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
+  // Calculate allocation percentages from bucket data
   const allocation: {
     label: string
     percentage: number
     color: string
     tooltip?: ReactNode
-  }[] = [
-    {
-      label: 'Less than 2 weeks',
-      percentage: 0.42,
-      color: COLORS[0],
-    },
-    {
-      label: '2 weeks - 6 months',
-      percentage: 0.2137,
-      color: COLORS[1],
-    },
-    {
-      label: '6 months - 1 year',
-      percentage: 0.3063,
-      color: COLORS[2],
-    },
-    {
-      label: '1 year - 2 years',
-      percentage: 0.03,
-      color: COLORS[3],
-    },
-    {
-      label: 'More than 2 years',
-      percentage: 0.03,
-      color: COLORS[4],
-    },
-  ]
+  }[] = useMemo(() => {
+    const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
+
+    if (isLoadingBucketInfo || bucketInfo.length === 0) {
+      return [
+        { label: 'Less than 2 weeks', percentage: 0, color: COLORS[0] },
+        { label: '2 weeks - 6 months', percentage: 0, color: COLORS[1] },
+        { label: '6 months - 1 year', percentage: 0, color: COLORS[2] },
+        { label: '1 year - 2 years', percentage: 0, color: COLORS[3] },
+        { label: 'More than 2 years', percentage: 0, color: COLORS[4] },
+      ]
+    }
+
+    // Find buckets by their enum values (2-6)
+    const bucket2 = bucketInfo.find((b) => b.bucket === 2) // TwoWeeksToThreeMonths
+    const bucket3 = bucketInfo.find((b) => b.bucket === 3) // ThreeToSixMonths
+    const bucket4 = bucketInfo.find((b) => b.bucket === 4) // SixToTwelveMonths
+    const bucket5 = bucketInfo.find((b) => b.bucket === 5) // OneToTwoYears
+    const bucket6 = bucketInfo.find((b) => b.bucket === 6) // TwoToThreeYears
+
+    // Calculate total staked across these buckets
+    const totalBucketStaked = [
+      bucket2?.totalStaked ?? 0n,
+      bucket3?.totalStaked ?? 0n,
+      bucket4?.totalStaked ?? 0n,
+      bucket5?.totalStaked ?? 0n,
+      bucket6?.totalStaked ?? 0n,
+    ].reduce((sum, amount) => sum + amount, 0n)
+
+    const totalBucketStakedNumber = Number(totalBucketStaked) / 1e18
+
+    // Calculate percentage for each bucket
+    const calculatePercentage = (amount: bigint | undefined) => {
+      if (!amount || totalBucketStakedNumber === 0) return 0
+
+      return Number(amount) / 1e18 / totalBucketStakedNumber
+    }
+
+    return [
+      {
+        label: 'Less than 2 weeks',
+        percentage: calculatePercentage(bucket2?.totalStaked),
+        color: COLORS[0],
+      },
+      {
+        label: '2 weeks - 6 months',
+        percentage: calculatePercentage(bucket3?.totalStaked),
+        color: COLORS[1],
+      },
+      {
+        label: '6 months - 1 year',
+        percentage: calculatePercentage(bucket4?.totalStaked),
+        color: COLORS[2],
+      },
+      {
+        label: '1 year - 2 years',
+        percentage: calculatePercentage(bucket5?.totalStaked),
+        color: COLORS[3],
+      },
+      {
+        label: 'More than 2 years',
+        percentage: calculatePercentage(bucket6?.totalStaked),
+        color: COLORS[4],
+      },
+    ]
+  }, [bucketInfo, isLoadingBucketInfo])
 
   return (
     <div
@@ -578,7 +642,11 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
       )}
     >
       <Text variant="h5">SUMR Lock Period Allocation</Text>
-      <AllocationBar items={allocation} variant="large" />
+      {isLoadingBucketInfo ? (
+        <SkeletonLine height="40px" width="100%" style={{ margin: '8px 0' }} />
+      ) : (
+        <AllocationBar items={allocation} variant="large" />
+      )}
       <Text variant="h5">All Locked SUMR Positions</Text>
       <AllLockedSumrPositionsTable
         stakes={stakes}
@@ -593,20 +661,34 @@ interface AllLockedSumrPositionsProps {
   stakes: StakingStake[]
   isLoading: boolean
   totalSumrStaked: number
+  averageLockDuration: number
+  circulatingSupply: number
+  bucketInfo: StakingBucketInfo[]
+  isLoadingBucketInfo: boolean
 }
 
 const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
   stakes,
   isLoading,
   totalSumrStaked,
+  averageLockDuration,
+  circulatingSupply,
+  bucketInfo,
+  isLoadingBucketInfo,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-      <AllLockedSumrPositionsCards />
+      <AllLockedSumrPositionsCards
+        averageLockDuration={averageLockDuration}
+        totalSumrStaked={totalSumrStaked}
+        circulatingSupply={circulatingSupply}
+      />
       <AllLockedSumrPositionsData
         stakes={stakes}
         isLoading={isLoading}
         totalSumrStaked={totalSumrStaked}
+        bucketInfo={bucketInfo}
+        isLoadingBucketInfo={isLoadingBucketInfo}
       />
     </div>
   )
@@ -625,6 +707,10 @@ interface LockedSumrInfoTabBarV2Props {
   totalSumrStaked: number
   allStakes: StakingStake[]
   isLoadingAllStakes: boolean
+  averageLockDuration: number
+  circulatingSupply: number
+  bucketInfo: StakingBucketInfo[]
+  isLoadingBucketInfo: boolean
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -640,6 +726,10 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   totalSumrStaked,
   allStakes,
   isLoadingAllStakes,
+  averageLockDuration,
+  circulatingSupply,
+  bucketInfo,
+  isLoadingBucketInfo,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -686,6 +776,10 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
                 stakes={allStakes}
                 isLoading={isLoadingAllStakes}
                 totalSumrStaked={totalSumrStaked}
+                averageLockDuration={averageLockDuration}
+                circulatingSupply={circulatingSupply}
+                bucketInfo={bucketInfo}
+                isLoadingBucketInfo={isLoadingBucketInfo}
               />
             ),
           },

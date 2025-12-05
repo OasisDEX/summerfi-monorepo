@@ -1,6 +1,7 @@
 import { type Dispatch, type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import type {
+  StakingBucketInfo,
   StakingEarningsEstimationForStakesV2,
   UserStakeV2,
 } from '@summerfi/armada-protocol-common'
@@ -53,6 +54,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   )
   const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
   const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
+  const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
+  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(true)
 
   const {
     getUserBalance,
@@ -65,6 +68,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getCalculatePenaltyAmount,
     getUserBlendedYieldBoost,
     getStakingStakesV2,
+    getStakingBucketsInfoV2,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -79,6 +83,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     try {
       setIsLoadingStakes(true)
       setIsLoadingAllStakes(true)
+      setIsLoadingBucketInfo(true)
       // Fetch all data in parallel
       const [
         userBalance,
@@ -88,6 +93,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userStakesData,
         _userBlendedYieldBoost,
         allStakesData,
+        bucketsInfo,
       ] = await Promise.all([
         getUserBalance({
           userAddress: userWalletAddress as AddressValue,
@@ -110,6 +116,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           first: 100,
           skip: 0,
         }),
+        getStakingBucketsInfoV2(),
       ])
 
       const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
@@ -173,6 +180,10 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       // Set all stakes
       setAllStakes(allStakesData)
       setIsLoadingAllStakes(false)
+
+      // Set bucket info
+      setBucketInfo(bucketsInfo)
+      setIsLoadingBucketInfo(false)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch staking data:', error)
@@ -190,6 +201,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getCalculatePenaltyAmount,
     getUserBlendedYieldBoost,
     getStakingStakesV2,
+    getStakingBucketsInfoV2,
     sumrPriceUsd,
     userWalletAddress,
   ])
@@ -259,6 +271,10 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         totalSumrStaked={totalSumrStaked}
         allStakes={allStakes}
         isLoadingAllStakes={isLoadingAllStakes}
+        averageLockDuration={averageLockDuration}
+        circulatingSupply={circulatingSupply}
+        bucketInfo={bucketInfo}
+        isLoadingBucketInfo={isLoadingBucketInfo}
       />
     </div>
   )
