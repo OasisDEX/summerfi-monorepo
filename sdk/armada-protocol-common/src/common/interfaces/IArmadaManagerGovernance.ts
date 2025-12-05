@@ -487,7 +487,7 @@ export interface IArmadaManagerGovernance {
    * @param first number of items to return (optional, defaults to 1000)
    * @param skip number of items to skip for pagination (optional, defaults to 0)
    *
-   * @returns Array of StakingStake objects representing the staking stakes, sorted by lockupPeriod in descending order
+   * @returns Array of StakingStake objects representing the staking stakes, sorted by amount in descending order
    */
   getStakingStakesV2: (params: { first?: number; skip?: number }) => Promise<StakingStake[]>
 }
