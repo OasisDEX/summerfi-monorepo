@@ -210,23 +210,43 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       setRevenueShareAmount(revenueShareAmountFormatted)
 
-      // Fetch staking-specific data if user is connected
+      // Fetch public staking data (available to all users)
+      setIsLoadingAllStakes(true)
+      setIsLoadingBucketInfo(true)
+
+      const [stakingStats, allStakesData, bucketsInfo] = await Promise.all([
+        getStakingStatsV2(),
+        getStakingStakesV2({
+          first: 10,
+          skip: 0,
+        }),
+        getStakingBucketsInfoV2(),
+      ])
+
+      // Process staking stats
+      setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
+      setCirculatingSupply(new BigNumber(stakingStats.circulatingSupply).toNumber())
+
+      // Format average lock duration from seconds to seconds (as expected by the component)
+      if (stakingStats.averageLockupPeriod) {
+        setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
+      }
+
+      // Set all stakes
+      setAllStakes(allStakesData)
+      setIsLoadingAllStakes(false)
+
+      // Set bucket info
+      setBucketInfo(bucketsInfo)
+      setIsLoadingBucketInfo(false)
+
+      // Fetch user-specific staking data if user is connected
       if (userWalletAddress) {
         setIsLoadingStakes(true)
-        setIsLoadingAllStakes(true)
-        setIsLoadingBucketInfo(true)
 
         const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
 
-        const [
-          stakingStats,
-          userStaked,
-          userStakesData,
-          _userBlendedYieldBoost,
-          allStakesData,
-          bucketsInfo,
-        ] = await Promise.all([
-          getStakingStatsV2(),
+        const [userStaked, userStakesData, _userBlendedYieldBoost] = await Promise.all([
           getUserStakingSumrStaked({
             user,
           }),
@@ -236,11 +256,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
           getUserBlendedYieldBoost({
             user,
           }),
-          getStakingStakesV2({
-            first: 100,
-            skip: 0,
-          }),
-          getStakingBucketsInfoV2(),
         ])
 
         const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
@@ -280,25 +295,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
         setSumrStaked(stakedSumrValue)
 
-        // Process staking stats
-        setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
-        setCirculatingSupply(new BigNumber(stakingStats.circulatingSupply).toNumber())
-
-        // Format average lock duration from seconds to seconds (as expected by the component)
-        if (stakingStats.averageLockupPeriod) {
-          setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
-        }
-
         // Set user stakes
         setUserStakes(userStakesData)
 
-        // Set all stakes
-        setAllStakes(allStakesData)
-        setIsLoadingAllStakes(false)
-
-        // Set bucket info
-        setBucketInfo(bucketsInfo)
-        setIsLoadingBucketInfo(false)
         setIsLoadingStakes(false)
       }
     } catch (error) {

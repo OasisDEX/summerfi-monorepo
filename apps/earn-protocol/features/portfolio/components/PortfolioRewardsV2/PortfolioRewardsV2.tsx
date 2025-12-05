@@ -113,7 +113,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           user,
         }),
         getStakingStakesV2({
-          first: 100,
+          first: 10,
           skip: 0,
         }),
         getStakingBucketsInfoV2(),

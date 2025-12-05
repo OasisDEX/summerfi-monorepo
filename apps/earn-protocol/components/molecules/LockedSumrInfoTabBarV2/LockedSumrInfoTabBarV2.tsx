@@ -598,8 +598,8 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 
     if (isLoadingBucketInfo || bucketInfo.length === 0) {
       return [
-        { label: 'Less than 2 weeks', percentage: 0, color: COLORS[0] },
-        { label: '2 weeks - 6 months', percentage: 0, color: COLORS[1] },
+        { label: '2 weeks - 3 months', percentage: 0, color: COLORS[0] },
+        { label: '3 months - 6 months', percentage: 0, color: COLORS[1] },
         { label: '6 months - 1 year', percentage: 0, color: COLORS[2] },
         { label: '1 year - 2 years', percentage: 0, color: COLORS[3] },
         { label: 'More than 2 years', percentage: 0, color: COLORS[4] },
@@ -633,12 +633,12 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 
     return [
       {
-        label: 'Less than 2 weeks',
+        label: '2 weeks - 3 months',
         percentage: calculatePercentage(bucket2?.totalStaked),
         color: COLORS[0],
       },
       {
-        label: '2 weeks - 6 months',
+        label: '3 months - 6 months',
         percentage: calculatePercentage(bucket3?.totalStaked),
         color: COLORS[1],
       },
@@ -758,60 +758,65 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   bucketInfo,
   isLoadingBucketInfo,
 }) => {
+  const tabs = []
+
+  // Only show "Your Locked SUMR Positions" tab if wallet is connected
+  if (userWalletAddress) {
+    tabs.push({
+      id: 'your-locked-sumr-positions',
+      label: 'Your Locked SUMR Positions',
+      content: isLoading ? (
+        <YourLockedSumrPositions
+          stakes={stakes}
+          isLoading
+          userWalletAddress={userWalletAddress}
+          refetchStakingData={refetchStakingData}
+          penaltyPercentages={penaltyPercentages}
+          penaltyAmounts={penaltyAmounts}
+          earningsEstimation={earningsEstimation}
+          userBlendedYieldBoost={userBlendedYieldBoost}
+          userSumrStaked={userSumrStaked}
+          totalSumrStaked={totalSumrStaked}
+        />
+      ) : stakes.length ? (
+        <YourLockedSumrPositions
+          stakes={stakes}
+          isLoading={false}
+          userWalletAddress={userWalletAddress}
+          refetchStakingData={refetchStakingData}
+          penaltyPercentages={penaltyPercentages}
+          penaltyAmounts={penaltyAmounts}
+          earningsEstimation={earningsEstimation}
+          userBlendedYieldBoost={userBlendedYieldBoost}
+          userSumrStaked={userSumrStaked}
+          totalSumrStaked={totalSumrStaked}
+        />
+      ) : (
+        <NoStakedPositions />
+      ),
+    })
+  }
+
+  // Always show "All Locked SUMR Positions" tab
+  tabs.push({
+    id: 'all-locked-sumr-positions',
+    label: 'All Locked SUMR Positions',
+    content: (
+      <AllLockedSumrPositions
+        stakes={allStakes}
+        isLoading={isLoadingAllStakes}
+        totalSumrStaked={totalSumrStaked}
+        averageLockDuration={averageLockDuration}
+        circulatingSupply={circulatingSupply}
+        bucketInfo={bucketInfo}
+        isLoadingBucketInfo={isLoadingBucketInfo}
+      />
+    ),
+  })
+
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
-      <TabBar
-        tabs={[
-          {
-            id: 'your-locked-sumr-positions',
-            label: 'Your Locked SUMR Positions',
-            content: isLoading ? (
-              <YourLockedSumrPositions
-                stakes={stakes}
-                isLoading
-                userWalletAddress={userWalletAddress}
-                refetchStakingData={refetchStakingData}
-                penaltyPercentages={penaltyPercentages}
-                penaltyAmounts={penaltyAmounts}
-                earningsEstimation={earningsEstimation}
-                userBlendedYieldBoost={userBlendedYieldBoost}
-                userSumrStaked={userSumrStaked}
-                totalSumrStaked={totalSumrStaked}
-              />
-            ) : stakes.length ? (
-              <YourLockedSumrPositions
-                stakes={stakes}
-                isLoading={false}
-                userWalletAddress={userWalletAddress}
-                refetchStakingData={refetchStakingData}
-                penaltyPercentages={penaltyPercentages}
-                penaltyAmounts={penaltyAmounts}
-                earningsEstimation={earningsEstimation}
-                userBlendedYieldBoost={userBlendedYieldBoost}
-                userSumrStaked={userSumrStaked}
-                totalSumrStaked={totalSumrStaked}
-              />
-            ) : (
-              <NoStakedPositions />
-            ),
-          },
-          {
-            id: 'all-locked-sumr-positions',
-            label: 'All Locked SUMR Positions',
-            content: (
-              <AllLockedSumrPositions
-                stakes={allStakes}
-                isLoading={isLoadingAllStakes}
-                totalSumrStaked={totalSumrStaked}
-                averageLockDuration={averageLockDuration}
-                circulatingSupply={circulatingSupply}
-                bucketInfo={bucketInfo}
-                isLoadingBucketInfo={isLoadingBucketInfo}
-              />
-            ),
-          },
-        ]}
-      />
+      <TabBar tabs={tabs} />
     </div>
   )
 }
