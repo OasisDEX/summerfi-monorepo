@@ -140,7 +140,7 @@ export const VaultsListView = ({
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const sumrAvailableToStake =
-    Number(sumrStakeInfo?.sumrBalances.total ?? 0) -
+    Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
     Number(sumrStakeInfo?.sumrStakeInfo.stakedAmount ?? 0)
 
   const sumrStakeRawApy = sumrStakeInfo?.sumrStakingInfo.sumrStakingApy ?? 0
