@@ -157,10 +157,16 @@ const YourLockedSumrPositionsCards = ({
       <DataModule
         dataBlock={{
           title: 'Blended APY boost multiple',
-          value: `${blendedYieldBoost}x`,
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="60px" style={{ margin: '5px 0' }} />
+          ) : (
+            `${blendedYieldBoost}x`
+          ),
           valueSize: 'large',
           titleSize: 'medium',
-          subValue: (
+          subValue: isLoading ? (
+            <SkeletonLine height="14px" width="150px" style={{ margin: '3px 0' }} />
+          ) : (
             <div
               style={{
                 display: 'flex',
@@ -186,10 +192,16 @@ const YourLockedSumrPositionsCards = ({
       <DataModule
         dataBlock={{
           title: 'Share of all staked SUMR',
-          value: `${shareOfTotalStakedSumr}%`,
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="60px" style={{ margin: '5px 0' }} />
+          ) : (
+            `${shareOfTotalStakedSumr}%`
+          ),
           valueSize: 'large',
           titleSize: 'medium',
-          subValue: (
+          subValue: isLoading ? (
+            <SkeletonLine height="14px" width="80px" style={{ margin: '3px 0' }} />
+          ) : (
             <Tooltip
               tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
               tooltipWrapperStyles={{ minWidth: '140px' }}
@@ -412,12 +424,14 @@ interface AllLockedSumrPositionsCardsProps {
   averageLockDuration: number
   totalSumrStaked: number
   circulatingSupply: number
+  isLoading: boolean
 }
 
 const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
   averageLockDuration,
   totalSumrStaked,
   circulatingSupply,
+  isLoading,
 }) => {
   // Format average lock duration
   const averageLockPeriodDisplay = formatLockPeriod(BigInt(averageLockDuration))
@@ -435,7 +449,11 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
       <DataModule
         dataBlock={{
           title: 'Avg. SUMR Lock Period',
-          value: averageLockPeriodDisplay,
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="120px" style={{ margin: '5px 0' }} />
+          ) : (
+            averageLockPeriodDisplay
+          ),
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -444,7 +462,11 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
       <DataModule
         dataBlock={{
           title: 'Total SUMR Staked',
-          value: totalSumrStakedDisplay,
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="150px" style={{ margin: '5px 0' }} />
+          ) : (
+            totalSumrStakedDisplay
+          ),
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -453,7 +475,11 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
       <DataModule
         dataBlock={{
           title: '% of circulating SUMR supply Staked',
-          value: percentStakedDisplay,
+          value: isLoading ? (
+            <SkeletonLine height="30px" width="80px" style={{ margin: '5px 0' }} />
+          ) : (
+            percentStakedDisplay
+          ),
           valueSize: 'large',
           titleSize: 'medium',
         }}
@@ -682,6 +708,7 @@ const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
         averageLockDuration={averageLockDuration}
         totalSumrStaked={totalSumrStaked}
         circulatingSupply={circulatingSupply}
+        isLoading={isLoading}
       />
       <AllLockedSumrPositionsData
         stakes={stakes}
