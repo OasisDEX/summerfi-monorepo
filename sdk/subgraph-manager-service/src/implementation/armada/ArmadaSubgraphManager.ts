@@ -181,6 +181,17 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
+  getStakingStakesV2({
+    chainId,
+    first,
+    skip,
+  }: Parameters<IArmadaSubgraphManager['getStakingStakesV2']>[0]) {
+    return this._getClient(SubgraphTypes.protocol, chainId).GetStakingStakesV2({
+      first,
+      skip,
+    })
+  }
+
   /** PRIVATE */
   _getClient<T extends SubgraphType>(
     subgraphType: T,

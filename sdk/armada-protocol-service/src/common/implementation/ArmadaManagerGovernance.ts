@@ -898,15 +898,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
   }
 
-  /**
-   * @method getStakingEarningsEstimationV2
-   * @description Calculates staking rewards estimation for multiple stakes
-   *
-   * @param stakes Array of stake positions with amount, period, and weightedAmount
-   * @param sumrPriceUsd Optional SUMR price in USD (defaults to current price from utils)
-   *
-   * @returns Estimation data with SUMR rewards and USD earnings for each stake
-   */
   async getStakingEarningsEstimationV2(
     params: Parameters<IArmadaManagerGovernance['getStakingEarningsEstimationV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakingEarningsEstimationV2']> {
@@ -980,12 +971,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     return { stakes }
   }
 
-  /**
-   * @method getStakingConfigV2
-   * @description Returns the staking configuration including the staking contract address
-   *
-   * @returns Object containing staking configuration
-   */
   async getStakingConfigV2(): Promise<{ stakingContractAddress: `0x${string}` }> {
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
     return {
@@ -993,12 +978,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
   }
 
-  /**
-   * @method getStakingStatsV2
-   * @description Returns staking statistics from the protocol subgraph
-   *
-   * @returns Object containing staking statistics
-   */
   async getStakingStatsV2(): Promise<StakingStatsV2> {
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
 
@@ -1174,14 +1153,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     })
   }
 
-  /**
-   * @method getUserBlendedYieldBoost
-   * @description Returns the user's current blended yield boost based on their weighted balance and staked balance
-   *
-   * @param params Object containing user parameter
-   *
-   * @returns The user's blended yield boost (userWeightedBalance / userSumrStakedBalance), returns 0 if user has no staked balance
-   */
   async getUserBlendedYieldBoost(
     params: Parameters<IArmadaManagerGovernance['getUserBlendedYieldBoost']>[0],
   ): ReturnType<IArmadaManagerGovernance['getUserBlendedYieldBoost']> {
@@ -1205,5 +1176,33 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }
 
     return usdcBlendedYieldBoost
+  }
+
+  async getStakingStakesV2(
+    params: Parameters<IArmadaManagerGovernance['getStakingStakesV2']>[0],
+  ): ReturnType<IArmadaManagerGovernance['getStakingStakesV2']> {
+    const result = await this._subgraphManager.getStakingStakesV2({
+      chainId: this._hubChainInfo.chainId,
+      first: params.first ?? 1000,
+      skip: params.skip ?? 0,
+    })
+
+    // Map subgraph data to StakingStake interface
+    const stakes = result.stakeLockups.map((lockup) => ({
+      owner: lockup.account.id as AddressValue,
+      index: Number(lockup.index),
+      amount: lockup.amount,
+      weightedAmount: lockup.weightedAmount,
+      weightedAmountNormalized: parseFloat(lockup.weightedAmountNormalized),
+      lockupStartTime: lockup.startTimestamp,
+      lockupEndTime: lockup.endTimestamp,
+      lockupPeriod: lockup.lockupPeriod,
+      multiplier:
+        lockup.amount > 0n
+          ? parseFloat(lockup.weightedAmountNormalized) / parseFloat(lockup.amount.toString())
+          : 0,
+    }))
+
+    return stakes
   }
 }

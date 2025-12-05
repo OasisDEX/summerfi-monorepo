@@ -1,10 +1,11 @@
 import { type Dispatch, type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import type {
+  StakingBucketInfo,
   StakingEarningsEstimationForStakesV2,
   UserStakeV2,
 } from '@summerfi/armada-protocol-common'
-import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds, type StakingStake, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
@@ -36,6 +37,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
   // State for fetched data
   const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
+  const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(true)
   const [maxApy, setMaxApy] = useState<number>(0)
   const [sumrRewardApy, setSumrRewardApy] = useState<number>(0)
   const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
@@ -44,6 +46,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [sumrAvailableToStake, setSumrAvailableToStake] = useState<number>(0)
   const [sumrStaked, setSumrStaked] = useState<number>(0)
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
+  const [allStakes, setAllStakes] = useState<StakingStake[]>([])
   const [earningsEstimation, setEarningsEstimation] =
     useState<StakingEarningsEstimationForStakesV2 | null>(null)
   const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
@@ -51,6 +54,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   )
   const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
   const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
+  const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
+  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(true)
 
   const {
     getUserBalance,
@@ -62,6 +67,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getCalculatePenaltyPercentage,
     getCalculatePenaltyAmount,
     getUserBlendedYieldBoost,
+    getStakingStakesV2,
+    getStakingBucketsInfoV2,
   } = useAppSDK()
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
@@ -75,6 +82,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
     try {
       setIsLoadingStakes(true)
+      setIsLoadingAllStakes(true)
+      setIsLoadingBucketInfo(true)
       // Fetch all data in parallel
       const [
         userBalance,
@@ -83,6 +92,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userStaked,
         userStakesData,
         _userBlendedYieldBoost,
+        allStakesData,
+        bucketsInfo,
       ] = await Promise.all([
         getUserBalance({
           userAddress: userWalletAddress as AddressValue,
@@ -101,6 +112,11 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         getUserBlendedYieldBoost({
           user,
         }),
+        getStakingStakesV2({
+          first: 10,
+          skip: 0,
+        }),
+        getStakingBucketsInfoV2(),
       ])
 
       const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
@@ -160,6 +176,14 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
       // Set user stakes
       setUserStakes(userStakesData)
+
+      // Set all stakes
+      setAllStakes(allStakesData)
+      setIsLoadingAllStakes(false)
+
+      // Set bucket info
+      setBucketInfo(bucketsInfo)
+      setIsLoadingBucketInfo(false)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch staking data:', error)
@@ -176,6 +200,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getCalculatePenaltyPercentage,
     getCalculatePenaltyAmount,
     getUserBlendedYieldBoost,
+    getStakingStakesV2,
+    getStakingBucketsInfoV2,
     sumrPriceUsd,
     userWalletAddress,
   ])
@@ -243,6 +269,12 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userBlendedYieldBoost={userBlendedYieldBoost}
         userSumrStaked={sumrStaked}
         totalSumrStaked={totalSumrStaked}
+        allStakes={allStakes}
+        isLoadingAllStakes={isLoadingAllStakes}
+        averageLockDuration={averageLockDuration}
+        circulatingSupply={circulatingSupply}
+        bucketInfo={bucketInfo}
+        isLoadingBucketInfo={isLoadingBucketInfo}
       />
     </div>
   )

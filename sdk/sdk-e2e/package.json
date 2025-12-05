@@ -12,6 +12,7 @@
     "e2e:govV2.unstake": "jest --roots e2e -- ./e2e/govV2.unstake.test.ts",
     "e2e:govV2.getUserStakesCount": "jest --roots e2e -- ./e2e/govV2.getUserStakesCount.test.ts",
     "e2e:govV2.getUserStakesV2": "jest --roots e2e -- ./e2e/govV2.getUserStakesV2.test.ts",
+    "e2e:govV2.getStakingStakesV2": "jest --roots e2e -- ./e2e/govV2.getStakingStakesV2.test.ts",
     "e2e:govV2.penaltyCalculation": "jest --roots e2e -- ./e2e/govV2.penaltyCalculation.test.ts",
     "e2e:govV2.getUserStakingSumrStaked": "jest --roots e2e -- ./e2e/govV2.getUserStakingSumrStaked.test.ts",
     "e2e:govV2.getUserBlendedYieldBoost": "jest --roots e2e -- ./e2e/govV2.getUserBlendedYieldBoost.test.ts",

@@ -27,6 +27,7 @@ import { getUnstakeTxHandler } from '../handlers/getUnstakeTxHandler'
 import { getUnstakeTxV2Handler } from '../handlers/getUnstakeTxV2Handler'
 import { getUserStakesCountHandler } from '../handlers/getUserStakesCountHandler'
 import { getUserStakesV2Handler } from '../handlers/getUserStakesV2Handler'
+import { getStakingStakesV2Handler } from '../handlers/getStakingStakesV2Handler'
 import { getUserStakingBalanceV2Handler } from '../handlers/getUserStakingBalanceV2Handler'
 import { getUserStakingWeightedBalanceV2Handler } from '../handlers/getUserStakingWeightedBalanceV2Handler'
 import { getUserBlendedYieldBoostHandler } from '../handlers/getUserBlendedYieldBoostHandler'
@@ -155,6 +156,7 @@ export const useSDK = (params: UseSdk) => {
   const getUnstakeTxV2 = useMemo(() => getUnstakeTxV2Handler(sdk), [sdk])
   const getUserStakesCount = useMemo(() => getUserStakesCountHandler(sdk), [sdk])
   const getUserStakesV2 = useMemo(() => getUserStakesV2Handler(sdk), [sdk])
+  const getStakingStakesV2 = useMemo(() => getStakingStakesV2Handler(sdk), [sdk])
   const getCalculatePenaltyPercentage = useMemo(
     () => getCalculatePenaltyPercentageHandler(sdk),
     [sdk],
@@ -256,6 +258,7 @@ export const useSDK = (params: UseSdk) => {
       getUnstakeTxV2,
       getUserStakesCount,
       getUserStakesV2,
+      getStakingStakesV2,
       getCalculatePenaltyPercentage,
       getCalculatePenaltyAmount,
       getUserStakingBalanceV2,
@@ -333,6 +336,7 @@ export const useSDK = (params: UseSdk) => {
       getUnstakeTxV2,
       getUserStakesCount,
       getUserStakesV2,
+      getStakingStakesV2,
       getCalculatePenaltyPercentage,
       getCalculatePenaltyAmount,
       getUserStakingBalanceV2,

@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -15,13 +15,19 @@ import {
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import type {
+  StakingBucketInfo,
+  StakingEarningsEstimationForStakesV2,
+  UserStakeV2,
+} from '@summerfi/armada-protocol-common'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds, type StakingStake, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
+import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
@@ -55,6 +61,25 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [revenueSharePercentage, setRevenueSharePercentage] = useState<string>('0')
   const [revenueShareAmount, setRevenueShareAmount] = useState<string>('0')
 
+  // State for LockedSumrInfoTabBarV2
+  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(false)
+  const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(false)
+  const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
+  const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
+  const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
+  const [sumrStaked, setSumrStaked] = useState<number>(0)
+  const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
+  const [allStakes, setAllStakes] = useState<StakingStake[]>([])
+  const [earningsEstimation, setEarningsEstimation] =
+    useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
+    [],
+  )
+  const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
+  const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
+  const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
+  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(false)
+
   const {
     getUserBalance,
     getAggregatedRewardsIncludingMerkl,
@@ -62,7 +87,15 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     getProtocolRevenue,
     getProtocolTvl,
     getStakingRevenueShareV2,
-    getSummerToken,
+    getStakingStatsV2,
+    getStakingEarningsEstimationV2,
+    getUserStakingSumrStaked,
+    getUserStakesV2,
+    getCalculatePenaltyPercentage,
+    getCalculatePenaltyAmount,
+    getUserBlendedYieldBoost,
+    getStakingStakesV2,
+    getStakingBucketsInfoV2,
   } = useAppSDK()
   const [sumrNetApyConfig] = useSumrNetApyConfig()
   const sumrPriceUsd = useMemo(
@@ -70,134 +103,236 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     [sumrNetApyConfig.dilutedValuation],
   )
 
-  // Fetch all staking data on mount
-  useEffect(() => {
-    const fetchStakingData = async () => {
-      try {
-        setIsLoading(true)
+  const fetchStakingData = useCallback(async () => {
+    try {
+      setIsLoading(true)
 
-        // Fetch all data in parallel
-        const [userBalance, aggregatedRewards, rewardRates, revenue, tvl, revenueShare] =
+      // Fetch all data in parallel
+      const [userBalance, aggregatedRewards, rewardRates, revenue, tvl, revenueShare] =
+        await Promise.all([
+          userWalletAddress
+            ? getUserBalance({
+                userAddress: userWalletAddress as AddressValue,
+                chainId: ChainIds.Base,
+              })
+            : Promise.resolve(0n),
+          userWalletAddress
+            ? getAggregatedRewardsIncludingMerkl({
+                userAddress: userWalletAddress as AddressValue,
+                chainId: ChainIds.Base,
+              })
+            : Promise.resolve({
+                total: 0n,
+              }),
+          getStakingRewardRatesV2({
+            sumrPriceUsd,
+          }),
+          getProtocolRevenue(),
+          getProtocolTvl(),
+          getStakingRevenueShareV2(),
+        ])
+
+      // Process user balance
+      const availableSumrValue = new BigNumber(userBalance)
+        .shiftedBy(-SUMR_DECIMALS)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+      const availableSumrUsdValue = new BigNumber(availableSumrValue)
+        .times(sumrPriceUsd)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setAvailableSumr(availableSumrValue)
+      setAvailableSumrUsd(availableSumrUsdValue)
+
+      // Process claimable rewards
+      const claimableSumrValue = new BigNumber(aggregatedRewards.total)
+        .shiftedBy(-SUMR_DECIMALS)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+      const claimableSumrUsdValue = new BigNumber(claimableSumrValue)
+        .times(sumrPriceUsd)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setClaimableSumr(claimableSumrValue)
+      setClaimableSumrUsd(claimableSumrUsdValue)
+
+      // Process reward rates
+      const maxApyValue = formatPercent(
+        new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
+      )
+
+      setMaxApy(maxApyValue)
+
+      // Calculate max APY USD per year
+      const maxApyUsdPerYearValue = new BigNumber(availableSumrUsdValue)
+        .times(maxApyValue)
+        .dividedBy(100)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setMaxApyUsdPerYear(maxApyUsdPerYearValue)
+
+      // Process SUMR reward APY
+      const summerRewardApyValue = formatPercent(
+        new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
+      )
+
+      setSumrRewardApy(summerRewardApyValue)
+
+      // Calculate earnable SUMR per year
+      const earnableSumrValue = new BigNumber(availableSumrValue)
+        .times(summerRewardApyValue)
+        .dividedBy(100)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setEarnableSumr(earnableSumrValue)
+
+      const earnableSumrUsdValue = new BigNumber(earnableSumrValue)
+        .times(sumrPriceUsd)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setEarnableSumrUsd(earnableSumrUsdValue)
+
+      // Process protocol revenue
+      const revenueFormatted = new BigNumber(revenue)
+        .dividedBy(1000000)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setProtocolRevenue(revenueFormatted)
+
+      // Process protocol TVL
+      const tvlFormatted = new BigNumber(tvl).dividedBy(1000000).toFixed(0, BigNumber.ROUND_DOWN)
+
+      setProtocolTvl(tvlFormatted)
+
+      // Process revenue share
+      setRevenueSharePercentage(revenueShare.percentage.value.toFixed(0))
+      const revenueShareAmountFormatted = new BigNumber(revenueShare.amount)
+        .dividedBy(1000000)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+
+      setRevenueShareAmount(revenueShareAmountFormatted)
+
+      // Fetch public staking data (available to all users)
+      setIsLoadingAllStakes(true)
+      setIsLoadingBucketInfo(true)
+
+      const [stakingStats, allStakesData, bucketsInfo] = await Promise.all([
+        getStakingStatsV2(),
+        getStakingStakesV2({
+          first: 10,
+          skip: 0,
+        }),
+        getStakingBucketsInfoV2(),
+      ])
+
+      // Process staking stats
+      setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
+      setCirculatingSupply(new BigNumber(stakingStats.circulatingSupply).toNumber())
+
+      // Format average lock duration from seconds to seconds (as expected by the component)
+      if (stakingStats.averageLockupPeriod) {
+        setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
+      }
+
+      // Set all stakes
+      setAllStakes(allStakesData)
+      setIsLoadingAllStakes(false)
+
+      // Set bucket info
+      setBucketInfo(bucketsInfo)
+      setIsLoadingBucketInfo(false)
+
+      // Fetch user-specific staking data if user is connected
+      if (userWalletAddress) {
+        setIsLoadingStakes(true)
+
+        const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
+
+        const [userStaked, userStakesData, _userBlendedYieldBoost] = await Promise.all([
+          getUserStakingSumrStaked({
+            user,
+          }),
+          getUserStakesV2({
+            user,
+          }),
+          getUserBlendedYieldBoost({
+            user,
+          }),
+        ])
+
+        const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
           await Promise.all([
-            userWalletAddress
-              ? getUserBalance({
-                  userAddress: userWalletAddress as AddressValue,
-                  chainId: ChainIds.Base,
-                })
-              : Promise.resolve(0n),
-            userWalletAddress
-              ? getAggregatedRewardsIncludingMerkl({
-                  userAddress: userWalletAddress as AddressValue,
-                  chainId: ChainIds.Base,
-                })
-              : Promise.resolve({
-                  total: 0n,
-                }),
-            getStakingRewardRatesV2({
-              sumrPriceUsd,
+            getStakingEarningsEstimationV2({
+              stakes: userStakesData,
             }),
-            getProtocolRevenue(),
-            getProtocolTvl(),
-            getStakingRevenueShareV2(),
+            getCalculatePenaltyPercentage({
+              userStakes: userStakesData,
+            }),
+            getCalculatePenaltyAmount({
+              userStakes: userStakesData,
+            }),
           ])
 
-        // Process user balance
-        const availableSumrValue = new BigNumber(userBalance)
-          .shiftedBy(-SUMR_DECIMALS)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-        const availableSumrUsdValue = new BigNumber(availableSumrValue)
-          .times(sumrPriceUsd)
-          .toFixed(2, BigNumber.ROUND_DOWN)
+        setEarningsEstimation(_earningsEstimation)
+        setUserBlendedYieldBoost(_userBlendedYieldBoost)
 
-        setAvailableSumr(availableSumrValue)
-        setAvailableSumrUsd(availableSumrUsdValue)
-
-        // Process claimable rewards
-        const claimableSumrValue = new BigNumber(aggregatedRewards.total)
-          .shiftedBy(-SUMR_DECIMALS)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-        const claimableSumrUsdValue = new BigNumber(claimableSumrValue)
-          .times(sumrPriceUsd)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setClaimableSumr(claimableSumrValue)
-        setClaimableSumrUsd(claimableSumrUsdValue)
-
-        // Process reward rates
-        const maxApyValue = formatPercent(
-          new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
+        // Map penalty percentages with stake indices
+        setPenaltyPercentages(
+          _penaltyCalculationPercentage.map((percentage, idx) => ({
+            value: percentage.value,
+            index: userStakesData[idx].index,
+          })),
         )
 
-        setMaxApy(maxApyValue)
-
-        // Calculate max APY USD per year
-        const maxApyUsdPerYearValue = new BigNumber(availableSumrUsdValue)
-          .times(maxApyValue)
-          .dividedBy(100)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setMaxApyUsdPerYear(maxApyUsdPerYearValue)
-
-        // Process SUMR reward APY
-        const summerRewardApyValue = formatPercent(
-          new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
+        // Map penalty amounts with stake indices
+        setPenaltyAmounts(
+          _penaltyCalculationAmount.map((amount, idx) => ({
+            value: amount,
+            index: userStakesData[idx].index,
+          })),
         )
 
-        setSumrRewardApy(summerRewardApyValue)
+        // Process user staked amount
+        const stakedSumrValue = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
 
-        // Calculate earnable SUMR per year
-        const earnableSumrValue = new BigNumber(availableSumrValue)
-          .times(summerRewardApyValue)
-          .dividedBy(100)
-          .toFixed(2, BigNumber.ROUND_DOWN)
+        setSumrStaked(stakedSumrValue)
 
-        setEarnableSumr(earnableSumrValue)
+        // Set user stakes
+        setUserStakes(userStakesData)
 
-        const earnableSumrUsdValue = new BigNumber(earnableSumrValue)
-          .times(sumrPriceUsd)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setEarnableSumrUsd(earnableSumrUsdValue)
-
-        // Process protocol revenue
-        const revenueFormatted = new BigNumber(revenue)
-          .dividedBy(1000000)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setProtocolRevenue(revenueFormatted)
-
-        // Process protocol TVL
-        const tvlFormatted = new BigNumber(tvl).dividedBy(1000000).toFixed(0, BigNumber.ROUND_DOWN)
-
-        setProtocolTvl(tvlFormatted)
-
-        // Process revenue share
-        setRevenueSharePercentage(revenueShare.percentage.value.toFixed(0))
-        const revenueShareAmountFormatted = new BigNumber(revenueShare.amount)
-          .dividedBy(1000000)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setRevenueShareAmount(revenueShareAmountFormatted)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to fetch staking data:', error)
-      } finally {
-        setIsLoading(false)
+        setIsLoadingStakes(false)
       }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch staking data:', error)
+      setIsLoadingStakes(false)
+      setIsLoadingAllStakes(false)
+      setIsLoadingBucketInfo(false)
+    } finally {
+      setIsLoading(false)
     }
-
-    void fetchStakingData()
   }, [
-    userWalletAddress,
-    getUserBalance,
-    getAggregatedRewardsIncludingMerkl,
+    getStakingEarningsEstimationV2,
     getStakingRewardRatesV2,
+    getStakingStatsV2,
+    getUserBalance,
+    getUserStakesV2,
+    getUserStakingSumrStaked,
+    getCalculatePenaltyPercentage,
+    getCalculatePenaltyAmount,
+    getUserBlendedYieldBoost,
+    getStakingStakesV2,
+    getStakingBucketsInfoV2,
+    getAggregatedRewardsIncludingMerkl,
     getProtocolRevenue,
     getProtocolTvl,
     getStakingRevenueShareV2,
-    getSummerToken,
     sumrPriceUsd,
+    userWalletAddress,
   ])
+
+  // Fetch all staking data on mount
+  useEffect(() => {
+    void fetchStakingData()
+  }, [fetchStakingData])
 
   return (
     <>
@@ -215,6 +350,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
+                ) : !userWalletAddress ? (
+                  '-'
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(availableSumr).toNumber())} SUMR
@@ -242,6 +379,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
+                ) : !userWalletAddress ? (
+                  '-'
                 ) : (
                   <>
                     {formatCryptoBalance(new BigNumber(claimableSumr).toNumber())} SUMR
@@ -563,9 +702,26 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
           ]}
         />
         {/* <SumrPriceBar /> */}
-        {/* <div className={sumrV2PageStyles.stakingTabBarWrapper}>
-          <LockedSumrInfoTabBarV2 />
-        </div> */}
+        <div className={sumrV2PageStyles.stakingTabBarWrapper}>
+          <LockedSumrInfoTabBarV2
+            stakes={userStakes}
+            isLoading={isLoadingStakes}
+            userWalletAddress={userWalletAddress}
+            refetchStakingData={fetchStakingData}
+            penaltyPercentages={penaltyPercentages}
+            penaltyAmounts={penaltyAmounts}
+            earningsEstimation={earningsEstimation}
+            userBlendedYieldBoost={userBlendedYieldBoost}
+            userSumrStaked={sumrStaked}
+            totalSumrStaked={totalSumrStaked}
+            allStakes={allStakes}
+            isLoadingAllStakes={isLoadingAllStakes}
+            averageLockDuration={averageLockDuration}
+            circulatingSupply={circulatingSupply}
+            bucketInfo={bucketInfo}
+            isLoadingBucketInfo={isLoadingBucketInfo}
+          />
+        </div>
         <FaqSection
           data={[
             {

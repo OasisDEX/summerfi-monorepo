@@ -255,4 +255,23 @@ export interface IArmadaSubgraphManager {
    *
    */
   getStakingStatsV2(params: { chainId: ChainId; id: string }): Promise<GetStakingStatsV2Query>
+
+  /**
+   * @name getStakingStakesV2
+   * @description Get staking stakes across all users with pagination support (V2)
+   *
+   * @param chainId target chain
+   * @param first number of items to return (defaults to 1000)
+   * @param skip number of items to skip for pagination (defaults to 0)
+   *
+   * @returns GetStakingStakesV2Query
+   *
+   * @throws Error
+   *
+   */
+  getStakingStakesV2(params: {
+    chainId: ChainId
+    first: number
+    skip: number
+  }): Promise<import('../generated/protocol/client').GetStakingStakesV2Query>
 }

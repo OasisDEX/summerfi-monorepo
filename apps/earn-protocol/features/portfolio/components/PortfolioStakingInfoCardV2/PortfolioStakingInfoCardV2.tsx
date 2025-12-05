@@ -219,7 +219,10 @@ export const PortfolioStakingInfoCardV2 = ({
                 </div>
               ),
               value: `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100)}`,
-              subValue: `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
+              subValue:
+                usdcEarnedOnSumrAmount === 0
+                  ? 'No locked positions'
+                  : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
@@ -244,8 +247,12 @@ export const PortfolioStakingInfoCardV2 = ({
                   </Tooltip>
                 </div>
               ),
-              value: `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
-              subValue: `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
+              value:
+                sumrRewardApy === 0 ? '-' : `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
+              subValue:
+                sumrRewardAmount === 0
+                  ? 'No rewards campaign'
+                  : `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}

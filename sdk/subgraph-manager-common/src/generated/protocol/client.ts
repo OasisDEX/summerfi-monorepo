@@ -11710,6 +11710,14 @@ export type GetStakingStatsV2QueryVariables = Exact<{
 
 export type GetStakingStatsV2Query = { __typename?: 'Query', governanceStakings: Array<{ __typename?: 'GovernanceStaking', id: string, summerStakedNormalized: string, averageLockupPeriod?: bigint | null, amountOfLockedStakes?: bigint | null }> };
 
+export type GetStakingStakesV2QueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
+
+
+export type GetStakingStakesV2Query = { __typename?: 'Query', stakeLockups: Array<{ __typename?: 'StakeLockup', id: string, index: bigint, amount: bigint, weightedAmount: bigint, weightedAmountNormalized: string, lockupPeriod: bigint, startTimestamp: bigint, endTimestamp: bigint, account: { __typename?: 'Account', id: string } }> };
+
 export type GetLatestActivityQueryVariables = Exact<{
   timestamp?: InputMaybe<Scalars['BigInt']['input']>;
   first: Scalars['Int']['input'];
@@ -11870,6 +11878,23 @@ export const GetStakingStatsV2Document = gql`
     summerStakedNormalized
     averageLockupPeriod
     amountOfLockedStakes
+  }
+}
+    `;
+export const GetStakingStakesV2Document = gql`
+    query GetStakingStakesV2($first: Int!, $skip: Int!) {
+  stakeLockups(first: $first, skip: $skip, orderBy: amount, orderDirection: desc) {
+    id
+    index
+    account {
+      id
+    }
+    amount
+    weightedAmount
+    weightedAmountNormalized
+    lockupPeriod
+    startTimestamp
+    endTimestamp
   }
 }
     `;
@@ -12513,6 +12538,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetStakingStatsV2(variables: GetStakingStatsV2QueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStakingStatsV2Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetStakingStatsV2Query>({ document: GetStakingStatsV2Document, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStakingStatsV2', 'query', variables);
+    },
+    GetStakingStakesV2(variables: GetStakingStakesV2QueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetStakingStakesV2Query> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetStakingStakesV2Query>({ document: GetStakingStakesV2Document, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetStakingStakesV2', 'query', variables);
     },
     GetLatestActivity(variables: GetLatestActivityQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetLatestActivityQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetLatestActivityQuery>({ document: GetLatestActivityDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetLatestActivity', 'query', variables);
