@@ -4,8 +4,8 @@ import { publicProcedure } from '../../SDKTRPC'
 export const getStakingStakesV2 = publicProcedure
   .input(
     z.object({
-      first: z.number().optional(),
-      skip: z.number().optional(),
+      first: z.number().int().min(1).max(1000).optional(),
+      skip: z.number().int().min(0).optional(),
     }),
   )
   .query(async (opts) => {

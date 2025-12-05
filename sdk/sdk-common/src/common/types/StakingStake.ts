@@ -1,7 +1,7 @@
 import type { AddressValue } from './AddressValue'
 
 /**
- * @description Staking stake details for a user
+ * @description Staking stake position details
  */
 export interface StakingStake {
   owner: AddressValue

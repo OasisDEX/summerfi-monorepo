@@ -680,7 +680,7 @@ export interface IArmadaManagerUsersClient {
 
   /**
    * @method getStakingStakesV2
-   * @description Retrieves all staking stakes for a user from the subgraph manager
+   * @description Retrieves all staking stakes across all users with pagination support (V2)
    *
    * @param first number of items to return (optional, defaults to 1000)
    * @param skip number of items to skip for pagination (optional, defaults to 0)

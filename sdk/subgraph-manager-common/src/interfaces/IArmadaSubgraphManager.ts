@@ -258,7 +258,7 @@ export interface IArmadaSubgraphManager {
 
   /**
    * @name getStakingStakesV2
-   * @description Get staking stakes for a user with pagination
+   * @description Get staking stakes across all users with pagination support (V2)
    *
    * @param chainId target chain
    * @param first number of items to return (defaults to 1000)

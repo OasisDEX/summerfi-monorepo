@@ -19,6 +19,7 @@ import type {
   StakingEarningsEstimationForStakesV2,
   UserStakeV2,
 } from '@summerfi/armada-protocol-common'
+import type { StakingStake } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -441,16 +442,67 @@ const AllLockedSumrPositionsCards = () => {
   )
 }
 
-const AllLockedSumrPositionsTable = () => {
-  return (
-    <Table<AllLockedSumrPositionsTableColumns>
-      columns={allLockedSumrPositionsTableColumns}
-      rows={Array(6).fill({
+interface AllLockedSumrPositionsTableProps {
+  stakes: StakingStake[]
+  isLoading: boolean
+  totalSumrStaked: number
+}
+
+const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
+  stakes,
+  isLoading,
+  totalSumrStaked,
+}) => {
+  if (isLoading) {
+    return (
+      <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
+        <Table<AllLockedSumrPositionsTableColumns>
+          columns={allLockedSumrPositionsTableColumns}
+          rows={Array(4).fill({
+            content: {
+              staked: <SkeletonLine height="20px" width="80px" />,
+              shareOfSumrStaked: (
+                <SkeletonLine height="20px" width="50px" style={{ marginLeft: 'auto' }} />
+              ),
+              stakeTime: <SkeletonLine height="20px" width="50px" style={{ marginLeft: 'auto' }} />,
+              ownerAddress: (
+                <SkeletonLine height="20px" width="80px" style={{ marginLeft: 'auto' }} />
+              ),
+              usdValueEarningInLazySummer: (
+                <SkeletonLine height="20px" width="100px" style={{ marginLeft: 'auto' }} />
+              ),
+            },
+          })}
+        />
+      </div>
+    )
+  }
+
+  const rowsData: TableRow<AllLockedSumrPositionsTableColumns>[] = stakes
+    .filter((stake) => stake.amount > 0n)
+    .map((stake) => {
+      // Format staked amount
+      const stakedAmount = new BigNumber(stake.amount.toString()).shiftedBy(-SUMR_DECIMALS)
+      const stakedDisplay = `${formatCryptoBalance(stakedAmount)} SUMR`
+
+      // Calculate share of total staked
+      const shareOfStaked =
+        totalSumrStaked > 0 ? (stakedAmount.toNumber() / totalSumrStaked) * 100 : 0
+      const shareDisplay = `${shareOfStaked.toFixed(2)}%`
+
+      // Format lock period
+      const lockPeriodDisplay = formatLockPeriod(stake.lockupPeriod)
+
+      // Format owner address
+      const ownerDisplay = `${stake.owner.slice(0, 6)}...${stake.owner.slice(-4)}`
+
+      return {
+        id: `${stake.owner}-${stake.index}`,
         content: {
-          staked: '89,323,322.3 SUMR',
-          shareOfSumrStaked: <TableRightCell>12%</TableRightCell>,
-          stakeTime: <TableRightCell>2 years</TableRightCell>,
-          ownerAddress: <TableRightCell>0x5d...c94</TableRightCell>,
+          staked: stakedDisplay,
+          shareOfSumrStaked: <TableRightCell>{shareDisplay}</TableRightCell>,
+          stakeTime: <TableRightCell>{lockPeriodDisplay}</TableRightCell>,
+          ownerAddress: <TableRightCell>{ownerDisplay}</TableRightCell>,
           usdValueEarningInLazySummer: (
             <TableRightCell>
               24.32m&nbsp;
@@ -460,12 +512,30 @@ const AllLockedSumrPositionsTable = () => {
             </TableRightCell>
           ),
         },
-      })}
-    />
+      }
+    })
+
+  return (
+    <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
+      <Table<AllLockedSumrPositionsTableColumns>
+        columns={allLockedSumrPositionsTableColumns}
+        rows={rowsData}
+      />
+    </div>
   )
 }
 
-const AllLockedSumrPositionsData = () => {
+interface AllLockedSumrPositionsDataProps {
+  stakes: StakingStake[]
+  isLoading: boolean
+  totalSumrStaked: number
+}
+
+const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
+  stakes,
+  isLoading,
+  totalSumrStaked,
+}) => {
   const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
   const allocation: {
     label: string
@@ -510,16 +580,34 @@ const AllLockedSumrPositionsData = () => {
       <Text variant="h5">SUMR Lock Period Allocation</Text>
       <AllocationBar items={allocation} variant="large" />
       <Text variant="h5">All Locked SUMR Positions</Text>
-      <AllLockedSumrPositionsTable />
+      <AllLockedSumrPositionsTable
+        stakes={stakes}
+        isLoading={isLoading}
+        totalSumrStaked={totalSumrStaked}
+      />
     </div>
   )
 }
 
-const AllLockedSumrPositions = () => {
+interface AllLockedSumrPositionsProps {
+  stakes: StakingStake[]
+  isLoading: boolean
+  totalSumrStaked: number
+}
+
+const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
+  stakes,
+  isLoading,
+  totalSumrStaked,
+}) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
       <AllLockedSumrPositionsCards />
-      <AllLockedSumrPositionsData />
+      <AllLockedSumrPositionsData
+        stakes={stakes}
+        isLoading={isLoading}
+        totalSumrStaked={totalSumrStaked}
+      />
     </div>
   )
 }
@@ -535,6 +623,8 @@ interface LockedSumrInfoTabBarV2Props {
   userBlendedYieldBoost: number
   userSumrStaked: number
   totalSumrStaked: number
+  allStakes: StakingStake[]
+  isLoadingAllStakes: boolean
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -548,6 +638,8 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   userBlendedYieldBoost,
   userSumrStaked,
   totalSumrStaked,
+  allStakes,
+  isLoadingAllStakes,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -589,7 +681,13 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
           {
             id: 'all-locked-sumr-positions',
             label: 'All Locked SUMR Positions',
-            content: <AllLockedSumrPositions />,
+            content: (
+              <AllLockedSumrPositions
+                stakes={allStakes}
+                isLoading={isLoadingAllStakes}
+                totalSumrStaked={totalSumrStaked}
+              />
+            ),
           },
         ]}
       />

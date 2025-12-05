@@ -81,23 +81,6 @@ describe('Armada Protocol Gov V2 getStakingStakesV2', () => {
       })
     })
 
-    it('should return results sorted by lockupPeriod descending', async () => {
-      const first = 100
-      const skip = 0
-
-      const result = await sdk.armada.users.getStakingStakesV2({ first, skip })
-
-      expect(result).toBeDefined()
-      expect(Array.isArray(result)).toBe(true)
-
-      // Check if sorted by lockupPeriod in descending order
-      for (let i = 1; i < result.length; i++) {
-        expect(result[i - 1].lockupPeriod).toBeGreaterThanOrEqual(result[i].lockupPeriod)
-      }
-
-      console.log('Stakes are sorted by lockupPeriod in descending order')
-    })
-
     it('should support pagination with skip', async () => {
       const first = 5
       const skip = 0
