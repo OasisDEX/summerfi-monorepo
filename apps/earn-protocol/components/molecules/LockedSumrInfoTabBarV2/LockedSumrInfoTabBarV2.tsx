@@ -526,7 +526,7 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
           ownerAddress: <TableRightCell>{ownerDisplay}</TableRightCell>,
           usdValueEarningInLazySummer: (
             <TableRightCell>
-              24.32m&nbsp;
+              -
               <Link href="Huh?">
                 <WithArrow style={{ margin: '0 18px' }}>View</WithArrow>
               </Link>
