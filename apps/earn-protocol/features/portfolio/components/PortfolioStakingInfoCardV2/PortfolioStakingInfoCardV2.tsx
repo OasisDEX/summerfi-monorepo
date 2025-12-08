@@ -76,10 +76,8 @@ const StartStakingSumrCard = () => {
           Stake SUMR to earn boosted rewards, share in protocol revenues, and gain real governance
           power, all while turning your tokens into a yield-bearing asset.
         </Text>
-        <WithArrow
-        // Huh?
-        >
-          <Link href="Huh?" prefetch>
+        <WithArrow>
+          <Link href="/staking" prefetch>
             <Text as="span" variant="p4semi">
               Read more about SUMR staking
             </Text>
