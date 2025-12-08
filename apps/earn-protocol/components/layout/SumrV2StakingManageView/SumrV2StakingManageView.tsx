@@ -41,6 +41,7 @@ import { LockupRangeInput } from '@/components/molecules/LockupRangeInput/Lockup
 import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
+import { SUMR_STAKING_V2_LOCKUP_MAX_DAYS } from '@/constants/sumr-staking-v2'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
@@ -635,8 +636,8 @@ const SumrV2StakingManageComponent = ({
       return
     }
 
-    if (parsedValue > 1080) {
-      setSelectedLockupAndBoost(1080)
+    if (parsedValue > SUMR_STAKING_V2_LOCKUP_MAX_DAYS) {
+      setSelectedLockupAndBoost(SUMR_STAKING_V2_LOCKUP_MAX_DAYS)
     } else if (parsedValue < 0) {
       setSelectedLockupAndBoost(0)
     } else {
@@ -1150,14 +1151,18 @@ const SumrV2StakingManageComponent = ({
                         180: getAvailabilityLabel(lockBucketAvailabilityMap[3], amountParsed), // 3m - 6m
                         360: getAvailabilityLabel(lockBucketAvailabilityMap[4], amountParsed), // 6m - 1y
                         720: getAvailabilityLabel(lockBucketAvailabilityMap[5], amountParsed), // 1y - 2y
-                        1080: getAvailabilityLabel(lockBucketAvailabilityMap[6], amountParsed), // 2y - 3y
+                        [SUMR_STAKING_V2_LOCKUP_MAX_DAYS]: getAvailabilityLabel(
+                          lockBucketAvailabilityMap[6],
+                          amountParsed,
+                        ), // 2y - 3y
                       }
                     : {
-                        90: 'high',
-                        180: 'high',
-                        360: 'high',
-                        720: 'high',
-                        1080: 'high',
+                        // gray as in `loading`
+                        90: 'gray',
+                        180: 'gray',
+                        360: 'gray',
+                        720: 'gray',
+                        [SUMR_STAKING_V2_LOCKUP_MAX_DAYS]: 'gray',
                       }
                 }
                 selectedBucketIndex={mapLockBucketToBucketIndex(debouncedSelectedLockupAndBoost)}

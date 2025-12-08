@@ -203,12 +203,17 @@ export const PortfolioStakingInfoCardV2 = ({
               title: (
                 <div className={portfolioStakingInfoCardStyles.yieldSourceTitleWithIcon}>
                   <Icon iconName="usdc_circle_color" size={24} />
-                  <span>USDC Yield</span>
+                  <span>USDC Real Yield</span>
                   <Tooltip
-                    tooltip="??"
+                    tooltip={
+                      <Text as="p" variant="p4semi">
+                        USDC yield is derived from Lazy Summer Protocol revenues and distributes
+                        weekly directly to your wallet
+                      </Text>
+                    }
                     showAbove
                     tooltipWrapperStyles={{
-                      top: '-60px',
+                      minWidth: '240px',
                     }}
                   >
                     <Icon iconName="info" size={18} />
@@ -232,12 +237,17 @@ export const PortfolioStakingInfoCardV2 = ({
               title: (
                 <div className={portfolioStakingInfoCardStyles.yieldSourceTitleWithIcon}>
                   <Icon iconName="sumr" size={20} />
-                  <span>SUMR Reward APY</span>
+                  <span>SUMR Staking APY</span>
                   <Tooltip
-                    tooltip="??"
+                    tooltip={
+                      <Text as="p" variant="p4semi">
+                        The % yield you are earning on your SUMR based on your lock duration
+                        multiple and SUMR market cap.
+                      </Text>
+                    }
                     showAbove
                     tooltipWrapperStyles={{
-                      top: '-60px',
+                      minWidth: '240px',
                     }}
                   >
                     <Icon iconName="info" size={18} />

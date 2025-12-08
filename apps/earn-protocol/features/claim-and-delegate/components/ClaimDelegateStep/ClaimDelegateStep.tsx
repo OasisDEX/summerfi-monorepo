@@ -6,9 +6,7 @@ import {
   Button,
   Card,
   DataBlock,
-  Dropdown,
   ERROR_TOAST_CONFIG,
-  Icon,
   Input,
   SDKChainIdToAAChainMap,
   SkeletonLine,
@@ -18,17 +16,8 @@ import {
   useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import {
-  type DropdownRawOption,
-  SupportedNetworkIds,
-  UiTransactionStatuses,
-} from '@summerfi/app-types'
-import {
-  ADDRESS_ZERO,
-  formatCryptoBalance,
-  formatDecimalAsPercent,
-  formatFiatBalance,
-} from '@summerfi/app-utils'
+import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
+import { ADDRESS_ZERO, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -52,7 +41,6 @@ import {
   getChangeDelegateButtonLabel,
   getRemoveDelegateButtonLabel,
 } from './getDelegateButtonLabel'
-import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
 import { ClaimDelegateAction } from './types'
 
 import classNames from './ClaimDelegateStep.module.css'
@@ -96,10 +84,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { setChain } = useChain()
   const { push } = useRouter()
   const { clientChainId } = useClientChainId()
-
-  const [sortBy, setSortBy] = useState<DropdownRawOption>(
-    getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTING_WEIGHT)[0],
-  )
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
@@ -296,21 +280,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               {value}
             </Text>
           </div>
-          {delegatedTo && (
-            <Text
-              as="div"
-              variant="p3semi"
-              style={{
-                color: 'var(--earn-protocol-secondary-40)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-8)',
-              }}
-            >
-              Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(delegatedTo.votesCountNormalized)}
-            </Text>
-          )}
         </Card>
         <div>
           <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
@@ -418,23 +387,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               value={searchValue}
             />
           </div>
-          <div>
-            <Dropdown
-              options={getDelegateSortOptions(sortBy.value as DelegateSortOptions)}
-              dropdownValue={sortBy}
-              dropdownOptionsStyle={{ left: 'unset', right: 0, top: '50px' }}
-              dropdownChildrenStyle={{
-                borderRadius: 'var(--general-radius-8)',
-                padding: 'var(--general-space-12) var(--general-space-16)',
-              }}
-              asPill
-              onChange={setSortBy}
-            >
-              <Text as="p" variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                Sort by
-              </Text>
-            </Dropdown>
-          </div>
         </div>
         {hasStake && action === ClaimDelegateAction.REMOVE ? (
           <ClaimDelegateActionCard
@@ -449,27 +401,18 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
         ) : (
           <>
             <div className={classNames.delegates}>
-              {mappedSumrDelegatesData
-                .sort((a, b) => {
-                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
-                    return b.sumrAmount - a.sumrAmount
+              {mappedSumrDelegatesData.map((delegate) => (
+                <ClaimDelegateCard
+                  key={delegate.address}
+                  {...delegate}
+                  isActive={state.delegatee === delegate.address}
+                  handleClick={() =>
+                    dispatch({ type: 'update-delegatee', payload: delegate.address })
                   }
-
-                  return b.decayFactor - a.decayFactor
-                })
-                .map((delegate) => (
-                  <ClaimDelegateCard
-                    key={delegate.address}
-                    {...delegate}
-                    isActive={state.delegatee === delegate.address}
-                    handleClick={() =>
-                      dispatch({ type: 'update-delegatee', payload: delegate.address })
-                    }
-                    votingPower={delegate.decayFactor}
-                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                    isFaded={getIsCardFaded({ address: delegate.address, state })}
-                  />
-                ))}
+                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                  isFaded={getIsCardFaded({ address: delegate.address, state })}
+                />
+              ))}
               {mappedSumrDelegatesData.length === 0 && (
                 <Text
                   as="p"

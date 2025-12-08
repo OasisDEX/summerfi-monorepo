@@ -2,6 +2,11 @@ import { useMemo } from 'react'
 import { Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
+import {
+  SUMR_STAKING_V2_LOCKUP_MAX_DAYS,
+  SUMR_STAKING_V2_LOCKUP_MIN_DAYS,
+} from '@/constants/sumr-staking-v2'
+
 import lockupRangeGraphStyles from './LockupRangeGraph.module.css'
 
 export const LockupRangeGraph = ({
@@ -10,13 +15,13 @@ export const LockupRangeGraph = ({
   selectedBucketIndex,
 }: {
   lockupMap: {
-    // key is the number of days, starting at 14 (minimum) to 1080 (maximum)
-    [key: number]: 'low' | 'medium' | 'high'
+    // key is the number of days, starting at SUMR_STAKING_V2_LOCKUP_MIN_DAYS (minimum) to SUMR_STAKING_V2_LOCKUP_MAX_DAYS (maximum)
+    [key: number]: 'low' | 'medium' | 'high' | 'gray' // gray for loading
   }
   selectedBucketIndex?: number
   onLockupClick?: (days: number) => void
 }) => {
-  // the minimum lockup is 14 days
+  // the minimum lockup is SUMR_STAKING_V2_LOCKUP_MIN_DAYS days
 
   const calculatedBarWidths = useMemo(() => {
     const entries = Object.entries(lockupMap).map(([days, level]) => ({
@@ -24,10 +29,10 @@ export const LockupRangeGraph = ({
       level,
     }))
 
-    const totalDays = 1080 - 14 // max - min
+    const totalDays = SUMR_STAKING_V2_LOCKUP_MAX_DAYS - SUMR_STAKING_V2_LOCKUP_MIN_DAYS // max - min
 
     return entries.map(({ days, level }, index) => {
-      const previousDays = index === 0 ? 14 : entries[index - 1].days
+      const previousDays = index === 0 ? SUMR_STAKING_V2_LOCKUP_MIN_DAYS : entries[index - 1].days
       const barDays = days - previousDays
       const widthPercent = (barDays / totalDays) * 100
 
@@ -120,13 +125,6 @@ export const LockupRangeGraph = ({
         </Tooltip>
       </div>
       <div className={lockupRangeGraphStyles.lockupRangeGraphBars}>
-        {/* <div
-          // gray bar for 0-14d - if needed later
-          className={`${lockupRangeGraphStyles.lockupRangeGraphBar} ${lockupRangeGraphStyles.gray}`}
-          style={{
-            width: `${(14 / (1080 - 14)) * 100}%`,
-          }}
-        /> */}
         {calculatedBarWidths.map(({ days, level, widthPercent, timespanLabel }, bucketIndex) => (
           <div
             key={days}
@@ -145,7 +143,9 @@ export const LockupRangeGraph = ({
             onClick={() => {
               // calculate the middle of the range for this bucket
               const previousDays =
-                bucketIndex === 0 ? 14 : calculatedBarWidths[bucketIndex - 1].days
+                bucketIndex === 0
+                  ? SUMR_STAKING_V2_LOCKUP_MIN_DAYS
+                  : calculatedBarWidths[bucketIndex - 1].days
               const middleDays = Math.round((previousDays + days) / 2)
 
               onLockupClick?.(middleDays)

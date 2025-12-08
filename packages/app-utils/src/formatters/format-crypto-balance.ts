@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import type BigNumber from 'bignumber.js'
 
 import { formatAsShorthandNumbers } from '@/formatters/format-as-shorthand-numbers'
 import { formatToBigNumber } from '@/formatters/format-to-big-number'
@@ -25,7 +25,7 @@ export const formatCryptoBalance = (
     return '-'
   }
 
-  const resolvedAmount = formatToBigNumber(amount.toString())
+  const resolvedAmount = formatToBigNumber(amount.toString().replaceAll(',', ''))
   const absAmount = resolvedAmount.abs()
   let formattedAmount: string
 
@@ -38,7 +38,7 @@ export const formatCryptoBalance = (
   } else if (absAmount.lt(hundredThousand)) {
     formattedAmount = formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
   } else if (absAmount.lt(million)) {
-    formattedAmount = resolvedAmount.toFormat(2, BigNumber.ROUND_DOWN)
+    formattedAmount = formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
   } else {
     formattedAmount = formatAsShorthandNumbers(resolvedAmount, { precision: 2 })
   }

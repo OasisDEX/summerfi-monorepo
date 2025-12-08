@@ -5,7 +5,8 @@ import { type TallyDelegate } from '@/app/server-handlers/tally'
 import { getDelegateTitle } from './helpers'
 
 interface SumrDelegate {
-  sumrAmount: number
+  sumrAmountV1: number
+  sumrAmountV2: number
   ens: string
   address: string
   title: string
@@ -32,7 +33,9 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
 
     mergedDelegates.set(normalizedAddress, {
       // eslint-disable-next-line no-mixed-operators
-      sumrAmount: Number(sumrDelegate.votesCount) / 10 ** 18,
+      sumrAmountV1: Number(sumrDelegate.votesCountV1) / 10 ** 18,
+      // eslint-disable-next-line no-mixed-operators
+      sumrAmountV2: Number(sumrDelegate.votesCountV2) / 10 ** 18,
       ens: sumrDelegate.ens || '',
       address: sumrDelegate.userAddress,
       title: getDelegateTitle({
@@ -51,10 +54,18 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
         etherscan: `https://basescan.org/address/${sumrDelegate.userAddress}`,
         link: sumrDelegate.forumUrl,
       },
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       picture: sumrDelegate.photo ?? '',
-      decayFactor: Number(sumrDelegate.votePower),
+      // not used currently, but kept for future use
+      decayFactor: 0,
     })
   })
 
-  return Array.from(mergedDelegates.values()).sort((a, b) => b.sumrAmount - a.sumrAmount)
+  return Array.from(mergedDelegates.values()).sort((a, b) => {
+    // comparing the totals, not ideal but works for now
+    const aTotal = a.sumrAmountV1 + a.sumrAmountV2
+    const bTotal = b.sumrAmountV1 + b.sumrAmountV2
+
+    return bTotal - aTotal
+  })
 }
