@@ -551,15 +551,15 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={160} height={20} />
                 ) : (
-                  `${protocolTvl}M Lazy Summer TVL`
+                  `$${protocolTvl}M Lazy Summer TVL`
                 )
               }
             />
-            <Link href="Huh?">
+            {/* <Link href="Huh?">
               <Button variant="textPrimaryMedium" style={{ paddingTop: '2px' }}>
                 Simulate USDC yield payoff
               </Button>
-            </Link>
+            </Link> */}
           </Card>
           <Card className={sumrV2PageStyles.cardDataBlock} variant="cardSecondary">
             <DataBlock
