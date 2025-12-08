@@ -1359,6 +1359,7 @@ const SumrV2StakingManageComponent = ({
 
 const SumrV2StakingSuccessComponent = ({
   txData,
+  onReset,
 }: {
   txData: {
     amount: BigNumber
@@ -1370,6 +1371,7 @@ const SumrV2StakingSuccessComponent = ({
     userStakesCountBefore?: string
     userStakesCountAfter?: string
   }
+  onReset: () => void
 }) => {
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { publicClient } = useNetworkAlignedClient({
@@ -1514,9 +1516,15 @@ const SumrV2StakingSuccessComponent = ({
         </Card>
         <div className={sumrV2StakingManageViewStyles.successScreenButtonGroup}>
           {!isAllTokenStaked && (
-            <Link href="/staking/manage" style={{ marginTop: '24px' }}>
-              <Button variant="primaryLarge">Stake remaining $SUMR</Button>
-            </Link>
+            <Button
+              variant="primaryLarge"
+              style={{
+                marginTop: '24px',
+              }}
+              onClick={onReset}
+            >
+              Stake remaining $SUMR
+            </Button>
           )}
           {userWalletAddress ? (
             <Link
@@ -1743,6 +1751,14 @@ const SumrV2StakingIntermediary = () => {
     }
   }
 
+  const onReset = () => {
+    setStep('init')
+    setTxData(undefined)
+    setApproveStatus(null)
+    setStakeStatus(null)
+    setShouldAutoStakeAfterApproval(false)
+  }
+
   if (step === 'init') {
     return (
       <SumrV2StakingManageComponent
@@ -1762,7 +1778,7 @@ const SumrV2StakingIntermediary = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (step === 'done' && txData) {
-    return <SumrV2StakingSuccessComponent txData={txData} />
+    return <SumrV2StakingSuccessComponent txData={txData} onReset={onReset} />
   }
 
   return <Text variant="p2semi">Something went wrong.</Text>
