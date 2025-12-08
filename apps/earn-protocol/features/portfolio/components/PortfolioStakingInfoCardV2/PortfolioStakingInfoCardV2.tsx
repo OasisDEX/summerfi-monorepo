@@ -176,8 +176,7 @@ export const PortfolioStakingInfoCardV2 = ({
                 subValue: `$${formatCryptoBalance(sumrUserData.sumrStaked * sumrPrice)}`,
               }}
               actionable={
-                // Huh?
-                <Link href="Huh?" prefetch>
+                <Link href="/staking/manage" prefetch>
                   <Button variant="textPrimarySmall">View SUMR staking details</Button>
                 </Link>
               }
@@ -318,13 +317,6 @@ export const PortfolioStakingInfoCardV2 = ({
             wrapperClassName={portfolioStakingInfoCardStyles.stakingStatsBlock}
           />
         </div>
-        <WithArrow>
-          <Link href="/staking" prefetch>
-            <Text as="span" variant="p4semi">
-              View all SUMR analytics
-            </Text>
-          </Link>
-        </WithArrow>
       </Card>
     </Card>
   )
