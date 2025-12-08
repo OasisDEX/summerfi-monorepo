@@ -84,6 +84,7 @@ export const useTokenBalances = ({
       tokenBalance: new BigNumber(0),
       tokenBalanceLoading: false,
       handleSetTokenBalanceLoading: () => null,
+      refetch: () => Promise.resolve(),
     }
   }
 
