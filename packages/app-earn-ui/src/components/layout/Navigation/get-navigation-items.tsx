@@ -1,5 +1,6 @@
 import { type EarnAppConfigType, type IconNamesList } from '@summerfi/app-types'
 
+import { Text } from '@/components/atoms/Text/Text'
 import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
 import { SupportBox } from '@/components/layout/Navigation/SupportBox'
 
@@ -51,7 +52,25 @@ export const getNavigationItems = ({
               onClick: handleButtonClick('sumr'),
             },
             {
-              title: 'Stake $SUMR',
+              title: (
+                <>
+                  Stake $SUMR{' '}
+                  <Text
+                    variant="p4semi"
+                    style={{
+                      display: 'inline-block',
+                      background: 'var(--gradient-earn-protocol-dark)',
+                      position: 'relative',
+                      top: '-2px',
+                      padding: '0 8px',
+                      borderRadius: '4px',
+                      color: 'white',
+                    }}
+                  >
+                    Staking V2
+                  </Text>
+                </>
+              ),
               id: 'sumr-stake',
               description: 'Earn USD yield by staking your SUMR.',
               url: `${prefix}/staking`,

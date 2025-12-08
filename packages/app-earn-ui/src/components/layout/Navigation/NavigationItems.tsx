@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -10,7 +11,7 @@ import navigationItemsStyles from './NavigationItems.module.css'
 export type NavigationItemsProps = {
   items: {
     id: string
-    title: string
+    title: ReactNode
     description: string
     url: string
     icon: IconNamesList
