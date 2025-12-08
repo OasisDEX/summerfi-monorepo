@@ -13,6 +13,7 @@ export interface TokenBalanceData {
   tokenBalance: BigNumber | undefined
   tokenBalanceLoading: boolean
   handleSetTokenBalanceLoading: (loading: boolean) => void
+  refetch: () => Promise<void>
 }
 
 /**
@@ -60,83 +61,78 @@ export const useTokenBalance = ({
           }),
     [sdk, chainId],
   )
-  const fetchTokenBalance = useCallback(
-    async (address: string) => {
-      setTokenBalance(undefined)
-      setTokenBalanceLoading(true)
+  const fetchTokenBalance = useCallback(async () => {
+    setTokenBalance(undefined)
+    setTokenBalanceLoading(true)
 
-      const tokenRequests: Promise<IToken | undefined>[] = [getTokenRequest(vaultTokenSymbol)]
+    const tokenRequests: Promise<IToken | undefined>[] = [getTokenRequest(vaultTokenSymbol)]
 
-      if (tokenSymbol !== vaultTokenSymbol) {
-        tokenRequests.push(getTokenRequest(tokenSymbol))
-      }
+    if (tokenSymbol !== vaultTokenSymbol) {
+      tokenRequests.push(getTokenRequest(tokenSymbol))
+    }
 
-      const [fetchedVaultToken, fetchedToken] = (await Promise.all(tokenRequests)) as [
-        IToken,
-        IToken | undefined,
-      ]
+    const [fetchedVaultToken, fetchedToken] = (await Promise.all(tokenRequests)) as [
+      IToken,
+      IToken | undefined,
+    ]
 
-      setVaultToken(fetchedVaultToken)
+    setVaultToken(fetchedVaultToken)
 
-      if (tokenSymbol === 'ETH') {
-        const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
+    if (tokenSymbol === 'ETH') {
+      const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
 
-        setToken(fetchedOrVaultToken)
+      setToken(fetchedOrVaultToken)
 
-        publicClient
-          .getBalance({
-            address: address as HexData,
-          })
-          .then((val) => {
-            if (skip) {
-              return
-            }
-            setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
-          })
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error('Error reading ETH balance', err)
-          })
-          .finally(() => {
-            setTokenBalanceLoading(false)
-          })
-      } else {
-        const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
+      publicClient
+        .getBalance({
+          address: walletAddress as HexData,
+        })
+        .then((val) => {
+          if (skip) {
+            return
+          }
+          setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error reading ETH balance', err)
+        })
+        .finally(() => {
+          setTokenBalanceLoading(false)
+        })
+    } else {
+      const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
 
-        setToken(fetchedOrVaultToken)
+      setToken(fetchedOrVaultToken)
 
-        publicClient
-          .readContract({
-            abi: erc20Abi,
-            address: fetchedOrVaultToken.address.value,
-            functionName: 'balanceOf',
-            args: [address as HexData],
-          })
-          .then((val) => {
-            if (skip) {
-              return
-            }
-            setTokenBalance(
-              new BigNumber(val.toString()).div(
-                new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
-              ),
-            )
-          })
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error('Error reading token balance', err)
-          })
-          .finally(() => {
-            setTokenBalanceLoading(false)
-          })
-      }
-    },
-    [skip, getTokenRequest, vaultTokenSymbol, tokenSymbol, publicClient],
-  )
+      publicClient
+        .readContract({
+          abi: erc20Abi,
+          address: fetchedOrVaultToken.address.value,
+          functionName: 'balanceOf',
+          args: [walletAddress as HexData],
+        })
+        .then((val) => {
+          if (skip) {
+            return
+          }
+          setTokenBalance(
+            new BigNumber(val.toString()).div(new BigNumber(ten).pow(fetchedOrVaultToken.decimals)),
+          )
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error reading token balance', err)
+        })
+        .finally(() => {
+          setTokenBalanceLoading(false)
+        })
+    }
+  }, [skip, getTokenRequest, vaultTokenSymbol, tokenSymbol, publicClient, walletAddress])
 
   useEffect(() => {
     if (!skip && walletAddress) {
-      fetchTokenBalance(walletAddress).catch((err) => {
+      fetchTokenBalance().catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Error fetching token balance', err)
         setTokenBalance(undefined)
@@ -169,5 +165,6 @@ export const useTokenBalance = ({
     tokenBalance,
     tokenBalanceLoading,
     handleSetTokenBalanceLoading,
+    refetch: fetchTokenBalance,
   }
 }

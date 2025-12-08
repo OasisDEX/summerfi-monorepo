@@ -1,39 +1,27 @@
 'use client'
-import { type Dispatch, type FC, useCallback, useMemo } from 'react'
-import { toast } from 'react-toastify'
-import { useAuthModal, useChain } from '@account-kit/react'
+import { type Dispatch, type FC } from 'react'
+import { useAuthModal } from '@account-kit/react'
 import {
   Button,
   DataModule,
-  ERROR_TOAST_CONFIG,
   Icon,
-  LoadingSpinner,
-  SDKChainIdToAAChainMap,
-  SUCCESS_TOAST_CONFIG,
   SUMR_CAP,
   Text,
   Tooltip,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds } from '@summerfi/app-types'
-import {
-  ADDRESS_ZERO,
-  formatCryptoBalance,
-  formatDecimalToBigInt,
-  formatFiatBalance,
-} from '@summerfi/app-utils'
+import { ADDRESS_ZERO, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
-import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRewardsCardsV2.module.css'
@@ -143,110 +131,9 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) =>
 
 const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }) => {
   const sumrAvailableToStake = Number(rewardsData.sumrStakeDelegate.stakedAmount)
-  const buttonClickEventHandler = useHandleButtonClickEvent()
-  const { walletAddress } = useParams()
-  const { chain, isSettingChain, setChain } = useChain()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { unstakeSumrTransaction, isLoading: isLoadingUnstakeTransaction } =
-    useUnstakeSumrTransaction({
-      amount: formatDecimalToBigInt(sumrAvailableToStake, 18),
-      onSuccess: () => {
-        toast.success('Unstaked $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
-        revalidateUser(userWalletAddress)
-      },
-      onError: () => {
-        toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
-      },
-    })
-
-  const resolvedWalletAddress = walletAddress as string
 
   const value = `${formatCryptoBalance(sumrAvailableToStake)} SUMR`
-  const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
-
-  const hasOldStakedSumr = sumrAvailableToStake > 0
-
-  const isLoading =
-    isLoadingAccount || isLoadingUnstakeTransaction || isAuthModalOpen || isSettingChain
-
-  const handleRemoveStakeInOldModule = useCallback(() => {
-    if (userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase()) {
-      return
-    }
-    if (!isCorrectNetwork) {
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
-
-      return
-    }
-    unstakeSumrTransaction()
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-add-remove-stake`)
-  }, [
-    buttonClickEventHandler,
-    isCorrectNetwork,
-    resolvedWalletAddress,
-    setChain,
-    userWalletAddress,
-    unstakeSumrTransaction,
-  ])
-
-  const handleConnect = useCallback(() => {
-    buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
-    if (!userWalletAddress) {
-      openAuthModal()
-    }
-  }, [buttonClickEventHandler, openAuthModal, userWalletAddress])
-
-  const button = useMemo(() => {
-    if (isLoading) {
-      return (
-        <Button variant="unstyled" disabled>
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            <LoadingSpinner size={18} />
-          </Text>
-        </Button>
-      )
-    }
-
-    if (!hasOldStakedSumr) {
-      return (
-        <Button variant="unstyled" disabled>
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Remove Old Staked SUMR
-          </Text>
-        </Button>
-      )
-    }
-
-    if (!userWalletAddress) {
-      return (
-        <Button variant="unstyled" onClick={handleConnect}>
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            Remove Old Staked SUMR
-          </Text>
-        </Button>
-      )
-    }
-
-    return (
-      <Button
-        variant="unstyled"
-        disabled={userWalletAddress.toLowerCase() !== resolvedWalletAddress.toLowerCase()}
-        onClick={handleRemoveStakeInOldModule}
-      >
-        <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-          Remove Old Staked SUMR
-        </Text>
-      </Button>
-    )
-  }, [
-    handleConnect,
-    handleRemoveStakeInOldModule,
-    hasOldStakedSumr,
-    isLoading,
-    resolvedWalletAddress,
-    userWalletAddress,
-  ])
+  const { walletAddress } = useParams()
 
   return (
     <DataModule
@@ -256,7 +143,12 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
         titleSize: 'medium',
         valueSize: 'large',
       }}
-      actionable={button}
+      actionable={
+        <UnstakeOldSumrButton
+          walletAddress={walletAddress as string}
+          oldStakedAmount={Number(rewardsData.sumrStakeDelegate.stakedAmount)}
+        />
+      }
     />
   )
 }

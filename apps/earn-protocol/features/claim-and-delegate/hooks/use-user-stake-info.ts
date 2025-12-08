@@ -32,11 +32,15 @@ export const useUserStakeInfo = () => {
   const { features } = useSystemConfig()
   const stakingV2Enabled = !!features?.StakingV2
 
-  const { data: sumrStakeInfo, isLoading: isSumrStakeInfoLoading } = useQuery({
+  const {
+    data: sumrStakeInfo,
+    isLoading: isSumrStakeInfoLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['sumr-stake-info', userWalletAddress],
     queryFn: () => getUserStakeInfo(userWalletAddress ?? zeroAddress),
     enabled: !!userWalletAddress && stakingV2Enabled,
   })
 
-  return { sumrStakeInfo, isSumrStakeInfoLoading }
+  return { sumrStakeInfo, isSumrStakeInfoLoading, refetchUserStakeInfo: refetch }
 }

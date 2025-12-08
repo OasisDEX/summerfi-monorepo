@@ -38,11 +38,13 @@ import Link from 'next/link'
 
 import { LockupRangeGraph } from '@/components/molecules/LockupRangeGraph/LockupRangeGraph'
 import { LockupRangeInput } from '@/components/molecules/LockupRangeInput/LockupRangeInput'
+import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
 import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/QuickActionTags'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
+import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { getAvailabilityLabel } from '@/helpers/stakingv2-availability-label'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -393,12 +395,17 @@ const SumrV2StakingManageComponent = ({
   })
 
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { isSumrStakeInfoLoading, sumrStakeInfo, refetchUserStakeInfo } = useUserStakeInfo()
 
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })
 
-  const { tokenBalance: sumrBalanceOnSourceChain, tokenBalanceLoading } = useTokenBalance({
+  const {
+    tokenBalance: sumrBalanceOnSourceChain,
+    tokenBalanceLoading,
+    refetch: refetchSumrBalance,
+  } = useTokenBalance({
     chainId: ChainIds.Base,
     publicClient,
     tokenSymbol: 'SUMMER',
@@ -635,6 +642,11 @@ const SumrV2StakingManageComponent = ({
     } else {
       setSelectedLockupAndBoost(parsedValue)
     }
+  }
+
+  const onOldUnstakeFinished = () => {
+    refetchUserStakeInfo()
+    refetchSumrBalance()
   }
 
   return (
@@ -878,6 +890,36 @@ const SumrV2StakingManageComponent = ({
         </div>
         <div className={sumrV2StakingManageViewStyles.cardRightColumn}>
           <div className={sumrV2StakingManageViewStyles.cardRightColumnStepWrapper}>
+            <AnimateHeight
+              id="step-0"
+              show={
+                !isSumrStakeInfoLoading &&
+                !!sumrStakeInfo?.sumrStakeInfo.stakedAmount &&
+                !!userWalletAddress
+              }
+            >
+              {!!sumrStakeInfo && userWalletAddress && (
+                <Card
+                  style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+                  variant="cardGradientLight"
+                >
+                  <Text variant="p2semi">$SUMR staked in the old module.</Text>
+                  <Text variant="p3">
+                    There is{' '}
+                    <strong>
+                      {formatCryptoBalance(sumrStakeInfo.sumrStakeInfo.stakedAmount)} $SUMR
+                    </strong>{' '}
+                    staked in the old staking module. Unstake it so its available for use in this
+                    new module.
+                  </Text>
+                  <UnstakeOldSumrButton
+                    walletAddress={userWalletAddress}
+                    oldStakedAmount={Number(sumrStakeInfo.sumrStakeInfo.stakedAmount)}
+                    onFinished={onOldUnstakeFinished}
+                  />
+                </Card>
+              )}
+            </AnimateHeight>
             <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
               <StepNumber number={1} />
               <Text variant="p2semi">How much SUMR would you like to stake?</Text>
