@@ -104,7 +104,6 @@
           }
         }
       }
-
     }
   }
 }
@@ -125,9 +124,8 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-rounder);
-  background: var(--Lazy-Summer-Dark, linear-gradient(90deg, #FF49A4 0%, #B049FF 93%));
+  background: var(--Lazy-Summer-Dark, linear-gradient(90deg, #ff49a4 0%, #b049ff 93%));
 }
-
 
 .inlineLittleGap {
   display: flex;
@@ -217,4 +215,16 @@
   line-height: 22px;
   font-weight: 600;
   border: none;
+}
+
+.successScreenButtonGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+
+  button {
+    min-width: unset;
+  }
 }

@@ -19,6 +19,7 @@ declare const styles: {
   readonly "stakingLockupManualInput": string;
   readonly "stakingLockupManualInputWrapper": string;
   readonly "stepNumberWrapper": string;
+  readonly "successScreenButtonGroup": string;
   readonly "summaryWrapper": string;
   readonly "sumrKeyStakingInfoCard": string;
   readonly "title": string;

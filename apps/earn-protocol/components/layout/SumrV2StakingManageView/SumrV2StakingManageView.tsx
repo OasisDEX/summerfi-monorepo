@@ -1512,15 +1512,27 @@ const SumrV2StakingSuccessComponent = ({
             ]}
           />
         </Card>
-        {userWalletAddress ? (
-          <Link href={`/portfolio/${userWalletAddress}?tab=rewards`} style={{ marginTop: '24px' }}>
-            <Button variant="primaryLarge">Go to portfolio</Button>
-          </Link>
-        ) : (
-          <Button variant="primaryLarge" disabled>
-            Go to portfolio
-          </Button>
-        )}
+        <div className={sumrV2StakingManageViewStyles.successScreenButtonGroup}>
+          {!isAllTokenStaked && (
+            <Link href="/staking/manage" style={{ marginTop: '24px' }}>
+              <Button variant="primaryLarge">Stake remaining $SUMR</Button>
+            </Link>
+          )}
+          {userWalletAddress ? (
+            <Link
+              href={`/portfolio/${userWalletAddress}?tab=rewards`}
+              style={{ marginTop: '24px' }}
+            >
+              <Button variant={isAllTokenStaked ? 'primaryLarge' : 'secondaryLarge'}>
+                Go to portfolio
+              </Button>
+            </Link>
+          ) : (
+            <Button variant={isAllTokenStaked ? 'primaryLarge' : 'secondaryLarge'} disabled>
+              Go to portfolio
+            </Button>
+          )}
+        </div>
       </Card>
     </div>
   )
