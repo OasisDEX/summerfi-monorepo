@@ -671,7 +671,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     )
     // Convert to actual token amounts (not wei)
     const rewardRatePerYearBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(
-      -rewardTokenDecimals,
+      -rewardTokenDecimals * 2,
     )
 
     let summerRewardYield = new BigNumber(0)
