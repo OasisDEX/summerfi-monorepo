@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useMemo } from 'react'
+import { type FC, type ReactNode, useMemo, useState } from 'react'
 import {
   AllocationBar,
   BigGradientBox,
@@ -10,11 +10,12 @@ import {
   TabBar,
   Table,
   type TableRow,
+  type TableSortedColumn,
   Text,
   Tooltip,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance } from '@summerfi/app-utils'
+import { formatCryptoBalance, SortDirection } from '@summerfi/app-utils'
 import type {
   StakingBucketInfo,
   StakingEarningsEstimationForStakesV2,
@@ -326,7 +327,6 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
                 userStakeIndex={BigInt(stake.index)}
                 refetchStakingData={refetchStakingData}
                 penaltyPercentage={penaltyPercentage}
-                penaltyAmount={penaltyAmount}
               />
             </TableCenterCell>
           ),
@@ -500,6 +500,13 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
   isLoading,
   totalSumrStaked,
 }) => {
+  const [sortConfig, setSortConfig] = useState<
+    TableSortedColumn<AllLockedSumrPositionsTableColumns>
+  >({
+    direction: SortDirection.DESC,
+    key: 'staked',
+  })
+
   if (isLoading) {
     return (
       <div className={lockedSumrInfoTabBarV2Styles.tableResponsiveWrapper}>
@@ -527,6 +534,26 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
 
   const rowsData: TableRow<AllLockedSumrPositionsTableColumns>[] = stakes
     .filter((stake) => stake.amount > 0n)
+    .sort((a, b) => {
+      const aAmountValue = new BigNumber(a.amount.toString()).shiftedBy(-SUMR_DECIMALS).toNumber()
+      const bAmountValue = new BigNumber(b.amount.toString()).shiftedBy(-SUMR_DECIMALS).toNumber()
+      const aLockupValue = new BigNumber(a.lockupPeriod.toString()).toNumber()
+      const bLockupValue = new BigNumber(b.lockupPeriod.toString()).toNumber()
+
+      switch (sortConfig.key) {
+        case 'staked':
+          return sortConfig.direction === SortDirection.ASC
+            ? aAmountValue - bAmountValue
+            : bAmountValue - aAmountValue
+
+        case 'stakeTime':
+          return sortConfig.direction === SortDirection.ASC
+            ? aLockupValue - bLockupValue
+            : bLockupValue - aLockupValue
+      }
+
+      return 0
+    })
     .map((stake) => {
       // Format staked amount
       const stakedAmount = new BigNumber(stake.amount.toString()).shiftedBy(-SUMR_DECIMALS)
@@ -567,6 +594,9 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
       <Table<AllLockedSumrPositionsTableColumns>
         columns={allLockedSumrPositionsTableColumns}
         rows={rowsData}
+        handleSort={(config) => {
+          setSortConfig({ key: config.key, direction: config.direction })
+        }}
       />
     </div>
   )

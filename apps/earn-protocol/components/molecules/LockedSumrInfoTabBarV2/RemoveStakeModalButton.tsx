@@ -37,14 +37,12 @@ const RemoveStakeModal: FC<{
   refetchStakingData: () => Promise<void>
   handleOpenClose: () => void
   penaltyPercentage?: number
-  penaltyAmount?: bigint
 }> = ({
   stakedAmount,
   userWalletAddress,
   userStakeIndex,
   refetchStakingData,
   handleOpenClose,
-  penaltyAmount,
   penaltyPercentage,
 }) => {
   const { chain, setChain } = useChain()
@@ -101,14 +99,20 @@ const RemoveStakeModal: FC<{
   }, [isCorrectNetwork, setChain, triggerNextTransaction])
 
   const receivedAmount = useMemo(() => {
-    if (penaltyAmount) {
+    if (penaltyPercentage) {
       return new BigNumber(amountParsed)
-        .minus(new BigNumber(penaltyAmount).div(new BigNumber(10).pow(SUMR_DECIMALS)))
+        .minus(
+          new BigNumber(
+            new BigNumber(amountParsed)
+              .multipliedBy(new BigNumber(penaltyPercentage).div(new BigNumber(100)))
+              .toFixed(2),
+          ),
+        )
         .toFixed(2)
     }
 
     return amountParsed.toFixed(2)
-  }, [amountParsed, penaltyAmount])
+  }, [amountParsed, penaltyPercentage])
 
   return (
     <Card variant="cardSecondary" style={{ maxWidth: '446px' }}>
@@ -219,15 +223,7 @@ export const RemoveStakeModalButton: FC<{
   userStakeIndex: bigint
   refetchStakingData: () => Promise<void>
   penaltyPercentage?: number
-  penaltyAmount?: bigint
-}> = ({
-  amount,
-  userWalletAddress,
-  userStakeIndex,
-  refetchStakingData,
-  penaltyPercentage,
-  penaltyAmount,
-}) => {
+}> = ({ amount, userWalletAddress, userStakeIndex, refetchStakingData, penaltyPercentage }) => {
   const { isSettingChain } = useChain()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
@@ -282,7 +278,6 @@ export const RemoveStakeModalButton: FC<{
             refetchStakingData={refetchStakingData}
             handleOpenClose={handleOpenClose}
             penaltyPercentage={penaltyPercentage}
-            penaltyAmount={penaltyAmount}
           />
         </MobileDrawer>
       ) : (
@@ -294,7 +289,6 @@ export const RemoveStakeModalButton: FC<{
             refetchStakingData={refetchStakingData}
             handleOpenClose={handleOpenClose}
             penaltyPercentage={penaltyPercentage}
-            penaltyAmount={penaltyAmount}
           />
         </Modal>
       )}

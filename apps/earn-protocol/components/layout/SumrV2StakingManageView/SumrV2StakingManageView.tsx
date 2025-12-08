@@ -762,7 +762,7 @@ const SumrV2StakingManageComponent = ({
                           <Text variant="p3semi">{`${revenueShare}%`}</Text>
                         )}
                         <Tooltip
-                          tooltip="USDC yield is derived from Lazy Summer Protocol Revenue. Specifically a 20% of total protocol revenue."
+                          tooltip="USDC yield is derived from Lazy Summer Protocol Revenue. Specifically 20% of total protocol revenue."
                           tooltipWrapperStyles={{
                             minWidth: '220px',
                           }}

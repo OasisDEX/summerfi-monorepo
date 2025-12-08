@@ -40,15 +40,18 @@ export const yourLockedSumrPositionsTableColumns: {
 export const allLockedSumrPositionsTableColumns: {
   title: string
   key: AllLockedSumrPositionsTableColumns
+  sortable?: boolean
 }[] = [
   {
     title: 'SUMR Staked',
     key: 'staked',
+    sortable: true,
   },
   { title: 'Share of SUMR Staked / Supply', key: 'shareOfSumrStaked' },
   {
     title: 'SUMR Stake Time',
     key: 'stakeTime',
+    sortable: true,
   },
   {
     title: 'Owner address',
