@@ -493,12 +493,14 @@ interface AllLockedSumrPositionsTableProps {
   stakes: StakingStake[]
   isLoading: boolean
   totalSumrStaked: number
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
   stakes,
   isLoading,
   totalSumrStaked,
+  earningsEstimation,
 }) => {
   const [sortConfig, setSortConfig] = useState<
     TableSortedColumn<AllLockedSumrPositionsTableColumns>
@@ -519,6 +521,9 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
                 <SkeletonLine height="20px" width="50px" style={{ marginLeft: 'auto' }} />
               ),
               stakeTime: <SkeletonLine height="20px" width="50px" style={{ marginLeft: 'auto' }} />,
+              stakeExpiring: (
+                <SkeletonLine height="20px" width="80px" style={{ marginLeft: 'auto' }} />
+              ),
               ownerAddress: (
                 <SkeletonLine height="20px" width="80px" style={{ marginLeft: 'auto' }} />
               ),
@@ -570,21 +575,31 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
       // Format owner address
       const ownerDisplay = `${stake.owner.slice(0, 6)}...${stake.owner.slice(-4)}`
 
+      // Find the corresponding earnings data by stake index (array index matches stake index)
+      const allStakesIndex = stakes.findIndex((s) => s.id === stake.id)
+
+      if (allStakesIndex === -1) {
+        throw new Error('Earnings data not found for stake, should not happen')
+      }
+      const stakeEarnings = earningsEstimation?.stakes[allStakesIndex]
+      const usdEarnings = stakeEarnings?.usdEarningsAmount ?? null
+
+      // Format USD earnings: simple dollar value, or dash if not available
+      const usdEarningsDisplay =
+        usdEarnings !== null ? `$${formatCryptoBalance(new BigNumber(usdEarnings))}` : '-'
+
+      // Format stake expiring
+      const stakeExpiringDisplay = dayjs.unix(Number(stake.lockupEndTime)).format('MMM D, YYYY')
+
       return {
         id: `${stake.owner}-${stake.index}`,
         content: {
           staked: stakedDisplay,
           shareOfSumrStaked: <TableRightCell>{shareDisplay}</TableRightCell>,
           stakeTime: <TableRightCell>{lockPeriodDisplay}</TableRightCell>,
+          stakeExpiring: <TableRightCell>{stakeExpiringDisplay}</TableRightCell>,
           ownerAddress: <TableRightCell>{ownerDisplay}</TableRightCell>,
-          usdValueEarningInLazySummer: (
-            <TableRightCell>
-              -
-              <Link href="Huh?">
-                <WithArrow style={{ margin: '0 18px' }}>View</WithArrow>
-              </Link>
-            </TableRightCell>
-          ),
+          usdValueEarningInLazySummer: <TableRightCell>{usdEarningsDisplay}</TableRightCell>,
         },
       }
     })
@@ -608,6 +623,7 @@ interface AllLockedSumrPositionsDataProps {
   totalSumrStaked: number
   bucketInfo: StakingBucketInfo[]
   isLoadingBucketInfo: boolean
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
@@ -616,6 +632,7 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
   totalSumrStaked,
   bucketInfo,
   isLoadingBucketInfo,
+  earningsEstimation,
 }) => {
   // Calculate allocation percentages from bucket data
   const allocation: {
@@ -708,6 +725,7 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
         stakes={stakes}
         isLoading={isLoading}
         totalSumrStaked={totalSumrStaked}
+        earningsEstimation={earningsEstimation}
       />
     </div>
   )
@@ -721,6 +739,7 @@ interface AllLockedSumrPositionsProps {
   circulatingSupply: number
   bucketInfo: StakingBucketInfo[]
   isLoadingBucketInfo: boolean
+  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
 const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
@@ -731,6 +750,7 @@ const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
   circulatingSupply,
   bucketInfo,
   isLoadingBucketInfo,
+  earningsEstimation,
 }) => {
   return (
     <div className={lockedSumrInfoTabBarV2Styles.wrapper}>
@@ -746,6 +766,7 @@ const AllLockedSumrPositions: FC<AllLockedSumrPositionsProps> = ({
         totalSumrStaked={totalSumrStaked}
         bucketInfo={bucketInfo}
         isLoadingBucketInfo={isLoadingBucketInfo}
+        earningsEstimation={earningsEstimation}
       />
     </div>
   )
@@ -758,7 +779,8 @@ interface LockedSumrInfoTabBarV2Props {
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
   penaltyAmounts: { value: bigint; index: number }[]
-  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  yourEarningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  allEarningsEstimation: StakingEarningsEstimationForStakesV2 | null
   userBlendedYieldBoost: number
   userSumrStaked: number
   totalSumrStaked: number
@@ -777,7 +799,8 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
-  earningsEstimation,
+  yourEarningsEstimation,
+  allEarningsEstimation,
   userBlendedYieldBoost,
   userSumrStaked,
   totalSumrStaked,
@@ -803,7 +826,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
-          earningsEstimation={earningsEstimation}
+          earningsEstimation={yourEarningsEstimation}
           userBlendedYieldBoost={userBlendedYieldBoost}
           userSumrStaked={userSumrStaked}
           totalSumrStaked={totalSumrStaked}
@@ -816,7 +839,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
-          earningsEstimation={earningsEstimation}
+          earningsEstimation={yourEarningsEstimation}
           userBlendedYieldBoost={userBlendedYieldBoost}
           userSumrStaked={userSumrStaked}
           totalSumrStaked={totalSumrStaked}
@@ -840,6 +863,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
         circulatingSupply={circulatingSupply}
         bucketInfo={bucketInfo}
         isLoadingBucketInfo={isLoadingBucketInfo}
+        earningsEstimation={allEarningsEstimation}
       />
     ),
   })

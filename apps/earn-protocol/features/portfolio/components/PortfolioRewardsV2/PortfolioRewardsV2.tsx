@@ -34,6 +34,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   dispatch,
 }) => {
   const { userWalletAddress } = useUserWallet()
+  const portfolioWalletAddress = state.walletAddress
 
   // State for fetched data
   const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
@@ -47,7 +48,9 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [sumrStaked, setSumrStaked] = useState<number>(0)
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
   const [allStakes, setAllStakes] = useState<StakingStake[]>([])
-  const [earningsEstimation, setEarningsEstimation] =
+  const [yourEarningsEstimation, setYourEarningsEstimation] =
+    useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  const [allEarningsEstimation, setAllEarningsEstimation] =
     useState<StakingEarningsEstimationForStakesV2 | null>(null)
   const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
     [],
@@ -78,7 +81,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   )
 
   const fetchStakingData = useCallback(async () => {
-    const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
+    const user = User.createFromEthereum(ChainIds.Base, portfolioWalletAddress as AddressValue)
 
     try {
       setIsLoadingStakes(true)
@@ -96,7 +99,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         bucketsInfo,
       ] = await Promise.all([
         getUserBalance({
-          userAddress: userWalletAddress as AddressValue,
+          userAddress: portfolioWalletAddress as AddressValue,
           chainId: ChainIds.Base,
         }),
         getStakingRewardRatesV2({
@@ -119,20 +122,30 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         getStakingBucketsInfoV2(),
       ])
 
-      const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
-        await Promise.all([
-          getStakingEarningsEstimationV2({
-            stakes: userStakesData,
-          }),
-          getCalculatePenaltyPercentage({
-            userStakes: userStakesData,
-          }),
-          getCalculatePenaltyAmount({
-            userStakes: userStakesData,
-          }),
-        ])
+      const [
+        _yourEarningsEstimation,
+        _allEarningsEstimation,
+        _penaltyCalculationPercentage,
+        _penaltyCalculationAmount,
+      ] = await Promise.all([
+        getStakingEarningsEstimationV2({
+          stakes: userStakesData,
+          // sumrPriceUsd,
+        }),
+        getStakingEarningsEstimationV2({
+          stakes: allStakesData,
+          sumrPriceUsd: 0.2,
+        }),
+        getCalculatePenaltyPercentage({
+          userStakes: userStakesData,
+        }),
+        getCalculatePenaltyAmount({
+          userStakes: userStakesData,
+        }),
+      ])
 
-      setEarningsEstimation(_earningsEstimation)
+      setYourEarningsEstimation(_yourEarningsEstimation)
+      setAllEarningsEstimation(_allEarningsEstimation)
       setUserBlendedYieldBoost(_userBlendedYieldBoost)
 
       // Map penalty percentages with stake indices
@@ -203,15 +216,13 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getStakingStakesV2,
     getStakingBucketsInfoV2,
     sumrPriceUsd,
-    userWalletAddress,
+    portfolioWalletAddress,
   ])
 
   // Fetch all staking data on mount
   useEffect(() => {
-    if (!userWalletAddress) return
-
     void fetchStakingData()
-  }, [fetchStakingData, userWalletAddress])
+  }, [fetchStakingData])
 
   // Calculate percentage staked
   const percentStaked = useMemo(() => {
@@ -221,22 +232,22 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   }, [totalSumrStaked, circulatingSupply])
 
   const usdcEarnedOnSumrAmount = useMemo(() => {
-    return earningsEstimation
-      ? earningsEstimation.stakes.reduce(
+    return yourEarningsEstimation
+      ? yourEarningsEstimation.stakes.reduce(
           (acc, stake) => acc + parseFloat(stake.usdEarningsAmount.toString()),
           0,
         )
       : 0
-  }, [earningsEstimation])
+  }, [yourEarningsEstimation])
 
   const sumrRewardAmount = useMemo(() => {
-    return earningsEstimation
-      ? earningsEstimation.stakes.reduce(
+    return yourEarningsEstimation
+      ? yourEarningsEstimation.stakes.reduce(
           (acc, stake) => acc + parseFloat(stake.sumrRewardsAmount.toString()),
           0,
         )
       : 0
-  }, [earningsEstimation])
+  }, [yourEarningsEstimation])
 
   return (
     <div className={classNames.wrapper}>
@@ -261,11 +272,12 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       <LockedSumrInfoTabBarV2
         stakes={userStakes}
         isLoading={isLoadingStakes}
-        userWalletAddress={userWalletAddress}
+        userWalletAddress={userWalletAddress as AddressValue}
         refetchStakingData={fetchStakingData}
         penaltyPercentages={penaltyPercentages}
         penaltyAmounts={penaltyAmounts}
-        earningsEstimation={earningsEstimation}
+        yourEarningsEstimation={yourEarningsEstimation}
+        allEarningsEstimation={allEarningsEstimation}
         userBlendedYieldBoost={userBlendedYieldBoost}
         userSumrStaked={sumrStaked}
         totalSumrStaked={totalSumrStaked}

@@ -97,6 +97,7 @@ describe('Armada Protocol Gov V2 Penalty Calculation', () => {
       // Create mock expired stakes (lockupEndTime in the past)
       const expiredStakes = [
         {
+          id: 'stake1',
           index: 0,
           amount: BigInt(1000),
           weightedAmount: BigInt(1000),
@@ -105,6 +106,7 @@ describe('Armada Protocol Gov V2 Penalty Calculation', () => {
           multiplier: 1,
         },
         {
+          id: 'stake2',
           index: 1,
           amount: BigInt(2000),
           weightedAmount: BigInt(2000),

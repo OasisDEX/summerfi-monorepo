@@ -6,7 +6,6 @@ export const getUserStakesCount = publicProcedure
   .input(
     z.object({
       user: z.custom<IUser>(isUser),
-      bucketIndex: z.number(),
     }),
   )
   .query(async (opts) => {

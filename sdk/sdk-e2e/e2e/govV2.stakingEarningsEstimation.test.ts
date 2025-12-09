@@ -24,9 +24,10 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
       // Mock SUMR price (in production this would come from a price oracle)
       const sumrPriceUsd = 0.25 // Assume $0.25 per SUMR
 
-      const stakes = await sdk.armada.users.getUserStakesV2({
-        user: User.createFromEthereum(_scenario.chainId, _scenario.userAddressValue),
-      })
+      // const stakes = await sdk.armada.users.getUserStakesV2({
+      //   user: User.createFromEthereum(_scenario.chainId, _scenario.userAddressValue),
+      // })
+      const stakes = await sdk.armada.users.getStakingStakesV2()
 
       console.log('\nTesting earnings estimation for multiple stakes:')
       stakes.forEach((stake, index) => {

@@ -659,13 +659,11 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the number of stakes a user has before and after considering a specific bucket
    *
    * @param user The user
-   * @param bucketIndex The bucket index to check
    *
    * @returns Object containing userStakesCountBefore and userStakesCountAfter
    */
   getUserStakesCount(params: {
     user: IUser
-    bucketIndex: number
   }): Promise<{ userStakesCountBefore: bigint; userStakesCountAfter: bigint }>
 
   /**
@@ -851,7 +849,7 @@ export interface IArmadaManagerUsersClient {
    * @returns Earnings estimation including SUMR rewards and USD earnings for each stake
    */
   getStakingEarningsEstimationV2(params: {
-    stakes: { weightedAmount: bigint }[]
+    stakes: { weightedAmount: bigint; id: string }[]
     sumrPriceUsd?: number
   }): Promise<StakingEarningsEstimationForStakesV2>
 

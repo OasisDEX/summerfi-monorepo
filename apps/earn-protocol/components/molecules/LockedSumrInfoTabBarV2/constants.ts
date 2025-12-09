@@ -54,11 +54,15 @@ export const allLockedSumrPositionsTableColumns: {
     sortable: true,
   },
   {
+    title: 'Stake Expiring',
+    key: 'stakeExpiring',
+  },
+  {
     title: 'Owner address',
     key: 'ownerAddress',
   },
   {
-    title: 'USD Value earning in Lazy Summer',
+    title: 'USD Earnings (1 yr)',
     key: 'usdValueEarningInLazySummer',
   },
 ]

@@ -3,6 +3,6 @@ import type { IUser } from '@summerfi/sdk-common'
 
 export const getUserStakesCountHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
-  async ({ user, bucketIndex }: { user: IUser; bucketIndex: number }) => {
-    return sdk.armada.users.getUserStakesCount({ user, bucketIndex })
+  async ({ user }: { user: IUser }) => {
+    return sdk.armada.users.getUserStakesCount({ user })
   }

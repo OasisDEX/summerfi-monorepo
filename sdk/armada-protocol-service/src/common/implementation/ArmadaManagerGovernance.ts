@@ -36,6 +36,7 @@ import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
 
 const MAX_MULTIPLE = 7.2655
+const WAD_DECIMALS = 18
 
 /**
  * @name ArmadaManager
@@ -671,7 +672,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     )
     // Convert to actual token amounts (not wei)
     const rewardRatePerYearBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(
-      -rewardTokenDecimals * 2,
+      -rewardTokenDecimals - WAD_DECIMALS,
     )
 
     let summerRewardYield = new BigNumber(0)
@@ -806,9 +807,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     const sumrPriceUsd = params.sumrPriceUsd ?? this._utils.getSummerPrice()
 
-    // Get bucket index from lockup period
-    const bucketIndex = findBucket(params.period)
-
     // Get required data
     const [
       rewardRates,
@@ -832,7 +830,6 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       }),
       this.getUserStakesCount({
         user,
-        bucketIndex,
       }),
       this.getUserStakingWeightedBalanceV2({ user }),
     ])
@@ -941,6 +938,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
       if (totalWeightedSupplyBN.isZero()) {
         return {
+          id: stake.id,
           sumrRewardsAmount: 0n,
           usdEarningsAmount: '0.000000',
         }
@@ -955,7 +953,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       let sumrRewardsAmount = new BigNumber(0)
       if (isRewardPeriodActive) {
         const rewardRateBN = new BigNumber(rewardData.rewardRatePerYear).shiftedBy(
-          -rewardTokenDecimals,
+          -rewardTokenDecimals - WAD_DECIMALS,
         )
         sumrRewardsAmount = weightedAmountBN
           .dividedBy(totalWeightedSupplyBN)
@@ -963,6 +961,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       }
 
       return {
+        id: stake.id,
         sumrRewardsAmount: BigInt(sumrRewardsAmount.integerValue(BigNumber.ROUND_DOWN).toFixed(0)),
         usdEarningsAmount: usdEarningsAmount.toFixed(6),
       }
@@ -1055,6 +1054,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
               .toNumber()
           : 0
       return {
+        id: `${stakingContract.address.toSolidityValue()}-${params.user.wallet.address.value}-0x${index}`,
         index,
         amount,
         weightedAmount,
@@ -1189,14 +1189,15 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
     // Map subgraph data to StakingStake interface
     const stakes = result.stakeLockups.map((lockup) => ({
+      id: lockup.id,
       owner: lockup.account.id as AddressValue,
       index: Number(lockup.index),
-      amount: lockup.amount,
-      weightedAmount: lockup.weightedAmount,
+      amount: BigInt(lockup.amount),
+      weightedAmount: BigInt(lockup.weightedAmount),
       weightedAmountNormalized: parseFloat(lockup.weightedAmountNormalized),
-      lockupStartTime: lockup.startTimestamp,
-      lockupEndTime: lockup.endTimestamp,
-      lockupPeriod: lockup.lockupPeriod,
+      lockupStartTime: BigInt(lockup.startTimestamp),
+      lockupEndTime: BigInt(lockup.endTimestamp),
+      lockupPeriod: BigInt(lockup.lockupPeriod),
       multiplier:
         lockup.amount > 0n
           ? parseFloat(lockup.weightedAmountNormalized) / parseFloat(lockup.amount.toString())

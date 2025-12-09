@@ -72,6 +72,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [allStakes, setAllStakes] = useState<StakingStake[]>([])
   const [earningsEstimation, setEarningsEstimation] =
     useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  const [allEarningsEstimation, setAllEarningsEstimation] =
+    useState<StakingEarningsEstimationForStakesV2 | null>(null)
   const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
     [],
   )
@@ -235,6 +237,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       // Set all stakes
       setAllStakes(allStakesData)
       setIsLoadingAllStakes(false)
+
+      const _allEarningsEstimation = await getStakingEarningsEstimationV2({
+        stakes: allStakesData,
+        sumrPriceUsd,
+      })
+
+      setAllEarningsEstimation(_allEarningsEstimation)
 
       // Set bucket info
       setBucketInfo(bucketsInfo)
@@ -710,7 +719,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
             refetchStakingData={fetchStakingData}
             penaltyPercentages={penaltyPercentages}
             penaltyAmounts={penaltyAmounts}
-            earningsEstimation={earningsEstimation}
+            yourEarningsEstimation={earningsEstimation}
+            allEarningsEstimation={allEarningsEstimation}
             userBlendedYieldBoost={userBlendedYieldBoost}
             userSumrStaked={sumrStaked}
             totalSumrStaked={totalSumrStaked}
