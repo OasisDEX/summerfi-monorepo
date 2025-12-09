@@ -3131,17 +3131,7 @@ export type Institution = {
   harborCommand: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   protocolAccessManager: Scalars['String']['output'];
-  roles: Array<Role>;
   vaults: Array<Vault>;
-};
-
-
-export type InstitutionRolesArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Role_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Role_Filter>;
 };
 
 
@@ -3266,7 +3256,6 @@ export type Institution_Filter = {
   protocolAccessManager_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocolAccessManager_starts_with?: InputMaybe<Scalars['String']['input']>;
   protocolAccessManager_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  roles_?: InputMaybe<Role_Filter>;
   vaults_?: InputMaybe<Vault_Filter>;
 };
 
@@ -3279,7 +3268,6 @@ export enum Institution_OrderBy {
   HarborCommand = 'harborCommand',
   Id = 'id',
   ProtocolAccessManager = 'protocolAccessManager',
-  Roles = 'roles',
   Vaults = 'vaults'
 }
 
