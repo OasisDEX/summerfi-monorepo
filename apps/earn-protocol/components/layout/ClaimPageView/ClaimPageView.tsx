@@ -28,7 +28,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({
 }) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
-    delegatee: externalData.sumrStakeDelegate.delegatedTo,
+    delegatee: externalData.sumrStakeDelegate.delegatedToV2,
     walletAddress,
     claimableBalances: Object.values(SupportedNetworkIds)
       .filter((networkId): networkId is number => typeof networkId === 'number')

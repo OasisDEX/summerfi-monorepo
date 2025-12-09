@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
+import {
+  SUMR_STAKING_V2_LOCKUP_MAX_DAYS,
+  SUMR_STAKING_V2_LOCKUP_MIN_DAYS,
+} from '@/constants/sumr-staking-v2'
+
 import lockupRangeInputStyles from './LockupRangeInput.module.css'
 
 const MIN_DAYS = 0
-const MIN_NONZERO_DAYS = 14
-const MAX_DAYS = 36 * 30
 
 export const LockupRangeInput = ({
   value,
@@ -29,15 +32,15 @@ export const LockupRangeInput = ({
   const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let days = Math.round(Number(e.target.value) || 0)
 
-    if (days > 0 && days < MIN_NONZERO_DAYS) days = MIN_NONZERO_DAYS
+    if (days > 0 && days < SUMR_STAKING_V2_LOCKUP_MIN_DAYS) days = SUMR_STAKING_V2_LOCKUP_MIN_DAYS
 
-    days = Math.max(MIN_DAYS, Math.min(MAX_DAYS, days))
+    days = Math.max(MIN_DAYS, Math.min(SUMR_STAKING_V2_LOCKUP_MAX_DAYS, days))
 
     setLocalValue(days)
   }
 
   const percent = useMemo(() => {
-    const range = MAX_DAYS - MIN_DAYS || 1
+    const range = SUMR_STAKING_V2_LOCKUP_MAX_DAYS - MIN_DAYS || 1
 
     return Math.round(((localValue - MIN_DAYS) / range) * 100)
   }, [localValue])
@@ -51,7 +54,7 @@ export const LockupRangeInput = ({
     const containerWidth = container.clientWidth
     const tooltipWidth = tooltip.offsetWidth
 
-    const range = MAX_DAYS - MIN_DAYS || 1
+    const range = SUMR_STAKING_V2_LOCKUP_MAX_DAYS - MIN_DAYS || 1
     const rawX = ((localValue - MIN_DAYS) / range) * containerWidth
 
     const minX = tooltipWidth / 2
@@ -111,7 +114,7 @@ export const LockupRangeInput = ({
       <input
         type="range"
         min={MIN_DAYS}
-        max={MAX_DAYS}
+        max={SUMR_STAKING_V2_LOCKUP_MAX_DAYS}
         step={1}
         value={localValue}
         onChange={handleLocalChange}

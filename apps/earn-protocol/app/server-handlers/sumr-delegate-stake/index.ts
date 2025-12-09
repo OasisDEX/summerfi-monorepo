@@ -13,7 +13,8 @@ import {
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 export interface SumrDelegateStakeData {
-  delegatedTo: Address
+  delegatedToV1: Address
+  delegatedToV2: Address
   delegatedToDecayFactor: number
   sumrDelegated: string
   stakedAmount: string
@@ -58,17 +59,22 @@ export const getSumrDelegateStake = async ({
     }
 
     try {
-      const [sumrAmountResult, delegatedToResult] = await Promise.all([
+      const [sumrAmountResult, delegatedToV2Result, delegatedToV1Result] = await Promise.all([
         backendSDK.armada.users.getUserBalance({
           user: User.createFromEthereum(ChainIds.Base, resolvedWalletAddress),
         }),
         backendSDK.armada.users.getUserDelegateeV2({ userAddress: resolvedWalletAddress }),
+        backendSDK.armada.users.getUserDelegatee({
+          user: User.createFromEthereum(ChainIds.Base, resolvedWalletAddress),
+        }),
       ])
 
       const _sumrAmount = sumrAmountResult
-      const delegatedTo = delegatedToResult.toSolidityValue()
+      const delegatedToV2 = delegatedToV2Result.toSolidityValue()
+      const delegatedToV1 = delegatedToV1Result.toSolidityValue()
 
-      if (!delegatedTo) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!delegatedToV2) {
         throw new Error('Failed to fetch vesting or staking data or delegated to data')
       }
 
@@ -92,7 +98,7 @@ export const getSumrDelegateStake = async ({
               abi: SummerTokenAbi,
               address: sumrToken.address.value,
               functionName: 'getDecayFactor',
-              args: [delegatedTo],
+              args: [delegatedToV2],
             },
           ],
         })
@@ -127,6 +133,7 @@ export const getSumrDelegateStake = async ({
       const _vestedSumrAmount = vestedSumrAmountResult.result
 
       if (
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         _sumrAmount === undefined ||
         _stakedAmount === undefined ||
         _vestedSumrAmount === undefined
@@ -145,7 +152,8 @@ export const getSumrDelegateStake = async ({
         .toString()
 
       return {
-        delegatedTo,
+        delegatedToV2,
+        delegatedToV1,
         delegatedToDecayFactor,
         sumrDelegated,
         stakedAmount,

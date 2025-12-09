@@ -1,13 +1,13 @@
 import { Icon, Text } from '@summerfi/app-earn-ui'
 
 export enum DelegateSortOptions {
-  HIGHEST_VOTING_WEIGHT = 'highest-voting-weight',
-  HIGHEST_VOTE_REWARD_POWER = 'highest-vote-reward-power',
+  HIGHEST_VOTE_AMOUNT = 'highest-vote-amount',
+  HIGHEST_DELEGATE_COUNT = 'highest-delegate-count',
 }
 
 export const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
   {
-    value: DelegateSortOptions.HIGHEST_VOTING_WEIGHT,
+    value: DelegateSortOptions.HIGHEST_VOTE_AMOUNT,
     content: (
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
         <Text
@@ -15,14 +15,14 @@ export const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
           variant="p4semi"
           style={{
             color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT
+              sortBy === DelegateSortOptions.HIGHEST_VOTE_AMOUNT
                 ? 'var(--earn-protocol-primary-100)'
                 : 'var(--earn-protocol-secondary-100)',
           }}
         >
-          Highest $SUMR voting weight
+          Highest Vote amount
         </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTING_WEIGHT && (
+        {sortBy === DelegateSortOptions.HIGHEST_VOTE_AMOUNT && (
           <Icon
             iconName="checkmark"
             size={14}
@@ -33,7 +33,7 @@ export const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
     ),
   },
   {
-    value: DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER,
+    value: DelegateSortOptions.HIGHEST_DELEGATE_COUNT,
     content: (
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-8)' }}>
         <Text
@@ -41,14 +41,14 @@ export const getDelegateSortOptions = (sortBy: DelegateSortOptions) => [
           variant="p4semi"
           style={{
             color:
-              sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER
+              sortBy === DelegateSortOptions.HIGHEST_DELEGATE_COUNT
                 ? 'var(--earn-protocol-primary-100)'
                 : 'var(--earn-protocol-secondary-100)',
           }}
         >
-          Highest Vote and Reward Power
+          Highest delegate count
         </Text>
-        {sortBy === DelegateSortOptions.HIGHEST_VOTE_REWARD_POWER && (
+        {sortBy === DelegateSortOptions.HIGHEST_DELEGATE_COUNT && (
           <Icon
             iconName="checkmark"
             size={14}

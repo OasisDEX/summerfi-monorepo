@@ -1,13 +1,6 @@
 import { type FC } from 'react'
-import {
-  Card,
-  getVotingPowerColor,
-  Icon,
-  LoadableAvatar,
-  Text,
-  Tooltip,
-} from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatShorthandNumber, safeBTOA } from '@summerfi/app-utils'
+import { Card, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
+import { formatCryptoBalance, safeBTOA } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,7 +9,8 @@ import classNames from './ClaimDelegateCard.module.css'
 
 interface ClaimDelegateCardProps {
   isActive: boolean
-  sumrAmount?: number
+  sumrAmountV1?: number
+  sumrAmountV2?: number
   ens: string
   address: string
   title: string
@@ -28,26 +22,27 @@ interface ClaimDelegateCardProps {
     etherscan: string | undefined
   }
   handleClick: () => void
-  votingPower?: number
   selfDelegate?: boolean
   disabled?: boolean
+  delegatorsCountV2?: number
   isFaded?: boolean
   picture?: string
 }
 
 export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   isActive,
-  sumrAmount = '0',
+  sumrAmountV1 = '0',
+  sumrAmountV2,
   address,
   title,
   description,
   handleClick,
   social,
-  votingPower,
   selfDelegate,
   disabled,
   isFaded,
   picture,
+  delegatorsCountV2,
 }) => {
   return (
     <Card
@@ -92,12 +87,30 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             </Text>
           </div>
           {!selfDelegate && (
-            <div className={classNames.amount}>
-              <Icon tokenName="SUMR" variant="s" />
-              <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                {formatCryptoBalance(sumrAmount)}
-              </Text>
-            </div>
+            <>
+              {sumrAmountV2 !== undefined && sumrAmountV2 > 0 && (
+                <div className={classNames.amount}>
+                  <Icon tokenName="SUMR" variant="s" />
+                  <Text
+                    as="p"
+                    variant="p3semi"
+                    style={{ color: 'var(--earn-protocol-secondary-60)' }}
+                  >
+                    v2: {formatCryptoBalance(sumrAmountV2)}
+                  </Text>
+                </div>
+              )}
+              <div className={classNames.amount}>
+                <Icon tokenName="SUMR" variant="s" />
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-60)' }}
+                >
+                  v1: {formatCryptoBalance(sumrAmountV1)}
+                </Text>
+              </div>
+            </>
           )}
         </div>
         <Text
@@ -130,18 +143,14 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
               </Link>
             )}
           </div>
-          {!selfDelegate && votingPower && (
-            <div className={classNames.votingPower}>
-              <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
-                Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
-              </Text>
-              <Tooltip
-                tooltip="Vote and Reward Power reflects a delegates activity within governance. A 1.0 Power will give you full staking rewards. Anything less will reduce your reward amounts."
-                tooltipWrapperStyles={{ minWidth: '230px', left: '-200px' }}
-              >
-                <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
-              </Tooltip>
-            </div>
+          {!selfDelegate && (
+            <Text
+              as="p"
+              variant="p4"
+              style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
+            >
+              {delegatorsCountV2} delegators
+            </Text>
           )}
         </div>
       </div>

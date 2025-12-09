@@ -128,7 +128,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const { userWalletAddress } = useUserWallet()
   const { openAuthModal } = useAuthModal()
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
-  const isDelegated = rewardsData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
+  const isDelegated = rewardsData.sumrStakeDelegate.delegatedToV2 !== ADDRESS_ZERO
   const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
   const rawDecayFactor = rewardsData.sumrStakeDelegate.delegatedToDecayFactor
 
@@ -247,7 +247,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const { openAuthModal } = useAuthModal()
 
   const sumrDelegatedTo =
-    state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
+    state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedToV2.toLowerCase()
 
   const rewardsDataDelegatee = rewardsData.tallyDelegates.find(
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
@@ -262,7 +262,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
 
   const votingPower = Number(
     rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
-      ?.votePower ?? 1,
+      ?.votePowerV1 ?? 1,
   )
 
   const subValue =

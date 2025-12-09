@@ -35,7 +35,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     getSumrDelegateStake({
       walletAddress,
     }).then(async (res) => {
-      const delegates = await getTallyDelegates(res.delegatedTo)
+      const delegates = await getTallyDelegates(res.delegatedToV2)
 
       return {
         sumrStakeDelegate: res,

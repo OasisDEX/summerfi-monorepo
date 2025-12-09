@@ -212,7 +212,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
         strategies: userVaultsIds,
         periods: positionsActivePeriods,
       }),
-      getTallyDelegates(sumrStakeDelegate.delegatedTo),
+      getTallyDelegates(sumrStakeDelegate.delegatedToV2),
     ])
 
   const rewardsData: ClaimDelegateExternalData = {

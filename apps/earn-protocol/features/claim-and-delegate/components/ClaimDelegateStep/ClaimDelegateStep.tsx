@@ -96,9 +96,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { setChain } = useChain()
   const { push } = useRouter()
   const { clientChainId } = useClientChainId()
-
   const [sortBy, setSortBy] = useState<DropdownRawOption>(
-    getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTING_WEIGHT)[0],
+    getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTE_AMOUNT)[0],
   )
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
@@ -153,16 +152,16 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   }, [])
 
   useEffect(() => {
-    if (externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) {
+    if (externalData.sumrStakeDelegate.delegatedToV2 === ADDRESS_ZERO) {
       setDelegatedTo(undefined)
 
       return
     }
 
-    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedTo).then((result) =>
+    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedToV2).then((result) =>
       setDelegatedTo(result[0]),
     )
-  }, [externalData.sumrStakeDelegate.delegatedTo])
+  }, [externalData.sumrStakeDelegate.delegatedToV2])
 
   const sumrToClaim =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -215,8 +214,9 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const handleDelegate = async (updateDelegatee?: string) => {
     const isDelegateUnchanged =
-      externalData.sumrStakeDelegate.delegatedTo.toLowerCase() === updateDelegatee?.toLowerCase() &&
-      externalData.sumrStakeDelegate.delegatedTo !== ADDRESS_ZERO
+      externalData.sumrStakeDelegate.delegatedToV2.toLowerCase() ===
+        updateDelegatee?.toLowerCase() &&
+      externalData.sumrStakeDelegate.delegatedToV2 !== ADDRESS_ZERO
 
     // delegation is only supported on base
     if (!isBase) {
@@ -266,34 +266,43 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   // since we use tally that doesn't support SCA
   const isEoa = user?.type === AccountKitAccountType.EOA
 
-  const sumrDelegatedTo =
+  const sumrDelegatedToV1 = externalData.sumrStakeDelegate.delegatedToV1.toLowerCase()
+  const sumrDelegatedToV2 =
     state.delegateStatus === UiTransactionStatuses.COMPLETED && state.delegatee
       ? state.delegatee.toLowerCase()
-      : externalData.sumrStakeDelegate.delegatedTo.toLowerCase()
+      : externalData.sumrStakeDelegate.delegatedToV2.toLowerCase()
 
-  const hasDelegatee = sumrDelegatedTo !== ADDRESS_ZERO
+  const hasDelegateeV2 = sumrDelegatedToV2 !== ADDRESS_ZERO
 
-  const rewardsDataDelegatee = externalData.tallyDelegates.find(
-    (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,
+  const rewardsDataDelegateeV1 = externalData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedToV1,
+  )
+  const rewardsDataDelegateeV2 = externalData.tallyDelegates.find(
+    (item) => item.userAddress.toLowerCase() === sumrDelegatedToV2,
   )
 
-  const resolvedDelegateTitle = getDelegateTitle({
-    tallyDelegate: rewardsDataDelegatee,
-    currentDelegate: sumrDelegatedTo,
+  const resolvedDelegateTitleV1 = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegateeV1,
+    currentDelegate: sumrDelegatedToV1,
+  })
+  const resolvedDelegateTitleV2 = getDelegateTitle({
+    tallyDelegate: rewardsDataDelegateeV2,
+    currentDelegate: sumrDelegatedToV2,
   })
 
-  const value = sumrDelegatedTo === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitle
+  const delegateV1 = sumrDelegatedToV1 === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitleV1
+  const delegateV2 = sumrDelegatedToV2 === ADDRESS_ZERO ? 'No delegate' : resolvedDelegateTitleV2
 
   return (
     <div className={classNames.claimDelegateStepWrapper}>
       <div className={classNames.leftContent}>
-        <Card className={classNames.cardWrapper}>
+        <Card className={classNames.cardWrapper} style={{ marginBottom: '0' }}>
           <Text as="p" variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
             Your delegate
           </Text>
           <div className={classNames.valueWithIcon}>
             <Text as="h4" variant="h4">
-              {value}
+              {delegateV2}
             </Text>
           </div>
           {delegatedTo && (
@@ -308,10 +317,22 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }}
             >
               Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(delegatedTo.votesCountNormalized)}
+              {formatCryptoBalance(delegatedTo.votesCountNormalizedV1)}
             </Text>
           )}
         </Card>
+        {!hasDelegateeV2 && (
+          <Card className={classNames.cardWrapper}>
+            <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              Your v1 gov. delegate
+            </Text>
+            <div className={classNames.valueWithIcon}>
+              <Text as="h5" variant="h5">
+                {delegateV1}
+              </Text>
+            </div>
+          </Card>
+        )}
         <div>
           <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
             Lazy Summer Governance Objectives
@@ -451,11 +472,11 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             <div className={classNames.delegates}>
               {mappedSumrDelegatesData
                 .sort((a, b) => {
-                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTING_WEIGHT) {
-                    return b.sumrAmount - a.sumrAmount
+                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTE_AMOUNT) {
+                    return b.sumrAmountV2 - a.sumrAmountV2
                   }
 
-                  return b.decayFactor - a.decayFactor
+                  return b.delegatorsCountV2 - a.delegatorsCountV2
                 })
                 .map((delegate) => (
                   <ClaimDelegateCard
@@ -465,7 +486,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                     handleClick={() =>
                       dispatch({ type: 'update-delegatee', payload: delegate.address })
                     }
-                    votingPower={delegate.decayFactor}
                     disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                     isFaded={getIsCardFaded({ address: delegate.address, state })}
                   />
@@ -507,7 +527,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
             <div className={classNames.buttonsGroup}>
-              {hasDelegatee ? (
+              {hasDelegateeV2 ? (
                 !isBase ? null : (
                   <Button
                     variant="secondarySmall"
@@ -545,7 +565,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                     isRemoveDelegateLoading ||
                     !state.delegatee ||
                     (state.delegatee === ADDRESS_ZERO &&
-                      externalData.sumrStakeDelegate.delegatedTo === ADDRESS_ZERO) ||
+                      externalData.sumrStakeDelegate.delegatedToV2 === ADDRESS_ZERO) ||
                     userWalletAddress?.toLowerCase() !== resolvedWalletAddress.toLowerCase())
                 }
               >
@@ -563,7 +583,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 </WithArrow>
               </Button>
             </div>
-            {hasDelegatee && (
+            {hasDelegateeV2 && (
               <Button
                 disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
                 onClick={() => {
