@@ -146,7 +146,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
       actionable={
         <UnstakeOldSumrButton
           walletAddress={walletAddress as string}
-          oldStakedAmount={Number(rewardsData.sumrStakeDelegate.stakedAmount)}
+          oldStakedAmount={rewardsData.sumrStakeDelegate.stakedAmount}
         />
       }
     />

@@ -650,6 +650,13 @@ const SumrV2StakingManageComponent = ({
     refetchSumrBalance()
   }
 
+  const showOldStake =
+    !isSumrStakeInfoLoading &&
+    // assuming 0.1 SUMR is the minimum meaningful stake
+    !!sumrStakeInfo?.sumrStakeInfo.stakedAmount &&
+    Number(sumrStakeInfo.sumrStakeInfo.stakedAmount) > 0.1 &&
+    !!userWalletAddress
+
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
       <div className={sumrV2StakingManageViewStyles.title}>
@@ -891,14 +898,7 @@ const SumrV2StakingManageComponent = ({
         </div>
         <div className={sumrV2StakingManageViewStyles.cardRightColumn}>
           <div className={sumrV2StakingManageViewStyles.cardRightColumnStepWrapper}>
-            <AnimateHeight
-              id="step-0"
-              show={
-                !isSumrStakeInfoLoading &&
-                !!sumrStakeInfo?.sumrStakeInfo.stakedAmount &&
-                !!userWalletAddress
-              }
-            >
+            <AnimateHeight id="step-0" show={showOldStake}>
               {!!sumrStakeInfo && userWalletAddress && (
                 <Card
                   style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
@@ -915,7 +915,7 @@ const SumrV2StakingManageComponent = ({
                   </Text>
                   <UnstakeOldSumrButton
                     walletAddress={userWalletAddress}
-                    oldStakedAmount={Number(sumrStakeInfo.sumrStakeInfo.stakedAmount)}
+                    oldStakedAmount={sumrStakeInfo.sumrStakeInfo.stakedAmount}
                     onFinished={onOldUnstakeFinished}
                   />
                 </Card>

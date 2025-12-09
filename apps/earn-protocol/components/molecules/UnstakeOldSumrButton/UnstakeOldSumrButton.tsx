@@ -23,7 +23,7 @@ export const UnstakeOldSumrButton = ({
   walletAddress,
   onFinished,
 }: {
-  oldStakedAmount: number
+  oldStakedAmount: string
   walletAddress: string
   onFinished?: () => void
 }) => {
@@ -48,7 +48,7 @@ export const UnstakeOldSumrButton = ({
   const resolvedWalletAddress = walletAddress as string
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
 
-  const hasOldStakedSumr = oldStakedAmount > 0
+  const hasOldStakedSumr = Number(oldStakedAmount) > 0.2
 
   const isLoading =
     isLoadingAccount || isLoadingUnstakeTransaction || isAuthModalOpen || isSettingChain
