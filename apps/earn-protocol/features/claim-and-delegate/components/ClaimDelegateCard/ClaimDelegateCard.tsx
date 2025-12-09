@@ -24,6 +24,7 @@ interface ClaimDelegateCardProps {
   handleClick: () => void
   selfDelegate?: boolean
   disabled?: boolean
+  delegatorsCount?: number
   isFaded?: boolean
   picture?: string
 }
@@ -41,6 +42,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   disabled,
   isFaded,
   picture,
+  delegatorsCount,
 }) => {
   return (
     <Card
@@ -86,16 +88,6 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
           </div>
           {!selfDelegate && (
             <>
-              <div className={classNames.amount}>
-                <Icon tokenName="SUMR" variant="s" />
-                <Text
-                  as="p"
-                  variant="p3semi"
-                  style={{ color: 'var(--earn-protocol-secondary-60)' }}
-                >
-                  v1: {formatCryptoBalance(sumrAmountV1)}
-                </Text>
-              </div>
               {sumrAmountV2 !== undefined && sumrAmountV2 > 0 && (
                 <div className={classNames.amount}>
                   <Icon tokenName="SUMR" variant="s" />
@@ -108,6 +100,16 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
                   </Text>
                 </div>
               )}
+              <div className={classNames.amount}>
+                <Icon tokenName="SUMR" variant="s" />
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{ color: 'var(--earn-protocol-secondary-60)' }}
+                >
+                  v1: {formatCryptoBalance(sumrAmountV1)}
+                </Text>
+              </div>
             </>
           )}
         </div>
@@ -141,6 +143,15 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
               </Link>
             )}
           </div>
+          {!selfDelegate && (
+            <Text
+              as="p"
+              variant="p4"
+              style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
+            >
+              {delegatorsCount} delegators
+            </Text>
+          )}
         </div>
       </div>
     </Card>

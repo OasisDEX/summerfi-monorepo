@@ -2,7 +2,8 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
 export type TallyDelegate = {
   bio: string
-  delegatorsCount: string
+  delegatorsCountV1: string
+  delegatorsCountV2: string
   displayName: string
   ens: string
   photo: string
@@ -60,7 +61,8 @@ export const getTallyDelegates = async (currentDelegate?: string): Promise<Tally
 
         return {
           bio: v2Delegate.bio,
-          delegatorsCount: v2Delegate.delegatorsCount,
+          delegatorsCountV1: v1Delegate.delegatorsCount,
+          delegatorsCountV2: v2Delegate.delegatorsCount,
           displayName: v2Delegate.displayName,
           ens: v2Delegate.ens,
           photo: v2Delegate.photo,
@@ -81,6 +83,8 @@ export const getTallyDelegates = async (currentDelegate?: string): Promise<Tally
 
       return {
         ...v1Delegate,
+        delegatorsCountV1: v1Delegate.delegatorsCount,
+        delegatorsCountV2: '',
         votePowerV1: v1Delegate.votePower,
         votesCountV1: v1Delegate.votesCount,
         votesCountNormalizedV1: v1Delegate.votesCountNormalized,
@@ -93,7 +97,8 @@ export const getTallyDelegates = async (currentDelegate?: string): Promise<Tally
     // Add remaining V2-only delegates
     const v2OnlyDelegates = Array.from(v2Map.values()).map((v2Delegate) => ({
       bio: v2Delegate.bio,
-      delegatorsCount: v2Delegate.delegatorsCount,
+      delegatorsCountV1: '',
+      delegatorsCountV2: v2Delegate.delegatorsCount,
       displayName: v2Delegate.displayName,
       ens: v2Delegate.ens,
       photo: v2Delegate.photo,

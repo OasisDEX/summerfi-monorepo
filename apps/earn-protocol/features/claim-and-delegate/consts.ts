@@ -11,6 +11,7 @@ interface SumrDelegate {
   address: string
   title: string
   description: string
+  delegatorsCount: number
   social: {
     linkedin: string | undefined
     x: string | undefined
@@ -32,10 +33,15 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
     const normalizedAddress = sumrDelegate.userAddress.toLowerCase()
 
     mergedDelegates.set(normalizedAddress, {
-      sumrAmountV1: Number(BigInt(sumrDelegate.votesCountV1) / BigInt(10 ** 18)),
-      sumrAmountV2: Number(BigInt(sumrDelegate.votesCountV2) / BigInt(10 ** 18)),
+      sumrAmountV1: sumrDelegate.votesCountV1
+        ? Number(BigInt(sumrDelegate.votesCountV1) / BigInt(10 ** 18))
+        : 0,
+      sumrAmountV2: sumrDelegate.votesCountV2
+        ? Number(BigInt(sumrDelegate.votesCountV2) / BigInt(10 ** 18))
+        : 0,
       ens: sumrDelegate.ens || '',
       address: sumrDelegate.userAddress,
+      delegatorsCount: Number(sumrDelegate.delegatorsCountV2),
       title: getDelegateTitle({
         tallyDelegate: sumrDelegate,
         // just to meet type requirements
@@ -60,10 +66,7 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
   })
 
   return Array.from(mergedDelegates.values()).sort((a, b) => {
-    // comparing the totals, not ideal but works for now
-    const aTotal = a.sumrAmountV1 + a.sumrAmountV2
-    const bTotal = b.sumrAmountV1 + b.sumrAmountV2
-
-    return bTotal - aTotal
+    // sorting by the V2 amount
+    return b.sumrAmountV2 - a.sumrAmountV2
   })
 }

@@ -8,7 +8,7 @@
 }
 .claimDelegateStepWrapper .leftContent {
   display: grid;
-  grid-template-areas: "delegate" "info" "rewards" "self";
+  grid-template-areas: 'delegate' 'info' 'rewards' 'self';
   grid-template-columns: 1fr;
   gap: 0;
   width: 100%;
@@ -17,7 +17,7 @@
   .claimDelegateStepWrapper .leftContent {
     gap: var(--general-space-24);
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: "delegate delegate" "info rewards" "self self";
+    grid-template-areas: 'delegate delegate' 'info rewards' 'self self';
   }
 }
 .claimDelegateStepWrapper .leftContent > *:nth-child(1) {
@@ -103,7 +103,7 @@
 .claimDelegateStepWrapper .rightContent .delegates {
   display: flex;
   flex-direction: column;
-  max-height: 700px;
+  max-height: 850px;
   overflow-y: auto;
   scrollbar-color: grey transparent;
   scrollbar-width: thin;

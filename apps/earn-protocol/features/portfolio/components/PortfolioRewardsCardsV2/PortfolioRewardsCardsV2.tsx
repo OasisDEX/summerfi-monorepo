@@ -194,7 +194,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const { openAuthModal } = useAuthModal()
 
   const sumrDelegatedTo =
-    state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedTo.toLowerCase()
+    state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedToV2.toLowerCase()
 
   const rewardsDataDelegatee = rewardsData.tallyDelegates.find(
     (item) => item.userAddress.toLowerCase() === sumrDelegatedTo,

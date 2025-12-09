@@ -28,7 +28,7 @@ export const StakeDelegatePageView: FC<StakeDelegatePageViewProps> = ({
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
     step: ClaimDelegateSteps.DELEGATE,
-    delegatee: externalData.sumrStakeDelegate.delegatedTo,
+    delegatee: externalData.sumrStakeDelegate.delegatedToV2,
     walletAddress,
   })
 

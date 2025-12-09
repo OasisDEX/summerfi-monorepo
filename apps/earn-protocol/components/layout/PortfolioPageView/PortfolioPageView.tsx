@@ -86,7 +86,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   })
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
-    delegatee: rewardsData.sumrStakeDelegate.delegatedTo,
+    delegatee: rewardsData.sumrStakeDelegate.delegatedToV2,
     walletAddress,
     merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
