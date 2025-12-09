@@ -11,7 +11,8 @@ interface SumrDelegate {
   address: string
   title: string
   description: string
-  delegatorsCount: number
+  delegatorsCountV1: number
+  delegatorsCountV2: number
   social: {
     linkedin: string | undefined
     x: string | undefined
@@ -41,7 +42,8 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
         : 0,
       ens: sumrDelegate.ens || '',
       address: sumrDelegate.userAddress,
-      delegatorsCount: Number(sumrDelegate.delegatorsCountV2),
+      delegatorsCountV1: Number(sumrDelegate.delegatorsCountV1),
+      delegatorsCountV2: Number(sumrDelegate.delegatorsCountV2),
       title: getDelegateTitle({
         tallyDelegate: sumrDelegate,
         // just to meet type requirements

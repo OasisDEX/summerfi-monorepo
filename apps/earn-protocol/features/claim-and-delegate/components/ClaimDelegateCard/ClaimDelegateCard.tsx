@@ -24,7 +24,7 @@ interface ClaimDelegateCardProps {
   handleClick: () => void
   selfDelegate?: boolean
   disabled?: boolean
-  delegatorsCount?: number
+  delegatorsCountV2?: number
   isFaded?: boolean
   picture?: string
 }
@@ -42,7 +42,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
   disabled,
   isFaded,
   picture,
-  delegatorsCount,
+  delegatorsCountV2,
 }) => {
   return (
     <Card
@@ -149,7 +149,7 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
               variant="p4"
               style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
             >
-              {delegatorsCount} delegators
+              {delegatorsCountV2} delegators
             </Text>
           )}
         </div>

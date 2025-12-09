@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   DataBlock,
+  Dropdown,
   ERROR_TOAST_CONFIG,
   Icon,
   Input,
@@ -17,7 +18,11 @@ import {
   useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  SupportedNetworkIds,
+  UiTransactionStatuses,
+} from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   formatCryptoBalance,
@@ -47,6 +52,7 @@ import {
   getChangeDelegateButtonLabel,
   getRemoveDelegateButtonLabel,
 } from './getDelegateButtonLabel'
+import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
 import { ClaimDelegateAction } from './types'
 
 import classNames from './ClaimDelegateStep.module.css'
@@ -90,6 +96,9 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { setChain } = useChain()
   const { push } = useRouter()
   const { clientChainId } = useClientChainId()
+  const [sortBy, setSortBy] = useState<DropdownRawOption>(
+    getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTE_AMOUNT)[0],
+  )
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
 
@@ -430,6 +439,23 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               value={searchValue}
             />
           </div>
+          <div>
+            <Dropdown
+              options={getDelegateSortOptions(sortBy.value as DelegateSortOptions)}
+              dropdownValue={sortBy}
+              dropdownOptionsStyle={{ left: 'unset', right: 0, top: '50px' }}
+              dropdownChildrenStyle={{
+                borderRadius: 'var(--general-radius-8)',
+                padding: 'var(--general-space-12) var(--general-space-16)',
+              }}
+              asPill
+              onChange={setSortBy}
+            >
+              <Text as="p" variant="p2" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                Sort by
+              </Text>
+            </Dropdown>
+          </div>
         </div>
         {hasStake && action === ClaimDelegateAction.REMOVE ? (
           <ClaimDelegateActionCard
@@ -444,18 +470,26 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
         ) : (
           <>
             <div className={classNames.delegates}>
-              {mappedSumrDelegatesData.map((delegate) => (
-                <ClaimDelegateCard
-                  key={delegate.address}
-                  {...delegate}
-                  isActive={state.delegatee === delegate.address}
-                  handleClick={() =>
-                    dispatch({ type: 'update-delegatee', payload: delegate.address })
+              {mappedSumrDelegatesData
+                .sort((a, b) => {
+                  if (sortBy.value === DelegateSortOptions.HIGHEST_VOTE_AMOUNT) {
+                    return b.sumrAmountV2 - a.sumrAmountV2
                   }
-                  disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                  isFaded={getIsCardFaded({ address: delegate.address, state })}
-                />
-              ))}
+
+                  return b.delegatorsCountV2 - a.delegatorsCountV2
+                })
+                .map((delegate) => (
+                  <ClaimDelegateCard
+                    key={delegate.address}
+                    {...delegate}
+                    isActive={state.delegatee === delegate.address}
+                    handleClick={() =>
+                      dispatch({ type: 'update-delegatee', payload: delegate.address })
+                    }
+                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+                    isFaded={getIsCardFaded({ address: delegate.address, state })}
+                  />
+                ))}
               {mappedSumrDelegatesData.length === 0 && (
                 <Text
                   as="p"
