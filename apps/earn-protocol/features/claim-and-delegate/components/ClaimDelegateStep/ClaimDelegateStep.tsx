@@ -7,6 +7,7 @@ import {
   Card,
   DataBlock,
   ERROR_TOAST_CONFIG,
+  Icon,
   Input,
   SDKChainIdToAAChainMap,
   SkeletonLine,
@@ -17,7 +18,12 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
-import { ADDRESS_ZERO, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import {
+  ADDRESS_ZERO,
+  formatCryptoBalance,
+  formatDecimalAsPercent,
+  formatFiatBalance,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -280,6 +286,21 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               {value}
             </Text>
           </div>
+          {delegatedTo && (
+            <Text
+              as="div"
+              variant="p3semi"
+              style={{
+                color: 'var(--earn-protocol-secondary-40)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--general-space-8)',
+              }}
+            >
+              Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
+              {formatCryptoBalance(delegatedTo.votesCountNormalizedV1)}
+            </Text>
+          )}
         </Card>
         <div>
           <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
