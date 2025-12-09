@@ -257,10 +257,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   // since we use tally that doesn't support SCA
   const isEoa = user?.type === AccountKitAccountType.EOA
 
-  const sumrDelegatedToV1 =
-    state.delegateStatus === UiTransactionStatuses.COMPLETED && state.delegatee
-      ? state.delegatee.toLowerCase()
-      : externalData.sumrStakeDelegate.delegatedToV1.toLowerCase()
+  const sumrDelegatedToV1 = externalData.sumrStakeDelegate.delegatedToV1.toLowerCase()
   const sumrDelegatedToV2 =
     state.delegateStatus === UiTransactionStatuses.COMPLETED && state.delegatee
       ? state.delegatee.toLowerCase()
@@ -315,16 +312,18 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             </Text>
           )}
         </Card>
-        <Card className={classNames.cardWrapper}>
-          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            Your v1 gov. delegate
-          </Text>
-          <div className={classNames.valueWithIcon}>
-            <Text as="h5" variant="h5">
-              {delegateV1}
+        {!hasDelegateeV2 && (
+          <Card className={classNames.cardWrapper}>
+            <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              Your v1 gov. delegate
             </Text>
-          </div>
-        </Card>
+            <div className={classNames.valueWithIcon}>
+              <Text as="h5" variant="h5">
+                {delegateV1}
+              </Text>
+            </div>
+          </Card>
+        )}
         <div>
           <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--general-space-4)' }}>
             Lazy Summer Governance Objectives
