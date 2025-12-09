@@ -262,7 +262,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
 
   const votingPower = Number(
     rewardsData.tallyDelegates.find((item) => item.userAddress.toLowerCase() === sumrDelegatedTo)
-      ?.votePower ?? 1,
+      ?.votePowerV1 ?? 1,
   )
 
   const subValue =
