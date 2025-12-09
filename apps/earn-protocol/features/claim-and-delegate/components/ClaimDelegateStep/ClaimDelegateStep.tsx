@@ -8,7 +8,6 @@ import {
   DataBlock,
   Dropdown,
   ERROR_TOAST_CONFIG,
-  Icon,
   Input,
   SDKChainIdToAAChainMap,
   SkeletonLine,
@@ -23,12 +22,7 @@ import {
   SupportedNetworkIds,
   UiTransactionStatuses,
 } from '@summerfi/app-types'
-import {
-  ADDRESS_ZERO,
-  formatCryptoBalance,
-  formatDecimalAsPercent,
-  formatFiatBalance,
-} from '@summerfi/app-utils'
+import { ADDRESS_ZERO, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -48,10 +42,7 @@ import {
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { revalidateUser } from '@/helpers/revalidation-handlers'
 
-import {
-  getChangeDelegateButtonLabel,
-  getRemoveDelegateButtonLabel,
-} from './getDelegateButtonLabel'
+import { getChangeDelegateButtonLabel } from './getDelegateButtonLabel'
 import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
 import { ClaimDelegateAction } from './types'
 
@@ -91,7 +82,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 }) => {
   const { walletAddress } = useParams()
   const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
-  const [delegatedTo, setDelegatedTo] = useState<TallyDelegate>()
   const [action, setAction] = useState<ClaimDelegateAction>()
   const { setChain } = useChain()
   const { push } = useRouter()
@@ -150,18 +140,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (externalData.sumrStakeDelegate.delegatedToV2 === ADDRESS_ZERO) {
-      setDelegatedTo(undefined)
-
-      return
-    }
-
-    fetchDelegatesBySearchValue(externalData.sumrStakeDelegate.delegatedToV2).then((result) =>
-      setDelegatedTo(result[0]),
-    )
-  }, [externalData.sumrStakeDelegate.delegatedToV2])
 
   const sumrToClaim =
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -305,21 +283,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               {delegateV2}
             </Text>
           </div>
-          {delegatedTo && (
-            <Text
-              as="div"
-              variant="p3semi"
-              style={{
-                color: 'var(--earn-protocol-secondary-40)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--general-space-8)',
-              }}
-            >
-              Total voting weight: <Icon tokenName="SUMR" size={16} />{' '}
-              {formatCryptoBalance(delegatedTo.votesCountNormalizedV1)}
-            </Text>
-          )}
         </Card>
         {!hasDelegateeV2 && (
           <Card className={classNames.cardWrapper}>
@@ -512,7 +475,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               }}
             >
               <Link
-                href="https://www.tally.xyz/gov/lazy-summer-dao-official/delegates"
+                href="https://www.tally.xyz/gov/lazy-summer-dao-official-v2/delegates"
                 target="_blank"
                 style={{
                   color: 'var(--earn-protocol-primary-100)',
@@ -527,23 +490,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
         {hasStake && action === ClaimDelegateAction.REMOVE ? null : (
           <div className={classNames.buttonsWrapper}>
             <div className={classNames.buttonsGroup}>
-              {hasDelegateeV2 ? (
-                !isBase ? null : (
-                  <Button
-                    variant="secondarySmall"
-                    disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                    onClick={() => handleDelegate(ADDRESS_ZERO)}
-                  >
-                    <Text variant="p3semi" as="p">
-                      {getRemoveDelegateButtonLabel({
-                        state,
-                        action,
-                        isBase,
-                      })}
-                    </Text>
-                  </Button>
-                )
-              ) : (
+              {hasDelegateeV2 ? null : (
                 <Link href={`/portfolio/${walletAddress}?tab=${PortfolioTabs.REWARDS}`}>
                   <Button
                     variant="secondarySmall"
@@ -583,18 +530,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
                 </WithArrow>
               </Button>
             </div>
-            {hasDelegateeV2 && (
-              <Button
-                disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-                onClick={() => {
-                  dispatch({ type: 'update-step', payload: ClaimDelegateSteps.STAKE })
-                }}
-              >
-                <WithArrow variant="p3semi" as="p">
-                  Skip
-                </WithArrow>
-              </Button>
-            )}
           </div>
         )}
       </div>

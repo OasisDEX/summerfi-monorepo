@@ -213,20 +213,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   // )
 
   const subValue =
-    sumrDelegatedTo !== ADDRESS_ZERO
-      ? // <div className={classNames.votingPower}>
-        //   <Text as="p" variant="p3semi" style={{ color: getVotingPowerColor(votingPower) }}>
-        //     Vote and Reward Power: {formatShorthandNumber(votingPower, { precision: 2 })}
-        //   </Text>
-        //   <Tooltip
-        //     tooltip="Vote and Reward Power reflects a delegates activity within governance. A 1.0 Power will give you full staking rewards. Anything less will reduce your reward amounts."
-        //     tooltipWrapperStyles={{ minWidth: '230px', left: '-200px' }}
-        //   >
-        //     <Icon iconName="info" variant="s" color={getVotingPowerColor(votingPower)} />
-        //   </Tooltip>
-        // </div>
-        null
-      : 'You have not delegated'
+    sumrDelegatedTo !== ADDRESS_ZERO ? null : 'You have not delegated in Governance V2'
 
   const handleChangeDelegateEventButton = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate`)

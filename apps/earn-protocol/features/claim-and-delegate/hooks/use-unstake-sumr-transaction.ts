@@ -39,7 +39,11 @@ export const useUnstakeSumrTransaction = ({
   error: Error | null
 } => {
   const { getUnstakeTx } = useAppSDK()
+  const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: 'Base',
+  })
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
     client: smartAccountClient,
@@ -70,12 +74,20 @@ export const useUnstakeSumrTransaction = ({
     return await sendUserOperationAsync({
       uo: txParams,
       overrides: resolvedOverrides,
+    }).then(async (result) => {
+      setIsLocalTxLoading(true)
+      await waitForTransactionReceipt(publicClient, {
+        hash: result.hash,
+        confirmations: 2,
+      }).finally(() => {
+        setIsLocalTxLoading(false)
+      })
     })
   }
 
   return {
     unstakeSumrTransaction,
-    isLoading: isSendingUserOperation,
+    isLoading: isSendingUserOperation || isLocalTxLoading,
     error,
   }
 }
