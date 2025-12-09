@@ -33,6 +33,7 @@ export type Account = {
   claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Address of the account  */
   id: Scalars['ID']['output'];
+  lastLockupIndex?: Maybe<Scalars['BigInt']['output']>;
   lastUpdateBlock: Scalars['BigInt']['output'];
   positions: Array<Position>;
   referralData?: Maybe<ReferralData>;
@@ -175,6 +176,7 @@ export enum AccountRewards_OrderBy {
   account__claimedSummerToken = 'account__claimedSummerToken',
   account__claimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   account__id = 'account__id',
+  account__lastLockupIndex = 'account__lastLockupIndex',
   account__lastUpdateBlock = 'account__lastUpdateBlock',
   account__referralTimestamp = 'account__referralTimestamp',
   account__stakedSummerToken = 'account__stakedSummerToken',
@@ -221,6 +223,14 @@ export type Account_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  lastLockupIndex?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastLockupIndex_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   lastUpdateBlock?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateBlock_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateBlock_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -284,6 +294,7 @@ export enum Account_OrderBy {
   claimedSummerToken = 'claimedSummerToken',
   claimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   id = 'id',
+  lastLockupIndex = 'lastLockupIndex',
   lastUpdateBlock = 'lastUpdateBlock',
   positions = 'positions',
   referralData = 'referralData',
@@ -4284,6 +4295,7 @@ export enum Position_OrderBy {
   account__claimedSummerToken = 'account__claimedSummerToken',
   account__claimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   account__id = 'account__id',
+  account__lastLockupIndex = 'account__lastLockupIndex',
   account__lastUpdateBlock = 'account__lastUpdateBlock',
   account__referralTimestamp = 'account__referralTimestamp',
   account__stakedSummerToken = 'account__stakedSummerToken',
@@ -6738,6 +6750,7 @@ export enum StakeLockup_OrderBy {
   account__claimedSummerToken = 'account__claimedSummerToken',
   account__claimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   account__id = 'account__id',
+  account__lastLockupIndex = 'account__lastLockupIndex',
   account__lastUpdateBlock = 'account__lastUpdateBlock',
   account__referralTimestamp = 'account__referralTimestamp',
   account__stakedSummerToken = 'account__stakedSummerToken',

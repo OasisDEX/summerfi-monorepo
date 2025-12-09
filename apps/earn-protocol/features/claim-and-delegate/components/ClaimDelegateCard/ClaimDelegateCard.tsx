@@ -144,13 +144,25 @@ export const ClaimDelegateCard: FC<ClaimDelegateCardProps> = ({
             )}
           </div>
           {!selfDelegate && (
-            <Text
-              as="p"
-              variant="p4"
-              style={{ color: 'var(--earn-protocol-secondary-60)', wordBreak: 'break-word' }}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
             >
-              {delegatorsCountV2} delegators
-            </Text>
+              <Text
+                as="p"
+                variant="p4semi"
+                style={{
+                  color: 'var(--earn-protocol-secondary-60)',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {delegatorsCountV2}&nbsp;&times;
+              </Text>
+              <Icon iconName="user" size={11} />
+            </div>
           )}
         </div>
       </div>
