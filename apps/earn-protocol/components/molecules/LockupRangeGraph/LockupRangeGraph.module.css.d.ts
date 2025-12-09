@@ -5,6 +5,7 @@ declare const styles: {
   readonly "highlightAnimationCritical": string;
   readonly "highlightAnimationSuccess": string;
   readonly "highlightAnimationWarning": string;
+  readonly "highlightAnimation_gray": string;
   readonly "highlightAnimation_high": string;
   readonly "highlightAnimation_low": string;
   readonly "highlightAnimation_medium": string;

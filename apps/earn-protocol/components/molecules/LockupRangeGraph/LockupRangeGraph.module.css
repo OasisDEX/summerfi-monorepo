@@ -92,7 +92,8 @@
   }
 }
 
-.highlightAnimation_low {
+.highlightAnimation_low,
+.highlightAnimation_gray {
   animation: highlightAnimationCritical 0.3s 1;
 }
 

@@ -32,10 +32,8 @@ export function mergeDelegatesData(sumrDelegates: TallyDelegate[]): SumrDelegate
     const normalizedAddress = sumrDelegate.userAddress.toLowerCase()
 
     mergedDelegates.set(normalizedAddress, {
-      // eslint-disable-next-line no-mixed-operators
-      sumrAmountV1: Number(sumrDelegate.votesCountV1) / 10 ** 18,
-      // eslint-disable-next-line no-mixed-operators
-      sumrAmountV2: Number(sumrDelegate.votesCountV2) / 10 ** 18,
+      sumrAmountV1: Number(BigInt(sumrDelegate.votesCountV1) / BigInt(10 ** 18)),
+      sumrAmountV2: Number(BigInt(sumrDelegate.votesCountV2) / BigInt(10 ** 18)),
       ens: sumrDelegate.ens || '',
       address: sumrDelegate.userAddress,
       title: getDelegateTitle({
