@@ -10,7 +10,8 @@ import { type SumrUserStakeInfoData } from '@/features/claim-and-delegate/types'
 
 const fallbackResponse: SumrUserStakeInfoData = {
   sumrStakeInfo: {
-    delegatedTo: zeroAddress,
+    delegatedToV1: zeroAddress,
+    delegatedToV2: zeroAddress,
     delegatedToDecayFactor: 0,
     sumrDelegated: '0',
     stakedAmount: '0',

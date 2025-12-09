@@ -316,8 +316,8 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
           )}
         </Card>
         <Card className={classNames.cardWrapper}>
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            Your goveranance v1 delegate
+          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+            Your v1 gov. delegate
           </Text>
           <div className={classNames.valueWithIcon}>
             <Text as="h5" variant="h5">
