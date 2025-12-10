@@ -327,29 +327,18 @@ const SumrV2StakingManageComponent = ({
 
         setLockBucketAvailabilityMap(availabilityMap)
         setStakingContractAddress(stakingConfig.stakingContractAddress)
-        const totalStakedFormatted = new BigNumber(totalStaked.toString())
-          .shiftedBy(-18)
-          .dividedBy(1000000)
-          .toFormat(2, BigNumber.ROUND_DOWN)
 
-        setTotalSumrStaked(totalStakedFormatted)
+        setTotalSumrStaked(
+          formatCryptoBalance(new BigNumber(totalStaked.toString()).shiftedBy(-18)),
+        )
 
-        const revenueFormatted = new BigNumber(revenue)
-          .dividedBy(1000000)
-          .toFormat(2, BigNumber.ROUND_DOWN)
-
-        setProtocolRevenue(revenueFormatted)
+        setProtocolRevenue(formatCryptoBalance(new BigNumber(revenue)))
 
         setRevenueShare(revenueShareData.percentage.value)
 
-        setMaxApy(new BigNumber(rewardRates.maxApy.value).toFormat(2, BigNumber.ROUND_DOWN))
+        setMaxApy(formatPercent(new BigNumber(rewardRates.maxApy.value), { precision: 2 }))
 
-        // Process staking stats
-        const circulatingSupplyFormatted = new BigNumber(stakingStats.circulatingSupply)
-          .dividedBy(1000000)
-          .toFormat(2, BigNumber.ROUND_DOWN)
-
-        setCirculatingSupply(circulatingSupplyFormatted)
+        setCirculatingSupply(formatCryptoBalance(new BigNumber(stakingStats.circulatingSupply)))
 
         // Calculate percentage of circulating SUMR staked
         const percentStaked =
@@ -738,7 +727,7 @@ const SumrV2StakingManageComponent = ({
                         {sdkDataOnMountLoading ? (
                           <SkeletonLine width={60} height={16} />
                         ) : (
-                          <Text variant="p3semi">{`${totalSumrStaked}m`}</Text>
+                          <Text variant="p3semi">{`${totalSumrStaked}`}</Text>
                         )}
                       </div>
                     ),
@@ -759,7 +748,7 @@ const SumrV2StakingManageComponent = ({
                         {sdkDataOnMountLoading ? (
                           <SkeletonLine width={60} height={16} />
                         ) : (
-                          <Text variant="p3semi">{`${circulatingSupply}m`}</Text>
+                          <Text variant="p3semi">{`${circulatingSupply}`}</Text>
                         )}
                       </div>
                     ),
@@ -785,7 +774,7 @@ const SumrV2StakingManageComponent = ({
                     value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={80} height={16} />
                     ) : (
-                      `$${protocolRevenue}m`
+                      `$${protocolRevenue}`
                     ),
                   },
                   {
@@ -813,7 +802,7 @@ const SumrV2StakingManageComponent = ({
                     value: sdkDataOnMountLoading ? (
                       <SkeletonLine width={70} height={16} />
                     ) : (
-                      `up to ${maxApy}%`
+                      `up to ${maxApy}`
                     ),
                   },
                 ]}
@@ -840,7 +829,17 @@ const SumrV2StakingManageComponent = ({
                   },
                   {
                     label: 'Staking contract audit',
-                    value: 'ADD LINK',
+                    value: (
+                      <WithArrow variant="p4semi" style={{ marginRight: '15px' }}>
+                        <Link
+                          href="https://docs.summer.fi/summer.fi/audits#lazy-summer-protocol"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Go to audit
+                        </Link>
+                      </WithArrow>
+                    ),
                   },
                 ]}
               />

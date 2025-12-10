@@ -192,25 +192,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       setEarnableSumrUsd(earnableSumrUsdValue)
 
-      // Process protocol revenue
-      const revenueFormatted = new BigNumber(revenue)
-        .dividedBy(1000000)
-        .toFixed(2, BigNumber.ROUND_DOWN)
+      setProtocolRevenue(formatCryptoBalance(revenue))
 
-      setProtocolRevenue(revenueFormatted)
-
-      // Process protocol TVL
-      const tvlFormatted = new BigNumber(tvl).dividedBy(1000000).toFixed(0, BigNumber.ROUND_DOWN)
-
-      setProtocolTvl(tvlFormatted)
+      setProtocolTvl(formatCryptoBalance(tvl))
 
       // Process revenue share
       setRevenueSharePercentage(revenueShare.percentage.value.toFixed(0))
-      const revenueShareAmountFormatted = new BigNumber(revenueShare.amount)
-        .dividedBy(1000000)
-        .toFixed(2, BigNumber.ROUND_DOWN)
 
-      setRevenueShareAmount(revenueShareAmountFormatted)
+      setRevenueShareAmount(formatCryptoBalance(new BigNumber(revenueShare.amount)))
 
       // Fetch public staking data (available to all users)
       setIsLoadingAllStakes(true)
@@ -549,7 +538,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                   />
                 ) : (
                   <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h4">${protocolRevenue}M</Text>
+                    <Text variant="h4">${protocolRevenue}</Text>
                   </div>
                 )
               }
@@ -560,7 +549,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={160} height={20} />
                 ) : (
-                  `$${protocolTvl}M Lazy Summer TVL`
+                  `$${protocolTvl} Lazy Summer TVL`
                 )
               }
             />
@@ -592,7 +581,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 isLoading ? (
                   <SkeletonLine width={90} height={20} />
                 ) : (
-                  `$${revenueShareAmount}M a year`
+                  `$${revenueShareAmount} a year`
                 )
               }
             />
