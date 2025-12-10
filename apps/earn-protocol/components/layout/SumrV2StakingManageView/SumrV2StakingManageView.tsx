@@ -1837,7 +1837,8 @@ const SumrV2StakingIntermediary = () => {
       // Convert amount to bigint with proper decimals
       const amountBigInt = formatDecimalToBigInt(amount.toString())
       // Convert lockup duration from days to seconds
-      const lockupPeriodSeconds = BigInt(lockupDuration * 24 * 60 * 60) + 1n // +1s to avoid edge cases
+      const lockupPeriodSeconds =
+        BigInt(lockupDuration * 24 * 60 * 60) + (lockupDuration !== 0 ? 1n : 0n) // +1s to avoid edge cases, also avoiding zero lockup
 
       // Prepare the transactions
       const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
