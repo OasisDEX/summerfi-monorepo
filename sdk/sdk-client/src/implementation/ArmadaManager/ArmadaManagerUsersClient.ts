@@ -385,7 +385,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   async getStakingEarningsEstimationV2(
     params: Parameters<IArmadaManagerUsersClient['getStakingEarningsEstimationV2']>[0],
   ): ReturnType<IArmadaManagerUsersClient['getStakingEarningsEstimationV2']> {
-    return this.rpcClient.armada.users.getStakingEarningsEstimationV2.query({
+    return this.rpcClient.armada.users.getStakingEarningsEstimationV2.mutate({
       stakes: params.stakes.map((stake) => ({
         id: stake.id,
         weightedAmount: stake.weightedAmount,

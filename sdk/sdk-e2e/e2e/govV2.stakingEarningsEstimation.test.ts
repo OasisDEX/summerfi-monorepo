@@ -37,7 +37,10 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
       })
 
       const earningsEstimation = await sdk.armada.users.getStakingEarningsEstimationV2({
-        stakes,
+        stakes: stakes.map((stake) => ({
+          id: stake.id,
+          weightedAmount: stake.weightedAmount.toString(),
+        })),
         sumrPriceUsd,
       })
 
