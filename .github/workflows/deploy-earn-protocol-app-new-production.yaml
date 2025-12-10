@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   build-earn-protocol:
@@ -32,7 +32,7 @@ jobs:
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
       SDK_API_URL: ${{ vars.SDK_API_URL }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
@@ -47,8 +47,7 @@ jobs:
       SUMMER_DEPLOYMENT_CONFIG: ${{ vars.SUMMER_DEPLOYMENT_CONFIG }}
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
-      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING:
-        ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
+      BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
       SECURE_PAGE_COOKIE_AUTH_TOKEN: ${{ secrets.SECURE_PAGE_COOKIE_AUTH_TOKEN }}
       BLOG_POSTS_API_KEY: ${{ secrets.BLOG_POSTS_API_KEY }}
       MERCHANDISE_FORM_KEY: ${{ secrets.MERCHANDISE_FORM_KEY }}
@@ -81,7 +80,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Setup Earn Protocol App Next.js Cache
         uses: actions/cache@v4

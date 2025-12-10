@@ -23,7 +23,7 @@ jobs:
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
       SDK_API_URL: ${{ vars.SDK_API_URL }}
@@ -59,7 +59,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Setup Earn Protocol LP App Next.js Cache
         uses: actions/cache@v4
@@ -69,8 +69,7 @@ jobs:
             ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol-landing-page/**/*.ts',
             'apps/earn-protocol-landing-page/**/*.tsx') }}
-          restore-keys:
-            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
+          restore-keys: ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Extract commit hash
         id: vars

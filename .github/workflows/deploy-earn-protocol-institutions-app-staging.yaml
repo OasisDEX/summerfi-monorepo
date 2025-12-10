@@ -59,7 +59,7 @@ jobs:
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       TRANSAK_SECRET: ${{ secrets.TRANSAK_SECRET }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SUBGRAPH_BASE: ${{ vars.SUBGRAPH_BASE }}
       SDK_API_URL: ${{ vars.SDK_API_URL_INSTI }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
@@ -75,14 +75,12 @@ jobs:
       EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN: ${{ secrets.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN }}
       EARN_APP_URL: ${{ secrets.EARN_APP_URL }}
       INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY: ${{ secrets.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY }}
-      INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY:
-        ${{ secrets.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY }}
+      INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY: ${{ secrets.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY }}
       INSTITUTIONS_COGNITO_USER_POOL_ID: ${{ secrets.INSTITUTIONS_COGNITO_USER_POOL_ID }}
       INSTITUTIONS_COGNITO_CLIENT_ID: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_ID }}
       INSTITUTIONS_COGNITO_CLIENT_SECRET: ${{ secrets.INSTITUTIONS_COGNITO_CLIENT_SECRET }}
       INSTITUTIONS_SESSION_SECRET: ${{ secrets.INSTITUTIONS_SESSION_SECRET }}
-      EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING:
-        ${{ secrets.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING }}
+      EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -111,7 +109,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Setup Earn Protocol Institutions App Next.js Cache
         uses: actions/cache@v4
@@ -121,8 +119,7 @@ jobs:
             ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol-institutions/**/*.ts',
             'apps/earn-protocol-institutions/**/*.tsx') }}
-          restore-keys:
-            ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-
+          restore-keys: ${{ runner.os }}-earn-protocol-institutions-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |
