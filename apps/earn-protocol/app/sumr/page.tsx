@@ -1,8 +1,19 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import {
+  getSumrTokenBonus,
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+  SUMR_CAP,
+  sumrNetApyConfigCookieName,
+} from '@summerfi/app-earn-ui'
 import { configEarnAppFetcher, getVaultsInfo } from '@summerfi/app-server-handlers'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import {
+  getServerSideCookies,
+  parseServerResponseToClient,
+  safeParseJson,
+} from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { cookies } from 'next/headers'
 
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'
@@ -18,6 +29,9 @@ const SumrPage = async () => {
       tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
   ])
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const systemConfig = parseServerResponseToClient(configRaw)
   const apyRanges: {
     eth: { minApy: number; maxApy: number }
@@ -46,20 +60,32 @@ const SumrPage = async () => {
     },
   )
 
+  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+
   const sumrRewards: {
     eth: number
     stablecoins: number
   } = vaultsInfo.reduce(
     (rewards, vault) => {
+      if (
+        vault.id.fleetAddress.value.toLowerCase() ===
+        '0x4F63cfEa7458221CB3a0EEE2F31F7424Ad34bb58'.toLowerCase()
+      ) {
+        return rewards
+      }
+
       const isEthVault = vault.assetToken.symbol === 'ETH' || vault.assetToken.symbol === 'WETH'
-      const sumrApy = vault.rewardsApys?.find((reward) => reward.token.symbol === 'SUMR')?.apy
-        ? Number(vault.rewardsApys.find((reward) => reward.token.symbol === 'SUMR')?.apy?.value)
-        : 0
+
+      const { rawSumrTokenBonus } = getSumrTokenBonus({
+        merklRewards: vault.merklRewards,
+        sumrPrice: estimatedSumrPrice,
+        totalValueLockedUSD: vault.tvlUsd.amount.toString(),
+      })
 
       if (isEthVault) {
-        rewards.eth = Math.max(rewards.eth, sumrApy)
+        rewards.eth = Math.max(rewards.eth, Number(rawSumrTokenBonus))
       } else {
-        rewards.stablecoins = Math.max(rewards.stablecoins, sumrApy)
+        rewards.stablecoins = Math.max(rewards.stablecoins, Number(rawSumrTokenBonus))
       }
 
       return rewards

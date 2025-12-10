@@ -41,6 +41,7 @@ import {
   convertWethToEth,
   findVaultInfo,
   formatCryptoBalance,
+  formatPercent,
   sdkNetworkToHumanNetwork,
   slugifyVault,
   subgraphNetworkToId,
@@ -49,6 +50,7 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
@@ -127,6 +129,7 @@ export const VaultsListView = ({
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
   const [maxApy, setMaxApy] = useState<number>(0)
+  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   const [isLoadingRewardRates, setIsLoadingRewardRates] = useState<boolean>(true)
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -144,10 +147,6 @@ export const VaultsListView = ({
   const sumrAvailableToStake =
     Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
     Number(sumrStakeInfo?.sumrStakeInfo.stakedAmount ?? 0)
-
-  const sumrStakeRawApy = sumrStakeInfo?.sumrStakingInfo.sumrStakingApy ?? 0
-  const sumrStakeDecayFactor = sumrStakeInfo?.sumrStakeInfo.delegatedToDecayFactor ?? 1
-  const sumrStakeApy = sumrStakeRawApy * sumrStakeDecayFactor
 
   const sumrAvailableToStakeUSD = sumrAvailableToStake * estimatedSumrPrice
 
@@ -172,6 +171,14 @@ export const VaultsListView = ({
       ])
 
       setMaxApy(rewardRates.maxApy.value)
+      const summerRewardApyValue = formatPercent(
+        new BigNumber(rewardRates.summerRewardYield.value),
+        {
+          precision: 2,
+        },
+      )
+
+      setSumrRewardApy(summerRewardApyValue)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch staking data:', error)
@@ -730,7 +737,7 @@ export const VaultsListView = ({
               availableToStakeUSD={sumrAvailableToStakeUSD}
               yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
               yieldToken="USDC"
-              apy={sumrStakeApy}
+              apy={sumrRewardApy}
               tooltipName="sumr-stake-bonus-label"
               onTooltipOpen={tooltipEventHandler}
               handleClick={() => {

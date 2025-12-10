@@ -1,5 +1,5 @@
 import { Button, DataBlock, Icon, SkeletonLine, Text, Tooltip } from '@summerfi/app-earn-ui'
-import { formatPercent } from '@summerfi/app-utils'
+import { formatDecimalAsPercent, formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -47,7 +47,7 @@ export const WaysToAccessSumr = ({
                 isLoading ? (
                   <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
                 ) : (
-                  `${formatPercent(sumrRewards.eth, { precision: 2, noPercentSign: true })}%`
+                  `${formatDecimalAsPercent(sumrRewards.eth, { precision: 2, noPercentSign: true })}%`
                 )
               }
               valueStyle={{ color: 'white' }}
@@ -85,7 +85,7 @@ export const WaysToAccessSumr = ({
                 isLoading ? (
                   <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
                 ) : (
-                  `${formatPercent(sumrRewards.stablecoins, { precision: 2, noPercentSign: true })}%`
+                  `${formatDecimalAsPercent(sumrRewards.stablecoins, { precision: 2, noPercentSign: true })}%`
                 )
               }
               valueStyle={{ color: 'white' }}

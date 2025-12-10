@@ -39,13 +39,13 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
             SUMR
           </Text>
           <SimpleBonusLabel
-            bonusLabel={`SUMR Reward APY up to ${formatDecimalAsPercent(apy)}`}
+            bonusLabel={`SUMR Reward APY up to ${apy}`}
             tooltipName={tooltipName}
             onTooltipOpen={onTooltipOpen}
             tooltip={
               <div>
                 <Text variant="p3semi" as="p">
-                  SUMR Reward APY up to {formatDecimalAsPercent(apy)}
+                  SUMR Reward APY up to {apy}
                 </Text>
               </div>
             }
@@ -68,7 +68,9 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
               {yieldToken} Yield
             </Text>
             <Text variant="p1semi" as="p" className={classNames.sumrStakeCardDataValue}>
-              {yieldTokenApy ? `Up to ${formatDecimalAsPercent(yieldTokenApy)}` : '-'}
+              {yieldTokenApy && !isNaN(Number(yieldTokenApy))
+                ? `Up to ${formatDecimalAsPercent(yieldTokenApy)}`
+                : '-'}
             </Text>
           </div>
         </div>
