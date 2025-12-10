@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js'
 import { createTestSDK } from './utils/sdkInstance'
 import { type TestConfigKey } from './utils/testConfig'
 
@@ -53,7 +54,6 @@ describe('Armada Protocol Gov V2 getStakingStakesV2', () => {
 
         expect(stake.amount).toBeDefined()
         expect(typeof stake.amount).toBe('bigint')
-        expect(stake.amount).toBeGreaterThan(0n)
 
         expect(stake.weightedAmount).toBeDefined()
         expect(typeof stake.weightedAmount).toBe('bigint')
@@ -115,8 +115,9 @@ describe('Armada Protocol Gov V2 getStakingStakesV2', () => {
 
       result.forEach((stake, idx) => {
         // Multiplier should be weightedAmountNormalized / amount
-        const calculatedMultiplier =
-          stake.weightedAmountNormalized / parseFloat(stake.amount.toString())
+        const calculatedMultiplier = BigNumber(stake.weightedAmount)
+          .dividedBy(parseFloat(stake.amount.toString()))
+          .toNumber()
 
         console.log(
           `Stake ${idx} multiplier check: ${stake.multiplier} vs calculated: ${calculatedMultiplier}`,

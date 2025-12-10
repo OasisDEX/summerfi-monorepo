@@ -1204,7 +1204,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       multiplier:
         lockup.amount > 0n
           ? new BigNumber(lockup.weightedAmount).dividedBy(lockup.amount).toNumber()
-          : 0,
+          : 1,
     }))
 
     return stakes
