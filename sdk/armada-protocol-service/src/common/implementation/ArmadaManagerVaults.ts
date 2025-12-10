@@ -1681,14 +1681,36 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     })
   }
 
-  async getVaultInfoList(
-    params: Parameters<IArmadaManagerVaults['getVaultInfoList']>[0],
-  ): ReturnType<IArmadaManagerVaults['getVaultInfoList']> {
+  async getVaultInfoListPerChain(
+    params: Parameters<IArmadaManagerVaults['getVaultInfoListPerChain']>[0],
+  ): ReturnType<IArmadaManagerVaults['getVaultInfoListPerChain']> {
     const { chainId } = params
     const queryResult = await this._subgraphManager.getVaults({
       chainId,
       clientId: this.getClientIdOrUndefined(),
     })
+
+    const vaultIds = queryResult.vaults.map((vault) =>
+      ArmadaVaultId.createFrom({
+        chainInfo: getChainInfoByChainId(chainId),
+        fleetAddress: Address.createFromEthereum({ value: vault.id }),
+      }),
+    )
+
+    const [apys, rewardsApys, merklRewards] = await Promise.all([
+      this.getVaultsApys({
+        chainId,
+        vaultIds,
+      }),
+      this.getVaultsRewardsApys({
+        chainId,
+        vaultIds,
+      }),
+      this.getMerklRewardsData({
+        chainId,
+        vaultIds,
+      }),
+    ])
 
     if (!queryResult || !queryResult.vaults) {
       return { list: [] }
@@ -1696,18 +1718,77 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
 
     const chainInfo = getChainInfoByChainId(chainId)
 
-    const vaultInfoPromises = queryResult.vaults.map((rawVault) => {
+    const list = queryResult.vaults.map((rawVault) => {
+      const fleetAddress = rawVault.id.toLowerCase()
       const vaultId = ArmadaVaultId.createFrom({
         chainInfo,
-        fleetAddress: Address.createFromEthereum({ value: rawVault.id }),
+        fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
       })
-      return this.getVaultInfo({
-        vaultId,
-        rawVault: { totalValueLockedUSD: rawVault.totalValueLockedUSD },
+
+      if (!rawVault.outputToken) {
+        throw new Error(`Vault ${vaultId.toString()} is missing outputToken data`)
+      }
+      const token = Token.createFrom({
+        chainInfo,
+        address: Address.createFromEthereum({ value: rawVault.outputToken.id }),
+        decimals: rawVault.outputToken.decimals,
+        symbol: rawVault.outputToken.symbol,
+        name: rawVault.outputToken.name,
+      })
+      const assetToken = this._tokensManager.getTokenByAddress({
+        chainInfo,
+        address: Address.createFromEthereum({ value: rawVault.inputToken.id }),
+      })
+      const depositCap = TokenAmount.createFromBaseUnit({
+        token,
+        amount: rawVault.depositCap.toString(),
+      })
+
+      const apysForVault = apys.byFleetAddress[fleetAddress]
+
+      const totalDepositsRaw = BigInt(rawVault.inputTokenBalance)
+      const totalDeposits = TokenAmount.createFromBaseUnit({
+        token: assetToken,
+        amount: totalDepositsRaw.toString(),
+      })
+      const totalSharesRaw = BigInt(rawVault.outputTokenSupply)
+      const totalShares = TokenAmount.createFromBaseUnit({
+        token,
+        amount: totalSharesRaw.toString(),
+      })
+
+      const sharePrice = Price.createFromAmountsRatio({
+        numerator: totalDeposits,
+        denominator: totalShares,
+      })
+
+      // Calculate tvlUsd from rawVault data or default to 0
+      const tvlUsd = FiatCurrencyAmount.createFrom({
+        fiat: FiatCurrency.USD,
+        amount: rawVault.totalValueLockedUSD,
+      })
+
+      return ArmadaVaultInfo.createFrom({
+        id: vaultId,
+        token: token,
+        assetToken: assetToken,
+        depositCap: depositCap,
+        totalDeposits: totalDeposits,
+        totalShares: totalShares,
+        sharePrice: sharePrice,
+        apy: apysForVault?.live || null,
+        apys: apysForVault || {
+          live: null,
+          sma24h: null,
+          sma7day: null,
+          sma30day: null,
+        },
+        rewardsApys: rewardsApys.byFleetAddress[fleetAddress],
+        merklRewards: merklRewards.byFleetAddress[fleetAddress],
+        tvlUsd: tvlUsd,
       })
     })
 
-    const list = await Promise.all(vaultInfoPromises)
     return { list }
   }
 
@@ -2003,7 +2084,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getProtocolRevenue(): ReturnType<IArmadaManagerVaults['getProtocolRevenue']> {
     // Get vaults info list on all chains by creating a promise array
     const vaultsPromises = Object.values(ChainIds).map((chainId) =>
-      this.getVaultInfoList({ chainId }),
+      this.getVaultInfoListPerChain({ chainId }),
     )
     const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
 
@@ -2041,7 +2122,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   async getProtocolTvl(): ReturnType<IArmadaManagerVaults['getProtocolTvl']> {
     // Get vaults info list on all chains by creating a promise array
     const vaultsPromises = Object.values(ChainIds).map((chainId) =>
-      this.getVaultInfoList({ chainId }),
+      this.getVaultInfoListPerChain({ chainId }),
     )
     const vaults = await (await Promise.all(vaultsPromises)).flatMap((res) => res.list)
 

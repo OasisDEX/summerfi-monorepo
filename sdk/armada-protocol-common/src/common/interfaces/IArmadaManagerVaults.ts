@@ -170,7 +170,7 @@ export interface IArmadaManagerVaults {
    *
    * @returns The information of all Armada vaults for the given chain
    */
-  getVaultInfoList(params: { chainId: ChainId }): Promise<{
+  getVaultInfoListPerChain(params: { chainId: ChainId }): Promise<{
     list: IArmadaVaultInfo[]
   }>
 

@@ -9,5 +9,5 @@ export const getVaultInfoList = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.vaults.getVaultInfoList(opts.input)
+    return opts.ctx.armadaManager.vaults.getVaultInfoListPerChain(opts.input)
   })

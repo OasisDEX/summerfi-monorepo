@@ -52,6 +52,7 @@ query GetVaults {
       symbol
       decimals
     }
+    outputTokenSupply
     inputTokenBalance
     inputTokenPriceUSD
     outputTokenPriceUSD
@@ -122,6 +123,7 @@ query GetVault($id: ID!) {
       symbol
       decimals
     }
+    outputTokenSupply
     inputTokenBalance
     inputTokenPriceUSD
     outputTokenPriceUSD
