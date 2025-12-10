@@ -1839,7 +1839,7 @@ const SumrV2StakingIntermediary = () => {
       // Convert lockup duration from days to seconds
       const lockupPeriodSeconds =
         BigInt(lockupDuration * 24 * 60 * 60) +
-        (lockupDuration !== 0 && lockupDuration !== 1085 ? 1n : 0n) // +1s to avoid edge cases, also avoiding zero lockup
+        (lockupDuration !== 0 && lockupDuration !== SUMR_STAKING_V2_LOCKUP_MAX_DAYS ? 1n : 0n) // +1s to avoid edge cases, also avoiding zero lockup
 
       // Prepare the transactions
       const prepared = await prepareTxs(amountBigInt, lockupPeriodSeconds)
