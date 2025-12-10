@@ -1280,7 +1280,7 @@ const SumrV2StakingManageComponent = ({
                                   }
                                 }}
                               >
-                                {bucketAvailability.toLocaleString()} SUMR
+                                {formatCryptoBalance(bucketAvailability)} SUMR
                               </span>
                             ),
                           }
