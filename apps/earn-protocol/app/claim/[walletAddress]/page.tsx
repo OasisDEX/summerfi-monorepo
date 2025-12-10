@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
+import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
@@ -31,6 +32,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     sumrStakingInfo,
     sumrToClaim,
     systemConfigRaw,
+    { sumrRewardApy, sumrRewardAmount },
   ] = await Promise.all([
     getSumrDelegateStake({
       walletAddress,
@@ -51,6 +53,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
       revalidate: REVALIDATION_TIMES.CONFIG,
       tags: [REVALIDATION_TAGS.CONFIG],
     })(),
+    getSumrStakingRewards({ walletAddress }),
   ])
 
   const systemConfig = parseServerResponseToClient(systemConfigRaw)
@@ -63,6 +66,8 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     sumrBalances,
     sumrStakingInfo,
     tallyDelegates,
+    sumrRewardApy,
+    sumrRewardAmount,
   }
 
   return (

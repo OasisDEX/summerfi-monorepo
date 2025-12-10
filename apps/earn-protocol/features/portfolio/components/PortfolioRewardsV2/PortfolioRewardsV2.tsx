@@ -59,11 +59,13 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
   const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
   const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(true)
+  const [userUsdcRealYield, setUserUsdcRealYield] = useState<number>(0)
 
   const {
     getUserBalance,
     getStakingRewardRatesV2,
     getStakingStatsV2,
+    getStakingRevenueShareV2,
     getStakingEarningsEstimationV2,
     getUserStakingSumrStaked,
     getUserStakesV2,
@@ -92,6 +94,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userBalance,
         rewardRates,
         stakingStats,
+        revenueShare,
         userStaked,
         userStakesData,
         _userBlendedYieldBoost,
@@ -106,6 +109,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           sumrPriceUsd,
         }),
         getStakingStatsV2(),
+        getStakingRevenueShareV2(),
         getUserStakingSumrStaked({
           user,
         }),
@@ -130,11 +134,9 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       ] = await Promise.all([
         getStakingEarningsEstimationV2({
           stakes: userStakesData,
-          // sumrPriceUsd,
         }),
         getStakingEarningsEstimationV2({
           stakes: allStakesData,
-          sumrPriceUsd: 0.2,
         }),
         getCalculatePenaltyPercentage({
           userStakes: userStakesData,
@@ -147,6 +149,23 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       setYourEarningsEstimation(_yourEarningsEstimation)
       setAllEarningsEstimation(_allEarningsEstimation)
       setUserBlendedYieldBoost(_userBlendedYieldBoost)
+      const userTotalWeightedTokens = userStakesData.reduce(
+        (acc, stake) => acc + stake.weightedAmount,
+        0n,
+      )
+      const totalUsdcRealYield =
+        userTotalWeightedTokens > 0
+          ? new BigNumber(revenueShare.amount)
+              .dividedBy(
+                new BigNumber(userTotalWeightedTokens)
+                  .shiftedBy(-SUMR_DECIMALS)
+                  .multipliedBy(sumrPriceUsd),
+              )
+              .multipliedBy(_userBlendedYieldBoost)
+              .toNumber()
+          : 0
+
+      setUserUsdcRealYield(totalUsdcRealYield)
 
       // Map penalty percentages with stake indices
       setPenaltyPercentages(
@@ -207,6 +226,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getStakingEarningsEstimationV2,
     getStakingRewardRatesV2,
     getStakingStatsV2,
+    getStakingRevenueShareV2,
     getUserBalance,
     getUserStakesV2,
     getUserStakingSumrStaked,
@@ -268,6 +288,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           sumrAvailableToStake,
           sumrStaked,
         }}
+        sumrPriceUsd={sumrPriceUsd}
+        userUsdcRealYield={userUsdcRealYield}
       />
       <LockedSumrInfoTabBarV2
         stakes={userStakes}

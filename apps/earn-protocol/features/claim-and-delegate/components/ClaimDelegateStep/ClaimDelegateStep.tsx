@@ -10,7 +10,6 @@ import {
   ERROR_TOAST_CONFIG,
   Input,
   SDKChainIdToAAChainMap,
-  SkeletonLine,
   SUCCESS_TOAST_CONFIG,
   Text,
   useClientChainId,
@@ -22,7 +21,7 @@ import {
   SupportedNetworkIds,
   UiTransactionStatuses,
 } from '@summerfi/app-types'
-import { ADDRESS_ZERO, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
+import { ADDRESS_ZERO, formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -31,7 +30,6 @@ import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/component
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
-import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
 import { useSumrDelegateTransaction } from '@/features/claim-and-delegate/hooks/use-sumr-delegate-transaction'
 import {
   type ClaimDelegateExternalData,
@@ -90,8 +88,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     getDelegateSortOptions(DelegateSortOptions.HIGHEST_VOTE_AMOUNT)[0],
   )
 
-  const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
-
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
@@ -141,20 +137,20 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     }
   }, [])
 
-  const sumrToClaim =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    externalData.sumrToClaim.aggregatedRewards.perChain[SupportedNetworkIds.Base] ?? 0
-
   const apy = (
     <Text as="h5" variant="h5">
-      up to{' '}
-      {formatDecimalAsPercent(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1))}{' '}
+      {externalData.sumrRewardApy === 0
+        ? '-'
+        : `Up to ${formatDecimalAsPercent(externalData.sumrRewardApy / 100)}`}
       <Text as="span" variant="p4semi">
         APR
       </Text>
     </Text>
   )
-  const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} SUMR / Year`
+  const sumrPerYear =
+    externalData.sumrRewardAmount === 0
+      ? '-'
+      : `+${formatCryptoBalance(externalData.sumrRewardAmount)} SUMR / Year`
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
     onSuccess: () => {
@@ -326,36 +322,13 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               marginBottom: 'var(--general-space-8)',
             }}
             titleSize="medium"
-            value={
-              decayFactorLoading ? (
-                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                  <SkeletonLine height="18px" width="60px" />
-                </div>
-              ) : (
-                apy
-              )
-            }
+            value={apy}
             valueStyle={{
               color: 'var(--earn-protocol-success-100)',
               marginBottom: 'var(--general-space-8)',
             }}
             valueSize="small"
-            subValue={
-              decayFactorLoading ? (
-                <div style={{ marginTop: '9px', marginBottom: '7px)' }}>
-                  <SkeletonLine
-                    height="12px"
-                    width="80px"
-                    style={{
-                      marginTop: '6px',
-                      marginBottom: 'var(--general-space-4)',
-                    }}
-                  />
-                </div>
-              ) : (
-                sumrPerYear
-              )
-            }
+            subValue={sumrPerYear}
             subValueStyle={{
               color: 'var(--earn-protocol-primary-100)',
               marginBottom: 'var(--general-space-8)',

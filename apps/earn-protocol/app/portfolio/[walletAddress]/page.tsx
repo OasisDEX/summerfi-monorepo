@@ -36,6 +36,7 @@ import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
+import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -75,6 +76,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     positionsActivePeriods,
     blogPosts,
     vaultsInfo,
+    sumrStakingRewards,
   ] = await Promise.all([
     portfolioWalletAssetsHandler(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
@@ -104,6 +106,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       revalidate: REVALIDATION_TIMES.VAULTS_LIST,
       tags: [REVALIDATION_TAGS.VAULTS_LIST],
     })(),
+    unstableCache(getSumrStakingRewards, [walletAddress], cacheConfig)({ walletAddress }),
   ])
 
   return {
@@ -121,6 +124,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     positionsActivePeriods,
     blogPosts,
     vaultsInfo,
+    sumrStakingRewards,
   }
 }
 
@@ -160,6 +164,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     positionsActivePeriods,
     blogPosts,
     vaultsInfo,
+    sumrStakingRewards,
   } = await portfolioCallsHandler(walletAddress)
 
   const userPositionsJsonSafe = userPositions
@@ -221,6 +226,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrStakeDelegate,
     sumrStakingInfo,
     tallyDelegates,
+    sumrRewardApy: sumrStakingRewards.sumrRewardApy,
+    sumrRewardAmount: sumrStakingRewards.sumrRewardAmount,
   }
 
   const positionsHistoricalChartMap = positionsWithVault.reduce<{

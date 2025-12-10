@@ -110,6 +110,8 @@ export type ClaimDelegateExternalData = {
   sumrBalances: SumrBalancesData
   sumrStakingInfo: SumrStakingInfoData
   tallyDelegates: TallyDelegate[]
+  sumrRewardApy: number
+  sumrRewardAmount: number
 }
 
 export interface SumrUserStakeInfoData {

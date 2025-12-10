@@ -134,6 +134,8 @@ export const PortfolioStakingInfoCardV2 = ({
   usdcEarnedOnSumr,
   usdcEarnedOnSumrAmount,
   stats,
+  sumrPriceUsd,
+  userUsdcRealYield,
 }: {
   sumrUserData: {
     sumrAvailableToStake: number
@@ -150,6 +152,8 @@ export const PortfolioStakingInfoCardV2 = ({
   sumrRewardAmount: number
   usdcEarnedOnSumr: number
   usdcEarnedOnSumrAmount: number
+  sumrPriceUsd: number
+  userUsdcRealYield: number
 }) => {
   return (
     <Card
@@ -220,11 +224,16 @@ export const PortfolioStakingInfoCardV2 = ({
                   </Tooltip>
                 </div>
               ),
-              value: `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100)}`,
+              value:
+                sumrUserData.sumrStaked > 0
+                  ? formatDecimalAsPercent(userUsdcRealYield)
+                  : `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100)}`,
               subValue:
-                usdcEarnedOnSumrAmount === 0
-                  ? 'No locked positions'
-                  : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
+                sumrUserData.sumrStaked > 0
+                  ? `$${formatCryptoBalance(sumrUserData.sumrStaked * sumrPriceUsd * userUsdcRealYield)} / Year`
+                  : usdcEarnedOnSumrAmount === 0
+                    ? '-'
+                    : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
@@ -258,7 +267,7 @@ export const PortfolioStakingInfoCardV2 = ({
                 sumrRewardApy === 0 ? '-' : `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
               subValue:
                 sumrRewardAmount === 0
-                  ? 'No rewards campaign'
+                  ? '-'
                   : `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
               subValueType: 'positive',
             }}

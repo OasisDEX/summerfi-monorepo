@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
+import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { DelegatePageViewComponent } from '@/components/layout/DelegatePageView/DelegatePageViewComponent'
@@ -22,24 +23,30 @@ const DelegatePage = async ({ params }: DelegatePageProps) => {
     redirect('/not-found')
   }
 
-  const [{ sumrStakeDelegate, tallyDelegates }, sumrBalances, sumrStakingInfo, sumrToClaim] =
-    await Promise.all([
-      getSumrDelegateStake({
-        walletAddress,
-      }).then(async (res) => {
-        const delegates = await getTallyDelegates(res.delegatedToV2)
+  const [
+    { sumrStakeDelegate, tallyDelegates },
+    sumrBalances,
+    sumrStakingInfo,
+    sumrToClaim,
+    { sumrRewardApy, sumrRewardAmount },
+  ] = await Promise.all([
+    getSumrDelegateStake({
+      walletAddress,
+    }).then(async (res) => {
+      const delegates = await getTallyDelegates(res.delegatedToV2)
 
-        return {
-          sumrStakeDelegate: res,
-          tallyDelegates: delegates,
-        }
-      }),
-      getSumrBalances({
-        walletAddress,
-      }),
-      getSumrStakingInfo(),
-      getSumrToClaim({ walletAddress }),
-    ])
+      return {
+        sumrStakeDelegate: res,
+        tallyDelegates: delegates,
+      }
+    }),
+    getSumrBalances({
+      walletAddress,
+    }),
+    getSumrStakingInfo(),
+    getSumrToClaim({ walletAddress }),
+    getSumrStakingRewards({ walletAddress }),
+  ])
 
   const externalData: ClaimDelegateExternalData = {
     sumrToClaim,
@@ -47,6 +54,8 @@ const DelegatePage = async ({ params }: DelegatePageProps) => {
     sumrBalances,
     sumrStakingInfo,
     tallyDelegates,
+    sumrRewardApy,
+    sumrRewardAmount,
   }
 
   return <DelegatePageViewComponent walletAddress={walletAddress} externalData={externalData} />
