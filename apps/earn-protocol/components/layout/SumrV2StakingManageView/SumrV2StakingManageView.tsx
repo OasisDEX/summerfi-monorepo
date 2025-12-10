@@ -272,7 +272,6 @@ const SumrV2StakingManageComponent = ({
     getStakingRevenueShareV2,
     getStakingRewardRatesV2,
     getStakingSimulationDataV2,
-    getCalculatePenaltyPercentage,
     getSummerToken,
     getStakingConfigV2,
     getStakingStatsV2,
