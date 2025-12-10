@@ -157,9 +157,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       setClaimableSumrUsd(claimableSumrUsdValue)
 
       // Process reward rates
-      const maxApyValue = formatPercent(
-        new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
-      )
+      const maxApyValue = formatPercent(new BigNumber(rewardRates.maxApy.value), { precision: 2 })
 
       setMaxApy(maxApyValue)
 
@@ -173,7 +171,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
+        new BigNumber(rewardRates.summerRewardYield.value),
+        {
+          precision: 2,
+        },
       )
 
       setSumrRewardApy(summerRewardApyValue)

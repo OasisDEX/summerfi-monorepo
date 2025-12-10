@@ -234,8 +234,8 @@ export const PortfolioStakingInfoCardV2 = ({
               ),
               value:
                 sumrUserData.sumrStaked > 0
-                  ? formatDecimalAsPercent(userUsdcRealYield)
-                  : `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100)}`,
+                  ? formatDecimalAsPercent(userUsdcRealYield, { precision: 2 })
+                  : `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100, { precision: 2 })}`,
               subValue:
                 sumrUserData.sumrStaked > 0
                   ? `$${formatCryptoBalance(sumrUserData.sumrStaked * sumrPriceUsd * userUsdcRealYield)} / Year`
