@@ -3305,8 +3305,8 @@ importers:
         specifier: workspace:*
         version: link:../subgraph-manager-common
       '@trpc/client':
-        specifier: 11.0.0-rc.844
-        version: 11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.8.2)
+        specifier: 11.7.2
+        version: 11.7.2(@trpc/server@11.7.2)(typescript@5.8.2)
     devDependencies:
       '@microsoft/api-extractor':
         specifier: ^7.52.13
@@ -3447,8 +3447,8 @@ importers:
         specifier: workspace:*
         version: link:../sdk-server
       '@trpc/server':
-        specifier: 11.0.0-rc.844
-        version: 11.0.0-rc.844(typescript@5.8.2)
+        specifier: 11.7.2
+        version: 11.7.2(typescript@5.8.2)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -3565,8 +3565,8 @@ importers:
         specifier: workspace:*
         version: link:../tokens-service
       '@trpc/server':
-        specifier: 11.0.0-rc.844
-        version: 11.0.0-rc.844(typescript@5.8.2)
+        specifier: 11.7.2
+        version: 11.7.2(typescript@5.8.2)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -20298,18 +20298,18 @@ packages:
       query-string: 8.2.0
     dev: false
 
-  /@trpc/client@11.0.0-rc.844(@trpc/server@11.0.0-rc.844)(typescript@5.8.2):
-    resolution: {integrity: sha512-WPyGZZvTvhlTdozBcJVFrh40RYOuI90Ghaq/DYOPFBC9H8aRR5uExCIemU+O1h8jaAs1E+IFdHpUNEVzZJ9pQw==}
+  /@trpc/client@11.7.2(@trpc/server@11.7.2)(typescript@5.8.2):
+    resolution: {integrity: sha512-OQxqUMfpDvjcszo9dbnqWQXnW2L5IbrKSz2H7l8s+mVM3EvYw7ztQ/gjFIN3iy0NcamiQfd4eE6qjcb9Lm+63A==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.844+0244dee81
+      '@trpc/server': 11.7.2
       typescript: '>=5.7.2'
     dependencies:
-      '@trpc/server': 11.0.0-rc.844(typescript@5.8.2)
+      '@trpc/server': 11.7.2(typescript@5.8.2)
       typescript: 5.8.2
     dev: false
 
-  /@trpc/server@11.0.0-rc.844(typescript@5.8.2):
-    resolution: {integrity: sha512-jy2qccOY4kjSmfRaAjZ/BZUG1D90Dex/ow0X920wAsno/EX+orR9vNXbNKsL/4TmM8CzRJ6jw1Y39GwBnrfziA==}
+  /@trpc/server@11.7.2(typescript@5.8.2):
+    resolution: {integrity: sha512-AgB26PXY69sckherIhCacKLY49rxE2XP5h38vr/KMZTbLCL1p8IuIoKPjALTcugC2kbyQ7Lbqo2JDVfRSmPmfQ==}
     peerDependencies:
       typescript: '>=5.7.2'
     dependencies:
