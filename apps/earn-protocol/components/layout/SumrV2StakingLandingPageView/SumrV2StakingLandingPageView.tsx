@@ -735,20 +735,111 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         <FaqSection
           data={[
             {
-              title: 'What is the $SUMR token airdrop?',
-              content: 'Huh??',
+              title: 'What is SUMR?',
+              content: (
+                <>
+                  SUMR is the governance token of Lazy Summer Protocol. SUMR holders steer the
+                  protocol (via Governance V2) and can share in protocol growth through staking
+                  rewards and revenue distributions.
+                </>
+              ),
             },
             {
-              title: 'Who qualifies for the $SUMR token airdrop? ',
-              content: 'Huh?? Huuh??',
+              title: 'How does SUMR capture value from Lazy Summer?',
+              content: (
+                <>
+                  Lazy Summer charges fees on yield generated in its vaults. A portion of this
+                  protocol revenue flows to the treasury, and from there to{' '}
+                  <strong>SUMR staker’s</strong> (in USDC LV vault tokens) and ecosystem growth, as
+                  decided by governance.
+                </>
+              ),
             },
             {
-              title: 'When will the $SUMR tokens start trading?',
-              content: 'Huh?? Huuh?? Huuuh??',
+              title: 'Do I need SUMR to use Lazy Summer?',
+              content: (
+                <>
+                  No. Anyone can deposit into Lazy Summer vaults without holding SUMR. SUMR is for
+                  users who want <strong>governance influence</strong> and{' '}
+                  <strong>economic exposure</strong> to protocol growth on top of vault
+                  yield.Though, all depositors in Lazy Summer do <strong>earn SUMR.</strong>
+                </>
+              ),
             },
             {
-              title: 'Will the conversion rate for $RAYS in Season 2 be the same as Season 1?',
-              content: 'Huh?? Huuh?? Huuuh?? What? Huh? Huuh??',
+              title: 'What is SUMR Staking V2?',
+              content: (
+                <>
+                  It’s the upgraded SUMR staking & locking system that powers Governance V2. When
+                  you lock SUMR, you get governance power, ongoing SUMR emissions, and a share of
+                  protocol revenue paid in USDC (via LV vault tokens).
+                </>
+              ),
+            },
+            {
+              title: 'What’s new vs Staking V1?',
+              content: (
+                <>
+                  V1 only paid SUMR. V2 adds <strong>dual rewards (SUMR + USDC)</strong>,
+                  conviction-weighted locking (longer lock → higher multiplier), capacity buckets
+                  per duration, and clear early withdrawal rules.
+                </>
+              ),
+            },
+            {
+              title: 'Why should I stake SUMR?',
+              content: (
+                <>
+                  Three reasons:
+                  <br />
+                  <br />
+                  1. <strong>Govern</strong> Lazy Summer (curate ARKs, allocate capital, hold
+                  contributors accountable)
+                  <br />
+                  2. <strong>Earn more SUMR</strong> via emissions
+                  <br />
+                  3. <strong>Share protocol revenue</strong> in auto-compounding USDC LV vault
+                  tokens.
+                  <br />
+                </>
+              ),
+            },
+            {
+              title: 'How do rewards work?',
+              content: (
+                <>
+                  You earn:
+                  <br />
+                  <br />- <strong>SUMR emissions</strong> proportional to your stake and lock
+                  multiplier
+                  <br />- <strong>USDC yield share</strong> currently 20% of protocol yield flows to
+                  lockers as LV vault tokens that keep compounding.
+                </>
+              ),
+            },
+            {
+              title: 'How does locking & penalties work?',
+              content: (
+                <>
+                  You choose a lock duration from <strong>no lock</strong> up to{' '}
+                  <strong>~3 years</strong>. Longer lock = more voting power + higher rewards. You
+                  can exit early but pay a <strong>penalty</strong> that decreases linearly as you
+                  approach the end of your lock.
+                </>
+              ),
+            },
+            {
+              title: 'How do I migrate from Staking V1 to V2?',
+              content: (
+                <>
+                  1. Go to <strong>Portfolio → SUMR Rewards / Staking</strong>
+                  <br />
+                  2. <strong>Unstake</strong> from V1 and <strong>claim</strong> any pending SUMR
+                  <br />
+                  3. Open <strong>Staking V2</strong>, choose amount + lock duration(s), and confirm
+                  the new stake.
+                </>
+              ),
             },
           ]}
         />

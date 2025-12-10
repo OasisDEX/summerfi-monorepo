@@ -705,7 +705,13 @@ const SumrV2StakingManageComponent = ({
               getting governance rights and continued SUMR rewards.
             </Text>
             <WithArrow>
-              <Link href="Huh?">Learn more about SUMR and staking</Link>
+              <Link
+                href="https://blog.summer.fi/introducing-sumr-staking-v2-all-you-need-to-know-about-defis-most-productive-asset/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Learn more about SUMR and staking
+              </Link>
             </WithArrow>
           </div>
           <Expander
