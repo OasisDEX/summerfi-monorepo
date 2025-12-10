@@ -1002,7 +1002,18 @@ const SumrV2StakingManageComponent = ({
                   label={
                     <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                       <Text variant="p4semiColorful">Yield source 1</Text>
-                      <Tooltip tooltip="Huh?">
+                      <Tooltip
+                        tooltip={
+                          <Text as="p" variant="p4semi">
+                            USDC yield is derived from Lazy Summer Protocol revenues and distributes
+                            weekly directly to your wallet
+                          </Text>
+                        }
+                        showAbove
+                        tooltipWrapperStyles={{
+                          minWidth: '240px',
+                        }}
+                      >
                         <Icon iconName="info" size={16} color="#B049FF" />
                       </Tooltip>
                     </div>
@@ -1047,7 +1058,18 @@ const SumrV2StakingManageComponent = ({
                   label={
                     <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                       <Text variant="p4semiColorful">Yield source 2</Text>
-                      <Tooltip tooltip="Huh?">
+                      <Tooltip
+                        tooltip={
+                          <Text as="p" variant="p4semi">
+                            The % yield you are earning on your SUMR based on your lock duration
+                            multiple and SUMR market cap.
+                          </Text>
+                        }
+                        showAbove
+                        tooltipWrapperStyles={{
+                          minWidth: '240px',
+                        }}
+                      >
                         <Icon iconName="info" size={16} color="#B049FF" />
                       </Tooltip>
                     </div>
