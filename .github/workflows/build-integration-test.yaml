@@ -12,9 +12,8 @@ jobs:
     name: Build and Integration Test
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    environment:
-      ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging'
-      || 'staging' }}
+    environment: >-
+      ${{ (github.ref == 'refs/heads/main' && 'production') || (github.ref == 'refs/heads/dev' && 'staging') || 'staging' }}
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}

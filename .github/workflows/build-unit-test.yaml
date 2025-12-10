@@ -15,8 +15,7 @@ jobs:
     permissions:
       id-token: write
     environment: >-
-      ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/dev' && 'staging'
-      || 'staging' }}
+      ${{ (github.ref == 'refs/heads/main' && 'production') || (github.ref == 'refs/heads/dev' && 'staging') || 'staging' }}
     env:
       AWS_REGION: eu-central-1
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
