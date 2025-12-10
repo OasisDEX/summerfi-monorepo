@@ -516,7 +516,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
           address: Address.createFromEthereum({ value: stakeSummerTokenAddress }),
           chainInfo,
           decimals: 18,
-          symbol: 'xSUMR',
+          symbol: isTestDeployment() ? 'xSUMR' : 'stSUMR',
           name: 'StakedSummerToken',
         }),
       }),
