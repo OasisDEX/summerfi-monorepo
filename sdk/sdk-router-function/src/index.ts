@@ -4,6 +4,7 @@ import { sdkAppRouter, createSDKContext } from '@summerfi/sdk-server'
 export const baseHandler = awsLambdaRequestHandler({
   router: sdkAppRouter,
   createContext: createSDKContext,
+  allowMethodOverride: true,
 })
 
 export const handler = baseHandler

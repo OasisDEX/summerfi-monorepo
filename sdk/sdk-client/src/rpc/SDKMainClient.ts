@@ -24,6 +24,7 @@ export function createMainRPCClient(params: {
         url: params.apiURL,
         transformer: SerializationService.getTransformer(),
         maxURLLength: 3000,
+        methodOverride: 'POST',
         headers() {
           return {
             ...(params.clientId && { 'Client-Id': params.clientId }),
