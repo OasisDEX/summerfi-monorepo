@@ -1,7 +1,16 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import {
+  REVALIDATION_TAGS,
+  REVALIDATION_TIMES,
+  sumrNetApyConfigCookieName,
+} from '@summerfi/app-earn-ui'
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
+import {
+  getServerSideCookies,
+  parseServerResponseToClient,
+  safeParseJson,
+} from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
@@ -22,6 +31,10 @@ type ClaimPageProps = {
 
 const ClaimPage = async ({ params }: ClaimPageProps) => {
   const { walletAddress } = await params
+  // Get SUMR price from cookie or use default
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
 
   if (!isValidAddress(walletAddress)) {
     redirect('/not-found')
@@ -53,7 +66,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
       revalidate: REVALIDATION_TIMES.CONFIG,
       tags: [REVALIDATION_TAGS.CONFIG],
     })(),
-    getSumrStakingRewards({ walletAddress }),
+    getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
 
   const systemConfig = parseServerResponseToClient(systemConfigRaw)

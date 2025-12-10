@@ -1,3 +1,6 @@
+import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
+import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
@@ -18,6 +21,10 @@ type DelegatePageProps = {
 
 const DelegatePage = async ({ params }: DelegatePageProps) => {
   const { walletAddress } = await params
+  // Get SUMR price from cookie or use default
+  const cookieRaw = await cookies()
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
 
   if (!isValidAddress(walletAddress)) {
     redirect('/not-found')
@@ -45,7 +52,7 @@ const DelegatePage = async ({ params }: DelegatePageProps) => {
     }),
     getSumrStakingInfo(),
     getSumrToClaim({ walletAddress }),
-    getSumrStakingRewards({ walletAddress }),
+    getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
 
   const externalData: ClaimDelegateExternalData = {

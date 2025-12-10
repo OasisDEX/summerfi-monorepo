@@ -4,6 +4,7 @@ import {
   DataBlock,
   DataModule,
   Icon,
+  LoadingSpinner,
   Text,
   Tooltip,
   WithArrow,
@@ -136,6 +137,7 @@ export const PortfolioStakingInfoCardV2 = ({
   stats,
   sumrPriceUsd,
   userUsdcRealYield,
+  isLoading,
 }: {
   sumrUserData: {
     sumrAvailableToStake: number
@@ -154,12 +156,18 @@ export const PortfolioStakingInfoCardV2 = ({
   usdcEarnedOnSumrAmount: number
   sumrPriceUsd: number
   userUsdcRealYield: number
+  isLoading?: boolean
 }) => {
   return (
     <Card
       variant="cardGradientDark"
       className={portfolioStakingInfoCardStyles.portfolioStakingInfoCardWrapper}
     >
+      {isLoading && (
+        <div className={portfolioStakingInfoCardStyles.loadingOverlay}>
+          <LoadingSpinner size={48} />
+        </div>
+      )}
       <div className={portfolioStakingInfoCardStyles.header}>
         <Icon iconName="sumr" size={32} />
         <Text variant="h5">

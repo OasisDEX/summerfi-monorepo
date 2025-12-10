@@ -1,8 +1,6 @@
-import { SUMR_CAP, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
-import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
+import { SUMR_CAP } from '@summerfi/app-earn-ui'
 import { ChainIds, User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
-import { cookies } from 'next/headers'
 import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -26,17 +24,15 @@ const DEFAULT_DILUTED_VALUATION = '250000000'
  */
 export const getSumrStakingRewards = async ({
   walletAddress,
+  dilutedValuation,
 }: {
   walletAddress: string
+  dilutedValuation?: string
 }): Promise<SumrStakingRewardsData> => {
   try {
-    // Get SUMR price from cookie or use default
-    const cookieRaw = await cookies()
-    const cookie = cookieRaw.toString()
-    const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-
-    const dilutedValuation = sumrNetApyConfig?.dilutedValuation || DEFAULT_DILUTED_VALUATION
-    const sumrPriceUsd = new BigNumber(dilutedValuation, 10).dividedBy(SUMR_CAP).toNumber()
+    const sumrPriceUsd = new BigNumber(dilutedValuation ?? DEFAULT_DILUTED_VALUATION, 10)
+      .dividedBy(SUMR_CAP)
+      .toNumber()
 
     const user = User.createFromEthereum(ChainIds.Base, walletAddress as Address)
 

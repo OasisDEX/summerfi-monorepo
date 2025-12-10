@@ -290,6 +290,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         }}
         sumrPriceUsd={sumrPriceUsd}
         userUsdcRealYield={userUsdcRealYield}
+        isLoading={isLoadingStakes}
       />
       <LockedSumrInfoTabBarV2
         stakes={userStakes}
