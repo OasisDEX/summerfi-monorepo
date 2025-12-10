@@ -1360,7 +1360,7 @@ const SumrV2StakingManageComponent = ({
                     value: simulationLoading ? (
                       <SkeletonLine width={90} height={16} />
                     ) : simulationData ? (
-                      `${simulationData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                      `${simulationData.usdcBlendedYieldBoostFrom.toFixed(2)}x → ${simulationData.usdcBlendedYieldBoostTo.toFixed(2)}x`
                     ) : (
                       '-'
                     ),
@@ -1582,7 +1582,7 @@ const SumrV2StakingSuccessComponent = ({
                 value:
                   txData.usdcBlendedYieldBoostFrom !== undefined &&
                   txData.usdcBlendedYieldBoostTo !== undefined ? (
-                    `${txData.usdcBlendedYieldBoostFrom.toFixed(1)}x → ${txData.usdcBlendedYieldBoostTo.toFixed(1)}x`
+                    `${txData.usdcBlendedYieldBoostFrom.toFixed(2)}x → ${txData.usdcBlendedYieldBoostTo.toFixed(2)}x`
                   ) : (
                     <SkeletonLine width={90} height={16} />
                   ),
