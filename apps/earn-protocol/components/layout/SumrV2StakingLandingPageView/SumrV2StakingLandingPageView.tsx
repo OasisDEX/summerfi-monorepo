@@ -564,11 +564,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 )
               }
             />
-            {/* <Link href="Huh?">
-              <Button variant="textPrimaryMedium" style={{ paddingTop: '2px' }}>
-                Simulate USDC yield payoff
-              </Button>
-            </Link> */}
           </Card>
           <Card className={sumrV2PageStyles.cardDataBlock} variant="cardSecondary">
             <DataBlock
@@ -661,7 +656,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                     getting governance rights and continued SUMR rewards.
                   </Text>
                   <WithArrow>
-                    <Link href="Huh?">Read the details</Link>
+                    <Link
+                      href="https://blog.summer.fi/introducing-sumr-staking-v2-all-you-need-to-know-about-defis-most-productive-asset/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Read the details
+                    </Link>
                   </WithArrow>
                   <div className={sumrV2PageStyles.whatIsSumrStakingBlocksWrapper}>
                     <div className={sumrV2PageStyles.whatIsSumrStakingBlock}>
