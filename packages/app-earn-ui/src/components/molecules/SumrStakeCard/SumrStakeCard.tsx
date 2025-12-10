@@ -10,7 +10,7 @@ import { SimpleBonusLabel } from '@/components/molecules/SimpleBonusLabel/Simple
 import classNames from './SumrStakeCard.module.css'
 
 interface SumrStakeCardProps {
-  apy: number
+  apy: number | string
   tooltipName: string
   availableToStake: number
   availableToStakeUSD: number
