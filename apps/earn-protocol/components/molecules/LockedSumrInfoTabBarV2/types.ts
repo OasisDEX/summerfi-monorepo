@@ -13,4 +13,4 @@ export type AllLockedSumrPositionsTableColumns =
   | 'stakeTime'
   | 'stakeExpiring'
   | 'ownerAddress'
-  | 'usdValueEarningInLazySummer'
+// | 'usdValueEarningInLazySummer'

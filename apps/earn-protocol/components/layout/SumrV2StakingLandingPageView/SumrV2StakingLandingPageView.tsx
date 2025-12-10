@@ -72,8 +72,8 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [allStakes, setAllStakes] = useState<StakingStake[]>([])
   const [earningsEstimation, setEarningsEstimation] =
     useState<StakingEarningsEstimationForStakesV2 | null>(null)
-  const [allEarningsEstimation, setAllEarningsEstimation] =
-    useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  // const [allEarningsEstimation, setAllEarningsEstimation] =
+  //   useState<StakingEarningsEstimationForStakesV2 | null>(null)
   const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
     [],
   )
@@ -222,12 +222,12 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       }
 
       // Set all stakes
-      const _allEarningsEstimation = await getStakingEarningsEstimationV2({
-        // filter first 20
-        stakes: allStakesData.filter((_, idx) => idx < 10),
-      })
+      // const _allEarningsEstimation = await getStakingEarningsEstimationV2({
+      // filter first
+      // stakes: allStakesData.filter((_, idx) => idx < 10),
+      // })
 
-      setAllEarningsEstimation(_allEarningsEstimation)
+      // setAllEarningsEstimation(_allEarningsEstimation)
 
       setAllStakes(allStakesData)
       setIsLoadingAllStakes(false)
@@ -257,7 +257,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
           await Promise.all([
             getStakingEarningsEstimationV2({
-              stakes: userStakesData.filter((_, idx) => idx < 10),
+              stakes: userStakesData.filter((_, idx) => idx < 12),
             }),
             getCalculatePenaltyPercentage({
               userStakes: userStakesData,
@@ -708,7 +708,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
             penaltyPercentages={penaltyPercentages}
             penaltyAmounts={penaltyAmounts}
             yourEarningsEstimation={earningsEstimation}
-            allEarningsEstimation={allEarningsEstimation}
+            // allEarningsEstimation={allEarningsEstimation}
             userBlendedYieldBoost={userBlendedYieldBoost}
             userSumrStaked={sumrStaked}
             totalSumrStaked={totalSumrStaked}

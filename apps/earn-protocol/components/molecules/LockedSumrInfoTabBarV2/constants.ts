@@ -61,8 +61,8 @@ export const allLockedSumrPositionsTableColumns: {
     title: 'Owner address',
     key: 'ownerAddress',
   },
-  {
-    title: 'USD Earnings (1 yr)',
-    key: 'usdValueEarningInLazySummer',
-  },
+  // {
+  //   title: 'USD Earnings (1 yr)',
+  //   key: 'usdValueEarningInLazySummer',
+  // },
 ]
