@@ -27,7 +27,7 @@ import {
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { UiTransactionStatuses } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalToBigInt } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalToBigInt, formatPercent } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
@@ -51,6 +51,7 @@ import { getAvailabilityLabel } from '@/helpers/stakingv2-availability-label'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useStakePenaltySimulation } from '@/hooks/use-stake-penalty-simulation'
 import { useToken } from '@/hooks/use-token'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
@@ -271,6 +272,7 @@ const SumrV2StakingManageComponent = ({
     getStakingRevenueShareV2,
     getStakingRewardRatesV2,
     getStakingSimulationDataV2,
+    getCalculatePenaltyPercentage,
     getSummerToken,
     getStakingConfigV2,
     getStakingStatsV2,
@@ -429,6 +431,7 @@ const SumrV2StakingManageComponent = ({
   })
 
   const handleAmountChangeWithPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWarningAccepted(false)
     setSelectedPercentage(null)
     handleAmountChange(e)
   }
@@ -607,6 +610,11 @@ const SumrV2StakingManageComponent = ({
     return 'Confirm Stake & Lock'
   }
 
+  const handleSliderLockupChange = (value: number) => {
+    setWarningAccepted(false)
+    setSelectedLockupAndBoost(value)
+  }
+
   const onConfirmStake = () => {
     onStake({
       amount: amountParsed,
@@ -627,6 +635,7 @@ const SumrV2StakingManageComponent = ({
   )
 
   const handleManualLockupChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setWarningAccepted(false)
     const inputValue = e.target.value
     const parsedValue = parseInt(inputValue, 10)
 
@@ -656,6 +665,20 @@ const SumrV2StakingManageComponent = ({
     !!sumrStakeInfo?.sumrStakeInfo.stakedAmount &&
     Number(sumrStakeInfo.sumrStakeInfo.stakedAmount) > 0.1 &&
     !!userWalletAddress
+
+  const initialPenaltyPercentage = useStakePenaltySimulation({
+    timeRemainingInSeconds: debouncedSelectedLockupAndBoost * 24 * 60 * 60,
+  })
+
+  const lockupAdditionalInfo = useMemo(() => {
+    if (initialPenaltyPercentage === 2) {
+      return `At your current lockup, the penalty is 2.00%.`
+    }
+
+    return `At your current lockup, this starts at ${formatPercent(initialPenaltyPercentage, {
+      precision: 2,
+    })} of the amount you withdraw and reduces to 2.00% as you get closer to ${lockupExpirationDate}.`
+  }, [initialPenaltyPercentage, lockupExpirationDate])
 
   return (
     <div className={sumrV2StakingManageViewStyles.wrapper}>
@@ -1154,7 +1177,7 @@ const SumrV2StakingManageComponent = ({
               </div>
               <LockupRangeInput
                 value={selectedLockupAndBoost}
-                onChange={setSelectedLockupAndBoost}
+                onChange={handleSliderLockupChange}
               />
               <div className={sumrV2StakingManageViewStyles.stakingLengthLabels}>
                 <Text variant="p3semi">Years</Text>
@@ -1363,7 +1386,19 @@ const SumrV2StakingManageComponent = ({
                         <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
                           Initial early withdrawal penalty
                         </Text>
-                        <Tooltip tooltip="Huh?">
+                        <Tooltip
+                          tooltip={
+                            <span>
+                              You can withdraw your SUMR <strong>before</strong> the end of your
+                              lock. But you’ll pay a <strong>penalty</strong> on the SUMR returned
+                              to you, with the penalty decreasing as you get closer to the end of
+                              your lock.
+                            </span>
+                          }
+                          tooltipWrapperStyles={{
+                            minWidth: '280px',
+                          }}
+                        >
                           <Icon iconName="info" size={16} color="var(--color-text-warning)" />
                         </Tooltip>
                       </div>
@@ -1371,10 +1406,12 @@ const SumrV2StakingManageComponent = ({
                     value: (
                       <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                         <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
-                          11.2%
+                          {formatPercent(initialPenaltyPercentage, {
+                            precision: 2,
+                          })}
                         </Text>
                       </div>
-                    ), // Huh?
+                    ),
                   },
                 ]}
               />
@@ -1391,9 +1428,7 @@ const SumrV2StakingManageComponent = ({
                   <div className={sumrV2StakingManageViewStyles.warningContent}>
                     <Text variant="p3">
                       Warning: There is an early withdrawal penalty if you unstake your SUMR before
-                      the lockup has expired. At your current lockup, this starts at 11.2% of the
-                      amount you withdraw and reduces to 2% as you get closer to{' '}
-                      {lockupExpirationDate}.
+                      the lockup has expired. {lockupAdditionalInfo}
                     </Text>
                     <CheckboxButton
                       name="warning-acceptance-checkbox"
@@ -1481,6 +1516,10 @@ const SumrV2StakingSuccessComponent = ({
     return `${txData.lockupDuration} days (${lockupExpirationDate})`
   }, [txData.lockupDuration, lockupExpirationDate])
 
+  const initialPenaltyPercentage = useStakePenaltySimulation({
+    timeRemainingInSeconds: txData.lockupDuration * 24 * 60 * 60,
+  })
+
   return (
     <div className={sumrV2StakingManageViewStyles.finalCardWrapper}>
       <div className={sumrV2StakingManageViewStyles.title}>
@@ -1567,7 +1606,18 @@ const SumrV2StakingSuccessComponent = ({
                     <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
                       Initial early withdrawal penalty
                     </Text>
-                    <Tooltip tooltip="Huh?">
+                    <Tooltip
+                      tooltip={
+                        <span>
+                          You can withdraw your SUMR <strong>before</strong> the end of your lock.
+                          But you’ll pay a <strong>penalty</strong> on the SUMR returned to you,
+                          with the penalty decreasing as you get closer to the end of your lock.
+                        </span>
+                      }
+                      tooltipWrapperStyles={{
+                        minWidth: '280px',
+                      }}
+                    >
                       <Icon iconName="info" size={16} color="var(--color-text-warning)" />
                     </Tooltip>
                   </div>
@@ -1575,10 +1625,12 @@ const SumrV2StakingSuccessComponent = ({
                 value: (
                   <div className={sumrV2StakingManageViewStyles.inlineLittleGap}>
                     <Text variant="p3semi" style={{ color: 'var(--color-text-warning)' }}>
-                      11.2%
+                      {formatPercent(initialPenaltyPercentage, {
+                        precision: 2,
+                      })}
                     </Text>
                   </div>
-                ), // Huh?
+                ),
               },
             ]}
           />
