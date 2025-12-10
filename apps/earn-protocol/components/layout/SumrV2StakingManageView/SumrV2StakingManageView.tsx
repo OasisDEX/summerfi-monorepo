@@ -1392,7 +1392,7 @@ const SumrV2StakingManageComponent = ({
                               You can withdraw your SUMR <strong>before</strong> the end of your
                               lock. But you’ll pay a <strong>penalty</strong> on the SUMR returned
                               to you, with the penalty decreasing as you get closer to the end of
-                              your lock.
+                              your lock. The penalty applies to the amount withdrawn.
                             </span>
                           }
                           tooltipWrapperStyles={{
@@ -1611,7 +1611,8 @@ const SumrV2StakingSuccessComponent = ({
                         <span>
                           You can withdraw your SUMR <strong>before</strong> the end of your lock.
                           But you’ll pay a <strong>penalty</strong> on the SUMR returned to you,
-                          with the penalty decreasing as you get closer to the end of your lock.
+                          with the penalty decreasing as you get closer to the end of your lock. The
+                          penalty applies to the amount withdrawn.
                         </span>
                       }
                       tooltipWrapperStyles={{
