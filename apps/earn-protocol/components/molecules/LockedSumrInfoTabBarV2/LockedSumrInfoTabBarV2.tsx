@@ -142,7 +142,11 @@ const YourLockedSumrPositionsCards = ({
           value: isLoading ? (
             <SkeletonLine height="30px" width="40px" style={{ margin: '5px 0' }} />
           ) : (
-            stakes.length.toString()
+            stakes
+              .filter((stake) => {
+                return stake.amount > 0n
+              })
+              .length.toString()
           ),
           valueSize: 'large',
           titleSize: 'medium',
