@@ -183,13 +183,18 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
 
   getStakingStakesV2({
     chainId,
+    id,
     first,
     skip,
   }: Parameters<IArmadaSubgraphManager['getStakingStakesV2']>[0]) {
-    return this._getClient(SubgraphTypes.protocol, chainId).GetStakingStakesV2({
-      first,
-      skip,
-    })
+    return this._getClient(SubgraphTypes.protocol, chainId)
+      .GetStakingStakesV2({
+        first,
+        skip,
+      })
+      .then((result) => ({
+        stakeLockups: result.stakeLockups.filter((stake) => stake.id.startsWith(id)),
+      }))
   }
 
   /** PRIVATE */

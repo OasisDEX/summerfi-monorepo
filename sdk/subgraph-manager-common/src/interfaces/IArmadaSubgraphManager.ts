@@ -247,7 +247,7 @@ export interface IArmadaSubgraphManager {
    * @description Get staking stats for a given Armada position ID
    *
    * @param chainId target chain
-   * @param id staking stats record ID
+   * @param id staking contract id
    *
    * @returns GetStakingStatsV2Query
    *
@@ -261,6 +261,7 @@ export interface IArmadaSubgraphManager {
    * @description Get staking stakes across all users with pagination support (V2)
    *
    * @param chainId target chain
+   * @param id staking contract id
    * @param first number of items to return (defaults to 1000)
    * @param skip number of items to skip for pagination (defaults to 0)
    *
@@ -271,6 +272,7 @@ export interface IArmadaSubgraphManager {
    */
   getStakingStakesV2(params: {
     chainId: ChainId
+    id: string
     first: number
     skip: number
   }): Promise<import('../generated/protocol/client').GetStakingStakesV2Query>

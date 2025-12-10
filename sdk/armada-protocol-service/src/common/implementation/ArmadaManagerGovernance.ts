@@ -1181,8 +1181,11 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakingStakesV2(
     params: Parameters<IArmadaManagerGovernance['getStakingStakesV2']>[0],
   ): ReturnType<IArmadaManagerGovernance['getStakingStakesV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
     const result = await this._subgraphManager.getStakingStakesV2({
       chainId: this._hubChainInfo.chainId,
+      id: stakingContractAddress.value,
       first: params.first ?? 1000,
       skip: params.skip ?? 0,
     })
