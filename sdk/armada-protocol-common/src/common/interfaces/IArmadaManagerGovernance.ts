@@ -404,7 +404,7 @@ export interface IArmadaManagerGovernance {
    * @returns Earnings estimation for the provided stakes
    */
   getStakingEarningsEstimationV2(params: {
-    stakes: Pick<UserStakingStake, 'weightedAmount' | 'id'>[]
+    stakes: { weightedAmount: string; id: string }[]
     sumrPriceUsd?: number
   }): Promise<StakingEarningsEstimationForStakes>
 
