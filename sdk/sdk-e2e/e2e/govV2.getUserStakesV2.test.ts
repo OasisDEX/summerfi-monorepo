@@ -91,7 +91,7 @@ describe('Armada Protocol Gov V2 getUserStakesV2', () => {
       const stakes = await sdk.armada.users.getUserStakesV2({ user })
 
       // Get stakes count
-      const countResult = await sdk.armada.users.getUserStakesCount({ user, bucketIndex: 0 })
+      const countResult = await sdk.armada.users.getUserStakesCount({ user })
 
       console.log('Stakes array length:', stakes.length)
       console.log('Stakes count before:', countResult.userStakesCountBefore.toString())
