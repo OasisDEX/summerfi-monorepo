@@ -298,9 +298,11 @@ export const SumrV2PageView = ({
               link: 'https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/',
             },
             {
-              title: 'SUMR Staking Launch and how to blog',
-              description: 'Huh?',
-              link: '#',
+              title:
+                'Introducing SUMR Staking V2: All you need to know about DeFi’s most productive asset',
+              description:
+                'SUMR Staking V2 is now live. This upgrade brings  SUMR utility beyond a governance token and into what has the potential to be one of the DeFi ecosystem most productive assets.',
+              link: 'https://blog.summer.fi/introducing-sumr-staking-v2-all-you-need-to-know-about-defis-most-productive-asset/',
             },
           ]}
         />
