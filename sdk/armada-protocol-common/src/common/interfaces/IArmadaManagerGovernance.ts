@@ -453,7 +453,7 @@ export interface IArmadaManagerGovernance {
    * @returns Array of penalty percentages (IPercentage objects)
    */
   getCalculatePenaltyPercentage: (params: {
-    userStakes: UserStakingStake[]
+    userStakes: { lockupEndTime: number }[]
   }) => Promise<IPercentage[]>
 
   /**
@@ -466,7 +466,7 @@ export interface IArmadaManagerGovernance {
    * @returns Array of penalty amounts in tokens
    */
   getCalculatePenaltyAmount: (params: {
-    userStakes: UserStakingStake[]
+    userStakes: { lockupEndTime: number }[]
     amounts: bigint[]
   }) => Promise<bigint[]>
 

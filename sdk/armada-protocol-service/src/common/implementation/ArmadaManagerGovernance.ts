@@ -1081,7 +1081,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const penaltyEnabled = await stakingContract.penaltyEnabled()
 
     // Get current timestamp using local time
-    const currentTimestamp = BigInt(Math.floor(Date.now() / 1000))
+    const currentTimestamp = Math.floor(Date.now() / 1000)
 
     // Constants from the contract
     const MIN_PENALTY_PERCENTAGE = BigInt('20000000000000000') // 0.02e18 (2%)

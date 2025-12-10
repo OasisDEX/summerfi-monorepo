@@ -10,5 +10,12 @@ export const getCalculatePenaltyAmountHandler =
     amounts?: bigint[]
   }): Promise<bigint[]> => {
     const amountsWithDefault = amounts ?? userStakes.map((stake) => stake.amount)
-    return sdk.armada.users.getCalculatePenaltyAmount({ userStakes, amounts: amountsWithDefault })
+    const userStakesFormatted = userStakes.map((stake) => ({
+      lockupEndTime: Number(stake.lockupEndTime),
+    }))
+
+    return sdk.armada.users.getCalculatePenaltyAmount({
+      userStakes: userStakesFormatted,
+      amounts: amountsWithDefault,
+    })
   }

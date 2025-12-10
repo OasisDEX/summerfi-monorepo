@@ -119,10 +119,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         getUserBlendedYieldBoost({
           user,
         }),
-        getStakingStakesV2({
-          first: 10,
-          skip: 0,
-        }),
+        getStakingStakesV2({}),
         getStakingBucketsInfoV2(),
       ])
 
@@ -136,7 +133,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
           stakes: userStakesData,
         }),
         getStakingEarningsEstimationV2({
-          stakes: allStakesData,
+          stakes: allStakesData.filter((_, idx) => idx < 10),
         }),
         getCalculatePenaltyPercentage({
           userStakes: userStakesData,

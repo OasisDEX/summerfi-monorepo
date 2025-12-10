@@ -1,11 +1,10 @@
-import { UserStakeV2 } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
 export const getCalculatePenaltyPercentage = publicProcedure
   .input(
     z.object({
-      userStakes: z.array(z.custom<UserStakeV2>()),
+      userStakes: z.array(z.custom<{ lockupEndTime: number }>()),
     }),
   )
   .query(async (opts) => {

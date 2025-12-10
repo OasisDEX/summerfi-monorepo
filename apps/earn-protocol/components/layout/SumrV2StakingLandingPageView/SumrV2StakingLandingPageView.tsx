@@ -208,10 +208,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       const [stakingStats, allStakesData, bucketsInfo] = await Promise.all([
         getStakingStatsV2(),
-        getStakingStakesV2({
-          first: 10,
-          skip: 0,
-        }),
+        getStakingStakesV2({}),
         getStakingBucketsInfoV2(),
       ])
 
@@ -225,14 +222,15 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       }
 
       // Set all stakes
-      setAllStakes(allStakesData)
-      setIsLoadingAllStakes(false)
-
       const _allEarningsEstimation = await getStakingEarningsEstimationV2({
-        stakes: allStakesData,
+        // filter first 20
+        stakes: allStakesData.filter((_, idx) => idx < 10),
       })
 
       setAllEarningsEstimation(_allEarningsEstimation)
+
+      setAllStakes(allStakesData)
+      setIsLoadingAllStakes(false)
 
       // Set bucket info
       setBucketInfo(bucketsInfo)
@@ -259,7 +257,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
           await Promise.all([
             getStakingEarningsEstimationV2({
-              stakes: userStakesData,
+              stakes: userStakesData.filter((_, idx) => idx < 10),
             }),
             getCalculatePenaltyPercentage({
               userStakes: userStakesData,

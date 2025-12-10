@@ -10,9 +10,8 @@ export const getStakingEarningsEstimationV2 = publicProcedure
           weightedAmount: z.string(),
         }),
       ),
-      sumrPriceUsd: z.number().optional(),
     }),
   )
-  .mutation(async (opts) => {
+  .query(async (opts) => {
     return await opts.ctx.armadaManager.governance.getStakingEarningsEstimationV2(opts.input)
   })
