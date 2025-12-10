@@ -7,7 +7,7 @@ export const getStakingEarningsEstimationV2 = publicProcedure
       stakes: z.array(
         z.object({
           id: z.string(),
-          weightedAmount: z.bigint(),
+          weightedAmount: z.string(),
         }),
       ),
       sumrPriceUsd: z.number().optional(),

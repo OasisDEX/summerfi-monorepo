@@ -230,7 +230,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       const _allEarningsEstimation = await getStakingEarningsEstimationV2({
         stakes: allStakesData,
-        sumrPriceUsd,
       })
 
       setAllEarningsEstimation(_allEarningsEstimation)

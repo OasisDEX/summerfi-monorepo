@@ -49,7 +49,10 @@ export const getSumrStakingRewards = async ({
     // Calculate earnings estimation if user has stakes
     if (userStakes.length > 0) {
       const earningsEstimation = await backendSDK.armada.users.getStakingEarningsEstimationV2({
-        stakes: userStakes,
+        stakes: userStakes.map((stake) => ({
+          id: stake.id,
+          weightedAmount: stake.weightedAmount.toString(),
+        })),
       })
 
       sumrRewardAmount = earningsEstimation.stakes.reduce(
