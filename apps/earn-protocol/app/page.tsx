@@ -40,7 +40,10 @@ const EarnAllVaultsPage = async () => {
   })
 
   const [vaultsApyByNetworkMap] = await Promise.all([
-    getVaultsApy({
+    unstableCache(getVaultsApy, [], {
+      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
+      tags: [REVALIDATION_TAGS.VAULTS_LIST],
+    })({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

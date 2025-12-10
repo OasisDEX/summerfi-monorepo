@@ -267,7 +267,7 @@ export const SumrV2PageView = ({
                 <div className={sumrv2PageViewStyles.sectionCardWrapper}>
                   <SectionCard>
                     <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">TBD Date Huh?</Text>
+                      <Text variant="p2semi">Dec 10th, 2025</Text>
                       <Text as="p" variant="p3">
                         Staking v2 goes live. SUMR holders can now stake in v2 to earn additional
                         SUMR rewards and USDC.
