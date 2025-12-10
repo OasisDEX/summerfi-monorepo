@@ -16,7 +16,6 @@ interface SumrStakeCardProps {
   availableToStakeUSD: number
   yieldToken: string
   yieldTokenApy: string
-  yieldTokenUsdPerYear: string
   onTooltipOpen?: (tooltipName: string) => void
   handleClick?: () => void
 }
@@ -28,7 +27,6 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
   availableToStakeUSD,
   yieldToken,
   yieldTokenApy,
-  yieldTokenUsdPerYear,
   onTooltipOpen,
   handleClick,
 }) => {
@@ -70,15 +68,7 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
               {yieldToken} Yield
             </Text>
             <Text variant="p1semi" as="p" className={classNames.sumrStakeCardDataValue}>
-              Up to {formatDecimalAsPercent(yieldTokenApy)}
-            </Text>
-            <Text
-              variant="p4semi"
-              as="p"
-              className={classNames.sumrStakeCardDataSubValue}
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-            >
-              ${formatFiatBalance(yieldTokenUsdPerYear)} / Year
+              {yieldTokenApy ? `Up to ${formatDecimalAsPercent(yieldTokenApy)}` : '-'}
             </Text>
           </div>
         </div>

@@ -126,6 +126,8 @@ export const VaultsListView = ({
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
+  const [maxApy, setMaxApy] = useState<number>(0)
+  const [isLoadingRewardRates, setIsLoadingRewardRates] = useState<boolean>(true)
   const {
     state: { sumrNetApyConfig, slippageConfig },
   } = useLocalConfig()
@@ -158,6 +160,30 @@ export const VaultsListView = ({
   )
 
   const sdk = useAppSDK()
+
+  const fetchStakingData = useCallback(async () => {
+    try {
+      setIsLoadingRewardRates(true)
+      // Fetch all data in parallel
+      const [rewardRates] = await Promise.all([
+        sdk.getStakingRewardRatesV2({
+          sumrPriceUsd: estimatedSumrPrice,
+        }),
+      ])
+
+      setMaxApy(rewardRates.maxApy.value)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch staking data:', error)
+    } finally {
+      setIsLoadingRewardRates(false)
+    }
+  }, [sdk, estimatedSumrPrice])
+
+  // Fetch all staking data on mount
+  useEffect(() => {
+    void fetchStakingData()
+  }, [fetchStakingData])
 
   const updateQueryParams = useCallback(
     (
@@ -702,10 +728,8 @@ export const VaultsListView = ({
             <SumrStakeCard
               availableToStake={sumrAvailableToStake}
               availableToStakeUSD={sumrAvailableToStakeUSD}
-              // TODO: fill data or remove (not decided yet)
-              yieldTokenApy="0.072"
+              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
               yieldToken="USDC"
-              yieldTokenUsdPerYear="100"
               apy={sumrStakeApy}
               tooltipName="sumr-stake-bonus-label"
               onTooltipOpen={tooltipEventHandler}
