@@ -23,7 +23,7 @@ export function createMainRPCClient(params: {
       httpBatchLink({
         url: params.apiURL,
         transformer: SerializationService.getTransformer(),
-        maxURLLength: 3000,
+        maxURLLength: 13000,
         headers() {
           return {
             ...(params.clientId && { 'Client-Id': params.clientId }),
