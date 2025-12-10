@@ -17,7 +17,7 @@ describe('Armada Protocol Gov V2 getStakingStakesV2', () => {
 
   describe.each(scenarios)('with scenario %#', () => {
     it('should get staking stakes with pagination', async () => {
-      const first = 10
+      const first = 100
       const skip = 0
 
       const result = await sdk.armada.users.getStakingStakesV2({ first, skip })

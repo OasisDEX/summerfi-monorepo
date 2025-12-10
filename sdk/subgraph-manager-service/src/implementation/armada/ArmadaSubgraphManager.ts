@@ -193,7 +193,9 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
         skip,
       })
       .then((result) => ({
-        stakeLockups: result.stakeLockups.filter((stake) => stake.id.startsWith(id)),
+        stakeLockups: result.stakeLockups.filter((stake) =>
+          stake.id.toLowerCase().startsWith(id.toLowerCase()),
+        ),
       }))
   }
 

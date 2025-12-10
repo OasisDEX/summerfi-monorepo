@@ -1203,7 +1203,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       lockupPeriod: BigInt(lockup.lockupPeriod),
       multiplier:
         lockup.amount > 0n
-          ? parseFloat(lockup.weightedAmountNormalized) / parseFloat(lockup.amount.toString())
+          ? new BigNumber(lockup.weightedAmount).dividedBy(lockup.amount).toNumber()
           : 0,
     }))
 
