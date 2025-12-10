@@ -33,53 +33,15 @@ import sumrv2PageViewStyles from './SumrV2PageView.module.css'
 
 import sumrStakingDiagram from '@/public/img/sumr/staking_diagram.png'
 
-const TwoColumnHeader = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
-  const [maxApy, setMaxApy] = useState<string>('0')
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const sumrPriceUsd = useMemo(
-    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
-    [sumrNetApyConfig.dilutedValuation],
-  )
-
-  const { getStakingRewardRatesV2 } = useAppSDK()
-
-  const fetchStakingData = useCallback(async () => {
-    try {
-      setIsLoading(true)
-
-      const [rewardRates] = await Promise.all([
-        getStakingRewardRatesV2({
-          sumrPriceUsd,
-        }),
-      ])
-
-      const maxApyValue = formatPercent(
-        new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
-      )
-
-      const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
-      )
-
-      setMaxApy(maxApyValue)
-      setSumrRewardApy(summerRewardApyValue)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch staking data:', error)
-      setMaxApy('0')
-      setSumrRewardApy('0')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [getStakingRewardRatesV2, sumrPriceUsd])
-
-  // Fetch all staking data on mount
-  useEffect(() => {
-    void fetchStakingData()
-  }, [fetchStakingData])
-
+const TwoColumnHeader = ({
+  isLoading,
+  sumrRewardApy,
+  maxApy,
+}: {
+  isLoading: boolean
+  sumrRewardApy: string
+  maxApy: string
+}) => {
   return (
     <div className={sumrv2PageViewStyles.twoColumnHeader}>
       <div
@@ -117,7 +79,7 @@ const TwoColumnHeader = () => {
                 {isLoading ? (
                   <SkeletonLine width="120px" height="36px" style={{ margin: '5px 0' }} />
                 ) : (
-                  <>Up to {maxApy}</>
+                  <>Up&nbsp;to&nbsp;{maxApy}</>
                 )}
               </Text>
               <Text as="h5" variant="h5">
@@ -130,7 +92,7 @@ const TwoColumnHeader = () => {
                 {isLoading ? (
                   <SkeletonLine width="120px" height="36px" style={{ margin: '5px 0' }} />
                 ) : (
-                  <>Up to {sumrRewardApy}</>
+                  <>Up&nbsp;to&nbsp;{sumrRewardApy}</>
                 )}
               </Text>
               <Text as="h5" variant="h5">
@@ -190,341 +152,417 @@ const NewsList = ({
   )
 }
 
-export const SumrV2PageView = ({
+const SumrV2PageViewComponent = ({
   apyRanges,
+  sumrRewards,
 }: {
   apyRanges: {
     eth: { minApy: number; maxApy: number }
     stablecoins: { minApy: number; maxApy: number }
   }
+  sumrRewards: {
+    eth: number
+    stablecoins: number
+  }
 }) => {
   const { userWalletAddress } = useUserWallet()
+  const [isLoading, setIsLoading] = useState(true)
+  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
+  const [maxApy, setMaxApy] = useState<string>('0')
+  const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const sumrPriceUsd = useMemo(
+    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
+    [sumrNetApyConfig.dilutedValuation],
+  )
+
+  const { getStakingRewardRatesV2 } = useAppSDK()
+
+  const fetchStakingData = useCallback(async () => {
+    try {
+      setIsLoading(true)
+
+      const [rewardRates] = await Promise.all([
+        getStakingRewardRatesV2({
+          sumrPriceUsd,
+        }),
+      ])
+
+      const maxApyValue = formatPercent(
+        new BigNumber(rewardRates.maxApy.value).toFixed(2, BigNumber.ROUND_DOWN),
+        { precision: 2 },
+      )
+
+      const summerRewardApyValue = formatPercent(
+        new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
+        { precision: 2 },
+      )
+
+      setMaxApy(maxApyValue)
+      setSumrRewardApy(summerRewardApyValue)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch staking data:', error)
+      setMaxApy('0')
+      setSumrRewardApy('0')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [getStakingRewardRatesV2, sumrPriceUsd])
+
+  // Fetch all staking data on mount
+  useEffect(() => {
+    void fetchStakingData()
+  }, [fetchStakingData])
 
   return (
-    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <div className={sumrv2PageViewStyles.wrapper}>
-        <TwoColumnHeader />
-        <Text
-          as="h2"
-          variant="h2"
-          className={sumrv2PageViewStyles.innerHeader}
-          style={{
-            marginTop: '140px',
-            marginBottom: '50px',
-          }}
-        >
-          What you need to know
-        </Text>
-        <SectionTabs
-          wrapperStyle={{
-            margin: '0 auto',
-          }}
-          sections={[
-            {
-              id: 'facts',
-              title: 'Facts',
-              content: (
-                <div className={sumrv2PageViewStyles.sectionCardWrapper}>
-                  <SectionCard>
-                    <Image
-                      src={sumrStakingDiagram}
-                      alt="SUMR Staking Diagram"
-                      quality={100}
-                      style={{ maxWidth: '85%' }}
-                    />
-                    <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">Govern Lazy Summer Protocol</Text>
-                      <Text as="p" variant="p3">
-                        Steer which yield sources and networks are onboarded, how capital is
-                        allocated, and how contributors are rewarded.
-                      </Text>
-                    </div>
-                    <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">Earn more SUMR</Text>
-                      <Text as="p" variant="p3">
-                        Stake SUMR tokens to receive additional SUMR emissions (longer lock = higher
-                        share).
-                      </Text>
-                    </div>
-                    <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">Share in protocol growth</Text>
-                      <Text as="p" variant="p3">
-                        Receive a share of protocol revenues as auto compounding USDC denominated LV
-                        vault tokens.
-                      </Text>
-                    </div>
-                  </SectionCard>
-                  <Link href="/staking/manage" prefetch>
-                    <Button variant="primarySmall">Stake SUMR</Button>
-                  </Link>
-                </div>
-              ),
-            },
-            {
-              id: 'timeline',
-              title: 'SUMR Transferability timeline',
-              content: (
-                <div className={sumrv2PageViewStyles.sectionCardWrapper}>
-                  <SectionCard>
-                    <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">Dec 10th, 2025</Text>
-                      <Text as="p" variant="p3">
-                        Staking v2 goes live. SUMR holders can now stake in v2 to earn additional
-                        SUMR rewards and USDC.
-                      </Text>
-                    </div>
-                    <div className={sumrv2PageViewStyles.factsSectionText}>
-                      <Text variant="p2semi">January 21, 2026</Text>
-                      <Text as="p" variant="p3">
-                        SUMR starts trading and can be bought and sold freely. Based on the market
-                        price SUMR APYs may fluctuate, earning you even more.
-                      </Text>
-                    </div>
-                  </SectionCard>
-                  <Link href="/staking/manage" prefetch>
-                    <Button variant="primarySmall">Stake SUMR</Button>
-                  </Link>
-                </div>
-              ),
-            },
-          ]}
-        />
-        <NewsList
-          newsItems={[
-            {
-              title: 'Lazy Summer and SUMR, a protocol with a business model, not just a token',
-              description:
-                'Lazy Summer Protocol makes DeFi’s best yield sources accessible through automation and risk curation. SUMR aligns users with the protocol’s growth, turning transparent yield access into a sustainable, governance-driven business model.',
-              link: 'https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/',
-            },
-            {
-              title:
-                'Introducing SUMR Staking V2: All you need to know about DeFi’s most productive asset',
-              description:
-                'SUMR Staking V2 is now live. This upgrade brings  SUMR utility beyond a governance token and into what has the potential to be one of the DeFi ecosystem most productive assets.',
-              link: 'https://blog.summer.fi/introducing-sumr-staking-v2-all-you-need-to-know-about-defis-most-productive-asset/',
-            },
-          ]}
-        />
-        <Text
-          as="h2"
-          variant="h2"
-          className={sumrv2PageViewStyles.innerHeader}
-          style={{
-            marginTop: '80px',
-            marginBottom: '64px',
-          }}
-        >
-          Governance power, tokenomic’s designed for value accrual
-        </Text>
-        <SectionTabs
-          wrapperStyle={{
-            margin: '0 auto',
-          }}
-          sections={[
-            {
-              id: 'governance',
-              title: 'Govern Lazy Summer',
-              content: (
-                <div className={sumrv2PageViewStyles.sectionCardWrapper}>
-                  <Text variant="h3">The only way to govern Lazy Summer Protocol</Text>
-                  <SectionCard>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <Icon iconName="big_pot" size={64} />
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">Curate the best of DeFi</Text>
-                        <Text as="p" variant="p2semi">
-                          Approve or offboard markets, ensuring only the best and safest yield
-                          opportunities are available.
-                        </Text>
-                      </div>
-                    </div>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <Icon iconName="big_certificate" size={64} />
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">Keep contributors accountable</Text>
-                        <Text as="p" variant="p2semi">
-                          Monitor and hold third-party contributors (such as Keepers and Risk
-                          Curators) accountable, ensuring consistent, responsible protocol
-                          management.
-                        </Text>
-                      </div>
-                    </div>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <Icon iconName="big_reload" size={64} />
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">Allocate Protocol Capital</Text>
-                        <Text as="p" variant="p2semi">
-                          Decide on how to spend revenue, allocate SUMR token rewards and issue
-                          grants to balance growth with long term sustainability.
-                        </Text>
-                      </div>
-                    </div>
-                  </SectionCard>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
-                      <Link href={`/claim/${userWalletAddress}`}>
-                        <Text variant="p3semi">Claim $SUMR</Text>
-                      </Link>
-                    </WithArrow>
+    <div className={sumrv2PageViewStyles.wrapper}>
+      <TwoColumnHeader isLoading={isLoading} sumrRewardApy={sumrRewardApy} maxApy={maxApy} />
+      <Text
+        as="h2"
+        variant="h2"
+        className={sumrv2PageViewStyles.innerHeader}
+        style={{
+          marginTop: '140px',
+          marginBottom: '50px',
+        }}
+      >
+        What you need to know
+      </Text>
+      <SectionTabs
+        wrapperStyle={{
+          margin: '0 auto',
+        }}
+        sections={[
+          {
+            id: 'facts',
+            title: 'Facts',
+            content: (
+              <div className={sumrv2PageViewStyles.sectionCardWrapper}>
+                <SectionCard>
+                  <Image
+                    src={sumrStakingDiagram}
+                    alt="SUMR Staking Diagram"
+                    quality={100}
+                    style={{ maxWidth: '85%' }}
+                  />
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Govern Lazy Summer Protocol</Text>
+                    <Text as="p" variant="p3">
+                      Steer which yield sources and networks are onboarded, how capital is
+                      allocated, and how contributors are rewarded.
+                    </Text>
                   </div>
-                </div>
-              ),
-            },
-            {
-              id: 'tokenomics',
-              title: 'SUMR Tokenomic’s',
-              content: (
-                <div className={sumrv2PageViewStyles.sectionCardWrapper}>
-                  <Text variant="h3">A protocol with a business model, not just a token</Text>
-                  <SectionCard>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <Text variant="p1">
-                        SUMR is the ownership and governance token of Lazy Summer Protocol, tied
-                        directly to real revenue, real yield, and aligned incentives.
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Earn more SUMR</Text>
+                    <Text as="p" variant="p3">
+                      Stake SUMR tokens to receive additional SUMR emissions (longer lock = higher
+                      share).
+                    </Text>
+                  </div>
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">Share in protocol growth</Text>
+                    <Text as="p" variant="p3">
+                      Receive a share of protocol revenues as auto compounding USDC denominated LV
+                      vault tokens.
+                    </Text>
+                  </div>
+                </SectionCard>
+                <Link href="/staking/manage" prefetch>
+                  <Button variant="primarySmall">Stake SUMR</Button>
+                </Link>
+              </div>
+            ),
+          },
+          {
+            id: 'timeline',
+            title: 'SUMR Transferability timeline',
+            content: (
+              <div className={sumrv2PageViewStyles.sectionCardWrapper}>
+                <SectionCard>
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">December 10, 2025</Text>
+                    <Text as="p" variant="p3">
+                      Staking v2 goes live. SUMR holders can now stake in v2 to earn additional SUMR
+                      rewards and USDC.
+                    </Text>
+                  </div>
+                  <div className={sumrv2PageViewStyles.factsSectionText}>
+                    <Text variant="p2semi">January 21, 2026</Text>
+                    <Text as="p" variant="p3">
+                      SUMR starts trading and can be bought and sold freely. Based on the market
+                      price SUMR APYs may fluctuate, earning you even more.
+                    </Text>
+                  </div>
+                </SectionCard>
+                <Link href="/staking/manage" prefetch>
+                  <Button variant="primarySmall">Stake SUMR</Button>
+                </Link>
+              </div>
+            ),
+          },
+        ]}
+      />
+      <NewsList
+        newsItems={[
+          {
+            title: 'Lazy Summer and SUMR, a protocol with a business model, not just a token',
+            description:
+              'Lazy Summer Protocol makes DeFi’s best yield sources accessible through automation and risk curation. SUMR aligns users with the protocol’s growth, turning transparent yield access into a sustainable, governance-driven business model.',
+            link: 'https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/',
+          },
+          {
+            title:
+              'Introducing SUMR Staking V2: All you need to know about DeFi’s most productive asset',
+            description:
+              'SUMR Staking V2 is now live. This upgrade brings  SUMR utility beyond a governance token and into what has the potential to be one of the DeFi ecosystem most productive assets.',
+            link: 'https://blog.summer.fi/introducing-sumr-staking-v2-all-you-need-to-know-about-defis-most-productive-asset/',
+          },
+        ]}
+      />
+      <Text
+        as="h2"
+        variant="h2"
+        className={sumrv2PageViewStyles.innerHeader}
+        style={{
+          marginTop: '80px',
+          marginBottom: '64px',
+        }}
+      >
+        Governance power, tokenomic’s designed for value accrual
+      </Text>
+      <SectionTabs
+        wrapperStyle={{
+          margin: '0 auto',
+        }}
+        sections={[
+          {
+            id: 'governance',
+            title: 'Govern Lazy Summer',
+            content: (
+              <div className={sumrv2PageViewStyles.sectionCardWrapper}>
+                <Text variant="h3">The only way to govern Lazy Summer Protocol</Text>
+                <SectionCard>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <Icon iconName="big_pot" size={64} />
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">Curate the best of DeFi</Text>
+                      <Text as="p" variant="p2semi">
+                        Approve or offboard markets, ensuring only the best and safest yield
+                        opportunities are available.
                       </Text>
                     </div>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">The revenue engine: fees on real DeFi yield</Text>
-                        <Text as="p" variant="p2semi">
-                          As TVL grows, protocol revenue scales, creating a clear economic engine
-                          behind SUMR.
-                        </Text>
-                      </div>
+                  </div>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <Icon iconName="big_certificate" size={64} />
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">Keep contributors accountable</Text>
+                      <Text as="p" variant="p2semi">
+                        Monitor and hold third-party contributors (such as Keepers and Risk
+                        Curators) accountable, ensuring consistent, responsible protocol management.
+                      </Text>
                     </div>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">Staking: SUMR as a productive asset</Text>
-                        <Text as="p" variant="p2semi">
-                          Staking SUMR gives holders an **active claim on protocol growth**:
-                          <br />
-                          USDC from protocol revenue, Additional SUMR rewards and Governance power.
-                        </Text>
-                      </div>
+                  </div>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <Icon iconName="big_reload" size={64} />
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">Allocate Protocol Capital</Text>
+                      <Text as="p" variant="p2semi">
+                        Decide on how to spend revenue, allocate SUMR token rewards and issue grants
+                        to balance growth with long term sustainability.
+                      </Text>
                     </div>
-                    <div className={sumrv2PageViewStyles.governanceSectionText}>
-                      <div className={sumrv2PageViewStyles.governanceSectionDescription}>
-                        <Text variant="h5">
-                          Incentive alignment: Depositors, SUMR Holders & Lazy Summer Protocol.
-                        </Text>
-                        <Text as="p" variant="p2semi">
-                          Depositors get automated DeFi yield, SUMR holders capture value via
-                          staking rewards, USDC distributions, and control over the treasury.
-                        </Text>
-                      </div>
-                    </div>
-                  </SectionCard>
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Link href="https://gov.summer.fi/" target="_blank">
-                      <Button variant="primarySmall">Go to Governance</Button>
+                  </div>
+                </SectionCard>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
+                    <Link href={`/claim/${userWalletAddress}`}>
+                      <Text variant="p3semi">Claim $SUMR</Text>
                     </Link>
-                    <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
-                      <Link href={`/claim/${userWalletAddress}`}>
-                        <Text variant="p3semi">Claim $SUMR</Text>
-                      </Link>
-                    </WithArrow>
-                  </div>
+                  </WithArrow>
                 </div>
-              ),
-            },
-          ]}
-        />
-        <WaysToAccessSumr
-          className={sumrv2PageViewStyles.waysToAccessSumrSection}
-          apyRanges={apyRanges}
-        />
-        <SectionCard className={sumrv2PageViewStyles.understandingSumr}>
-          <div className={sumrv2PageViewStyles.understandingSumrText}>
-            <Text as="h2" variant="h2">
-              Understanding <span>$SUMR</span>
-            </Text>
-            <Text variant="p1">
-              $SUMR is the governance token for the Lazy Summer Protocol. A DeFi yield optimization
-              protocol that earns DeFi’s highest quality yields, all of the time, for everyone.
-            </Text>
-            <Link href="Huh?">
-              <Button variant="primaryLarge">Read the SUMR thesis</Button>
-            </Link>
-          </div>
-          <Image src={sumrTokenBubbles} alt="SUMR Token Bubbles" />
-        </SectionCard>
-        <FaqSection
-          wrapperClassName={sumrv2PageViewStyles.faqSection}
-          data={[
-            {
-              title: 'What is SUMR?',
-              content:
-                'SUMR is the governance token of Lazy Summer Protocol. SUMR holders steer the protocol (via Governance V2) and can share in protocol growth through staking rewards and revenue distributions.',
-            },
-            {
-              title: 'How does SUMR capture value from Lazy Summer?',
-              content:
-                'Lazy Summer charges fees on yield generated in its vaults. A portion of this protocol revenue flows to the treasury, and from there to SUMR stakers (in USDC LV vault tokens) and ecosystem growth, as decided by governance.',
-            },
-            {
-              title: 'Do I need SUMR to use Lazy Summer?',
-              content:
-                'No. Anyone can deposit into Lazy Summer vaults without holding SUMR. SUMR is for users who want governance influence and economic exposure to protocol growth on top of vault yield. Though, all depositors in Lazy Summer do earn SUMR.',
-            },
-            {
-              title: 'What is SUMR Staking V2?',
-              content:
-                'It’s the upgraded SUMR staking & locking system that powers Governance V2. When you lock SUMR, you get governance power, ongoing SUMR emissions, and a share of protocol revenue paid in USDC (via LV vault tokens).',
-            },
-            {
-              title: 'What’s new vs Staking V1?',
-              content:
-                'V1 only paid SUMR. V2 adds dual rewards (SUMR + USDC), conviction-weighted locking (longer lock → higher multiplier), capacity buckets per duration, and clear early withdrawal rules.',
-            },
-            {
-              title: 'Why should I stake SUMR?',
-              content: (
-                <>
-                  Three reasons:
-                  <br />
-                  <br />
-                  1. Govern Lazy Summer (curate ARKs, allocate capital, hold contributors
-                  accountable)
-                  <br />
-                  2. Earn more SUMR via emissions
-                  <br />
-                  3. Share protocol revenue in auto-compounding USDC LV vault tokens.
-                </>
-              ),
-            },
-            {
-              title: 'How do rewards work?',
-              content: (
-                <>
-                  You earn:
-                  <br />
-                  <br />- SUMR emissions proportional to your stake and lock multiplier
-                  <br />- USDC yield share currently 20% of protocol yield flows to lockers as LV
-                  vault tokens that keep compounding.
-                </>
-              ),
-            },
-            {
-              title: 'How does locking & penalties work?',
-              content:
-                'You choose a lock duration from no lock up to ~3 years. Longer lock = more voting power + higher rewards. You can exit early but pay a penalty that decreases linearly as you approach the end of your lock.',
-            },
-            {
-              title: 'How do I migrate from Staking V1 to V2?',
-              content: (
-                <>
-                  1. Go to Portfolio → SUMR Rewards / Staking
-                  <br />
-                  2. Unstake from V1 and claim any pending SUMR
-                  <br />
-                  3. Open Staking V2, choose amount + lock duration(s), and confirm the new stake.
-                </>
-              ),
-            },
-          ]}
-        />
-      </div>
+              </div>
+            ),
+          },
+          {
+            id: 'tokenomics',
+            title: 'SUMR Tokenomic’s',
+            content: (
+              <div className={sumrv2PageViewStyles.sectionCardWrapper}>
+                <Text variant="h3">A protocol with a business model, not just a token</Text>
+                <SectionCard>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <Text variant="p1">
+                      SUMR is the ownership and governance token of Lazy Summer Protocol, tied
+                      directly to real revenue, real yield, and aligned incentives.
+                    </Text>
+                  </div>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">The revenue engine: fees on real DeFi yield</Text>
+                      <Text as="p" variant="p2semi">
+                        As TVL grows, protocol revenue scales, creating a clear economic engine
+                        behind SUMR.
+                      </Text>
+                    </div>
+                  </div>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">Staking: SUMR as a productive asset</Text>
+                      <Text as="p" variant="p2semi">
+                        Staking SUMR gives holders an **active claim on protocol growth**:
+                        <br />
+                        USDC from protocol revenue, Additional SUMR rewards and Governance power.
+                      </Text>
+                    </div>
+                  </div>
+                  <div className={sumrv2PageViewStyles.governanceSectionText}>
+                    <div className={sumrv2PageViewStyles.governanceSectionDescription}>
+                      <Text variant="h5">
+                        Incentive alignment: Depositors, SUMR Holders & Lazy Summer Protocol.
+                      </Text>
+                      <Text as="p" variant="p2semi">
+                        Depositors get automated DeFi yield, SUMR holders capture value via staking
+                        rewards, USDC distributions, and control over the treasury.
+                      </Text>
+                    </div>
+                  </div>
+                </SectionCard>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Link href="https://gov.summer.fi/" target="_blank">
+                    <Button variant="primarySmall">Go to Governance</Button>
+                  </Link>
+                  <WithArrow variant="p3semi" style={{ marginLeft: '20px', alignSelf: 'center' }}>
+                    <Link href={`/claim/${userWalletAddress}`}>
+                      <Text variant="p3semi">Claim $SUMR</Text>
+                    </Link>
+                  </WithArrow>
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      />
+      <WaysToAccessSumr
+        className={sumrv2PageViewStyles.waysToAccessSumrSection}
+        apyRanges={apyRanges}
+        isLoading={isLoading}
+        sumrRewardApy={sumrRewardApy}
+        sumrRewards={sumrRewards}
+        maxApy={maxApy}
+      />
+      <SectionCard className={sumrv2PageViewStyles.understandingSumr}>
+        <div className={sumrv2PageViewStyles.understandingSumrText}>
+          <Text as="h2" variant="h2">
+            Understanding <span>$SUMR</span>
+          </Text>
+          <Text variant="p1">
+            $SUMR is the governance token for the Lazy Summer Protocol. A DeFi yield optimization
+            protocol that earns DeFi’s highest quality yields, all of the time, for everyone.
+          </Text>
+          <Link
+            href="https://blog.summer.fi/lazy-summer-and-sumr-a-protocol-with-a-business-model-not-just-a-token/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="primaryLarge">Read the SUMR thesis</Button>
+          </Link>
+        </div>
+        <Image src={sumrTokenBubbles} alt="SUMR Token Bubbles" />
+      </SectionCard>
+      <FaqSection
+        wrapperClassName={sumrv2PageViewStyles.faqSection}
+        data={[
+          {
+            title: 'What is SUMR?',
+            content:
+              'SUMR is the governance token of Lazy Summer Protocol. SUMR holders steer the protocol (via Governance V2) and can share in protocol growth through staking rewards and revenue distributions.',
+          },
+          {
+            title: 'How does SUMR capture value from Lazy Summer?',
+            content:
+              'Lazy Summer charges fees on yield generated in its vaults. A portion of this protocol revenue flows to the treasury, and from there to SUMR stakers (in USDC LV vault tokens) and ecosystem growth, as decided by governance.',
+          },
+          {
+            title: 'Do I need SUMR to use Lazy Summer?',
+            content:
+              'No. Anyone can deposit into Lazy Summer vaults without holding SUMR. SUMR is for users who want governance influence and economic exposure to protocol growth on top of vault yield. Though, all depositors in Lazy Summer do earn SUMR.',
+          },
+          {
+            title: 'What is SUMR Staking V2?',
+            content:
+              'It’s the upgraded SUMR staking & locking system that powers Governance V2. When you lock SUMR, you get governance power, ongoing SUMR emissions, and a share of protocol revenue paid in USDC (via LV vault tokens).',
+          },
+          {
+            title: 'What’s new vs Staking V1?',
+            content:
+              'V1 only paid SUMR. V2 adds dual rewards (SUMR + USDC), conviction-weighted locking (longer lock → higher multiplier), capacity buckets per duration, and clear early withdrawal rules.',
+          },
+          {
+            title: 'Why should I stake SUMR?',
+            content: (
+              <>
+                Three reasons:
+                <br />
+                <br />
+                1. Govern Lazy Summer (curate ARKs, allocate capital, hold contributors accountable)
+                <br />
+                2. Earn more SUMR via emissions
+                <br />
+                3. Share protocol revenue in auto-compounding USDC LV vault tokens.
+              </>
+            ),
+          },
+          {
+            title: 'How do rewards work?',
+            content: (
+              <>
+                You earn:
+                <br />
+                <br />- SUMR emissions proportional to your stake and lock multiplier
+                <br />- USDC yield share currently 20% of protocol yield flows to lockers as LV
+                vault tokens that keep compounding.
+              </>
+            ),
+          },
+          {
+            title: 'How does locking & penalties work?',
+            content:
+              'You choose a lock duration from no lock up to ~3 years. Longer lock = more voting power + higher rewards. You can exit early but pay a penalty that decreases linearly as you approach the end of your lock.',
+          },
+          {
+            title: 'How do I migrate from Staking V1 to V2?',
+            content: (
+              <>
+                1. Go to Portfolio → SUMR Rewards / Staking
+                <br />
+                2. Unstake from V1 and claim any pending SUMR
+                <br />
+                3. Open Staking V2, choose amount + lock duration(s), and confirm the new stake.
+              </>
+            ),
+          },
+        ]}
+      />
+    </div>
+  )
+}
+
+export const SumrV2PageView = ({
+  apyRanges,
+  sumrRewards,
+}: {
+  apyRanges: {
+    eth: { minApy: number; maxApy: number }
+    stablecoins: { minApy: number; maxApy: number }
+  }
+  sumrRewards: {
+    eth: number
+    stablecoins: number
+  }
+}) => {
+  return (
+    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
+      <SumrV2PageViewComponent apyRanges={apyRanges} sumrRewards={sumrRewards} />
     </SDKContextProvider>
   )
 }

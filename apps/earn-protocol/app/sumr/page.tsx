@@ -46,8 +46,32 @@ const SumrPage = async () => {
     },
   )
 
+  const sumrRewards: {
+    eth: number
+    stablecoins: number
+  } = vaultsInfo.reduce(
+    (rewards, vault) => {
+      const isEthVault = vault.assetToken.symbol === 'ETH' || vault.assetToken.symbol === 'WETH'
+      const sumrApy = vault.rewardsApys?.find((reward) => reward.token.symbol === 'SUMR')?.apy
+        ? Number(vault.rewardsApys.find((reward) => reward.token.symbol === 'SUMR')?.apy?.value)
+        : 0
+
+      if (isEthVault) {
+        rewards.eth = Math.max(rewards.eth, sumrApy)
+      } else {
+        rewards.stablecoins = Math.max(rewards.stablecoins, sumrApy)
+      }
+
+      return rewards
+    },
+    {
+      eth: 0,
+      stablecoins: 0,
+    },
+  )
+
   return systemConfig.features?.StakingV2 ? (
-    <SumrV2PageView apyRanges={apyRanges} />
+    <SumrV2PageView apyRanges={apyRanges} sumrRewards={sumrRewards} />
   ) : (
     <SumrPageView />
   )

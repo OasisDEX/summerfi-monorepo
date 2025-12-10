@@ -1,4 +1,4 @@
-import { Button, DataBlock, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { Button, DataBlock, Icon, SkeletonLine, Text, Tooltip } from '@summerfi/app-earn-ui'
 import { formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -10,12 +10,23 @@ import waysToAccessSumrStyles from './WaysToAccessSumr.module.css'
 export const WaysToAccessSumr = ({
   className,
   apyRanges,
+  sumrRewards,
+  isLoading,
+  sumrRewardApy,
+  maxApy,
 }: {
   className?: string
   apyRanges: {
     eth: { minApy: number; maxApy: number }
     stablecoins: { minApy: number; maxApy: number }
   }
+  sumrRewards: {
+    eth: number
+    stablecoins: number
+  }
+  isLoading?: boolean
+  sumrRewardApy?: string
+  maxApy?: string
 }) => {
   return (
     <div className={clsx(waysToAccessSumrStyles.wrapper, className)}>
@@ -32,7 +43,13 @@ export const WaysToAccessSumr = ({
           <div className={waysToAccessSumrStyles.boxData}>
             <DataBlock
               title="SUMR Rewards"
-              value="Huh?"
+              value={
+                isLoading ? (
+                  <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
+                ) : (
+                  `${formatPercent(sumrRewards.eth, { precision: 2, noPercentSign: true })}%`
+                )
+              }
               valueStyle={{ color: 'white' }}
               wrapperStyles={{ width: '100%' }}
             />
@@ -64,7 +81,13 @@ export const WaysToAccessSumr = ({
           <div className={waysToAccessSumrStyles.boxData}>
             <DataBlock
               title="SUMR Rewards"
-              value="Huh?"
+              value={
+                isLoading ? (
+                  <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
+                ) : (
+                  `${formatPercent(sumrRewards.stablecoins, { precision: 2, noPercentSign: true })}%`
+                )
+              }
               valueStyle={{ color: 'white' }}
               wrapperStyles={{ width: '100%' }}
             />
@@ -100,13 +123,25 @@ export const WaysToAccessSumr = ({
           <div className={waysToAccessSumrStyles.boxData}>
             <DataBlock
               title="SUMR Rewards"
-              value="Huh?"
+              value={
+                isLoading ? (
+                  <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
+                ) : (
+                  sumrRewardApy
+                )
+              }
               valueStyle={{ color: 'white' }}
               wrapperStyles={{ width: '100%' }}
             />
             <DataBlock
               title="USDC Yield"
-              value="Huh?"
+              value={
+                isLoading ? (
+                  <SkeletonLine height="18px" width="60px" style={{ margin: '5px 0' }} />
+                ) : (
+                  maxApy
+                )
+              }
               valueStyle={{ color: 'white' }}
               wrapperStyles={{ width: '100%' }}
             />
