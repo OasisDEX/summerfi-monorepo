@@ -67,13 +67,9 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                 width={65}
                 domain={[
                   (dataMin: number) => {
-                    console.log('dataMin', dataMin)
-
                     return Math.max(dataMin - Number(dataMin * 0.001), 0)
                   },
                   (dataMax: number) => {
-                    console.log('dataMax', dataMax)
-
                     return dataMax + Number(dataMax * 0.001)
                   },
                 ]}
