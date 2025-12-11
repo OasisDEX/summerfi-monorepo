@@ -91,7 +91,9 @@ export const mapSinglePointChartData = ({
     chartBaseData['7d'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      [pointName]: isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      [pointName]: Number(
+        isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      ),
     })
   }
 
@@ -107,7 +109,9 @@ export const mapSinglePointChartData = ({
     chartBaseData['30d'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      [pointName]: isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      [pointName]: Number(
+        isSameHour ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      ),
     })
   }
 
@@ -124,7 +128,9 @@ export const mapSinglePointChartData = ({
       chartBaseData[timeframe].push({
         timestamp: timestampUnix,
         timestampParsed,
-        [pointName]: isSameDay ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        [pointName]: Number(
+          isSameDay ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+        ),
       })
     }
   }
@@ -147,7 +153,9 @@ export const mapSinglePointChartData = ({
     chartBaseData['3y'].push({
       timestamp: timestampUnix,
       timestampParsed,
-      [pointName]: isSameWeek ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      [pointName]: Number(
+        isSameWeek ? currentPointValue : existingPoint ? existingPoint[pointName] : 0,
+      ),
     })
   }
 

@@ -36,7 +36,7 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
   return (
     <Card className={aumChartStyles.aumChartCardWrapper}>
       <div className={aumChartStyles.aumChart}>
-        <RechartResponsiveWrapper height="300px">
+        <RechartResponsiveWrapper height="270px">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               syncId={syncId}
@@ -67,9 +67,13 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                 width={65}
                 domain={[
                   (dataMin: number) => {
+                    console.log('dataMin', dataMin)
+
                     return Math.max(dataMin - Number(dataMin * 0.001), 0)
                   },
                   (dataMax: number) => {
+                    console.log('dataMax', dataMax)
+
                     return dataMax + Number(dataMax * 0.001)
                   },
                 ]}
