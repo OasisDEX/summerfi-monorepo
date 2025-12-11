@@ -25,10 +25,7 @@ import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 import { GetVaultHistoryDocument } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
-const supportedInstitutionNetworks = [
-  // SupportedNetworkIds.Base,
-  SupportedNetworkIds.ArbitrumOne,
-]
+const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
 
 export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
   if (!institutionName) return null
