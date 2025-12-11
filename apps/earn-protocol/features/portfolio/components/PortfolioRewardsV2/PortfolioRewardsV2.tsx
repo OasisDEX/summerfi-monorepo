@@ -45,7 +45,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
   const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
   const [sumrAvailableToStake, setSumrAvailableToStake] = useState<number>(0)
-  const [sumrStaked, setSumrStaked] = useState<number>(0)
+  const [sumrStakedV2, setSumrStakedV2] = useState<number>(0)
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
   const [allStakes, setAllStakes] = useState<StakingStake[]>([])
   const [yourEarningsEstimation, setYourEarningsEstimation] =
@@ -188,7 +188,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       // Process user staked amount
       const stakedSumrValue = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
 
-      setSumrStaked(stakedSumrValue)
+      setSumrStakedV2(stakedSumrValue)
 
       // Process reward rates
       setMaxApy(rewardRates.maxApy.value)
@@ -268,7 +268,13 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
   return (
     <div className={classNames.wrapper}>
-      <PortfolioRewardsCardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
+      <PortfolioRewardsCardsV2
+        rewardsData={rewardsData}
+        state={state}
+        dispatch={dispatch}
+        sumrStakedV2={sumrStakedV2}
+        loading={isLoadingStakes}
+      />
       <PortfolioStakingInfoCardV2
         usdcEarnedOnSumr={maxApy}
         usdcEarnedOnSumrAmount={usdcEarnedOnSumrAmount}
@@ -283,7 +289,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         }}
         sumrUserData={{
           sumrAvailableToStake,
-          sumrStaked,
+          sumrStaked: sumrStakedV2,
         }}
         sumrPriceUsd={sumrPriceUsd}
         userUsdcRealYield={userUsdcRealYield}
@@ -299,7 +305,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         yourEarningsEstimation={yourEarningsEstimation}
         // allEarningsEstimation={allEarningsEstimation}
         userBlendedYieldBoost={userBlendedYieldBoost}
-        userSumrStaked={sumrStaked}
+        userSumrStaked={sumrStakedV2}
         totalSumrStaked={totalSumrStaked}
         allStakes={allStakes}
         isLoadingAllStakes={isLoadingAllStakes}

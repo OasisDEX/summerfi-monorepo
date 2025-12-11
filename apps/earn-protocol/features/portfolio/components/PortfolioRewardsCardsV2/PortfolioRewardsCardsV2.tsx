@@ -5,6 +5,7 @@ import {
   Button,
   DataModule,
   Icon,
+  SkeletonLine,
   SUMR_CAP,
   Text,
   Tooltip,
@@ -36,6 +37,8 @@ interface SumrInOldStakingModuleProps {
 
 interface YourTotalSumrProps {
   rewardsData: ClaimDelegateExternalData
+  sumrStakedV2: number
+  loading: boolean
 }
 
 interface YourDelegateProps {
@@ -47,6 +50,8 @@ interface PortfolioRewardsCardsV2Props {
   rewardsData: ClaimDelegateExternalData
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  sumrStakedV2: number
+  loading: boolean
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
@@ -153,7 +158,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
   )
 }
 
-const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
+const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrStakedV2, loading }) => {
   const [sumrNetApyConfig] = useSumrNetApyConfig()
 
   const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
@@ -162,7 +167,8 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
     Number(rewardsData.sumrBalances.total) +
     Number(rewardsData.sumrBalances.vested) +
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
-    Number(rewardsData.sumrToClaim.aggregatedRewards.total)
+    Number(rewardsData.sumrToClaim.aggregatedRewards.total) +
+    sumrStakedV2
 
   const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
 
@@ -177,8 +183,12 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
         titleWrapperStyles: {
           whiteSpace: 'unset',
         },
-        value: totalSumr,
-        subValue: `$${totalSumrUSD}`,
+        value: loading ? (
+          <SkeletonLine width={150} height={32} style={{ marginBottom: '8px' }} />
+        ) : (
+          totalSumr
+        ),
+        subValue: loading ? <SkeletonLine width={70} height={20} /> : `$${totalSumrUSD}`,
         titleSize: 'medium',
         valueSize: 'large',
       }}
@@ -266,11 +276,13 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
 export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   rewardsData,
   state,
+  sumrStakedV2,
+  loading,
 }) => {
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
       <div className={classNames.cardWrapper}>
-        <YourTotalSumr rewardsData={rewardsData} />
+        <YourTotalSumr rewardsData={rewardsData} sumrStakedV2={sumrStakedV2} loading={loading} />
       </div>
       <div className={classNames.cardWrapper}>
         <YourDelegate rewardsData={rewardsData} state={state} />
