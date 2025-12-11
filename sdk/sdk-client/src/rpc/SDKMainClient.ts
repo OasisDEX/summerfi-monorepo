@@ -24,6 +24,7 @@ export function createMainRPCClient(params: {
         url: params.apiURL,
         transformer: SerializationService.getTransformer(),
         maxURLLength: 5000,
+        fetch: (url, opts) => fetch(url, { ...opts, credentials: 'omit' }),
         headers() {
           return {
             ...(params.clientId && { 'Client-Id': params.clientId }),
