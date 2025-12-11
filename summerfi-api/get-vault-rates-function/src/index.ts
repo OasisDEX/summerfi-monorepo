@@ -82,7 +82,7 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
 
   try {
     const withCacheRaw = event.queryStringParameters?.withCache
-    const withCache = withCacheRaw ? Boolean(withCacheRaw) : false
+    const withCache = withCacheRaw === 'true'
     const hasCacheSettings = REDIS_CACHE_URL && STAGE
     if (withCache && !hasCacheSettings) {
       logger.warn(
