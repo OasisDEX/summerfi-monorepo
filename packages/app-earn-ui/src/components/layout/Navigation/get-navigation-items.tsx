@@ -41,6 +41,9 @@ export const getNavigationItems = ({
         {
           label: '$SUMR',
           id: 'sumr-category',
+          style: {
+            color: 'var(--color-background-primary)',
+          },
           itemsList: [
             {
               title: 'Learn about $SUMR',

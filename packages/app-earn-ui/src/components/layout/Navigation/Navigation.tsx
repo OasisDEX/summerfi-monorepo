@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
+import { type CSSProperties, type FC, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { type EarnAppConfigType, type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
@@ -30,6 +30,7 @@ export interface EarnNavigationProps {
     disabled?: boolean
     prefetchDisabled?: boolean
     onClick?: () => void
+    style?: CSSProperties
   })[]
   walletConnectionComponent?: ReactNode
   mobileWalletConnectionComponents?: {

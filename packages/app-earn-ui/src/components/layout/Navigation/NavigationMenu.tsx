@@ -30,6 +30,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}
+                style={link.style}
               >
                 {link.label}{' '}
                 <Icon
