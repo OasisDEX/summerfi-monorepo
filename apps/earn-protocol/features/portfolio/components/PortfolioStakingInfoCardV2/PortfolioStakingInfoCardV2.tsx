@@ -219,8 +219,8 @@ export const PortfolioStakingInfoCardV2 = ({
                   <Tooltip
                     tooltip={
                       <Text as="p" variant="p4semi">
-                        USDC yield is derived from Lazy Summer Protocol revenues and distributes
-                        weekly directly to your wallet
+                        USDC yield is derived from Lazy Summer Protocol revenues and distrbutes
+                        monthly
                       </Text>
                     }
                     showAbove
