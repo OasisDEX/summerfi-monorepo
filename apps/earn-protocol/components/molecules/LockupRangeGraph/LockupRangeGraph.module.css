@@ -60,7 +60,7 @@
   }
 
   100% {
-    box-shadow: 0;
+    box-shadow: 0 0 5px var(--color-text-critical);
   }
 }
 
@@ -74,7 +74,7 @@
   }
 
   100% {
-    box-shadow: 0;
+    box-shadow: 0 0 5px var(--color-background-warning-bold);
   }
 }
 
@@ -88,21 +88,21 @@
   }
 
   100% {
-    box-shadow: 0;
+    box-shadow: 0 0 5px var(--earn-protocol-success-100);
   }
 }
 
 .highlightAnimation_low,
 .highlightAnimation_gray {
-  animation: highlightAnimationCritical 0.3s 1;
+  animation: highlightAnimationCritical 0.3s 1 forwards;
 }
 
 .highlightAnimation_medium {
-  animation: highlightAnimationWarning 0.3s 1;
+  animation: highlightAnimationWarning 0.3s 1 forwards;
 }
 
 .highlightAnimation_high {
-  animation: highlightAnimationSuccess 0.3s 1;
+  animation: highlightAnimationSuccess 0.3s 1 forwards;
 }
 
 .clickable {
@@ -125,4 +125,8 @@
     height: 4px;
     border-radius: 4px;
   }
+}
+
+.faded {
+  opacity: 0.5;
 }

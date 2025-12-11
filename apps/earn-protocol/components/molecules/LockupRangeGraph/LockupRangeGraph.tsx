@@ -133,6 +133,7 @@ export const LockupRangeGraph = ({
               lockupRangeGraphStyles[level],
               {
                 [lockupRangeGraphStyles.clickable]: Boolean(onLockupClick),
+                [lockupRangeGraphStyles.faded]: selectedBucketIndex !== bucketIndex,
                 [lockupRangeGraphStyles[`highlightAnimation_${level}`]]:
                   selectedBucketIndex === bucketIndex,
               },

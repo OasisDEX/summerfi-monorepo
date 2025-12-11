@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "clickable": string;
+  readonly "faded": string;
   readonly "gray": string;
   readonly "high": string;
   readonly "highlightAnimationCritical": string;
