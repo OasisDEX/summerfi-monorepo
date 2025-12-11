@@ -1813,11 +1813,12 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       },
       body: JSON.stringify(input),
     })
+    const jsonData = await res.json()
 
     // handle res errors
     if (!res.ok) {
-      const error = await res.json()
-      console.error(`Error fetching /api/vault/rates from lambda: ${JSON.stringify(error)}`)
+      console.error(`Error fetching /api/vault/rates from lambda: ${JSON.stringify(jsonData)}`)
+      return { byFleetAddress: {} }
     }
 
     const data:
@@ -1842,7 +1843,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
               | []
           }>
         }
-      | undefined = await res.json()
+      | undefined = jsonData
 
     const byFleetAddress =
       data?.rates?.reduce(
