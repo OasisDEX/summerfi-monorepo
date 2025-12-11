@@ -52,10 +52,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [claimableSumr, setClaimableSumr] = useState<string>('0')
   const [claimableSumrUsd, setClaimableSumrUsd] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')
-  const [maxApyUsdPerYear, setMaxApyUsdPerYear] = useState<string>('0')
+  // const [maxApyUsdPerYear, setMaxApyUsdPerYear] = useState<string>('0')
   const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
-  const [earnableSumr, setEarnableSumr] = useState<string>('0')
-  const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
+  // const [earnableSumr, setEarnableSumr] = useState<string>('0')
+  // const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
   const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
   const [protocolTvl, setProtocolTvl] = useState<string>('0')
   const [revenueSharePercentage, setRevenueSharePercentage] = useState<string>('0')
@@ -162,12 +162,12 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       setMaxApy(maxApyValue)
 
       // Calculate max APY USD per year
-      const maxApyUsdPerYearValue = new BigNumber(availableSumrUsdValue)
-        .times(maxApyValue)
-        .dividedBy(100)
-        .toFixed(2, BigNumber.ROUND_DOWN)
+      // const maxApyUsdPerYearValue = new BigNumber(availableSumrUsdValue)
+      //   .times(maxApyValue)
+      //   .dividedBy(100)
+      //   .toFixed(2, BigNumber.ROUND_DOWN)
 
-      setMaxApyUsdPerYear(maxApyUsdPerYearValue)
+      // setMaxApyUsdPerYear(maxApyUsdPerYearValue)
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
@@ -180,18 +180,18 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       setSumrRewardApy(summerRewardApyValue)
 
       // Calculate earnable SUMR per year
-      const earnableSumrValue = new BigNumber(availableSumrValue)
-        .times(summerRewardApyValue)
-        .dividedBy(100)
-        .toFixed(2, BigNumber.ROUND_DOWN)
+      // const earnableSumrValue = new BigNumber(availableSumrValue)
+      //   .times(summerRewardApyValue)
+      //   .dividedBy(100)
+      //   .toFixed(2, BigNumber.ROUND_DOWN)
 
-      setEarnableSumr(earnableSumrValue)
+      // setEarnableSumr(earnableSumrValue)
 
-      const earnableSumrUsdValue = new BigNumber(earnableSumrValue)
-        .times(sumrPriceUsd)
-        .toFixed(2, BigNumber.ROUND_DOWN)
+      // const earnableSumrUsdValue = new BigNumber(earnableSumrValue)
+      //   .times(sumrPriceUsd)
+      //   .toFixed(2, BigNumber.ROUND_DOWN)
 
-      setEarnableSumrUsd(earnableSumrUsdValue)
+      // setEarnableSumrUsd(earnableSumrUsdValue)
 
       setProtocolRevenue(formatCryptoBalance(revenue))
 
@@ -437,14 +437,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               valueStyle={{
                 color: 'white',
               }}
-              subValue={
-                isLoading ? (
-                  <SkeletonLine width={110} height={20} />
-                ) : (
-                  `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} / Year`
-                )
-              }
-              subValueType="positive"
+              // subValue={
+              //   isLoading ? (
+              //     <SkeletonLine width={110} height={20} />
+              //   ) : (
+              //     `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} / Year`
+              //   )
+              // }
+              // subValueType="positive"
             />
             <YieldSourceLabel label="Yield source 1" />
           </Card>
@@ -490,14 +490,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               valueStyle={{
                 color: 'white',
               }}
-              subValue={
-                isLoading ? (
-                  <SkeletonLine width={110} height={20} />
-                ) : (
-                  `Up to ${formatCryptoBalance(new BigNumber(earnableSumr).toNumber())} SUMR / Year ($${formatCryptoBalance(new BigNumber(earnableSumrUsd).toNumber())})`
-                )
-              }
-              subValueType="positive"
+              // subValue={
+              //   isLoading ? (
+              //     <SkeletonLine width={110} height={20} />
+              //   ) : (
+              //     `Up to ${formatCryptoBalance(new BigNumber(earnableSumr).toNumber())} SUMR / Year ($${formatCryptoBalance(new BigNumber(earnableSumrUsd).toNumber())})`
+              //   )
+              // }
+              // subValueType="positive"
             />
             <YieldSourceLabel label="Yield source 2" />
           </Card>
