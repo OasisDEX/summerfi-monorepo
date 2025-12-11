@@ -82,6 +82,15 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     [sumrNetApyConfig.dilutedValuation],
   )
 
+  const usdcEarnedOnSumrAmount = useMemo(() => {
+    return yourEarningsEstimation
+      ? yourEarningsEstimation.stakes.reduce(
+          (acc, stake) => acc + parseFloat(stake.usdEarningsAmount.toString()),
+          0,
+        )
+      : 0
+  }, [yourEarningsEstimation])
+
   const fetchStakingData = useCallback(async () => {
     const user = User.createFromEthereum(ChainIds.Base, portfolioWalletAddress as AddressValue)
 
@@ -94,7 +103,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         userBalance,
         rewardRates,
         stakingStats,
-        revenueShare,
+        _revenueShare,
         userStaked,
         userStakesData,
         _userBlendedYieldBoost,
@@ -150,9 +159,10 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         (acc, stake) => acc + stake.weightedAmount,
         0n,
       )
-      const totalUsdcRealYield =
+
+      const _userUsdcRealYield =
         userTotalWeightedTokens > 0
-          ? new BigNumber(revenueShare.amount)
+          ? new BigNumber(usdcEarnedOnSumrAmount)
               .dividedBy(
                 new BigNumber(userTotalWeightedTokens)
                   .shiftedBy(-SUMR_DECIMALS)
@@ -162,7 +172,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
               .toNumber()
           : 0
 
-      setUserUsdcRealYield(totalUsdcRealYield)
+      setUserUsdcRealYield(_userUsdcRealYield)
 
       // Map penalty percentages with stake indices
       setPenaltyPercentages(
@@ -234,6 +244,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
     getStakingBucketsInfoV2,
     sumrPriceUsd,
     portfolioWalletAddress,
+    usdcEarnedOnSumrAmount,
   ])
 
   // Fetch all staking data on mount
@@ -247,15 +258,6 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
     return totalSumrStaked / circulatingSupply
   }, [totalSumrStaked, circulatingSupply])
-
-  const usdcEarnedOnSumrAmount = useMemo(() => {
-    return yourEarningsEstimation
-      ? yourEarningsEstimation.stakes.reduce(
-          (acc, stake) => acc + parseFloat(stake.usdEarningsAmount.toString()),
-          0,
-        )
-      : 0
-  }, [yourEarningsEstimation])
 
   const sumrRewardAmount = useMemo(() => {
     return yourEarningsEstimation

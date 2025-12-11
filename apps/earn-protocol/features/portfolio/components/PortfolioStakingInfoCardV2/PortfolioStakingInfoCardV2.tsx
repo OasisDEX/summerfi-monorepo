@@ -135,7 +135,6 @@ export const PortfolioStakingInfoCardV2 = ({
   usdcEarnedOnSumr,
   usdcEarnedOnSumrAmount,
   stats,
-  sumrPriceUsd,
   userUsdcRealYield,
   isLoading,
 }: {
@@ -238,7 +237,7 @@ export const PortfolioStakingInfoCardV2 = ({
                   : `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100, { precision: 2 })}`,
               subValue:
                 sumrUserData.sumrStaked > 0
-                  ? `$${formatCryptoBalance(sumrUserData.sumrStaked * sumrPriceUsd * userUsdcRealYield)} / Year`
+                  ? `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`
                   : usdcEarnedOnSumrAmount === 0
                     ? '-'
                     : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,

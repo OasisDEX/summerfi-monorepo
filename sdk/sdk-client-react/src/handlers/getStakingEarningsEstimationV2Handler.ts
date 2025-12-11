@@ -8,7 +8,6 @@ export const getStakingEarningsEstimationV2Handler =
       weightedAmount: stake.weightedAmount.toString(),
     }))
 
-    console.log('stakes', stakes)
     return sdk.armada.users.getStakingEarningsEstimationV2({
       stakes,
     })

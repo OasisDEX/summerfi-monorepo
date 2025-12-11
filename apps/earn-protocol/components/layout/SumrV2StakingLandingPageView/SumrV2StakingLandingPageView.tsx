@@ -52,7 +52,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [claimableSumr, setClaimableSumr] = useState<string>('0')
   const [claimableSumrUsd, setClaimableSumrUsd] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')
-  // const [maxApyUsdPerYear, setMaxApyUsdPerYear] = useState<string>('0')
+  const [usdcEarnedOnSumrAmount, setUsdcEarnedOnSumrAmount] = useState<string>('0')
   const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   // const [earnableSumr, setEarnableSumr] = useState<string>('0')
   // const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
@@ -91,6 +91,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     getStakingRevenueShareV2,
     getStakingStatsV2,
     getStakingEarningsEstimationV2,
+    getStakingTotalWeightedSupplyV2,
     getUserStakingSumrStaked,
     getUserStakesV2,
     getCalculatePenaltyPercentage,
@@ -110,39 +111,47 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       setIsLoading(true)
 
       // Fetch all data in parallel
-      const [userBalance, aggregatedRewards, rewardRates, revenue, tvl, revenueShare] =
-        await Promise.all([
-          userWalletAddress
-            ? getUserBalance({
-                userAddress: userWalletAddress as AddressValue,
-                chainId: ChainIds.Base,
-              })
-            : Promise.resolve(0n),
-          userWalletAddress
-            ? getAggregatedRewardsIncludingMerkl({
-                userAddress: userWalletAddress as AddressValue,
-                chainId: ChainIds.Base,
-              })
-            : Promise.resolve({
-                total: 0n,
-              }),
-          getStakingRewardRatesV2({
-            sumrPriceUsd,
-          }),
-          getProtocolRevenue(),
-          getProtocolTvl(),
-          getStakingRevenueShareV2(),
-        ])
+      const [
+        userBalance,
+        aggregatedRewards,
+        rewardRates,
+        revenue,
+        tvl,
+        revenueShare,
+        totalWeightedSupply,
+      ] = await Promise.all([
+        userWalletAddress
+          ? getUserBalance({
+              userAddress: userWalletAddress as AddressValue,
+              chainId: ChainIds.Base,
+            })
+          : Promise.resolve(0n),
+        userWalletAddress
+          ? getAggregatedRewardsIncludingMerkl({
+              userAddress: userWalletAddress as AddressValue,
+              chainId: ChainIds.Base,
+            })
+          : Promise.resolve({
+              total: 0n,
+            }),
+        getStakingRewardRatesV2({
+          sumrPriceUsd,
+        }),
+        getProtocolRevenue(),
+        getProtocolTvl(),
+        getStakingRevenueShareV2(),
+        getStakingTotalWeightedSupplyV2(),
+      ])
 
       // Process user balance
-      const availableSumrValue = new BigNumber(userBalance)
+      const availableSumrNormalized = new BigNumber(userBalance)
         .shiftedBy(-SUMR_DECIMALS)
         .toFixed(2, BigNumber.ROUND_DOWN)
-      const availableSumrUsdValue = new BigNumber(availableSumrValue)
+      const availableSumrUsdValue = new BigNumber(availableSumrNormalized)
         .times(sumrPriceUsd)
         .toFixed(2, BigNumber.ROUND_DOWN)
 
-      setAvailableSumr(availableSumrValue)
+      setAvailableSumr(availableSumrNormalized)
       setAvailableSumrUsd(availableSumrUsdValue)
 
       // Process claimable rewards
@@ -160,14 +169,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       const maxApyValue = formatPercent(new BigNumber(rewardRates.maxApy.value), { precision: 2 })
 
       setMaxApy(maxApyValue)
-
-      // Calculate max APY USD per year
-      // const maxApyUsdPerYearValue = new BigNumber(availableSumrUsdValue)
-      //   .times(maxApyValue)
-      //   .dividedBy(100)
-      //   .toFixed(2, BigNumber.ROUND_DOWN)
-
-      // setMaxApyUsdPerYear(maxApyUsdPerYearValue)
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
@@ -287,9 +288,21 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         )
 
         // Process user staked amount
-        const stakedSumrValue = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
+        const sumrStakedNormalized = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
 
-        setSumrStaked(stakedSumrValue)
+        setSumrStaked(sumrStakedNormalized)
+
+        const totalSumrBN = new BigNumber(sumrStakedNormalized).plus(availableSumrNormalized)
+        const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply).shiftedBy(-SUMR_DECIMALS)
+
+        // Calculate max APY USD per year
+        const usdcEarnedOnSumrAmount = new BigNumber(
+          totalSumrBN.times(_userBlendedYieldBoost).dividedBy(totalWeightedSupplyBN),
+        )
+          .times(revenueShare.amount)
+          .toFixed(2, BigNumber.ROUND_DOWN)
+
+        setUsdcEarnedOnSumrAmount(usdcEarnedOnSumrAmount)
 
         // Set user stakes
         setUserStakes(userStakesData)
@@ -309,6 +322,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
     getStakingEarningsEstimationV2,
     getStakingRewardRatesV2,
     getStakingStatsV2,
+    getStakingTotalWeightedSupplyV2,
     getUserBalance,
     getUserStakesV2,
     getUserStakingSumrStaked,
@@ -437,14 +451,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
               valueStyle={{
                 color: 'white',
               }}
-              // subValue={
-              //   isLoading ? (
-              //     <SkeletonLine width={110} height={20} />
-              //   ) : (
-              //     `Up to $${formatCryptoBalance(new BigNumber(maxApyUsdPerYear).toNumber())} / Year`
-              //   )
-              // }
-              // subValueType="positive"
+              subValue={
+                isLoading ? (
+                  <SkeletonLine width={110} height={20} />
+                ) : parseFloat(usdcEarnedOnSumrAmount) > 0 ? (
+                  `Up to $${formatCryptoBalance(new BigNumber(usdcEarnedOnSumrAmount).toNumber())} / Year`
+                ) : null
+              }
+              subValueType="positive"
             />
             <YieldSourceLabel label="Yield source 1" />
           </Card>
