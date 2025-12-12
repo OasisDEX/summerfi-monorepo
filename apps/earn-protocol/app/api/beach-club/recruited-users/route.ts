@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { getBeachClubRecruitedUsersServerSide } from '@/app/server-handlers/raw-calls/beach-club/api'
+import { getCachedBeachClubRecruitedUsersServerSide } from '@/app/server-handlers/cached/beach-club'
 
 const BeachClubRecruitedUsersQueryParamsSchema = z.object({
   page: z.coerce.number().int().positive().default(1),
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
   const { page, limit, orderBy, referralCode } = result.data
 
-  return await getBeachClubRecruitedUsersServerSide({
+  return await getCachedBeachClubRecruitedUsersServerSide({
     page,
     limit,
     orderBy,

@@ -1,6 +1,6 @@
 import { isValidLink } from '@summerfi/app-utils'
 
-import { type TallyDelegate } from '@/app/server-handlers/tally'
+import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
 
 import { getDelegateTitle } from './helpers'
 
