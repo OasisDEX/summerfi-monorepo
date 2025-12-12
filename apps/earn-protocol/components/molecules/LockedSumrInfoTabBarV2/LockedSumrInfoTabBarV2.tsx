@@ -37,6 +37,7 @@ import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
@@ -188,7 +189,7 @@ const YourLockedSumrPositionsCards = ({
               >
                 <Icon iconName="question_o" size={16} />
               </Tooltip>
-              Max boost: 7.2655x
+              Max boost: {MAX_MULTIPLE}x
             </div>
           ),
         }}

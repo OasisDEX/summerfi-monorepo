@@ -11,9 +11,12 @@ import {
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatPercent } from '@summerfi/app-utils'
+import { BigNumber } from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+
+import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 
 import portfolioStakingInfoCardStyles from './PortfolioStakingInfoCardV2.module.css'
 
@@ -131,6 +134,7 @@ export const PortfolioStakingInfoCardV2 = ({
   sumrUserData,
   sumrPrice,
   sumrRewardApy,
+  maxSumrRewardApy,
   sumrRewardAmount,
   usdcEarnedOnSumr,
   usdcEarnedOnSumrAmount,
@@ -150,6 +154,7 @@ export const PortfolioStakingInfoCardV2 = ({
   }
   sumrPrice: number
   sumrRewardApy: number
+  maxSumrRewardApy: number
   sumrRewardAmount: number
   usdcEarnedOnSumr: number
   usdcEarnedOnSumrAmount: number
@@ -270,11 +275,17 @@ export const PortfolioStakingInfoCardV2 = ({
                 </div>
               ),
               value:
-                sumrRewardApy === 0 ? '-' : `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
+                maxSumrRewardApy === 0
+                  ? '-'
+                  : sumrUserData.sumrStaked > 0
+                    ? formatDecimalAsPercent(sumrRewardApy / 100)
+                    : `Up to ${formatDecimalAsPercent(maxSumrRewardApy / 100)}`,
               subValue:
                 sumrRewardAmount === 0
                   ? '-'
-                  : `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
+                  : sumrUserData.sumrStaked > 0
+                    ? `+${formatCryptoBalance(new BigNumber(sumrRewardAmount).shiftedBy(-SUMR_DECIMALS).toNumber())} SUMR / Year`
+                    : '-',
               subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
