@@ -1,9 +1,4 @@
-import {
-  getVaultsProtocolsList,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-} from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
+import { getVaultsProtocolsList } from '@summerfi/app-earn-ui'
 import {
   formatCryptoBalance,
   parseServerResponseToClient,
@@ -12,25 +7,21 @@ import {
   zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
   const [{ vaults }, configRaw, vaultsInfoRaw] = await Promise.all([
-    getVaultsList(),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
-    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      tags: [REVALIDATION_TAGS.VAULTS_LIST],
-    })(),
+    getCachedVaultsList(),
+    getCachedConfig(),
+    getCachedVaultsInfo(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -40,10 +31,7 @@ const EarnAllVaultsPage = async () => {
   })
 
   const [vaultsApyByNetworkMap] = await Promise.all([
-    unstableCache(getVaultsApy, [], {
-      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      tags: [REVALIDATION_TAGS.VAULTS_LIST],
-    })({
+    getCachedVaultsApy({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
@@ -68,7 +56,7 @@ export async function generateMetadata({
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
   const [{ vaults }, headersList, params] = await Promise.all([
-    getVaultsList(),
+    getCachedVaultsList(),
     headers(),
     searchParams,
   ])

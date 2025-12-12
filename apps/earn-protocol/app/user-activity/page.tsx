@@ -1,12 +1,10 @@
 import { type FC } from 'react'
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { parseQueryStringServerSide, parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -35,7 +33,7 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
   } = parseLatestActivitySearchParams(searchParamsParsed)
 
   const [{ vaults }, topDepositors, latestActivity, configRaw] = await Promise.all([
-    getVaultsList(),
+    getCachedVaultsList(),
     getPaginatedTopDepositors({
       page: 1,
       limit: 50,
@@ -54,9 +52,7 @@ const LatestActivityPage: FC<LatestActivityPageProps> = async ({ searchParams })
       orderBy: latestActivityOrderBy,
       filterOutUsersAddresses: userAddresesToFilterOut,
     }),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-    })(),
+    getCachedConfig(),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)

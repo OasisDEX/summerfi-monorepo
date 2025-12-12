@@ -1,22 +1,17 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { getVaultsApy } from '@summerfi/app-server-handlers'
 import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { NextResponse } from 'next/server'
 
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 
 /**
  * This is for external vendors to get the list of vaults with their APY.
  */
 
 export async function GET() {
-  const { vaults } = await getVaultsList()
+  const { vaults } = await getCachedVaultsList()
 
-  const vaultsApyByNetworkMap = await unstableCache(getVaultsApy, [], {
-    revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-    tags: [REVALIDATION_TAGS.VAULTS_LIST],
-  })({
+  const vaultsApyByNetworkMap = await getCachedVaultsApy({
     fleets: vaults.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

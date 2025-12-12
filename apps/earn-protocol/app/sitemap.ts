@@ -1,24 +1,13 @@
-import {
-  getVaultDetailsUrl,
-  getVaultUrl,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-} from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
+import { getVaultDetailsUrl, getVaultUrl } from '@summerfi/app-earn-ui'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type MetadataRoute } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [{ vaults }, configRaw] = await Promise.all([
-    getVaultsList(),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-    })(),
-  ])
+  const [{ vaults }, configRaw] = await Promise.all([getCachedVaultsList(), getCachedConfig()])
   const systemConfig = parseServerResponseToClient(configRaw)
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,

@@ -1,5 +1,4 @@
 import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -14,10 +13,13 @@ import {
 import { unstable_cache as unstableCache } from 'next/cache'
 import { NextResponse } from 'next/server'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getMedianDefiProjectYield } from '@/app/server-handlers/defillama/get-median-defi-project-yield'
 import { getProtocolTvl } from '@/app/server-handlers/defillama/get-protocol-tvl'
 import { getProAppStats } from '@/app/server-handlers/pro-app-stats/get-pro-app-stats'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -94,11 +96,8 @@ export async function GET() {
     protocolApys,
     vaultsInfoRaw,
   ] = await Promise.all([
-    getVaultsList(),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
+    getCachedVaultsList(),
+    getCachedConfig(),
     unstableCache(getPaginatedRebalanceActivity, [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY], {
       revalidate: REVALIDATION_TIMES.LP_REBALANCE_ACTIVITY,
       tags: [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY],
@@ -125,10 +124,7 @@ export async function GET() {
       revalidate: REVALIDATION_TIMES.LP_PROTOCOLS_APY,
       tags: [REVALIDATION_TAGS.LP_PROTOCOLS_APY],
     })(),
-    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      tags: [REVALIDATION_TAGS.VAULTS_LIST],
-    })(),
+    getCachedVaultsInfo(),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -138,14 +134,7 @@ export async function GET() {
     vaults,
   })
 
-  const vaultsApyByNetworkMap = await unstableCache(
-    getVaultsApy,
-    [REVALIDATION_TAGS.LP_VAULTS_APY],
-    {
-      revalidate: REVALIDATION_TIMES.LP_VAULTS_APY,
-      tags: [REVALIDATION_TAGS.LP_VAULTS_APY],
-    },
-  )({
+  const vaultsApyByNetworkMap = await getCachedVaultsApy({
     fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
       fleetAddress: id,
       chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

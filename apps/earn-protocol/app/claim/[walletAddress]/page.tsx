@@ -1,18 +1,13 @@
-import {
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  sumrNetApyConfigCookieName,
-} from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
+import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
   safeParseJson,
 } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
@@ -62,10 +57,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     }),
     getSumrStakingInfo(),
     getSumrToClaim({ walletAddress }),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
+    getCachedConfig(),
     getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
 

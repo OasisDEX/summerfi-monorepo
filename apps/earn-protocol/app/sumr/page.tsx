@@ -1,35 +1,23 @@
-import {
-  getSumrTokenBonus,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  SUMR_CAP,
-  sumrNetApyConfigCookieName,
-} from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsInfo } from '@summerfi/app-server-handlers'
+import { getSumrTokenBonus, SUMR_CAP, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
   safeParseJson,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'
 
 const SumrPage = async () => {
-  const [configRaw, vaultsInfo] = await Promise.all([
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
-    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      tags: [REVALIDATION_TAGS.VAULTS_LIST],
-    })(),
+  const [configRaw, vaultsInfo, cookieRaw] = await Promise.all([
+    getCachedConfig(),
+    getCachedVaultsInfo(),
+    cookies(),
   ])
-  const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const systemConfig = parseServerResponseToClient(configRaw)

@@ -6,10 +6,8 @@ import {
   Text,
 } from '@summerfi/app-earn-ui'
 import {
-  configEarnAppFetcher,
   getArksInterestRates,
   getVaultInfo,
-  getVaultsApy,
   getVaultsHistoricalApy,
 } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
@@ -32,9 +30,11 @@ import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -54,15 +54,14 @@ type EarnVaultOpenPageProps = {
 }
 
 const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
-  const { network: paramsNetwork, vaultId } = await params
+  const [{ network: paramsNetwork, vaultId }, cookieRaw, configRaw] = await Promise.all([
+    params,
+    cookies(),
+    getCachedConfig(),
+  ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
-  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-    revalidate: REVALIDATION_TIMES.CONFIG,
-  })()
   const systemConfig = parseServerResponseToClient(configRaw)
-
-  const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
 
   const referralCode = getServerSideCookies('referralCode', cookie)
@@ -83,7 +82,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         vaultAddress: parsedVaultId,
         network: parsedNetwork,
       }),
-      getVaultsList(),
+      getCachedVaultsList(),
       getMedianDefiYield(),
       getPaginatedTopDepositors({
         page: 1,
@@ -151,11 +150,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    unstableCache(
-      getVaultsApy,
-      keyParts,
-      cacheConfig,
-    )({
+    getCachedVaultsApy({
       fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
@@ -212,14 +207,7 @@ export async function generateMetadata({
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
   const [{ network: paramsNetwork, vaultId }, systemConfig, headersList, searchParamsAwaited] =
-    await Promise.all([
-      params,
-      unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-        revalidate: REVALIDATION_TIMES.CONFIG,
-      })(),
-      headers(),
-      searchParams,
-    ])
+    await Promise.all([params, getCachedConfig(), headers(), searchParams])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const prodHost = headersList.get('host')
@@ -244,9 +232,7 @@ export async function generateMetadata({
     : []
 
   const [vaultsApyRaw] = await Promise.all([
-    unstableCache(getVaultsApy, [REVALIDATION_TAGS.INTEREST_RATES], {
-      revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    })({
+    getCachedVaultsApy({
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

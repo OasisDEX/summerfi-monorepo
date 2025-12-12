@@ -1,10 +1,9 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { getTos, type TOSRequestContext } from '@summerfi/app-tos'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
+
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
 
 export async function GET(req: NextRequest, context: TOSRequestContext) {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
@@ -20,10 +19,7 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
     getSummerProtocolDB({
       connectionString,
     }),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
+    getCachedConfig(),
     context.params,
   ])
   const systemConfig = parseServerResponseToClient(configRaw)

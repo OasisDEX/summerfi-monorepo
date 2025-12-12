@@ -5,12 +5,7 @@ import {
   Text,
   VaultGridDetails,
 } from '@summerfi/app-earn-ui'
-import {
-  configEarnAppFetcher,
-  getArksInterestRates,
-  getVaultsApy,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   getVaultNiceName,
@@ -25,8 +20,10 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -46,14 +43,11 @@ type EarnVaultDetailsPageProps = {
 }
 
 const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
-  const { network, vaultId } = await params
+  const [{ network, vaultId }, configRaw] = await Promise.all([params, getCachedConfig()])
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
 
-  const configRaw = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-    revalidate: REVALIDATION_TIMES.CONFIG,
-  })()
   const systemConfig = parseServerResponseToClient(configRaw)
 
   const parsedVaultId = isAddress(vaultId)
@@ -69,7 +63,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
-    getVaultsList(),
+    getCachedVaultsList(),
     // just to get info about total rebalance actions
     getPaginatedRebalanceActivity({
       page: 1,
@@ -129,11 +123,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
           chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
         })),
       }),
-      unstableCache(
-        getVaultsApy,
-        keyParts,
-        cacheConfig,
-      )({
+      getCachedVaultsApy({
         fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
           fleetAddress: id,
           chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
@@ -173,9 +163,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
 export async function generateMetadata({ params }: EarnVaultDetailsPageProps): Promise<Metadata> {
   const [{ network: paramsNetwork, vaultId }, systemConfig] = await Promise.all([
     params,
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-    })(),
+    getCachedConfig(),
   ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
