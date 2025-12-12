@@ -297,13 +297,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply).shiftedBy(-SUMR_DECIMALS)
 
         // Calculate max APY USD per year
-        const usdcEarnedOnSumrAmount = new BigNumber(
+        const _usdcEarnedOnSumrAmount = new BigNumber(
           totalSumrBN.times(_userBlendedYieldBoost).dividedBy(totalWeightedSupplyBN),
         )
           .times(revenueShare.amount)
           .toFixed(2, BigNumber.ROUND_DOWN)
 
-        setUsdcEarnedOnSumrAmount(usdcEarnedOnSumrAmount)
+        setUsdcEarnedOnSumrAmount(_usdcEarnedOnSumrAmount)
 
         // Set user stakes
         setUserStakes(userStakesData)
