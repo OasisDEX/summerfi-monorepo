@@ -40,7 +40,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(true)
   const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(true)
   const [maxApy, setMaxApy] = useState<number>(0)
-  const [sumrRewardApy, setSumrRewardApy] = useState<number>(0)
+  const [stakedSumrRewardApy, setStakedSumrRewardApy] = useState<number>(0)
+  const [maxSumrRewardApy, setMaxSumrRewardApy] = useState<number>(0)
   const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
   const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
   const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
@@ -202,7 +203,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
 
       // Process reward rates
       setMaxApy(rewardRates.maxApy.value)
-      setSumrRewardApy(rewardRates.summerRewardYield.value)
+      setStakedSumrRewardApy(rewardRates.summerRewardYield.value * _userBlendedYieldBoost)
+      setMaxSumrRewardApy(rewardRates.maxSummerRewardYield.value)
 
       // Process staking stats
       setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
@@ -281,7 +283,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         usdcEarnedOnSumr={maxApy}
         usdcEarnedOnSumrAmount={usdcEarnedOnSumrAmount}
         sumrPrice={sumrPriceUsd}
-        sumrRewardApy={sumrRewardApy}
+        sumrRewardApy={stakedSumrRewardApy}
+        maxSumrRewardApy={maxSumrRewardApy}
         sumrRewardAmount={sumrRewardAmount}
         stats={{
           totalSumrStaked,

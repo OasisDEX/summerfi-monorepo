@@ -172,7 +172,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value),
+        new BigNumber(rewardRates.summerRewardYield.value).multipliedBy(7.2655),
         {
           precision: 2,
         },
