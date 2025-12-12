@@ -1122,7 +1122,7 @@ const SumrV2StakingManageComponent = ({
                     simulationLoading ? (
                       <SkeletonLine width={120} height={20} style={{ marginBottom: '0' }} />
                     ) : simulationData ? (
-                      `+${formatCryptoBalance(simulationData.sumrRewardAmount)} SUMR`
+                      `+${formatCryptoBalance(simulationData.sumrRewardAmount)} SUMR a year`
                     ) : (
                       '-'
                     )

@@ -30,6 +30,7 @@ import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2Pag
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -172,7 +173,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).multipliedBy(7.2655),
+        new BigNumber(rewardRates.summerRewardYield.value).multipliedBy(MAX_MULTIPLE),
         {
           precision: 2,
         },
