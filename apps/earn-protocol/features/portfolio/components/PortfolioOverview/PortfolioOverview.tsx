@@ -31,8 +31,8 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type BlogPosts } from '@/app/server-handlers/raw-calls/blog-posts/types'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'

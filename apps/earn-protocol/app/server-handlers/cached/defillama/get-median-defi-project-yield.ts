@@ -1,4 +1,3 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import dayjs from 'dayjs'
 
 type MedianDefiYieldResponse = {
@@ -21,11 +20,11 @@ type PoolYieldResponse = {
   }[]
 }
 
-const getDefillamaPoolYield = async (poolId: string): Promise<[number, number]> => {
+const getCachedDefillamaPoolYield = async (poolId: string): Promise<[number, number]> => {
   try {
     const response = await fetch(`https://yields.llama.fi/chart/${poolId}`, {
       next: {
-        revalidate: REVALIDATION_TIMES.MEDIAN_DEFI_YIELD,
+        revalidate: 600, // 10 minutes
       },
     })
     const data: PoolYieldResponse = await response.json()
@@ -53,7 +52,7 @@ const getDefillamaPoolYield = async (poolId: string): Promise<[number, number]> 
   }
 }
 
-export const getMedianDefiProjectYield = async ({
+export const getCachedMedianDefiProjectYield = async ({
   project,
 }: {
   project: string
@@ -61,11 +60,11 @@ export const getMedianDefiProjectYield = async ({
   try {
     if (project === 'ethena') {
       // Ethena is a special case, we need to fetch the pool yield instead
-      return getDefillamaPoolYield('66985a81-9c51-46ca-9977-42b4fe7bc6df') // Ethena USDe - Ethereum
+      return getCachedDefillamaPoolYield('66985a81-9c51-46ca-9977-42b4fe7bc6df') // Ethena USDe - Ethereum
     }
     const response = await fetch(`https://yields.llama.fi/medianProject/${project}`, {
       next: {
-        revalidate: REVALIDATION_TIMES.MEDIAN_DEFI_YIELD,
+        revalidate: 600, // 10 minutes
       },
     })
     const medianData: MedianDefiYieldResponse = await response.json()

@@ -1,4 +1,3 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import dayjs from 'dayjs'
 
 type MedianDefiYieldResponse = {
@@ -7,11 +6,11 @@ type MedianDefiYieldResponse = {
   medianAPY: number
 }[]
 
-export const getMedianDefiYield = async (): Promise<number> => {
+export const getCachedMedianDefiYield = async (): Promise<number> => {
   try {
     const response = await fetch('https://yields.llama.fi/median', {
       next: {
-        revalidate: REVALIDATION_TIMES.MEDIAN_DEFI_YIELD,
+        revalidate: 600, // 10 minutes
       },
     })
     const medianData: MedianDefiYieldResponse = await response.json()

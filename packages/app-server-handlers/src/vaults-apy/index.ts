@@ -1,8 +1,10 @@
-import { type GetVaultsApyResponse } from '@summerfi/app-types'
+import {
+  type GetVaultsApyParams,
+  type GetVaultsApyRAWResponse,
+  type GetVaultsApyResponse,
+} from '@summerfi/app-types'
 
 import { getVaultsApyEmptyResponse } from '@/vaults-apy/helpers/get-vaults-apy-empty-response'
-
-import { type GetVaultsApyParams, type GetVaultsApyRAWResponse } from './types'
 
 /**
  * Fetches APY (Annual Percentage Yield) data for multiple vault fleets across different chains.

@@ -4,7 +4,6 @@ import {
   REVALIDATION_TAGS,
   REVALIDATION_TIMES,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher, getVaultsApy, getVaultsInfo } from '@summerfi/app-server-handlers'
 import {
   type HistoryChartData,
   type IArmadaPosition,
@@ -25,14 +24,18 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { getUserBeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { getBlogPosts } from '@/app/server-handlers/blog-posts'
-import { getMigratablePositions } from '@/app/server-handlers/migration'
-import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
+import { getCachedUserBeachClubData } from '@/app/server-handlers/cached/beach-club'
+import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
+import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { getCachedWalletAssets } from '@/app/server-handlers/cached/get-wallet-assets'
+import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
@@ -40,7 +43,6 @@ import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-reward
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
-import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
@@ -78,18 +80,15 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     vaultsInfo,
     sumrStakingRewards,
   ] = await Promise.all([
-    portfolioWalletAssetsHandler(walletAddress),
+    getCachedWalletAssets(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
     unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
-    getVaultsList(),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
-    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    getCachedVaultsList(),
+    getCachedConfig(),
+    getCachedMigratablePositions({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
       [walletAddress],
@@ -99,13 +98,10 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       limit: 50,
       usersAddresses: [walletAddress],
     }),
-    unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
-    unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
-    unstableCache(getBlogPosts, [], cacheConfig)(),
-    unstableCache(getVaultsInfo, [REVALIDATION_TAGS.VAULTS_LIST], {
-      revalidate: REVALIDATION_TIMES.VAULTS_LIST,
-      tags: [REVALIDATION_TAGS.VAULTS_LIST],
-    })(),
+    getCachedUserBeachClubData(walletAddress),
+    getCachedPositionsActivePeriods({ walletAddress }),
+    getCachedBlogPosts(),
+    getCachedVaultsInfo(),
     unstableCache(getSumrStakingRewards, [walletAddress], cacheConfig)({ walletAddress }),
   ])
 
@@ -195,17 +191,14 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     await Promise.all([
       Promise.all(
         vaultsWithConfig.map((vault) =>
-          getPositionHistory({
+          getCachedPositionHistory({
             network: supportedSDKNetwork(vault.protocol.network),
             address: walletAddress.toLowerCase(),
             vault,
           }),
         ),
       ).then(mapPortfolioVaultsApy),
-      unstableCache(getVaultsApy, [walletAddress], {
-        revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-        tags: [REVALIDATION_TAGS.INTEREST_RATES],
-      })({
+      getCachedVaultsApy({
         fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
           fleetAddress: id,
           chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

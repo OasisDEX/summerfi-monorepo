@@ -11,7 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'

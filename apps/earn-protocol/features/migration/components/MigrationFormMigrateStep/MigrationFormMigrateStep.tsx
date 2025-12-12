@@ -25,7 +25,7 @@ import {
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { type BigNumber } from 'bignumber.js'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import {
   MigrationMiniCard,
   MigrationMiniCardType,

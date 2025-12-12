@@ -1,24 +1,19 @@
-import {
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  sumrNetApyConfigCookieName,
-} from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
+import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
   safeParseJson,
 } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
-import { getTallyDelegates } from '@/app/server-handlers/tally'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -62,10 +57,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     }),
     getSumrStakingInfo(),
     getSumrToClaim({ walletAddress }),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-      tags: [REVALIDATION_TAGS.CONFIG],
-    })(),
+    getCachedConfig(),
     getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
 

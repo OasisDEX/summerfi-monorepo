@@ -17,7 +17,7 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import { type PortfolioWalletAsset } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioWalletAsset } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 

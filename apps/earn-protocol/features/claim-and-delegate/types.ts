@@ -1,11 +1,11 @@
 import { type SupportedNetworkIds, type UiTransactionStatuses } from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
+import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
 import { type SumrBalancesData } from '@/app/server-handlers/sumr-balances'
 import { type SumrDelegateStakeData } from '@/app/server-handlers/sumr-delegate-stake'
 import { type SumrStakingInfoData } from '@/app/server-handlers/sumr-staking-info'
 import { type SumrToClaimData } from '@/app/server-handlers/sumr-to-claim'
-import { type TallyDelegate } from '@/app/server-handlers/tally'
 
 export enum ClaimDelegateSteps {
   TERMS = 'terms',

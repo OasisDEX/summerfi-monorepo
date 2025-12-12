@@ -5,7 +5,7 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 
 /**

@@ -197,6 +197,8 @@ export type {
   AggregatedFleetRate,
   HistoricalFleetRates,
   HistoricalFleetRateResult,
+  GetVaultsApyParams,
+  GetVaultsApyRAWResponse,
 } from './src/earn-protocol'
 export {
   supportedDefillamaProtocols,

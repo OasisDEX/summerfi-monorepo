@@ -34,6 +34,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
@@ -46,7 +47,6 @@ import {
   type ClaimDelegateState,
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useTokenBalance } from '@/hooks/use-token-balance'

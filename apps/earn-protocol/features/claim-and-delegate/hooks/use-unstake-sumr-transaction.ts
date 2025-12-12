@@ -8,9 +8,9 @@ import BigNumber from 'bignumber.js'
 import { debounce } from 'lodash-es'
 import { waitForTransactionReceipt } from 'viem/actions'
 
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 

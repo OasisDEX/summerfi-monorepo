@@ -8,21 +8,18 @@ import {
   GlobalIssueBanner,
   GlobalStyles,
   GoogleTagManager,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
   slippageConfigCookieName,
   sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { DeviceType } from '@summerfi/app-types'
 import { getDeviceType, getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import type { Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 import Script from 'next/script'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { largeUsersCookieName } from '@/components/molecules/LargeUserFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
@@ -42,13 +39,13 @@ export const metadata: Metadata = {
 const reactScanDebug = false
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const config = await unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-    revalidate: REVALIDATION_TIMES.CONFIG,
-  })()
+  const [config, cookieRaw, headersList] = await Promise.all([
+    getCachedConfig(),
+    cookies(),
+    headers(),
+  ])
 
-  const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
-  const headersList = await headers()
 
   const locale = 'en'
 

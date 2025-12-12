@@ -12,7 +12,7 @@ import { formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Image from 'next/image'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { type MigrationEarningsData } from '@/features/migration/types'
 import { platformLogoMap, platformLogoMapByMigrationType } from '@/helpers/platform-logo-map'

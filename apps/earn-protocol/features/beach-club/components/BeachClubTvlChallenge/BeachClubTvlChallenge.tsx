@@ -25,7 +25,7 @@ import {
 } from '@summerfi/app-utils'
 import { type MerklReward } from '@summerfi/armada-protocol-common'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'

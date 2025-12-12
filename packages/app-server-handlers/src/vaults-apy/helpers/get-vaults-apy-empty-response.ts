@@ -1,6 +1,4 @@
-import { type GetVaultsApyResponse } from '@summerfi/app-types'
-
-import { type GetVaultsApyParams } from '@/vaults-apy/types'
+import { type GetVaultsApyParams, type GetVaultsApyResponse } from '@summerfi/app-types'
 
 /**
  * Creates an empty APY response structure for the provided fleets.
