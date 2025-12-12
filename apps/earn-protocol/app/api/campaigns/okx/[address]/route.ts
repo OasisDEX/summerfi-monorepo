@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 
-import { isOkxCampaignWallet, saveOkxWallet } from '@/app/server-handlers/campaigns/okx-handlers'
+import {
+  isOkxCampaignWallet,
+  saveOkxWallet,
+} from '@/app/server-handlers/raw-calls/campaigns/okx-handlers'
 
 export async function GET(req: Request, { params }: { params: Promise<{ address: string }> }) {
   const { address } = await params

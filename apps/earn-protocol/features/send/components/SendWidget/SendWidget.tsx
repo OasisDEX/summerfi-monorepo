@@ -25,7 +25,7 @@ import {
 } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { SendFormContent } from '@/features/send/components/SendFormContent/SendFormContent'

@@ -34,12 +34,12 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
+import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getMigratablePositions } from '@/app/server-handlers/migration'
-import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
+import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
@@ -108,7 +108,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         strategies: [strategy],
         usersAddresses: [walletAddress],
       }),
-      getPositionsActivePeriods(walletAddress).then((periods) => {
+      getCachedPositionsActivePeriods({ walletAddress }).then((periods) => {
         return getPaginatedRebalanceActivity({
           page: 1,
           limit: 4,
@@ -187,7 +187,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    getPositionHistory({
+    getCachedPositionHistory({
       network: parsedNetwork,
       address: walletAddress.toLowerCase(),
       vault,
@@ -203,7 +203,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    getMigratablePositions({
+    getCachedMigratablePositions({
       walletAddress,
     }),
     unstableCache(

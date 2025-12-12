@@ -7,7 +7,7 @@ import {
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'

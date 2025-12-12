@@ -1,16 +1,14 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getMigratablePositions } from '@/app/server-handlers/migration'
+import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -24,17 +22,10 @@ type MigrationLandingPageProps = {
 const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const { walletAddress } = await params
 
-  const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.MIGRATION_DATA,
-    tags: [REVALIDATION_TAGS.MIGRATION_DATA],
-  }
-
-  const keyParts = [walletAddress]
-
   const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getMigratablePositions, keyParts, cacheConfig)({ walletAddress }),
+    getCachedMigratablePositions({ walletAddress }),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)

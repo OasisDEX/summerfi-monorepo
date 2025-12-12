@@ -3,7 +3,7 @@ import { parseQueryStringServerSide, parseServerResponseToClient } from '@summer
 import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'

@@ -11,7 +11,7 @@ import Image from 'next/image'
 
 import { OkxClientComponents } from '@/app/campaigns/okx/components/ClientComponents'
 import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'

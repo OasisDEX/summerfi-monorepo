@@ -19,7 +19,7 @@ import { cookies, headers } from 'next/headers'
 import Image from 'next/image'
 import Script from 'next/script'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { largeUsersCookieName } from '@/components/molecules/LargeUserFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'

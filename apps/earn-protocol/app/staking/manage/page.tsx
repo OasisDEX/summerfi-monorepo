@@ -1,7 +1,7 @@
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { SumrV2StakingManageView } from '@/components/layout/SumrV2StakingManageView/SumrV2StakingManageView'
 
 const SumrStakingManagePage = async () => {

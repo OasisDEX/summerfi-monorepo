@@ -6,7 +6,7 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'

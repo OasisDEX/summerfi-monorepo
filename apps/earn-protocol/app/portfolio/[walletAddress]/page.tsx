@@ -24,16 +24,16 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { getUserBeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { getBlogPosts } from '@/app/server-handlers/blog-posts'
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedUserBeachClubData } from '@/app/server-handlers/cached/beach-club'
+import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
+import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getMigratablePositions } from '@/app/server-handlers/migration'
-import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
-import { getPositionHistory } from '@/app/server-handlers/position-history'
-import { getPositionsActivePeriods } from '@/app/server-handlers/positions-active-periods'
+import { getCachedWalletAssets } from '@/app/server-handlers/cached/get-wallet-assets'
+import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
@@ -80,7 +80,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     vaultsInfo,
     sumrStakingRewards,
   ] = await Promise.all([
-    portfolioWalletAssetsHandler(walletAddress),
+    getCachedWalletAssets(walletAddress),
     unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
@@ -88,7 +88,7 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getMigratablePositions, [walletAddress], cacheConfig)({ walletAddress }),
+    getCachedMigratablePositions({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
       [walletAddress],
@@ -98,9 +98,9 @@ const portfolioCallsHandler = async (walletAddress: string) => {
       limit: 50,
       usersAddresses: [walletAddress],
     }),
-    unstableCache(getUserBeachClubData, [walletAddress], cacheConfig)(walletAddress),
-    unstableCache(getPositionsActivePeriods, [walletAddress], cacheConfig)(walletAddress),
-    unstableCache(getBlogPosts, [], cacheConfig)(),
+    getCachedUserBeachClubData(walletAddress),
+    getCachedPositionsActivePeriods({ walletAddress }),
+    getCachedBlogPosts(),
     getCachedVaultsInfo(),
     unstableCache(getSumrStakingRewards, [walletAddress], cacheConfig)({ walletAddress }),
   ])
@@ -191,7 +191,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     await Promise.all([
       Promise.all(
         vaultsWithConfig.map((vault) =>
-          getPositionHistory({
+          getCachedPositionHistory({
             network: supportedSDKNetwork(vault.protocol.network),
             address: walletAddress.toLowerCase(),
             vault,

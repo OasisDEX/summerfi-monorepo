@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { getBeachClubRecruitedUsersServerSide } from '@/app/server-handlers/beach-club/api'
+import { getBeachClubRecruitedUsersServerSide } from '@/app/server-handlers/raw-calls/beach-club/api'
 
 const BeachClubRecruitedUsersQueryParamsSchema = z.object({
   page: z.coerce.number().int().positive().default(1),

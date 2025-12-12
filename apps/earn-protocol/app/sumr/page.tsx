@@ -7,7 +7,7 @@ import {
 import { type Metadata } from 'next'
 import { cookies } from 'next/headers'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'

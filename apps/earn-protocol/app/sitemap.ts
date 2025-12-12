@@ -2,7 +2,7 @@ import { getVaultDetailsUrl, getVaultUrl } from '@summerfi/app-earn-ui'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { type MetadataRoute } from 'next'
 
-import { getCachedConfig } from '@/app/server-handlers/cached/config'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
