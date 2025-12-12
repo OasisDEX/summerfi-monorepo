@@ -1,4 +1,4 @@
-import { INTERNAL_LINKS, REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
+import { INTERNAL_LINKS, REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { type ProAppStats } from '@summerfi/app-types'
 import { unstable_cache as unstableCache } from 'next/cache'
 
@@ -13,11 +13,11 @@ const DEFAULT_STATS: ProAppStats = {
 }
 
 const cacheConfig = {
-  revalidate: REVALIDATION_TIMES.PRO_APP_STATS,
+  revalidate: 600,
   tags: [REVALIDATION_TAGS.PRO_APP_STATS],
 }
 
-export const getProAppStats = unstableCache(
+export const getCachedProAppStats = unstableCache(
   async (): Promise<ProAppStats> => {
     try {
       const response = await fetch(`${INTERNAL_LINKS.summerPro}/api/stats`)

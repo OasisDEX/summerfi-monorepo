@@ -1,37 +1,19 @@
 /* eslint-disable camelcase */
-import { type MerklReward } from '@summerfi/armada-protocol-common'
-import { type AddressValue, type ChainId, ChainIds } from '@summerfi/sdk-common'
+import { type AddressValue, ChainIds } from '@summerfi/sdk-common'
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import {
   defaultLatestActivityPagination,
   getPaginatedLatestActivity,
 } from '@/app/server-handlers/tables-data/latest-activity/api'
-import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
-import {
-  type BeachClubRecruitedUsersPagination,
-  type BeachClubRewardBalance,
-} from '@/features/beach-club/types'
 
 import {
   defaultBeachClubRecruitedUsersPagination,
   getPaginatedBeachClubRecruitedUsers,
 } from './api'
-
-export interface BeachClubData {
-  referral_code: string | null
-  active_users_count: number | null
-  custom_code: string | null
-  total_deposits_referred_usd: string | null
-  rewards: BeachClubRewardBalance[]
-  recruitedUsersWithRewards: BeachClubRecruitedUsersPagination
-  recruitedUsersLatestActivity: LatestActivityPagination
-  claimableRewardsPerChain: {
-    perChain: Partial<{ [key in ChainId]: MerklReward[] }>
-  }
-}
 
 const defaultBeachClubData: BeachClubData = {
   referral_code: null,

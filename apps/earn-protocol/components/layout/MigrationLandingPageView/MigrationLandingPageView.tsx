@@ -40,7 +40,7 @@ import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'

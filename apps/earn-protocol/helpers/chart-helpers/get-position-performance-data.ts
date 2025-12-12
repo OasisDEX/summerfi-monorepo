@@ -8,7 +8,7 @@ import {
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
-import { type GetPositionHistoryReturnType } from '@/app/server-handlers/position-history'
+import { type GetPositionHistoryReturnType } from '@/app/server-handlers/cached/get-position-history'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/constants/charts'
 
 const preparePositionHistoryAndForecast = (

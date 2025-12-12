@@ -26,7 +26,7 @@ import {
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'

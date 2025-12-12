@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { BeachClubBoatChallengeRewardCard } from '@/features/beach-club/components/BeachClubBoatChallengeRewardCard/BeachClubBoatChallengeRewardCard'
 
 import { getBeachClubBoatCards } from './get-cards'

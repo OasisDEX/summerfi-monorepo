@@ -1,4 +1,4 @@
-export const getProtocolTvl = async (
+export const getCachedDefillamaProtocolTvl = async (
   defillamaProtocolName: string,
   originalProtocolName: string,
 ): Promise<{
@@ -7,7 +7,11 @@ export const getProtocolTvl = async (
   const url = `https://api.llama.fi/tvl/${defillamaProtocolName}`
 
   try {
-    const response = await fetch(url)
+    const response = await fetch(url, {
+      next: {
+        revalidate: 600, // 10 minutes
+      },
+    })
     const responseJson = await response.json()
     const tvl = String(responseJson)
 

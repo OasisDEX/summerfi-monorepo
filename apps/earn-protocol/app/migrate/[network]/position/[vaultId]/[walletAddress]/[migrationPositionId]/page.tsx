@@ -16,11 +16,11 @@ import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
-import { getMedianDefiYield } from '@/app/server-handlers/defillama/get-median-defi-yield'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -78,7 +78,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       network: parsedNetwork,
     }),
     getCachedVaultsList(),
-    getMedianDefiYield(),
+    getCachedMedianDefiYield(),
     getCachedMigratablePositions({ walletAddress }),
     getPaginatedTopDepositors({
       page: 1,

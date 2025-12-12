@@ -33,7 +33,7 @@ import BigNumber from 'bignumber.js'
 import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
