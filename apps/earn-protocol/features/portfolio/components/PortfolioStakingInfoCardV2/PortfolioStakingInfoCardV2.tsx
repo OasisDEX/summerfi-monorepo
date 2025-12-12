@@ -10,7 +10,7 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
@@ -171,8 +171,7 @@ export const PortfolioStakingInfoCardV2 = ({
         <Icon iconName="sumr" size={32} />
         <Text variant="h5">
           {formatCryptoBalance(sumrUserData.sumrAvailableToStake)} SUMR available to stake. In
-          addition, earn up to {formatDecimalAsPercent(usdcEarnedOnSumr / 100)} USDC yield on your
-          SUMR.
+          addition, earn up to {formatPercent(usdcEarnedOnSumr)} USDC yield on your SUMR.
         </Text>
       </div>
       <div className={portfolioStakingInfoCardStyles.yieldSourcesWrapper}>
