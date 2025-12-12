@@ -131,9 +131,9 @@ export const PortfolioStakingInfoCardV2 = ({
   sumrUserData,
   sumrPrice,
   sumrRewardApy,
-  // sumrRewardAmount,
+  sumrRewardAmount,
   usdcEarnedOnSumr,
-  // usdcEarnedOnSumrAmount,
+  usdcEarnedOnSumrAmount,
   stats,
   userUsdcRealYield,
   isLoading,
@@ -235,13 +235,13 @@ export const PortfolioStakingInfoCardV2 = ({
                 sumrUserData.sumrStaked > 0
                   ? formatDecimalAsPercent(userUsdcRealYield, { precision: 2 })
                   : `Up to ${formatDecimalAsPercent(usdcEarnedOnSumr / 100, { precision: 2 })}`,
-              // subValue:
-              //   sumrUserData.sumrStaked > 0
-              //     ? `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`
-              //     : usdcEarnedOnSumrAmount === 0
-              //       ? '-'
-              //       : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
-              // subValueType: 'positive',
+              subValue:
+                sumrUserData.sumrStaked > 0
+                  ? `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`
+                  : usdcEarnedOnSumrAmount === 0
+                    ? '-'
+                    : `$${formatCryptoBalance(usdcEarnedOnSumrAmount)} / Year`,
+              subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
           />
@@ -272,11 +272,11 @@ export const PortfolioStakingInfoCardV2 = ({
               ),
               value:
                 sumrRewardApy === 0 ? '-' : `Up to ${formatDecimalAsPercent(sumrRewardApy / 100)}`,
-              // subValue:
-              //   sumrRewardAmount === 0
-              //     ? '-'
-              //     : `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
-              // subValueType: 'positive',
+              subValue:
+                sumrRewardAmount === 0
+                  ? '-'
+                  : `+${formatCryptoBalance(sumrRewardAmount)} SUMR / Year`,
+              subValueType: 'positive',
             }}
             cardClassName={portfolioStakingInfoCardStyles.lighterCardGradient}
           />
