@@ -851,10 +851,15 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const totalWeightedSupplyBN = new BigNumber(_totalWeightedSupply.toString()).shiftedBy(
       -sumrDecimals,
     )
-    const weightedAmountBN = new BigNumber(weightedAmount.toString()).shiftedBy(-sumrDecimals)
+
     const amountBN = new BigNumber(params.amount.toString()).shiftedBy(-sumrDecimals)
-    const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString())
-    const userSumrStakedBalanceBN = new BigNumber(userSumrStakedBalance.toString())
+    const weightedAmountBN = new BigNumber(weightedAmount.toString()).shiftedBy(-sumrDecimals)
+    const userWeightedBalanceBN = new BigNumber(userWeightedBalance.toString()).shiftedBy(
+      -sumrDecimals,
+    )
+    const userSumrStakedBalanceBN = new BigNumber(userSumrStakedBalance.toString()).shiftedBy(
+      -sumrDecimals,
+    )
 
     // Calculate formulas
     // usdcYieldBoost = weightedAmount / amount
@@ -884,7 +889,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       .toNumber()
 
     return {
-      sumrRewardApy: rewardRates.summerRewardYield,
+      sumrRewardApy: rewardRates.summerRewardYield.multiply(usdcYieldBoost),
       usdcYieldApy: Percentage.createFrom({ value: usdcYieldApy.toNumber() }),
       usdcYieldBoost,
       usdcBlendedYieldBoostFrom,
@@ -962,7 +967,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
       return {
         id: stake.id,
-        sumrRewardsAmount: BigInt(sumrRewardsAmount.integerValue(BigNumber.ROUND_DOWN).toFixed(0)),
+        sumrRewardsAmount: BigInt(sumrRewardsAmount.shiftedBy(rewardTokenDecimals).toFixed(0)),
         usdEarningsAmount: usdEarningsAmount.toFixed(6),
       }
     })

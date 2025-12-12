@@ -30,6 +30,7 @@ import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2Pag
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -172,7 +173,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
 
       // Process SUMR reward APY
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value),
+        new BigNumber(rewardRates.summerRewardYield.value).multipliedBy(MAX_MULTIPLE),
         {
           precision: 2,
         },
@@ -296,13 +297,13 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply).shiftedBy(-SUMR_DECIMALS)
 
         // Calculate max APY USD per year
-        const usdcEarnedOnSumrAmount = new BigNumber(
+        const _usdcEarnedOnSumrAmount = new BigNumber(
           totalSumrBN.times(_userBlendedYieldBoost).dividedBy(totalWeightedSupplyBN),
         )
           .times(revenueShare.amount)
           .toFixed(2, BigNumber.ROUND_DOWN)
 
-        setUsdcEarnedOnSumrAmount(usdcEarnedOnSumrAmount)
+        setUsdcEarnedOnSumrAmount(_usdcEarnedOnSumrAmount)
 
         // Set user stakes
         setUserStakes(userStakesData)

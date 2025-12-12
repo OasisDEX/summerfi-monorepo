@@ -1,2 +1,3 @@
 export const SUMR_STAKING_V2_LOCKUP_MAX_DAYS = 1095
 export const SUMR_STAKING_V2_LOCKUP_MIN_DAYS = 14
+export const MAX_MULTIPLE = 7.2655

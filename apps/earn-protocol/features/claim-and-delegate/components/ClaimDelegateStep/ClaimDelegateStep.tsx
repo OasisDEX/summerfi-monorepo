@@ -21,11 +21,13 @@ import {
   SupportedNetworkIds,
   UiTransactionStatuses,
 } from '@summerfi/app-types'
-import { ADDRESS_ZERO, formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { ADDRESS_ZERO, formatPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
+
 import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
 import { mergeDelegatesData } from '@/features/claim-and-delegate/consts'
@@ -141,16 +143,16 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     <Text as="h5" variant="h5">
       {externalData.sumrRewardApy === 0
         ? '-'
-        : `Up to ${formatDecimalAsPercent(externalData.sumrRewardApy / 100)}`}
+        : `Up to ${formatPercent(externalData.sumrRewardApy * MAX_MULTIPLE, { precision: 2 })} `}
       <Text as="span" variant="p4semi">
         APR
       </Text>
     </Text>
   )
-  const sumrPerYear =
-    externalData.sumrRewardAmount === 0
-      ? '-'
-      : `+${formatCryptoBalance(externalData.sumrRewardAmount)} SUMR / Year`
+  // const sumrPerYear =
+  //   externalData.sumrRewardAmount === 0
+  //     ? '-'
+  //     : `+${formatCryptoBalance(externalData.sumrRewardAmount)} SUMR / Year`
 
   const { sumrDelegateTransaction } = useSumrDelegateTransaction({
     onSuccess: () => {
@@ -328,7 +330,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
               marginBottom: 'var(--general-space-8)',
             }}
             valueSize="small"
-            subValue={sumrPerYear}
+            // subValue={sumrPerYear}
             subValueStyle={{
               color: 'var(--earn-protocol-primary-100)',
               marginBottom: 'var(--general-space-8)',
