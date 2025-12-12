@@ -25,7 +25,6 @@ import { ADDRESS_ZERO, formatPercent } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
-
 import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
