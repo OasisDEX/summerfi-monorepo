@@ -14,8 +14,8 @@ import {
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { formatDecimalToBigInt } from '@summerfi/app-utils'
 
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 export const UnstakeOldSumrButton = ({

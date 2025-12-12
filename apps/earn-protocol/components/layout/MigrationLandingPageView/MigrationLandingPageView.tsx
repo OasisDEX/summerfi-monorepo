@@ -41,12 +41,12 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { revalidateMigrationData } from '@/app/server-handlers/revalidation-handlers'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
-import { revalidateMigrationData } from '@/helpers/revalidation-handlers'
 
 import classNames from './MigrationLandingPageView.module.css'
 

@@ -27,12 +27,12 @@ import clsx from 'clsx'
 import Link from 'next/link'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { usePublicClient } from '@/hooks/use-public-client'
 
 import classNames from './PortfolioHeader.module.css'

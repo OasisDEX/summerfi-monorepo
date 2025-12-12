@@ -34,6 +34,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -48,7 +49,6 @@ import { getMigrationSidebarError } from '@/features/migration/helpers/get-migra
 import { useMigrationTransaction } from '@/features/migration/hooks/use-migration-transaction'
 import { migrationReducer, migrationState } from '@/features/migration/state'
 import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
-import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {
