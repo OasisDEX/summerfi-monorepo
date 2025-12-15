@@ -14,3 +14,6 @@ export type AllLockedSumrPositionsTableColumns =
   | 'stakeExpiring'
   | 'ownerAddress'
 // | 'usdValueEarningInLazySummer'
+
+export type LockPeriodAllocationTableColumns = 'bucket' | 'cap' | 'staked' | 'percentage'
+// | 'usdValueEarningInLazySummer'

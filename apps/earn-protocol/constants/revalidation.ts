@@ -20,6 +20,7 @@ export const CACHE_TAGS = {
   DEFI_MEDIAN_YIELD: 'defi-median-yield',
   DEFI_PROTOCOL_TVL: 'defi-protocol-tvl',
   USER_DATA: 'user-data',
+  STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
 }
 
 export const CACHE_TIMES = {
@@ -45,4 +46,5 @@ export const CACHE_TIMES = {
   DEFI_PROTOCOL_TVL: 600,
   ALWAYS_FRESH: 0,
   USER_DATA: 300,
+  STAKING_V2_GLOBAL_DATA: 300,
 }

@@ -32,3 +32,32 @@ export type PortfolioSumrStakingV2Data = {
   userUsdcRealYield: number
   usdcEarnedOnSumrAmount: number
 }
+
+export type LandingPageStakingV2Data = {
+  maxApy: string
+  sumrRewardApy: string
+  protocolRevenue: string
+  protocolTvl: string
+  revenueSharePercentage: string
+  revenueShareAmount: string
+  totalSumrStaked: number
+  circulatingSupply: number
+  averageLockDuration: number
+  allStakes: RecursiveObjectWithNumberInsteadOfBigInt<StakingStake[]>
+  bucketInfo: RecursiveObjectWithNumberInsteadOfBigInt<StakingBucketInfo[]>
+  totalWeightedSupply: number
+}
+
+export type LandingPageStakingV2UserData = {
+  availableSumr: string
+  availableSumrUsd: string
+  claimableSumr: string
+  claimableSumrUsd: string
+  sumrStaked: number
+  userStakes: RecursiveObjectWithNumberInsteadOfBigInt<UserStakeV2[]>
+  earningsEstimation?: RecursiveObjectWithNumberInsteadOfBigInt<StakingEarningsEstimationForStakesV2>
+  penaltyPercentages: { value: number; index: number }[]
+  penaltyAmounts: { value: number; index: number }[]
+  userBlendedYieldBoost: number
+  usdcEarnedOnSumrAmount: string
+}

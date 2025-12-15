@@ -3,6 +3,7 @@ import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '
 
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { SimpleBonusLabel } from '@/components/molecules/SimpleBonusLabel/SimpleBonusLabel'
@@ -10,7 +11,7 @@ import { SimpleBonusLabel } from '@/components/molecules/SimpleBonusLabel/Simple
 import classNames from './SumrStakeCard.module.css'
 
 interface SumrStakeCardProps {
-  apy: number | string
+  apy?: number | string
   tooltipName: string
   availableToStake: number
   availableToStakeUSD: number
@@ -38,18 +39,22 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
             <Icon tokenName="SUMR" size={36} />
             SUMR
           </Text>
-          <SimpleBonusLabel
-            bonusLabel={`SUMR Reward APY up to ${apy}`}
-            tooltipName={tooltipName}
-            onTooltipOpen={onTooltipOpen}
-            tooltip={
-              <div>
-                <Text variant="p3semi" as="p">
-                  SUMR Reward APY up to {apy}
-                </Text>
-              </div>
-            }
-          />
+          {apy ? (
+            <SimpleBonusLabel
+              bonusLabel={`SUMR Reward APY up to ${apy}`}
+              tooltipName={tooltipName}
+              onTooltipOpen={onTooltipOpen}
+              tooltip={
+                <div>
+                  <Text variant="p3semi" as="p">
+                    SUMR Reward APY up to {apy}
+                  </Text>
+                </div>
+              }
+            />
+          ) : (
+            <SkeletonLine width={275} height={38} />
+          )}
         </div>
         <div className={classNames.sumrStakeCardDataWrapper}>
           <div className={classNames.sumrStakeCardDataItem}>
@@ -68,9 +73,11 @@ export const SumrStakeCard: FC<SumrStakeCardProps> = ({
               {yieldToken} Yield
             </Text>
             <Text variant="p1semi" as="p" className={classNames.sumrStakeCardDataValue}>
-              {yieldTokenApy && !isNaN(Number(yieldTokenApy))
-                ? `Up to ${formatDecimalAsPercent(yieldTokenApy)}`
-                : '-'}
+              {yieldTokenApy && !isNaN(Number(yieldTokenApy)) ? (
+                `Up to ${formatDecimalAsPercent(yieldTokenApy)}`
+              ) : (
+                <SkeletonLine width={102} height={28} />
+              )}
             </Text>
           </div>
         </div>

@@ -63,6 +63,16 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
     }
   }
 
+  const handleSlippageSave = () => {
+    setSlippageConfig({ slippage })
+    setSumrNetApyConfig({
+      withSumr: sumrToggle,
+      dilutedValuation: inputValue,
+    })
+    toast.success('Settings saved successfully', SUCCESS_TOAST_CONFIG)
+    handleOpenClose?.()
+  }
+
   return (
     <Card variant="cardSecondary" style={{ maxWidth: '446px' }}>
       <div className={classNames.navConfigContent}>
@@ -199,15 +209,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           )}
           <Button
             variant="primaryMedium"
-            onClick={() => {
-              setSumrNetApyConfig({
-                withSumr: sumrToggle,
-                dilutedValuation: inputValue,
-              })
-              setSlippageConfig({ slippage })
-              toast.success('Settings saved successfully', SUCCESS_TOAST_CONFIG)
-              handleOpenClose?.()
-            }}
+            onClick={handleSlippageSave}
             disabled={
               (sumrNetApyConfig.dilutedValuation === inputValue.replaceAll(',', '') &&
                 sumrNetApyConfig.withSumr === sumrToggle &&
