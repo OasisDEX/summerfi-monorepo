@@ -427,24 +427,22 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
         />
         {/* <SumrPriceBar /> */}
         <div className={sumrV2PageStyles.stakingTabBarWrapper}>
-          {userStakingData && (
-            <LockedSumrInfoTabBarV2
-              bucketInfo={bucketInfo}
-              allStakes={allStakes}
-              isLoading={isLoading}
-              userWalletAddress={userWalletAddress}
-              refetchStakingData={fetchUserStakingData}
-              penaltyPercentages={userStakingData.penaltyPercentages}
-              userBlendedYieldBoost={userStakingData.userBlendedYieldBoost}
-              userSumrStaked={userStakingData.sumrStaked}
-              penaltyAmounts={userStakingData.penaltyAmounts}
-              yourEarningsEstimation={userStakingData.earningsEstimation}
-              stakes={userStakingData.userStakes}
-              totalSumrStaked={totalSumrStaked}
-              averageLockDuration={averageLockDuration}
-              circulatingSupply={circulatingSupply}
-            />
-          )}
+          <LockedSumrInfoTabBarV2
+            bucketInfo={bucketInfo}
+            allStakes={allStakes}
+            isLoading={isLoading}
+            userWalletAddress={userWalletAddress}
+            refetchStakingData={fetchUserStakingData}
+            penaltyPercentages={userStakingData?.penaltyPercentages}
+            userBlendedYieldBoost={userStakingData?.userBlendedYieldBoost}
+            userSumrStaked={userStakingData?.sumrStaked}
+            penaltyAmounts={userStakingData?.penaltyAmounts}
+            yourEarningsEstimation={userStakingData?.earningsEstimation}
+            stakes={userStakingData?.userStakes}
+            totalSumrStaked={totalSumrStaked}
+            averageLockDuration={averageLockDuration}
+            circulatingSupply={circulatingSupply}
+          />
         </div>
         <FaqSection
           data={[
