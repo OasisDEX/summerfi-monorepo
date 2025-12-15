@@ -4,6 +4,7 @@ import {
   parseServerResponseToClient,
   safeParseJson,
 } from '@summerfi/app-utils'
+import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -15,7 +16,9 @@ import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type ClaimPageProps = {
@@ -52,11 +55,17 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
         tallyDelegates: delegates,
       }
     }),
-    getSumrBalances({
+    unstableCache(getSumrBalances, [], {
+      revalidate: CACHE_TIMES.USER_DATA,
+      tags: [getUserDataCacheHandler(walletAddress)],
+    })({
       walletAddress,
     }),
     getSumrStakingInfo(),
-    getSumrToClaim({ walletAddress }),
+    unstableCache(getSumrToClaim, [], {
+      revalidate: CACHE_TIMES.USER_DATA,
+      tags: [getUserDataCacheHandler(walletAddress)],
+    })({ walletAddress }),
     getCachedConfig(),
     getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
