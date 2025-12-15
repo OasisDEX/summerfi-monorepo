@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal } from '@account-kit/react'
 import {
   Button,
@@ -29,6 +29,7 @@ import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2Pag
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
+import { formatStakeLockupPeriod } from '@/helpers/format-stake-lockup-period'
 import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
@@ -67,6 +68,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
   const fetchUserStakingData = useCallback(async () => {
     if (!userWalletAddress) {
       setIsLoading(false)
+      setUserStakingData(undefined)
 
       return
     }
@@ -99,89 +101,121 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
     void fetchUserStakingData()
   }, [fetchUserStakingData])
 
+  const leftCard = useMemo(() => {
+    return userWalletAddress ? (
+      <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
+        <Text as="p" variant="p3semi">
+          SUMR in your wallet and available to stake
+        </Text>
+        <Text as="h4" variant="h4">
+          {isLoading ? (
+            <div className={sumrV2PageStyles.verticalSkeletonLines}>
+              <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
+              <SkeletonLine width={70} height={20} />
+            </div>
+          ) : (
+            <>
+              {formatCryptoBalance(new BigNumber(userStakingData?.availableSumr ?? 0).toNumber())}{' '}
+              SUMR
+              <Text as="span" variant="p4semi">
+                $
+                {formatCryptoBalance(
+                  new BigNumber(userStakingData?.availableSumrUsd ?? 0).toNumber(),
+                )}
+              </Text>
+            </>
+          )}
+        </Text>
+        <Link href="/staking/manage" prefetch>
+          <Button variant="primarySmall" disabled={isLoading}>
+            Stake your SUMR
+          </Button>
+        </Link>
+      </Card>
+    ) : (
+      <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
+        <Text as="p" variant="p3semi">
+          Total SUMR staked
+        </Text>
+        <Text as="h4" variant="h4">
+          {formatCryptoBalance(totalSumrStaked)} SUMR
+          <Text as="span" variant="p4semi">
+            &nbsp;
+            {/* Space for separation */}
+          </Text>
+        </Text>
+        <Button variant="primarySmall" onClick={openAuthModal}>
+          Connect wallet
+        </Button>
+      </Card>
+    )
+  }, [userWalletAddress, isLoading, userStakingData, totalSumrStaked, openAuthModal])
+
+  const rightCard = useMemo(() => {
+    return userWalletAddress ? (
+      <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
+        <Text as="p" variant="p3semi">
+          SUMR available to claim
+        </Text>
+        <Text as="h4" variant="h4">
+          {isLoading ? (
+            <div className={sumrV2PageStyles.verticalSkeletonLines}>
+              <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
+              <SkeletonLine width={70} height={20} />
+            </div>
+          ) : (
+            <>
+              {formatCryptoBalance(new BigNumber(userStakingData?.claimableSumr ?? 0).toNumber())}{' '}
+              SUMR
+              <Text as="span" variant="p4semi">
+                $
+                {formatCryptoBalance(
+                  new BigNumber(userStakingData?.claimableSumrUsd ?? 0).toNumber(),
+                )}
+              </Text>
+            </>
+          )}
+        </Text>
+        {!userWalletAddress ? (
+          <Button variant="secondarySmall" onClick={openAuthModal}>
+            Connect wallet
+          </Button>
+        ) : (
+          <Link href={`/claim/${userWalletAddress}`} prefetch>
+            <Button variant="secondarySmall" disabled={isLoading || !userStakingData}>
+              Claim your SUMR
+            </Button>
+          </Link>
+        )}
+      </Card>
+    ) : (
+      <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
+        <Text as="p" variant="p3semi">
+          Avg SUMR lock period
+        </Text>
+        <Text as="h4" variant="h4">
+          {formatStakeLockupPeriod(averageLockDuration)}
+          <Text as="span" variant="p4semi">
+            &nbsp;
+            {/* Space for separation */}
+          </Text>
+        </Text>
+        <Button variant="secondarySmall" onClick={openAuthModal}>
+          Connect wallet
+        </Button>
+      </Card>
+    )
+  }, [userWalletAddress, isLoading, userStakingData, openAuthModal, averageLockDuration])
+
   return (
     <>
       <SumrV2PageHeader />
       <div className={sumrV2PageStyles.sumrPageV2Wrapper}>
         <div className={sumrV2PageStyles.twoCardsWrapper}>
           <GradientBox selected style={{ cursor: 'auto' }}>
-            <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
-              <Text as="p" variant="p3semi">
-                SUMR in your wallet and available to stake
-              </Text>
-              <Text as="h4" variant="h4">
-                {isLoading ? (
-                  <div className={sumrV2PageStyles.verticalSkeletonLines}>
-                    <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
-                    <SkeletonLine width={70} height={20} />
-                  </div>
-                ) : (
-                  <>
-                    {formatCryptoBalance(
-                      new BigNumber(userStakingData?.availableSumr ?? 0).toNumber(),
-                    )}{' '}
-                    SUMR
-                    <Text as="span" variant="p4semi">
-                      $
-                      {formatCryptoBalance(
-                        new BigNumber(userStakingData?.availableSumrUsd ?? 0).toNumber(),
-                      )}
-                    </Text>
-                  </>
-                )}
-              </Text>
-              {!userWalletAddress ? (
-                <Button variant="primarySmall" onClick={openAuthModal}>
-                  Connect wallet
-                </Button>
-              ) : (
-                <Link href="/staking/manage" prefetch>
-                  <Button variant="primarySmall" disabled={isLoading}>
-                    Stake your SUMR
-                  </Button>
-                </Link>
-              )}
-            </Card>
+            {leftCard}
           </GradientBox>
-          <GradientBox style={{ cursor: 'auto' }}>
-            <Card className={sumrV2PageStyles.cardCentered} variant="cardSecondary">
-              <Text as="p" variant="p3semi">
-                SUMR available to claim
-              </Text>
-              <Text as="h4" variant="h4">
-                {isLoading ? (
-                  <div className={sumrV2PageStyles.verticalSkeletonLines}>
-                    <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
-                    <SkeletonLine width={70} height={20} />
-                  </div>
-                ) : (
-                  <>
-                    {formatCryptoBalance(
-                      new BigNumber(userStakingData?.claimableSumr ?? 0).toNumber(),
-                    )}{' '}
-                    SUMR
-                    <Text as="span" variant="p4semi">
-                      $
-                      {formatCryptoBalance(
-                        new BigNumber(userStakingData?.claimableSumrUsd ?? 0).toNumber(),
-                      )}
-                    </Text>
-                  </>
-                )}
-              </Text>
-              {!userWalletAddress ? (
-                <Button variant="secondarySmall" onClick={openAuthModal}>
-                  Connect wallet
-                </Button>
-              ) : (
-                <Link href={`/claim/${userWalletAddress}`} prefetch>
-                  <Button variant="secondarySmall" disabled={isLoading || !userStakingData}>
-                    Claim your SUMR
-                  </Button>
-                </Link>
-              )}
-            </Card>
-          </GradientBox>
+          <GradientBox style={{ cursor: 'auto' }}>{rightCard}</GradientBox>
         </div>
         <div className={sumrV2PageStyles.twoCardsWrapper}>
           <Card className={sumrV2PageStyles.cardDataBlock} variant="cardSecondary">

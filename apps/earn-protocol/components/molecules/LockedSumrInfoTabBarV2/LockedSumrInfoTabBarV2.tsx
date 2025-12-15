@@ -34,6 +34,7 @@ import {
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
+import { formatStakeLockupPeriod } from '@/helpers/format-stake-lockup-period'
 
 import lockedSumrInfoTabBarV2Styles from './LockedSumrInfoTabBarV2.module.css'
 
@@ -43,39 +44,6 @@ const formatTimestamp = (timestamp: number): string => {
   const date = dayjs.unix(Number(timestamp))
 
   return date.format('YYYY-MM-DD')
-}
-
-const formatLockPeriod = (seconds: number): string => {
-  // returns a nice formatted lock period like "2 years", "6 months", "3 weeks", "5 days"
-  const dayjsNow = dayjs()
-  const timestamp = dayjsNow.add(Number(seconds), 'seconds')
-  const daysCount = timestamp.diff(dayjsNow, 'days')
-  const hoursCount = timestamp.diff(dayjsNow, 'hours')
-  const minutesCount = timestamp.diff(dayjsNow, 'minutes')
-  const minutesClamped = minutesCount % 60
-
-  const hoursLabel = hoursCount === 1 ? 'hour' : `hours`
-  const minutesLabel = minutesClamped === 1 ? 'minute' : `minutes`
-
-  if (Number(seconds) === 0) {
-    return `No lockup`
-  }
-
-  if (daysCount === 0) {
-    // if its zero days its gonna show hours and minutes
-
-    return `${hoursCount > 0 ? `${hoursCount} ${hoursLabel}, ` : ''}${minutesClamped > 0 ? `${minutesClamped} ${minutesLabel}` : ''}`
-  }
-
-  if (daysCount <= 2) {
-    // if its less than two days its gonna show hours
-    return `${hoursCount} ${hoursLabel}`
-  }
-
-  return `${new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 0,
-    useGrouping: true,
-  }).format(Number(daysCount))} days`
 }
 
 const TableCenterCell = ({ children, title }: { title?: string; children: ReactNode }) => {
@@ -311,7 +279,9 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
               )}
             </TableRightCell>
           ),
-          lockPeriod: <TableRightCell>{formatLockPeriod(stake.lockupPeriod)}</TableRightCell>,
+          lockPeriod: (
+            <TableRightCell>{formatStakeLockupPeriod(stake.lockupPeriod)}</TableRightCell>
+          ),
           rewards: <TableCenterCell>{rewardsDisplay}</TableCenterCell>,
           usdEarnings: <TableCenterCell>{usdEarningsDisplay}</TableCenterCell>,
           removeStakePenalty: (
@@ -436,7 +406,7 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
   isLoading,
 }) => {
   // Format average lock duration
-  const averageLockPeriodDisplay = formatLockPeriod(averageLockDuration)
+  const averageLockPeriodDisplay = formatStakeLockupPeriod(averageLockDuration)
 
   // Format total SUMR staked
   const totalSumrStakedDisplay = `${formatCryptoBalance(totalSumrStaked)} SUMR`
@@ -570,7 +540,7 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
       const shareDisplay = `${shareOfStaked.toFixed(2)}%`
 
       // Format lock period
-      const lockPeriodDisplay = formatLockPeriod(stake.lockupPeriod)
+      const lockPeriodDisplay = formatStakeLockupPeriod(stake.lockupPeriod)
 
       // Format owner address
       const ownerDisplay = `${stake.owner.slice(0, 6)}...${stake.owner.slice(-4)}`
