@@ -30,8 +30,11 @@ type RecursiveObjectWithNumberInsteadOfBigInt<T> = {
 
 // same as above but changes bigint to string
 export const parseJsonSafelyWithBigInt = <T>(
-  response: T,
+  response?: T,
 ): RecursiveObjectWithNumberInsteadOfBigInt<T> => {
+  if (!response) {
+    return response as RecursiveObjectWithNumberInsteadOfBigInt<T>
+  }
   try {
     return JSON.parse(
       JSON.stringify(response, (_, value) =>
