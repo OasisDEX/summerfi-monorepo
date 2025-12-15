@@ -418,7 +418,7 @@ const SumrV2PageViewComponent = ({
                   <div className={sumrv2PageViewStyles.governanceSectionText}>
                     <div className={sumrv2PageViewStyles.governanceSectionDescription}>
                       <Text variant="h5">
-                        Incentive alignment: Depositors, SUMR Holders & Lazy Summer Protocol.
+                        Incentive alignment: Depositors, SUMR Holders & Lazy Summer Protocol
                       </Text>
                       <Text as="p" variant="p2semi">
                         Depositors get automated DeFi yield, SUMR holders capture value via staking

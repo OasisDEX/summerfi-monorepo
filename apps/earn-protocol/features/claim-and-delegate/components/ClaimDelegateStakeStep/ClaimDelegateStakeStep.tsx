@@ -416,7 +416,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
           }}
         />
         <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-          Earn $SUMR rewards for staking and delegating your tokens.
+          Earn $SUMR rewards for staking your tokens.
         </Text>
       </div>
       <div className={classNames.rightContent}>
