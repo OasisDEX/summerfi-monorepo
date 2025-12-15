@@ -1,5 +1,4 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { transakPublicApiKey } from '@/features/transak/consts'
 import { type TransakFiatCurrenciesResponse } from '@/features/transak/types'
 
@@ -21,7 +20,7 @@ export const getTransakFiatCurrencies = async (): Promise<
       method: 'GET',
       headers: { 'x-partner-api-key': transakPublicApiKey },
       next: {
-        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        revalidate: CACHE_TIMES.ALWAYS_FRESH,
       },
     })
 

@@ -1,4 +1,3 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import {
   configEarnAppFetcher,
   getArksInterestRates,
@@ -13,6 +12,7 @@ import {
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
 export default async function InstitutionVaultVaultExposurePage({
@@ -24,10 +24,12 @@ export default async function InstitutionVaultVaultExposurePage({
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
 
-  // tags yet to be determined
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, parsedNetwork],
+    revalidate: INSTITUTIONS_CACHE_TIMES.VAULT_DETAILS,
+    tags: [
+      INSTITUTIONS_CACHE_TAGS.VAULT_DETAILS,
+      `vault-details-${institutionName}-${vaultAddress}`,
+    ],
   }
 
   const [vault, config] = await Promise.all([
@@ -40,8 +42,9 @@ export default async function InstitutionVaultVaultExposurePage({
       vaultAddress,
       network: parsedNetwork,
     }),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
+    unstableCache(configEarnAppFetcher, [], {
+      revalidate: INSTITUTIONS_CACHE_TIMES.CONFIG,
+      tags: [INSTITUTIONS_CACHE_TAGS.CONFIG],
     })(),
   ])
 

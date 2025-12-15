@@ -1,7 +1,7 @@
 import { type Dispatch, type FC } from 'react'
 import { Text } from '@summerfi/app-earn-ui'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { BeachClubBigBanner } from '@/features/beach-club/components/BeachClubBigBannner/BeachClubBigBanner'
 import { BeachClubReferAndEarn } from '@/features/beach-club/components/BeachClubReferAndEarn/BeachClubReferAndEarn'
 import { BeachClubRewards } from '@/features/beach-club/components/BeachClubRewards/BeachClubRewards'

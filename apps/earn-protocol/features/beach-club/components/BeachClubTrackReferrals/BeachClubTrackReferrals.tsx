@@ -1,7 +1,7 @@
 import { type FC, useState } from 'react'
 import { Button, Card } from '@summerfi/app-earn-ui'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { getBeachClubRecruitedUsers } from '@/features/beach-club/api/get-beach-club-recruited-users'
 import { BeachClubYourReferralsTable } from '@/features/beach-club/components/BeachClubYourReferralsTable/BeachClubYourReferralsTable'
 

@@ -1,8 +1,8 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelAssetReallocation } from '@/features/panels/vaults/components/PanelAssetReallocation/PanelAssetReallocation'
 
 export default async function InstitutionVaultAssetReallocationPage({
@@ -13,10 +13,12 @@ export default async function InstitutionVaultAssetReallocationPage({
   const { institutionName, vaultAddress, network } = await params
 
   const parsedNetwork = humanNetworktoSDKNetwork(network)
-  // tags yet to be determined
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, parsedNetwork],
+    revalidate: INSTITUTIONS_CACHE_TIMES.VAULT_DETAILS,
+    tags: [
+      INSTITUTIONS_CACHE_TAGS.VAULT_DETAILS,
+      `vault-details-${institutionName}-${vaultAddress}`,
+    ],
   }
 
   const [vault] = await Promise.all([

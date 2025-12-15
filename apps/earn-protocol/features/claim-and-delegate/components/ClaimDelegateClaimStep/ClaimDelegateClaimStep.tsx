@@ -22,6 +22,7 @@ import {
 } from '@summerfi/app-utils'
 import { redirect, useParams, useRouter, useSearchParams } from 'next/navigation'
 
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -165,9 +166,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
         dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
         toast.success('Claimed $SUMR tokens successfully', SUCCESS_TOAST_CONFIG)
+        revalidateUser(resolvedWalletAddress)
       }, delayPerNetwork[clientChainId])
     },
     onError: () => {
+      revalidateUser(resolvedWalletAddress)
       handleClaimError()
     },
     network: chainIdToSDKNetwork(clientChainId),

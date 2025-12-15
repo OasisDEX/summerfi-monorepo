@@ -44,7 +44,10 @@ export { getHumanReadableFleetName } from './helpers/human-readable-fleet-names'
 export { timeUntil } from './helpers/time-until'
 export { isValidUrl } from './helpers/is-valid-url'
 export { mapNumericInput } from './helpers/map-numeric-input'
-export { parseServerResponseToClient } from './helpers/parse-server-response-to-client'
+export {
+  parseServerResponseToClient,
+  parseJsonSafelyWithBigInt,
+} from './helpers/parse-server-response-to-client'
 export { parseQueryStringServerSide } from './helpers/parse-query-string-server-side'
 export {
   configLSKey,

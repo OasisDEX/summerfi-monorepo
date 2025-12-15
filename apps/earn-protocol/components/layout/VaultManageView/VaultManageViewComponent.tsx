@@ -57,7 +57,8 @@ import {
 import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -73,7 +74,6 @@ import { MigrationBox } from '@/features/migration/components/MigrationBox/Migra
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { UnstakeVaultToken } from '@/features/unstake-vault-token/components/UnstakeVaultToken/UnstakeVaultToken'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
-import { revalidatePositionData } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {

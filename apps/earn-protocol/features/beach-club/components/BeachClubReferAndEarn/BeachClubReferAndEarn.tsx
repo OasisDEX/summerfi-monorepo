@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react'
 import { Card, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { BeachClubHowItWorks } from '@/features/beach-club/components/BeachClubHowItWorks/BeachClubHowItWorks'
 import { BeachClubReferralActivity } from '@/features/beach-club/components/BeachClubReferralActivity/BeachClubReferralActivity'
 import { BeachClubTrackReferrals } from '@/features/beach-club/components/BeachClubTrackReferrals/BeachClubTrackReferrals'

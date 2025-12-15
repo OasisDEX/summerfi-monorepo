@@ -25,7 +25,8 @@ import {
 } from '@summerfi/app-utils'
 import { isAddress } from 'viem'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { SendFormContent } from '@/features/send/components/SendFormContent/SendFormContent'
@@ -34,7 +35,6 @@ import { getSendSidebarTitle } from '@/features/send/helpers/get-send-sidebar-ti
 import { useSendTransaction } from '@/features/send/hooks/use-send-transaction'
 import { sendReducer, sendState } from '@/features/send/state'
 import { SendStep, SendTxStatuses } from '@/features/send/types'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'

@@ -15,7 +15,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './BeachClubHowItWorks.module.css'

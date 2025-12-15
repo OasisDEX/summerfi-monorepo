@@ -24,6 +24,7 @@ import Link from 'next/link'
 import { SectionCard } from '@/components/molecules/CardVariants/SectionCard'
 import { WaysToAccessSumr } from '@/components/molecules/WaysToAccessSumr/WaysToAccessSumr'
 import { sdkApiUrl } from '@/constants/sdk'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import sumrLogo from '@/public/img/branding/logo-dark.svg'
@@ -192,12 +193,15 @@ const SumrV2PageViewComponent = ({
         { precision: 2 },
       )
 
+      setMaxApy(maxApyValue)
+
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).toFixed(2, BigNumber.ROUND_DOWN),
+        new BigNumber(rewardRates.summerRewardYield.value)
+          .multipliedBy(MAX_MULTIPLE)
+          .toFixed(2, BigNumber.ROUND_DOWN),
         { precision: 2 },
       )
 
-      setMaxApy(maxApyValue)
       setSumrRewardApy(summerRewardApyValue)
     } catch (error) {
       // eslint-disable-next-line no-console

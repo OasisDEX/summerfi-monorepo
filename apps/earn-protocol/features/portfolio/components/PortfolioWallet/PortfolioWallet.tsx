@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
 
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { PortfolioAssets } from '@/features/portfolio/components/PortfolioAssets/PortfolioAssets'
 import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 

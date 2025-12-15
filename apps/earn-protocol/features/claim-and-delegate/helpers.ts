@@ -1,6 +1,6 @@
 import { ADDRESS_ZERO, formatAddress } from '@summerfi/app-utils'
 
-import { type TallyDelegate } from '@/app/server-handlers/tally'
+import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
 
 /**
  * Gets the display title for a delegate, prioritizing displayName > customTitle > ens > formatted address

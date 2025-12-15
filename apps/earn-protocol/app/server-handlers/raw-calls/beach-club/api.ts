@@ -3,17 +3,10 @@ import BigNumber from 'bignumber.js'
 import { NextResponse } from 'next/server'
 
 import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
-import { type BeachClubRecruitedUsersPagination } from '@/features/beach-club/types'
-
-interface BeachClubRewardBalance {
-  currency: string
-  balance: string
-  balance_usd: string | null
-  amount_per_day: string
-  amount_per_day_usd: string | null
-  total_earned: string
-  total_claimed: string
-}
+import {
+  type BeachClubRecruitedUsersPagination,
+  type BeachClubRewardBalance,
+} from '@/features/beach-club/types'
 
 export const defaultBeachClubRecruitedUsersPagination: BeachClubRecruitedUsersPagination = {
   data: [],

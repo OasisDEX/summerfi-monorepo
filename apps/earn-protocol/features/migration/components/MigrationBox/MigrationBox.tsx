@@ -3,7 +3,7 @@ import { Button, Card, Expander, Text, WithArrow } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { MigrationPositionCard } from '@/features/migration/components/MigrationPositionCard/MigrationPositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 

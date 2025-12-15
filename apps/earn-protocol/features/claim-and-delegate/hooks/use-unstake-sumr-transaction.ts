@@ -8,9 +8,9 @@ import BigNumber from 'bignumber.js'
 import { debounce } from 'lodash-es'
 import { waitForTransactionReceipt } from 'viem/actions'
 
+import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
-import { revalidateUser } from '@/helpers/revalidation-handlers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
@@ -101,7 +101,7 @@ export const useUnstakeV2SumrTransaction = ({
 }: {
   amount: string
   userAddress?: string
-  userStakeIndex: bigint
+  userStakeIndex: number
   refetchStakingData: () => Promise<void>
   onAllTransactionsComplete?: () => void
 }): {
@@ -177,7 +177,7 @@ export const useUnstakeV2SumrTransaction = ({
       const txs = await getUnstakeTxV2({
         amount: debouncedAmount,
         user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
-        userStakeIndex,
+        userStakeIndex: BigInt(userStakeIndex),
       })
 
       const mappedTransactions = txs.map((tx) => ({
@@ -230,19 +230,19 @@ export const useUnstakeV2SumrTransaction = ({
           confirmations: 2,
         }).finally(() => {
           setIsLocalTxLoading(false)
-        })
-        setTransactionQueue((prevQueue) => {
-          if (!prevQueue) return prevQueue
+          setTransactionQueue((prevQueue) => {
+            if (!prevQueue) return prevQueue
 
-          const updatedQueue = prevQueue.map((tx) => {
-            if (tx.type === nextTransaction.type) {
-              return { ...tx, executed: true }
-            }
+            const updatedQueue = prevQueue.map((tx) => {
+              if (tx.type === nextTransaction.type) {
+                return { ...tx, executed: true }
+              }
 
-            return tx
+              return tx
+            })
+
+            return updatedQueue
           })
-
-          return updatedQueue
         })
 
         return result

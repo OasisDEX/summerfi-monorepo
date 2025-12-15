@@ -14,7 +14,7 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatPercent, parseJsonSafelyWithBigInt } from '@summerfi/app-utils'
 import type {
   StakingBucketInfo,
   StakingEarningsEstimationForStakesV2,
@@ -71,10 +71,9 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   const [sumrStaked, setSumrStaked] = useState<number>(0)
   const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
   const [allStakes, setAllStakes] = useState<StakingStake[]>([])
-  const [earningsEstimation, setEarningsEstimation] =
-    useState<StakingEarningsEstimationForStakesV2 | null>(null)
-  // const [allEarningsEstimation, setAllEarningsEstimation] =
-  //   useState<StakingEarningsEstimationForStakesV2 | null>(null)
+  const [earningsEstimation, setEarningsEstimation] = useState<
+    StakingEarningsEstimationForStakesV2 | undefined
+  >()
   const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
     [],
   )
@@ -222,14 +221,6 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
       if (stakingStats.averageLockupPeriod) {
         setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
       }
-
-      // Set all stakes
-      // const _allEarningsEstimation = await getStakingEarningsEstimationV2({
-      // filter first
-      // stakes: allStakesData.filter((_, idx) => idx < 10),
-      // })
-
-      // setAllEarningsEstimation(_allEarningsEstimation)
 
       setAllStakes(allStakesData)
       setIsLoadingAllStakes(false)
@@ -716,22 +707,23 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         {/* <SumrPriceBar /> */}
         <div className={sumrV2PageStyles.stakingTabBarWrapper}>
           <LockedSumrInfoTabBarV2
-            stakes={userStakes}
+            /** Temporarily until we move the data to the backend */
+            penaltyAmounts={parseJsonSafelyWithBigInt(penaltyAmounts as typeof penaltyAmounts)}
+            yourEarningsEstimation={parseJsonSafelyWithBigInt(earningsEstimation)}
+            bucketInfo={parseJsonSafelyWithBigInt(bucketInfo)}
+            allStakes={parseJsonSafelyWithBigInt(allStakes)}
+            stakes={parseJsonSafelyWithBigInt(userStakes)}
+            /** Temporarily until we move the data to the backend */
             isLoading={isLoadingStakes}
             userWalletAddress={userWalletAddress}
             refetchStakingData={fetchStakingData}
             penaltyPercentages={penaltyPercentages}
-            penaltyAmounts={penaltyAmounts}
-            yourEarningsEstimation={earningsEstimation}
-            // allEarningsEstimation={allEarningsEstimation}
             userBlendedYieldBoost={userBlendedYieldBoost}
             userSumrStaked={sumrStaked}
             totalSumrStaked={totalSumrStaked}
-            allStakes={allStakes}
             isLoadingAllStakes={isLoadingAllStakes}
             averageLockDuration={averageLockDuration}
             circulatingSupply={circulatingSupply}
-            bucketInfo={bucketInfo}
             isLoadingBucketInfo={isLoadingBucketInfo}
           />
         </div>

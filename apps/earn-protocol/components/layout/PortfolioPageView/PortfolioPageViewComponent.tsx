@@ -7,10 +7,11 @@ import {
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
-import { type BeachClubData } from '@/app/server-handlers/beach-club/get-user-beach-club-data'
-import { type BlogPosts } from '@/app/server-handlers/blog-posts/types'
-import { type MigratablePosition } from '@/app/server-handlers/migration'
-import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
+import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
+import { type BlogPosts } from '@/app/server-handlers/raw-calls/blog-posts/types'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { sdkApiUrl } from '@/constants/sdk'
@@ -36,6 +37,7 @@ interface PortfolioPageViewComponentProps {
   migrationBestVaultApy: MigrationEarningsDataByChainId
   beachClubData: BeachClubData
   blogPosts: BlogPosts
+  portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -52,6 +54,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   migrationBestVaultApy,
   beachClubData,
   blogPosts,
+  portfolioSumrStakingV2Data,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -69,6 +72,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         migrationBestVaultApy={migrationBestVaultApy}
         beachClubData={beachClubData}
         blogPosts={blogPosts}
+        portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
       />
     </SDKContextProvider>
   )

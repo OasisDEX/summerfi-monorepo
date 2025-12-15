@@ -1,10 +1,10 @@
 'use server'
 
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType, SupportedSDKNetworks } from '@summerfi/app-types'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
@@ -30,7 +30,11 @@ const subgraphsMap = {
   [SupportedSDKNetworks.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
 }
 
-export async function getPositionHistory({ network, address, vault }: GetPositionHistoryParams) {
+export async function getCachedPositionHistory({
+  network,
+  address,
+  vault,
+}: GetPositionHistoryParams) {
   const positionId = `${address}-${vault.id}`
   let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
@@ -52,15 +56,15 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
     await fetch(url, {
       ...params,
       next: {
-        revalidate: REVALIDATION_TIMES.POSITION_HISTORY,
-        tags: [REVALIDATION_TAGS.POSITION_HISTORY, address.toLowerCase()],
+        revalidate: CACHE_TIMES.POSITION_HISTORY,
+        tags: [CACHE_TAGS.POSITION_HISTORY, address.toLowerCase()],
       },
     })
 
   const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
 
   if (!isProperNetwork(network)) {
-    throw new Error(`getPositionHistory: No endpoint found for network: ${network}`)
+    throw new Error(`getCachedPositionHistory: No endpoint found for network: ${network}`)
   }
 
   const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
@@ -96,4 +100,4 @@ export async function getPositionHistory({ network, address, vault }: GetPositio
   }
 }
 
-export type GetPositionHistoryReturnType = Awaited<ReturnType<typeof getPositionHistory>>
+export type GetPositionHistoryReturnType = Awaited<ReturnType<typeof getCachedPositionHistory>>

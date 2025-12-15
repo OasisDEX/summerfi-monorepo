@@ -3,7 +3,7 @@ import { type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { type TransactionMetadataMigration } from '@summerfi/sdk-common'
 import { type BigNumber } from 'bignumber.js'
 
-import { type MigratablePosition } from '@/app/server-handlers/migration'
+import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { MigrationFormCompleteStep } from '@/features/migration/components/MigrationFormCompleteStep/MigrationFormCompleteStep'
 import { MigrationFormMigrateStep } from '@/features/migration/components/MigrationFormMigrateStep/MigrationFormMigrateStep'
 import { type MigrationState, MigrationSteps } from '@/features/migration/types'

@@ -1,8 +1,9 @@
 import { type Dispatch, type FC, useEffect, useState } from 'react'
-import { Icon, REVALIDATION_TIMES, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
+import { Icon, Text, Tooltip, useMobileCheck } from '@summerfi/app-earn-ui'
 import debounce from 'lodash-es/debounce'
 import { useParams } from 'next/navigation'
 
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { TransakExchangeDetails } from '@/features/transak/components/TransakExchangeDetails/TransakExchangeDetails'
 import { TransakExchangeInput } from '@/features/transak/components/TransakExchangeInput/TransakExchangeInput'
@@ -61,7 +62,7 @@ export const TransakExchange: FC<TransakExchangeProps> = ({ dispatch, state, inj
           }),
           {
             next: {
-              revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+              revalidate: CACHE_TIMES.ALWAYS_FRESH,
             },
           },
         )

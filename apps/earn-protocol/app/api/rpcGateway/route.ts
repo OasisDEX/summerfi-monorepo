@@ -1,7 +1,7 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { getRpcGatewayUrl } from '@/helpers/rpc-gateway'
 
 /**
@@ -22,13 +22,6 @@ export async function POST(req: NextRequest) {
   if (!rpcGatewayUrl) {
     return NextResponse.json({ error: 'Invalid network or RPC Config is missing' }, { status: 400 })
   }
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      Connection: 'keep-alive',
-      'Content-Length': '',
-    },
-  }
 
   const body = JSON.stringify(await req.json())
 
@@ -36,7 +29,8 @@ export async function POST(req: NextRequest) {
     method: req.method,
     body,
     headers: {
-      ...config.headers,
+      'Content-Type': 'application/json',
+      Connection: 'keep-alive',
       'Content-Length': body.length.toString(),
     },
   })
@@ -45,7 +39,7 @@ export async function POST(req: NextRequest) {
     const response = await fetch(request, {
       cache: 'no-store',
       next: {
-        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        revalidate: CACHE_TIMES.ALWAYS_FRESH,
       },
     })
 

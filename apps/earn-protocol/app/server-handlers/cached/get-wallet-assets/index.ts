@@ -1,24 +1,13 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import { type NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
+import { type TokenSymbolsList } from '@summerfi/app-types'
 
-export type PortfolioWalletAsset = {
-  id: string
-  name: string
-  network: NetworkNames
-  symbol: TokenSymbolsList
-  priceUSD: number
-  price24hChange?: number
-  balance: number
-  balanceUSD: number
-}
+import {
+  type PortfolioAssetsResponse,
+  type PortfolioWalletAsset,
+} from '@/app/server-handlers/cached/get-wallet-assets/types'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
-export type PortfolioAssetsResponse = {
-  totalAssetsUsdValue: number
-  totalAssetsPercentageChange: number
-  assets: PortfolioWalletAsset[]
-}
-
-export const portfolioWalletAssetsHandler = async (
+export const getCachedWalletAssets = async (
   walletAddress: string,
 ): Promise<PortfolioAssetsResponse> => {
   // Return empty, default values if in dev environment
@@ -30,8 +19,8 @@ export const portfolioWalletAssetsHandler = async (
     `${process.env.FUNCTIONS_API_URL}/api/portfolio/assets?address=${walletAddress}`,
     {
       next: {
-        revalidate: REVALIDATION_TIMES.PORTFOLIO_ASSETS,
-        tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS, walletAddress.toLowerCase()],
+        revalidate: CACHE_TIMES.USER_DATA,
+        tags: [getUserDataCacheHandler(walletAddress), CACHE_TAGS.PORTFOLIO_DATA],
       },
     },
   )

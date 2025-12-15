@@ -1,19 +1,14 @@
 import { type FC } from 'react'
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-import {
-  configEarnAppFetcher,
-  getArksInterestRates,
-  getVaultsApy,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
 import {
   parseServerResponseToClient,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 
-import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -26,12 +21,7 @@ interface YieldTrendPageProps {
 
 export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPromise }) => {
   const { vaultIdWithNetwork } = await paramsPromise
-  const [{ vaults }, configRaw] = await Promise.all([
-    getVaultsList(),
-    unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-      revalidate: REVALIDATION_TIMES.CONFIG,
-    })(),
-  ])
+  const [{ vaults }, configRaw] = await Promise.all([getCachedVaultsList(), getCachedConfig()])
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -70,7 +60,7 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
         chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
       })),
     }),
-    getVaultsApy({
+    getCachedVaultsApy({
       fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),

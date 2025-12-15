@@ -2,7 +2,6 @@ declare const styles: {
   readonly "halfCardsRow": string;
   readonly "header": string;
   readonly "lighterCardGradient": string;
-  readonly "loadingOverlay": string;
   readonly "portfolioStakingInfoCardWrapper": string;
   readonly "stakingStatsBlock": string;
   readonly "stakingStatsWrapper": string;

@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode } from 'react'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -42,7 +43,10 @@ export const AllocationBar: FC<AllocationBarProps> = ({ variant = 'large', items
         <Tooltip
           key={`${item.label}-${idx}`}
           tooltip={item.tooltip ?? <TooltipContent {...item} />}
-          style={{ width: `${item.percentage * 100}%`, height: '100%' }}
+          style={{
+            width: `${Number(new BigNumber(item.percentage).toFixed(2)) * 100}%`,
+            height: '100%',
+          }}
           tooltipWrapperStyles={{ minWidth: '300px', top: '24px' }}
           tooltipCardVariant="cardPrimarySmallPaddings"
         >

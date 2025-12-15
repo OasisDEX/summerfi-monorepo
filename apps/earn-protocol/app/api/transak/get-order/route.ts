@@ -1,6 +1,6 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 
 export async function GET(req: NextRequest) {
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
         'access-token': accessToken.value,
       },
       next: {
-        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        revalidate: CACHE_TIMES.ALWAYS_FRESH,
       },
     })
 
