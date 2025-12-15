@@ -1,10 +1,11 @@
-import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 
 import {
   type PortfolioAssetsResponse,
   type PortfolioWalletAsset,
 } from '@/app/server-handlers/cached/get-wallet-assets/types'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
 export const getCachedWalletAssets = async (
   walletAddress: string,
@@ -18,8 +19,8 @@ export const getCachedWalletAssets = async (
     `${process.env.FUNCTIONS_API_URL}/api/portfolio/assets?address=${walletAddress}`,
     {
       next: {
-        revalidate: 300, // 5 minutes
-        tags: [REVALIDATION_TAGS.PORTFOLIO_ASSETS, walletAddress.toLowerCase()],
+        revalidate: CACHE_TIMES.USER_DATA,
+        tags: [getUserDataCacheHandler(walletAddress), CACHE_TAGS.PORTFOLIO_DATA],
       },
     },
   )

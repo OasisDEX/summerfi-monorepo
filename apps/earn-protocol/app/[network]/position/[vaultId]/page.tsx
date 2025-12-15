@@ -1,10 +1,4 @@
-import {
-  getDisplayToken,
-  isVaultAtLeastDaysOld,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
 import {
   getArksInterestRates,
   getVaultInfo,
@@ -39,6 +33,7 @@ import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/la
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
@@ -112,10 +107,9 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+    revalidate: CACHE_TIMES.INTEREST_RATES,
+    tags: [CACHE_TAGS.INTEREST_RATES],
   }
-  const keyParts = [vaultId, paramsNetwork]
 
   const [
     fullArkInterestRatesMap,
@@ -141,7 +135,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       : Promise.resolve({}),
     unstableCache(
       getVaultsHistoricalApy,
-      keyParts,
+      [],
       cacheConfig,
     )({
       // just the vault displayed
@@ -158,7 +152,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     }),
     unstableCache(
       getVaultInfo,
-      keyParts,
+      [],
       cacheConfig,
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])

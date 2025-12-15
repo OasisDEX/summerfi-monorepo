@@ -1,6 +1,5 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
-
 import { getCookies } from '@/constants/get-cookies'
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { transakProductionUrl } from '@/features/transak/consts'
 import { type TransakIpCountryCodeResponse } from '@/features/transak/types'
 
@@ -24,7 +23,7 @@ export const getTransakIpCountryCode = async (): Promise<
       method: 'GET',
       headers: { accept: 'application/json' },
       next: {
-        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        revalidate: CACHE_TIMES.ALWAYS_FRESH,
       },
     }
 

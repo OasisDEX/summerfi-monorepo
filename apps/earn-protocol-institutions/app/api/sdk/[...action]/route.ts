@@ -1,5 +1,6 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
+
+import { INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 
 // Rewrite the path to remove the /api/sdk/ prefix
 // This is necessary to use sdkApiUrl correctly
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
     method: 'POST',
     body: JSON.stringify(await req.json()),
     next: {
-      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      revalidate: INSTITUTIONS_CACHE_TIMES.ALWAYS_FRESH,
     },
   })
 
@@ -52,7 +53,7 @@ export async function GET(req: NextRequest) {
   const response = await fetch(url, {
     headers,
     next: {
-      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      revalidate: INSTITUTIONS_CACHE_TIMES.ALWAYS_FRESH,
     },
   })
 

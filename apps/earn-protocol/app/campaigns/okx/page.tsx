@@ -1,10 +1,4 @@
-import {
-  BigGradientBox,
-  ProtocolStats,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  Text,
-} from '@summerfi/app-earn-ui'
+import { BigGradientBox, ProtocolStats, Text } from '@summerfi/app-earn-ui'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 import Image from 'next/image'
@@ -14,6 +8,7 @@ import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButto
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 import okxHeaderImage from '@/public/img/campaigns/header-okx.svg'
 
@@ -23,9 +18,9 @@ export default async function OkxCampaignPage() {
   const [{ vaults }, configRaw, latestActivity] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getPaginatedLatestActivity, [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS], {
-      revalidate: REVALIDATION_TIMES.LP_SUMMER_PRO_STATS,
-      tags: [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS],
+    unstableCache(getPaginatedLatestActivity, [], {
+      revalidate: CACHE_TIMES.LP_SUMMER_PRO_STATS,
+      tags: [CACHE_TAGS.LP_SUMMER_PRO_STATS],
     })({
       page: 1,
       limit: 1,

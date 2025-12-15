@@ -1,4 +1,3 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -22,6 +21,7 @@ import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-inf
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const emptyTvls = {
@@ -98,28 +98,28 @@ export async function GET() {
   ] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getPaginatedRebalanceActivity, [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY], {
-      revalidate: REVALIDATION_TIMES.LP_REBALANCE_ACTIVITY,
-      tags: [REVALIDATION_TAGS.LP_REBALANCE_ACTIVITY],
+    unstableCache(getPaginatedRebalanceActivity, [], {
+      revalidate: CACHE_TIMES.LP_REBALANCE_ACTIVITY,
+      tags: [CACHE_TAGS.LP_REBALANCE_ACTIVITY],
     })({
       page: 1,
       limit: 1,
     }),
-    unstableCache(getPaginatedLatestActivity, [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS], {
-      revalidate: REVALIDATION_TIMES.LP_SUMMER_PRO_STATS,
-      tags: [REVALIDATION_TAGS.LP_SUMMER_PRO_STATS],
+    unstableCache(getPaginatedLatestActivity, [], {
+      revalidate: CACHE_TIMES.LP_SUMMER_PRO_STATS,
+      tags: [CACHE_TAGS.LP_SUMMER_PRO_STATS],
     })({
       page: 1,
       limit: 1,
     }),
     getCachedProAppStats(),
-    unstableCache(getProtocolsTvl, [REVALIDATION_TAGS.LP_PROTOCOLS_TVL], {
-      revalidate: REVALIDATION_TIMES.LP_PROTOCOLS_TVL,
-      tags: [REVALIDATION_TAGS.LP_PROTOCOLS_TVL],
+    unstableCache(getProtocolsTvl, [], {
+      revalidate: CACHE_TIMES.LP_PROTOCOLS_TVL,
+      tags: [CACHE_TAGS.LP_PROTOCOLS_TVL],
     })(),
-    unstableCache(getProtocolsApy, [REVALIDATION_TAGS.LP_PROTOCOLS_APY], {
-      revalidate: REVALIDATION_TIMES.LP_PROTOCOLS_APY,
-      tags: [REVALIDATION_TAGS.LP_PROTOCOLS_APY],
+    unstableCache(getProtocolsApy, [], {
+      revalidate: CACHE_TIMES.LP_PROTOCOLS_APY,
+      tags: [CACHE_TAGS.LP_PROTOCOLS_APY],
     })(),
     getCachedVaultsInfo(),
   ])

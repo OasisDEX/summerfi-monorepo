@@ -1,14 +1,15 @@
-import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getBeachClubRecruitedUsersServerSide } from '@/app/server-handlers/raw-calls/beach-club/api'
 import { getUserBeachClubData } from '@/app/server-handlers/raw-calls/beach-club/get-user-beach-club-data'
 import { type TableSortOrder } from '@/app/server-handlers/tables-data/types'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
 export const getCachedUserBeachClubData = async (walletAddress: string) => {
-  return await unstableCache(getUserBeachClubData, [walletAddress], {
-    revalidate: 600, // 10 minutes
-    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, walletAddress.toLowerCase()],
+  return await unstableCache(getUserBeachClubData, [], {
+    revalidate: CACHE_TIMES.BEACH_CLUB_PROFILE,
+    tags: [getUserDataCacheHandler(walletAddress), CACHE_TAGS.BEACH_CLUB_PROFILE],
   })(walletAddress)
 }
 
@@ -24,8 +25,8 @@ export const getCachedBeachClubRecruitedUsersServerSide = async ({
   orderBy?: TableSortOrder
 }) => {
   return await unstableCache(getBeachClubRecruitedUsersServerSide, [], {
-    revalidate: 300, // 10 minutes
-    tags: [],
+    revalidate: CACHE_TIMES.BEACH_CLUB_RECRUITS,
+    tags: [CACHE_TAGS.BEACH_CLUB_RECRUITS, referralCode],
   })({
     page,
     limit,

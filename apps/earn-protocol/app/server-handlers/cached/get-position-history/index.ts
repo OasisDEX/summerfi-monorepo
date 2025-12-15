@@ -1,10 +1,10 @@
 'use server'
 
-import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType, SupportedSDKNetworks } from '@summerfi/app-types'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
@@ -56,8 +56,8 @@ export async function getCachedPositionHistory({
     await fetch(url, {
       ...params,
       next: {
-        revalidate: 300, // 5 minutes
-        tags: [REVALIDATION_TAGS.POSITION_HISTORY, address.toLowerCase()],
+        revalidate: CACHE_TIMES.POSITION_HISTORY,
+        tags: [CACHE_TAGS.POSITION_HISTORY, address.toLowerCase()],
       },
     })
 

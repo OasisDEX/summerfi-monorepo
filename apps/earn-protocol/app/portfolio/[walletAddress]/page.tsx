@@ -1,9 +1,4 @@
-import {
-  getPositionValues,
-  getUniqueVaultId,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-} from '@summerfi/app-earn-ui'
+import { getPositionValues, getUniqueVaultId } from '@summerfi/app-earn-ui'
 import {
   type HistoryChartData,
   type IArmadaPosition,
@@ -44,11 +39,13 @@ import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
@@ -60,8 +57,8 @@ type PortfolioPageProps = {
 
 const portfolioCallsHandler = async (walletAddress: string) => {
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.PORTFOLIO_DATA,
-    tags: [REVALIDATION_TAGS.PORTFOLIO_DATA, walletAddress.toLowerCase()],
+    revalidate: CACHE_TIMES.PORTFOLIO_DATA,
+    tags: [getUserDataCacheHandler(walletAddress)],
   }
   const [
     walletData,
@@ -81,28 +78,28 @@ const portfolioCallsHandler = async (walletAddress: string) => {
     sumrStakingRewards,
   ] = await Promise.all([
     getCachedWalletAssets(walletAddress),
-    unstableCache(getSumrDelegateStake, [walletAddress], cacheConfig)({ walletAddress }),
-    unstableCache(getSumrBalances, [walletAddress], cacheConfig)({ walletAddress }),
-    unstableCache(getSumrStakingInfo, [walletAddress], cacheConfig)(),
-    unstableCache(getSumrToClaim, [walletAddress], cacheConfig)({ walletAddress }),
-    unstableCache(getUserPositions, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrDelegateStake, [], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrBalances, [], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrStakingInfo, [], cacheConfig)(),
+    unstableCache(getSumrToClaim, [], cacheConfig)({ walletAddress }),
+    unstableCache(getUserPositions, [], cacheConfig)({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedMigratablePositions({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
-      [walletAddress],
+      [],
       cacheConfig,
     )({
       page: 1,
       limit: 50,
-      usersAddresses: [walletAddress],
+      usersAddresses: [],
     }),
     getCachedUserBeachClubData(walletAddress),
     getCachedPositionsActivePeriods({ walletAddress }),
     getCachedBlogPosts(),
     getCachedVaultsInfo(),
-    unstableCache(getSumrStakingRewards, [walletAddress], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrStakingRewards, [], cacheConfig)({ walletAddress }),
   ])
 
   return {

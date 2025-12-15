@@ -1,7 +1,9 @@
-import { REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import { unstable_cache as unstableCache } from 'next/cache'
 
-export const getCachedConfig = unstableCache(configEarnAppFetcher, [REVALIDATION_TAGS.CONFIG], {
-  revalidate: 60, // 1 minute,
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+
+export const getCachedConfig = unstableCache(configEarnAppFetcher, [], {
+  revalidate: CACHE_TIMES.CONFIG,
+  tags: [CACHE_TAGS.CONFIG],
 })

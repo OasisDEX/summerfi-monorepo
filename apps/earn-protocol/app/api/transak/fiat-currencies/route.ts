@@ -1,6 +1,6 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 import { type TransakFiatCurrenciesResponse } from '@/features/transak/types'
 
@@ -27,7 +27,7 @@ export async function GET(req: ExtendedApiRequest) {
       method: 'GET',
       headers: { accept: 'application/json' },
       next: {
-        revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+        revalidate: CACHE_TIMES.ALWAYS_FRESH,
       },
     })
 

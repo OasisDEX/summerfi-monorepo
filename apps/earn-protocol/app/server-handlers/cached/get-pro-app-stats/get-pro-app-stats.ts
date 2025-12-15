@@ -1,6 +1,8 @@
-import { INTERNAL_LINKS, REVALIDATION_TAGS } from '@summerfi/app-earn-ui'
+import { INTERNAL_LINKS } from '@summerfi/app-earn-ui'
 import { type ProAppStats } from '@summerfi/app-types'
 import { unstable_cache as unstableCache } from 'next/cache'
+
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 
 const DEFAULT_STATS: ProAppStats = {
   monthlyVolume: 0,
@@ -10,11 +12,6 @@ const DEFAULT_STATS: ProAppStats = {
   executedTriggersLast90Days: 0,
   lockedCollateralActiveTrigger: 0,
   triggersSuccessRate: 0,
-}
-
-const cacheConfig = {
-  revalidate: 600,
-  tags: [REVALIDATION_TAGS.PRO_APP_STATS],
 }
 
 export const getCachedProAppStats = unstableCache(
@@ -35,5 +32,8 @@ export const getCachedProAppStats = unstableCache(
     }
   },
   [],
-  cacheConfig,
+  {
+    revalidate: CACHE_TIMES.PRO_APP_STATS,
+    tags: [CACHE_TAGS.PRO_APP_STATS],
+  },
 )

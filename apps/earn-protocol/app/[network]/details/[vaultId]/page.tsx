@@ -1,10 +1,4 @@
-import {
-  getDisplayToken,
-  REVALIDATION_TAGS,
-  REVALIDATION_TIMES,
-  Text,
-  VaultGridDetails,
-} from '@summerfi/app-earn-ui'
+import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
@@ -28,6 +22,7 @@ import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/const
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
@@ -93,11 +88,9 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
   })
 
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+    revalidate: CACHE_TIMES.INTEREST_RATES,
+    tags: [CACHE_TAGS.INTEREST_RATES],
   }
-
-  const keyParts = [vaultId, network]
 
   const [fullArkInterestRatesMap, latestArkInterestRatesMap, vaultInterestRates, vaultsApyRaw] =
     await Promise.all([
@@ -114,7 +107,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       }),
       unstableCache(
         getVaultsHistoricalApy,
-        keyParts,
+        [],
         cacheConfig,
       )({
         // just the vault displayed

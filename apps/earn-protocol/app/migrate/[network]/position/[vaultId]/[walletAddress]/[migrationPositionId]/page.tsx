@@ -1,4 +1,4 @@
-import { REVALIDATION_TAGS, REVALIDATION_TIMES, Text } from '@summerfi/app-earn-ui'
+import { Text } from '@summerfi/app-earn-ui'
 import {
   getArksInterestRates,
   getVaultInfo,
@@ -26,6 +26,7 @@ import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/la
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
+import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import {
   decorateVaultsWithConfig,
@@ -115,11 +116,9 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     : []
 
   const cacheConfig = {
-    revalidate: REVALIDATION_TIMES.INTEREST_RATES,
-    tags: [REVALIDATION_TAGS.INTEREST_RATES],
+    revalidate: CACHE_TIMES.INTEREST_RATES,
+    tags: [CACHE_TAGS.INTEREST_RATES],
   }
-
-  const keyParts = [walletAddress, vaultId, paramsNetwork]
 
   const [
     fullArkInterestRatesMap,
@@ -145,7 +144,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       : Promise.resolve({}),
     unstableCache(
       getVaultsHistoricalApy,
-      keyParts,
+      [],
       cacheConfig,
     )({
       // just the vault displayed
@@ -162,7 +161,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     }),
     unstableCache(
       getVaultInfo,
-      keyParts,
+      [],
       cacheConfig,
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])

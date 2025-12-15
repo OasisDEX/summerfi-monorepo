@@ -1,7 +1,7 @@
-import { REVALIDATION_TIMES } from '@summerfi/app-earn-ui'
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { CACHE_TIMES } from '@/constants/revalidation'
 import { getTransakUrl } from '@/features/transak/helpers/get-transak-url'
 import { type TransakRefreshTokenResponse } from '@/features/transak/types'
 
@@ -38,7 +38,7 @@ export async function GET(req: ExtendedApiRequest) {
     },
     body: JSON.stringify({ apiKey: partnerApiKey }),
     next: {
-      revalidate: REVALIDATION_TIMES.ALWAYS_FRESH,
+      revalidate: CACHE_TIMES.ALWAYS_FRESH,
     },
   }
 
