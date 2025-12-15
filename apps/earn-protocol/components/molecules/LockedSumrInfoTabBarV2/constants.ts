@@ -1,7 +1,7 @@
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
-  LockPeriodAllocationTableColumns,
+  type LockPeriodAllocationTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 
 export const yourLockedSumrPositionsTableColumns: {
