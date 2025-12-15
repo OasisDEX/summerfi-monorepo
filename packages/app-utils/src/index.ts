@@ -46,7 +46,7 @@ export { isValidUrl } from './helpers/is-valid-url'
 export { mapNumericInput } from './helpers/map-numeric-input'
 export {
   parseServerResponseToClient,
-  parseServerResponseToClientWithBigint,
+  parseJsonSafelyWithBigInt,
 } from './helpers/parse-server-response-to-client'
 export { parseQueryStringServerSide } from './helpers/parse-query-string-server-side'
 export {

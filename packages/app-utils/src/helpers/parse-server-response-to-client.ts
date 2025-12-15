@@ -20,8 +20,18 @@ export const parseServerResponseToClient = <T>(response: T): T => {
   }
 }
 
+type RecursiveObjectWithNumberInsteadOfBigInt<T> = {
+  [K in keyof T]: T[K] extends bigint
+    ? number
+    : T[K] extends object
+      ? RecursiveObjectWithNumberInsteadOfBigInt<T[K]>
+      : T[K]
+}
+
 // same as above but changes bigint to string
-export const parseServerResponseToClientWithBigint = <T>(response: T): T => {
+export const parseJsonSafelyWithBigInt = <T>(
+  response: T,
+): RecursiveObjectWithNumberInsteadOfBigInt<T> => {
   try {
     return JSON.parse(
       JSON.stringify(response, (_, value) =>
@@ -30,8 +40,6 @@ export const parseServerResponseToClientWithBigint = <T>(response: T): T => {
     )
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse server response (with bigint', e)
-
-    return response
+    throw console.error('Failed to safely parse response with BigInt', e)
   }
 }

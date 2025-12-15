@@ -1,4 +1,4 @@
-import { parseServerResponseToClientWithBigint } from '@summerfi/app-utils'
+import { parseJsonSafelyWithBigInt } from '@summerfi/app-utils'
 import { type AddressValue, ChainIds, User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -52,8 +52,8 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
         ? Number(stakingStats.averageLockupPeriod)
         : 0,
       userStakes: [],
-      allStakes: allStakesData,
-      bucketInfo: bucketsInfo,
+      allStakes: parseJsonSafelyWithBigInt(allStakesData),
+      bucketInfo: parseJsonSafelyWithBigInt(bucketsInfo),
       penaltyPercentages: [],
       penaltyAmounts: [],
       yourEarningsEstimation: undefined,
@@ -118,9 +118,9 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
     averageLockDuration: stakingStats.averageLockupPeriod
       ? Number(stakingStats.averageLockupPeriod)
       : 0,
-    userStakes: parseServerResponseToClientWithBigint(userStakesData),
-    allStakes: parseServerResponseToClientWithBigint(allStakesData),
-    bucketInfo: parseServerResponseToClientWithBigint(bucketsInfo),
+    userStakes: parseJsonSafelyWithBigInt(userStakesData),
+    allStakes: parseJsonSafelyWithBigInt(allStakesData),
+    bucketInfo: parseJsonSafelyWithBigInt(bucketsInfo),
     penaltyPercentages: penaltyCalculationPercentage.map((percentage, idx) => ({
       value: percentage.value,
       index: userStakesData[idx].index,
@@ -129,7 +129,7 @@ export const getPortfolioSumrStakingV2Data: GetPortfolioSumrStakingV2DataFuncTyp
       value: Number(amount),
       index: userStakesData[idx].index,
     })),
-    yourEarningsEstimation: parseServerResponseToClientWithBigint(yourEarningsEstimation),
+    yourEarningsEstimation: parseJsonSafelyWithBigInt(yourEarningsEstimation),
     userBlendedYieldBoost,
     userUsdcRealYield,
     usdcEarnedOnSumrAmount,
