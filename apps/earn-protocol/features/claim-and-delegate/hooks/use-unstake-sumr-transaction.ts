@@ -230,19 +230,19 @@ export const useUnstakeV2SumrTransaction = ({
           confirmations: 2,
         }).finally(() => {
           setIsLocalTxLoading(false)
-        })
-        setTransactionQueue((prevQueue) => {
-          if (!prevQueue) return prevQueue
+          setTransactionQueue((prevQueue) => {
+            if (!prevQueue) return prevQueue
 
-          const updatedQueue = prevQueue.map((tx) => {
-            if (tx.type === nextTransaction.type) {
-              return { ...tx, executed: true }
-            }
+            const updatedQueue = prevQueue.map((tx) => {
+              if (tx.type === nextTransaction.type) {
+                return { ...tx, executed: true }
+              }
 
-            return tx
+              return tx
+            })
+
+            return updatedQueue
           })
-
-          return updatedQueue
         })
 
         return result
