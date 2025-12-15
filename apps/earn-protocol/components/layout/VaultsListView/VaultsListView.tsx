@@ -55,6 +55,7 @@ import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { revalidateVaultsListData } from '@/app/server-handlers/revalidation-handlers'
+import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
@@ -129,7 +130,7 @@ export const VaultsListView = ({
   const { userWalletAddress } = useUserWallet()
   const { features } = useSystemConfig()
   const [maxApy, setMaxApy] = useState<number>(0)
-  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
+  const [sumrRewardApy, setSumrRewardApy] = useState<string | undefined>()
   const [isLoadingRewardRates, setIsLoadingRewardRates] = useState<boolean>(true)
   const {
     state: { sumrNetApyConfig, slippageConfig },
@@ -172,7 +173,7 @@ export const VaultsListView = ({
 
       setMaxApy(rewardRates.maxApy.value)
       const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value),
+        new BigNumber(rewardRates.summerRewardYield.value).times(MAX_MULTIPLE),
         {
           precision: 2,
         },

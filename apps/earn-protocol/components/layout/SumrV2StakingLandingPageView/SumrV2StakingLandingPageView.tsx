@@ -1,5 +1,5 @@
 'use client'
-import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useState } from 'react'
 import {
   Button,
   Card,
@@ -14,327 +14,88 @@ import {
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatPercent, parseJsonSafelyWithBigInt } from '@summerfi/app-utils'
-import type {
-  StakingBucketInfo,
-  StakingEarningsEstimationForStakesV2,
-  UserStakeV2,
-} from '@summerfi/armada-protocol-common'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
-import { type AddressValue, ChainIds, type StakingStake, User } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import {
+  type LandingPageStakingV2Data,
+  type LandingPageStakingV2UserData,
+} from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { SumrV2PageHeader } from '@/components/layout/SumrV2PageHeader/SumrV2PageHeader'
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { sdkApiUrl } from '@/constants/sdk'
-import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
-import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
-import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
-import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import sumrV2PageStyles from './SumrV2StakingLandingPageView.module.css'
 
 import lockEarningDiagram from '@/public/img/sumr/lock_earn_diagram.png'
 
-interface SumrV2StakingPageViewProps {}
+interface SumrV2StakingPageViewProps {
+  sumrStakingV2LandingPageData: LandingPageStakingV2Data
+}
 
-const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
+const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
+  sumrStakingV2LandingPageData,
+}) => {
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { userWalletAddress } = useUserWallet()
 
+  const {
+    maxApy,
+    sumrRewardApy,
+    protocolRevenue,
+    protocolTvl,
+    revenueSharePercentage,
+    revenueShareAmount,
+    totalSumrStaked,
+    circulatingSupply,
+    averageLockDuration,
+    allStakes,
+    bucketInfo,
+  } = sumrStakingV2LandingPageData
+
   // State for fetched data
   const [isLoading, setIsLoading] = useState(true)
-  const [availableSumr, setAvailableSumr] = useState<string>('0')
-  const [availableSumrUsd, setAvailableSumrUsd] = useState<string>('0')
-  const [claimableSumr, setClaimableSumr] = useState<string>('0')
-  const [claimableSumrUsd, setClaimableSumrUsd] = useState<string>('0')
-  const [maxApy, setMaxApy] = useState<string>('0')
-  const [usdcEarnedOnSumrAmount, setUsdcEarnedOnSumrAmount] = useState<string>('0')
-  const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
-  // const [earnableSumr, setEarnableSumr] = useState<string>('0')
-  // const [earnableSumrUsd, setEarnableSumrUsd] = useState<string>('0')
-  const [protocolRevenue, setProtocolRevenue] = useState<string>('0')
-  const [protocolTvl, setProtocolTvl] = useState<string>('0')
-  const [revenueSharePercentage, setRevenueSharePercentage] = useState<string>('0')
-  const [revenueShareAmount, setRevenueShareAmount] = useState<string>('0')
+  const [userStakingData, setUserStakingData] = useState<LandingPageStakingV2UserData | undefined>()
 
-  // State for LockedSumrInfoTabBarV2
-  const [isLoadingStakes, setIsLoadingStakes] = useState<boolean>(false)
-  const [isLoadingAllStakes, setIsLoadingAllStakes] = useState<boolean>(false)
-  const [totalSumrStaked, setTotalSumrStaked] = useState<number>(0)
-  const [circulatingSupply, setCirculatingSupply] = useState<number>(0)
-  const [averageLockDuration, setAverageLockDuration] = useState<number>(0)
-  const [sumrStaked, setSumrStaked] = useState<number>(0)
-  const [userStakes, setUserStakes] = useState<UserStakeV2[]>([])
-  const [allStakes, setAllStakes] = useState<StakingStake[]>([])
-  const [earningsEstimation, setEarningsEstimation] = useState<
-    StakingEarningsEstimationForStakesV2 | undefined
-  >()
-  const [penaltyPercentages, setPenaltyPercentages] = useState<{ value: number; index: number }[]>(
-    [],
-  )
-  const [penaltyAmounts, setPenaltyAmounts] = useState<{ value: bigint; index: number }[]>([])
-  const [userBlendedYieldBoost, setUserBlendedYieldBoost] = useState<number>(0)
-  const [bucketInfo, setBucketInfo] = useState<StakingBucketInfo[]>([])
-  const [isLoadingBucketInfo, setIsLoadingBucketInfo] = useState<boolean>(false)
+  const fetchUserStakingData = useCallback(async () => {
+    if (!userWalletAddress) {
+      setIsLoading(false)
 
-  const {
-    getUserBalance,
-    getAggregatedRewardsIncludingMerkl,
-    getStakingRewardRatesV2,
-    getProtocolRevenue,
-    getProtocolTvl,
-    getStakingRevenueShareV2,
-    getStakingStatsV2,
-    getStakingEarningsEstimationV2,
-    getStakingTotalWeightedSupplyV2,
-    getUserStakingSumrStaked,
-    getUserStakesV2,
-    getCalculatePenaltyPercentage,
-    getCalculatePenaltyAmount,
-    getUserBlendedYieldBoost,
-    getStakingStakesV2,
-    getStakingBucketsInfoV2,
-  } = useAppSDK()
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const sumrPriceUsd = useMemo(
-    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
-    [sumrNetApyConfig.dilutedValuation],
-  )
+      return
+    }
 
-  const fetchStakingData = useCallback(async () => {
     try {
       setIsLoading(true)
-
-      // Fetch all data in parallel
-      const [
-        userBalance,
-        aggregatedRewards,
-        rewardRates,
-        revenue,
-        tvl,
-        revenueShare,
-        totalWeightedSupply,
-      ] = await Promise.all([
-        userWalletAddress
-          ? getUserBalance({
-              userAddress: userWalletAddress as AddressValue,
-              chainId: ChainIds.Base,
-            })
-          : Promise.resolve(0n),
-        userWalletAddress
-          ? getAggregatedRewardsIncludingMerkl({
-              userAddress: userWalletAddress as AddressValue,
-              chainId: ChainIds.Base,
-            })
-          : Promise.resolve({
-              total: 0n,
-            }),
-        getStakingRewardRatesV2({
-          sumrPriceUsd,
-        }),
-        getProtocolRevenue(),
-        getProtocolTvl(),
-        getStakingRevenueShareV2(),
-        getStakingTotalWeightedSupplyV2(),
-      ])
-
-      // Process user balance
-      const availableSumrNormalized = new BigNumber(userBalance)
-        .shiftedBy(-SUMR_DECIMALS)
-        .toFixed(2, BigNumber.ROUND_DOWN)
-      const availableSumrUsdValue = new BigNumber(availableSumrNormalized)
-        .times(sumrPriceUsd)
-        .toFixed(2, BigNumber.ROUND_DOWN)
-
-      setAvailableSumr(availableSumrNormalized)
-      setAvailableSumrUsd(availableSumrUsdValue)
-
-      // Process claimable rewards
-      const claimableSumrValue = new BigNumber(aggregatedRewards.total)
-        .shiftedBy(-SUMR_DECIMALS)
-        .toFixed(2, BigNumber.ROUND_DOWN)
-      const claimableSumrUsdValue = new BigNumber(claimableSumrValue)
-        .times(sumrPriceUsd)
-        .toFixed(2, BigNumber.ROUND_DOWN)
-
-      setClaimableSumr(claimableSumrValue)
-      setClaimableSumrUsd(claimableSumrUsdValue)
-
-      // Process reward rates
-      const maxApyValue = formatPercent(new BigNumber(rewardRates.maxApy.value), { precision: 2 })
-
-      setMaxApy(maxApyValue)
-
-      // Process SUMR reward APY
-      const summerRewardApyValue = formatPercent(
-        new BigNumber(rewardRates.summerRewardYield.value).multipliedBy(MAX_MULTIPLE),
-        {
-          precision: 2,
-        },
+      const response = await fetch(
+        `/earn/api/staking-v2/user-info/${encodeURIComponent(userWalletAddress)}`,
       )
 
-      setSumrRewardApy(summerRewardApyValue)
-
-      // Calculate earnable SUMR per year
-      // const earnableSumrValue = new BigNumber(availableSumrValue)
-      //   .times(summerRewardApyValue)
-      //   .dividedBy(100)
-      //   .toFixed(2, BigNumber.ROUND_DOWN)
-
-      // setEarnableSumr(earnableSumrValue)
-
-      // const earnableSumrUsdValue = new BigNumber(earnableSumrValue)
-      //   .times(sumrPriceUsd)
-      //   .toFixed(2, BigNumber.ROUND_DOWN)
-
-      // setEarnableSumrUsd(earnableSumrUsdValue)
-
-      setProtocolRevenue(formatCryptoBalance(revenue))
-
-      setProtocolTvl(formatCryptoBalance(tvl))
-
-      // Process revenue share
-      setRevenueSharePercentage(revenueShare.percentage.value.toFixed(0))
-
-      setRevenueShareAmount(formatCryptoBalance(new BigNumber(revenueShare.amount)))
-
-      // Fetch public staking data (available to all users)
-      setIsLoadingAllStakes(true)
-      setIsLoadingBucketInfo(true)
-
-      const [stakingStats, allStakesData, bucketsInfo] = await Promise.all([
-        getStakingStatsV2(),
-        getStakingStakesV2({}),
-        getStakingBucketsInfoV2(),
-      ])
-
-      // Process staking stats
-      setTotalSumrStaked(new BigNumber(stakingStats.summerStakedNormalized).toNumber())
-      setCirculatingSupply(new BigNumber(stakingStats.circulatingSupply).toNumber())
-
-      // Format average lock duration from seconds to seconds (as expected by the component)
-      if (stakingStats.averageLockupPeriod) {
-        setAverageLockDuration(Number(stakingStats.averageLockupPeriod))
+      if (!response.ok) {
+        throw new Error('Failed to fetch staking data')
       }
 
-      setAllStakes(allStakesData)
-      setIsLoadingAllStakes(false)
-
-      // Set bucket info
-      setBucketInfo(bucketsInfo)
-      setIsLoadingBucketInfo(false)
-
-      // Fetch user-specific staking data if user is connected
-      if (userWalletAddress) {
-        setIsLoadingStakes(true)
-
-        const user = User.createFromEthereum(ChainIds.Base, userWalletAddress as AddressValue)
-
-        const [userStaked, userStakesData, _userBlendedYieldBoost] = await Promise.all([
-          getUserStakingSumrStaked({
-            user,
-          }),
-          getUserStakesV2({
-            user,
-          }),
-          getUserBlendedYieldBoost({
-            user,
-          }),
-        ])
-
-        const [_earningsEstimation, _penaltyCalculationPercentage, _penaltyCalculationAmount] =
-          await Promise.all([
-            getStakingEarningsEstimationV2({
-              stakes: userStakesData.filter((_, idx) => idx < 12),
-            }),
-            getCalculatePenaltyPercentage({
-              userStakes: userStakesData,
-            }),
-            getCalculatePenaltyAmount({
-              userStakes: userStakesData,
-            }),
-          ])
-
-        setEarningsEstimation(_earningsEstimation)
-        setUserBlendedYieldBoost(_userBlendedYieldBoost)
-
-        // Map penalty percentages with stake indices
-        setPenaltyPercentages(
-          _penaltyCalculationPercentage.map((percentage, idx) => ({
-            value: percentage.value,
-            index: userStakesData[idx].index,
-          })),
-        )
-
-        // Map penalty amounts with stake indices
-        setPenaltyAmounts(
-          _penaltyCalculationAmount.map((amount, idx) => ({
-            value: amount,
-            index: userStakesData[idx].index,
-          })),
-        )
-
-        // Process user staked amount
-        const sumrStakedNormalized = new BigNumber(userStaked).shiftedBy(-SUMR_DECIMALS).toNumber()
-
-        setSumrStaked(sumrStakedNormalized)
-
-        const totalSumrBN = new BigNumber(sumrStakedNormalized).plus(availableSumrNormalized)
-        const totalWeightedSupplyBN = new BigNumber(totalWeightedSupply).shiftedBy(-SUMR_DECIMALS)
-
-        // Calculate max APY USD per year
-        const _usdcEarnedOnSumrAmount = new BigNumber(
-          totalSumrBN.times(_userBlendedYieldBoost).dividedBy(totalWeightedSupplyBN),
-        )
-          .times(revenueShare.amount)
-          .toFixed(2, BigNumber.ROUND_DOWN)
-
-        setUsdcEarnedOnSumrAmount(_usdcEarnedOnSumrAmount)
-
-        // Set user stakes
-        setUserStakes(userStakesData)
-
-        setIsLoadingStakes(false)
+      const { userInfo } = (await response.json()) as {
+        userInfo: LandingPageStakingV2UserData
       }
+
+      setUserStakingData(userInfo)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch staking data:', error)
-      setIsLoadingStakes(false)
-      setIsLoadingAllStakes(false)
-      setIsLoadingBucketInfo(false)
     } finally {
       setIsLoading(false)
     }
-  }, [
-    getStakingEarningsEstimationV2,
-    getStakingRewardRatesV2,
-    getStakingStatsV2,
-    getStakingTotalWeightedSupplyV2,
-    getUserBalance,
-    getUserStakesV2,
-    getUserStakingSumrStaked,
-    getCalculatePenaltyPercentage,
-    getCalculatePenaltyAmount,
-    getUserBlendedYieldBoost,
-    getStakingStakesV2,
-    getStakingBucketsInfoV2,
-    getAggregatedRewardsIncludingMerkl,
-    getProtocolRevenue,
-    getProtocolTvl,
-    getStakingRevenueShareV2,
-    sumrPriceUsd,
-    userWalletAddress,
-  ])
+  }, [userWalletAddress])
 
   // Fetch all staking data on mount
   useEffect(() => {
-    void fetchStakingData()
-  }, [fetchStakingData])
+    void fetchUserStakingData()
+  }, [fetchUserStakingData])
 
   return (
     <>
@@ -347,18 +108,20 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 SUMR in your wallet and available to stake
               </Text>
               <Text as="h4" variant="h4">
-                {isLoading ? (
+                {isLoading || !userStakingData ? (
                   <div className={sumrV2PageStyles.verticalSkeletonLines}>
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
-                ) : !userWalletAddress ? (
-                  '-'
                 ) : (
                   <>
-                    {formatCryptoBalance(new BigNumber(availableSumr).toNumber())} SUMR
+                    {formatCryptoBalance(new BigNumber(userStakingData.availableSumr).toNumber())}{' '}
+                    SUMR
                     <Text as="span" variant="p4semi">
-                      ${formatCryptoBalance(new BigNumber(availableSumrUsd).toNumber())}
+                      $
+                      {formatCryptoBalance(
+                        new BigNumber(userStakingData.availableSumrUsd).toNumber(),
+                      )}
                     </Text>
                   </>
                 )}
@@ -376,18 +139,20 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 SUMR available to claim
               </Text>
               <Text as="h4" variant="h4">
-                {isLoading ? (
+                {isLoading || !userStakingData ? (
                   <div className={sumrV2PageStyles.verticalSkeletonLines}>
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
-                ) : !userWalletAddress ? (
-                  '-'
                 ) : (
                   <>
-                    {formatCryptoBalance(new BigNumber(claimableSumr).toNumber())} SUMR
+                    {formatCryptoBalance(new BigNumber(userStakingData.claimableSumr).toNumber())}{' '}
+                    SUMR
                     <Text as="span" variant="p4semi">
-                      ${formatCryptoBalance(new BigNumber(claimableSumrUsd).toNumber())}
+                      $
+                      {formatCryptoBalance(
+                        new BigNumber(userStakingData.claimableSumrUsd).toNumber(),
+                      )}
                     </Text>
                   </>
                 )}
@@ -427,27 +192,19 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 </div>
               }
               value={
-                isLoading ? (
-                  <SkeletonLine
-                    width={150}
-                    height={28}
-                    style={{ marginBottom: '8px', marginTop: '12px' }}
-                  />
-                ) : (
-                  <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{maxApy}</Text>
-                  </div>
-                )
+                <div className={sumrV2PageStyles.cardDataBlockValue}>
+                  <Text variant="h5">up to</Text>&nbsp;
+                  <Text variant="h4">{maxApy}%</Text>
+                </div>
               }
               valueStyle={{
                 color: 'white',
               }}
               subValue={
-                isLoading ? (
+                isLoading || !userStakingData ? (
                   <SkeletonLine width={110} height={20} />
-                ) : parseFloat(usdcEarnedOnSumrAmount) > 0 ? (
-                  `Up to $${formatCryptoBalance(new BigNumber(usdcEarnedOnSumrAmount).toNumber())} / Year`
+                ) : parseFloat(userStakingData.usdcEarnedOnSumrAmount) > 0 ? (
+                  `Up to $${formatCryptoBalance(new BigNumber(userStakingData.usdcEarnedOnSumrAmount).toNumber())} / Year`
                 ) : null
               }
               subValueType="positive"
@@ -480,18 +237,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 </div>
               }
               value={
-                isLoading ? (
-                  <SkeletonLine
-                    width={150}
-                    height={28}
-                    style={{ marginBottom: '8px', marginTop: '12px' }}
-                  />
-                ) : (
-                  <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h5">up to</Text>&nbsp;
-                    <Text variant="h4">{sumrRewardApy}</Text>
-                  </div>
-                )
+                <div className={sumrV2PageStyles.cardDataBlockValue}>
+                  <Text variant="h5">up to</Text>&nbsp;
+                  <Text variant="h4">{sumrRewardApy}%</Text>
+                </div>
               }
               valueStyle={{
                 color: 'white',
@@ -534,28 +283,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 </div>
               }
               value={
-                isLoading ? (
-                  <SkeletonLine
-                    width={100}
-                    height={28}
-                    style={{ marginBottom: '8px', marginTop: '12px' }}
-                  />
-                ) : (
-                  <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h4">${protocolRevenue}</Text>
-                  </div>
-                )
+                <div className={sumrV2PageStyles.cardDataBlockValue}>
+                  <Text variant="h4">${formatCryptoBalance(protocolRevenue)}</Text>
+                </div>
               }
               valueStyle={{
                 color: 'white',
               }}
-              subValue={
-                isLoading ? (
-                  <SkeletonLine width={160} height={20} />
-                ) : (
-                  `$${protocolTvl} Lazy Summer TVL`
-                )
-              }
+              subValue={`$${formatCryptoBalance(protocolTvl)} Lazy Summer TVL`}
             />
           </Card>
           <Card className={sumrV2PageStyles.cardDataBlock} variant="cardSecondary">
@@ -566,28 +301,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
                 </Text>
               }
               value={
-                isLoading ? (
-                  <SkeletonLine
-                    width={60}
-                    height={28}
-                    style={{ marginBottom: '8px', marginTop: '12px' }}
-                  />
-                ) : (
-                  <div className={sumrV2PageStyles.cardDataBlockValue}>
-                    <Text variant="h4">{revenueSharePercentage}%</Text>
-                  </div>
-                )
+                <div className={sumrV2PageStyles.cardDataBlockValue}>
+                  <Text variant="h4">{revenueSharePercentage}%</Text>
+                </div>
               }
               valueStyle={{
                 color: 'white',
               }}
-              subValue={
-                isLoading ? (
-                  <SkeletonLine width={90} height={20} />
-                ) : (
-                  `$${revenueShareAmount} a year`
-                )
-              }
+              subValue={`$${formatCryptoBalance(revenueShareAmount)} a year`}
             />
           </Card>
         </div>
@@ -706,26 +427,24 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
         />
         {/* <SumrPriceBar /> */}
         <div className={sumrV2PageStyles.stakingTabBarWrapper}>
-          <LockedSumrInfoTabBarV2
-            /** Temporarily until we move the data to the backend */
-            penaltyAmounts={parseJsonSafelyWithBigInt(penaltyAmounts as typeof penaltyAmounts)}
-            yourEarningsEstimation={parseJsonSafelyWithBigInt(earningsEstimation)}
-            bucketInfo={parseJsonSafelyWithBigInt(bucketInfo)}
-            allStakes={parseJsonSafelyWithBigInt(allStakes)}
-            stakes={parseJsonSafelyWithBigInt(userStakes)}
-            /** Temporarily until we move the data to the backend */
-            isLoading={isLoadingStakes}
-            userWalletAddress={userWalletAddress}
-            refetchStakingData={fetchStakingData}
-            penaltyPercentages={penaltyPercentages}
-            userBlendedYieldBoost={userBlendedYieldBoost}
-            userSumrStaked={sumrStaked}
-            totalSumrStaked={totalSumrStaked}
-            isLoadingAllStakes={isLoadingAllStakes}
-            averageLockDuration={averageLockDuration}
-            circulatingSupply={circulatingSupply}
-            isLoadingBucketInfo={isLoadingBucketInfo}
-          />
+          {userStakingData && (
+            <LockedSumrInfoTabBarV2
+              bucketInfo={bucketInfo}
+              allStakes={allStakes}
+              isLoading={isLoading}
+              userWalletAddress={userWalletAddress}
+              refetchStakingData={fetchUserStakingData}
+              penaltyPercentages={userStakingData.penaltyPercentages}
+              userBlendedYieldBoost={userStakingData.userBlendedYieldBoost}
+              userSumrStaked={userStakingData.sumrStaked}
+              penaltyAmounts={userStakingData.penaltyAmounts}
+              yourEarningsEstimation={userStakingData.earningsEstimation}
+              stakes={userStakingData.userStakes}
+              totalSumrStaked={totalSumrStaked}
+              averageLockDuration={averageLockDuration}
+              circulatingSupply={circulatingSupply}
+            />
+          )}
         </div>
         <FaqSection
           data={[
@@ -843,10 +562,14 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = () => {
   )
 }
 
-export const SumrV2StakingLandingPageView: FC<SumrV2StakingPageViewProps> = () => {
+export const SumrV2StakingLandingPageView: FC<SumrV2StakingPageViewProps> = ({
+  sumrStakingV2LandingPageData,
+}) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <SumrV2StakingLandingPageContent />
+      <SumrV2StakingLandingPageContent
+        sumrStakingV2LandingPageData={sumrStakingV2LandingPageData}
+      />
     </SDKContextProvider>
   )
 }
