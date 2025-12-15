@@ -31,9 +31,9 @@ import removeStakeModalContentStyles from '@/components/molecules/LockedSumrInfo
 const percentageButtons = [0.25, 0.5, 0.75, 1]
 
 const RemoveStakeModal: FC<{
-  stakedAmount: bigint
+  stakedAmount: number
   userWalletAddress?: string
-  userStakeIndex: bigint
+  userStakeIndex: number
   refetchStakingData: () => Promise<void>
   handleOpenClose: () => void
   penaltyPercentage?: number
@@ -218,9 +218,9 @@ const RemoveStakeModal: FC<{
 }
 
 export const RemoveStakeModalButton: FC<{
-  amount: bigint
+  amount: number
   userWalletAddress?: string
-  userStakeIndex: bigint
+  userStakeIndex: number
   refetchStakingData: () => Promise<void>
   penaltyPercentage?: number
 }> = ({ amount, userWalletAddress, userStakeIndex, refetchStakingData, penaltyPercentage }) => {

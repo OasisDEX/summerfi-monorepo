@@ -101,7 +101,7 @@ export const useUnstakeV2SumrTransaction = ({
 }: {
   amount: string
   userAddress?: string
-  userStakeIndex: bigint
+  userStakeIndex: number
   refetchStakingData: () => Promise<void>
   onAllTransactionsComplete?: () => void
 }): {
@@ -177,7 +177,7 @@ export const useUnstakeV2SumrTransaction = ({
       const txs = await getUnstakeTxV2({
         amount: debouncedAmount,
         user: User.createFromEthereum(NetworkIds.BASEMAINNET, userAddress as `0x${string}`),
-        userStakeIndex,
+        userStakeIndex: BigInt(userStakeIndex),
       })
 
       const mappedTransactions = txs.map((tx) => ({
