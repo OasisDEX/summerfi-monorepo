@@ -385,7 +385,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
           <div className={classNames.selfDelegateCard}>
             <ClaimDelegateCard
               title="Delegate to yourself"
-              description="Be your own Delegate. In order to accrue full staking rewards, you must vote on every proposal and remain active."
+              description="Be your own Delegate. Steer which yield sources and networks are onboarded, how capital is allocated, and how contributors are rewarded."
               ens=""
               address={resolvedWalletAddress}
               isActive={state.delegatee?.toLowerCase() === resolvedWalletAddress.toLowerCase()}

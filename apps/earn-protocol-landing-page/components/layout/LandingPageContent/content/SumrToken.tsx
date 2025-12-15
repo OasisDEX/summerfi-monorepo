@@ -40,8 +40,8 @@ export const SumrToken = () => {
         </Text>
         <Text variant="p2" as="p">
           You can earn $SUMR by participating in the protocol and the community. Deposit into the
-          Protocol, Stake & Delegate your voting power or be a Delegate and vote on behalf of
-          others. Earn $SUMR and help contribute to the value created by the Lazy Summer Protocol.
+          Protocol, Stake your SUMR or be a Delegate and vote on behalf of others. Earn $SUMR and
+          help contribute to the value created by the Lazy Summer Protocol.
         </Text>
         <Link href="/earn/sumr" prefetch={false} onClick={handleSumrTokenCta}>
           <Button variant="secondarySmall">Get $SUMR</Button>
