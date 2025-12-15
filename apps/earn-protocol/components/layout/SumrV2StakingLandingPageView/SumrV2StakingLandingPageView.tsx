@@ -1,5 +1,6 @@
 'use client'
 import { type FC, useCallback, useEffect, useState } from 'react'
+import { useAuthModal } from '@account-kit/react'
 import {
   Button,
   Card,
@@ -43,6 +44,7 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
 }) => {
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { userWalletAddress } = useUserWallet()
+  const { openAuthModal } = useAuthModal()
 
   const {
     maxApy,
@@ -108,29 +110,37 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                 SUMR in your wallet and available to stake
               </Text>
               <Text as="h4" variant="h4">
-                {isLoading || !userStakingData ? (
+                {isLoading ? (
                   <div className={sumrV2PageStyles.verticalSkeletonLines}>
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
                 ) : (
                   <>
-                    {formatCryptoBalance(new BigNumber(userStakingData.availableSumr).toNumber())}{' '}
+                    {formatCryptoBalance(
+                      new BigNumber(userStakingData?.availableSumr ?? 0).toNumber(),
+                    )}{' '}
                     SUMR
                     <Text as="span" variant="p4semi">
                       $
                       {formatCryptoBalance(
-                        new BigNumber(userStakingData.availableSumrUsd).toNumber(),
+                        new BigNumber(userStakingData?.availableSumrUsd ?? 0).toNumber(),
                       )}
                     </Text>
                   </>
                 )}
               </Text>
-              <Link href="/staking/manage" prefetch>
-                <Button variant="primarySmall" disabled={isLoading}>
-                  Stake your SUMR
+              {!userWalletAddress ? (
+                <Button variant="primarySmall" onClick={openAuthModal}>
+                  Connect wallet
                 </Button>
-              </Link>
+              ) : (
+                <Link href="/staking/manage" prefetch>
+                  <Button variant="primarySmall" disabled={isLoading}>
+                    Stake your SUMR
+                  </Button>
+                </Link>
+              )}
             </Card>
           </GradientBox>
           <GradientBox style={{ cursor: 'auto' }}>
@@ -139,29 +149,37 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                 SUMR available to claim
               </Text>
               <Text as="h4" variant="h4">
-                {isLoading || !userStakingData ? (
+                {isLoading ? (
                   <div className={sumrV2PageStyles.verticalSkeletonLines}>
                     <SkeletonLine width={150} height={32} style={{ marginBottom: '0' }} />
                     <SkeletonLine width={70} height={20} />
                   </div>
                 ) : (
                   <>
-                    {formatCryptoBalance(new BigNumber(userStakingData.claimableSumr).toNumber())}{' '}
+                    {formatCryptoBalance(
+                      new BigNumber(userStakingData?.claimableSumr ?? 0).toNumber(),
+                    )}{' '}
                     SUMR
                     <Text as="span" variant="p4semi">
                       $
                       {formatCryptoBalance(
-                        new BigNumber(userStakingData.claimableSumrUsd).toNumber(),
+                        new BigNumber(userStakingData?.claimableSumrUsd ?? 0).toNumber(),
                       )}
                     </Text>
                   </>
                 )}
               </Text>
-              <Link href={`/claim/${userWalletAddress}`} prefetch>
-                <Button variant="secondarySmall" disabled={isLoading}>
-                  Claim your SUMR
+              {!userWalletAddress ? (
+                <Button variant="secondarySmall" onClick={openAuthModal}>
+                  Connect wallet
                 </Button>
-              </Link>
+              ) : (
+                <Link href={`/claim/${userWalletAddress}`} prefetch>
+                  <Button variant="secondarySmall" disabled={isLoading || !userStakingData}>
+                    Claim your SUMR
+                  </Button>
+                </Link>
+              )}
             </Card>
           </GradientBox>
         </div>
@@ -201,10 +219,10 @@ const SumrV2StakingLandingPageContent: FC<SumrV2StakingPageViewProps> = ({
                 color: 'white',
               }}
               subValue={
-                isLoading || !userStakingData ? (
+                isLoading ? (
                   <SkeletonLine width={110} height={20} />
-                ) : parseFloat(userStakingData.usdcEarnedOnSumrAmount) > 0 ? (
-                  `Up to $${formatCryptoBalance(new BigNumber(userStakingData.usdcEarnedOnSumrAmount).toNumber())} / Year`
+                ) : Number(userStakingData?.usdcEarnedOnSumrAmount ?? 0) > 0 ? (
+                  `Up to $${formatCryptoBalance(new BigNumber(userStakingData?.usdcEarnedOnSumrAmount ?? 0).toNumber())} / Year`
                 ) : null
               }
               subValueType="positive"
