@@ -15,7 +15,7 @@ import {
   Tooltip,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, SortDirection } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatDecimalAsPercent, SortDirection } from '@summerfi/app-utils'
 import { BigNumber } from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -25,12 +25,14 @@ import Link from 'next/link'
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import {
   allLockedSumrPositionsTableColumns,
+  lockPeriodAllocationTableColumns,
   yourLockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/constants'
 import { RemoveStakeModalButton } from '@/components/molecules/LockedSumrInfoTabBarV2/RemoveStakeModalButton'
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
+  type LockPeriodAllocationTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
@@ -610,6 +612,7 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
     percentage: number
     color: string
     tooltip?: ReactNode
+    cap?: number
   }[] = useMemo(() => {
     const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066', '#99004d']
 
@@ -656,31 +659,37 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
         label: 'No lockup',
         percentage: calculatePercentage(bucket1?.totalStaked),
         color: COLORS[0],
+        cap: Number(bucket1?.cap ?? 0) / 1e18,
       },
       {
         label: '2 weeks - 3 months',
         percentage: calculatePercentage(bucket2?.totalStaked),
         color: COLORS[1],
+        cap: Number(bucket2?.cap ?? 0) / 1e18,
       },
       {
         label: '3 months - 6 months',
         percentage: calculatePercentage(bucket3?.totalStaked),
         color: COLORS[2],
+        cap: Number(bucket3?.cap ?? 0) / 1e18,
       },
       {
         label: '6 months - 1 year',
         percentage: calculatePercentage(bucket4?.totalStaked),
         color: COLORS[3],
+        cap: Number(bucket4?.cap ?? 0) / 1e18,
       },
       {
         label: '1 year - 2 years',
         percentage: calculatePercentage(bucket5?.totalStaked),
         color: COLORS[4],
+        cap: Number(bucket5?.cap ?? 0) / 1e18,
       },
       {
         label: 'More than 2 years',
         percentage: calculatePercentage(bucket6?.totalStaked),
         color: COLORS[5],
+        cap: Number(bucket6?.cap ?? 0) / 1e18,
       },
     ]
   }, [bucketInfo, isLoadingBucketInfo])
@@ -696,7 +705,37 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
       {isLoadingBucketInfo ? (
         <SkeletonLine height="40px" width="100%" style={{ margin: '8px 0' }} />
       ) : (
-        <AllocationBar items={allocation} variant="large" />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            gap: '24px',
+            marginBottom: '24px',
+          }}
+        >
+          <AllocationBar items={allocation} variant="large" />
+          <div>
+            <Table<LockPeriodAllocationTableColumns>
+              columns={lockPeriodAllocationTableColumns}
+              rows={allocation.map((item) => ({
+                id: `lock-period-${item.label}`,
+                content: {
+                  bucket: item.label,
+                  cap: <TableRightCell>{formatCryptoBalance(item.cap ?? 0)}</TableRightCell>,
+                  staked: (
+                    <TableRightCell>
+                      {formatCryptoBalance(item.percentage * totalSumrStaked)} SUMR
+                    </TableRightCell>
+                  ),
+                  percentage: (
+                    <TableRightCell>{formatDecimalAsPercent(item.percentage)}</TableRightCell>
+                  ),
+                },
+              }))}
+            />
+          </div>
+        </div>
       )}
       <Text variant="h5">All Locked SUMR Positions</Text>
       <AllLockedSumrPositionsTable

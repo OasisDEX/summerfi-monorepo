@@ -1,6 +1,7 @@
 import {
   type AllLockedSumrPositionsTableColumns,
   type LockedSumrPositionsTableColumns,
+  LockPeriodAllocationTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/types'
 
 export const yourLockedSumrPositionsTableColumns: {
@@ -65,4 +66,24 @@ export const allLockedSumrPositionsTableColumns: {
   //   title: 'USD Earnings (1 yr)',
   //   key: 'usdValueEarningInLazySummer',
   // },
+]
+
+export const lockPeriodAllocationTableColumns: {
+  title: string
+  key: LockPeriodAllocationTableColumns
+  sortable?: boolean
+}[] = [
+  { key: 'bucket', title: 'Bucket' },
+  {
+    key: 'cap',
+    title: 'Cap (SUMR)',
+  },
+  {
+    key: 'staked',
+    title: 'Staked',
+  },
+  {
+    key: 'percentage',
+    title: '% of all Staked SUMR',
+  },
 ]
