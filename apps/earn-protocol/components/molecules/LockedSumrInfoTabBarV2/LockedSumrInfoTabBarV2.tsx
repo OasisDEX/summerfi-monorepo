@@ -611,19 +611,21 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
     color: string
     tooltip?: ReactNode
   }[] = useMemo(() => {
-    const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
+    const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066', '#99004d']
 
     if (isLoadingBucketInfo ?? bucketInfo.length === 0) {
       return [
-        { label: '2 weeks - 3 months', percentage: 0, color: COLORS[0] },
-        { label: '3 months - 6 months', percentage: 0, color: COLORS[1] },
-        { label: '6 months - 1 year', percentage: 0, color: COLORS[2] },
-        { label: '1 year - 2 years', percentage: 0, color: COLORS[3] },
-        { label: 'More than 2 years', percentage: 0, color: COLORS[4] },
+        { label: 'No lockup', percentage: 0, color: COLORS[0] },
+        { label: '2 weeks - 3 months', percentage: 0, color: COLORS[1] },
+        { label: '3 months - 6 months', percentage: 0, color: COLORS[2] },
+        { label: '6 months - 1 year', percentage: 0, color: COLORS[3] },
+        { label: '1 year - 2 years', percentage: 0, color: COLORS[4] },
+        { label: 'More than 2 years', percentage: 0, color: COLORS[5] },
       ]
     }
 
     // Find buckets by their enum values (2-6)
+    const bucket1 = bucketInfo.find((b) => b.bucket === 0) // NoLockup, actually 0 not 1
     const bucket2 = bucketInfo.find((b) => b.bucket === 2) // TwoWeeksToThreeMonths
     const bucket3 = bucketInfo.find((b) => b.bucket === 3) // ThreeToSixMonths
     const bucket4 = bucketInfo.find((b) => b.bucket === 4) // SixToTwelveMonths
@@ -632,6 +634,7 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 
     // Calculate total staked across these buckets
     const totalBucketStaked = [
+      bucket1?.totalStaked ? BigInt(bucket1.totalStaked) : 0n,
       bucket2?.totalStaked ? BigInt(bucket2.totalStaked) : 0n,
       bucket3?.totalStaked ? BigInt(bucket3.totalStaked) : 0n,
       bucket4?.totalStaked ? BigInt(bucket4.totalStaked) : 0n,
@@ -650,29 +653,34 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 
     return [
       {
+        label: 'No lockup',
+        percentage: calculatePercentage(bucket1?.totalStaked),
+        color: COLORS[0],
+      },
+      {
         label: '2 weeks - 3 months',
         percentage: calculatePercentage(bucket2?.totalStaked),
-        color: COLORS[0],
+        color: COLORS[1],
       },
       {
         label: '3 months - 6 months',
         percentage: calculatePercentage(bucket3?.totalStaked),
-        color: COLORS[1],
+        color: COLORS[2],
       },
       {
         label: '6 months - 1 year',
         percentage: calculatePercentage(bucket4?.totalStaked),
-        color: COLORS[2],
+        color: COLORS[3],
       },
       {
         label: '1 year - 2 years',
         percentage: calculatePercentage(bucket5?.totalStaked),
-        color: COLORS[3],
+        color: COLORS[4],
       },
       {
         label: 'More than 2 years',
         percentage: calculatePercentage(bucket6?.totalStaked),
-        color: COLORS[4],
+        color: COLORS[5],
       },
     ]
   }, [bucketInfo, isLoadingBucketInfo])
