@@ -107,7 +107,7 @@ const YourLockedSumrPositionsCards = ({
   totalSumrStaked,
 }: {
   stakes: UserStakeV2[]
-  isLoading: boolean
+  isLoading?: boolean
   userBlendedYieldBoost: number
   userSumrStaked: number
   totalSumrStaked: number
@@ -228,12 +228,12 @@ const YourLockedSumrPositionsCards = ({
 
 interface YourLockedSumrPositionsTableProps {
   stakes: UserStakeV2[]
-  isLoading: boolean
+  isLoading?: boolean
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
-  penaltyAmounts: { value: bigint; index: number }[]
-  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  penaltyAmounts: { value: number; index: number }[]
+  earningsEstimation?: StakingEarningsEstimationForStakesV2
 }
 
 const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
@@ -378,12 +378,12 @@ const NoStakedPositions: FC = () => {
 
 interface YourLockedSumrPositionsProps {
   stakes: UserStakeV2[]
-  isLoading: boolean
+  isLoading?: boolean
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
-  penaltyAmounts: { value: bigint; index: number }[]
-  earningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  penaltyAmounts: { value: number; index: number }[]
+  earningsEstimation?: StakingEarningsEstimationForStakesV2
   userBlendedYieldBoost: number
   userSumrStaked: number
   totalSumrStaked: number
@@ -429,7 +429,7 @@ interface AllLockedSumrPositionsCardsProps {
   averageLockDuration: number
   totalSumrStaked: number
   circulatingSupply: number
-  isLoading: boolean
+  isLoading?: boolean
 }
 
 const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
@@ -442,9 +442,7 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
   const averageLockPeriodDisplay = formatLockPeriod(BigInt(averageLockDuration))
 
   // Format total SUMR staked
-  const totalSumrStakedFormatted = new BigNumber(totalSumrStaked).toFormat(1)
-  const totalSumrStakedDisplay = `${totalSumrStakedFormatted} SUMR`
-
+  const totalSumrStakedDisplay = `${formatCryptoBalance(totalSumrStaked)} SUMR`
   // Calculate percentage of circulating supply staked
   const percentStaked = circulatingSupply > 0 ? (totalSumrStaked / circulatingSupply) * 100 : 0
   const percentStakedDisplay = `${percentStaked.toFixed(1)}%`
@@ -496,7 +494,7 @@ const AllLockedSumrPositionsCards: FC<AllLockedSumrPositionsCardsProps> = ({
 
 interface AllLockedSumrPositionsTableProps {
   stakes: StakingStake[]
-  isLoading: boolean
+  isLoading?: boolean
   totalSumrStaked: number
   // earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
@@ -624,10 +622,10 @@ const AllLockedSumrPositionsTable: FC<AllLockedSumrPositionsTableProps> = ({
 
 interface AllLockedSumrPositionsDataProps {
   stakes: StakingStake[]
-  isLoading: boolean
+  isLoading?: boolean
   totalSumrStaked: number
   bucketInfo: StakingBucketInfo[]
-  isLoadingBucketInfo: boolean
+  isLoadingBucketInfo?: boolean
   // earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
@@ -648,7 +646,7 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
   }[] = useMemo(() => {
     const COLORS = ['#ff80bf', '#fa52a6', '#fa3d9b', '#ff1a8c', '#cc0066']
 
-    if (isLoadingBucketInfo || bucketInfo.length === 0) {
+    if (isLoadingBucketInfo ?? bucketInfo.length === 0) {
       return [
         { label: '2 weeks - 3 months', percentage: 0, color: COLORS[0] },
         { label: '3 months - 6 months', percentage: 0, color: COLORS[1] },
@@ -738,12 +736,12 @@ const AllLockedSumrPositionsData: FC<AllLockedSumrPositionsDataProps> = ({
 
 interface AllLockedSumrPositionsProps {
   stakes: StakingStake[]
-  isLoading: boolean
+  isLoading?: boolean
   totalSumrStaked: number
   averageLockDuration: number
   circulatingSupply: number
   bucketInfo: StakingBucketInfo[]
-  isLoadingBucketInfo: boolean
+  isLoadingBucketInfo?: boolean
   // earningsEstimation: StakingEarningsEstimationForStakesV2 | null
 }
 
@@ -783,18 +781,17 @@ interface LockedSumrInfoTabBarV2Props {
   userWalletAddress?: string
   refetchStakingData: () => Promise<void>
   penaltyPercentages: { value: number; index: number }[]
-  penaltyAmounts: { value: bigint; index: number }[]
-  yourEarningsEstimation: StakingEarningsEstimationForStakesV2 | null
-  // allEarningsEstimation: StakingEarningsEstimationForStakesV2 | null
+  penaltyAmounts: { value: number; index: number }[]
+  yourEarningsEstimation?: StakingEarningsEstimationForStakesV2
   userBlendedYieldBoost: number
   userSumrStaked: number
   totalSumrStaked: number
   allStakes: StakingStake[]
-  isLoadingAllStakes: boolean
+  isLoadingAllStakes?: boolean
   averageLockDuration: number
   circulatingSupply: number
   bucketInfo: StakingBucketInfo[]
-  isLoadingBucketInfo: boolean
+  isLoadingBucketInfo?: boolean
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -839,7 +836,6 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
       ) : stakes.length ? (
         <YourLockedSumrPositions
           stakes={stakes}
-          isLoading={false}
           userWalletAddress={userWalletAddress}
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}

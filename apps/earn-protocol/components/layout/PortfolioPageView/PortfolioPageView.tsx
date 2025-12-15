@@ -19,6 +19,7 @@ import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-w
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { type BlogPosts } from '@/app/server-handlers/raw-calls/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -59,6 +60,7 @@ interface PortfolioPageViewProps {
   migrationBestVaultApy: MigrationEarningsDataByChainId
   beachClubData: BeachClubData
   blogPosts: BlogPosts
+  portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -75,6 +77,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   migrationBestVaultApy,
   beachClubData,
   blogPosts,
+  portfolioSumrStakingV2Data,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -173,7 +176,12 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
               </>
             ),
             content: (
-              <PortfolioRewardsV2 rewardsData={rewardsData} state={state} dispatch={dispatch} />
+              <PortfolioRewardsV2
+                rewardsData={rewardsData}
+                state={state}
+                dispatch={dispatch}
+                portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
+              />
             ),
           },
         ]

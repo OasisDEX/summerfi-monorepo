@@ -19,3 +19,19 @@ export const parseServerResponseToClient = <T>(response: T): T => {
     return response
   }
 }
+
+// same as above but changes bigint to string
+export const parseServerResponseToClientWithBigint = <T>(response: T): T => {
+  try {
+    return JSON.parse(
+      JSON.stringify(response, (_, value) =>
+        typeof value === 'bigint' ? value.toString() : value,
+      ),
+    )
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to parse server response (with bigint', e)
+
+    return response
+  }
+}
