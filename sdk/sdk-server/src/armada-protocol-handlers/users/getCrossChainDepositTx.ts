@@ -3,12 +3,12 @@ import {
   isChainId,
   isPercentage,
   isTokenAmount,
-  isUser,
+  isAddressValue,
   type ChainId,
   type IArmadaVaultId,
   type IPercentage,
   type ITokenAmount,
-  type IUser,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -18,10 +18,10 @@ export const getCrossChainDepositTx = publicProcedure
     z.object({
       fromChainId: z.custom<ChainId>(isChainId),
       vaultId: z.custom<IArmadaVaultId>(isArmadaVaultId),
-      user: z.custom<IUser>(isUser),
+      senderAddressValue: z.custom<AddressValue>(isAddressValue),
+      receiverAddressValue: z.custom<AddressValue>(isAddressValue).optional(),
       amount: z.custom<ITokenAmount>(isTokenAmount),
       slippage: z.custom<IPercentage>(isPercentage),
-      referralCode: z.string().optional(),
     }),
   )
   .query(async (opts) => {

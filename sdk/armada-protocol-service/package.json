@@ -18,7 +18,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@ensofinance/sdk": "^2.0.11",
+    "@ensofinance/sdk": "^2.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.67",
     "@summerfi/allowance-manager-common": "workspace:^",
     "@summerfi/allowance-manager-service": "workspace:*",

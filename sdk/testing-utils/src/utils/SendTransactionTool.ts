@@ -60,7 +60,7 @@ export const createSendTransactionTool = (params: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         debugViemError('  > Simulation failed with error:', error)
-        continue
+        throw new Error('Transaction simulation failed')
       }
 
       // Send the transaction
