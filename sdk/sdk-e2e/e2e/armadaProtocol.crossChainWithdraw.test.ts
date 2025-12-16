@@ -20,7 +20,6 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Cross Chain Withdraw', () => {
   const scenarios: {
-    description: string
     fromChainId: typeof ChainIds.ArbitrumOne
     fromFleetAddress: string
     fromSymbol: string
@@ -29,35 +28,25 @@ describe('Armada Protocol - Cross Chain Withdraw', () => {
     withdrawAmount: string
   }[] = [
     {
-      description: 'withdraw from Arbitrum USDT vault to Base USDC',
       fromChainId: ChainIds.ArbitrumOne,
       fromFleetAddress: FleetAddresses.ArbitrumOne.USDT,
       fromSymbol: 'USDT',
       toChainId: ChainIds.Base,
-      toSymbol: 'USDC',
-      withdrawAmount: '1',
+      toSymbol: 'USDT',
+      withdrawAmount: '20',
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const {
-      description,
-      fromChainId,
-      fromFleetAddress,
-      fromSymbol,
-      toChainId,
-      toSymbol,
-      withdrawAmount,
-    } = scenario
+    const { fromChainId, fromFleetAddress, fromSymbol, toChainId, toSymbol, withdrawAmount } =
+      scenario
 
     it('should get cross-chain withdraw transaction', async () => {
       const setup = createSdkTestSetup('ArbitrumUSDT')
       const { sdk, userAddress, userSendTxTool } = setup
 
       console.log(
-        `[Cross-Chain Withdraw] ${description}\n` +
-          `From: Chain ${fromChainId} (${fromSymbol}) at ${fromFleetAddress}\n` +
-          `To: Chain ${toChainId} (${toSymbol})\n` +
+        `[Cross-Chain Withdraw] ${fromSymbol} on Chain ${fromChainId} => ${toSymbol} on Chain ${toChainId}\n` +
           `User: ${userAddress.value}`,
       )
 

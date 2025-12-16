@@ -345,6 +345,142 @@ const hash = await walletClient.sendTransaction({
 })
 ```
 
+### Create Cross-Chain Deposit Transaction
+
+Deposit tokens from one chain into a vault on a different chain.
+
+**Parameters:**
+
+- **fromChainId**: Source chain ID where the user has tokens
+- **vaultId**: Target vault ID on the destination chain
+- **user**: User making the deposit (must be created with source chain ID)
+- **amount**: Token amount to deposit from the source chain
+- **slippage**: Maximum slippage tolerance for the operation
+
+**Example:**
+
+```typescript
+import {
+  ArmadaVaultId,
+  ChainIds,
+  User,
+  Address,
+  TokenAmount,
+  Percentage,
+  getChainInfoByChainId,
+} from '@summer_fi/sdk-client'
+
+import { sdk } from './sdk'
+
+// Create user on the SOURCE chain (where tokens currently are)
+const fromChainId = ChainIds.Base
+const user = User.createFromEthereum(fromChainId, '0x.........')
+
+// Get token on the source chain
+const sourceToken = await sdk.tokens.getTokenBySymbol({
+  symbol: 'USDC',
+  chainId: fromChainId,
+})
+
+// Create amount to deposit from source chain
+const amount = TokenAmount.createFrom({
+  amount: '100', // 100 USDC from Base
+  token: sourceToken,
+})
+
+// Create vault ID on DESTINATION chain (where you want to deposit)
+const toChainId = ChainIds.ArbitrumOne
+const vaultId = ArmadaVaultId.createFrom({
+  chainInfo: getChainInfoByChainId(toChainId),
+  fleetAddress: Address.createFromEthereum({ value: '0x.........' }), // Vault on Arbitrum
+})
+
+// Set slippage tolerance
+const slippage = Percentage.createFrom({ value: '0.5' }) // 0.5%
+
+// Get cross-chain deposit transactions
+const transactions = await sdk.armada.users.getCrossChainDepositTx({
+  fromChainId,
+  vaultId,
+  user,
+  amount,
+  slippage,
+})
+
+// Handle transactions (may include approval if needed)
+if (transactions.length === 2) {
+  const [approval, deposit] = transactions
+  // First execute approval, then deposit
+} else if (transactions.length === 1) {
+  const [deposit] = transactions
+  // Execute deposit directly
+}
+
+// Execute using your preferred wallet client
+const txInfo = transactions[0]
+const hash = await walletClient.sendTransaction({
+  to: txInfo.transaction.target.value,
+  data: txInfo.transaction.calldata,
+  value: BigInt(txInfo.transaction.value),
+})
+```
+
+**Response:**
+
+Returns either one or two transactions:
+
+```json
+[
+  {
+    "type": "Approve",
+    "description": "Approval for USDC spending by Enso router",
+    "transaction": {
+      "target": "0x...",
+      "calldata": "0x...",
+      "value": "0"
+    },
+    "metadata": {
+      "approvalAmount": {
+        "amount": "100",
+        "token": {
+          "symbol": "USDC",
+          "decimals": 6
+        }
+      },
+      "approvalSpender": "0x..."
+    }
+  },
+  {
+    "type": "Deposit",
+    "description": "Cross-chain deposit: 100 USDC from Base to Arbitrum vault",
+    "transaction": {
+      "target": "0x...",
+      "calldata": "0x...",
+      "value": "0"
+    },
+    "metadata": {
+      "fromAmount": {
+        "amount": "100",
+        "token": {
+          "symbol": "USDC",
+          "decimals": 6
+        }
+      },
+      "toAmount": {
+        "amount": "99.5",
+        "token": {
+          "symbol": "USDC",
+          "decimals": 6
+        }
+      },
+      "slippage": {
+        "value": "0.5"
+      }
+    }
+  }
+]
+```
+
 ### Create Withdraw Transaction
 
 ```tsx
@@ -1933,6 +2069,23 @@ enum FiatCurrency {
 ### v2.2.0
 
 **Features:**
+
+- **🌉 Cross-Chain Deposits**: New method to deposit tokens from one chain into vaults on another
+  chain
+
+  - **getCrossChainDepositTx** - Generate transactions for cross-chain vault deposits
+  - Seamlessly bridge and deposit tokens across different chains in a single transaction flow
+  - Supports deposits from Base, Arbitrum, Optimism, Mainnet, and Sonic to any supported chain
+  - Automatically handles cross-chain bridging and token conversions
+  - Parameters:
+    - `fromChainId`: Source chain ID where user has tokens
+    - `vaultId`: Target vault ID on destination chain
+    - `user`: User making the deposit (created with source chain ID)
+    - `amount`: Token amount from source chain
+    - `slippage`: Maximum slippage tolerance
+  - Returns approval transaction (if needed) and deposit transaction
+  - Enables users to access yield opportunities across chains without manual bridging
+  - Example: Deposit USDC from Base directly into an Arbitrum vault
 
 - **📊 Position Transaction History**: New methods to retrieve detailed deposit and withdrawal
   transaction history

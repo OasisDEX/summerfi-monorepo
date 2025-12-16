@@ -20,7 +20,6 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Cross Chain Deposit', () => {
   const scenarios: {
-    description: string
     fromChainId: typeof ChainIds.Base
     fromSymbol: string
     toChainId: typeof ChainIds.ArbitrumOne
@@ -28,36 +27,33 @@ describe('Armada Protocol - Cross Chain Deposit', () => {
     toSymbol: string
     depositAmount: string
   }[] = [
+    // {
+    //   fromChainId: ChainIds.Base,
+    //   fromSymbol: 'USDT',
+    //   toChainId: ChainIds.ArbitrumOne,
+    //   toFleetAddress: FleetAddresses.ArbitrumOne.USDT,
+    //   toSymbol: 'USDT',
+    //   depositAmount: '20',
+    // },
     {
-      description: 'deposit from Base USDT to Arbitrum USDT vault',
       fromChainId: ChainIds.Base,
-      fromSymbol: 'USDT',
+      fromSymbol: 'USDC',
       toChainId: ChainIds.ArbitrumOne,
-      toFleetAddress: FleetAddresses.ArbitrumOne.USDT,
-      toSymbol: 'USDT',
-      depositAmount: '1',
+      toFleetAddress: FleetAddresses.ArbitrumOne.TargenUSDC,
+      toSymbol: 'USDC',
+      depositAmount: '10',
     },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const {
-      description,
-      fromChainId,
-      fromSymbol,
-      toChainId,
-      toFleetAddress,
-      toSymbol,
-      depositAmount,
-    } = scenario
+    const { fromChainId, fromSymbol, toChainId, toFleetAddress, toSymbol, depositAmount } = scenario
 
     it('should get cross-chain deposit transaction', async () => {
       const setup = createSdkTestSetup('BaseUSDC')
       const { sdk, userAddress, userSendTxTool } = setup
 
       console.log(
-        `[Cross-Chain Deposit] ${description}\n` +
-          `From: Chain ${fromChainId} (${fromSymbol})\n` +
-          `To: Chain ${toChainId} (${toSymbol}) at ${toFleetAddress}\n` +
+        `[Cross-Chain Deposit] ${fromSymbol} on Chain ${fromChainId} => ${toSymbol} on Chain ${toChainId}\n` +
           `User: ${userAddress.value}`,
       )
 

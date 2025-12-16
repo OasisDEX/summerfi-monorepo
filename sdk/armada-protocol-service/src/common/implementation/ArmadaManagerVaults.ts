@@ -54,6 +54,7 @@ import type { IDeploymentProvider } from '../..'
 import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { EnsoClient, type BundleAction } from '../services/EnsoClient'
+import type { RouteParams } from '@ensofinance/sdk'
 
 export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaManagerVaults {
   private _supportedChains: IChainInfo[]
@@ -2145,7 +2146,6 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
    * @param amount The amount being deposited
    * @param slippage Maximum slippage tolerance in basis points
    * @param shouldStake Whether to stake after deposit
-   * @param referralCode Optional referral code
    *
    * @returns The transactions needed to deposit the tokens cross-chain
    */
@@ -2155,133 +2155,87 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     user: IUser
     amount: ITokenAmount
     slippage: IPercentage
-    referralCode?: string
   }): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
     const sourceChainId = params.fromChainId
     const destinationChainId = params.vaultId.chainInfo.chainId
     const senderAddressValue = params.user.wallet.address.value
-    const fleetAddressValue = params.vaultId.fleetAddress.value
 
     // Get source and destination tokens
-    const sourceToken = params.amount.token
-    const sourceTokenSymbol = sourceToken.symbol
-    const sourceAmount = params.amount
+    const tokenIn = params.amount.token
+    const tokenInSymbol = tokenIn.symbol
+    const tokenInAddress = tokenIn.address.toSolidityValue()
+    const amountIn = params.amount
 
     // Get the fleet asset token on destination chain
     const fleetCommander = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.vaultId.chainInfo,
       address: params.vaultId.fleetAddress,
     })
-    const [assetToken, fleetToken] = await Promise.all([
-      fleetCommander.asErc4626().asset(),
-      fleetCommander.asErc20().getToken(),
-    ])
-    const assetTokenSymbol = assetToken.symbol
+    const [tokenOut] = await Promise.all([fleetCommander.asErc20().getToken()])
+    const tokenOutAddress = tokenOut.address.toSolidityValue()
 
     // Convert slippage from percentage to basis points
     const slippageBps = Math.floor(parseFloat(params.slippage.value.toString()) * 100)
 
-    const isNative = sourceToken.address.value.toLowerCase() === NATIVE_CURRENCY_ADDRESS_LOWERCASE
-
-    // Enso action to swap source token to native currency on source chain
-    const ensoSourceSwapToEth: BundleAction = {
-      protocol: 'enso',
-      action: 'route',
-      args: {
-        tokenIn: sourceToken.address.value,
-        amountIn: sourceAmount.toSolidityValue().toString(),
-        tokenOut: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
-        slippage: slippageBps,
-      },
+    const routeParams: RouteParams = {
+      fromAddress: senderAddressValue,
+      receiver: senderAddressValue,
+      chainId: sourceChainId,
+      amountIn: [amountIn.toSolidityValue().toString()],
+      tokenIn: [tokenInAddress],
+      destinationChainId: destinationChainId,
+      tokenOut: [tokenOutAddress],
+      slippage: slippageBps,
+      routingStrategy: 'router',
     }
 
     // Build Enso bundle actions
-    const actions: BundleAction[] = [
-      ...(!isNative ? [ensoSourceSwapToEth] : []),
-      {
-        protocol: 'stargate',
-        action: 'bridge',
-        args: {
-          primaryAddress: '0xdc181Bd607330aeeBEF6ea62e03e5e1Fb4B6F7C7', // Stargate router
-          destinationChainId: destinationChainId,
-          tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
-          amountIn: isNative ? sourceAmount.toSolidityValue().toString() : { useOutputOfCallAt: 0 },
-          receiver: senderAddressValue,
-          callback: [
-            {
-              protocol: 'enso',
-              action: 'balance',
-              args: {
-                token: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
-              },
-            },
-            {
-              protocol: 'enso',
-              action: 'route',
-              args: {
-                tokenIn: NATIVE_CURRENCY_ADDRESS_LOWERCASE,
-                amountIn: { useOutputOfCallAt: 0 },
-                tokenOut: assetToken.address.value,
-                slippage: slippageBps,
-              },
-            },
-            {
-              protocol: 'summer-fi',
-              action: 'deposit',
-              args: {
-                tokenIn: assetToken.address.value,
-                tokenOut: fleetAddressValue,
-                amountIn: { useOutputOfCallAt: 1 },
-                primaryAddress: fleetAddressValue,
-                receiver: senderAddressValue,
-              },
-            },
-          ],
-        },
-      },
-    ]
+    const routeData = await EnsoClient.getClient().getRouteData(routeParams)
 
-    // Get bundle data from Enso
-    const ensoBundleData = await EnsoClient.getBundleData(
-      {
-        chainId: sourceChainId,
-        fromAddress: senderAddressValue,
-        spender: senderAddressValue,
-        routingStrategy: 'router',
-      },
-      actions,
-    )
+    const tokenOutAmount = routeData.amountOut
 
-    const fleetTokenAmount = ensoBundleData.amountsOut[fleetToken.address.toSolidityValue()]
-    const toAmount = TokenAmount.createFromBaseUnit({
-      token: fleetToken,
-      amount: fleetTokenAmount.toString(),
+    const amountOut = TokenAmount.createFromBaseUnit({
+      token: tokenOut,
+      amount: tokenOutAmount.toString(),
     })
     const priceImpact: TransactionPriceImpact = {
-      impact: Percentage.createFrom({ value: 0 }),
+      impact: Percentage.createFrom({
+        value: parseInt(routeData.priceImpact?.toString() || '0') / 100,
+      }),
       price: Price.createFromAmountsRatio({
-        numerator: sourceAmount,
-        denominator: toAmount,
+        numerator: amountIn,
+        denominator: amountOut,
       }),
     }
 
+    const isNative = tokenInAddress === NATIVE_CURRENCY_ADDRESS_LOWERCASE
+
     LoggingService.debug('Cross-chain deposit Enso bundle data', {
-      from: sourceTokenSymbol,
-      to: assetTokenSymbol,
+      isNative,
       sourceChainId,
+      from: tokenInSymbol,
+      fromAddress: tokenInAddress,
+      fromAmount: amountIn.toString(),
       destinationChainId,
-      amount: sourceAmount.toString(),
+      to: tokenOut.symbol,
+      toAddress: tokenOutAddress,
+      toAmount: amountOut.toString(),
+      priceImpact: {
+        rawPriceImpact: routeData.priceImpact?.toString(),
+        impact: priceImpact.impact?.toString(),
+        price: priceImpact.price?.toString(),
+      },
     })
 
     // Create deposit transaction from Enso data
     const depositTransaction = createDepositTransaction({
-      target: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
-      calldata: ensoBundleData.tx.data as HexData,
+      target: Address.createFromEthereum({ value: routeData.tx.to }),
+      calldata: routeData.tx.data as HexData,
       description: `Cross-chain deposit from ${sourceChainId} to ${destinationChainId}`,
-      value: isNative ? sourceAmount.toSolidityValue() : undefined,
+      value: BigInt(routeData.tx.value.toString()),
       metadata: {
-        fromAmount: sourceAmount,
-        toAmount: toAmount,
+        fromAmount: amountIn,
+        toAmount: amountOut,
         slippage: params.slippage,
         priceImpact: priceImpact,
       },
@@ -2292,8 +2246,8 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     if (!isNative) {
       approveTransaction = await this._allowanceManager.getApproval({
         chainInfo: getChainInfoByChainId(sourceChainId),
-        spender: Address.createFromEthereum({ value: ensoBundleData.tx.to }),
-        amount: sourceAmount,
+        spender: Address.createFromEthereum({ value: routeData.tx.to }),
+        amount: amountIn,
         owner: params.user.wallet.address,
       })
     }
