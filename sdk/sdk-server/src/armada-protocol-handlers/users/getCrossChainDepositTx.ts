@@ -21,7 +21,6 @@ export const getCrossChainDepositTx = publicProcedure
       user: z.custom<IUser>(isUser),
       amount: z.custom<ITokenAmount>(isTokenAmount),
       slippage: z.custom<IPercentage>(isPercentage),
-      referralCode: z.string().optional(),
     }),
   )
   .query(async (opts) => {

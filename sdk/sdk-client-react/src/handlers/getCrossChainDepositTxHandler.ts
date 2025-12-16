@@ -15,7 +15,6 @@ import type {
  * @param params.user user that is trying to deposit
  * @param params.amount Token amount to be deposited from source chain
  * @param params.slippage Maximum slippage allowed for the operation
- * @param params.referralCode Optional referral code
  */
 export const getCrossChainDepositTxHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
@@ -25,14 +24,12 @@ export const getCrossChainDepositTxHandler =
     user,
     amount,
     slippage,
-    referralCode,
   }: {
     fromChainId: ChainId
     vaultId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
     slippage: IPercentage
-    referralCode?: string
   }) => {
     const transactions = await sdk.armada.users.getCrossChainDepositTx({
       fromChainId,
@@ -40,7 +37,6 @@ export const getCrossChainDepositTxHandler =
       user,
       amount,
       slippage,
-      referralCode,
     })
     return transactions
   }
