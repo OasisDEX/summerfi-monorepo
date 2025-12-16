@@ -198,8 +198,6 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     portfolioSumrStakingV2Data,
   } = await portfolioCallsHandler({ walletAddress, sumrPriceUsd: estimatedSumrPrice })
 
-  console.log('sumrToClaim', sumrToClaim)
-
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
