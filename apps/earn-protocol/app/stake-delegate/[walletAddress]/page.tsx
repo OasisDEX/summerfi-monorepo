@@ -3,12 +3,12 @@ import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
-import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { StakeDelegateViewComponent } from '@/components/layout/StakeDelegatePageView/StakeDelegateViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { isValidAddress } from '@/helpers/is-valid-address'
@@ -51,7 +51,7 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
       walletAddress,
     }),
     getSumrStakingInfo(),
-    getSumrToClaim({ walletAddress }),
+    getCachedSumrToClaim(walletAddress),
     getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
 

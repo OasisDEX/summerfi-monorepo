@@ -9,12 +9,12 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
-import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
 import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -62,10 +62,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
       walletAddress,
     }),
     getSumrStakingInfo(),
-    unstableCache(getSumrToClaim, ['sumrToClaim', walletAddress.toLowerCase()], {
-      revalidate: CACHE_TIMES.USER_DATA,
-      tags: [getUserDataCacheHandler(walletAddress)],
-    })({ walletAddress }),
+    getCachedSumrToClaim(walletAddress),
     getCachedConfig(),
     getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
   ])
