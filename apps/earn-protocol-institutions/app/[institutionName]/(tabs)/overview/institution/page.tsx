@@ -36,11 +36,11 @@ export default async function InstitutionOverviewTab({
 
   const vaultsTvlChartData = mapMultiVaultChartData({
     institutionName,
-    performanceDataArray: vaultsPerformanceDataMap.map((performanceData, index) => ({
+    performanceDataArray: vaultsPerformanceDataMap.map((performanceData) => ({
       performanceData,
       pointName: 'netValue',
-      currentPointValue: new BigNumber(institutionVaults.vaults[index]?.inputTokenBalance)
-        .div(ten.pow(institutionVaults.vaults[index]?.inputToken.decimals))
+      currentPointValue: new BigNumber(performanceData.vault.inputTokenBalance)
+        .div(ten.pow(performanceData.vault.inputToken.decimals))
         .toString(),
     })),
   })

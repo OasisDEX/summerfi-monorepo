@@ -6,7 +6,9 @@ query GetVaultHistory($vaultId: ID!) {
     }
     inputToken {
       symbol
+      decimals
     }
+    inputTokenBalance
     hourlyVaultHistory: hourlySnapshots(
       first: 721 # 30 days in hours + 1 point of leeway
       orderBy: timestamp

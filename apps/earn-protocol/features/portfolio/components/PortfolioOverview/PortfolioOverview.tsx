@@ -18,8 +18,8 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
-  type SingleSourceChartData,
   type SDKVaultsListType,
+  type SingleSourceChartData,
   type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'

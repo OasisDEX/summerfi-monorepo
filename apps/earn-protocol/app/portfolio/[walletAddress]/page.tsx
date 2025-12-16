@@ -5,9 +5,9 @@ import {
   sumrNetApyConfigCookieName,
 } from '@summerfi/app-earn-ui'
 import {
-  type SingleSourceChartData,
   type IArmadaPosition,
   type SDKVaultishType,
+  type SingleSourceChartData,
 } from '@summerfi/app-types'
 import {
   formatAddress,

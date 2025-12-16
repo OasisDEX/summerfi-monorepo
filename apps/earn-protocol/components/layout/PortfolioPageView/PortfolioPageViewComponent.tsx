@@ -2,8 +2,8 @@
 import { type FC } from 'react'
 import {
   type GetVaultsApyResponse,
-  type SingleSourceChartData,
   type SDKVaultishType,
+  type SingleSourceChartData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 

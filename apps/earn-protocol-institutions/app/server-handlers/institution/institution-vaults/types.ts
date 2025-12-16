@@ -40,7 +40,9 @@ export type InstiVaultPerformanceResponse = {
     }
     inputToken: {
       symbol: string
+      decimals: number
     }
+    inputTokenBalance: string
     hourlyVaultHistory: InstiVaultsPerformanceDataPoint[]
     dailyVaultHistory: InstiVaultsPerformanceDataPoint[]
     weeklyVaultHistory: InstiVaultsPerformanceDataPoint[]

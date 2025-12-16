@@ -1,9 +1,9 @@
 import { getPositionValues } from '@summerfi/app-earn-ui'
 import {
   type ChartsDataTimeframes,
-  type SingleSourceChartData,
   type IArmadaPosition,
   type SDKVaultishType,
+  type SingleSourceChartData,
 } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 

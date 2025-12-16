@@ -20,17 +20,14 @@ export default async function InstitutionTabLayout({
     return <div>Institution not found.</div>
   }
 
-  const allTimePerformance = Number(
-    institutionVaults.vaults.reduce((acc, vault) => {
-      const vaultPerformance = getVaultPerformance(vault)
+  const performanceValues = institutionVaults.vaults
+    .map((vault) => getVaultPerformance(vault))
+    .filter((perf): perf is number => perf !== null)
 
-      if (vaultPerformance !== null) {
-        return acc + vaultPerformance
-      }
-
-      return acc
-    }, 0) / institutionVaults.vaults.length,
-  )
+  const allTimePerformance =
+    performanceValues.length > 0
+      ? performanceValues.reduce((acc, perf) => acc + perf, 0) / performanceValues.length
+      : 0
 
   return (
     <>

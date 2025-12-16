@@ -11729,7 +11729,7 @@ export type GetVaultHistoryQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultHistoryQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, protocol: { __typename?: 'YieldAggregator', network: Network }, inputToken: { __typename?: 'Token', symbol: string }, hourlyVaultHistory: Array<{ __typename?: 'VaultHourlySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, dailyVaultHistory: Array<{ __typename?: 'VaultDailySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, weeklyVaultHistory: Array<{ __typename?: 'VaultWeeklySnapshot', timestamp: number, netValue: number, navPrice?: number | null }> } | null };
+export type GetVaultHistoryQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, inputTokenBalance: number, protocol: { __typename?: 'YieldAggregator', network: Network }, inputToken: { __typename?: 'Token', symbol: string, decimals: number }, hourlyVaultHistory: Array<{ __typename?: 'VaultHourlySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, dailyVaultHistory: Array<{ __typename?: 'VaultDailySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, weeklyVaultHistory: Array<{ __typename?: 'VaultWeeklySnapshot', timestamp: number, netValue: number, navPrice?: number | null }> } | null };
 
 
 export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
@@ -11741,7 +11741,9 @@ export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
     }
     inputToken {
       symbol
+      decimals
     }
+    inputTokenBalance
     hourlyVaultHistory: hourlySnapshots(
       first: 721
       orderBy: timestamp

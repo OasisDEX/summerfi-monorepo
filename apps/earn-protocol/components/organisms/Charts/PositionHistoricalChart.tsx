@@ -3,9 +3,9 @@
 import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
-  type SingleSourceChartData,
   type IArmadaPosition,
   type SDKVaultishType,
+  type SingleSourceChartData,
   type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
