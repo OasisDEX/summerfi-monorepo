@@ -4,7 +4,6 @@ import { type AddressValue } from '@summerfi/sdk-common'
 import { BigNumber } from 'bignumber.js'
 
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { LockedSumrInfoTabBarV2 } from '@/components/molecules/LockedSumrInfoTabBarV2/LockedSumrInfoTabBarV2'
 import {
   type ClaimDelegateExternalData,
@@ -14,6 +13,7 @@ import {
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { PortfolioRewardsCardsV2 } from '@/features/portfolio/components/PortfolioRewardsCardsV2/PortfolioRewardsCardsV2'
 import { PortfolioStakingInfoCardV2 } from '@/features/portfolio/components/PortfolioStakingInfoCardV2/PortfolioStakingInfoCardV2'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioRewardsV2.module.css'
 
@@ -54,6 +54,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   } = portfolioSumrStakingV2Data
 
   const [sumrNetApyConfig] = useSumrNetApyConfig()
+  const revalidateUser = useRevalidateUser()
   const sumrPriceUsd = useMemo(
     () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
     [sumrNetApyConfig.dilutedValuation],
@@ -78,7 +79,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   const refetchStakingData = useCallback(async () => {
     if (!portfolioWalletAddress) return
     await revalidateUser(portfolioWalletAddress)
-  }, [portfolioWalletAddress])
+  }, [portfolioWalletAddress, revalidateUser])
 
   return (
     <div className={classNames.wrapper}>

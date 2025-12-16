@@ -34,7 +34,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -57,6 +56,7 @@ import {
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 
 type MigrationVaultPageComponentProps = {
   vault: SDKVaultishType
@@ -112,6 +112,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   )
 
   const { userWalletAddress } = useUserWallet()
+  const revalidatePositionData = useRevalidatePositionData()
 
   const [state, dispatch] = useReducer(migrationReducer, {
     ...migrationState,

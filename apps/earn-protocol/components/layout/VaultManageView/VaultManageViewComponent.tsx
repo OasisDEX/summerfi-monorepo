@@ -58,7 +58,6 @@ import { TransactionType } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -83,6 +82,7 @@ import {
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -180,6 +180,7 @@ export const VaultManageViewComponent = ({
   const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
     TransactionAction.DEPOSIT,
   )
+  const revalidatePositionData = useRevalidatePositionData()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 

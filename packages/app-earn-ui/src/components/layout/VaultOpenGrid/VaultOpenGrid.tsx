@@ -56,7 +56,7 @@ interface VaultOpenGridProps {
   isMobileOrTablet?: boolean
   medianDefiYield?: number
   sumrPrice?: number
-  onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
+  onRefresh?: (params: { chainName?: string; vaultId?: string; walletAddress?: string }) => void
   vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
   headerLink?: {
@@ -172,7 +172,10 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
 
   const handleUserRefresh = () => {
     buttonClickEventHandler(`vault-open-refresh-button`)
-    onRefresh?.(sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)), vault.id)
+    onRefresh?.({
+      chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+      vaultId: vault.id,
+    })
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)

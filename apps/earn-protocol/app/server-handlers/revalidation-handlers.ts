@@ -5,15 +5,27 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/constants/revalidation'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
-export const revalidateUser = async (walletAddress?: string) => {
+const revalidationDebugging = true
+
+export const serverRevalidateUser = async (walletAddress?: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (revalidationDebugging) {
+    // eslint-disable-next-line no-console
+    console.log('Revalidating user data for:', walletAddress)
+  }
   if (walletAddress) {
     return await Promise.resolve(revalidateTag(getUserDataCacheHandler(walletAddress)))
   }
 
-  return await Promise.resolve(null)
+  return await Promise.resolve()
 }
 
-export const revalidateVaultsListData = async () => {
+export const serverRevalidateVaultsListData = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (revalidationDebugging) {
+    // eslint-disable-next-line no-console
+    console.log('Revalidating vaults list data')
+  }
   // clears the cache and revalidates the vaults list data
   revalidateTag(CACHE_TAGS.VAULTS_LIST)
   revalidateTag(CACHE_TAGS.INTEREST_RATES)
@@ -21,14 +33,19 @@ export const revalidateVaultsListData = async () => {
   return await Promise.resolve()
 }
 
-export const revalidatePositionData = async (
+export const serverRevalidatePositionData = async (
   chainName?: string,
   vaultId?: string,
   walletAddress?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (revalidationDebugging) {
+    // eslint-disable-next-line no-console
+    console.log('Revalidating position data for:', { chainName, vaultId, walletAddress })
+  }
   revalidateTag(CACHE_TAGS.VAULTS_LIST)
   revalidateTag(CACHE_TAGS.INTEREST_RATES)
-  revalidateUser(walletAddress)
+  serverRevalidateUser(walletAddress)
   // clears the cache and revalidates the position data (either user position or vault page)
   if (chainName && vaultId) {
     return await Promise.resolve(
@@ -41,7 +58,12 @@ export const revalidatePositionData = async (
   return await Promise.resolve(null)
 }
 
-export const revalidateMigrationData = async (walletAddress?: string) => {
+export const serverRevalidateMigrationData = async (walletAddress?: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (revalidationDebugging) {
+    // eslint-disable-next-line no-console
+    console.log('Revalidating migration data for:', walletAddress)
+  }
   // clears the cache and revalidates the migration data
   revalidateTag(CACHE_TAGS.MIGRATION_DATA)
 

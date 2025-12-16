@@ -54,7 +54,6 @@ import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
 
-import { revalidateVaultsListData } from '@/app/server-handlers/revalidation-handlers'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -71,6 +70,7 @@ import {
   useHandleTooltipOpenEvent,
 } from '@/hooks/use-mixpanel-event'
 import { usePosition } from '@/hooks/use-position'
+import { useRevalidateVaultsListData } from '@/hooks/use-revalidate'
 import { useTokenBalances } from '@/hooks/use-tokens-balances'
 
 import vaultsListViewStyles from './VaultsListView.module.css'
@@ -128,6 +128,7 @@ export const VaultsListView = ({
   const inputChangeHandler = useHandleInputChangeEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { userWalletAddress } = useUserWallet()
+  const revalidateVaultsListData = useRevalidateVaultsListData()
   const { features } = useSystemConfig()
   const [maxApy, setMaxApy] = useState<number>(0)
   const [sumrRewardApy, setSumrRewardApy] = useState<string | undefined>()

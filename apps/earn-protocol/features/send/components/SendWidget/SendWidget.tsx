@@ -26,7 +26,6 @@ import {
 import { isAddress } from 'viem'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { SendFormContent } from '@/features/send/components/SendFormContent/SendFormContent'
@@ -38,6 +37,7 @@ import { SendStep, SendTxStatuses } from '@/features/send/types'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
 interface SendWidgetProps {
@@ -57,6 +57,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
 }) => {
   const { deviceType } = useDeviceType()
   const inputChangeHandler = useHandleInputChangeEvent()
+  const revalidateUser = useRevalidateUser()
 
   const walletDataAssetsSortedByUsdValue = walletData.assets
     .sort((a, b) => b.balanceUSD - a.balanceUSD)

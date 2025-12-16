@@ -34,7 +34,6 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { base } from 'viem/chains'
 
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { useDecayFactor } from '@/features/claim-and-delegate/hooks/use-decay-factor'
@@ -49,6 +48,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { usePublicClient } from '@/hooks/use-public-client'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 import { useTokenBalance } from '@/hooks/use-token-balance'
 
 import { getStakeButtonLabel } from './getStakeButtonLabel'
@@ -173,6 +173,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   })
 
   const { decayFactor, isLoading: decayFactorLoading } = useDecayFactor(state.delegatee)
+  const revalidateUser = useRevalidateUser()
 
   const { stakeSumrTransaction, approveSumrTransaction, prepareTxs } = useStakeSumrTransaction({
     onStakeSuccess: () => {

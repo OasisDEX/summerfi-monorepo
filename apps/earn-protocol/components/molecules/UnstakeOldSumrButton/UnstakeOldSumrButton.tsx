@@ -14,9 +14,9 @@ import {
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { formatDecimalToBigInt } from '@summerfi/app-utils'
 
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 export const UnstakeOldSumrButton = ({
   oldStakedAmount,
@@ -31,6 +31,7 @@ export const UnstakeOldSumrButton = ({
   const { chain, isSettingChain, setChain } = useChain()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const revalidateUser = useRevalidateUser()
   const { unstakeSumrTransaction, isLoading: isLoadingUnstakeTransaction } =
     useUnstakeSumrTransaction({
       amount: formatDecimalToBigInt(oldStakedAmount, 18),

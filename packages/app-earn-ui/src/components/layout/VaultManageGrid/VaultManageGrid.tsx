@@ -60,7 +60,7 @@ interface VaultManageGridProps {
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   sumrPrice?: number
-  onRefresh?: (chainName?: string, vaultId?: string, walletAddress?: string) => void
+  onRefresh?: (params: { chainName?: string; vaultId?: string; walletAddress?: string }) => void
   vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
   tooltipEventHandler: (tooltipName: string) => void
@@ -161,11 +161,11 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   })
   const handleUserRefresh = () => {
     buttonClickEventHandler(`vault-manage-refresh-button`)
-    onRefresh?.(
-      sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
-      vault.id,
-      viewWalletAddress,
-    )
+    onRefresh?.({
+      chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+      vaultId: vault.id,
+      walletAddress: viewWalletAddress,
+    })
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)

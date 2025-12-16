@@ -22,7 +22,6 @@ import {
 } from '@summerfi/app-utils'
 import { redirect, useParams, useRouter, useSearchParams } from 'next/navigation'
 
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -36,6 +35,7 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 import { useRiskVerification } from '@/hooks/use-risk-verification'
 
 import { ClaimDelegateError, ClaimDelegateNoBalances } from './ClaimDelegateError'
@@ -100,6 +100,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
   const { userWalletAddress } = useUserWallet()
+  const revalidateUser = useRevalidateUser()
   const isOwner = state.walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)

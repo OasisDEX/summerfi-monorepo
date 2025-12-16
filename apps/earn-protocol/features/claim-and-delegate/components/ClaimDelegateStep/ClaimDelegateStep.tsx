@@ -26,7 +26,6 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 
 import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { ClaimDelegateActionCard } from '@/features/claim-and-delegate/components/ClaimDelegateActionCard/ClaimDelegateActionCard'
 import { ClaimDelegateCard } from '@/features/claim-and-delegate/components/ClaimDelegateCard/ClaimDelegateCard'
@@ -40,6 +39,7 @@ import {
   ClaimDelegateSteps,
 } from '@/features/claim-and-delegate/types'
 import { PortfolioTabs } from '@/features/portfolio/types'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import { getChangeDelegateButtonLabel } from './getDelegateButtonLabel'
 import { DelegateSortOptions, getDelegateSortOptions } from './sort-options'
@@ -95,6 +95,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const user = useUser()
   const { userWalletAddress } = useUserWallet()
+  const revalidateUser = useRevalidateUser()
 
   const [searchValue, setSearchValue] = useState('')
 

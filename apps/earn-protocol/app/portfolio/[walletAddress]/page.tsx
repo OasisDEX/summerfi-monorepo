@@ -31,6 +31,7 @@ import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -43,7 +44,6 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
-import { getSumrToClaim } from '@/app/server-handlers/sumr-to-claim'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
@@ -103,7 +103,7 @@ const portfolioCallsHandler = async ({
     )({ walletAddress }),
     unstableCache(getSumrBalances, ['sumrBalances', userKey], cacheConfig)({ walletAddress }),
     unstableCache(getSumrStakingInfo, ['sumrStakingInfo'], cacheConfig)(),
-    unstableCache(getSumrToClaim, ['sumrToClaim', userKey], cacheConfig)({ walletAddress }),
+    getCachedSumrToClaim(walletAddress),
     unstableCache(getUserPositions, ['userPositions', userKey], cacheConfig)({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
@@ -197,6 +197,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     sumrStakingRewards,
     portfolioSumrStakingV2Data,
   } = await portfolioCallsHandler({ walletAddress, sumrPriceUsd: estimatedSumrPrice })
+
+  console.log('sumrToClaim', sumrToClaim)
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)

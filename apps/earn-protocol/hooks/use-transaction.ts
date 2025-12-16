@@ -52,7 +52,6 @@ import { capitalize } from 'lodash-es'
 import { useRouter } from 'next/navigation'
 import { type PublicClient } from 'viem'
 
-import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -60,6 +59,7 @@ import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
+import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -132,6 +132,7 @@ export const useTransaction = ({
   >()
   const [isEditingSwitchAmount, setIsEditingSwitchAmount] = useState(false)
   const isIframe = useIsIframe()
+  const revalidatePositionData = useRevalidatePositionData()
 
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
 
@@ -804,11 +805,11 @@ export const useTransaction = ({
         // refreshes the view
         refreshView()
         // revalidates users wallet data (all of fetches with wallet tagged in it)
-        revalidatePositionData(
-          sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
-          vault.id,
-          userWalletAddress,
-        )
+        revalidatePositionData({
+          chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
+          vaultId: vault.id,
+          walletAddress: userWalletAddress,
+        })
 
         // makes sure the user is redirected to the correct page
         // after closing or opening

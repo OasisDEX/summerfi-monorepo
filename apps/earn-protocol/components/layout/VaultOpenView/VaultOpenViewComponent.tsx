@@ -46,7 +46,6 @@ import {
 } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { revalidatePositionData } from '@/app/server-handlers/revalidation-handlers'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
@@ -76,6 +75,7 @@ import {
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPositionView } from '@/hooks/use-redirect-to-position'
+import { useRevalidatePositionData } from '@/hooks/use-revalidate'
 import { useTermsOfServiceSidebar } from '@/hooks/use-terms-of-service-sidebar'
 import { useTermsOfServiceSigner } from '@/hooks/use-terms-of-service-signer'
 import { useTokenBalance } from '@/hooks/use-token-balance'
@@ -150,6 +150,7 @@ export const VaultOpenViewComponent = ({
   const [referralCode, setReferralCode] = useState<string>(referralCodeFromCookie ?? '')
 
   const [isNewUser, setIsNewUser] = useState(false)
+  const revalidatePositionData = useRevalidatePositionData()
 
   const beachClubEnabled = !!features?.BeachClub && !!userWalletAddress && isNewUser
 

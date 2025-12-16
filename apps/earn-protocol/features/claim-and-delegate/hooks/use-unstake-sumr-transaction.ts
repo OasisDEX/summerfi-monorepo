@@ -8,11 +8,11 @@ import BigNumber from 'bignumber.js'
 import { debounce } from 'lodash-es'
 import { waitForTransactionReceipt } from 'viem/actions'
 
-import { revalidateUser } from '@/app/server-handlers/revalidation-handlers'
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 /**
  * Hook to handle unstaking SUMR tokens through a user operation transaction
@@ -120,6 +120,7 @@ export const useUnstakeV2SumrTransaction = ({
   const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
   const [transactionQueue, setTransactionQueue] = useState<TransactionWithStatus[]>()
   const { getUnstakeTxV2 } = useAppSDK()
+  const revalidateUser = useRevalidateUser()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })

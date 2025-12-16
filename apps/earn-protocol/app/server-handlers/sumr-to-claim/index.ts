@@ -35,6 +35,8 @@ export const getSumrToClaim = async ({
     user,
   })
 
+  console.log('aggregatedRewards', aggregatedRewards)
+
   const chains = Object.keys(aggregatedRewards.vaultUsagePerChain)
 
   const isAuthorizedAsMerklRewardsOperatorPerChain = await Promise.all(
