@@ -8,13 +8,23 @@ export const marketRiskParametersMapper = ({ rawData }: { rawData: MarketRiskPar
     return {
       content: {
         market: <TableCellText>{item.market}</TableCellText>,
-        'market-cap': <TableCellNodes>{formatWithSeparators(item.marketCap)}</TableCellNodes>,
+        'market-cap': (
+          <TableCellNodes>
+            {formatWithSeparators(item.marketCap)}
+            {item.token ? ` ${item.token}` : ''}
+          </TableCellNodes>
+        ),
         'max-percentage': (
           <TableCellNodes>
             {formatDecimalAsPercent(item.maxPercentage, { precision: 1 })}
           </TableCellNodes>
         ),
-        'implied-cap': <TableCellNodes>{formatWithSeparators(item.impliedCap)}</TableCellNodes>,
+        'implied-cap': (
+          <TableCellNodes>
+            {formatWithSeparators(item.impliedCap)}
+            {item.token ? ` ${item.token}` : ''}
+          </TableCellNodes>
+        ),
       },
     }
   })

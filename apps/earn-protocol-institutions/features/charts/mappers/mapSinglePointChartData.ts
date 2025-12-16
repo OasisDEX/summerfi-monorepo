@@ -1,6 +1,6 @@
 import {
   type ChartsDataTimeframes,
-  type SinglePointChartData,
+  type SingleSourceChartData,
 } from '@summerfi/app-types/types/src/earn-protocol'
 import dayjs from 'dayjs'
 
@@ -16,7 +16,7 @@ export const mapSinglePointChartData = ({
   performanceData: InstiVaultPerformanceResponse
   pointName: keyof InstiVaultPerformanceResponse['vault']['hourlyVaultHistory'][number]
   currentPointValue: string
-}): SinglePointChartData => {
+}): SingleSourceChartData => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')

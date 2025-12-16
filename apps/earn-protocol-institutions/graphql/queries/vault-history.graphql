@@ -1,5 +1,12 @@
 query GetVaultHistory($vaultId: ID!) {
   vault(id: $vaultId) {
+    id
+    protocol {
+      network
+    }
+    inputToken {
+      symbol
+    }
     hourlyVaultHistory: hourlySnapshots(
       first: 721 # 30 days in hours + 1 point of leeway
       orderBy: timestamp

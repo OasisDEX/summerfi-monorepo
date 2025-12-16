@@ -20,7 +20,6 @@
 }
 
 @media (min-width: 531px) {
-
   .cardPrimary,
   .cardPrimaryColorfulBorder,
   .cardPrimarySmallPaddingsColorfulBorder,
@@ -111,11 +110,13 @@
 .cardPrimaryColorfulBorder,
 .cardPrimarySmallPaddingsColorfulBorder,
 .cardPrimaryMediumPaddingsColorfulBorder {
-  background-image: linear-gradient(rgb(43, 43, 43), rgb(43, 43, 43)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+  background-image: linear-gradient(rgb(43, 43, 43), rgb(43, 43, 43)),
+    linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
 }
 
 .cardSecondaryColorfulBorder,
 .cardSecondarySmallPaddingsColorfulBorder,
 .cardSecondaryMediumPaddingsColorfulBorder {
-  background-image: linear-gradient(rgb(35, 35, 35), rgb(35, 35, 35)), linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
+  background-image: linear-gradient(rgb(35, 35, 35), rgb(35, 35, 35)),
+    linear-gradient(90deg, rgba(255, 73, 164, 0.5), rgba(176, 73, 255, 0.5));
 }

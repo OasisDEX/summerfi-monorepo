@@ -18,7 +18,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
-  type HistoryChartData,
+  type SingleSourceChartData,
   type SDKVaultsListType,
   type TimeframesType,
   type TokenSymbolsList,
@@ -57,7 +57,7 @@ type PortfolioOverviewProps = {
   positions: PositionWithVault[] | []
   rewardsData: ClaimDelegateExternalData
   positionsHistoricalChartMap: {
-    [key: string]: HistoryChartData
+    [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]

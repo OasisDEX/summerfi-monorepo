@@ -11,7 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
-  type HistoryChartData,
+  type SingleSourceChartData,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 
@@ -53,7 +53,7 @@ interface PortfolioPageViewProps {
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
   positionsHistoricalChartMap: {
-    [key: string]: HistoryChartData
+    [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]

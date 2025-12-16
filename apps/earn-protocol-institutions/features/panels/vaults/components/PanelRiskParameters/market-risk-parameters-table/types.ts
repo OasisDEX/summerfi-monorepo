@@ -6,4 +6,5 @@ export type MarketRiskParameters = {
   marketCap: number
   maxPercentage: number
   impliedCap: number
+  token?: string
 }

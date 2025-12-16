@@ -34,6 +34,13 @@ export type InstiVaultsPerformanceDataPoint = {
 
 export type InstiVaultPerformanceResponse = {
   vault: {
+    id: string
+    protocol: {
+      network: string
+    }
+    inputToken: {
+      symbol: string
+    }
     hourlyVaultHistory: InstiVaultsPerformanceDataPoint[]
     dailyVaultHistory: InstiVaultsPerformanceDataPoint[]
     weeklyVaultHistory: InstiVaultsPerformanceDataPoint[]

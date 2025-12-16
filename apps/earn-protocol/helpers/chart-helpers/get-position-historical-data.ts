@@ -1,7 +1,7 @@
 import { getPositionValues } from '@summerfi/app-earn-ui'
 import {
   type ChartsDataTimeframes,
-  type HistoryChartData,
+  type SingleSourceChartData,
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
@@ -14,7 +14,7 @@ const mapPositionHistory = (
   positionHistory: GetPositionHistoryReturnType['positionHistory'],
   position?: IArmadaPosition,
   vault?: SDKVaultishType,
-): HistoryChartData => {
+): SingleSourceChartData => {
   const now = dayjs()
   const nowStartOfHour = now.startOf('hour')
   const nowStartOfDay = now.startOf('day')

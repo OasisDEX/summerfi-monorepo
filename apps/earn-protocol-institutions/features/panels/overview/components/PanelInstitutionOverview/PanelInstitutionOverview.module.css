@@ -9,3 +9,9 @@
   flex-direction: column;
   gap: 12px;
 }
+
+.tvlHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

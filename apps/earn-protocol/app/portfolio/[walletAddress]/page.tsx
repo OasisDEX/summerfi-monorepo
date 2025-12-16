@@ -5,7 +5,7 @@ import {
   sumrNetApyConfigCookieName,
 } from '@summerfi/app-earn-ui'
 import {
-  type HistoryChartData,
+  type SingleSourceChartData,
   type IArmadaPosition,
   type SDKVaultishType,
 } from '@summerfi/app-types'
@@ -259,7 +259,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   }
 
   const positionsHistoricalChartMap = positionsWithVault.reduce<{
-    [key: string]: HistoryChartData
+    [key: string]: SingleSourceChartData
   }>(
     (acc, position) => ({
       ...acc,
