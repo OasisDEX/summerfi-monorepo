@@ -27,7 +27,7 @@ export default async function InstitutionTabLayout({
   const allTimePerformance =
     performanceValues.length > 0
       ? performanceValues.reduce((acc, perf) => acc + perf, 0) / performanceValues.length
-      : 0
+      : null
 
   return (
     <>
@@ -59,7 +59,10 @@ export default async function InstitutionTabLayout({
           },
           {
             title: 'All time performance',
-            value: formatPercent(allTimePerformance, { precision: 2 }),
+            value:
+              allTimePerformance !== null
+                ? formatPercent(allTimePerformance, { precision: 2 })
+                : 'n/a',
           },
         ]}
       />
