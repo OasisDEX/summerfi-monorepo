@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
+import { getMarketCapIndexByValue, sumrMarketCapOptions } from '@/helpers/sumr-market-cap'
 
 import classNames from './NavConfigContent.module.css'
 
@@ -26,7 +27,6 @@ interface NavConfigContentProps {
 }
 
 const slippageOptions = ['0.05', '0.10', '0.20', '0.50']
-const marketCapOptions = ['150000000', '250000000', '500000000', '750000000']
 
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
@@ -41,8 +41,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
     slippageOptions.findIndex((item) => item === slippageConfig.slippage) ?? 1,
   )
   const [activeMarketCapOption, setActiveMarketCapOption] = useState<number | undefined>(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    marketCapOptions.findIndex((item) => item === sumrNetApyConfig.dilutedValuation) ?? 1,
+    getMarketCapIndexByValue(sumrNetApyConfig.dilutedValuation),
   )
   const [sumrToggle, setSumrToggle] = useState(sumrNetApyConfig.withSumr)
 
@@ -126,7 +125,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             onChange={handleInputChange}
           />
           <div className={classNames.slippageOptionsWrapper}>
-            {marketCapOptions.map((item, idx) => (
+            {sumrMarketCapOptions.map((item, idx) => (
               <Badge
                 value={`$${Number(item) / 1000000}M`}
                 key={item}

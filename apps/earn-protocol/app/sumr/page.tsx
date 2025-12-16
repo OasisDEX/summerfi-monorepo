@@ -11,6 +11,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'
+import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 const SumrPage = async () => {
   const [configRaw, vaultsInfo, cookieRaw] = await Promise.all([
@@ -48,7 +49,8 @@ const SumrPage = async () => {
     },
   )
 
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice =
+    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
 
   const sumrRewards: {
     eth: number

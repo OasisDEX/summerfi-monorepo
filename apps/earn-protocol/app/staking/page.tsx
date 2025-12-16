@@ -12,6 +12,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getLandingPageSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
 import { SumrV2StakingLandingPageView } from '@/components/layout/SumrV2StakingLandingPageView/SumrV2StakingLandingPageView'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 const SumrStakingLandingPage = async () => {
   const [configRaw, cookieRaw] = await Promise.all([getCachedConfig(), cookies()])
@@ -19,7 +20,8 @@ const SumrStakingLandingPage = async () => {
 
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice =
+    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
 
   if (systemConfig.features?.StakingV2) {
     const [sumrStakingV2LandingPageData] = await Promise.all([

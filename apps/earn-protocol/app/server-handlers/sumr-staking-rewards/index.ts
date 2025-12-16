@@ -4,14 +4,12 @@ import BigNumber from 'bignumber.js'
 import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 export interface SumrStakingRewardsData {
   sumrRewardApy: number
   sumrRewardAmount: number
 }
-
-// Default diluted valuation from LocalConfigContext
-const DEFAULT_DILUTED_VALUATION = '250000000'
 
 /**
  * Fetches SUMR staking rewards data for a given wallet address
@@ -30,7 +28,7 @@ export const getSumrStakingRewards = async ({
   dilutedValuation?: string
 }): Promise<SumrStakingRewardsData> => {
   try {
-    const sumrPriceUsd = new BigNumber(dilutedValuation ?? DEFAULT_DILUTED_VALUATION, 10)
+    const sumrPriceUsd = new BigNumber(dilutedValuation ?? defaultSumrMarketCap, 10)
       .dividedBy(SUMR_CAP)
       .toNumber()
 

@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server'
 
 import { getLandingPageSumrStakingV2UserData } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
+import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 export async function GET(
   _request: Request,
@@ -14,7 +15,8 @@ export async function GET(
   const [{ walletAddress }, cookieRaw] = await Promise.all([params, cookies()])
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice =
+    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
 
   try {
     const userInfo = await unstableCache(

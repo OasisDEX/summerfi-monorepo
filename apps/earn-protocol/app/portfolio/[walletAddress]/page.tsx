@@ -55,6 +55,7 @@ import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
+import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -75,6 +76,7 @@ const portfolioCallsHandler = async ({
     revalidate: CACHE_TIMES.PORTFOLIO_DATA,
     tags: [getUserDataCacheHandler(userKey)],
   }
+
   const [
     walletData,
     sumrStakeDelegate,
@@ -168,7 +170,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice =
+    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
@@ -309,7 +312,8 @@ export async function generateMetadata({
   const walletAddress = walletAddressRaw.toLowerCase()
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice =
+    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
 
   const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
     walletAddress,
