@@ -1,6 +1,6 @@
 # SDK API Reference v2
 
-**Latest version: v2.2.0**
+**Latest version: v2.3.0**
 
 For information on installing the SDK, please see the installation guide here →
 [SDK Installation Guide](https://summerfi.notion.site/summerfi-sdk-install-guide)
@@ -2066,7 +2066,7 @@ enum FiatCurrency {
 
 ## Changelog
 
-### v2.2.0
+### v2.3.0
 
 **Features:**
 
@@ -2086,6 +2086,10 @@ enum FiatCurrency {
   - Returns approval transaction (if needed) and deposit transaction
   - Enables users to access yield opportunities across chains without manual bridging
   - Example: Deposit USDC from Base directly into an Arbitrum vault
+
+### v2.2.0
+
+**Features:**
 
 - **📊 Position Transaction History**: New methods to retrieve detailed deposit and withdrawal
   transaction history
