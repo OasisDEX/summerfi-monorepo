@@ -5,7 +5,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/constants/revalidation'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
-const revalidationDebugging = true
+const revalidationDebugging = false
 
 export const serverRevalidateUser = async (walletAddress?: string) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
