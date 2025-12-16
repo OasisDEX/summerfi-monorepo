@@ -283,7 +283,7 @@ export const getLandingPageSumrStakingV2UserData: GetLandingPageStakingV2UserDat
 
   const usdcEarnedOnSumrAmount =
     totalWeightedSupplyBN.gt(0) && totalSumrBN.gt(0)
-      ? new BigNumber(totalSumrBN.times(userBlendedYieldBoost).dividedBy(totalWeightedSupplyBN))
+      ? new BigNumber(totalSumrBN.times(MAX_MULTIPLE).dividedBy(totalWeightedSupplyBN))
           .times(revenueShare.amount)
           .toFixed(2, BigNumber.ROUND_DOWN)
       : '0'
