@@ -6,14 +6,11 @@ import {
   GetUsersActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import {
-  ExtendedTransactionInfo,
   IArmadaPosition,
   VaultSwitchTransactionInfo,
   IArmadaVaultInfo,
   DepositTransactionInfo,
   WithdrawTransactionInfo,
-  MigrationTransactionInfo,
-  BridgeTransactionInfo,
   ClaimTransactionInfo,
   DelegateTransactionInfo,
   StakeTransactionInfo,
@@ -54,16 +51,14 @@ export type PerformanceChartData = {
   forecast: ChartsDataTimeframes
 }
 
-export type HistoryChartData = {
+export type SingleSourceChartData = {
   data: ChartsDataTimeframes
 }
 
-export type SinglePointChartData = {
+export type MultipleSourceChartData = {
   data: ChartsDataTimeframes
-}
-
-export type ApyPriceChartData = {
-  data: ChartsDataTimeframes
+  dataNames: string[]
+  colors: string[]
 }
 
 export type ArksHistoricalChartData = {

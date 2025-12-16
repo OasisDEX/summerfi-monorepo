@@ -55,13 +55,6 @@ export default async function InstitutionMainLayout({
         selectedInstitution={institution}
         institutionsList={userInstitutionsList}
       />
-      {/* 
-      <InstitutionPageDataBlocks
-        totalValue={institution.totalValue}
-        numberOfVaults={institution.numberOfVaults}
-        thirtyDayAvgApy={institution.thirtyDayAvgApy}
-        allTimePerformance={institution.allTimePerformance}
-      /> */}
       {children}
     </div>
   )

@@ -5,7 +5,7 @@ import { Card, Text } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import {
   type ArksHistoricalChartData,
-  type SinglePointChartData,
+  type SingleSourceChartData,
 } from '@summerfi/app-types/types/src/earn-protocol'
 
 import { ArkHistoricalYieldChart } from '@/components/molecules/Charts/ArkHistoricalYieldChart'
@@ -22,8 +22,8 @@ export const PanelOverview = ({
   arksHistoricalChartData,
   summerVaultName,
 }: {
-  navChartData?: SinglePointChartData
-  aumChartData?: SinglePointChartData
+  navChartData?: SingleSourceChartData
+  aumChartData?: SingleSourceChartData
   arksHistoricalChartData?: ArksHistoricalChartData
   summerVaultName: string
 }) => {
@@ -60,6 +60,9 @@ export const PanelOverview = ({
             syncId="vault-overview-performance-chart"
           />
         </Card>
+        <Text as="h5" variant="h5">
+          APY
+        </Text>
         <Card>
           <ArkHistoricalYieldChart
             chartData={arksHistoricalChartData}
@@ -72,7 +75,7 @@ export const PanelOverview = ({
       </div>
       <div className={styles.panelOverviewItem}>
         <Text as="h5" variant="h5">
-          AUM (Bn’s)
+          AUM
         </Text>
         <Card>
           <AumChart

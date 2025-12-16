@@ -168,7 +168,7 @@ export type {
   ForecastData,
   ForecastDataPoints,
   GetInterestRatesParams,
-  HistoryChartData,
+  SingleSourceChartData,
   IArmadaPosition,
   IArmadaVaultInfo,
   PerformanceChartData,

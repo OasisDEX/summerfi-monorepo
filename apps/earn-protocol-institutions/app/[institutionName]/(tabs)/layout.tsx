@@ -3,6 +3,7 @@ import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
 import { TopBlocks } from '@/components/layout/TopBlocks/TopBlocks'
+import { getVaultPerformance } from '@/helpers/get-vault-performance'
 
 export default async function InstitutionTabLayout({
   children,
@@ -18,6 +19,15 @@ export default async function InstitutionTabLayout({
     // Handle institution not found
     return <div>Institution not found.</div>
   }
+
+  const performanceValues = institutionVaults.vaults
+    .map((vault) => getVaultPerformance(vault))
+    .filter((perf): perf is number => perf !== null)
+
+  const allTimePerformance =
+    performanceValues.length > 0
+      ? performanceValues.reduce((acc, perf) => acc + perf, 0) / performanceValues.length
+      : null
 
   return (
     <>
@@ -49,7 +59,10 @@ export default async function InstitutionTabLayout({
           },
           {
             title: 'All time performance',
-            value: 'n/a',
+            value:
+              allTimePerformance !== null
+                ? formatPercent(allTimePerformance, { precision: 2 })
+                : 'n/a',
           },
         ]}
       />

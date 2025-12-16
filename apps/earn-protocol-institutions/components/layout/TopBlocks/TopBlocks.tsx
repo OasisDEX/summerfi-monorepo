@@ -30,6 +30,13 @@ export const TopBlocks = ({ blocks }: TopBlocksProps) => {
                 : {}
             }
             value={block.value}
+            valueStyle={
+              block.colorful
+                ? {
+                    color: 'var(--color-text-primary)',
+                  }
+                : {}
+            }
             valueSize="large"
           />
         </Card>

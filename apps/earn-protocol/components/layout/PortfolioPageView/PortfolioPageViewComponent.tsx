@@ -2,8 +2,8 @@
 import { type FC } from 'react'
 import {
   type GetVaultsApyResponse,
-  type HistoryChartData,
   type SDKVaultishType,
+  type SingleSourceChartData,
 } from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 
@@ -30,7 +30,7 @@ interface PortfolioPageViewComponentProps {
   rebalanceActivity: RebalanceActivityPagination
   latestActivity: LatestActivityPagination
   positionsHistoricalChartMap: {
-    [key: string]: HistoryChartData
+    [key: string]: SingleSourceChartData
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]

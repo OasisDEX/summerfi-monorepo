@@ -8,6 +8,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
 import {
   formatCryptoBalance,
   formatPercent,
@@ -19,6 +20,7 @@ import Link from 'next/link'
 
 import { type VaultAdditionalInfo } from '@/app/server-handlers/institution/institution-vaults/types'
 import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
+import { TvlChartIntermediary } from '@/features/panels/overview/components/PanelInstitutionOverview/TvlChartIntermediary'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 
@@ -94,11 +96,13 @@ export const PanelInstitutionOverview = ({
   institutionVaults,
   vaultsAdditionalInfo,
   isLoading,
+  vaultsTvlChartData,
 }: {
   institutionName: string
   institutionVaults?: SDKVaultishType[]
   vaultsAdditionalInfo?: VaultAdditionalInfo
   isLoading?: boolean
+  vaultsTvlChartData?: MultipleSourceChartData
 }) => {
   const vaultsTableList = useMemo(
     () => mapVaultTableRows({ institutionVaults, institutionName, vaultsAdditionalInfo }),
@@ -107,11 +111,7 @@ export const PanelInstitutionOverview = ({
 
   return (
     <div className={panelInstitutionOverviewStyles.wrapper}>
-      {/* <Card variant="cardSecondary">
-        <Card variant="cardPrimary">
-          <AumChart chartData={mockedAumChartData} />
-        </Card>
-      </Card> */}
+      <TvlChartIntermediary vaultsTvlChartData={vaultsTvlChartData} isLoading={isLoading} />
       <Card variant="cardSecondary" className={panelInstitutionOverviewStyles.yourVaultsWrapper}>
         <Text variant="h5">Your Vaults</Text>
         <Card variant="cardPrimary">

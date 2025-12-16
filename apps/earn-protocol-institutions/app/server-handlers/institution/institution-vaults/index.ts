@@ -32,19 +32,19 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
   if (typeof institutionName !== 'string') return null
 
   try {
-    const systemConfig = await configEarnAppFetcher()
     const institutionSdk = getInstitutionsSDK(institutionName)
 
     // this is a temporary method
     // until either `getVaultsRaw` returns only the particular insti vaults
     // or `getVaultInfoList` is mapped in the frontend components
-    const vaultsInfoArray = await Promise.all(
-      supportedInstitutionNetworks.map((networkId) =>
+    const [systemConfig, ...vaultsInfoArray] = await Promise.all([
+      configEarnAppFetcher(),
+      ...supportedInstitutionNetworks.map((networkId) =>
         institutionSdk.armada.users.getVaultInfoList({
           chainId: networkId,
         }),
       ),
-    )
+    ])
 
     const vaultsInfoByNetwork = supportedInstitutionNetworks.map((networkId, i) => ({
       list: vaultsInfoArray[i].list,

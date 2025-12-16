@@ -28,6 +28,7 @@ const mapArksToRiskParameters = (
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       market: <span title={ark.name ?? ark.id}>{getArkNiceName(ark) || 'Unknown Market'}</span>,
       marketCap: new BigNumber(ark.depositCap).shiftedBy(-ark.inputToken.decimals).toNumber(),
+      token: ark.inputToken.symbol,
       maxPercentage: new BigNumber(ark.maxDepositPercentageOfTVL.toString())
         .shiftedBy(
           -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
@@ -61,6 +62,7 @@ export const PanelRiskParameters = ({
         id: '1',
         parameter: 'Vault Cap',
         value: new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals).toNumber(),
+        token: vault.inputToken.symbol,
       },
       {
         id: '2',
@@ -68,6 +70,7 @@ export const PanelRiskParameters = ({
         value: new BigNumber(vault.minimumBufferBalance)
           .shiftedBy(-vault.inputToken.decimals)
           .toNumber(),
+        token: vault.inputToken.symbol,
       },
     ],
   })

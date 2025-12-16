@@ -3,9 +3,9 @@
 import { useMemo } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
 import {
-  type HistoryChartData,
   type IArmadaPosition,
   type SDKVaultishType,
+  type SingleSourceChartData,
   type TimeframesType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
@@ -13,7 +13,7 @@ import {
 import { HistoricalChart } from '@/components/organisms/Charts/components/Historical'
 
 type PositionHistoricalChartProps = {
-  chartData: HistoryChartData
+  chartData: SingleSourceChartData
   tokenSymbol: TokenSymbolsList
   position: {
     position: IArmadaPosition

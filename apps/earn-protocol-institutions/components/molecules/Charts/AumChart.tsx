@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
-import { type SinglePointChartData } from '@summerfi/app-types/types/src/earn-protocol'
+import { type SingleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
 import dayjs from 'dayjs'
 import { ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
@@ -16,7 +16,7 @@ import {
 import aumChartStyles from './AumChart.module.css'
 
 type AumChartProps = {
-  chartData?: SinglePointChartData
+  chartData?: SingleSourceChartData
   timeframe?: TimeframesType
   syncId?: string
 }
@@ -60,7 +60,7 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
               <YAxis
                 strokeWidth={0}
                 tickFormatter={(label: string) => {
-                  return formatChartCryptoValue(Number(label))
+                  return Number(label) > 0 ? `$${formatChartCryptoValue(Number(label))}` : '0'
                 }}
                 interval="preserveStartEnd"
                 scale="linear"
