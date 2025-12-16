@@ -17,10 +17,14 @@ export async function GET(
   const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   try {
-    const userInfo = await unstableCache(getLandingPageSumrStakingV2UserData, [], {
-      revalidate: 300, // 5 minutes
-      tags: [getUserDataCacheHandler(walletAddress)],
-    })({
+    const userInfo = await unstableCache(
+      getLandingPageSumrStakingV2UserData,
+      ['landingPageSumrStakingV2UserData', walletAddress.toLowerCase()],
+      {
+        revalidate: 300, // 5 minutes
+        tags: [getUserDataCacheHandler(walletAddress)],
+      },
+    )({
       walletAddress,
       sumrPriceUsd: estimatedSumrPrice,
     })

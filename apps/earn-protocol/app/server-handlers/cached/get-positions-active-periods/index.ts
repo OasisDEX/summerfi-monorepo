@@ -4,8 +4,12 @@ import { getPositionsActivePeriods } from '@/app/server-handlers/raw-calls/posit
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 
 export const getCachedPositionsActivePeriods = ({ walletAddress }: { walletAddress: string }) => {
-  return unstableCache(getPositionsActivePeriods, [], {
-    revalidate: CACHE_TIMES.POSITIONS_ACTIVE_PERIODS,
-    tags: [CACHE_TAGS.POSITIONS_ACTIVE_PERIODS, walletAddress.toLowerCase()],
-  })(walletAddress)
+  return unstableCache(
+    getPositionsActivePeriods,
+    ['positionsActivePeriods', walletAddress.toLowerCase()],
+    {
+      revalidate: CACHE_TIMES.POSITIONS_ACTIVE_PERIODS,
+      tags: [CACHE_TAGS.POSITIONS_ACTIVE_PERIODS, walletAddress.toLowerCase()],
+    },
+  )(walletAddress)
 }

@@ -5,7 +5,7 @@ import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
 export const getCachedMigratablePositions = ({ walletAddress }: { walletAddress: string }) => {
-  return unstableCache(getMigratablePositions, [], {
+  return unstableCache(getMigratablePositions, ['migrationData', walletAddress.toLowerCase()], {
     revalidate: CACHE_TIMES.MIGRATION_DATA,
     tags: [CACHE_TAGS.MIGRATION_DATA, getUserDataCacheHandler(walletAddress)],
   })({ walletAddress })

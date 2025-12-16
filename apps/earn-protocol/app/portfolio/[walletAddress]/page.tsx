@@ -70,9 +70,10 @@ const portfolioCallsHandler = async ({
   walletAddress: string
   sumrPriceUsd?: number
 }) => {
+  const userKey = walletAddress.toLowerCase()
   const cacheConfig = {
     revalidate: CACHE_TIMES.PORTFOLIO_DATA,
-    tags: [getUserDataCacheHandler(walletAddress)],
+    tags: [getUserDataCacheHandler(userKey)],
   }
   const [
     walletData,
@@ -93,17 +94,21 @@ const portfolioCallsHandler = async ({
     portfolioSumrStakingV2Data,
   ] = await Promise.all([
     getCachedWalletAssets(walletAddress),
-    unstableCache(getSumrDelegateStake, [], cacheConfig)({ walletAddress }),
-    unstableCache(getSumrBalances, [], cacheConfig)({ walletAddress }),
-    unstableCache(getSumrStakingInfo, [], cacheConfig)(),
-    unstableCache(getSumrToClaim, [], cacheConfig)({ walletAddress }),
-    unstableCache(getUserPositions, [], cacheConfig)({ walletAddress }),
+    unstableCache(
+      getSumrDelegateStake,
+      ['sumrDelegateStake', userKey],
+      cacheConfig,
+    )({ walletAddress }),
+    unstableCache(getSumrBalances, ['sumrBalances', userKey], cacheConfig)({ walletAddress }),
+    unstableCache(getSumrStakingInfo, ['sumrStakingInfo'], cacheConfig)(),
+    unstableCache(getSumrToClaim, ['sumrToClaim', userKey], cacheConfig)({ walletAddress }),
+    unstableCache(getUserPositions, ['userPositions', userKey], cacheConfig)({ walletAddress }),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedMigratablePositions({ walletAddress }),
     unstableCache(
       getPaginatedLatestActivity,
-      [],
+      ['latestActivity', userKey],
       cacheConfig,
     )({
       page: 1,
@@ -114,8 +119,16 @@ const portfolioCallsHandler = async ({
     getCachedPositionsActivePeriods({ walletAddress }),
     getCachedBlogPosts(),
     getCachedVaultsInfo(),
-    unstableCache(getSumrStakingRewards, [], cacheConfig)({ walletAddress }),
-    unstableCache(getPortfolioSumrStakingV2Data, [], cacheConfig)({ walletAddress, sumrPriceUsd }),
+    unstableCache(
+      getSumrStakingRewards,
+      ['sumrStakingRewards', userKey],
+      cacheConfig,
+    )({ walletAddress }),
+    unstableCache(
+      getPortfolioSumrStakingV2Data,
+      ['portfolioSumrStakingV2Data', userKey],
+      cacheConfig,
+    )({ walletAddress, sumrPriceUsd }),
   ])
 
   return {

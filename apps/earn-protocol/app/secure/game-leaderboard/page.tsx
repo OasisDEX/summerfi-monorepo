@@ -98,7 +98,7 @@ const getGameLeaderboard = async () => {
   }
 }
 
-const getGameLeaderboardCached = unstableCache(getGameLeaderboard, [], {
+const getGameLeaderboardCached = unstableCache(getGameLeaderboard, ['gameLeaderboard'], {
   tags: [SECURE_PAGE_CACHE_TAG],
   revalidate: 60 * 60, // 1 hour
 })

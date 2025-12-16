@@ -107,7 +107,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       }),
       unstableCache(
         getVaultsHistoricalApy,
-        [],
+        ['vaultsHistoricalApy', `${vault.id}-${parsedNetworkId}`],
         cacheConfig,
       )({
         // just the vault displayed

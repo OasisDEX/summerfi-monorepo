@@ -18,9 +18,9 @@ export default async function OkxCampaignPage() {
   const [{ vaults }, configRaw, latestActivity] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getPaginatedLatestActivity, [], {
-      revalidate: CACHE_TIMES.LP_SUMMER_PRO_STATS,
-      tags: [CACHE_TAGS.LP_SUMMER_PRO_STATS],
+    unstableCache(getPaginatedLatestActivity, ['latestActivity'], {
+      revalidate: CACHE_TIMES.LP_REBALANCE_ACTIVITY,
+      tags: [CACHE_TAGS.LP_REBALANCE_ACTIVITY],
     })({
       page: 1,
       limit: 1,

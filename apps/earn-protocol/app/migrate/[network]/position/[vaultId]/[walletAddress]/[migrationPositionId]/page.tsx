@@ -144,7 +144,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       : Promise.resolve({}),
     unstableCache(
       getVaultsHistoricalApy,
-      [],
+      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
       cacheConfig,
     )({
       // just the vault displayed
@@ -161,7 +161,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     }),
     unstableCache(
       getVaultInfo,
-      [],
+      ['vaultInfo', parsedNetwork, parsedVaultId],
       cacheConfig,
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])

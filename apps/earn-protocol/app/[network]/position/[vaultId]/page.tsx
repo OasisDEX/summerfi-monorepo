@@ -135,7 +135,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       : Promise.resolve({}),
     unstableCache(
       getVaultsHistoricalApy,
-      [],
+      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
       cacheConfig,
     )({
       // just the vault displayed
@@ -152,7 +152,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     }),
     unstableCache(
       getVaultInfo,
-      [],
+      ['vaultInfo', parsedNetwork, parsedVaultId],
       cacheConfig,
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])

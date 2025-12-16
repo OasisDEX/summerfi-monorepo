@@ -55,14 +55,14 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
         tallyDelegates: delegates,
       }
     }),
-    unstableCache(getSumrBalances, [], {
+    unstableCache(getSumrBalances, ['sumrBalances', walletAddress.toLowerCase()], {
       revalidate: CACHE_TIMES.USER_DATA,
       tags: [getUserDataCacheHandler(walletAddress)],
     })({
       walletAddress,
     }),
     getSumrStakingInfo(),
-    unstableCache(getSumrToClaim, [], {
+    unstableCache(getSumrToClaim, ['sumrToClaim', walletAddress.toLowerCase()], {
       revalidate: CACHE_TIMES.USER_DATA,
       tags: [getUserDataCacheHandler(walletAddress)],
     })({ walletAddress }),

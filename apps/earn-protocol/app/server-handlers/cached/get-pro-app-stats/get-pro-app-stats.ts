@@ -31,7 +31,7 @@ export const getCachedProAppStats = unstableCache(
       return DEFAULT_STATS
     }
   },
-  [],
+  ['proAppStats'],
   {
     revalidate: CACHE_TIMES.PRO_APP_STATS,
     tags: [CACHE_TAGS.PRO_APP_STATS],

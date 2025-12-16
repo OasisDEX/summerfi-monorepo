@@ -44,7 +44,7 @@ const getReferralsListFunction = async () => {
   }
 }
 
-const getReferralsListCached = unstableCache(getReferralsListFunction, [], {
+const getReferralsListCached = unstableCache(getReferralsListFunction, ['referralsList'], {
   tags: [SECURE_PAGE_CACHE_TAG],
   revalidate: 60 * 60, // 1 hour
 })

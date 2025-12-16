@@ -98,14 +98,14 @@ export async function GET() {
   ] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
-    unstableCache(getPaginatedRebalanceActivity, [], {
+    unstableCache(getPaginatedRebalanceActivity, ['rebalanceActivity'], {
       revalidate: CACHE_TIMES.LP_REBALANCE_ACTIVITY,
       tags: [CACHE_TAGS.LP_REBALANCE_ACTIVITY],
     })({
       page: 1,
       limit: 1,
     }),
-    unstableCache(getPaginatedLatestActivity, [], {
+    unstableCache(getPaginatedLatestActivity, ['latestActivity'], {
       revalidate: CACHE_TIMES.LP_SUMMER_PRO_STATS,
       tags: [CACHE_TAGS.LP_SUMMER_PRO_STATS],
     })({
@@ -113,11 +113,11 @@ export async function GET() {
       limit: 1,
     }),
     getCachedProAppStats(),
-    unstableCache(getProtocolsTvl, [], {
+    unstableCache(getProtocolsTvl, ['protocolTvls'], {
       revalidate: CACHE_TIMES.LP_PROTOCOLS_TVL,
       tags: [CACHE_TAGS.LP_PROTOCOLS_TVL],
     })(),
-    unstableCache(getProtocolsApy, [], {
+    unstableCache(getProtocolsApy, ['protocolApys'], {
       revalidate: CACHE_TIMES.LP_PROTOCOLS_APY,
       tags: [CACHE_TAGS.LP_PROTOCOLS_APY],
     })(),
