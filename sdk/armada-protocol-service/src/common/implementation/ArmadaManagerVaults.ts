@@ -2164,9 +2164,9 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     const receiverAddressValue = params.receiverAddressValue ?? params.senderAddressValue
 
     // Get source and destination tokens
-    const tokenIn = params.amount.token
-    const tokenInSymbol = tokenIn.symbol
-    const tokenInAddress = tokenIn.address.toSolidityValue()
+    const sourceToken = params.amount.token
+    const tokenInSymbol = sourceToken.symbol
+    const tokenInAddress = sourceToken.address.toSolidityValue()
     const amountIn = params.amount
 
     // Get the fleet asset token on destination chain
@@ -2203,7 +2203,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     })
     const priceImpact: TransactionPriceImpact = {
       impact: Percentage.createFrom({
-        value: parseInt(routeData.priceImpact?.toString() || '0') / 100,
+        value: parseFloat(routeData.priceImpact?.toString() || '0') / 100,
       }),
       price: Price.createFromAmountsRatio({
         numerator: amountIn,
