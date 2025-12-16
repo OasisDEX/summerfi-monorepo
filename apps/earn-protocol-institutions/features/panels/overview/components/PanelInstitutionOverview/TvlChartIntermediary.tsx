@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Card, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
 
@@ -12,8 +12,10 @@ import panelInstitutionOverviewStyles from './PanelInstitutionOverview.module.cs
 
 export const TvlChartIntermediary = ({
   vaultsTvlChartData,
+  isLoading,
 }: {
   vaultsTvlChartData?: MultipleSourceChartData
+  isLoading?: boolean
 }) => {
   const { timeframe, setTimeframe, timeframes } = useTimeframes({
     chartData: vaultsTvlChartData?.data,
@@ -39,7 +41,13 @@ export const TvlChartIntermediary = ({
           checkboxLabel="Stacked"
         />
       </div>
-      <TvlChart chartData={vaultsTvlChartData} timeframe={timeframe} stacked={stacked} />
+      {isLoading ? (
+        <div className={panelInstitutionOverviewStyles.tvlChartLoading}>
+          <LoadingSpinner size={64} />
+        </div>
+      ) : (
+        <TvlChart chartData={vaultsTvlChartData} timeframe={timeframe} stacked={stacked} />
+      )}
     </Card>
   )
 }

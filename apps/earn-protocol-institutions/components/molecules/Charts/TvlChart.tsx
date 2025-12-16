@@ -59,7 +59,7 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
 
   return (
     <div className={tvlChartStyles.tvlChart}>
-      <RechartResponsiveWrapper height="450px">
+      <RechartResponsiveWrapper height="350px">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             syncId={syncId}

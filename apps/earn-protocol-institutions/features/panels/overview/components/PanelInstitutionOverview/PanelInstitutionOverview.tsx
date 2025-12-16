@@ -102,7 +102,7 @@ export const PanelInstitutionOverview = ({
   institutionVaults?: SDKVaultishType[]
   vaultsAdditionalInfo?: VaultAdditionalInfo
   isLoading?: boolean
-  vaultsTvlChartData: MultipleSourceChartData
+  vaultsTvlChartData?: MultipleSourceChartData
 }) => {
   const vaultsTableList = useMemo(
     () => mapVaultTableRows({ institutionVaults, institutionName, vaultsAdditionalInfo }),
@@ -111,7 +111,7 @@ export const PanelInstitutionOverview = ({
 
   return (
     <div className={panelInstitutionOverviewStyles.wrapper}>
-      <TvlChartIntermediary vaultsTvlChartData={vaultsTvlChartData} />
+      <TvlChartIntermediary vaultsTvlChartData={vaultsTvlChartData} isLoading={isLoading} />
       <Card variant="cardSecondary" className={panelInstitutionOverviewStyles.yourVaultsWrapper}>
         <Text variant="h5">Your Vaults</Text>
         <Card variant="cardPrimary">
