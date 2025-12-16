@@ -19,9 +19,10 @@ type TvlChartProps = {
   chartData?: MultipleSourceChartData
   timeframe?: TimeframesType
   syncId?: string
+  stacked: boolean
 }
 
-export const TvlChart = ({ chartData, timeframe, syncId }: TvlChartProps) => {
+export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProps) => {
   const defaultTimeframe = '7d'
 
   const parsedData = useMemo(() => {
@@ -47,14 +48,14 @@ export const TvlChart = ({ chartData, timeframe, syncId }: TvlChartProps) => {
           stroke={color}
           strokeWidth={2}
           fill={color}
-          fillOpacity={0.6}
-          stackId="Tvl_Stack_ID"
+          fillOpacity={0.5}
+          stackId={stacked ? 'Tvl_Stack_ID' : undefined}
           dot={false}
           animationDuration={500}
         />
       )
     })
-  }, [chartData])
+  }, [chartData, stacked])
 
   return (
     <div className={tvlChartStyles.tvlChart}>
