@@ -43,6 +43,7 @@ import {
   NATIVE_CURRENCY_ADDRESS_LOWERCASE,
   type TransactionPriceImpact,
   Token,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
@@ -2152,13 +2153,15 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
   private async _getCrossChainDepositTx(params: {
     fromChainId: ChainId
     vaultId: IArmadaVaultId
-    user: IUser
+    senderAddressValue: AddressValue
+    receiverAddressValue?: AddressValue
     amount: ITokenAmount
     slippage: IPercentage
   }): ReturnType<IArmadaManagerVaults['getCrossChainDepositTx']> {
     const sourceChainId = params.fromChainId
     const destinationChainId = params.vaultId.chainInfo.chainId
-    const senderAddressValue = params.user.wallet.address.value
+    const senderAddressValue = params.senderAddressValue
+    const receiverAddressValue = params.receiverAddressValue ?? params.senderAddressValue
 
     // Get source and destination tokens
     const tokenIn = params.amount.token
@@ -2179,7 +2182,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
 
     const routeParams: RouteParams = {
       fromAddress: senderAddressValue,
-      receiver: senderAddressValue,
+      receiver: receiverAddressValue,
       chainId: sourceChainId,
       amountIn: [amountIn.toSolidityValue().toString()],
       tokenIn: [tokenInAddress],
@@ -2248,7 +2251,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
         chainInfo: getChainInfoByChainId(sourceChainId),
         spender: Address.createFromEthereum({ value: routeData.tx.to }),
         amount: amountIn,
-        owner: params.user.wallet.address,
+        owner: Address.createFromEthereum({ value: senderAddressValue }),
       })
     }
 

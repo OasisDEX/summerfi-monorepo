@@ -309,7 +309,8 @@ export interface IArmadaManagerUsersClient {
    *
    * @param fromChainId Source chain ID where user has tokens
    * @param vaultId ID of the pool to deposit in on destination chain
-   * @param user user that is trying to deposit
+   * @param senderAddressValue Address of the user that is sending tokens
+   * @param receiverAddressValue Optional address to receive the vault shares (defaults to senderAddressValue)
    * @param amount Token amount to be deposited from source chain
    * @param slippage Maximum slippage allowed for the operation
    *
@@ -318,7 +319,8 @@ export interface IArmadaManagerUsersClient {
   getCrossChainDepositTx(params: {
     fromChainId: ChainId
     vaultId: IArmadaVaultId
-    user: IUser
+    senderAddressValue: AddressValue
+    receiverAddressValue?: AddressValue
     amount: ITokenAmount
     slippage: IPercentage
   }): Promise<[DepositTransactionInfo] | [ApproveTransactionInfo, DepositTransactionInfo]>

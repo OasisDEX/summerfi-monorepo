@@ -353,7 +353,9 @@ Deposit tokens from one chain into a vault on a different chain.
 
 - **fromChainId**: Source chain ID where the user has tokens
 - **vaultId**: Target vault ID on the destination chain
-- **user**: User making the deposit (must be created with source chain ID)
+- **senderAddressValue**: Address of the user sending tokens (as AddressValue/0x string)
+- **receiverAddressValue** (optional): Address to receive vault shares (defaults to
+  senderAddressValue)
 - **amount**: Token amount to deposit from the source chain
 - **slippage**: Maximum slippage tolerance for the operation
 
@@ -363,7 +365,6 @@ Deposit tokens from one chain into a vault on a different chain.
 import {
   ArmadaVaultId,
   ChainIds,
-  User,
   Address,
   TokenAmount,
   Percentage,
@@ -372,9 +373,9 @@ import {
 
 import { sdk } from './sdk'
 
-// Create user on the SOURCE chain (where tokens currently are)
+// Define the source chain and user address
 const fromChainId = ChainIds.Base
-const user = User.createFromEthereum(fromChainId, '0x.........')
+const userAddress = '0x.........'
 
 // Get token on the source chain
 const sourceToken = await sdk.tokens.getTokenBySymbol({
@@ -402,7 +403,8 @@ const slippage = Percentage.createFrom({ value: '0.5' }) // 0.5%
 const transactions = await sdk.armada.users.getCrossChainDepositTx({
   fromChainId,
   vaultId,
-  user,
+  senderAddressValue: userAddress,
+  // receiverAddressValue: '0x...', // Optional: different address to receive vault shares
   amount,
   slippage,
 })
@@ -2077,14 +2079,7 @@ enum FiatCurrency {
   - Seamlessly bridge and deposit tokens across different chains in a single transaction flow
   - Supports deposits from Base, Arbitrum, Optimism, Mainnet, and Sonic to any supported chain
   - Automatically handles cross-chain bridging and token conversions
-  - Parameters:
-    - `fromChainId`: Source chain ID where user has tokens
-    - `vaultId`: Target vault ID on destination chain
-    - `user`: User making the deposit (created with source chain ID)
-    - `amount`: Token amount from source chain
-    - `slippage`: Maximum slippage tolerance
   - Returns approval transaction (if needed) and deposit transaction
-  - Enables users to access yield opportunities across chains without manual bridging
   - Example: Deposit USDC from Base directly into an Arbitrum vault
 
 ### v2.2.0

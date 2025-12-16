@@ -5,7 +5,6 @@ import {
   getChainInfoByChainId,
   Percentage,
   TokenAmount,
-  User,
 } from '@summerfi/sdk-common'
 
 import assert from 'assert'
@@ -69,9 +68,6 @@ describe('Armada Protocol - Cross Chain Deposit', () => {
         token: fromToken,
       })
 
-      // Create user
-      const user = User.createFromEthereum(fromChainId, userAddress.value)
-
       // Create vault ID on destination chain
       const vaultId = ArmadaVaultId.createFrom({
         chainInfo: getChainInfoByChainId(toChainId),
@@ -82,7 +78,7 @@ describe('Armada Protocol - Cross Chain Deposit', () => {
       const transactions = await sdk.armada.users.getCrossChainDepositTx({
         fromChainId,
         vaultId,
-        user,
+        senderAddressValue: userAddress.value,
         amount,
         slippage: Percentage.createFrom({
           value: DEFAULT_SLIPPAGE_PERCENTAGE,
