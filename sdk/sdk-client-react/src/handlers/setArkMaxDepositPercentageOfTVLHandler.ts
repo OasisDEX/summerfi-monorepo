@@ -4,9 +4,10 @@ import { Address, ArmadaVaultId, Percentage } from '@summerfi/sdk-common'
 /**
  * @name setArkMaxDepositPercentageOfTVLHandler
  * @description Sets the maximum deposit percentage of TVL for an ark
- * @param params.vaultId The ID of the vault
- * @param params.ark The address of the ark
- * @param params.maxDepositPercentageOfTVL The new maximum deposit percentage of TVL
+ * @param params.arkAddress The address of the ark
+ * @param params.fleetAddress The address of the fleet
+ * @param params.chainInfo The chain information
+ * @param params.maxDepositPercentage The new maximum deposit percentage
  */
 export const setArkMaxDepositPercentageOfTVLHandler =
   (sdk: ISDKManager | ISDKAdminManager) =>
