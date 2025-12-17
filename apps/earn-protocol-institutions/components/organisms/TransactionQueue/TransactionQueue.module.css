@@ -35,6 +35,10 @@
   opacity: 0;
   animation: transactionItemHeightFadeIn 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
   will-change: transform, opacity, padding;
+  border-bottom: 1px solid rgba(71, 71, 71, 0.5);
+}
+.transactionItemLast {
+  border-bottom: none;
 }
 
 .transactionActions {

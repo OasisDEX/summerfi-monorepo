@@ -6,6 +6,7 @@ declare const styles: {
   readonly "transactionActions": string;
   readonly "transactionItem": string;
   readonly "transactionItemHeightFadeIn": string;
+  readonly "transactionItemLast": string;
 };
 export = styles;
 

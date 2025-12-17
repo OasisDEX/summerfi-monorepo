@@ -63,13 +63,13 @@ export const getChangeMinimumBufferBalanceId = ({
 export const getChangeArkDepositCapId = ({
   address,
   chainId,
-  vaultCap,
+  arkDepositCap,
   arkId,
 }: {
   address: string
   chainId: number
-  vaultCap: string
+  arkDepositCap: string
   arkId: string
 }) => {
-  return `change-ark-deposit-cap-${address}-${chainId}-${vaultCap}-${arkId}`
+  return `change-ark-deposit-cap-${address}-${chainId}-${arkDepositCap}-${arkId}`
 }

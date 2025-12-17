@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
-import { formatAddress, formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
+import { formatAddress, formatWithSeparators, networkNameToSDKId, ten } from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -24,6 +24,18 @@ import { type MarketRiskParameters } from './market-risk-parameters-table/types'
 import { vaultRiskParametersColumns } from './vault-risk-parameters-table/columns'
 
 import styles from './PanelRiskParameters.module.css'
+
+const normalizeValue = (value: string | bigint, decimals: number) =>
+  new BigNumber(value.toString()).shiftedBy(-decimals)
+
+const denormalizeValue = (valueNormalized: BigNumber, decimals: number) =>
+  valueNormalized.multipliedBy(ten.pow(decimals)).toFixed(0)
+
+const createTransactionLabel = (nextValueRaw: string, currentValue: string | bigint) =>
+  ({
+    label: Number(nextValueRaw) > Number(currentValue) ? 'Increase' : 'Decrease',
+    charge: Number(nextValueRaw) < Number(currentValue) ? 'negative' : 'positive',
+  }) as const
 
 const mapArksToRiskParameters = ({
   vault,
@@ -106,17 +118,16 @@ export const PanelRiskParameters = ({
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
 
-  const depositCapNormalized = new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals)
-  const minimumBufferBalanceNormalized = new BigNumber(vault.minimumBufferBalance).shiftedBy(
-    -vault.inputToken.decimals,
+  const depositCapNormalized = normalizeValue(vault.depositCap, vault.inputToken.decimals)
+  const minimumBufferBalanceNormalized = normalizeValue(
+    vault.minimumBufferBalance,
+    vault.inputToken.decimals,
   )
 
   const isLoading = !vaultTokenSymbol
 
   const handleVaultCapChange = (nextValueNormalized: BigNumber) => {
-    const nextValueRaw = nextValueNormalized
-      .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
-      .toFixed(0)
+    const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
 
     if (!vaultTokenSymbol) {
       throw new Error('Vault token symbol is not defined')
@@ -141,10 +152,7 @@ export const PanelRiskParameters = ({
             </Text>
           </Text>
         ),
-        txLabel: {
-          label: Number(nextValueRaw) > Number(vault.depositCap) ? 'Increase' : 'Decrease',
-          charge: Number(nextValueRaw) < Number(vault.depositCap) ? 'negative' : 'positive',
-        },
+        txLabel: createTransactionLabel(nextValueRaw, vault.depositCap),
       },
       setFleetDepositCap({
         fleetAddress: vault.id,
@@ -156,9 +164,7 @@ export const PanelRiskParameters = ({
   }
 
   const handleMinimumBufferBalanceChange = (nextValueNormalized: BigNumber) => {
-    const nextValueRaw = nextValueNormalized
-      .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
-      .toFixed(0)
+    const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
 
     if (!vaultTokenSymbol) {
       throw new Error('Vault token symbol is not defined')
@@ -183,12 +189,7 @@ export const PanelRiskParameters = ({
             </Text>
           </Text>
         ),
-        txLabel: {
-          label:
-            Number(nextValueRaw) > Number(vault.minimumBufferBalance) ? 'Increase' : 'Decrease',
-          charge:
-            Number(nextValueRaw) < Number(vault.minimumBufferBalance) ? 'negative' : 'positive',
-        },
+        txLabel: createTransactionLabel(nextValueRaw, vault.minimumBufferBalance),
       },
       setMinimumBufferBalance({
         fleetAddress: vault.id,
@@ -201,12 +202,8 @@ export const PanelRiskParameters = ({
 
   const handleArkDepositCapChange =
     (ark: SDKVaultishType['arks'][number]) => (nextValueNormalized: BigNumber) => {
-      const arkDepositCapNormalized = new BigNumber(ark.depositCap).shiftedBy(
-        -vault.inputToken.decimals,
-      )
-      const nextValueRaw = nextValueNormalized
-        .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
-        .toFixed(0)
+      const arkDepositCapNormalized = normalizeValue(ark.depositCap, vault.inputToken.decimals)
+      const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
 
       if (!vaultTokenSymbol) {
         throw new Error('Vault token symbol is not defined')
@@ -217,7 +214,7 @@ export const PanelRiskParameters = ({
           id: getChangeArkDepositCapId({
             address: vault.id,
             chainId,
-            vaultCap: nextValueRaw,
+            arkDepositCap: nextValueRaw,
             arkId: ark.id,
           }),
           txDescription: (
@@ -233,10 +230,7 @@ export const PanelRiskParameters = ({
               </Text>
             </Text>
           ),
-          txLabel: {
-            label: Number(nextValueRaw) > Number(ark.depositCap) ? 'Increase' : 'Decrease',
-            charge: Number(nextValueRaw) < Number(ark.depositCap) ? 'negative' : 'positive',
-          },
+          txLabel: createTransactionLabel(nextValueRaw, ark.depositCap),
         },
         setArkDepositCap({
           fleetAddress: vault.id,
@@ -271,9 +265,7 @@ export const PanelRiskParameters = ({
             modalTitle="Edit Vault Cap"
             editValue={{
               label: 'Vault Cap',
-              valueNormalized: new BigNumber(vault.depositCap)
-                .shiftedBy(-vault.inputToken.decimals)
-                .toNumber(),
+              valueNormalized: depositCapNormalized.toNumber(),
               decimals: vault.inputToken.decimals,
               symbol: vault.inputToken.symbol,
             }}
@@ -294,9 +286,7 @@ export const PanelRiskParameters = ({
             modalTitle="Edit Minimum Buffer Balance"
             editValue={{
               label: 'Minimum Buffer Balance',
-              valueNormalized: new BigNumber(vault.minimumBufferBalance)
-                .shiftedBy(-vault.inputToken.decimals)
-                .toNumber(),
+              valueNormalized: minimumBufferBalanceNormalized.toNumber(),
               decimals: vault.inputToken.decimals,
               symbol: vault.inputToken.symbol,
             }}
@@ -310,12 +300,17 @@ export const PanelRiskParameters = ({
 
   useEffect(() => {
     const updateVaultTokenSymbol = async () => {
-      const token = await getTokenBySymbol({
-        chainId: networkNameToSDKId(network),
-        symbol: vault.inputToken.symbol,
-      })
+      try {
+        const token = await getTokenBySymbol({
+          chainId: networkNameToSDKId(network),
+          symbol: vault.inputToken.symbol,
+        })
 
-      setVaultTokenSymbol(token)
+        setVaultTokenSymbol(token)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error fetching vault token symbol:', error)
+      }
     }
 
     updateVaultTokenSymbol()

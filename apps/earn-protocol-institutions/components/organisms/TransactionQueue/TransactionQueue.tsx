@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react'
 import { AnimateHeight, Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
+import clsx from 'clsx'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { SimpleTransactionButton } from '@/components/organisms/SimpleTransactionButton/SimpleTransactionButton'
@@ -90,7 +91,12 @@ export const TransactionQueue = ({
           show={!transactionRemovedLocally.some((tx) => tx.id === txItem.id)}
           fade
         >
-          <div className={transactionQueueStyles.transactionItem}>
+          <div
+            className={clsx(transactionQueueStyles.transactionItem, {
+              [transactionQueueStyles.transactionItemLast]:
+                txItem === transactionQueue[transactionQueue.length - 1],
+            })}
+          >
             <Text as="p" variant="p2">
               {getTxLabel(txItem)}
             </Text>

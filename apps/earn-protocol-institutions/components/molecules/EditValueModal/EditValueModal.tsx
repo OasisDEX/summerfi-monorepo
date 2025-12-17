@@ -69,6 +69,8 @@ export const EditTokenValueModal = ({
 
     if (Number(nextValue) < 0 || isNaN(Number(nextValue))) {
       manualSetAmount(editValue.valueNormalized.toString())
+
+      return
     }
 
     manualSetAmount(nextValue)

@@ -1,5 +1,5 @@
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
-import { NetworkNames } from '@summerfi/app-types'
+import { type NetworkNames } from '@summerfi/app-types'
 import { decorateWithFleetConfig, humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
