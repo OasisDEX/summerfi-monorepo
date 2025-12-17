@@ -18,6 +18,7 @@ type UseAmountProps = {
   initialAmount?: string
   inputChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
   inputName: string
+  suffix?: string
 }
 
 /**
@@ -46,6 +47,7 @@ export const useAmount = ({
   initialAmount,
   inputChangeHandler,
   inputName,
+  suffix,
 }: UseAmountProps): {
   /**
     A is a string version of the amount
@@ -94,8 +96,8 @@ export const useAmount = ({
       return amountRaw
     }
 
-    return formatCryptoBalance(amountRaw)
-  }, [amountRaw, editMode])
+    return suffix ? `${formatCryptoBalance(amountRaw)}${suffix}` : formatCryptoBalance(amountRaw)
+  }, [amountRaw, editMode, suffix])
 
   const amountDisplayUSD = useMemo(() => {
     if (!tokenPrice) {

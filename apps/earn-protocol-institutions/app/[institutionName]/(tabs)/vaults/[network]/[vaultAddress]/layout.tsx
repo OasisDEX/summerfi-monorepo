@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
 import {
   formatCryptoBalance,
-  getHumanReadableFleetName,
   humanNetworktoSDKNetwork,
   subgraphNetworkToId,
   supportedSDKNetwork,

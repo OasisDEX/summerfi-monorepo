@@ -73,3 +73,17 @@ export const getChangeArkDepositCapId = ({
 }) => {
   return `change-ark-deposit-cap-${address}-${chainId}-${arkDepositCap}-${arkId}`
 }
+
+export const getChangeArkMaxDepositPercentageId = ({
+  address,
+  chainId,
+  arkMaxDepositPercentage,
+  arkId,
+}: {
+  address: string
+  chainId: number
+  arkMaxDepositPercentage: string
+  arkId: string
+}) => {
+  return `change-ark-max-deposit-percentage-${address}-${chainId}-${arkMaxDepositPercentage}-${arkId}`
+}

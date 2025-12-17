@@ -82,7 +82,7 @@ import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
 import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler'
 import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
 import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
-import { setArkMaxDepositPercentageOfTVLTxHandler } from '../handlers/setArkMaxDepositPercentageOfTVLTxHandler'
+import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -232,8 +232,8 @@ export const useSDK = (params: UseSdk) => {
   const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
   const setMinimumBufferBalance = useMemo(() => setMinimumBufferBalanceHandler(sdk), [sdk])
   const setArkDepositCap = useMemo(() => setArkDepositCapHandler(sdk), [sdk])
-  const setArkMaxDepositPercentageOfTVLTx = useMemo(
-    () => setArkMaxDepositPercentageOfTVLTxHandler(sdk),
+  const setArkMaxDepositPercentageOfTVL = useMemo(
+    () => setArkMaxDepositPercentageOfTVLHandler(sdk),
     [sdk],
   )
 
@@ -320,7 +320,7 @@ export const useSDK = (params: UseSdk) => {
       setFleetDepositCap,
       setMinimumBufferBalance,
       setArkDepositCap,
-      setArkMaxDepositPercentageOfTVLTx,
+      setArkMaxDepositPercentageOfTVL,
     }),
     [
       getCurrentUser,
@@ -400,7 +400,10 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
-      setArkMaxDepositPercentageOfTVLTx,
+      setFleetDepositCap,
+      setMinimumBufferBalance,
+      setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL,
     ],
   )
 

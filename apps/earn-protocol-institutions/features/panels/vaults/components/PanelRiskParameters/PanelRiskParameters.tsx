@@ -3,16 +3,26 @@
 import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
-import { formatAddress, formatWithSeparators, networkNameToSDKId, ten } from '@summerfi/app-utils'
+import {
+  formatAddress,
+  formatPercent,
+  formatWithSeparators,
+  networkNameToSDKId,
+  ten,
+} from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
-import { EditTokenValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
+import {
+  EditPercentageValueModal,
+  EditTokenValueModal,
+} from '@/components/molecules/EditValueModal/EditValueModal'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { marketRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/mapper'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
 import {
   getChangeArkDepositCapId,
+  getChangeArkMaxDepositPercentageId,
   getChangeMinimumBufferBalanceId,
   getChangeVaultCapId,
 } from '@/helpers/get-transaction-id'
@@ -42,6 +52,7 @@ const mapArksToRiskParameters = ({
   arksImpliedCapsMap,
   isLoading,
   handleArkDepositCapChange,
+  handleArkMaxDepositPercentageOfTVLChange,
 }: {
   vault: SDKVaultishType
   arksImpliedCapsMap: {
@@ -51,6 +62,9 @@ const mapArksToRiskParameters = ({
   handleArkDepositCapChange: (
     ark: SDKVaultishType['arks'][number],
   ) => (nextArkDepositCapNormalized: BigNumber) => void
+  handleArkMaxDepositPercentageOfTVLChange: (
+    ark: SDKVaultishType['arks'][number],
+  ) => (nextArkMaxDepositPercentageNormalized: BigNumber) => void
 }): MarketRiskParameters[] => {
   return vault.arks
     .filter((ark) => {
@@ -80,11 +94,28 @@ const mapArksToRiskParameters = ({
         />
       ),
       token: ark.inputToken.symbol,
-      maxPercentage: new BigNumber(ark.maxDepositPercentageOfTVL.toString())
-        .shiftedBy(
-          -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
-        )
-        .toNumber(),
+      maxPercentage: (
+        <EditPercentageValueModal
+          buttonLabel={formatPercent(
+            normalizeValue(
+              ark.maxDepositPercentageOfTVL,
+              18, // 18 (wei) because it's stored as wei
+            ),
+            { precision: 2 },
+          )}
+          modalTitle={`Edit ${getArkNiceName(ark)} Ark Max Deposit % of TVL`}
+          modalDescription={`Edit the maximum deposit percentage of TVL for ${getArkNiceName(ark)} ark.`}
+          editValue={{
+            label: 'Ark Max Deposit Percentage of TVL',
+            valueNormalized: normalizeValue(
+              ark.maxDepositPercentageOfTVL,
+              18, // 18 (wei) because it's stored as wei
+            ).toNumber(),
+          }}
+          onAddTransaction={handleArkMaxDepositPercentageOfTVLChange(ark)}
+          loading={isLoading}
+        />
+      ),
       impliedCap:
         typeof arksImpliedCapsMap[ark.id] === 'string'
           ? new BigNumber(arksImpliedCapsMap[ark.id] as string)
@@ -112,6 +143,7 @@ export const PanelRiskParameters = ({
     setFleetDepositCap,
     setArkDepositCap,
     setMinimumBufferBalance,
+    setArkMaxDepositPercentageOfTVL,
     getTargetChainInfo,
     getTokenBySymbol,
   } = useAdminAppSDK(institutionName)
@@ -184,11 +216,11 @@ export const PanelRiskParameters = ({
           <Text variant="p3">
             minimum&nbsp;buffer&nbsp;balance&nbsp;from&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {minimumBufferBalanceNormalized.toString()}
+              {minimumBufferBalanceNormalized.toString()}&nbsp;{vault.inputToken.symbol}
             </Text>
             &nbsp;to&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {nextMinimumBufferBalanceNormalized.toString()}
+              {nextMinimumBufferBalanceNormalized.toString()}&nbsp;{vault.inputToken.symbol}
             </Text>
           </Text>
         ),
@@ -203,6 +235,56 @@ export const PanelRiskParameters = ({
     )
   }
 
+  const handleArkMaxDepositPercentageOfTVLChange =
+    (ark: SDKVaultishType['arks'][number]) =>
+    (nextArkMaxDepositPercentageNormalized: BigNumber) => {
+      const currentArkMaxDepositPercentageNormalized = normalizeValue(
+        ark.maxDepositPercentageOfTVL,
+        18, // 18 (wei) + 2 (percent formatting)
+      )
+      const nextArkMaxDepositPercentage = denormalizeValue(
+        nextArkMaxDepositPercentageNormalized,
+        18,
+      )
+
+      if (!vaultTokenSymbol) {
+        throw new Error('Vault token symbol is not defined')
+      }
+
+      addTransaction(
+        {
+          id: getChangeArkMaxDepositPercentageId({
+            address: vault.id,
+            chainId,
+            arkId: ark.id,
+            arkMaxDepositPercentage: nextArkMaxDepositPercentage,
+          }),
+          txDescription: (
+            <Text variant="p3">
+              {getArkNiceName(ark) ?? formatAddress(ark.id)}
+              &nbsp;ark&nbsp;max&nbsp;deposit&nbsp;%&nbsp;of&nbsp;TVL&nbsp;from&nbsp;
+              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                {formatPercent(currentArkMaxDepositPercentageNormalized, { precision: 4 })}
+              </Text>
+              &nbsp;to&nbsp;
+              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                {formatPercent(nextArkMaxDepositPercentageNormalized, { precision: 4 })}
+              </Text>
+            </Text>
+          ),
+          txLabel: createTransactionLabel(
+            nextArkMaxDepositPercentage,
+            ark.maxDepositPercentageOfTVL,
+          ),
+        },
+        setArkMaxDepositPercentageOfTVL({
+          fleetAddress: vault.id,
+          chainInfo: getTargetChainInfo(chainId),
+          maxDepositPercentage: nextArkMaxDepositPercentageNormalized.times(100).toNumber(), // iPercentage is in basis points
+          arkAddress: ark.id,
+        }),
+      )
+    }
   const handleArkDepositCapChange =
     (ark: SDKVaultishType['arks'][number]) => (nextArkDepositCapNormalized: BigNumber) => {
       const currentArkDepositCapNormalized = normalizeValue(
@@ -257,6 +339,7 @@ export const PanelRiskParameters = ({
       arksImpliedCapsMap,
       isLoading,
       handleArkDepositCapChange,
+      handleArkMaxDepositPercentageOfTVLChange,
     }),
   })
 

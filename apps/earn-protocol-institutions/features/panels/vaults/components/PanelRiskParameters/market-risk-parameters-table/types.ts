@@ -4,7 +4,7 @@ export type MarketRiskParameters = {
   id: string
   market: ReactNode
   marketCap: ReactNode
-  maxPercentage: number
+  maxPercentage: ReactNode
   impliedCap: number
   token?: string
 }
