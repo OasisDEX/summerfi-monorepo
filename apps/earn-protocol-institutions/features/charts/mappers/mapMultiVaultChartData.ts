@@ -3,23 +3,17 @@ import {
   type ChartsDataTimeframes,
   type MultipleSourceChartData,
 } from '@summerfi/app-types/types/src/earn-protocol'
-import { sdkNetworkToHumanNetwork, supportedSDKNetwork } from '@summerfi/app-utils'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
 import { type InstiVaultPerformanceResponse } from '@/app/server-handlers/institution/institution-vaults/types'
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/features/charts/helpers'
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 
 type ChartRow = {
   timestamp: number
   timestampParsed: string
   [key: string]: number | string
-}
-
-const getMappedVaultName = (
-  performanceData: InstiVaultPerformanceResponse,
-  institutionName?: string,
-) => {
-  return `${institutionName ? `${institutionName} ` : ''}${performanceData.vault.inputToken.symbol} ${sdkNetworkToHumanNetwork(supportedSDKNetwork(performanceData.vault.protocol.network))}`
 }
 
 export const mapMultiVaultChartData = ({
@@ -72,7 +66,11 @@ export const mapMultiVaultChartData = ({
   >()
 
   performanceDataArray.forEach(({ performanceData }) => {
-    const vaultLabel = getMappedVaultName(performanceData, institutionName)
+    const vaultLabel = getInstiVaultNiceName({
+      network: supportedSDKNetwork(performanceData.vault.protocol.network),
+      symbol: performanceData.vault.inputToken.symbol,
+      institutionName,
+    })
 
     colors.push(getUniqueColor(vaultLabel))
     dataNames.push(vaultLabel)
@@ -130,7 +128,11 @@ export const mapMultiVaultChartData = ({
     }
 
     performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getMappedVaultName(performanceData, institutionName)
+      const vaultLabel = getInstiVaultNiceName({
+        network: supportedSDKNetwork(performanceData.vault.protocol.network),
+        symbol: performanceData.vault.inputToken.symbol,
+        institutionName,
+      })
       const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
       row[vaultLabel] = Number(
@@ -148,7 +150,11 @@ export const mapMultiVaultChartData = ({
     }
 
     performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getMappedVaultName(performanceData, institutionName)
+      const vaultLabel = getInstiVaultNiceName({
+        network: supportedSDKNetwork(performanceData.vault.protocol.network),
+        symbol: performanceData.vault.inputToken.symbol,
+        institutionName,
+      })
       const existingPoint = perVaultHourly.get(vaultLabel)?.get(timestampUnix)
 
       row[vaultLabel] = Number(
@@ -170,7 +176,11 @@ export const mapMultiVaultChartData = ({
     }
 
     performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getMappedVaultName(performanceData, institutionName)
+      const vaultLabel = getInstiVaultNiceName({
+        network: supportedSDKNetwork(performanceData.vault.protocol.network),
+        symbol: performanceData.vault.inputToken.symbol,
+        institutionName,
+      })
       const existingPoint = perVaultDaily.get(vaultLabel)?.get(timestampUnix)
 
       row[vaultLabel] = Number(
@@ -188,7 +198,11 @@ export const mapMultiVaultChartData = ({
     }
 
     performanceDataArray.forEach(({ performanceData, pointName, currentPointValue }) => {
-      const vaultLabel = getMappedVaultName(performanceData, institutionName)
+      const vaultLabel = getInstiVaultNiceName({
+        network: supportedSDKNetwork(performanceData.vault.protocol.network),
+        symbol: performanceData.vault.inputToken.symbol,
+        institutionName,
+      })
       const existingPoint = perVaultWeekly.get(vaultLabel)?.get(timestampUnix)
 
       row[vaultLabel] = Number(

@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
 import {
   formatCryptoBalance,
-  getHumanReadableFleetName,
   humanNetworktoSDKNetwork,
   subgraphNetworkToId,
   supportedSDKNetwork,
@@ -19,6 +18,7 @@ import { DashboardContentLayout } from '@/components/layout/DashboardContentLayo
 import { VaultsDropdownWrapper } from '@/components/layout/VaultsDropdownWrapper/VaultsDropdownWrapper'
 import { VaultsPanelNavigationWrapper } from '@/components/layout/VaultsPanelNavigationWrapper/VaultsPanelNavigationWrapper'
 import { DashboardVaultHeader } from '@/features/dashboard/components/DashboardVaultHeader/DashboardVaultHeader'
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 
 import institutionVaultLayoutStyles from './InstitutionVaultLayout.module.css'
 
@@ -89,10 +89,11 @@ export default async function InstitutionVaultLayout({
       }
       header={
         <DashboardVaultHeader
-          vaultName={getHumanReadableFleetName(
-            supportedSDKNetwork(institutionVault.vault.protocol.network),
-            institutionVault.vault.name,
-          )}
+          vaultName={getInstiVaultNiceName({
+            symbol: institutionVault.vault.inputToken.symbol,
+            network: institutionVault.vault.protocol.network,
+            institutionName,
+          })}
           liveApy={
             institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive
               ? institutionVaults.vaultsAdditionalInfo.vaultApyMap[vaultSelector].apyLive / 100

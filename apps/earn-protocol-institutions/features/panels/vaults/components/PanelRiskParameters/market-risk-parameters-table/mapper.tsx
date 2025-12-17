@@ -1,5 +1,5 @@
 import { TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
-import { formatDecimalAsPercent, formatWithSeparators } from '@summerfi/app-utils'
+import { formatWithSeparators } from '@summerfi/app-utils'
 
 import { type MarketRiskParameters } from './types'
 
@@ -8,17 +8,8 @@ export const marketRiskParametersMapper = ({ rawData }: { rawData: MarketRiskPar
     return {
       content: {
         market: <TableCellText>{item.market}</TableCellText>,
-        'market-cap': (
-          <TableCellNodes>
-            {formatWithSeparators(item.marketCap)}
-            {item.token ? ` ${item.token}` : ''}
-          </TableCellNodes>
-        ),
-        'max-percentage': (
-          <TableCellNodes>
-            {formatDecimalAsPercent(item.maxPercentage, { precision: 1 })}
-          </TableCellNodes>
-        ),
+        'market-cap': <TableCellNodes>{item.marketCap}</TableCellNodes>,
+        'max-percentage': <TableCellNodes>{item.maxPercentage}</TableCellNodes>,
         'implied-cap': (
           <TableCellNodes>
             {formatWithSeparators(item.impliedCap)}

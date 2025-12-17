@@ -12,7 +12,6 @@ import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn
 import {
   formatCryptoBalance,
   formatPercent,
-  getVaultNiceName,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
@@ -22,6 +21,7 @@ import { type VaultAdditionalInfo } from '@/app/server-handlers/institution/inst
 import { vaultsListColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/constants'
 import { TvlChartIntermediary } from '@/features/panels/overview/components/PanelInstitutionOverview/TvlChartIntermediary'
 import { type VaultsListTableColumns } from '@/features/panels/overview/components/PanelInstitutionOverview/types'
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 
 import panelInstitutionOverviewStyles from './PanelInstitutionOverview.module.css'
@@ -50,7 +50,11 @@ const mapVaultTableRows: ({
       return {
         id: getUniqueVaultId(vault),
         content: {
-          vault: getVaultNiceName({ vault }),
+          vault: getInstiVaultNiceName({
+            symbol: vault.inputToken.symbol,
+            network: vault.protocol.network,
+            institutionName,
+          }),
           value: (
             <TableCellRightAlign>
               ${formatCryptoBalance(vault.totalValueLockedUSD)}

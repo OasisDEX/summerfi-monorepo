@@ -1,0 +1,47 @@
+.editValueModalWrapper {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.editTokenModalInput {
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  line-height: 28px;
+  border: none;
+  &:focus {
+    outline: 1px solid var(--color-border-hover);
+  }
+}
+
+.defaultUnderlineOnHover {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition:
+    color 0.1s ease,
+    text-decoration-color 0.1s ease,
+    opacity 0.1s ease;
+
+  &:hover {
+    color: var(--color-text-link);
+    text-decoration-color: var(--color-text-link);
+  }
+}
+
+.disabledDefaultUnderlineOnHover {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

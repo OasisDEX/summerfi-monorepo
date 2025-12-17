@@ -8,10 +8,11 @@ import {
   type SDKVaultType,
   type TimeframesType,
 } from '@summerfi/app-types'
-import { getVaultNiceName, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 
 import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/features/charts/helpers'
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 
 type BaseHistoricalChartsDataReturnType = {
   [key in TimeframesType]: {
@@ -75,17 +76,23 @@ export const getArkHistoricalChartData = ({
   vault,
   arkInterestRatesMap,
   vaultInterestRates,
+  institutionName,
 }: {
   vault: SDKVaultishType
   arkInterestRatesMap: InterestRates
   vaultInterestRates: GetVaultsHistoricalApyResponse
+  institutionName?: string
 }) => {
   const castedVault = vault as SDKVaultType
   const vaultsInterestRates =
     vaultInterestRates[
       `${castedVault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
     ]
-  const vaultName = getVaultNiceName({ vault: castedVault })
+  const vaultName = getInstiVaultNiceName({
+    network: supportedSDKNetwork(vault.protocol.network),
+    symbol: vault.inputToken.symbol,
+    institutionName,
+  })
   const today = dayjs()
   const threshold7d = today.startOf('hour').subtract(7, 'day').unix()
   const threshold30d = today.startOf('hour').subtract(30, 'day').unix()

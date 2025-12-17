@@ -25,12 +25,25 @@ export const SimpleTransactionButton = ({
   }, [isSendingUserOperation, txItem.txData?.transaction, txItem.txError])
 
   const buttonDisabled = useMemo(() => {
-    return !!txItem.txError || !txItem.txData?.transaction || isLoading
-  }, [isLoading, txItem.txData?.transaction, txItem.txError])
+    return (
+      !!txItem.txError ||
+      !txItem.txData?.transaction ||
+      isLoading ||
+      ['txInProgress', 'txSuccess'].includes(txStatus)
+    )
+  }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus])
 
   const buttonLabel = useMemo(() => {
+    if (txStatus === 'txSuccess') {
+      return 'Done!'
+    }
     if (txStatus === 'txInProgress') {
-      return 'In progress...'
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <LoadingSpinner size={16} />
+          <Text variant="p4semi">In progress...</Text>
+        </div>
+      )
     }
     if (txStatus === 'txError') {
       return (
@@ -61,12 +74,17 @@ export const SimpleTransactionButton = ({
   }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus, txError])
 
   const buttonAction = useCallback(() => {
-    if (txItem.txData?.transaction && !txItem.txError && !isLoading) {
+    if (
+      txItem.txData?.transaction &&
+      !txItem.txError &&
+      !isLoading &&
+      !['txInProgress', 'txSuccess'].includes(txStatus)
+    ) {
       return executeTransaction(txItem)
     }
 
     return undefined
-  }, [executeTransaction, isLoading, txItem])
+  }, [executeTransaction, isLoading, txItem, txStatus])
 
   const buttonVariant = useMemo(() => {
     if (txStatus === 'txError') {
@@ -78,7 +96,7 @@ export const SimpleTransactionButton = ({
 
   return (
     <Button
-      variant={buttonVariant}
+      variant={txStatus === 'txSuccess' ? 'textPrimarySmall' : buttonVariant}
       className={transactionButtonStyles.transactionActionsSubmitButton}
       disabled={buttonDisabled}
       onClick={buttonAction}

@@ -14,12 +14,16 @@ export const InstitutionTabBar = ({
   tabBarStyle,
 }: {
   institutionName: string
-  defaultVault: SDKVaultishType
+  defaultVault?: SDKVaultishType
   tabBarStyle?: CSSProperties
 }) => {
   const pathname = usePathname()
 
   const tabId = getMainTabBarTabId(pathname)
+
+  if (!defaultVault) {
+    return null
+  }
 
   return (
     <TabBarSimple

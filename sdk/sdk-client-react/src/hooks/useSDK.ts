@@ -79,7 +79,10 @@ import { setWhitelistedBatchAQTxHandler } from '../handlers/setWhitelistedBatchA
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
-import { setArkMaxDepositPercentageOfTVLTxHandler } from '../handlers/setArkMaxDepositPercentageOfTVLTxHandler'
+import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler'
+import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
+import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
+import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -226,8 +229,11 @@ export const useSDK = (params: UseSdk) => {
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
   const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
   const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
-  const setArkMaxDepositPercentageOfTVLTx = useMemo(
-    () => setArkMaxDepositPercentageOfTVLTxHandler(sdk),
+  const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
+  const setMinimumBufferBalance = useMemo(() => setMinimumBufferBalanceHandler(sdk), [sdk])
+  const setArkDepositCap = useMemo(() => setArkDepositCapHandler(sdk), [sdk])
+  const setArkMaxDepositPercentageOfTVL = useMemo(
+    () => setArkMaxDepositPercentageOfTVLHandler(sdk),
     [sdk],
   )
 
@@ -311,7 +317,10 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
-      setArkMaxDepositPercentageOfTVLTx,
+      setFleetDepositCap,
+      setMinimumBufferBalance,
+      setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL,
     }),
     [
       getCurrentUser,
@@ -391,7 +400,10 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
-      setArkMaxDepositPercentageOfTVLTx,
+      setFleetDepositCap,
+      setMinimumBufferBalance,
+      setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL,
     ],
   )
 

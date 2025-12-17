@@ -4,8 +4,10 @@ declare const styles: {
   readonly "noTransactionsIcon": string;
   readonly "title": string;
   readonly "transactionActions": string;
+  readonly "transactionDescription": string;
   readonly "transactionItem": string;
   readonly "transactionItemHeightFadeIn": string;
+  readonly "transactionItemLast": string;
 };
 export = styles;
 

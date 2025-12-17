@@ -1,10 +1,11 @@
 'use client'
 
 import { type FC } from 'react'
-import { Dropdown, VaultTitleDropdownContent } from '@summerfi/app-earn-ui'
+import { Dropdown, VaultTitleDropdownContentBlock } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption, type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 import { getPanelVaultNavigationTabId } from '@/helpers/get-pathname-tab-id'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 import { type InstitutionData } from '@/types/institution-data'
@@ -27,9 +28,14 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
   const vaultsOptions: DropdownRawOption[] = vaults.map((vault) => ({
     value: `${vault.id}-${vault.protocol.network}`,
     content: (
-      <VaultTitleDropdownContent
+      <VaultTitleDropdownContentBlock
         vault={vault}
         className={vaultsDropdownWrapperStyles.contentWrapper}
+        customVaultName={getInstiVaultNiceName({
+          symbol: vault.inputToken.symbol,
+          network: vault.protocol.network,
+          institutionName: institution.name,
+        })}
       />
     ),
   }))
@@ -37,7 +43,7 @@ export const VaultsDropdownWrapper: FC<VaultsDropdownWrapperProps> = ({
   const selectedVaultOption = {
     value: `${selectedVault.id}-${selectedVault.protocol.network}`,
     content: (
-      <VaultTitleDropdownContent
+      <VaultTitleDropdownContentBlock
         vault={selectedVault}
         className={vaultsDropdownWrapperStyles.contentWrapper}
       />
