@@ -37,6 +37,7 @@ import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 import {
   getChainInfoByChainId,
   isChainId,
+  LoggingService,
   type ChainId,
   type IChainInfo,
 } from '@summerfi/sdk-common'
@@ -76,6 +77,7 @@ const quickHashCode = (str: string): string => {
 export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppContext> => {
   // check for Client-Id header in request and fetch integrator config if present
   const clientId = opts.event.headers['Client-Id'] || opts.event.headers['client-id'] || undefined
+  LoggingService.debug('Request headers', opts.event.headers)
 
   const configProvider = new ConfigurationProvider()
   const summerDeployment = configProvider.getConfigurationItem({
@@ -90,6 +92,8 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
+  console.log('clientId', clientId)
+
   if (clientId) {
     const rawInstiChainIds = configProvider.getConfigurationItem({
       name: 'SUMMER_DEPLOYED_CHAINS_ID_INSTI',

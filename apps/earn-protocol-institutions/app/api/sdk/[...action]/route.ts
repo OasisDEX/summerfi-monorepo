@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers = {}
+  const headers = {
+    'client-id': req.headers.get('client-id') ?? '',
+  }
   const response = await fetch(url, {
     headers,
     method: 'POST',
@@ -49,7 +51,9 @@ export async function GET(req: NextRequest) {
   const rewrittenPath = rewriteSdkPath(req.nextUrl.pathname)
   const url = sdkApiUrl + rewrittenPath + req.nextUrl.search
 
-  const headers = {}
+  const headers = {
+    'client-id': req.headers.get('client-id') ?? '',
+  }
   const response = await fetch(url, {
     headers,
     next: {
