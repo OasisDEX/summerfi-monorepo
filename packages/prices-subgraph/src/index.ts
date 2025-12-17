@@ -78,20 +78,20 @@ async function getLatestPrice(
 ): Promise<DerivedPrices | undefined> {
   const url = getEndpoint(config.chainId, config.urlBase)
   config.logger?.info('Fetching latest price for', {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
     url,
   })
   const prices = await request(url, PricesDocument, {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
   })
 
   const price = prices.derivedPrices[0]
 
   config.logger?.debug('Received latest price for', {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
     price,
   })
 
@@ -104,22 +104,22 @@ async function getMaxPrice(
 ): Promise<DerivedPrices | undefined> {
   const url = getEndpoint(config.chainId, config.urlBase)
   config.logger?.info('Fetching max price for', {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
     from: params.from,
     url,
   })
   const prices = await request(url, MaxPriceFromDocument, {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
     from: params.from,
   })
 
   const price = prices.derivedPrices[0]
 
   config.logger?.debug('Received max price for', {
-    token: params.token,
-    denomination: params.denomination,
+    token: params.token.toLowerCase(),
+    denomination: params.denomination.toLowerCase(),
     from: params.from,
     price,
   })
@@ -156,7 +156,7 @@ async function getUsdcAndTokenPrice(
 ): Promise<UsdcAndTokenPrice> {
   const url = getEndpoint(config.chainId, config.urlBase)
   const prices = await request(url, PricesUsdcTokenDocument, {
-    token: params.token,
+    token: params.token.toLowerCase(),
     tokenID: params.token.toLowerCase(),
   })
 

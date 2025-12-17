@@ -4,13 +4,13 @@ query Prices($token: String!, $denomination: String!) {
       { or: [
         { token: $token },
         { token_: {
-          relatedTokens_contains_nocase: [$token]
+          relatedTokens_contains: [$token]
         }}
       ]}
       { or: [
         { denomination: $denomination },
         { denomination_: {
-          relatedTokens_contains_nocase: [$denomination]
+          relatedTokens_contains: [$denomination]
         }}
       ]}
     ]}
