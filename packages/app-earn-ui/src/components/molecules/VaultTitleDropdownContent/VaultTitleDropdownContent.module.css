@@ -17,3 +17,10 @@
   top: -6px;
   left: -2px;
 }
+
+.customVaultTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 12px;
+}

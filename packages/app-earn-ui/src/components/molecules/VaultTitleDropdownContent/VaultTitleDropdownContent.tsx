@@ -19,6 +19,7 @@ interface VaultDropdownContentProps {
   link?: string
   className?: string
   linkOnClick?: () => void
+  customVaultName?: string
 }
 
 export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 'link'>> = ({
@@ -26,6 +27,7 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
   isDisabled,
   style,
   className,
+  customVaultName,
 }) => (
   <div
     className={clsx(classNames.wrapper, className)}
@@ -43,8 +45,8 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
           size={10}
         />
       </div>
-      <Text as="p" variant="p1semi">
-        {getDisplayToken(vault.inputToken.symbol)}
+      <Text as="p" variant="p1semi" className={customVaultName ? classNames.customVaultTitle : ''}>
+        {customVaultName ?? getDisplayToken(vault.inputToken.symbol)}
       </Text>
     </div>
     <Risk risk={vault.customFields?.risk ?? 'lower'} variant="p4semi" />
