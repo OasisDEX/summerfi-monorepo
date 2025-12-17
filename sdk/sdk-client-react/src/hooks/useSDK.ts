@@ -81,6 +81,7 @@ import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpe
 import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
 import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler'
 import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
+import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -229,6 +230,7 @@ export const useSDK = (params: UseSdk) => {
   const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
   const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
   const setMinimumBufferBalance = useMemo(() => setMinimumBufferBalanceHandler(sdk), [sdk])
+  const setArkDepositCap = useMemo(() => setArkDepositCapHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -312,6 +314,7 @@ export const useSDK = (params: UseSdk) => {
       getAllRoles,
       setFleetDepositCap,
       setMinimumBufferBalance,
+      setArkDepositCap,
     }),
     [
       getCurrentUser,

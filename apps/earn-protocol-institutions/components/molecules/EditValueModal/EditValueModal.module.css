@@ -21,9 +21,17 @@
 }
 
 .defaultUnderlineOnHover {
+  color: var(--color-text-link);
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  .disabledDefaultUnderlineOnHover {
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+    text-decoration: none;
   }
 }

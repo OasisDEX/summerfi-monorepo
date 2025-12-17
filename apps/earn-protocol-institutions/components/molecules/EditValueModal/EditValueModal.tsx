@@ -9,7 +9,8 @@ import {
   useAmount,
 } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
-import type BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js'
+import clsx from 'clsx'
 
 import editValueModalStyles from './EditValueModal.module.css'
 
@@ -73,6 +74,8 @@ export const EditTokenValueModal = ({
     manualSetAmount(nextValue)
   }
 
+  const isValueChanged = !amountParsed.isEqualTo(new BigNumber(editValue.valueNormalized))
+
   return (
     <>
       <Modal openModal={isOpen} closeModal={handleOpenClose} noScroll>
@@ -101,21 +104,31 @@ export const EditTokenValueModal = ({
               <Button variant="secondarySmall" onClick={handleOpenClose}>
                 Cancel
               </Button>
-              <Button variant="primarySmall" onClick={handleAddTransaction}>
+              <Button
+                variant="primarySmall"
+                onClick={handleAddTransaction}
+                disabled={!isValueChanged}
+              >
                 Add transaction
               </Button>
             </div>
           </div>
         </Card>
       </Modal>
-      <Button
-        variant={buttonVariant ?? 'textPrimarySmall'}
-        onClick={handleOpenClose}
-        disabled={loading}
-        className={buttonVariant ? '' : editValueModalStyles.defaultUnderlineOnHover}
-      >
-        {buttonLabel}
-      </Button>
+      {buttonVariant ? (
+        <Button variant={buttonVariant} onClick={handleOpenClose} disabled={loading}>
+          {buttonLabel}
+        </Button>
+      ) : (
+        <span
+          onClick={handleOpenClose}
+          className={clsx(editValueModalStyles.defaultUnderlineOnHover, {
+            [editValueModalStyles.disabledDefaultUnderlineOnHover]: loading,
+          })}
+        >
+          {buttonLabel}
+        </span>
+      )}
     </>
   )
 }

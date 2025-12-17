@@ -47,3 +47,29 @@ export const getChangeVaultCapId = ({
 }) => {
   return `change-vault-cap-${address}-${chainId}-${vaultCap}`
 }
+
+export const getChangeMinimumBufferBalanceId = ({
+  address,
+  chainId,
+  vaultCap,
+}: {
+  address: string
+  chainId: number
+  vaultCap: string
+}) => {
+  return `change-minimum-buffer-balance-${address}-${chainId}-${vaultCap}`
+}
+
+export const getChangeArkDepositCapId = ({
+  address,
+  chainId,
+  vaultCap,
+  arkId,
+}: {
+  address: string
+  chainId: number
+  vaultCap: string
+  arkId: string
+}) => {
+  return `change-ark-deposit-cap-${address}-${chainId}-${vaultCap}-${arkId}`
+}

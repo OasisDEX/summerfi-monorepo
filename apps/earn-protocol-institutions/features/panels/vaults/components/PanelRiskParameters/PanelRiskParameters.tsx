@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
-import { formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
+import { formatAddress, formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -11,7 +11,11 @@ import { EditTokenValueModal } from '@/components/molecules/EditValueModal/EditV
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { marketRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/mapper'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
-import { getChangeVaultCapId } from '@/helpers/get-transaction-id'
+import {
+  getChangeArkDepositCapId,
+  getChangeMinimumBufferBalanceId,
+  getChangeVaultCapId,
+} from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
@@ -21,12 +25,21 @@ import { vaultRiskParametersColumns } from './vault-risk-parameters-table/column
 
 import styles from './PanelRiskParameters.module.css'
 
-const mapArksToRiskParameters = (
-  vault: SDKVaultishType,
+const mapArksToRiskParameters = ({
+  vault,
+  arksImpliedCapsMap,
+  isLoading,
+  handleArkDepositCapChange,
+}: {
+  vault: SDKVaultishType
   arksImpliedCapsMap: {
     [x: string]: string | undefined
-  },
-): MarketRiskParameters[] => {
+  }
+  isLoading: boolean
+  handleArkDepositCapChange: (
+    ark: SDKVaultishType['arks'][number],
+  ) => (nextValueNormalized: BigNumber) => void
+}): MarketRiskParameters[] => {
   return vault.arks
     .filter((ark) => {
       return getArkNiceName(ark) !== null
@@ -35,7 +48,25 @@ const mapArksToRiskParameters = (
       id: ark.id,
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       market: <span title={ark.name ?? ark.id}>{getArkNiceName(ark) || 'Unknown Market'}</span>,
-      marketCap: new BigNumber(ark.depositCap).shiftedBy(-ark.inputToken.decimals).toNumber(),
+      marketCap: (
+        <EditTokenValueModal
+          buttonLabel={`${formatWithSeparators(
+            new BigNumber(ark.depositCap).shiftedBy(-ark.inputToken.decimals).toNumber(),
+          )} ${ark.inputToken.symbol}`}
+          modalDescription={`Edit the maximum amount that can be deposited into ${getArkNiceName(ark)} ark.`}
+          modalTitle={`Edit ${getArkNiceName(ark)} Ark Deposit Cap`}
+          editValue={{
+            label: 'Ark Deposit Cap',
+            valueNormalized: new BigNumber(ark.depositCap)
+              .shiftedBy(-ark.inputToken.decimals)
+              .toNumber(),
+            decimals: ark.inputToken.decimals,
+            symbol: ark.inputToken.symbol,
+          }}
+          onAddTransaction={handleArkDepositCapChange(ark)}
+          loading={isLoading}
+        />
+      ),
       token: ark.inputToken.symbol,
       maxPercentage: new BigNumber(ark.maxDepositPercentageOfTVL.toString())
         .shiftedBy(
@@ -65,8 +96,13 @@ export const PanelRiskParameters = ({
   institutionName: string
 }) => {
   const [vaultTokenSymbol, setVaultTokenSymbol] = useState<IToken>()
-  const { setFleetDepositCap, setMinimumBufferBalance, getTargetChainInfo, getTokenBySymbol } =
-    useAdminAppSDK(institutionName)
+  const {
+    setFleetDepositCap,
+    setArkDepositCap,
+    setMinimumBufferBalance,
+    getTargetChainInfo,
+    getTokenBySymbol,
+  } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
 
@@ -130,7 +166,7 @@ export const PanelRiskParameters = ({
 
     addTransaction(
       {
-        id: getChangeVaultCapId({
+        id: getChangeMinimumBufferBalanceId({
           address: vault.id,
           chainId,
           vaultCap: nextValueRaw,
@@ -163,8 +199,62 @@ export const PanelRiskParameters = ({
     )
   }
 
+  const handleArkDepositCapChange =
+    (ark: SDKVaultishType['arks'][number]) => (nextValueNormalized: BigNumber) => {
+      const arkDepositCapNormalized = new BigNumber(ark.depositCap).shiftedBy(
+        -vault.inputToken.decimals,
+      )
+      const nextValueRaw = nextValueNormalized
+        .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
+        .toFixed(0)
+
+      if (!vaultTokenSymbol) {
+        throw new Error('Vault token symbol is not defined')
+      }
+
+      addTransaction(
+        {
+          id: getChangeArkDepositCapId({
+            address: vault.id,
+            chainId,
+            vaultCap: nextValueRaw,
+            arkId: ark.id,
+          }),
+          txDescription: (
+            <Text variant="p3">
+              {getArkNiceName(ark) ?? formatAddress(ark.id)}
+              &nbsp;ark&nbsp;deposit&nbsp;cap&nbsp;from&nbsp;
+              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                {arkDepositCapNormalized.toString()}
+              </Text>
+              &nbsp;to&nbsp;
+              <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+                {nextValueNormalized.toString()}
+              </Text>
+            </Text>
+          ),
+          txLabel: {
+            label: Number(nextValueRaw) > Number(ark.depositCap) ? 'Increase' : 'Decrease',
+            charge: Number(nextValueRaw) < Number(ark.depositCap) ? 'negative' : 'positive',
+          },
+        },
+        setArkDepositCap({
+          fleetAddress: vault.id,
+          chainInfo: getTargetChainInfo(chainId),
+          cap: nextValueNormalized.toString(),
+          token: vaultTokenSymbol,
+          arkAddress: ark.id,
+        }),
+      )
+    }
+
   const marketRows = marketRiskParametersMapper({
-    rawData: mapArksToRiskParameters(vault, arksImpliedCapsMap),
+    rawData: mapArksToRiskParameters({
+      vault,
+      arksImpliedCapsMap,
+      isLoading,
+      handleArkDepositCapChange,
+    }),
   })
 
   const vaultRows = vaultRiskParametersMapper({
