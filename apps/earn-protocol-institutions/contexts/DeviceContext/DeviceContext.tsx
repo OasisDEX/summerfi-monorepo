@@ -5,8 +5,8 @@ import { DeviceType } from '@summerfi/app-types'
 const DeviceContext = createContext<DeviceType | null>(null)
 
 export const DeviceProvider: FC<{ value: DeviceType; children: ReactNode }> = ({
-  value,
   children,
+  value,
 }) => {
   return <DeviceContext.Provider value={value}>{children}</DeviceContext.Provider>
 }
