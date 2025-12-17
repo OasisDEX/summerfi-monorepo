@@ -100,10 +100,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         throw new Error(`Merkl API request failed: ${response.status} ${response.statusText}`)
       }
 
-      const merklApiUsers = (await response.json()) as MerklApiUsersResponse
+      const merklApiUsersData = (await response.json()) as MerklApiUsersResponse
 
-      if (!merklApiUsers || !Array.isArray(merklApiUsers)) {
-        LoggingService.debug('Invalid response from Merkl API', { data: merklApiUsers })
+      if (!merklApiUsersData || !Array.isArray(merklApiUsersData)) {
+        LoggingService.debug('Invalid response from Merkl API', { data: merklApiUsersData })
         throw new Error('Invalid response from Merkl API')
       }
 
@@ -115,7 +115,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         ? new Set(rewardsTokensAddresses.map((address) => address.toLowerCase()))
         : null
 
-      merklApiUsers.forEach((merklApiUser) => {
+      merklApiUsersData.forEach((merklApiUser) => {
         const rewards: MerklReward[] = []
         // parsing user rewards
         for (const reward of merklApiUser.rewards) {
