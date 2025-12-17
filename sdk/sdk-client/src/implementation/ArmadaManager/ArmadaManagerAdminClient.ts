@@ -67,6 +67,13 @@ export class ArmadaManagerAdminClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.admin.setArkDepositCap.query(params)
   }
 
+  /** @see IArmadaManagerAdminClient.setArkMaxDepositPercentageOfTVL */
+  async setArkMaxDepositPercentageOfTVL(
+    params: Parameters<IArmadaManagerAdminClient['setArkMaxDepositPercentageOfTVL']>[0],
+  ): ReturnType<IArmadaManagerAdminClient['setArkMaxDepositPercentageOfTVL']> {
+    return this.rpcClient.armada.admin.setArkMaxDepositPercentageOfTVL.query(params)
+  }
+
   /** @see IArmadaManagerAdminClient.setArkMaxRebalanceOutflow */
   async setArkMaxRebalanceOutflow(
     params: Parameters<IArmadaManagerAdminClient['setArkMaxRebalanceOutflow']>[0],

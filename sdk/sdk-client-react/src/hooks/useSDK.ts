@@ -79,6 +79,7 @@ import { setWhitelistedBatchAQTxHandler } from '../handlers/setWhitelistedBatchA
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
+import { setArkMaxDepositPercentageOfTVLTxHandler } from '../handlers/setArkMaxDepositPercentageOfTVLTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -225,6 +226,10 @@ export const useSDK = (params: UseSdk) => {
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
   const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
   const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
+  const setArkMaxDepositPercentageOfTVLTx = useMemo(
+    () => setArkMaxDepositPercentageOfTVLTxHandler(sdk),
+    [sdk],
+  )
 
   const memo = useMemo(
     () => ({
@@ -306,6 +311,7 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
+      setArkMaxDepositPercentageOfTVLTx,
     }),
     [
       getCurrentUser,
@@ -385,6 +391,7 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
+      setArkMaxDepositPercentageOfTVLTx,
     ],
   )
 

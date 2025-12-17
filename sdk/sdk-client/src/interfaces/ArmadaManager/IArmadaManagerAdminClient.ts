@@ -146,6 +146,22 @@ export interface IArmadaManagerAdminClient {
   }): Promise<TransactionInfo>
 
   /**
+   * @name setArkMaxDepositPercentageOfTVL
+   * @description Sets the maximum deposit percentage of TVL for an ark
+   *
+   * @param vaultId The ID of the vault
+   * @param ark The address of the ark
+   * @param maxDepositPercentageOfTVL The new maximum deposit percentage of TVL
+   *
+   * @returns The transaction information
+   */
+  setArkMaxDepositPercentageOfTVL(params: {
+    vaultId: IArmadaVaultId
+    ark: IAddress
+    maxDepositPercentageOfTVL: IPercentage
+  }): Promise<TransactionInfo>
+
+  /**
    * @name setArkMaxRebalanceOutflow
    * @description Sets the maximum rebalance outflow of an ark. Used by the governance
    *

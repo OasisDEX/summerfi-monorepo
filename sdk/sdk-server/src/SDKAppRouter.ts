@@ -9,6 +9,7 @@ import { forceRebalance } from './armada-protocol-handlers/admin/forceRebalance'
 import { getFeeRevenueConfig } from './armada-protocol-handlers/admin/getFeeRevenueConfig'
 import { removeArk } from './armada-protocol-handlers/admin/removeArk'
 import { setArkDepositCap } from './armada-protocol-handlers/admin/setArkDepositCap'
+import { setArkMaxDepositPercentageOfTVL } from './armada-protocol-handlers/admin/setArkMaxDepositPercentageOfTVL'
 import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceInflow'
 import { setArkMaxRebalanceOutflow } from './armada-protocol-handlers/admin/setArkMaxRebalanceOutflow'
 import { setFleetDepositCap } from './armada-protocol-handlers/admin/setFleetDepositCap'
@@ -254,6 +255,7 @@ export const sdkAppRouter = router({
       addArks: addArks,
       removeArk: removeArk,
       setArkDepositCap: setArkDepositCap,
+      setArkMaxDepositPercentageOfTVL: setArkMaxDepositPercentageOfTVL,
       setArkMaxRebalanceInflow: setArkMaxRebalanceInflow,
       setArkMaxRebalanceOutflow: setArkMaxRebalanceOutflow,
       setMinimumBufferBalance: setMinimumBufferBalance,
