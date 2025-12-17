@@ -74,7 +74,7 @@ export const EditTokenValueModal = ({
 
   return (
     <>
-      <Modal openModal={isOpen} closeModal={handleOpenClose}>
+      <Modal openModal={isOpen} closeModal={handleOpenClose} noScroll>
         <Card variant="cardSecondary">
           <div className={editValueModalStyles.editValueModalWrapper}>
             <Text
@@ -111,6 +111,13 @@ export const EditTokenValueModal = ({
         variant={buttonVariant ?? 'textPrimarySmall'}
         onClick={handleOpenClose}
         disabled={loading}
+        style={
+          buttonVariant
+            ? {}
+            : {
+                textDecoration: 'underline',
+              }
+        }
       >
         {buttonLabel}
       </Button>

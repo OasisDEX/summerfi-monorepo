@@ -2,8 +2,7 @@ import { type ReactNode } from 'react'
 
 export type VaultRiskParameters = {
   id: string
-  parameter: string
-  value: number
+  parameter: ReactNode
+  value: ReactNode
   token?: string
-  action?: ReactNode
 }

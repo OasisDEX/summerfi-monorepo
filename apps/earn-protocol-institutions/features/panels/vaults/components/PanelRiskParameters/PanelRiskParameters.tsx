@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
-import { formatAddress, networkNameToSDKId } from '@summerfi/app-utils'
+import { formatAddress, formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -123,11 +123,11 @@ export const PanelRiskParameters = ({
       {
         id: '1',
         parameter: 'Vault Cap',
-        value: new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals).toNumber(),
-        token: vault.inputToken.symbol,
-        action: (
+        value: (
           <EditTokenValueModal
-            buttonLabel="Edit"
+            buttonLabel={`${formatWithSeparators(
+              new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals).toNumber(),
+            )} ${vault.inputToken.symbol}`}
             modalDescription="Edit the maximum amount that can be deposited into the vault."
             modalTitle="Edit Vault Cap"
             editValue={{
@@ -142,6 +142,7 @@ export const PanelRiskParameters = ({
             loading={isLoading}
           />
         ),
+        token: vault.inputToken.symbol,
       },
       {
         id: '2',
