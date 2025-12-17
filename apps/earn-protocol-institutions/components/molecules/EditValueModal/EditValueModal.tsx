@@ -48,6 +48,7 @@ export const EditTokenValueModal = ({
     if (loading) {
       return
     }
+    manualSetAmount(editValue.valueNormalized.toString())
     setIsOpen((prev) => !prev)
   }
 
@@ -111,13 +112,7 @@ export const EditTokenValueModal = ({
         variant={buttonVariant ?? 'textPrimarySmall'}
         onClick={handleOpenClose}
         disabled={loading}
-        style={
-          buttonVariant
-            ? {}
-            : {
-                textDecoration: 'underline',
-              }
-        }
+        className={buttonVariant ? '' : editValueModalStyles.defaultUnderlineOnHover}
       >
         {buttonLabel}
       </Button>

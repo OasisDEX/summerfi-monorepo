@@ -19,3 +19,11 @@
   line-height: 28px;
   border: none;
 }
+
+.defaultUnderlineOnHover {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

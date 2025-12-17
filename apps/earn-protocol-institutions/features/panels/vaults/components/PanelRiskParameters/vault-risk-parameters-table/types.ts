@@ -4,5 +4,4 @@ export type VaultRiskParameters = {
   id: string
   parameter: ReactNode
   value: ReactNode
-  token?: string
 }

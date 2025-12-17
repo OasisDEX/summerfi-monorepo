@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
-import { formatAddress, formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
+import { formatWithSeparators, networkNameToSDKId } from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
@@ -65,10 +65,15 @@ export const PanelRiskParameters = ({
   institutionName: string
 }) => {
   const [vaultTokenSymbol, setVaultTokenSymbol] = useState<IToken>()
-  const { setFleetDepositCap, getTargetChainInfo, getTokenBySymbol } =
+  const { setFleetDepositCap, setMinimumBufferBalance, getTargetChainInfo, getTokenBySymbol } =
     useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+
+  const depositCapNormalized = new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals)
+  const minimumBufferBalanceNormalized = new BigNumber(vault.minimumBufferBalance).shiftedBy(
+    -vault.inputToken.decimals,
+  )
 
   const isLoading = !vaultTokenSymbol
 
@@ -90,9 +95,9 @@ export const PanelRiskParameters = ({
         }),
         txDescription: (
           <Text variant="p3">
-            vault&nbsp;cap&nbsp;for&nbsp;
+            vault&nbsp;cap&nbsp;from&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {formatAddress(vault.id)}
+              {depositCapNormalized.toString()}
             </Text>
             &nbsp;to&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
@@ -114,6 +119,50 @@ export const PanelRiskParameters = ({
     )
   }
 
+  const handleMinimumBufferBalanceChange = (nextValueNormalized: BigNumber) => {
+    const nextValueRaw = nextValueNormalized
+      .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
+      .toFixed(0)
+
+    if (!vaultTokenSymbol) {
+      throw new Error('Vault token symbol is not defined')
+    }
+
+    addTransaction(
+      {
+        id: getChangeVaultCapId({
+          address: vault.id,
+          chainId,
+          vaultCap: nextValueRaw,
+        }),
+        txDescription: (
+          <Text variant="p3">
+            minimum&nbsp;buffer&nbsp;balance&nbsp;from&nbsp;
+            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+              {minimumBufferBalanceNormalized.toString()}
+            </Text>
+            &nbsp;to&nbsp;
+            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+              {nextValueNormalized.toString()}
+            </Text>
+          </Text>
+        ),
+        txLabel: {
+          label:
+            Number(nextValueRaw) > Number(vault.minimumBufferBalance) ? 'Increase' : 'Decrease',
+          charge:
+            Number(nextValueRaw) < Number(vault.minimumBufferBalance) ? 'negative' : 'positive',
+        },
+      },
+      setMinimumBufferBalance({
+        fleetAddress: vault.id,
+        chainInfo: getTargetChainInfo(chainId),
+        minimumBufferBalance: nextValueNormalized.toString(),
+        token: vaultTokenSymbol,
+      }),
+    )
+  }
+
   const marketRows = marketRiskParametersMapper({
     rawData: mapArksToRiskParameters(vault, arksImpliedCapsMap),
   })
@@ -126,7 +175,7 @@ export const PanelRiskParameters = ({
         value: (
           <EditTokenValueModal
             buttonLabel={`${formatWithSeparators(
-              new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals).toNumber(),
+              depositCapNormalized.toNumber(),
             )} ${vault.inputToken.symbol}`}
             modalDescription="Edit the maximum amount that can be deposited into the vault."
             modalTitle="Edit Vault Cap"
@@ -142,15 +191,29 @@ export const PanelRiskParameters = ({
             loading={isLoading}
           />
         ),
-        token: vault.inputToken.symbol,
       },
       {
         id: '2',
         parameter: 'Buffer',
-        value: new BigNumber(vault.minimumBufferBalance)
-          .shiftedBy(-vault.inputToken.decimals)
-          .toNumber(),
-        token: vault.inputToken.symbol,
+        value: (
+          <EditTokenValueModal
+            buttonLabel={`${formatWithSeparators(
+              minimumBufferBalanceNormalized.toNumber(),
+            )} ${vault.inputToken.symbol}`}
+            modalDescription="Edit the minimum buffer balance required in the vault."
+            modalTitle="Edit Minimum Buffer Balance"
+            editValue={{
+              label: 'Minimum Buffer Balance',
+              valueNormalized: new BigNumber(vault.minimumBufferBalance)
+                .shiftedBy(-vault.inputToken.decimals)
+                .toNumber(),
+              decimals: vault.inputToken.decimals,
+              symbol: vault.inputToken.symbol,
+            }}
+            onAddTransaction={handleMinimumBufferBalanceChange}
+            loading={isLoading}
+          />
+        ),
       },
     ],
   })
