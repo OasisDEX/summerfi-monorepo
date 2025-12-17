@@ -1,11 +1,6 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
-import {
-  getVaultNiceName,
-  humanNetworktoSDKNetwork,
-  subgraphNetworkToId,
-  ten,
-} from '@summerfi/app-utils'
+import { humanNetworktoSDKNetwork, subgraphNetworkToId, ten } from '@summerfi/app-utils'
 import { Address, ArmadaVaultId, getChainInfoByChainId, isAddress } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { redirect } from 'next/navigation'
@@ -16,6 +11,7 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getArkHistoricalChartData } from '@/features/charts/mappers/mapApyChartData'
 import { mapSinglePointChartData } from '@/features/charts/mappers/mapSinglePointChartData'
 import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview/PanelOverview'
+import { getInstiVaultNiceName } from '@/helpers/get-insti-vault-nice-name'
 
 export default async function InstitutionVaultOverviewPage({
   params,
@@ -97,8 +93,13 @@ export default async function InstitutionVaultOverviewPage({
     vault,
     arkInterestRatesMap,
     vaultInterestRates,
+    institutionName,
   })
-  const summerVaultName = getVaultNiceName({ vault })
+  const summerVaultName = getInstiVaultNiceName({
+    network: parsedNetwork,
+    symbol: vault.inputToken.symbol,
+    institutionName,
+  })
 
   return (
     <PanelOverview
