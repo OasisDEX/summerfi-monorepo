@@ -25,16 +25,16 @@ import { vaultRiskParametersColumns } from './vault-risk-parameters-table/column
 
 import styles from './PanelRiskParameters.module.css'
 
-const normalizeValue = (value: string | bigint, decimals: number) =>
-  new BigNumber(value.toString()).shiftedBy(-decimals)
+const normalizeValue = (rawValue: string | bigint, decimals: number) =>
+  new BigNumber(rawValue.toString()).shiftedBy(-decimals)
 
 const denormalizeValue = (valueNormalized: BigNumber, decimals: number) =>
   valueNormalized.multipliedBy(ten.pow(decimals)).toFixed(0)
 
-const createTransactionLabel = (nextValueRaw: string, currentValue: string | bigint) =>
+const createTransactionLabel = (nextValue: string, currentValue: string | bigint) =>
   ({
-    label: Number(nextValueRaw) > Number(currentValue) ? 'Increase' : 'Decrease',
-    charge: Number(nextValueRaw) < Number(currentValue) ? 'negative' : 'positive',
+    label: Number(nextValue) > Number(currentValue) ? 'Increase' : 'Decrease',
+    charge: Number(nextValue) < Number(currentValue) ? 'negative' : 'positive',
   }) as const
 
 const mapArksToRiskParameters = ({
@@ -50,7 +50,7 @@ const mapArksToRiskParameters = ({
   isLoading: boolean
   handleArkDepositCapChange: (
     ark: SDKVaultishType['arks'][number],
-  ) => (nextValueNormalized: BigNumber) => void
+  ) => (nextArkDepositCapNormalized: BigNumber) => void
 }): MarketRiskParameters[] => {
   return vault.arks
     .filter((ark) => {
@@ -126,8 +126,8 @@ export const PanelRiskParameters = ({
 
   const isLoading = !vaultTokenSymbol
 
-  const handleVaultCapChange = (nextValueNormalized: BigNumber) => {
-    const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
+  const handleVaultCapChange = (nextDepositCapNormalized: BigNumber) => {
+    const nextDepositCap = denormalizeValue(nextDepositCapNormalized, vault.inputToken.decimals)
 
     if (!vaultTokenSymbol) {
       throw new Error('Vault token symbol is not defined')
@@ -138,7 +138,7 @@ export const PanelRiskParameters = ({
         id: getChangeVaultCapId({
           address: vault.id,
           chainId,
-          vaultCap: nextValueRaw,
+          vaultCap: nextDepositCap,
         }),
         txDescription: (
           <Text variant="p3">
@@ -148,23 +148,26 @@ export const PanelRiskParameters = ({
             </Text>
             &nbsp;to&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {nextValueNormalized.toString()}
+              {nextDepositCapNormalized.toString()}
             </Text>
           </Text>
         ),
-        txLabel: createTransactionLabel(nextValueRaw, vault.depositCap),
+        txLabel: createTransactionLabel(nextDepositCap, vault.depositCap),
       },
       setFleetDepositCap({
         fleetAddress: vault.id,
         chainInfo: getTargetChainInfo(chainId),
-        cap: nextValueNormalized.toString(),
+        cap: nextDepositCapNormalized.toString(),
         token: vaultTokenSymbol,
       }),
     )
   }
 
-  const handleMinimumBufferBalanceChange = (nextValueNormalized: BigNumber) => {
-    const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
+  const handleMinimumBufferBalanceChange = (nextMinimumBufferBalanceNormalized: BigNumber) => {
+    const minimumBufferBalance = denormalizeValue(
+      nextMinimumBufferBalanceNormalized,
+      vault.inputToken.decimals,
+    )
 
     if (!vaultTokenSymbol) {
       throw new Error('Vault token symbol is not defined')
@@ -175,7 +178,7 @@ export const PanelRiskParameters = ({
         id: getChangeMinimumBufferBalanceId({
           address: vault.id,
           chainId,
-          vaultCap: nextValueRaw,
+          minimumBufferBalance,
         }),
         txDescription: (
           <Text variant="p3">
@@ -185,25 +188,31 @@ export const PanelRiskParameters = ({
             </Text>
             &nbsp;to&nbsp;
             <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-              {nextValueNormalized.toString()}
+              {nextMinimumBufferBalanceNormalized.toString()}
             </Text>
           </Text>
         ),
-        txLabel: createTransactionLabel(nextValueRaw, vault.minimumBufferBalance),
+        txLabel: createTransactionLabel(minimumBufferBalance, vault.minimumBufferBalance),
       },
       setMinimumBufferBalance({
         fleetAddress: vault.id,
         chainInfo: getTargetChainInfo(chainId),
-        minimumBufferBalance: nextValueNormalized.toString(),
+        minimumBufferBalance: nextMinimumBufferBalanceNormalized.toString(),
         token: vaultTokenSymbol,
       }),
     )
   }
 
   const handleArkDepositCapChange =
-    (ark: SDKVaultishType['arks'][number]) => (nextValueNormalized: BigNumber) => {
-      const arkDepositCapNormalized = normalizeValue(ark.depositCap, vault.inputToken.decimals)
-      const nextValueRaw = denormalizeValue(nextValueNormalized, vault.inputToken.decimals)
+    (ark: SDKVaultishType['arks'][number]) => (nextArkDepositCapNormalized: BigNumber) => {
+      const currentArkDepositCapNormalized = normalizeValue(
+        ark.depositCap,
+        vault.inputToken.decimals,
+      )
+      const nextArkDepositCap = denormalizeValue(
+        nextArkDepositCapNormalized,
+        vault.inputToken.decimals,
+      )
 
       if (!vaultTokenSymbol) {
         throw new Error('Vault token symbol is not defined')
@@ -214,7 +223,7 @@ export const PanelRiskParameters = ({
           id: getChangeArkDepositCapId({
             address: vault.id,
             chainId,
-            arkDepositCap: nextValueRaw,
+            arkDepositCap: nextArkDepositCap,
             arkId: ark.id,
           }),
           txDescription: (
@@ -222,20 +231,20 @@ export const PanelRiskParameters = ({
               {getArkNiceName(ark) ?? formatAddress(ark.id)}
               &nbsp;ark&nbsp;deposit&nbsp;cap&nbsp;from&nbsp;
               <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {arkDepositCapNormalized.toString()}
+                {currentArkDepositCapNormalized.toString()}
               </Text>
               &nbsp;to&nbsp;
               <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
-                {nextValueNormalized.toString()}
+                {nextArkDepositCapNormalized.toString()}
               </Text>
             </Text>
           ),
-          txLabel: createTransactionLabel(nextValueRaw, ark.depositCap),
+          txLabel: createTransactionLabel(nextArkDepositCap, ark.depositCap),
         },
         setArkDepositCap({
           fleetAddress: vault.id,
           chainInfo: getTargetChainInfo(chainId),
-          cap: nextValueNormalized.toString(),
+          cap: nextArkDepositCapNormalized.toString(),
           token: vaultTokenSymbol,
           arkAddress: ark.id,
         }),

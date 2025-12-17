@@ -35,10 +35,10 @@
     color: var(--color-text-link);
     text-decoration-color: var(--color-text-link);
   }
+}
 
-  .disabledDefaultUnderlineOnHover {
-    color: var(--color-text-disabled);
-    cursor: not-allowed;
-    text-decoration: none;
-  }
+.disabledDefaultUnderlineOnHover {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  text-decoration: none;
 }
