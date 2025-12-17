@@ -98,7 +98,7 @@ export const EditTokenValueModal = ({
               onFocus={onFocus}
             />
             <div className={editValueModalStyles.actionButtons}>
-              <Button variant="textSecondarySmall" onClick={handleOpenClose}>
+              <Button variant="secondarySmall" onClick={handleOpenClose}>
                 Cancel
               </Button>
               <Button variant="primarySmall" onClick={handleAddTransaction}>
