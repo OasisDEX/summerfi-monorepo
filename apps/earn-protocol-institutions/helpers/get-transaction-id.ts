@@ -35,3 +35,15 @@ export const getRevokeWhitelistId = ({
 export const getGrantWhitelistId = ({ address, chainId }: { address: string; chainId: number }) => {
   return `grant-whitelist-${address}-${chainId}`
 }
+
+export const getChangeVaultCapId = ({
+  address,
+  chainId,
+  vaultCap,
+}: {
+  address: string
+  chainId: number
+  vaultCap: string
+}) => {
+  return `change-vault-cap-${address}-${chainId}-${vaultCap}`
+}

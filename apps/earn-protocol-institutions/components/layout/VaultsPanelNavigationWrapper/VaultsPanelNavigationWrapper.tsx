@@ -45,7 +45,6 @@ const panelItems = [
   {
     id: DashboardVaultsPanel.ROLE_ADMIN,
     label: 'Role admin',
-    disabled: true,
   },
   {
     id: DashboardVaultsPanel.USER_ADMIN,

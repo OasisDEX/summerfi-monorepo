@@ -1,11 +1,19 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
+import { formatAddress, networkNameToSDKId } from '@summerfi/app-utils'
+import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
+import { EditTokenValueModal } from '@/components/molecules/EditValueModal/EditValueModal'
+import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { marketRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/market-risk-parameters-table/mapper'
 import { vaultRiskParametersMapper } from '@/features/panels/vaults/components/PanelRiskParameters/vault-risk-parameters-table/mapper'
+import { getChangeVaultCapId } from '@/helpers/get-transaction-id'
+import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
 import { type MarketRiskParameters } from './market-risk-parameters-table/types'
@@ -46,12 +54,66 @@ const mapArksToRiskParameters = (
 export const PanelRiskParameters = ({
   vault,
   arksImpliedCapsMap,
+  network,
+  institutionName,
 }: {
   vault: SDKVaultishType
   arksImpliedCapsMap: {
     [x: string]: string | undefined
   }
+  network: NetworkNames
+  institutionName: string
 }) => {
+  const [vaultTokenSymbol, setVaultTokenSymbol] = useState<IToken>()
+  const { setFleetDepositCap, getTargetChainInfo, getTokenBySymbol } =
+    useAdminAppSDK(institutionName)
+  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const chainId = networkNameToSDKId(network)
+
+  const isLoading = !vaultTokenSymbol
+
+  const handleVaultCapChange = (nextValueNormalized: BigNumber) => {
+    const nextValueRaw = nextValueNormalized
+      .multipliedBy(new BigNumber(10).pow(vault.inputToken.decimals))
+      .toFixed(0)
+
+    if (!vaultTokenSymbol) {
+      throw new Error('Vault token symbol is not defined')
+    }
+
+    addTransaction(
+      {
+        id: getChangeVaultCapId({
+          address: vault.id,
+          chainId,
+          vaultCap: nextValueRaw,
+        }),
+        txDescription: (
+          <Text variant="p3">
+            vault&nbsp;cap&nbsp;for&nbsp;
+            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+              {formatAddress(vault.id)}
+            </Text>
+            &nbsp;to&nbsp;
+            <Text as="span" variant="p4semi" style={{ fontFamily: 'monospace' }}>
+              {nextValueNormalized.toString()}
+            </Text>
+          </Text>
+        ),
+        txLabel: {
+          label: Number(nextValueRaw) > Number(vault.depositCap) ? 'Increase' : 'Decrease',
+          charge: Number(nextValueRaw) < Number(vault.depositCap) ? 'negative' : 'positive',
+        },
+      },
+      setFleetDepositCap({
+        fleetAddress: vault.id,
+        chainInfo: getTargetChainInfo(chainId),
+        cap: nextValueNormalized.toString(),
+        token: vaultTokenSymbol,
+      }),
+    )
+  }
+
   const marketRows = marketRiskParametersMapper({
     rawData: mapArksToRiskParameters(vault, arksImpliedCapsMap),
   })
@@ -63,6 +125,23 @@ export const PanelRiskParameters = ({
         parameter: 'Vault Cap',
         value: new BigNumber(vault.depositCap).shiftedBy(-vault.inputToken.decimals).toNumber(),
         token: vault.inputToken.symbol,
+        action: (
+          <EditTokenValueModal
+            buttonLabel="Edit"
+            modalDescription="Edit the maximum amount that can be deposited into the vault."
+            modalTitle="Edit Vault Cap"
+            editValue={{
+              label: 'Vault Cap',
+              valueNormalized: new BigNumber(vault.depositCap)
+                .shiftedBy(-vault.inputToken.decimals)
+                .toNumber(),
+              decimals: vault.inputToken.decimals,
+              symbol: vault.inputToken.symbol,
+            }}
+            onAddTransaction={handleVaultCapChange}
+            loading={isLoading}
+          />
+        ),
       },
       {
         id: '2',
@@ -74,6 +153,19 @@ export const PanelRiskParameters = ({
       },
     ],
   })
+
+  useEffect(() => {
+    const updateVaultTokenSymbol = async () => {
+      const token = await getTokenBySymbol({
+        chainId: networkNameToSDKId(network),
+        symbol: vault.inputToken.symbol,
+      })
+
+      setVaultTokenSymbol(token)
+    }
+
+    updateVaultTokenSymbol()
+  }, [getTokenBySymbol, network, vault.inputToken.symbol])
 
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
@@ -99,6 +191,14 @@ export const PanelRiskParameters = ({
           tableClassName={styles.table}
         />
       </Card>
+      <Text as="h5" variant="h5">
+        Transaction Queue
+      </Text>
+      <TransactionQueue
+        transactionQueue={transactionQueue}
+        chainId={chainId}
+        removeTransaction={removeTransaction}
+      />
     </Card>
   )
 }

@@ -14,6 +14,7 @@ export const vaultRiskParametersMapper = ({ rawData }: { rawData: VaultRiskParam
             {item.token ? ` ${item.token}` : ''}
           </TableCellNodes>
         ),
+        action: <TableCellNodes>{item.action}</TableCellNodes>,
       },
     }
   })

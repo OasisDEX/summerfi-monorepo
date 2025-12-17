@@ -92,7 +92,6 @@ export const createSDKContext = async (opts: SDKContextOptions): Promise<SDKAppC
 
   let deploymentProviderConfigs: DeploymentProviderConfig[]
   let supportedChains: IChainInfo[]
-  console.log('clientId', clientId)
 
   if (clientId) {
     const rawInstiChainIds = configProvider.getConfigurationItem({

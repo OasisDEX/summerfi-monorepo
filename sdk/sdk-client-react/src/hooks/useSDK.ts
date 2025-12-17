@@ -79,6 +79,7 @@ import { setWhitelistedBatchAQTxHandler } from '../handlers/setWhitelistedBatchA
 import { grantContractSpecificRoleHandler } from '../handlers/grantContractSpecificRole'
 import { revokeContractSpecificRoleHandler } from '../handlers/revokeContractSpecificRole'
 import { getAllRolesHandler } from '../handlers/getAllRolesHandler'
+import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -225,6 +226,7 @@ export const useSDK = (params: UseSdk) => {
   const grantContractSpecificRole = useMemo(() => grantContractSpecificRoleHandler(sdk), [sdk])
   const revokeContractSpecificRole = useMemo(() => revokeContractSpecificRoleHandler(sdk), [sdk])
   const getAllRoles = useMemo(() => getAllRolesHandler(sdk), [sdk])
+  const setFleetDepositCap = useMemo(() => setFleetDepositCapHandler(sdk), [sdk])
 
   const memo = useMemo(
     () => ({
@@ -306,6 +308,7 @@ export const useSDK = (params: UseSdk) => {
       grantContractSpecificRole,
       revokeContractSpecificRole,
       getAllRoles,
+      setFleetDepositCap,
     }),
     [
       getCurrentUser,

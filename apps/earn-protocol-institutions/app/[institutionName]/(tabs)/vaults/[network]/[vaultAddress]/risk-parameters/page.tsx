@@ -1,16 +1,18 @@
 import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
+import { NetworkNames } from '@summerfi/app-types'
 import { decorateWithFleetConfig, humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getInstitutionVaultArksImpliedCapsMap } from '@/app/server-handlers/institution/institution-vaults'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelRiskParameters } from '@/features/panels/vaults/components/PanelRiskParameters/PanelRiskParameters'
 
 export default async function InstitutionVaultRiskParametersPage({
   params,
 }: {
-  params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
+  params: Promise<{ institutionName: string; vaultAddress: string; network: NetworkNames }>
 }) {
   const { institutionName, vaultAddress, network } = await params
 
@@ -56,5 +58,14 @@ export default async function InstitutionVaultRiskParametersPage({
     fleetCommanderAddress: vaultWithConfig.id,
   })
 
-  return <PanelRiskParameters vault={vaultWithConfig} arksImpliedCapsMap={arksImpliedCapsMap} />
+  return (
+    <ClientSideSdkWrapper>
+      <PanelRiskParameters
+        vault={vaultWithConfig}
+        arksImpliedCapsMap={arksImpliedCapsMap}
+        network={network}
+        institutionName={institutionName}
+      />
+    </ClientSideSdkWrapper>
+  )
 }
