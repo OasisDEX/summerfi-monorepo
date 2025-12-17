@@ -21,12 +21,19 @@
 }
 
 .defaultUnderlineOnHover {
-  color: var(--color-text-link);
-  text-decoration: none;
+  color: var(--color-text-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
   cursor: pointer;
+  transition:
+    color 0.1s ease,
+    text-decoration-color 0.1s ease;
 
   &:hover {
-    text-decoration: underline;
+    color: var(--color-text-link);
+    text-decoration-color: var(--color-text-link);
   }
 
   .disabledDefaultUnderlineOnHover {

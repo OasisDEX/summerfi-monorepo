@@ -25,18 +25,21 @@ export const TransactionQueue = ({
     [],
   )
 
-  const handleTransactionRemove = (id: string) => {
-    // Animation handling - fade out before removing from the list
-    const txToRemove = transactionQueue.find((tx) => tx.id === id)
+  const handleTransactionRemove = useCallback(
+    (id: string) => {
+      // Animation handling - fade out before removing from the list
+      const txToRemove = transactionQueue.find((tx) => tx.id === id)
 
-    if (txToRemove) {
-      setTransactionRemovedLocally((prev) => [...prev, txToRemove])
-      setTimeout(() => {
-        removeTransaction(id)
-        setTransactionRemovedLocally((prev) => prev.filter((tx) => tx.id !== id))
-      }, 600) // Duration should match the AnimateHeight transition duration
-    }
-  }
+      if (txToRemove) {
+        setTransactionRemovedLocally((prev) => [...prev, txToRemove])
+        setTimeout(() => {
+          removeTransaction(id)
+          setTransactionRemovedLocally((prev) => prev.filter((tx) => tx.id !== id))
+        }, 600) // Duration should match the AnimateHeight transition duration
+      }
+    },
+    [removeTransaction, transactionQueue],
+  )
 
   const userConnected = !!userWalletAddress
   const getTxLabel = useCallback((txItem: SDKTransactionItem) => {
@@ -47,7 +50,7 @@ export const TransactionQueue = ({
         {txItem.txLabel ? (
           <Text
             as="span"
-            variant="p2semi"
+            variant="p3semi"
             style={{
               color: {
                 positive: 'var(--earn-protocol-success-50)',
@@ -97,7 +100,7 @@ export const TransactionQueue = ({
                 txItem === transactionQueue[transactionQueue.length - 1],
             })}
           >
-            <Text as="p" variant="p2">
+            <Text as="p" variant="p2" className={transactionQueueStyles.transactionDescription}>
               {getTxLabel(txItem)}
             </Text>
             <div className={transactionQueueStyles.transactionActions}>
