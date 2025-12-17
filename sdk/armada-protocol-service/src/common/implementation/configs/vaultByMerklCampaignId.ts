@@ -82,6 +82,18 @@ const vaultsByCampaignId: Record<string, { chainId: ChainId; fleetAddress: Addre
     chainId: 1,
     fleetAddress: '0x67e536797570b3d8919df052484273815a0ab506',
   },
+  '0xc3f519a3f54b556215111fbe97295d3686be84f26bd29bcaff7e633e533d1354': {
+    chainId: 1,
+    fleetAddress: '0x2E6abcbCCeD9Af05bc3B8a4908e0c98c29A88e10',
+  },
+  '0xaaa23594002c0fe9baa69eef0f35658d04f869abf375595a4f090115b5361167': {
+    chainId: 1,
+    fleetAddress: '0xE9cDA459bED6dcfb8AC61CD8cE08E2D52370cB06',
+  },
+  '0x01342ce9875958fc68ef017eb17140491afb6f812adfb7cf5bad724d641bccae': {
+    chainId: 8453,
+    fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
+  },
 }
 
 export function getVaultByMerklCampaignId(

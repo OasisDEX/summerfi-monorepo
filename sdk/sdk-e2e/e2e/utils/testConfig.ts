@@ -103,7 +103,7 @@ export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestC
 
 /** INSTI CONFIG */
 export enum TestClientIds {
-  'ACME' = 'ACME',
+  'ACME' = 'ExtDemoCorp',
   'Targen' = 'Targen',
 }
 
