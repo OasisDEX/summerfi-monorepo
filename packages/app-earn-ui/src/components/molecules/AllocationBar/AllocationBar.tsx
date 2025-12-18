@@ -39,25 +39,33 @@ interface AllocationBarProps {
 export const AllocationBar: FC<AllocationBarProps> = ({ variant = 'large', items }) => {
   return (
     <div className={clsx(allocationBarStyles.allocationBar, allocationBarStyles[variant])}>
-      {items.map((item, idx) => (
-        <Tooltip
-          key={`${item.label}-${idx}`}
-          tooltip={item.tooltip ?? <TooltipContent {...item} />}
-          style={{
-            width: `${Number(new BigNumber(item.percentage).toFixed(2)) * 100}%`,
-            height: '100%',
-          }}
-          tooltipWrapperStyles={{ minWidth: '300px', top: '24px' }}
-          tooltipCardVariant="cardPrimarySmallPaddings"
-        >
-          <div
-            className={allocationBarStyles.allocationBarItem}
+      {items.length ? (
+        items.map((item, idx) => (
+          <Tooltip
+            key={`${item.label}-${idx}`}
+            tooltip={item.tooltip ?? <TooltipContent {...item} />}
             style={{
-              backgroundColor: item.color,
+              width: `${Number(new BigNumber(item.percentage).toFixed(2)) * 100}%`,
+              height: '100%',
             }}
-          />
-        </Tooltip>
-      ))}
+            tooltipWrapperStyles={{ minWidth: '300px', top: '24px' }}
+            tooltipCardVariant="cardPrimarySmallPaddings"
+          >
+            <div
+              className={allocationBarStyles.allocationBarItem}
+              style={{
+                backgroundColor: item.color,
+              }}
+            />
+          </Tooltip>
+        ))
+      ) : (
+        <div className={allocationBarStyles.allocationBarItemEmpty}>
+          <Text as="p" variant="p4">
+            Nothing allocated yet
+          </Text>
+        </div>
+      )}
     </div>
   )
 }
