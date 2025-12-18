@@ -1,7 +1,15 @@
 'use client'
 import { useCallback, useMemo } from 'react'
-import { Button, LoadingSpinner, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { useChain } from '@account-kit/react'
+import {
+  Button,
+  LoadingSpinner,
+  SDKChainIdToAAChainMap,
+  Text,
+  Tooltip,
+} from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
+import { sdkChainIdToHumanNetwork } from '@summerfi/app-utils'
 
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 import { useSimpleTransaction } from '@/hooks/useSimpleTransaction'
@@ -15,14 +23,19 @@ export const SimpleTransactionButton = ({
   txItem: SDKTransactionItem
   chainId: SupportedNetworkIds
 }) => {
+  const { chain, isSettingChain, setChain } = useChain()
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
   })
   const isLoading = useMemo(() => {
     const isLoadingTransaction = !txItem.txError && !txItem.txData?.transaction
 
-    return isLoadingTransaction || isSendingUserOperation
-  }, [isSendingUserOperation, txItem.txData?.transaction, txItem.txError])
+    return isLoadingTransaction || isSendingUserOperation || isSettingChain
+  }, [isSendingUserOperation, txItem.txData?.transaction, txItem.txError, isSettingChain])
+
+  const isProperChain = useMemo(() => {
+    return chain.id === chainId
+  }, [chain.id, chainId])
 
   const buttonDisabled = useMemo(() => {
     return (
@@ -34,6 +47,9 @@ export const SimpleTransactionButton = ({
   }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus])
 
   const buttonLabel = useMemo(() => {
+    if (!isProperChain) {
+      return `Switch to ${sdkChainIdToHumanNetwork(chainId)}`
+    }
     if (txStatus === 'txSuccess') {
       return 'Done!'
     }
@@ -71,20 +87,36 @@ export const SimpleTransactionButton = ({
     }
 
     return 'Execute'
-  }, [isLoading, txItem.txData?.transaction, txItem.txError, txStatus, txError])
+  }, [
+    isProperChain,
+    txStatus,
+    txItem.txError,
+    txItem.txData?.transaction,
+    isLoading,
+    chainId,
+    txError,
+  ])
 
   const buttonAction = useCallback(() => {
+    if (!isProperChain) {
+      setChain({
+        chain: SDKChainIdToAAChainMap[chainId],
+      })
+
+      return
+    }
     if (
       txItem.txData?.transaction &&
       !txItem.txError &&
       !isLoading &&
       !['txInProgress', 'txSuccess'].includes(txStatus)
     ) {
-      return executeTransaction(txItem)
+      executeTransaction(txItem)
     }
 
-    return undefined
-  }, [executeTransaction, isLoading, txItem, txStatus])
+    // eslint-disable-next-line no-console
+    console.log('Action not mapped')
+  }, [chainId, executeTransaction, isLoading, isProperChain, setChain, txItem, txStatus])
 
   const buttonVariant = useMemo(() => {
     if (txStatus === 'txError') {

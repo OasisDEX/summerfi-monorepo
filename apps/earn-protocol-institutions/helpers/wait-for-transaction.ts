@@ -8,7 +8,7 @@ type WaitForTransactionParams = {
 export const waitForTransaction = async ({ publicClient, hash }: WaitForTransactionParams) => {
   const receipt = await publicClient.waitForTransactionReceipt({
     hash,
-    confirmations: 2,
+    confirmations: 3,
   })
 
   if (receipt.status === 'reverted') {

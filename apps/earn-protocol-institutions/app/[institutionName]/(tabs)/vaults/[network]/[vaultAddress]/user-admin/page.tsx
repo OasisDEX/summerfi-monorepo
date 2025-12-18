@@ -2,6 +2,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 
 import { getVaultWhitelist } from '@/app/server-handlers/sdk/get-vault-whitelist'
+import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelUserAdmin } from '@/features/panels/vaults/components/PanelUserAdmin/PanelUserAdmin'
 
 export default async function InstitutionVaultUserAdminPage({
@@ -25,11 +26,13 @@ export default async function InstitutionVaultUserAdminPage({
   })
 
   return (
-    <PanelUserAdmin
-      whitelistedWallets={whitelistedWallets}
-      vaultAddress={vaultAddress}
-      network={network}
-      institutionName={institutionName}
-    />
+    <ClientSideSdkWrapper>
+      <PanelUserAdmin
+        whitelistedWallets={whitelistedWallets}
+        vaultAddress={vaultAddress}
+        network={network}
+        institutionName={institutionName}
+      />
+    </ClientSideSdkWrapper>
   )
 }
