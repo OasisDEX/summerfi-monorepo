@@ -49,7 +49,6 @@ const panelItems = [
   {
     id: DashboardVaultsPanel.USER_ADMIN,
     label: 'User admin',
-    disabled: true,
   },
   {
     id: DashboardVaultsPanel.ACTIVITY,
