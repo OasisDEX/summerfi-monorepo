@@ -2,6 +2,7 @@
 
 import { type FC, useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
+import { useChain } from '@account-kit/react'
 import { Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
@@ -39,6 +40,11 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const { chain, isSettingChain } = useChain()
+
+  const isProperChain = useMemo(() => {
+    return chain.id === chainId
+  }, [chain.id, chainId])
 
   const onRevokeContractSpecificRole = useCallback(
     ({ address, role }: InstitutionVaultRole) => {
@@ -127,8 +133,9 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         transactionQueue,
         onRevokeContractSpecificRole,
         chainId,
+        disabled: !isProperChain || isSettingChain,
       }),
-    [roles, transactionQueue, onRevokeContractSpecificRole, chainId],
+    [roles, transactionQueue, onRevokeContractSpecificRole, chainId, isProperChain, isSettingChain],
   )
 
   return (
@@ -148,7 +155,10 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         Add new role
       </Text>
       <Card>
-        <AddNewRoleForm onAddRole={onGrantContractSpecificRole} />
+        <AddNewRoleForm
+          onAddRole={onGrantContractSpecificRole}
+          disabled={!isProperChain || isSettingChain}
+        />
       </Card>
       <Text as="h5" variant="h5">
         Transaction Queue

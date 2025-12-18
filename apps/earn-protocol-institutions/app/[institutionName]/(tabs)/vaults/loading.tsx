@@ -20,7 +20,7 @@ export default function InstitutionVaultsLoadingTab() {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '46px',
+                gap: 'var(--spacing-space-large)',
                 marginBottom: 'var(--spacing-space-large)',
               }}
             >

@@ -13,9 +13,11 @@ import styles from './PanelRoleAdmin.module.css'
 export const AddNewRoleForm = ({
   onAddRole,
   staticRole,
+  disabled,
 }: {
   staticRole?: InstitutionVaultRoleType
   onAddRole: ({ address, role }: { address: string; role: InstitutionVaultRoleType }) => void
+  disabled?: boolean
 }) => {
   const [isAddressValid, setIsAddressValid] = useState(false)
   const [newRoleAddress, setNewRoleAddress] = useState('')
@@ -108,7 +110,7 @@ export const AddNewRoleForm = ({
       </div>
       <Button
         variant="primaryLarge"
-        disabled={!newRoleAddress || !isAddressValid}
+        disabled={!newRoleAddress || !isAddressValid || disabled}
         onClick={handleAddRole}
         style={{ minWidth: 'fit-content' }}
       >

@@ -123,7 +123,7 @@ export const EditTokenValueModal = ({
         </Button>
       ) : (
         <span
-          onClick={handleOpenClose}
+          onClick={!loading ? handleOpenClose : undefined}
           className={clsx(editValueModalStyles.defaultUnderlineOnHover, {
             [editValueModalStyles.disabledDefaultUnderlineOnHover]: loading,
           })}

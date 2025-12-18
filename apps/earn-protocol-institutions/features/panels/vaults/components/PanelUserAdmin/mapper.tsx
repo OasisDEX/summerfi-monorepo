@@ -10,6 +10,7 @@ type UserMapperParams = {
   transactionQueue: SDKTransactionItem[]
   onRevokeWhitelist: (params: { address: string }) => void
   chainId: number
+  disabled?: boolean
 }
 
 export const userAdminMapper = ({
@@ -17,10 +18,11 @@ export const userAdminMapper = ({
   transactionQueue,
   onRevokeWhitelist,
   chainId,
+  disabled = false,
 }: UserMapperParams) => {
   return whitelistedWallets.map((address) => {
     const revokeId = getRevokeWhitelistId({ address, chainId })
-    const idDisabled = transactionQueue.some((tx) => tx.id === revokeId)
+    const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
 
     return {
       content: {

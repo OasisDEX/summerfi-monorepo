@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useChain } from '@account-kit/react'
 import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 import {
@@ -53,6 +54,7 @@ const mapArksToRiskParameters = ({
   isLoading,
   handleArkDepositCapChange,
   handleArkMaxDepositPercentageOfTVLChange,
+  disabled,
 }: {
   vault: SDKVaultishType
   arksImpliedCapsMap: {
@@ -65,6 +67,7 @@ const mapArksToRiskParameters = ({
   handleArkMaxDepositPercentageOfTVLChange: (
     ark: SDKVaultishType['arks'][number],
   ) => (nextArkMaxDepositPercentageNormalized: BigNumber) => void
+  disabled?: boolean
 }): MarketRiskParameters[] => {
   return vault.arks
     .filter((ark) => {
@@ -90,7 +93,7 @@ const mapArksToRiskParameters = ({
             symbol: ark.inputToken.symbol,
           }}
           onAddTransaction={handleArkDepositCapChange(ark)}
-          loading={isLoading}
+          loading={isLoading || disabled}
         />
       ),
       token: ark.inputToken.symbol,
@@ -113,7 +116,7 @@ const mapArksToRiskParameters = ({
             ).toNumber(),
           }}
           onAddTransaction={handleArkMaxDepositPercentageOfTVLChange(ark)}
-          loading={isLoading}
+          loading={isLoading || disabled}
         />
       ),
       impliedCap:
@@ -149,6 +152,11 @@ export const PanelRiskParameters = ({
   } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const { chain, isSettingChain } = useChain()
+
+  const isProperChain = useMemo(() => {
+    return chain.id === chainId
+  }, [chain.id, chainId])
 
   const depositCapNormalized = normalizeValue(vault.depositCap, vault.inputToken.decimals)
   const minimumBufferBalanceNormalized = normalizeValue(
@@ -156,7 +164,7 @@ export const PanelRiskParameters = ({
     vault.inputToken.decimals,
   )
 
-  const isLoading = !vaultTokenSymbol
+  const isLoading = !vaultTokenSymbol || isSettingChain
 
   const handleVaultCapChange = (nextDepositCapNormalized: BigNumber) => {
     const nextDepositCap = denormalizeValue(nextDepositCapNormalized, vault.inputToken.decimals)
@@ -285,6 +293,7 @@ export const PanelRiskParameters = ({
         }),
       )
     }
+
   const handleArkDepositCapChange =
     (ark: SDKVaultishType['arks'][number]) => (nextArkDepositCapNormalized: BigNumber) => {
       const currentArkDepositCapNormalized = normalizeValue(
@@ -340,6 +349,7 @@ export const PanelRiskParameters = ({
       isLoading,
       handleArkDepositCapChange,
       handleArkMaxDepositPercentageOfTVLChange,
+      disabled: !isProperChain || isSettingChain,
     }),
   })
 
@@ -362,7 +372,7 @@ export const PanelRiskParameters = ({
               symbol: vault.inputToken.symbol,
             }}
             onAddTransaction={handleVaultCapChange}
-            loading={isLoading}
+            loading={isLoading || !isProperChain || isSettingChain}
           />
         ),
       },
@@ -383,7 +393,7 @@ export const PanelRiskParameters = ({
               symbol: vault.inputToken.symbol,
             }}
             onAddTransaction={handleMinimumBufferBalanceChange}
-            loading={isLoading}
+            loading={isLoading || !isProperChain || isSettingChain}
           />
         ),
       },

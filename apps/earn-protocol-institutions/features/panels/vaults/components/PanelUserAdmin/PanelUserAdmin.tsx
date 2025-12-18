@@ -2,13 +2,13 @@
 
 import { type FC, useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
+import { useChain } from '@account-kit/react'
 import { Card, ERROR_TOAST_CONFIG, Table, Text, WARNING_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
-import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
-import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
+import { AddWhitelistForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddWhitelistForm'
 import { userAdminColumns } from '@/features/panels/vaults/components/PanelUserAdmin/columns'
 import { userAdminMapper } from '@/features/panels/vaults/components/PanelUserAdmin/mapper'
 import { getGrantWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
@@ -30,9 +30,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   vaultAddress,
   network,
 }) => {
-  const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
-  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const { chain, isSettingChain } = useChain()
+  const { setWhitelistedTx } = useAdminAppSDK(institutionName)
+  const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+
+  const isProperChain = useMemo(() => {
+    return chain.id === chainId
+  }, [chain.id, chainId])
 
   const onRevokeWhitelist = useCallback(
     ({ address }: { address: string }) => {
@@ -55,11 +60,11 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
               charge: 'negative',
             },
           },
-          revokeContractSpecificRole({
-            contractAddress: vaultAddress,
+          setWhitelistedTx({
             chainId,
-            role: ContractSpecificRoleName.CURATOR_ROLE,
-            targetAddress: address,
+            fleetCommanderAddress: vaultAddress as `0x${string}`,
+            targetAddress: address as `0x${string}`,
+            allowed: false,
           }),
         )
       } catch (error) {
@@ -68,7 +73,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, revokeContractSpecificRole, vaultAddress],
+    [addTransaction, chainId, setWhitelistedTx, vaultAddress],
   )
 
   const onGrantWhitelist = useCallback(
@@ -98,11 +103,11 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
               charge: 'positive',
             },
           },
-          grantContractSpecificRole({
-            contractAddress: vaultAddress,
+          setWhitelistedTx({
             chainId,
-            role: ContractSpecificRoleName.CURATOR_ROLE,
-            targetAddress: address,
+            fleetCommanderAddress: vaultAddress as `0x${string}`,
+            targetAddress: address as `0x${string}`,
+            allowed: true,
           }),
         )
       } catch (error) {
@@ -111,7 +116,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, grantContractSpecificRole, vaultAddress, whitelistedWallets],
+    [addTransaction, chainId, setWhitelistedTx, vaultAddress, whitelistedWallets],
   )
 
   const rows = useMemo(
@@ -121,8 +126,16 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         transactionQueue,
         onRevokeWhitelist,
         chainId,
+        disabled: !isProperChain || isSettingChain,
       }),
-    [whitelistedWallets, transactionQueue, onRevokeWhitelist, chainId],
+    [
+      whitelistedWallets,
+      transactionQueue,
+      onRevokeWhitelist,
+      chainId,
+      isProperChain,
+      isSettingChain,
+    ],
   )
 
   return (
@@ -142,7 +155,10 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         Add new user
       </Text>
       <Card>
-        <AddNewRoleForm onAddRole={onGrantWhitelist} staticRole="CURATOR_ROLE" />
+        <AddWhitelistForm
+          onGrantWhitelist={onGrantWhitelist}
+          disabled={!isProperChain || isSettingChain}
+        />
       </Card>
       <Text as="h5" variant="h5">
         Transaction Queue

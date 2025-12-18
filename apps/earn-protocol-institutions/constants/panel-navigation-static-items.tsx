@@ -18,6 +18,6 @@ export const panelNavigationStaticItems = [
         Help & Support
       </IconWithText>
     ),
-    link: { href: '/', target: '_blank' },
+    link: { href: '' },
   },
 ]

@@ -1,9 +1,20 @@
 'use client'
 
-import { useCallback, useState } from 'react'
-import { AnimateHeight, Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { useCallback, useMemo, useState } from 'react'
+import { useChain } from '@account-kit/react'
+import {
+  AnimateHeight,
+  Button,
+  Card,
+  Icon,
+  SDKChainIdToAAChainMap,
+  Text,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
+import { sdkChainIdToHumanNetwork } from '@summerfi/app-utils'
 import clsx from 'clsx'
+import { capitalize } from 'lodash-es'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { SimpleTransactionButton } from '@/components/organisms/SimpleTransactionButton/SimpleTransactionButton'
@@ -21,9 +32,22 @@ export const TransactionQueue = ({
   chainId: SupportedNetworkIds
 }) => {
   const { userWalletAddress } = useUserWallet()
+  const { chain, isSettingChain, setChain } = useChain()
   const [transactionRemovedLocally, setTransactionRemovedLocally] = useState<SDKTransactionItem[]>(
     [],
   )
+
+  const isProperChain = useMemo(() => {
+    return chain.id === chainId
+  }, [chain.id, chainId])
+
+  const properChainName = useMemo(() => {
+    return sdkChainIdToHumanNetwork(chainId) || `Chain ID ${chainId}`
+  }, [chainId])
+
+  const switchToProperChain = useCallback(() => {
+    setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+  }, [chainId, setChain])
 
   const handleTransactionRemove = useCallback(
     (id: string) => {
@@ -87,6 +111,24 @@ export const TransactionQueue = ({
           <WalletLabel />
         </div>
       </AnimateHeight>
+      <AnimateHeight
+        id="transaction-queue-wrong-chain"
+        show={userConnected && !isProperChain}
+        keepChildrenRendered
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <Button variant="primaryMedium" onClick={switchToProperChain}>
+            Switch to {capitalize(properChainName)} network
+          </Button>
+        </div>
+      </AnimateHeight>
       {transactionQueue.map((txItem) => (
         <AnimateHeight
           key={txItem.id}
@@ -119,7 +161,7 @@ export const TransactionQueue = ({
       ))}
       <AnimateHeight
         id="transaction-queue-no-items"
-        show={transactionQueue.length === 0 && userConnected}
+        show={transactionQueue.length === 0 && userConnected && isProperChain}
         keepChildrenRendered
         contentClassName={transactionQueueStyles.noTransactions}
       >
