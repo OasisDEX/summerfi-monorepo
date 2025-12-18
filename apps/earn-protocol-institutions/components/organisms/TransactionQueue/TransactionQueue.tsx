@@ -113,7 +113,7 @@ export const TransactionQueue = ({
       </AnimateHeight>
       <AnimateHeight
         id="transaction-queue-wrong-chain"
-        show={userConnected && !isProperChain}
+        show={(userConnected && !isProperChain) || isSettingChain}
         keepChildrenRendered
       >
         <div
