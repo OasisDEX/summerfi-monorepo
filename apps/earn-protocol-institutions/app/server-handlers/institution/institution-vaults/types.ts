@@ -48,3 +48,28 @@ export type InstiVaultPerformanceResponse = {
     weeklyVaultHistory: InstiVaultsPerformanceDataPoint[]
   }
 }
+
+export type InstiVaultActiveUsersResponse =
+  | {
+      inputTokenDeposits: number
+      inputTokenDepositsNormalized: number
+      account: {
+        id: string
+      }
+      latestDepositTest: {
+        timestamp: number
+      }[]
+      latestDeposit: {
+        timestamp: number
+      }[]
+      latestWithdrawal: {
+        timestamp: number
+      }[]
+      firstDeposit: {
+        timestamp: number
+      }[]
+      firstWithdrawal: {
+        timestamp: number
+      }[]
+    }[]
+  | []

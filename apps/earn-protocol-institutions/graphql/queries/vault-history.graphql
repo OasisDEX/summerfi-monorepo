@@ -38,3 +38,30 @@ query GetVaultHistory($vaultId: ID!) {
     }
   }
 }
+
+query GetVaultActiveUsers($vaultId: ID!) {
+  vault(id: $vaultId) {
+    positions {
+      account {
+        id
+      }
+      inputTokenDeposits
+      inputTokenDepositsNormalized
+      latestDepositTest: deposits(first:1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+      }
+      latestDeposit: deposits(first:1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+      }
+      latestWithdrawal: withdrawals(first:1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+      }
+      firstDeposit: deposits(first:1, orderBy: timestamp, orderDirection: asc) {
+        timestamp
+      }
+      firstWithdrawal: withdrawals(first:1, orderBy: timestamp, orderDirection: asc) {
+        timestamp
+      }
+    }
+  }
+}

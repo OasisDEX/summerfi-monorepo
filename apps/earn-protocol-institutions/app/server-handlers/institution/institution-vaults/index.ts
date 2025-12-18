@@ -5,6 +5,7 @@ import {
   type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import {
+  chainIdToSDKNetwork,
   decorateWithFleetConfig,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
@@ -14,6 +15,7 @@ import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-com
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import {
+  type InstiVaultActiveUsersResponse,
   type InstiVaultPerformanceResponse,
   type VaultAdditionalInfo,
   type VaultApyAverageMap,
@@ -22,7 +24,11 @@ import {
 } from '@/app/server-handlers/institution/institution-vaults/types'
 import { graphqlVaultHistoryClients } from '@/app/server-handlers/institution/utils/graph-ql-clients'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
-import { GetVaultHistoryDocument } from '@/graphql/clients/vault-history/client'
+import {
+  GetVaultActiveUsersDocument,
+  type GetVaultActiveUsersQuery,
+  GetVaultHistoryDocument,
+} from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
@@ -280,4 +286,44 @@ export const getInstitutionVaultPerformanceData = async ({
       revalidate: 300, // 5 minutes
     },
   )()
+}
+
+export const getInstitutionVaultActiveUsers = async ({
+  chainId,
+  vaultAddress,
+}: {
+  chainId: SupportedNetworkIds
+  vaultAddress: string
+}): Promise<InstiVaultActiveUsersResponse> => {
+  try {
+    if (!vaultAddress) {
+      throw new Error('Vault address is required')
+    }
+
+    const network = chainIdToSDKNetwork(chainId)
+    const client = graphqlVaultHistoryClients[network]
+    const response = await unstableCache(
+      () =>
+        client.request<GetVaultActiveUsersQuery>(
+          GetVaultActiveUsersDocument,
+          {
+            vaultId: vaultAddress,
+          },
+          {
+            origin: 'earn-protocol-institutions',
+          },
+        ),
+      ['institution-vault-active-users', vaultAddress, network],
+      {
+        revalidate: 300, // 5 minutes
+      },
+    )()
+
+    return response.vault?.positions ?? []
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching institution vault active users:', error)
+
+    return []
+  }
 }

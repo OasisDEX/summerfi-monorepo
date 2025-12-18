@@ -10878,6 +10878,13 @@ export type GetVaultHistoryQueryVariables = Exact<{
 
 export type GetVaultHistoryQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, inputTokenBalance: number, protocol: { __typename?: 'YieldAggregator', network: Network }, inputToken: { __typename?: 'Token', symbol: string, decimals: number }, hourlyVaultHistory: Array<{ __typename?: 'VaultHourlySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, dailyVaultHistory: Array<{ __typename?: 'VaultDailySnapshot', timestamp: number, netValue: number, navPrice?: number | null }>, weeklyVaultHistory: Array<{ __typename?: 'VaultWeeklySnapshot', timestamp: number, netValue: number, navPrice?: number | null }> } | null };
 
+export type GetVaultActiveUsersQueryVariables = Exact<{
+  vaultId: Scalars['ID']['input'];
+}>;
+
+
+export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenDeposits: number, inputTokenDepositsNormalized: number, account: { __typename?: 'Account', id: string }, latestDepositTest: Array<{ __typename?: 'Deposit', timestamp: number }>, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
+
 
 export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
     query GetVaultHistory($vaultId: ID!) {
@@ -10921,6 +10928,38 @@ export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
   }
 }
     `;
+export const GetVaultActiveUsersDocument = /*#__PURE__*/ gql`
+    query GetVaultActiveUsers($vaultId: ID!) {
+  vault(id: $vaultId) {
+    positions {
+      account {
+        id
+      }
+      inputTokenDeposits
+      inputTokenDepositsNormalized
+      latestDepositTest: deposits(first: 1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+      }
+      latestDeposit: deposits(first: 1, orderBy: timestamp, orderDirection: desc) {
+        timestamp
+      }
+      latestWithdrawal: withdrawals(
+        first: 1
+        orderBy: timestamp
+        orderDirection: desc
+      ) {
+        timestamp
+      }
+      firstDeposit: deposits(first: 1, orderBy: timestamp, orderDirection: asc) {
+        timestamp
+      }
+      firstWithdrawal: withdrawals(first: 1, orderBy: timestamp, orderDirection: asc) {
+        timestamp
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -10931,6 +10970,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetVaultHistory(variables: GetVaultHistoryQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultHistoryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultHistoryQuery>({ document: GetVaultHistoryDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaultHistory', 'query', variables);
+    },
+    GetVaultActiveUsers(variables: GetVaultActiveUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultActiveUsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultActiveUsersQuery>({ document: GetVaultActiveUsersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaultActiveUsers', 'query', variables);
     }
   };
 }
