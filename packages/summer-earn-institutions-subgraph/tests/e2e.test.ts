@@ -340,7 +340,7 @@ describe('Summer Earn Institutions Subgraph E2E Tests', () => {
       'should fetch historical vaults',
       async () => {
         // Use a recent block number (you might want to adjust this)
-        const blockNumber = 37260602 // Approximate recent block
+        const blockNumber = 39598409 // Approximate recent block
         const result = await getHistoricalVaults({ blockNumber }, testConfig)
 
         expect(Array.isArray(result.vaults)).toBe(true)
