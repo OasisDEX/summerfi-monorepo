@@ -56,9 +56,6 @@ export type InstiVaultActiveUsersResponse =
       account: {
         id: string
       }
-      latestDepositTest: {
-        timestamp: number
-      }[]
       latestDeposit: {
         timestamp: number
       }[]

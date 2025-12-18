@@ -47,9 +47,6 @@ query GetVaultActiveUsers($vaultId: ID!) {
       }
       inputTokenDeposits
       inputTokenDepositsNormalized
-      latestDepositTest: deposits(first:1, orderBy: timestamp, orderDirection: desc) {
-        timestamp
-      }
       latestDeposit: deposits(first:1, orderBy: timestamp, orderDirection: desc) {
         timestamp
       }

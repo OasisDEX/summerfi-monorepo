@@ -10883,7 +10883,7 @@ export type GetVaultActiveUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenDeposits: number, inputTokenDepositsNormalized: number, account: { __typename?: 'Account', id: string }, latestDepositTest: Array<{ __typename?: 'Deposit', timestamp: number }>, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
+export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenDeposits: number, inputTokenDepositsNormalized: number, account: { __typename?: 'Account', id: string }, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
 
 
 export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
@@ -10937,9 +10937,6 @@ export const GetVaultActiveUsersDocument = /*#__PURE__*/ gql`
       }
       inputTokenDeposits
       inputTokenDepositsNormalized
-      latestDepositTest: deposits(first: 1, orderBy: timestamp, orderDirection: desc) {
-        timestamp
-      }
       latestDeposit: deposits(first: 1, orderBy: timestamp, orderDirection: desc) {
         timestamp
       }

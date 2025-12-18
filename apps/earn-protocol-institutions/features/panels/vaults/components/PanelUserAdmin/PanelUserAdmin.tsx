@@ -105,7 +105,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
     ({ address }: { address: string }) => {
       const transactionId = getGrantWhitelistId({ address, chainId })
 
-      if (whitelistedWallets.includes(address)) {
+      if (whitelistedWallets.map((role) => role.owner).includes(address)) {
         toast.info(`Address ${address} is already whitelisted`, WARNING_TOAST_CONFIG)
 
         return

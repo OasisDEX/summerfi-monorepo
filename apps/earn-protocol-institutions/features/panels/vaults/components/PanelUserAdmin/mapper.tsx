@@ -83,8 +83,8 @@ export const userActiveListMapper = ({
         return (a.inputTokenDepositsNormalized - b.inputTokenDepositsNormalized) * direction
       }
       if (key === 'first-deposit') {
-        const aFirst = Math.min(...a.latestDeposit.map((d) => d.timestamp))
-        const bFirst = Math.min(...b.latestDeposit.map((d) => d.timestamp))
+        const aFirst = Math.min(...a.firstDeposit.map((d) => d.timestamp))
+        const bFirst = Math.min(...b.firstDeposit.map((d) => d.timestamp))
 
         return (aFirst - bFirst) * direction
       }
@@ -100,15 +100,17 @@ export const userActiveListMapper = ({
       return (aLast - bLast) * direction
     })
     .map((userData) => {
-      const firstDeposit =
-        dayjs(userData.firstDeposit[0].timestamp * 1000).format(CHART_TIMESTAMP_FORMAT_SHORT) ||
-        'n/a'
+      const firstDeposit = userData.firstDeposit[0]
+        ? dayjs(userData.firstDeposit[0].timestamp * 1000).format(CHART_TIMESTAMP_FORMAT_SHORT)
+        : 'n/a'
       const lastActivityRaw = Math.max(
         ...userData.latestDeposit.map((d) => d.timestamp),
         ...userData.latestWithdrawal.map((w) => w.timestamp),
       )
       const lastActivity =
-        dayjs(lastActivityRaw * 1000).format(CHART_TIMESTAMP_FORMAT_SHORT) || 'n/a'
+        lastActivityRaw > 0
+          ? dayjs(lastActivityRaw * 1000).format(CHART_TIMESTAMP_FORMAT_SHORT)
+          : 'n/a'
 
       return {
         content: {
