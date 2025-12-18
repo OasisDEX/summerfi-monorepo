@@ -22,12 +22,14 @@
   "dependencies": {
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
-    "@summerfi/configuration-provider-mock": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
+    "@summerfi/configuration-provider-mock": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
+    "graphql-request": "^7.4.0",
+    "graphql-tag": "^2.12.6",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {

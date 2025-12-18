@@ -41,6 +41,7 @@
     "e2e:ac:grantrevokeglobal": "jest --roots e2e -- ./e2e/ac.grantRevokeGlobalRole.test.ts",
     "e2e:ac:whitelist": "jest --roots e2e -- ./e2e/ac.whitelist.test.ts",
     "e2e:ac:whitelistaq": "jest --roots e2e -- ./e2e/ac.whitelist.aq.test.ts",
+    "e2e:ac:getallroles": "jest --roots e2e -- ./e2e/ac.getAllRoles.test.ts",
     "e2e:admin:rebalance": "jest --roots e2e -- ./e2e/admin.rebalance.test.ts",
     "e2e:admin:feerevenue": "jest --roots e2e -- ./e2e/admin.getFeeRevenueConfig.test.ts",
     "e2e:priceOracle": "jest --roots e2e -- ./e2e/priceOracle.test.ts",

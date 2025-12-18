@@ -68,6 +68,15 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
             ? aqAddress.value
             : undefined
 
+      console.log(
+        'Running test with ' +
+          (targetContractKey ? `targetContract: ${targetContract}` : 'no targetContract'),
+        roleName ? `, roleName: ${roleName}` : '',
+        owner ? `, owner: ${owner}` : '',
+        first ? `, first: ${first}` : '',
+        skip ? `, skip: ${skip}` : '',
+      )
+
       const result = await sdk.armada.accessControl.getAllRoles({
         chainId,
         name: roleName,

@@ -7,6 +7,8 @@ import {
   SubgraphTypes,
 } from '@summerfi/subgraph-manager-common'
 import { LoggingService, toBytes32InHex, type ChainId, type HexData } from '@summerfi/sdk-common'
+import gql from 'graphql-tag'
+import { GraphQLClient } from 'graphql-request'
 
 /**
  * @name ArmadaSubgraphManager
@@ -123,15 +125,70 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
-  getAllRoles(params: Parameters<IArmadaSubgraphManager['getAllRoles']>[0]) {
-    return this._getClient(SubgraphTypes.institutions, params.chainId).GetRoles({
-      id: this._getInstitutionId(params.clientId),
-      first: params.first ?? 1000,
-      skip: params.skip ?? 0,
-      name: params.name,
-      targetContract: params.targetContract,
-      owner: params.owner,
-    })
+  async getAllRoles(params: Parameters<IArmadaSubgraphManager['getAllRoles']>[0]) {
+    const institutionId = this._getInstitutionId(params.clientId)
+    const first = params.first ?? 1000
+    const skip = params.skip ?? 0
+
+    // Build where clause dynamically based on provided parameters
+    const whereConditions: string[] = [`institution_: { id: $id }`]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const variables: Record<string, any> = {
+      id: institutionId,
+      first,
+      skip,
+    }
+
+    if (params.name !== undefined) {
+      whereConditions.push(`name: $name`)
+      variables.name = params.name
+    }
+    if (params.targetContract !== undefined) {
+      whereConditions.push(`targetContract: $targetContract`)
+      variables.targetContract = params.targetContract
+    }
+    if (params.owner !== undefined) {
+      whereConditions.push(`owner: $owner`)
+      variables.owner = params.owner
+    }
+
+    // Build variable declarations for the query
+    const variableDeclarations = [
+      `$id: ID!`,
+      `$first: Int!`,
+      `$skip: Int!`,
+      ...(params.name !== undefined ? [`$name: String!`] : []),
+      ...(params.targetContract !== undefined ? [`$targetContract: String!`] : []),
+      ...(params.owner !== undefined ? [`$owner: String!`] : []),
+    ]
+
+    const query = gql`
+      query GetRoles(${variableDeclarations.join(', ')}) {
+        roles(
+          first: $first
+          skip: $skip
+          where: {
+            ${whereConditions.join('\n            ')}
+          }
+        ) {
+          id
+          name
+          owner
+          targetContract
+          institution {
+            id
+          }
+        }
+      }
+    `
+
+    const urlMapForChain = this._urlMap[params.chainId]
+    if (!urlMapForChain?.institutions) {
+      throw new Error(`No institutions subgraph url found for chainId: ${params.chainId}`)
+    }
+
+    const rawClient = new GraphQLClient(urlMapForChain.institutions)
+    return rawClient.request(query, variables)
   }
 
   getGlobalRebalances({ chainId }: Parameters<IArmadaSubgraphManager['getGlobalRebalances']>[0]) {

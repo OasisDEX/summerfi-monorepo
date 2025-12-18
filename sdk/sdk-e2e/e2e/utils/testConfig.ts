@@ -40,7 +40,7 @@ export const FleetAddresses = {
     ETH: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af',
     USDC: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     EURC: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-    AcmeUSDC: '0xfb42001c8c39011c96b6181ced913aefa0d53514',
+    AcmeUSDC: '0x1db644c6077912cf5dab0b5a7f2d8efb5b61df5c',
   },
   ArbitrumOne: {
     USDT: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
@@ -112,7 +112,7 @@ export const InstiTestConfigs = {
     rpcUrl: RpcUrls.Base,
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
-    aqAddressValue: '0xaae3f78433a13e3c2aa440600cbd22081b579d15',
+    aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
     userAddressValue: SharedConfig.userAddressValue,
     symbol: 'ETH',
   },
