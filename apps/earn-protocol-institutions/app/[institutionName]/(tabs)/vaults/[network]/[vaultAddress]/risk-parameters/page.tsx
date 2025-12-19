@@ -29,7 +29,7 @@ export default async function InstitutionVaultRiskParametersPage({
   const [vault, config] = await Promise.all([
     unstableCache(
       getVaultDetails,
-      [parsedNetwork],
+      [parsedNetwork, institutionName, vaultAddress],
       cacheConfig,
     )({
       institutionName,
