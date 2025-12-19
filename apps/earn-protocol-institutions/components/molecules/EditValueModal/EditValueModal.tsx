@@ -7,6 +7,7 @@ import {
   Modal,
   Text,
   useAmount,
+  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { slugify } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -36,6 +37,7 @@ export const EditTokenValueModal = ({
   loading?: boolean
   onAddTransaction: (value: BigNumber) => void
 }) => {
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
   const [isOpen, setIsOpen] = useState(false)
 
   const { amountDisplay, amountParsed, manualSetAmount, onBlur, onFocus } = useAmount({
@@ -77,6 +79,8 @@ export const EditTokenValueModal = ({
   }
 
   const isValueChanged = !amountParsed.isEqualTo(new BigNumber(editValue.valueNormalized))
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const buttonsDisabled = loading || isLoadingAccount || !userWalletAddress
 
   return (
     <>
@@ -118,14 +122,14 @@ export const EditTokenValueModal = ({
         </Card>
       </Modal>
       {buttonVariant ? (
-        <Button variant={buttonVariant} onClick={handleOpenClose} disabled={loading}>
+        <Button variant={buttonVariant} onClick={handleOpenClose} disabled={buttonsDisabled}>
           {buttonLabel}
         </Button>
       ) : (
         <span
-          onClick={!loading ? handleOpenClose : undefined}
+          onClick={!buttonsDisabled ? handleOpenClose : undefined}
           className={clsx(editValueModalStyles.defaultUnderlineOnHover, {
-            [editValueModalStyles.disabledDefaultUnderlineOnHover]: loading,
+            [editValueModalStyles.disabledDefaultUnderlineOnHover]: buttonsDisabled,
           })}
         >
           {buttonLabel}
@@ -157,6 +161,7 @@ export const EditPercentageValueModal = ({
   onAddTransaction: (value: BigNumber) => void
 }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const { userWalletAddress, isLoadingAccount } = useUserWallet()
 
   const { amountDisplay, amountParsed, manualSetAmount, onBlur, onFocus } = useAmount({
     inputName: `insti-${slugify(editValue.label)}-percentage-edit-modal`,
@@ -197,6 +202,8 @@ export const EditPercentageValueModal = ({
   }
 
   const isValueChanged = !amountParsed.isEqualTo(new BigNumber(editValue.valueNormalized))
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const buttonsDisabled = loading || isLoadingAccount || !userWalletAddress
 
   return (
     <>
@@ -238,14 +245,14 @@ export const EditPercentageValueModal = ({
         </Card>
       </Modal>
       {buttonVariant ? (
-        <Button variant={buttonVariant} onClick={handleOpenClose} disabled={loading}>
+        <Button variant={buttonVariant} onClick={handleOpenClose} disabled={buttonsDisabled}>
           {buttonLabel}
         </Button>
       ) : (
         <span
-          onClick={handleOpenClose}
+          onClick={!buttonsDisabled ? handleOpenClose : undefined}
           className={clsx(editValueModalStyles.defaultUnderlineOnHover, {
-            [editValueModalStyles.disabledDefaultUnderlineOnHover]: loading,
+            [editValueModalStyles.disabledDefaultUnderlineOnHover]: buttonsDisabled,
           })}
         >
           {buttonLabel}

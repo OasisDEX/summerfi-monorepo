@@ -10885,6 +10885,15 @@ export type GetVaultActiveUsersQueryVariables = Exact<{
 
 export type GetVaultActiveUsersQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', positions: Array<{ __typename?: 'Position', inputTokenDeposits: number, inputTokenDepositsNormalized: number, account: { __typename?: 'Account', id: string }, latestDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, latestWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }>, firstDeposit: Array<{ __typename?: 'Deposit', timestamp: number }>, firstWithdrawal: Array<{ __typename?: 'Withdraw', timestamp: number }> }> } | null };
 
+export type GetVaultActivityLogByTimestampFromQueryVariables = Exact<{
+  vaultId: Scalars['ID']['input'];
+  timestampFrom: Scalars['BigInt']['input'];
+  timestampTo?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type GetVaultActivityLogByTimestampFromQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', deposits: Array<{ __typename?: 'Deposit', from: string, timestamp: number, amount: number, hash: string }>, withdraws: Array<{ __typename?: 'Withdraw', from: string, timestamp: number, amount: number, hash: string }>, rebalances: Array<{ __typename?: 'Rebalance', timestamp: number, amount: number, hash: string, from: { __typename?: 'Ark', id: string, name?: string | null }, to: { __typename?: 'Ark', id: string, name?: string | null } }> } | null };
+
 
 export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
     query GetVaultHistory($vaultId: ID!) {
@@ -10957,6 +10966,52 @@ export const GetVaultActiveUsersDocument = /*#__PURE__*/ gql`
   }
 }
     `;
+export const GetVaultActivityLogByTimestampFromDocument = /*#__PURE__*/ gql`
+    query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!, $timestampTo: BigInt) {
+  vault(id: $vaultId) {
+    deposits(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
+      from
+      timestamp
+      amount
+      hash
+    }
+    withdraws(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
+      from
+      timestamp
+      amount
+      hash
+    }
+    rebalances(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
+      timestamp
+      amount
+      hash
+      from {
+        id
+        name
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -10970,6 +11025,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetVaultActiveUsers(variables: GetVaultActiveUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultActiveUsersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultActiveUsersQuery>({ document: GetVaultActiveUsersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaultActiveUsers', 'query', variables);
+    },
+    GetVaultActivityLogByTimestampFrom(variables: GetVaultActivityLogByTimestampFromQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultActivityLogByTimestampFromQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultActivityLogByTimestampFromQuery>({ document: GetVaultActivityLogByTimestampFromDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaultActivityLogByTimestampFrom', 'query', variables);
     }
   };
 }

@@ -44,17 +44,3 @@ export type InstitutionDataBasic = {
   id: InstitutionData['id']
   displayName: InstitutionData['displayName']
 }
-
-export enum InstitutionVaultActivityType {
-  DEPOSIT = 'deposit',
-  WITHDRAWAL = 'withdrawal',
-  REBALANCE = 'rebalance',
-  USER_ADDED = 'user-added',
-  USER_REMOVED = 'user-removed',
-}
-
-export type InstitutionVaultActivityItem = {
-  when: string
-  type: InstitutionVaultActivityType
-  message: string
-}

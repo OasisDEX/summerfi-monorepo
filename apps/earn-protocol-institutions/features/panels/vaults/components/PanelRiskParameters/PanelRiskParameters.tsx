@@ -14,6 +14,7 @@ import {
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 
+import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import {
   EditPercentageValueModal,
   EditTokenValueModal,
@@ -418,6 +419,10 @@ export const PanelRiskParameters = ({
     updateVaultTokenSymbol()
   }, [getTokenBySymbol, network, vault.inputToken.symbol])
 
+  const onTxSuccess = () => {
+    revalidateActivityData(institutionName, vault.id, String(network))
+  }
+
   return (
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
       <Text as="h5" variant="h5">
@@ -449,6 +454,7 @@ export const PanelRiskParameters = ({
         transactionQueue={transactionQueue}
         chainId={chainId}
         removeTransaction={removeTransaction}
+        onTxSuccess={onTxSuccess}
       />
     </Card>
   )

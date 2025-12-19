@@ -16,6 +16,7 @@ import { networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
+import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { AddWhitelistForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddWhitelistForm'
 import {
@@ -171,6 +172,9 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       }),
     [activeUsers, activeUsersSortConfig],
   )
+  const onTxSuccess = () => {
+    revalidateActivityData(institutionName, vaultAddress, String(network))
+  }
 
   return (
     <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
@@ -215,6 +219,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         transactionQueue={transactionQueue}
         chainId={chainId}
         removeTransaction={removeTransaction}
+        onTxSuccess={onTxSuccess}
       />
     </Card>
   )

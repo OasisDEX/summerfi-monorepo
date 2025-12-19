@@ -8,6 +8,7 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
+import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
 import {
@@ -138,6 +139,10 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
     [roles, transactionQueue, onRevokeContractSpecificRole, chainId, isProperChain, isSettingChain],
   )
 
+  const onTxSuccess = () => {
+    revalidateActivityData(institutionName, vaultAddress, String(network))
+  }
+
   return (
     <Card variant="cardSecondary" className={panelRoleStyles.panelRoleAdminWrapper}>
       <Text as="h5" variant="h5">
@@ -167,6 +172,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         transactionQueue={transactionQueue}
         chainId={chainId}
         removeTransaction={removeTransaction}
+        onTxSuccess={onTxSuccess}
       />
     </Card>
   )

@@ -53,7 +53,6 @@ const panelItems = [
   {
     id: DashboardVaultsPanel.ACTIVITY,
     label: 'Activity',
-    disabled: true,
   },
 ]
 

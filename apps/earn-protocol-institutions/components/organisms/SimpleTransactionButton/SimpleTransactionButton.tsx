@@ -11,12 +11,15 @@ import transactionButtonStyles from './SimpleTransactionButton.module.css'
 export const SimpleTransactionButton = ({
   txItem,
   chainId,
+  onTxSuccess,
 }: {
   txItem: SDKTransactionItem
   chainId: SupportedNetworkIds
+  onTxSuccess?: () => void
 }) => {
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
+    onTxSuccess,
   })
   const isLoading = useMemo(() => {
     const isLoadingTransaction = !txItem.txError && !txItem.txData?.transaction
@@ -87,7 +90,7 @@ export const SimpleTransactionButton = ({
     }
 
     return 'Execute'
-  }, [txStatus, txItem.txError, txItem.txData?.transaction, isLoading, chainId, txError])
+  }, [txStatus, txItem.txError, txItem.txData?.transaction, isLoading, txError])
 
   const buttonAction = useCallback(() => {
     if (
@@ -101,7 +104,7 @@ export const SimpleTransactionButton = ({
 
     // eslint-disable-next-line no-console
     console.log('Action not mapped')
-  }, [chainId, executeTransaction, isLoading, txItem, txStatus])
+  }, [executeTransaction, isLoading, txItem, txStatus])
 
   const buttonVariant = useMemo(() => {
     if (txStatus === 'txError') {

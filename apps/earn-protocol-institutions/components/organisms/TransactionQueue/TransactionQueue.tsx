@@ -26,10 +26,12 @@ export const TransactionQueue = ({
   transactionQueue,
   removeTransaction,
   chainId,
+  onTxSuccess,
 }: {
   transactionQueue: SDKTransactionItem[]
   removeTransaction: (id: string) => void
   chainId: SupportedNetworkIds
+  onTxSuccess?: () => void
 }) => {
   const { userWalletAddress } = useUserWallet()
   const { chain, isSettingChain, setChain } = useChain()
@@ -146,7 +148,11 @@ export const TransactionQueue = ({
               {getTxLabel(txItem)}
             </Text>
             <div className={transactionQueueStyles.transactionActions}>
-              <SimpleTransactionButton txItem={txItem} chainId={chainId} />
+              <SimpleTransactionButton
+                txItem={txItem}
+                chainId={chainId}
+                onTxSuccess={onTxSuccess}
+              />
               <Button
                 variant="textSecondarySmall"
                 onClick={() => handleTransactionRemove(txItem.id)}
