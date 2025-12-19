@@ -101,7 +101,7 @@ export const PanelActivity = ({
     }
   }, [loadedWeeksNumber])
 
-  const vaultInceptionDate = dayjs(vault.createdTimestamp * 1000)
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
 
   const isLoadedToDateHigherThanInceptionDate = useMemo(() => {
     const loadedToDate = dayjs().subtract(loadedWeeksNumber + 1, 'weeks')
