@@ -3,6 +3,7 @@ export const ChainIds = {
   Base: 8453,
   ArbitrumOne: 42161,
   Sonic: 146,
+  HyperEvm: 999,
 } as const
 
 export const LegacyChainIds = {
