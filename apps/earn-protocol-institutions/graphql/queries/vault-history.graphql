@@ -62,3 +62,42 @@ query GetVaultActiveUsers($vaultId: ID!) {
     }
   }
 }
+
+query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!, $timestampTo: BigInt) {
+  vault(id: $vaultId) {
+    deposits(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
+      timestamp_gt: $timestampFrom,
+      timestamp_lt: $timestampTo
+    }) {
+      from
+      timestamp
+      amount
+      hash
+    }
+    withdraws(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
+      timestamp_gt: $timestampFrom,
+      timestamp_lt: $timestampTo
+    }) {
+      from
+      timestamp
+      amount
+      hash
+    }
+    rebalances(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
+      timestamp_gt: $timestampFrom,
+      timestamp_lt: $timestampTo
+    }) {
+      timestamp
+      amount
+      hash
+      from {
+        id
+        name
+      }
+      to {
+        id
+        name
+      }
+    }
+  }
+}

@@ -131,7 +131,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     const skip = params.skip ?? 0
 
     // Build where clause dynamically based on provided parameters
-    const whereConditions: string[] = [`institution_: { id: $id }`]
+    const whereConditions: string[] = [`institution_: { id: $id }, active: true`]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const variables: Record<string, any> = {
       id: institutionId,

@@ -12,6 +12,7 @@ import {
 } from '@summerfi/app-utils'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
+import dayjs from 'dayjs'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import {
@@ -27,6 +28,8 @@ import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 import {
   GetVaultActiveUsersDocument,
   type GetVaultActiveUsersQuery,
+  GetVaultActivityLogByTimestampFromDocument,
+  type GetVaultActivityLogByTimestampFromQuery,
   GetVaultHistoryDocument,
 } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
@@ -325,5 +328,56 @@ export const getInstitutionVaultActiveUsers = async ({
     console.error('Error fetching institution vault active users:', error)
 
     return []
+  }
+}
+
+export const getInstitutionVaultActivityLog = async ({
+  chainId,
+  vaultAddress,
+  // both used to get _weeks_ worth of data with timestampFrom
+  // and timestampTo, starting from 0 (current week) to N weeks ago
+  weekNo,
+}: {
+  chainId: SupportedNetworkIds
+  vaultAddress: string
+  weekNo: number
+}): Promise<GetVaultActivityLogByTimestampFromQuery['vault']> => {
+  try {
+    if (!vaultAddress) {
+      throw new Error('Vault address is required')
+    }
+
+    const timestampFrom = dayjs()
+      .subtract(weekNo + 1, 'week')
+      .unix()
+    const timestampTo = dayjs().subtract(weekNo, 'week').unix()
+
+    const network = chainIdToSDKNetwork(chainId)
+    const client = graphqlVaultHistoryClients[network]
+    const response = await unstableCache(
+      () =>
+        client.request<GetVaultActivityLogByTimestampFromQuery>(
+          GetVaultActivityLogByTimestampFromDocument,
+          {
+            vaultId: vaultAddress,
+            timestampFrom,
+            timestampTo,
+          },
+          {
+            origin: 'earn-protocol-institutions',
+          },
+        ),
+      ['institution-vault-activity-log', vaultAddress, network],
+      {
+        revalidate: 300, // 5 minutes
+      },
+    )()
+
+    return response.vault
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching institution vault active users:', error)
+
+    return null
   }
 }
