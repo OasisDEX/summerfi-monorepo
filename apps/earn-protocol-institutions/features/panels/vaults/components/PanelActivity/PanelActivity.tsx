@@ -1,10 +1,11 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Button, Card, LoadingSpinner, Table, Text } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, LoadingSpinner, Table, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
+import { useRouter } from 'next/navigation'
 
 import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
 import { mapActivityDataToTable } from '@/features/panels/vaults/components/PanelActivity/mapper'
@@ -29,6 +30,7 @@ export const PanelActivity = ({
   vault,
   institutionName,
 }: PanelActivityProps) => {
+  const { refresh: refreshView } = useRouter()
   const [isLoadingNextWeek, setIsLoadingNextWeek] = useState(false)
   const [loadedWeeksNumber, setLoadedWeeksNumber] = useState(0)
   const [loadedAdditionalActivityLogData, setLoadedAdditionalActivityLogData] = useState<
@@ -135,6 +137,9 @@ export const PanelActivity = ({
     <Card variant="cardSecondary" className={styles.panelActivityWrapper}>
       <Text as="h5" variant="h5">
         Activity - {`${loadedDateRangeArray.from} - ${loadedDateRangeArray.to}`}
+        <div onClick={refreshView} style={{ display: 'inline-block', cursor: 'pointer' }}>
+          <Icon iconName="refresh" size={16} style={{ margin: '0 10px' }} />
+        </div>
       </Text>
       <div className={styles.headingWrapper}>
         <div className={styles.filters}>

@@ -11,12 +11,15 @@ import transactionButtonStyles from './SimpleTransactionButton.module.css'
 export const SimpleTransactionButton = ({
   txItem,
   chainId,
+  onTxSuccess,
 }: {
   txItem: SDKTransactionItem
   chainId: SupportedNetworkIds
+  onTxSuccess?: () => void
 }) => {
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
+    onTxSuccess,
   })
   const isLoading = useMemo(() => {
     const isLoadingTransaction = !txItem.txError && !txItem.txData?.transaction

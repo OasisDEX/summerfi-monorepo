@@ -35,7 +35,13 @@ const waitingSecondsTimePerEachChain: { [key in SupportedNetworkIds]: number } =
   [SupportedNetworkIds.SonicMainnet]: 5,
 }
 
-export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds }) => {
+export const useSimpleTransaction = ({
+  chainId,
+  onTxSuccess,
+}: {
+  chainId: SupportedNetworkIds
+  onTxSuccess?: () => void
+}) => {
   const { refresh: refreshView } = useRouter()
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[chainId],
@@ -215,6 +221,7 @@ export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds
           })
 
           setTimeout(() => {
+            onTxSuccess?.()
             refreshView()
             toast.dismiss(toastId)
           }, waitingSecondsTimePerEachChain[chainId] * 1000)
@@ -227,7 +234,16 @@ export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds
           setTxError(parseErrorMessage((err as Error).message))
         })
     }
-  }, [waitingForTx, txStatus, publicClient, setTxStatus, setWaitingForTx, refreshView, chainId])
+  }, [
+    waitingForTx,
+    txStatus,
+    publicClient,
+    setTxStatus,
+    setWaitingForTx,
+    refreshView,
+    chainId,
+    onTxSuccess,
+  ])
 
   return {
     executeTransaction,

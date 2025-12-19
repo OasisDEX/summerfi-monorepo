@@ -367,7 +367,7 @@ export const getInstitutionVaultActivityLog = async ({
             origin: 'earn-protocol-institutions',
           },
         ),
-      ['institution-vault-activity-log', vaultAddress, network],
+      ['institution-vault-activity-log', vaultAddress, network, String(weekNo)],
       {
         revalidate: 300, // 5 minutes
       },
@@ -376,7 +376,7 @@ export const getInstitutionVaultActivityLog = async ({
     return response.vault
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching institution vault active users:', error)
+    console.error('Error fetching institution vault activity log:', error)
 
     return null
   }
