@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { useChain } from '@account-kit/react'
-import { Card, getArkNiceName, Table, Text } from '@summerfi/app-earn-ui'
+import { Card, getArkNiceName, Icon, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatAddress,
@@ -13,6 +13,7 @@ import {
 } from '@summerfi/app-utils'
 import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
+import { useRouter } from 'next/navigation'
 
 import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import {
@@ -153,6 +154,7 @@ export const PanelRiskParameters = ({
   } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const { refresh: refreshView } = useRouter()
   const { chain, isSettingChain } = useChain()
 
   const isProperChain = useMemo(() => {
@@ -427,6 +429,9 @@ export const PanelRiskParameters = ({
     <Card variant="cardSecondary" className={styles.panelRiskParametersWrapper}>
       <Text as="h5" variant="h5">
         Vault Risk Parameters
+        <div onClick={refreshView} style={{ display: 'inline-block', cursor: 'pointer' }}>
+          <Icon iconName="refresh" size={16} style={{ margin: '0 10px' }} />
+        </div>
       </Text>
       <Card>
         <Table
