@@ -5,6 +5,7 @@ import { useChain } from '@account-kit/react'
 import { Card, getArkNiceName, Icon, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames, type SDKVaultishType } from '@summerfi/app-types'
 import {
+  chainIdToSDKNetwork,
   formatAddress,
   formatPercent,
   formatWithSeparators,
@@ -42,7 +43,7 @@ const normalizeValue = (rawValue: string | bigint, decimals: number) =>
   new BigNumber(rawValue.toString()).shiftedBy(-decimals)
 
 const denormalizeValue = (valueNormalized: BigNumber, decimals: number) =>
-  valueNormalized.multipliedBy(ten.pow(decimals)).toFixed(0)
+  valueNormalized.multipliedBy(ten.pow(decimals)).toString()
 
 const createTransactionLabel = (nextValue: string, currentValue: string | bigint) =>
   ({
@@ -83,6 +84,9 @@ const mapArksToRiskParameters = ({
         <EditTokenValueModal
           buttonLabel={`${formatWithSeparators(
             new BigNumber(ark.depositCap).shiftedBy(-ark.inputToken.decimals).toNumber(),
+            {
+              precision: 2,
+            },
           )} ${ark.inputToken.symbol}`}
           modalDescription={`Edit the maximum amount that can be deposited into ${getArkNiceName(ark)} ark.`}
           modalTitle={`Edit ${getArkNiceName(ark)} Ark Deposit Cap`}
@@ -154,6 +158,7 @@ export const PanelRiskParameters = ({
   } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { refresh: refreshView } = useRouter()
   const { chain, isSettingChain } = useChain()
   const { revalidateTags } = useRevalidateTags()
@@ -364,9 +369,9 @@ export const PanelRiskParameters = ({
         parameter: 'Vault Cap',
         value: (
           <EditTokenValueModal
-            buttonLabel={`${formatWithSeparators(
-              depositCapNormalized.toNumber(),
-            )} ${vault.inputToken.symbol}`}
+            buttonLabel={`${formatWithSeparators(depositCapNormalized.toNumber(), {
+              precision: 2,
+            })} ${vault.inputToken.symbol}`}
             modalDescription="Edit the maximum amount that can be deposited into the vault."
             modalTitle="Edit Vault Cap"
             editValue={{
@@ -385,9 +390,9 @@ export const PanelRiskParameters = ({
         parameter: 'Buffer',
         value: (
           <EditTokenValueModal
-            buttonLabel={`${formatWithSeparators(
-              minimumBufferBalanceNormalized.toNumber(),
-            )} ${vault.inputToken.symbol}`}
+            buttonLabel={`${formatWithSeparators(minimumBufferBalanceNormalized.toNumber(), {
+              precision: 2,
+            })} ${vault.inputToken.symbol}`}
             modalDescription="Edit the minimum buffer balance required in the vault."
             modalTitle="Edit Minimum Buffer Balance"
             editValue={{
@@ -425,7 +430,7 @@ export const PanelRiskParameters = ({
   const onTxSuccess = () => {
     revalidateTags({
       tags: [
-        `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
       ],
     })
   }

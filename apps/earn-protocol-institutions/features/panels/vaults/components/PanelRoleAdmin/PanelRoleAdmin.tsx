@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import { Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
@@ -41,6 +41,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
+  const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { chain, isSettingChain } = useChain()
   const { revalidateTags } = useRevalidateTags()
 
@@ -143,7 +144,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   const onTxSuccess = () => {
     revalidateTags({
       tags: [
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
       ],
     })
   }

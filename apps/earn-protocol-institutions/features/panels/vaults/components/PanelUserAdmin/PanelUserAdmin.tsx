@@ -12,7 +12,7 @@ import {
   WARNING_TOAST_CONFIG,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
@@ -50,6 +50,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   activeUsers,
 }) => {
   const chainId = networkNameToSDKId(network)
+  const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { chain, isSettingChain } = useChain()
   const { setWhitelistedTx } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
@@ -176,7 +177,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   const onTxSuccess = () => {
     revalidateTags({
       tags: [
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
       ],
     })
   }
