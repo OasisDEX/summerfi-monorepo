@@ -11693,7 +11693,7 @@ export const GetVaultActivityLogByTimestampFromDocument = /*#__PURE__*/ gql`
     orderBy: timestamp
     orderDirection: desc
     first: 1000
-    where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo, role_: {accessController_in: $targetContractsList}}
+    where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo, role_: {targetContract_in: $targetContractsList}}
   ) {
     action
     caller
