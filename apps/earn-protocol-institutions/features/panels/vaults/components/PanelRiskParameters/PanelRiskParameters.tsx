@@ -15,7 +15,6 @@ import { type IToken } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { useRouter } from 'next/navigation'
 
-import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import {
   EditPercentageValueModal,
   EditTokenValueModal,
@@ -30,6 +29,7 @@ import {
   getChangeVaultCapId,
 } from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import { marketRiskParametersColumns } from './market-risk-parameters-table/columns'
@@ -156,6 +156,7 @@ export const PanelRiskParameters = ({
   const chainId = networkNameToSDKId(network)
   const { refresh: refreshView } = useRouter()
   const { chain, isSettingChain } = useChain()
+  const { revalidateTags } = useRevalidateTags()
 
   const isProperChain = useMemo(() => {
     return chain.id === chainId
@@ -422,7 +423,11 @@ export const PanelRiskParameters = ({
   }, [getTokenBySymbol, network, vault.inputToken.symbol])
 
   const onTxSuccess = () => {
-    revalidateActivityData(institutionName, vault.id, String(network))
+    revalidateTags({
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    })
   }
 
   return (

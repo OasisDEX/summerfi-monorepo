@@ -7,6 +7,7 @@ export enum InstitutionVaultActivityType {
   WITHDRAWAL = 'withdrawal',
   REBALANCE = 'rebalance',
   RISK_CHANGE = 'risk_change',
+  ROLE_CHANGE = 'role_change',
 }
 
 export type InstitutionVaultActivityItem = {

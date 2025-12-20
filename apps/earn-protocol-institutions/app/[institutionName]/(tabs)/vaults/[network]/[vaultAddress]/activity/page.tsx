@@ -5,8 +5,10 @@ import {
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 
-import { getInstitutionVaultActivityLog } from '@/app/server-handlers/institution/institution-vaults'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import {
+  getCachedInstitutionVaultActivityLog,
+  getCachedVaultDetails,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { PanelActivity } from '@/features/panels/vaults/components/PanelActivity/PanelActivity'
 
 export default async function InstitutionVaultActivityPage({
@@ -19,16 +21,11 @@ export default async function InstitutionVaultActivityPage({
   const chainId = supportedSDKNetworkId(subgraphNetworkToId(parsedNetwork))
   const parsedVaultAddress = vaultAddress.toLowerCase()
 
-  const [vault, activityLogBaseDataRaw] = await Promise.all([
-    getVaultDetails({
+  const [vault] = await Promise.all([
+    getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
-    }),
-    getInstitutionVaultActivityLog({
-      vaultAddress: parsedVaultAddress,
-      chainId,
-      weekNo: 0,
     }),
   ])
 
@@ -39,6 +36,16 @@ export default async function InstitutionVaultActivityPage({
       </Text>
     )
   }
+
+  const [activityLogBaseDataRaw] = await Promise.all([
+    getCachedInstitutionVaultActivityLog({
+      vaultAddress: parsedVaultAddress,
+      chainId,
+      weekNo: 0,
+      institutionName,
+      targetContractsList: [parsedVaultAddress, ...vault.arks.map((ark) => ark.id)],
+    }),
+  ])
 
   return (
     <PanelActivity

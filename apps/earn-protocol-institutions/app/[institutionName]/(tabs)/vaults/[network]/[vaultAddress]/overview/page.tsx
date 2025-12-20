@@ -5,9 +5,11 @@ import { Address, ArmadaVaultId, getChainInfoByChainId, isAddress } from '@summe
 import BigNumber from 'bignumber.js'
 import { redirect } from 'next/navigation'
 
-import { getInstitutionVaultPerformanceData } from '@/app/server-handlers/institution/institution-vaults'
+import {
+  getCachedInstitutionVaultPerformanceData,
+  getCachedVaultDetails,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getArkHistoricalChartData } from '@/features/charts/mappers/mapApyChartData'
 import { mapSinglePointChartData } from '@/features/charts/mappers/mapSinglePointChartData'
 import { PanelOverview } from '@/features/panels/vaults/components/PanelOverview/PanelOverview'
@@ -39,7 +41,7 @@ export default async function InstitutionVaultOverviewPage({
   }
 
   const [vault] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
       network: parsedNetwork,
@@ -59,9 +61,10 @@ export default async function InstitutionVaultOverviewPage({
       network: parsedNetwork,
       arksList: vault.arks,
     }),
-    getInstitutionVaultPerformanceData({
-      fleetCommanderAddress: vaultAddress,
+    getCachedInstitutionVaultPerformanceData({
+      vaultAddress,
       network: parsedNetwork,
+      institutionName,
     }),
     institutionSdk.armada.users.getVaultInfo({
       vaultId,

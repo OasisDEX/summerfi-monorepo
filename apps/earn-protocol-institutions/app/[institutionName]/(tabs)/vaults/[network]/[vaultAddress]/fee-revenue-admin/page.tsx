@@ -1,7 +1,9 @@
 import { humanNetworktoSDKNetwork } from '@summerfi/app-utils'
 
-import { getInstitutionVaultFeeRevenueConfig } from '@/app/server-handlers/institution/institution-vault-fee-revenue-config'
-import { getInstitutionVault } from '@/app/server-handlers/institution/institution-vaults'
+import {
+  getCachedInstitutionVault,
+  getCachedInstitutionVaultFeeRevenueConfig,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { PanelFeeRevenueAdmin } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/PanelFeeRevenueAdmin'
 
 export default async function InstitutionVaultFeeRevenueAdminPage({
@@ -11,12 +13,12 @@ export default async function InstitutionVaultFeeRevenueAdminPage({
 }) {
   const { institutionName, vaultAddress, network } = await params
   const [institutionVault, institutionVaultFeeRevenueConfig] = await Promise.all([
-    getInstitutionVault({
+    getCachedInstitutionVault({
       institutionName,
       network: humanNetworktoSDKNetwork(network),
       vaultAddress,
     }),
-    getInstitutionVaultFeeRevenueConfig({
+    getCachedInstitutionVaultFeeRevenueConfig({
       institutionName,
       network: humanNetworktoSDKNetwork(network),
       vaultAddress,

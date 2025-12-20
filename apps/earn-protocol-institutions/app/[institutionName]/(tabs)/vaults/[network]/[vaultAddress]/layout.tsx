@@ -8,11 +8,11 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import { getInstitutionData } from '@/app/server-handlers/institution/institution-data'
-import { getInstitutionVaultFeeRevenueConfig } from '@/app/server-handlers/institution/institution-vault-fee-revenue-config'
+import { getCachedInstitutionData } from '@/app/server-handlers/institution/institution-data'
 import {
-  getInstitutionVault,
-  getInstitutionVaults,
+  getCachedInstitutionVault,
+  getCachedInstitutionVaultFeeRevenueConfig,
+  getCachedInstitutionVaults,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
 import { VaultsDropdownWrapper } from '@/components/layout/VaultsDropdownWrapper/VaultsDropdownWrapper'
@@ -32,14 +32,14 @@ export default async function InstitutionVaultLayout({
   const { institutionName, vaultAddress, network } = await params
   const [institutionData, institutionVaults, institutionVault, institutionVaultFeeRevenueConfig] =
     await Promise.all([
-      getInstitutionData(institutionName),
-      getInstitutionVaults({ institutionName }),
-      getInstitutionVault({
+      getCachedInstitutionData({ institutionName }),
+      getCachedInstitutionVaults({ institutionName }),
+      getCachedInstitutionVault({
         institutionName,
         network: humanNetworktoSDKNetwork(network),
         vaultAddress,
       }),
-      getInstitutionVaultFeeRevenueConfig({
+      getCachedInstitutionVaultFeeRevenueConfig({
         institutionName,
         network: humanNetworktoSDKNetwork(network),
         vaultAddress,

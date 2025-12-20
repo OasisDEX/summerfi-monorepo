@@ -8,7 +8,6 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
 
-import { revalidateActivityData } from '@/app/server-handlers/revalidation-handlers'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { AddNewRoleForm } from '@/features/panels/vaults/components/PanelRoleAdmin/AddNewRoleForm'
 import {
@@ -17,6 +16,7 @@ import {
 } from '@/helpers/get-transaction-id'
 import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 import { type InstitutionVaultRole } from '@/types/institution-data'
 
@@ -42,6 +42,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
   const { chain, isSettingChain } = useChain()
+  const { revalidateTags } = useRevalidateTags()
 
   const isProperChain = useMemo(() => {
     return chain.id === chainId
@@ -140,7 +141,11 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   )
 
   const onTxSuccess = () => {
-    revalidateActivityData(institutionName, vaultAddress, String(network))
+    revalidateTags({
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    })
   }
 
   return (

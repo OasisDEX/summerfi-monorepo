@@ -2,7 +2,7 @@ import { supportedSDKNetworkId } from '@summerfi/app-utils'
 import { type NextRequest, NextResponse } from 'next/server'
 import { isAddress } from 'viem'
 
-import { getInstitutionVaultActivityLog } from '@/app/server-handlers/institution/institution-vaults'
+import { getCachedInstitutionVaultActivityLog } from '@/app/server-handlers/institution/institution-vaults'
 import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 
 export const GET = async (
@@ -27,10 +27,11 @@ export const GET = async (
 
   const chainId = supportedSDKNetworkId(Number(rawChainId))
 
-  const weekActivityData = await getInstitutionVaultActivityLog({
+  const weekActivityData = await getCachedInstitutionVaultActivityLog({
     vaultAddress,
     chainId,
     weekNo: Number(weekNo),
+    institutionName,
   })
 
   return NextResponse.json(weekActivityData)
