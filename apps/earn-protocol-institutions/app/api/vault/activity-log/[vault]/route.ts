@@ -1,8 +1,11 @@
-import { supportedSDKNetworkId } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 import { type NextRequest, NextResponse } from 'next/server'
 import { isAddress } from 'viem'
 
-import { getInstitutionVaultActivityLog } from '@/app/server-handlers/institution/institution-vaults'
+import {
+  getCachedInstitutionVaultActivityLog,
+  getCachedVaultDetails,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 
 export const GET = async (
@@ -26,11 +29,29 @@ export const GET = async (
   await validateInstitutionUserSession({ institutionName })
 
   const chainId = supportedSDKNetworkId(Number(rawChainId))
+  const parsedNetwork = chainIdToSDKNetwork(chainId)
 
-  const weekActivityData = await getInstitutionVaultActivityLog({
+  const [vault] = await Promise.all([
+    getCachedVaultDetails({
+      institutionName,
+      vaultAddress,
+      network: parsedNetwork,
+    }),
+  ])
+
+  if (!vault) {
+    return NextResponse.json(
+      { error: `No vault found with the id ${vaultAddress} on the network ${parsedNetwork}` },
+      { status: 404 },
+    )
+  }
+
+  const weekActivityData = await getCachedInstitutionVaultActivityLog({
     vaultAddress,
     chainId,
     weekNo: Number(weekNo),
+    institutionName,
+    targetContractsList: [vaultAddress, ...vault.arks.map((ark) => ark.id)],
   })
 
   return NextResponse.json(weekActivityData)

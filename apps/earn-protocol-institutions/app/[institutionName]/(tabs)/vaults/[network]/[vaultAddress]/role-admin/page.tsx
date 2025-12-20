@@ -1,7 +1,7 @@
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
+import { humanNetworktoSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 
-import { getVaultSpecificRoles } from '@/app/server-handlers/sdk/get-vault-roles'
+import { getCachedVaultSpecificRoles } from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelRoleAdmin } from '@/features/panels/vaults/components/PanelRoleAdmin/PanelRoleAdmin'
 
@@ -13,16 +13,17 @@ export default async function InstitutionVaultRoleAdminPage({
   const { institutionName, vaultAddress, network } = await params
 
   const chainId = networkNameToSDKId(network)
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!chainId) {
     throw new Error(`Unsupported network: ${network}`)
   }
 
-  const rolesList = await getVaultSpecificRoles({
+  const rolesList = await getCachedVaultSpecificRoles({
     institutionName,
     vaultAddress,
-    chainId,
+    network: parsedNetwork,
   })
 
   return (

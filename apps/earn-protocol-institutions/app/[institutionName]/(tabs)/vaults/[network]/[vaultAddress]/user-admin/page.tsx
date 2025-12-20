@@ -1,8 +1,10 @@
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId } from '@summerfi/app-utils'
+import { humanNetworktoSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 
-import { getInstitutionVaultActiveUsers } from '@/app/server-handlers/institution/institution-vaults'
-import { getVaultWhitelist } from '@/app/server-handlers/sdk/get-vault-whitelist'
+import {
+  getCachedInstitutionVaultActiveUsers,
+  getCachedVaultWhitelist,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { ClientSideSdkWrapper } from '@/components/organisms/ClientSideSDKWrapper/ClientSideSDKWrapper'
 import { PanelUserAdmin } from '@/features/panels/vaults/components/PanelUserAdmin/PanelUserAdmin'
 
@@ -14,6 +16,7 @@ export default async function InstitutionVaultUserAdminPage({
   const { institutionName, vaultAddress, network } = await params
 
   const chainId = networkNameToSDKId(network)
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!chainId) {
@@ -21,14 +24,15 @@ export default async function InstitutionVaultUserAdminPage({
   }
 
   const [whitelistedWallets, activeUsers] = await Promise.all([
-    getVaultWhitelist({
+    getCachedVaultWhitelist({
       institutionName,
       vaultAddress,
-      chainId,
+      network: parsedNetwork,
     }),
-    getInstitutionVaultActiveUsers({
+    getCachedInstitutionVaultActiveUsers({
       vaultAddress,
       chainId,
+      institutionName,
     }),
   ])
 

@@ -39,7 +39,7 @@ generates:
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
   ./graphql/clients/vault-history/client.ts:
-    schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+    schema: '${SUBGRAPH_BASE}/summer-institutions-base'
     documents: './graphql/queries/vault-history.graphql'
     plugins:
       - add:

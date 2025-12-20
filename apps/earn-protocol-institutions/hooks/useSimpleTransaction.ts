@@ -14,7 +14,6 @@ import {
 } from '@summerfi/app-earn-ui'
 import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
-import { useRouter } from 'next/navigation'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
@@ -42,7 +41,6 @@ export const useSimpleTransaction = ({
   chainId: SupportedNetworkIds
   onTxSuccess?: () => void
 }) => {
-  const { refresh: refreshView } = useRouter()
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[chainId],
   })
@@ -222,7 +220,6 @@ export const useSimpleTransaction = ({
 
           setTimeout(() => {
             onTxSuccess?.()
-            refreshView()
             toast.dismiss(toastId)
           }, waitingSecondsTimePerEachChain[chainId] * 1000)
           setWaitingForTx(undefined) // Clear waitingForTx after successful execution and state update
@@ -234,16 +231,7 @@ export const useSimpleTransaction = ({
           setTxError(parseErrorMessage((err as Error).message))
         })
     }
-  }, [
-    waitingForTx,
-    txStatus,
-    publicClient,
-    setTxStatus,
-    setWaitingForTx,
-    refreshView,
-    chainId,
-    onTxSuccess,
-  ])
+  }, [waitingForTx, txStatus, publicClient, setTxStatus, setWaitingForTx, chainId, onTxSuccess])
 
   return {
     executeTransaction,

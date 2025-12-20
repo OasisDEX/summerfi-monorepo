@@ -63,30 +63,36 @@ query GetVaultActiveUsers($vaultId: ID!) {
   }
 }
 
-query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!, $timestampTo: BigInt) {
+query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!, $timestampTo: BigInt, $targetContractsList: [String!]) {
   vault(id: $vaultId) {
-    deposits(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
-      timestamp_gt: $timestampFrom,
-      timestamp_lt: $timestampTo
-    }) {
+    deposits(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
       from
       timestamp
       amount
       hash
     }
-    withdraws(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
-      timestamp_gt: $timestampFrom,
-      timestamp_lt: $timestampTo
-    }) {
+    withdraws(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
       from
       timestamp
       amount
       hash
     }
-    rebalances(orderBy: timestamp, orderDirection: desc, first: 1000, where: {
-      timestamp_gt: $timestampFrom,
-      timestamp_lt: $timestampTo
-    }) {
+    rebalances(
+      orderBy: timestamp
+      orderDirection: desc
+      first: 1000
+      where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo}
+    ) {
       timestamp
       amount
       hash
@@ -99,5 +105,32 @@ query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!,
         name
       }
     }
+  }
+  curationEvents(
+    orderBy: timestamp
+    orderDirection: desc
+    first: 1000
+    where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo, targetContract_in: $targetContractsList}
+  ) {
+    action
+    valueBefore
+    valueAfter
+    caller
+    timestamp
+    targetContract
+  }
+  roleEvents(
+    orderBy: timestamp
+    orderDirection: desc
+    first: 1000
+    where: {timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo, role_: {targetContract_in: $targetContractsList}}
+  ) {
+    action
+    caller
+    role {
+      owner
+      name
+    }
+    timestamp
   }
 }

@@ -8,7 +8,10 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 
 import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
-import { mapActivityDataToTable } from '@/features/panels/vaults/components/PanelActivity/mapper'
+import {
+  formatActivityLogTypeToHuman,
+  mapActivityDataToTable,
+} from '@/features/panels/vaults/components/PanelActivity/mapper'
 import {
   type ActivityTableColumns,
   InstitutionVaultActivityType,
@@ -19,8 +22,14 @@ import { activityColumns } from './columns'
 
 import styles from './PanelActivity.module.css'
 
+type ActivityLogData = {
+  vault: GetVaultActivityLogByTimestampFromQuery['vault']
+  curationEvents: GetVaultActivityLogByTimestampFromQuery['curationEvents']
+  roleEvents: GetVaultActivityLogByTimestampFromQuery['roleEvents']
+}
+
 type PanelActivityProps = {
-  activityLogBaseDataRaw: GetVaultActivityLogByTimestampFromQuery['vault']
+  activityLogBaseDataRaw: ActivityLogData
   vault: SDKVaultishType
   institutionName: string
 }
@@ -34,9 +43,9 @@ export const PanelActivity = ({
   const [isLoadingNextWeek, setIsLoadingNextWeek] = useState(false)
   const [loadedWeeksNumber, setLoadedWeeksNumber] = useState(0)
   const [loadedAdditionalActivityLogData, setLoadedAdditionalActivityLogData] = useState<
-    GetVaultActivityLogByTimestampFromQuery['vault'][]
+    ActivityLogData[]
   >([])
-  const [activeFilter, setActiveFilter] = useState<InstitutionVaultActivityType | null>(null)
+  const [activeFilter, setActiveFilter] = useState<string | null>(null)
   const chainId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
 
   const activityLogDataTable = useMemo(() => {
@@ -49,17 +58,21 @@ export const PanelActivity = ({
       ),
     )
     const mergedAndFilteredData = activeFilter
-      ? mergedData.filter((item) => item.content.type?.toString().toLowerCase() === activeFilter)
+      ? mergedData.filter(
+          (item) =>
+            formatActivityLogTypeToHuman(item.content.type?.toString() ?? '').toLowerCase() ===
+            formatActivityLogTypeToHuman(activeFilter).toLowerCase(),
+        )
       : mergedData
 
     return mergedAndFilteredData
   }, [activeFilter, activityLogBaseDataRaw, loadedAdditionalActivityLogData, vault.inputToken])
 
-  const handleToggleFilter = (filter: InstitutionVaultActivityType) => {
-    if (activeFilter === filter) {
+  const handleToggleFilter = (filter: string) => {
+    if (activeFilter === formatActivityLogTypeToHuman(filter)) {
       setActiveFilter(null)
     } else {
-      setActiveFilter(filter)
+      setActiveFilter(formatActivityLogTypeToHuman(filter))
     }
   }
 
@@ -92,6 +105,13 @@ export const PanelActivity = ({
         handleToggleFilter(InstitutionVaultActivityType.RISK_CHANGE)
       },
     },
+    {
+      label: 'Role Changes',
+      value: InstitutionVaultActivityType.ROLE_CHANGE,
+      onClick: () => {
+        handleToggleFilter(InstitutionVaultActivityType.ROLE_CHANGE)
+      },
+    },
   ]
 
   const loadedDateRangeArray = useMemo(() => {
@@ -120,7 +140,7 @@ export const PanelActivity = ({
         }`,
       )
         .then((res) => res.json())
-        .then((data: GetVaultActivityLogByTimestampFromQuery['vault']) => {
+        .then((data: ActivityLogData) => {
           setLoadedAdditionalActivityLogData((prev) => [...prev, data])
           setLoadedWeeksNumber((prev) => prev + 1)
         })
@@ -148,7 +168,11 @@ export const PanelActivity = ({
               key={filter.value}
               variant="primarySmall"
               onClick={filter.onClick}
-              className={activeFilter === filter.value ? styles.active : styles.button}
+              className={
+                activeFilter === formatActivityLogTypeToHuman(filter.value)
+                  ? styles.active
+                  : styles.button
+              }
             >
               {filter.label}
             </Button>

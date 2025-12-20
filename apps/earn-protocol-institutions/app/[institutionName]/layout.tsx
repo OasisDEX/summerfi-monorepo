@@ -3,8 +3,8 @@ import Link from 'next/link'
 
 import { readSession } from '@/app/server-handlers/auth/session'
 import {
-  getInstitutionData,
-  getUserInstitutionsList,
+  getCachedInstitutionData,
+  getCachedUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
 import { InstitutionPageHeader } from '@/components/layout/InstitutionPageHeader/InstitutionPageHeader'
 
@@ -40,8 +40,8 @@ export default async function InstitutionMainLayout({
   }
 
   const [institution, userInstitutionsList] = await Promise.all([
-    getInstitutionData(institutionName),
-    getUserInstitutionsList(session.sub),
+    getCachedInstitutionData({ institutionName }),
+    getCachedUserInstitutionsList({ userSub: session.sub }),
   ])
 
   if (!institutionName || !institution) {
