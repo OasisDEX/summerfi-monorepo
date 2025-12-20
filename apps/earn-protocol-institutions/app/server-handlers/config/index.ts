@@ -14,7 +14,11 @@ const everyFiveMinutes = () => {
   return tag
 }
 
-export const getCachedConfig = unstableCache(configEarnAppFetcher, ['config-earn-app'], {
-  revalidate: 300,
-  tags: ['config-earn-app', everyFiveMinutes()],
-})
+export const getCachedConfig = async () => {
+  const fiveMinuteTag = everyFiveMinutes()
+
+  return await unstableCache(configEarnAppFetcher, ['config-earn-app'], {
+    revalidate: 300,
+    tags: ['config-earn-app', fiveMinuteTag],
+  })()
+}
