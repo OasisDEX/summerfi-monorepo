@@ -870,7 +870,7 @@ export const handler = async (
           })
         }
 
-        // Second transaction for vault APRs
+        // Third transaction for institutions vault APRs
         try {
           await db.transaction().execute(async (trx) => {
             // Attempt to acquire lock within transaction
