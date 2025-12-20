@@ -11558,7 +11558,7 @@ export type GetVaultActivityLogByTimestampFromQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultActivityLogByTimestampFromQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', deposits: Array<{ __typename?: 'Deposit', from: string, timestamp: number, amount: number, hash: string }>, withdraws: Array<{ __typename?: 'Withdraw', from: string, timestamp: number, amount: number, hash: string }>, rebalances: Array<{ __typename?: 'Rebalance', timestamp: number, amount: number, hash: string, from: { __typename?: 'Ark', id: string, name?: string | null }, to: { __typename?: 'Ark', id: string, name?: string | null } }> } | null, curationEvents: Array<{ __typename?: 'CurationEvent', action: AdminAction, valueBefore: number, valueAfter: number, caller: string, timestamp: number, targetContract: string }>, roleEvents: Array<{ __typename?: 'RoleEvent', action: RoleAction, caller: string, timestamp: number, role: { __typename?: 'Role', owner: string, name: string } }> };
+export type GetVaultActivityLogByTimestampFromQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', deposits: Array<{ __typename?: 'Deposit', from: string, timestamp: number, amount: number, hash: string }>, withdraws: Array<{ __typename?: 'Withdraw', from: string, timestamp: number, amount: number, hash: string }>, rebalances: Array<{ __typename?: 'Rebalance', timestamp: number, amount: number, hash: string, from: { __typename?: 'Ark', id: string, name?: string | null }, to: { __typename?: 'Ark', id: string, name?: string | null } }> } | null, curationEvents: Array<{ __typename?: 'CurationEvent', action: AdminAction, valueBefore: number, valueAfter: number, caller: string, timestamp: number, targetContract: string, hash: string }>, roleEvents: Array<{ __typename?: 'RoleEvent', action: RoleAction, caller: string, timestamp: number, hash: string, role: { __typename?: 'Role', owner: string, name: string } }> };
 
 
 export const GetVaultHistoryDocument = /*#__PURE__*/ gql`
@@ -11688,6 +11688,7 @@ export const GetVaultActivityLogByTimestampFromDocument = /*#__PURE__*/ gql`
     caller
     timestamp
     targetContract
+    hash
   }
   roleEvents(
     orderBy: timestamp
@@ -11702,6 +11703,7 @@ export const GetVaultActivityLogByTimestampFromDocument = /*#__PURE__*/ gql`
       name
     }
     timestamp
+    hash
   }
 }
     `;

@@ -1,6 +1,7 @@
 declare const styles: {
   readonly "active": string;
   readonly "activityLogMessage": string;
+  readonly "activityLogMessageDetails": string;
   readonly "button": string;
   readonly "filters": string;
   readonly "headingWrapper": string;
@@ -9,6 +10,7 @@ declare const styles: {
   readonly "table": string;
   readonly "tableCard": string;
   readonly "tableWrapper": string;
+  readonly "txLink": string;
 };
 export = styles;
 

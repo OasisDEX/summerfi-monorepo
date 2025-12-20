@@ -14,4 +14,5 @@ export type InstitutionVaultActivityItem = {
   when: number
   type: InstitutionVaultActivityType
   message: ReactNode
+  details?: ReactNode
 }

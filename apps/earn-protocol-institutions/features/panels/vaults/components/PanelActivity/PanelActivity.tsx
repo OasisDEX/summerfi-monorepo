@@ -51,11 +51,9 @@ export const PanelActivity = ({
   const activityLogDataTable = useMemo(() => {
     const mergedData = mapActivityDataToTable({
       data: activityLogBaseDataRaw,
-      vaultToken: vault.inputToken,
+      vault,
     }).concat(
-      ...loadedAdditionalActivityLogData.map((data) =>
-        mapActivityDataToTable({ data, vaultToken: vault.inputToken }),
-      ),
+      ...loadedAdditionalActivityLogData.map((data) => mapActivityDataToTable({ data, vault })),
     )
     const mergedAndFilteredData = activeFilter
       ? mergedData.filter(
@@ -66,7 +64,7 @@ export const PanelActivity = ({
       : mergedData
 
     return mergedAndFilteredData
-  }, [activeFilter, activityLogBaseDataRaw, loadedAdditionalActivityLogData, vault.inputToken])
+  }, [activeFilter, activityLogBaseDataRaw, loadedAdditionalActivityLogData, vault])
 
   const handleToggleFilter = (filter: string) => {
     if (activeFilter === formatActivityLogTypeToHuman(filter)) {

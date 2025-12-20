@@ -118,6 +118,7 @@ query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!,
     caller
     timestamp
     targetContract
+    hash
   }
   roleEvents(
     orderBy: timestamp
@@ -132,5 +133,6 @@ query GetVaultActivityLogByTimestampFrom($vaultId: ID!, $timestampFrom: BigInt!,
       name
     }
     timestamp
+    hash
   }
 }
