@@ -828,6 +828,68 @@ export const handler = async (
             try {
               const protocolSubgraphClient =
                 protocolSubgraphClients[mapDbNetworkToChainId(network.network)]
+
+              const vaults = await retrySubgraphQuery<VaultsQuery>(
+                () => protocolSubgraphClient.Vaults(),
+                {
+                  logger,
+                  context: {
+                    operation: 'GetVaults',
+                    network: network.network,
+                  },
+                },
+              )
+
+              if (vaults.vaults.length > 0) {
+                await updateVaultAprs(
+                  trx,
+                  network,
+                  updateStartTimestamp,
+                  vaults,
+                  ratesSubgraphClients,
+                )
+                logger.debug('Updated vault APRs successfully', {
+                  network: network.network,
+                })
+              }
+            } finally {
+              // Always release the lock, even if there's an error
+              await trx
+                .updateTable('networkStatus')
+                .set({ isUpdating: false })
+                .where('network', '=', network.network)
+                .execute()
+            }
+          })
+        } catch (vaultError) {
+          logger.error(`Error updating vault APRs for network ${network.network}`, {
+            error: vaultError instanceof Error ? vaultError.message : String(vaultError),
+            stack: vaultError instanceof Error ? vaultError.stack : undefined,
+            network: network.network,
+            timestamp: updateStartTimestamp,
+          })
+        }
+
+        // Third transaction for institutions vault APRs
+        try {
+          await db.transaction().execute(async (trx) => {
+            // Attempt to acquire lock within transaction
+            const updatedNetwork = await trx
+              .updateTable('networkStatus')
+              .set({ isUpdating: true })
+              .where('network', '=', network.network)
+              .where('isUpdating', '=', false)
+              .returningAll()
+              .executeTakeFirst()
+
+            if (!updatedNetwork) {
+              logger.debug('Skipping vault APR updates - lock not acquired', {
+                network: network.network,
+              })
+              return
+            }
+
+            try {
               const institutionsSubgraphClient =
                 institutionsSubgraphClients[mapDbNetworkToChainId(network.network)]
               const institutionsVaults = await retrySubgraphQuery<InstitutionsVaultsQuery>(
@@ -840,16 +902,6 @@ export const handler = async (
                   },
                 },
               )
-              const vaults = await retrySubgraphQuery<VaultsQuery>(
-                () => protocolSubgraphClient.Vaults(),
-                {
-                  logger,
-                  context: {
-                    operation: 'GetVaults',
-                    network: network.network,
-                  },
-                },
-              )
               if (institutionsVaults.vaults.length > 0) {
                 await updateVaultAprs(
                   trx,
@@ -858,18 +910,6 @@ export const handler = async (
                   institutionsVaults,
                   ratesSubgraphClients,
                 )
-              }
-              if (vaults.vaults.length > 0) {
-                await updateVaultAprs(
-                  trx,
-                  network,
-                  updateStartTimestamp,
-                  vaults,
-                  ratesSubgraphClients,
-                )
-                logger.debug('Updated vault APRs successfully', {
-                  network: network.network,
-                })
               }
             } finally {
               // Always release the lock, even if there's an error
