@@ -35,7 +35,7 @@ import {
 import styles from './PanelActivity.module.css'
 
 const getAmount = (amount: string | number, decimals: number): string => {
-  return new BigNumber(amount).dividedBy(ten.pow(decimals)).toFixed(2)
+  return new BigNumber(amount).dividedBy(ten.pow(decimals)).toString()
 }
 
 export const formatActivityLogTypeToHuman = (type: string): string => {
@@ -55,8 +55,12 @@ const curationEventActionToRiskLevelMap: { [key in AdminAction]: string } = {
   VAULT_TIP_RATE_CHANGED: 'Vault tip rate',
 }
 
-const ActivityArrow = () => (
-  <Icon iconName="arrow_forward" style={{ display: 'inline-block', margin: '0 4px' }} size={12} />
+const ActivityArrow = ({ reversed = false }: { reversed?: boolean }) => (
+  <Icon
+    iconName={reversed ? 'arrow_backward' : 'arrow_forward'}
+    style={{ display: 'inline-block', margin: '0 4px' }}
+    size={12}
+  />
 )
 
 const TxScannerLink = ({ vaultChainid, hash }: { vaultChainid: number; hash: string }) => {
@@ -161,6 +165,7 @@ export const mapActivityDataToTable: (props: {
         message: (
           <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
             <strong>{user}</strong>&nbsp;
+            <ActivityArrow />
             <strong style={{ color: 'var(--earn-protocol-success-100)' }}>
               +{amount}&nbsp;{vault.inputToken.symbol}
             </strong>
@@ -184,7 +189,9 @@ export const mapActivityDataToTable: (props: {
   // region withdraws
   if (data.vault?.withdraws && Array.isArray(data.vault.withdraws)) {
     data.vault.withdraws.forEach((withdraw) => {
-      const amount = formatCryptoBalance(getAmount(withdraw.amount, vault.inputToken.decimals))
+      const amount = formatCryptoBalance(
+        getAmount(Math.abs(withdraw.amount), vault.inputToken.decimals),
+      )
       const user = formatAddress(withdraw.from)
 
       mappedData.push({
@@ -194,8 +201,9 @@ export const mapActivityDataToTable: (props: {
         message: (
           <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
             <strong>{user}</strong>&nbsp;
+            <ActivityArrow reversed />
             <strong style={{ color: 'var(--earn-protocol-critical-100)' }}>
-              {amount}&nbsp;{vault.inputToken.symbol}
+              -{amount}&nbsp;{vault.inputToken.symbol}
             </strong>
           </TableCellText>
         ),
@@ -222,6 +230,7 @@ export const mapActivityDataToTable: (props: {
       const isValueIncrease = new BigNumber(curationEvent.valueAfter).isGreaterThan(
         curationEvent.valueBefore,
       )
+
       const beforeColor = !isValueIncrease
         ? 'var(--earn-protocol-success-100)'
         : 'var(--earn-protocol-critical-100)'
@@ -303,6 +312,7 @@ export const mapActivityDataToTable: (props: {
             <strong>{formatActivityLogTypeToHuman(roleEvent.role.name)}</strong>&nbsp;
             <span style={{ color: actionLabelColor }}>{actionLabel}</span>
             &nbsp;
+            <ActivityArrow />
             <strong>{formatAddress(roleEvent.role.owner)}</strong>
           </TableCellText>
         ),
