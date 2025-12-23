@@ -63,7 +63,7 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: BigNumber('15896').shiftedBy(token.decimals).toFixed() },
         ],
         // usdc low risk_2
-        '0x71d77C39dB0eB5d086611a2e950198E3077cf58A': [
+        '0x71d77c39db0eb5d086611a2e950198e3077cf58a': [
           { token, dailyEmission: BigNumber('15896').shiftedBy(token.decimals).toFixed() },
         ],
       }
