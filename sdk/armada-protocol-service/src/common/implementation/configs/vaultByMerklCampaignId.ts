@@ -94,7 +94,7 @@ const vaultsByCampaignId: Record<string, { chainId: ChainId; fleetAddress: Addre
     chainId: 8453,
     fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
   },
-   '0x30cca5843f153f8d404eca2e4592687e8b0042d9f58ceb0872485f08abfb9f86': {
+  '0x30cca5843f153f8d404eca2e4592687e8b0042d9f58ceb0872485f08abfb9f86': {
     chainId: 42161,
     fleetAddress: '0x71d77C39dB0eB5d086611a2e950198E3077cf58A',
   },
