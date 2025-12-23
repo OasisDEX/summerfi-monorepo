@@ -62,6 +62,10 @@ export const getByFleetAddressFallback = (
         '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58': [
           { token, dailyEmission: BigNumber('15896').shiftedBy(token.decimals).toFixed() },
         ],
+        // usdc low risk_2
+        '0x71d77C39dB0eB5d086611a2e950198E3077cf58A': [
+          { token, dailyEmission: BigNumber('15896').shiftedBy(token.decimals).toFixed() },
+        ],
       }
     case ChainIds.Sonic:
       return {
