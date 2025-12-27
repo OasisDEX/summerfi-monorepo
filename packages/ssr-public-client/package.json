@@ -26,7 +26,7 @@
     "@summerfi/typescript-config": "workspace:*",
     "@types/node": "^22.14.1",
     "eslint": "8.57.0",
-    "glob": "^11.0.0",
+    "glob": "^11.1.0",
     "knip": "5.64.0",
     "typescript": "^5.7.3"
   },
