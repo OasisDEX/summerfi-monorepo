@@ -18,7 +18,7 @@
     "sst": "2.48.5",
     "viem": "2.29.2",
     "zod": "3.25.61",
-    "zx": "^8.5.4"
+    "zx": "^8.8.5"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.149"
