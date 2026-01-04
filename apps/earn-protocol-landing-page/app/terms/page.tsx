@@ -11,7 +11,7 @@ export default function TermsOfServicePage() {
           Terms of Service
         </Text>
         <Text as="p" variant="p2semi">
-          Last Revised: 25 July 2025
+          Last Revised: 5 January 2026
         </Text>{' '}
         <Text as="p" variant="p2" className={styles.p2}>
           Please read these Terms of Service (this &quot;Agreement&quot;) carefully. Your use or
@@ -49,9 +49,15 @@ export default function TermsOfServicePage() {
           to time at our sole discretion in accordance with section 3 below.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 1. Use of Services
+          }
           1. Use of Services
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 1.1. Services
+          }
           1.1. Services
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -59,7 +65,7 @@ export default function TermsOfServicePage() {
           that displays certain information and provides to Users access to use autonomous smart
           contracts and access to transactions of digital tokens and digital assets (&quot;Digital
           Assets&quot;).–The Site is used to provide Users with access to certain decentralized
-          technology services,products and protocols on the Ethereum blockchain and other
+          technology services, products and protocols on the Ethereum blockchain and other
           blockchains as may be available from time to time through Summer.fi (the
           &quot;Services&quot;). The Services may require users to pay fees, such as gas charges on
           the Ethereum network, to perform a transaction. You acknowledge and agree that the Company
@@ -75,23 +81,26 @@ export default function TermsOfServicePage() {
           decentralized environment wherein the Services can be autonomously and directly accessed
           by the Users without any involvement or actions taken by Company or any third-party. The
           User acknowledges that Company does not in any way control any of the assets or protocols
-          displayed on the Site, including but not limited to ETH, WSTETH, DAI, USDC, Lazy Summer,
-          Ajna, Spark, Maker, Aave, Arbitrum, Optimism, Base or Ethereum. The User acknowledges that
-          the Company and its Services are entirely unaffiliated with any of these protocols, other
-          service provider or other DeFi platform upon which Users may transact.
+          displayed on the Site, which may include, without limitation, ETH, WSTETH, DAI, USDC, Lazy
+          Summer, Ajna, Spark, Maker, Aave, Arbitrum, Optimism, Base or Ethereum. The User
+          acknowledges that the Company and its Services are entirely unaffiliated with any of these
+          protocols, other service provider or other DeFi platform upon which Users may transact.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Notwithstanding the above, the code which forms the basis of the Lazy Summer Protocol was
           initially developed by the Company and was licensed to a third party, which is the sole
           responsible for the launch and operation of the Lazy Summer Protocol. The Company provides
           certain support services in relation to the ongoing development and maintenance of the
-          Lazy Summer Protocol and is a holder of SUMR Tokens that confer the power to participate
-          in the decentralized autonomous organization in charge of the governance of the Lazy
-          Summer Protocol. There is no corporate connection or common ownership or control between
-          the Company and the third party responsible for the launch and operation of the Lazy
-          Summer Protocol.
+          Lazy Summer Protocol and is a holder of SUMR Tokens that may confer the power to
+          participate in the decentralized autonomous organization in charge of the governance of
+          the Lazy Summer Protocol. There is no corporate connection or common ownership or control
+          between the Company and the third party responsible for the launch and operation of the
+          Lazy Summer Protocol.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 1.2. Your Use of Services
+          }
           1.2. Your Use of Services
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -102,30 +111,24 @@ export default function TermsOfServicePage() {
             You are eligible to enter into the Agreement and use the Services in accordance with
             Section 2, below.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             This Agreement is valid, binding on you, and enforceable against you.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You will comply with all terms and conditions of this Agreement.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You are not entering into the Agreement and using the Services in your capacity as a
             consumer.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You will ensure that all information that you provide on the Site is current, complete,
             and accurate;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You will maintain the security and confidentiality of access to your cryptocurrency
             wallet address via private keys, access credentials, or otherwise;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You acknowledge and agree that access to the Site is provided on an &quot;as is&quot;
             and &quot;as available&quot; basis, only. You acknowledge and agree that from time to
@@ -141,7 +144,8 @@ export default function TermsOfServicePage() {
           <Text as="li" variant="p2" className={styles.p2}>
             You acknowledge and agree that the Site and the Services may evolve or change over time.
             This means the Company may alter, replace, or discontinue (temporarily or permanently)
-            the Site and Services at any time in the Company&apos;s sole discretion.
+            the Site and Services at any time in the Company&apos;s sole discretion without any
+            prior notice.
           </Text>
           <Text as="li" variant="p2" className={styles.p2}>
             You acknowledge that the Site is provided as a tool for you to interact with third party
@@ -163,12 +167,10 @@ export default function TermsOfServicePage() {
             solely be acting as agent for the third party service provider (disclosed agency
             relationship).
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             You are solely responsible for your use of the Site and Services, including all
             transactions of Digital Assets you make.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             In connection with using the Services, you will only transact legally obtained Digital
             Assets that belong to you.
@@ -251,6 +253,9 @@ export default function TermsOfServicePage() {
           </Text>
         </ul>
         <Text as="h5" variant="h5">
+          {
+            // region 1.3. Fees
+          }
           1.3. Fees
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -268,6 +273,9 @@ export default function TermsOfServicePage() {
           that transaction for more information.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 2. Eligibility
+          }
           2. Eligibility
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -301,6 +309,9 @@ export default function TermsOfServicePage() {
           will not use the Service for any illegal activity.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 3. Modification of Agreement and Transfer
+          }
           3. Modification of Agreement and Transfer
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -315,26 +326,43 @@ export default function TermsOfServicePage() {
           the Agreement in effect when you access or use the Site, the Services or the Program, you
           must stop using the them. We may, at any time and without liability or prior notice,
           modify or discontinue all or part of the Site (including access to the Site via any
-          third-party links). Neither party may assign or transfer any rights or obligations under
-          this Agreement, provided that Company may assign this Agreement without your prior consent
-          to any of Company&apos;s affiliates, or to its successors in interest of any business
-          associated with the Services provided by Company. This Agreement shall be binding upon the
-          permitted assigns or transferees of each party.
+          third-party links). You may not assign or transfer any rights or obligations under this
+          Agreement. The Company may assign this Agreement without your prior consent to any of
+          Company&apos;s affiliates, or to its successors in interest of any business associated
+          with the Services provided by Company, including in connection with a merger,
+          reorganisation, sale of assets or other transaction. This Agreement shall be binding upon
+          the permitted assigns or transferees of each party.
+        </Text>
+        <Text as="p" variant="p2" className={styles.p2}>
+          The Company may, at any time and in its sole discretion, modify, suspend or discontinue
+          all or any part of the Services. In connection with any such discontinuation, the Company
+          may inform users of, or provide the option to migrate to, third-party platforms or service
+          providers. Any such migration shall be voluntary. For the avoidance of doubt, any user
+          migration or referral to a third-party platform pursuant to this Clause shall not
+          constitute an assignment, transfer or novation of these Terms or of the user relationship,
+          unless the Company expressly states otherwise. Any use of a third-party platform shall be
+          governed solely by that third party’s applicable terms and policies, and the Company shall
+          have no responsibility or liability for such third-party platforms or services, to the
+          fullest extent permitted by applicable law.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 4. Rewards Program Terms:
+          }
           4. Rewards Program Terms:
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          The Company offers its eligible Users the opportunity to earn Rewards by: (i) referring
-          other Users to enter into qualified transactions using the Services, (ii) answering
-          surveys or in any way providing information to the Company in connection to the Services
-          or, more generally, to the Company&apos;s business or industry and (iii) any other . The
-          Rewards are for promotional and informational purposes only, as part of the Company
-          Rewards Programs (&quot;Rewards Programs&quot; or &quot;Programs&quot;). By joining the
-          Programs, you and Users you refer can earn Rewards payable in DAI, SUMR, or other Digital
-          Assets. You may also receive physical items, including but not limited to merchandise such
-          as t-shirts, caps, mugs, and other promotional materials, as may be specified from time to
-          time in connection with each specific Program.
+          The Company may offer certain eligible Users the opportunity to earn Rewards by: (i)
+          referring other Users to enter into qualified transactions using the Services, (ii)
+          answering surveys or in any way providing information to the Company in connection to the
+          Services or, more generally, to the Company&apos;s business or industry and (iii) any
+          other way as and if the Company deems fit. The Rewards are for promotional and
+          informational purposes only, as part of the Company Rewards Programs (&quot;Rewards
+          Programs&quot; or &quot;Programs&quot;). By joining the Programs, you and Users you refer
+          can earn Rewards payable in DAI, SUMR, or other Digital Assets. You may also receive
+          physical items, including but not limited to merchandise such as t-shirts, caps, mugs, and
+          other promotional materials, as may be specified from time to time in connection with each
+          specific Program.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           These Rewards Program Terms (&quot;Program Terms&quot;) apply to a User&apos;s
@@ -349,6 +377,9 @@ export default function TermsOfServicePage() {
           warranties made to the Company pursuant to Section 1.2.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Eligibility
+          }
           Eligibility
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -357,42 +388,49 @@ export default function TermsOfServicePage() {
           &quot;Referred Users.&quot; Referrers may be eligible to receive Rewards for every
           qualified transaction by a Referred User, in accordance to the specific terms of the
           Program. Referrers must speak and read English, must be legally able to participate in the
-          Program, and must be 1) at least the age of majority where they reside and 2) be an
-          existing User of the Services.
+          Program, and must be 1) at least the age of majority where they reside, 2) be an existing
+          User of the Services and 3) comply and ensure that the Referred Users referred by the
+          Referrer comply with all the provisions of the present Agreement.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Privacy and Personal Data
+          }
           Privacy and Personal Data
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           You may be required to share certain information about yourself in order to be able to
           participate in the Programs or to receive the Rewards. If you do not wish to share that
-          information you may not participate in Program. Please refer to the Company’s Privacy
+          information you may not participate in Program. Please refer to the Company&apos;s Privacy
           Policy for details on your privacy rights and information on how the Company collects and
           processes personal data.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region How It Works
+          }
           How It Works
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          To participate, a User shall usually be able to generate a referral code by Browse to the
-          Site (or the specific URL of the Program) and clicking a &quot;copy referral link&quot;
-          button or similar. Once a User generates and distributes that referral code to another
-          User that accepts to be referred after they have accepted the Program Terms via – usually
-          – a wallet transaction, that second User becomes a Referred User, and that User who
-          distributed the referral code becomes a Referrer. Referrers may be able share their
-          referral code with other Users who may use that code to receive Services from the Company
-          using their self-custodial wallet by visiting the Site (or the specific URL of the
-          Program) and inserting the referral code when prompted at the appropriate URL. The User
-          who receives the referral code and clicks it or otherwise manually enters the URL will be
-          prompted to access, review, and accept these Program Terms by signing a transaction
-          through that User’s wallet. After that User clicks to accept the Program Terms, that User
-          will be a Referred User. Both a Referrer, and a Referred User may be able to claim the
-          Rewards relevant for the specific Program.
+          To participate, a User shall be able to generate a referral code by Browse to the Site (or
+          the specific URL of the Program) and clicking a &quot;copy referral link&quot; button or
+          similar. Once a User generates and distributes that referral code to another User that
+          accepts to be referred after they have accepted the Program Terms via – usually – a wallet
+          transaction, that second User becomes a Referred User, and that User who distributed the
+          referral code becomes a Referrer. Referrers may be able share their referral code with
+          other Users who may use that code to receive Services from the Company using their
+          self-custodial wallet by visiting the Site (or the specific URL of the Program) and
+          inserting the referral code when prompted at the appropriate URL. The User who receives
+          the referral code and clicks it or otherwise manually enters the URL will be prompted to
+          access, review, and accept these Program Terms by signing a transaction through that
+          User&apos;s wallet. After that User clicks to accept the Program Terms, that User will be
+          a Referred User. Both a Referrer, and a Referred User may be able to claim the Rewards
+          relevant for the specific Program.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Both the Referrer and the Referred User shall be informed of the Rewards to which they are
           eligible, in accordance to the specific terms of each Program. A Referrer or Referred User
-          may claim their Rewards balance as prescribed in the specific Program’s terms.
+          may claim their Rewards balance as prescribed in the specific Program&apos;s terms.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Each Program is subject to its own specific terms and conditions, which shall be
@@ -402,6 +440,9 @@ export default function TermsOfServicePage() {
           Program.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Conditions for Receiving Rewards on Referral Code-based Programs
+          }
           Conditions for Receiving Rewards on Referral Code-based Programs
         </Text>
         <ol className={styles.list} style={{ listStyleType: 'decimal', marginLeft: 'unset' }}>
@@ -429,6 +470,9 @@ export default function TermsOfServicePage() {
           </Text>
         </ol>
         <Text as="h5" variant="h5">
+          {
+            // region How Rewards Work
+          }
           How Rewards Work
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -437,6 +481,9 @@ export default function TermsOfServicePage() {
           Company and as long as Referrers and Referred Users otherwise qualify for the Program.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Claim of Rewards
+          }
           Claim of Rewards
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -466,12 +513,15 @@ export default function TermsOfServicePage() {
           </Text>
         </ul>
         <Text as="h5" variant="h5">
+          {
+            // region Liability Release
+          }
           Liability Release
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Except where prohibited, Users who have accepted these Program Terms agree that by
           participating in the Program, they agree: (1) to be bound by these Program Terms, any
-          applicable terms and condition specifc to a certain Program and to the decisions of the
+          applicable terms and condition specific to a certain Program and to the decisions of the
           Company and/or its designees, its other Terms of Service and its privacy policies; and (2)
           to release and hold harmless the Company and its owners, affiliates, and subsidiaries,
           together with its respective employees, directors, officers, licensees, licensors,
@@ -504,15 +554,15 @@ export default function TermsOfServicePage() {
         <Text as="p" variant="p2" className={styles.p2}>
           The Company disclaims any liability for damage to any computer system resulting from
           participating in, or accessing, or downloading information in connection with this
-          Program, to the extent that You could have avoided such damage by following the Company’s
-          advice to apply an update offered to You free of charge or for damage that was caused by
-          You failing to correctly follow installation instructions or to have in place the minimum
-          system requirements advised by the Company, and reserves the right, in its sole
-          discretion, to cancel, modify or suspend the Program should a virus, bug, computer
-          problem, unauthorized intervention, technical fault, hack, attack, exploit, or other
-          causes beyond the Company’s control, corrupt the administration, security, or proper play
-          of the Program, or any system, product, service, or protocol upon which the Program
-          relies.
+          Program, to the extent that You could have avoided such damage by following the
+          Company&apos;s advice to apply an update offered to You free of charge or for damage that
+          was caused by You failing to correctly follow installation instructions or to have in
+          place the minimum system requirements advised by the Company, and reserves the right, in
+          its sole discretion, to cancel, modify or suspend the Program should a virus, bug,
+          computer problem, unauthorized intervention, technical fault, hack, attack, exploit, or
+          other causes beyond the Company&apos;s control, corrupt the administration, security, or
+          proper play of the Program, or any system, product, service, or protocol upon which the
+          Program relies.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Except where prohibited, the Released Parties shall not be liable to any Users for failure
@@ -538,6 +588,9 @@ export default function TermsOfServicePage() {
           to you.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Applicable Law
+          }
           Applicable Law
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -547,6 +600,9 @@ export default function TermsOfServicePage() {
           to submit any dispute to Arbitration as detailed in section 12 of these Terms.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Program Participant Code of Conduct
+          }
           Program Participant Code of Conduct
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -558,68 +614,67 @@ export default function TermsOfServicePage() {
           <Text as="li" variant="p2" className={styles.p2}>
             Violate the intellectual property rights of the Company or any other party;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Spam or otherwise create bulk distributions of the referral link;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Collect or attempting to collect personal data about Users;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Engage in any actions that are designed to disrupt or undermine the Program, the
             Company, or the use of the Site and Services by any other User;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Make attempts to gain unauthorized access to any software or the Program for any reason;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Transmit files that contain bots, viruses, works, Trojan horses, exploits, or any other
             code or file that could contaminate or otherwise destroy the Company intellectual
             property or stop the function of the Site and Services, or otherwise harm any third
             party;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Engage in illegal or improper activities;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Engage in behavior designed to annoy or harass others; and or
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Engage in actions that disparage or malign or call into question the reputation of the
             Company, as determined in the Company&apos;s sole discretion.
           </Text>
         </ul>
         <Text as="h5" variant="h5">
+          {
+            // region Inappropriate Behavior
+          }
           Inappropriate Behavior
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          The Company may prohibit any User from participating in the Program or receiving any
-          Rewards if the Company determines such User is attempting to undermine the fairness,
-          integrity or legitimate operation of the Program in any way by cheating, hacking,
-          deception, or any other unfair playing practices or intending to annoy, abuse, threaten or
-          harass any other Users (whether or not participating in the Program), or representatives
-          of the Company. Use of any automated system not typical of users of the Site and Services
-          to participate in the Program is strictly prohibited, and if discovered, will result in
-          disqualification. The Company reserves the right to disqualify any User, cancel Rewards,
-          disable or suspend a User from the Program Rewards account, and contact legal authorities
-          (including law enforcement), if it should discover a User is tampering with the entry or
-          referral process or the operation of the Program or violating these Terms.
+          The Company may, at its sole discretion, prohibit any User from participating in the
+          Program or receiving any Rewards if the Company determines such User is attempting to
+          undermine the fairness, integrity or legitimate operation of the Program in any way by
+          cheating, hacking, deception, or any other unfair playing practices or intending to annoy,
+          abuse, threaten or harass any other Users (whether or not participating in the Program),
+          or representatives of the Company. Use of any automated system not typical of users of the
+          Site and Services to participate in the Program is strictly prohibited, and if discovered,
+          will result in disqualification. The Company reserves the right to disqualify any User,
+          cancel Rewards, disable or suspend a User from the Program Rewards account, and contact
+          legal authorities (including law enforcement), if it should discover a User is tampering
+          with the entry or referral process or the operation of the Program or violating these
+          Terms.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region Reservations of Rights
+          }
           Reservations of Rights
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The Company may withhold or invalidate a Reward if it reasonably believes that any Reward
           would violate any law or legal requirement, or if the Company believes any use of the
           Site, the Services or the Program by any Referrer or Referred User is fraudulent, suspect,
-          or in violation of these Program Terms.
+          or in violation of the Program Terms or this Agreement.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           If the Company, in its sole discretion, believes that to award Rewards will impose
@@ -646,24 +701,17 @@ export default function TermsOfServicePage() {
         <Text as="p" variant="p2" className={styles.p2}>
           To the extent permitted under law, the Company may modify, terminate, discontinue, end or
           revoke Rewards or the Reward Program at any time in its sole discretion for any reason
-          without any liability or obligation to you. The Company reserves the right to cancel or
+          without any liability or obligation to You. The Company reserves the right to cancel or
           suspend this Program should it determine, in its sole discretion, that the administration,
           security or fairness of the Program has been compromised in any way.
-        </Text>
-        <Text as="p" variant="p2" className={styles.p2}>
-          To the extent permitted under law, the Company may modify, terminate, discontinue, end or
-          revoke Rewards or the Reward Program at any time in its sole discretion for any reason
-          without any liability or obligation to you. The Company reserves the right to cancel or
-          suspend this Program should it determine, in its sole discretion, that the administration,
-          security or fairness of this Program has been compromised in any way.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           We reserve the right to modify or amend at any time these Program Terms and any other
           terms and conditions applicable to the Programs and the methods through which Rewards are
           distributed. We reserve the right to disqualify any User at any time from participation in
-          the Program if he/she does not comply with any of these Terms or other terms and
-          conditions applicable to the Program. The Company&apos;s failure to enforce any term of
-          these Terms shall not constitute a waiver of that provision.
+          the Program if he/she does not comply with any of these Terms or this Agreement or other
+          terms and conditions applicable to the Program. The Company&apos;s failure to enforce any
+          term of these Terms shall not constitute a waiver of that provision.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           ANY ATTEMPT TO DELIBERATELY DAMAGE OR UNDERMINE THE LEGITIMATE OPERATION OF THE PROGRAM
@@ -684,9 +732,15 @@ export default function TermsOfServicePage() {
           AND OTHER ASPECTS OF THE SITE ARE FUNCTIONAL.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 5. No Representations and Warranties. Risks
+          }
           5. No Representations and Warranties. Risks
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.1. No Representation or Warranty
+          }
           5.1. No Representation or Warranty
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -696,7 +750,7 @@ export default function TermsOfServicePage() {
           PROPRIETARY OR OPEN SOURCE, TO THE EXTENT PERMITTED BY APPLICABLE LAW, WE SPECIFICALLY DO
           NOT REPRESENT AND WARRANT AND EXPRESSLY DISCLAIM ANY REPRESENTATION OR WARRANTY, EXPRESS,
           IMPLIED OR STATUTORY, INCLUDING WITHOUT LIMITATION, ANY REPRESENTATIONS OR WARRANTIES OF
-          TITLE, NONINFRINGEMENT, MERCHANTABILITY, USAGE, SECURITY, SUITABILITY OR FITNESS FOR ANY
+          TITLE, NON-INFRINGEMENT, MERCHANTABILITY, USAGE, SECURITY, SUITABILITY OR FITNESS FOR ANY
           PARTICULAR PURPOSE, OR AS TO THE WORKMANSHIP OR TECHNICAL CODING THEREOF, OR THE ABSENCE
           OF ANY DEFECTS THEREIN, WHETHER LATENT OR PATENT. WE DO NOT REPRESENT OR WARRANT THAT THE
           SITE, SERVICES, CODE AND ANY RELATED INFORMATION ARE ACCURATE, COMPLETE, RELIABLE, CURRENT
@@ -711,6 +765,9 @@ export default function TermsOfServicePage() {
           COMPANY CAN GUARANTEE THE LEGALITY OF THE SERVICES IN ANY SPECIFIC JURISDICTION.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.2. Disclaimer of Fiduciary Duties
+          }
           5.2. Disclaimer of Fiduciary Duties
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -719,12 +776,15 @@ export default function TermsOfServicePage() {
           equity or otherwise, the parties hereto hereby agree to eliminate any and all fiduciary
           duties Company may have to the User, its affiliates, or the end Users of the Services, the
           Site or its content, provided that such exclusion or limitation of liability shall not
-          extend to the Company’s misappropriation of assets or funds of its users or its
+          extend to the Company&apos;s misappropriation of assets or funds of its users or its
           affiliates, or the end Users of the Services, Site, Programs or content provided by
           Company or other acts or omissions that constitute a bad faith violation of the implied
           contractual covenant of good faith and fair dealing.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.3. Sophistication and Risk of Cryptographic Systems
+          }
           5.3. Sophistication and Risk of Cryptographic Systems
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -760,19 +820,22 @@ export default function TermsOfServicePage() {
           Underlying networks relied upon by the Services utilize public/private key cryptography.
           You alone are responsible for securing and protecting your private key(s) or other access
           credentials or hardware equipment used to access Digital Assets. Company does not have
-          access to your private key(s).The Company does not take custody or control of User Digital
-          Assets. Losing control of your private key(s) will permanently and irreversibly deny you
-          access to Digital Assets on the Ethereum blockchain or other network. If your private
-          key(s) are lost or compromised, neither Company nor any other person will be able to
-          retrieve or protect your Digital Assets. Once your private key(s) is lost, you will not be
-          able to transfer your Digital Assets to any other address or wallet. If this occurs, you
-          will not be able to realize any value or utility from Digital Assets that you may hold now
-          or in future. The Services may offer integrations with third party service providers, such
-          as the Li.Fi widget integration. If you decide to make use of the Li.Fi or widget
+          access to your private key(s). The Company does not take custody or control of User
+          Digital Assets. Losing control of your private key(s) will permanently and irreversibly
+          deny you access to Digital Assets on the Ethereum blockchain or other network. If your
+          private key(s) are lost or compromised, neither Company nor any other person will be able
+          to retrieve or protect your Digital Assets. Once your private key(s) is lost, you will not
+          be able to transfer your Digital Assets to any other address or wallet. If this occurs,
+          you will not be able to realize any value or utility from Digital Assets that you may hold
+          now or in future. The Services may offer integrations with third party service providers,
+          such as the Li.Fi widget integration. If you decide to make use of the Li.Fi or widget
           integration, your transactions are executed by Li.Fi&apos;s third-party service providers
           and not by Li.Fi.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.4. Risk of Regulatory Actions in One or More Jurisdictions
+          }
           5.4. Risk of Regulatory Actions in One or More Jurisdictions
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -785,6 +848,9 @@ export default function TermsOfServicePage() {
           public network blockchains remains fluid and quickly changing.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.5. Risk of Weaknesses or Exploits in the Field of Cryptography
+          }
           5.5. Risk of Weaknesses or Exploits in the Field of Cryptography
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -792,12 +858,15 @@ export default function TermsOfServicePage() {
           cracking or technical advances such as the development of quantum computers may present
           risks to cryptocurrencies, Digital Assets and Services, which could result in the theft or
           loss of your Digital Assets or property. To the extent possible, the Company intends to
-          update the protocol underlying the Services to account for any advances in cryptography
-          and to incorporate additional security measures, but the Company does not guarantee or
+          make updates in relation to the Services to account for any advances in cryptography and
+          to incorporate additional security measures, but the Company does not guarantee or
           otherwise represent full security of the system. By using the Services or accessing the
           Site, you acknowledge these inherent risks.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.6. Volatility of Cryptocurrency
+          }
           5.6. Volatility of Cryptocurrency
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -810,6 +879,9 @@ export default function TermsOfServicePage() {
           cannot be held liable for such fluctuations or increased costs.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.7. Application Security
+          }
           5.7. Application Security
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -820,6 +892,9 @@ export default function TermsOfServicePage() {
           accessing the Site.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.8. Site Accuracy
+          }
           5.8. Site Accuracy
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -835,7 +910,9 @@ export default function TermsOfServicePage() {
           as a convenience but are not controlled by any entity. You acknowledge and agree that we
           are not responsible for any aspect of the information, content, or services contained in
           any third-party materials or on any third party sites accessible or linked to the Site or
-          available via other relevant tools.
+          available via other relevant tools, nor can we be held liable for any information provided
+          by any third parties, including information shared in the Company&apos;s channels and
+          social networks.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           No representation is made as to the accuracy, completeness or appropriateness for any
@@ -845,6 +922,9 @@ export default function TermsOfServicePage() {
           inaccurate and should not be relied upon.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.9. Technical Knowledge
+          }
           5.9. Technical Knowledge
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -863,6 +943,9 @@ export default function TermsOfServicePage() {
           assume no fiduciary duty in our relations with you.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.10. Financial Risks
+          }
           5.10. Financial Risks
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -887,6 +970,9 @@ export default function TermsOfServicePage() {
           includes the provision or tendering of business, financial, legal or investment advice.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.11. Applicable Law and Tax
+          }
           5.11. Applicable Law and Tax
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -902,6 +988,9 @@ export default function TermsOfServicePage() {
           information.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 5.12. Operational Risks
+          }
           5.12. Operational Risks
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -925,6 +1014,9 @@ export default function TermsOfServicePage() {
           Site are your sole responsibility and we will have no liability for such decisions.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 6. Indemnity
+          }
           6. Indemnity
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -954,15 +1046,18 @@ export default function TermsOfServicePage() {
           cooperate with Company in the defense of such matter.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 7. Limitation on Liability
+          }
           7. Limitation on Liability
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
-          You acknowledge and agree that you assume full responsibility for Your use of the Site,the
-          Services and the Programs. You acknowledge and agree that any information You send or
-          receive during your use of the Site and Services may not be secure and may be intercepted
-          or later acquired by unauthorized parties. You acknowledge and agree that Your use of the
-          Site, the Services, including any Smart Contracts with which you interact, are Your
-          responsibility and are at Your own risk.
+          You acknowledge and agree that you assume full responsibility for Your use of the Site,
+          the Services and the Programs. You acknowledge and agree that any information You send or
+          receive during Your use of the Site and Services or during Your participation in the
+          Programs may not be secure and may be intercepted or later acquired by unauthorized
+          parties. You acknowledge and agree that Your use of the Site, the Services, including any
+          Smart Contracts with which you interact, are Your responsibility and are at Your own risk.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           Nothing in this Agreement limits any liability which cannot legally be limited, including
@@ -978,8 +1073,8 @@ export default function TermsOfServicePage() {
           </Text>
 
           <Text as="li" variant="p2" className={styles.p2}>
-            (c) breach of the terms implied by section 2 of the UK’s Supply of Goods and Services
-            Act 1982 (title and quiet possession).
+            (c) breach of the terms implied by section 2 of the UK&apos;s Supply of Goods and
+            Services Act 1982 (title and quiet possession).
           </Text>
         </ul>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1001,9 +1096,9 @@ export default function TermsOfServicePage() {
           device or network, providers, or software (including, but not limited to, those that do
           not permit participation in the service); (i) any injury or damage to persons or property,
           including to computer equipment (to the extent that You could have avoided such damage by
-          following the Company’s advice to apply an update offered to You free of charge or for
-          damage that was caused by You failing to correctly follow installation instructions or to
-          have in place the minimum system requirements advised by the Company); (j) inability to
+          following the Company&apos;s advice to apply an update offered to You free of charge or
+          for damage that was caused by You failing to correctly follow installation instructions or
+          to have in place the minimum system requirements advised by the Company); (j) inability to
           fully access the site or service or any other website; (k) theft, tampering, destruction,
           or unauthorized access to, images or other content of any kind; data that is processed
           late or incorrectly or is incomplete or lost; (l) typographical, printing or other errors,
@@ -1028,13 +1123,16 @@ export default function TermsOfServicePage() {
           California Civil Code § 1542, which provides: &quot;[a] general release does not extend to
           claims that the creditor or releasing party does not know or suspect to exist in his or
           her favor at the time of executing the release and that, if known by him or her, would
-          have materially affected his or her settlement with the debtor or released party.
+          have materially affected his or her settlement with the debtor or released party.&quot;
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The terms implied by sections 3, 4 and 5 of the UK&apos;s Supply of Goods and Services Act
           1982 are, to the fullest extent permitted by law, excluded from this Agreement.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 8. Open Source and Proprietary Rights
+          }
           8. Open Source and Proprietary Rights
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1042,18 +1140,24 @@ export default function TermsOfServicePage() {
           will make available to you. Documentation of open source code is available on the
           Summer.fi Github page. This documentation, including any code shown in it, is licensed
           under the GNU Affero General Public License version 3 and you agree to abide by the terms
-          of this license.
+          of this license. The Company may, at its sole discretion, cease to offer any Software or
+          similar under an open source license, without being required to provide any prior notice
+          to You or any third party.
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           The &quot;Summer.fi&quot; name, the Summer.fi logo, other related trademarks, and the web
           domains and URLs are property of Oazo Apps Limited. Using our Services does not give you
-          ownership of any proprietary intellectual property rights in our Services or the content
-          you access. You may not use proprietary content from our Services unless you obtain
-          permission from its owner or are otherwise permitted by law. These terms do not grant you
-          the right to use any branding or logos used in our Services. You may not remove, obscure,
-          or alter any legal notices displayed in or along with our Services.
+          ownership of any intellectual property rights, proprietary or otherwise, in our Services,
+          the Programs or the content you access. You may not use proprietary content from our
+          Services unless you obtain permission from its owner or are otherwise permitted by law.
+          These terms do not grant you the right to use any branding or logos used in our Services.
+          You may not remove, obscure, or alter any legal notices displayed in or along with our
+          Services.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 9. Links
+          }
           9. Links
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1073,6 +1177,9 @@ export default function TermsOfServicePage() {
           through any such site or resource.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 10. Termination and Suspension
+          }
           10. Termination and Suspension
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1090,6 +1197,9 @@ export default function TermsOfServicePage() {
           BENEFICIARIES; ARBITRATION AND CLASS ACTION WAIVER; USE OF SERVICES.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 11. No Third-Party Beneficiaries
+          }
           11. No Third-Party Beneficiaries
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1097,9 +1207,15 @@ export default function TermsOfServicePage() {
           no express or implied third party beneficiaries to the Agreement.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 12. Arbitration and Class Action Waiver
+          }
           12. Arbitration and Class Action Waiver
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.1. Initial Dispute Resolution
+          }
           12.1. Initial Dispute Resolution
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1108,6 +1224,9 @@ export default function TermsOfServicePage() {
           Company.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.2. Binding Arbitration
+          }
           12.2. Binding Arbitration
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1124,6 +1243,9 @@ export default function TermsOfServicePage() {
           venue defenses otherwise available.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.3. No Class Arbitrations, Class Actions or Representative Actions
+          }
           12.3. No Class Arbitrations, Class Actions or Representative Actions
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1138,6 +1260,9 @@ export default function TermsOfServicePage() {
           outside of arbitration, or on behalf of any other individual or group of individuals.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.4. Process
+          }
           12.4. Process
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1158,6 +1283,9 @@ export default function TermsOfServicePage() {
           regarding the Dispute).
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.5. Arbitration
+          }
           12.5. Arbitration
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1170,6 +1298,9 @@ export default function TermsOfServicePage() {
           arbitration agreement shall be the law of England and Wales.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.6. Authority of Arbitral Tribunal
+          }
           12.6. Authority of Arbitral Tribunal
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1179,6 +1310,9 @@ export default function TermsOfServicePage() {
           involving more than one individual.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.7. Rules of the LCIA
+          }
           12.7. Rules of the LCIA
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1193,6 +1327,9 @@ export default function TermsOfServicePage() {
           unfair or should not apply for any reason.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 12.8. Governing law
+          }
           12.8. Governing law
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1201,16 +1338,19 @@ export default function TermsOfServicePage() {
           to conflict of law provisions.
         </Text>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 13. Prohibited Use
+          }
           13. Prohibited Use
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
           You may not use the Site and Services to engage in the following categories of activity
-          (&quot;Prohibited Uses &quot;). The specific types of uses listed below are
-          representative, but not exhaustive. If You are uncertain as to whether or not Your use of
-          the Services involves a Prohibited Use, or have questions about how these requirements
-          apply to You, please contact us at{' '}
-          <Link href="mailto:legal@summer.fi">legal@summer.fi</Link>. By using the Site or Services,
-          you confirm that You will not use the Site or Services to do any of the following:
+          (&quot;Prohibited Uses&quot;). The specific types of uses listed below are representative,
+          but not exhaustive. If You are uncertain as to whether or not Your use of the Services
+          involves a Prohibited Use, or have questions about how these requirements apply to You,
+          please contact us at <Link href="mailto:legal@summer.fi">legal@summer.fi</Link>. By using
+          the Site or Services, you confirm that You will not use the Site or Services to do any of
+          the following:
         </Text>
         <ul className={styles.list}>
           <Text as="li" variant="p2" className={styles.p2}>
@@ -1218,18 +1358,17 @@ export default function TermsOfServicePage() {
             of, any domestic or international law, statute, ordinance, or regulation, sanctions
             programs administered in any relevant country, including but not limited to the U.S.
             Department of Treasury&apos;s Office of Foreign Assets Control (&quot;OFAC&quot;), the
-            UK HM Treasury’s Office of Financial Sanctions Implementation (OFSI), or the EU’s
-            Financial Sanctions Database (FSB), or which would involve proceeds of any unlawful
-            activity; publish, distribute or disseminate any unlawful material or information;
+            UK HM Treasury&apos;s Office of Financial Sanctions Implementation (OFSI), or the
+            EU&apos;s Financial Sanctions Database (FSB), or which would involve proceeds of any
+            unlawful activity; publish, distribute or disseminate any unlawful material or
+            information;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             Engage in any transactions that would violate any applicable law regarding securities,
             commodities, derivatives, or any applicable law, rule, or regulation concerning the
             integrity of trading markets, including but not limited to market manipulation,
             &quot;spoofing&quot; and &quot;wash trading.&quot;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             <strong>Abuse Other Users:</strong> Interfere with another individual&apos;s or
             entity&apos;s access to the Site or use of any Services; defame, abuse, extort, harass,
@@ -1239,14 +1378,12 @@ export default function TermsOfServicePage() {
             against others; harvest or otherwise collect information from the Site about others,
             including without limitation email addresses, without proper consent;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             <strong>Fraud or misrepresentation:</strong> Activity which operates to defraud Company,
             other Users, or any other person; provide any false, inaccurate, or misleading
             information, or misrepresent the truthfulness of any content on the Site or of the
             Services;
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             <strong>Intellectual Property Infringement:</strong> Engage in transactions involving
             items that infringe or violate any copyright, trademark, right of publicity or privacy
@@ -1257,7 +1394,6 @@ export default function TermsOfServicePage() {
             without express consent from Company or in a manner that otherwise harms Company; any
             action that implies an untrue endorsement by or affiliation with Company.
           </Text>
-
           <Text as="li" variant="p2" className={styles.p2}>
             <strong>Illegal Source of Funds:</strong> Use or accessing the Site or Services to
             transmit or exchange Digital Assets that are the direct or indirect proceeds of any
@@ -1273,7 +1409,6 @@ export default function TermsOfServicePage() {
               attempt to disable or circumvent any security or access control mechanism of the Site
               or Services, where applicable;
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               design or assist in designing cheats, exploits, hacks, modes or any other unauthorized
               third-party software to modify or interfere with the Services, with the exception of
@@ -1281,7 +1416,6 @@ export default function TermsOfServicePage() {
               in the ordinary course of using the Services and do not cause disruption or harm to
               the Services;
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               institute, assist or become involved in any type of attack, including distribution of
               a virus, attacks upon the Services or the Site, that prevent access to or use of any
@@ -1289,22 +1423,18 @@ export default function TermsOfServicePage() {
               any of the above, or disrupt any other person&apos;s use or enjoyment of any of the
               above;
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               attempt to, or harass, abuse, or harm of another person or entity, including our
               employees and service providers;
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               impersonate another user or otherwise misrepresent yourself;
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               take any action that imposes an unreasonable or disproportionately large load on our
               infrastructure; or detrimentally interfere with, intercept, or expropriate any system,
               data, or information.
             </Text>
-
             <Text as="li" variant="p2" className={styles.p2}>
               Induce or encourage any third party to engage in any conduct prohibited by this
               Agreement.
@@ -1312,9 +1442,15 @@ export default function TermsOfServicePage() {
           </ul>
         </ul>
         <Text as="h4" variant="h4" style={{ marginTop: 'var(--spacing-space-small)' }}>
+          {
+            // region 14. General Information
+          }
           14. General Information
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.1 Entire Agreement
+          }
           14.1 Entire Agreement
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1328,6 +1464,9 @@ export default function TermsOfServicePage() {
           NO THIRD-PARTY BENEFICIARIES; ARBITRATION AND CLASS ACTION WAIVER; USE OF SERVICES.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.2 Waiver and Severability of the Agreement
+          }
           14.2 Waiver and Severability of the Agreement
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1339,6 +1478,9 @@ export default function TermsOfServicePage() {
           the Agreement shall remain in full force and effect.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.3 Statute of Limitations
+          }
           14.3 Statute of Limitations
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1348,6 +1490,9 @@ export default function TermsOfServicePage() {
           claim or cause of action arose or be forever barred.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.4 Section Titles
+          }
           14.4 Section Titles
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1355,6 +1500,9 @@ export default function TermsOfServicePage() {
           contractual effect.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.5 Privacy and Transparency
+          }
           14.5 Privacy and Transparency
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1379,6 +1527,9 @@ export default function TermsOfServicePage() {
           Services.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.6 Conflict or Inconsistencies
+          }
           14.6 Conflict or Inconsistencies
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1387,6 +1538,9 @@ export default function TermsOfServicePage() {
           Service shall control.
         </Text>
         <Text as="h5" variant="h5">
+          {
+            // region 14.7 Communications
+          }
           14.7 Communications
         </Text>
         <Text as="p" variant="p2" className={styles.p2}>
@@ -1401,19 +1555,6 @@ export default function TermsOfServicePage() {
           connect specific users, including you, to specific contact details, and that Company is
           under no obligation to contact you in relation to your specific User transactions, User
           digital assets, or anything else related to your specific use of the Site or Services.
-        </Text>
-        <Text as="p" variant="p2" className={styles.p2}>
-          As stipulated in the Privacy Policy, incorporated herein by reference, data provided by
-          you in an email to Company will be used only to answer the contact question or to reply to
-          the email in the best possible manner. To the extent Company does, voluntarily and as a
-          gesture of goodwill, use your contact details that you have provided in correspondence
-          with Company in order to contact you, Company does so without creating any obligation to
-          contact you whether specifically regarding your correspondence or more generally.
-        </Text>
-        <Text as="p" variant="p2" className={styles.p2}>
-          Users with questions, complaints or claims with respect to the Services may contact us
-          using the relevant contact information set forth above and at{' '}
-          <Link href="mailto:legal@summer.fi">legal@summer.fi</Link>.
         </Text>
       </div>
     </div>
