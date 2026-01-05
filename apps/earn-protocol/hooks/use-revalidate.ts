@@ -1,34 +1,69 @@
+'use client'
 import { useRouter } from 'next/navigation'
 
-import {
-  serverRevalidateMigrationData,
-  serverRevalidatePositionData,
-  serverRevalidateUser,
-  serverRevalidateVaultsListData,
-} from '@/app/server-handlers/revalidation-handlers'
+import { CACHE_TAGS } from '@/constants/revalidation'
+import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
+
+const fetchRevalidate = async ({
+  tags,
+  paths,
+}: {
+  tags?: (string | undefined)[]
+  paths?: (string | undefined)[]
+}) => {
+  await fetch('/earn/api/revalidate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ tags, paths }),
+  })
+}
+
+export const useRevalidateTags = () => {
+  const { refresh: refreshView } = useRouter()
+
+  const revalidateTags = ({ tags }: { tags: string[] }) => {
+    fetchRevalidate({ tags }).then(() => {
+      refreshView()
+    })
+  }
+
+  return {
+    revalidateTags,
+  }
+}
 
 export const useRevalidateUser = () => {
-  const { refresh } = useRouter()
+  const { refresh: refreshView } = useRouter()
 
-  return async (walletAddress?: string) => {
-    await serverRevalidateUser(walletAddress)
-    refresh()
+  return (walletAddress?: string) => {
+    if (!walletAddress) return
+
+    fetchRevalidate({
+      tags: [getUserDataCacheHandler(walletAddress)],
+    }).then(() => {
+      refreshView()
+    })
   }
 }
 
 export const useRevalidateVaultsListData = () => {
-  const { refresh } = useRouter()
+  const { refresh: refreshView } = useRouter()
 
-  return async () => {
-    await serverRevalidateVaultsListData()
-    refresh()
+  return () => {
+    fetchRevalidate({
+      tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES],
+    }).then(() => {
+      refreshView()
+    })
   }
 }
 
 export const useRevalidatePositionData = () => {
-  const { refresh } = useRouter()
+  const { refresh: refreshView } = useRouter()
 
-  return async ({
+  return ({
     chainName,
     vaultId,
     walletAddress,
@@ -37,16 +72,30 @@ export const useRevalidatePositionData = () => {
     vaultId?: string
     walletAddress?: string
   }) => {
-    await serverRevalidatePositionData(chainName, vaultId, walletAddress)
-    refresh()
+    fetchRevalidate({
+      tags: [
+        CACHE_TAGS.VAULTS_LIST,
+        CACHE_TAGS.INTEREST_RATES,
+        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
+      ],
+      paths:
+        chainName && vaultId
+          ? [`/earn/${chainName}/position/${vaultId}${walletAddress ? `/${walletAddress}` : ''}`]
+          : [],
+    }).then(() => {
+      refreshView()
+    })
   }
 }
 
 export const useRevalidateMigrationData = () => {
-  const { refresh } = useRouter()
+  const { refresh: refreshView } = useRouter()
 
-  return async (walletAddress?: string) => {
-    await serverRevalidateMigrationData(walletAddress)
-    refresh()
+  return () => {
+    fetchRevalidate({
+      tags: [CACHE_TAGS.MIGRATION_DATA],
+    }).then(() => {
+      refreshView()
+    })
   }
 }
