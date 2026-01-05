@@ -31,10 +31,6 @@ export const usersAdminPanelColumns = [
     accessor: 'id',
   },
   {
-    label: 'Sub',
-    accessor: 'userSub',
-  },
-  {
     label: 'User name',
     accessor: 'cognitoUserName',
   },
@@ -45,10 +41,6 @@ export const usersAdminPanelColumns = [
   {
     label: 'Email',
     accessor: 'cognitoEmail',
-  },
-  {
-    label: 'Institution',
-    accessor: 'institutionId',
   },
   {
     label: 'Role',

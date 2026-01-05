@@ -83,7 +83,7 @@ const AdminsList = ({
                                 <Button variant="textPrimarySmall">Edit</Button>
                               </Link>
                               <Link href={`/admin/global-admins/${row.id}/delete`}>
-                                <Button variant="textPrimarySmall">Delete</Button>
+                                <Button variant="textSecondarySmall">Delete</Button>
                               </Link>
                             </>
                           )}

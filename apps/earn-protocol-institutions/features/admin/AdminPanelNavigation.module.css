@@ -3,17 +3,17 @@
   flex-direction: row;
   gap: 20px;
   align-items: center;
+  justify-content: space-between;
 }
 
 .links {
-  width: 100%;
   display: flex;
   flex-direction: row;
   gap: 20px;
   justify-content: space-between;
   align-items: center;
 
-  >div {
+  > div {
     display: flex;
     align-items: center;
     flex-direction: row;

@@ -33,11 +33,11 @@
   width: 100%;
 }
 
-.formField input[type="file"] {
+.formField input[type='file'] {
   max-width: 200px;
 }
 
-.formField input:not([type="file"]),
+.formField input:not([type='file']),
 .formField select {
   border: 1px solid rgba(150, 150, 150, 0.2);
   background-color: rgba(20, 20, 20, 0.5);
@@ -64,32 +64,81 @@
 
 .tableContainer {
   overflow-x: auto;
+  border-radius: 12px;
+  background: rgba(20, 20, 20, 0.3);
+  border: 1px solid rgba(150, 150, 150, 0.15);
 }
 
 .table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
 }
 
 .tableHeader {
   text-align: left;
-  border-bottom: 1px solid #ddd;
-  padding: 8px;
+  border-bottom: 1px solid rgba(150, 150, 150, 0.2);
+  padding: 16px 20px;
   font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tableHeader:first-child {
+  border-top-left-radius: 12px;
+}
+
+.tableHeader:last-child {
+  border-top-right-radius: 12px;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
 }
 
 .tableCell {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 8px;
+  border-bottom: 1px solid rgba(150, 150, 150, 0.1);
+  padding: 16px 20px;
   vertical-align: middle;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
+  font-size: 14px;
+}
+
+.table tbody tr:last-child .tableCell {
+  border-bottom: none;
 }
 
 .tableCellContent {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+.monospace {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .adminPanelUsers {

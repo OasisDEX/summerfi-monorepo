@@ -74,55 +74,96 @@ const UsersList = ({
 }: {
   users: Awaited<ReturnType<typeof rootAdminActionGetUsersList>>['users']
 }) => {
+  // Group users by institution
+  const usersByInstitution = users.reduce<{
+    [key: string]: { institutionName: string; users: typeof users }
+  }>((acc, user) => {
+    const institutionKey = user.institutionId
+    const institutionName = user.institutionDisplayName ?? 'Unassigned'
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!acc[institutionKey]) {
+      acc[institutionKey] = {
+        institutionName,
+        users: [],
+      }
+    }
+    acc[institutionKey].users.push(user)
+
+    return acc
+  }, {})
+
   return (
     <div className={styles.usersSection}>
       {users.length === 0 ? (
-        <Text>No users found.</Text>
+        <Card variant="cardGradientDark">
+          <Text>No users found.</Text>
+        </Card>
       ) : (
-        <div className={styles.tableContainer}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {usersAdminPanelColumns.map((col) => (
-                  <th key={col.accessor} className={styles.tableHeader}>
-                    {col.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((row) => {
-                const key = `${row.userSub}-${row.id}`
+        <>
+          {Object.entries(usersByInstitution).map(
+            ([institutionId, { institutionName, users: institutionUsers }]) => (
+              <div className={styles.usersSection} key={institutionId}>
+                <Text variant="h4">{institutionName}</Text>
+                <div className={styles.tableContainer}>
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        {usersAdminPanelColumns.map((col) => (
+                          <th key={col.accessor} className={styles.tableHeader}>
+                            {col.label}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {institutionUsers.map((row) => {
+                        const key = `${row.userSub}-${row.id}`
 
-                return (
-                  <tr key={key}>
-                    {usersAdminPanelColumns.map(({ accessor }) => (
-                      <td key={accessor} className={styles.tableCell}>
-                        <div className={styles.tableCellContent}>
-                          {accessor === 'institutionId' && row.institutionDisplayName}
-                          {accessor === 'actions' && (
-                            <>
-                              <Link href={`/admin/users/${row.id}/edit`}>
-                                <Button variant="textPrimarySmall">Edit</Button>
-                              </Link>
-                              <Link href={`/admin/users/${row.id}/delete`}>
-                                <Button variant="textPrimarySmall">Delete</Button>
-                              </Link>
-                            </>
-                          )}
-                          {institutionsAdminPanelDisplayRow(
-                            (row as { [key: string]: unknown })[accessor],
-                            accessor,
-                          )}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+                        return (
+                          <tr key={key}>
+                            {usersAdminPanelColumns.map(({ accessor }) => (
+                              <td key={accessor} className={styles.tableCell}>
+                                <div className={styles.tableCellContent}>
+                                  {accessor === 'actions' && (
+                                    <div className={styles.actions}>
+                                      <Link href={`/admin/users/${row.id}/edit`}>
+                                        <Button variant="textPrimarySmall">Edit</Button>
+                                      </Link>
+                                      <Link href={`/admin/users/${row.id}/delete`}>
+                                        <Button variant="textSecondarySmall">Delete</Button>
+                                      </Link>
+                                    </div>
+                                  )}
+                                  {accessor !== 'institutionId' && accessor !== 'actions' && (
+                                    <span
+                                      className={
+                                        accessor === 'id' ||
+                                        accessor === 'userSub' ||
+                                        accessor === 'email'
+                                          ? styles.monospace
+                                          : ''
+                                      }
+                                    >
+                                      {institutionsAdminPanelDisplayRow(
+                                        (row as { [key: string]: unknown })[accessor],
+                                        accessor,
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                            ))}
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ),
+          )}
+        </>
       )}
     </div>
   )

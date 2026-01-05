@@ -101,17 +101,26 @@ const InstitutionsListTable = ({
                       return (
                         <td key={accessor} className={styles.tableTd}>
                           <div className={styles.tableTdContent}>
-                            {accessor === 'displayName' && logo && (
-                              <Image
-                                src={logo}
-                                alt={institutionsAdminPanelDisplayRow(
-                                  (row as { [key: string]: unknown })[accessor],
-                                )}
-                                className={styles.logo}
-                                width={32}
-                                height={32}
-                              />
-                            )}
+                            {accessor === 'displayName' ? (
+                              logo ? (
+                                <Image
+                                  src={logo}
+                                  alt={institutionsAdminPanelDisplayRow(
+                                    (row as { [key: string]: unknown })[accessor],
+                                  )}
+                                  className={styles.logo}
+                                  width={32}
+                                  height={32}
+                                />
+                              ) : (
+                                <div
+                                  style={{
+                                    width: 32,
+                                    height: 32,
+                                  }}
+                                />
+                              )
+                            ) : null}
                             {accessor === 'displayName' && !logo && row.logoUrl && (
                               <Image
                                 src={row.logoUrl}
@@ -123,20 +132,30 @@ const InstitutionsListTable = ({
                                 height={32}
                               />
                             )}
-                            {accessor === 'users' && row[accessor].length}
+                            {accessor === 'users' && (
+                              <span className={styles.monospace}>{row[accessor].length}</span>
+                            )}
                             {accessor === 'actions' && (
-                              <>
+                              <div className={styles.actions}>
                                 <Link href={`/admin/institutions/${row.id}/edit`}>
                                   <Button variant="textPrimarySmall">Edit</Button>
                                 </Link>
                                 <Link href={`/admin/institutions/${row.id}/delete`}>
-                                  <Button variant="textPrimarySmall">Delete</Button>
+                                  <Button variant="textSecondarySmall">Delete</Button>
                                 </Link>
-                              </>
+                              </div>
                             )}
-                            {institutionsAdminPanelDisplayRow(
-                              (row as { [key: string]: unknown })[accessor],
-                              accessor,
+                            {accessor !== 'users' && accessor !== 'actions' && (
+                              <span
+                                className={
+                                  accessor === 'id' || accessor === 'name' ? styles.monospace : ''
+                                }
+                              >
+                                {institutionsAdminPanelDisplayRow(
+                                  (row as { [key: string]: unknown })[accessor],
+                                  accessor,
+                                )}
+                              </span>
                             )}
                           </div>
                         </td>
