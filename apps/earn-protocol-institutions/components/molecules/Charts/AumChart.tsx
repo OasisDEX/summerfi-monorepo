@@ -44,7 +44,7 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
               margin={{
                 top: 20,
                 right: 20,
-                left: 10,
+                left: 20,
                 bottom: 10,
               }}
               dataKey="netValue"
