@@ -225,7 +225,9 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const withToggleButton = filteredPositions.length > 1 && !!positionId
 
   const handleUserRefresh = () => {
-    revalidateMigrationData(walletAddress)
+    revalidateMigrationData({
+      walletAddress,
+    })
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)

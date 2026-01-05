@@ -91,9 +91,12 @@ export const useRevalidatePositionData = () => {
 export const useRevalidateMigrationData = () => {
   const { refresh: refreshView } = useRouter()
 
-  return () => {
+  return ({ walletAddress }: { walletAddress?: string }) => {
     fetchRevalidate({
-      tags: [CACHE_TAGS.MIGRATION_DATA],
+      tags: [
+        CACHE_TAGS.MIGRATION_DATA,
+        walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
+      ],
     }).then(() => {
       refreshView()
     })
