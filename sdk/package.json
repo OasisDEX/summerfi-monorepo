@@ -14,9 +14,9 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.44.1",
     "aws-cdk-lib": "2.132.1",
-    "bignumber.js": "^9.3.0",
+    "bignumber.js": "^9.3.1",
     "sst": "2.48.5",
-    "viem": "2.29.2",
+    "viem": "2.43.5",
     "zod": "3.25.61",
     "zx": "^8.5.4"
   },

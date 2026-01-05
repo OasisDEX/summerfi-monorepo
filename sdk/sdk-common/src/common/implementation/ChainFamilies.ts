@@ -1,69 +1,62 @@
-import {
-  ArbitrumChainNames,
-  BaseChainNames,
-  ChainFamilyName,
-  EthereumChainNames,
-  OptimismChainNames,
-  SonicChainNames,
-} from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
 import { ChainIds, LegacyChainIds } from './ChainIds'
 import type { ChainId } from '../types/ChainId'
 
+// Make sure the names are unique
+
+// TODO: rethink the family enums / hierachy if we need to separate them into separate familiites or independant list of chains
+export enum ChainFamilyName {
+  Ethereum = 'Ethereum',
+  Arbitrum = 'Arbitrum',
+  Optimism = 'Optimism',
+  Base = 'Base',
+  Sonic = 'Sonic',
+  HyperEvm = 'HyperEvm',
+}
+
 /**
  * Chain definition per family
  */
-const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
-  [EthereumChainNames.Mainnet]: ChainInfo.createFrom({
+const EthereumFamily: Record<'Mainnet', ChainInfo> = {
+  ['Mainnet']: ChainInfo.createFrom({
     chainId: ChainIds.Mainnet,
-    name: EthereumChainNames.Mainnet,
+    name: 'Mainnet',
   }),
 }
 
-const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
-  [ArbitrumChainNames.ArbitrumOne]: ChainInfo.createFrom({
+const ArbitrumFamily: Record<'ArbitrumOne', ChainInfo> = {
+  ['ArbitrumOne']: ChainInfo.createFrom({
     chainId: ChainIds.ArbitrumOne,
-    name: ArbitrumChainNames.ArbitrumOne,
+    name: 'ArbitrumOne',
   }),
 }
 
-const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
-  [OptimismChainNames.Optimism]: ChainInfo.createFrom({
+const OptimismFamily: Record<'Optimism', ChainInfo> = {
+  ['Optimism']: ChainInfo.createFrom({
     chainId: LegacyChainIds.Optimism as ChainId,
-    name: OptimismChainNames.Optimism,
+    name: 'Optimism',
   }),
 }
 
-const BaseFamily: Record<BaseChainNames, ChainInfo> = {
-  [BaseChainNames.Mainnet]: ChainInfo.createFrom({
+const BaseFamily: Record<'Base', ChainInfo> = {
+  ['Base']: ChainInfo.createFrom({
     chainId: ChainIds.Base,
-    name: BaseChainNames.Mainnet,
+    name: 'Base',
   }),
 }
 
-const SonicFamily: Record<SonicChainNames, ChainInfo> = {
-  [SonicChainNames.Sonic]: ChainInfo.createFrom({
+const SonicFamily: Record<'Sonic', ChainInfo> = {
+  ['Sonic']: ChainInfo.createFrom({
     chainId: ChainIds.Sonic,
-    name: SonicChainNames.Sonic,
+    name: 'Sonic',
   }),
 }
 
-/**
- * Complex type to allow Typescript to figure out the type of the value when
- * using a ChainFamilyName as a key
- */
-export type ChainFamily = {
-  [key in ChainFamilyName]: key extends ChainFamilyName.Ethereum
-    ? typeof EthereumFamily
-    : key extends ChainFamilyName.Arbitrum
-      ? typeof ArbitrumFamily
-      : key extends ChainFamilyName.Optimism
-        ? typeof OptimismFamily
-        : key extends ChainFamilyName.Base
-          ? typeof BaseFamily
-          : key extends ChainFamilyName.Sonic
-            ? typeof SonicFamily
-            : never
+const HyperEvmFamily: Record<'HyperEvm', ChainInfo> = {
+  ['HyperEvm']: ChainInfo.createFrom({
+    chainId: ChainIds.HyperEvm,
+    name: 'HyperEvm',
+  }),
 }
 
 /**
@@ -71,12 +64,13 @@ export type ChainFamily = {
  * @description A map of chain family names to chain families. It can be used to
  *              retrieve the ChainId of a chain family + chain combination
  */
-export const ChainFamilyMap: ChainFamily = {
+export const ChainFamilyMap = {
   [ChainFamilyName.Ethereum]: EthereumFamily,
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
   [ChainFamilyName.Sonic]: SonicFamily,
+  [ChainFamilyName.HyperEvm]: HyperEvmFamily,
 }
 
 export type ChainFamilyInfo = {

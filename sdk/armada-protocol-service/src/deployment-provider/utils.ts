@@ -1,14 +1,7 @@
-import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
+import { chainIdToGraphChain, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { getDeploymentsJsonConfig } from '@summerfi/armada-protocol-common'
 import type { DeploymentProviderConfig } from './DeploymentProviderConfig'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
-
-const chainIdToNetwork = {
-  [ChainIds.Base]: 'base',
-  [ChainIds.ArbitrumOne]: 'arbitrum',
-  [ChainIds.Mainnet]: 'mainnet',
-  [ChainIds.Sonic]: 'sonic',
-} as const
 
 export async function fetchInstiDeploymentProviderConfig(
   subgraphManager: IArmadaSubgraphManager,
@@ -47,18 +40,20 @@ export const fetchPublicDeploymentProviderConfig = (
   }
 
   const config: DeploymentProviderConfig[] = deployedChainIds.map((chainId) => {
+    const jsonConfigKey = chainIdToGraphChain(chainId)
+
     return {
       chainId,
       active: true,
       contracts: {
-        harborCommand: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core.harborCommand
+        harborCommand: jsonConfig[jsonConfigKey].deployedContracts.core.harborCommand
           .address as AddressValue,
-        admiralsQuarters: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core
-          .admiralsQuarters.address as AddressValue,
-        configurationManager: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.core
-          .configurationManager.address as AddressValue,
-        protocolAccessManager: jsonConfig[chainIdToNetwork[chainId]].deployedContracts.gov
-          .protocolAccessManager.address as AddressValue,
+        admiralsQuarters: jsonConfig[jsonConfigKey].deployedContracts.core.admiralsQuarters
+          .address as AddressValue,
+        configurationManager: jsonConfig[jsonConfigKey].deployedContracts.core.configurationManager
+          .address as AddressValue,
+        protocolAccessManager: jsonConfig[jsonConfigKey].deployedContracts.gov.protocolAccessManager
+          .address as AddressValue,
       },
     }
   })

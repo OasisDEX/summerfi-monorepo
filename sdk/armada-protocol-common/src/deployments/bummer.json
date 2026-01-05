@@ -574,5 +574,107 @@
         }
       }
     }
+  },
+  "hyperEvm": {
+    "deployedContracts": {
+      "gov": {
+        "summerGovernor": {
+          "address": "0x9b499816Fdc6541821cc5789D7115EBf0Bb92768"
+        },
+        "summerToken": {
+          "address": "0xe8e6e06F9D33C4030e24b98ca7b000B76DF74845"
+        },
+        "timelock": {
+          "address": "0x363139edCB1994E6f9f928CEB33b431E9Db53ac5"
+        },
+        "protocolAccessManager": {
+          "address": "0xA55cd6a6D882180E84DDb25F7c7Ae4e4Af0f3f27"
+        },
+        "rewardsRedeemer": {
+          "address": "0x3E516345E8B212E35c8fDEbcf74360d765Be78e4"
+        }
+      },
+      "buyAndBurn": {
+        "buyAndBurn": {
+          "address": "0x0000000000000000000000000000000000000000"
+        }
+      },
+      "core": {
+        "tipJar": {
+          "address": "0xA6a157F7d344209D54D82a7EFF17466032b847Ea"
+        },
+        "raft": {
+          "address": "0x702C4114eB8bB23Dd1432bb12Ac51B9cD5C7826f"
+        },
+        "configurationManager": {
+          "address": "0x3714C1D845e7137f144902A19828124c388e8Ffb"
+        },
+        "harborCommand": {
+          "address": "0x5de028b0ED0F1B5A81636eB97445236C6b4b2523"
+        },
+        "admiralsQuarters": {
+          "address": "0xAaB08AB98c93696665454b8C0a6eF8C2cd0206eF"
+        },
+        "fleetCommanderRewardsManagerFactory": {
+          "address": "0xB3be2a9bF327a201D2BEFa3172B5E6aC2671B80b"
+        }
+      }
+    },
+    "tokens": {
+      "usdce": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+      "dai": "0x0000000000000000000000000000000000000000",
+      "weth": "0x50c42dEAcD8Fc9773493ED674b675bE577f2634b",
+      "usds": "0x0000000000000000000000000000000000000000",
+      "stakedUsds": "0x0000000000000000000000000000000000000000",
+      "usdt": "0x6047828dc181963ba44974801FF68e538dA5eaF9"
+    },
+    "common": {
+      "chainId": "146",
+      "initialSupply": "0",
+      "swapProvider": "0x111111125421ca6dc452d289314280a0f8842a65",
+      "tipRate": "100",
+      "layerZero": {
+        "lzEndpoint": "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
+        "eID": "30332",
+        "lzExecutor": "0x4208D6E27538189bB48E603D6123A94b8Abe0A0b",
+        "sendUln302": "0xC39161c743D0307EB9BCc9FEF03eeb9Dc4802de7",
+        "receiveUln302": "0xe1844c5D63a9543023008D332Bd3d2e6f1FE1043",
+        "blockedMessageLib": "0xc1ce56b2099ca68720592583c7984cab4b6d7e7a",
+        "lzDeadDVN": "",
+        "dvns": {
+          "base": {
+            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
+            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
+          },
+          "arbitrum": {
+            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
+            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
+          },
+          "mainnet": {
+            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
+            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
+          }
+        }
+      }
+    },
+    "protocolSpecific": {
+      "aaveV3": {
+        "pool": "0x5362dBb1e601abF3a4c14c22ffEdA64042E5eAA3",
+        "rewards": "0x24bD6e9ca54F1737467DEf82dCA9702925B3Aa59"
+      },
+      "erc4626": {
+        "usdc": {},
+        "dai": {},
+        "usde": {},
+        "usdt": {},
+        "usdce": {
+          "Euler_MEV_Capital": "0x196F3C7443E940911EE2Bb88e019Fd71400349D9",
+          "Euler_Re7_Labs": "0x3D9e5462A940684073EED7e4a13d19AE0Dcd13bc"
+        },
+        "weth": {
+          "Euler_MEV_Capital": "0xa5cd24d9792F4F131f5976Af935A505D19c8Db2b"
+        }
+      }
+    }
   }
 }
