@@ -1,6 +1,6 @@
 import { ChainId } from '@summerfi/serverless-shared'
 
-export type DbNetworks = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
+export type DbNetworks = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic' | 'hyperliquid'
 
 const dbNetworkToChainId: Record<DbNetworks, ChainId> = {
   arbitrum: ChainId.ARBITRUM,
@@ -8,6 +8,7 @@ const dbNetworkToChainId: Record<DbNetworks, ChainId> = {
   base: ChainId.BASE,
   mainnet: ChainId.MAINNET,
   sonic: ChainId.SONIC,
+  hyperliquid: ChainId.HYPERLIQUID,
 }
 
 export function mapDbNetworkToChainId(network: DbNetworks): ChainId {

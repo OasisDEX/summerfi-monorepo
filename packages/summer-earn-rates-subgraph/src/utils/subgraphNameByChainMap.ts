@@ -5,4 +5,5 @@ export const subgraphNameByChainMap: Partial<Record<ChainId, string>> = {
   [ChainId.ARBITRUM]: 'summer-earn-protocol-rates-arbitrum',
   [ChainId.MAINNET]: 'summer-earn-protocol-rates',
   [ChainId.SONIC]: 'summer-earn-protocol-rates-sonic',
+  [ChainId.HYPERLIQUID]: 'summer-earn-protocol-rates-hyperliquid',
 }

@@ -139,6 +139,7 @@ function getRpcUrl(chainId: ChainId): string {
     [ChainId.BASE]: 'base',
     [ChainId.SEPOLIA]: 'sepolia',
     [ChainId.SONIC]: 'sonic',
+    [ChainId.HYPERLIQUID]: 'hyperliquid',
   }[chainId]
 
   if (!networkName) {
