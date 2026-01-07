@@ -1,4 +1,4 @@
-import { ChainIds, type AddressValue, type HexData } from '@summerfi/sdk-common'
+import { ChainIds, type AddressValue, type ChainId, type HexData } from '@summerfi/sdk-common'
 
 if (!process.env.E2E_SDK_API_URL) {
   throw new Error('Missing E2E_SDK_API_URL')
@@ -26,6 +26,9 @@ if (!process.env.E2E_SDK_FORK_URL_ARBITRUM) {
 }
 if (!process.env.E2E_SDK_FORK_URL_SONIC) {
   throw new Error('Missing E2E_SDK_FORK_URL_SONIC')
+}
+if (!process.env.E2E_SDK_FORK_URL_HYPERLIQUID) {
+  throw new Error('Missing E2E_SDK_FORK_URL_HYPERLIQUID')
 }
 
 export const RpcUrls = {
@@ -70,6 +73,13 @@ export const SharedConfig = {
   governorPrivateKey: process.env.E2E_USER_PRIVATE_KEY as HexData,
 } as const
 
+export type ChainConfig = {
+  rpcUrl: string
+  chainId: ChainId
+  fleetAddressValue: AddressValue
+  symbol: string
+}
+
 export const TestConfigs = {
   BaseWETH: {
     rpcUrl: RpcUrls.Base,
@@ -101,7 +111,14 @@ export const TestConfigs = {
     fleetAddressValue: FleetAddresses.Sonic.USDC,
     symbol: 'USDC',
   },
-}
+  HyperliquidUSDC: {
+    rpcUrl: RpcUrls.Hyperliquid,
+    chainId: ChainIds.Hyperliquid,
+    fleetAddressValue: FleetAddresses.Hyperliquid.USDC,
+    symbol: 'USDC',
+  },
+} satisfies Record<string, ChainConfig>
+
 export type TestConfigKey = keyof typeof TestConfigs
 export const TestConfigKeys: TestConfigKey[] = Object.keys(TestConfigs) as TestConfigKey[]
 
