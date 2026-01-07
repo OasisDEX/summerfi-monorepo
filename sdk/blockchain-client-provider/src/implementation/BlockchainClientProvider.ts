@@ -3,12 +3,7 @@ import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import {
-  LegacyChainIds,
-  ChainIds,
-  type IChainInfo,
-  chainIdToGraphChain,
-} from '@summerfi/sdk-common'
+import { type IChainInfo, chainIdToGraphChain } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
