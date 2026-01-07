@@ -5,7 +5,7 @@ import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 export const hyperEvm = defineChain({
   id: 999,
   name: 'HyperEVM',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  nativeCurrency: { name: 'Hyperliquid', symbol: 'HYPE', decimals: 18 },
   rpcUrls: {
     default: { http: ['https://rpc.hypurrscan.io'] },
   },
