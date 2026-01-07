@@ -91,8 +91,7 @@ export async function makeSignIn({
     },
   })
 
-  const viemChain: ViemChain =
-    domainChainIdToViemChain[body.chainId as unknown as SupportedNetworkIds]
+  const viemChain: ViemChain = domainChainIdToViemChain[body.chainId]
 
   const client: PublicClient = createPublicClient({
     chain: viemChain,

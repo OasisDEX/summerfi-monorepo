@@ -26,7 +26,6 @@ const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.ARBITRUM]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.BASE]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.SONIC]: '0x4e0037f487bBb588bf1B7a83BDe6c34FeD6099e3',
-  [ChainId.HYPERLIQUID]: '0x00000000000000000000000000000000000000000', // Placeholder
 }
 
 const logger = new Logger({ serviceName: 'get-protocol-info-function' })
