@@ -53,6 +53,7 @@ const weETH_eETH_map: Record<ChainId, Address[]> = {
   [ChainId.BASE]: ['0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A'],
   [ChainId.SEPOLIA]: [],
   [ChainId.SONIC]: [],
+  [ChainId.HYPERLIQUID]: [],
 }
 
 export interface ResponseBodyItem {
