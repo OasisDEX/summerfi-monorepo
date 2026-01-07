@@ -1095,7 +1095,7 @@ export const StaticTokensData: TokenListData = {
       address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       symbol: 'HYPE',
       decimals: 18,
-      chainId: ChainIds.HyperEvm,
+      chainId: ChainIds.Hyperliquid,
       logoURI: '',
     },
     {

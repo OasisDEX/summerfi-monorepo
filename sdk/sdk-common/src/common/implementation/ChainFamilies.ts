@@ -11,7 +11,7 @@ export enum ChainFamilyName {
   Optimism = 'Optimism',
   Base = 'Base',
   Sonic = 'Sonic',
-  HyperEvm = 'HyperEvm',
+  Hyperliquid = 'Hyperliquid',
 }
 
 /**
@@ -52,10 +52,10 @@ const SonicFamily: Record<'Sonic', ChainInfo> = {
   }),
 }
 
-const HyperEvmFamily: Record<'HyperEvm', ChainInfo> = {
-  ['HyperEvm']: ChainInfo.createFrom({
-    chainId: ChainIds.HyperEvm,
-    name: 'HyperEvm',
+const HyperEvmFamily: Record<'Hyperliquid', ChainInfo> = {
+  ['Hyperliquid']: ChainInfo.createFrom({
+    chainId: ChainIds.Hyperliquid,
+    name: 'Hyperliquid',
   }),
 }
 
@@ -70,7 +70,7 @@ export const ChainFamilyMap = {
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
   [ChainFamilyName.Sonic]: SonicFamily,
-  [ChainFamilyName.HyperEvm]: HyperEvmFamily,
+  [ChainFamilyName.Hyperliquid]: HyperEvmFamily,
 }
 
 export type ChainFamilyInfo = {

@@ -8,7 +8,7 @@ const keyMap: Record<ChainId, GraphChain> = {
   [ChainIds.Base]: 'base',
   [ChainIds.ArbitrumOne]: 'arbitrum',
   [ChainIds.Sonic]: 'sonic',
-  [ChainIds.HyperEvm]: 'hyperliquid',
+  [ChainIds.Hyperliquid]: 'hyperliquid',
 }
 
 export const chainIdToGraphChain = (chainId: number) => {
