@@ -87,7 +87,13 @@ const YourLockedSumrPositionsCards = ({
 
   const nextUnlockStake = useMemo(() => {
     const sortedStakes = stakes
-      ?.filter((stake) => stake.amount > 0n && stake.lockupPeriod > 0n)
+      ?.filter((stake) => {
+        const isUnlocked =
+          Number(stake.lockupPeriod) === 0 ||
+          dayjs.unix(Number(stake.lockupEndTime)).isBefore(dayjs())
+
+        return stake.amount > 0n && stake.lockupPeriod > 0n && !isUnlocked
+      })
       .sort((a, b) => {
         return Number(a.lockupEndTime - b.lockupEndTime)
       })
