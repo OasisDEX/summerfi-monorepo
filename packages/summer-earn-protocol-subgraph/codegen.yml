@@ -1,5 +1,5 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+schema: '${SUBGRAPH_BASE}/summer-protocol-hyperliquid'
 documents: './src/**/*.graphql'
 generates:
   src/generated/client.ts:

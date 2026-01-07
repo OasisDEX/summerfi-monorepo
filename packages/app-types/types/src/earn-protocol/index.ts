@@ -375,7 +375,7 @@ export enum SupportedSDKNetworks {
   Base = Network.Base,
   ArbitrumOne = Network.ArbitrumOne,
   SonicMainnet = Network.SonicMainnet,
-  Hyperliquid = Network.Hyperliquid,
+  Hyperliquid = Network.Hyperevm,
 }
 
 export interface FleetRate {
