@@ -6,6 +6,7 @@ const mainnetRpc = getRpcGatewayUrl(NetworkNames.ethereumMainnet)
 const arbitrumMainnetRpc = getRpcGatewayUrl(NetworkNames.arbitrumMainnet)
 const baseMainnetRpc = getRpcGatewayUrl(NetworkNames.baseMainnet)
 const sonicMainnetRpc = getRpcGatewayUrl(NetworkNames.sonicMainnet)
+const hyperliquidRpc = getRpcGatewayUrl(NetworkNames.hyperliquid)
 
 // use this ONLY server side so it doesnt leak to the client
 export const SDKChainIdToSSRRpcGatewayMap = {
@@ -13,4 +14,5 @@ export const SDKChainIdToSSRRpcGatewayMap = {
   [SupportedNetworkIds.Base]: baseMainnetRpc,
   [SupportedNetworkIds.Mainnet]: mainnetRpc,
   [SupportedNetworkIds.SonicMainnet]: sonicMainnetRpc,
+  [SupportedNetworkIds.Hyperliquid]: hyperliquidRpc,
 }

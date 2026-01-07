@@ -195,7 +195,13 @@ export type VaultApyData = {
   sma30d: number | null
 }
 
-export type EarnProtocolDbNetwork = 'arbitrum' | 'optimism' | 'base' | 'mainnet' | 'sonic'
+export type EarnProtocolDbNetwork =
+  | 'arbitrum'
+  | 'optimism'
+  | 'base'
+  | 'mainnet'
+  | 'sonic'
+  | 'hyperliquid'
 
 // Define a new type for transactions that includes an `executed` property
 export type TransactionWithStatus = (
@@ -361,6 +367,7 @@ export enum SupportedNetworkIds {
   Base = NetworkIds.BASEMAINNET,
   ArbitrumOne = NetworkIds.ARBITRUMMAINNET,
   SonicMainnet = NetworkIds.SONICMAINNET,
+  Hyperliquid = NetworkIds.HYPERLIQUID,
 }
 
 export enum SupportedSDKNetworks {
@@ -368,6 +375,7 @@ export enum SupportedSDKNetworks {
   Base = Network.Base,
   ArbitrumOne = Network.ArbitrumOne,
   SonicMainnet = Network.SonicMainnet,
+  Hyperliquid = Network.Hyperliquid,
 }
 
 export interface FleetRate {

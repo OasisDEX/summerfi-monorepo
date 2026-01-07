@@ -8,7 +8,7 @@ import {
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
-import { sonic } from 'viem/chains'
+import { hyperliquid, sonic } from 'viem/chains'
 import { safe } from 'wagmi/connectors'
 
 export const queryClient: QueryClient = new QueryClient()
@@ -27,6 +27,7 @@ export const SDKChainIdToAAChainMap: {
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.Mainnet]: mainnet,
+  [SupportedNetworkIds.Hyperliquid]: hyperliquid,
   [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
 }
 
@@ -35,6 +36,7 @@ const GasSponsorshipIdMap = {
   [SupportedNetworkIds.ArbitrumOne]: '99eeab13-6d37-4f9e-adf6-d59cd8060d7f',
   [SupportedNetworkIds.Mainnet]: undefined,
   [SupportedNetworkIds.SonicMainnet]: undefined,
+  [SupportedNetworkIds.Hyperliquid]: undefined,
 }
 
 const uiConfigDefault: AlchemyAccountsUIConfig = {
@@ -102,6 +104,7 @@ export const getAccountKitConfig = ({
         [SupportedNetworkIds.ArbitrumOne]: arbitrum,
         [SupportedNetworkIds.Base]: base,
         [SupportedNetworkIds.Mainnet]: mainnet,
+        [SupportedNetworkIds.Hyperliquid]: hyperliquid,
         [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({

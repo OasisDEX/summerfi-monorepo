@@ -1,5 +1,5 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
-import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
+import { arbitrum, base, mainnet, optimism, sonic, hyperliquid } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
@@ -37,6 +37,7 @@ export function getRpcGatewayEndpoint(
     [LegacyChainIds.Optimism]: 'optimism',
     [ChainIds.Base]: 'base',
     [ChainIds.Sonic]: 'sonic',
+    [ChainIds.Hyperliquid]: 'hyperliquid',
   }
   const network = NetworkByChainID[chainId]
   if (!network) {
@@ -65,7 +66,7 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-    this._loadClients([mainnet, optimism, arbitrum, base, sonic])
+    this._loadClients([mainnet, optimism, arbitrum, base, sonic, hyperliquid])
   }
 
   /** PUBLIC */
