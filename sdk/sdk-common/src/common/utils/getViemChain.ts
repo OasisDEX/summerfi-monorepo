@@ -1,13 +1,19 @@
 import type { ChainId } from '@summerfi/sdk-common'
-import { extractChain, type Chain } from 'viem'
+import { defineChain, extractChain } from 'viem'
 import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
 
-export const hyperEvm = {
+export const hyperEvm = defineChain({
   id: 999,
   name: 'HyperEVM',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://eth.merkle.io'] },
+    default: { http: ['https://rpc.hypurrscan.io'] },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Hyperliquid Explorer',
+      url: 'https://hyperevmscan.io/',
+    },
   },
   contracts: {
     ensRegistry: {
@@ -22,7 +28,7 @@ export const hyperEvm = {
       blockCreated: 14353601,
     },
   },
-} as const satisfies Chain
+})
 
 export const getViemChain = (chainId: ChainId) => {
   return extractChain({
