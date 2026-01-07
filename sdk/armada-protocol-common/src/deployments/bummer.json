@@ -575,23 +575,46 @@
       }
     }
   },
-  "hyperEvm": {
+  "hyperliquid": {
     "deployedContracts": {
       "gov": {
         "summerGovernor": {
-          "address": "0x9b499816Fdc6541821cc5789D7115EBf0Bb92768"
+          "address": "0x0000000000000000000000000000000000000000"
         },
         "summerToken": {
-          "address": "0xe8e6e06F9D33C4030e24b98ca7b000B76DF74845"
+          "address": "0x72c527d3efDe2169AA950EFc9573C838cf125D21"
         },
         "timelock": {
-          "address": "0x363139edCB1994E6f9f928CEB33b431E9Db53ac5"
+          "address": "0x244c6EFC140b9cC4D69d3bf4d9137Dc4195Be86c"
         },
         "protocolAccessManager": {
-          "address": "0xA55cd6a6D882180E84DDb25F7c7Ae4e4Af0f3f27"
+          "address": "0x38fB5a7fa70103dCd9e8A969f3975A77E0fE755f"
         },
         "rewardsRedeemer": {
-          "address": "0x3E516345E8B212E35c8fDEbcf74360d765Be78e4"
+          "address": "0x0000000000000000000000000000000000000000"
+        },
+        "oazoSummerRewardsRedeemer": {
+          "address": "0x0000000000000000000000000000000000000000"
+        }
+      },
+      "govV2": {
+        "summerGovernor": {
+          "address": "0x0398DA19EBb8F5DEcdc2E78465c2ef4F2412233b"
+        },
+        "summerGovernanceToken": {
+          "address": "0x0000000000000000000000000000000000000000"
+        },
+        "timelock": {
+          "address": "0x244c6EFC140b9cC4D69d3bf4d9137Dc4195Be86c"
+        },
+        "protocolAccessManager": {
+          "address": "0x38fB5a7fa70103dCd9e8A969f3975A77E0fE755f"
+        },
+        "summerStaking": {
+          "address": "0x0000000000000000000000000000000000000000"
+        },
+        "summerVestingWalletsEscrow": {
+          "address": "0x0000000000000000000000000000000000000000"
         }
       },
       "buyAndBurn": {
@@ -601,80 +624,81 @@
       },
       "core": {
         "tipJar": {
-          "address": "0xA6a157F7d344209D54D82a7EFF17466032b847Ea"
+          "address": "0xD6f6548cF8643303F8C6bc9f4fcEC6Ed57f9A573"
         },
         "raft": {
-          "address": "0x702C4114eB8bB23Dd1432bb12Ac51B9cD5C7826f"
+          "address": "0xFF199c0B988f80987e6612a99a024Ec9A6F59f53"
         },
         "configurationManager": {
-          "address": "0x3714C1D845e7137f144902A19828124c388e8Ffb"
+          "address": "0x5A4ac204864a36e9820A3663836299ed963F0857"
         },
         "harborCommand": {
-          "address": "0x5de028b0ED0F1B5A81636eB97445236C6b4b2523"
+          "address": "0x5CD5D7e3A1b604E0EdeDc4A2343b312729e09E3F"
         },
         "admiralsQuarters": {
-          "address": "0xAaB08AB98c93696665454b8C0a6eF8C2cd0206eF"
+          "address": "0x3D4AE5aefbE0F5471Eb33BCFcBBcf6d9234D32a5"
         },
         "fleetCommanderRewardsManagerFactory": {
-          "address": "0xB3be2a9bF327a201D2BEFa3172B5E6aC2671B80b"
+          "address": "0xBcA69b2918bad37E8A4e1F77B6864F27eee05AEe"
+        },
+        "institutionalVaultRegistry": {
+          "address": "0x0000000000000000000000000000000000000000"
         }
       }
     },
     "tokens": {
-      "usdce": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+      "usdc": "0xb88339cb7199b77e23db6e890353e22632ba630f",
       "dai": "0x0000000000000000000000000000000000000000",
-      "weth": "0x50c42dEAcD8Fc9773493ED674b675bE577f2634b",
+      "weth": "0x0000000000000000000000000000000000000000",
       "usds": "0x0000000000000000000000000000000000000000",
       "stakedUsds": "0x0000000000000000000000000000000000000000",
-      "usdt": "0x6047828dc181963ba44974801FF68e538dA5eaF9"
+      "morpho": "0x0000000000000000000000000000000000000000",
+      "reul": "0x0000000000000000000000000000000000000000",
+      "eurc": "0x0000000000000000000000000000000000000000",
+      "seam": "0x0000000000000000000000000000000000000000",
+      "ws": "0x0000000000000000000000000000000000000000",
+      "whype": "0x5555555555555555555555555555555555555555",
+      "usdt": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
+      "wrappedNative": "0x5555555555555555555555555555555555555555"
     },
     "common": {
-      "chainId": "146",
+      "chainId": "999",
       "initialSupply": "0",
-      "swapProvider": "0x111111125421ca6dc452d289314280a0f8842a65",
+      "swapProvider": "0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "foundation": "0xB0F53Fc4e15301147de9b3e49C3DB942E3F118F2",
       "tipRate": "100",
       "layerZero": {
-        "lzEndpoint": "0x6F475642a6e85809B1c36Fa62763669b1b48DD5B",
-        "eID": "30332",
-        "lzExecutor": "0x4208D6E27538189bB48E603D6123A94b8Abe0A0b",
-        "sendUln302": "0xC39161c743D0307EB9BCc9FEF03eeb9Dc4802de7",
-        "receiveUln302": "0xe1844c5D63a9543023008D332Bd3d2e6f1FE1043",
-        "blockedMessageLib": "0xc1ce56b2099ca68720592583c7984cab4b6d7e7a",
-        "lzDeadDVN": "",
+        "lzEndpoint": "0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9",
+        "eID": "30367",
+        "lzExecutor": "0x41Bdb4aa4A63a5b2Efc531858d3118392B1A1C3d",
+        "sendUln302": "0xfd76d9CB0Bac839725aB79127E7411fe71b1e3CA",
+        "receiveUln302": "0x7cacBe439EaD55fa1c22790330b12835c6884a91",
+        "blockedMessageLib": "0xf540d892bc671f08e0b1c5b61185c53c2211e8f7",
+        "lzDeadDVN": "0xcCE466a522984415bC91338c232d98869193D46e",
         "dvns": {
-          "base": {
-            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
-            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
-          },
-          "arbitrum": {
-            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
-            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
+          "sonic": {
+            "lzLabs": "0xc097ab8cd7b053326dfe9fb3e3a31a0cce3b526f",
+            "secondDvn": "0xae016a939935d6fe6185900d4c7c7c9b27366cac"
           },
           "mainnet": {
-            "lzLabs": "0x282b3386571f7f794450d5789911a9804fa346b4",
-            "stargate": "0xdd7b5e1db4aafd5c8ec3b764efb8ed265aa5445b"
+            "lzLabs": "0xc097ab8cd7b053326dfe9fb3e3a31a0cce3b526f",
+            "secondDvn": "0xae016a939935d6fe6185900d4c7c7c9b27366cac"
+          },
+          "arbitrum": {
+            "lzLabs": "0xc097ab8cd7b053326dfe9fb3e3a31a0cce3b526f",
+            "secondDvn": "0xae016a939935d6fe6185900d4c7c7c9b27366cac"
+          },
+          "base": {
+            "lzLabs": "0xc097ab8cd7b053326dfe9fb3e3a31a0cce3b526f",
+            "secondDvn": "0xae016a939935d6fe6185900d4c7c7c9b27366cac"
+          },
+          "monad": {
+            "lzLabs": "0xc097ab8cd7b053326dfe9fb3e3a31a0cce3b526f",
+            "secondDvn": "0xae016a939935d6fe6185900d4c7c7c9b27366cac"
           }
         }
       }
     },
-    "protocolSpecific": {
-      "aaveV3": {
-        "pool": "0x5362dBb1e601abF3a4c14c22ffEdA64042E5eAA3",
-        "rewards": "0x24bD6e9ca54F1737467DEf82dCA9702925B3Aa59"
-      },
-      "erc4626": {
-        "usdc": {},
-        "dai": {},
-        "usde": {},
-        "usdt": {},
-        "usdce": {
-          "Euler_MEV_Capital": "0x196F3C7443E940911EE2Bb88e019Fd71400349D9",
-          "Euler_Re7_Labs": "0x3D9e5462A940684073EED7e4a13d19AE0Dcd13bc"
-        },
-        "weth": {
-          "Euler_MEV_Capital": "0xa5cd24d9792F4F131f5976Af935A505D19c8Db2b"
-        }
-      }
-    }
+    "protocolSpecific": {}
   }
 }
