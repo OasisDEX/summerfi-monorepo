@@ -33,6 +33,7 @@ export const RpcUrls = {
   Base: process.env.E2E_SDK_FORK_URL_BASE,
   ArbitrumOne: process.env.E2E_SDK_FORK_URL_ARBITRUM,
   Sonic: process.env.E2E_SDK_FORK_URL_SONIC,
+  Hyperliquid: process.env.E2E_SDK_FORK_URL_HYPERLIQUID,
 } as const
 
 export const FleetAddresses = {
@@ -52,6 +53,9 @@ export const FleetAddresses = {
   },
   Sonic: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
+  },
+  Hyperliquid: {
+    USDC: '',
   },
 } as const
 
