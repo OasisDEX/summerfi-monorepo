@@ -62,6 +62,7 @@ export { Address } from './common/implementation/Address'
 export type { AddressParameters } from './common/implementation/Address'
 export { ChainIds, LegacyChainIds } from './common/implementation/ChainIds'
 export {
+  ChainFamilyName,
   ChainFamilyMap,
   getChainFamilyInfoByChainId,
   getChainInfoByChainId,
