@@ -26,12 +26,16 @@ export async function GET(req: NextRequest, context: TOSRequestContext) {
   const whitelistedTos = systemConfig.tosWhitelist
 
   if (whitelistedTos?.includes(params.walletAddress.toLowerCase())) {
+    db.destroy()
+
     return NextResponse.json({ acceptance: true, authorized: true })
   }
 
   const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
 
   if (!jwtSecret) {
+    db.destroy()
+
     return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
   }
 
