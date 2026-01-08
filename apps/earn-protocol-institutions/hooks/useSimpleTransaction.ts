@@ -32,6 +32,7 @@ const waitingSecondsTimePerEachChain: { [key in SupportedNetworkIds]: number } =
   [SupportedNetworkIds.ArbitrumOne]: 5, // setting 5s as minimum seems reasonable
   [SupportedNetworkIds.Base]: 5,
   [SupportedNetworkIds.SonicMainnet]: 5,
+  [SupportedNetworkIds.Hyperliquid]: 5,
 }
 
 export const useSimpleTransaction = ({

@@ -194,6 +194,9 @@ export const iconsSync = {
   earn_network_ethereum: import('./icons/earn_network_ethereum.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
+  earn_network_hyperliquid: import('./icons/earn_network_hyperliquid.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
   earn_network_optimism: import('./icons/earn_network_optimism.svg?react') as Promise<
     typeof import('*.svg?react')
   >,

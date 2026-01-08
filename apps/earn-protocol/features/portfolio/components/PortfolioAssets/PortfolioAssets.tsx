@@ -38,6 +38,10 @@ const networks: { value: PortfolioAssetNetworkOption; icon?: ReactNode; label?: 
     value: NetworkNames.sonicMainnet,
     icon: <Icon iconName="earn_network_sonic" variant="m" />,
   },
+  {
+    value: NetworkNames.hyperliquid,
+    icon: <Icon iconName="earn_network_hyperliquid" variant="m" />,
+  },
 ]
 
 interface PortfolioAssetsProps {

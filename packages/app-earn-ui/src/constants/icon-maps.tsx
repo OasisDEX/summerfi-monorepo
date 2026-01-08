@@ -12,6 +12,7 @@ export const networkIdIconNameMap: {
   [NetworkIds.BASEMAINNET]: 'earn_network_base',
   [NetworkIds.ARBITRUMMAINNET]: 'earn_network_arbitrum',
   [NetworkIds.SONICMAINNET]: 'earn_network_sonic',
+  [NetworkIds.HYPERLIQUID]: 'earn_network_hyperliquid',
 }
 
 export const networkNameIconNameMap: {
@@ -21,4 +22,5 @@ export const networkNameIconNameMap: {
   [SupportedSDKNetworks.Base]: 'earn_network_base',
   [SupportedSDKNetworks.ArbitrumOne]: 'earn_network_arbitrum',
   [SupportedSDKNetworks.SonicMainnet]: 'earn_network_sonic',
+  [SupportedSDKNetworks.Hyperliquid]: 'earn_network_hyperliquid',
 }

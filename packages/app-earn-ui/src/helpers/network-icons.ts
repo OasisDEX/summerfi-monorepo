@@ -5,6 +5,7 @@ export const networkNameIconNameMap: Partial<{ [key in SupportedSDKNetworks]: Ic
   [SupportedSDKNetworks.Base]: 'earn_network_base',
   [SupportedSDKNetworks.Mainnet]: 'earn_network_ethereum',
   [SupportedSDKNetworks.SonicMainnet]: 'earn_network_sonic',
+  [SupportedSDKNetworks.Hyperliquid]: 'earn_network_hyperliquid',
 }
 
 export const networkIdIconNameMap: Partial<{ [key in SupportedNetworkIds]: IconNamesList }> = {
@@ -12,4 +13,5 @@ export const networkIdIconNameMap: Partial<{ [key in SupportedNetworkIds]: IconN
   [SupportedNetworkIds.Base]: 'earn_network_base',
   [SupportedNetworkIds.Mainnet]: 'earn_network_ethereum',
   [SupportedNetworkIds.SonicMainnet]: 'earn_network_sonic',
+  [SupportedNetworkIds.Hyperliquid]: 'earn_network_hyperliquid',
 }
