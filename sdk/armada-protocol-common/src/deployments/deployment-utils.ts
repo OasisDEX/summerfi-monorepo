@@ -95,9 +95,12 @@ export const getDeploymentConfigContractAddress = <
   })
 }
 
-export const getAaveV3Address = <TKey extends ChainKey, TChainInfo extends ChainInfo>(params: {
+export const getAaveV3Address = <
+  TKey extends Exclude<ChainKey, 'hyperliquid'>,
+  TChainInfo extends ChainInfo,
+>(params: {
   chainInfo: TChainInfo
-  contractName: keyof Config[ChainKey]['protocolSpecific']['aaveV3']
+  contractName: keyof Config[Exclude<ChainKey, 'hyperliquid'>]['protocolSpecific']['aaveV3']
 }): IAddress => {
   const config = getDeploymentsJsonConfig()
   const configKey = getConfigKey(params.chainInfo.chainId) as TKey
