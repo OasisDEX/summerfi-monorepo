@@ -15,6 +15,8 @@ const table = 'rebalanceActivity'
  * @param mainnetGraphQlClient - The GraphQL client instance for the mainnet.
  * @param baseGraphQlClient - The GraphQL client instance for the base network.
  * @param arbitrumGraphQlClient - The GraphQL client instance for the arbitrum network.
+ * @param sonicGraphQlClient - The GraphQL client instance for the sonic network.
+ * @param hyperliquidGraphQlClient - The GraphQL client instance for the hyperliquid network.
  *
  * @returns {Promise<{ updated: number, startingFrom: string, duration: string }>} - A promise that resolves to an object containing:
  *   - `updated`: The number of rows inserted or updated in the database.
@@ -28,12 +30,14 @@ export const updateRebalanceActivity = async ({
   baseGraphQlClient,
   arbitrumGraphQlClient,
   sonicGraphQlClient,
+  hyperliquidGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
+  hyperliquidGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const [
@@ -41,11 +45,13 @@ export const updateRebalanceActivity = async ({
     latestRebalanceActivityBase,
     latestRebalanceActivityArbitrum,
     latestRebalanceActivitySonic,
+    latestRebalanceActivityHyperliquid,
   ] = await Promise.all([
     getLatestTimestamp({ network: 'mainnet', db, table }),
     getLatestTimestamp({ network: 'base', db, table }),
     getLatestTimestamp({ network: 'arbitrum', db, table }),
     getLatestTimestamp({ network: 'sonic', db, table }),
+    getLatestTimestamp({ network: 'hyperliquid', db, table }),
   ])
 
   const allRebalanceActivities = await getAllRebalanceActivities({
@@ -54,12 +60,14 @@ export const updateRebalanceActivity = async ({
       base: latestRebalanceActivityBase,
       arbitrum: latestRebalanceActivityArbitrum,
       sonic: latestRebalanceActivitySonic,
+      hyperliquid: latestRebalanceActivityHyperliquid,
     },
     clients: {
       mainnetGraphQlClient,
       baseGraphQlClient,
       arbitrumGraphQlClient,
       sonicGraphQlClient,
+      hyperliquidGraphQlClient,
     },
   })
 
@@ -75,6 +83,7 @@ export const updateRebalanceActivity = async ({
       base: latestRebalanceActivityBase,
       arbitrum: latestRebalanceActivityArbitrum,
       sonic: latestRebalanceActivitySonic,
+      hyperliquid: latestRebalanceActivityHyperliquid,
     },
     duration,
   }

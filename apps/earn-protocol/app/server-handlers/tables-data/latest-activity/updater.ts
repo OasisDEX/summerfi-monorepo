@@ -32,21 +32,29 @@ export const updateLatestActivities = async ({
   baseGraphQlClient,
   arbitrumGraphQlClient,
   sonicGraphQlClient,
+  hyperliquidGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
+  hyperliquidGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
-  const [latestActivityMainnet, latestActivityBase, latestActivityArbitrum, latestActivitySonic] =
-    await Promise.all([
-      getLatestTimestamp({ network: 'mainnet', db, table }),
-      getLatestTimestamp({ network: 'base', db, table }),
-      getLatestTimestamp({ network: 'arbitrum', db, table }),
-      getLatestTimestamp({ network: 'sonic', db, table }),
-    ])
+  const [
+    latestActivityMainnet,
+    latestActivityBase,
+    latestActivityArbitrum,
+    latestActivitySonic,
+    latestActivityHyperliquid,
+  ] = await Promise.all([
+    getLatestTimestamp({ network: 'mainnet', db, table }),
+    getLatestTimestamp({ network: 'base', db, table }),
+    getLatestTimestamp({ network: 'arbitrum', db, table }),
+    getLatestTimestamp({ network: 'sonic', db, table }),
+    getLatestTimestamp({ network: 'hyperliquid', db, table }),
+  ])
 
   const allLatestActivities = await getAllLatestActivities({
     timestamps: {
@@ -54,12 +62,14 @@ export const updateLatestActivities = async ({
       base: latestActivityBase,
       arbitrum: latestActivityArbitrum,
       sonic: latestActivitySonic,
+      hyperliquid: latestActivityHyperliquid,
     },
     clients: {
       mainnetGraphQlClient,
       baseGraphQlClient,
       arbitrumGraphQlClient,
       sonicGraphQlClient,
+      hyperliquidGraphQlClient,
     },
   })
 
@@ -75,6 +85,7 @@ export const updateLatestActivities = async ({
       base: latestActivityBase,
       arbitrum: latestActivityArbitrum,
       sonic: latestActivitySonic,
+      hyperliquid: latestActivityHyperliquid,
     },
     duration,
   }

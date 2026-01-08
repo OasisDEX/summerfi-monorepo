@@ -23,12 +23,14 @@ import { fetchAllLatestActivities } from './fetcher'
  *     base: '1620000000',
  *     arbitrum: '1620000000',
  *     sonic: '1620000000',
+ *     hyperliquid: '1620000000',
  *   },
  *   clients: {
  *     mainnetGraphQlClient,
  *     baseGraphQlClient,
  *     arbitrumGraphQlClient,
  *     sonicGraphQlClient,
+ *     hyperliquidGraphQlClient,
  *   },
  * })
  */
@@ -41,12 +43,14 @@ export const getAllLatestActivities = async ({
     base: string
     arbitrum: string
     sonic: string
+    hyperliquid: string
   }
   clients: {
     mainnetGraphQlClient: GraphQLClient
     baseGraphQlClient: GraphQLClient
     arbitrumGraphQlClient: GraphQLClient
     sonicGraphQlClient: GraphQLClient
+    hyperliquidGraphQlClient: GraphQLClient
   }
 }): Promise<LatestActivity[]> => {
   const results = await Promise.allSettled([
@@ -54,10 +58,17 @@ export const getAllLatestActivities = async ({
     fetchAllLatestActivities(clients.baseGraphQlClient, timestamps.base),
     fetchAllLatestActivities(clients.arbitrumGraphQlClient, timestamps.arbitrum),
     fetchAllLatestActivities(clients.sonicGraphQlClient, timestamps.sonic),
+    fetchAllLatestActivities(clients.hyperliquidGraphQlClient, timestamps.hyperliquid),
   ])
 
-  const [mainnetActivities, baseActivities, arbitrumActivities, sonicActivities] = results.map(
-    (result) => (result.status === 'fulfilled' ? result.value : { deposits: [], withdraws: [] }),
+  const [
+    mainnetActivities,
+    baseActivities,
+    arbitrumActivities,
+    sonicActivities,
+    hyperliquidActivities,
+  ] = results.map((result) =>
+    result.status === 'fulfilled' ? result.value : { deposits: [], withdraws: [] },
   )
 
   // Combine all new activities from different networks and add type property
@@ -66,9 +77,14 @@ export const getAllLatestActivities = async ({
     ...baseActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...arbitrumActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...sonicActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
+    ...hyperliquidActivities.deposits.map((deposit) => ({ ...deposit, type: 'deposit' as const })),
     ...mainnetActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
     ...baseActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
     ...arbitrumActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
     ...sonicActivities.withdraws.map((withdraw) => ({ ...withdraw, type: 'withdraw' as const })),
+    ...hyperliquidActivities.withdraws.map((withdraw) => ({
+      ...withdraw,
+      type: 'withdraw' as const,
+    })),
   ].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
 }

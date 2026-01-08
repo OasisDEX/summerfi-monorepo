@@ -34,21 +34,29 @@ export const getAllRebalanceActivities = async ({
     base: string
     arbitrum: string
     sonic: string
+    hyperliquid: string
   }
   clients: {
     mainnetGraphQlClient: GraphQLClient
     baseGraphQlClient: GraphQLClient
     arbitrumGraphQlClient: GraphQLClient
     sonicGraphQlClient: GraphQLClient
+    hyperliquidGraphQlClient: GraphQLClient
   }
 }): Promise<RebalanceActivity[]> => {
-  const [mainnetRebalances, baseRebalances, arbitrumRebalances, sonicRebalances] =
-    await Promise.all([
-      fetchAllRebalanceActivities(clients.mainnetGraphQlClient, timestamps.mainnet),
-      fetchAllRebalanceActivities(clients.baseGraphQlClient, timestamps.base),
-      fetchAllRebalanceActivities(clients.arbitrumGraphQlClient, timestamps.arbitrum),
-      fetchAllRebalanceActivities(clients.sonicGraphQlClient, timestamps.sonic),
-    ])
+  const [
+    mainnetRebalances,
+    baseRebalances,
+    arbitrumRebalances,
+    sonicRebalances,
+    hyperliquidRebalances,
+  ] = await Promise.all([
+    fetchAllRebalanceActivities(clients.mainnetGraphQlClient, timestamps.mainnet),
+    fetchAllRebalanceActivities(clients.baseGraphQlClient, timestamps.base),
+    fetchAllRebalanceActivities(clients.arbitrumGraphQlClient, timestamps.arbitrum),
+    fetchAllRebalanceActivities(clients.sonicGraphQlClient, timestamps.sonic),
+    fetchAllRebalanceActivities(clients.hyperliquidGraphQlClient, timestamps.hyperliquid),
+  ])
 
   // Combine all new activities from different networks and add type property
   return [
@@ -65,6 +73,10 @@ export const getAllRebalanceActivities = async ({
       actionType: rebalancesActionTypeMapper(rebalance),
     })),
     ...sonicRebalances.rebalances.map((rebalance) => ({
+      ...rebalance,
+      actionType: rebalancesActionTypeMapper(rebalance),
+    })),
+    ...hyperliquidRebalances.rebalances.map((rebalance) => ({
       ...rebalance,
       actionType: rebalancesActionTypeMapper(rebalance),
     })),

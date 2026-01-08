@@ -14,6 +14,7 @@ import { fetchTopDepositors } from './fetcher'
  * @param {GraphQLClient} baseGraphQlClient - The GraphQL client for the Base network.
  * @param {GraphQLClient} arbitrumGraphQlClient - The GraphQL client for the Arbitrum network.
  * @param {GraphQLClient} sonicGraphQlClient - The GraphQL client for the Sonic network.
+ * @param {GraphQLClient} hyperliquidGraphQlClient - The GraphQL client for the Hyperliquid network.
  * @returns {Promise<Position[]>} - A promise that resolves to an array of positions representing the top depositors
  * with deposits greater than zero, sorted by `inputTokenBalance` in descending order.
  *
@@ -29,20 +30,30 @@ export const getTopDepositors = async ({
   baseGraphQlClient,
   arbitrumGraphQlClient,
   sonicGraphQlClient,
+  hyperliquidGraphQlClient,
 }: {
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
+  hyperliquidGraphQlClient: GraphQLClient
 }) => {
-  const [mainnetPositions, basePositions, arbitrumPositions, sonicPositions] = await Promise.all([
-    fetchTopDepositors(mainnetGraphQlClient),
-    fetchTopDepositors(baseGraphQlClient),
-    fetchTopDepositors(arbitrumGraphQlClient),
-    fetchTopDepositors(sonicGraphQlClient),
-  ])
+  const [mainnetPositions, basePositions, arbitrumPositions, sonicPositions, hyperliquidPositions] =
+    await Promise.all([
+      fetchTopDepositors(mainnetGraphQlClient),
+      fetchTopDepositors(baseGraphQlClient),
+      fetchTopDepositors(arbitrumGraphQlClient),
+      fetchTopDepositors(sonicGraphQlClient),
+      fetchTopDepositors(hyperliquidGraphQlClient),
+    ])
 
-  return [...mainnetPositions, ...basePositions, ...arbitrumPositions, ...sonicPositions]
+  return [
+    ...mainnetPositions,
+    ...basePositions,
+    ...arbitrumPositions,
+    ...sonicPositions,
+    ...hyperliquidPositions,
+  ]
     .filter((position) => position.deposits.length > 0)
     .sort((a, b) => Number(b.inputTokenBalance) - Number(a.inputTokenBalance))
 }
