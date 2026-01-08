@@ -47,11 +47,7 @@ export const getDeploymentsJsonConfig = (): Config => {
 }
 
 const getConfigKey = (chainId: ChainId): ChainKey => {
-  const configKey = chainIdToGraphChain(chainId)
-  if (!configKey) {
-    throw new Error(`Deployment config not found for chain ID ${chainId}`)
-  }
-  return configKey
+  return chainIdToGraphChain(chainId)
 }
 
 export const getDeploymentConfigContractAddress = <

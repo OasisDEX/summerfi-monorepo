@@ -1,5 +1,5 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
-import { arbitrum, base, hyperliquid, mainnet, optimism, sonic } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'

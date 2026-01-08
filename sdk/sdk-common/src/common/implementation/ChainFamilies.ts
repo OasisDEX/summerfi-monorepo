@@ -52,7 +52,7 @@ const SonicFamily: Record<'Sonic', ChainInfo> = {
   }),
 }
 
-const HyperEvmFamily: Record<'Hyperliquid', ChainInfo> = {
+const HyperliquidFamily: Record<'Hyperliquid', ChainInfo> = {
   ['Hyperliquid']: ChainInfo.createFrom({
     chainId: ChainIds.Hyperliquid,
     name: 'Hyperliquid',
@@ -70,7 +70,7 @@ export const ChainFamilyMap = {
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
   [ChainFamilyName.Sonic]: SonicFamily,
-  [ChainFamilyName.Hyperliquid]: HyperEvmFamily,
+  [ChainFamilyName.Hyperliquid]: HyperliquidFamily,
 }
 
 export type ChainFamilyInfo = {

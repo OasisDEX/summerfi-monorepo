@@ -58,7 +58,7 @@ export const FleetAddresses = {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
   Hyperliquid: {
-    USDC: '',
+    USDC: '', // TODO: Add Hyperliquid USDC fleet address
   },
 } as const
 
