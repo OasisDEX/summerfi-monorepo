@@ -1,8 +1,4 @@
-import {
-  configEarnAppFetcher,
-  getArksInterestRates,
-  getVaultsApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates, getVaultsApy } from '@summerfi/app-server-handlers'
 import {
   decorateWithFleetConfig,
   humanNetworktoSDKNetwork,
@@ -11,7 +7,8 @@ import {
 } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getCachedConfig } from '@/app/server-handlers/config'
+import { getCachedVaultDetails } from '@/app/server-handlers/institution/institution-vaults'
 import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
@@ -33,19 +30,12 @@ export default async function InstitutionVaultVaultExposurePage({
   }
 
   const [vault, config] = await Promise.all([
-    unstableCache(
-      getVaultDetails,
-      [parsedNetwork],
-      cacheConfig,
-    )({
+    getCachedVaultDetails({
       institutionName,
       vaultAddress,
       network: parsedNetwork,
     }),
-    unstableCache(configEarnAppFetcher, [], {
-      revalidate: INSTITUTIONS_CACHE_TIMES.CONFIG,
-      tags: [INSTITUTIONS_CACHE_TAGS.CONFIG],
-    })(),
+    getCachedConfig(),
   ])
 
   if (!vault) {

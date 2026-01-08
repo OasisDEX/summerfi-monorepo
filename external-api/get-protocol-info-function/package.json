@@ -17,7 +17,7 @@
     "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "@summerfi/summer-earn-institutions-subgraph": "workspace:*",
     "bignumber.js": "^9.1.2",
-    "viem": "2.29.2",
+    "viem": "2.43.5",
     "zod": "3.25.61"
   },
   "devDependencies": {

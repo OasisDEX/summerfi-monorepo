@@ -1,8 +1,8 @@
 import { type ContractSpecificRoleName, type GlobalRoles } from '@summerfi/sdk-client'
 
 import {
-  type getInstitutionData,
-  type getUserInstitutionsList,
+  type getCachedInstitutionData,
+  type getCachedUserInstitutionsList,
 } from '@/app/server-handlers/institution/institution-data'
 
 export type InstitutionVaultRoleType = keyof typeof ContractSpecificRoleName
@@ -32,8 +32,10 @@ export type InstitutionVaultFeeRevenueData = {
   feeRevenue: InstitutionVaultFeeRevenueItem[]
 }
 
-export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getInstitutionData>>>
-export type InstitutionsList = NonNullable<Awaited<ReturnType<typeof getUserInstitutionsList>>>
+export type InstitutionData = NonNullable<Awaited<ReturnType<typeof getCachedInstitutionData>>>
+export type InstitutionsList = NonNullable<
+  Awaited<ReturnType<typeof getCachedUserInstitutionsList>>
+>
 
 export type InstitutionVaultRole = {
   address: string
@@ -43,18 +45,4 @@ export type InstitutionVaultRole = {
 export type InstitutionDataBasic = {
   id: InstitutionData['id']
   displayName: InstitutionData['displayName']
-}
-
-export enum InstitutionVaultActivityType {
-  DEPOSIT = 'deposit',
-  WITHDRAWAL = 'withdrawal',
-  REBALANCE = 'rebalance',
-  USER_ADDED = 'user-added',
-  USER_REMOVED = 'user-removed',
-}
-
-export type InstitutionVaultActivityItem = {
-  when: string
-  type: InstitutionVaultActivityType
-  message: string
 }

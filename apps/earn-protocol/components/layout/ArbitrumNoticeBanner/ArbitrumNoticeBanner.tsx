@@ -5,7 +5,9 @@ import Link from 'next/link'
 
 export const ArbitrumNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }> = ({ vault }) => {
   const isArbitrumUSDCVault =
-    vault.protocol.network === 'ARBITRUM_ONE' && vault.inputToken.symbol === 'USDC'
+    vault.protocol.network === 'ARBITRUM_ONE' &&
+    vault.inputToken.symbol === 'USDC' &&
+    vault.name === 'LazyVault_LowerRisk_USDC'
 
   return !isArbitrumUSDCVault ? null : (
     <GlobalNoticeBanner

@@ -70,3 +70,33 @@ export type InstiVaultActiveUsersResponse =
       }[]
     }[]
   | []
+
+export type InstiVaultActivityLogResponse =
+  | {
+      deposits: {
+        from: string
+        timestamp: number
+        amount: number
+        hash: string
+      }[]
+      withdraws: {
+        from: string
+        timestamp: number
+        amount: number
+        hash: string
+      }[]
+      rebalances: {
+        timestamp: number
+        amount: number
+        hash: string
+        from: {
+          id: string
+          name?: string | null | undefined
+        }
+        to: {
+          id: string
+          name?: string | null | undefined
+        }
+      }
+    }[]
+  | []

@@ -35,6 +35,7 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
   }, [chartData, timeframe])
 
   const stackedAreaComponents = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!chartData?.colors || !chartData?.dataNames) {
       return null
     }
@@ -67,7 +68,7 @@ export const TvlChart = ({ chartData, timeframe, syncId, stacked }: TvlChartProp
             margin={{
               top: 20,
               right: 20,
-              left: 10,
+              left: 20,
               bottom: 10,
             }}
             dataKey="netValue"

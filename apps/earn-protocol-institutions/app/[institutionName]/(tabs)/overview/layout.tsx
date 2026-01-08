@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { getInstitutionData } from '@/app/server-handlers/institution/institution-data'
+import { getCachedInstitutionData } from '@/app/server-handlers/institution/institution-data'
 import { DashboardContentLayout } from '@/components/layout/DashboardContentLayout/DashboardContentLayout'
 import { OverviewPanelNavigationWrapper } from '@/components/layout/VaultsOverviewNavigationWrapper/VaultsOverviewNavigationWrapper'
 
@@ -12,7 +12,7 @@ export default async function InstitutionOverviewLayout({
   params: Promise<{ institutionName: string }>
 }) {
   const { institutionName } = await params
-  const [institutionData] = await Promise.all([getInstitutionData(institutionName)])
+  const [institutionData] = await Promise.all([getCachedInstitutionData({ institutionName })])
 
   if (!institutionName) {
     return <div>Institution ID not provided.</div>

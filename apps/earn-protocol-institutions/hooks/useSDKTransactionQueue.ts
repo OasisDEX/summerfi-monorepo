@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
+import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type TransactionInfo } from '@summerfi/sdk-common'
 
 export type SDKTransactionItem = {
@@ -13,7 +14,15 @@ export type SDKTransactionItem = {
 }
 
 export const useSDKTransactionQueue = () => {
+  const { userWalletAddress } = useUserWallet()
   const [transactionQueue, setTransactionQueue] = useState<SDKTransactionItem[]>([])
+
+  useEffect(() => {
+    if (!userWalletAddress && transactionQueue.length > 0) {
+      // Clear the transaction queue when the user disconnects their wallet
+      setTransactionQueue([])
+    }
+  }, [userWalletAddress, transactionQueue.length])
 
   const addTransaction = async (item: SDKTransactionItem, txPromise: Promise<TransactionInfo>) => {
     const { id } = item

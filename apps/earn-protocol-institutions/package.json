@@ -16,9 +16,9 @@
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
-    "@account-kit/core": "^4.52.2",
-    "@account-kit/infra": "^4.52.2",
-    "@account-kit/react": "^4.52.2",
+    "@account-kit/core": "4.82.0",
+    "@account-kit/infra": "4.82.0",
+    "@account-kit/react": "4.82.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.859.0",
     "@aws-sdk/credential-providers": "^3.859.0",
     "@loadable/component": "^5.16.4",
@@ -59,7 +59,7 @@
     "recharts": "^2.15.0",
     "sharp": "^0.33.5",
     "usehooks-ts": "^3.1.0",
-    "viem": "2.29.2",
+    "viem": "2.43.5",
     "wagmi": "2.10.9",
     "websocket": "^1.0.35",
     "zod": "3.25.61"

@@ -2,17 +2,18 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
   accountType,
   SDKChainIdToAAChainMap,
+  SUCCESS_TOAST_CONFIG,
   useIsIframe,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import { type EarnTransactionViewStates, type SupportedNetworkIds } from '@summerfi/app-types'
+import { type EarnTransactionViewStates, SupportedNetworkIds } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
-import { useRouter } from 'next/navigation'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
@@ -26,8 +27,20 @@ const parseErrorMessage = (error: string) => {
   return cutoff.replace(/(\r\n|\n|\r)/gmu, ' ')
 }
 
-export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds }) => {
-  const { refresh: refreshView } = useRouter()
+const waitingSecondsTimePerEachChain: { [key in SupportedNetworkIds]: number } = {
+  [SupportedNetworkIds.Mainnet]: 15,
+  [SupportedNetworkIds.ArbitrumOne]: 5, // setting 5s as minimum seems reasonable
+  [SupportedNetworkIds.Base]: 5,
+  [SupportedNetworkIds.SonicMainnet]: 5,
+}
+
+export const useSimpleTransaction = ({
+  chainId,
+  onTxSuccess,
+}: {
+  chainId: SupportedNetworkIds
+  onTxSuccess?: () => void
+}) => {
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[chainId],
   })
@@ -200,7 +213,15 @@ export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds
         .then(() => {
           setTxStatus('txSuccess')
           // refresh the view to get the latest data
-          refreshView()
+          const toastId = toast.info(`Transaction successful, refreshing data...`, {
+            ...SUCCESS_TOAST_CONFIG,
+            autoClose: false,
+          })
+
+          setTimeout(() => {
+            onTxSuccess?.()
+            toast.dismiss(toastId)
+          }, waitingSecondsTimePerEachChain[chainId] * 1000)
           setWaitingForTx(undefined) // Clear waitingForTx after successful execution and state update
         })
         .catch((err) => {
@@ -210,7 +231,7 @@ export const useSimpleTransaction = ({ chainId }: { chainId: SupportedNetworkIds
           setTxError(parseErrorMessage((err as Error).message))
         })
     }
-  }, [waitingForTx, txStatus, publicClient, setTxStatus, setWaitingForTx, refreshView])
+  }, [waitingForTx, txStatus, publicClient, setTxStatus, setWaitingForTx, chainId, onTxSuccess])
 
   return {
     executeTransaction,

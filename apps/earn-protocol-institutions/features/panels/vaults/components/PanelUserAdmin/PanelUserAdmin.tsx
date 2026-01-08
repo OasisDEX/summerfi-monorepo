@@ -12,7 +12,7 @@ import {
   WARNING_TOAST_CONFIG,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork, networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
@@ -29,6 +29,7 @@ import {
 import { type ActiveUsersListColumns } from '@/features/panels/vaults/components/PanelUserAdmin/types'
 import { getGrantWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
+import { useRevalidateTags } from '@/hooks/useRevalidateTags'
 import { useSDKTransactionQueue } from '@/hooks/useSDKTransactionQueue'
 
 import panelUserStyles from './PanelUser.module.css'
@@ -49,9 +50,11 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   activeUsers,
 }) => {
   const chainId = networkNameToSDKId(network)
+  const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { chain, isSettingChain } = useChain()
   const { setWhitelistedTx } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
+  const { revalidateTags } = useRevalidateTags()
 
   const [activeUsersSortConfig, setActiveUsersSortConfig] = useState<
     TableSortedColumn<ActiveUsersListColumns>
@@ -171,6 +174,13 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       }),
     [activeUsers, activeUsersSortConfig],
   )
+  const onTxSuccess = () => {
+    revalidateTags({
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+      ],
+    })
+  }
 
   return (
     <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
@@ -215,6 +225,7 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         transactionQueue={transactionQueue}
         chainId={chainId}
         removeTransaction={removeTransaction}
+        onTxSuccess={onTxSuccess}
       />
     </Card>
   )

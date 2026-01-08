@@ -45,9 +45,9 @@
     "vite-plugin-lib-inject-css": "^2.2.1"
   },
   "peerDependencies": {
-    "@account-kit/core": "^4.52.2",
-    "@account-kit/infra": "^4.52.2",
-    "@account-kit/react": "^4.52.2",
+    "@account-kit/core": "4.82.0",
+    "@account-kit/infra": "4.82.0",
+    "@account-kit/react": "4.82.0",
     "@loadable/component": "^5.16.4",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
@@ -67,7 +67,7 @@
     "react-toastify": "^11.0.3",
     "uniqolor": "1.1.1",
     "usehooks-ts": "^3.1.0",
-    "viem": "2.29.2",
+    "viem": "2.43.5",
     "wagmi": "2.10.9"
   },
   "publishConfig": {

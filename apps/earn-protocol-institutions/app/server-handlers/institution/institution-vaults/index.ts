@@ -1,19 +1,28 @@
-import { configEarnAppFetcher } from '@summerfi/app-server-handlers'
 import {
   type SDKVaultishType,
+  type SDKVaultType,
   SupportedNetworkIds,
   type SupportedSDKNetworks,
 } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   decorateWithFleetConfig,
+  serverOnlyErrorHandler,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
 } from '@summerfi/app-utils'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
-import { Address, ArmadaVaultId, getChainInfoByChainId } from '@summerfi/sdk-common'
+import {
+  Address,
+  ArmadaVaultId,
+  getChainInfoByChainId,
+  GraphRoleName,
+  type Role,
+} from '@summerfi/sdk-common'
+import dayjs from 'dayjs'
 import { unstable_cache as unstableCache } from 'next/cache'
 
+import { getCachedConfig } from '@/app/server-handlers/config'
 import {
   type InstiVaultActiveUsersResponse,
   type InstiVaultPerformanceResponse,
@@ -24,16 +33,22 @@ import {
 } from '@/app/server-handlers/institution/institution-vaults/types'
 import { graphqlVaultHistoryClients } from '@/app/server-handlers/institution/utils/graph-ql-clients'
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
+import { vaultSpecificRolesList } from '@/constants/vaults'
 import {
   GetVaultActiveUsersDocument,
   type GetVaultActiveUsersQuery,
+  GetVaultActivityLogByTimestampFromDocument,
+  type GetVaultActivityLogByTimestampFromQuery,
   GetVaultHistoryDocument,
 } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
+import { type InstitutionVaultRole } from '@/types/institution-data'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
 
-export const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
+// region fetchers
+
+const getInstitutionVaults = async ({ institutionName }: { institutionName: string }) => {
   if (!institutionName) return null
   if (typeof institutionName !== 'string') return null
 
@@ -44,7 +59,7 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
     // until either `getVaultsRaw` returns only the particular insti vaults
     // or `getVaultInfoList` is mapped in the frontend components
     const [systemConfig, ...vaultsInfoArray] = await Promise.all([
-      configEarnAppFetcher(),
+      getCachedConfig(),
       ...supportedInstitutionNetworks.map((networkId) =>
         institutionSdk.armada.users.getVaultInfoList({
           chainId: networkId,
@@ -170,7 +185,7 @@ export const getInstitutionVaults = async ({ institutionName }: { institutionNam
   }
 }
 
-export const getInstitutionVault = async ({
+const getInstitutionVault = async ({
   network,
   institutionName,
   vaultAddress,
@@ -195,7 +210,7 @@ export const getInstitutionVault = async ({
           }),
         }),
       }),
-      configEarnAppFetcher(),
+      getCachedConfig(),
     ])
 
     if (!vault.vault) {
@@ -215,16 +230,16 @@ export const getInstitutionVault = async ({
   }
 }
 
-export const getInstitutionVaultArksImpliedCapsMap = async ({
+const getInstitutionVaultArksImpliedCapsMap = async ({
   network,
-  fleetCommanderAddress,
+  vaultAddress,
   arksAddresses,
 }: {
   network: SupportedSDKNetworks
-  fleetCommanderAddress: string
+  vaultAddress: string
   arksAddresses: string[]
 }) => {
-  if (!fleetCommanderAddress) {
+  if (!vaultAddress) {
     throw new Error('Fleet commander address is required')
   }
 
@@ -237,7 +252,7 @@ export const getInstitutionVaultArksImpliedCapsMap = async ({
         arksAddresses.map(async (arkAddress) => {
           const impliedCap = await publicClient?.readContract({
             abi: FleetCommanderAbi,
-            address: fleetCommanderAddress as `0x${string}`,
+            address: vaultAddress as `0x${string}`,
             functionName: 'getEffectiveArkDepositCap',
             args: [arkAddress as `0x${string}`],
           })
@@ -257,38 +272,31 @@ export const getInstitutionVaultArksImpliedCapsMap = async ({
   }
 }
 
-export const getInstitutionVaultPerformanceData = async ({
+const getInstitutionVaultPerformanceData = async ({
   network,
-  fleetCommanderAddress,
+  vaultAddress,
 }: {
   network: SupportedSDKNetworks
-  fleetCommanderAddress: string
+  vaultAddress: string
 }) => {
-  if (!fleetCommanderAddress) {
+  if (!vaultAddress) {
     throw new Error('Fleet commander address is required')
   }
 
   const client = graphqlVaultHistoryClients[network]
 
-  return await unstableCache(
-    () =>
-      client.request<InstiVaultPerformanceResponse>(
-        GetVaultHistoryDocument,
-        {
-          vaultId: fleetCommanderAddress,
-        },
-        {
-          origin: 'earn-protocol-institutions',
-        },
-      ),
-    ['institution-vault-performance-data', fleetCommanderAddress, network],
+  return await client.request<InstiVaultPerformanceResponse>(
+    GetVaultHistoryDocument,
     {
-      revalidate: 300, // 5 minutes
+      vaultId: vaultAddress,
     },
-  )()
+    {
+      origin: 'earn-protocol-institutions',
+    },
+  )
 }
 
-export const getInstitutionVaultActiveUsers = async ({
+const getInstitutionVaultActiveUsers = async ({
   chainId,
   vaultAddress,
 }: {
@@ -302,22 +310,15 @@ export const getInstitutionVaultActiveUsers = async ({
 
     const network = chainIdToSDKNetwork(chainId)
     const client = graphqlVaultHistoryClients[network]
-    const response = await unstableCache(
-      () =>
-        client.request<GetVaultActiveUsersQuery>(
-          GetVaultActiveUsersDocument,
-          {
-            vaultId: vaultAddress,
-          },
-          {
-            origin: 'earn-protocol-institutions',
-          },
-        ),
-      ['institution-vault-active-users', vaultAddress, network],
+    const response = await client.request<GetVaultActiveUsersQuery>(
+      GetVaultActiveUsersDocument,
       {
-        revalidate: 300, // 5 minutes
+        vaultId: vaultAddress,
       },
-    )()
+      {
+        origin: 'earn-protocol-institutions',
+      },
+    )
 
     return response.vault?.positions ?? []
   } catch (error) {
@@ -327,3 +328,401 @@ export const getInstitutionVaultActiveUsers = async ({
     return []
   }
 }
+
+const getInstitutionVaultActivityLog = async ({
+  chainId,
+  vaultAddress,
+  // both used to get _weeks_ worth of data with timestampFrom
+  // and timestampTo, starting from 0 (current week) to N weeks ago
+  weekNo,
+  targetContractsList,
+}: {
+  chainId: SupportedNetworkIds
+  vaultAddress: string
+  weekNo: number
+  targetContractsList: string[]
+}): Promise<{
+  vault: GetVaultActivityLogByTimestampFromQuery['vault']
+  curationEvents: GetVaultActivityLogByTimestampFromQuery['curationEvents']
+  roleEvents: GetVaultActivityLogByTimestampFromQuery['roleEvents']
+}> => {
+  try {
+    if (!vaultAddress) {
+      throw new Error('Vault address is required')
+    }
+
+    const timestampFrom = dayjs()
+      .subtract(weekNo + 1, 'week')
+      .unix()
+    const timestampTo = dayjs().subtract(weekNo, 'week').unix()
+
+    const network = chainIdToSDKNetwork(chainId)
+    const client = graphqlVaultHistoryClients[network]
+    const response = await client.request<GetVaultActivityLogByTimestampFromQuery>(
+      GetVaultActivityLogByTimestampFromDocument,
+      {
+        vaultId: vaultAddress,
+        timestampFrom,
+        timestampTo,
+        targetContractsList,
+      },
+      {
+        origin: 'earn-protocol-institutions',
+      },
+    )
+
+    return {
+      vault: response.vault,
+      curationEvents: response.curationEvents,
+      roleEvents: response.roleEvents,
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching institution vault activity log:', error)
+
+    return {
+      vault: null,
+      curationEvents: [],
+      roleEvents: [],
+    }
+  }
+}
+
+const getInstitutionVaultFeeRevenueConfig = async ({
+  network,
+  institutionName,
+  vaultAddress,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+  vaultAddress: string
+}) => {
+  if (!institutionName) return null
+  if (typeof institutionName !== 'string') return null
+
+  try {
+    const chainId = subgraphNetworkToId(network)
+
+    const institutionSdk = getInstitutionsSDK(institutionName)
+    const vaultId = ArmadaVaultId.createFrom({
+      chainInfo: getChainInfoByChainId(chainId),
+      fleetAddress: Address.createFromEthereum({
+        value: vaultAddress,
+      }),
+    })
+
+    return await institutionSdk.armada.admin.getFeeRevenueConfig({
+      vaultId,
+    })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching institution vault fee revenue config:', error)
+
+    return null
+  }
+}
+
+const getVaultDetails = async ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress?: string
+  network: SupportedSDKNetworks
+}) => {
+  const institutionSDK = getInstitutionsSDK(institutionName)
+
+  try {
+    if (!vaultAddress) {
+      return undefined
+    }
+
+    const chainId = subgraphNetworkToId(network)
+    const chainInfo = getChainInfoByChainId(chainId)
+
+    const fleetAddress = Address.createFromEthereum({
+      value: vaultAddress,
+    })
+    const poolId = ArmadaVaultId.createFrom({
+      chainInfo,
+      fleetAddress,
+    })
+    const { vault } = await institutionSDK.armada.users.getVaultRaw({
+      vaultId: poolId,
+    })
+
+    return vault as SDKVaultType | undefined
+  } catch (error) {
+    return serverOnlyErrorHandler(
+      'getVaultDetails',
+      error instanceof Error ? error.message : 'Unknown error',
+    )
+  }
+}
+
+const getVaultWhitelist: ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  network: SupportedSDKNetworks
+}) => Promise<Role[]> = async ({ institutionName, vaultAddress, network }) => {
+  const institutionSDK = getInstitutionsSDK(institutionName)
+  const chainId = subgraphNetworkToSDKId(network)
+
+  const { roles } = await institutionSDK.armada.accessControl.getAllRoles({
+    chainId,
+    targetContract: vaultAddress as `0x${string}`,
+    name: GraphRoleName.WHITELIST_ROLE,
+  })
+
+  return roles
+}
+
+const getVaultSpecificRoles: ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  network: SupportedSDKNetworks
+}) => Promise<InstitutionVaultRole[]> = async ({ institutionName, vaultAddress, network }) => {
+  const institutionSDK = getInstitutionsSDK(institutionName)
+  const chainId = subgraphNetworkToSDKId(network)
+
+  const results = await Promise.all(
+    vaultSpecificRolesList.map(async ({ role, roleName }) => {
+      const contractAddress = Address.createFromEthereum({
+        value: vaultAddress,
+      })
+      const wallets =
+        await institutionSDK.armada.accessControl.getAllAddressesWithContractSpecificRole({
+          role,
+          contractAddress,
+          chainId,
+        })
+
+      return wallets.map((address) => ({
+        address,
+        role: roleName,
+      }))
+    }),
+  )
+
+  return results.flat()
+}
+
+// endregion
+
+// region cached calls
+
+export const getCachedInstitutionVaults = ({ institutionName }: { institutionName: string }) => {
+  return unstableCache(getInstitutionVaults, ['institution-vaults', institutionName], {
+    revalidate: 300,
+    tags: [`institution-vaults-${institutionName.toLowerCase()}`],
+  })({ institutionName })
+}
+
+export const getCachedInstitutionVault = ({
+  network,
+  institutionName,
+  vaultAddress,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+  vaultAddress: string
+}) => {
+  return unstableCache(
+    getInstitutionVault,
+    ['institution-vault', institutionName, vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ institutionName, network, vaultAddress })
+}
+export const getCachedInstitutionVaultArksImpliedCapsMap = ({
+  network,
+  vaultAddress,
+  arksAddresses,
+  institutionName,
+}: {
+  network: SupportedSDKNetworks
+  vaultAddress: string
+  arksAddresses: string[]
+  institutionName: string
+}) => {
+  return unstableCache(
+    getInstitutionVaultArksImpliedCapsMap,
+    ['institution-vault-arks-implied-caps', vaultAddress, JSON.stringify(arksAddresses), network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-arks-implied-caps-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ network, vaultAddress, arksAddresses })
+}
+export const getCachedInstitutionVaultPerformanceData = ({
+  network,
+  vaultAddress,
+  institutionName,
+}: {
+  network: SupportedSDKNetworks
+  vaultAddress: string
+  institutionName: string
+}) => {
+  return unstableCache(
+    getInstitutionVaultPerformanceData,
+    ['institution-vault-performance-data', vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-performance-data-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ network, vaultAddress })
+}
+
+export const getCachedInstitutionVaultActiveUsers = ({
+  chainId,
+  vaultAddress,
+  institutionName,
+}: {
+  chainId: SupportedNetworkIds
+  vaultAddress: string
+  institutionName: string
+}) => {
+  const network = chainIdToSDKNetwork(chainId)
+
+  return unstableCache(
+    getInstitutionVaultActiveUsers,
+    ['institution-vault-active-users', vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-active-users-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ chainId, vaultAddress })
+}
+
+export const getCachedInstitutionVaultActivityLog = ({
+  chainId,
+  vaultAddress,
+  weekNo,
+  institutionName,
+  targetContractsList,
+}: {
+  chainId: SupportedNetworkIds
+  vaultAddress: string
+  weekNo: number
+  institutionName: string
+  targetContractsList: string[]
+}) => {
+  const network = chainIdToSDKNetwork(chainId)
+
+  return unstableCache(
+    getInstitutionVaultActivityLog,
+    ['institution-vault-activity-log', vaultAddress, network, weekNo.toString()],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-activity-log-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ chainId, vaultAddress, weekNo, targetContractsList })
+}
+
+export const getCachedInstitutionVaultFeeRevenueConfig = ({
+  network,
+  institutionName,
+  vaultAddress,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+  vaultAddress: string
+}) => {
+  return unstableCache(
+    getInstitutionVaultFeeRevenueConfig,
+    ['institution-vault-fee-revenue-config', institutionName, vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-fee-revenue-config-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ institutionName, network, vaultAddress })
+}
+
+export const getCachedVaultDetails = ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  network: SupportedSDKNetworks
+}) => {
+  return unstableCache(getVaultDetails, ['vault-details', institutionName, vaultAddress, network], {
+    revalidate: 300,
+    tags: [
+      `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+    ],
+  })({ institutionName, vaultAddress, network })
+}
+
+export const getCachedVaultWhitelist: ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  network: SupportedSDKNetworks
+}) => Promise<Role[]> = ({ institutionName, vaultAddress, network }) => {
+  return unstableCache(
+    getVaultWhitelist,
+    ['vault-whitelist', institutionName, vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ institutionName, vaultAddress, network })
+}
+
+export const getCachedVaultSpecificRoles = ({
+  institutionName,
+  vaultAddress,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  network: SupportedSDKNetworks
+}) => {
+  return unstableCache(
+    getVaultSpecificRoles,
+    ['vault-roles', institutionName, vaultAddress, network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ institutionName, vaultAddress, network })
+}
+
+// endregion

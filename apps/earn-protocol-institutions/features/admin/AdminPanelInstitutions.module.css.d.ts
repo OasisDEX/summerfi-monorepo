@@ -10,6 +10,7 @@ declare const styles: {
   readonly "formLabel": string;
   readonly "institutionsListWrapper": string;
   readonly "logo": string;
+  readonly "monospace": string;
   readonly "removeInstitutionForm": string;
   readonly "removeInstitutionFormWrapper": string;
   readonly "submitButton": string;

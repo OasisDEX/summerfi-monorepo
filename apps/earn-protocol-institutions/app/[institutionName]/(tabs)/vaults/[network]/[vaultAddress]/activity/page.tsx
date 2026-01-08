@@ -1,45 +1,57 @@
-import { PanelActivity } from '@/features/panels/vaults/components/PanelActivity/PanelActivity'
+import { Text } from '@summerfi/app-earn-ui'
 import {
-  type InstitutionVaultActivityItem,
-  InstitutionVaultActivityType,
-} from '@/types/institution-data'
+  humanNetworktoSDKNetwork,
+  subgraphNetworkToId,
+  supportedSDKNetworkId,
+} from '@summerfi/app-utils'
 
-const dummyActivitiesData: InstitutionVaultActivityItem[] = [
-  {
-    when: '2021-01-05',
-    type: InstitutionVaultActivityType.DEPOSIT,
-    message: 'A message here tp explain the type of activity that has taken place',
-  },
-  {
-    when: '2021-01-04',
-    type: InstitutionVaultActivityType.WITHDRAWAL,
-    message: 'A message here tp explain the type of activity that has taken place',
-  },
-  {
-    when: '2021-01-03',
-    type: InstitutionVaultActivityType.REBALANCE,
-    message: 'A message here tp explain the type of activity that has taken place',
-  },
-  {
-    when: '2021-01-02',
-    type: InstitutionVaultActivityType.USER_ADDED,
-    message: '-',
-  },
-  {
-    when: '2021-01-01',
-    type: InstitutionVaultActivityType.USER_REMOVED,
-    message: '-',
-  },
-]
+import {
+  getCachedInstitutionVaultActivityLog,
+  getCachedVaultDetails,
+} from '@/app/server-handlers/institution/institution-vaults'
+import { PanelActivity } from '@/features/panels/vaults/components/PanelActivity/PanelActivity'
 
-export default async function InstitutionVaultActivityPage() {
-  // simulate loading state
-  // eslint-disable-next-line no-promise-executor-return
-  const _dummy: InstitutionVaultActivityItem[] = await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(dummyActivitiesData)
-    }, 1000)
-  }) // Simulate loading delay
+export default async function InstitutionVaultActivityPage({
+  params,
+}: {
+  params: Promise<{ institutionName: string; vaultAddress: string; network: string }>
+}) {
+  const { vaultAddress, network, institutionName } = await params
+  const parsedNetwork = humanNetworktoSDKNetwork(network)
+  const chainId = supportedSDKNetworkId(subgraphNetworkToId(parsedNetwork))
+  const parsedVaultAddress = vaultAddress.toLowerCase()
 
-  return <PanelActivity activitiesData={_dummy} />
+  const [vault] = await Promise.all([
+    getCachedVaultDetails({
+      institutionName,
+      vaultAddress: parsedVaultAddress,
+      network: parsedNetwork,
+    }),
+  ])
+
+  if (!vault) {
+    return (
+      <Text>
+        No vault found with the id {parsedVaultAddress} on the network {parsedNetwork}
+      </Text>
+    )
+  }
+
+  const [activityLogBaseDataRaw] = await Promise.all([
+    getCachedInstitutionVaultActivityLog({
+      vaultAddress: parsedVaultAddress,
+      chainId,
+      weekNo: 0,
+      institutionName,
+      targetContractsList: [parsedVaultAddress, ...vault.arks.map((ark) => ark.id)],
+    }),
+  ])
+
+  return (
+    <PanelActivity
+      institutionName={institutionName}
+      activityLogBaseDataRaw={activityLogBaseDataRaw}
+      vault={vault}
+    />
+  )
 }

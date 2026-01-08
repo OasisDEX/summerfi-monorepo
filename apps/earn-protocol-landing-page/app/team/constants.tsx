@@ -5,7 +5,6 @@ import anthonyImage from '@/public/img/team/anthony.png'
 import chrisImage from '@/public/img/team/chris.png'
 import joeImage from '@/public/img/team/joe.png'
 import jordanImage from '@/public/img/team/jordan.png'
-import konradImage from '@/public/img/team/konrad.png'
 
 export const teamList: TeamListItem[] = [
   {
@@ -49,15 +48,6 @@ export const teamList: TeamListItem[] = [
     socialLinks: {
       twitter: 'https://x.com/samehueasyou',
       linkedin: 'https://www.linkedin.com/company/summerfi/',
-    },
-  },
-  {
-    image: konradImage,
-    name: 'Konrad Kloch',
-    role: 'Smart Contract Engineer',
-    socialLinks: {
-      twitter: 'https://x.com/halaprix',
-      linkedin: 'https://www.linkedin.com/in/konrad-kloch',
     },
   },
 ]

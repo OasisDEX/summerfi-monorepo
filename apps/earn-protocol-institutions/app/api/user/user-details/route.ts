@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
+import { getWalletDetails } from '@/app/server-handlers/institution/institution-users'
 import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
-import { getWalletDetails } from '@/app/server-handlers/sdk/get-wallet-details'
 
 export const POST = async (request: Request) => {
   const requestData = await request.json()

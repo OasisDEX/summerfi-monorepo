@@ -15,15 +15,9 @@ export type Scalars = {
   BigDecimal: { input: any; output: any; }
   BigInt: { input: any; output: any; }
   Bytes: { input: any; output: any; }
-  /**
-   * 8 bytes signed integer
-   *
-   */
+  /** 8 bytes signed integer */
   Int8: { input: any; output: any; }
-  /**
-   * A string representation of microseconds UNIX timestamp (16 digits)
-   *
-   */
+  /** A string representation of microseconds UNIX timestamp (16 digits) */
   Timestamp: { input: any; output: any; }
 };
 
@@ -34,11 +28,14 @@ export type Account = {
   claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Address of the account  */
   id: Scalars['ID']['output'];
+  lastLockupIndex?: Maybe<Scalars['BigInt']['output']>;
+  lastLockupIndexProd?: Maybe<Scalars['BigInt']['output']>;
   lastUpdateBlock: Scalars['BigInt']['output'];
   positions: Array<Position>;
   referralData?: Maybe<ReferralData>;
   referralTimestamp?: Maybe<Scalars['BigInt']['output']>;
   rewards: Array<AccountRewards>;
+  stakeLockups: Array<StakeLockup>;
   stakedSummerToken: Scalars['BigInt']['output'];
   stakedSummerTokenNormalized: Scalars['BigDecimal']['output'];
 };
@@ -59,6 +56,15 @@ export type AccountRewardsArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<AccountRewards_Filter>;
+};
+
+
+export type AccountStakeLockupsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<StakeLockup_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<StakeLockup_Filter>;
 };
 
 export type AccountRewards = {
@@ -166,6 +172,8 @@ export enum AccountRewards_OrderBy {
   AccountClaimedSummerToken = 'account__claimedSummerToken',
   AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   AccountId = 'account__id',
+  AccountLastLockupIndex = 'account__lastLockupIndex',
+  AccountLastLockupIndexProd = 'account__lastLockupIndexProd',
   AccountLastUpdateBlock = 'account__lastUpdateBlock',
   AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
@@ -212,6 +220,22 @@ export type Account_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  lastLockupIndex?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastLockupIndexProd_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndexProd_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastLockupIndex_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastLockupIndex_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastLockupIndex_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   lastUpdateBlock?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateBlock_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastUpdateBlock_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -252,6 +276,7 @@ export type Account_Filter = {
   referralTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   referralTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   rewards_?: InputMaybe<AccountRewards_Filter>;
+  stakeLockups_?: InputMaybe<StakeLockup_Filter>;
   stakedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   stakedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   stakedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -274,6 +299,8 @@ export enum Account_OrderBy {
   ClaimedSummerToken = 'claimedSummerToken',
   ClaimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   Id = 'id',
+  LastLockupIndex = 'lastLockupIndex',
+  LastLockupIndexProd = 'lastLockupIndexProd',
   LastUpdateBlock = 'lastUpdateBlock',
   Positions = 'positions',
   ReferralData = 'referralData',
@@ -281,6 +308,7 @@ export enum Account_OrderBy {
   ReferralDataId = 'referralData__id',
   ReferralTimestamp = 'referralTimestamp',
   Rewards = 'rewards',
+  StakeLockups = 'stakeLockups',
   StakedSummerToken = 'stakedSummerToken',
   StakedSummerTokenNormalized = 'stakedSummerTokenNormalized'
 }
@@ -2438,7 +2466,6 @@ export enum Disembark_OrderBy {
  * the deposit and withdraw functions in Yearn do not emit any events. In our subgraphs, we still
  * store them as events, although they are not technically Ethereum events emitted by smart
  * contracts.
- *
  */
 export type Event = {
   /**  Block number of this event  */
@@ -2834,6 +2861,8 @@ export enum GovernanceRewardsManager_OrderBy {
 export type GovernanceStaking = {
   __typename?: 'GovernanceStaking';
   accounts: Array<Account>;
+  amountOfLockedStakes?: Maybe<Scalars['BigInt']['output']>;
+  averageLockupPeriod?: Maybe<Scalars['BigInt']['output']>;
   id: Scalars['ID']['output'];
   /**  Per-block reward token emission as of the current block normalized to a day, in token's native amount. This should be ideally calculated as the theoretical rate instead of the realized amount.  */
   rewardTokenEmissionsAmount: Array<Scalars['BigInt']['output']>;
@@ -2846,6 +2875,7 @@ export type GovernanceStaking = {
   rewardTokens: Array<Token>;
   summerStaked: Scalars['BigInt']['output'];
   summerStakedNormalized: Scalars['BigDecimal']['output'];
+  weightedAverageLockupPeriod?: Maybe<Scalars['BigInt']['output']>;
 };
 
 
@@ -2876,7 +2906,23 @@ export type GovernanceStaking_Filter = {
   accounts_not?: InputMaybe<Array<Scalars['String']['input']>>;
   accounts_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
   accounts_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
+  amountOfLockedStakes?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amountOfLockedStakes_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_not?: InputMaybe<Scalars['BigInt']['input']>;
+  amountOfLockedStakes_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   and?: InputMaybe<Array<InputMaybe<GovernanceStaking_Filter>>>;
+  averageLockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  averageLockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  averageLockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -2933,10 +2979,20 @@ export type GovernanceStaking_Filter = {
   summerStaked_lte?: InputMaybe<Scalars['BigInt']['input']>;
   summerStaked_not?: InputMaybe<Scalars['BigInt']['input']>;
   summerStaked_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAverageLockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAverageLockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAverageLockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
 };
 
 export enum GovernanceStaking_OrderBy {
   Accounts = 'accounts',
+  AmountOfLockedStakes = 'amountOfLockedStakes',
+  AverageLockupPeriod = 'averageLockupPeriod',
   Id = 'id',
   RewardTokenEmissionsAmount = 'rewardTokenEmissionsAmount',
   RewardTokenEmissionsAmountsPerOutputToken = 'rewardTokenEmissionsAmountsPerOutputToken',
@@ -2944,7 +3000,8 @@ export enum GovernanceStaking_OrderBy {
   RewardTokenEmissionsUsd = 'rewardTokenEmissionsUSD',
   RewardTokens = 'rewardTokens',
   SummerStaked = 'summerStaked',
-  SummerStakedNormalized = 'summerStakedNormalized'
+  SummerStakedNormalized = 'summerStakedNormalized',
+  WeightedAverageLockupPeriod = 'weightedAverageLockupPeriod'
 }
 
 export type HourlyInterestRate = {
@@ -4243,6 +4300,8 @@ export enum Position_OrderBy {
   AccountClaimedSummerToken = 'account__claimedSummerToken',
   AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
   AccountId = 'account__id',
+  AccountLastLockupIndex = 'account__lastLockupIndex',
+  AccountLastLockupIndexProd = 'account__lastLockupIndexProd',
   AccountLastUpdateBlock = 'account__lastUpdateBlock',
   AccountReferralTimestamp = 'account__referralTimestamp',
   AccountStakedSummerToken = 'account__stakedSummerToken',
@@ -5125,6 +5184,8 @@ export type Query = {
   rewardTokens: Array<RewardToken>;
   rewardsManager?: Maybe<RewardsManager>;
   rewardsManagers: Array<RewardsManager>;
+  stakeLockup?: Maybe<StakeLockup>;
+  stakeLockups: Array<StakeLockup>;
   staked?: Maybe<Staked>;
   stakeds: Array<Staked>;
   token?: Maybe<Token>;
@@ -5644,6 +5705,24 @@ export type QueryRewardsManagersArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<RewardsManager_Filter>;
+};
+
+
+export type QueryStakeLockupArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID']['input'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryStakeLockupsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<StakeLockup_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<StakeLockup_Filter>;
 };
 
 
@@ -6558,6 +6637,142 @@ export enum RewardsManager_OrderBy {
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
 
+export type StakeLockup = {
+  __typename?: 'StakeLockup';
+  account: Account;
+  amount: Scalars['BigInt']['output'];
+  amountNormalized: Scalars['BigDecimal']['output'];
+  endTimestamp: Scalars['BigInt']['output'];
+  id: Scalars['ID']['output'];
+  index: Scalars['BigInt']['output'];
+  lockupPeriod: Scalars['BigInt']['output'];
+  startTimestamp: Scalars['BigInt']['output'];
+  weightedAmount: Scalars['BigInt']['output'];
+  weightedAmountNormalized: Scalars['BigDecimal']['output'];
+};
+
+export type StakeLockup_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  account?: InputMaybe<Scalars['String']['input']>;
+  account_?: InputMaybe<Account_Filter>;
+  account_contains?: InputMaybe<Scalars['String']['input']>;
+  account_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_gt?: InputMaybe<Scalars['String']['input']>;
+  account_gte?: InputMaybe<Scalars['String']['input']>;
+  account_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_lt?: InputMaybe<Scalars['String']['input']>;
+  account_lte?: InputMaybe<Scalars['String']['input']>;
+  account_not?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains?: InputMaybe<Scalars['String']['input']>;
+  account_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  account_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with?: InputMaybe<Scalars['String']['input']>;
+  account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  amount?: InputMaybe<Scalars['BigInt']['input']>;
+  amountNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  amountNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  amountNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  amount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  and?: InputMaybe<Array<InputMaybe<StakeLockup_Filter>>>;
+  endTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  endTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  endTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_gt?: InputMaybe<Scalars['ID']['input']>;
+  id_gte?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_lt?: InputMaybe<Scalars['ID']['input']>;
+  id_lte?: InputMaybe<Scalars['ID']['input']>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  index?: InputMaybe<Scalars['BigInt']['input']>;
+  index_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  index_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  index_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  index_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  index_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  index_not?: InputMaybe<Scalars['BigInt']['input']>;
+  index_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockupPeriod?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lockupPeriod_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lockupPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  or?: InputMaybe<Array<InputMaybe<StakeLockup_Filter>>>;
+  startTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  startTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  startTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAmount?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmountNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weightedAmountNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weightedAmountNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weightedAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weightedAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_not?: InputMaybe<Scalars['BigInt']['input']>;
+  weightedAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+};
+
+export enum StakeLockup_OrderBy {
+  Account = 'account',
+  AccountClaimedSummerToken = 'account__claimedSummerToken',
+  AccountClaimedSummerTokenNormalized = 'account__claimedSummerTokenNormalized',
+  AccountId = 'account__id',
+  AccountLastLockupIndex = 'account__lastLockupIndex',
+  AccountLastLockupIndexProd = 'account__lastLockupIndexProd',
+  AccountLastUpdateBlock = 'account__lastUpdateBlock',
+  AccountReferralTimestamp = 'account__referralTimestamp',
+  AccountStakedSummerToken = 'account__stakedSummerToken',
+  AccountStakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
+  Amount = 'amount',
+  AmountNormalized = 'amountNormalized',
+  EndTimestamp = 'endTimestamp',
+  Id = 'id',
+  Index = 'index',
+  LockupPeriod = 'lockupPeriod',
+  StartTimestamp = 'startTimestamp',
+  WeightedAmount = 'weightedAmount',
+  WeightedAmountNormalized = 'weightedAmountNormalized'
+}
+
 export type Staked = Event & {
   __typename?: 'Staked';
   /**  Amount of token staked in native units  */
@@ -6906,837 +7121,6 @@ export enum Staked_OrderBy {
   VaultWithdrawableTotalAssets = 'vault__withdrawableTotalAssets',
   VaultWithdrawableTotalAssetsUsd = 'vault__withdrawableTotalAssetsUSD'
 }
-
-export type Subscription = {
-  __typename?: 'Subscription';
-  /** Access to subgraph metadata */
-  _meta?: Maybe<_Meta_>;
-  account?: Maybe<Account>;
-  accountRewards?: Maybe<AccountRewards>;
-  accountRewards_collection: Array<AccountRewards>;
-  accounts: Array<Account>;
-  activeAccount?: Maybe<ActiveAccount>;
-  activeAccounts: Array<ActiveAccount>;
-  ark?: Maybe<Ark>;
-  arkDailySnapshot?: Maybe<ArkDailySnapshot>;
-  arkDailySnapshots: Array<ArkDailySnapshot>;
-  arkHourlySnapshot?: Maybe<ArkHourlySnapshot>;
-  arkHourlySnapshots: Array<ArkHourlySnapshot>;
-  arks: Array<Ark>;
-  board?: Maybe<Board>;
-  boards: Array<Board>;
-  dailyInterestRate?: Maybe<DailyInterestRate>;
-  dailyInterestRates: Array<DailyInterestRate>;
-  deposit?: Maybe<Deposit>;
-  deposits: Array<Deposit>;
-  disembark?: Maybe<Disembark>;
-  disembarks: Array<Disembark>;
-  event?: Maybe<Event>;
-  events: Array<Event>;
-  financialsDailySnapshot?: Maybe<FinancialsDailySnapshot>;
-  financialsDailySnapshots: Array<FinancialsDailySnapshot>;
-  governanceRewardsManager?: Maybe<GovernanceRewardsManager>;
-  governanceRewardsManagers: Array<GovernanceRewardsManager>;
-  governanceStaking?: Maybe<GovernanceStaking>;
-  governanceStakings: Array<GovernanceStaking>;
-  hourlyInterestRate?: Maybe<HourlyInterestRate>;
-  hourlyInterestRates: Array<HourlyInterestRate>;
-  position?: Maybe<Position>;
-  positionDailySnapshot?: Maybe<PositionDailySnapshot>;
-  positionDailySnapshots: Array<PositionDailySnapshot>;
-  positionHourlySnapshot?: Maybe<PositionHourlySnapshot>;
-  positionHourlySnapshots: Array<PositionHourlySnapshot>;
-  positionRewards?: Maybe<PositionRewards>;
-  positionRewards_collection: Array<PositionRewards>;
-  positionWeeklySnapshot?: Maybe<PositionWeeklySnapshot>;
-  positionWeeklySnapshots: Array<PositionWeeklySnapshot>;
-  positions: Array<Position>;
-  postActionArkSnapshot?: Maybe<PostActionArkSnapshot>;
-  postActionArkSnapshots: Array<PostActionArkSnapshot>;
-  postActionVaultSnapshot?: Maybe<PostActionVaultSnapshot>;
-  postActionVaultSnapshots: Array<PostActionVaultSnapshot>;
-  protocol?: Maybe<Protocol>;
-  protocols: Array<Protocol>;
-  rebalance?: Maybe<Rebalance>;
-  rebalances: Array<Rebalance>;
-  referralData?: Maybe<ReferralData>;
-  referralDatas: Array<ReferralData>;
-  rewardToken?: Maybe<RewardToken>;
-  rewardTokens: Array<RewardToken>;
-  rewardsManager?: Maybe<RewardsManager>;
-  rewardsManagers: Array<RewardsManager>;
-  staked?: Maybe<Staked>;
-  stakeds: Array<Staked>;
-  token?: Maybe<Token>;
-  tokenPrice?: Maybe<TokenPrice>;
-  tokenPrices: Array<TokenPrice>;
-  tokens: Array<Token>;
-  unstaked?: Maybe<Unstaked>;
-  unstakeds: Array<Unstaked>;
-  usageMetricsDailySnapshot?: Maybe<UsageMetricsDailySnapshot>;
-  usageMetricsDailySnapshots: Array<UsageMetricsDailySnapshot>;
-  usageMetricsHourlySnapshot?: Maybe<UsageMetricsHourlySnapshot>;
-  usageMetricsHourlySnapshots: Array<UsageMetricsHourlySnapshot>;
-  vault?: Maybe<Vault>;
-  vaultDailySnapshot?: Maybe<VaultDailySnapshot>;
-  vaultDailySnapshots: Array<VaultDailySnapshot>;
-  vaultFee?: Maybe<VaultFee>;
-  vaultFees: Array<VaultFee>;
-  vaultHourlySnapshot?: Maybe<VaultHourlySnapshot>;
-  vaultHourlySnapshots: Array<VaultHourlySnapshot>;
-  vaultWeeklySnapshot?: Maybe<VaultWeeklySnapshot>;
-  vaultWeeklySnapshots: Array<VaultWeeklySnapshot>;
-  vaults: Array<Vault>;
-  weeklyInterestRate?: Maybe<WeeklyInterestRate>;
-  weeklyInterestRates: Array<WeeklyInterestRate>;
-  withdraw?: Maybe<Withdraw>;
-  withdraws: Array<Withdraw>;
-  yieldAggregator?: Maybe<YieldAggregator>;
-  yieldAggregators: Array<YieldAggregator>;
-};
-
-
-export type Subscription_MetaArgs = {
-  block?: InputMaybe<Block_Height>;
-};
-
-
-export type SubscriptionAccountArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionAccountRewardsArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionAccountRewards_CollectionArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<AccountRewards_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<AccountRewards_Filter>;
-};
-
-
-export type SubscriptionAccountsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Account_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Account_Filter>;
-};
-
-
-export type SubscriptionActiveAccountArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionActiveAccountsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ActiveAccount_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ActiveAccount_Filter>;
-};
-
-
-export type SubscriptionArkArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionArkDailySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionArkDailySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ArkDailySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ArkDailySnapshot_Filter>;
-};
-
-
-export type SubscriptionArkHourlySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionArkHourlySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ArkHourlySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ArkHourlySnapshot_Filter>;
-};
-
-
-export type SubscriptionArksArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Ark_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Ark_Filter>;
-};
-
-
-export type SubscriptionBoardArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionBoardsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Board_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Board_Filter>;
-};
-
-
-export type SubscriptionDailyInterestRateArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionDailyInterestRatesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<DailyInterestRate_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<DailyInterestRate_Filter>;
-};
-
-
-export type SubscriptionDepositArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionDepositsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Deposit_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Deposit_Filter>;
-};
-
-
-export type SubscriptionDisembarkArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionDisembarksArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Disembark_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Disembark_Filter>;
-};
-
-
-export type SubscriptionEventArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionEventsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Event_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Event_Filter>;
-};
-
-
-export type SubscriptionFinancialsDailySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionFinancialsDailySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<FinancialsDailySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<FinancialsDailySnapshot_Filter>;
-};
-
-
-export type SubscriptionGovernanceRewardsManagerArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionGovernanceRewardsManagersArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<GovernanceRewardsManager_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<GovernanceRewardsManager_Filter>;
-};
-
-
-export type SubscriptionGovernanceStakingArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionGovernanceStakingsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<GovernanceStaking_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<GovernanceStaking_Filter>;
-};
-
-
-export type SubscriptionHourlyInterestRateArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionHourlyInterestRatesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<HourlyInterestRate_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<HourlyInterestRate_Filter>;
-};
-
-
-export type SubscriptionPositionArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPositionDailySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPositionDailySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PositionDailySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PositionDailySnapshot_Filter>;
-};
-
-
-export type SubscriptionPositionHourlySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPositionHourlySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PositionHourlySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PositionHourlySnapshot_Filter>;
-};
-
-
-export type SubscriptionPositionRewardsArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPositionRewards_CollectionArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PositionRewards_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PositionRewards_Filter>;
-};
-
-
-export type SubscriptionPositionWeeklySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPositionWeeklySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PositionWeeklySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PositionWeeklySnapshot_Filter>;
-};
-
-
-export type SubscriptionPositionsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Position_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Position_Filter>;
-};
-
-
-export type SubscriptionPostActionArkSnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPostActionArkSnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostActionArkSnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PostActionArkSnapshot_Filter>;
-};
-
-
-export type SubscriptionPostActionVaultSnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionPostActionVaultSnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<PostActionVaultSnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<PostActionVaultSnapshot_Filter>;
-};
-
-
-export type SubscriptionProtocolArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionProtocolsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Protocol_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Protocol_Filter>;
-};
-
-
-export type SubscriptionRebalanceArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionRebalancesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Rebalance_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Rebalance_Filter>;
-};
-
-
-export type SubscriptionReferralDataArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionReferralDatasArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<ReferralData_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<ReferralData_Filter>;
-};
-
-
-export type SubscriptionRewardTokenArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionRewardTokensArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RewardToken_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<RewardToken_Filter>;
-};
-
-
-export type SubscriptionRewardsManagerArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionRewardsManagersArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<RewardsManager_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<RewardsManager_Filter>;
-};
-
-
-export type SubscriptionStakedArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionStakedsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Staked_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Staked_Filter>;
-};
-
-
-export type SubscriptionTokenArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionTokenPriceArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionTokenPricesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<TokenPrice_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<TokenPrice_Filter>;
-};
-
-
-export type SubscriptionTokensArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Token_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Token_Filter>;
-};
-
-
-export type SubscriptionUnstakedArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionUnstakedsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Unstaked_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Unstaked_Filter>;
-};
-
-
-export type SubscriptionUsageMetricsDailySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionUsageMetricsDailySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<UsageMetricsDailySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<UsageMetricsDailySnapshot_Filter>;
-};
-
-
-export type SubscriptionUsageMetricsHourlySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionUsageMetricsHourlySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<UsageMetricsHourlySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<UsageMetricsHourlySnapshot_Filter>;
-};
-
-
-export type SubscriptionVaultArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionVaultDailySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionVaultDailySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultDailySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VaultDailySnapshot_Filter>;
-};
-
-
-export type SubscriptionVaultFeeArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionVaultFeesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultFee_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VaultFee_Filter>;
-};
-
-
-export type SubscriptionVaultHourlySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionVaultHourlySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultHourlySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VaultHourlySnapshot_Filter>;
-};
-
-
-export type SubscriptionVaultWeeklySnapshotArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionVaultWeeklySnapshotsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VaultWeeklySnapshot_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<VaultWeeklySnapshot_Filter>;
-};
-
-
-export type SubscriptionVaultsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Vault_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Vault_Filter>;
-};
-
-
-export type SubscriptionWeeklyInterestRateArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionWeeklyInterestRatesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<WeeklyInterestRate_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<WeeklyInterestRate_Filter>;
-};
-
-
-export type SubscriptionWithdrawArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionWithdrawsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Withdraw_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Withdraw_Filter>;
-};
-
-
-export type SubscriptionYieldAggregatorArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionYieldAggregatorsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<YieldAggregator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<YieldAggregator_Filter>;
-};
 
 export type Token = {
   __typename?: 'Token';
@@ -11467,7 +10851,6 @@ export type _Meta_ = {
    * will be null if the _meta field has a block constraint that asks for
    * a block number. It will be filled if the _meta field has no block constraint
    * and therefore asks for the latest  block
-   *
    */
   block: _Block_;
   /** The deployment ID */

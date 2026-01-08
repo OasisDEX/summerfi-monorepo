@@ -31,6 +31,10 @@
     }
   }
 
+  .tableCard {
+    flex-direction: column;
+  }
+
   .tableWrapper {
     overflow-x: auto;
 
@@ -46,5 +50,47 @@
         }
       }
     }
+  }
+}
+
+.activityLogMessage {
+  display: inline-flex;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+}
+
+.activityLogMessageDetails {
+  display: flex;
+  width: 100%;
+  justify-items: space-between;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+  > div {
+    width: 100%;
+  }
+}
+
+.txLink {
+  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+    transition:
+      opacity 0.1s ease-in-out,
+      color 0.1s ease-in-out;
+    color: var(--earn-protocol-primary-100);
   }
 }

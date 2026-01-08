@@ -1,45 +1,76 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type DateRange } from 'react-day-picker'
-import { Button, Card, DateRangePicker, Table, Text, useMobileCheck } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, LoadingSpinner, Table, Text } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
+import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/navigation'
 
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
 import {
-  type InstitutionVaultActivityItem,
+  formatActivityLogTypeToHuman,
+  mapActivityDataToTable,
+} from '@/features/panels/vaults/components/PanelActivity/mapper'
+import {
+  type ActivityTableColumns,
   InstitutionVaultActivityType,
-} from '@/types/institution-data'
+} from '@/features/panels/vaults/components/PanelActivity/types'
+import { type GetVaultActivityLogByTimestampFromQuery } from '@/graphql/clients/vault-history/client'
 
 import { activityColumns } from './columns'
-import { activityMapper } from './mapper'
 
 import styles from './PanelActivity.module.css'
 
-const filterByActivityType = (
-  activitiesData: InstitutionVaultActivityItem[],
-  activityType: InstitutionVaultActivityType,
-) => activitiesData.filter((activity) => activity.type === activityType)
-
-type PanelActivityProps = {
-  activitiesData: InstitutionVaultActivityItem[]
+type ActivityLogData = {
+  vault: GetVaultActivityLogByTimestampFromQuery['vault']
+  curationEvents: GetVaultActivityLogByTimestampFromQuery['curationEvents']
+  roleEvents: GetVaultActivityLogByTimestampFromQuery['roleEvents']
 }
 
-export const PanelActivity = ({ activitiesData }: PanelActivityProps) => {
-  const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
+type PanelActivityProps = {
+  activityLogBaseDataRaw: ActivityLogData
+  vault: SDKVaultishType
+  institutionName: string
+}
 
-  const [activeFilter, setActiveFilter] = useState<InstitutionVaultActivityType | null>(null)
+export const PanelActivity = ({
+  activityLogBaseDataRaw,
+  vault,
+  institutionName,
+}: PanelActivityProps) => {
+  const { refresh: refreshView } = useRouter()
+  const [isLoadingNextWeek, setIsLoadingNextWeek] = useState(false)
+  const [loadedWeeksNumber, setLoadedWeeksNumber] = useState(0)
+  const [loadedAdditionalActivityLogData, setLoadedAdditionalActivityLogData] = useState<
+    ActivityLogData[]
+  >([])
+  const [activeFilter, setActiveFilter] = useState<string | null>(null)
+  const chainId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
 
-  const handleDateRangeChange = (date: DateRange) => {
-    setDateRange(date)
-  }
+  const activityLogDataTable = useMemo(() => {
+    const mergedData = mapActivityDataToTable({
+      data: activityLogBaseDataRaw,
+      vault,
+    }).concat(
+      ...loadedAdditionalActivityLogData.map((data) => mapActivityDataToTable({ data, vault })),
+    )
+    const mergedAndFilteredData = activeFilter
+      ? mergedData.filter(
+          (item) =>
+            formatActivityLogTypeToHuman(item.content.type?.toString() ?? '').toLowerCase() ===
+            formatActivityLogTypeToHuman(activeFilter).toLowerCase(),
+        )
+      : mergedData
 
-  const handleToggleFilter = (filter: InstitutionVaultActivityType) => {
-    if (activeFilter === filter) {
+    return mergedAndFilteredData
+  }, [activeFilter, activityLogBaseDataRaw, loadedAdditionalActivityLogData, vault])
+
+  const handleToggleFilter = (filter: string) => {
+    if (activeFilter === formatActivityLogTypeToHuman(filter)) {
       setActiveFilter(null)
     } else {
-      setActiveFilter(filter)
+      setActiveFilter(formatActivityLogTypeToHuman(filter))
     }
   }
 
@@ -65,51 +96,115 @@ export const PanelActivity = ({ activitiesData }: PanelActivityProps) => {
         handleToggleFilter(InstitutionVaultActivityType.WITHDRAWAL)
       },
     },
+    {
+      label: 'Risk Changes',
+      value: InstitutionVaultActivityType.RISK_CHANGE,
+      onClick: () => {
+        handleToggleFilter(InstitutionVaultActivityType.RISK_CHANGE)
+      },
+    },
+    {
+      label: 'Role Changes',
+      value: InstitutionVaultActivityType.ROLE_CHANGE,
+      onClick: () => {
+        handleToggleFilter(InstitutionVaultActivityType.ROLE_CHANGE)
+      },
+    },
   ]
 
-  const activities = useMemo(() => {
-    // to do: handle filters based on date range
-    if (activeFilter) {
-      const filteredActivities = filterByActivityType(activitiesData, activeFilter)
-
-      return activityMapper(filteredActivities)
+  const loadedDateRangeArray = useMemo(() => {
+    return {
+      from: dayjs().format(CHART_TIMESTAMP_FORMAT_SHORT),
+      to: dayjs()
+        .subtract(loadedWeeksNumber + 1, 'weeks')
+        .format(CHART_TIMESTAMP_FORMAT_SHORT),
     }
+  }, [loadedWeeksNumber])
 
-    return activityMapper(activitiesData)
-  }, [activitiesData, activeFilter])
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
+
+  const isLoadedToDateHigherThanInceptionDate = useMemo(() => {
+    const loadedToDate = dayjs().subtract(loadedWeeksNumber + 1, 'weeks')
+
+    return loadedToDate.isBefore(vaultInceptionDate)
+  }, [loadedWeeksNumber, vaultInceptionDate])
+
+  const loadAnotherWeekActivityLog = () => {
+    try {
+      setIsLoadingNextWeek(true)
+      fetch(
+        `/api/vault/activity-log/${institutionName}-${chainId}-${vault.id}?weekNo=${
+          loadedWeeksNumber + 1
+        }`,
+      )
+        .then((res) => res.json())
+        .then((data: ActivityLogData) => {
+          setLoadedAdditionalActivityLogData((prev) => [...prev, data])
+          setLoadedWeeksNumber((prev) => prev + 1)
+        })
+        .finally(() => {
+          setIsLoadingNextWeek(false)
+        })
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error loading additional activity log data:', error)
+    }
+  }
 
   return (
     <Card variant="cardSecondary" className={styles.panelActivityWrapper}>
       <Text as="h5" variant="h5">
-        Activity
+        Activity - {`${loadedDateRangeArray.from} - ${loadedDateRangeArray.to}`}
+        <div onClick={refreshView} style={{ display: 'inline-block', cursor: 'pointer' }}>
+          <Icon iconName="refresh" size={16} style={{ margin: '0 10px' }} />
+        </div>
       </Text>
       <div className={styles.headingWrapper}>
-        <DateRangePicker
-          mode="range"
-          isMobile={isMobile}
-          onChange={handleDateRangeChange}
-          selected={dateRange}
-        />
         <div className={styles.filters}>
           {filters.map((filter) => (
             <Button
               key={filter.value}
               variant="primarySmall"
               onClick={filter.onClick}
-              className={activeFilter === filter.value ? styles.active : styles.button}
+              className={
+                activeFilter === formatActivityLogTypeToHuman(filter.value)
+                  ? styles.active
+                  : styles.button
+              }
             >
               {filter.label}
             </Button>
           ))}
         </div>
       </div>
-      <Card>
-        <Table
-          rows={activities}
+      <Card className={styles.tableCard}>
+        <Table<ActivityTableColumns>
+          rows={activityLogDataTable}
           columns={activityColumns}
           wrapperClassName={styles.tableWrapper}
           tableClassName={styles.table}
         />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '16px',
+          }}
+        >
+          <Button
+            variant="secondarySmall"
+            onClick={loadAnotherWeekActivityLog}
+            disabled={isLoadingNextWeek || isLoadedToDateHigherThanInceptionDate}
+          >
+            {isLoadedToDateHigherThanInceptionDate ? (
+              'All activity (until vault inception date) loaded'
+            ) : isLoadingNextWeek ? (
+              <LoadingSpinner size={18} />
+            ) : (
+              'Load one more week'
+            )}
+          </Button>
+        </div>
       </Card>
     </Card>
   )

@@ -1,6 +1,6 @@
 import { formatCryptoBalance, formatPercent } from '@summerfi/app-utils'
 
-import { getInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
+import { getCachedInstitutionVaults } from '@/app/server-handlers/institution/institution-vaults'
 import { InstitutionTabBar } from '@/components/layout/TabBar/InstitutionTabBar'
 import { TopBlocks } from '@/components/layout/TopBlocks/TopBlocks'
 import { getVaultPerformance } from '@/helpers/get-vault-performance'
@@ -13,7 +13,7 @@ export default async function InstitutionTabLayout({
   params: Promise<{ institutionName: string }>
 }) {
   const [{ institutionName }] = await Promise.all([params])
-  const [institutionVaults] = await Promise.all([getInstitutionVaults({ institutionName })])
+  const [institutionVaults] = await Promise.all([getCachedInstitutionVaults({ institutionName })])
 
   if (!institutionName || !institutionVaults?.vaults) {
     // Handle institution not found

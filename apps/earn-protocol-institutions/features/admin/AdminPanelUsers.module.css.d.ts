@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "actions": string;
   readonly "addUserButton": string;
   readonly "addUserForm": string;
   readonly "addUserFormContainer": string;
@@ -10,6 +11,7 @@ declare const styles: {
   readonly "formField": string;
   readonly "formFields": string;
   readonly "formLabel": string;
+  readonly "monospace": string;
   readonly "removeUserForm": string;
   readonly "removeUserFormWrapper": string;
   readonly "submitButton": string;

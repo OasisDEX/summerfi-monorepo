@@ -77,7 +77,7 @@ export const ArkHistoricalYieldChart = ({
               margin={{
                 top: 20,
                 right: 20,
-                left: 10,
+                left: 20,
                 bottom: 10,
               }}
             >

@@ -2,8 +2,8 @@ import { supportedSDKNetwork, ten } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import {
-  getInstitutionVaultPerformanceData,
-  getInstitutionVaults,
+  getCachedInstitutionVaultPerformanceData,
+  getCachedInstitutionVaults,
 } from '@/app/server-handlers/institution/institution-vaults'
 import { mapMultiVaultChartData } from '@/features/charts/mappers/mapMultiVaultChartData'
 import { PanelInstitutionOverview } from '@/features/panels/overview/components/PanelInstitutionOverview/PanelInstitutionOverview'
@@ -18,7 +18,7 @@ export default async function InstitutionOverviewTab({
   if (!institutionName) {
     return <div>Institution ID not provided.</div>
   }
-  const institutionVaults = await getInstitutionVaults({ institutionName })
+  const institutionVaults = await getCachedInstitutionVaults({ institutionName })
 
   if (!institutionVaults || institutionVaults.vaults.length === 0) {
     return <div>No vaults found for this institution.</div>
@@ -27,9 +27,10 @@ export default async function InstitutionOverviewTab({
   const vaultsPerformanceDataMap = await Promise.all(
     institutionVaults.vaults.map(
       async (vault) =>
-        await getInstitutionVaultPerformanceData({
-          fleetCommanderAddress: vault.id.toString(),
+        await getCachedInstitutionVaultPerformanceData({
+          vaultAddress: vault.id.toString(),
           network: supportedSDKNetwork(vault.protocol.network),
+          institutionName,
         }),
     ),
   )

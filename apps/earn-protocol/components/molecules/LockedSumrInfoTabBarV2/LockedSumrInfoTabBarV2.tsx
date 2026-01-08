@@ -28,6 +28,7 @@ import {
   lockPeriodAllocationTableColumns,
   yourLockedSumrPositionsTableColumns,
 } from '@/components/molecules/LockedSumrInfoTabBarV2/constants'
+import { LockPeriodCell } from '@/components/molecules/LockedSumrInfoTabBarV2/LockPeriodCell'
 import { RemoveStakeModalButton } from '@/components/molecules/LockedSumrInfoTabBarV2/RemoveStakeModalButton'
 import {
   type AllLockedSumrPositionsTableColumns,
@@ -86,7 +87,13 @@ const YourLockedSumrPositionsCards = ({
 
   const nextUnlockStake = useMemo(() => {
     const sortedStakes = stakes
-      ?.filter((stake) => stake.amount > 0n && stake.lockupPeriod > 0n)
+      ?.filter((stake) => {
+        const isUnlocked =
+          Number(stake.lockupPeriod) === 0 ||
+          dayjs.unix(Number(stake.lockupEndTime)).isBefore(dayjs())
+
+        return stake.amount > 0n && stake.lockupPeriod > 0n && !isUnlocked
+      })
       .sort((a, b) => {
         return Number(a.lockupEndTime - b.lockupEndTime)
       })
@@ -254,7 +261,10 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
         -SUMR_DECIMALS,
       )
       const penaltyPercentageFormatted = penaltyPercentage.toFixed(2)
-      const penaltyDisplay = `${formatCryptoBalance(penaltyAmountFormatted)} (${penaltyPercentageFormatted}%) SUMR`
+      const isNoPenalty = penaltyAmountFormatted.isZero()
+      const penaltyDisplay = isNoPenalty
+        ? 'No penalty'
+        : `${formatCryptoBalance(penaltyAmountFormatted)} (${penaltyPercentageFormatted}%) SUMR`
 
       // Format rewards: convert from wei
       const sumrRewardsFormatted = new BigNumber(sumrRewards.toString()).shiftedBy(-SUMR_DECIMALS)
@@ -263,6 +273,10 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
       // Format USD earnings: simple dollar value
       const usdEarningsFormatted = new BigNumber(usdEarnings)
       const usdEarningsDisplay = `$${formatCryptoBalance(usdEarningsFormatted)} (${stake.multiplier.toFixed(2)}x)`
+
+      const isUnlocked =
+        Number(stake.lockupPeriod) !== 0 &&
+        dayjs.unix(Number(stake.lockupEndTime)).isBefore(dayjs())
 
       return {
         id: stake.index.toString(),
@@ -282,14 +296,22 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
             </TableRightCell>
           ),
           lockPeriod: (
-            <TableRightCell>{formatStakeLockupPeriod(stake.lockupPeriod)}</TableRightCell>
+            <LockPeriodCell lockupEndTime={stake.lockupEndTime} lockupPeriod={stake.lockupPeriod} />
           ),
           rewards: <TableCenterCell>{rewardsDisplay}</TableCenterCell>,
           usdEarnings: <TableCenterCell>{usdEarningsDisplay}</TableCenterCell>,
           removeStakePenalty: (
             <TableRightCell>
-              <Text variant="p4semi" style={{ color: 'var(--color-text-critical)' }}>
-                {penaltyDisplay}
+              <Text
+                variant="p4semi"
+                style={{
+                  color:
+                    isUnlocked || isNoPenalty
+                      ? 'var(--color-text-success)'
+                      : 'var(--color-text-critical)',
+                }}
+              >
+                {!isUnlocked ? penaltyDisplay : 'Unlocked'}
               </Text>
             </TableRightCell>
           ),
