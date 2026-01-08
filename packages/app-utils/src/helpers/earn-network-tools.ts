@@ -36,7 +36,7 @@ const humanReadableNetworkMap: {
   readonly BASE: 'base'
   readonly MAINNET: 'mainnet'
   readonly SONIC_MAINNET: 'sonic'
-  readonly HYPERLIQUID: 'hyperliquid'
+  readonly HYPEREVM: 'hyperliquid'
 } = {
   [SupportedSDKNetworks.ArbitrumOne]: 'arbitrum',
   [SupportedSDKNetworks.Base]: 'base',
@@ -53,6 +53,7 @@ export const humanReadableChainToLabelMap: {
   readonly 42161: 'Arbitrum'
   readonly 1: 'Ethereum'
   readonly 146: 'Sonic'
+  readonly 999: 'Hyperliquid'
 } = {
   [SupportedNetworkIds.Base]: 'Base',
   [SupportedNetworkIds.ArbitrumOne]: 'Arbitrum',
