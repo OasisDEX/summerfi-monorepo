@@ -33,15 +33,6 @@ export type { IRebalanceData, IRebalanceDataData } from './common/types/IRebalan
 export { GlobalRoles, GLOBAL_ROLE_HASHES } from './common/types/GlobalRoles'
 export { ContractSpecificRoleName } from './common/types/ContractSpecificRoleName'
 export { AddressType } from './common/enums/AddressType'
-export {
-  ChainFamilyName,
-  EthereumChainNames,
-  ArbitrumChainNames,
-  OptimismChainNames,
-  BaseChainNames,
-  SonicChainNames,
-} from './common/enums/ChainNames'
-export type { ChainNames } from './common/enums/ChainNames'
 export { CommonTokenSymbols } from './common/enums/CommonTokenSymbols'
 export {
   FiatCurrency,
@@ -71,16 +62,13 @@ export { Address } from './common/implementation/Address'
 export type { AddressParameters } from './common/implementation/Address'
 export { ChainIds, LegacyChainIds } from './common/implementation/ChainIds'
 export {
+  ChainFamilyName,
   ChainFamilyMap,
   getChainFamilyInfoByChainId,
   getChainInfoByChainId,
   valuesOfChainFamilyMap,
 } from './common/implementation/ChainFamilies'
-export type {
-  ChainFamily,
-  ChainFamilyInfo,
-  ChainFamilyInfoById,
-} from './common/implementation/ChainFamilies'
+export type { ChainFamilyInfo, ChainFamilyInfoById } from './common/implementation/ChainFamilies'
 export { ChainInfo } from './common/implementation/ChainInfo'
 export type { ChainInfoParameters } from './common/implementation/ChainInfo'
 export { FiatCurrencyAmount } from './common/implementation/FiatCurrencyAmount'
@@ -447,6 +435,7 @@ export { User } from './user/implementation/User'
 export type { UserParameters } from './user/implementation/User'
 export { UserDataSchema, isUser } from './user/interfaces/IUser'
 export type { IUser, IUserData } from './user/interfaces/IUser'
+export * from './common/utils/chainIdToGraphChain'
 
 export { Simulation } from './simulation/implementation/Simulation'
 export * as steps from './simulation/interfaces/Steps'

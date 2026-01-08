@@ -1,7 +1,6 @@
-import { type SDKManager } from '@summerfi/sdk-client'
 import { ChainIds, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
-import { RpcUrls, signerPrivateKey, userAddress } from './utils/testConfig'
+import { RpcUrls, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import assert from 'assert'
@@ -9,6 +8,7 @@ import assert from 'assert'
 jest.setTimeout(300000)
 const simulateOnly = true
 
+const signerPrivateKey = SharedConfig.userPrivateKey
 const config = [
   {
     chainId: ChainIds.Sonic,
@@ -18,7 +18,7 @@ const config = [
 ]
 
 describe('Armada Protocol Claim', () => {
-  const sdk: SDKManager = createTestSDK()
+  const sdk = createTestSDK()
 
   for (const { chainId, rpcUrl, userAddress } of config) {
     if (!rpcUrl) {

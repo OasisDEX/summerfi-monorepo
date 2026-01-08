@@ -45,20 +45,6 @@ export type GetAllRolesScenario = {
   expectedMinimumCount?: number
 }
 
-export type DepositScenario = {
-  description: string
-  chainConfig: {
-    rpcUrl: string
-    chainId: ChainId
-    fleetAddressValue: AddressValue
-    symbol: string
-  }
-  amountValue: string
-  swapToSymbol?: string
-  stake?: boolean
-  referralCode?: string
-}
-
 export type WithdrawScenario = {
   description: string
   chainConfig: {

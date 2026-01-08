@@ -1,9 +1,9 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
-import { arbitrum, base, mainnet, optimism, sonic } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { LegacyChainIds, ChainIds, type IChainInfo } from '@summerfi/sdk-common'
+import { type IChainInfo, chainIdToGraphChain } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
@@ -31,17 +31,7 @@ export function getRpcGatewayEndpoint(
   chainId: number,
   rpcConfig: IRpcConfig,
 ) {
-  const NetworkByChainID: Record<number, string> = {
-    [ChainIds.Mainnet]: 'mainnet',
-    [ChainIds.ArbitrumOne]: 'arbitrum',
-    [LegacyChainIds.Optimism]: 'optimism',
-    [ChainIds.Base]: 'base',
-    [ChainIds.Sonic]: 'sonic',
-  }
-  const network = NetworkByChainID[chainId]
-  if (!network) {
-    throw new Error(`Chain ID ${chainId} is not supported`)
-  }
+  const network = chainIdToGraphChain(chainId)
 
   return (
     `${rpcGatewayUrl}/?` +
@@ -65,7 +55,7 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-    this._loadClients([mainnet, optimism, arbitrum, base, sonic])
+    this._loadClients([mainnet, arbitrum, base, sonic, hyperliquid])
   }
 
   /** PUBLIC */

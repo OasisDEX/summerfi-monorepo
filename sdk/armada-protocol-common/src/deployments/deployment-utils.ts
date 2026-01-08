@@ -1,13 +1,11 @@
 import {
   Address,
-  ArbitrumChainNames,
-  BaseChainNames,
-  ChainFamilyName,
-  EthereumChainNames,
+  ChainIds,
+  chainIdToGraphChain,
   getChainInfoByChainId,
-  SonicChainNames,
   type ChainId,
   type ChainInfo,
+  type GraphChain,
   type IAddress,
 } from '@summerfi/sdk-common'
 import sumrConfig from './sumr.json'
@@ -40,7 +38,7 @@ export const isTestDeployment = () => {
 }
 
 type Config = typeof bummerConfig
-type ChainKey = 'mainnet' | 'base' | 'arbitrum' | 'sonic'
+type ChainKey = GraphChain
 type ContractCategoryKey = keyof Config[ChainKey]['deployedContracts']
 
 export const getDeploymentsJsonConfig = (): Config => {
@@ -48,19 +46,8 @@ export const getDeploymentsJsonConfig = (): Config => {
   return isTestDeployment() ? bummerConfig : (sumrConfig as any)
 }
 
-const getChainKey = <TName extends string>(name: TName): ChainKey => {
-  const keyMap: Record<ChainInfo['name'], ChainKey> = {
-    [EthereumChainNames.Mainnet]: 'mainnet',
-    [BaseChainNames.Mainnet]: 'base',
-    [ArbitrumChainNames.ArbitrumOne]: 'arbitrum',
-    [SonicChainNames.Sonic]: 'sonic',
-  }
-
-  const key = keyMap[name]
-  if (!key) {
-    throw new Error(`Deployment config not found for chain ${name}`)
-  }
-  return key
+const getConfigKey = (chainId: ChainId): ChainKey => {
+  return chainIdToGraphChain(chainId)
 }
 
 export const getDeploymentConfigContractAddress = <
@@ -80,12 +67,12 @@ export const getDeploymentConfigContractAddress = <
 ): IAddress => {
   const config = getDeploymentsJsonConfig()
   const chainInfo = 'chainId' in params ? getChainInfoByChainId(params.chainId) : params.chainInfo
-  const chainKey = getChainKey(chainInfo.name)
-  if (!(chainKey in config)) {
-    throw new Error(`Chain key ${chainKey} is not valid for the current configuration`)
+  const configKey = getConfigKey(chainInfo.chainId)
+  if (!(configKey in config)) {
+    throw new Error(`Chain key ${configKey} is not valid for the current configuration`)
   }
 
-  const contract = config[chainKey].deployedContracts[params.contractCategory][
+  const contract = config[configKey].deployedContracts[params.contractCategory][
     params.contractName
   ] as
     | {
@@ -104,14 +91,17 @@ export const getDeploymentConfigContractAddress = <
   })
 }
 
-export const getAaveV3Address = <TKey extends ChainKey, TChainInfo extends ChainInfo>(params: {
+export const getAaveV3Address = <
+  TKey extends Exclude<ChainKey, 'hyperliquid'>,
+  TChainInfo extends ChainInfo,
+>(params: {
   chainInfo: TChainInfo
-  contractName: keyof Config[ChainKey]['protocolSpecific']['aaveV3']
+  contractName: keyof Config[Exclude<ChainKey, 'hyperliquid'>]['protocolSpecific']['aaveV3']
 }): IAddress => {
   const config = getDeploymentsJsonConfig()
-  const chainKey = getChainKey(params.chainInfo.name) as TKey
+  const configKey = getConfigKey(params.chainInfo.chainId) as TKey
 
-  const address = config[chainKey]['protocolSpecific']['aaveV3'][params.contractName]
+  const address = config[configKey]['protocolSpecific']['aaveV3'][params.contractName]
 
   if (!address) {
     throw new Error(`Contract ${params.contractName.toString()} not found in aaveV3 config`)
@@ -131,10 +121,10 @@ export const getCompoundV3Address = <
   token?: keyof Config['mainnet' | 'base' | 'arbitrum']['protocolSpecific']['compoundV3']['pools']
 }): IAddress => {
   const config = getDeploymentsJsonConfig()
-  const chainKey = getChainKey(params.chainInfo.name) as TKey
+  const configKey = getConfigKey(params.chainInfo.chainId) as TKey
 
   if (params.contractName === 'rewards') {
-    const address = config[chainKey]['protocolSpecific']['compoundV3'][params.contractName]
+    const address = config[configKey]['protocolSpecific']['compoundV3'][params.contractName]
 
     if (!address) {
       throw new Error(`Contract ${params.contractName.toString()} not found in compoundV3 config`)
@@ -148,7 +138,7 @@ export const getCompoundV3Address = <
     }
 
     const address =
-      config[chainKey]['protocolSpecific']['compoundV3'][params.contractName][params.token]
+      config[configKey]['protocolSpecific']['compoundV3'][params.contractName][params.token]
     if (!address) {
       throw new Error(
         `Contract ${params.contractName.toString()} for token ${params.token.toString()} not found in compoundV3 config`,
@@ -162,14 +152,14 @@ export const getCompoundV3Address = <
 
 export const getDeployedRewardsRedeemerAddress = () => {
   const config = getDeploymentsJsonConfig()
-  const key = getChainKey(ChainFamilyName.Base)
+  const configKey = getConfigKey(ChainIds.Base)
 
   const maybeAddress = (
-    config[key].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
+    config[configKey].deployedContracts.gov as { rewardsRedeemer: { address: string | undefined } }
   ).rewardsRedeemer.address
   if (!maybeAddress) {
     throw new Error(
-      'Rewards redeemer contract is not available on ' + key + '. It is only on Base.',
+      'Rewards redeemer contract is not available on ' + configKey + '. It is only on Base.',
     )
   }
   return Address.createFromEthereum({ value: maybeAddress })
@@ -179,17 +169,17 @@ export const getDeployedGovAddress = (
   version: 'rewardsManager' | 'summerStaking' = 'rewardsManager',
 ) => {
   const config = getDeploymentsJsonConfig()
-  const key = getChainKey(ChainFamilyName.Base)
+  const configKey = getConfigKey(ChainIds.Base)
 
   const maybeAddress = (
-    config[key].deployedContracts.gov as {
+    config[configKey].deployedContracts.gov as {
       rewardsManager: { address: string | undefined }
       summerStaking: { address: string | undefined }
     }
   )[version].address
   if (!maybeAddress) {
     throw new Error(
-      'Gov rewards manager contract is not available on ' + key + '. It is only on Base.',
+      'Gov rewards manager contract is not available on ' + configKey + '. It is only on Base.',
     )
   }
   return Address.createFromEthereum({ value: maybeAddress })
@@ -210,14 +200,14 @@ export const getLayerZeroConfig = (
   eID: number
 } => {
   const config = getDeploymentsJsonConfig()
-  const key = getChainKey(chainInfo.name)
-  if (!config[key].common) {
+  const configKey = getConfigKey(chainInfo.chainId)
+  if (!config[configKey].common) {
     throw new Error(`Common configuration not found for chain: ${chainInfo.name}`)
   }
-  if (!config[key].common.layerZero) {
+  if (!config[configKey].common.layerZero) {
     throw new Error(`LayerZero configuration not found for chain: ${chainInfo.name}`)
   }
-  const { lzEndpoint, eID } = config[key].common.layerZero
+  const { lzEndpoint, eID } = config[configKey].common.layerZero
   if (!lzEndpoint) {
     throw new Error(`LayerZero endpoint address not found for chain: ${chainInfo.name}`)
   }

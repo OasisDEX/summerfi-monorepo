@@ -1091,6 +1091,14 @@ export const StaticTokensData: TokenListData = {
         'https://assets.coingecko.com/coins/images/38108/standard/200x200_Sonic_Logo.png?1734679256',
     },
     {
+      name: 'HYPE',
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      symbol: 'HYPE',
+      decimals: 18,
+      chainId: ChainIds.Hyperliquid,
+      logoURI: '',
+    },
+    {
       name: 'Ripple USD',
       address: '0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD',
       symbol: 'RLUSD',
