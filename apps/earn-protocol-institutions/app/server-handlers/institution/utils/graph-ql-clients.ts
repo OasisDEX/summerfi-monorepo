@@ -35,4 +35,12 @@ export const graphqlVaultHistoryClients: { [key in SupportedSDKNetworks]: GraphQ
       },
     },
   ),
+  [SupportedSDKNetworks.Hyperliquid]: new GraphQLClient(
+    `${process.env.SUBGRAPH_BASE}/summer-institutions-hyperliquid`,
+    {
+      next: {
+        revalidate: 0,
+      },
+    },
+  ),
 }
