@@ -8,10 +8,9 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { TestConfigs, SharedConfig } from './utils/testConfig'
+import { TestConfigs, SharedConfig, type ChainConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
-import type { DepositScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -26,24 +25,26 @@ describe('Armada Protocol - Deposit', () => {
   const userAddressValue = SharedConfig.userAddressValue
 
   // Configure test scenarios here
-  const depositScenarios: DepositScenario[] = [
+  const depositScenarios: {
+    chainConfig: ChainConfig
+    amountValue: string
+    swapToSymbol?: string
+    stake?: boolean
+    referralCode?: string
+  }[] = [
     {
-      description: 'deposit ETH to Base WETH Vault without staking',
-      chainConfig: TestConfigs.BaseWETH,
-      amountValue: '0.0005',
-      stake: false,
+      chainConfig: TestConfigs.HyperliquidUSDC,
+      amountValue: '1',
     },
     // {
-    //   description: 'deposit ETH to Base WETH Vault with staking',
     //   chainConfig: TestConfigs.BaseWETH,
     //   amountValue: '0.0005',
-    //   stake: true,
     // },
   ]
 
   describe('getNewDepositTx - deposit to fleet', () => {
     test.each(depositScenarios)(
-      'should $description',
+      'should deposit to fleet',
       async ({ chainConfig, amountValue, swapToSymbol, stake = false, referralCode }) => {
         const { rpcUrl, chainId, fleetAddressValue, symbol } = chainConfig
 
