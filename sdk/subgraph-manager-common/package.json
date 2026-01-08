@@ -12,7 +12,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "prebuild": "pnpm run generate",
+    "prebuild-removed-for-now": "pnpm run generate",
     "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
