@@ -4767,7 +4767,7 @@ packages:
     dependencies:
       deep-equal: 2.2.3
       ox: 0.6.12(typescript@5.7.3)(zod@3.25.61)
-      typebox: 1.0.75
+      typebox: 1.0.76
       typescript: 5.7.3
       viem: 2.29.2(typescript@5.7.3)(zod@3.25.61)
     transitivePeerDependencies:
@@ -13139,9 +13139,9 @@ packages:
       '@types/ws': 8.5.10
       graphql: 16.11.0
       graphql-ws: 5.16.0(graphql@16.11.0)
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.18.3)
       tslib: 2.8.1
-      ws: 8.18.2
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -13192,9 +13192,9 @@ packages:
       '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       '@types/ws': 8.5.10
       graphql: 16.11.0
-      isomorphic-ws: 5.0.0(ws@8.18.2)
+      isomorphic-ws: 5.0.0(ws@8.18.3)
       tslib: 2.8.1
-      ws: 8.18.2
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -13704,10 +13704,10 @@ packages:
       '@types/ws': 8.5.10
       duplexify: 3.7.1
       inherits: 2.0.4
-      isomorphic-ws: 4.0.1(ws@8.18.2)
+      isomorphic-ws: 4.0.1(ws@8.18.3)
       readable-stream: 2.3.8
       safe-buffer: 5.2.1
-      ws: 8.18.2
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       xtend: 4.0.2
     transitivePeerDependencies:
       - bufferutil
@@ -14999,7 +14999,7 @@ packages:
       '@paulmillr/qr': 0.2.1
       bowser: 2.11.0
       cross-fetch: 4.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.4.0
       eciesjs: 0.4.15
       eth-rpc-errors: 4.0.3
       eventemitter2: 6.4.9
@@ -15007,7 +15007,7 @@ packages:
       pump: 3.0.0
       readable-stream: 3.6.2
       socket.io-client: 4.7.5
-      tslib: 2.2.0
+      tslib: 2.8.1
       util: 0.12.5
       uuid: 8.3.2
     transitivePeerDependencies:
@@ -15313,7 +15313,7 @@ packages:
     dependencies:
       '@keystonehq/alias-sampling': 0.1.2
       assert: 2.1.0
-      bignumber.js: 9.3.0
+      bignumber.js: 9.3.1
       cbor-sync: 1.0.4
       crc: 3.8.0
       jsbi: 3.2.5
@@ -21821,7 +21821,7 @@ packages:
       '@toruslabs/openlogin-jrpc': 8.3.0(@babel/runtime@7.26.9)
       '@toruslabs/openlogin-utils': 8.2.1(@babel/runtime@7.26.9)
       async-mutex: 0.5.0
-      bignumber.js: 9.3.0
+      bignumber.js: 9.3.1
       bowser: 2.11.0
       jwt-decode: 4.0.0
       loglevel: 1.9.1
@@ -24019,6 +24019,7 @@ packages:
 
   /@walletconnect/ethereum-provider@2.21.1(@types/react@19.0.8)(react@19.1.0)(typescript@5.7.3)(zod@3.25.61):
     resolution: {integrity: sha512-SSlIG6QEVxClgl1s0LMk4xr2wg4eT3Zn/Hb81IocyqNSGfXpjtawWxKxiC5/9Z95f1INyBD6MctJbL/R1oBwIw==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
     dependencies:
       '@reown/appkit': 1.7.8(@types/react@19.0.8)(react@19.1.0)(typescript@5.7.3)(zod@3.25.61)
       '@walletconnect/jsonrpc-http-connection': 1.0.8
@@ -25240,21 +25241,6 @@ packages:
     dependencies:
       typescript: 5.7.3
       zod: 3.25.61
-
-  /abitype@1.2.3(typescript@5.8.2)(zod@3.25.61):
-    resolution: {integrity: sha512-Ofer5QUnuUdTFsBRwARMoWKOH1ND5ehwYhJ3OJ/BQO+StkwQjHw0XyVh4vDttzHB7QOFhPHa/o413PJ82gU/Tg==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-      zod: ^3.22.0 || ^4.0.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-      zod:
-        optional: true
-    dependencies:
-      typescript: 5.8.2
-      zod: 3.25.61
-    dev: false
 
   /abitype@1.2.3(typescript@5.8.2)(zod@3.25.61):
     resolution: {integrity: sha512-Ofer5QUnuUdTFsBRwARMoWKOH1ND5ehwYhJ3OJ/BQO+StkwQjHw0XyVh4vDttzHB7QOFhPHa/o413PJ82gU/Tg==}
@@ -32359,7 +32345,7 @@ packages:
       type-fest: 0.12.0
       widest-line: 4.0.1
       wrap-ansi: 8.1.0
-      ws: 8.18.2
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       yoga-wasm-web: 0.3.3
     transitivePeerDependencies:
       - bufferutil
@@ -33092,12 +33078,12 @@ packages:
       ws: 7.5.10
     dev: false
 
-  /isomorphic-ws@4.0.1(ws@8.18.2):
+  /isomorphic-ws@4.0.1(ws@8.18.3):
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.18.2
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
   /isomorphic-ws@5.0.0(ws@8.18.2):
     resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
@@ -33105,6 +33091,14 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.18.2
+    dev: true
+
+  /isomorphic-ws@5.0.0(ws@8.18.3):
+    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     dev: true
 
   /isows@1.0.3(ws@8.13.0):
@@ -33136,14 +33130,6 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-
-  /isows@1.0.7(ws@8.18.3):
-    resolution: {integrity: sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==}
-    peerDependencies:
-      ws: '*'
-    dependencies:
-      ws: 8.18.3
-    dev: false
 
   /istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
@@ -38717,7 +38703,7 @@ packages:
     engines: {node: '>= 18'}
     dependencies:
       '@xrplf/isomorphic': 1.0.1
-      bignumber.js: 9.3.0
+      bignumber.js: 9.3.1
       ripple-address-codec: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -41437,10 +41423,6 @@ packages:
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  /tslib@2.2.0:
-    resolution: {integrity: sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==}
-    dev: false
-
   /tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
     dev: true
@@ -41672,8 +41654,8 @@ packages:
     resolution: {integrity: sha512-dzlvlNlt6AXU7EBSfpAscydQ7gXB+pPGsPnfJnZpiNJBDj7IaJzQlBZYGdEi4R9HmPdBv2XmWJ6YUtoTa7lmCw==}
     requiresBuild: true
 
-  /typebox@1.0.75:
-    resolution: {integrity: sha512-5u1pkRdAfQiIprkuS59RrrV+5ydXQh2OzR7Lqb/bhgS8sBZznMVcNYZMrZdsmL7xEV+Qhu7wiAKLr9gE1INBPQ==}
+  /typebox@1.0.76:
+    resolution: {integrity: sha512-BAMoCFfnoAJk45FwY9n2GTyQUpGuEq6R3VogsXED+qWZ46v2srKNO5/s/q49C9fpYfZL8UcoQHGIvTorfmVJ6g==}
     dev: false
 
   /typed-array-buffer@1.0.2:
@@ -42592,29 +42574,6 @@ packages:
       - zod
     dev: false
 
-  /viem@2.43.5(typescript@5.8.2)(zod@3.25.61):
-    resolution: {integrity: sha512-QuJpuEMEPM3EreN+vX4mVY68Sci0+zDxozYfbh/WfV+SSy/Gthm74PH8XmitXdty1xY54uTCJ+/Gbbd1IiMPSA==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.8.2)(zod@3.25.61)
-      isows: 1.0.7(ws@8.18.3)
-      ox: 0.11.1(typescript@5.8.2)(zod@3.25.61)
-      typescript: 5.8.2
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-    dev: false
-
   /vite-node@0.34.6(@types/node@20.14.2):
     resolution: {integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==}
     engines: {node: '>=v14.18.0'}
@@ -43427,6 +43386,7 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: true
 
   /ws@8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
@@ -43442,19 +43402,6 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
-
-  /ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
 
   /xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
@@ -43486,7 +43433,7 @@ packages:
       '@scure/bip39': 1.6.0
       '@xrplf/isomorphic': 1.0.1
       '@xrplf/secret-numbers': 2.0.0
-      bignumber.js: 9.3.0
+      bignumber.js: 9.3.1
       eventemitter3: 5.0.1
       fast-json-stable-stringify: 2.1.0
       ripple-address-codec: 5.0.0
