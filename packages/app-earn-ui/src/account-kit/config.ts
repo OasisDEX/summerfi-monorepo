@@ -21,13 +21,21 @@ export const customAAKitSonicConfig: Chain = {
   },
 }
 
+export const customAAKitHyperliquidConfig: Chain = {
+  ...hyperliquid,
+  rpcUrls: {
+    ...hyperliquid.rpcUrls,
+    alchemy: hyperliquid.rpcUrls.default,
+  },
+}
+
 export const SDKChainIdToAAChainMap: {
   [key in SupportedNetworkIds]: Chain
 } = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.Mainnet]: mainnet,
-  [SupportedNetworkIds.Hyperliquid]: hyperliquid,
+  [SupportedNetworkIds.Hyperliquid]: customAAKitHyperliquidConfig,
   [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
 }
 
@@ -104,7 +112,7 @@ export const getAccountKitConfig = ({
         [SupportedNetworkIds.ArbitrumOne]: arbitrum,
         [SupportedNetworkIds.Base]: base,
         [SupportedNetworkIds.Mainnet]: mainnet,
-        [SupportedNetworkIds.Hyperliquid]: hyperliquid,
+        [SupportedNetworkIds.Hyperliquid]: customAAKitHyperliquidConfig,
         [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
       }[chainId ?? defaultChain.id] as Chain,
       chains: Object.values(SDKChainIdToAAChainMap).map((chain) => ({

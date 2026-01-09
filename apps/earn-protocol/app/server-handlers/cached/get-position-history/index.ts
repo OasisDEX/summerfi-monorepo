@@ -21,6 +21,7 @@ const networkDbNameMap = {
   [SupportedSDKNetworks.Base]: 'base' as const,
   [SupportedSDKNetworks.ArbitrumOne]: 'arbitrum' as const,
   [SupportedSDKNetworks.SonicMainnet]: 'sonic' as const,
+  [SupportedSDKNetworks.Hyperliquid]: 'hyperliquid' as const,
 }
 
 const subgraphsMap = {
@@ -28,6 +29,7 @@ const subgraphsMap = {
   [SupportedSDKNetworks.Base]: `${process.env.SUBGRAPH_BASE}/summer-protocol-base`,
   [SupportedSDKNetworks.ArbitrumOne]: `${process.env.SUBGRAPH_BASE}/summer-protocol-arbitrum`,
   [SupportedSDKNetworks.SonicMainnet]: `${process.env.SUBGRAPH_BASE}/summer-protocol-sonic`,
+  [SupportedSDKNetworks.Hyperliquid]: `${process.env.SUBGRAPH_BASE}/summer-protocol-hyperliquid`,
 }
 
 export async function getCachedPositionHistory({

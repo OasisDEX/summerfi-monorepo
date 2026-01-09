@@ -15,7 +15,7 @@ export const useRevalidateTags = () => {
   const { refresh: refreshView } = useRouter()
 
   const revalidateTags = ({ tags }: { tags: string[] }) => {
-    fetchRevalidate({ tags }).then(() => {
+    fetchRevalidate({ tags: tags.filter(Boolean) }).then(() => {
       refreshView()
     })
   }

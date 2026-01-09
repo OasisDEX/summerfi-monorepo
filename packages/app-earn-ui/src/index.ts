@@ -274,6 +274,7 @@ export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGr
 export {
   queryClient,
   customAAKitSonicConfig,
+  customAAKitHyperliquidConfig,
   SDKChainIdToAAChainMap,
   getAccountKitConfig,
 } from './account-kit/config'

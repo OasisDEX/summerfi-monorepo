@@ -24,7 +24,7 @@ export const useRevalidateTags = () => {
   const { refresh: refreshView } = useRouter()
 
   const revalidateTags = ({ tags }: { tags: string[] }) => {
-    fetchRevalidate({ tags }).then(() => {
+    fetchRevalidate({ tags: tags.filter(Boolean) }).then(() => {
       refreshView()
     })
   }
@@ -41,7 +41,7 @@ export const useRevalidateUser = () => {
     if (!walletAddress) return
 
     fetchRevalidate({
-      tags: [getUserDataCacheHandler(walletAddress)],
+      tags: [getUserDataCacheHandler(walletAddress)].filter(Boolean),
     }).then(() => {
       refreshView()
     })
@@ -53,7 +53,7 @@ export const useRevalidateVaultsListData = () => {
 
   return () => {
     fetchRevalidate({
-      tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES],
+      tags: [CACHE_TAGS.VAULTS_LIST, CACHE_TAGS.INTEREST_RATES].filter(Boolean),
     }).then(() => {
       refreshView()
     })
@@ -77,11 +77,11 @@ export const useRevalidatePositionData = () => {
         CACHE_TAGS.VAULTS_LIST,
         CACHE_TAGS.INTEREST_RATES,
         walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
-      ],
-      paths:
-        chainName && vaultId
-          ? [`/earn/${chainName}/position/${vaultId}${walletAddress ? `/${walletAddress}` : ''}`]
-          : [],
+      ].filter(Boolean),
+      paths: (chainName && vaultId
+        ? [`/earn/${chainName}/position/${vaultId}${walletAddress ? `/${walletAddress}` : ''}`]
+        : []
+      ).filter(Boolean),
     }).then(() => {
       refreshView()
     })
@@ -96,7 +96,7 @@ export const useRevalidateMigrationData = () => {
       tags: [
         CACHE_TAGS.MIGRATION_DATA,
         walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
-      ],
+      ].filter(Boolean),
     }).then(() => {
       refreshView()
     })
