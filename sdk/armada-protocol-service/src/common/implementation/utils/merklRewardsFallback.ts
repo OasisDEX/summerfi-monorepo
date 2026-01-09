@@ -75,6 +75,9 @@ export const getByFleetAddressFallback = (
         ],
       }
 
+    case ChainIds.Hyperliquid:
+      return {}
+
     default:
       throw new Error(`No Merkl rewards fallback data for chainId: ${chainId}`)
   }
