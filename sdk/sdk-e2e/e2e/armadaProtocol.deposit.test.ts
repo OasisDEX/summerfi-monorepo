@@ -14,7 +14,7 @@ import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
 
-const simulateOnly = true
+const simulateOnly = false
 
 /**
  * @group e2e

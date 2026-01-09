@@ -213,7 +213,7 @@ export {
   isArmadaWithdrawal,
 } from './common/interfaces/IArmadaWithdrawal'
 export type { IArmadaWithdrawal } from './common/interfaces/IArmadaWithdrawal'
-export { getViemChain } from './common/utils/getViemChain'
+export { getViemChain, hyperliquid } from './common/utils/getViemChain'
 export {
   newEmptyPositionFromPool,
   depositToPosition,

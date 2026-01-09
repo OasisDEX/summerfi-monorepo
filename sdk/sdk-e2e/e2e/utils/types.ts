@@ -45,18 +45,6 @@ export type GetAllRolesScenario = {
   expectedMinimumCount?: number
 }
 
-export type WithdrawScenario = {
-  description: string
-  chainConfig: {
-    rpcUrl: string
-    chainId: ChainId
-    fleetAddressValue: AddressValue
-    symbol: string
-  }
-  amountValue: string
-  swapToSymbol?: string
-}
-
 export type RebalanceScenario = {
   description: string
   fromArk: Address

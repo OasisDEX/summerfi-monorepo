@@ -556,7 +556,7 @@ export const StaticTokensData: TokenListData = {
       logoURI: 'https://tokens.1inch.io/0xae78736cd615f374d3085123a210448e74fc6393.png',
     },
     {
-      chainId: 8453,
+      chainId: ChainIds.Base,
       symbol: 'USDC',
       name: 'USDCoin',
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
@@ -565,7 +565,7 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
     {
-      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      chainId: ChainIds.ArbitrumOne,
       symbol: 'USDC',
       name: 'USDCoin',
       address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
@@ -574,7 +574,16 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
     {
-      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      chainId: ChainIds.Hyperliquid,
+      symbol: 'USDC',
+      name: 'USDCoin',
+      address: '0xb88339CB7199b77E23DB6E890353E22632Ba630f',
+      decimals: 6,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
+      chainId: ChainIds.ArbitrumOne,
       symbol: 'USDC.e',
       name: 'Bridged USDCoin',
       address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',

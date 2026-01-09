@@ -1,9 +1,9 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
-import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
+import { arbitrum, base, mainnet, sonic } from 'viem/chains'
 
 import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { type IChainInfo, chainIdToGraphChain } from '@summerfi/sdk-common'
+import { type IChainInfo, chainIdToGraphChain, hyperliquid } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import { getForkUrl } from './getForkUrl'
 
@@ -22,8 +22,8 @@ const rpcConfig: IRpcConfig = {
   skipCache: false,
   skipMulticall: false,
   skipGraph: true,
-  stage: 'prod',
-  source: 'borrow-prod',
+  stage: process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
+  source: 'SDK',
 }
 
 export function getRpcGatewayEndpoint(
@@ -34,7 +34,7 @@ export function getRpcGatewayEndpoint(
   const network = chainIdToGraphChain(chainId)
 
   return (
-    `${rpcGatewayUrl}/?` +
+    `${rpcGatewayUrl}?` +
     `network=${network}&` +
     `skipCache=${rpcConfig.skipCache}&` +
     `skipMulticall=${rpcConfig.skipMulticall}&` +
@@ -105,23 +105,21 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
         throw new Error('SDK_RPC_GATEWAY not found')
       }
 
-      let useFork = false
-      let forkConfig = undefined
+      let forkRpc = undefined
       try {
         const useForkEnv = this._configProvider.getConfigurationItem({ name: 'SDK_USE_FORK' })
-        forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
+        const forkConfig = this._configProvider.getConfigurationItem({ name: 'SDK_FORK_CONFIG' })
 
-        useFork = useForkEnv === 'true'
+        const useFork = useForkEnv === 'true'
+        if (useFork && forkConfig) {
+          forkRpc = getForkUrl(forkConfig, chain.id)
+        }
       } catch {
-        // SDK_USE_FORK not found, defaulting to false
-      }
-
-      let forkRpc = undefined
-      if (useFork && forkConfig) {
-        forkRpc = getForkUrl(forkConfig, chain.id)
+        // FORK CONFIG not found, will just use RPC GATEWAY
       }
 
       const rpc = forkRpc ? forkRpc : getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
+
       const transport = http(rpc, {
         batch: true,
         fetchOptions: {

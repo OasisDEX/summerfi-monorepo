@@ -8,10 +8,9 @@ import {
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { TestConfigs, SharedConfig } from './utils/testConfig'
+import { TestConfigs, SharedConfig, type ChainConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
-import type { WithdrawScenario } from './utils/types'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -27,18 +26,25 @@ describe('Armada Protocol - Withdraw', () => {
   const userAddressValue = SharedConfig.userAddressValue
 
   // Configure test scenarios here
-  const withdrawScenarios: WithdrawScenario[] = [
+  const withdrawScenarios: {
+    chainConfig: ChainConfig
+    amountValue: string
+    swapToSymbol?: string
+  }[] = [
     {
-      description: 'withdraw ETH from Base Eth Vault',
-      chainConfig: TestConfigs.BaseWETH,
-      amountValue: '0.001',
-      swapToSymbol: 'ETH',
+      chainConfig: TestConfigs.HyperliquidUSDC,
+      amountValue: '1',
     },
+    // {
+    //   chainConfig: TestConfigs.BaseWETH,
+    //   amountValue: '0.001',
+    //   swapToSymbol: 'ETH',
+    // },
   ]
 
   describe('getWithdrawTx - withdraw from fleet', () => {
     test.each(withdrawScenarios)(
-      'should $description',
+      'should withdraw from fleet',
       async ({ chainConfig, amountValue, swapToSymbol }) => {
         const { rpcUrl, chainId, fleetAddressValue, symbol } = chainConfig
 
@@ -78,7 +84,9 @@ describe('Armada Protocol - Withdraw', () => {
           token: token,
         })
 
-        console.log(`withdraw ${amount.toString()} assets back from fleet at ${fleetAddressValue}`)
+        console.log(
+          `withdraw ${amount.toString()} assets back from fleet at ${fleetAddressValue}${swapToken ? ', swapping to ' + swapToken.symbol : ''}`,
+        )
 
         // Verify sufficient balance
         const totalAssetsBefore = fleetAmountBefore.assets.add(stakedAmountBefore.assets)
@@ -104,7 +112,7 @@ describe('Armada Protocol - Withdraw', () => {
         // Send transactions
         const { statuses } = await sendAndLogTransactions({
           chainInfo,
-          transactions: transactions,
+          transactions,
           rpcUrl,
           privateKey,
           simulateOnly,
