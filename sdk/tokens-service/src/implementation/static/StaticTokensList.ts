@@ -1048,7 +1048,6 @@ export const StaticTokensData: TokenListData = {
       chainId: ChainIds.Sonic,
       logoURI: '',
     },
-    // BUMMER
     {
       name: 'BummerToken',
       address: '0x8c977a41aDCd7537498a3bC3a0cB30Fb210A247A',
@@ -1079,6 +1078,22 @@ export const StaticTokensData: TokenListData = {
       symbol: 'BUMMER',
       decimals: 18,
       chainId: ChainIds.Sonic,
+      logoURI: '',
+    },
+    {
+      name: 'SummerToken',
+      address: '0x72c527d3efDe2169AA950EFc9573C838cf125D21',
+      symbol: 'SUMR',
+      decimals: 18,
+      chainId: ChainIds.Hyperliquid,
+      logoURI: '',
+    },
+    {
+      name: 'BummerToken',
+      address: '0x77e5f42d5cf2d1B9849AE6A5d2D7dC5b774f8290',
+      symbol: 'BUMMER',
+      decimals: 18,
+      chainId: ChainIds.Hyperliquid,
       logoURI: '',
     },
     // xSUMR 0x49fea727a60469f2c25376ad3c7d5f3810adfd8c on base

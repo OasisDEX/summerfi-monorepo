@@ -28,6 +28,7 @@ describe('Armada Protocol - All Vaults', () => {
     { chainId: ChainIds.ArbitrumOne },
     { chainId: ChainIds.Mainnet },
     { chainId: ChainIds.Sonic },
+    { chainId: ChainIds.Hyperliquid },
     {
       testClientId: TestClientIds.ACME,
       chainId: ChainIds.Base,
