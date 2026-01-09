@@ -66,12 +66,20 @@ export const useTokenBalances = ({
     chainId: SupportedNetworkIds.SonicMainnet,
     skip: network !== SupportedSDKNetworks.SonicMainnet,
   })
+  const hyperliquidTokenBalance = useTokenBalance({
+    tokenSymbol,
+    vaultTokenSymbol,
+    publicClient: sonicPublicClient,
+    chainId: SupportedNetworkIds.Hyperliquid,
+    skip: network !== SupportedSDKNetworks.Hyperliquid,
+  })
 
   const balance = {
     [SupportedSDKNetworks.ArbitrumOne]: arbitrumTokenBalance,
     [SupportedSDKNetworks.Base]: baseTokenBalance,
     [SupportedSDKNetworks.Mainnet]: mainnetTokenBalance,
     [SupportedSDKNetworks.SonicMainnet]: sonicTokenBalance,
+    [SupportedSDKNetworks.Hyperliquid]: hyperliquidTokenBalance,
   }[network]
 
   /**

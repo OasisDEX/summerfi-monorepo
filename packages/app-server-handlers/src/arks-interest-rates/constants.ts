@@ -15,6 +15,9 @@ export const graphqlClients: { [key in SupportedSDKNetworks]: GraphQLClient } = 
   [SupportedSDKNetworks.SonicMainnet]: new GraphQLClient(
     `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-sonic`,
   ),
+  [SupportedSDKNetworks.Hyperliquid]: new GraphQLClient(
+    `${process.env.SUBGRAPH_BASE}/summer-earn-protocol-rates-hyperliquid`,
+  ),
 }
 
 export const noInterestRates: GetInterestRatesQuery = {

@@ -15,7 +15,9 @@ import { hyperliquid } from 'viem/chains'
  */
 export const sdkNetworkToAAChain = (network: SupportedSDKNetworks): Chain => {
   if (!Object.values(SupportedSDKNetworks).includes(network as SupportedSDKNetworks)) {
-    throw new Error(`Unsupported network: ${network}`)
+    throw new Error(
+      `Unsupported network: ${network}, supported networks are: ${Object.values(SupportedSDKNetworks).join(', ')}`,
+    )
   }
 
   const chainMap: { [K in SupportedSDKNetworks]: Chain } = {

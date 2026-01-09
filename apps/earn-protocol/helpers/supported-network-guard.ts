@@ -12,11 +12,13 @@ export const supportedNetworkGuard = (
   | SupportedSDKNetworks.ArbitrumOne
   | SupportedSDKNetworks.Base
   | SupportedSDKNetworks.Mainnet
-  | SupportedSDKNetworks.SonicMainnet => {
+  | SupportedSDKNetworks.SonicMainnet
+  | SupportedSDKNetworks.Hyperliquid => {
   return [
     SupportedSDKNetworks.ArbitrumOne,
     SupportedSDKNetworks.Base,
     SupportedSDKNetworks.Mainnet,
     SupportedSDKNetworks.SonicMainnet,
+    SupportedSDKNetworks.Hyperliquid,
   ].includes(network)
 }
