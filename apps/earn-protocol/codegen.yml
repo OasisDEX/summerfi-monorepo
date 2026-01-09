@@ -3,7 +3,7 @@ config:
     enumValues: keep
 generates:
   ./graphql/clients/rates/client.ts:
-    schema: '${SUBGRAPH_BASE}/summer-earn-protocol-rates-base'
+    schema: '${SUBGRAPH_BASE}/summer-earn-protocol-rates-hyperliquid'
     documents: './graphql/queries/rates.graphql'
     plugins:
       - add:
@@ -39,7 +39,7 @@ generates:
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
   ./graphql/clients/position-history/client.ts:
-    schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+    schema: '${SUBGRAPH_BASE}/summer-protocol-hyperliquid'
     documents: './graphql/queries/position-history.graphql'
     plugins:
       - add:

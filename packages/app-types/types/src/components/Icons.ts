@@ -101,6 +101,7 @@ export declare const IconsList: {
   earn_network_base: IconExportType
   earn_network_blast: IconExportType
   earn_network_ethereum: IconExportType
+  earn_network_hyperliquid: IconExportType
   earn_network_optimism: IconExportType
   earn_network_sonic: IconExportType
   earn_institution: IconExportType

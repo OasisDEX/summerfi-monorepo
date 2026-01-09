@@ -61,7 +61,9 @@ export async function requestJWT({
 
     // start polling
     const token = await new Promise<string | undefined>((resolve) => {
+      // Resolve helper that always clears timers before finishing the promise
       let returnValue = (val: string | undefined) => resolve(val) // CAUTION: this function is reassigned later
+
       const interval = setInterval(async () => {
         if (messageHash) {
           try {
@@ -86,11 +88,19 @@ export async function requestJWT({
             console.error('GnosisSafe: error occurred', error)
           }
         }
+
+        return undefined
       }, 5 * 1000)
+
+      // Safety net: stop polling after 120 seconds to avoid leaking intervals
+      const timeout = setTimeout(() => {
+        returnValue(undefined)
+      }, 120_000)
 
       // clear all scheduled callbacks
       returnValue = (val: string | undefined) => {
         clearInterval(interval)
+        clearTimeout(timeout)
         resolve(val)
       }
     })

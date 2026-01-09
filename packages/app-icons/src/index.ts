@@ -167,6 +167,9 @@ export const icons = {
   earn_network_ethereum: customLazy(
     () => import('./icons/earn_network_ethereum.svg?react'),
   ) as IconExportType,
+  earn_network_hyperliquid: customLazy(
+    () => import('./icons/earn_network_hyperliquid.svg?react'),
+  ) as IconExportType,
   earn_network_optimism: customLazy(
     () => import('./icons/earn_network_optimism.svg?react'),
   ) as IconExportType,

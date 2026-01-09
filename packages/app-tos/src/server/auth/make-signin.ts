@@ -10,7 +10,7 @@ import {
   type PublicClient,
   recoverMessageAddress,
 } from 'viem'
-import { arbitrum, base, mainnet, sonic } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 import * as z from 'zod'
 
 import { checkIfArgentWallet } from '@/server/helpers/check-if-argent'
@@ -33,6 +33,7 @@ const domainChainIdToViemChain: { [key in SupportedNetworkIds]: ViemChain } = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.SonicMainnet]: sonic,
+  [SupportedNetworkIds.Hyperliquid]: hyperliquid,
 }
 const rpcConfig: IRpcConfig = {
   skipCache: false,

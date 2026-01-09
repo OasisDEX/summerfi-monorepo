@@ -12,6 +12,9 @@ export const createAddressService = (chainId: ChainId) => {
   if (network === Network.SONIC) {
     throw new Error('Sonic is not supported yet')
   }
+  if (network === Network.HYPERLIQUID) {
+    throw new Error('Hyperliquid is not supported yet')
+  }
   const addresses = ADDRESSES[network]
 
   const getTokenContract = (token: Common): Address => {

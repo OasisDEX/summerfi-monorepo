@@ -8,6 +8,7 @@ export enum NetworkNames {
   optimismMainnet = 'optimism',
   baseMainnet = 'base',
   sonicMainnet = 'sonic',
+  hyperliquid = 'hyperliquid',
 }
 
 export enum NetworkIds {
@@ -24,6 +25,7 @@ export enum NetworkIds {
   BASEGOERLI = 84531,
   EMPTYNET = 0,
   SONICMAINNET = 146,
+  HYPERLIQUID = 999,
 }
 
 function getRpc(network: NetworkNames): string {
@@ -38,10 +40,12 @@ const mainnetRpc = getRpc(NetworkNames.ethereumMainnet)
 const arbitrumMainnetRpc = getRpc(NetworkNames.arbitrumMainnet)
 const baseMainnetRpc = getRpc(NetworkNames.baseMainnet)
 const sonicMainnetRpc = getRpc(NetworkNames.sonicMainnet)
+const hyperliquidRpc = getRpc(NetworkNames.hyperliquid)
 
 export const SDKChainIdToRpcGatewayMap = {
   [SupportedNetworkIds.ArbitrumOne]: arbitrumMainnetRpc,
   [SupportedNetworkIds.Base]: baseMainnetRpc,
   [SupportedNetworkIds.Mainnet]: mainnetRpc,
   [SupportedNetworkIds.SonicMainnet]: sonicMainnetRpc,
+  [SupportedNetworkIds.Hyperliquid]: hyperliquidRpc,
 }

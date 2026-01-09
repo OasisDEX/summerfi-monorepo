@@ -27,6 +27,9 @@ export function getAddresses(chainId: ChainId): Addresses {
   if (network === Network.SONIC) {
     throw new Error('Sonic is not supported yet')
   }
+  if (network === Network.HYPERLIQUID) {
+    throw new Error('Hyperliquid is not supported yet')
+  }
   const addresses = ADDRESSES[network]
 
   return {

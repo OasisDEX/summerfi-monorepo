@@ -22,6 +22,8 @@ import { insertTopDepositorsInBatches } from './inserter'
  * @param mainnetGraphQlClient - The GraphQL client instance for the mainnet.
  * @param baseGraphQlClient - The GraphQL client instance for the base network.
  * @param arbitrumGraphQlClient - The GraphQL client instance for the arbitrum network.
+ * @param sonicGraphQlClient - The GraphQL client instance for the sonic network.
+ * @param hyperliquidGraphQlClient - The GraphQL client instance for the hyperliquid network.
  *
  * @returns An object containing the number of updated rows and the operation duration in seconds.
  */
@@ -31,12 +33,14 @@ export const updateTopDepositors = async ({
   baseGraphQlClient,
   arbitrumGraphQlClient,
   sonicGraphQlClient,
+  hyperliquidGraphQlClient,
 }: {
   db: SummerProtocolDB['db']
   mainnetGraphQlClient: GraphQLClient
   baseGraphQlClient: GraphQLClient
   arbitrumGraphQlClient: GraphQLClient
   sonicGraphQlClient: GraphQLClient
+  hyperliquidGraphQlClient: GraphQLClient
 }) => {
   const startTime = Date.now()
   const topDepositors = await getTopDepositors({
@@ -44,6 +48,7 @@ export const updateTopDepositors = async ({
     baseGraphQlClient,
     arbitrumGraphQlClient,
     sonicGraphQlClient,
+    hyperliquidGraphQlClient,
   })
 
   // TEMPORARY: USE getVaultsApy instead of reading it from the db since it's not available in new dbs

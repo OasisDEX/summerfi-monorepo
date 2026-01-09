@@ -174,4 +174,10 @@ export const transakNetworkOptions: TransakNetworkOption[] = [
     chainId: SupportedNetworkIds.SonicMainnet,
     iconName: 'earn_network_sonic',
   },
+  {
+    label: 'Hyperliquid',
+    value: 'hyperliquid',
+    chainId: SupportedNetworkIds.Hyperliquid,
+    iconName: 'earn_network_hyperliquid',
+  },
 ]

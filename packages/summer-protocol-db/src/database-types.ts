@@ -22,7 +22,7 @@ export type JsonPrimitive = boolean | number | string | null;
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
 
-export type Network = "arbitrum" | "base" | "mainnet" | "optimism" | "sonic";
+export type Network = "arbitrum" | "base" | "hyperliquid" | "mainnet" | "optimism" | "sonic";
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 

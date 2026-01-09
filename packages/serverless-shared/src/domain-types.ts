@@ -8,6 +8,7 @@ export enum Network {
   BASE = 'base',
   SEPOLIA = 'sepolia',
   SONIC = 'sonic',
+  HYPERLIQUID = 'hyperliquid',
 }
 
 export enum NetworkNames {
@@ -17,6 +18,7 @@ export enum NetworkNames {
   optimismMainnet = 'optimism',
   baseMainnet = 'base',
   sonicMainnet = 'sonic',
+  hyperliquidMainnet = 'hyperliquid',
 }
 
 export enum ChainId {
@@ -26,6 +28,7 @@ export enum ChainId {
   BASE = 8453,
   SEPOLIA = 11155111,
   SONIC = 146,
+  HYPERLIQUID = 999,
 }
 
 export const isChainId = (chainId: unknown): chainId is ChainId => {
@@ -42,6 +45,7 @@ export const NetworkByChainID: Record<ChainId, Network> = {
   [ChainId.BASE]: Network.BASE,
   [ChainId.SEPOLIA]: Network.SEPOLIA,
   [ChainId.SONIC]: Network.SONIC,
+  [ChainId.HYPERLIQUID]: Network.HYPERLIQUID,
 }
 
 export const ChainIDByNetwork: Record<Network, ChainId> = {
@@ -51,6 +55,7 @@ export const ChainIDByNetwork: Record<Network, ChainId> = {
   [Network.BASE]: ChainId.BASE,
   [Network.SEPOLIA]: ChainId.SEPOLIA,
   [Network.SONIC]: ChainId.SONIC,
+  [Network.HYPERLIQUID]: ChainId.HYPERLIQUID,
 }
 
 export enum ProtocolId {

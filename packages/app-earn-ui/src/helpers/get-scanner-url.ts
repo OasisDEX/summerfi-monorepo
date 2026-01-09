@@ -8,6 +8,7 @@ const chainsMap: {
   42161: 'https://arbiscan.io', // ARBITRUM
   8453: 'https://basescan.org', // BASE
   146: 'https://sonicscan.org', // SONIC
+  999: 'https://hyperevmscan.io', // HYPERLIQUID
 }
 
 export const getScannerUrl = (chainId: number, txHash: string) => {

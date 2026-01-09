@@ -15,6 +15,7 @@ export interface SumrBalancesData {
   optimism: string
   base: string
   sonic: string
+  hyperliquid: string
   total: string // without vesting
   vested: string
   raw: {
@@ -23,6 +24,7 @@ export interface SumrBalancesData {
     base: string
     optimism: string
     sonic: string
+    hyperliquid: string
     total: string
     vested: string
   }
@@ -130,6 +132,7 @@ export const getSumrBalances = async ({
       arbitrum: '0',
       base: '0',
       sonic: '0',
+      hyperliquid: '0',
       optimism: '0',
       total: '0',
       vested: '0',
@@ -138,6 +141,7 @@ export const getSumrBalances = async ({
         arbitrum: '0',
         base: '0',
         sonic: '0',
+        hyperliquid: '0',
         optimism: '0',
         total: '0',
         vested: '0',

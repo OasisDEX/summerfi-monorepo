@@ -22,6 +22,7 @@ const fallbackResponse: SumrUserStakeInfoData = {
     optimism: '0',
     base: '0',
     sonic: '0',
+    hyperliquid: '0',
     total: '0',
     vested: '0',
     raw: {
@@ -30,6 +31,7 @@ const fallbackResponse: SumrUserStakeInfoData = {
       base: '0',
       optimism: '0',
       sonic: '0',
+      hyperliquid: '0',
       total: '0',
       vested: '0',
     },

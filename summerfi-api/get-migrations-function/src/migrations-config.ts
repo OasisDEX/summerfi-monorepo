@@ -12,4 +12,5 @@ export const MigrationConfig: IMigrationConfig = {
   [ChainId.BASE]: [ProtocolId.AAVE_V3],
   [ChainId.SEPOLIA]: [],
   [ChainId.SONIC]: [],
+  [ChainId.HYPERLIQUID]: [],
 }

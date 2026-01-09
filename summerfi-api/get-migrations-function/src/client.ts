@@ -7,7 +7,7 @@ import {
   http,
   HttpTransport,
 } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia, sonic } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, optimism, sepolia, sonic } from 'viem/chains'
 import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
 import { aavePoolDataProviderContract } from './abi/aavePoolDataProviderContract'
@@ -59,14 +59,14 @@ export function createMigrationsClient(
         throw new Error(`Invalid chainId: ${chainId}`)
       }
       // skik unsupported chains
-      if ([ChainId.SONIC].includes(chainId)) {
+      if ([ChainId.SONIC, ChainId.HYPERLIQUID].includes(chainId)) {
         return
       }
       if (customChainId && customChainId !== chainId) {
         return
       }
       const chain = extractChain({
-        chains: [mainnet, base, optimism, arbitrum, sepolia, sonic],
+        chains: [mainnet, base, optimism, arbitrum, sepolia, sonic, hyperliquid],
         id: chainId,
       })
 

@@ -15,6 +15,7 @@ export enum NetworkNames {
   baseGoerli = 'base_goerli',
 
   sonicMainnet = 'sonic',
+  hyperliquid = 'hyperliquid',
 }
 
 export enum NetworkIds {
@@ -31,6 +32,7 @@ export enum NetworkIds {
   BASEGOERLI = 84531,
   EMPTYNET = 0,
   SONICMAINNET = 146,
+  HYPERLIQUID = 999,
 }
 
 export enum NetworkHexIds {
@@ -47,4 +49,5 @@ export enum NetworkHexIds {
   BASEGOERLI = '0x14a33',
   EMPTYNET = '0x0',
   SONICMAINNET = '0x92',
+  HYPERLIQUID = '0x3e7',
 }

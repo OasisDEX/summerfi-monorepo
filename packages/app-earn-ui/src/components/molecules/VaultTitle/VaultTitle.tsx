@@ -62,6 +62,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
             {networkId && networkIdIconNameMap[networkId] && (
               <Icon iconName={networkIdIconNameMap[networkId]} size={16} />
             )}
+            {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
             {networkName && networkNameIconNameMap[networkName] && (
               <Icon iconName={networkNameIconNameMap[networkName]} size={16} />
             )}

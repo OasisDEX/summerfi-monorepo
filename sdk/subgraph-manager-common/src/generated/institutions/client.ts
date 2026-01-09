@@ -3484,6 +3484,7 @@ export enum Network {
   Fuse = 'FUSE',
   Gnosis = 'GNOSIS',
   Harmony = 'HARMONY',
+  Hyperevm = 'HYPEREVM',
   Juno = 'JUNO',
   Mainnet = 'MAINNET',
   Matic = 'MATIC',

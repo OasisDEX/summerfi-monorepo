@@ -35,12 +35,16 @@ export const updateTablesData = async ({
       [SupportedSDKNetworks.Base]: `${baseUrl}/summer-protocol-base`,
       [SupportedSDKNetworks.ArbitrumOne]: `${baseUrl}/summer-protocol-arbitrum`,
       [SupportedSDKNetworks.SonicMainnet]: `${baseUrl}/summer-protocol-sonic`,
+      [SupportedSDKNetworks.Hyperliquid]: `${baseUrl}/summer-protocol-hyperliquid`,
     }
 
     const mainnetGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Mainnet])
     const baseGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.Base])
     const arbitrumGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.ArbitrumOne])
     const sonicGraphQlClient = new GraphQLClient(subgraphsMap[SupportedSDKNetworks.SonicMainnet])
+    const hyperliquidGraphQlClient = new GraphQLClient(
+      subgraphsMap[SupportedSDKNetworks.Hyperliquid],
+    )
 
     let updatedLatestActivities
     let updatedTopDepositors
@@ -53,6 +57,7 @@ export const updateTablesData = async ({
         baseGraphQlClient,
         arbitrumGraphQlClient,
         sonicGraphQlClient,
+        hyperliquidGraphQlClient,
       })
     }
 
@@ -63,6 +68,7 @@ export const updateTablesData = async ({
         baseGraphQlClient,
         arbitrumGraphQlClient,
         sonicGraphQlClient,
+        hyperliquidGraphQlClient,
       })
     }
 
@@ -73,6 +79,7 @@ export const updateTablesData = async ({
         baseGraphQlClient,
         arbitrumGraphQlClient,
         sonicGraphQlClient,
+        hyperliquidGraphQlClient,
       })
     }
 

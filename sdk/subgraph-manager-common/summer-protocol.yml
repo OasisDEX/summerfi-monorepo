@@ -1,5 +1,5 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+schema: '${SUBGRAPH_BASE}/summer-protocol-hyperliquid'
 # schema: 'https://api.goldsky.com/api/public/project_cmgyeezx300294yp2bgo8cfjo/subgraphs/summer-protocol-base/prod/gn'
 documents: './src/queries/protocol/*.graphql'
 generates:
