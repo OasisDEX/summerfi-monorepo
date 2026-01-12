@@ -8,7 +8,6 @@ import {
   AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
-  ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { slugify } from '@summerfi/app-utils'
 import {
@@ -19,6 +18,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { getAllUsersInGroup } from '@/app/server-handlers/institution/institution-users/helpers'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 // this is just a simple helper function to extract user attributes
@@ -49,17 +49,29 @@ export async function rootAdminActionDeleteCognitoUser(userSub: string) {
   })
 
   try {
-    const userData = await cognitoAdminClient.send(
-      new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
-    )
+    const userData = await cognitoAdminClient
+      .send(
+        new ListUsersCommand({ UserPoolId: userPoolId, Filter: `sub = "${userSub}"`, Limit: 1 }),
+      )
+      .catch((error) => {
+        throw new Error(`Error fetching user with sub ${userSub}: ${error}`)
+      })
 
     if (!userData.Users || userData.Users.length === 0) {
       throw new Error(`User with sub ${userSub} not found`)
     }
 
-    const userDeletionQuery = await cognitoAdminClient.send(
-      new AdminDeleteUserCommand({ UserPoolId: userPoolId, Username: userData.Users[0].Username }),
-    )
+    const userDeletionQuery = await cognitoAdminClient
+      .send(
+        new AdminDeleteUserCommand({
+          UserPoolId: userPoolId,
+          Username: userData.Users[0].Username,
+        }),
+      )
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error deleting user', error)
+      })
 
     return userDeletionQuery
   } catch (error) {
@@ -108,13 +120,17 @@ export async function rootAdminActionCreateUser(formData: FormData) {
   })
 
   // 1) Find existing user by email
-  const found = await cognitoClient.send(
-    new ListUsersCommand({
-      UserPoolId: userPoolId,
-      Filter: `email = "${email}"`,
-      Limit: 1,
-    }),
-  )
+  const found = await cognitoClient
+    .send(
+      new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Filter: `email = "${email}"`,
+        Limit: 1,
+      }),
+    )
+    .catch((error) => {
+      throw new Error(`Error searching for user by email ${email}: ${error}`)
+    })
 
   let username: string | undefined
   let sub: string | undefined
@@ -127,43 +143,56 @@ export async function rootAdminActionCreateUser(formData: FormData) {
     const base = slugify(fullName)
     const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
 
-    const created = await cognitoClient.send(
-      new AdminCreateUserCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        UserAttributes: [
-          { Name: 'email', Value: email },
-          { Name: 'name', Value: fullName },
-          { Name: 'email_verified', Value: 'true' },
-        ],
-      }),
-    )
+    const created = await cognitoClient
+      .send(
+        new AdminCreateUserCommand({
+          UserPoolId: userPoolId,
+          Username: generatedUsername,
+          UserAttributes: [
+            { Name: 'email', Value: email },
+            { Name: 'name', Value: fullName },
+            { Name: 'email_verified', Value: 'true' },
+          ],
+        }),
+      )
+      .catch((error) => {
+        throw new Error(`Error creating user with email ${email}: ${error}`)
+      })
 
     // add to `institution-user` group - easier to list them later
     // `ListUsersInGroupCommand` instead of `ListUsersCommand`
-    await cognitoClient.send(
-      new AdminAddUserToGroupCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        GroupName: 'institution-user',
-      }),
-    )
+    await cognitoClient
+      .send(
+        new AdminAddUserToGroupCommand({
+          UserPoolId: userPoolId,
+          Username: generatedUsername,
+          GroupName: 'institution-user',
+        }),
+      )
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error adding user to group', error)
+      })
 
     username = created.User?.Username ?? generatedUsername
 
     // Retrieve attributes to get sub
-    const createdFetch = await cognitoClient.send(
-      new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
-    )
+    const createdFetch = await cognitoClient
+      .send(new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }))
+      .catch((error) => {
+        throw new Error(`Error fetching created user ${username}: ${error}`)
+      })
 
     sub = getAttr(createdFetch, 'sub')
   }
 
   // 2b) Ensure we have sub
   if (!sub && username) {
-    const fetched = await cognitoClient.send(
-      new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
-    )
+    const fetched = await cognitoClient
+      .send(new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }))
+      .catch((error) => {
+        throw new Error(`Error fetching user ${username} to get sub: ${error}`)
+      })
 
     sub = getAttr(fetched, 'sub')
   }
@@ -287,24 +316,32 @@ export async function rootAdminActionUpdateUser(formData: FormData) {
     }
 
     // get the user by email
-    const cognitoUser = await cognitoClient.send(
-      new ListUsersCommand({
-        UserPoolId: userPoolId,
-        Filter: `sub = "${userSub}"`,
-        Limit: 1,
-      }),
-    )
+    const cognitoUser = await cognitoClient
+      .send(
+        new ListUsersCommand({
+          UserPoolId: userPoolId,
+          Filter: `sub = "${userSub}"`,
+          Limit: 1,
+        }),
+      )
+      .catch((error) => {
+        throw new Error(`Error fetching user data for update: ${error}`)
+      })
 
     if (cognitoUser.Users && cognitoUser.Users.length > 0) {
       const username = cognitoUser.Users[0].Username
       const [cognitoUpdateResult, dbUpdateResult] = await Promise.all([
-        cognitoClient.send(
-          new AdminUpdateUserAttributesCommand({
-            UserPoolId: userPoolId,
-            Username: username,
-            UserAttributes: [{ Name: 'name', Value: fullName }],
+        cognitoClient
+          .send(
+            new AdminUpdateUserAttributesCommand({
+              UserPoolId: userPoolId,
+              Username: username,
+              UserAttributes: [{ Name: 'name', Value: fullName }],
+            }),
+          )
+          .catch((error) => {
+            throw new Error(`Error updating user attributes: ${error}`)
           }),
-        ),
         db
           .updateTable('institutionUsers')
           .set({
@@ -380,16 +417,15 @@ export async function rootAdminActionGetUsersList() {
         .execute(),
     ])
 
-    const cognitoUsers = await cognitoAdminClient.send(
-      new ListUsersInGroupCommand({
-        UserPoolId: userPoolId,
-        GroupName: 'institution-user',
-      }),
+    const cognitoUsers = await getAllUsersInGroup(
+      cognitoAdminClient,
+      userPoolId,
+      'institution-user',
     )
 
     // enriched with cognito data
     const users = dbUsers.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.Users?.find((u) =>
+      const user = cognitoUsers.find((u) =>
         u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
       )
       const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
@@ -463,13 +499,17 @@ export async function rootAdminActionGetUserData(userDbId: number) {
     },
   })
 
-  const userData = await cognitoAdminClient.send(
-    new ListUsersCommand({
-      UserPoolId: userPoolId,
-      Filter: `sub = "${dbUser.userSub}"`,
-      Limit: 1,
-    }),
-  )
+  const userData = await cognitoAdminClient
+    .send(
+      new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Filter: `sub = "${dbUser.userSub}"`,
+        Limit: 1,
+      }),
+    )
+    .catch((error) => {
+      throw new Error(`Error fetching user with sub ${dbUser.userSub}: ${error}`)
+    })
 
   if (!userData.Users || userData.Users.length === 0) {
     throw new Error(`User with sub ${dbUser.userSub} not found`)
@@ -511,16 +551,15 @@ export async function rootAdminActionGetGlobalAdminsList() {
   try {
     const [globalAdmins] = await Promise.all([db.selectFrom('globalAdmins').selectAll().execute()])
 
-    const cognitoUsers = await cognitoAdminClient.send(
-      new ListUsersInGroupCommand({
-        UserPoolId: userPoolId,
-        GroupName: 'global-admin',
-      }),
+    const cognitoUsers = await getAllUsersInGroup(
+      cognitoAdminClient,
+      userPoolId,
+      'institution-user',
     )
 
     // enriched with cognito data
     const admins = globalAdmins.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.Users?.find((u) =>
+      const user = cognitoUsers.find((u) =>
         u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
       )
       const cognitoUserName = user?.Username
@@ -580,13 +619,17 @@ export async function rootAdminActionGetGlobalAdminData(userDbId: number) {
 
     if (!globalAdmin) throw new Error(`Global admin with id ${userDbId} not found`)
 
-    const userData = await cognitoAdminClient.send(
-      new ListUsersCommand({
-        UserPoolId: userPoolId,
-        Filter: `sub = "${globalAdmin.userSub}"`,
-        Limit: 1,
-      }),
-    )
+    const userData = await cognitoAdminClient
+      .send(
+        new ListUsersCommand({
+          UserPoolId: userPoolId,
+          Filter: `sub = "${globalAdmin.userSub}"`,
+          Limit: 1,
+        }),
+      )
+      .catch((error) => {
+        throw new Error(`Error fetching user with sub ${globalAdmin.userSub}: ${error}`)
+      })
 
     if (!userData.Users || userData.Users.length === 0) {
       throw new Error(`Cognito user not found for sub ${globalAdmin.userSub}`)
@@ -641,26 +684,38 @@ export async function rootAdminActionCreateGlobalAdmin(formData: FormData) {
   try {
     const generatedUsername = slugify(fullName)
     // Create the user in Cognito
-    const cognitoUser = await cognitoAdminClient.send(
-      new AdminCreateUserCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        UserAttributes: [
-          { Name: 'email', Value: email },
-          { Name: 'name', Value: fullName },
-          { Name: 'email_verified', Value: 'true' },
-        ],
-      }),
-    )
+    const cognitoUser = await cognitoAdminClient
+      .send(
+        new AdminCreateUserCommand({
+          UserPoolId: userPoolId,
+          Username: generatedUsername,
+          UserAttributes: [
+            { Name: 'email', Value: email },
+            { Name: 'name', Value: fullName },
+            { Name: 'email_verified', Value: 'true' },
+          ],
+        }),
+      )
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error creating cognito user', error)
+
+        throw new Error('Failed to create cognito user')
+      })
 
     // Add the user to the 'institution-user' group
-    await cognitoAdminClient.send(
-      new AdminAddUserToGroupCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        GroupName: 'global-admin',
-      }),
-    )
+    await cognitoAdminClient
+      .send(
+        new AdminAddUserToGroupCommand({
+          UserPoolId: userPoolId,
+          Username: generatedUsername,
+          GroupName: 'global-admin',
+        }),
+      )
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error adding user to group institution-user', error)
+      })
 
     const userSub = cognitoUser.User?.Attributes?.find((a) => a.Name === 'sub')?.Value as string
 
@@ -764,13 +819,17 @@ export async function rootAdminActionUpdateGlobalAdmin(formData: FormData) {
 
   try {
     // Update the user in Cognito
-    await cognitoAdminClient.send(
-      new AdminUpdateUserAttributesCommand({
-        UserPoolId: userPoolId,
-        Username: cognitoUserName,
-        UserAttributes: [{ Name: 'name', Value: fullName }],
-      }),
-    )
+    await cognitoAdminClient
+      .send(
+        new AdminUpdateUserAttributesCommand({
+          UserPoolId: userPoolId,
+          Username: cognitoUserName,
+          UserAttributes: [{ Name: 'name', Value: fullName }],
+        }),
+      )
+      .catch((error) => {
+        throw new Error(`Error updating global admin in cognito: ${error}`)
+      })
 
     // eslint-disable-next-line no-console
     console.log(`Global admin updated successfully: ${cognitoUserName}`)

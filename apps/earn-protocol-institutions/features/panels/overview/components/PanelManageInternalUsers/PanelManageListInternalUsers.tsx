@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { addInstitutionUser } from '@/app/server-handlers/institution/institution-users'
+import { FormSubmitButton } from '@/components/molecules/FormSubmitButton/FormSubmitButton'
 import { type SessionPayload } from '@/features/auth/types'
 import { usersPanelColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/constants'
 import { type UserListColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/types'
@@ -144,13 +145,12 @@ export const PanelManageListInternalUsers = ({
               </select>
             </div>
           </div>
-          <Button
-            variant="primarySmall"
-            type="submit"
-            className={panelManageInternalUsersStyles.addUserButton}
-          >
-            Add&nbsp;User
-          </Button>
+          <FormSubmitButton
+            className={panelManageInternalUsersStyles.submitButton}
+            toastLabel="Adding user..."
+            pendingLabel={<>Adding&nbsp;User...</>}
+            label={<>Add&nbsp;User</>}
+          />
         </form>
       </Card>
     </Card>

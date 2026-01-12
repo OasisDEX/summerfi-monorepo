@@ -2,6 +2,7 @@ import { Button, Card, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { removeInstitutionUser } from '@/app/server-handlers/institution/institution-users'
+import { FormSubmitButton } from '@/components/molecules/FormSubmitButton/FormSubmitButton'
 import { type SessionPayload } from '@/features/auth/types'
 import { getUserPrivileges } from '@/features/user/get-user-privileges'
 
@@ -81,14 +82,12 @@ export const PanelManageDeleteInternalUser = ({
             </div>
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
-            <Button
-              variant="primarySmall"
-              type="submit"
-              style={{ alignSelf: 'flex-start' }}
+            <FormSubmitButton
               className={panelManageInternalUsersStyles.submitButton}
-            >
-              Delete&nbsp;User
-            </Button>
+              toastLabel="User deleted successfully"
+              pendingLabel={<>Deleting&nbsp;User...</>}
+              label={<>Delete&nbsp;User</>}
+            />
             <Link href={`/${institutionName}/overview/manage-internal-users`}>
               <Button variant="secondarySmall">Go&nbsp;back</Button>
             </Link>

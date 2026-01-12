@@ -6,7 +6,6 @@ import {
   AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
-  ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { slugify } from '@summerfi/app-utils'
 import { type GlobalRoles } from '@summerfi/sdk-common'
@@ -18,6 +17,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { getCachedInstitutionRoles } from '@/app/server-handlers/institution/institution-data'
+import { getAllUsersInGroup } from '@/app/server-handlers/institution/institution-users/helpers'
 import { validateInstitutionUserSession } from '@/app/server-handlers/institution/utils/validate-user-session'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
@@ -69,19 +69,21 @@ export const getInstitutionUsers = async (institutionName: string) => {
         ])
         .where('institutions.name', '=', institutionName)
         .execute(),
-      await cognitoAdminClient.send(
-        new ListUsersInGroupCommand({
-          UserPoolId: userPoolId,
-          GroupName: 'institution-user',
-        }),
-      ),
+      await getAllUsersInGroup(cognitoAdminClient, userPoolId, 'institution-user'),
     ])
 
     // enriched with cognito data
     const users = dbUsers.map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.Users?.find((u) =>
+      const user = cognitoUsers.find((u) =>
         u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
       )
+
+      if (!user) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `Warning: Cognito user with sub ${userSub} not found for institution ${institutionName}`,
+        )
+      }
       const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
       const cognitoUserName = user?.Username
       const cognitoName = user?.Attributes?.find((a) => a.Name === 'name')?.Value
@@ -151,12 +153,7 @@ export const getInstitutionUser = async (institutionName: string, userId: string
         .where('institutions.name', '=', institutionName)
         .where('institutionUsers.id', '=', Number(userId))
         .executeTakeFirst(),
-      await cognitoAdminClient.send(
-        new ListUsersInGroupCommand({
-          UserPoolId: userPoolId,
-          GroupName: 'institution-user',
-        }),
-      ),
+      await getAllUsersInGroup(cognitoAdminClient, userPoolId, 'institution-user'),
     ])
 
     if (!dbUsers) {
@@ -165,7 +162,7 @@ export const getInstitutionUser = async (institutionName: string, userId: string
 
     // enriched with cognito data
     const users = [dbUsers].map(({ userSub, ...dbUser }) => {
-      const user = cognitoUsers.Users?.find((u) =>
+      const user = cognitoUsers.find((u) =>
         u.Attributes?.find((a) => a.Name === 'sub' && a.Value === userSub),
       )
       const cognitoEmail = user?.Attributes?.find((a) => a.Name === 'email')?.Value
@@ -198,130 +195,140 @@ export const getInstitutionUser = async (institutionName: string, userId: string
 
 export const addInstitutionUser = async (formData: FormData) => {
   'use server'
-  const email = String(formData.get('email') ?? '')
-    .trim()
-    .toLowerCase()
-
-  const fullName = String(formData.get('name') ?? '').trim()
-
-  const roleRaw = formData.get('role')
-  const institutionName = formData.get('institutionName') as string
-
-  if (!email || !fullName || !institutionName) return
-
-  await validateInstitutionUserSession({ institutionName })
-
-  const role = roleRaw ? (String(roleRaw) as UserRole) : null
-
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const cognitoClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  // 1) Find existing user by email
-  const found = await cognitoClient.send(
-    new ListUsersCommand({
-      UserPoolId: userPoolId,
-      Filter: `email = "${email}"`,
-      Limit: 1,
-    }),
-  )
-
-  let username: string | undefined
-  let sub: string | undefined
-
-  if (found.Users && found.Users.length > 0) {
-    username = found.Users[0]?.Username
-    sub = getAttr(found.Users[0], 'sub')
-  } else {
-    // 2) Create user if not exists. Username cannot be an email when email alias is enabled.
-    const base = slugify(fullName)
-    const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
-
-    const created = await cognitoClient.send(
-      new AdminCreateUserCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        UserAttributes: [
-          { Name: 'email', Value: email },
-          { Name: 'name', Value: fullName },
-          { Name: 'email_verified', Value: 'true' },
-        ],
-      }),
-    )
-
-    // add to `institution-user` group - easier to list them later
-    // `ListUsersInGroupCommand` instead of `ListUsersCommand`
-    await cognitoClient.send(
-      new AdminAddUserToGroupCommand({
-        UserPoolId: userPoolId,
-        Username: generatedUsername,
-        GroupName: 'institution-user',
-      }),
-    )
-
-    username = created.User?.Username ?? generatedUsername
-
-    // Retrieve attributes to get sub
-    const createdFetch = await cognitoClient.send(
-      new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
-    )
-
-    sub = getAttr(createdFetch, 'sub')
-  }
-
-  // 2b) Ensure we have sub
-  if (!sub && username) {
-    const fetched = await cognitoClient.send(
-      new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
-    )
-
-    sub = getAttr(fetched, 'sub')
-  }
-
-  if (!sub) throw new Error('Failed to resolve Cognito user sub')
-
-  const { db } = await getSummerProtocolInstitutionDB({
-    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
-
   try {
-    const institutionId = await db
-      .selectFrom('institutions')
-      .select('id')
-      .where('name', '=', institutionName)
-      .executeTakeFirst()
+    const email = String(formData.get('email') ?? '')
+      .trim()
+      .toLowerCase()
 
-    if (!institutionId) {
-      throw new Error('Institution not found')
+    const fullName = String(formData.get('name') ?? '').trim()
+
+    const roleRaw = formData.get('role')
+    const institutionName = formData.get('institutionName') as string
+
+    if (!email || !fullName || !institutionName) return
+
+    await validateInstitutionUserSession({ institutionName })
+
+    const role = roleRaw ? (String(roleRaw) as UserRole) : null
+
+    const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+    const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+    const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+    const region = COGNITO_USER_POOL_REGION
+
+    if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+    if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
+
+    const cognitoClient = new CognitoIdentityProviderClient({
+      region,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+    })
+
+    // 1) Find existing user by email
+    const found = await cognitoClient.send(
+      new ListUsersCommand({
+        UserPoolId: userPoolId,
+        Filter: `email = "${email}"`,
+        Limit: 1,
+      }),
+    )
+
+    let username: string | undefined
+    let sub: string | undefined
+
+    if (found.Users && found.Users.length > 0) {
+      username = found.Users[0]?.Username
+      sub = getAttr(found.Users[0], 'sub')
+    } else {
+      // 2) Create user if not exists. Username cannot be an email when email alias is enabled.
+      const base = slugify(fullName)
+      const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
+
+      const created = await cognitoClient.send(
+        new AdminCreateUserCommand({
+          UserPoolId: userPoolId,
+          Username: generatedUsername,
+          UserAttributes: [
+            { Name: 'email', Value: email },
+            { Name: 'name', Value: fullName },
+            { Name: 'email_verified', Value: 'true' },
+          ],
+        }),
+      )
+
+      // add to `institution-user` group - easier to list them later
+      // `ListUsersInGroupCommand` instead of `ListUsersCommand`
+      await cognitoClient
+        .send(
+          new AdminAddUserToGroupCommand({
+            UserPoolId: userPoolId,
+            Username: generatedUsername,
+            GroupName: 'institution-user',
+          }),
+        )
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error('Error adding user to group institution-user', error)
+        })
+
+      username = created.User?.Username ?? generatedUsername
+
+      // Retrieve attributes to get sub
+      const createdFetch = await cognitoClient.send(
+        new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
+      )
+
+      sub = getAttr(createdFetch, 'sub')
     }
 
-    const [_insertResult] = await Promise.all([
-      db
-        .insertInto('institutionUsers')
-        .values({ userSub: sub, institutionId: institutionId.id, role })
-        .execute(),
-    ])
+    // 2b) Ensure we have sub
+    if (!sub && username) {
+      const fetched = await cognitoClient.send(
+        new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
+      )
 
-    revalidatePath(`/${institutionName}/overview/manage-internal-users`)
+      sub = getAttr(fetched, 'sub')
+    }
+
+    if (!sub) throw new Error('Failed to resolve Cognito user sub')
+
+    const { db } = await getSummerProtocolInstitutionDB({
+      connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+    })
+
+    try {
+      const institutionId = await db
+        .selectFrom('institutions')
+        .select('id')
+        .where('name', '=', institutionName)
+        .executeTakeFirst()
+
+      if (!institutionId) {
+        throw new Error('Institution not found')
+      }
+
+      const [_insertResult] = await Promise.all([
+        db
+          .insertInto('institutionUsers')
+          .values({ userSub: sub, institutionId: institutionId.id, role })
+          .execute(),
+      ])
+
+      revalidatePath(`/${institutionName}/overview/manage-internal-users`)
+    } catch (error) {
+      // Handle errors
+      // eslint-disable-next-line no-console
+      console.error('Error creating user', error)
+    } finally {
+      db.destroy()
+      cognitoClient.destroy()
+    }
   } catch (error) {
-    // Handle errors
     // eslint-disable-next-line no-console
-    console.error('Error creating user', error)
-  } finally {
-    db.destroy()
-    cognitoClient.destroy()
+    console.error('Error in addInstitutionUser', error)
   }
 }
 
