@@ -5,8 +5,8 @@ import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { addInstitutionUser } from '@/app/server-handlers/institution/institution-users'
-import { FormSubmitButton } from '@/components/molecules/FormSubmitButton/FormSubmitButton'
 import { type SessionPayload } from '@/features/auth/types'
+import { AddUserForm } from '@/features/panels/overview/components/PanelManageInternalUsers/AddUserForm'
 import { usersPanelColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/constants'
 import { type UserListColumns } from '@/features/panels/overview/components/PanelManageInternalUsers/types'
 import { getUserPrivileges } from '@/features/user/get-user-privileges'
@@ -118,41 +118,7 @@ export const PanelManageListInternalUsers = ({
         </div>
       </Card>
       <Text variant="h3">Add user</Text>
-      <Card variant="cardPrimary">
-        <form action={addInstitutionUser} className={panelManageInternalUsersStyles.addUserForm}>
-          <input type="hidden" name="institutionName" value={institutionName} />
-          <div className={panelManageInternalUsersStyles.formFields}>
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="email" className={panelManageInternalUsersStyles.formLabel}>
-                Email
-              </label>
-              <input name="email" type="email" placeholder="Email" required />
-            </div>
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
-                Full name
-              </label>
-              <input name="name" placeholder="Full name" required />
-            </div>
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
-                Role
-              </label>
-              <select name="role" defaultValue="Viewer">
-                <option value="RoleAdmin">RoleAdmin</option>
-                <option value="SuperAdmin">SuperAdmin</option>
-                <option value="Viewer">Viewer</option>
-              </select>
-            </div>
-          </div>
-          <FormSubmitButton
-            className={panelManageInternalUsersStyles.submitButton}
-            toastLabel="Adding user..."
-            pendingLabel={<>Adding&nbsp;User...</>}
-            label={<>Add&nbsp;User</>}
-          />
-        </form>
-      </Card>
+      <AddUserForm institutionName={institutionName} action={addInstitutionUser} />
     </Card>
   )
 }

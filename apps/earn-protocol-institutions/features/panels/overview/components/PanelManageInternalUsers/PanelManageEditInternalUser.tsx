@@ -1,9 +1,8 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import { updateInstitutionUser } from '@/app/server-handlers/institution/institution-users'
-import { FormSubmitButton } from '@/components/molecules/FormSubmitButton/FormSubmitButton'
 import { type SessionPayload } from '@/features/auth/types'
+import { EditUserForm } from '@/features/panels/overview/components/PanelManageInternalUsers/EditUserForm'
 import { getUserPrivileges } from '@/features/user/get-user-privileges'
 
 import panelManageInternalUsersStyles from './PanelManageInternalUsers.module.css'
@@ -52,47 +51,7 @@ export const PanelManageEditInternalUser = ({
       className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
     >
       <Text variant="h2">Editing user</Text>
-      <Card variant="cardPrimaryMediumPaddings">
-        <form
-          action={updateInstitutionUser}
-          className={panelManageInternalUsersStyles.editUserForm}
-        >
-          <input type="hidden" name="userSub" value={user.userSub} />
-          <input type="hidden" name="institutionId" value={user.institutionId} />
-          <div className={panelManageInternalUsersStyles.formFields}>
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="name" className={panelManageInternalUsersStyles.formLabel}>
-                Full name
-              </label>
-              <input name="name" placeholder="Full name" required defaultValue={user.cognitoName} />
-            </div>
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="role" className={panelManageInternalUsersStyles.formLabel}>
-                Role
-              </label>
-              <select name="role" defaultValue={user.role ?? ''} required>
-                <option value="" disabled hidden>
-                  Select role
-                </option>
-                <option value="RoleAdmin">RoleAdmin</option>
-                <option value="SuperAdmin">SuperAdmin</option>
-                <option value="Viewer">Viewer</option>
-              </select>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <FormSubmitButton
-              className={panelManageInternalUsersStyles.submitButton}
-              toastLabel="Updating user..."
-              pendingLabel={<>Updating&nbsp;User...</>}
-              label={<>Update&nbsp;User</>}
-            />
-            <Link href={`/${institutionName}/overview/manage-internal-users`}>
-              <Button variant="secondarySmall">Go&nbsp;back</Button>
-            </Link>
-          </div>
-        </form>
-      </Card>
+      <EditUserForm institutionName={institutionName} user={user} action={updateInstitutionUser} />
     </Card>
   )
 }

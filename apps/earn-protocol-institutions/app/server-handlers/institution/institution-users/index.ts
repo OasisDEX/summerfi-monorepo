@@ -193,23 +193,26 @@ export const getInstitutionUser = async (institutionName: string, userId: string
   }
 }
 
-export const addInstitutionUser = async (formData: FormData) => {
+export const addInstitutionUser = async (_prevState: unknown, formData: FormData) => {
   'use server'
+
+  const email = String(formData.get('email') ?? '')
+    .trim()
+    .toLowerCase()
+
+  const fullName = String(formData.get('name') ?? '').trim()
+  const roleRaw = formData.get('role')
+  const institutionName = formData.get('institutionName') as string
+
+  if (!email || !fullName || !institutionName) {
+    return { success: false, error: 'Missing required fields' }
+  }
+
   try {
-    const email = String(formData.get('email') ?? '')
-      .trim()
-      .toLowerCase()
-
-    const fullName = String(formData.get('name') ?? '').trim()
-
-    const roleRaw = formData.get('role')
-    const institutionName = formData.get('institutionName') as string
-
-    if (!email || !fullName || !institutionName) return
-
     await validateInstitutionUserSession({ institutionName })
 
     const role = roleRaw ? (String(roleRaw) as UserRole) : null
+    // ...existing code...
 
     const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
     const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
@@ -221,13 +224,10 @@ export const addInstitutionUser = async (formData: FormData) => {
 
     const cognitoClient = new CognitoIdentityProviderClient({
       region,
-      credentials: {
-        accessKeyId,
-        secretAccessKey,
-      },
+      credentials: { accessKeyId, secretAccessKey },
     })
 
-    // 1) Find existing user by email
+    // ...existing cognito logic...
     const found = await cognitoClient.send(
       new ListUsersCommand({
         UserPoolId: userPoolId,
@@ -243,7 +243,6 @@ export const addInstitutionUser = async (formData: FormData) => {
       username = found.Users[0]?.Username
       sub = getAttr(found.Users[0], 'sub')
     } else {
-      // 2) Create user if not exists. Username cannot be an email when email alias is enabled.
       const base = slugify(fullName)
       const generatedUsername = `${base}-${Math.random().toString(36).slice(2, 8)}`
 
@@ -259,8 +258,6 @@ export const addInstitutionUser = async (formData: FormData) => {
         }),
       )
 
-      // add to `institution-user` group - easier to list them later
-      // `ListUsersInGroupCommand` instead of `ListUsersCommand`
       await cognitoClient
         .send(
           new AdminAddUserToGroupCommand({
@@ -276,7 +273,6 @@ export const addInstitutionUser = async (formData: FormData) => {
 
       username = created.User?.Username ?? generatedUsername
 
-      // Retrieve attributes to get sub
       const createdFetch = await cognitoClient.send(
         new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
       )
@@ -284,7 +280,6 @@ export const addInstitutionUser = async (formData: FormData) => {
       sub = getAttr(createdFetch, 'sub')
     }
 
-    // 2b) Ensure we have sub
     if (!sub && username) {
       const fetched = await cognitoClient.send(
         new AdminGetUserCommand({ UserPoolId: userPoolId, Username: username }),
@@ -310,18 +305,19 @@ export const addInstitutionUser = async (formData: FormData) => {
         throw new Error('Institution not found')
       }
 
-      const [_insertResult] = await Promise.all([
-        db
-          .insertInto('institutionUsers')
-          .values({ userSub: sub, institutionId: institutionId.id, role })
-          .execute(),
-      ])
+      await db
+        .insertInto('institutionUsers')
+        .values({ userSub: sub, institutionId: institutionId.id, role })
+        .execute()
 
       revalidatePath(`/${institutionName}/overview/manage-internal-users`)
+
+      return { success: true }
     } catch (error) {
-      // Handle errors
       // eslint-disable-next-line no-console
       console.error('Error creating user', error)
+
+      return { success: false, error: 'Failed to create user in database' }
     } finally {
       db.destroy()
       cognitoClient.destroy()
@@ -329,68 +325,79 @@ export const addInstitutionUser = async (formData: FormData) => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error in addInstitutionUser', error)
+
+    return { success: false, error: 'Failed to add user' }
   }
 }
 
-export const updateInstitutionUser = async (formData: FormData) => {
+export const updateInstitutionUser = async (_prevState: unknown, formData: FormData) => {
   'use server'
   const fullName = String(formData.get('name') ?? '').trim()
   const roleRaw = formData.get('role')
   const institutionIdRaw = formData.get('institutionId')
   const userSub = formData.get('userSub')
 
-  await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
-
-  const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
-  const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
-  const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
-  const region = COGNITO_USER_POOL_REGION
-
-  if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
-  if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
-
-  const cognitoClient = new CognitoIdentityProviderClient({
-    region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  })
-
-  const { db } = await getSummerProtocolInstitutionDB({
-    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
-  })
+  if (!fullName || !userSub || typeof userSub !== 'string' || !institutionIdRaw) {
+    return { success: false, error: 'Missing required fields' }
+  }
 
   try {
-    if (!fullName || !userSub || typeof userSub !== 'string') {
-      throw new Error('Missing required fields')
-    }
+    await validateInstitutionUserSession({ institutionId: String(institutionIdRaw) })
 
-    const institutionId = Number(institutionIdRaw)
-    const role = roleRaw ? (String(roleRaw) as UserRole) : null
+    const accessKeyId = process.env.INSTITUTIONS_COGNITO_ADMIN_ACCESS_KEY
+    const secretAccessKey = process.env.INSTITUTIONS_COGNITO_ADMIN_SECRET_ACCESS_KEY
+    const userPoolId = process.env.INSTITUTIONS_COGNITO_USER_POOL_ID
+    const region = COGNITO_USER_POOL_REGION
 
-    if (!Number.isFinite(institutionId)) {
-      throw new Error('Invalid institutionId')
-    }
+    if (!userPoolId) throw new Error('INSTITUTIONS_COGNITO_USER_POOL_ID is not set')
+    if (!accessKeyId || !secretAccessKey) throw new Error('Cognito admin credentials are not set')
 
-    // get the user by email
-    const [cognitoUser, institutionName] = await Promise.all([
-      cognitoClient.send(
-        new ListUsersCommand({
-          UserPoolId: userPoolId,
-          Filter: `sub = "${userSub}"`,
-          Limit: 1,
-        }),
-      ),
-      db
-        .selectFrom('institutions')
-        .select('name')
-        .where('id', '=', Number(institutionIdRaw))
-        .executeTakeFirst(),
-    ])
+    const cognitoClient = new CognitoIdentityProviderClient({
+      region,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+    })
 
-    if (cognitoUser.Users && cognitoUser.Users.length > 0) {
+    const { db } = await getSummerProtocolInstitutionDB({
+      connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+    })
+
+    try {
+      const institutionId = Number(institutionIdRaw)
+      const role = roleRaw ? (String(roleRaw) as UserRole) : null
+
+      if (!Number.isFinite(institutionId)) {
+        return { success: false, error: 'Invalid institutionId' }
+      }
+
+      // get the user by sub
+      const [cognitoUser, institutionName] = await Promise.all([
+        cognitoClient.send(
+          new ListUsersCommand({
+            UserPoolId: userPoolId,
+            Filter: `sub = "${userSub}"`,
+            Limit: 1,
+          }),
+        ),
+        db
+          .selectFrom('institutions')
+          .select('name')
+          .where('id', '=', institutionId)
+          .executeTakeFirst(),
+      ])
+
+      if (!institutionName) {
+        return { success: false, error: 'Institution not found' }
+      }
+
+      if (!cognitoUser.Users || cognitoUser.Users.length === 0) {
+        return { success: false, error: `User with sub ${userSub} not found` }
+      }
+
       const username = cognitoUser.Users[0].Username
+
       const [cognitoUpdateResult, dbUpdateResult] = await Promise.all([
         cognitoClient.send(
           new AdminUpdateUserAttributesCommand({
@@ -411,7 +418,6 @@ export const updateInstitutionUser = async (formData: FormData) => {
 
       // eslint-disable-next-line no-console
       console.log(
-        // Log the results of the update
         'Institution user updated',
         JSON.stringify(
           {
@@ -421,17 +427,24 @@ export const updateInstitutionUser = async (formData: FormData) => {
           (_key, value) => (typeof value === 'bigint' ? value.toString() : value),
         ),
       )
-    } else {
-      throw new Error(`User with sub ${userSub} not found`)
+
+      revalidatePath(`/${institutionName.name}/overview/manage-internal-users`)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error updating user', error)
+
+      return { success: false, error: 'Failed to update user' }
+    } finally {
+      cognitoClient.destroy()
+      db.destroy()
     }
-    redirect(`/${institutionName?.name}/overview/manage-internal-users`)
+
+    return { success: true }
   } catch (error) {
-    // Handle errors
     // eslint-disable-next-line no-console
-    console.error('Error updating user', error)
-  } finally {
-    cognitoClient.destroy()
-    db.destroy()
+    console.error('Error in updateInstitutionUser', error)
+
+    return { success: false, error: 'Failed to update user' }
   }
 }
 
@@ -478,7 +491,7 @@ export async function institutionDeleteCognitoUser(userSub: string, institutionI
   }
 }
 
-export const removeInstitutionUser = async (formData: FormData) => {
+export const removeInstitutionUser = async (_prevState: unknown, formData: FormData) => {
   'use server'
   const institutionName = formData.get('institutionName')
 

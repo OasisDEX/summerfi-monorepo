@@ -1,9 +1,8 @@
-import { Button, Card, Text } from '@summerfi/app-earn-ui'
-import Link from 'next/link'
+import { Card, Text } from '@summerfi/app-earn-ui'
 
 import { removeInstitutionUser } from '@/app/server-handlers/institution/institution-users'
-import { FormSubmitButton } from '@/components/molecules/FormSubmitButton/FormSubmitButton'
 import { type SessionPayload } from '@/features/auth/types'
+import { DeleteUserForm } from '@/features/panels/overview/components/PanelManageInternalUsers/DeleteUserForm'
 import { getUserPrivileges } from '@/features/user/get-user-privileges'
 
 import panelManageInternalUsersStyles from './PanelManageInternalUsers.module.css'
@@ -52,48 +51,11 @@ export const PanelManageDeleteInternalUser = ({
       className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
     >
       <Text variant="h2">Deleting user</Text>
-      <Card variant="cardPrimaryMediumPaddings">
-        <form
-          action={removeInstitutionUser}
-          className={panelManageInternalUsersStyles.editUserForm}
-        >
-          <div className={panelManageInternalUsersStyles.formFields}>
-            <input type="hidden" name="userSub" value={user.userSub} />
-            <input type="hidden" name="institutionName" value={institutionName} />
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="email" className={panelManageInternalUsersStyles.formLabel}>
-                Email
-              </label>
-              <input id="email" name="email" defaultValue={user.cognitoEmail} disabled required />
-            </div>
-
-            <div className={panelManageInternalUsersStyles.formField}>
-              <label htmlFor="displayName" className={panelManageInternalUsersStyles.formLabel}>
-                Name
-              </label>
-              <input
-                id="displayName"
-                name="displayName"
-                defaultValue={user.cognitoName}
-                disabled
-                required
-                placeholder="Human Friendly Name"
-              />
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <FormSubmitButton
-              className={panelManageInternalUsersStyles.submitButton}
-              toastLabel="User deleted successfully"
-              pendingLabel={<>Deleting&nbsp;User...</>}
-              label={<>Delete&nbsp;User</>}
-            />
-            <Link href={`/${institutionName}/overview/manage-internal-users`}>
-              <Button variant="secondarySmall">Go&nbsp;back</Button>
-            </Link>
-          </div>
-        </form>
-      </Card>
+      <DeleteUserForm
+        institutionName={institutionName}
+        user={user}
+        action={removeInstitutionUser}
+      />
     </Card>
   )
 }

@@ -20,13 +20,18 @@ export default async function ManageInternalUsersDelete({
   if (!institutionName) {
     return <div>Institution ID not provided.</div>
   }
-  const institutionUsersList = await getInstitutionUser(institutionName, userDbId)
 
-  return (
-    <PanelManageDeleteInternalUser
-      user={institutionUsersList.user}
-      institutionName={institutionName}
-      session={session}
-    />
-  )
+  try {
+    const { user } = await getInstitutionUser(institutionName, userDbId)
+
+    return (
+      <PanelManageDeleteInternalUser
+        user={user}
+        institutionName={institutionName}
+        session={session}
+      />
+    )
+  } catch (error) {
+    return <div>Error loading user data: {(error as Error).message}</div>
+  }
 }
