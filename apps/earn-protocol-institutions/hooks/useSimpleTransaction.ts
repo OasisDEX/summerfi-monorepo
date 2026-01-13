@@ -38,19 +38,30 @@ const waitingSecondsTimePerEachChain: { [key in SupportedNetworkIds]: number } =
 export const useSimpleTransaction = ({
   chainId,
   onTxSuccess,
+  txItem,
 }: {
   chainId: SupportedNetworkIds
-  onTxSuccess?: () => void
+  onTxSuccess?: (txId: string) => void
+  txItem: SDKTransactionItem
 }) => {
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[chainId],
   })
   const { userWalletAddress } = useUserWallet()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
-  const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
+  const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>(
+    txItem.txInitialState ?? 'idle',
+  )
+
   const [txError, setTxError] = useState('')
   const isIframe = useIsIframe()
   const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+
+  useEffect(() => {
+    if (txItem.txInitialState && txItem.txInitialState !== txStatus) {
+      setTxStatus(txItem.txInitialState)
+    }
+  }, [txItem.txInitialState, txStatus])
 
   // Configure User Operation (transaction) sender, passing client which can be undefined
   const {
@@ -220,7 +231,7 @@ export const useSimpleTransaction = ({
           })
 
           setTimeout(() => {
-            onTxSuccess?.()
+            onTxSuccess?.(txItem.id)
             toast.dismiss(toastId)
           }, waitingSecondsTimePerEachChain[chainId] * 1000)
           setWaitingForTx(undefined) // Clear waitingForTx after successful execution and state update
@@ -232,7 +243,16 @@ export const useSimpleTransaction = ({
           setTxError(parseErrorMessage((err as Error).message))
         })
     }
-  }, [waitingForTx, txStatus, publicClient, setTxStatus, setWaitingForTx, chainId, onTxSuccess])
+  }, [
+    waitingForTx,
+    txStatus,
+    publicClient,
+    setTxStatus,
+    setWaitingForTx,
+    chainId,
+    onTxSuccess,
+    txItem.id,
+  ])
 
   return {
     executeTransaction,

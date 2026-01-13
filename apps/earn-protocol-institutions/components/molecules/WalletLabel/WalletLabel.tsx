@@ -21,6 +21,7 @@ import {
   sdkChainIdToHumanNetwork,
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
+import clsx from 'clsx'
 
 import walletLabelStyles from './WalletLabel.module.css'
 
@@ -226,7 +227,11 @@ export default function WalletLabel({
     if (variant === 'addressOnly') return null
 
     return (
-      <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
+      <Button
+        variant={buttonVariant}
+        onClick={openAuthModal}
+        className={clsx(walletLabelStyles.wrapper, className)}
+      >
         {customLoginLabel ?? 'Connect wallet'}
       </Button>
     )
@@ -235,7 +240,7 @@ export default function WalletLabel({
   // Address-only variant - compact display of just the wallet address with network icon
   if (variant === 'addressOnly') {
     return (
-      <div className={`${walletLabelStyles.addressOnlyWrapper} ${className}`}>
+      <div className={clsx(walletLabelStyles.addressOnlyWrapper, className)}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-16)' }}>
           {addressCopied && (
             <div className={`${walletLabelStyles.copiedNotification}`}>

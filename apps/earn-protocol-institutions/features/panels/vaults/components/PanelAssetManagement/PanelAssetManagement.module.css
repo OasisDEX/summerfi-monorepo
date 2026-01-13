@@ -1,0 +1,31 @@
+.panelAssetManagementWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-medium-large);
+}
+
+.depositCards {
+  display: flex;
+  justify-content: space-evenly;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+  padding: 0 100px;
+}
+
+.depositCardsItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-space-medium);
+  width: 45%;
+}
+
+.connectWalletButton {
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+
+.clickableBalance {
+  cursor: pointer;
+  text-decoration: underline;
+}

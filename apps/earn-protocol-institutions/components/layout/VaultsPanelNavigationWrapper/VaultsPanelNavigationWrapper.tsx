@@ -13,6 +13,7 @@ enum DashboardVaultsPanel {
   OVERVIEW = 'overview',
   VAULT_EXPOSURE = 'vault-exposure',
   ASSET_REALLOCATION = 'asset-reallocation',
+  ASSET_MANAGEMENT = 'asset-management',
   RISK_PARAMETERS = 'risk-parameters',
   ROLE_ADMIN = 'role-admin',
   USER_ADMIN = 'user-admin',
@@ -41,6 +42,10 @@ const panelItems = [
     id: DashboardVaultsPanel.ASSET_REALLOCATION,
     label: 'Asset reallocation',
     disabled: true,
+  },
+  {
+    id: DashboardVaultsPanel.ASSET_MANAGEMENT,
+    label: 'Asset management',
   },
   {
     id: DashboardVaultsPanel.ROLE_ADMIN,

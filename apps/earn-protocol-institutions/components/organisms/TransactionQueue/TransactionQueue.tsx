@@ -31,7 +31,7 @@ export const TransactionQueue = ({
   transactionQueue: SDKTransactionItem[]
   removeTransaction: (id: string) => void
   chainId: SupportedNetworkIds
-  onTxSuccess?: () => void
+  onTxSuccess?: (txid: string) => void
 }) => {
   const { userWalletAddress } = useUserWallet()
   const { chain, isSettingChain, setChain } = useChain()

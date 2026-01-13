@@ -15,11 +15,12 @@ export const SimpleTransactionButton = ({
 }: {
   txItem: SDKTransactionItem
   chainId: SupportedNetworkIds
-  onTxSuccess?: () => void
+  onTxSuccess?: (txId: string) => void
 }) => {
   const { executeTransaction, isSendingUserOperation, txStatus, txError } = useSimpleTransaction({
     chainId,
     onTxSuccess,
+    txItem,
   })
   const isLoading = useMemo(() => {
     const isLoadingTransaction = !txItem.txError && !txItem.txData?.transaction
