@@ -411,6 +411,8 @@ export class CoingeckoOracleProvider
         return 'ethereum'
       case ChainIds.Sonic:
         return 'sonic-3'
+      case ChainIds.Hyperliquid:
+        return 'hyperliquid'
       default:
         throw new Error(`Unsupported chainId for native token: ${chainId}`)
     }
