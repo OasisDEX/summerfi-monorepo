@@ -6,9 +6,11 @@ import { useChain } from '@account-kit/react'
 import {
   Card,
   ERROR_TOAST_CONFIG,
+  Input,
   Table,
   type TableSortedColumn,
   Text,
+  useUserWallet,
   WARNING_TOAST_CONFIG,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
@@ -49,6 +51,9 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   network,
   activeUsers,
 }) => {
+  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const [activeUsersFilter, setActiveUsersFilter] = useState('')
+  const [whitelistedUsersFilter, setWhitelistedUsersFilter] = useState('')
   const chainId = networkNameToSDKId(network)
   const sdkNetworkName = chainIdToSDKNetwork(chainId)
   const { chain, isSettingChain } = useChain()
@@ -155,6 +160,8 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         onRevokeWhitelist,
         chainId,
         disabled: !isProperChain || isSettingChain,
+        whitelistedUsersFilter,
+        userWalletAddress: isLoadingAccount ? undefined : userWalletAddress,
       }),
     [
       whitelistedWallets,
@@ -163,6 +170,9 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       chainId,
       isProperChain,
       isSettingChain,
+      whitelistedUsersFilter,
+      isLoadingAccount,
+      userWalletAddress,
     ],
   )
 
@@ -171,8 +181,10 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       userActiveListMapper({
         activeUsers,
         activeUsersSortConfig,
+        activeUsersFilter,
+        userWalletAddress: isLoadingAccount ? undefined : userWalletAddress,
       }),
-    [activeUsers, activeUsersSortConfig],
+    [activeUsers, activeUsersSortConfig, activeUsersFilter, isLoadingAccount, userWalletAddress],
   )
   const onTxSuccess = () => {
     revalidateTags({
@@ -184,9 +196,18 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={panelUserStyles.panelUserAdminWrapper}>
-      <Text as="h5" variant="h5">
-        Active Users
-      </Text>
+      <div className={panelUserStyles.titleWithInput}>
+        <Text as="h5" variant="h5">
+          Active Users
+        </Text>
+        <Input
+          variant="dark"
+          placeholder="Filter active users (address)"
+          value={activeUsersFilter}
+          onChange={(e) => setActiveUsersFilter(e.target.value)}
+          wrapperClassName={panelUserStyles.inputFilter}
+        />
+      </div>
       <Card>
         <Table<ActiveUsersListColumns>
           rows={activeUsersListRows}
@@ -198,9 +219,18 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
           }}
         />
       </Card>
-      <Text as="h5" variant="h5">
-        Whitelisted users
-      </Text>
+      <div className={panelUserStyles.titleWithInput}>
+        <Text as="h5" variant="h5">
+          Whitelisted users
+        </Text>
+        <Input
+          variant="dark"
+          placeholder="Filter whitelisted users (address)"
+          value={whitelistedUsersFilter}
+          onChange={(e) => setWhitelistedUsersFilter(e.target.value)}
+          wrapperClassName={panelUserStyles.inputFilter}
+        />
+      </div>
       <Card>
         <Table
           rows={userListRows}

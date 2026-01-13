@@ -18,8 +18,6 @@
     user-select: auto;
   }
 
-
-
   .tableWrapper {
     overflow-x: auto;
 
@@ -27,4 +25,25 @@
       min-width: 600px;
     }
   }
+}
+
+.titleWithInput {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-medium);
+  width: 100%;
+}
+
+.inputFilter {
+  width: 260px;
+  input {
+    padding: var(--spacing-space-small) var(--spacing-space-medium);
+    font-size: 14px;
+    background-color: var(--earn-protocol-neutral-95);
+  }
+}
+
+.currentUser {
+  color: var(--earn-protocol-success-50);
 }

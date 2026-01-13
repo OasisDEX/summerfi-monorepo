@@ -7,10 +7,12 @@ import { globalRoleToHuman } from '@/helpers/wallet-roles'
 
 export const useWalletGlobalRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GlobalRoles[] | null>(null)
+  const [isLoadingConnectedRoles, setIsLoadingConnectedRoles] = useState<boolean>(true)
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const abortControllerRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
+    setIsLoadingConnectedRoles(false)
     if (isLoadingAccount && userWalletAddress) {
       setConnectedRoles(null)
 
@@ -27,6 +29,8 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
     }
     // Create a new controller for this request
     abortControllerRef.current = new AbortController()
+
+    setIsLoadingConnectedRoles(true)
 
     getUserData({
       walletAddress: userWalletAddress,
@@ -49,6 +53,9 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
           setConnectedRoles(null)
         }
       })
+      .finally(() => {
+        setIsLoadingConnectedRoles(false)
+      })
 
     // eslint-disable-next-line consistent-return
     return () => {
@@ -57,7 +64,7 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
   }, [isLoadingAccount, userWalletAddress, institutionName])
 
   const connectedRolesLabel = useMemo(() => {
-    if (isLoadingAccount) {
+    if (isLoadingAccount || isLoadingConnectedRoles) {
       return 'Loading...'
     }
     if (!userWalletAddress) {
@@ -68,7 +75,7 @@ export const useWalletGlobalRole = ({ institutionName }: { institutionName: stri
     }
 
     return connectedRoles.map(globalRoleToHuman).join(', ')
-  }, [connectedRoles, isLoadingAccount, userWalletAddress])
+  }, [connectedRoles, isLoadingAccount, userWalletAddress, isLoadingConnectedRoles])
 
   return {
     connectedRoles,
