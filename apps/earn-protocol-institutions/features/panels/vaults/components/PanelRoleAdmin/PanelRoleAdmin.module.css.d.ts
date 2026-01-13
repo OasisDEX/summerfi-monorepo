@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "addRoleForm": string;
+  readonly "currentUser": string;
   readonly "inputContainer": string;
   readonly "inputWrapper": string;
   readonly "panelRoleAdminWrapper": string;

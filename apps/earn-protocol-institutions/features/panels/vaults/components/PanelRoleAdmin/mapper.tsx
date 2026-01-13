@@ -1,4 +1,5 @@
-import { Button, Icon, TableCellNodes, TableCellText } from '@summerfi/app-earn-ui'
+import { Button, Icon, TableCellNodes, TableCellText, Tooltip } from '@summerfi/app-earn-ui'
+import clsx from 'clsx'
 
 import { getRevokeContractRoleTransactionId } from '@/helpers/get-transaction-id'
 import { contractSpecificRolesToHuman } from '@/helpers/wallet-roles'
@@ -13,6 +14,7 @@ type RoleAdminMapperParams = {
   onRevokeContractSpecificRole: (params: InstitutionVaultRole) => void
   chainId: number
   disabled?: boolean
+  userWalletAddress?: string
 }
 
 export const roleAdminMapper = ({
@@ -21,10 +23,12 @@ export const roleAdminMapper = ({
   onRevokeContractSpecificRole,
   chainId,
   disabled = false,
+  userWalletAddress,
 }: RoleAdminMapperParams) => {
   return roles.map(({ address, role }) => {
     const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
     const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
+    const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
 
     return {
       content: {
@@ -33,7 +37,24 @@ export const roleAdminMapper = ({
             {contractSpecificRolesToHuman(role as InstitutionVaultRoleType)}
           </TableCellText>
         ),
-        address: <TableCellNodes className={styles.tableCellAddress}>{address}</TableCellNodes>,
+        address: (
+          <TableCellNodes
+            className={clsx(styles.tableCellAddress, {
+              [styles.currentUser]: isCurrentUser,
+            })}
+          >
+            {isCurrentUser ? (
+              <Tooltip
+                tooltip="Your currently connected address"
+                tooltipWrapperStyles={{ minWidth: '290px' }}
+              >
+                <span>{address}</span>
+              </Tooltip>
+            ) : (
+              <span>{address}</span>
+            )}
+          </TableCellNodes>
+        ),
         action: (
           <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
             <Button

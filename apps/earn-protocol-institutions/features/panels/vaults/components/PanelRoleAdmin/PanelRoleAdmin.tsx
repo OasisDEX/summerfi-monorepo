@@ -3,7 +3,7 @@
 import { type FC, useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { Card, ERROR_TOAST_CONFIG, Table, Text } from '@summerfi/app-earn-ui'
+import { Card, ERROR_TOAST_CONFIG, Table, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -38,6 +38,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   vaultAddress,
   network,
 }) => {
+  const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
   const chainId = networkNameToSDKId(network)
@@ -137,8 +138,18 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         onRevokeContractSpecificRole,
         chainId,
         disabled: !isProperChain || isSettingChain,
+        userWalletAddress: isLoadingAccount ? undefined : userWalletAddress,
       }),
-    [roles, transactionQueue, onRevokeContractSpecificRole, chainId, isProperChain, isSettingChain],
+    [
+      roles,
+      transactionQueue,
+      onRevokeContractSpecificRole,
+      chainId,
+      isProperChain,
+      isSettingChain,
+      isLoadingAccount,
+      userWalletAddress,
+    ],
   )
 
   const onTxSuccess = () => {

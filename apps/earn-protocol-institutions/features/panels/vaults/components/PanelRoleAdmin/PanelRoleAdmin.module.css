@@ -49,3 +49,7 @@
   gap: var(--spacing-space-large);
   width: 100%;
 }
+
+.currentUser {
+  color: var(--earn-protocol-success-50);
+}
