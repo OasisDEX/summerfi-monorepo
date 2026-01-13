@@ -584,7 +584,7 @@ export const StaticTokensData: TokenListData = {
     },
     {
       chainId: ChainIds.Hyperliquid,
-      symbol: 'USDT',
+      symbol: 'USD₮0',
       name: 'Tether USD Stablecoin',
       address: '0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb',
       decimals: 6,
