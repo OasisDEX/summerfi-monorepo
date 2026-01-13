@@ -1,9 +1,9 @@
 'use client'
 
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
-import { Card, ERROR_TOAST_CONFIG, Table, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { Card, ERROR_TOAST_CONFIG, Input, Table, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 import { ContractSpecificRoleName } from '@summerfi/sdk-common'
@@ -38,6 +38,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
   vaultAddress,
   network,
 }) => {
+  const [rolesUsersFilter, setRolesUsersFilter] = useState('')
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { grantContractSpecificRole, revokeContractSpecificRole } = useAdminAppSDK(institutionName)
   const { addTransaction, removeTransaction, transactionQueue } = useSDKTransactionQueue()
@@ -138,6 +139,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
         onRevokeContractSpecificRole,
         chainId,
         disabled: !isProperChain || isSettingChain,
+        rolesUsersFilter,
         userWalletAddress: isLoadingAccount ? undefined : userWalletAddress,
       }),
     [
@@ -147,6 +149,7 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
       chainId,
       isProperChain,
       isSettingChain,
+      rolesUsersFilter,
       isLoadingAccount,
       userWalletAddress,
     ],
@@ -162,9 +165,18 @@ export const PanelRoleAdmin: FC<PanelRoleAdminProps> = ({
 
   return (
     <Card variant="cardSecondary" className={panelRoleStyles.panelRoleAdminWrapper}>
-      <Text as="h5" variant="h5">
-        Roles
-      </Text>
+      <div className={panelRoleStyles.titleWithInput}>
+        <Text as="h5" variant="h5">
+          Roles
+        </Text>
+        <Input
+          variant="dark"
+          placeholder="Filter roles (address, role)"
+          value={rolesUsersFilter}
+          onChange={(e) => setRolesUsersFilter(e.target.value)}
+          wrapperClassName={panelRoleStyles.inputFilter}
+        />
+      </div>
       <Card>
         <Table
           rows={rows}

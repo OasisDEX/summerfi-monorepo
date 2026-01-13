@@ -15,6 +15,7 @@ type RoleAdminMapperParams = {
   chainId: number
   disabled?: boolean
   userWalletAddress?: string
+  rolesUsersFilter?: string
 }
 
 export const roleAdminMapper = ({
@@ -24,57 +25,70 @@ export const roleAdminMapper = ({
   chainId,
   disabled = false,
   userWalletAddress,
+  rolesUsersFilter,
 }: RoleAdminMapperParams) => {
-  return roles.map(({ address, role }) => {
-    const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
-    const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
-    const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
+  return roles
+    .filter((role) => {
+      if (!rolesUsersFilter) return true
 
-    return {
-      content: {
-        role: (
-          <TableCellText>
-            {contractSpecificRolesToHuman(role as InstitutionVaultRoleType)}
-          </TableCellText>
-        ),
-        address: (
-          <TableCellNodes
-            className={clsx(styles.tableCellAddress, {
-              [styles.currentUser]: isCurrentUser,
-            })}
-          >
-            {isCurrentUser ? (
-              <Tooltip
-                tooltip="Your currently connected address"
-                tooltipWrapperStyles={{ minWidth: '290px' }}
-              >
-                <span>{address}</span>
-              </Tooltip>
-            ) : (
-              <span>{address}</span>
-            )}
-          </TableCellNodes>
-        ),
-        action: (
-          <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
-            <Button
-              variant="unstyled"
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              onClick={() => onRevokeContractSpecificRole({ address, role })}
-              disabled={idDisabled}
+      const filter = rolesUsersFilter.toLowerCase()
+      const addressMatch = role.address.toLowerCase().includes(filter)
+      const roleMatch = contractSpecificRolesToHuman(role.role as InstitutionVaultRoleType)
+        .toLowerCase()
+        .includes(filter)
+
+      return addressMatch || roleMatch
+    })
+    .map(({ address, role }) => {
+      const revokeId = getRevokeContractRoleTransactionId({ address, role, chainId })
+      const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
+      const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
+
+      return {
+        content: {
+          role: (
+            <TableCellText>
+              {contractSpecificRolesToHuman(role as InstitutionVaultRoleType)}
+            </TableCellText>
+          ),
+          address: (
+            <TableCellNodes
+              className={clsx(styles.tableCellAddress, {
+                [styles.currentUser]: isCurrentUser,
+              })}
             >
-              <Icon
-                iconName="trash"
-                size={16}
-                className={styles.trashButton}
-                style={{
-                  opacity: idDisabled ? 0.5 : 1,
-                }}
-              />
-            </Button>
-          </TableCellText>
-        ),
-      },
-    }
-  })
+              {isCurrentUser ? (
+                <Tooltip
+                  tooltip="Your currently connected address"
+                  tooltipWrapperStyles={{ minWidth: '290px' }}
+                >
+                  <span>{address}</span>
+                </Tooltip>
+              ) : (
+                <span>{address}</span>
+              )}
+            </TableCellNodes>
+          ),
+          action: (
+            <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
+              <Button
+                variant="unstyled"
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                onClick={() => onRevokeContractSpecificRole({ address, role })}
+                disabled={idDisabled}
+              >
+                <Icon
+                  iconName="trash"
+                  size={16}
+                  className={styles.trashButton}
+                  style={{
+                    opacity: idDisabled ? 0.5 : 1,
+                  }}
+                />
+              </Button>
+            </TableCellText>
+          ),
+        },
+      }
+    })
 }
