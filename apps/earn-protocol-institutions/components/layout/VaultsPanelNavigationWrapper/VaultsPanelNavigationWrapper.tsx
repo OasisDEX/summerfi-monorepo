@@ -46,6 +46,7 @@ const panelItems = [
   {
     id: DashboardVaultsPanel.ASSET_MANAGEMENT,
     label: 'Asset management',
+    disabled: true,
   },
   {
     id: DashboardVaultsPanel.ROLE_ADMIN,
