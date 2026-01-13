@@ -583,6 +583,14 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
     {
+      chainId: ChainIds.Hyperliquid,
+      symbol: 'USDT',
+      name: 'Tether USD Stablecoin',
+      address: '0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb',
+      decimals: 6,
+      logoURI: '',
+    },
+    {
       chainId: ChainIds.ArbitrumOne,
       symbol: 'USDC.e',
       name: 'Bridged USDCoin',
