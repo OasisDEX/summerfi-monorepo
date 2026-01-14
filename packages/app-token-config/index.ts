@@ -658,4 +658,9 @@ export const tokenConfigs: TokenConfig[] = [
     name: 'Sonic',
     iconName: 'sonic_badge_mainnet',
   },
+  {
+    symbol: 'HYPE',
+    name: 'HYPE',
+    iconName: 'earn_network_hyperliquid',
+  },
 ]

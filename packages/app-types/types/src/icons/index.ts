@@ -388,6 +388,7 @@ export type TokenSymbolsList =
   | 'GUNIV3DAIUSDC2'
   | 'GUSD'
   | 'KNC'
+  | 'HYPE'
   | 'LBTC'
   | 'LDO'
   | 'LINK'

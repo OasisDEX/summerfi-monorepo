@@ -5,7 +5,8 @@ export const arkDetailsMap: {
     | SupportedSDKNetworks.ArbitrumOne
     | SupportedSDKNetworks.Base
     | SupportedSDKNetworks.Mainnet
-    | SupportedSDKNetworks.SonicMainnet]: {
+    | SupportedSDKNetworks.SonicMainnet
+    | SupportedSDKNetworks.Hyperliquid]: {
     [key: string]: { description: string; link?: string }
   }
 } = {
@@ -710,6 +711,16 @@ export const arkDetailsMap: {
     '0x8faf711962e89047cb26fb4b4f8dbd578069db53': {
       description:
         'A WETH vault curated by Yearn, lending to moderate-risk markets with automatic algorithmic optimization.',
+    },
+  },
+  [SupportedSDKNetworks.Hyperliquid]: {
+    '0xefcadb404c81aecec1c2a1805db27a086285f570': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
+    },
+    '0x21f847f8afce5b71a98ddd97db9fd6047ec933fa': {
+      description:
+        'The buffer is a portion of a vault that is not held in any one particular strategy and stands ready to be deployed to capitalize on any new strategies that may arise.',
     },
   },
 }

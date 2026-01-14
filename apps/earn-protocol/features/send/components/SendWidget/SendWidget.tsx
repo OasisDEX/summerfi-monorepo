@@ -92,7 +92,15 @@ export const SendWidget: FC<SendWidgetProps> = ({
         networkNameToSDKNetwork(item.network) as SupportedSDKNetworks,
       ),
     )
-    .filter((item) => !!getTokenGuarded(item.symbol.toLocaleUpperCase()))
+    .filter((item) => {
+      if (!getTokenGuarded(item.symbol.toLocaleUpperCase())) {
+        console.log(
+          `SendWidget: no token config found for ${item.symbol.toLocaleUpperCase()}, skipping...`,
+        )
+      }
+
+      return !!getTokenGuarded(item.symbol.toLocaleUpperCase())
+    })
     .map((asset) => ({
       label: asset.symbol.toUpperCase(),
       value: `${asset.id}_${asset.network}`,

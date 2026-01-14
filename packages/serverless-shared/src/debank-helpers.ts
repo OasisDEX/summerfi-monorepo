@@ -1,7 +1,7 @@
 import { NetworkNames } from './domain-types'
 
 // For each new network, add a new enum value
-export const DEBANK_SUPPORTED_CHAIN_IDS = ['eth', 'op', 'arb', 'base']
+export const DEBANK_SUPPORTED_CHAIN_IDS = ['eth', 'op', 'arb', 'base', 'matic', 'sonic', 'hyper']
 // For each new protocol, add a new enum value as network_protocol
 export const DEBANK_SUPPORTED_PROTOCOL_IDS = [
   // Mainnet
@@ -31,6 +31,7 @@ export enum DebankNetworkNames {
   optimismMainnet = 'op',
   baseMainnet = 'base',
   sonicMainnet = 'sonic',
+  hyperliquidMainnet = 'hyper',
 }
 
 export const DebankNetworkNameToOurs = {
@@ -40,4 +41,5 @@ export const DebankNetworkNameToOurs = {
   [DebankNetworkNames.optimismMainnet]: NetworkNames.optimismMainnet,
   [DebankNetworkNames.baseMainnet]: NetworkNames.baseMainnet,
   [DebankNetworkNames.sonicMainnet]: NetworkNames.sonicMainnet,
+  [DebankNetworkNames.hyperliquidMainnet]: NetworkNames.hyperliquidMainnet,
 }

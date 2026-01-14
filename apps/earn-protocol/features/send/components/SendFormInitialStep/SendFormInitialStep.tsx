@@ -60,7 +60,7 @@ export const SendFormInitialStep: FC<SendFormInitialStepProps> = ({
         <Input
           value={state.recipientAddress}
           onChange={(e) => dispatch({ type: 'update-recipient-address', payload: e.target.value })}
-          placeholder="Recievers address"
+          placeholder="Receiver's address"
           disabled={isLoading || state.txStatus === SendTxStatuses.COMPLETED}
           variant="dark"
           maxLength={42}
