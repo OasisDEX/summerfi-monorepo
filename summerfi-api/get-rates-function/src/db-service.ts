@@ -348,6 +348,7 @@ export class RatesService {
       base: [],
       mainnet: [],
       sonic: [],
+      hyperliquid: [],
     }
     requests.forEach(({ chainId, productId }) => {
       const network = mapChainIdToDbNetwork(chainId)
