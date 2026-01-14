@@ -720,7 +720,8 @@ export const handler = async (
         network.network === 'mainnet' ||
         network.network === 'arbitrum' ||
         network.network === 'base' ||
-        network.network === 'sonic',
+        network.network === 'sonic' ||
+        network.network === 'hyperliquid',
     )
 
     logger.debug('Starting network processing', { networkCount: allNetworks.length })

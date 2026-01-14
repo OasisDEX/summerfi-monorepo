@@ -59,19 +59,19 @@ async function calculateAndStoreFleetRates(
   rewardRates: Array<{ productId: string; rate: string }>,
 ) {
   for (const vault of vaultData.vaults) {
-    logger.info('Vault', { network: network.network, vaultId: vault.id, arks: vault.arks })
-    logger.info('Buffer ark', { network: network.network, vaultId: vault.id })
+    logger.debug('Vault', { network: network.network, vaultId: vault.id, arks: vault.arks })
+    logger.debug('Buffer ark', { network: network.network, vaultId: vault.id })
     const arksWithTvl = vault.arks.filter((ark) => +ark.totalValueLockedUSD > 0)
-    logger.info('Arks with tvl', { network: network.network, vaultId: vault.id, arksWithTvl })
+    logger.debug('Arks with tvl', { network: network.network, vaultId: vault.id, arksWithTvl })
     const fleetTvl = arksWithTvl.reduce((acc, ark) => acc + +ark.totalValueLockedUSD, 0)
     let weightedFleetRate = 0
     if (fleetTvl > 0) {
-      logger.info('Fleet tvl', { network: network.network, vaultId: vault.id, fleetTvl })
+      logger.debug('Fleet tvl', { network: network.network, vaultId: vault.id, fleetTvl })
       const fleetArksWithRatios = arksWithTvl.map((ark) => ({
         ...ark,
         ratio: +ark.totalValueLockedUSD / fleetTvl,
       }))
-      logger.info('Fleet arks with ratios', {
+      logger.debug('Fleet arks with ratios', {
         network: network.network,
         vaultId: vault.id,
         fleetArksWithRatios,
@@ -93,7 +93,7 @@ async function calculateAndStoreFleetRates(
         const totalRate = baseRate + rewardRate
         return acc + totalRate * ark.ratio
       }, 0)
-      logger.info('Weighted fleet rate', {
+      logger.debug('Weighted fleet rate', {
         network: network.network,
         vaultId: vault.id,
         weightedFleetRate,
@@ -107,7 +107,7 @@ async function calculateAndStoreFleetRates(
     const offsetTimestamp = timestamp + EPOCH_WEEK_OFFSET
     const weekTimestamp =
       Math.floor(offsetTimestamp / WEEK_IN_SECONDS) * WEEK_IN_SECONDS - EPOCH_WEEK_OFFSET
-    logger.info('Period timestamps', {
+    logger.debug('Period timestamps', {
       network: network.network,
       vaultId: vault.id,
       hourTimestamp,
@@ -115,7 +115,7 @@ async function calculateAndStoreFleetRates(
       weekTimestamp,
     })
     // Store fleet interest rate
-    logger.info('Storing fleet interest rate', {
+    logger.debug('Storing fleet interest rate', {
       network: network.network,
       vaultId: vault.id,
       timestamp,
@@ -130,7 +130,7 @@ async function calculateAndStoreFleetRates(
         fleetAddress: vault.id,
       })
       .execute()
-    logger.info('Stored fleet interest rate', {
+    logger.debug('Stored fleet interest rate', {
       network: network.network,
       vaultId: vault.id,
       timestamp,
@@ -157,7 +157,7 @@ export async function backfillFleetRates() {
     const startTimestamp = START_BACKFILL_TIMESTAMP
     const endTimestamp = Math.floor(Date.now() / 1000)
 
-    logger.info('Starting backfill', { startTimestamp, endTimestamp })
+    logger.debug('Starting backfill', { startTimestamp, endTimestamp })
 
     const allNetworks = (await db.selectFrom('networkStatus').selectAll().execute()).filter(
       (network) => network.network == 'sonic',
@@ -214,7 +214,7 @@ export async function backfillFleetRates() {
               .executeTakeFirst()
 
             if (existing) {
-              logger.info('Data exists, skipping', {
+              logger.debug('Data exists, skipping', {
                 block: blockTimestamp[1],
                 network: network.network,
                 timeIso: new Date(blockTimestamp[1] * 1000).toISOString(),
@@ -241,9 +241,9 @@ export async function backfillFleetRates() {
                 }
               })
               .filter((product): product is NonNullable<typeof product> => product !== null)
-            logger.info('Relevant rates', { network: network.network, relevantRates })
+            logger.debug('Relevant rates', { network: network.network, relevantRates })
             if (relevantRates.length === 0) {
-              logger.info('No relevant rates found', {
+              logger.debug('No relevant rates found', {
                 block: blockTimestamp[1],
                 network: network.network,
               })
@@ -295,7 +295,7 @@ export async function backfillFleetRates() {
               rewardRates,
             )
 
-            logger.info('Processed block', { block: blockTimestamp[0], network: network.network })
+            logger.debug('Processed block', { block: blockTimestamp[0], network: network.network })
           })
         } catch (error) {
           logger.error('Error processing block', {
@@ -307,7 +307,7 @@ export async function backfillFleetRates() {
       }
     }
 
-    logger.info('Backfill completed')
+    logger.debug('Backfill completed')
   } catch (error) {
     logger.error('Error in backfillFleetRates', {
       error: error instanceof Error ? error.message : String(error),
