@@ -94,6 +94,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
     )
     .filter((item) => {
       if (!getTokenGuarded(item.symbol.toLocaleUpperCase())) {
+        // eslint-disable-next-line no-console
         console.log(
           `SendWidget: no token config found for ${item.symbol.toLocaleUpperCase()}, skipping...`,
         )
