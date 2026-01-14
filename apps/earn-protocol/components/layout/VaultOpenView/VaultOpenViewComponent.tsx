@@ -62,7 +62,7 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
-import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
+import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
@@ -389,7 +389,7 @@ export const VaultOpenViewComponent = ({
 
   const filteredVaults = useMemo(() => {
     if (userIsSmartAccount) {
-      return filterOutSonicFromVaults(vaults)
+      return filterOutNonSCACompatibleVaults(vaults)
     }
 
     return vaults

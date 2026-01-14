@@ -59,7 +59,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
-import { filterOutSonicFromVaults } from '@/helpers/filter-out-sonic-from-vaults'
+import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { isStablecoin } from '@/helpers/is-stablecoin'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -344,7 +344,7 @@ export const VaultsListView = ({
       : networkFilteredVaults
 
     const accountTypeFilteredVaults = userIsSmartAccount
-      ? filterOutSonicFromVaults(assetFilteredVaults ?? [])
+      ? filterOutNonSCACompatibleVaults(assetFilteredVaults ?? [])
       : assetFilteredVaults
 
     const sortedVaults = accountTypeFilteredVaults?.sort(sortVaults)
