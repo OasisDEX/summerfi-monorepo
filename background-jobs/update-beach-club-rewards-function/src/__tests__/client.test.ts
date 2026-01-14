@@ -1,3 +1,4 @@
+import { Logger } from '@aws-lambda-powertools/logger'
 import { ReferralClient } from '../client'
 import { Account, Network } from '../types'
 
@@ -19,8 +20,8 @@ describe('ReferralClient', () => {
     GraphQLClient.mockImplementation(() => ({
       request: mockRequest,
     }))
-
-    client = new ReferralClient()
+    // pass console as logger
+    client = new ReferralClient(console as unknown as Logger)
     consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -75,15 +76,32 @@ describe('ReferralClient', () => {
       expect(result).toHaveLength(2)
     })
 
-    it('should handle API errors gracefully', async () => {
-      mockRequest.mockRejectedValue(new Error('GraphQL API Error'))
+    it('should propagate API errors instead of swallowing them', async () => {
+      const apiError = new Error('GraphQL API Error')
+      mockRequest.mockRejectedValue(apiError)
 
-      const result = await client.getReferredAccounts(Network.MAINNET)
+      await expect(client.getReferredAccounts(Network.MAINNET)).rejects.toThrow('GraphQL API Error')
 
-      expect(result).toEqual([])
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error fetching referred accounts from mainnet:',
-        expect.any(Error),
+      expect(consoleSpy).toHaveBeenCalledWith('Error fetching referred accounts from mainnet:', {
+        error: apiError,
+      })
+    })
+
+    it('should propagate network timeout errors', async () => {
+      const timeoutError = new Error('Network timeout')
+      timeoutError.name = 'TimeoutError'
+      mockRequest.mockRejectedValue(timeoutError)
+
+      await expect(client.getReferredAccounts(Network.MAINNET)).rejects.toThrow('Network timeout')
+      expect(consoleSpy).toHaveBeenCalled()
+    })
+
+    it('should propagate GraphQL query errors', async () => {
+      const queryError = new Error('GraphQL query syntax error')
+      mockRequest.mockRejectedValue(queryError)
+
+      await expect(client.getReferredAccounts(Network.MAINNET)).rejects.toThrow(
+        'GraphQL query syntax error',
       )
     })
 
@@ -283,15 +301,26 @@ describe('ReferralClient', () => {
       expect(result['0x123']).toBe(false)
     })
 
-    it('should handle GraphQL errors gracefully', async () => {
-      mockRequest.mockRejectedValue(new Error('GraphQL Error'))
+    it('should propagate GraphQL errors instead of swallowing them', async () => {
+      const validationError = new Error('GraphQL Error')
+      mockRequest.mockRejectedValue(validationError)
 
-      const result = await client.validateAccounts(Network.MAINNET, mockAccounts)
+      await expect(client.validateAccounts(Network.MAINNET, mockAccounts)).rejects.toThrow(
+        'GraphQL Error',
+      )
 
-      expect(result).toEqual({})
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error validating positions from mainnet:',
-        expect.any(Error),
+      expect(consoleSpy).toHaveBeenCalledWith('Error validating positions from mainnet:', {
+        error: validationError,
+      })
+    })
+
+    it('should propagate subgraph connection errors', async () => {
+      const connectionError = new Error('ECONNREFUSED')
+      connectionError.name = 'ConnectionError'
+      mockRequest.mockRejectedValue(connectionError)
+
+      await expect(client.validateAccounts(Network.MAINNET, mockAccounts)).rejects.toThrow(
+        'ECONNREFUSED',
       )
     })
 
@@ -545,10 +574,13 @@ describe('ReferralClient', () => {
 
     it('should handle empty results from all chains', async () => {
       mockGetReferredAccounts.mockResolvedValue([])
+      mockValidateAccounts.mockResolvedValue({})
 
       const result = await client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400))
 
       expect(result.validAccounts).toEqual([])
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(5)
+      expect(mockValidateAccounts).toHaveBeenCalledTimes(5)
     })
 
     it('should handle duplicate accounts from same chain', async () => {
@@ -581,6 +613,390 @@ describe('ReferralClient', () => {
         }),
       )
       expect(result.validAccounts.map((a) => a.id)).toEqual(['0x123'])
+    })
+  })
+
+  describe('getAccountsWithHourlySnapshots', () => {
+    const mockAccountData = {
+      accounts: [
+        {
+          id: '0x123',
+          referralData: { id: '0xreferrer' },
+          referralTimestamp: '1640995200',
+          positions: [
+            {
+              id: 'pos1',
+              account: { id: '0x123' },
+              vault: { id: 'vault1', inputToken: { symbol: 'USDC' } },
+              createdTimestamp: '1640995200',
+              inputTokenBalanceNormalizedInUSD: '1000',
+              inputTokenBalanceNormalized: '1000',
+              referralData: { id: '0xreferrer' },
+              hourlySnapshots: [
+                {
+                  id: 'snapshot1',
+                  timestamp: '1640995200',
+                  inputTokenBalanceNormalizedInUSD: '1000',
+                  inputTokenBalanceNormalized: '1000',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+
+    it('should fetch accounts with hourly snapshots successfully', async () => {
+      mockRequest.mockResolvedValue(mockAccountData)
+
+      const result = await client.getAccountsWithHourlySnapshots(
+        Network.MAINNET,
+        ['0x123'],
+        { first: 50 },
+        { timestampGt: BigInt(1640995000), timestampLt: BigInt(1640995400) },
+      )
+
+      expect(result).toHaveLength(1)
+      expect(result[0].id).toBe('0x123')
+    })
+
+    it('should propagate API errors instead of swallowing them', async () => {
+      const apiError = new Error('Subgraph query failed')
+      mockRequest.mockRejectedValue(apiError)
+
+      await expect(
+        client.getAccountsWithHourlySnapshots(
+          Network.MAINNET,
+          ['0x123'],
+          { first: 50 },
+          { timestampGt: BigInt(1640995000), timestampLt: BigInt(1640995400) },
+        ),
+      ).rejects.toThrow('Subgraph query failed')
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error fetching accounts with hourly snapshots from mainnet:',
+        { error: apiError },
+      )
+    })
+
+    it('should propagate timeout errors', async () => {
+      const timeoutError = new Error('Request timeout')
+      timeoutError.name = 'TimeoutError'
+      mockRequest.mockRejectedValue(timeoutError)
+
+      await expect(
+        client.getAccountsWithHourlySnapshots(
+          Network.ARBITRUM,
+          ['0x123'],
+          { first: 50 },
+          { timestampGt: BigInt(1640995000), timestampLt: BigInt(1640995400) },
+        ),
+      ).rejects.toThrow('Request timeout')
+    })
+
+    it('should handle pagination parameters correctly', async () => {
+      const batchData = {
+        accounts: Array.from({ length: 50 }, (_, i) => ({
+          id: `0x${i.toString().padStart(2, '0')}`,
+          referralData: { id: '0xreferrer' },
+          referralTimestamp: '1640995200',
+          positions: [],
+        })),
+      }
+
+      mockRequest.mockResolvedValue(batchData)
+
+      const result = await client.getAccountsWithHourlySnapshots(
+        Network.MAINNET,
+        Array.from({ length: 100 }, (_, i) => `0x${i.toString().padStart(2, '0')}`),
+        { first: 50, lastId: '0x00' },
+        { timestampGt: BigInt(1640995000), timestampLt: BigInt(1640995400) },
+      )
+
+      expect(result).toHaveLength(50)
+      expect(mockRequest).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          accountIds: expect.arrayContaining(['0x00']),
+          first: 50,
+          lastId: '0x00',
+          timestampGt: '1640995000',
+          timestampLt: '1640995400',
+        }),
+      )
+    })
+  })
+
+  describe('getAllPositionsWithHourlySnapshots', () => {
+    const mockAccountData = {
+      accounts: [
+        {
+          id: '0x123',
+          referralData: { id: '0xreferrer' },
+          referralTimestamp: '1640995200',
+          positions: [
+            {
+              id: 'pos1',
+              account: { id: '0x123' },
+              vault: { id: 'vault1', inputToken: { symbol: 'USDC' } },
+              createdTimestamp: '1640995200',
+              referralData: { id: '0xreferrer' },
+              inputTokenBalanceNormalizedInUSD: '1000',
+              inputTokenBalanceNormalized: '1000',
+              hourlySnapshots: [
+                {
+                  id: 'snapshot1',
+                  timestamp: '1640995200',
+                  inputTokenBalanceNormalizedInUSD: '1000',
+                  inputTokenBalanceNormalized: '1000',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+
+    beforeEach(() => {
+      jest.spyOn(client, 'getAccountsWithHourlySnapshots')
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('should fetch positions from all chains successfully', async () => {
+      const mockGetAccountsWithHourlySnapshots = jest.spyOn(
+        client,
+        'getAccountsWithHourlySnapshots',
+      )
+      mockGetAccountsWithHourlySnapshots.mockResolvedValue(mockAccountData.accounts)
+
+      const result = await client.getAllPositionsWithHourlySnapshots(['0x123'], {
+        timestampGt: BigInt(1640995000),
+        timestampLt: BigInt(1640995400),
+      })
+
+      expect(Object.keys(result)).toHaveLength(5) // All 5 chains
+      expect(mockGetAccountsWithHourlySnapshots).toHaveBeenCalledTimes(5)
+    })
+
+    it('should propagate errors from any chain when fetching positions', async () => {
+      const mockGetAccountsWithHourlySnapshots = jest.spyOn(
+        client,
+        'getAccountsWithHourlySnapshots',
+      )
+      const chainError = new Error('Arbitrum subgraph unavailable')
+      // First chain succeeds, second fails
+      mockGetAccountsWithHourlySnapshots
+        .mockResolvedValueOnce(mockAccountData.accounts) // MAINNET succeeds
+        .mockRejectedValueOnce(chainError) // SONIC fails
+
+      await expect(
+        client.getAllPositionsWithHourlySnapshots(['0x123'], {
+          timestampGt: BigInt(1640995000),
+          timestampLt: BigInt(1640995400),
+        }),
+      ).rejects.toThrow('Arbitrum subgraph unavailable')
+    })
+
+    it('should propagate errors during pagination', async () => {
+      const mockGetAccountsWithHourlySnapshots = jest.spyOn(
+        client,
+        'getAccountsWithHourlySnapshots',
+      )
+      const paginationError = new Error('Pagination query failed')
+      // First page succeeds, second page fails
+      mockGetAccountsWithHourlySnapshots
+        .mockResolvedValueOnce(
+          Array.from({ length: 50 }, (_, i) => ({
+            id: `0x${i.toString().padStart(2, '0')}`,
+            referralData: { id: '0xreferrer' },
+            referralTimestamp: '1640995200',
+            positions: [],
+          })),
+        )
+        .mockRejectedValueOnce(paginationError)
+
+      await expect(
+        client.getAllPositionsWithHourlySnapshots(
+          Array.from({ length: 51 }, (_, i) => `0x${i.toString().padStart(2, '0')}`),
+          {
+            timestampGt: BigInt(1640995000),
+            timestampLt: BigInt(1640995400),
+          },
+        ),
+      ).rejects.toThrow('Pagination query failed')
+    })
+
+    it('should handle empty results from all chains', async () => {
+      const mockGetAccountsWithHourlySnapshots = jest.spyOn(
+        client,
+        'getAccountsWithHourlySnapshots',
+      )
+      mockGetAccountsWithHourlySnapshots.mockResolvedValue([])
+
+      const result = await client.getAllPositionsWithHourlySnapshots(['0x123'], {
+        timestampGt: BigInt(1640995000),
+        timestampLt: BigInt(1640995400),
+      })
+
+      expect(Object.keys(result)).toHaveLength(5)
+      Object.values(result).forEach((accounts) => {
+        expect(accounts).toEqual([])
+      })
+    })
+  })
+
+  describe('getValidReferredAccounts - error propagation', () => {
+    let mockGetReferredAccounts: jest.SpyInstance
+    let mockValidateAccounts: jest.SpyInstance
+
+    beforeEach(() => {
+      mockGetReferredAccounts = jest.spyOn(client, 'getReferredAccounts')
+      mockValidateAccounts = jest.spyOn(client, 'validateAccounts')
+    })
+
+    afterEach(() => {
+      mockGetReferredAccounts.mockRestore()
+      mockValidateAccounts.mockRestore()
+    })
+
+    it('should propagate errors when getReferredAccounts fails on first chain', async () => {
+      const chainError = new Error('Mainnet subgraph down')
+      mockGetReferredAccounts.mockRejectedValueOnce(chainError)
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Mainnet subgraph down')
+
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(1)
+      expect(mockValidateAccounts).not.toHaveBeenCalled()
+    })
+
+    it('should propagate errors when getReferredAccounts fails on middle chain', async () => {
+      const chainError = new Error('Sonic subgraph timeout')
+      mockGetReferredAccounts
+        .mockResolvedValueOnce([]) // MAINNET succeeds
+        .mockRejectedValueOnce(chainError) // SONIC fails
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Sonic subgraph timeout')
+
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(2)
+      expect(mockValidateAccounts).not.toHaveBeenCalled()
+    })
+
+    it('should propagate errors when getReferredAccounts fails on last chain', async () => {
+      const chainError = new Error('Hyperliquid subgraph error')
+      mockGetReferredAccounts
+        .mockResolvedValueOnce([]) // MAINNET
+        .mockResolvedValueOnce([]) // SONIC
+        .mockResolvedValueOnce([]) // ARBITRUM
+        .mockResolvedValueOnce([]) // BASE
+        .mockRejectedValueOnce(chainError) // HYPERLIQUID fails
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Hyperliquid subgraph error')
+
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(5)
+      expect(mockValidateAccounts).not.toHaveBeenCalled()
+    })
+
+    it('should propagate errors when validateAccounts fails on first chain', async () => {
+      const mockAccounts: Account[] = [
+        {
+          id: '0x123',
+          referralTimestamp: '1640995200',
+          referralData: { id: '0xreferrer' },
+          referralChain: Network.MAINNET,
+        },
+      ]
+
+      const validationError = new Error('Validation query failed')
+      mockGetReferredAccounts.mockResolvedValue(mockAccounts)
+      mockValidateAccounts.mockRejectedValueOnce(validationError)
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Validation query failed')
+
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(5)
+      expect(mockValidateAccounts).toHaveBeenCalledTimes(1)
+    })
+
+    it('should propagate errors when validateAccounts fails on middle chain', async () => {
+      const mockAccounts: Account[] = [
+        {
+          id: '0x123',
+          referralTimestamp: '1640995200',
+          referralData: { id: '0xreferrer' },
+          referralChain: Network.MAINNET,
+        },
+      ]
+
+      const validationError = new Error('Arbitrum validation failed')
+      mockGetReferredAccounts.mockResolvedValue(mockAccounts)
+      mockValidateAccounts
+        .mockResolvedValueOnce({ '0x123': true }) // MAINNET succeeds
+        .mockResolvedValueOnce({}) // SONIC succeeds (no accounts)
+        .mockRejectedValueOnce(validationError) // ARBITRUM fails
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Arbitrum validation failed')
+
+      expect(mockValidateAccounts).toHaveBeenCalledTimes(3)
+    })
+
+    it('should propagate errors when validateAccounts fails on last chain', async () => {
+      const mockAccounts: Account[] = [
+        {
+          id: '0x123',
+          referralTimestamp: '1640995200',
+          referralData: { id: '0xreferrer' },
+          referralChain: Network.MAINNET,
+        },
+      ]
+
+      const validationError = new Error('Hyperliquid validation failed')
+      mockGetReferredAccounts.mockResolvedValue(mockAccounts)
+      mockValidateAccounts
+        .mockResolvedValueOnce({ '0x123': true }) // MAINNET
+        .mockResolvedValueOnce({}) // SONIC
+        .mockResolvedValueOnce({}) // ARBITRUM
+        .mockResolvedValueOnce({}) // BASE
+        .mockRejectedValueOnce(validationError) // HYPERLIQUID fails
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('Hyperliquid validation failed')
+
+      expect(mockValidateAccounts).toHaveBeenCalledTimes(5)
+    })
+
+    it('should handle network errors correctly', async () => {
+      const networkError = new Error('ECONNREFUSED')
+      networkError.name = 'NetworkError'
+      mockGetReferredAccounts.mockRejectedValueOnce(networkError)
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('ECONNREFUSED')
+    })
+
+    it('should handle partial failures correctly - fail fast on first error', async () => {
+      const firstChainError = new Error('First chain failed')
+      mockGetReferredAccounts.mockRejectedValueOnce(firstChainError)
+
+      await expect(
+        client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400)),
+      ).rejects.toThrow('First chain failed')
+
+      // Should not continue to other chains
+      expect(mockGetReferredAccounts).toHaveBeenCalledTimes(1)
     })
   })
 })

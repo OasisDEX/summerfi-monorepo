@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
+import { Logger } from '@aws-lambda-powertools/logger'
 import {
   GetAccountsWithHourlySnapshotsQuery,
   GetReferredAccountsQuery,
@@ -36,8 +37,9 @@ export interface HourlySnapshotOptions {
 
 export class ReferralClient {
   private clients: Record<SupportedChain, GraphQLClient>
+  private logger: Logger
 
-  constructor() {
+  constructor(logger: Logger) {
     this.clients = SUPPORTED_CHAINS.reduce(
       (acc, chain) => {
         acc[chain] = new GraphQLClient(SUBGRAPH_URLS[chain])
@@ -45,6 +47,7 @@ export class ReferralClient {
       },
       {} as Record<SupportedChain, GraphQLClient>,
     )
+    this.logger = logger
   }
 
   async getReferredAccounts(
@@ -58,8 +61,10 @@ export class ReferralClient {
       )
       return data.accounts.filter(Boolean).map((a) => convertAccount(a as any)) as Account[]
     } catch (error) {
-      console.error(`Error fetching referred accounts from ${chain}:`, error)
-      return []
+      this.logger.error(`Error fetching referred accounts from ${chain}:`, {
+        error: error as Error,
+      })
+      throw error
     }
   }
 
@@ -90,8 +95,10 @@ export class ReferralClient {
       )
       return data.accounts.filter(Boolean).map((a) => convertAccount(a)) as Account[]
     } catch (error) {
-      console.error(`Error fetching accounts with hourly snapshots from ${chain}:`, error)
-      return []
+      this.logger.error(`Error fetching accounts with hourly snapshots from ${chain}:`, {
+        error: error as Error,
+      })
+      throw error
     }
   }
 
@@ -160,8 +167,8 @@ export class ReferralClient {
       }
       return result
     } catch (error) {
-      console.error(`Error validating positions from ${chain}:`, error)
-      return {}
+      this.logger.error(`Error validating positions from ${chain}:`, { error: error as Error })
+      throw error
     }
   }
 

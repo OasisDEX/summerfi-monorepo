@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
+import { Logger } from '@aws-lambda-powertools/logger'
 import { DatabaseService } from './db'
 import { ReferralProcessor } from './processor'
 
 async function main() {
   const args = process.argv.slice(2)
   const command = args[0] || 'process'
-
-  const processor = new ReferralProcessor()
-  const db = new DatabaseService()
+  const logger = new Logger({ serviceName: 'update-beach-club-rewards-function', logLevel: 'INFO' })
+  const processor = new ReferralProcessor({ logger })
+  const db = new DatabaseService(logger)
 
   try {
     switch (command) {
@@ -20,7 +21,7 @@ async function main() {
           console.log(`   Users processed: ${result.usersProcessed}`)
           console.log(`   Active users: ${result.activeUsers}`)
         } else {
-          console.error('❌ Processing failed:', result.error)
+          logger.error('❌ Processing failed:', { error: result.error as Error })
           process.exit(1)
         }
         break
@@ -38,7 +39,7 @@ Examples:
         process.exit(1)
     }
   } catch (error) {
-    console.error('❌ Fatal error:', error)
+    logger.error('❌ Fatal error:', { error: error as Error })
     process.exit(1)
   } finally {
     await processor.close()

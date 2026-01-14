@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely } from 'kysely'
 import { ReferralClient } from './client'
 import { DatabaseService } from './db'
 import { Account, HourlySnapshot, AssetVolatility, PositionUpdate, ReferralCodeType } from './types'
@@ -74,11 +74,11 @@ export class ReferralProcessor {
   } as const
 
   constructor(config?: ProcessorConfig) {
-    this.db = new DatabaseService()
-    this.client = new ReferralClient()
     this.logger =
       config?.logger ||
-      new Logger({ serviceName: 'update-beach-club-rewards-function', logLevel: 'DEBUG' })
+      new Logger({ serviceName: 'update-beach-club-rewards-function', logLevel: 'INFO' })
+    this.client = new ReferralClient(this.logger)
+    this.db = new DatabaseService(this.logger)
     this.referralStartDate = new Date('2025-05-27')
   }
 
@@ -103,6 +103,9 @@ export class ReferralProcessor {
       }
     }
 
+    let result: ProcessingResult | undefined
+    let processingError: Error | undefined
+
     try {
       // Set updating flag to true
       await this.db.config.setIsUpdating(true)
@@ -112,7 +115,7 @@ export class ReferralProcessor {
       const verifyFlag = await this.db.config.getIsUpdating()
       this.logger.info(`✅ Verified is_updating flag: ${verifyFlag}`)
 
-      return await this.db.executeInTransaction(async (trx) => {
+      result = await this.db.executeInTransaction(async (trx) => {
         const lastProcessed = await this.db.getLastProcessedTimestampInTransaction(trx)
         const now = new Date()
         now.setMinutes(0, 0, 0) // Round down to hour
@@ -144,10 +147,7 @@ export class ReferralProcessor {
           }
         }
 
-        const newUsers = await this.processNewUsersInTransaction(trx, periodStart, periodEnd)
-        if (!newUsers.success) {
-          throw new Error(`Processing failed: ${newUsers.error?.message}`)
-        }
+        await this.processNewUsersInTransaction(trx, periodStart, periodEnd)
 
         // if period is longer than 1 hour, we need to process it in chunks of 1 hour
         if (periodEnd.getTime() - periodStart.getTime() > 1 * 60 * 60 * 1000) {
@@ -157,32 +157,24 @@ export class ReferralProcessor {
           for (let i = 0; i < chunks; i++) {
             const chunkStart = new Date(periodStart.getTime() + i * 1 * 60 * 60 * 1000)
             const chunkEnd = new Date(periodStart.getTime() + (i + 1) * 1 * 60 * 60 * 1000)
-            const result = await this.processPeriodInTransaction(trx, chunkStart, chunkEnd)
-            if (!result.success) {
-              throw new Error(`Processing failed for chunk: ${result.error?.message}`)
-            } else {
-              await trx
-                .insertInto('processing_checkpoint')
-                .values({
-                  last_processed_timestamp: chunkEnd,
-                })
-                .execute()
-              this.logger.info(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
-            }
-          }
-        } else {
-          const result = await this.processPeriodInTransaction(trx, periodStart, periodEnd)
-          if (!result.success) {
-            throw new Error(`Processing failed: ${result.error?.message}`)
-          } else {
+            await this.processPeriodInTransaction(trx, chunkStart, chunkEnd)
             await trx
               .insertInto('processing_checkpoint')
               .values({
-                last_processed_timestamp: periodEnd,
+                last_processed_timestamp: chunkEnd,
               })
               .execute()
-            this.logger.info(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
+            this.logger.info(`✅ Checkpoint updated to: ${chunkEnd.toISOString()}`)
           }
+        } else {
+          await this.processPeriodInTransaction(trx, periodStart, periodEnd)
+          await trx
+            .insertInto('processing_checkpoint')
+            .values({
+              last_processed_timestamp: periodEnd,
+            })
+            .execute()
+          this.logger.info(`✅ Checkpoint updated to: ${periodEnd.toISOString()}`)
         }
 
         return {
@@ -194,14 +186,15 @@ export class ReferralProcessor {
         }
       })
     } catch (error) {
-      this.logger.error('❌ Processing failed:', { error: error as Error })
-      return {
+      processingError = error as Error
+      this.logger.error('❌ Processing failed:', { error: processingError })
+      result = {
         success: false,
         usersProcessed: 0,
         activeUsers: 0,
         periodStart: new Date(),
         periodEnd: new Date(),
-        error: error as Error,
+        error: processingError,
       }
     } finally {
       // Always clear the updating flag
@@ -212,6 +205,7 @@ export class ReferralProcessor {
       const verifyCleared = await this.db.config.getIsUpdating()
       this.logger.info(`✅ Verified is_updating flag after clear: ${verifyCleared}`)
     }
+    return result
   }
 
   /**
@@ -282,7 +276,7 @@ export class ReferralProcessor {
    * Process a specific time period within a transaction
    */
   async processPeriodInTransaction(
-    trx: any,
+    trx: Kysely<DB>,
     periodStart: Date,
     periodEnd: Date,
   ): Promise<ProcessingResult> {
@@ -355,7 +349,7 @@ export class ReferralProcessor {
       // Get final stats
       const activeUsersResult = await trx
         .selectFrom('users')
-        .select((eb: any) => eb.fn.count('id').as('count'))
+        .select((eb) => eb.fn.count('id').as('count'))
         .where('is_active', '=', true)
         .executeTakeFirst()
 
@@ -373,15 +367,9 @@ export class ReferralProcessor {
         periodEnd,
       }
     } catch (error) {
-      this.logger.error('❌ Error during period processing:', { error: error as Error })
-      return {
-        success: false,
-        usersProcessed: 0,
-        activeUsers: 0,
-        periodStart,
-        periodEnd,
-        error: error as Error,
-      }
+      const err = error as Error
+      this.logger.error('❌ Error during period processing (aborting transaction):', { error: err })
+      throw err
     }
   }
 
