@@ -987,7 +987,7 @@ export const useTransaction = ({
 
   // watch for sendUserEnableBigBlocksOperationError
   useEffect(() => {
-    if (sendUserEnableBigBlocksOperationError && txStatus === 'txInProgress') {
+    if (sendUserEnableBigBlocksOperationError && txStatus === 'idle') {
       setTxStatus('txError')
     }
   }, [sendUserEnableBigBlocksOperationError, setTxStatus, txStatus])
