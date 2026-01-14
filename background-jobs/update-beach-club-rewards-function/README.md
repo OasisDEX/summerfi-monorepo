@@ -236,6 +236,7 @@ ETHEREUM_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol
 SONIC_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-sonic
 ARBITRUM_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-arbitrum
 BASE_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-base
+HYPERLIQUID_SUBGRAPH_URL=https://subgraph.staging.oasisapp.dev/summer-protocol-hyperliquid
 ```
 
 ## Example Queries

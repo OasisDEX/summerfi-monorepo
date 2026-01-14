@@ -6,6 +6,7 @@ export enum Network {
   BASE = 'base',
   SEPOLIA = 'sepolia',
   SONIC = 'sonic',
+  HYPERLIQUID = 'hyperliquid',
 }
 
 // Only include the chains we have subgraph URLs for
@@ -14,6 +15,7 @@ export const SUPPORTED_CHAINS = [
   Network.ARBITRUM,
   Network.BASE,
   Network.SONIC,
+  Network.HYPERLIQUID,
 ] as const
 export type SupportedChain = (typeof SUPPORTED_CHAINS)[number]
 
