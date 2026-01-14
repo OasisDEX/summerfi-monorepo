@@ -80,8 +80,9 @@ export const useTokenBalance = ({
 
     // if its a native token, not just ETH
     if (
+      ['ETH', 'WETH'].includes(tokenSymbol) ||
       fetchedVaultToken.address.value.toLowerCase() ===
-      '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase()
+        '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase()
     ) {
       const fetchedOrVaultToken = fetchedToken ?? fetchedVaultToken
 
