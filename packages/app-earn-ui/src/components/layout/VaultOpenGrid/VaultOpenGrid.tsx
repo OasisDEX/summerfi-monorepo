@@ -190,6 +190,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     .div(ten.pow(vault.inputToken.decimals))
     .div(depositCapInToken)
 
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
+
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
@@ -256,11 +259,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
             >
               <VaultTitleWithRisk
                 symbol={getDisplayToken(vault.inputToken.symbol)}
-                // TODO: fill data
                 risk={vault.customFields?.risk ?? 'lower'}
                 networkName={supportedSDKNetwork(vault.protocol.network)}
                 tooltipName="vault-open-risk-label"
                 onTooltipOpen={tooltipEventHandler}
+                isNewVault={isNewVault}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>
@@ -295,7 +298,11 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={`${totalValueLockedTokenParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
+                value={
+                  <>
+                    {totalValueLockedTokenParsed}&nbsp;{getDisplayToken(vault.inputToken.symbol)}
+                  </>
+                }
                 subValue={`$${totalValueLockedUSDParsed}`}
                 subValueSize="small"
               />
@@ -305,7 +312,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Instant liquidity"
-                value={`${withdrawableTotalAssetsParsed} ${getDisplayToken(vault.inputToken.symbol)}`}
+                value={
+                  <>
+                    {withdrawableTotalAssetsParsed}&nbsp;
+                    {getDisplayToken(vault.inputToken.symbol)}
+                  </>
+                }
                 subValue={`$${withdrawableTotalAssetsUSDParsed} (${formatDecimalAsPercent(
                   withdrawablePercentage,
                   {
@@ -320,7 +332,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Deposit Cap"
-                value={`${formatCryptoBalance(depositCapInToken)} ${getDisplayToken(vault.inputToken.symbol)}`}
+                value={
+                  <>
+                    {formatCryptoBalance(depositCapInToken)}&nbsp;
+                    {getDisplayToken(vault.inputToken.symbol)}
+                  </>
+                }
                 subValue={
                   <div
                     style={{

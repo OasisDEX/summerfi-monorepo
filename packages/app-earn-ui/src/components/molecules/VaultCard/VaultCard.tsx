@@ -16,6 +16,7 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
+import dayjs from 'dayjs'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Card } from '@/components/atoms/Card/Card'
@@ -72,6 +73,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     deviceType,
     onTooltipOpen,
     tooltipName,
+    createdTimestamp,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
@@ -111,6 +113,9 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     .div(ten.pow(inputToken.decimals))
     .div(depositCapInToken)
 
+  const vaultInceptionDate = dayjs(Number(createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
+
   return (
     <GradientBox
       withHover={withHover && !disabled}
@@ -134,6 +139,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             isVaultCard
             tooltipName={`${tooltipName}-${slugifyVault(props)}-risk-label`}
             onTooltipOpen={onTooltipOpen}
+            isNewVault={isNewVault}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>

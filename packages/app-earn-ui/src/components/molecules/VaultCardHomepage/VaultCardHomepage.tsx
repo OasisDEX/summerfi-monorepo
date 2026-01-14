@@ -15,6 +15,7 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
@@ -264,6 +265,9 @@ export const VaultCardHomepage = ({
     }
   }
 
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
+
   return (
     <Card
       className={clsx(vaultCardHomepageStyles.vaultCardHomepageWrapper, {
@@ -284,6 +288,7 @@ export const VaultCardHomepage = ({
             symbol={inputToken.symbol}
             networkName={supportedSDKNetwork(protocol.network)}
             isVaultCard
+            isNewVault={isNewVault}
           />
           <AdditionalBonusLabel
             externalTokenBonus={customFields?.bonus}
@@ -366,7 +371,14 @@ export const VaultCardHomepage = ({
           </div>
         </div>
         <Link href={`/earn${getVaultUrl(vault)}`} onClick={handleGetStartedClick}>
-          <Button variant="primaryLargeColorful" style={{ width: '100%' }}>
+          <Button
+            variant="primaryLargeColorful"
+            style={{
+              width: '100%',
+              opacity: !selected ? '0.5' : undefined,
+              transition: 'opacity 0.5s ease',
+            }}
+          >
             Get started
           </Button>
         </Link>
