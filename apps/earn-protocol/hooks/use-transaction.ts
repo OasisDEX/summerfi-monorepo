@@ -118,6 +118,9 @@ export const useTransaction = ({
   const { userWalletAddress } = useUserWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  // Add state to track if big blocks are enabled for Hyperliquid
+  const [hyperliquidBigBlocksEnabled, setHyperliquidBigBlocksEnabled] = useState(false)
+  const [hyperliquidBigBlocksChecked, setHyperliquidBigBlocksChecked] = useState(false)
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
@@ -379,6 +382,21 @@ export const useTransaction = ({
     },
   })
 
+  const {
+    sendUserOperation: sendUserEnableBigBlocksOperation,
+    error: sendUserEnableBigBlocksOperationError,
+    isSendingUserOperation: isSendingUserEnableBigBlocksOperation,
+  } = useSendUserOperation({
+    client: smartAccountClient,
+    waitForTxn: true,
+    onSuccess: ({ hash }) => {
+      setHyperliquidBigBlocksEnabled(true)
+    },
+    onError: (err) => {
+      setHyperliquidBigBlocksEnabled(false)
+    },
+  })
+
   const sendTransaction = useCallback(
     (
       {
@@ -457,6 +475,82 @@ export const useTransaction = ({
     },
     [nextTransaction, vault.protocol.network],
   )
+  const isHyperliquid = vaultChainId === SupportedNetworkIds.Hyperliquid
+
+  // Function to check if big blocks are enabled on Hyperliquid
+  const checkHyperliquidBigBlocksStatus = useCallback(async () => {
+    if (
+      !isHyperliquid ||
+      !userWalletAddress ||
+      !smartAccountClient ||
+      !publicClient ||
+      hyperliquidBigBlocksChecked
+    ) {
+      setHyperliquidBigBlocksChecked(true)
+
+      return
+    }
+
+    try {
+      await publicClient
+        .request<{
+          Method: 'eth_usingBigBlocks'
+          Parameters: [`0x${string}`]
+          ReturnType: boolean
+        }>({
+          method: 'eth_usingBigBlocks',
+          params: [userWalletAddress as `0x${string}`],
+        })
+        .then((usingBigBlocks: boolean) => {
+          setHyperliquidBigBlocksEnabled(usingBigBlocks)
+          setHyperliquidBigBlocksChecked(true)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error in eth_usingBigBlocks request:', err)
+          setHyperliquidBigBlocksEnabled(false)
+          setHyperliquidBigBlocksChecked(true)
+        })
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error checking Hyperliquid big blocks status:', err)
+      setHyperliquidBigBlocksEnabled(false)
+      setHyperliquidBigBlocksChecked(true)
+    }
+  }, [
+    isHyperliquid,
+    userWalletAddress,
+    smartAccountClient,
+    hyperliquidBigBlocksChecked,
+    publicClient,
+  ])
+
+  // Function to enable big blocks on Hyperliquid
+  const enableHyperliquidBigBlocks = useCallback(async () => {
+    if (!isHyperliquid || !userWalletAddress || !smartAccountClient) {
+      return
+    }
+
+    try {
+      // Submit the evmUserModify action to enable big blocks
+      const evmUserModifyData = JSON.stringify({
+        type: 'evmUserModify',
+        usingBigBlocks: true,
+      })
+
+      await sendUserOperation({
+        uo: {
+          target: userWalletAddress as `0x${string}`,
+          data: `0x${Buffer.from(evmUserModifyData).toString('hex')}` as `0x${string}`,
+          value: 0n,
+        },
+      })
+      setHyperliquidBigBlocksEnabled(true)
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error enabling Hyperliquid big blocks:', err)
+    }
+  }, [isHyperliquid, userWalletAddress, smartAccountClient, sendUserOperation])
 
   const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
@@ -846,6 +940,7 @@ export const useTransaction = ({
     isDeposit,
     isWithdraw,
     transactions,
+    revalidatePositionData,
   ])
 
   // watch for sendUserOperationError
@@ -854,6 +949,13 @@ export const useTransaction = ({
       setTxStatus('txError')
     }
   }, [sendUserOperationError, setTxStatus, txStatus])
+
+  // check for big blocks operation first
+  useEffect(() => {
+    if (isHyperliquid && !hyperliquidBigBlocksChecked) {
+      checkHyperliquidBigBlocksStatus()
+    }
+  }, [isHyperliquid, checkHyperliquidBigBlocksStatus, hyperliquidBigBlocksChecked])
 
   // custom wait for tx to be processed
   useEffect(() => {
