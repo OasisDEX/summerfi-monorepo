@@ -2,7 +2,7 @@
 import { type Dispatch, type ReactNode, type SetStateAction, useMemo, useState } from 'react'
 import {
   type IArmadaPosition,
-  type NetworkIds,
+  NetworkIds,
   type RiskType,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -172,6 +172,27 @@ export const ControlsSwitch = ({
 
     return potentialVaults.filter((vault) => vault.inputToken.symbol === filterByToken)
   }, [filterByToken, potentialVaults])
+
+  if (chainId === NetworkIds.HYPERLIQUID) {
+    return (
+      <div>
+        <div className={controlsSwitchStyles.positionAndVaultsListWrapper}>
+          <Text
+            variant="p3semi"
+            style={{
+              textAlign: 'center',
+              color: 'var(--color-text-primary-disabled)',
+              margin: '30px 30px 0',
+            }}
+          >
+            Vault switching is not available on Hyperliquid
+            <br />
+            at the moment.
+          </Text>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
