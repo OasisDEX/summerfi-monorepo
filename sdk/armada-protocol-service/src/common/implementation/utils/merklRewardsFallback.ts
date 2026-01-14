@@ -76,7 +76,16 @@ export const getByFleetAddressFallback = (
       }
 
     case ChainIds.Hyperliquid:
-      return {}
+      return {
+        // usdc
+        '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa': [
+          { token, dailyEmission: BigNumber('8767').shiftedBy(token.decimals).toFixed() },
+        ],
+        // usdt
+        '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa': [
+          { token, dailyEmission: BigNumber('8767').shiftedBy(token.decimals).toFixed() },
+        ],
+      }
 
     default:
       throw new Error(`No Merkl rewards fallback data for chainId: ${chainId}`)
