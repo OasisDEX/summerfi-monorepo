@@ -16,6 +16,7 @@ const SUBGRAPH_URLS: Record<SupportedChain, string> = {
   [Network.ARBITRUM]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-arbitrum',
   [Network.BASE]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-base',
   [Network.SONIC]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-sonic',
+  [Network.HYPERLIQUID]: 'https://subgraph.staging.oasisapp.dev/summer-protocol-hyperliquid',
 }
 
 export interface ReferredAccountsOptions {
@@ -206,7 +207,7 @@ export class ReferralClient {
    * This method validates accounts across all chains and ensures they meet all referral criteria.
    *
    * The process consists of four main steps:
-   * 1. Fetches referred accounts from all chains (Ethereum, Sonic, Arbitrum, Base) for the specified time period
+   * 1. Fetches referred accounts from all chains (Ethereum, Sonic, Arbitrum, Base, Hyperliquid) for the specified time period
    * 2. Consolidates accounts across chains, keeping the earliest referral timestamp for each account
    * 3. Validates positions across all chains to ensure accounts haven't created positions before being referred
    * 4. Validates if the account was not referred before the currently processed time period

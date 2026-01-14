@@ -386,6 +386,7 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce([]) // Sonic
         .mockResolvedValueOnce([]) // Arbitrum
         .mockResolvedValueOnce([]) // Base
+        .mockResolvedValueOnce([]) // Hyperliquid
 
       // Mock validateAccounts for all chains
       mockValidateAccounts
@@ -393,6 +394,7 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce({}) // Sonic
         .mockResolvedValueOnce({}) // Arbitrum
         .mockResolvedValueOnce({}) // Base
+        .mockResolvedValueOnce({}) // Hyperliquid
 
       const result = await client.getValidReferredAccounts(BigInt(0), BigInt(1640995400))
 
@@ -419,9 +421,11 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce([])
         .mockResolvedValueOnce([])
         .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([])
 
       mockValidateAccounts
         .mockResolvedValueOnce({ '0x123': true })
+        .mockResolvedValueOnce({})
         .mockResolvedValueOnce({})
         .mockResolvedValueOnce({})
         .mockResolvedValueOnce({})
@@ -458,6 +462,7 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce(sonicAccounts) // Sonic
         .mockResolvedValueOnce([]) // Arbitrum
         .mockResolvedValueOnce([]) // Base
+        .mockResolvedValueOnce([]) // Hyperliquid
 
       mockValidateAccounts.mockResolvedValue({ '0x123': true })
 
@@ -501,6 +506,7 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce({}) // Sonic
         .mockResolvedValueOnce({}) // Arbitrum
         .mockResolvedValueOnce({}) // Base
+        .mockResolvedValueOnce({}) // Hyperliquid
 
       const result = await client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400))
 
@@ -522,6 +528,7 @@ describe('ReferralClient', () => {
         .mockResolvedValue([])
         .mockResolvedValue([])
         .mockResolvedValue([])
+        .mockResolvedValue([])
 
       // Account invalid on one chain should make it invalid overall
       mockValidateAccounts
@@ -529,6 +536,7 @@ describe('ReferralClient', () => {
         .mockResolvedValueOnce({ '0x123': false }) // Sonic - invalid
         .mockResolvedValueOnce({ '0x123': true }) // Arbitrum - valid
         .mockResolvedValueOnce({ '0x123': true }) // Base - valid
+        .mockResolvedValueOnce({ '0x123': true }) // Hyperliquid - valid
 
       const result = await client.getValidReferredAccounts(BigInt(1640995000), BigInt(1640995400))
 
