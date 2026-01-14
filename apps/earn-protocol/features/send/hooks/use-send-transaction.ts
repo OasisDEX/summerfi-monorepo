@@ -119,7 +119,9 @@ export const useSendTransaction = ({
     // eslint-disable-next-line no-mixed-operators
     const resolvedAmount = BigInt(Number(amount) * 10 ** token.decimals)
 
-    const isEth = ['ETH', 'WETH'].includes(token.symbol)
+    const isNativeToken =
+      token.address.value.toLowerCase() ===
+      '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase()
 
     const transferData = encodeFunctionData({
       abi: [
@@ -136,7 +138,7 @@ export const useSendTransaction = ({
       args: [recipient, resolvedAmount],
     })
 
-    if (isEth) {
+    if (isNativeToken) {
       return {
         transaction: {
           target: Address.createFromEthereum({ value: recipient }),

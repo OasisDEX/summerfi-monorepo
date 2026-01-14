@@ -93,13 +93,6 @@ export const SendWidget: FC<SendWidgetProps> = ({
       ),
     )
     .filter((item) => {
-      if (!getTokenGuarded(item.symbol.toLocaleUpperCase())) {
-        // eslint-disable-next-line no-console
-        console.log(
-          `SendWidget: no token config found for ${item.symbol.toLocaleUpperCase()}, skipping...`,
-        )
-      }
-
       return !!getTokenGuarded(item.symbol.toLocaleUpperCase())
     })
     .map((asset) => ({
@@ -228,7 +221,7 @@ export const SendWidget: FC<SendWidgetProps> = ({
             chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(state.tokenDropdown.chainId)],
           })
 
-          return
+          return null
         }
 
         if (state.txStatus === SendTxStatuses.COMPLETED) {
@@ -250,6 +243,20 @@ export const SendWidget: FC<SendWidgetProps> = ({
       disabled: isDisabled,
       loading: isLoading,
     },
+    secondaryButton:
+      state.txStatus === SendTxStatuses.COMPLETED
+        ? {
+            label: 'Send another',
+            action: () => {
+              dispatch({
+                type: 'reset',
+                payload: { txStatus: undefined, step: SendStep.INIT, recipientAddress: '' },
+              })
+              manualSetAmount('0')
+            },
+            disabled: isLoading,
+          }
+        : undefined,
     isMobileOrTablet,
     drawerOptions: {
       slideFrom: 'right',
