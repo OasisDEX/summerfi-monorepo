@@ -62,7 +62,9 @@ export const AdditionalBonusLabel = ({
         )}
         {externalTokenBonus && (
           <div>
-            <Text variant="p2semi">{externalTokenBonus.multiplier}x</Text>
+            {externalTokenBonus.multiplier > 0 ? (
+              <Text variant="p2semi">{externalTokenBonus.multiplier}x</Text>
+            ) : null}
             <Icon iconName={externalTokenBonus.icon as IconNamesList} size={20} />
           </div>
         )}
