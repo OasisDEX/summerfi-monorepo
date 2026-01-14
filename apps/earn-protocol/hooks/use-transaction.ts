@@ -14,9 +14,11 @@ import {
   useChain,
   useSendUserOperation,
   useSmartAccountClient,
+  useUser,
 } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
+  AccountKitAccountType,
   accountType,
   getVaultPositionUrl,
   getVaultUrl,
@@ -29,7 +31,7 @@ import {
   type EarnAllowanceTypes,
   type EarnTransactionViewStates,
   type SDKVaultishType,
-  type SupportedNetworkIds,
+  SupportedNetworkIds,
   TransactionAction,
   type TransactionWithStatus,
 } from '@summerfi/app-types'
@@ -124,6 +126,7 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
+  const user = useUser()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
@@ -143,6 +146,7 @@ export const useTransaction = ({
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
   const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
   const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
+  const isEoa = user?.type === AccountKitAccountType.EOA
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -390,9 +394,13 @@ export const useTransaction = ({
     client: smartAccountClient,
     waitForTxn: true,
     onSuccess: ({ hash }) => {
+      // eslint-disable-next-line no-console
+      console.log('Big blocks enabled successfully with tx hash:', hash)
       setHyperliquidBigBlocksEnabled(true)
     },
     onError: (err) => {
+      // eslint-disable-next-line no-console
+      console.error('Error enabling Hyperliquid big blocks:', err)
       setHyperliquidBigBlocksEnabled(false)
     },
   })
@@ -538,19 +546,18 @@ export const useTransaction = ({
         usingBigBlocks: true,
       })
 
-      await sendUserOperation({
+      await sendUserEnableBigBlocksOperation({
         uo: {
           target: userWalletAddress as `0x${string}`,
           data: `0x${Buffer.from(evmUserModifyData).toString('hex')}` as `0x${string}`,
           value: 0n,
         },
       })
-      setHyperliquidBigBlocksEnabled(true)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Error enabling Hyperliquid big blocks:', err)
     }
-  }, [isHyperliquid, userWalletAddress, smartAccountClient, sendUserOperation])
+  }, [isHyperliquid, userWalletAddress, smartAccountClient, sendUserEnableBigBlocksOperation])
 
   const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
@@ -751,6 +758,32 @@ export const useTransaction = ({
       }
     }
 
+    // handle hyperliquid big blocks
+    if (
+      isHyperliquid &&
+      !isSendingUserOperation &&
+      !isSendingUserEnableBigBlocksOperation &&
+      !hyperliquidBigBlocksChecked
+    ) {
+      return {
+        label: 'Checking big blocks configuration',
+        action: () => null,
+        disabled: true,
+        loading: true,
+      }
+    }
+
+    if (isHyperliquid && !hyperliquidBigBlocksEnabled && !isSendingUserEnableBigBlocksOperation) {
+      return {
+        label: 'Enable HyperEVM big blocks',
+        action: () => {
+          enableHyperliquidBigBlocks()
+        },
+        disabled: false,
+        loading: isSendingUserEnableBigBlocksOperation,
+      }
+    }
+
     // transactions loaded from the SDK
     // execute them one by one
     if (nextTransaction?.type) {
@@ -821,6 +854,7 @@ export const useTransaction = ({
     }
   }, [
     isEditingSwitchAmount,
+    userWalletAddress,
     ownerView,
     isProperChainSelected,
     isSettingChain,
@@ -834,18 +868,21 @@ export const useTransaction = ({
     isSwitch,
     txStatus,
     token,
+    isHyperliquid,
+    isSendingUserOperation,
+    isSendingUserEnableBigBlocksOperation,
+    hyperliquidBigBlocksChecked,
     nextTransaction,
     referralCodeError,
     getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
-    setChain,
     buttonClickEventHandler,
+    setChain,
     sidebarTransactionType,
     approvalTokenSymbol,
     executeNextTransaction,
-    userWalletAddress,
     selectedSwitchVault,
     push,
     vault.protocol.network,
