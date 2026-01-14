@@ -64,8 +64,11 @@ export const HomepageCarousel = ({
   const vaultsCards = useMemo(() => {
     return (
       vaultsList ? vaultsList : (Array.from({ length: 10 }) as (SDKVaultishType | undefined)[])
-    ).sort((vault) => {
-      return vault?.createdTimestamp ? -1 : 1
+    ).sort((a, b) => {
+      const aTime = a?.createdTimestamp ?? 0
+      const bTime = b?.createdTimestamp ?? 0
+
+      return Number(bTime) - Number(aTime)
     })
   }, [vaultsList])
 
