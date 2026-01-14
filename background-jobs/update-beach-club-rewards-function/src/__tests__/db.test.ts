@@ -1,6 +1,7 @@
 import { Pool } from 'pg'
 import { ConfigService } from '../config'
 import { DatabaseService } from '../db'
+import { Logger } from '@aws-lambda-powertools/logger'
 
 // Mock dependencies
 jest.mock('pg')
@@ -84,7 +85,7 @@ describe('DatabaseService', () => {
     ;(ConfigService as jest.MockedClass<typeof ConfigService>).mockImplementation(() => mockConfig)
 
     // Create service instance
-    db = new DatabaseService()
+    db = new DatabaseService(console as unknown as Logger)
 
     // Replace the Kysely instance with our mock
     ;(db as any).db = mockKysely
