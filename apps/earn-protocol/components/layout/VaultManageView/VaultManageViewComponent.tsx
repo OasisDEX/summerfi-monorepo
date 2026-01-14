@@ -43,6 +43,7 @@ import {
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
+  SupportedNetworkIds,
   TOSStatus,
   TransactionAction,
 } from '@summerfi/app-types'
@@ -463,6 +464,7 @@ export const VaultManageViewComponent = ({
 
   const considerSwitchingContent = useMemo(() => {
     return potentialVaultsToSwitchToTokens.length > 0 &&
+      vaultChainId !== SupportedNetworkIds.Hyperliquid &&
       sidebarTransactionType === TransactionAction.WITHDRAW ? (
       <Card onClick={() => setSidebarTransactionType(TransactionAction.SWITCH)}>
         <Text variant="p4semi" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
@@ -471,7 +473,7 @@ export const VaultManageViewComponent = ({
         </Text>
       </Card>
     ) : null
-  }, [potentialVaultsToSwitchToTokens, sidebarTransactionType])
+  }, [potentialVaultsToSwitchToTokens, sidebarTransactionType, vaultChainId])
 
   const sidebarTabsList = useMemo(() => {
     return [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW, TransactionAction.SWITCH].filter(
