@@ -83,15 +83,14 @@ export const PortfolioPosition = ({
       },
     },
   } = portfolioPosition.position
-  const isVaultAtLeast30dOld = createdTimestamp
-    ? dayjs().diff(dayjs(Number(createdTimestamp) * 1000), 'day') > 30
-    : false
+  const vaultInceptionDate = dayjs(Number(createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
   const apyCurrent = vaultApyData.apy ? formatDecimalAsPercent(vaultApyData.apy) : 'New strategy'
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
   })
   const isAltPressed = useHoldAlt()
-  const apy30dParsed = isVaultAtLeast30dOld
+  const apy30dParsed = !isNewVault
     ? vaultApyData.sma30d
       ? formatDecimalAsPercent(vaultApyData.sma30d)
       : 'n/a'
@@ -135,6 +134,7 @@ export const PortfolioPosition = ({
               isVaultCard
               tooltipName={`portfolio-overview-risk-label-${slugifyVault(portfolioPosition.vault)}`}
               onTooltipOpen={tooltipEventHandler}
+              isNewVault={isNewVault}
             />
             {isMobile && linkToPosition}
           </div>

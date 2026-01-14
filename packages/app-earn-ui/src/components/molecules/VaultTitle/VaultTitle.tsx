@@ -11,6 +11,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
+import { Emphasis } from '@/components/molecules/Emphasis/Emphasis'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { networkWarnings } from '@/constants/earn-protocol'
 import { networkIdIconNameMap, networkNameIconNameMap } from '@/constants/icon-maps'
@@ -27,6 +28,7 @@ interface VaultTitleProps {
   isLoading?: boolean
   isVaultCard?: boolean
   iconSize?: number
+  isNewVault?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -39,6 +41,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   isLoading,
   isVaultCard,
   iconSize = 44,
+  isNewVault = false,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -75,10 +78,17 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           <Text
             as="h4"
             variant={titleVariant}
-            style={{ color: 'white', fontWeight: 600 }}
+            style={{
+              color: 'white',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+            }}
             data-testid="vault-token"
           >
             {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
+            {isNewVault && !isLoading && <Emphasis variant="p2semiColorful">New!</Emphasis>}
           </Text>
           {selected && (
             <div

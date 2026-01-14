@@ -3,6 +3,7 @@
 import { type ReactNode } from 'react'
 import { type SDKVaultsListType, type SDKVaultType } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -26,6 +27,9 @@ export const VaultGridDetails = ({
   vaults: SDKVaultsListType
   children: ReactNode
 }): React.ReactNode => {
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
+
   return (
     <>
       <div className={vaultGridDetailsStyles.vaultGridDetailsBreadcrumbsWrapper}>
@@ -62,6 +66,7 @@ export const VaultGridDetails = ({
               symbol={getDisplayToken(vault.inputToken.symbol)}
               risk={vault.customFields?.risk ?? 'lower'}
               networkName={supportedSDKNetwork(vault.protocol.network)}
+              isNewVault={isNewVault}
             />
           </Dropdown>
           <Button

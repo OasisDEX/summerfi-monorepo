@@ -24,6 +24,7 @@ interface VaultTitleWithRiskProps {
   titleVariant?: keyof typeof TextVariants
   tooltipName?: string
   onTooltipOpen?: (tooltipName: string) => void
+  isNewVault?: boolean
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
@@ -36,6 +37,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   titleVariant = 'h4semi',
   tooltipName,
   onTooltipOpen,
+  isNewVault = false,
 }) => {
   const color = riskColors[risk]
   const riskTooltipLabel = getVaultRiskTooltipLabel({
@@ -49,6 +51,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       selected={selected}
       titleVariant={titleVariant}
       isVaultCard={isVaultCard}
+      isNewVault={isNewVault}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={

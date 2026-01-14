@@ -173,6 +173,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   }
 
   const sumrRewards = useSumrRewardsToDate(position)
+  const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
+  const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
 
   return (
     <>
@@ -250,6 +252,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 networkName={supportedSDKNetwork(vault.protocol.network)}
                 tooltipName="vault-manage-risk-label"
                 onTooltipOpen={tooltipEventHandler}
+                isNewVault={isNewVault}
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>

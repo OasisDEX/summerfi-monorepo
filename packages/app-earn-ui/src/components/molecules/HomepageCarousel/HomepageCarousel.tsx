@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type IArmadaVaultInfo, type SDKVaultishType, type VaultApyData } from '@summerfi/app-types'
 import { findVaultInfo } from '@summerfi/app-utils'
 import clsx from 'clsx'
@@ -61,6 +61,24 @@ export const HomepageCarousel = ({
     [emblaApi],
   )
 
+  const vaultsCards = useMemo(() => {
+    return (
+      vaultsList ? vaultsList : (Array.from({ length: 10 }) as (SDKVaultishType | undefined)[])
+    ).sort((vault) => {
+      return vault?.createdTimestamp ? -1 : 1
+    })
+  }, [vaultsList])
+
+  const vaultsDots = useMemo(() => {
+    return vaultsList?.map((_, idx) => (
+      <div
+        key={idx}
+        className={`${homepageCarouselStyles.dot} ${idx === selectedIndex ? homepageCarouselStyles.dotActive : ''}`}
+        onClick={selectSlide(idx)}
+      />
+    ))
+  }, [vaultsList, selectedIndex, selectSlide])
+
   return (
     <div className={homepageCarouselStyles.homepageCarouselWrapper}>
       <section className={`${homepageCarouselStyles.embla}`}>
@@ -84,10 +102,7 @@ export const HomepageCarousel = ({
         </div>
         <div className={homepageCarouselStyles.emblaViewport} ref={emblaRef}>
           <div className={homepageCarouselStyles.emblaContainer}>
-            {(vaultsList
-              ? vaultsList
-              : (Array.from({ length: 10 }) as (SDKVaultishType | undefined)[])
-            ).map((vault, vaultIndex) => (
+            {vaultsCards.map((vault, vaultIndex) => (
               <div
                 className={clsx(homepageCarouselStyles.emblaSlide, 'embla__slide')}
                 key={`VaultCardHomepage_${vault?.id ?? vaultIndex}_${vault?.protocol.network}`}
@@ -108,15 +123,7 @@ export const HomepageCarousel = ({
             ))}
           </div>
         </div>
-        <div className={homepageCarouselStyles.dotsBottom}>
-          {vaultsList?.map((_, idx) => (
-            <div
-              key={idx}
-              className={`${homepageCarouselStyles.dot} ${idx === selectedIndex ? homepageCarouselStyles.dotActive : ''}`}
-              onClick={selectSlide(idx)}
-            />
-          ))}
-        </div>
+        <div className={homepageCarouselStyles.dotsBottom}>{vaultsDots}</div>
       </section>
     </div>
   )
