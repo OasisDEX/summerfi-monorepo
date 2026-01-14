@@ -13,10 +13,16 @@ export const handler = async (
   logger.debug('Handler started')
 
   const processor = new ReferralProcessor({ logger })
-  const result = await processor.processLatest()
-  if (result.success) {
-    logger.info('Processing completed successfully')
-  } else {
+  try {
+    const result = await processor.processLatest()
+    if (result.success) {
+      logger.info('Processing completed successfully')
+      return
+    }
+
     logger.error('Processing failed', { error: result.error })
+    throw result.error ?? new Error('Processing failed without an error')
+  } finally {
+    await processor.close()
   }
 }

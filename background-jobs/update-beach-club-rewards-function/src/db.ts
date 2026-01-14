@@ -34,8 +34,8 @@ export class DatabaseService {
     { maxAmount: Infinity, percentage: 0.005 }, // 0.5%
   ]
 
-  constructor() {
-    this.logger = new Logger({ serviceName: 'db' })
+  constructor(logger: Logger) {
+    this.logger = logger
     const BEACH_CLUB_REWARDS_DB_CONNECTION_STRING =
       process.env.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING
     if (!BEACH_CLUB_REWARDS_DB_CONNECTION_STRING) {
@@ -46,7 +46,7 @@ export class DatabaseService {
       connectionString: BEACH_CLUB_REWARDS_DB_CONNECTION_STRING,
     }).db
 
-    this.config = new ConfigService(this.db, new Logger({ serviceName: 'config' }))
+    this.config = new ConfigService(this.db, this.logger)
   }
 
   /**
@@ -442,7 +442,7 @@ WHERE u.id = ANY(${userIds});
         .executeTakeFirst()
       return result?.value === 'true'
     } catch (error) {
-      console.error('Db not initialized:', error)
+      this.logger.error('Db not initialized:', { error: error as Error })
       return true
     }
   }
@@ -563,8 +563,8 @@ WHERE u.id = ANY(${userIds});
       )
       return result.rows.length > 0 ? referralCodeId : null
     } catch (error) {
-      console.error('Error validating referral code:', error)
-      return null
+      this.logger.error('Error validating referral code:', { error: error as Error })
+      throw error
     }
   }
 
