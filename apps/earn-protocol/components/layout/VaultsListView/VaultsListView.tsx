@@ -540,13 +540,25 @@ export const VaultsListView = ({
 
   const vaultsNetworksList = useMemo(
     () => [
-      ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
+      ...[
+        ...new Set(
+          vaultsList
+            .filter((vault) => {
+              if (userIsSmartAccount) {
+                return filterOutNonSCACompatibleVaults([vault]).length > 0
+              }
+
+              return true
+            })
+            .map(({ protocol }) => protocol.network),
+        ),
+      ].map((network) => ({
         icon: networkNameIconNameMap[supportedSDKNetwork(network)] as IconNamesList,
         value: network,
         label: capitalize(sdkNetworkToHumanNetwork(supportedSDKNetwork(network))),
       })),
     ],
-    [vaultsList],
+    [vaultsList, userIsSmartAccount],
   )
   const vaultsNetworksOptionGroups = useMemo(() => {
     return [
