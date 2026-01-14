@@ -50,7 +50,7 @@ export class SiloRewardFetcher implements IRewardFetcher {
       // Fetch data for each product sequentially with a small delay
       for (const product of products) {
         try {
-          this.logger.info(
+          this.logger.debug(
             `[SiloRewardFetcher] Fetching rewards for vault: ${product.pool} on ${networkName}`,
           )
           const response = await this.fetchWithRetry(

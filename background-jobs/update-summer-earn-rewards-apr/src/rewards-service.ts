@@ -127,7 +127,7 @@ export class RewardsService {
     products: Product[],
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
-    this.logger.info(
+    this.logger.debug(
       `[RewardsService] Getting reward rates for ${products.length} products on chain ${chainId}`,
     )
 
@@ -347,7 +347,7 @@ export class RewardsService {
     products: Product[],
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
-    this.logger.info(
+    this.logger.debug(
       `[RewardsService] Getting Morpho rewards for ${products.length} products on chain ${chainId}`,
     )
 
@@ -537,7 +537,7 @@ export class RewardsService {
     chainId: ChainId,
   ): Promise<Record<string, RewardRate[]>> {
     const currentTimestamp = Math.floor(Date.now() / 1000)
-    this.logger.info(
+    this.logger.debug(
       `[RewardsService] Getting Euler rewards for ${products.length} products on chain ${chainId}`,
     )
 
