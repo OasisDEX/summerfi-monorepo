@@ -629,6 +629,8 @@ describe('ReferralClient', () => {
               account: { id: '0x123' },
               vault: { id: 'vault1', inputToken: { symbol: 'USDC' } },
               createdTimestamp: '1640995200',
+              inputTokenBalanceNormalizedInUSD: '1000',
+              inputTokenBalanceNormalized: '1000',
               referralData: { id: '0xreferrer' },
               hourlySnapshots: [
                 {
@@ -739,6 +741,8 @@ describe('ReferralClient', () => {
               vault: { id: 'vault1', inputToken: { symbol: 'USDC' } },
               createdTimestamp: '1640995200',
               referralData: { id: '0xreferrer' },
+              inputTokenBalanceNormalizedInUSD: '1000',
+              inputTokenBalanceNormalized: '1000',
               hourlySnapshots: [
                 {
                   id: 'snapshot1',
