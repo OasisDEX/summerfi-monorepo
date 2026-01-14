@@ -14,11 +14,9 @@ import {
   useChain,
   useSendUserOperation,
   useSmartAccountClient,
-  useUser,
 } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
-  AccountKitAccountType,
   accountType,
   getVaultPositionUrl,
   getVaultUrl,
@@ -126,7 +124,6 @@ export const useTransaction = ({
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const { setChain, isSettingChain } = useChain()
   const { clientChainId } = useClientChainId()
-  const user = useUser()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
@@ -146,7 +143,6 @@ export const useTransaction = ({
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
   const isDeposit = sidebarTransactionType === TransactionAction.DEPOSIT
   const isSwitch = sidebarTransactionType === TransactionAction.SWITCH
-  const isEoa = user?.type === AccountKitAccountType.EOA
 
   const nextTransaction = useMemo(() => {
     if (!transactions || transactions.length === 0) {
@@ -549,7 +545,7 @@ export const useTransaction = ({
       await sendUserEnableBigBlocksOperation({
         uo: {
           target: userWalletAddress as `0x${string}`,
-          data: `0x${Buffer.from(evmUserModifyData).toString('hex')}` as `0x${string}`,
+          data: `0x${Array.from(new TextEncoder().encode(evmUserModifyData), (b) => b.toString(16).padStart(2, '0')).join('')}` as `0x${string}`,
           value: 0n,
         },
       })
@@ -773,13 +769,13 @@ export const useTransaction = ({
       }
     }
 
-    if (isHyperliquid && !hyperliquidBigBlocksEnabled && !isSendingUserEnableBigBlocksOperation) {
+    if (isHyperliquid && !hyperliquidBigBlocksEnabled) {
       return {
         label: 'Enable HyperEVM big blocks',
         action: () => {
           enableHyperliquidBigBlocks()
         },
-        disabled: false,
+        disabled: isSendingUserEnableBigBlocksOperation,
         loading: isSendingUserEnableBigBlocksOperation,
       }
     }
@@ -872,6 +868,7 @@ export const useTransaction = ({
     isSendingUserOperation,
     isSendingUserEnableBigBlocksOperation,
     hyperliquidBigBlocksChecked,
+    hyperliquidBigBlocksEnabled,
     nextTransaction,
     referralCodeError,
     getTransactionsList,
@@ -881,6 +878,7 @@ export const useTransaction = ({
     buttonClickEventHandler,
     setChain,
     sidebarTransactionType,
+    enableHyperliquidBigBlocks,
     approvalTokenSymbol,
     executeNextTransaction,
     selectedSwitchVault,
@@ -986,6 +984,13 @@ export const useTransaction = ({
       setTxStatus('txError')
     }
   }, [sendUserOperationError, setTxStatus, txStatus])
+
+  // watch for sendUserEnableBigBlocksOperationError
+  useEffect(() => {
+    if (sendUserEnableBigBlocksOperationError && txStatus === 'txInProgress') {
+      setTxStatus('txError')
+    }
+  }, [sendUserEnableBigBlocksOperationError, setTxStatus, txStatus])
 
   // check for big blocks operation first
   useEffect(() => {
