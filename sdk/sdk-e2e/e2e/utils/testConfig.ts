@@ -58,7 +58,8 @@ export const FleetAddresses = {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
   },
   Hyperliquid: {
-    USDC: '0x015e60a0b239214fdeab9ad21318b12c0d97c15d',
+    USDC: '0x252e5aa42c1804b85b2ce6712cd418a0561232ba',
+    USDT: '0x2cc190fb654141dfbeac4c0f718f4d511674d346',
   },
 } as const
 
@@ -116,6 +117,12 @@ export const TestConfigs = {
     chainId: ChainIds.Hyperliquid,
     fleetAddressValue: FleetAddresses.Hyperliquid.USDC,
     symbol: 'USDC',
+  },
+  HyperliquidUSDT: {
+    rpcUrl: RpcUrls.Hyperliquid,
+    chainId: ChainIds.Hyperliquid,
+    fleetAddressValue: FleetAddresses.Hyperliquid.USDT,
+    symbol: 'USDT',
   },
 } satisfies Record<string, ChainConfig>
 
