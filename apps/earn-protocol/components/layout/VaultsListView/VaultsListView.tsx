@@ -398,6 +398,7 @@ export const VaultsListView = ({
     chainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
     vaultId: resolvedVaultData.id,
     onlyActive: true,
+    cached: true,
   })
 
   const { handleTokenSelectionChange, selectedTokenOption, tokenOptions, setSelectedTokenOption } =
@@ -410,6 +411,7 @@ export const VaultsListView = ({
     tokenSymbol: selectedTokenOption.value,
     network: supportedSDKNetwork(resolvedVaultData.protocol.network),
     vaultTokenSymbol: resolvedVaultData.inputToken.symbol,
+    cached: true,
   })
 
   // wrapper to show skeleton immediately when changing token

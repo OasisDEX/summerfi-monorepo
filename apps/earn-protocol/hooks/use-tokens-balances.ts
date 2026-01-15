@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import {
   arbitrumPublicClient,
   basePublicClient,
+  hyperliquidPublicClient,
   mainnetPublicClient,
   sonicPublicClient,
 } from '@/helpers/get-fe-public-client'
@@ -17,6 +18,7 @@ import { type TokenBalanceData, useTokenBalance } from '@/hooks/use-token-balanc
  * @param {string} params.tokenSymbol - The symbol of the token to fetch balance for
  * @param {SupportedSDKNetworks} params.network - The network to fetch balances from (Arbitrum or Base)
  * @param {string} params.vaultTokenSymbol - The symbol of the vault token
+ * @param {boolean} [params.cached] - Whether to use cached data or not
  * @returns {Object} Object containing:
  *  - token: Token information
  *  - vaultToken: Vault token information
@@ -28,10 +30,12 @@ export const useTokenBalances = ({
   tokenSymbol,
   network,
   vaultTokenSymbol,
+  cached,
 }: {
   tokenSymbol: string
   network: SupportedSDKNetworks
   vaultTokenSymbol: string
+  cached?: boolean
 }): TokenBalanceData => {
   if (!supportedNetworkGuard(network)) {
     throw new Error(`Unsupported network: ${network}`)
@@ -44,6 +48,7 @@ export const useTokenBalances = ({
     publicClient: arbitrumPublicClient,
     chainId: SupportedNetworkIds.ArbitrumOne,
     skip: network !== SupportedSDKNetworks.ArbitrumOne,
+    cached,
   })
   const baseTokenBalance = useTokenBalance({
     tokenSymbol,
@@ -51,6 +56,7 @@ export const useTokenBalances = ({
     publicClient: basePublicClient,
     chainId: SupportedNetworkIds.Base,
     skip: network !== SupportedSDKNetworks.Base,
+    cached,
   })
   const mainnetTokenBalance = useTokenBalance({
     tokenSymbol,
@@ -58,6 +64,7 @@ export const useTokenBalances = ({
     publicClient: mainnetPublicClient,
     chainId: SupportedNetworkIds.Mainnet,
     skip: network !== SupportedSDKNetworks.Mainnet,
+    cached,
   })
   const sonicTokenBalance = useTokenBalance({
     tokenSymbol,
@@ -65,13 +72,15 @@ export const useTokenBalances = ({
     publicClient: sonicPublicClient,
     chainId: SupportedNetworkIds.SonicMainnet,
     skip: network !== SupportedSDKNetworks.SonicMainnet,
+    cached,
   })
   const hyperliquidTokenBalance = useTokenBalance({
     tokenSymbol,
     vaultTokenSymbol,
-    publicClient: sonicPublicClient,
+    publicClient: hyperliquidPublicClient,
     chainId: SupportedNetworkIds.Hyperliquid,
     skip: network !== SupportedSDKNetworks.Hyperliquid,
+    cached,
   })
 
   const balance = {

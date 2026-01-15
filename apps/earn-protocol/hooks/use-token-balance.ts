@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { ten } from '@summerfi/app-utils'
 import { getChainInfoByChainId, type HexData, type IToken } from '@summerfi/sdk-common'
@@ -24,6 +24,7 @@ export interface TokenBalanceData {
  * @param chainId - Network chain ID
  * @param skip - Optional flag to skip balance fetching
  * @param overwriteWalletAddress - Optional address to override the connected wallet
+ * @param cached - Optional flag to use cached data
  * @returns TokenBalanceData containing vault token, underlying token, balance, and loading state
  */
 export const useTokenBalance = ({
@@ -33,6 +34,7 @@ export const useTokenBalance = ({
   chainId,
   skip, // to be used when we there are multiple calls of this hook within single component
   overwriteWalletAddress,
+  cached,
 }: {
   publicClient: PublicClient
   vaultTokenSymbol: string
@@ -40,6 +42,7 @@ export const useTokenBalance = ({
   chainId: number
   skip?: boolean
   overwriteWalletAddress?: string
+  cached?: boolean
 }): TokenBalanceData => {
   const [vaultToken, setVaultToken] = useState<IToken>()
   const [token, setToken] = useState<IToken>()
@@ -47,6 +50,9 @@ export const useTokenBalance = ({
   const { userWalletAddress } = useUserWallet()
   const walletAddress = overwriteWalletAddress ?? userWalletAddress
   const [tokenBalanceLoading, setTokenBalanceLoading] = useState(!!walletAddress)
+  const cacheRef = useRef<Map<string, { vaultToken: IToken; token: IToken; balance: BigNumber }>>(
+    new Map(),
+  )
 
   const sdk = useAppSDK()
   const getTokenRequest = useCallback(
@@ -62,6 +68,22 @@ export const useTokenBalance = ({
     [sdk, chainId],
   )
   const fetchTokenBalance = useCallback(async () => {
+    // Check cache if enabled
+    const cacheKey = `${tokenSymbol}-${vaultTokenSymbol}-${chainId}-${walletAddress}`
+
+    if (cached && cacheRef.current.has(cacheKey)) {
+      const cachedData = cacheRef.current.get(cacheKey)
+
+      if (cachedData) {
+        setVaultToken(cachedData.vaultToken)
+        setToken(cachedData.token)
+        setTokenBalance(cachedData.balance)
+        setTokenBalanceLoading(false)
+
+        return
+      }
+    }
+
     setTokenBalance(undefined)
     setTokenBalanceLoading(true)
 
@@ -96,7 +118,16 @@ export const useTokenBalance = ({
           if (skip) {
             return
           }
-          setTokenBalance(new BigNumber(val.toString()).div(new BigNumber(ten).pow(18)))
+
+          const balance = new BigNumber(val.toString()).div(new BigNumber(ten).pow(18))
+
+          // Cache the result
+          cacheRef.current.set(cacheKey, {
+            vaultToken: fetchedVaultToken,
+            token: fetchedOrVaultToken,
+            balance,
+          })
+          setTokenBalance(balance)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -121,9 +152,18 @@ export const useTokenBalance = ({
           if (skip) {
             return
           }
-          setTokenBalance(
-            new BigNumber(val.toString()).div(new BigNumber(ten).pow(fetchedOrVaultToken.decimals)),
+
+          const balance = new BigNumber(val.toString()).div(
+            new BigNumber(ten).pow(fetchedOrVaultToken.decimals),
           )
+
+          // Cache the result
+          cacheRef.current.set(cacheKey, {
+            vaultToken: fetchedVaultToken,
+            token: fetchedOrVaultToken,
+            balance,
+          })
+          setTokenBalance(balance)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -133,7 +173,16 @@ export const useTokenBalance = ({
           setTokenBalanceLoading(false)
         })
     }
-  }, [skip, getTokenRequest, vaultTokenSymbol, tokenSymbol, publicClient, walletAddress])
+  }, [
+    skip,
+    getTokenRequest,
+    vaultTokenSymbol,
+    tokenSymbol,
+    publicClient,
+    walletAddress,
+    cached,
+    chainId,
+  ])
 
   useEffect(() => {
     if (!skip && walletAddress) {

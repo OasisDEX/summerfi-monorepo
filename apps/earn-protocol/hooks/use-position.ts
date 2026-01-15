@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
@@ -48,27 +48,47 @@ async function updateUserPosition({
  * @param {string} params.vaultId - The fleet/vault address to query
  * @param {SupportedNetworkIds} params.chainId - Chain ID where the vault exists
  * @param {boolean} [params.onlyActive] - When true, only returns positions with amount > 0.01
+ * @param {boolean} [params.cached] - When true, uses cached data if available
  * @returns {{ position: IArmadaPosition | undefined, isLoading: boolean }} Position data and loading state
  */
 export const usePosition = ({
   vaultId,
   chainId,
   onlyActive,
+  cached,
 }: {
   vaultId: string
   chainId: SupportedNetworkIds
   onlyActive?: boolean
+  cached?: boolean
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition } = useAppSDK()
   const { userWalletAddress } = useUserWallet()
   const [isLoading, setIsLoading] = useState(false)
+  const cacheRef = useRef<Map<string, IArmadaPosition>>(new Map())
 
   const reFetchPosition = useCallback(async () => {
-    setIsLoading(true)
     if (!userWalletAddress) {
       return Promise.resolve(undefined)
     }
+
+    // Check cache if enabled
+    const cacheKey = `${vaultId}-${chainId}-${userWalletAddress}`
+
+    if (cached && cacheRef.current.has(cacheKey)) {
+      const cachedPos = cacheRef.current.get(cacheKey)
+
+      if (onlyActive && cachedPos && Number(cachedPos.assetsUSD.amount) < 0.01) {
+        setPosition(undefined)
+      } else {
+        setPosition(cachedPos)
+      }
+
+      return cachedPos
+    }
+
+    setIsLoading(true)
 
     return await updateUserPosition({
       vaultId,
@@ -82,12 +102,16 @@ export const usePosition = ({
 
           return
         }
+
+        // Cache the result
+        cacheRef.current.set(cacheKey, pos)
         setIsLoading(false)
-        if (onlyActive && Number(pos.amount.amount) < 0.01) {
+        if (onlyActive && Number(pos.assetsUSD.amount) < 0.01) {
           setPosition(undefined)
 
           return
         }
+
         setPosition(pos)
       })
       .catch(() => {
@@ -95,7 +119,7 @@ export const usePosition = ({
         console.info('The user does not have a position for this vault', vaultId)
         setIsLoading(false)
       })
-  }, [chainId, getUserPosition, onlyActive, userWalletAddress, vaultId])
+  }, [chainId, getUserPosition, onlyActive, userWalletAddress, vaultId, cached])
 
   useEffect(() => {
     if (!userWalletAddress) {
