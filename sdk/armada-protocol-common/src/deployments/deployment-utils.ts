@@ -172,7 +172,7 @@ export const getDeployedGovAddress = (
   const configKey = getConfigKey(ChainIds.Base)
 
   const maybeAddress = (
-    config[configKey].deployedContracts.gov as {
+    config[configKey].deployedContracts.govV2 as {
       rewardsManager: { address: string | undefined }
       summerStaking: { address: string | undefined }
     }
