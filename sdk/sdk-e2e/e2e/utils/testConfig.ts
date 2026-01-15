@@ -118,6 +118,12 @@ export const TestConfigs = {
     fleetAddressValue: FleetAddresses.Hyperliquid.USDC,
     symbol: 'USDC',
   },
+  HyperliquidUSDT: {
+    rpcUrl: RpcUrls.Hyperliquid,
+    chainId: ChainIds.Hyperliquid,
+    fleetAddressValue: FleetAddresses.Hyperliquid.USDT,
+    symbol: 'USDT',
+  },
 } satisfies Record<string, ChainConfig>
 
 export type TestConfigKey = keyof typeof TestConfigs
