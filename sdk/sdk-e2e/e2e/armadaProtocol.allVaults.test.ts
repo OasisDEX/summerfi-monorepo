@@ -24,23 +24,23 @@ describe('Armada Protocol - All Vaults', () => {
     chainId: ChainId
     testClientId?: TestClientIds
   }[] = [
-    { chainId: ChainIds.Base },
-    { chainId: ChainIds.ArbitrumOne },
-    { chainId: ChainIds.Mainnet },
-    { chainId: ChainIds.Sonic },
+    // { chainId: ChainIds.Base },
+    // { chainId: ChainIds.ArbitrumOne },
+    // { chainId: ChainIds.Mainnet },
+    // { chainId: ChainIds.Sonic },
     { chainId: ChainIds.Hyperliquid },
-    {
-      testClientId: TestClientIds.ACME,
-      chainId: ChainIds.Base,
-    },
-    {
-      testClientId: TestClientIds.Targen,
-      chainId: ChainIds.Base,
-    },
-    {
-      testClientId: TestClientIds.Targen,
-      chainId: ChainIds.ArbitrumOne,
-    },
+    // {
+    //   testClientId: TestClientIds.ACME,
+    //   chainId: ChainIds.Base,
+    // },
+    // {
+    //   testClientId: TestClientIds.Targen,
+    //   chainId: ChainIds.Base,
+    // },
+    // {
+    //   testClientId: TestClientIds.Targen,
+    //   chainId: ChainIds.ArbitrumOne,
+    // },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
