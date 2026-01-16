@@ -1,11 +1,17 @@
 export const getAccountType: (
   chainId?: number,
-) => 'ModularAccountV2' | 'MultiOwnerModularAccount' = (chainId) => {
+  skipOverrideCheck?: boolean,
+) => 'ModularAccountV2' | 'MultiOwnerModularAccount' = (chainId, skipOverrideCheck = false) => {
+  const localConfig =
+    typeof window !== 'undefined' && !skipOverrideCheck
+      ? localStorage.getItem(`smart-account-custom-account-type-${chainId}`)
+      : null
+
+  if (localConfig && localConfig !== 'null') {
+    return localConfig as 'ModularAccountV2' | 'MultiOwnerModularAccount'
+  }
   // HyperEVM uses ModularAccountV2 (entry point 0.7.0)
   if (chainId === 999) {
-    // eslint-disable-next-line no-console
-    console.log('getAccountType: returning ModularAccountV2 for HyperEVM chainId 999')
-
     return 'ModularAccountV2' as const
   }
 
