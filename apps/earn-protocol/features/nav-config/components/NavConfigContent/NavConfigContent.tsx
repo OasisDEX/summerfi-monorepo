@@ -13,7 +13,6 @@ import {
   SUCCESS_TOAST_CONFIG,
   Text,
   ToggleButton,
-  useLocalStorage,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
@@ -44,10 +43,10 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const { client: smartAccountClient } = useSmartAccountClient({
     type: getAccountType(chain.id),
   })
-  const [customAccountType, setCustomAccountType] = useLocalStorage(
-    `smart-account-custom-account-type-${chain.id}`,
-    getAccountType(chain.id, true),
-  )
+  // const [customAccountType, setCustomAccountType] = useLocalStorage(
+  //   `smart-account-custom-account-type-${chain.id}`,
+  //   getAccountType(chain.id, true),
+  // )
   const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
@@ -290,7 +289,8 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
                   {isDeployingSmartAccount ? 'Deploying...' : 'Deploy smart account'}
                 </Button>
               )}
-              <Text
+              {/** This isnt working well, commenting it out for now */}
+              {/* <Text
                 as="p"
                 variant="p3"
                 style={{
@@ -318,7 +318,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
                     isActive={customAccountType === item && getAccountType(chain.id, true) !== item}
                   />
                 ))}
-              </div>
+              </div> */}
             </>
           )}
         </div>
