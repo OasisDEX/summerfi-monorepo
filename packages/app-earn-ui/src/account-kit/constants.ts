@@ -1,5 +1,5 @@
 export const getAccountType: (
-  chainId: number,
+  chainId?: number,
 ) => 'ModularAccountV2' | 'MultiOwnerModularAccount' = (chainId) => {
   // HyperEVM uses ModularAccountV2 (entry point 0.7.0)
   if (chainId === 999) {
