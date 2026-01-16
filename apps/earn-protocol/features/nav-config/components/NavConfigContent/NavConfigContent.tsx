@@ -9,10 +9,10 @@ import {
   getAccountType,
   Icon,
   Input,
-  isUserSmartAccount,
   SUCCESS_TOAST_CONFIG,
   Text,
   ToggleButton,
+  useLocalStorage,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
@@ -38,11 +38,16 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const userAAKit = useUser()
-  const userIsSmartAccount = isUserSmartAccount(userAAKit)
+  // const userIsSmartAccount = isUserSmartAccount(userAAKit)
+  const userIsSmartAccount = true
   const { chain } = useChain()
   const { client: smartAccountClient } = useSmartAccountClient({
     type: getAccountType(chain.id),
   })
+  const [customAccountType, setCustomAccountType] = useLocalStorage(
+    `smart-account-custom-account-type-${chain.id}`,
+    getAccountType(chain.id, true),
+  )
   const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
@@ -249,44 +254,74 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
               />
             ))}
           </div>
-        </div>
-        {userIsSmartAccount && (
-          <>
-            <Text
-              as="p"
-              variant="p2semi"
-              style={{
-                marginBottom: 'var(--general-space-8)',
-              }}
-            >
-              Smart account
-            </Text>
-            <Text
-              as="p"
-              variant="p3"
-              style={{
-                marginBottom: 'var(--general-space-24)',
-                color: 'var(--earn-protocol-secondary-60)',
-              }}
-            >
-              {isSmartAccountDeployed === null
-                ? 'Checking smart account status...'
-                : isSmartAccountDeployed
-                  ? `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is deployed.`
-                  : `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is not deployed yet.`}
-            </Text>
-            {isSmartAccountDeployed === false && (
-              <Button
-                variant="secondaryMedium"
-                onClick={handleDeploySmartAccount}
-                disabled={isDeployingSmartAccount}
-                style={{ marginBottom: 'var(--general-space-24)' }}
+          {userIsSmartAccount && (
+            <>
+              <div className={classNames.spacerContent} />
+              <Text
+                as="p"
+                variant="p2semi"
+                style={{
+                  marginBottom: 'var(--general-space-8)',
+                }}
               >
-                {isDeployingSmartAccount ? 'Deploying...' : 'Deploy smart account'}
-              </Button>
-            )}
-          </>
-        )}
+                Smart account
+              </Text>
+              <Text
+                as="p"
+                variant="p3"
+                style={{
+                  marginBottom: 'var(--general-space-24)',
+                  color: 'var(--earn-protocol-secondary-60)',
+                }}
+              >
+                {isSmartAccountDeployed === null
+                  ? 'Checking smart account status...'
+                  : isSmartAccountDeployed
+                    ? `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is deployed.`
+                    : `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is not deployed yet.`}
+              </Text>
+              {isSmartAccountDeployed === false && (
+                <Button
+                  variant="secondaryMedium"
+                  onClick={handleDeploySmartAccount}
+                  disabled={isDeployingSmartAccount}
+                  style={{ marginBottom: 'var(--general-space-24)' }}
+                >
+                  {isDeployingSmartAccount ? 'Deploying...' : 'Deploy smart account'}
+                </Button>
+              )}
+              <Text
+                as="p"
+                variant="p3"
+                style={{
+                  marginBottom: 'var(--general-space-24)',
+                  color: 'var(--earn-protocol-secondary-60)',
+                }}
+              >
+                {`Your account type is ${customAccountType && getAccountType(chain.id, true) !== customAccountType ? `overriden to ${customAccountType}` : getAccountType(chain.id)}`}
+                . You can change it below.
+              </Text>
+
+              <div className={classNames.slippageOptionsWrapper}>
+                {['ModularAccountV2', 'MultiOwnerModularAccount', 'Remove override'].map((item) => (
+                  <Badge
+                    value={item}
+                    key={item}
+                    onClick={() => {
+                      if (item === 'Remove override') {
+                        setCustomAccountType(null)
+
+                        return
+                      }
+                      setCustomAccountType(item as 'ModularAccountV2' | 'MultiOwnerModularAccount')
+                    }}
+                    isActive={customAccountType === item && getAccountType(chain.id, true) !== item}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
         <div
           style={
             handleOpenClose && isMobile
