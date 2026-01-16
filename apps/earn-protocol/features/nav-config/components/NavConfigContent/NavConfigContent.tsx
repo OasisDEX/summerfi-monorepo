@@ -117,6 +117,8 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
           },
           overrides: {
             callGasLimit: 1_500_000n,
+            maxFeePerGas: 1_500_000n,
+            verificationGasLimit: 1_500_000n,
           },
         })
 
