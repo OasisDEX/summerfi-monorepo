@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType, SDKChainIdToAAChainMap, useIsIframe } from '@summerfi/app-earn-ui'
+import { useChain, useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { getAccountType, SDKChainIdToAAChainMap, useIsIframe } from '@summerfi/app-earn-ui'
 import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
 import {
@@ -68,7 +68,8 @@ export const useMigrationTransaction = ({
   })
   const isIframe = useIsIframe()
   const { getMigrateTx } = useAppSDK()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
   const [waitingForTx, setWaitingForTx] = useState<TransactionHash>()
   const [txHashes, setTxHashes] = useState<
     { type: TransactionType; hash?: string; custom?: string }[]

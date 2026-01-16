@@ -1,5 +1,5 @@
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+import { useChain, useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { getAccountType } from '@summerfi/app-earn-ui'
 import { type AddressValue } from '@summerfi/sdk-common'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -27,7 +27,8 @@ export const useSumrDelegateTransaction = ({
   error: Error | null
 } => {
   const { getDelegateTxV2 } = useAppSDK()
-  const { client } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
 
   const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
     client,

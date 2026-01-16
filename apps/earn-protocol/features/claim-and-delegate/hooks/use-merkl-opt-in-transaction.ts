@@ -1,7 +1,8 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
+import { sdkNetworkToChain } from '@summerfi/app-utils'
 import { type PublicClient } from 'viem'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
@@ -35,7 +36,9 @@ export const useMerklOptInTransaction = ({
 } => {
   const { getAuthorizeAsMerklRewardsOperatorTx, getCurrentUser, getChainInfo } = useAppSDK()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(sdkNetworkToChain(network).id),
+  })
 
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,

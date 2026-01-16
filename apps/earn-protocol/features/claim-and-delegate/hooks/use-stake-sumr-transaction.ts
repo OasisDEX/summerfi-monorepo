@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+import { useChain, useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { getAccountType } from '@summerfi/app-earn-ui'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -30,7 +30,8 @@ export const useStakeSumrTransaction = ({
   onApproveError: () => void
 }) => {
   const { getStakeTx, getCurrentUser } = useAppSDK()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
 
   const [stakeSumrTransaction, setStakeSumrTransaction] = useState<
     (() => Promise<unknown>) | undefined

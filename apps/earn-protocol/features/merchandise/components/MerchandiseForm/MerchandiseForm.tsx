@@ -1,12 +1,12 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useSignMessage, useSmartAccountClient } from '@account-kit/react'
+import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import {
-  accountType,
   Button,
   Dropdown,
   ERROR_TOAST_CONFIG,
+  getAccountType,
   Icon,
   Input,
   INTERNAL_LINKS,
@@ -138,7 +138,8 @@ interface MerchandiseFormProps {
 }
 
 export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress }) => {
-  const { client } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
   const { signMessageAsync } = useSignMessage({
     client,
   })

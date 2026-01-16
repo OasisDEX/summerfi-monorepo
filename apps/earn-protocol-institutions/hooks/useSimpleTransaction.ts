@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
-  accountType,
+  getAccountType,
   SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   useIsIframe,
@@ -55,7 +55,7 @@ export const useSimpleTransaction = ({
 
   const [txError, setTxError] = useState('')
   const isIframe = useIsIframe()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chainId) })
 
   useEffect(() => {
     if (txItem.txInitialState && txItem.txInitialState !== txStatus) {

@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
 import {
-  accountType,
   Button,
   Card as UiCard,
+  getAccountType,
   getTwitterShareUrl,
   Icon,
   LoadingSpinner,
@@ -69,11 +69,11 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({
   isBanned = false,
   closeGame,
 }) => {
-  const { client } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
   const { signMessageAsync } = useSignMessage({
     client,
   })
-  const { chain } = useChain()
 
   const [submittingToLeaderboard, setSubmittingToLeaderboard] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)

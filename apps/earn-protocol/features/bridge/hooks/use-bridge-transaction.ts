@@ -5,7 +5,7 @@ import {
   useSendUserOperation,
   useSmartAccountClient,
 } from '@account-kit/react'
-import { accountType } from '@summerfi/app-earn-ui'
+import { getAccountType } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   type BridgeTransactionInfo,
@@ -183,7 +183,9 @@ export function useBridgeTransaction({
   const [transaction, setTransaction] = useState<BridgeTransactionInfoWithLzFeeUsd | undefined>()
 
   const { getBridgeTx, getCurrentUser, getTargetChainInfo, getSummerToken } = useAppSDK()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(sourceChain.id),
+  })
 
   const { sendUserOperationAsync, isSendingUserOperation } = useSendUserOperation({
     client: smartAccountClient,

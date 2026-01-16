@@ -1,7 +1,8 @@
 'use client'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
+import { sdkNetworkToChain } from '@summerfi/app-utils'
 import { ChainIds } from '@summerfi/sdk-common'
 import { type PublicClient } from 'viem'
 
@@ -37,7 +38,9 @@ export const useClaimBeachClubFeesTransaction = ({
   const { getReferralFeesMerklClaimTx, getCurrentUser, getChainInfo, getTokenBySymbol } =
     useAppSDK()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(sdkNetworkToChain(network).id),
+  })
 
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,

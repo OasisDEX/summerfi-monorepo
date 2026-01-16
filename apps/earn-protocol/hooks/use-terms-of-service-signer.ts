@@ -1,6 +1,12 @@
 import { useCallback } from 'react'
-import { useSigner, useSignMessage, useSmartAccountClient, useUser } from '@account-kit/react'
-import { AccountKitAccountType, accountType } from '@summerfi/app-earn-ui'
+import {
+  useChain,
+  useSigner,
+  useSignMessage,
+  useSmartAccountClient,
+  useUser,
+} from '@account-kit/react'
+import { AccountKitAccountType, getAccountType } from '@summerfi/app-earn-ui'
 import { type TOSSignMessage } from '@summerfi/app-tos'
 
 /**
@@ -9,7 +15,8 @@ import { type TOSSignMessage } from '@summerfi/app-tos'
  */
 export const useTermsOfServiceSigner = () => {
   const user = useUser()
-  const { client } = useSmartAccountClient({ type: accountType })
+  const { chain } = useChain()
+  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
   const { signMessageAsync } = useSignMessage({
     client,
   })
