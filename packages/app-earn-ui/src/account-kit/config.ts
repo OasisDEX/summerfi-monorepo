@@ -8,6 +8,7 @@ import {
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
+import { entryPoint07Address } from 'viem/account-abstraction'
 import { hyperliquid, sonic } from 'viem/chains'
 import { safe } from 'wagmi/connectors'
 
@@ -29,6 +30,12 @@ export const customAAKitHyperliquidConfig: Chain = {
     ...hyperliquid.rpcUrls,
     alchemy: {
       http: ['https://hyperliquid-mainnet.g.alchemy.com/v2'],
+    },
+  },
+  contracts: {
+    ...hyperliquid.contracts,
+    entryPoint: {
+      address: entryPoint07Address,
     },
   },
 }
