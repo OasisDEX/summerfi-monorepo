@@ -1,7 +1,7 @@
 'use client'
 import { useMemo } from 'react'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, User, Wallet } from '@summerfi/sdk-common'
@@ -45,7 +45,9 @@ export const useUnstakeVaultTokens = ({
 } => {
   const { getUnstakeFleetTokensTx, getStakedBalance, getTargetChainInfo } = useAppSDK()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(subgraphNetworkToId(network)),
+  })
 
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,

@@ -17,7 +17,7 @@ import {
 } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
-  accountType,
+  getAccountType,
   getVaultPositionUrl,
   getVaultUrl,
   SDKChainIdToAAChainMap,
@@ -119,7 +119,7 @@ export const useTransaction = ({
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
-  const { setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain, chain } = useChain()
   const { clientChainId } = useClientChainId()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
@@ -134,7 +134,7 @@ export const useTransaction = ({
   const isIframe = useIsIframe()
   const revalidatePositionData = useRevalidatePositionData()
 
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
 
   const isProperChainSelected = clientChainId === vaultChainId
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW

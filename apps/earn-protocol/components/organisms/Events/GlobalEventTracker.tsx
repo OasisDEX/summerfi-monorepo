@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react'
 import { useAccount, useChain, useUser } from '@account-kit/react'
-import { accountType, useUserWallet } from '@summerfi/app-earn-ui'
+import { getAccountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -14,7 +14,7 @@ export const GlobalEventTracker = () => {
   const pageViewedEventHandler = usePageviewEvent()
   const { userWalletAddress: userAddress } = useUserWallet()
   const { chain } = useChain()
-  const { account, isLoadingAccount } = useAccount({ type: accountType })
+  const { account, isLoadingAccount } = useAccount({ type: getAccountType(chain.id) })
 
   // Track previous wallet state for connection/disconnection events
   const prevWalletRef = useRef<{

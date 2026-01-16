@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
-import { accountType, ERROR_TOAST_CONFIG, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
+import { ERROR_TOAST_CONFIG, getAccountType, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
 import { User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -40,7 +40,9 @@ export const useUnstakeSumrTransaction = ({
 } => {
   const { getUnstakeTx } = useAppSDK()
   const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(NetworkIds.BASEMAINNET),
+  })
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })
@@ -124,7 +126,9 @@ export const useUnstakeV2SumrTransaction = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(NetworkIds.BASEMAINNET),
+  })
   // debounce amount by 500ms to avoid rapid calls to getUnstakeTxV2
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amountParsed)
   const debouncedSetAmount = useMemo(

@@ -1,11 +1,12 @@
 'use client'
 import { type ChangeEvent, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useSmartAccountClient, useUser } from '@account-kit/react'
+import { useChain, useSmartAccountClient, useUser } from '@account-kit/react'
 import {
   Badge,
   Button,
   Card,
+  getAccountType,
   Icon,
   Input,
   isUserSmartAccount,
@@ -38,8 +39,9 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const { isMobile } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
+  const { chain } = useChain()
   const { client: smartAccountClient } = useSmartAccountClient({
-    type: 'ModularAccountV2',
+    type: getAccountType(chain.id),
   })
   const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 

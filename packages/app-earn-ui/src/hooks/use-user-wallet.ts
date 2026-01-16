@@ -1,6 +1,6 @@
-import { useAccount, useUser } from '@account-kit/react'
+import { useAccount, useChain, useUser } from '@account-kit/react'
 
-import { accountType } from '@/account-kit/constants'
+import { getAccountType } from '@/account-kit/constants'
 
 /**
  * Custom hook to get the user's wallet address.
@@ -17,7 +17,8 @@ export const useUserWallet = (): {
   isLoadingAccount: boolean
 } => {
   const user = useUser()
-  const { account, isLoadingAccount } = useAccount({ type: accountType })
+  const { chain } = useChain()
+  const { account, isLoadingAccount } = useAccount({ type: getAccountType(chain.id) })
 
   // user loads first and if sca we need to wait for account to be defined
   // to avoid ui flickering
