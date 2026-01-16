@@ -12,6 +12,7 @@ import {
   getUsers,
   getUsersPositions,
   UserPositionsQuery,
+  VaultsQuery,
 } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults as getInstitutionalVaults } from '@summerfi/summer-earn-institutions-subgraph'
@@ -26,6 +27,7 @@ const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.ARBITRUM]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.BASE]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.SONIC]: '0x4e0037f487bBb588bf1B7a83BDe6c34FeD6099e3',
+  [ChainId.HYPERLIQUID]: '0x72c527d3efDe2169AA950EFc9573C838cf125D21',
 }
 
 const logger = new Logger({ serviceName: 'get-protocol-info-function' })
@@ -88,12 +90,26 @@ interface ProtocolInfo {
   totalVaults: number
 }
 
+interface ChainVaultInfo {
+  totalValueLockedUSD: number
+  totalVaults: number
+}
+
+interface ChainProtocolInfo {
+  chainId: ChainId
+  publicVaults: ChainVaultInfo
+  institutionalVaults: ChainVaultInfo
+  totalValueLockedUSD: number
+  totalVaults: number
+}
+
 interface UsersResponseBody {
   users: UserPositionsInfo[]
 }
 
 interface ProtocolResponseBody {
   protocol: ProtocolInfo
+  chains: ChainProtocolInfo[]
 }
 
 interface UserChainRewards {
@@ -335,48 +351,94 @@ async function handleProtocolRoute(
 ): Promise<ProtocolResponseBody> {
   logger.info(`Handling protocol route with parameters: ${JSON.stringify(params)}`)
   const chainsToQuery = params.chainId ? [params.chainId] : supportedChains
+  logger.info(`Chains to query: ${chainsToQuery.join(', ')}`)
 
-  const allVaults = await Promise.all(
+  const chainData = await Promise.all(
     chainsToQuery.map(async (chainId) => {
       logger.info(`Fetching vaults for chain ID: ${chainId}`)
+      const publicVaults: VaultsQuery['vaults'] = []
+      const institutionalVaults: VaultsQuery['vaults'] = []
+
       try {
         const vaults = await getVaults({
           chainId,
           urlBase: subgraphBase,
         })
-        const institutionalVaults = await getInstitutionalVaults({
+        logger.info(`Fetched ${vaults.vaults.length} public vaults for chain ID: ${chainId}`)
+        publicVaults.push(...vaults.vaults)
+      } catch (error) {
+        logger.warn('Failed to fetch public vaults for chain', { chainId, error })
+      }
+
+      try {
+        const institutionalVaultsResult = await getInstitutionalVaults({
           chainId,
           urlBase: subgraphBase,
         })
-        logger.info(`Fetched vaults for chain ID: ${chainId}`)
-        return { vaults: [...vaults.vaults, ...institutionalVaults.vaults] }
+        logger.info(
+          `Fetched ${institutionalVaultsResult.vaults.length} institutional vaults for chain ID: ${chainId}`,
+        )
+        institutionalVaults.push(...(institutionalVaultsResult.vaults as VaultsQuery['vaults']))
       } catch (error) {
-        logger.warn('Failed to fetch vaults for chain', { chainId, error })
-        return { vaults: [] }
+        logger.warn('Failed to fetch institutional vaults for chain', { chainId, error })
       }
-    }),
-  )
 
-  // Aggregate data across all chains
-  const aggregatedData = allVaults.reduce(
-    (acc, chainVaults) => {
-      const chainTVL = chainVaults.vaults.reduce(
+      // Calculate metrics for public vaults
+      const publicVaultsTVL = publicVaults.reduce(
         (sum, vault) => sum + Number(vault.totalValueLockedUSD),
         0,
       )
-      logger.info(`Total TVL for chain vaults: ${chainTVL}`)
 
+      // Calculate metrics for institutional vaults
+      const institutionalVaultsTVL = institutionalVaults.reduce(
+        (sum, vault) => sum + Number(vault.totalValueLockedUSD),
+        0,
+      )
+
+      const chainInfo: ChainProtocolInfo = {
+        chainId,
+        publicVaults: {
+          totalValueLockedUSD: publicVaultsTVL,
+          totalVaults: publicVaults.length,
+        },
+        institutionalVaults: {
+          totalValueLockedUSD: institutionalVaultsTVL,
+          totalVaults: institutionalVaults.length,
+        },
+        totalValueLockedUSD: publicVaultsTVL + institutionalVaultsTVL,
+        totalVaults: publicVaults.length + institutionalVaults.length,
+      }
+
+      logger.info(`Chain ${chainId} metrics:`, {
+        publicVaults: chainInfo.publicVaults,
+        institutionalVaults: chainInfo.institutionalVaults,
+        total: {
+          totalValueLockedUSD: chainInfo.totalValueLockedUSD,
+          totalVaults: chainInfo.totalVaults,
+        },
+      })
+
+      return chainInfo
+    }),
+  )
+
+  // Aggregate data across all chains for backwards compatibility
+  const aggregatedData = chainData.reduce(
+    (acc, chainInfo) => {
       return {
-        totalValueLockedUSD: acc.totalValueLockedUSD + chainTVL,
-        totalVaults: acc.totalVaults + chainVaults.vaults.length,
+        totalValueLockedUSD: acc.totalValueLockedUSD + chainInfo.totalValueLockedUSD,
+        totalVaults: acc.totalVaults + chainInfo.totalVaults,
       }
     },
     { totalValueLockedUSD: 0, totalVaults: 0 },
   )
 
   logger.info(`Returning aggregated protocol data: ${JSON.stringify(aggregatedData)}`)
+  logger.info(`Returning detailed chain data for ${chainData.length} chains`)
+
   return {
     protocol: aggregatedData,
+    chains: chainData,
   }
 }
 
