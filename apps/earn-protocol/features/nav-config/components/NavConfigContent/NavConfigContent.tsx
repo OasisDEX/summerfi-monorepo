@@ -1,18 +1,21 @@
 'use client'
-import { type ChangeEvent, type FC, useState } from 'react'
+import { type ChangeEvent, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useSmartAccountClient, useUser } from '@account-kit/react'
 import {
+  accountType,
   Badge,
   Button,
   Card,
   Icon,
   Input,
+  isUserSmartAccount,
   SUCCESS_TOAST_CONFIG,
   Text,
   ToggleButton,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
-import { mapNumericInput } from '@summerfi/app-utils'
+import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -29,10 +32,17 @@ interface NavConfigContentProps {
 const slippageOptions = ['0.05', '0.10', '0.20', '0.50']
 
 export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
+  const [isSmartAccountDeployed, setIsSmartAccountDeployed] = useState<boolean | null>(null)
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
+  const userAAKit = useUser()
+  const userIsSmartAccount = isUserSmartAccount(userAAKit)
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: accountType,
+  })
+  const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
   const [slippage, setSlippage] = useState(mapNumericInput(slippageConfig.slippage))
@@ -71,6 +81,61 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
     toast.success('Settings saved successfully', SUCCESS_TOAST_CONFIG)
     handleOpenClose?.()
   }
+
+  const fetchSmartAccountDeploymentStatus = useCallback(async () => {
+    if (!userIsSmartAccount) return
+
+    if (smartAccountClient) {
+      const isDeployed = await smartAccountClient.account.isAccountDeployed()
+
+      setIsSmartAccountDeployed(isDeployed)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('User is Smart account, but the client is not available')
+      setIsSmartAccountDeployed(false)
+    }
+  }, [smartAccountClient, userIsSmartAccount])
+
+  const handleDeploySmartAccount = useCallback(async () => {
+    if (!smartAccountClient || !userAAKit?.address) {
+      toast.error('Smart account client is not available')
+
+      return
+    }
+
+    setIsDeployingSmartAccount(true)
+
+    try {
+      const alreadyDeployed = await smartAccountClient.account.isAccountDeployed()
+
+      setIsSmartAccountDeployed(alreadyDeployed)
+
+      if (!alreadyDeployed) {
+        const deployHash = await smartAccountClient.sendUserOperation({
+          uo: {
+            target: smartAccountClient.account.address,
+            data: '0x',
+            value: 0n,
+          },
+        })
+
+        await smartAccountClient.waitForUserOperationTransaction(deployHash)
+        await fetchSmartAccountDeploymentStatus()
+
+        toast.success('Smart account deployed successfully', SUCCESS_TOAST_CONFIG)
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error while deploying smart account', error)
+      toast.error('Failed to deploy smart account')
+    } finally {
+      setIsDeployingSmartAccount(false)
+    }
+  }, [fetchSmartAccountDeploymentStatus, smartAccountClient, userAAKit?.address])
+
+  useEffect(() => {
+    void fetchSmartAccountDeploymentStatus()
+  }, [fetchSmartAccountDeploymentStatus])
 
   return (
     <Card variant="cardSecondary" style={{ maxWidth: '446px' }}>
@@ -184,6 +249,43 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             ))}
           </div>
         </div>
+        {userIsSmartAccount && (
+          <>
+            <Text
+              as="p"
+              variant="p2semi"
+              style={{
+                marginBottom: 'var(--general-space-8)',
+              }}
+            >
+              Smart account
+            </Text>
+            <Text
+              as="p"
+              variant="p3"
+              style={{
+                marginBottom: 'var(--general-space-24)',
+                color: 'var(--earn-protocol-secondary-60)',
+              }}
+            >
+              {isSmartAccountDeployed === null
+                ? 'Checking smart account status...'
+                : isSmartAccountDeployed
+                  ? `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is deployed.`
+                  : `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is not deployed yet.`}
+            </Text>
+            {isSmartAccountDeployed === false && (
+              <Button
+                variant="secondaryMedium"
+                onClick={handleDeploySmartAccount}
+                disabled={isDeployingSmartAccount}
+                style={{ marginBottom: 'var(--general-space-24)' }}
+              >
+                {isDeployingSmartAccount ? 'Deploying...' : 'Deploy smart account'}
+              </Button>
+            )}
+          </>
+        )}
         <div
           style={
             handleOpenClose && isMobile
