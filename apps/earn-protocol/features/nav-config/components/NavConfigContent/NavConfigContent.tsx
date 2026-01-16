@@ -3,7 +3,6 @@ import { type ChangeEvent, type FC, useCallback, useEffect, useState } from 'rea
 import { toast } from 'react-toastify'
 import { useSmartAccountClient, useUser } from '@account-kit/react'
 import {
-  accountType,
   Badge,
   Button,
   Card,
@@ -40,7 +39,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
   const { client: smartAccountClient } = useSmartAccountClient({
-    type: accountType,
+    type: 'ModularAccountV2',
   })
   const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 
