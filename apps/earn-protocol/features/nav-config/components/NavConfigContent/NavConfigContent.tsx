@@ -39,7 +39,28 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const { isMobile } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
-  const { client: smartAccountClient } = useSmartAccountClient({ type: accountType })
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: accountType,
+    opts: {
+      feeOptions: {
+        callGasLimit: {
+          max: 1_500_000n,
+        },
+        maxFeePerGas: {
+          max: 1_500_000n,
+        },
+        maxPriorityFeePerGas: {
+          max: 1_500_000n,
+        },
+        preVerificationGas: {
+          max: 1_500_000n,
+        },
+        verificationGasLimit: {
+          max: 1_500_000n,
+        },
+      },
+    },
+  })
   const [isDeployingSmartAccount, setIsDeployingSmartAccount] = useState(false)
 
   const [inputValue, setInputValue] = useState(mapNumericInput(sumrNetApyConfig.dilutedValuation))
@@ -119,6 +140,8 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             callGasLimit: 1_500_000n,
             maxFeePerGas: 1_500_000n,
             verificationGasLimit: 1_500_000n,
+            preVerificationGas: 1_500_000n,
+            maxPriorityFeePerGas: 1_500_000n,
           },
         })
 
