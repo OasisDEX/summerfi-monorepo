@@ -17,7 +17,9 @@ export const customAAKitSonicConfig: Chain = {
   ...sonic,
   rpcUrls: {
     ...sonic.rpcUrls,
-    alchemy: sonic.rpcUrls.default,
+    alchemy: {
+      http: ['https://sonic-mainnet.g.alchemy.com/v2'],
+    },
   },
 }
 
@@ -25,7 +27,9 @@ export const customAAKitHyperliquidConfig: Chain = {
   ...hyperliquid,
   rpcUrls: {
     ...hyperliquid.rpcUrls,
-    alchemy: hyperliquid.rpcUrls.default,
+    alchemy: {
+      http: ['https://hyperliquid-mainnet.g.alchemy.com/v2'],
+    },
   },
 }
 

@@ -15,7 +15,7 @@ import {
   ToggleButton,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
-import { mapNumericInput } from '@summerfi/app-utils'
+import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -269,8 +269,8 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
               {isSmartAccountDeployed === null
                 ? 'Checking smart account status...'
                 : isSmartAccountDeployed
-                  ? `Your smart account ${userAAKit?.address} is deployed.`
-                  : `Your smart account ${userAAKit?.address} is not deployed yet.`}
+                  ? `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is deployed.`
+                  : `Your smart account${userAAKit ? ` ${formatAddress(userAAKit.address)}` : ''} is not deployed yet.`}
             </Text>
             {isSmartAccountDeployed === false && (
               <Button
