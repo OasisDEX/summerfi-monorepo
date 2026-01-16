@@ -115,6 +115,9 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
             data: '0x',
             value: 0n,
           },
+          overrides: {
+            callGasLimit: 1_500_000n,
+          },
         })
 
         await smartAccountClient.waitForUserOperationTransaction(deployHash)
