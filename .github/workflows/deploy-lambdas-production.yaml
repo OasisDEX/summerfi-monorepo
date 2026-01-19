@@ -45,6 +45,7 @@ jobs:
       PRO_APP_URL: ${{ secrets.PRO_APP_URL }}
       BEACH_CLUB_REWARDS_DB_CONNECTION_STRING: ${{ secrets.BEACH_CLUB_REWARDS_DB_CONNECTION_STRING }}
       TALLY_API_KEY: ${{ secrets.TALLY_API_KEY }}
+      ROUTE53_HOSTED_ZONE_ID: ${{ vars.ROUTE53_HOSTED_ZONE_ID }}
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3

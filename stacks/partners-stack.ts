@@ -16,7 +16,7 @@ export function ExternalAPI(stackContext: StackContext) {
       isStaging || isProd
         ? {
             domainName: isProd ? 'gateway.summer.fi' : 'gateway.staging.summer.fi',
-            hostedZone: 'summer.fi',
+            hostedZone: process.env.ROUTE53_HOSTED_ZONE_ID || 'Z072477725LTZU88I4RYR',
           }
         : undefined,
   })
