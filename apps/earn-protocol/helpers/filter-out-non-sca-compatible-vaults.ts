@@ -6,4 +6,4 @@ import { Network } from '@summerfi/subgraph-manager-common'
   on sonic and hyperliquid
  */
 export const filterOutNonSCACompatibleVaults = (vaults: SDKVaultsListType): SDKVaultsListType =>
-  vaults.filter((item) => ![Network.SonicMainnet, Network.Hyperevm].includes(item.protocol.network))
+  vaults.filter((item) => ![Network.SonicMainnet].includes(item.protocol.network))
