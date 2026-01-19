@@ -27,7 +27,7 @@ export const exportActivityAsCSV = ({
   ]
   const fileName = `vault-activity-${vault.id}-${subgraphNetworkToId(
     supportedSDKNetwork(vault.protocol.network),
-  )}`
+  )}-export-${dayjs().format('YYYYMMDDHHmmss')}`
 
   const { curationEvents, roleEvents, vault: vaultEvents } = activityLogBaseDataRaw
 
