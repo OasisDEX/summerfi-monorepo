@@ -3,14 +3,23 @@ import { attachVPC } from './vpc'
 
 export function ExternalAPI(stackContext: StackContext) {
   const { stack } = stackContext
+  const isDev = stack.stage.startsWith('dev')
+  const isStaging = stack.stage === 'staging'
+  const isProd = stack.stage === 'production'
+
   const apiForPartners = new Api(stack, 'for-partners', {
     defaults: {
       function: {},
     },
     routes: {},
+    customDomain:
+      isStaging || isProd
+        ? {
+            domainName: isProd ? 'gateway.summer.fi' : 'gateway.staging.summer.fi',
+            hostedZone: 'summer.fi',
+          }
+        : undefined,
   })
-
-  const isDev = stack.stage.startsWith('dev')
   const vpc = attachVPC({ ...stackContext, isDev })
 
   const { SUBGRAPH_BASE } = process.env
@@ -93,5 +102,11 @@ export function ExternalAPI(stackContext: StackContext) {
 
   stack.addOutputs({
     PartnerApiEndpoint: apiForPartners.url,
+    PartnerApiCustomDomain:
+      isStaging || isProd
+        ? isProd
+          ? 'https://gateway.summer.fi'
+          : 'https://gateway.staging.summer.fi'
+        : undefined,
   })
 }
