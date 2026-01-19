@@ -1,8 +1,15 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Button, Card, Icon, LoadingSpinner, Table, Text } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
+import {
+  Button,
+  Card,
+  Icon,
+  LoadingSpinner,
+  Table,
+  type TableRow,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
@@ -13,26 +20,17 @@ import {
   mapActivityDataToTable,
 } from '@/features/panels/vaults/components/PanelActivity/mapper'
 import {
+  type ActivityLogData,
   type ActivityTableColumns,
+  type InstitutionVaultActivityTableRow,
   InstitutionVaultActivityType,
+  type PanelActivityProps,
 } from '@/features/panels/vaults/components/PanelActivity/types'
-import { type GetVaultActivityLogByTimestampFromQuery } from '@/graphql/clients/vault-history/client'
+import { exportActivityAsCSV } from '@/helpers/export-data/csv'
 
 import { activityColumns } from './columns'
 
 import styles from './PanelActivity.module.css'
-
-type ActivityLogData = {
-  vault: GetVaultActivityLogByTimestampFromQuery['vault']
-  curationEvents: GetVaultActivityLogByTimestampFromQuery['curationEvents']
-  roleEvents: GetVaultActivityLogByTimestampFromQuery['roleEvents']
-}
-
-type PanelActivityProps = {
-  activityLogBaseDataRaw: ActivityLogData
-  vault: SDKVaultishType
-  institutionName: string
-}
 
 export const PanelActivity = ({
   activityLogBaseDataRaw,
@@ -49,12 +47,16 @@ export const PanelActivity = ({
   const chainId = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
 
   const activityLogDataTable = useMemo(() => {
-    const mergedData = mapActivityDataToTable({
+    const baseRows = mapActivityDataToTable({
       data: activityLogBaseDataRaw,
       vault,
-    }).concat(
-      ...loadedAdditionalActivityLogData.map((data) => mapActivityDataToTable({ data, vault })),
+    })
+    const additionalRows = loadedAdditionalActivityLogData.flatMap((data) =>
+      mapActivityDataToTable({ data, vault }),
     )
+
+    const mergedData: InstitutionVaultActivityTableRow[] = [...baseRows, ...additionalRows]
+
     const mergedAndFilteredData = activeFilter
       ? mergedData.filter(
           (item) =>
@@ -63,8 +65,96 @@ export const PanelActivity = ({
         )
       : mergedData
 
-    return mergedAndFilteredData
+    const sortedData = [...mergedAndFilteredData].sort((a, b) => b.timestamp - a.timestamp)
+
+    let lastMonth: string | null = null
+
+    const dataWithMonthSeparators = sortedData.reduce<TableRow<ActivityTableColumns>[]>(
+      (acc, row) => {
+        if (row.monthLabel !== lastMonth) {
+          acc.push({
+            id: `month-${row.monthLabel}`,
+            content: {
+              when: <div className={styles.monthSeparator}>{row.monthLabel}</div>,
+              type: '',
+              activity: '',
+            },
+          })
+
+          lastMonth = row.monthLabel
+        }
+
+        acc.push(row)
+
+        return acc
+      },
+      [],
+    )
+
+    return dataWithMonthSeparators
   }, [activeFilter, activityLogBaseDataRaw, loadedAdditionalActivityLogData, vault])
+
+  const dataToExport = useMemo(() => {
+    const baseData = {
+      ...activityLogBaseDataRaw,
+      curationEvents: [
+        ...activityLogBaseDataRaw.curationEvents,
+        ...loadedAdditionalActivityLogData.flatMap((data) => data.curationEvents),
+      ],
+      roleEvents: [
+        ...activityLogBaseDataRaw.roleEvents,
+        ...loadedAdditionalActivityLogData.flatMap((data) => data.roleEvents),
+      ],
+      vault: {
+        deposits: [
+          ...(activityLogBaseDataRaw.vault?.deposits ?? []),
+          ...loadedAdditionalActivityLogData.flatMap((data) => data.vault?.deposits ?? []),
+        ],
+        withdraws: [
+          ...(activityLogBaseDataRaw.vault?.withdraws ?? []),
+          ...loadedAdditionalActivityLogData.flatMap((data) => data.vault?.withdraws ?? []),
+        ],
+        rebalances: [
+          ...(activityLogBaseDataRaw.vault?.rebalances ?? []),
+          ...loadedAdditionalActivityLogData.flatMap((data) => data.vault?.rebalances ?? []),
+        ],
+      },
+    }
+    const filteredData = activeFilter
+      ? {
+          ...baseData,
+          curationEvents: baseData.curationEvents.filter(
+            () =>
+              formatActivityLogTypeToHuman('risk_change').toLowerCase() ===
+              formatActivityLogTypeToHuman(activeFilter).toLowerCase(),
+          ),
+          roleEvents: baseData.roleEvents.filter(
+            () =>
+              formatActivityLogTypeToHuman('role_change').toLowerCase() ===
+              formatActivityLogTypeToHuman(activeFilter).toLowerCase(),
+          ),
+          vault: {
+            deposits:
+              formatActivityLogTypeToHuman('deposit').toLowerCase() ===
+              formatActivityLogTypeToHuman(activeFilter).toLowerCase()
+                ? baseData.vault.deposits
+                : [],
+            withdraws:
+              formatActivityLogTypeToHuman('withdrawal').toLowerCase() ===
+              formatActivityLogTypeToHuman(activeFilter).toLowerCase()
+                ? baseData.vault.withdraws
+                : [],
+            rebalances:
+              formatActivityLogTypeToHuman('rebalance').toLowerCase() ===
+              formatActivityLogTypeToHuman(activeFilter).toLowerCase()
+                ? baseData.vault.rebalances
+                : [],
+          },
+        }
+      : baseData
+
+    return filteredData
+  }, [activityLogBaseDataRaw, loadedAdditionalActivityLogData, activeFilter])
 
   const handleToggleFilter = (filter: string) => {
     if (activeFilter === formatActivityLogTypeToHuman(filter)) {
@@ -97,14 +187,14 @@ export const PanelActivity = ({
       },
     },
     {
-      label: 'Risk Changes',
+      label: 'Risk',
       value: InstitutionVaultActivityType.RISK_CHANGE,
       onClick: () => {
         handleToggleFilter(InstitutionVaultActivityType.RISK_CHANGE)
       },
     },
     {
-      label: 'Role Changes',
+      label: 'Role',
       value: InstitutionVaultActivityType.ROLE_CHANGE,
       onClick: () => {
         handleToggleFilter(InstitutionVaultActivityType.ROLE_CHANGE)
@@ -176,6 +266,18 @@ export const PanelActivity = ({
             </Button>
           ))}
         </div>
+        <Button
+          variant="secondarySmall"
+          onClick={() =>
+            exportActivityAsCSV({
+              activityLogBaseDataRaw: dataToExport,
+              vault,
+            })
+          }
+          className={styles.button}
+        >
+          Export as CSV
+        </Button>
       </div>
       <Card className={styles.tableCard}>
         <Table<ActivityTableColumns>

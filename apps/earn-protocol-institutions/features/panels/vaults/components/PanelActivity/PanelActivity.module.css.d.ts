@@ -5,6 +5,7 @@ declare const styles: {
   readonly "button": string;
   readonly "filters": string;
   readonly "headingWrapper": string;
+  readonly "monthSeparator": string;
   readonly "onEdit": string;
   readonly "panelActivityWrapper": string;
   readonly "table": string;

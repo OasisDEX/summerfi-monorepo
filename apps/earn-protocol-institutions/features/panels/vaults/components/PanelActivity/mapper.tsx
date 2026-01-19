@@ -5,7 +5,6 @@ import {
   getUniqueColor,
   Icon,
   TableCellText,
-  type TableRow,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import {
@@ -18,13 +17,13 @@ import {
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
-import { CHART_TIMESTAMP_FORMAT_DETAILED } from '@/features/charts/helpers'
 import {
-  type ActivityTableColumns,
   type InstitutionVaultActivityItem,
+  type InstitutionVaultActivityTableRow,
   InstitutionVaultActivityType,
 } from '@/features/panels/vaults/components/PanelActivity/types'
 import {
@@ -33,6 +32,8 @@ import {
 } from '@/graphql/clients/vault-history/client'
 
 import styles from './PanelActivity.module.css'
+
+dayjs.extend(advancedFormat)
 
 const getAmount = (amount: string | number, decimals: number): string => {
   return new BigNumber(amount).dividedBy(ten.pow(decimals)).toString()
@@ -90,7 +91,7 @@ export const mapActivityDataToTable: (props: {
     roleEvents: GetVaultActivityLogByTimestampFromQuery['roleEvents']
   }
   vault: SDKVaultishType
-}) => TableRow<ActivityTableColumns>[] = ({ data, vault }) => {
+}) => InstitutionVaultActivityTableRow[] = ({ data, vault }) => {
   const mappedData: InstitutionVaultActivityItem[] = []
   const vaultChainid = subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))
 
@@ -333,26 +334,32 @@ export const mapActivityDataToTable: (props: {
 
   return mappedData
     .sort((a, b) => b.when - a.when)
-    .map((item) => ({
-      content: {
-        // some of the mapping needs to happen _after_ sorting
-        when: (
-          <TableCellText
-            style={{
-              width: '150px',
-              whiteSpace: 'nowrap',
-              fontFamily: 'monospace',
-              fontSize: '12px',
-              fontWeight: 500,
-              justifySelf: 'flex-start',
-            }}
-          >
-            {dayjs.unix(item.when).format(CHART_TIMESTAMP_FORMAT_DETAILED)}
-          </TableCellText>
-        ),
-        type: formatActivityLogTypeToHuman(item.type), // simple capitalization
-        activity: item.message,
-      },
-      details: item.details,
-    }))
+    .map((item) => {
+      const monthLabel = dayjs.unix(item.when).format('MMMM YYYY')
+
+      return {
+        timestamp: item.when,
+        monthLabel,
+        content: {
+          // some of the mapping needs to happen _after_ sorting
+          when: (
+            <TableCellText
+              style={{
+                width: '150px',
+                whiteSpace: 'nowrap',
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                fontWeight: 500,
+                justifySelf: 'flex-start',
+              }}
+            >
+              {dayjs.unix(item.when).format('MMM Do, HH:mm:ss')}
+            </TableCellText>
+          ),
+          type: formatActivityLogTypeToHuman(item.type), // simple capitalization
+          activity: item.message,
+        },
+        details: item.details,
+      }
+    })
 }
