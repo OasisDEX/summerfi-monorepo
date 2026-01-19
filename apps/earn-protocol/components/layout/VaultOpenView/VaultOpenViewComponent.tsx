@@ -66,7 +66,6 @@ import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-co
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
-import { useIsDisabledForSmartAccounts } from '@/hooks/use-is-disabled-for-smart-accounts'
 import {
   useHandleButtonClickEvent,
   useHandleDropdownChangeEvent,
@@ -128,7 +127,6 @@ export const VaultOpenViewComponent = ({
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const userAAKit = useUser()
   const userIsSmartAccount = isUserSmartAccount(userAAKit)
-  const disabledForSmartAccounts = useIsDisabledForSmartAccounts()
 
   const { features } = useSystemConfig()
 
@@ -500,7 +498,7 @@ export const VaultOpenViewComponent = ({
     goBackAction: nextTransaction?.type ? backToInit : undefined,
     primaryButton: {
       ...sidebar.primaryButton,
-      disabled: sidebar.primaryButton.disabled ?? disabledForSmartAccounts,
+      disabled: sidebar.primaryButton.disabled,
     },
     footnote: (
       <>
