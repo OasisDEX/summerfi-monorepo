@@ -226,7 +226,8 @@ export const mapActivityDataToTable: (props: {
   // region risk changes
   if (Array.isArray(data.curationEvents) && data.curationEvents.length > 0) {
     data.curationEvents.forEach((curationEvent) => {
-      const isPercentageChange = curationEvent.action.includes('PCT')
+      const isPercentageChange =
+        curationEvent.action.includes('PCT') || curationEvent.action.includes('RATE')
       const isArkChange = curationEvent.action.includes('ARK')
       const isValueIncrease = new BigNumber(curationEvent.valueAfter).isGreaterThan(
         curationEvent.valueBefore,
