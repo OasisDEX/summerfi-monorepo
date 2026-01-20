@@ -22,7 +22,7 @@ import { type PositionWithVault } from '@/features/portfolio/helpers/merge-posit
 import { PortfolioPageView } from './PortfolioPageView'
 
 interface PortfolioPageViewComponentProps {
-  walletAddress: string
+  viewWalletAddress: string
   walletData: PortfolioAssetsResponse
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
@@ -41,7 +41,7 @@ interface PortfolioPageViewComponentProps {
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
-  walletAddress,
+  viewWalletAddress,
   walletData,
   rewardsData,
   vaultsList,
@@ -60,7 +60,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <PortfolioPageView
         positions={positions}
-        walletAddress={walletAddress}
+        viewWalletAddress={viewWalletAddress}
         walletData={walletData}
         rewardsData={rewardsData}
         vaultsList={vaultsList}

@@ -281,7 +281,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   return (
     <PortfolioPageViewComponent
       positions={positionsWithVault}
-      walletAddress={walletAddress}
+      viewWalletAddress={walletAddress}
       walletData={walletData}
       rewardsData={rewardsData}
       vaultsList={vaultsWithConfig}

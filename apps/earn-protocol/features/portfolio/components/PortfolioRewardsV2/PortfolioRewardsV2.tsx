@@ -22,6 +22,7 @@ interface PortfolioRewardsV2Props {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
+  viewWalletAddress: string
 }
 
 export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
@@ -29,6 +30,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   state,
   dispatch,
   portfolioSumrStakingV2Data,
+  viewWalletAddress,
 }) => {
   const { userWalletAddress } = useUserWallet()
   const portfolioWalletAddress = state.walletAddress
@@ -112,6 +114,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
       <LockedSumrInfoTabBarV2
         stakes={userStakes}
         userWalletAddress={userWalletAddress as AddressValue}
+        viewWalletAddress={viewWalletAddress}
         refetchStakingData={refetchStakingData}
         penaltyPercentages={penaltyPercentages}
         penaltyAmounts={penaltyAmounts}

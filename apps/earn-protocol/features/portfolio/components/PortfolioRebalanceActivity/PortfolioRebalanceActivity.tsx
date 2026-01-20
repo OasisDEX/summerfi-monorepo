@@ -32,14 +32,14 @@ import classNames from './PortfolioRebalanceActivity.module.css'
 
 interface PortfolioRebalanceActivityProps {
   rebalanceActivity: RebalanceActivityPagination
-  walletAddress: string
+  viewWalletAddress: string
   positions: PositionWithVault[]
   vaultsList: SDKVaultsListType
 }
 
 export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = ({
   rebalanceActivity,
-  walletAddress,
+  viewWalletAddress,
   positions,
   vaultsList,
 }) => {
@@ -90,7 +90,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
       protocols: protocolFilter,
       sortBy: 'timestamp',
       orderBy: 'desc',
-      userAddress: walletAddress,
+      userAddress: viewWalletAddress,
       initialData: shouldHydrateFromServer ? rebalanceActivity : undefined,
     })
 
@@ -227,7 +227,7 @@ export const PortfolioRebalanceActivity: FC<PortfolioRebalanceActivityProps> = (
         <RebalanceActivityTable
           rebalanceActivityList={currentlyLoadedList}
           isLoading={isPending}
-          walletAddress={walletAddress}
+          viewWalletAddress={viewWalletAddress}
         />
       </InfiniteScroll>
     </Card>

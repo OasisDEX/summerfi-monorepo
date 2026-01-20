@@ -22,12 +22,12 @@ import classNames from './BeachClubHowItWorks.module.css'
 
 interface BeachClubHowItWorksProps {
   beachClubData: BeachClubData
-  walletAddress: string
+  viewWalletAddress: string
 }
 
 export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
   beachClubData,
-  walletAddress,
+  viewWalletAddress,
 }) => {
   const resolvedInitReferralCode = beachClubData.custom_code ?? beachClubData.referral_code
   const { userWalletAddress } = useUserWallet()
@@ -35,7 +35,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
   const [isLoading, setIsLoading] = useState(false)
   const handleButtonClick = useHandleButtonClickEvent()
 
-  const isOwner = userWalletAddress?.toLowerCase() === walletAddress.toLowerCase()
+  const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
 
   const handleGenerateReferralCode = async () => {
     try {

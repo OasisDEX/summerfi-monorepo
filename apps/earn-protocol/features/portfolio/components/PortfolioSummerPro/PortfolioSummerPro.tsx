@@ -19,14 +19,14 @@ import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import classNames from './PortfolioSummerPro.module.css'
 
 interface PortfolioSummerProProps {
-  walletAddress: string
+  viewWalletAddress: string
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   carouselId: string
 }
 
 export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
-  walletAddress,
+  viewWalletAddress,
   migratablePositions,
   migrationBestVaultApy,
   carouselId,
@@ -82,7 +82,7 @@ export const PortfolioSummerPro: FC<PortfolioSummerProProps> = ({
                 )}
                 <div className={classNames.buttonWrapper}>
                   <Link
-                    href={`/migrate/user/${walletAddress}?positionId=${selectedPosition}`}
+                    href={`/migrate/user/${viewWalletAddress}?positionId=${selectedPosition}`}
                     onClick={() => {
                       buttonClickEventHandler(`${carouselId}-migrate-${selectedPosition}-click`)
                     }}

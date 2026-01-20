@@ -11,7 +11,7 @@ import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/ty
 import classNames from './PortfolioBeachClub.module.css'
 
 interface PortfolioBeachClubProps {
-  walletAddress: string
+  viewWalletAddress: string
   beachClubData: BeachClubData
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
   state: BeachClubState
@@ -19,7 +19,7 @@ interface PortfolioBeachClubProps {
 }
 
 export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
-  walletAddress,
+  viewWalletAddress,
   beachClubData,
   merklIsAuthorizedPerChain,
   state,
@@ -34,10 +34,10 @@ export const PortfolioBeachClub: FC<PortfolioBeachClubProps> = ({
         The more you share the more you earn.
       </Text>
       <BeachClubBigBanner />
-      <BeachClubReferAndEarn walletAddress={walletAddress} beachClubData={beachClubData} />
+      <BeachClubReferAndEarn viewWalletAddress={viewWalletAddress} beachClubData={beachClubData} />
       <BeachClubRewards
         beachClubData={beachClubData}
-        walletAddress={walletAddress}
+        viewWalletAddress={viewWalletAddress}
         merklIsAuthorizedPerChain={merklIsAuthorizedPerChain}
         state={state}
         dispatch={dispatch}

@@ -18,7 +18,7 @@ enum ReferAndEarnTab {
 
 interface BeachClubRewardsProps {
   beachClubData: BeachClubData
-  walletAddress: string
+  viewWalletAddress: string
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
   state: BeachClubState
   dispatch: Dispatch<BeachClubReducerAction>
@@ -26,7 +26,7 @@ interface BeachClubRewardsProps {
 
 export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
   beachClubData,
-  walletAddress,
+  viewWalletAddress,
   merklIsAuthorizedPerChain,
   state,
   dispatch,
@@ -50,12 +50,15 @@ export const BeachClubRewards: FC<BeachClubRewardsProps> = ({
         label: 'Beach Boat Challenge',
         id: ReferAndEarnTab.BEACH_BOAT_CHALLENGE,
         content: (
-          <BeachClubBoatChallenge beachClubData={beachClubData} walletAddress={walletAddress} />
+          <BeachClubBoatChallenge
+            beachClubData={beachClubData}
+            viewWalletAddress={viewWalletAddress}
+          />
         ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
-    [beachClubData, walletAddress, merklIsAuthorizedPerChain, state, dispatch],
+    [beachClubData, viewWalletAddress, merklIsAuthorizedPerChain, state, dispatch],
   )
   const handleButtonClick = useHandleButtonClickEvent()
 

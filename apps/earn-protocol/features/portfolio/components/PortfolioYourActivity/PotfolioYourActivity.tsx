@@ -24,14 +24,14 @@ import classNames from './PortfolioYourActivity.module.css'
 
 interface PortfolioYourActivityProps {
   latestActivity: LatestActivityPagination
-  walletAddress: string
+  viewWalletAddress: string
   vaultsList: SDKVaultsListType
   positions: PositionWithVault[]
 }
 
 export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
   latestActivity,
-  walletAddress,
+  viewWalletAddress,
   vaultsList,
   positions,
 }) => {
@@ -112,7 +112,7 @@ export const PortfolioYourActivity: FC<PortfolioYourActivityProps> = ({
       sortBy: sortBy?.key,
       orderBy: sortBy?.direction,
       initialData: shouldHydrateFromServer ? latestActivity : undefined,
-      usersAddresses: walletAddress ? [walletAddress] : undefined,
+      usersAddresses: viewWalletAddress ? [viewWalletAddress] : undefined,
     })
 
   const currentlyLoadedList = useMemo(

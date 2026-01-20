@@ -17,12 +17,12 @@ enum ReferAndEarnTab {
 }
 
 interface BeachClubReferAndEarnProps {
-  walletAddress: string
+  viewWalletAddress: string
   beachClubData: BeachClubData
 }
 
 export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
-  walletAddress,
+  viewWalletAddress,
   beachClubData,
 }) => {
   const tabsOptions = useMemo(
@@ -31,7 +31,10 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
         label: 'How it works',
         id: ReferAndEarnTab.HOW_IT_WORKS,
         content: (
-          <BeachClubHowItWorks walletAddress={walletAddress} beachClubData={beachClubData} />
+          <BeachClubHowItWorks
+            viewWalletAddress={viewWalletAddress}
+            beachClubData={beachClubData}
+          />
         ),
         activeColor: 'var(--beach-club-tab-underline)',
       },
@@ -48,7 +51,7 @@ export const BeachClubReferAndEarn: FC<BeachClubReferAndEarnProps> = ({
         activeColor: 'var(--beach-club-tab-underline)',
       },
     ],
-    [walletAddress, beachClubData],
+    [viewWalletAddress, beachClubData],
   )
 
   const handleButtonClick = useHandleButtonClickEvent()

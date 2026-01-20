@@ -61,7 +61,7 @@ type PortfolioOverviewProps = {
   }
   vaultsApyByNetworkMap: GetVaultsApyResponse
   migratablePositions: MigratablePosition[]
-  walletAddress: string
+  viewWalletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
   blogPosts: BlogPosts
 }
@@ -73,7 +73,7 @@ export const PortfolioOverview = ({
   positionsHistoricalChartMap,
   vaultsApyByNetworkMap,
   migratablePositions,
-  walletAddress,
+  viewWalletAddress,
   migrationBestVaultApy,
   blogPosts,
 }: PortfolioOverviewProps) => {
@@ -181,7 +181,7 @@ export const PortfolioOverview = ({
               value: `$${formatFiatBalance(availableToMigrate)}`,
               subValue: (
                 <Link
-                  href={`/migrate/user/${walletAddress}`}
+                  href={`/migrate/user/${viewWalletAddress}`}
                   onClick={handleButtonClick('migrate')}
                 >
                   <WithArrow
@@ -208,7 +208,7 @@ export const PortfolioOverview = ({
     migrationsEnabled,
     overallSumr,
     totalSummerPortfolioUSD,
-    walletAddress,
+    viewWalletAddress,
   ])
 
   return (
@@ -297,7 +297,7 @@ export const PortfolioOverview = ({
         </Card>
         {migrationsEnabled && (
           <PortfolioSummerPro
-            walletAddress={walletAddress}
+            viewWalletAddress={viewWalletAddress}
             migratablePositions={migratablePositions}
             migrationBestVaultApy={migrationBestVaultApy}
             carouselId="portfolio-overview-migrate-carousel"

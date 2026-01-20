@@ -61,7 +61,7 @@ const TransakTrigger = ({
 )
 
 interface PortfolioHeaderProps {
-  walletAddress: string
+  viewWalletAddress: string
   totalSumr?: number
   totalWalletValue?: number
   isLoading?: boolean
@@ -70,7 +70,7 @@ interface PortfolioHeaderProps {
 }
 
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
-  walletAddress,
+  viewWalletAddress,
   totalSumr,
   totalWalletValue,
   isLoading = false,
@@ -94,7 +94,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   const { transferAllBalance, isTransferring, tokenInfo } = useTokenTransfer({
     tokenAddress: '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58',
     userWallet: user?.address,
-    receiverWallet: walletAddress,
+    receiverWallet: viewWalletAddress,
     publicClient,
     signer,
   })
@@ -138,7 +138,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
               disabled={
-                userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase() ||
+                userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase() ||
                 (walletData && walletData.assets.length === 0)
               }
               onClick={() => {
@@ -175,11 +175,11 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
             </Button>
           )}
           {/* Bringing pack the SUMR bridge view */}
-          <Link href={`/bridge/${walletAddress}?via=portfolio`}>
+          <Link href={`/bridge/${viewWalletAddress}?via=portfolio`}>
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+              disabled={userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase()}
             >
               Bridge
             </Button>
@@ -188,7 +188,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}
-            isDisabled={userWalletAddress?.toLowerCase() !== walletAddress.toLowerCase()}
+            isDisabled={userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase()}
             options={transakNetworkOptions
               .filter((option) => {
                 if (userIsSmartAccount) {
@@ -233,13 +233,13 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
                 </svg>
               }
               size={36}
-              name={safeBTOA(walletAddress)}
+              name={safeBTOA(viewWalletAddress)}
               variant="pixel"
               colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
             />
             <Text as="p" variant="p1semi">
               {!isLoading ? (
-                formatAddress(walletAddress, { first: 6 })
+                formatAddress(viewWalletAddress, { first: 6 })
               ) : (
                 <SkeletonLine width={220} height={20} />
               )}
@@ -279,7 +279,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
 
       {walletData && walletData.assets.length > 0 && sendEnabled && (
         <SendWidget
-          walletAddress={walletAddress}
+          walletAddress={viewWalletAddress}
           isOpen={isSendOpen}
           onClose={() => setIsSendOpen(false)}
           walletData={walletData}

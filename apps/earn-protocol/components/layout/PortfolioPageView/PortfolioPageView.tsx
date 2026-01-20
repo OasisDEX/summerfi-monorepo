@@ -45,7 +45,7 @@ import { useTabStateQuery } from '@/hooks/use-tab-state'
 import classNames from './PortfolioPageView.module.css'
 
 interface PortfolioPageViewProps {
-  walletAddress: string
+  viewWalletAddress: string
   walletData: PortfolioAssetsResponse
   rewardsData: ClaimDelegateExternalData
   vaultsList: SDKVaultishType[]
@@ -64,7 +64,7 @@ interface PortfolioPageViewProps {
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
-  walletAddress,
+  viewWalletAddress,
   walletData,
   rewardsData,
   vaultsList,
@@ -82,7 +82,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
   const { userWalletAddress, isLoadingAccount } = useUserWallet()
-  const ownerView = walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
+  const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const [activeTab, updateTab] = useTabStateQuery({
     tabs: PortfolioTabs,
     defaultTab: PortfolioTabs.OVERVIEW,
@@ -90,13 +90,13 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
     delegatee: rewardsData.sumrStakeDelegate.delegatedToV2,
-    walletAddress,
+    walletAddress: viewWalletAddress,
     merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
   const [beachClubState, beachClubDispatch] = useReducer(beachClubReducer, {
     ...beachClubDefaultState,
-    walletAddress,
+    walletAddress: viewWalletAddress,
     merklIsAuthorizedPerChain: rewardsData.sumrToClaim.merklIsAuthorizedPerChain,
   })
 
@@ -122,7 +122,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           positionsHistoricalChartMap={positionsHistoricalChartMap}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
           migratablePositions={migratablePositions}
-          walletAddress={walletAddress}
+          viewWalletAddress={viewWalletAddress}
           migrationBestVaultApy={migrationBestVaultApy}
           blogPosts={blogPosts}
         />
@@ -145,7 +145,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       content: (
         <PortfolioYourActivity
           latestActivity={latestActivity}
-          walletAddress={walletAddress}
+          viewWalletAddress={viewWalletAddress}
           vaultsList={vaultsList}
           positions={positions}
         />
@@ -157,7 +157,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       content: (
         <PortfolioRebalanceActivity
           rebalanceActivity={rebalanceActivity}
-          walletAddress={walletAddress}
+          viewWalletAddress={viewWalletAddress}
           positions={positions}
           vaultsList={vaultsList}
         />
@@ -178,6 +178,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             content: (
               <PortfolioRewardsV2
                 rewardsData={rewardsData}
+                viewWalletAddress={viewWalletAddress}
                 state={state}
                 dispatch={dispatch}
                 portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
@@ -202,7 +203,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             icon: <Icon iconName="beach_club_icon" size={24} />,
             content: (
               <PortfolioBeachClub
-                walletAddress={walletAddress}
+                viewWalletAddress={viewWalletAddress}
                 beachClubData={beachClubData}
                 merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
                 state={beachClubState}
@@ -227,7 +228,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
       <NonOwnerPortfolioBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
       <div className={classNames.portfolioPageViewWrapper}>
         <PortfolioHeader
-          walletAddress={walletAddress}
+          viewWalletAddress={viewWalletAddress}
           totalSumr={overallSumr}
           totalWalletValue={totalWalletValue}
           walletData={walletData}

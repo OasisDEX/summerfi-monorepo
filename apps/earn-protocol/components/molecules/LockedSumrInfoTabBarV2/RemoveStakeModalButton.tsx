@@ -220,10 +220,18 @@ const RemoveStakeModal: FC<{
 export const RemoveStakeModalButton: FC<{
   amount: number
   userWalletAddress?: string
+  viewWalletAddress?: string
   userStakeIndex: number
   refetchStakingData: () => Promise<void>
   penaltyPercentage?: number
-}> = ({ amount, userWalletAddress, userStakeIndex, refetchStakingData, penaltyPercentage }) => {
+}> = ({
+  amount,
+  userWalletAddress,
+  viewWalletAddress,
+  userStakeIndex,
+  refetchStakingData,
+  penaltyPercentage,
+}) => {
   const { isSettingChain } = useChain()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
@@ -234,7 +242,10 @@ export const RemoveStakeModalButton: FC<{
   }, [])
 
   const button = useMemo(() => {
-    if (!userWalletAddress) {
+    if (
+      !userWalletAddress ||
+      userWalletAddress.toLowerCase() !== viewWalletAddress?.toLowerCase()
+    ) {
       return (
         <Button variant="unstyled" style={{ pointerEvents: 'none' }}>
           <WithArrow
@@ -264,7 +275,7 @@ export const RemoveStakeModalButton: FC<{
         </WithArrow>
       </Button>
     )
-  }, [handleOpenClose, isSettingChain, userWalletAddress])
+  }, [handleOpenClose, isSettingChain, userWalletAddress, viewWalletAddress])
 
   return (
     <>

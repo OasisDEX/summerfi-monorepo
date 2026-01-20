@@ -25,7 +25,7 @@ interface BeachClubBoatChallengeRewardCardProps {
   reward: {
     type: BeachClubBoatChallengeRewardCardType
   }
-  walletAddress: string
+  viewWalletAddress: string
 }
 
 export const BeachClubBoatChallengeRewardCard = ({
@@ -35,7 +35,7 @@ export const BeachClubBoatChallengeRewardCard = ({
   unlocked,
   pointsToUnlock,
   reward,
-  walletAddress,
+  viewWalletAddress,
 }: BeachClubBoatChallengeRewardCardProps) => {
   const { type } = reward
   const handleButtonClick = useHandleButtonClickEvent()
@@ -49,7 +49,7 @@ export const BeachClubBoatChallengeRewardCard = ({
     }
     handleButtonClick(`portfolio-beach-club-beach-boat-challenge-${type}-card`)
 
-    push(`/merchandise/${type}/${walletAddress}`)
+    push(`/merchandise/${type}/${viewWalletAddress}`)
   }
 
   return (

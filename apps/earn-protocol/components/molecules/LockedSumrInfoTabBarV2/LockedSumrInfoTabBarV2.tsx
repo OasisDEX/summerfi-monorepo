@@ -204,6 +204,7 @@ interface YourLockedSumrPositionsTableProps {
   stakes?: PortfolioSumrStakingV2Data['userStakes']
   isLoading?: boolean
   userWalletAddress?: string
+  viewWalletAddress?: string
   refetchStakingData: () => Promise<void>
   penaltyPercentages?: { value: number; index: number }[]
   penaltyAmounts?: { value: number; index: number }[]
@@ -214,6 +215,7 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
   stakes,
   isLoading,
   userWalletAddress,
+  viewWalletAddress,
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
@@ -319,6 +321,7 @@ const YourLockedSumrPositionsTable: FC<YourLockedSumrPositionsTableProps> = ({
             <TableCenterCell>
               <RemoveStakeModalButton
                 userWalletAddress={userWalletAddress}
+                viewWalletAddress={viewWalletAddress}
                 amount={stake.amount}
                 userStakeIndex={stake.index}
                 refetchStakingData={refetchStakingData}
@@ -378,12 +381,14 @@ interface YourLockedSumrPositionsProps {
   userBlendedYieldBoost?: number
   userSumrStaked?: number
   totalSumrStaked: number
+  viewWalletAddress?: string
 }
 
 const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
   stakes,
   isLoading,
   userWalletAddress,
+  viewWalletAddress,
   refetchStakingData,
   penaltyPercentages,
   penaltyAmounts,
@@ -406,6 +411,7 @@ const YourLockedSumrPositions: FC<YourLockedSumrPositionsProps> = ({
           stakes={stakes}
           isLoading={isLoading}
           userWalletAddress={userWalletAddress}
+          viewWalletAddress={viewWalletAddress}
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
@@ -828,6 +834,7 @@ interface LockedSumrInfoTabBarV2Props {
   circulatingSupply: number
   bucketInfo: PortfolioSumrStakingV2Data['bucketInfo']
   isLoadingBucketInfo?: boolean
+  viewWalletAddress?: string
 }
 
 export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
@@ -848,6 +855,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
   circulatingSupply,
   bucketInfo,
   isLoadingBucketInfo,
+  viewWalletAddress,
 }) => {
   const tabs = []
 
@@ -861,6 +869,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
           stakes={stakes}
           isLoading
           userWalletAddress={userWalletAddress}
+          viewWalletAddress={viewWalletAddress}
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
