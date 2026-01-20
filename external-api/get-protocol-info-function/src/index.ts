@@ -21,6 +21,8 @@ import { createPublicClient, http } from 'viem'
 import { mainnet, optimism, arbitrum, base, sonic } from 'viem/chains'
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
+import { handleCirculatingSupplyRoute } from './handlers/circulating-supply'
+import { getRpcUrl } from './utils/rpc'
 
 const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.MAINNET]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
@@ -139,30 +141,6 @@ const getChainConfig = (chainId: ChainId) => {
       logger.error(`Unsupported chain ID: ${chainId}`)
       throw new Error(`Unsupported chain ID: ${chainId}`)
   }
-}
-
-function getRpcUrl(chainId: ChainId): string {
-  const baseUrl = process.env.RPC_GATEWAY
-  if (!baseUrl) {
-    logger.error('RPC_GATEWAY is not set')
-    throw new Error('RPC_GATEWAY is not set')
-  }
-
-  const networkName = {
-    [ChainId.MAINNET]: 'mainnet',
-    [ChainId.OPTIMISM]: 'optimism',
-    [ChainId.ARBITRUM]: 'arbitrum',
-    [ChainId.BASE]: 'base',
-    [ChainId.SEPOLIA]: 'sepolia',
-    [ChainId.SONIC]: 'sonic',
-    [ChainId.HYPERLIQUID]: 'hyperliquid',
-  }[chainId]
-
-  if (!networkName) {
-    throw new Error(`Unsupported chain ID: ${chainId}`)
-  }
-
-  return `${baseUrl}?network=${networkName}`
 }
 
 async function fetchRewards(
@@ -508,9 +486,14 @@ export const handler = async (
 
   const isUsersRoute = event.rawPath.endsWith('/users')
   const isAllUsersRoute = event.rawPath.endsWith('/all-users')
+  const isCirculatingSupplyRoute = event.rawPath.endsWith('/circulating-supply')
 
   try {
     switch (true) {
+      case isCirculatingSupplyRoute: {
+        const response = await handleCirculatingSupplyRoute()
+        return ResponseOk({ body: response })
+      }
       case isAllUsersRoute: {
         const response = await handleAllUsersRoute(SUBGRAPH_BASE)
         return ResponseOk({ body: response })

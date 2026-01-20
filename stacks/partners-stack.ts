@@ -97,6 +97,7 @@ export function ExternalAPI(stackContext: StackContext) {
     'GET /api/protocol-info': getProtocolInfo,
     'GET /api/protocol-info/protocol': getProtocolInfo,
     'GET /api/protocol-info/all-users': getProtocolInfo,
+    'GET /api/protocol-info/circulating-supply': getProtocolInfo,
     'GET /api/campaigns/{campaign}/{questNumber}/{walletAddress}': getCampaignData,
   })
 
