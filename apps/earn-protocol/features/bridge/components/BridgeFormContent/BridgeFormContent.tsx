@@ -10,13 +10,18 @@ import { type BridgeReducerAction, type BridgeState, BridgeTxStatus } from '@/fe
 interface BridgeFormContentProps {
   dispatch: Dispatch<BridgeReducerAction>
   state: BridgeState
+  sumrPriceUsd: number
 }
 
-export const BridgeFormContent: FC<BridgeFormContentProps> = ({ state, dispatch }) => {
+export const BridgeFormContent: FC<BridgeFormContentProps> = ({
+  state,
+  dispatch,
+  sumrPriceUsd,
+}) => {
   return (
     <div>
       {state.bridgeStatus === BridgeTxStatus.NOT_STARTED && (
-        <BridgeFormStartStep state={state} dispatch={dispatch} />
+        <BridgeFormStartStep state={state} dispatch={dispatch} sumrPriceUsd={sumrPriceUsd} />
       )}
       {state.bridgeStatus === BridgeTxStatus.PENDING && (
         <BridgeFormPendingStep state={state} dispatch={dispatch} />

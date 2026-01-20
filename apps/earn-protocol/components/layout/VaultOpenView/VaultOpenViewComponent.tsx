@@ -11,7 +11,6 @@ import {
   sidebarFootnote,
   SidebarMobileHeader,
   type SidebarProps,
-  SUMR_CAP,
   useAmount,
   useAmountWithSwap,
   useForecast,
@@ -96,6 +95,7 @@ type VaultOpenViewComponentProps = {
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
+  sumrPriceUsd: number
 }
 
 export const VaultOpenViewComponent = ({
@@ -111,6 +111,7 @@ export const VaultOpenViewComponent = ({
   vaultApyData,
   vaultsApyRaw,
   referralCode: referralCodeFromCookie,
+  sumrPriceUsd,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -137,7 +138,7 @@ export const VaultOpenViewComponent = ({
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
   const {
-    state: { sumrNetApyConfig, slippageConfig },
+    state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
 
@@ -534,8 +535,6 @@ export const VaultOpenViewComponent = ({
       ? tosSidebarProps
       : sidebarProps
 
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-
   return (
     <>
       <RebalancingNoticeBanner vault={vault} />
@@ -547,7 +546,7 @@ export const VaultOpenViewComponent = ({
         vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
-        sumrPrice={estimatedSumrPrice}
+        sumrPrice={sumrPriceUsd}
         onRefresh={revalidatePositionData}
         vaultApyData={vaultApyData}
         tooltipEventHandler={tooltipEventHandler}

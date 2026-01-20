@@ -3,6 +3,7 @@ import {
   getDisplayToken,
   getPositionValues,
   parseForecastDatapoints,
+  sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
 import {
@@ -17,8 +18,10 @@ import {
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
+  getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
+  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   zero,
@@ -28,7 +31,7 @@ import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
 import { unstable_cache as unstableCache } from 'next/cache'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -40,6 +43,7 @@ import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-lis
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -48,6 +52,7 @@ import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -62,10 +67,8 @@ type EarnVaultManagePageProps = {
 }
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw] = await Promise.all([
-    params,
-    getCachedConfig(),
-  ])
+  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw, sumrPrice] =
+    await Promise.all([params, getCachedConfig(), getCachedSumrPrice()])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -161,6 +164,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsApyByNetworkMap,
     migratablePositionsData,
     vaultInfo,
+    cookieRaw,
   ] = await Promise.all([
     getArksInterestRates({
       network: parsedNetwork,
@@ -208,6 +212,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       [],
       cacheConfig,
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    cookies(),
   ])
 
   if (!positionForecastResponse.ok) {
@@ -238,8 +243,15 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsWithConfig: allVaultsWithConfig,
     vaultsApyByNetworkMap,
   })
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
 
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   return (
     <VaultManageView
@@ -259,6 +271,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}
       noOfDeposits={positionHistory.noOfDeposits}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }

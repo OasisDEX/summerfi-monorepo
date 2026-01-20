@@ -10,15 +10,21 @@ import { BridgePageView } from './BridgePageView'
 interface BridgePageViewComponentProps {
   walletAddress: string
   externalData: BridgeExternalData
+  sumrPriceUsd: number
 }
 
 export const BridgePageViewComponent: FC<BridgePageViewComponentProps> = ({
   walletAddress,
   externalData,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <BridgePageView walletAddress={walletAddress} externalData={externalData} />
+      <BridgePageView
+        walletAddress={walletAddress}
+        externalData={externalData}
+        sumrPriceUsd={sumrPriceUsd}
+      />
     </SDKContextProvider>
   )
 }

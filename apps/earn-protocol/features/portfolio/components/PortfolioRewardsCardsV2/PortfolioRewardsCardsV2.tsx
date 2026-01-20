@@ -1,15 +1,7 @@
 'use client'
 import { type Dispatch, type FC } from 'react'
 import { useAuthModal } from '@account-kit/react'
-import {
-  Button,
-  DataModule,
-  Icon,
-  SUMR_CAP,
-  Text,
-  Tooltip,
-  useUserWallet,
-} from '@summerfi/app-earn-ui'
+import { Button, DataModule, Icon, Text, Tooltip, useUserWallet } from '@summerfi/app-earn-ui'
 import { ADDRESS_ZERO, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -21,13 +13,13 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
-import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRewardsCardsV2.module.css'
 
 interface SumrAvailableToClaimProps {
   rewardsData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
 interface SumrInOldStakingModuleProps {
@@ -37,6 +29,7 @@ interface SumrInOldStakingModuleProps {
 interface YourTotalSumrProps {
   rewardsData: ClaimDelegateExternalData
   sumrStakedV2: number
+  sumrPriceUsd: number
 }
 
 interface YourDelegateProps {
@@ -49,17 +42,16 @@ interface PortfolioRewardsCardsV2Props {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   sumrStakedV2: number
+  sumrPriceUsd: number
 }
 
-const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
+const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
-  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
-  const rawSumrUSD = rawSumr * assumedSumrPriceRaw
+  const rawSumrUSD = rawSumr * sumrPriceUsd
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
@@ -155,11 +147,7 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
   )
 }
 
-const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrStakedV2 }) => {
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-
-  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-
+const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrStakedV2, sumrPriceUsd }) => {
   const rawTotalSumr =
     Number(rewardsData.sumrBalances.total) +
     Number(rewardsData.sumrBalances.vested) +
@@ -167,7 +155,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrStakedV2 }) =>
     Number(rewardsData.sumrToClaim.aggregatedRewards.total) +
     sumrStakedV2
 
-  const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
+  const rawTotalSumrUSD = rawTotalSumr * sumrPriceUsd
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
   const totalSumrUSD = formatFiatBalance(rawTotalSumrUSD)
@@ -270,17 +258,22 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   rewardsData,
   state,
   sumrStakedV2,
+  sumrPriceUsd,
 }) => {
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
       <div className={classNames.cardWrapper}>
-        <YourTotalSumr rewardsData={rewardsData} sumrStakedV2={sumrStakedV2} />
+        <YourTotalSumr
+          rewardsData={rewardsData}
+          sumrStakedV2={sumrStakedV2}
+          sumrPriceUsd={sumrPriceUsd}
+        />
       </div>
       <div className={classNames.cardWrapper}>
         <YourDelegate rewardsData={rewardsData} state={state} />
       </div>
       <div className={classNames.cardWrapper}>
-        <SumrAvailableToClaim rewardsData={rewardsData} />
+        <SumrAvailableToClaim rewardsData={rewardsData} sumrPriceUsd={sumrPriceUsd} />
       </div>
       <div className={classNames.cardWrapper}>
         <SumrInOldStakingModule rewardsData={rewardsData} />

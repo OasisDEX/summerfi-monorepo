@@ -16,7 +16,6 @@ import {
   SidebarMobileHeader,
   type SidebarProps,
   SkeletonLine,
-  SUMR_CAP,
   Text,
   useAmount,
   useAmountWithSwap,
@@ -146,6 +145,7 @@ export const VaultManageViewComponent = ({
   migratablePositions,
   migrationBestVaultApy,
   systemConfig,
+  sumrPriceUsd,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -163,6 +163,7 @@ export const VaultManageViewComponent = ({
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
+  sumrPriceUsd: number
 }) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -341,7 +342,7 @@ export const VaultManageViewComponent = ({
 
   const sdk = useAppSDK()
   const {
-    state: { sumrNetApyConfig, slippageConfig },
+    state: { slippageConfig },
   } = useLocalConfig()
 
   const { features } = useSystemConfig()
@@ -766,8 +767,6 @@ export const VaultManageViewComponent = ({
       ? tosSidebarProps
       : sidebarProps
 
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-
   return (
     <>
       <NonOwnerPositionBanner isOwner={ownerView} walletStateLoaded={!isLoadingAccount} />
@@ -797,7 +796,7 @@ export const VaultManageViewComponent = ({
             />
           )
         }
-        sumrPrice={estimatedSumrPrice}
+        sumrPrice={sumrPriceUsd}
         detailsContent={
           <VaultManageViewDetails
             arksHistoricalChartData={arksHistoricalChartData}

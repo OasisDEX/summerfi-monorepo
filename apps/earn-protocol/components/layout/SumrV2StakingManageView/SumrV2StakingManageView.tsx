@@ -46,7 +46,6 @@ import { QuickActionTags } from '@/features/bridge/components/QuickActionTags/Qu
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 import { useStakeSumrTransactionV2 } from '@/features/claim-and-delegate/hooks/use-stake-sumr-transaction-v2'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
-import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { getAvailabilityLabel } from '@/helpers/stakingv2-availability-label'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
@@ -208,6 +207,7 @@ const SumrV2StakingManageComponent = ({
   needsApproval,
   prepareTxs,
   isSettingChain = false,
+  sumrPriceUsd,
 }: {
   onStake: (params: {
     amount: BigNumber
@@ -227,6 +227,7 @@ const SumrV2StakingManageComponent = ({
     lockupPeriod: bigint,
   ) => Promise<{ approve?: () => Promise<unknown>; stake: () => Promise<unknown> } | null>
   isSettingChain?: boolean
+  sumrPriceUsd: number
 }) => {
   const inputChangeHandler = useHandleInputChangeEvent()
   const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null)
@@ -256,14 +257,6 @@ const SumrV2StakingManageComponent = ({
     userStakesCountAfter: string
   } | null>(null)
   const [stakingContractAddress, setStakingContractAddress] = useState<string>('')
-
-  // Calculate price from fully diluted valuation
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-
-  const sumrPriceUsd = useMemo(
-    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
-    [sumrNetApyConfig.dilutedValuation],
-  )
 
   const {
     getStakingBucketsInfoV2,
@@ -1672,7 +1665,7 @@ const SumrV2StakingSuccessComponent = ({
   )
 }
 
-const SumrV2StakingIntermediary = () => {
+const SumrV2StakingIntermediary = ({ sumrPriceUsd }: { sumrPriceUsd: number }) => {
   const [step, setStep] = useState<'init' | 'done'>('init')
   const [txData, setTxData] = useState<{
     amount: BigNumber
@@ -1900,6 +1893,7 @@ const SumrV2StakingIntermediary = () => {
         needsApproval={!!approveSumrTransaction}
         prepareTxs={prepareTxs}
         isSettingChain={isSettingChain}
+        sumrPriceUsd={sumrPriceUsd}
       />
     )
   }
@@ -1912,10 +1906,10 @@ const SumrV2StakingIntermediary = () => {
   return <Text variant="p2semi">Something went wrong.</Text>
 }
 
-export const SumrV2StakingManageView = () => {
+export const SumrV2StakingManageView = ({ sumrPriceUsd }: { sumrPriceUsd: number }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <SumrV2StakingIntermediary />
+      <SumrV2StakingIntermediary sumrPriceUsd={sumrPriceUsd} />
     </SDKContextProvider>
   )
 }

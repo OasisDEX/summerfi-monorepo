@@ -10,9 +10,14 @@ import classNames from './BridgePageView.module.css'
 interface BridgePageViewProps {
   externalData: BridgeExternalData
   walletAddress: string
+  sumrPriceUsd: number
 }
 
-export const BridgePageView: FC<BridgePageViewProps> = ({ walletAddress, externalData }) => {
+export const BridgePageView: FC<BridgePageViewProps> = ({
+  walletAddress,
+  externalData,
+  sumrPriceUsd,
+}) => {
   const [state, dispatch] = useReducer(bridgeReducer, {
     ...bridgeState,
     walletAddress,
@@ -21,7 +26,7 @@ export const BridgePageView: FC<BridgePageViewProps> = ({ walletAddress, externa
 
   return (
     <div className={classNames.bridgePageWrapper}>
-      <BridgeFormContent state={state} dispatch={dispatch} />
+      <BridgeFormContent state={state} dispatch={dispatch} sumrPriceUsd={sumrPriceUsd} />
     </div>
   )
 }

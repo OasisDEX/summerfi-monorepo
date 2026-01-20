@@ -17,6 +17,7 @@ interface ClaimDelegateFormProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
   stakingV2Enabled?: boolean
+  sumrPriceUsd: number
 }
 
 export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({
@@ -24,6 +25,7 @@ export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({
   dispatch,
   externalData,
   stakingV2Enabled,
+  sumrPriceUsd,
 }) => {
   return (
     <Card variant="cardSecondary" className={classNames.claimDelegateForm}>
@@ -34,6 +36,7 @@ export const ClaimDelegateForm: FC<ClaimDelegateFormProps> = ({
         dispatch={dispatch}
         externalData={externalData}
         isJustClaim={stakingV2Enabled}
+        sumrPriceUsd={sumrPriceUsd}
       />
     </Card>
   )

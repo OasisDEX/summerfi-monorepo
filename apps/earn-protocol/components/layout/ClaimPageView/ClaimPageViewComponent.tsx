@@ -11,12 +11,14 @@ interface ClaimPageViewComponentProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
   stakingV2Enabled?: boolean
+  sumrPriceUsd: number
 }
 
 export const ClaimPageViewComponent: FC<ClaimPageViewComponentProps> = ({
   walletAddress,
   externalData,
   stakingV2Enabled,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -24,6 +26,7 @@ export const ClaimPageViewComponent: FC<ClaimPageViewComponentProps> = ({
         walletAddress={walletAddress}
         externalData={externalData}
         stakingV2Enabled={stakingV2Enabled}
+        sumrPriceUsd={sumrPriceUsd}
       />
     </SDKContextProvider>
   )

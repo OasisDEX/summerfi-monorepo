@@ -1,11 +1,5 @@
 'use client'
-import {
-  HomepageCarousel,
-  type LocalConfigState,
-  SkeletonLine,
-  Text,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type IArmadaVaultInfo,
@@ -21,12 +15,12 @@ export const LandingPageHero = ({
   vaultsList,
   vaultsApyByNetworkMap,
   vaultsInfo,
-  userConfig,
+  sumrPriceUsd,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
-  userConfig?: LocalConfigState
+  sumrPriceUsd?: number
 }) => {
   const headerPartA = (
     <Text
@@ -80,7 +74,7 @@ export const LandingPageHero = ({
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
         onGetStartedClick={handleGetStartedClick}
-        sumrNetApyConfig={userConfig?.sumrNetApyConfig}
+        sumrPriceUsd={sumrPriceUsd}
       />
       <Link
         href="/earn"

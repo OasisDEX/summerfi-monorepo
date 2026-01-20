@@ -18,9 +18,14 @@ import classNames from './DelegatePageView.module.css'
 interface DelegatePageViewProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
-export const DelegatePageView: FC<DelegatePageViewProps> = ({ walletAddress, externalData }) => {
+export const DelegatePageView: FC<DelegatePageViewProps> = ({
+  walletAddress,
+  externalData,
+  sumrPriceUsd,
+}) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
     step: ClaimDelegateSteps.DELEGATE,
@@ -56,10 +61,19 @@ export const DelegatePageView: FC<DelegatePageViewProps> = ({ walletAddress, ext
           />
         )}
         {state.step === ClaimDelegateSteps.STAKE && (
-          <ClaimDelegateStakeStep state={state} dispatch={dispatch} externalData={externalData} />
+          <ClaimDelegateStakeStep
+            state={state}
+            dispatch={dispatch}
+            externalData={externalData}
+            sumrPriceUsd={sumrPriceUsd}
+          />
         )}
         {state.step === ClaimDelegateSteps.COMPLETED && (
-          <ClaimDelegateCompletedStep state={state} externalData={externalData} />
+          <ClaimDelegateCompletedStep
+            state={state}
+            externalData={externalData}
+            sumrPriceUsd={sumrPriceUsd}
+          />
         )}
       </Card>
     </div>

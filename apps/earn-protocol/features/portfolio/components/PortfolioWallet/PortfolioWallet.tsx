@@ -11,12 +11,14 @@ interface PortfolioWalletProps {
   walletData: PortfolioAssetsResponse
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
+  sumrPriceUsd: number
 }
 
 export const PortfolioWallet: FC<PortfolioWalletProps> = ({
   walletData,
   vaultsList,
   vaultsApyByNetworkMap,
+  sumrPriceUsd,
 }) => {
   return (
     <div className={classNames.wrapper}>
@@ -27,6 +29,7 @@ export const PortfolioWallet: FC<PortfolioWalletProps> = ({
         vaultsList={vaultsList}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         carouselId="portfolio-wallet-vaults-carousel"
+        sumrPriceUsd={sumrPriceUsd}
       />
     </div>
   )

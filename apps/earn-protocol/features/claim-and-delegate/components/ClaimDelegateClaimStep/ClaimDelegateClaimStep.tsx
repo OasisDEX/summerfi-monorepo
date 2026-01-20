@@ -7,9 +7,7 @@ import {
   Modal,
   SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
-  SUMR_CAP,
   useClientChainId,
-  useLocalConfig,
   useMobileCheck,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
@@ -64,6 +62,7 @@ interface ClaimDelegateClaimStepProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
   isJustClaim?: boolean
+  sumrPriceUsd: number
 }
 
 export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
@@ -71,13 +70,11 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   dispatch,
   externalData: initialExternalData,
   isJustClaim,
+  sumrPriceUsd,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const [isOptInOpen, setIsOptInOpen] = useState(false)
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
 
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
@@ -177,8 +174,6 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     network: chainIdToSDKNetwork(clientChainId),
     publicClient,
   })
-
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const handleClaim = useCallback(async () => {
     dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.PENDING })
@@ -337,7 +332,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         chainId={SupportedNetworkIds.Base}
         claimableAmount={state.claimableBalances[SupportedNetworkIds.Base] || 0}
         balance={state.walletBalances.base || 0}
-        estimatedSumrPrice={estimatedSumrPrice}
+        sumrPriceUsd={sumrPriceUsd}
         walletAddress={resolvedWalletAddress}
         onClaim={() => {
           if (!isOptInOpen && !merklIsAuthorizedOnBase) {
@@ -371,7 +366,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             chainId={item.chainId}
             claimableAmount={state.claimableBalances[item.chainId] || 0}
             balance={state.walletBalances[network] || 0}
-            estimatedSumrPrice={estimatedSumrPrice}
+            sumrPriceUsd={sumrPriceUsd}
             walletAddress={resolvedWalletAddress}
             onClaim={() => handleClaimClick(item.chainId)}
             isLoading={

@@ -13,11 +13,13 @@ import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-c
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
 import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
@@ -28,15 +30,26 @@ type ClaimPageProps = {
 }
 
 const ClaimPage = async ({ params }: ClaimPageProps) => {
-  const { walletAddress } = await params
+  const [{ walletAddress }, cookieRaw, sumrPrice, config] = await Promise.all([
+    params,
+    cookies(),
+    getCachedSumrPrice(),
+    getCachedConfig(),
+  ])
   // Get SUMR price from cookie or use default
-  const cookieRaw = await cookies()
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
 
   if (!isValidAddress(walletAddress)) {
     redirect('/not-found')
   }
+
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
+
   const [
     { sumrStakeDelegate, tallyDelegates },
     sumrBalances,
@@ -64,7 +77,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     getSumrStakingInfo(),
     getCachedSumrToClaim(walletAddress),
     getCachedConfig(),
-    getSumrStakingRewards({ walletAddress, dilutedValuation: sumrNetApyConfig?.dilutedValuation }),
+    getSumrStakingRewards({ walletAddress, sumrPriceUsd }),
   ])
 
   const systemConfig = parseServerResponseToClient(systemConfigRaw)
@@ -86,6 +99,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
       walletAddress={walletAddress}
       externalData={externalData}
       stakingV2Enabled={stakingV2Enabled}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }

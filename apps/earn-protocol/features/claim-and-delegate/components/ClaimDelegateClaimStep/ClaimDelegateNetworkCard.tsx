@@ -9,7 +9,7 @@ interface ClaimDelegateNetworkCardProps {
   chainId: SupportedNetworkIds
   claimableAmount: number
   balance: number
-  estimatedSumrPrice: number
+  sumrPriceUsd: number
   walletAddress: string
   onClaim: () => void
   isLoading?: boolean
@@ -23,7 +23,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   chainId,
   claimableAmount,
   balance,
-  estimatedSumrPrice,
+  sumrPriceUsd,
   walletAddress,
   onClaim,
   isLoading,
@@ -43,7 +43,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
       <ClaimDelegateToBridge
         chainId={chainId}
         balance={formattedBalance}
-        balanceInUSD={formatFiatBalance(balance * estimatedSumrPrice)}
+        balanceInUSD={formatFiatBalance(balance * sumrPriceUsd)}
         walletAddress={walletAddress}
       />
     )
@@ -55,7 +55,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
       earned={formattedClaimable}
       claimableRaw={claimableAmount}
       balance={formattedBalance}
-      earnedInUSD={formatFiatBalance(claimableAmount * estimatedSumrPrice)}
+      earnedInUSD={formatFiatBalance(claimableAmount * sumrPriceUsd)}
       onClaim={onClaim}
       isLoading={isLoading}
       isChangingNetwork={isChangingNetworkTo === chainId && isChangingNetwork}

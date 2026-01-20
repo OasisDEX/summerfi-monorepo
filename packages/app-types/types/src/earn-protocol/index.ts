@@ -360,6 +360,7 @@ export type LandingPageData = {
   proAppStats: ProAppStats
   vaultsInfo: IArmadaVaultInfo[] | undefined
   totalUniqueUsers: number
+  sumrPriceUsd: number
 }
 
 export enum SupportedNetworkIds {

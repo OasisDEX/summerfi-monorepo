@@ -4,7 +4,6 @@ import {
   Icon,
   SlideCarousel,
   SliderCarouselDotsPosition,
-  SUMR_CAP,
   Text,
   useLocalConfig,
   useMobileCheck,
@@ -22,6 +21,7 @@ interface PortfolioVaultsCarouselProps {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   carouselId: string
+  sumrPriceUsd: number
 }
 
 export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
@@ -30,6 +30,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   vaultsList,
   vaultsApyByNetworkMap,
   carouselId,
+  sumrPriceUsd,
 }) => {
   const { push } = useRouter()
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -40,8 +41,6 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
-
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const vaultOnClick = (vault: SDKVaultsListType[number]) => () => {
     buttonClickEventHandler(`${carouselId}-vault-${slugifyVault(vault)}-click`)
@@ -60,7 +59,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             withHover
             onClick={vaultOnClick(vault)}
             withTokenBonus={sumrNetApyConfig.withSumr}
-            sumrPrice={estimatedSumrPrice}
+            sumrPrice={sumrPriceUsd}
             tooltipName={carouselId}
             onTooltipOpen={tooltipEventHandler}
             vaultApyData={

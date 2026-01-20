@@ -6,9 +6,7 @@ import {
   InputWithDropdown,
   Sidebar,
   SUCCESS_TOAST_CONFIG,
-  SUMR_CAP,
   useAmount,
-  useLocalConfig,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
@@ -45,12 +43,14 @@ import { useToken } from '@/hooks/use-token'
 interface BridgeFormStartStepProps {
   dispatch: Dispatch<BridgeReducerAction>
   state: BridgeState
+  sumrPriceUsd: number
 }
 
-export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispatch }) => {
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
+export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
+  state,
+  dispatch,
+  sumrPriceUsd,
+}) => {
   const router = useRouter()
   const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
   const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
@@ -78,7 +78,6 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     tokenSymbol: 'SUMMER',
     chainId: sourceChain.id,
   })
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   // Add a ref to track if we've already initialized from params
   const initializedRef = useRef(false)
@@ -94,7 +93,7 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     onFocus: defaultOnFocus,
   } = useAmount({
     tokenDecimals: SUMR_DECIMALS,
-    tokenPrice: estimatedSumrPrice.toString(),
+    tokenPrice: sumrPriceUsd.toString(),
     selectedToken: sumrToken,
     initialAmount: amountFromParams ?? undefined,
     inputChangeHandler,
@@ -159,11 +158,13 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
     if (!userWalletAddress && !isUserWalletLoading) {
       try {
         router.push('/earn')
-      } catch (error) {
+      } catch (err) {
         dispatch({
           type: 'error',
           payload: 'Failed to redirect. Please try again.',
         })
+        // eslint-disable-next-line no-console
+        console.error('Failed to redirect to /earn:', err)
       }
     }
 
@@ -189,13 +190,13 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({ state, dispa
             if (sourceChain.id !== nextSourceChain.id) {
               await setSourceChain({ chain: nextSourceChain })
             }
-          } catch (error) {
+          } catch (err) {
             // eslint-disable-next-line no-console
-            console.error('Failed to switch chain:', error)
+            console.error('Failed to switch chain:', err)
 
             dispatch({
               type: 'error',
-              payload: error instanceof Error ? error.message : 'Failed to switch chain',
+              payload: err instanceof Error ? err.message : 'Failed to switch chain',
             })
           }
         }

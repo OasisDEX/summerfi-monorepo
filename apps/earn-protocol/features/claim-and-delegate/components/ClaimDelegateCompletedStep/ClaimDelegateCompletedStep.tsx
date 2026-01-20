@@ -6,9 +6,7 @@ import {
   DataBlock,
   Icon,
   LoadableAvatar,
-  SUMR_CAP,
   Text,
-  useLocalConfig,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
@@ -35,15 +33,10 @@ interface ClaimedCardProps {
   hasClaimed: boolean
   externalData: ClaimDelegateExternalData
   chainId: SupportedNetworkIds
-  estimatedSumrPrice: number
+  sumrPriceUsd: number
 }
 
-const ClaimedCard: FC<ClaimedCardProps> = ({
-  hasClaimed,
-  externalData,
-  chainId,
-  estimatedSumrPrice,
-}) => {
+const ClaimedCard: FC<ClaimedCardProps> = ({ hasClaimed, externalData, chainId, sumrPriceUsd }) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const claimedSumrRaw = externalData.sumrToClaim.aggregatedRewards.perChain[chainId] ?? 0
 
@@ -72,7 +65,7 @@ const ClaimedCard: FC<ClaimedCardProps> = ({
     </>
   )
 
-  const claimedSumrUSD = `$${formatFiatBalance(claimedSumrRaw * estimatedSumrPrice)}`
+  const claimedSumrUSD = `$${formatFiatBalance(claimedSumrRaw * sumrPriceUsd)}`
 
   return (
     <Card className={classNames.cardWrapper}>
@@ -138,10 +131,10 @@ const PotentialEarningCard: FC<PotentialEarningCardProps> = ({
 interface TotalStakedCardProps {
   externalData: ClaimDelegateExternalData
   state: ClaimDelegateState
-  estimatedSumrPrice: number
+  sumrPriceUsd: number
 }
 
-const TotalStakedCard: FC<TotalStakedCardProps> = ({ externalData, state, estimatedSumrPrice }) => {
+const TotalStakedCard: FC<TotalStakedCardProps> = ({ externalData, state, sumrPriceUsd }) => {
   const totalStakedRaw =
     Number(externalData.sumrStakeDelegate.stakedAmount) + Number(state.stakeChangeAmount ?? 0)
 
@@ -154,7 +147,7 @@ const TotalStakedCard: FC<TotalStakedCardProps> = ({ externalData, state, estima
     </div>
   )
 
-  const totalStakedUSD = `$${formatFiatBalance(totalStakedRaw * estimatedSumrPrice)}`
+  const totalStakedUSD = `$${formatFiatBalance(totalStakedRaw * sumrPriceUsd)}`
 
   return (
     <Card className={classNames.cardWrapper}>
@@ -173,19 +166,16 @@ const TotalStakedCard: FC<TotalStakedCardProps> = ({ externalData, state, estima
 interface ClaimDelegateCompletedStepProps {
   state: ClaimDelegateState
   externalData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
 export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = ({
   state,
   externalData,
+  sumrPriceUsd,
 }) => {
   const { walletAddress } = useParams()
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
   const { chain } = useChain()
-
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const sumrClaimedStepBefore =
     state.claimStatus === UiTransactionStatuses.COMPLETED
@@ -228,14 +218,10 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
           hasClaimed={state.claimStatus === UiTransactionStatuses.COMPLETED}
           externalData={externalData}
           chainId={chain.id}
-          estimatedSumrPrice={estimatedSumrPrice}
+          sumrPriceUsd={sumrPriceUsd}
         />
 
-        <TotalStakedCard
-          externalData={externalData}
-          state={state}
-          estimatedSumrPrice={estimatedSumrPrice}
-        />
+        <TotalStakedCard externalData={externalData} state={state} sumrPriceUsd={sumrPriceUsd} />
         <PotentialEarningCard
           externalData={externalData}
           state={state}

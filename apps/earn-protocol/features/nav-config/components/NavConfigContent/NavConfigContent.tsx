@@ -19,6 +19,7 @@ import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { getMarketCapIndexByValue, sumrMarketCapOptions } from '@/helpers/sumr-market-cap'
@@ -35,6 +36,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
   const [isSmartAccountDeployed, setIsSmartAccountDeployed] = useState<boolean | null>(null)
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
+  const { features } = useSystemConfig()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const userAAKit = useUser()
@@ -154,46 +156,50 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
         </Text>
         <div className={classNames.spacerHeader} />
         <div className={classNames.navConfigContentScrollable}>
-          <Text
-            as="p"
-            variant="p2semi"
-            style={{
-              marginBottom: 'var(--general-space-8)',
-            }}
-          >
-            Update $SUMR valuation
-          </Text>
-          <Text
-            as="p"
-            variant="p3"
-            style={{
-              marginBottom: 'var(--general-space-16)',
-              color: 'var(--earn-protocol-secondary-60)',
-            }}
-          >
-            Across the app, $SUMR Reward APYs depend on a Fully Diluted Valuation of the $SUMR
-            token. Because the token is not currently transferrable, you must choose an appropriate
-            valuation to best reflect the reward rate of the $SUMR token, or alternatively, exclude
-            $SUMR from any calculations.
-          </Text>
-          <div className={classNames.toggleWrapper}>
-            <ToggleButton
-              title="Include $SUMR"
-              checked={sumrToggle}
-              onChange={(ev) => {
-                setSumrToggle(ev.target.checked)
-              }}
-              titleVariant="p3semi"
-              wrapperStyle={{ width: '100%', justifyContent: 'space-between' }}
-              trackVariant="dark"
-            />
-          </div>
-          <Input
-            placeholder="Enter fully diluted valuation"
-            variant="dark"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
+          {!features?.UseSumrCoingeckoPrice && (
+            <>
+              <Text
+                as="p"
+                variant="p2semi"
+                style={{
+                  marginBottom: 'var(--general-space-8)',
+                }}
+              >
+                Update $SUMR valuation
+              </Text>
+              <Text
+                as="p"
+                variant="p3"
+                style={{
+                  marginBottom: 'var(--general-space-16)',
+                  color: 'var(--earn-protocol-secondary-60)',
+                }}
+              >
+                Across the app, $SUMR Reward APYs depend on a Fully Diluted Valuation of the $SUMR
+                token. Because the token is not currently transferrable, you must choose an
+                appropriate valuation to best reflect the reward rate of the $SUMR token, or
+                alternatively, exclude $SUMR from any calculations.
+              </Text>
+              <div className={classNames.toggleWrapper}>
+                <ToggleButton
+                  title="Include $SUMR"
+                  checked={sumrToggle}
+                  onChange={(ev) => {
+                    setSumrToggle(ev.target.checked)
+                  }}
+                  titleVariant="p3semi"
+                  wrapperStyle={{ width: '100%', justifyContent: 'space-between' }}
+                  trackVariant="dark"
+                />
+              </div>
+              <Input
+                placeholder="Enter fully diluted valuation"
+                variant="dark"
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+            </>
+          )}
           <div className={classNames.slippageOptionsWrapper}>
             {sumrMarketCapOptions.map((item, idx) => (
               <Badge
