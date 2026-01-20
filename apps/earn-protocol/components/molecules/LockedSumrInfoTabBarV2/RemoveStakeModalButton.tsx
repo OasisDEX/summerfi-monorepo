@@ -244,7 +244,7 @@ export const RemoveStakeModalButton: FC<{
   const button = useMemo(() => {
     if (
       !userWalletAddress ||
-      userWalletAddress.toLowerCase() !== viewWalletAddress?.toLowerCase()
+      (viewWalletAddress && userWalletAddress.toLowerCase() !== viewWalletAddress.toLowerCase())
     ) {
       return (
         <Button variant="unstyled" style={{ pointerEvents: 'none' }}>

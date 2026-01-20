@@ -882,6 +882,7 @@ export const LockedSumrInfoTabBarV2: FC<LockedSumrInfoTabBarV2Props> = ({
         <YourLockedSumrPositions
           stakes={stakes}
           userWalletAddress={userWalletAddress}
+          viewWalletAddress={viewWalletAddress}
           refetchStakingData={refetchStakingData}
           penaltyPercentages={penaltyPercentages}
           penaltyAmounts={penaltyAmounts}
