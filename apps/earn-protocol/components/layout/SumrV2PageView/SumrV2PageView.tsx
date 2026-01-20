@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Button,
   Card,
@@ -25,7 +25,6 @@ import { SectionCard } from '@/components/molecules/CardVariants/SectionCard'
 import { WaysToAccessSumr } from '@/components/molecules/WaysToAccessSumr/WaysToAccessSumr'
 import { sdkApiUrl } from '@/constants/sdk'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
-import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import sumrLogo from '@/public/img/branding/logo-dark.svg'
 import sumrTokenBubbles from '@/public/img/sumr/sumr_token_bubbles.svg'
@@ -156,6 +155,7 @@ const NewsList = ({
 const SumrV2PageViewComponent = ({
   apyRanges,
   sumrRewards,
+  sumrPriceUsd,
 }: {
   apyRanges: {
     eth: { minApy: number; maxApy: number }
@@ -165,16 +165,12 @@ const SumrV2PageViewComponent = ({
     eth: number
     stablecoins: number
   }
+  sumrPriceUsd: number
 }) => {
   const { userWalletAddress } = useUserWallet()
   const [isLoading, setIsLoading] = useState(true)
   const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const sumrPriceUsd = useMemo(
-    () => new BigNumber(sumrNetApyConfig.dilutedValuation, 10).dividedBy(1_000_000_000).toNumber(),
-    [sumrNetApyConfig.dilutedValuation],
-  )
 
   const { getStakingRewardRatesV2 } = useAppSDK()
 
@@ -554,6 +550,7 @@ const SumrV2PageViewComponent = ({
 export const SumrV2PageView = ({
   apyRanges,
   sumrRewards,
+  sumrPriceUsd,
 }: {
   apyRanges: {
     eth: { minApy: number; maxApy: number }
@@ -563,10 +560,15 @@ export const SumrV2PageView = ({
     eth: number
     stablecoins: number
   }
+  sumrPriceUsd: number
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <SumrV2PageViewComponent apyRanges={apyRanges} sumrRewards={sumrRewards} />
+      <SumrV2PageViewComponent
+        apyRanges={apyRanges}
+        sumrRewards={sumrRewards}
+        sumrPriceUsd={sumrPriceUsd}
+      />
     </SDKContextProvider>
   )
 }

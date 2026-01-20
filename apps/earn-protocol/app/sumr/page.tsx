@@ -1,4 +1,4 @@
-import { getSumrTokenBonus, SUMR_CAP, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
+import { getSumrTokenBonus, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
@@ -9,15 +9,17 @@ import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'
-import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
 const SumrPage = async () => {
-  const [configRaw, vaultsInfo, cookieRaw] = await Promise.all([
+  const [configRaw, vaultsInfo, cookieRaw, sumrPrice] = await Promise.all([
     getCachedConfig(),
     getCachedVaultsInfo(),
     cookies(),
+    getCachedSumrPrice(),
   ])
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
@@ -49,8 +51,11 @@ const SumrPage = async () => {
     },
   )
 
-  const estimatedSumrPrice =
-    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   const sumrRewards: {
     eth: number
@@ -68,7 +73,7 @@ const SumrPage = async () => {
 
       const { rawSumrTokenBonus } = getSumrTokenBonus({
         merklRewards: vault.merklRewards,
-        sumrPrice: estimatedSumrPrice,
+        sumrPrice: sumrPriceUsd,
         totalValueLockedUSD: vault.tvlUsd.amount.toString(),
       })
 
@@ -87,7 +92,7 @@ const SumrPage = async () => {
   )
 
   return systemConfig.features?.StakingV2 ? (
-    <SumrV2PageView apyRanges={apyRanges} sumrRewards={sumrRewards} />
+    <SumrV2PageView apyRanges={apyRanges} sumrRewards={sumrRewards} sumrPriceUsd={sumrPriceUsd} />
   ) : (
     <SumrPageView />
   )

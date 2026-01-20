@@ -1,7 +1,6 @@
 import {
   getPositionValues,
   getUniqueVaultId,
-  SUMR_CAP,
   sumrNetApyConfigCookieName,
 } from '@summerfi/app-earn-ui'
 import {
@@ -42,6 +41,7 @@ import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
@@ -53,9 +53,9 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
-import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -69,7 +69,7 @@ const portfolioCallsHandler = async ({
   sumrPriceUsd,
 }: {
   walletAddress: string
-  sumrPriceUsd?: number
+  sumrPriceUsd: number
 }) => {
   const userKey = walletAddress.toLowerCase()
   const cacheConfig = {
@@ -125,7 +125,7 @@ const portfolioCallsHandler = async ({
       getSumrStakingRewards,
       ['sumrStakingRewards', userKey],
       cacheConfig,
-    )({ walletAddress }),
+    )({ walletAddress, sumrPriceUsd }),
     unstableCache(
       getPortfolioSumrStakingV2Data,
       ['portfolioSumrStakingV2Data', userKey],
@@ -166,12 +166,20 @@ const mapPortfolioVaultsApy = (
   }, {})
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const [{ walletAddress: walletAddressRaw }, cookieRaw] = await Promise.all([params, cookies()])
+  const [{ walletAddress: walletAddressRaw }, cookieRaw, sumrPrice, config] = await Promise.all([
+    params,
+    cookies(),
+    getCachedSumrPrice(),
+    getCachedConfig(),
+  ])
 
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice =
-    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   const walletAddress = walletAddressRaw.toLowerCase()
 
@@ -196,7 +204,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     vaultsInfo,
     sumrStakingRewards,
     portfolioSumrStakingV2Data,
-  } = await portfolioCallsHandler({ walletAddress, sumrPriceUsd: estimatedSumrPrice })
+  } = await portfolioCallsHandler({ walletAddress, sumrPriceUsd })
 
   const userPositionsJsonSafe = userPositions
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
@@ -304,20 +312,36 @@ export async function generateMetadata({
 }: PortfolioPageProps & {
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
-  const [{ walletAddress: walletAddressRaw }, headersList, searchParamsAwaited, cookieRaw] =
-    await Promise.all([params, headers(), searchParams, cookies()])
+  const [
+    { walletAddress: walletAddressRaw },
+    headersList,
+    searchParamsAwaited,
+    cookieRaw,
+    sumrPrice,
+    config,
+  ] = await Promise.all([
+    params,
+    headers(),
+    searchParams,
+    cookies(),
+    getCachedSumrPrice(),
+    getCachedConfig(),
+  ])
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
   const walletAddress = walletAddressRaw.toLowerCase()
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice =
-    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   const { userPositions, vaultsList, systemConfig, vaultsInfo } = await portfolioCallsHandler({
     walletAddress,
-    sumrPriceUsd: estimatedSumrPrice,
+    sumrPriceUsd,
   })
 
   const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)

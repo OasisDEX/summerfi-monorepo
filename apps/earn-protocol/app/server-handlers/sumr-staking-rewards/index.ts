@@ -1,10 +1,7 @@
-import { SUMR_CAP } from '@summerfi/app-earn-ui'
 import { ChainIds, User } from '@summerfi/sdk-common'
-import BigNumber from 'bignumber.js'
 import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
-import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 export interface SumrStakingRewardsData {
   sumrRewardApy: number
@@ -22,16 +19,12 @@ export interface SumrStakingRewardsData {
  */
 export const getSumrStakingRewards = async ({
   walletAddress,
-  dilutedValuation,
+  sumrPriceUsd,
 }: {
   walletAddress: string
-  dilutedValuation?: string
+  sumrPriceUsd: number
 }): Promise<SumrStakingRewardsData> => {
   try {
-    const sumrPriceUsd = new BigNumber(dilutedValuation ?? defaultSumrMarketCap, 10)
-      .dividedBy(SUMR_CAP)
-      .toNumber()
-
     const user = User.createFromEthereum(ChainIds.Base, walletAddress as Address)
 
     // Fetch reward rates and user stakes in parallel

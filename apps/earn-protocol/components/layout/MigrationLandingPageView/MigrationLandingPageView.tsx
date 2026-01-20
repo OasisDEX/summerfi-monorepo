@@ -12,7 +12,6 @@ import {
   networkNameIconNameMap,
   SlideCarousel,
   SliderCarouselDotsPosition,
-  SUMR_CAP,
   Text,
   TitleWithSelect,
   useLocalConfig,
@@ -41,11 +40,14 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
+import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
 import { MigrationLandingPagePositionCard } from '@/features/migration/components/MigrationLandingPagePositionCard/MigrationLandingPagePositionCard'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { useRevalidateMigrationData } from '@/hooks/use-revalidate'
 
 import classNames from './MigrationLandingPageView.module.css'
@@ -88,6 +90,7 @@ interface MigrationLandingPageViewProps {
   migratablePositions: MigratablePosition[]
   walletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
+  sumrPrice: SumrPriceData
 }
 
 export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
@@ -97,6 +100,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   migratablePositions,
   walletAddress,
   migrationBestVaultApy,
+  sumrPrice,
 }) => {
   const searchParams = useSearchParams()
   const { deviceType } = useDeviceType()
@@ -105,6 +109,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   const {
     state: { sumrNetApyConfig },
   } = useLocalConfig()
+  const config = useSystemConfig()
   const [localVaultNetwork, setLocalVaultNetwork] =
     useState<MigrationLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
@@ -172,7 +177,11 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     setSelectedVaultId(nextselectedVaultId)
   }
 
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config,
+    sumrPrice,
+    sumrNetApyConfig,
+  })
 
   const migrationVaultUrl = useMemo(() => {
     if (!selectedVaultId || !selectedPosition) {
@@ -370,7 +379,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                       selected={selectedVaultId === getUniqueVaultId(vault)}
                       onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                       withTokenBonus={sumrNetApyConfig.withSumr}
-                      sumrPrice={estimatedSumrPrice}
+                      sumrPrice={sumrPriceUsd}
                       vaultApyData={
                         vaultsApyByNetworkMap[
                           `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
@@ -392,7 +401,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     selected={selectedVaultId === getUniqueVaultId(vault)}
                     onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                     withTokenBonus={sumrNetApyConfig.withSumr}
-                    sumrPrice={estimatedSumrPrice}
+                    sumrPrice={sumrPriceUsd}
                     wrapperStyle={{
                       minWidth: '300px',
                     }}

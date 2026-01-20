@@ -9,6 +9,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -22,10 +23,11 @@ type MigrationLandingPageProps = {
 const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const { walletAddress } = await params
 
-  const [{ vaults }, configRaw, migratablePositionsData] = await Promise.all([
+  const [{ vaults }, configRaw, migratablePositionsData, sumrPrice] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedMigratablePositions({ walletAddress }),
+    getCachedSumrPrice(),
   ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -62,6 +64,7 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
       migratablePositions={migratablePositions}
       walletAddress={walletAddress}
       migrationBestVaultApy={migrationBestVaultApy}
+      sumrPrice={sumrPrice}
     />
   )
 }

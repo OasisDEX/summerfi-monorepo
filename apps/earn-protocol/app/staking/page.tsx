@@ -1,4 +1,4 @@
-import { SUMR_CAP, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
+import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
@@ -10,26 +10,34 @@ import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getLandingPageSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { SumrV2StakingLandingPageView } from '@/components/layout/SumrV2StakingLandingPageView/SumrV2StakingLandingPageView'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
-import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
 const SumrStakingLandingPage = async () => {
-  const [configRaw, cookieRaw] = await Promise.all([getCachedConfig(), cookies()])
+  const [configRaw, cookieRaw, sumrPrice] = await Promise.all([
+    getCachedConfig(),
+    cookies(),
+    getCachedSumrPrice(),
+  ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
   const cookie = cookieRaw.toString()
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-  const estimatedSumrPrice =
-    Number(sumrNetApyConfig.dilutedValuation ?? defaultSumrMarketCap) / SUMR_CAP
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   if (systemConfig.features?.StakingV2) {
     const [sumrStakingV2LandingPageData] = await Promise.all([
-      unstableCache(getLandingPageSumrStakingV2Data, [estimatedSumrPrice.toString()], {
+      unstableCache(getLandingPageSumrStakingV2Data, [sumrPriceUsd.toString()], {
         revalidate: CACHE_TIMES.STAKING_V2_GLOBAL_DATA,
         tags: [CACHE_TAGS.STAKING_V2_GLOBAL_DATA],
       })({
-        sumrPriceUsd: estimatedSumrPrice,
+        sumrPriceUsd,
       }),
     ])
 
