@@ -45,7 +45,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
       handleButtonClick(`portfolio-beach-club-refer-and-earn-how-it-works-generate-code`)
 
       setIsLoading(true)
-      const response = await fetch(`/earn/api/beach-club/generate-code/${walletAddress}`, {
+      const response = await fetch(`/earn/api/beach-club/generate-code/${viewWalletAddress}`, {
         method: 'POST',
       })
 
