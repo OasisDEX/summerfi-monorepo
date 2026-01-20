@@ -73,7 +73,7 @@ export const PortfolioPageViewLoadingState: FC = () => {
     <>
       <NonOwnerPortfolioBanner isOwner walletStateLoaded />
       <div className={classNames.portfolioPageViewLoadingStateWrapper}>
-        <PortfolioHeader walletAddress="" isLoading />
+        <PortfolioHeader viewWalletAddress="" isLoading />
         <TabBar
           tabs={tabs}
           defaultIndex={tabs.findIndex((item) => item.id === activeTab)}
