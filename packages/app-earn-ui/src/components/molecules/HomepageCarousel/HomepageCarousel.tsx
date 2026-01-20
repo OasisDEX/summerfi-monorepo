@@ -11,7 +11,7 @@ import {
 } from '@/components/molecules/SlideCarousel/SlideCarouselButtons'
 import { VaultCardHomepage } from '@/components/molecules/VaultCardHomepage/VaultCardHomepage'
 import { SUMR_CAP } from '@/constants/earn-protocol'
-import { useLocalConfig } from '@/contexts/LocalConfigContext/LocalConfigContext'
+import { type LocalConfigState } from '@/contexts/LocalConfigContext/local-config-reducer'
 
 import homepageCarouselStyles from './HomepageCarousel.module.css'
 
@@ -22,6 +22,7 @@ type HomepageCarouselProps = {
   }
   onGetStartedClick?: (vault?: SDKVaultishType) => void
   vaultsInfo?: IArmadaVaultInfo[]
+  sumrNetApyConfig?: LocalConfigState['sumrNetApyConfig']
 }
 
 export const HomepageCarousel = ({
@@ -29,6 +30,7 @@ export const HomepageCarousel = ({
   vaultsApyByNetworkMap,
   onGetStartedClick,
   vaultsInfo,
+  sumrNetApyConfig,
 }: HomepageCarouselProps): React.ReactNode => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
@@ -36,10 +38,7 @@ export const HomepageCarousel = ({
     skipSnaps: true,
   })
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
+  const estimatedSumrPrice = Number(sumrNetApyConfig?.dilutedValuation ?? 250000000) / SUMR_CAP
 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
     usePrevNextButtons(emblaApi)
