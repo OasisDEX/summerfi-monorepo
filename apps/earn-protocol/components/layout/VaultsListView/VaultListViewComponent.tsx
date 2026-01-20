@@ -21,12 +21,14 @@ interface VaultListViewComponentProps {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
+  sumrPriceUsd: number
 }
 
 export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
   vaultsList,
   vaultsApyByNetworkMap,
   vaultsInfo,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -34,6 +36,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
         vaultsList={vaultsList}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
+        sumrPriceUsd={sumrPriceUsd}
       />
     </SDKContextProvider>
   )

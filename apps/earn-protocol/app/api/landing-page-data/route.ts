@@ -1,3 +1,4 @@
+import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   type LandingPageData,
   supportedDefillamaProtocols,
@@ -5,11 +6,14 @@ import {
   type SupportedDefillamaTvlProtocols,
 } from '@summerfi/app-types'
 import {
+  getServerSideCookies,
   parseServerResponseToClient,
+  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/defillama/get-median-defi-project-yield'
@@ -19,9 +23,11 @@ import { getCachedProAppStats } from '@/app/server-handlers/cached/get-pro-app-s
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const emptyTvls = {
@@ -95,6 +101,8 @@ export async function GET() {
     protocolTvls,
     protocolApys,
     vaultsInfoRaw,
+    sumrPrice,
+    cookieRaw,
   ] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
@@ -122,8 +130,9 @@ export async function GET() {
       tags: [CACHE_TAGS.LP_PROTOCOLS_APY],
     })(),
     getCachedVaultsInfo(),
+    getCachedSumrPrice(),
+    cookies(),
   ])
-
   const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
@@ -143,6 +152,13 @@ export async function GET() {
   const totalRebalanceItemsPerStrategyId = rebalanceActivity.totalItemsPerStrategyId
   const { totalUniqueUsers } = latestActivity
   const { tosWhitelist: _tosWhitelist, ...cleanSystemConfig } = systemConfig
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   return NextResponse.json({
     systemConfig: cleanSystemConfig,
@@ -154,5 +170,6 @@ export async function GET() {
     proAppStats,
     vaultsInfo,
     totalUniqueUsers,
+    sumrPriceUsd,
   } as LandingPageData)
 }

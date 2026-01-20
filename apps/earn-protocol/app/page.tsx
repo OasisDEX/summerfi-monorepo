@@ -1,27 +1,33 @@
-import { getVaultsProtocolsList } from '@summerfi/app-earn-ui'
+import { getVaultsProtocolsList, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   formatCryptoBalance,
+  getServerSideCookies,
   parseServerResponseToClient,
+  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
-  const [{ vaults }, configRaw, vaultsInfoRaw] = await Promise.all([
+  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice] = await Promise.all([
+    cookies(),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedVaultsInfo(),
+    getCachedSumrPrice(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -40,12 +46,20 @@ const EarnAllVaultsPage = async () => {
   ])
 
   const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
+  const cookie = cookieRaw.toString()
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   return (
     <VaultListViewComponent
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsInfo={vaultsInfo}
       vaultsList={vaultsWithConfig}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }

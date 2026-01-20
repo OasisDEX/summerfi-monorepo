@@ -38,6 +38,7 @@ interface PortfolioPageViewComponentProps {
   beachClubData: BeachClubData
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
+  sumrPriceUsd: number
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -55,6 +56,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   beachClubData,
   blogPosts,
   portfolioSumrStakingV2Data,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -73,6 +75,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         beachClubData={beachClubData}
         blogPosts={blogPosts}
         portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
+        sumrPriceUsd={sumrPriceUsd}
       />
     </SDKContextProvider>
   )

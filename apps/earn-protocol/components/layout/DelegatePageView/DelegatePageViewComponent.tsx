@@ -10,15 +10,21 @@ import { DelegatePageView } from './DelegatePageView'
 interface DelegatePageViewComponentProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
 export const DelegatePageViewComponent: FC<DelegatePageViewComponentProps> = ({
   walletAddress,
   externalData,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <DelegatePageView walletAddress={walletAddress} externalData={externalData} />
+      <DelegatePageView
+        walletAddress={walletAddress}
+        externalData={externalData}
+        sumrPriceUsd={sumrPriceUsd}
+      />
     </SDKContextProvider>
   )
 }

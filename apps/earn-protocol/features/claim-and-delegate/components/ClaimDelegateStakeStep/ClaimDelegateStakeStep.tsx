@@ -11,12 +11,10 @@ import {
   SDKChainIdToAAChainMap,
   SkeletonLine,
   SUCCESS_TOAST_CONFIG,
-  SUMR_CAP,
   TabBar,
   Text,
   useAmount,
   useClientChainId,
-  useLocalConfig,
   useMobileCheck,
   useUserWallet,
   WithArrow,
@@ -103,16 +101,15 @@ interface ClaimDelegateStakeStepProps {
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
 export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   state,
   dispatch,
   externalData,
+  sumrPriceUsd,
 }) => {
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const { userWalletAddress } = useUserWallet()
@@ -124,7 +121,6 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 
   const { setChain } = useChain()
   const { clientChainId } = useClientChainId()
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const { publicClient } = usePublicClient({ chain: base })
   const {
@@ -149,7 +145,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     onFocus: onFocusStake,
   } = useAmount({
     tokenDecimals: 18,
-    tokenPrice: estimatedSumrPrice.toString(),
+    tokenPrice: sumrPriceUsd.toString(),
     selectedToken: sumrToken,
     inputChangeHandler,
     inputName: 'stake-amount',
@@ -166,7 +162,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     onFocus: onFocusUnstake,
   } = useAmount({
     tokenDecimals: 18,
-    tokenPrice: estimatedSumrPrice.toString(),
+    tokenPrice: sumrPriceUsd.toString(),
     selectedToken: sumrToken,
     inputChangeHandler,
     inputName: 'unstake-amount',
@@ -322,7 +318,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const sumrPerYear = `*${formatFiatBalance((Number(externalData.sumrStakeDelegate.sumrDelegated) + Number(sumrToClaim)) * Number(externalData.sumrStakingInfo.sumrStakingApy * (decayFactor ?? 1)))} SUMR / Year`
 
   const stakedAmountRaw = Number(externalData.sumrStakeDelegate.stakedAmount)
-  const stakedAmountUSD = formatFiatBalance(stakedAmountRaw * estimatedSumrPrice)
+  const stakedAmountUSD = formatFiatBalance(stakedAmountRaw * sumrPriceUsd)
 
   const isLoading =
     state.stakingStatus === UiTransactionStatuses.PENDING ||

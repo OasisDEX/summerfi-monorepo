@@ -78,7 +78,13 @@ const DelegatePage = async ({ params }: DelegatePageProps) => {
     sumrRewardAmount,
   }
 
-  return <DelegatePageViewComponent walletAddress={walletAddress} externalData={externalData} />
+  return (
+    <DelegatePageViewComponent
+      walletAddress={walletAddress}
+      externalData={externalData}
+      sumrPriceUsd={sumrPriceUsd}
+    />
+  )
 }
 
 export default DelegatePage

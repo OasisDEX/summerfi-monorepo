@@ -302,6 +302,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       beachClubData={beachClubData}
       blogPosts={blogPosts}
       portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }

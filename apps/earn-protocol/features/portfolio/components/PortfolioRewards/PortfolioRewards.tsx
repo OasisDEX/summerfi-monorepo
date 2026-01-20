@@ -15,12 +15,23 @@ interface PortfolioRewardsProps {
   rewardsData: ClaimDelegateExternalData
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  sumrPriceUsd: number
 }
 
-export const PortfolioRewards: FC<PortfolioRewardsProps> = ({ rewardsData, state, dispatch }) => {
+export const PortfolioRewards: FC<PortfolioRewardsProps> = ({
+  rewardsData,
+  state,
+  dispatch,
+  sumrPriceUsd,
+}) => {
   return (
     <div className={classNames.wrapper}>
-      <PortfolioRewardsCards rewardsData={rewardsData} state={state} dispatch={dispatch} />
+      <PortfolioRewardsCards
+        rewardsData={rewardsData}
+        state={state}
+        dispatch={dispatch}
+        sumrPriceUsd={sumrPriceUsd}
+      />
       <PortfolioRewardsCountdown />
       <PortfolioRewardsFaq />
     </div>

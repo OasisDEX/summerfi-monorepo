@@ -13,7 +13,6 @@ import {
   getVaultUrl,
   isUserSmartAccount,
   networkNameIconNameMap,
-  SUMR_CAP,
   SumrStakeCard,
   Text,
   useAmount,
@@ -79,6 +78,7 @@ type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
+  sumrPriceUsd: number
 }
 
 enum VaultsSorting {
@@ -119,6 +119,7 @@ export const VaultsListView = ({
   vaultsList,
   vaultsApyByNetworkMap,
   vaultsInfo,
+  sumrPriceUsd,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
@@ -144,13 +145,11 @@ export const VaultsListView = ({
 
   const stakingV2Enabled = !!features?.StakingV2
 
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-
   const sumrAvailableToStake =
     Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
     Number(sumrStakeInfo?.sumrStakeInfo.stakedAmount ?? 0)
 
-  const sumrAvailableToStakeUSD = sumrAvailableToStake * estimatedSumrPrice
+  const sumrAvailableToStakeUSD = sumrAvailableToStake * sumrPriceUsd
 
   const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
@@ -168,7 +167,7 @@ export const VaultsListView = ({
       // Fetch all data in parallel
       const [rewardRates] = await Promise.all([
         sdk.getStakingRewardRatesV2({
-          sumrPriceUsd: estimatedSumrPrice,
+          sumrPriceUsd,
         }),
       ])
 
@@ -187,7 +186,7 @@ export const VaultsListView = ({
     } finally {
       setIsLoadingRewardRates(false)
     }
-  }, [sdk, estimatedSumrPrice])
+  }, [sdk, sumrPriceUsd])
 
   // Fetch all staking data on mount
   useEffect(() => {
@@ -287,12 +286,12 @@ export const VaultsListView = ({
 
       const aRewards = getSumrTokenBonus({
         merklRewards: aMerklRewards,
-        sumrPrice: estimatedSumrPrice,
+        sumrPrice: sumrPriceUsd,
         totalValueLockedUSD: aTvl,
       }).rawSumrTokenBonus
       const bRewards = getSumrTokenBonus({
         merklRewards: bMerklRewards,
-        sumrPrice: estimatedSumrPrice,
+        sumrPrice: sumrPriceUsd,
         totalValueLockedUSD: bTvl,
       }).rawSumrTokenBonus
 
@@ -315,7 +314,7 @@ export const VaultsListView = ({
       // default sorting method which is VaultsSorting.HIGHEST_APY
       return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
     },
-    [vaultsApyByNetworkMap, estimatedSumrPrice, sortingMethodId, vaultsInfo],
+    [vaultsApyByNetworkMap, sumrPriceUsd, sortingMethodId, vaultsInfo],
   )
 
   const filteredSafeVaultsList = useMemo(() => {
@@ -716,7 +715,7 @@ export const VaultsListView = ({
                   tokenBalances.handleSetTokenBalanceLoading(true)
                 }}
                 withTokenBonus={sumrNetApyConfig.withSumr}
-                sumrPrice={estimatedSumrPrice}
+                sumrPrice={sumrPriceUsd}
                 vaultApyData={
                   vaultsApyByNetworkMap[
                     `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
@@ -788,7 +787,7 @@ export const VaultsListView = ({
                     tokenBalances.handleSetTokenBalanceLoading(true)
                   }}
                   withTokenBonus={sumrNetApyConfig.withSumr}
-                  sumrPrice={estimatedSumrPrice}
+                  sumrPrice={sumrPriceUsd}
                   vaultApyData={
                     vaultsApyByNetworkMap[
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`

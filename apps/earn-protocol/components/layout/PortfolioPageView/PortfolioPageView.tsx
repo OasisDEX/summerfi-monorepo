@@ -61,6 +61,7 @@ interface PortfolioPageViewProps {
   beachClubData: BeachClubData
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
+  sumrPriceUsd: number
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -78,6 +79,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   beachClubData,
   blogPosts,
   portfolioSumrStakingV2Data,
+  sumrPriceUsd,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -125,6 +127,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           viewWalletAddress={viewWalletAddress}
           migrationBestVaultApy={migrationBestVaultApy}
           blogPosts={blogPosts}
+          sumrPriceUsd={sumrPriceUsd}
         />
       ),
     },
@@ -136,6 +139,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           walletData={walletData}
           vaultsList={vaultsList}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
+          sumrPriceUsd={sumrPriceUsd}
         />
       ),
     },
@@ -182,6 +186,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
                 state={state}
                 dispatch={dispatch}
                 portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
+                sumrPriceUsd={sumrPriceUsd}
               />
             ),
           },
@@ -191,7 +196,12 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
             id: PortfolioTabs.REWARDS,
             label: '$SUMR Rewards',
             content: (
-              <PortfolioRewards rewardsData={rewardsData} state={state} dispatch={dispatch} />
+              <PortfolioRewards
+                rewardsData={rewardsData}
+                state={state}
+                dispatch={dispatch}
+                sumrPriceUsd={sumrPriceUsd}
+              />
             ),
           },
         ]),

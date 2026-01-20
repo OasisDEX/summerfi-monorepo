@@ -27,24 +27,22 @@ import {
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
 } from '@/features/claim-and-delegate/types'
-import { useSumrNetApyConfig } from '@/features/nav-config/hooks/useSumrNetApyConfig'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 
 import classNames from './PortfolioRewardsCards.module.css'
 
 interface SumrAvailableToClaimProps {
   rewardsData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
-const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData }) => {
+const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
   const { openAuthModal } = useAuthModal()
-  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
-  const rawSumrUSD = rawSumr * assumedSumrPriceRaw
+  const rawSumrUSD = rawSumr * sumrPriceUsd
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
@@ -189,14 +187,13 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
 
 interface YourTotalSumrProps {
   rewardsData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
-const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
-  const [sumrNetApyConfig] = useSumrNetApyConfig()
-  const assumedMarketCap = formatCryptoBalance(sumrNetApyConfig.dilutedValuation)
+const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData, sumrPriceUsd }) => {
+  const assumedMarketCap = sumrPriceUsd * SUMR_CAP
 
-  const assumedSumrPriceRaw = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
-  const assumedSumrPrice = formatFiatBalance(assumedSumrPriceRaw)
+  const assumedSumrPrice = formatFiatBalance(sumrPriceUsd)
 
   const rawTotalSumr =
     Number(rewardsData.sumrBalances.total) +
@@ -204,7 +201,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
     Number(rewardsData.sumrStakeDelegate.stakedAmount) +
     Number(rewardsData.sumrToClaim.aggregatedRewards.total)
 
-  const rawTotalSumrUSD = rawTotalSumr * assumedSumrPriceRaw
+  const rawTotalSumrUSD = rawTotalSumr * sumrPriceUsd
 
   const totalSumr = formatCryptoBalance(rawTotalSumr)
   const totalSumrUSD = formatFiatBalance(rawTotalSumrUSD)
@@ -223,7 +220,7 @@ const YourTotalSumr: FC<YourTotalSumrProps> = ({ rewardsData }) => {
       }}
       actionable={
         <Text variant="p3semi" style={{ color: 'var(--earn-protocol-success-100)' }}>
-          Assumed Market Cap: {assumedMarketCap}
+          Market Cap: {assumedMarketCap}
           <span style={{ color: 'var(--earn-protocol-secondary-60)' }}>
             {' '}
             • 1 $SUMR = ${assumedSumrPrice}
@@ -334,16 +331,21 @@ interface PortfolioRewardsCardsProps {
   rewardsData: ClaimDelegateExternalData
   state: ClaimDelegateState
   dispatch: Dispatch<ClaimDelegateReducerAction>
+  sumrPriceUsd: number
 }
 
-export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({ rewardsData, state }) => {
+export const PortfolioRewardsCards: FC<PortfolioRewardsCardsProps> = ({
+  rewardsData,
+  state,
+  sumrPriceUsd,
+}) => {
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
       <div className={classNames.cardWrapper}>
-        <YourTotalSumr rewardsData={rewardsData} />
+        <YourTotalSumr rewardsData={rewardsData} sumrPriceUsd={sumrPriceUsd} />
       </div>
       <div className={classNames.cardWrapper}>
-        <SumrAvailableToClaim rewardsData={rewardsData} />
+        <SumrAvailableToClaim rewardsData={rewardsData} sumrPriceUsd={sumrPriceUsd} />
       </div>
       <div className={classNames.cardWrapper}>
         <StakedAndDelegatedSumr rewardsData={rewardsData} />

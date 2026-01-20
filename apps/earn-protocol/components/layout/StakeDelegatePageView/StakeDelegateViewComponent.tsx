@@ -10,15 +10,21 @@ import { StakeDelegatePageView } from './StakeDelegatePageView'
 interface StakeDelegateViewComponentProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
+  sumrPriceUsd: number
 }
 
 export const StakeDelegateViewComponent: FC<StakeDelegateViewComponentProps> = ({
   walletAddress,
   externalData,
+  sumrPriceUsd,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <StakeDelegatePageView walletAddress={walletAddress} externalData={externalData} />
+      <StakeDelegatePageView
+        walletAddress={walletAddress}
+        externalData={externalData}
+        sumrPriceUsd={sumrPriceUsd}
+      />
     </SDKContextProvider>
   )
 }

@@ -19,12 +19,14 @@ interface ClaimPageViewProps {
   walletAddress: string
   externalData: ClaimDelegateExternalData
   stakingV2Enabled?: boolean
+  sumrPriceUsd: number
 }
 
 export const ClaimPageView: FC<ClaimPageViewProps> = ({
   walletAddress,
   externalData,
   stakingV2Enabled,
+  sumrPriceUsd,
 }) => {
   const [state, dispatch] = useReducer(claimDelegateReducer, {
     ...claimDelegateState,
@@ -69,6 +71,7 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({
         dispatch={dispatch}
         externalData={externalData}
         stakingV2Enabled={stakingV2Enabled}
+        sumrPriceUsd={sumrPriceUsd}
       />
     </div>
   )

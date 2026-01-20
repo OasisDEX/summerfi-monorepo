@@ -78,7 +78,13 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
     sumrRewardAmount,
   }
 
-  return <StakeDelegateViewComponent walletAddress={walletAddress} externalData={externalData} />
+  return (
+    <StakeDelegateViewComponent
+      walletAddress={walletAddress}
+      externalData={externalData}
+      sumrPriceUsd={sumrPriceUsd}
+    />
+  )
 }
 
 export default StakeDelegatePage

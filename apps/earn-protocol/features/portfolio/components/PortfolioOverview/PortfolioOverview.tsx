@@ -7,11 +7,9 @@ import {
   getPositionValues,
   getUniqueVaultId,
   PortfolioPosition,
-  SUMR_CAP,
   Text,
   Timeframes,
   ToggleButton,
-  useLocalConfig,
   useLocalStorage,
   useMobileCheck,
   WithArrow,
@@ -64,6 +62,7 @@ type PortfolioOverviewProps = {
   viewWalletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
   blogPosts: BlogPosts
+  sumrPriceUsd: number
 }
 
 export const PortfolioOverview = ({
@@ -76,11 +75,8 @@ export const PortfolioOverview = ({
   viewWalletAddress,
   migrationBestVaultApy,
   blogPosts,
+  sumrPriceUsd,
 }: PortfolioOverviewProps) => {
-  const {
-    state: { sumrNetApyConfig },
-  } = useLocalConfig()
-
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
 
@@ -132,7 +128,6 @@ export const PortfolioOverview = ({
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
-  const estimatedSumrPrice = Number(sumrNetApyConfig.dilutedValuation) / SUMR_CAP
 
   const totalSummerPortfolioUSD = sortedPositions.reduce(
     (acc, position) => acc + getPositionValues(position).netValueUSD.toNumber(),
@@ -270,7 +265,7 @@ export const PortfolioOverview = ({
                     `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
                   ]
                 }
-                sumrPrice={estimatedSumrPrice}
+                sumrPrice={sumrPriceUsd}
               />
             ))
           ) : (
@@ -293,6 +288,7 @@ export const PortfolioOverview = ({
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
             carouselId="portfolio-overview-you-might-like-carousel"
+            sumrPriceUsd={sumrPriceUsd}
           />
         </Card>
         {migrationsEnabled && (

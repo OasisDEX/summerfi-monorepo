@@ -6,7 +6,6 @@ import {
   EffortlessAccessBlock,
   EnhancedRiskManagement,
   HighestQualityYieldsDisclaimer,
-  type LocalConfigState,
   ProtocolStats,
   SupportedNetworksList,
 } from '@summerfi/app-earn-ui'
@@ -43,7 +42,7 @@ import strategyExposureImage from '@/public/img/landing-page/enhanced-risk-manag
 import summerEarnUi from '@/public/img/landing-page/summer-earn-ui.png'
 
 export default function HomePage() {
-  const { landingPageData, userConfig } = useLandingPageData()
+  const { landingPageData } = useLandingPageData()
 
   const handleRiskManagementLearnMoreClick = () => {
     EarnProtocolEvents.buttonClicked({
@@ -70,9 +69,9 @@ export default function HomePage() {
     >
       <LandingPageHero
         vaultsInfo={landingPageData?.vaultsInfo}
-        userConfig={userConfig as unknown as LocalConfigState}
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
+        sumrPriceUsd={landingPageData?.sumrPriceUsd}
       />
       <ProtocolStats
         vaultsList={landingPageData?.vaultsWithConfig}

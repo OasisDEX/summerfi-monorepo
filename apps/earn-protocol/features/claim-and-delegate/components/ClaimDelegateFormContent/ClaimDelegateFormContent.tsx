@@ -20,6 +20,7 @@ interface ClaimDelegateFormContentProps {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   externalData: ClaimDelegateExternalData
   isJustClaim?: boolean
+  sumrPriceUsd: number
 }
 
 export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
@@ -27,6 +28,7 @@ export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
   dispatch,
   externalData,
   isJustClaim,
+  sumrPriceUsd,
 }) => {
   const searchParams = useSearchParams()
   const via = searchParams.get('via')
@@ -49,16 +51,26 @@ export const ClaimDelegateFormContent: FC<ClaimDelegateFormContentProps> = ({
           dispatch={dispatch}
           externalData={externalData}
           isJustClaim={isJustClaim}
+          sumrPriceUsd={sumrPriceUsd}
         />
       )}
       {state.step === ClaimDelegateSteps.DELEGATE && (
         <ClaimDelegateStep state={state} dispatch={dispatch} externalData={externalData} />
       )}
       {state.step === ClaimDelegateSteps.STAKE && (
-        <ClaimDelegateStakeStep state={state} dispatch={dispatch} externalData={externalData} />
+        <ClaimDelegateStakeStep
+          state={state}
+          dispatch={dispatch}
+          externalData={externalData}
+          sumrPriceUsd={sumrPriceUsd}
+        />
       )}
       {state.step === ClaimDelegateSteps.COMPLETED && (
-        <ClaimDelegateCompletedStep state={state} externalData={externalData} />
+        <ClaimDelegateCompletedStep
+          state={state}
+          externalData={externalData}
+          sumrPriceUsd={sumrPriceUsd}
+        />
       )}
     </div>
   )

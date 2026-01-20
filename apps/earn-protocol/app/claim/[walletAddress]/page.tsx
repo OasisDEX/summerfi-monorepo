@@ -99,6 +99,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
       walletAddress={walletAddress}
       externalData={externalData}
       stakingV2Enabled={stakingV2Enabled}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }

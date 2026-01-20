@@ -1,4 +1,9 @@
-import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
+import {
+  getDisplayToken,
+  isVaultAtLeastDaysOld,
+  sumrNetApyConfigCookieName,
+  Text,
+} from '@summerfi/app-earn-ui'
 import {
   getArksInterestRates,
   getVaultInfo,
@@ -11,6 +16,7 @@ import {
   getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
+  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   ten,
@@ -29,12 +35,14 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -71,31 +79,39 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
-  const [vault, { vaults }, medianDefiYield, topDepositors, latestActivity, rebalanceActivity] =
-    await Promise.all([
-      getVaultDetails({
-        vaultAddress: parsedVaultId,
-        network: parsedNetwork,
-      }),
-      getCachedVaultsList(),
-      getCachedMedianDefiYield(),
-      getPaginatedTopDepositors({
-        page: 1,
-        limit: 4,
-        strategies: [strategy],
-      }),
-      getPaginatedLatestActivity({
-        page: 1,
-        limit: 4,
-        strategies: [strategy],
-      }),
-      getPaginatedRebalanceActivity({
-        page: 1,
-        limit: 4,
-        strategies: [strategy],
-        startTimestamp: dayjs().subtract(30, 'days').unix(),
-      }),
-    ])
+  const [
+    vault,
+    { vaults },
+    medianDefiYield,
+    topDepositors,
+    latestActivity,
+    rebalanceActivity,
+    sumrPrice,
+  ] = await Promise.all([
+    getVaultDetails({
+      vaultAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
+    getCachedVaultsList(),
+    getCachedMedianDefiYield(),
+    getPaginatedTopDepositors({
+      page: 1,
+      limit: 4,
+      strategies: [strategy],
+    }),
+    getPaginatedLatestActivity({
+      page: 1,
+      limit: 4,
+      strategies: [strategy],
+    }),
+    getPaginatedRebalanceActivity({
+      page: 1,
+      limit: 4,
+      strategies: [strategy],
+      startTimestamp: dayjs().subtract(30, 'days').unix(),
+    }),
+    getCachedSumrPrice(),
+  ])
 
   const [vaultWithConfig] = vault
     ? decorateVaultsWithConfig({
@@ -174,7 +190,13 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   const vaultApyData =
     vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
 
+  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config: systemConfig,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   return (
     <VaultOpenView
@@ -190,6 +212,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaultsApyRaw={vaultsApyRaw}
       referralCode={referralCode}
       vaultInfo={vaultInfoParsed}
+      sumrPriceUsd={sumrPriceUsd}
     />
   )
 }
