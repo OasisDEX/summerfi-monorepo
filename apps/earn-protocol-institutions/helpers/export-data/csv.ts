@@ -7,9 +7,11 @@ import { type ActivityLogData } from '@/features/panels/vaults/components/PanelA
 
 export const exportActivityAsCSV = ({
   activityLogBaseDataRaw,
+  activeFilter,
   vault,
 }: {
   activityLogBaseDataRaw: ActivityLogData
+  activeFilter: string | null
   vault: SDKVaultishType
 }) => {
   const header = [
@@ -27,7 +29,7 @@ export const exportActivityAsCSV = ({
   ]
   const fileName = `vault-activity-${vault.id}-${subgraphNetworkToId(
     supportedSDKNetwork(vault.protocol.network),
-  )}-export-${dayjs().format('YYYYMMDDHHmmss')}`
+  )}-export-${activeFilter ? activeFilter : 'all'}-${dayjs().format('YYYYMMDDHHmmss')}`
 
   const { curationEvents, roleEvents, vault: vaultEvents } = activityLogBaseDataRaw
 

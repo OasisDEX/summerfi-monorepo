@@ -271,6 +271,7 @@ export const PanelActivity = ({
           onClick={() =>
             exportActivityAsCSV({
               activityLogBaseDataRaw: dataToExport,
+              activeFilter,
               vault,
             })
           }
