@@ -12,6 +12,7 @@ import {
   useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
+import { AuthorizedStakingRewardsCallerBaseStatus } from '@summerfi/app-types/types/src/earn-protocol'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,
@@ -24,7 +25,10 @@ import { delayPerNetwork } from '@/constants/delay-per-network'
 import { TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
-import { useClaimSumrTransaction } from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
+import {
+  useApproveStakingRewardsCallerTransaction,
+  useClaimSumrTransaction,
+} from '@/features/claim-and-delegate/hooks/use-claim-sumr-transaction'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import {
   type ClaimDelegateExternalData,
@@ -108,6 +112,14 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     toast.error('Failed to claim $SUMR tokens', ERROR_TOAST_CONFIG)
   }, [dispatch])
 
+  const handleStakingRewardsCallerTransactionError = useCallback(() => {
+    dispatch({
+      type: 'update-staking-rewards-caller-status',
+      payload: AuthorizedStakingRewardsCallerBaseStatus.NOAUTH,
+    })
+    toast.error('Failed to approve staking rewards caller for $SUMR tokens', ERROR_TOAST_CONFIG)
+  }, [dispatch])
+
   const { merklOptInTransaction } = useMerklOptInTransaction({
     onSuccess: () => {
       setTimeout(() => {
@@ -170,6 +182,37 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     onError: () => {
       revalidateUser(resolvedWalletAddress)
       handleClaimError()
+    },
+    network: chainIdToSDKNetwork(clientChainId),
+    publicClient,
+  })
+
+  const {
+    approveStakingRewardsCallerTransaction,
+    isLoading: approveStakingRewardsCallerTransactionLoading,
+  } = useApproveStakingRewardsCallerTransaction({
+    onSuccess: () => {
+      setTimeout(() => {
+        // Get the network name for the current chain
+        const humanNetwork = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId))
+
+        if (!isSupportedHumanNetwork(humanNetwork)) {
+          throw new Error(`Unsupported network: ${humanNetwork}`)
+        }
+
+        // Update staking rewards caller status
+        dispatch({
+          type: 'update-staking-rewards-caller-status',
+          payload: AuthorizedStakingRewardsCallerBaseStatus.AUTHORIZED,
+        })
+
+        toast.success('Successfully approved staking rewards', SUCCESS_TOAST_CONFIG)
+        revalidateUser(resolvedWalletAddress)
+      }, delayPerNetwork[clientChainId])
+    },
+    onError: () => {
+      revalidateUser(resolvedWalletAddress)
+      handleStakingRewardsCallerTransactionError()
     },
     network: chainIdToSDKNetwork(clientChainId),
     publicClient,
@@ -359,12 +402,22 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
             return
           }
 
+          if (
+            state.authorizedStakingRewardsCallerBase ===
+            AuthorizedStakingRewardsCallerBaseStatus.NOAUTH
+          ) {
+            approveStakingRewardsCallerTransaction()
+
+            return
+          }
+
           handleClaimClick(SupportedNetworkIds.Base)
         }}
         isLoading={
-          state.claimStatus === UiTransactionStatuses.PENDING &&
-          (state.pendingClaimChainId === SupportedNetworkIds.Base ||
-            clientChainId === SupportedNetworkIds.Base)
+          (state.claimStatus === UiTransactionStatuses.PENDING &&
+            (state.pendingClaimChainId === SupportedNetworkIds.Base ||
+              clientChainId === SupportedNetworkIds.Base)) ||
+          approveStakingRewardsCallerTransactionLoading
         }
         isChangingNetwork={isSettingChain && state.pendingClaimChainId === SupportedNetworkIds.Base}
         isChangingNetworkTo={state.pendingClaimChainId}

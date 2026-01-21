@@ -2,6 +2,7 @@ import { Address, ChainIds, User } from '@summerfi/sdk-common'
 import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { AQ_BASE_ADDRESS } from '@/constants/addresses'
 
 export interface SumrStakingRewardsData {
   sumrRewardApy: number
@@ -25,7 +26,7 @@ export const getSumrStakingRewards = async ({
   sumrPriceUsd: number
 }): Promise<SumrStakingRewardsData> => {
   try {
-    const user = User.createFromEthereum(ChainIds.Base, walletAddress as Address)
+    const user = User.createFromEthereum(ChainIds.Base, walletAddress as `0x${string}`)
 
     // Fetch reward rates and user stakes in parallel
     const [rewardRates, userStakes] = await Promise.all([
@@ -72,7 +73,7 @@ export const getIsAuthorizedStakingRewardsCallerBase = async ({
       value: ownerAddress,
     })
     const authorizedCaller = Address.createFromEthereum({
-      value: '0x4e92071F9BC94011419Dc03fEaCA32D11241313a',
+      value: AQ_BASE_ADDRESS,
     })
 
     const [authorized] = await Promise.all([
