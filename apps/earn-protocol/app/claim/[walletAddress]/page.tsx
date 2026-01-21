@@ -15,7 +15,10 @@ import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
-import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
+import {
+  getIsAuthorizedStakingRewardsCallerBase,
+  getSumrStakingRewards,
+} from '@/app/server-handlers/sumr-staking-rewards'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
 import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -51,6 +54,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
   })
 
   const [
+    authorizedStakingRewardsCallerBase,
     { sumrStakeDelegate, tallyDelegates },
     sumrBalances,
     sumrStakingInfo,
@@ -58,6 +62,9 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     systemConfigRaw,
     { sumrRewardApy, sumrRewardAmount },
   ] = await Promise.all([
+    getIsAuthorizedStakingRewardsCallerBase({
+      ownerAddress: walletAddress,
+    }),
     getSumrDelegateStake({
       walletAddress,
     }).then(async (res) => {
@@ -92,6 +99,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
     tallyDelegates,
     sumrRewardApy,
     sumrRewardAmount,
+    authorizedStakingRewardsCallerBase,
   }
 
   return (

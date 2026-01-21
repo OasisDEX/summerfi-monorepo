@@ -1,4 +1,4 @@
-import { ChainIds, User } from '@summerfi/sdk-common'
+import { Address, ChainIds, User } from '@summerfi/sdk-common'
 import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
@@ -59,5 +59,34 @@ export const getSumrStakingRewards = async ({
     console.error('Error in getSumrStakingRewards:', error)
 
     return { sumrRewardApy: 0, sumrRewardAmount: 0 }
+  }
+}
+
+export const getIsAuthorizedStakingRewardsCallerBase = async ({
+  ownerAddress,
+}: {
+  ownerAddress: string
+}) => {
+  try {
+    const owner = Address.createFromEthereum({
+      value: ownerAddress,
+    })
+    const authorizedCaller = Address.createFromEthereum({
+      value: '0x4e92071F9BC94011419Dc03fEaCA32D11241313a',
+    })
+
+    const [authorized] = await Promise.all([
+      backendSDK.armada.users.isAuthorizedStakingRewardsCallerV2({
+        owner,
+        authorizedCaller,
+      }),
+    ])
+
+    return authorized
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error in getIsAuthorizedStakingRewardsCaller:', error)
+
+    return false
   }
 }

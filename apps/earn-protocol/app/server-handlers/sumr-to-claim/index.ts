@@ -9,6 +9,7 @@ export interface SumrToClaimData {
   aggregatedRewards: {
     total: number
     perChain: { [key: number]: number }
+    stakingV2: number
   }
   merklRewards: number
   voteRewards: number
@@ -55,6 +56,7 @@ export const getSumrToClaim = async ({
           Number(amount) / 10 ** 18,
         ]),
       ),
+      stakingV2: Number(aggregatedRewards.stakingV2) / 10 ** 18,
     },
     merklRewards: Number(aggregatedRewards.distribution) / 10 ** 18,
     voteRewards: Number(aggregatedRewards.voteDelegation) / 10 ** 18,

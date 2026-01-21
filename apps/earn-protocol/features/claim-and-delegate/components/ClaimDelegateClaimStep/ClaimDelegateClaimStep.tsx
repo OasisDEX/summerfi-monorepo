@@ -325,6 +325,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     handleOptInOpenClose()
   }
 
+  const stakingV2Earned = initialExternalData.sumrToClaim.aggregatedRewards.stakingV2
+  const baseEarnedOnPositions = state.claimableBalances[SupportedNetworkIds.Base] - stakingV2Earned
+
   return (
     <div className={classNames.claimDelegateClaimStepWrapper}>
       {/* Base network card */}
@@ -333,6 +336,21 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         claimableAmount={state.claimableBalances[SupportedNetworkIds.Base] || 0}
         balance={state.walletBalances.base || 0}
         sumrPriceUsd={sumrPriceUsd}
+        earnedAdditionalInfo={
+          stakingV2Earned > 0 ? (
+            <>
+              {baseEarnedOnPositions > 0 ? (
+                <>
+                  {baseEarnedOnPositions.toFixed(2)} SUMR earned on positions
+                  <br />
+                </>
+              ) : null}
+              {stakingV2Earned > 0 ? (
+                <>{stakingV2Earned.toFixed(2)} SUMR earned on staking</>
+              ) : null}
+            </>
+          ) : null
+        }
         walletAddress={resolvedWalletAddress}
         onClaim={() => {
           if (!isOptInOpen && !merklIsAuthorizedOnBase) {
@@ -350,6 +368,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
         }
         isChangingNetwork={isSettingChain && state.pendingClaimChainId === SupportedNetworkIds.Base}
         isChangingNetworkTo={state.pendingClaimChainId}
+        authorizedStakingRewardsCallerBase={state.authorizedStakingRewardsCallerBase}
         isOnlyStep
         isOwner={isOwner}
       />

@@ -1,4 +1,5 @@
 import { type SupportedNetworkIds, type UiTransactionStatuses } from '@summerfi/app-types'
+import { type AuthorizedStakingRewardsCallerBaseStatus } from '@summerfi/app-types/types/src/earn-protocol'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'
@@ -48,6 +49,7 @@ export type ClaimDelegateState = {
   claimableBalances: ClaimableBalances
   walletBalances: WalletBalances
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
+  authorizedStakingRewardsCallerBase: AuthorizedStakingRewardsCallerBaseStatus | undefined
 }
 
 export type ClaimDelegateReducerAction =
@@ -103,6 +105,10 @@ export type ClaimDelegateReducerAction =
       type: 'update-merkl-is-authorized-per-chain'
       payload: MerklIsAuthorizedPerChain
     }
+  | {
+      type: 'update-staking-rewards-caller-status'
+      payload: AuthorizedStakingRewardsCallerBaseStatus | undefined
+    }
 
 export type ClaimDelegateExternalData = {
   sumrToClaim: SumrToClaimData
@@ -112,6 +118,7 @@ export type ClaimDelegateExternalData = {
   tallyDelegates: TallyDelegate[]
   sumrRewardApy: number
   sumrRewardAmount: number
+  authorizedStakingRewardsCallerBase: boolean
 }
 
 export interface SumrUserStakeInfoData {

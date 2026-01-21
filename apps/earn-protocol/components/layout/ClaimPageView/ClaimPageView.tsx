@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/prefer-reduce-type-parameter */
 'use client'
 import { type FC, useReducer } from 'react'
-import { SupportedNetworkIds } from '@summerfi/app-types'
+import { AuthorizedStakingRewardsCallerBaseStatus, SupportedNetworkIds } from '@summerfi/app-types'
 import { type HumanReadableNetwork, isSupportedHumanNetwork } from '@summerfi/app-utils'
 
 import { ClaimDelegateForm } from '@/features/claim-and-delegate/components/ClaimDelegateForm/ClaimDelegateForm'
@@ -61,6 +61,9 @@ export const ClaimPageView: FC<ClaimPageViewProps> = ({
       {} as Record<HumanReadableNetwork, number>,
     ),
     merklIsAuthorizedPerChain: externalData.sumrToClaim.merklIsAuthorizedPerChain,
+    authorizedStakingRewardsCallerBase: externalData.authorizedStakingRewardsCallerBase
+      ? AuthorizedStakingRewardsCallerBaseStatus.AUTHORIZED
+      : AuthorizedStakingRewardsCallerBaseStatus.NOAUTH,
   })
 
   return (
