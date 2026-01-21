@@ -25,6 +25,7 @@ type GlobalProviderProps = {
   analyticsCookie: SavedAnalyticsCookiesSettings | null
   largeUsersCookie: SavedLargeUserBannerSettings | null
   largeUsersData?: string[]
+  sumrPriceUsd?: number
 }
 
 const AlchemyAccountsProvider = dynamic(
@@ -47,6 +48,7 @@ export const GlobalProvider = ({
   analyticsCookie,
   largeUsersData,
   largeUsersCookie,
+  sumrPriceUsd,
 }: GlobalProviderProps) => {
   return (
     <Suspense>
@@ -59,6 +61,7 @@ export const GlobalProvider = ({
                 analyticsCookie={analyticsCookie}
                 largeUsersData={largeUsersData}
                 largeUsersCookie={largeUsersCookie}
+                sumrPriceUsd={sumrPriceUsd}
               >
                 {children}
               </MasterPage>

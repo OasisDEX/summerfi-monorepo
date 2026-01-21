@@ -30,7 +30,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
   ),
 })
 
-export const NavigationWrapper: FC = () => {
+export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd }) => {
   const currentPath = usePathname()
   const path = useCurrentUrl()
   const { userWalletAddress } = useUserWallet()
@@ -98,7 +98,9 @@ export const NavigationWrapper: FC = () => {
       }}
       configComponent={
         <NavigationConfig isMobileOrTablet={isMobileOrTablet}>
-          {(handleOpenClose) => <NavConfigContent handleOpenClose={handleOpenClose} />}
+          {(handleOpenClose) => (
+            <NavConfigContent handleOpenClose={handleOpenClose} sumrPriceUsd={sumrPriceUsd} />
+          )}
         </NavigationConfig>
       }
       onLogoClick={() => {

@@ -28,11 +28,12 @@ import classNames from './NavConfigContent.module.css'
 
 interface NavConfigContentProps {
   handleOpenClose?: () => void
+  sumrPriceUsd?: number
 }
 
 const slippageOptions = ['0.05', '0.10', '0.20', '0.50']
 
-export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose }) => {
+export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, sumrPriceUsd }) => {
   const [isSmartAccountDeployed, setIsSmartAccountDeployed] = useState<boolean | null>(null)
   const [sumrNetApyConfig, setSumrNetApyConfig] = useSumrNetApyConfig()
   const [slippageConfig, setSlippageConfig] = useSlippageConfig()
@@ -198,6 +199,30 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose })
                 value={inputValue}
                 onChange={handleInputChange}
               />
+            </>
+          )}
+          {sumrPriceUsd && (
+            <>
+              <Text
+                as="p"
+                variant="p2semi"
+                style={{
+                  marginBottom: 'var(--general-space-8)',
+                }}
+              >
+                Current $SUMR price
+              </Text>
+              <Text
+                as="p"
+                variant="p3"
+                style={{
+                  marginTop: 'var(--general-space-8)',
+                  marginBottom: 'var(--general-space-24)',
+                  color: 'var(--earn-protocol-secondary-60)',
+                }}
+              >
+                <strong>${sumrPriceUsd.toFixed(4)} SUMR/USD</strong>
+              </Text>
             </>
           )}
           <div className={classNames.slippageOptionsWrapper}>

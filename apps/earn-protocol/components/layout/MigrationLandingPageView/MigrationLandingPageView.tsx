@@ -309,11 +309,17 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
             </Button>
             {isMobile ? (
               <MobileDrawer isOpen={isConfigOpen} onClose={handleConfigOpenClose} height="auto">
-                <NavConfigContent handleOpenClose={handleConfigOpenClose} />
+                <NavConfigContent
+                  handleOpenClose={handleConfigOpenClose}
+                  sumrPriceUsd={sumrPriceUsd}
+                />
               </MobileDrawer>
             ) : (
               <Modal openModal={isConfigOpen} closeModal={handleConfigOpenClose}>
-                <NavConfigContent handleOpenClose={handleConfigOpenClose} />
+                <NavConfigContent
+                  handleOpenClose={handleConfigOpenClose}
+                  sumrPriceUsd={sumrPriceUsd}
+                />
               </Modal>
             )}
           </div>

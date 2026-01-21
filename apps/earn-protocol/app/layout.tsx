@@ -20,10 +20,12 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { largeUsersCookieName } from '@/components/molecules/LargeUserFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
 import { fontInter } from '@/helpers/fonts'
+import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import logoMaintenance from '@/public/img/branding/logo-dark.svg'
 
@@ -39,10 +41,11 @@ export const metadata: Metadata = {
 const reactScanDebug = false
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [config, cookieRaw, headersList] = await Promise.all([
+  const [config, cookieRaw, headersList, sumrPrice] = await Promise.all([
     getCachedConfig(),
     cookies(),
     headers(),
+    getCachedSumrPrice(),
   ])
 
   const cookie = cookieRaw.toString()
@@ -101,6 +104,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
+  const sumrPriceUsd = getEstimatedSumrPrice({
+    config,
+    sumrPrice,
+    sumrNetApyConfig: sumrNetApyConfig ?? {},
+  })
 
   const chainId: number | undefined = accountKitState.state?.chainId
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
@@ -129,6 +137,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalProvider
           accountKitInitializedState={accountKitInitializedState}
           config={config}
+          sumrPriceUsd={sumrPriceUsd}
           analyticsCookie={analyticsCookie}
           deviceType={resolvedDeviceType}
           localConfigContextState={{

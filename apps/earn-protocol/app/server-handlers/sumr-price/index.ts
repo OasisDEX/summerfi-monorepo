@@ -1,5 +1,6 @@
 import { unstable_cache as unstableCache } from 'next/cache'
 
+import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
 
 const fallbackData: SumrPriceData = {
@@ -10,7 +11,8 @@ const fallbackData: SumrPriceData = {
 }
 
 const getSumrPrice = async () => {
-  const coingeckoSumrTokenId = 'summer-2'
+  const config = await getCachedConfig()
+  const coingeckoSumrTokenId = config.features?.SumrCoingeckoTokenID ?? 'summer-2'
   // check envs
   const { COINGECKO_API_URL, COINGECKO_API_VERSION, COINGECKO_API_KEY, COINGECKO_API_AUTH_HEADER } =
     process.env

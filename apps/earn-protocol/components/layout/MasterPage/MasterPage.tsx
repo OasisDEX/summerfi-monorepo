@@ -28,6 +28,7 @@ interface MasterPageProps {
   analyticsCookie: SavedAnalyticsCookiesSettings | null
   largeUsersCookie: SavedLargeUserBannerSettings | null
   largeUsersData?: string[]
+  sumrPriceUsd?: number
 }
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
@@ -36,6 +37,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
   analyticsCookie,
   largeUsersCookie,
   largeUsersData,
+  sumrPriceUsd,
 }) => {
   const [cookieSettings, setCookieSettings] = useAnalyticsCookies(analyticsCookie)
   const pathname = usePathname()
@@ -66,7 +68,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
 
   return (
     <div className={masterPageStyles.mainContainer}>
-      {!skipNavigation && <NavigationWrapper />}
+      {!skipNavigation && <NavigationWrapper sumrPriceUsd={sumrPriceUsd} />}
       <div className={masterPageStyles.appContainer}>{children}</div>
       <div
         style={{
