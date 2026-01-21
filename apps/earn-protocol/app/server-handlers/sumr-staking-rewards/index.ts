@@ -1,5 +1,4 @@
 import { Address, ChainIds, User } from '@summerfi/sdk-common'
-import { type Address } from 'viem'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 import { AQ_BASE_ADDRESS } from '@/constants/addresses'

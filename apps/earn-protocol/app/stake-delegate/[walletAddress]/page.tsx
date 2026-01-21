@@ -76,6 +76,7 @@ const StakeDelegatePage = async ({ params }: StakeDelegatePageProps) => {
     tallyDelegates,
     sumrRewardApy,
     sumrRewardAmount,
+    authorizedStakingRewardsCallerBase: false, // not used on this screen (delegate and stake is separated now), needed for type safety
   }
 
   return (
