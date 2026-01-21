@@ -52,6 +52,10 @@ jobs:
       BLOG_POSTS_API_KEY: ${{ secrets.BLOG_POSTS_API_KEY }}
       MERCHANDISE_FORM_KEY: ${{ secrets.MERCHANDISE_FORM_KEY }}
       DUNE_LAZYSUMMER_ACCOUNT_API_KEY: ${{ secrets.DUNE_LAZYSUMMER_ACCOUNT_API_KEY }}
+      COINGECKO_API_URL: ${{ secrets.COINGECKO_API_URL }}
+      COINGECKO_API_VERSION: ${{ secrets.COINGECKO_API_VERSION }}
+      COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+      COINGECKO_API_AUTH_HEADER: ${{ secrets.COINGECKO_API_AUTH_HEADER }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
