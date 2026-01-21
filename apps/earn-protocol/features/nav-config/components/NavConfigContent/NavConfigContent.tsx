@@ -15,7 +15,7 @@ import {
   ToggleButton,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
-import { formatAddress, mapNumericInput } from '@summerfi/app-utils'
+import { formatAddress, formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -201,7 +201,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
               />
             </>
           )}
-          {sumrPriceUsd && (
+          {sumrPriceUsd && Number(sumrPriceUsd) ? (
             <>
               <Text
                 as="p"
@@ -221,10 +221,10 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
                   color: 'var(--earn-protocol-secondary-60)',
                 }}
               >
-                <strong>${sumrPriceUsd.toFixed(4)} SUMR/USD</strong>
+                <strong>${formatCryptoBalance(sumrPriceUsd)} SUMR/USD</strong>
               </Text>
             </>
-          )}
+          ) : null}
           <div className={classNames.slippageOptionsWrapper}>
             {sumrMarketCapOptions.map((item, idx) => (
               <Badge
