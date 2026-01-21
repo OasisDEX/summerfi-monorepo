@@ -262,7 +262,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
             ))}
           </div>
           <div className={classNames.spacerContent} />
-          {sumrPriceUsd && Number(sumrPriceUsd) ? (
+          {sumrPriceUsd && Number(sumrPriceUsd) && features?.UseSumrCoingeckoPrice ? (
             <>
               <Text
                 as="p"
