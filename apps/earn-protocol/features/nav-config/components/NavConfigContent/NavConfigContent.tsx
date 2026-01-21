@@ -11,11 +11,13 @@ import {
   Input,
   isUserSmartAccount,
   SUCCESS_TOAST_CONFIG,
+  SUMR_CAP,
   Text,
   ToggleButton,
   useMobileCheck,
 } from '@summerfi/app-earn-ui'
 import { formatAddress, formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
@@ -215,31 +217,6 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
               <div className={classNames.spacerContent} />
             </>
           )}
-          {sumrPriceUsd && Number(sumrPriceUsd) ? (
-            <>
-              <Text
-                as="p"
-                variant="p2semi"
-                style={{
-                  marginBottom: 'var(--general-space-8)',
-                }}
-              >
-                Current $SUMR price
-              </Text>
-              <Text
-                as="p"
-                variant="p3"
-                style={{
-                  marginTop: 'var(--general-space-8)',
-                  marginBottom: 'var(--general-space-24)',
-                  color: 'var(--earn-protocol-secondary-60)',
-                }}
-              >
-                <strong>${formatCryptoBalance(sumrPriceUsd)} SUMR/USD</strong>
-              </Text>
-              <div className={classNames.spacerContent} />
-            </>
-          ) : null}
           <Text
             as="p"
             variant="p2semi"
@@ -284,6 +261,37 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
               />
             ))}
           </div>
+          <div className={classNames.spacerContent} />
+          {sumrPriceUsd && Number(sumrPriceUsd) ? (
+            <>
+              <Text
+                as="p"
+                variant="p2semi"
+                style={{
+                  marginBottom: 'var(--general-space-8)',
+                }}
+              >
+                SUMR Token
+              </Text>
+              <div className={classNames.sumrTokenGrid}>
+                <div className={classNames.sumrStat}>
+                  <Text variant="p4" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                    SUMR Price
+                  </Text>
+                  <Text variant="p1semi">${formatCryptoBalance(sumrPriceUsd)} SUMR/USD</Text>
+                </div>
+                <div className={classNames.sumrStat}>
+                  <Text variant="p4" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                    Fully Diluted Valuation
+                  </Text>
+                  <Text variant="p1semi">
+                    ${formatCryptoBalance(new BigNumber(sumrPriceUsd).multipliedBy(SUMR_CAP))}
+                  </Text>
+                </div>
+              </div>
+              <div className={classNames.spacerContent} />
+            </>
+          ) : null}
           {userIsSmartAccount && (
             <>
               <div className={classNames.spacerContent} />

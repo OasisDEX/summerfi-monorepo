@@ -51,3 +51,16 @@
   flex-wrap: wrap;
   gap: var(--general-space-8);
 }
+
+.sumrTokenGrid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: var(--general-space-12);
+}
+
+.sumrStat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--general-space-4);
+}

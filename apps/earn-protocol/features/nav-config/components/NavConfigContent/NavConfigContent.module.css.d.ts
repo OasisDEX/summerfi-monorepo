@@ -4,6 +4,8 @@ declare const styles: {
   readonly "slippageOptionsWrapper": string;
   readonly "spacerContent": string;
   readonly "spacerHeader": string;
+  readonly "sumrStat": string;
+  readonly "sumrTokenGrid": string;
   readonly "toggleWrapper": string;
 };
 export = styles;

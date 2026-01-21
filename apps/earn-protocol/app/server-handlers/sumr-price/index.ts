@@ -36,7 +36,7 @@ const getSumrPrice = async () => {
   }
 
   // request
-  const url = new URL(`${COINGECKO_API_URL}/api/${COINGECKO_API_VERSION}/simple/price`)
+  const url = new URL(`${COINGECKO_API_URL}/${COINGECKO_API_VERSION}/simple/price`)
 
   url.searchParams.append('vs_currencies', 'usd')
   url.searchParams.append('ids', coingeckoSumrTokenId)
@@ -45,7 +45,9 @@ const getSumrPrice = async () => {
   url.searchParams.append('include_24hr_change', 'true')
   url.searchParams.append('precision', 'full')
 
-  const response = await fetch(url.toString(), {
+  const reqUrl = url.toString()
+
+  const response = await fetch(reqUrl, {
     method: 'GET',
     headers: {
       [COINGECKO_API_AUTH_HEADER]: COINGECKO_API_KEY,
@@ -56,7 +58,7 @@ const getSumrPrice = async () => {
     const errorBody = await response.text()
 
     throw new Error(
-      `CoinGecko API request failed with status ${response.status}: ${response.statusText} - ${errorBody}`,
+      `CoinGecko API request (${reqUrl}) failed with status ${response.status}: ${response.statusText} - ${errorBody}`,
     )
   }
 
