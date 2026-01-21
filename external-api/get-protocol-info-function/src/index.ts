@@ -18,11 +18,14 @@ import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults as getInstitutionalVaults } from '@summerfi/summer-earn-institutions-subgraph'
 
 import { createPublicClient, http } from 'viem'
-import { mainnet, optimism, arbitrum, base, sonic } from 'viem/chains'
+import { mainnet, optimism, arbitrum, base, sonic, hyperliquid } from 'viem/chains'
 import { supportedChains } from '@summerfi/summer-earn-protocol-subgraph'
 import { fleetRewardsManagerAbi } from './abis/fleetRewardsManager'
+import { handleCirculatingSupplyRoute } from './handlers/circulating-supply'
+import { getRpcUrl } from './utils/rpc'
 
-const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
+// Token addresses per chain (same as rewardTokenPerChain in index.ts)
+export const SUMMER_TOKEN_ADDRESSES: Partial<Record<ChainId, Address>> = {
   [ChainId.MAINNET]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.ARBITRUM]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
   [ChainId.BASE]: '0x194f360D130F2393a5E9F3117A6a1B78aBEa1624',
@@ -30,7 +33,7 @@ const rewardTokenPerChain: Partial<Record<ChainId, Address>> = {
   [ChainId.HYPERLIQUID]: '0x72c527d3efDe2169AA950EFc9573C838cf125D21',
 }
 
-const logger = new Logger({ serviceName: 'get-protocol-info-function' })
+export const logger = new Logger({ serviceName: 'get-protocol-info-function' })
 
 const addressesSchema = z
   .string()
@@ -122,7 +125,7 @@ interface AllUsersResponseBody {
   addresses: Address[]
 }
 
-const getChainConfig = (chainId: ChainId) => {
+export const getChainConfig = (chainId: ChainId) => {
   logger.info(`Getting chain configuration for chain ID: ${chainId}`)
   switch (chainId) {
     case ChainId.MAINNET:
@@ -135,34 +138,12 @@ const getChainConfig = (chainId: ChainId) => {
       return base
     case ChainId.SONIC:
       return sonic
+    case ChainId.HYPERLIQUID:
+      return hyperliquid
     default:
       logger.error(`Unsupported chain ID: ${chainId}`)
       throw new Error(`Unsupported chain ID: ${chainId}`)
   }
-}
-
-function getRpcUrl(chainId: ChainId): string {
-  const baseUrl = process.env.RPC_GATEWAY
-  if (!baseUrl) {
-    logger.error('RPC_GATEWAY is not set')
-    throw new Error('RPC_GATEWAY is not set')
-  }
-
-  const networkName = {
-    [ChainId.MAINNET]: 'mainnet',
-    [ChainId.OPTIMISM]: 'optimism',
-    [ChainId.ARBITRUM]: 'arbitrum',
-    [ChainId.BASE]: 'base',
-    [ChainId.SEPOLIA]: 'sepolia',
-    [ChainId.SONIC]: 'sonic',
-    [ChainId.HYPERLIQUID]: 'hyperliquid',
-  }[chainId]
-
-  if (!networkName) {
-    throw new Error(`Unsupported chain ID: ${chainId}`)
-  }
-
-  return `${baseUrl}?network=${networkName}`
 }
 
 async function fetchRewards(
@@ -194,7 +175,7 @@ async function fetchRewards(
             abi: fleetRewardsManagerAbi,
             address: managerAddress,
             functionName: 'earned',
-            args: [address, rewardTokenPerChain[chainId]],
+            args: [address, SUMMER_TOKEN_ADDRESSES[chainId]],
           })),
         })
         const currentRewards = rewardsResult
@@ -508,9 +489,14 @@ export const handler = async (
 
   const isUsersRoute = event.rawPath.endsWith('/users')
   const isAllUsersRoute = event.rawPath.endsWith('/all-users')
+  const isCirculatingSupplyRoute = event.rawPath.endsWith('/circulating-supply')
 
   try {
     switch (true) {
+      case isCirculatingSupplyRoute: {
+        const response = await handleCirculatingSupplyRoute()
+        return ResponseOk({ body: response })
+      }
       case isAllUsersRoute: {
         const response = await handleAllUsersRoute(SUBGRAPH_BASE)
         return ResponseOk({ body: response })
@@ -558,7 +544,9 @@ export const handler = async (
     }
   } catch (error) {
     logger.error('Error processing request:', error instanceof Error ? error : String(error))
-    return ResponseInternalServerError('Failed to process request - please contact support')
+    return ResponseInternalServerError(
+      `Failed to process request - please contact support: ${error}`,
+    )
   }
 }
 
