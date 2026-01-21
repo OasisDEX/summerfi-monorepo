@@ -469,6 +469,27 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUnstakeFleetTokensTx.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getClaimStakingV2UserRewardsTx */
+  async getClaimStakingV2UserRewardsTx(
+    params: Parameters<IArmadaManagerUsersClient['getClaimStakingV2UserRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['getClaimStakingV2UserRewardsTx']> {
+    return this.rpcClient.armada.users.getClaimStakingV2UserRewardsTx.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.authorizeStakingRewardsCallerV2 */
+  async authorizeStakingRewardsCallerV2(
+    params: Parameters<IArmadaManagerUsersClient['authorizeStakingRewardsCallerV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['authorizeStakingRewardsCallerV2']> {
+    return this.rpcClient.armada.users.authorizeStakingRewardsCallerV2.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.isAuthorizedStakingRewardsCallerV2 */
+  async isAuthorizedStakingRewardsCallerV2(
+    params: Parameters<IArmadaManagerUsersClient['isAuthorizedStakingRewardsCallerV2']>[0],
+  ): ReturnType<IArmadaManagerUsersClient['isAuthorizedStakingRewardsCallerV2']> {
+    return this.rpcClient.armada.users.isAuthorizedStakingRewardsCallerV2.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getVaultsHistoricalRates */
   async getVaultsHistoricalRates(
     params: Parameters<IArmadaManagerUsersClient['getVaultsHistoricalRates']>[0],

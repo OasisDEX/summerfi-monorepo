@@ -1922,10 +1922,13 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     // override SUMR price in prices as it's not available from 1inch
     const sumrToken = rewardTokens.find((token) => token.symbol === 'SUMR')
     if (sumrToken) {
+      // TODO: REMOVE THIS and use oracle in the future
+      const sumrPriceUsd = await this._utils.getSummerPrice()
+
       prices.priceByAddress[sumrToken.address.value.toLowerCase()] = Price.createFrom({
         base: sumrToken,
         quote: FiatCurrency.USD,
-        value: '0.25', // price is hardcoded for now until we have trading enabled
+        value: sumrPriceUsd.toString(),
       })
     }
 
@@ -2028,7 +2031,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
       symbol: 'SUMR',
     })
 
-    // temporary fallback is enabled
+    // this is not used as temp fallback is enabled
     const byFleetAddress: {
       [fleetAddress: string]:
         | {

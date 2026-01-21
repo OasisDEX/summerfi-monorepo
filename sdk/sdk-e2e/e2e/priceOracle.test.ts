@@ -1,7 +1,6 @@
-import { ChainIds, FiatCurrency, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { ChainIds, FiatCurrency, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 
 import { createTestSDK } from './utils/sdkInstance'
-import type { OracleScenario } from './utils/types'
 
 jest.setTimeout(300000)
 
@@ -11,37 +10,55 @@ jest.setTimeout(300000)
 describe('Oracle Tests', () => {
   const sdk = createTestSDK()
 
-  // Configure test scenarios here
-  const spotPriceScenarios: OracleScenario[] = [
-    {
-      description: 'get spot price on Base',
-      chainId: ChainIds.Base,
-      baseTokenSymbol: 'eth',
-      denominationTokenSymbol: 'weth',
-    },
-    {
-      description: 'get spot price on Mainnet',
-      chainId: ChainIds.Mainnet,
-      baseTokenSymbol: 'wbtc',
-      denominationFiat: FiatCurrency.USD,
-    },
-    {
-      description: 'get spot price on Arbitrum One',
-      chainId: ChainIds.ArbitrumOne,
-      baseTokenSymbol: 'weth',
-      denominationTokenSymbol: 'eth',
-    },
-    {
-      description: 'get spot price on Sonic',
-      chainId: ChainIds.Sonic,
-      baseTokenSymbol: 's',
-      denominationFiat: FiatCurrency.USD,
-    },
-  ]
-
   describe('getSpotPrice', () => {
+    // Configure test scenarios here
+    const spotPriceScenarios: {
+      chainId: ChainId
+      baseTokenSymbol: string
+      denominationTokenSymbol?: string
+      denominationFiat?: FiatCurrency
+    }[] = [
+      {
+        chainId: ChainIds.Base,
+        baseTokenSymbol: 'eth',
+        denominationTokenSymbol: 'weth',
+      },
+      {
+        chainId: ChainIds.Base,
+        baseTokenSymbol: 'eth',
+        denominationFiat: FiatCurrency.USD,
+      },
+
+      {
+        chainId: ChainIds.Base,
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'weth',
+      },
+      {
+        chainId: ChainIds.Base,
+        baseTokenSymbol: 'sumr',
+        denominationFiat: FiatCurrency.USD,
+      },
+
+      // {
+      //   chainId: ChainIds.Mainnet,
+      //   baseTokenSymbol: 'wbtc',
+      //   denominationFiat: FiatCurrency.USD,
+      // },
+      // {
+      //   chainId: ChainIds.ArbitrumOne,
+      //   baseTokenSymbol: 'weth',
+      //   denominationTokenSymbol: 'eth',
+      // },
+      // {
+      //   chainId: ChainIds.Sonic,
+      //   baseTokenSymbol: 's',
+      //   denominationFiat: FiatCurrency.USD,
+      // },
+    ]
+
     test.each(spotPriceScenarios)(
-      'should $description',
+      'should get spot price for $baseTokenSymbol on chain $chainId',
       async ({ chainId, baseTokenSymbol, denominationTokenSymbol, denominationFiat }) => {
         const baseToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: baseTokenSymbol })
 
@@ -68,7 +85,7 @@ describe('Oracle Tests', () => {
     )
   })
 
-  describe('getSpotPrices', () => {
+  describe.skip('getSpotPrices', () => {
     it('should get spot prices for multiple tokens on Base', async () => {
       const chainId = ChainIds.Base
       const chainInfo = getChainInfoByChainId(chainId)

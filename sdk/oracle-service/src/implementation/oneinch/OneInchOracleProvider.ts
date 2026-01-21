@@ -45,7 +45,7 @@ export class OneInchOracleProvider
     this._version = config.version
     this._authHeader = config.authHeader
     const supportedChainIds = params.configProvider.getConfigurationItem({
-      name: 'ONE_INCH_SWAP_CHAIN_IDS',
+      name: 'ONE_INCH_API_SPOT_CHAIN_IDS',
     })
     this._supportedChainIds = supportedChainIds
       .split(',')

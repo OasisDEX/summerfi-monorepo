@@ -52,6 +52,7 @@ export interface IArmadaManagerClaims {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
+    stakingV2: bigint
     merkleDistribution: bigint
     voteDelegation: bigint
     /**
@@ -77,6 +78,7 @@ export interface IArmadaManagerClaims {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
+    stakingV2: bigint
     merkleDistribution: bigint
     voteDelegation: bigint
   }>
@@ -103,6 +105,43 @@ export interface IArmadaManagerClaims {
   }) => Promise<[ClaimTransactionInfo]>
 
   /**
+   * @name getClaimStakingV2UserRewardsTx
+   * @description Claims staking v2 rewards for a user
+   * @param params.user The user
+   * @returns Promise<TransactionInfoClaim>
+   * @throws Error
+   */
+  getClaimStakingV2UserRewardsTx: (params: { user: IUser }) => Promise<[ClaimTransactionInfo]>
+
+  /**
+   * @name authorizeStakingRewardsCallerV2
+   * @description Generates a transaction to authorize a caller for staking rewards
+   * @param params.user The user who is authorizing
+   * @param params.authorizedCaller The address to authorize
+   * @param params.isAuthorized Whether to authorize or revoke authorization
+   * @returns Promise<TransactionInfoClaim>
+   * @throws Error
+   */
+  authorizeStakingRewardsCallerV2: (params: {
+    user: IUser
+    authorizedCaller: IAddress
+    isAuthorized: boolean
+  }) => Promise<[ClaimTransactionInfo]>
+
+  /**
+   * @name isAuthorizedStakingRewardsCallerV2
+   * @description Checks if a caller is authorized for staking rewards
+   * @param params.owner The owner address
+   * @param params.authorizedCaller The address to check authorization for
+   * @returns Promise<boolean>
+   * @throws Error
+   */
+  isAuthorizedStakingRewardsCallerV2: (params: {
+    owner: IAddress
+    authorizedCaller: IAddress
+  }) => Promise<boolean>
+
+  /**
    * @name getClaimProtocolUsageRewardsTx
    * @description Claims protocol usage rewards for a user
    * @param params.user The user
@@ -126,6 +165,7 @@ export interface IArmadaManagerClaims {
    * @param chainInfo Chain information
    * @param user Address of the user that is trying to claim
    * @param includeMerkl Whether to include Merkl rewards in the claim
+   * @param includeStakingV2 Whether to include Staking V2 rewards in the claim
    *
    * @returns The transaction needed to claim the rewards
    */
@@ -133,5 +173,6 @@ export interface IArmadaManagerClaims {
     chainInfo: ChainInfo
     user: IUser
     includeMerkl?: boolean
+    includeStakingV2?: boolean
   }): Promise<[ClaimTransactionInfo] | undefined>
 }

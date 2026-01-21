@@ -8,10 +8,6 @@ import { SDKApiUrl } from './testConfig'
 export function createTestSDK(
   clientId?: string,
 ): ReturnType<typeof makeSDK> | ReturnType<typeof makeAdminSDK> {
-  if (!SDKApiUrl) {
-    throw new Error('E2E_SDK_API_URL environment variable not set')
-  }
-
   if (clientId) {
     return makeAdminSDK({
       apiDomainUrl: SDKApiUrl,

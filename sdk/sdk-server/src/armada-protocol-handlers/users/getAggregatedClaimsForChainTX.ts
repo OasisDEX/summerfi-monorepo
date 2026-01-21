@@ -8,6 +8,7 @@ export const getAggregatedClaimsForChainTx = publicProcedure
       chainInfo: z.custom<IChainInfo>(isChainInfo),
       user: z.custom<IUser>(isUser),
       includeMerkl: z.boolean().optional(),
+      includeStakingV2: z.boolean().optional(),
     }),
   )
   .query(async (opts) => {

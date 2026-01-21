@@ -10,6 +10,6 @@ export const getSummerPrice = publicProcedure
       .optional(),
   )
   .query(async (opts) => {
-    const price = opts.ctx.armadaManager.utils.getSummerPrice(opts.input)
+    const price = await opts.ctx.armadaManager.utils.getSummerPrice(opts.input)
     return { price }
   })
