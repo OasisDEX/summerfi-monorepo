@@ -10,7 +10,7 @@ import {
   type IArmadaManagerMerklRewards,
   type IArmadaManagerUtils,
   type MerklReward,
-  getAllMerkleClaims,
+  getAllDistributionClaims,
   getDeployedGovAddress,
 } from '@summerfi/armada-protocol-common'
 import {
@@ -96,12 +96,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: params.user.chainInfo,
     })
 
-    const merkleClaims = await getAllMerkleClaims({
+    const distributionClaims = await getAllDistributionClaims({
       distributionsUrls: this._distributionsUrls,
       walletAddress: params.user.wallet.address.value,
     })
 
-    const canClaimCalls = merkleClaims.map(
+    const canClaimCalls = distributionClaims.map(
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
@@ -119,10 +119,11 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     canClaimResults.forEach((result, index) => {
       if (result.status === 'success') {
-        canClaimRecord[merkleClaims[index].contractAddress] =
-          canClaimRecord[merkleClaims[index].contractAddress] || {}
-        canClaimRecord[merkleClaims[index].contractAddress][merkleClaims[index].index.toString()] =
-          result.result
+        canClaimRecord[distributionClaims[index].contractAddress] =
+          canClaimRecord[distributionClaims[index].contractAddress] || {}
+        canClaimRecord[distributionClaims[index].contractAddress][
+          distributionClaims[index].index.toString()
+        ] = result.result
       } else {
         throw new Error('Error in multicall reading canClaimDistributions: ' + result.error)
       }
@@ -134,12 +135,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async hasClaimedDistributions(
     params: Parameters<IArmadaManagerClaims['hasClaimedDistributions']>[0],
   ): ReturnType<IArmadaManagerClaims['hasClaimedDistributions']> {
-    const { merkleClaims, user } = params
+    const { distributionClaims, user } = params
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo: this._hubChainInfo,
     })
 
-    const hasClaimedCalls = merkleClaims.map(
+    const hasClaimedCalls = distributionClaims.map(
       (claim) =>
         ({
           abi: SummerRewardsRedeemerAbi,
@@ -157,10 +158,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     hasClaimedResults.forEach((result, index) => {
       if (result.status === 'success') {
-        hasClaimedPerContract[merkleClaims[index].contractAddress] =
-          hasClaimedPerContract[merkleClaims[index].contractAddress] || {}
-        hasClaimedPerContract[merkleClaims[index].contractAddress][
-          merkleClaims[index].index.toString()
+        hasClaimedPerContract[distributionClaims[index].contractAddress] =
+          hasClaimedPerContract[distributionClaims[index].contractAddress] || {}
+        hasClaimedPerContract[distributionClaims[index].contractAddress][
+          distributionClaims[index].index.toString()
         ] = result.result
       } else {
         throw new Error('Error in multicall reading hasClaimedDistributions: ' + result.error)
@@ -170,8 +171,8 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     return hasClaimedPerContract
   }
 
-  private async getMerkleDistributionRewards(user: IUser): Promise<bigint> {
-    const merkleClaims = await getAllMerkleClaims({
+  private async getDistributionRewards(user: IUser): Promise<bigint> {
+    const distributionClaims = await getAllDistributionClaims({
       distributionsUrls: this._distributionsUrls,
       walletAddress: user.wallet.address.value,
     })
@@ -180,13 +181,13 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const hasClaimedRecord = await this.hasClaimedDistributions({
       user,
-      merkleClaims,
+      distributionClaims,
     })
 
     LoggingService.debug('hasClaimedRecord:', hasClaimedRecord)
 
-    // get merkle rewards amount
-    return merkleClaims.reduce((amount, claim) => {
+    // get distribution rewards amount
+    return distributionClaims.reduce((amount, claim) => {
       if (hasClaimedRecord[claim.contractAddress][claim.index.toString()]) {
         return amount
       } else {
@@ -299,28 +300,31 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getAggregatedRewards(
     params: Parameters<IArmadaManagerClaims['getAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewards']> {
-    const [merkleDistributionRewards, voteDelegationRewards, stakingV2Rewards] = await Promise.all([
-      this.getMerkleDistributionRewards(params.user),
+    const [distributionRewards, voteDelegationRewards, stakingV2Rewards] = await Promise.all([
+      this.getDistributionRewards(params.user),
       this.getVoteDelegationRewards(params.user),
       this.getStakingV2UserRewards(params.user),
     ])
 
     const vaultUsagePerChain: Record<number, bigint> = {}
 
-    const perChainUsageRewards = await Promise.all(
+    await Promise.all(
       this._supportedChains.map(async (chainInfo) => {
         const usageRewards = await this.getProtocolUsageRewards(params.user, chainInfo)
         vaultUsagePerChain[chainInfo.chainId] = usageRewards.total
         return usageRewards
       }),
     )
-    const vaultUsageRewards = perChainUsageRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
+    const vaultUsageRewards = Object.values(vaultUsagePerChain).reduce(
+      (acc, rewards) => acc + rewards,
+      0n,
+    )
 
     const perChainRewards = { ...vaultUsagePerChain }
     perChainRewards[this._hubChainInfo.chainId] +=
-      voteDelegationRewards + merkleDistributionRewards + stakingV2Rewards
+      voteDelegationRewards + distributionRewards + stakingV2Rewards
 
-    const totalRewards = perChainUsageRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
+    const totalRewards = Object.values(perChainRewards).reduce((acc, rewards) => acc + rewards, 0n)
 
     return {
       total: totalRewards,
@@ -328,7 +332,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       vaultUsagePerChain,
       vaultUsage: vaultUsageRewards,
       stakingV2: stakingV2Rewards,
-      merkleDistribution: merkleDistributionRewards,
+      distribution: distributionRewards,
       voteDelegation: voteDelegationRewards,
     }
   }
@@ -362,30 +366,24 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       userMerklRewards,
     })
 
-    const vaultUsagePerChain = rewards.vaultUsagePerChain
-    // add merkl rewards only on base chain
+    // add merkl rewards only on base chain to vaultUsagePerChain
     const merklRewards = this.calculateTotalClaimableSumrOnMerkl(userMerklRewards)
-    vaultUsagePerChain[ChainIds.Base] = (vaultUsagePerChain[ChainIds.Base] || 0n) + merklRewards
+    rewards.vaultUsagePerChain[ChainIds.Base] =
+      (rewards.vaultUsagePerChain[ChainIds.Base] || 0n) + merklRewards
+    // and perChain
+    rewards.perChain[ChainIds.Base] = (rewards.perChain[ChainIds.Base] || 0n) + merklRewards
 
-    const vaultUsage = Object.values(vaultUsagePerChain).reduce((acc, usage) => acc + usage, 0n)
-    const total =
-      rewards.merkleDistribution + rewards.voteDelegation + rewards.stakingV2 + vaultUsage
+    // also add merkl rewards to total
+    rewards.total += merklRewards
 
-    return {
-      total,
-      vaultUsagePerChain,
-      vaultUsage,
-      stakingV2: rewards.stakingV2,
-      merkleDistribution: rewards.merkleDistribution,
-      voteDelegation: rewards.voteDelegation,
-    }
+    return rewards
   }
 
   async getClaimDistributionTx(
     params: Parameters<IArmadaManagerClaims['getClaimDistributionTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimDistributionTx']> {
-    const [merkleClaims, canClaimRecord] = await Promise.all([
-      getAllMerkleClaims({
+    const [distributionClaims, canClaimRecord] = await Promise.all([
+      getAllDistributionClaims({
         distributionsUrls: this._distributionsUrls,
         walletAddress: params.user.wallet.address.value,
       }),
@@ -396,12 +394,12 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const hasClaimedRecord = await this.hasClaimedDistributions({
       user: params.user,
-      merkleClaims,
+      distributionClaims,
     })
 
     LoggingService.debug(
-      'Claiming merkle claims for ' + params.user.toString(),
-      merkleClaims.map(({ amount, index }) => ({ amount, index })),
+      'Claiming distribution claims for ' + params.user.toString(),
+      distributionClaims.map(({ amount, index }) => ({ amount, index })),
       'has claimed record: ',
       hasClaimedRecord,
       'can claim record: ',
@@ -409,7 +407,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     )
 
     // filter not claimed rewards
-    const filteredClaims = merkleClaims.filter((claim) => {
+    const filteredClaims = distributionClaims.filter((claim) => {
       const hasClaimed = hasClaimedRecord[claim.contractAddress][claim.index.toString()]
       const canClaim = canClaimRecord[claim.contractAddress][claim.index.toString()]
       return !hasClaimed && canClaim && claim.amount > BigInt(0)
@@ -417,11 +415,11 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     // if no claims to process, return empty array
     if (filteredClaims.length === 0) {
-      LoggingService.debug('No merkle claims for ' + params.user.toString())
+      LoggingService.debug('No distribution claims for ' + params.user.toString())
       return
     } else {
       LoggingService.debug(
-        'Unclaimed merkle claims for ' + params.user.toString(),
+        'Unclaimed distribution claims for ' + params.user.toString(),
         filteredClaims.map(({ amount, index }) => ({ amount, index })),
       )
     }
@@ -448,7 +446,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     for (const [contractAddress, claims] of Object.entries(rewardsRecords)) {
       LoggingService.debug(
-        `Processing ${claims.length} merkle claims for contract: ${contractAddress}`,
+        `Processing ${claims.length} distribution claims for contract: ${contractAddress}`,
         claims.map(({ amount, index }) => ({ amount, index })),
       )
       const indices = claims.map((claim) => claim.index)
@@ -468,7 +466,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       })
       transactions.push({
         type: TransactionType.Claim,
-        description: 'Claiming merkle rewards',
+        description: 'Claiming distribution rewards',
         transaction: {
           target: admiralsQuartersAddress,
           calldata: calldata,
@@ -622,17 +620,17 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     if (isHubChain) {
       gatherMulticallArgsFromRequests.push(
-        this.getMerkleDistributionRewards(params.user).then((merkleDistributionRewards) => {
-          if (merkleDistributionRewards > 0n) {
+        this.getDistributionRewards(params.user).then((distributionRewards) => {
+          if (distributionRewards > 0n) {
             LoggingService.debug('Claiming distribution rewards', {
-              merkleDistributionRewards,
+              distributionRewards: distributionRewards,
             })
-            return this.getClaimDistributionTx({ user: params.user }).then((claimMerkleRewards) => {
-              if (!claimMerkleRewards) {
+            return this.getClaimDistributionTx({ user: params.user }).then((distributionTxInfo) => {
+              if (!distributionTxInfo) {
                 return
               }
-              multicallArgs.push(claimMerkleRewards[0].transaction.calldata)
-              multicallOperations.push('distribution rewards: ' + merkleDistributionRewards)
+              multicallArgs.push(distributionTxInfo[0].transaction.calldata)
+              multicallOperations.push('distribution rewards: ' + distributionRewards)
             })
           }
         }),

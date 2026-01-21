@@ -405,13 +405,10 @@ export interface IArmadaManagerUsersClient {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
-    stakingV2: bigint
-    merkleDistribution: bigint
+    distribution: bigint
     voteDelegation: bigint
-    /**
-     * @deprecated use `usagePerChain` instead
-     */
     perChain: Record<number, bigint>
+    stakingV2: bigint
   }>
 
   /**
@@ -426,9 +423,10 @@ export interface IArmadaManagerUsersClient {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
-    stakingV2: bigint
-    merkleDistribution: bigint
+    distribution: bigint
     voteDelegation: bigint
+    perChain: Record<number, bigint>
+    stakingV2: bigint
   }>
 
   /**

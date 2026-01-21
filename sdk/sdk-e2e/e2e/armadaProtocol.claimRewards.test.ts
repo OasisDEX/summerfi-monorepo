@@ -30,6 +30,14 @@ describe('Armada Protocol - Claim Rewards', () => {
       chainId: ChainIds.Base,
       rpcUrl: RpcUrls.Base,
       userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' as AddressValue,
+      includeMerkl: false,
+      includeStakingV2: true,
+    },
+    {
+      simulateOnly: true,
+      chainId: ChainIds.Base,
+      rpcUrl: RpcUrls.Base,
+      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' as AddressValue,
       includeMerkl: true,
       includeStakingV2: true,
     },
@@ -51,9 +59,13 @@ describe('Armada Protocol - Claim Rewards', () => {
     })
 
     it('should claim rewards', async () => {
-      const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
-        user,
-      })
+      const rewards = includeMerkl
+        ? await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+            user,
+          })
+        : await sdk.armada.users.getAggregatedRewards({
+            user,
+          })
       const toClaimBefore = rewards.total
       console.log(
         'before',
@@ -91,9 +103,13 @@ describe('Armada Protocol - Claim Rewards', () => {
       if (!simulateOnly) {
         expect(txStatus).toStrictEqual(['success'])
 
-        const rewardsAfter = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
-          user,
-        })
+        const rewardsAfter = includeMerkl
+          ? await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
+              user,
+            })
+          : await sdk.armada.users.getAggregatedRewards({
+              user,
+            })
         const toClaimAfter = rewardsAfter.total
         console.log(
           'after',

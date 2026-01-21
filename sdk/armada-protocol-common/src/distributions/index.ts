@@ -36,7 +36,7 @@ export interface Claim {
   proof: HexData[]
   contractAddress: HexData
 }
-export const getAllMerkleClaims = async (params: {
+export const getAllDistributionClaims = async (params: {
   walletAddress: string
   distributionsUrls: string[]
 }) => {

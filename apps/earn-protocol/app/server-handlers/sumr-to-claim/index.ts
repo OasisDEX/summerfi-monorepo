@@ -35,7 +35,7 @@ export const getSumrToClaim = async ({
     user,
   })
 
-  const chains = Object.keys(aggregatedRewards.vaultUsagePerChain)
+  const chains = Object.keys(aggregatedRewards.perChain)
 
   const isAuthorizedAsMerklRewardsOperatorPerChain = await Promise.all(
     chains.map((chainId) =>
@@ -50,13 +50,13 @@ export const getSumrToClaim = async ({
     aggregatedRewards: {
       total: Number(aggregatedRewards.total) / 10 ** 18,
       perChain: Object.fromEntries(
-        Object.entries(aggregatedRewards.vaultUsagePerChain).map(([chainId, amount]) => [
+        Object.entries(aggregatedRewards.perChain).map(([chainId, amount]) => [
           chainId,
           Number(amount) / 10 ** 18,
         ]),
       ),
     },
-    merklRewards: Number(aggregatedRewards.merkleDistribution) / 10 ** 18,
+    merklRewards: Number(aggregatedRewards.distribution) / 10 ** 18,
     voteRewards: Number(aggregatedRewards.voteDelegation) / 10 ** 18,
     merklIsAuthorizedPerChain: Object.fromEntries(
       chains.map((chainId, index) => [chainId, isAuthorizedAsMerklRewardsOperatorPerChain[index]]),

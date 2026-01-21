@@ -32,7 +32,7 @@ export interface IArmadaManagerClaims {
    */
   hasClaimedDistributions: (params: {
     user: IUser
-    merkleClaims: Claim[]
+    distributionClaims: Claim[]
   }) => Promise<Record<string, Record<string, boolean>>>
 
   /**
@@ -52,13 +52,10 @@ export interface IArmadaManagerClaims {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
-    stakingV2: bigint
-    merkleDistribution: bigint
+    distribution: bigint
     voteDelegation: bigint
-    /**
-     * @deprecated use `vaultUsagePerChain` instead
-     */
     perChain: Record<number, bigint>
+    stakingV2: bigint
   }>
 
   /**
@@ -78,9 +75,10 @@ export interface IArmadaManagerClaims {
     total: bigint
     vaultUsagePerChain: Record<number, bigint>
     vaultUsage: bigint
-    stakingV2: bigint
-    merkleDistribution: bigint
+    distribution: bigint
     voteDelegation: bigint
+    perChain: Record<number, bigint>
+    stakingV2: bigint
   }>
 
   /**
