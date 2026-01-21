@@ -59,7 +59,19 @@ describe('Armada Protocol - Claim Rewards', () => {
         'before',
         Object.entries(rewards)
 
-          .map(([key, value]) => `${key}: ${typeof value === 'bigint' ? formatSumr(value) : value}`)
+          .map(
+            ([key, value]) =>
+              `${key}: ${
+                typeof value === 'bigint'
+                  ? formatSumr(value)
+                  : Object.entries(value)
+                      .map(
+                        ([subKey, subValue]) =>
+                          `${subKey}: ${typeof subValue === 'bigint' ? formatSumr(subValue) : subValue}`,
+                      )
+                      .join(', ')
+              }`,
+          )
           .join(', '),
       )
       assert(toClaimBefore > 0n, 'Rewards should be greater than 0')

@@ -305,34 +305,28 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       this.getStakingV2UserRewards(params.user),
     ])
 
-    // get protocol usage rewards for each chain
-    const perChain: Record<number, bigint> = {}
+    const vaultUsagePerChain: Record<number, bigint> = {}
 
-    let totalUsageRewards = 0n
-    const perChainRewards = await Promise.all(
+    const perChainUsageRewards = await Promise.all(
       this._supportedChains.map(async (chainInfo) => {
         const usageRewards = await this.getProtocolUsageRewards(params.user, chainInfo)
-
-        if (chainInfo.chainId === this._hubChainInfo.chainId) {
-          // on hubchain we add delegation and distribution rewards
-          perChain[chainInfo.chainId] = usageRewards.total + merkleDistributionRewards
-        } else {
-          // on other chains we add only protocol usage rewards
-          perChain[chainInfo.chainId] = usageRewards.total
-        }
+        vaultUsagePerChain[chainInfo.chainId] = usageRewards.total
         return usageRewards
       }),
     )
-    totalUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
+    const vaultUsageRewards = perChainUsageRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
-    const total =
-      merkleDistributionRewards + voteDelegationRewards + stakingV2Rewards + totalUsageRewards
+    const perChainRewards = { ...vaultUsagePerChain }
+    perChainRewards[this._hubChainInfo.chainId] +=
+      voteDelegationRewards + merkleDistributionRewards + stakingV2Rewards
+
+    const totalRewards = perChainUsageRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
     return {
-      total,
-      perChain,
-      vaultUsagePerChain: perChain,
-      vaultUsage: totalUsageRewards,
+      total: totalRewards,
+      perChain: perChainRewards,
+      vaultUsagePerChain,
+      vaultUsage: vaultUsageRewards,
       stakingV2: stakingV2Rewards,
       merkleDistribution: merkleDistributionRewards,
       voteDelegation: voteDelegationRewards,
