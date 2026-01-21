@@ -268,7 +268,7 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
                 as="p"
                 variant="p2semi"
                 style={{
-                  marginBottom: 'var(--general-space-8)',
+                  marginBottom: 'var(--general-space-20)',
                 }}
               >
                 SUMR Token
