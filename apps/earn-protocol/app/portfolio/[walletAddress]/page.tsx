@@ -264,6 +264,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     tallyDelegates,
     sumrRewardApy: sumrStakingRewards.sumrRewardApy,
     sumrRewardAmount: sumrStakingRewards.sumrRewardAmount,
+    authorizedStakingRewardsCallerBase: false, // not used on this screen
   }
 
   const positionsHistoricalChartMap = positionsWithVault.reduce<{

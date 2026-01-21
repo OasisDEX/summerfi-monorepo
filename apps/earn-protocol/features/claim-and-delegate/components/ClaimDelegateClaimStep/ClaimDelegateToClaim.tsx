@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC, type ReactNode, useMemo } from 'react'
 import { Button, Card, Icon, LoadingSpinner, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { humanReadableChainToLabelMap } from '@summerfi/app-utils'
@@ -10,6 +10,7 @@ import classNames from './ClaimDelegateClaimStep.module.css'
 
 interface ClaimDelegateToClaimProps {
   earned: string
+  earnedAdditionalInfo?: ReactNode
   claimableRaw: number
   earnedInUSD: string
   balance: string
@@ -20,10 +21,12 @@ interface ClaimDelegateToClaimProps {
   canClaim: boolean
   isOnlyStep?: boolean
   isOwner?: boolean
+  needsToAuthorizeStakingRewardsCallerBase?: boolean
 }
 
 export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   earned,
+  earnedAdditionalInfo,
   claimableRaw,
   balance,
   chainId,
@@ -33,8 +36,12 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   isChangingNetwork,
   canClaim,
   isOwner,
+  needsToAuthorizeStakingRewardsCallerBase,
 }) => {
-  const getButtonLabel = () => {
+  const buttonLabel = useMemo(() => {
+    if (needsToAuthorizeStakingRewardsCallerBase) {
+      return 'Approve 1/2'
+    }
     if (isChangingNetwork) {
       return 'Switching network...'
     }
@@ -43,7 +50,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
     }
 
     return isOnlyStep ? 'Claim' : 'Claim 1/2'
-  }
+  }, [isLoading, isChangingNetwork, isOnlyStep, needsToAuthorizeStakingRewardsCallerBase])
 
   return (
     <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>
@@ -74,11 +81,20 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
         </div>
         <div className={classNames.valueWrapper}>
           <Tooltip
-            tooltip={<>{claimableRaw.toFixed(2)}&nbsp;SUMR</>}
+            tooltip={
+              <>
+                {earnedAdditionalInfo ? (
+                  earnedAdditionalInfo
+                ) : (
+                  <>{claimableRaw.toFixed(2)}&nbsp;SUMR</>
+                )}
+              </>
+            }
             tooltipName="claimable-sumr-tooltip"
             showAbove
             tooltipWrapperStyles={{
               top: '-40px',
+              minWidth: '300px',
             }}
           >
             <Text as="h2" variant="h2">
@@ -99,12 +115,13 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
             e.stopPropagation()
             onClaim()
           }}
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           disabled={!canClaim || isLoading || isChangingNetwork || !isOwner}
         >
           {isLoading ?? isChangingNetwork ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
-              <span>{getButtonLabel()}</span>
+              <span>{buttonLabel}</span>
             </div>
           ) : (
             <WithArrow
@@ -115,7 +132,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
                 color: 'inherit',
               }}
             >
-              {getButtonLabel()}
+              {buttonLabel}
             </WithArrow>
           )}
         </Button>

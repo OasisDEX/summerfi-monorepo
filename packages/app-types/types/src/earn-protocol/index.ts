@@ -95,6 +95,10 @@ export enum UiTransactionStatuses {
   COMPLETED = 'completed',
   FAILED = 'failed',
 }
+export enum AuthorizedStakingRewardsCallerBaseStatus {
+  NOAUTH = 'noauth',
+  AUTHORIZED = 'authorized',
+}
 
 export enum UiSimpleFlowSteps {
   INIT = 'init',

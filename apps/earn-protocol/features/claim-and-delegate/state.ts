@@ -23,6 +23,7 @@ export const claimDelegateState: ClaimDelegateState = {
   claimableBalances: {} as ClaimableBalances,
   walletBalances: {} as WalletBalances,
   merklIsAuthorizedPerChain: {} as MerklIsAuthorizedPerChain,
+  authorizedStakingRewardsCallerBase: undefined,
 }
 
 export const claimDelegateReducer = (
@@ -95,6 +96,11 @@ export const claimDelegateReducer = (
       return {
         ...prevState,
         merklIsAuthorizedPerChain: action.payload,
+      }
+    case 'update-staking-rewards-caller-status':
+      return {
+        ...prevState,
+        authorizedStakingRewardsCallerBase: action.payload,
       }
     default:
       return prevState
