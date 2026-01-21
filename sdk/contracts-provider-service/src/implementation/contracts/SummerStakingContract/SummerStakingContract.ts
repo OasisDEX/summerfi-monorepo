@@ -180,4 +180,31 @@ export class SummerStakingContract<TClient extends IBlockchainClient, TAddress e
   async stakeSummerTokenAddress(): Promise<AddressValue> {
     return this.contract.read.STAKED_SUMMER_TOKEN()
   }
+
+  /** @see ISummerStakingContract.rewards */
+  async rewards(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint> {
+    return this.contract.read.rewards([params.rewardToken, params.account])
+  }
+
+  /** @see ISummerStakingContract.setAuthorization */
+  async setAuthorization(params: {
+    authorizedCaller: AddressValue
+    isAuthorized: boolean
+  }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setAuthorization',
+      args: [params.authorizedCaller, params.isAuthorized],
+      description: params.isAuthorized
+        ? 'Authorize staking rewards caller'
+        : 'Revoke staking rewards caller authorization',
+    })
+  }
+
+  /** @see ISummerStakingContract.isAuthorized */
+  async isAuthorized(params: {
+    owner: AddressValue
+    authorizedCaller: AddressValue
+  }): Promise<boolean> {
+    return this.contract.read.isAuthorized([params.owner, params.authorizedCaller])
+  }
 }

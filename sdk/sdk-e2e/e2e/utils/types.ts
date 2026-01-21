@@ -59,14 +59,6 @@ export type PositionsScenario = {
   testSpecificFleet?: boolean
 }
 
-export type OracleScenario = {
-  description: string
-  chainId: ChainId
-  baseTokenSymbol: string
-  denominationTokenSymbol?: string
-  denominationFiat?: FiatCurrency
-}
-
 export type SwapScenario = {
   description: string
   chainId: ChainId

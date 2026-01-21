@@ -655,7 +655,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     const rewardTokenDecimals = rewardToken.decimals
 
     // Get SUMR price from params or fallback to utils
-    const sumrPrice = params.sumrPriceUsd ?? this._utils.getSummerPrice()
+    const sumrPrice = params.sumrPriceUsd ?? (await this._utils.getSummerPrice())
 
     // Use contract wrapper for all methods
     const [rewardData, _totalWeightedSupply] = await Promise.all([
@@ -805,7 +805,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       }),
     })
 
-    const sumrPriceUsd = params.sumrPriceUsd ?? this._utils.getSummerPrice()
+    const sumrPriceUsd = params.sumrPriceUsd ?? (await this._utils.getSummerPrice())
 
     // Get required data
     const [

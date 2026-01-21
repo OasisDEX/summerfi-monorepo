@@ -3,6 +3,7 @@ import {
   GovernanceRewardsManagerAbi,
   StakingRewardsManagerBaseAbi,
   SummerRewardsRedeemerAbi,
+  SummerStakingAbi,
 } from '@summerfi/armada-protocol-abis'
 import {
   type IArmadaManagerClaims,
@@ -11,7 +12,6 @@ import {
   type MerklReward,
   getAllMerkleClaims,
   getDeployedGovAddress,
-  isTestDeployment,
 } from '@summerfi/armada-protocol-common'
 import {
   Address,
@@ -87,17 +87,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       })
       .split(',')
       .map((file) => new URL(file.trim(), _distributionsBaseUrl.trim()).toString())
-  }
-
-  getSummerToken(
-    params: Parameters<IArmadaManagerUtils['getSummerToken']>[0],
-  ): ReturnType<IArmadaManagerUtils['getSummerToken']> {
-    const tokenSymbol = isTestDeployment() ? 'BUMMER' : 'SUMR'
-
-    return this._tokensManager.getTokenBySymbol({
-      chainInfo: params.chainInfo,
-      symbol: tokenSymbol,
-    })
   }
 
   async canClaimDistributions(
@@ -222,6 +211,22 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
   }
 
+  private async getStakingV2UserRewards(user: IUser): Promise<bigint> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const rewardToken = this._utils.getSummerToken({ chainInfo: this._hubChainInfo })
+
+    return stakingContract.rewards({
+      rewardToken: rewardToken.address.value,
+      account: user.wallet.address.value,
+    })
+  }
+
   private async getProtocolUsageRewards(
     user: IUser,
     chainInfo: IChainInfo,
@@ -233,7 +238,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo,
     })
 
-    const summerTokenAddress = this.getSummerToken({ chainInfo }).address
+    const summerTokenAddress = this._utils.getSummerToken({ chainInfo }).address
 
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
     const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
@@ -294,9 +299,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
   async getAggregatedRewards(
     params: Parameters<IArmadaManagerClaims['getAggregatedRewards']>[0],
   ): ReturnType<IArmadaManagerClaims['getAggregatedRewards']> {
-    const [merkleDistributionRewards, voteDelegationRewards] = await Promise.all([
+    const [merkleDistributionRewards, voteDelegationRewards, stakingV2Rewards] = await Promise.all([
       this.getMerkleDistributionRewards(params.user),
       this.getVoteDelegationRewards(params.user),
+      this.getStakingV2UserRewards(params.user),
     ])
 
     // get protocol usage rewards for each chain
@@ -319,13 +325,15 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     )
     totalUsageRewards = perChainRewards.reduce((acc, rewards) => acc + rewards.total, 0n)
 
-    const total = merkleDistributionRewards + voteDelegationRewards + totalUsageRewards
+    const total =
+      merkleDistributionRewards + voteDelegationRewards + stakingV2Rewards + totalUsageRewards
 
     return {
       total,
       perChain,
       vaultUsagePerChain: perChain,
       vaultUsage: totalUsageRewards,
+      stakingV2: stakingV2Rewards,
       merkleDistribution: merkleDistributionRewards,
       voteDelegation: voteDelegationRewards,
     }
@@ -366,12 +374,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     vaultUsagePerChain[ChainIds.Base] = (vaultUsagePerChain[ChainIds.Base] || 0n) + merklRewards
 
     const vaultUsage = Object.values(vaultUsagePerChain).reduce((acc, usage) => acc + usage, 0n)
-    const total = rewards.merkleDistribution + rewards.voteDelegation + vaultUsage
+    const total =
+      rewards.merkleDistribution + rewards.voteDelegation + rewards.stakingV2 + vaultUsage
 
     return {
       total,
       vaultUsagePerChain,
       vaultUsage,
+      stakingV2: rewards.stakingV2,
       merkleDistribution: rewards.merkleDistribution,
       voteDelegation: rewards.voteDelegation,
     }
@@ -503,6 +513,75 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     ]
   }
 
+  async getClaimStakingV2UserRewardsTx(
+    params: Parameters<IArmadaManagerClaims['getClaimStakingV2UserRewardsTx']>[0],
+  ): ReturnType<IArmadaManagerClaims['getClaimStakingV2UserRewardsTx']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+    const rewardToken = this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address
+
+    const calldata = encodeFunctionData({
+      abi: SummerStakingAbi,
+      functionName: 'getRewardFor',
+      args: [params.user.wallet.address.value, rewardToken.value],
+    })
+
+    return [
+      {
+        type: TransactionType.Claim,
+        description: 'Claiming staking v2 rewards',
+        transaction: {
+          target: stakingContractAddress,
+          calldata: calldata,
+          value: '0',
+        },
+      },
+    ]
+  }
+
+  async authorizeStakingRewardsCallerV2(
+    params: Parameters<IArmadaManagerClaims['authorizeStakingRewardsCallerV2']>[0],
+  ): ReturnType<IArmadaManagerClaims['authorizeStakingRewardsCallerV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    const transactionInfo = await stakingContract.setAuthorization({
+      authorizedCaller: params.authorizedCaller.value,
+      isAuthorized: params.isAuthorized,
+    })
+
+    return [
+      {
+        type: TransactionType.Claim,
+        description: transactionInfo.description,
+        transaction: {
+          target: transactionInfo.transaction.target,
+          calldata: transactionInfo.transaction.calldata,
+          value: transactionInfo.transaction.value,
+        },
+      },
+    ]
+  }
+
+  async isAuthorizedStakingRewardsCallerV2(
+    params: Parameters<IArmadaManagerClaims['isAuthorizedStakingRewardsCallerV2']>[0],
+  ): ReturnType<IArmadaManagerClaims['isAuthorizedStakingRewardsCallerV2']> {
+    const stakingContractAddress = getDeployedGovAddress('summerStaking')
+
+    const stakingContract = await this._contractsProvider.getSummerStakingContract({
+      chainInfo: this._hubChainInfo,
+      address: stakingContractAddress,
+    })
+
+    return stakingContract.isAuthorized({
+      owner: params.owner.value,
+      authorizedCaller: params.authorizedCaller.value,
+    })
+  }
+
   async getClaimProtocolUsageRewardsTx(
     params: Parameters<IArmadaManagerClaims['getClaimProtocolUsageRewardsTx']>[0],
   ): ReturnType<IArmadaManagerClaims['getClaimProtocolUsageRewardsTx']> {
@@ -537,8 +616,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     const govRewardsManagerAddress = getDeployedGovAddress()
 
     LoggingService.debug(
-      `Generating aggregated claim tx on ${params.chainInfo.toString() + isHubChain ? ' (on hub chain)' : ''} for user ${params.user.wallet.address.value}` +
-        (params.includeMerkl ? ' including merkl rewards' : ''),
+      `Generating aggregated claim tx on ${params.chainInfo.toString() + (isHubChain ? ' (hub chain)' : '')} for user ${params.user.wallet.address.value}` +
+        (params.includeMerkl ? ' including merkl rewards' : '') +
+        (params.includeStakingV2 ? ' including staking v2 rewards' : ''),
     )
 
     const multicallArgs: HexData[] = []
@@ -564,7 +644,47 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         }),
       )
 
-      const govRewardToken = this.getSummerToken({ chainInfo: this._hubChainInfo }).address
+      // Only include staking v2 rewards if includeStakingV2 flag is true
+      if (params.includeStakingV2) {
+        gatherMulticallArgsFromRequests.push(
+          this.getStakingV2UserRewards(params.user).then(async (stakingV2UserRewards) => {
+            if (stakingV2UserRewards > 0n) {
+              // Only check authorization if there are rewards to claim
+              const isAuthorized = await this.isAuthorizedStakingRewardsCallerV2({
+                owner: params.user.wallet.address,
+                authorizedCaller: this._deploymentProvider.getDeployedContractAddress({
+                  chainId: this._hubChainInfo.chainId,
+                  contractName: 'admiralsQuarters',
+                }),
+              })
+              if (!isAuthorized) {
+                throw new Error(
+                  `AdmiralsQuarters contract is not authorized to claim staking v2 rewards for user ${params.user.toString()}. Please authorize it first.`,
+                )
+              }
+
+              LoggingService.debug('Claiming staking v2 rewards', {
+                stakingV2Rewards: stakingV2UserRewards,
+              })
+              const summerStakingAddress = getDeployedGovAddress('summerStaking')
+              const rewardTokenAddress = this._utils.getSummerToken({
+                chainInfo: this._hubChainInfo,
+              }).address
+
+              const calldata = encodeFunctionData({
+                abi: AdmiralsQuartersAbi,
+                functionName: 'claimGovernanceRewards',
+                args: [summerStakingAddress.toSolidityValue(), rewardTokenAddress.value],
+              })
+
+              multicallArgs.push(calldata)
+              multicallOperations.push('staking v2 rewards: ' + stakingV2UserRewards)
+            }
+          }),
+        )
+      }
+
+      const govRewardToken = this._utils.getSummerToken({ chainInfo: this._hubChainInfo }).address
 
       gatherMulticallArgsFromRequests.push(
         this.getVoteDelegationRewards(params.user).then((voteDelegationRewards) => {
@@ -584,7 +704,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       )
     }
 
-    const fleetRewardToken = this.getSummerToken({ chainInfo: params.chainInfo }).address
+    const fleetRewardToken = this._utils.getSummerToken({ chainInfo: params.chainInfo }).address
 
     gatherMulticallArgsFromRequests.push(
       this.getProtocolUsageRewards(params.user, params.chainInfo).then((protocolUsageRewards) => {
@@ -619,7 +739,9 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
           .getUserMerklClaimDirectTx({
             address: params.user.wallet.address.value,
             chainId: params.chainInfo.chainId,
-            rewardsTokens: [this.getSummerToken({ chainInfo: params.chainInfo }).address.value],
+            rewardsTokens: [
+              this._utils.getSummerToken({ chainInfo: params.chainInfo }).address.value,
+            ],
             useMerklDistributorDirectly: false,
           })
           .then((tx) => {

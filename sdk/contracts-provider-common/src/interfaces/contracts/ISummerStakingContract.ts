@@ -191,4 +191,34 @@ export interface ISummerStakingContract extends IContractWrapper {
    * @returns The address of the staked summer token
    */
   stakeSummerTokenAddress(): Promise<AddressValue>
+
+  /**
+   * @name rewards
+   * @description Get the rewards amount for a specific account and reward token
+   * @param rewardToken The address of the reward token
+   * @param account The address of the account
+   * @returns The reward amount
+   */
+  rewards(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint>
+
+  /**
+   * @name setAuthorization
+   * @description Authorize or revoke authorization for a caller to claim rewards on behalf of the user
+   * @param authorizedCaller The address to authorize or revoke
+   * @param isAuthorized Whether to authorize (true) or revoke (false)
+   * @returns The transaction information
+   */
+  setAuthorization(params: {
+    authorizedCaller: AddressValue
+    isAuthorized: boolean
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name isAuthorized
+   * @description Check if a caller is authorized to claim rewards on behalf of an owner
+   * @param owner The owner address
+   * @param authorizedCaller The address to check authorization for
+   * @returns True if authorized, false otherwise
+   */
+  isAuthorized(params: { owner: AddressValue; authorizedCaller: AddressValue }): Promise<boolean>
 }

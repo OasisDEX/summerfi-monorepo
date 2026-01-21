@@ -128,13 +128,38 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     })
   }
 
-  getSummerPrice(
+  async getSummerPrice(
     params?: Parameters<IArmadaManagerUtils['getSummerPrice']>[0],
   ): ReturnType<IArmadaManagerUtils['getSummerPrice']> {
     if (params?.override !== undefined) {
       return params.override
     }
-    return 0.25
+
+    // fetch from coingecko
+    const id = 'summer-2'
+    const url = `https://pro-api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&precision=6`
+    const resp = await fetch(url, {
+      headers: {
+        [this._configProvider.getConfigurationItem({ name: 'COINGECKO_API_AUTH_HEADER' })]:
+          `${this._configProvider.getConfigurationItem({ name: 'COINGECKO_API_KEY' })}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!resp.ok) {
+      const errorText = await resp.text()
+      throw Error(
+        `Error performing coingecko spot price request: ${JSON.stringify({
+          apiQuery: url,
+          statusCode: resp.status,
+          json: errorText,
+        })}`,
+      )
+    }
+    const json = (await resp.json()) as Record<string, unknown>
+
+    const coinData = json[id] as { [currency: string]: number } | undefined
+
+    return coinData?.usd ?? 0.25
   }
 
   /** POOLS */

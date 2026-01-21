@@ -113,6 +113,9 @@ import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMer
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
 import { getAuthorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/getAuthorizeAsMerklRewardsOperatorTx'
 import { getIsAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/getIsAuthorizedAsMerklRewardsOperator'
+import { getClaimStakingV2UserRewardsTx } from './armada-protocol-handlers/users/getClaimStakingV2UserRewardsTx'
+import { authorizeStakingRewardsCallerV2 } from './armada-protocol-handlers/users/authorizeStakingRewardsCallerV2'
+import { isAuthorizedStakingRewardsCallerV2 } from './armada-protocol-handlers/users/isAuthorizedStakingRewardsCallerV2'
 import { hasGlobalRole } from './armada-protocol-handlers/access-control/hasGlobalRole'
 import { hasContractSpecificRole } from './armada-protocol-handlers/access-control/hasContractSpecificRole'
 import { grantGlobalRole } from './armada-protocol-handlers/access-control/grantGlobalRole'
@@ -242,6 +245,9 @@ export const sdkAppRouter = router({
       getVaultSwitchTx: getVaultSwitchTx,
       getUserMerklRewards: getUserMerklRewards,
       getUserMerklClaimTx: getUserMerklClaimTx,
+      getClaimStakingV2UserRewardsTx: getClaimStakingV2UserRewardsTx,
+      authorizeStakingRewardsCallerV2: authorizeStakingRewardsCallerV2,
+      isAuthorizedStakingRewardsCallerV2: isAuthorizedStakingRewardsCallerV2,
       getReferralFeesMerklClaimTx: getReferralFeesMerklClaimTx,
       getAuthorizeAsMerklRewardsOperatorTx: getAuthorizeAsMerklRewardsOperatorTx,
       getIsAuthorizedAsMerklRewardsOperator: getIsAuthorizedAsMerklRewardsOperator,

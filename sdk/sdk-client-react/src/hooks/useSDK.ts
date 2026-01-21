@@ -61,6 +61,9 @@ import { getSpotPriceHandler } from '../handlers/getSpotPriceHandler'
 import { getSpotPricesHandler } from '../handlers/getSpotPricesHandler'
 import { getAuthorizeAsMerklRewardsOperatorTxHandler } from '../handlers/getAuthorizeAsMerklRewardsOperatorTxHandler'
 import { getReferralFeesMerklClaimTxHandler } from '../handlers/getReferralFeesMerklClaimTxHandler'
+import { getClaimStakingV2UserRewardsTxHandler } from '../handlers/getClaimStakingV2UserRewardsTxHandler'
+import { authorizeStakingRewardsCallerV2Handler } from '../handlers/authorizeStakingRewardsCallerV2Handler'
+import { isAuthorizedStakingRewardsCallerV2Handler } from '../handlers/isAuthorizedStakingRewardsCallerV2Handler'
 import { getUserMerklRewardsHandler } from '../handlers/getUserMerklRewardsHandler'
 import { getPositionHistoryHandler } from '../handlers/getPositionHistoryHandler'
 import { getDepositsHandler } from '../handlers/getDepositsHandler'
@@ -209,6 +212,18 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
   const getReferralFeesMerklClaimTx = useMemo(() => getReferralFeesMerklClaimTxHandler(sdk), [sdk])
+  const getClaimStakingV2UserRewardsTx = useMemo(
+    () => getClaimStakingV2UserRewardsTxHandler(sdk),
+    [sdk],
+  )
+  const authorizeStakingRewardsCallerV2 = useMemo(
+    () => authorizeStakingRewardsCallerV2Handler(sdk),
+    [sdk],
+  )
+  const isAuthorizedStakingRewardsCallerV2 = useMemo(
+    () => isAuthorizedStakingRewardsCallerV2Handler(sdk),
+    [sdk],
+  )
   const getUserMerklRewards = useMemo(() => getUserMerklRewardsHandler(sdk), [sdk])
   const getPositionHistory = useMemo(() => getPositionHistoryHandler(sdk), [sdk])
   const getDeposits = useMemo(() => getDepositsHandler(sdk), [sdk])
@@ -304,6 +319,9 @@ export const useSDK = (params: UseSdk) => {
       getSpotPrices,
       getAuthorizeAsMerklRewardsOperatorTx,
       getReferralFeesMerklClaimTx,
+      getClaimStakingV2UserRewardsTx,
+      authorizeStakingRewardsCallerV2,
+      isAuthorizedStakingRewardsCallerV2,
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,
@@ -386,6 +404,9 @@ export const useSDK = (params: UseSdk) => {
       getSpotPrices,
       getAuthorizeAsMerklRewardsOperatorTx,
       getReferralFeesMerklClaimTx,
+      getClaimStakingV2UserRewardsTx,
+      authorizeStakingRewardsCallerV2,
+      isAuthorizedStakingRewardsCallerV2,
       getUserMerklRewards,
       getUnstakeFleetTokensTx,
       getStakedBalance,

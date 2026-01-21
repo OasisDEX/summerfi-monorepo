@@ -32,6 +32,7 @@ export const createSendTransactionTool = (params: {
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
     transactionOrTransactions: T,
+    { confirmations = 1 }: { confirmations?: number } = {},
   ): Promise<
     T extends TransactionInfo ? SendTransactionToolStatus : SendTransactionToolStatus[]
   > => {
@@ -68,6 +69,7 @@ export const createSendTransactionTool = (params: {
         try {
           const receipt = await transactionUtils.sendTransactionWithReceipt({
             transaction: transaction.transaction,
+            confirmations,
           })
           console.log('  > Sending successful with hash: ' + receipt.transactionHash)
           statuses.push(receipt.status)

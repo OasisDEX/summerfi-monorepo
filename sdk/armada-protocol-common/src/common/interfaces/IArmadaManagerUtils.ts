@@ -41,7 +41,7 @@ export interface IArmadaManagerUtils {
    * @param params.override - Optional price override value
    * @returns The current price of the Summer token
    */
-  getSummerPrice(params?: { override?: number }): number
+  getSummerPrice(params?: { override?: number }): Promise<number>
 
   /**
    * @method getSummerToken
