@@ -199,6 +199,20 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
                 value={inputValue}
                 onChange={handleInputChange}
               />
+              <div className={classNames.slippageOptionsWrapper}>
+                {sumrMarketCapOptions.map((item, idx) => (
+                  <Badge
+                    value={`$${Number(item) / 1000000}M`}
+                    key={item}
+                    onClick={() => {
+                      setInputValue(mapNumericInput(item))
+                      setActiveMarketCapOption(idx)
+                    }}
+                    isActive={activeMarketCapOption === idx}
+                  />
+                ))}
+              </div>
+              <div className={classNames.spacerContent} />
             </>
           )}
           {sumrPriceUsd && Number(sumrPriceUsd) ? (
@@ -223,23 +237,9 @@ export const NavConfigContent: FC<NavConfigContentProps> = ({ handleOpenClose, s
               >
                 <strong>${formatCryptoBalance(sumrPriceUsd)} SUMR/USD</strong>
               </Text>
+              <div className={classNames.spacerContent} />
             </>
           ) : null}
-          <div className={classNames.slippageOptionsWrapper}>
-            {sumrMarketCapOptions.map((item, idx) => (
-              <Badge
-                value={`$${Number(item) / 1000000}M`}
-                key={item}
-                onClick={() => {
-                  setInputValue(mapNumericInput(item))
-                  setActiveMarketCapOption(idx)
-                }}
-                isActive={activeMarketCapOption === idx}
-              />
-            ))}
-          </div>
-
-          <div className={classNames.spacerContent} />
           <Text
             as="p"
             variant="p2semi"
