@@ -181,9 +181,9 @@ export class SummerStakingContract<TClient extends IBlockchainClient, TAddress e
     return this.contract.read.STAKED_SUMMER_TOKEN()
   }
 
-  /** @see ISummerStakingContract.rewards */
-  async rewards(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint> {
-    return this.contract.read.rewards([params.rewardToken, params.account])
+  /** @see ISummerStakingContract.earned */
+  async earned(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint> {
+    return this.contract.read.earned([params.account, params.rewardToken])
   }
 
   /** @see ISummerStakingContract.setAuthorization */

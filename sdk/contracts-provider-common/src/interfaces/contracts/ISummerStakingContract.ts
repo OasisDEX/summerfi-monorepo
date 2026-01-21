@@ -193,13 +193,13 @@ export interface ISummerStakingContract extends IContractWrapper {
   stakeSummerTokenAddress(): Promise<AddressValue>
 
   /**
-   * @name rewards
+   * @name earned
    * @description Get the rewards amount for a specific account and reward token
    * @param rewardToken The address of the reward token
    * @param account The address of the account
    * @returns The reward amount
    */
-  rewards(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint>
+  earned(params: { rewardToken: AddressValue; account: AddressValue }): Promise<bigint>
 
   /**
    * @name setAuthorization

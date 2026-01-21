@@ -222,7 +222,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     const rewardToken = this._utils.getSummerToken({ chainInfo: this._hubChainInfo })
 
-    return stakingContract.rewards({
+    return stakingContract.earned({
       rewardToken: rewardToken.address.value,
       account: user.wallet.address.value,
     })
