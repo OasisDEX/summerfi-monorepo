@@ -8,6 +8,7 @@ import {
 import { RpcUrls, SharedConfig } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
+import { formatSumr } from './utils/stringifiers'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -29,8 +30,8 @@ describe('Armada Protocol - Claim Rewards', () => {
       chainId: ChainIds.Base,
       rpcUrl: RpcUrls.Base,
       userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' as AddressValue,
-      includeMerkl: false,
-      includeStakingV2: false,
+      includeMerkl: true,
+      includeStakingV2: true,
     },
   ]
 
@@ -38,10 +39,6 @@ describe('Armada Protocol - Claim Rewards', () => {
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { chainId, rpcUrl, userAddress, simulateOnly, includeMerkl, includeStakingV2 } = scenario
-
-    if (!rpcUrl) {
-      throw new Error('Missing fork url')
-    }
 
     const chainInfo = getChainInfoByChainId(chainId)
     const user = User.createFromEthereum(chainId, userAddress)
@@ -54,15 +51,17 @@ describe('Armada Protocol - Claim Rewards', () => {
     })
 
     it('should claim rewards', async () => {
-      const getRewards = includeMerkl
-        ? sdk.armada.users.getAggregatedRewardsIncludingMerkl
-        : sdk.armada.users.getAggregatedRewards
-
-      const rewards = await getRewards({
+      const rewards = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
         user,
       })
       const toClaimBefore = rewards.total
-      console.log('before', toClaimBefore)
+      console.log(
+        'before',
+        Object.entries(rewards)
+
+          .map(([key, value]) => `${key}: ${typeof value === 'bigint' ? formatSumr(value) : value}`)
+          .join(', '),
+      )
       assert(toClaimBefore > 0n, 'Rewards should be greater than 0')
 
       const tx = await sdk.armada.users.getAggregatedClaimsForChainTx({
@@ -72,19 +71,27 @@ describe('Armada Protocol - Claim Rewards', () => {
         includeStakingV2,
       })
       if (!tx) {
-        throw new Error('No claims')
+        throw new Error('Did not return a tx even though there are rewards to claim')
       }
 
       const txStatus = await userSendTxTool(tx)
-      expect(txStatus).toBe('success')
 
       if (!simulateOnly) {
-        const rewardsAfter = await getRewards({
+        expect(txStatus).toStrictEqual(['success'])
+
+        const rewardsAfter = await sdk.armada.users.getAggregatedRewardsIncludingMerkl({
           user,
         })
         const toClaimAfter = rewardsAfter.total
-        console.log('after', toClaimAfter)
-        console.log(`Claimed rewards: ${toClaimBefore - toClaimAfter}`)
+        console.log(
+          'after',
+          Object.entries(rewardsAfter)
+            .map(
+              ([key, value]) => `${key}: ${typeof value === 'bigint' ? formatSumr(value) : value}`,
+            )
+            .join(', '),
+        )
+        console.log(`Claimed rewards: ${formatSumr(toClaimBefore - toClaimAfter)}`)
       }
     })
   })

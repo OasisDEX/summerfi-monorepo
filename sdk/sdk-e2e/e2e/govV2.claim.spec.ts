@@ -1,6 +1,7 @@
 import { User } from '@summerfi/sdk-common'
 import { createSdkTestSetup } from './utils/createSdkTestSetup'
 import type { TestConfigKey } from './utils/testConfig'
+import { formatSumr } from './utils/stringifiers'
 
 jest.setTimeout(300000)
 
@@ -28,7 +29,7 @@ describe('Armada Protocol - Gov V2 Claims', () => {
       const earnedBefore = await sdk.armada.users.getUserStakingEarnedV2({
         user,
       })
-      console.log(`Earned rewards before claim: ${earnedBefore}`)
+      console.log(`Earned rewards before claim: ${formatSumr(earnedBefore)}`)
 
       // Get claim transaction
       const claimTx = await sdk.armada.users.getClaimStakingV2UserRewardsTx({
@@ -50,7 +51,7 @@ describe('Armada Protocol - Gov V2 Claims', () => {
         const earnedAfter = await sdk.armada.users.getUserStakingEarnedV2({
           user,
         })
-        console.log(`Earned rewards after claim: ${earnedAfter}`)
+        console.log(`Earned rewards after claim: ${formatSumr(earnedAfter)}`)
 
         // After claiming, earned rewards should be 0 or less than before
         expect(earnedAfter).toBeLessThanOrEqual(earnedBefore)

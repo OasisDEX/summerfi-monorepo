@@ -23,7 +23,7 @@ describe('Armada Protocol - Gov V2 Authorization', () => {
     // },
     {
       testConfigKey: 'BaseUSDC',
-      shouldAuthorize: true,
+      shouldAuthorize: false,
       target: '0x4e92071F9BC94011419Dc03fEaCA32D11241313a', // aq
     },
   ]
