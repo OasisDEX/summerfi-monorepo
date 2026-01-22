@@ -365,6 +365,7 @@ export type LandingPageData = {
   vaultsInfo: IArmadaVaultInfo[] | undefined
   totalUniqueUsers: number
   sumrPriceUsd: number
+  tvl: number
 }
 
 export enum SupportedNetworkIds {

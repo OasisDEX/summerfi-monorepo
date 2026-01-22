@@ -217,11 +217,13 @@ const higherYieldsBlockSectionsKeys = Object.keys(
 interface HigherYieldsBlockProps {
   vaultsList?: SDKVaultsListType
   totalRebalanceItemsPerStrategyId?: TotalRebalanceItemsPerStrategyId[]
+  tvl?: number
 }
 
 export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   vaultsList,
   totalRebalanceItemsPerStrategyId = [],
+  tvl,
 }) => {
   const pathname = usePathname()
   const totalRebalances = useMemo(
@@ -245,8 +247,8 @@ export const HigherYieldsBlock: React.FC<HigherYieldsBlockProps> = ({
   )
 
   const totalAssets = useMemo(() => {
-    return vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
-  }, [vaultsList])
+    return tvl
+  }, [tvl])
 
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
 

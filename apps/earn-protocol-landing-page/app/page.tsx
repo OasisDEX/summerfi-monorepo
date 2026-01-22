@@ -76,6 +76,7 @@ export default function HomePage() {
       <ProtocolStats
         vaultsList={landingPageData?.vaultsWithConfig}
         totalUniqueUsers={landingPageData?.totalUniqueUsers}
+        tvl={landingPageData?.tvl}
       />
       <SummerFiProBox />
       <BigGradientBox>
@@ -93,6 +94,7 @@ export default function HomePage() {
         <HigherYieldsBlock
           vaultsList={landingPageData?.vaultsWithConfig}
           totalRebalanceItemsPerStrategyId={landingPageData?.totalRebalanceItemsPerStrategyId}
+          tvl={landingPageData?.tvl}
         />
         <EnhancedRiskManagement
           protectedCapital="$10B+"

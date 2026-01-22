@@ -1,5 +1,6 @@
 import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
+  type EarnAppConfigType,
   type LandingPageData,
   supportedDefillamaProtocols,
   supportedDefillamaProtocolsConfig,
@@ -20,6 +21,7 @@ import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/de
 import { getCachedDefillamaProtocolTvl } from '@/app/server-handlers/cached/defillama/get-protocol-tvl'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedProAppStats } from '@/app/server-handlers/cached/get-pro-app-stats/get-pro-app-stats'
+import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -103,6 +105,7 @@ export async function GET() {
     vaultsInfoRaw,
     sumrPrice,
     cookieRaw,
+    tvl,
   ] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
@@ -132,6 +135,7 @@ export async function GET() {
     getCachedVaultsInfo(),
     getCachedSumrPrice(),
     cookies(),
+    getCachedTvl(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -160,8 +164,8 @@ export async function GET() {
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
-  return NextResponse.json({
-    systemConfig: cleanSystemConfig,
+  return NextResponse.json<LandingPageData>({
+    systemConfig: cleanSystemConfig as EarnAppConfigType,
     vaultsWithConfig,
     vaultsApyByNetworkMap,
     protocolTvls,
@@ -171,5 +175,6 @@ export async function GET() {
     vaultsInfo,
     totalUniqueUsers,
     sumrPriceUsd,
-  } as LandingPageData)
+    tvl,
+  })
 }

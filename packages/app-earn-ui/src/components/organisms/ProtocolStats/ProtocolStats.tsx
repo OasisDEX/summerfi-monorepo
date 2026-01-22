@@ -14,15 +14,16 @@ interface ProtocolStatsProps {
   vaultsList?: SDKVaultsListType
   totalUniqueUsers?: number
   noMargin?: boolean
+  tvl?: number
 }
 
 export const ProtocolStats: FC<ProtocolStatsProps> = ({
   vaultsList,
   totalUniqueUsers,
   noMargin = false,
+  tvl,
 }) => {
   const supportedProtocolsCount = getVaultsProtocolsList(vaultsList ?? []).allVaultsProtocols.length
-  const totalAssets = vaultsList?.reduce((acc, vault) => acc + Number(vault.totalValueLockedUSD), 0)
   const flooredTotalUniqueUsers = totalUniqueUsers
     ? Math.floor(totalUniqueUsers / 1000) * 1000
     : 6000
@@ -30,7 +31,7 @@ export const ProtocolStats: FC<ProtocolStatsProps> = ({
   const data = [
     {
       title: 'Total deposits',
-      value: `$${formatCryptoBalance(totalAssets ?? 0)}`,
+      value: `$${formatCryptoBalance(tvl ?? 0)}`,
     },
     {
       title: 'Users',
