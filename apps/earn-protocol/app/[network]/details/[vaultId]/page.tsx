@@ -15,6 +15,7 @@ import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
@@ -92,37 +93,43 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     tags: [CACHE_TAGS.INTEREST_RATES],
   }
 
-  const [fullArkInterestRatesMap, latestArkInterestRatesMap, vaultInterestRates, vaultsApyRaw] =
-    await Promise.all([
-      getArksInterestRates({
-        network: parsedNetwork,
-        arksList: vault.arks.filter(
-          (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-        ),
-      }),
-      getArksInterestRates({
-        network: parsedNetwork,
-        arksList: vault.arks,
-        justLatestRates: true,
-      }),
-      unstableCache(
-        getVaultsHistoricalApy,
-        ['vaultsHistoricalApy', `${vault.id}-${parsedNetworkId}`],
-        cacheConfig,
-      )({
-        // just the vault displayed
-        fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-          fleetAddress: id,
-          chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-        })),
-      }),
-      getCachedVaultsApy({
-        fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
-          fleetAddress: id,
-          chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
-        })),
-      }),
-    ])
+  const [
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
+    vaultInterestRates,
+    vaultsApyRaw,
+    tvl,
+  ] = await Promise.all([
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks,
+      justLatestRates: true,
+    }),
+    unstableCache(
+      getVaultsHistoricalApy,
+      ['vaultsHistoricalApy', `${vault.id}-${parsedNetworkId}`],
+      cacheConfig,
+    )({
+      // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
+      })),
+    }),
+    getCachedVaultsApy({
+      fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(supportedSDKNetwork(protocolNetwork)),
+      })),
+    }),
+    getCachedTvl(),
+  ])
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
@@ -144,10 +151,10 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
         summerVaultName={summerVaultName}
         vault={vaultWithConfig}
         arksInterestRates={latestArkInterestRatesMap}
-        vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}
         totalUsers={totalUsers}
         vaultApyData={vaultApyData}
+        tvl={tvl}
       />
     </VaultGridDetails>
   )

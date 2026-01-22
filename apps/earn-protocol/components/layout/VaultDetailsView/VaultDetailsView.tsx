@@ -5,7 +5,6 @@ import {
   type ArksHistoricalChartData,
   type InterestRates,
   type SDKVaultishType,
-  type SDKVaultsListType,
   type VaultApyData,
 } from '@summerfi/app-types'
 
@@ -18,22 +17,22 @@ interface VaultDetailsViewProps {
   arksHistoricalChartData: ArksHistoricalChartData
   summerVaultName: string
   vault: SDKVaultishType
-  vaults: SDKVaultsListType
   arksInterestRates: InterestRates
   totalRebalanceActions: number
   totalUsers: number
   vaultApyData: VaultApyData
+  tvl: number
 }
 
 export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
   arksHistoricalChartData,
   summerVaultName,
   vault,
-  vaults,
   arksInterestRates,
   totalRebalanceActions,
   totalUsers,
   vaultApyData,
+  tvl,
 }) => {
   return (
     <>
@@ -47,9 +46,9 @@ export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
       />
       <VaultDetailsSecurity
         vault={vault}
-        vaults={vaults}
         totalRebalanceActions={totalRebalanceActions}
         totalUsers={totalUsers}
+        tvl={tvl}
       />
       <VaultDetailsFaq />
     </>

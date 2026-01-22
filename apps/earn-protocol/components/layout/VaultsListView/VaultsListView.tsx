@@ -79,6 +79,7 @@ type VaultsListViewProps = {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
+  tvl: number
 }
 
 enum VaultsSorting {
@@ -120,6 +121,7 @@ export const VaultsListView = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
+  tvl,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
@@ -453,10 +455,8 @@ export const VaultsListView = ({
   }, [vaultsList])
 
   const formattedTotalAssets = useMemo(() => {
-    return formatCryptoBalance(
-      vaultsList.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
-    )
-  }, [vaultsList])
+    return formatCryptoBalance(tvl)
+  }, [tvl])
 
   const formattedProtocolsSupportedList = useMemo(
     () => getVaultsProtocolsList(vaultsList),
@@ -602,7 +602,7 @@ export const VaultsListView = ({
         <div className={vaultsListViewStyles.topContentGrid}>
           <DataBlock
             title="Protocol TVL"
-            titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies"
+            titleTooltip="Protocol TVL is the total amount of Assets currently deployed across all of the strategies including institutional deployments."
             size="large"
             value={`$${formattedTotalAssets}`}
             tooltipName="vaults-list-protocol-tvl"

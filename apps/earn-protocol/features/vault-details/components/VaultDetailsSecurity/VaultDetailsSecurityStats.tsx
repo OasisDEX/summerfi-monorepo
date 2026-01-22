@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { Card, DataBlock } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
-import { formatCryptoBalance, formatWithSeparators, zero } from '@summerfi/app-utils'
+import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -12,20 +11,17 @@ import { VaultDetailsSecurityStatsHeader } from './VaultDetailsSecurityStatsHead
 import classNames from './VaultDetailsSecurity.module.css'
 
 interface VaultDetailsSecurityStatsProps {
-  vaults: SDKVaultsListType
   totalRebalanceActions: number
   totalUsers: number
+  tvl: number
 }
 
 export const VaultDetailsSecurityStats = ({
-  vaults,
   totalRebalanceActions,
   totalUsers,
+  tvl,
 }: VaultDetailsSecurityStatsProps) => {
-  const totalAssets = useMemo(
-    () => vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
-    [vaults],
-  )
+  const totalAssets = useMemo(() => tvl, [tvl])
 
   const dataBlocks = [
     {

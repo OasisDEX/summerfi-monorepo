@@ -6,12 +6,12 @@ import {
   safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
-  zero,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
 import { cookies, headers } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -22,12 +22,13 @@ import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 const EarnAllVaultsPage = async () => {
-  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice] = await Promise.all([
+  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice, tvl] = await Promise.all([
     cookies(),
     getCachedVaultsList(),
     getCachedConfig(),
     getCachedVaultsInfo(),
     getCachedSumrPrice(),
+    getCachedTvl(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -60,6 +61,7 @@ const EarnAllVaultsPage = async () => {
       vaultsInfo={vaultsInfo}
       vaultsList={vaultsWithConfig}
       sumrPriceUsd={sumrPriceUsd}
+      tvl={tvl}
     />
   )
 }
@@ -69,17 +71,16 @@ export async function generateMetadata({
 }: {
   searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
-  const [{ vaults }, headersList, params] = await Promise.all([
+  const [{ vaults }, headersList, params, tvl] = await Promise.all([
     getCachedVaultsList(),
     headers(),
     searchParams,
+    getCachedTvl(),
   ])
   const prodHost = headersList.get('host')
   const baseUrl = new URL(`https://${prodHost}`)
 
-  const tvl = formatCryptoBalance(
-    vaults.reduce((acc, vault) => acc.plus(vault.totalValueLockedUSD), zero),
-  )
+  const tvlFormatted = formatCryptoBalance(tvl)
   const { allVaultsProtocols: protocolsSupported } = getVaultsProtocolsList(vaults)
 
   let ogImageUrl = ''
@@ -87,11 +88,11 @@ export async function generateMetadata({
   if (typeof params.game !== 'undefined') {
     ogImageUrl = `${baseUrl}earn/img/misc/yield_racer.png`
   } else {
-    ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvl}&protocols=${protocolsSupported.length}`
+    ogImageUrl = `${baseUrl}earn/api/og/vaults-list?tvl=${tvlFormatted}&protocols=${protocolsSupported.length}`
   }
 
   return {
-    title: `Lazy Summer Protocol - $${tvl} TVL with ${protocolsSupported.length} protocols supported`,
+    title: `Lazy Summer Protocol - $${tvlFormatted} TVL with ${protocolsSupported.length} protocols supported`,
     description:
       "Get effortless access to crypto's best DeFi yields. Continually rebalanced by AI powered Keepers to earn you more while saving you time and reducing costs.",
     openGraph: {
