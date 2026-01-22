@@ -32,6 +32,7 @@ export const createBackend = ({
   const nameSuffix = deployedVersion.replaceAll('.', 'x')
 
   console.log(`ENV FUNCTIONS_API_URL: `, environmentVariables.FUNCTIONS_API_URL)
+  console.log(`ENV PARTNERS_API_URL: `, environmentVariables.PARTNERS_API_URL)
 
   // create and deploy function
 

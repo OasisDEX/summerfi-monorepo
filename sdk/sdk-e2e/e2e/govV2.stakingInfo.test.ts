@@ -162,5 +162,10 @@ describe('Armada Protocol Gov V2 Staking Info', () => {
       console.log('Protocol revenue amount:', revenueAmount.toLocaleString(), 'USD')
       expect(revenueAmount).toBeGreaterThanOrEqual(0)
     })
+
+    it('should get staking stats', async () => {
+      const stakingStats = await sdk.armada.users.getStakingStatsV2()
+      console.log('Staking Stats:', stakingStats)
+    })
   })
 })
