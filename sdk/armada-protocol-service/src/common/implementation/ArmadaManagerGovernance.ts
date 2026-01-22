@@ -25,6 +25,8 @@ import {
   type IAddress,
   type IChainInfo,
   Token,
+  LoggingService,
+  createTimeoutSignal,
 } from '@summerfi/sdk-common'
 import { encodeFunctionData, zeroAddress } from 'viem'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
@@ -34,6 +36,7 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
+import type { IConfigurationProvider } from 'node_modules/@summerfi/configuration-provider-common/src/interfaces/IConfigurationProvider'
 
 const MAX_MULTIPLE = 7.2655
 const WAD_DECIMALS = 18
@@ -43,6 +46,7 @@ const WAD_DECIMALS = 18
  * @description This class is the implementation of the IArmadaManager interface. Takes care of choosing the best provider for a price consultation
  */
 export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
+  private _configProvider: IConfigurationProvider
   private _blockchainClientProvider: IBlockchainClientProvider
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
@@ -56,6 +60,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
 
   /** CONSTRUCTOR */
   constructor(params: {
+    configProvider: IConfigurationProvider
     blockchainClientProvider: IBlockchainClientProvider
     allowanceManager: IAllowanceManager
     tokensManager: ITokensManager
@@ -71,6 +76,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     this._contractsProvider = params.contractsProvider
     this._subgraphManager = params.subgraphManager
     this._hubChainInfo = params.hubChainInfo
+    this._configProvider = params.configProvider
     this._utils = params.utils
     this._vaults = params.vaults
 
@@ -985,10 +991,13 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
   async getStakingStatsV2(): Promise<StakingStatsV2> {
     const stakingContractAddress = getDeployedGovAddress('summerStaking')
 
-    const response = await this._subgraphManager.getStakingStatsV2({
-      chainId: this._hubChainInfo.chainId,
-      id: stakingContractAddress.value,
-    })
+    const [response, circulatingSupply] = await Promise.all([
+      this._subgraphManager.getStakingStatsV2({
+        chainId: this._hubChainInfo.chainId,
+        id: stakingContractAddress.value,
+      }),
+      this.getCirculatingSupply(),
+    ])
 
     if (!response || response.governanceStakings.length !== 1) {
       throw new Error(`No staking stats found for address: ${stakingContractAddress.value}`)
@@ -1000,7 +1009,7 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
       summerStakedNormalized: stats.summerStakedNormalized,
       amountOfLockedStakes: stats.amountOfLockedStakes,
       averageLockupPeriod: stats.averageLockupPeriod,
-      circulatingSupply: '0',
+      circulatingSupply: circulatingSupply ?? '0',
     }
   }
 
@@ -1213,5 +1222,30 @@ export class ArmadaManagerGovernance implements IArmadaManagerGovernance {
     }))
 
     return stakes
+  }
+
+  private async getCirculatingSupply(): Promise<string | undefined> {
+    const partnersApiUrl = this._configProvider.getConfigurationItem({
+      name: 'PARTNERS_API_URL',
+    })
+
+    const url = `${partnersApiUrl}/api/protocol-info/circulating-supply`
+
+    const response = await fetch(url, {
+      signal: createTimeoutSignal(),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      LoggingService.error(`Failed to fetch circulating supply: ${response.status} - ${errorText}`)
+      return undefined
+    }
+
+    const json = (await response.json()) as { circulatingSupply: string }
+
+    return json.circulatingSupply
   }
 }
