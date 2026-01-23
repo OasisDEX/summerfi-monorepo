@@ -271,13 +271,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   async getUserMerklClaimDirectTx(
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']>[0],
   ): ReturnType<IArmadaManagerMerklRewards['getUserMerklClaimDirectTx']> {
-    const { address } = params
-
-    const chainId = ChainIds.Base // Merkl rewards are only on Base for now
+    const { address, chainId = ChainIds.Base, rewardsTokens } = params
 
     LoggingService.debug('Generating getUserMerklClaimDirectTx', {
       address,
       chainId,
+      rewardsTokens,
     })
 
     const admiralsQuartersAddress = this._deploymentProvider.getDeployedContractAddress({
@@ -292,6 +291,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     // Get user's Merkl rewards for this specific chain
     const rewardsData = await this.getUserMerklRewards({
       address,
+      rewardsTokensAddresses: rewardsTokens,
     })
 
     const chainRewards = rewardsData.perChain[chainId]

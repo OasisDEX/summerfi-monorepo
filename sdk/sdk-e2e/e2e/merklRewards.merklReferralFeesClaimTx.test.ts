@@ -2,11 +2,15 @@ import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createTestSDK } from './utils/sdkInstance'
 import { SharedConfig } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
+import { formatToken } from './utils/stringifiers'
 
+const simulateOnly = true
 const signerPrivateKey = SharedConfig.userPrivateKey
 
 const scenarios: { userAddress: AddressValue }[] = [
-  { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
+  { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
+  // { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
+  // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
 ]
 
 describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
@@ -30,36 +34,40 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       const usdcTokenAddress = usdcToken.address.value
 
       // First get rewards to find chains with rewards and get token addresses
-      const rewards = await sdk.armada.users.getUserMerklRewards({
+      const rewardsData = await sdk.armada.users.getUserMerklRewards({
         address: userAddress,
         chainIds: [ChainIds.Base],
         rewardsTokensAddresses: [usdcTokenAddress],
       })
 
-      const chainsWithRewards = Object.entries(rewards.perChain)
-        .filter(([_, chainRewards]) => chainRewards && chainRewards.length > 0)
+      const chainIdsWithRewards = Object.entries(rewardsData.perChain)
+        .filter(([_chainId, chainRewards]) => chainRewards && chainRewards.length > 0)
         .map(([chainId]) => parseInt(chainId) as ChainId)
 
-      if (chainsWithRewards.length === 0) {
-        console.log('No chains with rewards found, skipping token-specific test')
+      if (chainIdsWithRewards.length === 0) {
+        console.log('No chains with rewards found, skipping test')
+        return
+      } else {
+        console.log(`Chains with rewards: ${chainIdsWithRewards}`)
+      }
+
+      const firstChainId = chainIdsWithRewards[0]
+      const firstChainRewards = rewardsData.perChain[firstChainId]
+      if (!firstChainRewards) {
+        console.log('Item is undefined, skipping test')
         return
       }
 
-      const testChainId = chainsWithRewards[0]
-      const chainRewards = rewards.perChain[testChainId]
-      if (!chainRewards || chainRewards.length === 0) {
-        console.log('No rewards found on test chain, skipping token-specific test')
-        return
-      }
+      console.log(`First chain with rewards: ${JSON.stringify(firstChainRewards, null, 2)}`)
 
       console.log(
-        `Testing referral claim transaction for chain ${testChainId} and token ${chainRewards[0].token.address} with ${chainRewards[0].amount} ${chainRewards[0].token.symbol}`,
+        `Testing referral claim transaction for chain ${firstChainId} and token ${firstChainRewards[0].token.address} with ${formatToken(BigInt(firstChainRewards[0].amount), firstChainRewards[0].token.decimals)} ${firstChainRewards[0].token.symbol}`,
       )
 
       const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
         address: userAddress,
-        chainId: testChainId,
-        rewardsTokensAddresses: [chainRewards[0].token.address as AddressValue],
+        chainId: firstChainId,
+        rewardsTokensAddresses: [firstChainRewards[0].token.address as AddressValue],
       })
 
       if (!claimTransactions) {
@@ -80,18 +88,21 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       expect(claimTx.transaction.value).toBe('0')
 
       console.log(
-        `✅ Generated referral claim transaction with specific tokens for chain ${testChainId}`,
+        `✅ Generated referral claim transaction with specific tokens for chain ${firstChainId}`,
       )
 
       // try to send tx
       sendTxTool = createSendTransactionTool({
-        chainId: testChainId,
+        chainId: firstChainId,
         rpcUrl,
         signerPrivateKey,
+        simulateOnly,
       })
 
       const status = await sendTxTool(claimTx)
-      console.log(`✅ Sent referral claim transaction for chain ${testChainId}: ${status}`)
+      if (!simulateOnly) {
+        console.log(`✅ Sent referral claim transaction for chain ${firstChainId}: ${status}`)
+      }
     })
 
     it('should throw error for unsupported chain', async () => {
