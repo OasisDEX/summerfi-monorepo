@@ -80,7 +80,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
     try {
       // Build the URL with hardcoded chainId=8453 (Base) as Merkl rewards are only on Base for now
       // using with reloadChainId because we're caching it in the app
-      const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=8453&reloadChainId=8453&claimableOnly=true`
+      const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=8453&reloadChainId=8453&claimableOnly=false`
 
       LoggingService.debug('Making request to Merkl API', { url })
 

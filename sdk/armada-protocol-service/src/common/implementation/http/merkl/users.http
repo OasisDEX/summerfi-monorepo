@@ -1,8 +1,6 @@
 # @address = 0x38233654FB0843c8024527682352A5d41E7f7324
 # @address = 0xE9c245293DAC615c11A5bF26FCec91C3617645E4
-@address = 0xdb6e9e7390e9acc34619e56efa48ade01cff6f12
+@address = 0xA8752762470a6a73aC874258677043c226d080ec
 @chain_id = 8453 # rewards only on base
 
-https://api.merkl.xyz/v4/users/{{address}}/rewards
-  ?chainId={{chain_id}}
-  &claimableOnly=true
+https://api.merkl.xyz/v4/users/{{address}}/rewards?chainId={{chain_id}}&reloadChainId={{chain_id}}&claimableOnly=false
