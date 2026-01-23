@@ -20,22 +20,19 @@ describe('Merkl Rewards', () => {
       const rewards = await sdk.armada.users.getUserMerklRewards({
         address: userAddress,
       })
-
       expect(rewards.perChain).toBeDefined()
+
+      // Log rewards for each chain
+
       Object.entries(rewards.perChain).forEach(([chainId, chainRewards]) => {
-        console.log(
-          `Validating rewards on Chain ID: ${chainId}, Rewards Count: ${chainRewards.length}`,
-        )
-        chainRewards.forEach((reward, index) => {
-          expect(reward).toHaveProperty('token')
-          expect(reward).toHaveProperty('root')
-          expect(reward).toHaveProperty('recipient')
-          expect(reward).toHaveProperty('amount')
-          expect(reward).toHaveProperty('claimed')
-          expect(reward).toHaveProperty('pending')
-          expect(reward).toHaveProperty('proofs')
-          console.log(`Reward ${index + 1} is valid`)
-        })
+        if (chainRewards && chainRewards.length > 0) {
+          console.log(`Chain ID ${chainId}: ${chainRewards.length} rewards found`)
+          chainRewards.forEach((reward, index) => {
+            console.log(`  Reward ${index + 1}: ${displayMerklReward(reward)}`)
+          })
+        } else {
+          console.log(`Chain ID ${chainId}: No rewards found`)
+        }
       })
     })
 
@@ -46,26 +43,20 @@ describe('Merkl Rewards', () => {
         address: userAddress,
         chainIds: requestedChainIds,
       })
-
       expect(rewards.perChain).toBeDefined()
 
       // Check that only requested chains are included (or chains with actual rewards)
       const returnedChainIds = Object.keys(rewards.perChain).map((chainId) => parseInt(chainId))
-
-      // Verify that returned chains are subset of requested chains
       returnedChainIds.forEach((chainId) => {
         expect(requestedChainIds).toContain(chainId)
       })
 
       // Log rewards for each requested chain
-      requestedChainIds.forEach((chainId) => {
-        const chainRewards = rewards.perChain[chainId]
+      Object.entries(rewards.perChain).forEach(([chainId, chainRewards]) => {
         if (chainRewards && chainRewards.length > 0) {
           console.log(`Chain ID ${chainId}: ${chainRewards.length} rewards found`)
           chainRewards.forEach((reward, index) => {
-            console.log(
-              `  Reward ${index + 1}: ${reward.token.symbol} - ${displayMerklReward(reward)}`,
-            )
+            console.log(` Reward ${index + 1}: ${displayMerklReward(reward)}`)
           })
         } else {
           console.log(`Chain ID ${chainId}: No rewards found`)

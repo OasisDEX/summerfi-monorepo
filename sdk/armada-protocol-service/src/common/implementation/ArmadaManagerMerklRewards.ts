@@ -108,16 +108,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       }
 
       // Map response to our interface, picking only required properties
-      const merklRewardsPerChain: Partial<Record<ChainId, MerklReward[]>> = {}
+      const merklRewardsPerDistributionChain: Partial<Record<ChainId, MerklReward[]>> = {}
 
       // Pre-normalize rewardsTokensAddresses to lowercase Set for case-insensitive comparison
       const normalizedRewardsTokensSet = rewardsTokensAddresses
         ? new Set(rewardsTokensAddresses.map((address) => address.toLowerCase()))
         : null
-
-      LoggingService.debug('merklApiUsersData', {
-        merklApiUsersData,
-      })
 
       merklApiUsersData.forEach((merklApiUser) => {
         const rewards: MerklReward[] = []
@@ -144,47 +140,53 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
           })
         }
 
-        if (!merklRewardsPerChain[ChainIds.Base]) {
-          merklRewardsPerChain[ChainIds.Base] = []
+        if (!merklRewardsPerDistributionChain[ChainIds.Base]) {
+          merklRewardsPerDistributionChain[ChainIds.Base] = []
         }
-        merklRewardsPerChain[ChainIds.Base]!.push(...rewards)
+        merklRewardsPerDistributionChain[ChainIds.Base]!.push(...rewards)
       })
 
-      LoggingService.debug(
-        'Successfully parsed Merkl rewards data',
-        normalizedRewardsTokensSet,
-        Object.entries(merklRewardsPerChain).map(([chainId, rewards]) =>
-          JSON.stringify({
+      const stringified = JSON.stringify(
+        Object.fromEntries(
+          Object.entries(merklRewardsPerDistributionChain).map(([chainId, rewards]) => [
             chainId,
-            rewards: rewards.map((reward) => ({
+            rewards.map((reward) => ({
               token: reward.token.symbol,
-              // use BigNumber for arithmetic/formatting instead of BigInt operations
-              amount: new BigNumber(reward.amount)
-                .div(new BigNumber(10).pow(reward.token.decimals))
-                .toFixed(3),
-              claimed: new BigNumber(reward.claimed)
-                .div(new BigNumber(10).pow(reward.token.decimals))
-                .toFixed(3),
+              amount: new BigNumber(reward.amount).shiftedBy(-reward.token.decimals).toFixed(3),
+              claimed: new BigNumber(reward.claimed).shiftedBy(-reward.token.decimals).toFixed(3),
               unknownCampaignsAmount: reward.unknownCampaigns
                 .map((c) => c.amount)
                 .reduce((a, b) => a.plus(b), new BigNumber(0))
-                .div(new BigNumber(10).pow(reward.token.decimals))
+                .shiftedBy(-reward.token.decimals)
                 .toFixed(3),
               unknownCampaignsClaimed: reward.unknownCampaigns
                 .map((c) => c.claimed)
                 .reduce((a, b) => a.plus(b), new BigNumber(0))
-                .div(new BigNumber(10).pow(reward.token.decimals))
+                .shiftedBy(-reward.token.decimals)
                 .toFixed(3),
-              breakdowns: Object.entries(reward.breakdowns).map(([chainId, breakdowns]) => ({
-                chainId,
-                breakdowns: Object.entries(breakdowns).length,
-              })),
+              breakdowns: Object.fromEntries(
+                Object.entries(reward.breakdowns).map(([chainId, breakdowns]) => [
+                  chainId,
+                  Object.entries(breakdowns).map(([fleetAddress, breakdown]) => ({
+                    fleetAddress,
+                    amount: new BigNumber(breakdown.amount)
+                      .shiftedBy(-reward.token.decimals)
+                      .toFixed(3),
+                    claimed: new BigNumber(breakdown.claimed)
+                      .shiftedBy(-reward.token.decimals)
+                      .toFixed(3),
+                  })),
+                ]),
+              ),
             })),
-          }),
+          ]),
         ),
-      )
+        null,
+        2,
+      ).toString()
+      LoggingService.debug('Finalized Merkl rewards data', stringified)
 
-      return { perChain: merklRewardsPerChain }
+      return { perChain: merklRewardsPerDistributionChain }
     } catch (error) {
       LoggingService.debug('Failed to fetch Merkl rewards', {
         address: userAddress,
@@ -214,7 +216,12 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
 
     LoggingService.debug('Parsing breakdown', {
       breakdownsCount: breakdowns.length,
-      breakdowns: breakdowns,
+      breakdowns: breakdowns.map((b) => ({
+        ...b,
+        amount: new BigNumber(b.amount).shiftedBy(-18).toFixed(),
+        claimed: new BigNumber(b.claimed).shiftedBy(-18).toFixed(),
+        pending: new BigNumber(b.pending).shiftedBy(-18).toFixed(),
+      })),
     })
 
     const unknownCampaigns: MerklApiRewardBreakdown[] = []
