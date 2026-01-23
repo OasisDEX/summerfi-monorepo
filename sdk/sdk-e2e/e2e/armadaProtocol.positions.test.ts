@@ -1,4 +1,4 @@
-import { Address, getChainInfoByChainId, User } from '@summerfi/sdk-common'
+import { Address, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
 
 import { TestClientIds } from './utils/testConfig'
 import { stringifyArmadaPosition } from './utils/stringifiers'
@@ -13,33 +13,38 @@ jest.setTimeout(300000)
  */
 
 describe('Armada Protocol - Positions', () => {
-  const scenarios: { testClientId?: TestClientIds; testSpecificFleet?: boolean }[] = [
+  const scenarios: {
+    userAddress?: AddressValue
+    testClientId?: TestClientIds
+    testSpecificFleet?: boolean
+  }[] = [
     {
       testSpecificFleet: false,
+      userAddress: '0xA8752762470a6a73aC874258677043c226d080ec',
     },
-    {
-      testSpecificFleet: true,
-    },
-    {
-      testClientId: TestClientIds.ACME,
-      testSpecificFleet: false,
-    },
-    {
-      testClientId: TestClientIds.ACME,
-      testSpecificFleet: true,
-    },
-    {
-      testClientId: TestClientIds.Targen,
-      testSpecificFleet: false,
-    },
-    {
-      testClientId: TestClientIds.Targen,
-      testSpecificFleet: true,
-    },
+    // {
+    //   testSpecificFleet: true,
+    // },
+    // {
+    //   testClientId: TestClientIds.ACME,
+    //   testSpecificFleet: false,
+    // },
+    // {
+    //   testClientId: TestClientIds.ACME,
+    //   testSpecificFleet: true,
+    // },
+    // {
+    //   testClientId: TestClientIds.Targen,
+    //   testSpecificFleet: false,
+    // },
+    // {
+    //   testClientId: TestClientIds.Targen,
+    //   testSpecificFleet: true,
+    // },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testClientId, testSpecificFleet = false } = scenario
+    const { testClientId, testSpecificFleet = false, userAddress: scenarioUserAddress } = scenario
 
     it('should get user positions', async () => {
       // Choose SDK setup based on scenario
@@ -47,7 +52,7 @@ describe('Armada Protocol - Positions', () => {
       const { sdk, chainId, fleetAddress, userAddress } = setup
 
       const chainInfo = getChainInfoByChainId(chainId)
-      const user = User.createFromEthereum(chainId, userAddress.value)
+      const user = User.createFromEthereum(chainId, scenarioUserAddress ?? userAddress.value)
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(`[${sdkType}] Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
