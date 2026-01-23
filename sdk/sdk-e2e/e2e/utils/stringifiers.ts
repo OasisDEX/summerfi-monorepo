@@ -7,6 +7,17 @@ export function formatSumr(value: bigint): string {
   return BigNumber(value).div(SUMR_DECIMALS).toFixed()
 }
 
+export function displayMerklReward(reward: {
+  amount: string
+  claimed: string
+  token: { decimals: number }
+}): string {
+  return BigNumber(reward.amount)
+    .minus(reward.claimed)
+    .div(10 ** Number(reward.token.decimals))
+    .toString()
+}
+
 export function stringifyArmadaVaultInfo(vaultInfo: IArmadaVaultInfo): string {
   return JSON.stringify(
     {

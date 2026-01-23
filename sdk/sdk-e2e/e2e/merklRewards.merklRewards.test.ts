@@ -1,0 +1,76 @@
+import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
+import { createTestSDK } from './utils/sdkInstance'
+import { displayMerklReward } from './utils/stringifiers'
+
+const scenarios: { userAddress: AddressValue }[] = [
+  { userAddress: '0xA8752762470a6a73aC874258677043c226d080ec' },
+  // { userAddress: '0x38233654FB0843c8024527682352A5d41E7f7324' },
+  // { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
+  // { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
+  // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
+]
+
+describe('Merkl Rewards - getUserMerklRewards', () => {
+  const sdk = createTestSDK()
+
+  describe.each(scenarios)('with scenario %#', (scenario) => {
+    const { userAddress } = scenario
+
+    it('should fetch Merkl rewards for the user', async () => {
+      const rewards = await sdk.armada.users.getUserMerklRewards({
+        address: userAddress,
+      })
+
+      expect(rewards.perChain).toBeDefined()
+      Object.entries(rewards.perChain).forEach(([chainId, chainRewards]) => {
+        console.log(
+          `Validating rewards on Chain ID: ${chainId}, Rewards Count: ${chainRewards.length}`,
+        )
+        chainRewards.forEach((reward, index) => {
+          expect(reward).toHaveProperty('token')
+          expect(reward).toHaveProperty('root')
+          expect(reward).toHaveProperty('recipient')
+          expect(reward).toHaveProperty('amount')
+          expect(reward).toHaveProperty('claimed')
+          expect(reward).toHaveProperty('pending')
+          expect(reward).toHaveProperty('proofs')
+          console.log(`Reward ${index + 1} is valid`)
+        })
+      })
+    })
+
+    it.skip('should fetch Merkl rewards for specific chain IDs', async () => {
+      const requestedChainIds = [ChainIds.Base]
+
+      const rewards = await sdk.armada.users.getUserMerklRewards({
+        address: userAddress,
+        chainIds: requestedChainIds,
+      })
+
+      expect(rewards.perChain).toBeDefined()
+
+      // Check that only requested chains are included (or chains with actual rewards)
+      const returnedChainIds = Object.keys(rewards.perChain).map((chainId) => parseInt(chainId))
+
+      // Verify that returned chains are subset of requested chains
+      returnedChainIds.forEach((chainId) => {
+        expect(requestedChainIds).toContain(chainId)
+      })
+
+      // Log rewards for each requested chain
+      requestedChainIds.forEach((chainId) => {
+        const chainRewards = rewards.perChain[chainId]
+        if (chainRewards && chainRewards.length > 0) {
+          console.log(`Chain ID ${chainId}: ${chainRewards.length} rewards found`)
+          chainRewards.forEach((reward, index) => {
+            console.log(
+              `  Reward ${index + 1}: ${reward.token.symbol} - ${displayMerklReward(reward)}`,
+            )
+          })
+        } else {
+          console.log(`Chain ID ${chainId}: No rewards found`)
+        }
+      })
+    })
+  })
+})
