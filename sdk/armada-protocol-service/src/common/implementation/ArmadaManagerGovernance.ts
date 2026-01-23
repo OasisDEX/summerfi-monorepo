@@ -36,7 +36,7 @@ import type { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { findBucket } from './findBucket'
 import { BigNumber } from 'bignumber.js'
-import type { IConfigurationProvider } from 'node_modules/@summerfi/configuration-provider-common/src/interfaces/IConfigurationProvider'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 
 const MAX_MULTIPLE = 7.2655
 const WAD_DECIMALS = 18
