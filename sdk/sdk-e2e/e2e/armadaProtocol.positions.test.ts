@@ -1,4 +1,10 @@
-import { Address, getChainInfoByChainId, User, type AddressValue } from '@summerfi/sdk-common'
+import {
+  Address,
+  getChainInfoByChainId,
+  User,
+  type AddressValue,
+  type ChainId,
+} from '@summerfi/sdk-common'
 
 import { TestClientIds } from './utils/testConfig'
 import { stringifyArmadaPosition } from './utils/stringifiers'
@@ -17,10 +23,12 @@ describe('Armada Protocol - Positions', () => {
     userAddress?: AddressValue
     testClientId?: TestClientIds
     testSpecificFleet?: boolean
+    chainId?: ChainId
   }[] = [
     {
       testSpecificFleet: false,
       userAddress: '0xA8752762470a6a73aC874258677043c226d080ec',
+      chainId: 1,
     },
     // {
     //   testSpecificFleet: true,
@@ -44,15 +52,23 @@ describe('Armada Protocol - Positions', () => {
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { testClientId, testSpecificFleet = false, userAddress: scenarioUserAddress } = scenario
+    const {
+      testClientId,
+      testSpecificFleet = false,
+      userAddress: scenarioUserAddress,
+      chainId: scenarioChainId,
+    } = scenario
 
     it('should get user positions', async () => {
       // Choose SDK setup based on scenario
       const setup = testClientId ? createAdminSdkTestSetup(testClientId) : createSdkTestSetup()
       const { sdk, chainId, fleetAddress, userAddress } = setup
 
-      const chainInfo = getChainInfoByChainId(chainId)
-      const user = User.createFromEthereum(chainId, scenarioUserAddress ?? userAddress.value)
+      const chainInfo = getChainInfoByChainId(scenarioChainId ?? chainId)
+      const user = User.createFromEthereum(
+        scenarioChainId ?? chainId,
+        scenarioUserAddress ?? userAddress.value,
+      )
       const sdkType = testClientId ? 'Admin SDK' : 'User SDK'
       console.log(`[${sdkType}] Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
