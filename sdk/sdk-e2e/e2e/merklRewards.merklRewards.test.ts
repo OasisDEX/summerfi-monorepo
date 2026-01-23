@@ -10,13 +10,13 @@ const scenarios: { userAddress: AddressValue }[] = [
   // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
 ]
 
-describe('Merkl Rewards - getUserMerklRewards', () => {
+describe('Merkl Rewards', () => {
   const sdk = createTestSDK()
 
-  describe.each(scenarios)('with scenario %#', (scenario) => {
+  describe.each(scenarios)('user address $userAddress', (scenario) => {
     const { userAddress } = scenario
 
-    it('should fetch Merkl rewards for the user', async () => {
+    it('should fetch Merkl rewards for the user ', async () => {
       const rewards = await sdk.armada.users.getUserMerklRewards({
         address: userAddress,
       })

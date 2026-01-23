@@ -12,7 +12,7 @@ const scenarios: { userAddress: AddressValue }[] = [
 describe('Merkl Rewards - Authorization', () => {
   const sdk = createTestSDK()
 
-  describe.each(scenarios)('with scenario %#', (scenario) => {
+  describe.each(scenarios)('user address $userAddress', (scenario) => {
     const { userAddress } = scenario
 
     describe('getAuthorizeAsMerklRewardsOperatorTx', () => {

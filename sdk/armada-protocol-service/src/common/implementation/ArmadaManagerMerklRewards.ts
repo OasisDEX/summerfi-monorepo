@@ -82,7 +82,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       // using with reloadChainId because we're caching it in the app
       const url = `https://api.merkl.xyz/v4/users/${userAddress}/rewards?chainId=8453&reloadChainId=8453&claimableOnly=true`
 
-      LoggingService.log('Making request to Merkl API', { url })
+      LoggingService.debug('Making request to Merkl API', { url })
 
       const response = await fetch(url, {
         method: 'GET',
@@ -114,6 +114,10 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       const normalizedRewardsTokensSet = rewardsTokensAddresses
         ? new Set(rewardsTokensAddresses.map((address) => address.toLowerCase()))
         : null
+
+      LoggingService.debug('merklApiUsersData', {
+        merklApiUsersData,
+      })
 
       merklApiUsersData.forEach((merklApiUser) => {
         const rewards: MerklReward[] = []
@@ -207,6 +211,11 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
       },
       {} as Record<ChainId, Record<AddressValue, MerklRewardBreakdown>>,
     )
+
+    LoggingService.debug('Parsing breakdown', {
+      breakdownsCount: breakdowns.length,
+      breakdowns: breakdowns,
+    })
 
     const unknownCampaigns: MerklApiRewardBreakdown[] = []
 

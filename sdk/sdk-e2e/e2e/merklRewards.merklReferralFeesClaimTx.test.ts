@@ -19,7 +19,7 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
 
   let sendTxTool: SendTransactionTool
 
-  describe.each(scenarios)('with scenario %#', (scenario) => {
+  describe.each(scenarios)('user address $userAddress', (scenario) => {
     const { userAddress } = scenario
 
     it('should generate referral claim transaction with specific token addresses', async () => {
