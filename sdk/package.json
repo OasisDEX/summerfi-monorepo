@@ -9,7 +9,8 @@
     "sst:deploy": "npx sst deploy",
     "sst:deploy:inst-demo": "npx sst deploy --stage=inst-demo",
     "sst:dev": "npx sst dev",
-    "sst:dev:basic": "npx sst dev --mode=basic"
+    "sst:dev:basic": "npx sst dev --mode=basic",
+    "check-blocks-behind": "tsx ./scripts/check-blocks-behind.ts"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.44.1",
