@@ -31,8 +31,8 @@ import { useParams } from 'next/navigation'
 import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { getBeachClubClaimFeesButtonLabel } from '@/features/beach-club/helpers/get-beach-club-claim-fees-button-label'
 import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
+import { type BeachClubState } from '@/features/beach-club/types'
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
@@ -84,6 +84,23 @@ interface PortfolioRewardsCardsV2Props {
   sumrPriceUsd: number
   merkleUsdcClaimableNow?: number
   viewWalletAddress: string
+}
+
+const getMerklClaimRewardsButtonLabel = ({
+  claimStatus,
+}: {
+  claimStatus: BeachClubState['claimStatus']
+}) => {
+  switch (claimStatus) {
+    case UiTransactionStatuses.PENDING:
+      return 'Claiming...'
+    case UiTransactionStatuses.COMPLETED:
+      return 'Claimed'
+    case UiTransactionStatuses.FAILED:
+      return 'Retry'
+    default:
+      return 'Claim rewards'
+  }
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
@@ -220,7 +237,7 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
   const { claimMerkleRewardsTransaction } = useClaimMerkleRewardsTransaction({
     onSuccess: () => {
       setTimeout(() => {
-        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+        dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.COMPLETED })
         toast.success(
           'Rewards claimed successfully, token values can take up to several minutes to update',
           SUCCESS_TOAST_CONFIG,
@@ -277,6 +294,7 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
   }
 
   const handleClaimRewards = async () => {
+    dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.PENDING })
     if (!isOptInOpen && !merklIsAuthorizedOnBase) {
       handleOptInOpenClose()
 
@@ -291,8 +309,12 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
   }
 
   const buttonLabel = useMemo(() => {
-    return getBeachClubClaimFeesButtonLabel({ state })
-  }, [state])
+    return getMerklClaimRewardsButtonLabel({ claimStatus: state.claimStatus })
+  }, [state.claimStatus])
+
+  const claimingInProgress =
+    state.claimStatus === UiTransactionStatuses.PENDING ||
+    state.claimStatus === UiTransactionStatuses.COMPLETED
 
   return (
     <>
@@ -311,9 +333,8 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
               merkleUsdcClaimableNow === 0 ||
               isSettingChain ||
               state.feesClaimed ||
-              state.claimStatus === UiTransactionStatuses.PENDING ||
-              state.claimStatus === UiTransactionStatuses.COMPLETED ||
-              !isOwner
+              !isOwner ||
+              claimingInProgress
             }
           >
             <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
