@@ -39,6 +39,7 @@ interface PortfolioPageViewComponentProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
+  merkleUsdcRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -57,6 +58,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   blogPosts,
   portfolioSumrStakingV2Data,
   sumrPriceUsd,
+  merkleUsdcRewards,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -73,6 +75,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
         beachClubData={beachClubData}
+        merkleUsdcRewards={merkleUsdcRewards}
         blogPosts={blogPosts}
         portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
         sumrPriceUsd={sumrPriceUsd}

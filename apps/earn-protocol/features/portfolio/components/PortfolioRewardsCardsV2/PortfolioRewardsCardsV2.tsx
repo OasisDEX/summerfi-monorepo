@@ -1,19 +1,51 @@
 'use client'
-import { type Dispatch, type FC } from 'react'
-import { useAuthModal } from '@account-kit/react'
-import { Button, DataModule, Icon, Text, Tooltip, useUserWallet } from '@summerfi/app-earn-ui'
-import { ADDRESS_ZERO, formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { type Dispatch, type FC, useMemo, useReducer, useState } from 'react'
+import { toast } from 'react-toastify'
+import { useAuthModal, useChain } from '@account-kit/react'
+import {
+  Button,
+  DataModule,
+  ERROR_TOAST_CONFIG,
+  Icon,
+  MobileDrawer,
+  Modal,
+  SDKChainIdToAAChainMap,
+  SUCCESS_TOAST_CONFIG,
+  Text,
+  Tooltip,
+  useClientChainId,
+  useMobileCheck,
+  useUserWallet,
+} from '@summerfi/app-earn-ui'
+import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
+import {
+  ADDRESS_ZERO,
+  chainIdToSDKNetwork,
+  formatCryptoBalance,
+  formatFiatBalance,
+  sdkNetworkToHumanNetwork,
+} from '@summerfi/app-utils'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
+import { delayPerNetwork } from '@/constants/delay-per-network'
+import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { getBeachClubClaimFeesButtonLabel } from '@/features/beach-club/helpers/get-beach-club-claim-fees-button-label'
+import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
+import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { getDelegateTitle } from '@/features/claim-and-delegate/helpers'
+import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import {
   type ClaimDelegateExternalData,
   type ClaimDelegateReducerAction,
   type ClaimDelegateState,
+  type MerklIsAuthorizedPerChain,
 } from '@/features/claim-and-delegate/types'
+import { useClaimMerkleRewardsTransaction } from '@/hooks/use-claim-merkle-rewards-transaction'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
+import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
+import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioRewardsCardsV2.module.css'
 
@@ -24,6 +56,13 @@ interface SumrAvailableToClaimProps {
 
 interface SumrInOldStakingModuleProps {
   rewardsData: ClaimDelegateExternalData
+}
+
+interface ClaimMerkleUsdcRewardsProps {
+  merkleUsdcClaimableNow: number
+  userWalletAddress: string
+  viewWalletAddress: string
+  merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
 
 interface YourTotalSumrProps {
@@ -43,6 +82,8 @@ interface PortfolioRewardsCardsV2Props {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   sumrStakedV2: number
   sumrPriceUsd: number
+  merkleUsdcClaimableNow?: number
+  viewWalletAddress: string
 }
 
 const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumrPriceUsd }) => {
@@ -144,6 +185,161 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
         />
       }
     />
+  )
+}
+
+const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
+  merkleUsdcClaimableNow,
+  userWalletAddress,
+  viewWalletAddress,
+  merklIsAuthorizedPerChain,
+}) => {
+  const [isOptInOpen, setIsOptInOpen] = useState(false)
+  const value = `${formatCryptoBalance(merkleUsdcClaimableNow)} USDC`
+  const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
+
+  const isOwner = userWalletAddress.toLowerCase() === viewWalletAddress.toLowerCase()
+
+  const revalidateUser = useRevalidateUser()
+  const { deviceType } = useDeviceType()
+  const { isMobile } = useMobileCheck(deviceType)
+  const { clientChainId } = useClientChainId()
+  const { setChain, isSettingChain } = useChain()
+  const { publicClient } = useNetworkAlignedClient({
+    overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
+  })
+
+  const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
+
+  const [state, dispatch] = useReducer(beachClubReducer, {
+    ...beachClubDefaultState,
+    walletAddress: userWalletAddress,
+    merklIsAuthorizedPerChain,
+  })
+
+  const { claimMerkleRewardsTransaction } = useClaimMerkleRewardsTransaction({
+    onSuccess: () => {
+      setTimeout(() => {
+        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+        toast.success(
+          'Rewards claimed successfully, token values can take up to several minutes to update',
+          SUCCESS_TOAST_CONFIG,
+        )
+        dispatch({ type: 'update-fees-claimed', payload: true })
+        if (isOwner) {
+          revalidateUser(userWalletAddress)
+        }
+      }, delayPerNetwork[clientChainId])
+    },
+    onError: () => {
+      toast.error('Failed to claim fees', ERROR_TOAST_CONFIG)
+    },
+    network: chainIdToSDKNetwork(clientChainId),
+    publicClient,
+  })
+
+  const { merklOptInTransaction } = useMerklOptInTransaction({
+    onSuccess: () => {
+      setTimeout(() => {
+        dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
+        dispatch({
+          type: 'update-merkl-is-authorized-per-chain',
+          payload: {
+            ...merklIsAuthorizedPerChain,
+            [clientChainId]: true,
+          },
+        })
+        toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
+        handleOptInOpenClose()
+      }, delayPerNetwork[clientChainId])
+    },
+    onError: () => {
+      dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.FAILED })
+      toast.error('Merkl approval failed', ERROR_TOAST_CONFIG)
+    },
+    network: chainIdToSDKNetwork(clientChainId),
+    publicClient,
+  })
+
+  const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
+    if (Number(clientChainId) !== Number(chainId)) {
+      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+
+      return
+    }
+    dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.PENDING })
+    merklOptInTransaction().catch((err) => {
+      dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.FAILED })
+      toast.error('Failed to approve Merkl', ERROR_TOAST_CONFIG)
+      // eslint-disable-next-line no-console
+      console.error('Error approving Merkl', err)
+    })
+  }
+
+  const handleClaimRewards = async () => {
+    if (!isOptInOpen && !merklIsAuthorizedOnBase) {
+      handleOptInOpenClose()
+
+      return
+    }
+
+    await claimMerkleRewardsTransaction().catch((err) => {
+      toast.error('Failed to claim rewards', ERROR_TOAST_CONFIG)
+      // eslint-disable-next-line no-console
+      console.error('Error claiming rewards', err)
+    })
+  }
+
+  const buttonLabel = useMemo(() => {
+    return getBeachClubClaimFeesButtonLabel({ state })
+  }, [state])
+
+  return (
+    <>
+      <DataModule
+        dataBlock={{
+          title: 'USDC to Claim from Staking',
+          value,
+          titleSize: 'medium',
+          valueSize: 'large',
+        }}
+        actionable={
+          <Button
+            variant="unstyled"
+            onClick={handleClaimRewards}
+            disabled={
+              merkleUsdcClaimableNow === 0 ||
+              isSettingChain ||
+              state.feesClaimed ||
+              state.claimStatus === UiTransactionStatuses.PENDING ||
+              state.claimStatus === UiTransactionStatuses.COMPLETED ||
+              !isOwner
+            }
+          >
+            <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+              {buttonLabel}
+            </Text>
+          </Button>
+        }
+      />
+      {isMobile ? (
+        <MobileDrawer isOpen={isOptInOpen} onClose={handleOptInOpenClose} height="auto">
+          <ClaimDelegateOptInMerkl
+            onAccept={() => handleMerklOptInAccept(SupportedNetworkIds.Base)}
+            onReject={handleOptInOpenClose}
+            merklStatus={state.merklStatus}
+          />
+        </MobileDrawer>
+      ) : (
+        <Modal openModal={isOptInOpen} closeModal={handleOptInOpenClose}>
+          <ClaimDelegateOptInMerkl
+            onAccept={() => handleMerklOptInAccept(SupportedNetworkIds.Base)}
+            onReject={handleOptInOpenClose}
+            merklStatus={state.merklStatus}
+          />
+        </Modal>
+      )}
+    </>
   )
 }
 
@@ -259,7 +455,12 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   state,
   sumrStakedV2,
   sumrPriceUsd,
+  merkleUsdcClaimableNow,
+  viewWalletAddress,
 }) => {
+  const hasSumrInOldModule = Number(rewardsData.sumrStakeDelegate.stakedAmount) > 0.01
+  const { userWalletAddress } = useUserWallet()
+
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>
       <div className={classNames.cardWrapper}>
@@ -275,9 +476,20 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
       <div className={classNames.cardWrapper}>
         <SumrAvailableToClaim rewardsData={rewardsData} sumrPriceUsd={sumrPriceUsd} />
       </div>
-      <div className={classNames.cardWrapper}>
-        <SumrInOldStakingModule rewardsData={rewardsData} />
-      </div>
+      {hasSumrInOldModule ? (
+        <div className={classNames.cardWrapper}>
+          <SumrInOldStakingModule rewardsData={rewardsData} />
+        </div>
+      ) : userWalletAddress ? (
+        <div className={classNames.cardWrapper}>
+          <ClaimMerkleUsdcRewards
+            merkleUsdcClaimableNow={merkleUsdcClaimableNow ?? 0}
+            userWalletAddress={userWalletAddress}
+            viewWalletAddress={viewWalletAddress}
+            merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
+          />
+        </div>
+      ) : null}
       {/* <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
         <SumrPriceBar />
       </div> */}

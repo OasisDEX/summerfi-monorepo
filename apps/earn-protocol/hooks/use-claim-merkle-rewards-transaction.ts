@@ -11,16 +11,16 @@ import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
 /**
- * Hook to handle claim of beach club fees through a user operation transaction
+ * Hook to handle claim of merkl rewards through a user operation transaction
  * @param {Object} params - Hook parameters
  * @param {() => void} params.onSuccess - Callback function called when the transaction succeeds
  * @param {() => void} params.onError - Callback function called when the transaction fails
  * @returns {Object} Object containing the claim transaction function, loading state, and error state
- * @returns {() => Promise<unknown>} returns.claimBeachClubFeesTransaction - Function to execute the claim transaction
+ * @returns {() => Promise<unknown>} returns.claimMerkleRewardsTransaction - Function to execute the claim transaction
  * @returns {boolean} returns.isLoading - Whether the transaction is currently being processed
  * @returns {Error | null} returns.error - Error object if the transaction failed, null otherwise
  */
-export const useClaimBeachClubFeesTransaction = ({
+export const useClaimMerkleRewardsTransaction = ({
   onSuccess,
   onError,
   network,
@@ -31,7 +31,7 @@ export const useClaimBeachClubFeesTransaction = ({
   network: SupportedSDKNetworks
   publicClient?: PublicClient
 }): {
-  claimBeachClubFeesTransaction: () => Promise<unknown>
+  claimMerkleRewardsTransaction: () => Promise<unknown>
   isLoading: boolean
   error: Error | null
 } => {
@@ -62,7 +62,7 @@ export const useClaimBeachClubFeesTransaction = ({
     onError,
   })
 
-  const claimBeachClubFeesTransaction = async () => {
+  const claimMerkleRewardsTransaction = async () => {
     const user = getCurrentUser()
     const chainInfo = getChainInfo()
 
@@ -103,7 +103,7 @@ export const useClaimBeachClubFeesTransaction = ({
   }
 
   return {
-    claimBeachClubFeesTransaction,
+    claimMerkleRewardsTransaction,
     isLoading: isSendingUserOperation || !!waitingForTx,
     error: sendUserOperationError,
   }

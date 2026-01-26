@@ -22,6 +22,7 @@ interface PortfolioRewardsV2Props {
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   viewWalletAddress: string
   sumrPriceUsd: number
+  merkleUsdcClaimableNow?: number
 }
 
 export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
@@ -31,6 +32,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   portfolioSumrStakingV2Data,
   viewWalletAddress,
   sumrPriceUsd,
+  merkleUsdcClaimableNow,
 }) => {
   const { userWalletAddress } = useUserWallet()
   const portfolioWalletAddress = state.walletAddress
@@ -86,6 +88,8 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
         dispatch={dispatch}
         sumrStakedV2={sumrStakedV2}
         sumrPriceUsd={sumrPriceUsd}
+        merkleUsdcClaimableNow={merkleUsdcClaimableNow}
+        viewWalletAddress={viewWalletAddress}
       />
       <PortfolioStakingInfoCardV2
         usdcEarnedOnSumr={maxApy}

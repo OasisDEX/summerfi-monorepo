@@ -23,37 +23,24 @@ import {
   formatFiatBalance,
   sdkNetworkToHumanNetwork,
 } from '@summerfi/app-utils'
-import { type MerklReward } from '@summerfi/armada-protocol-common'
 
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import { delayPerNetwork } from '@/constants/delay-per-network'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { BeachClubTvlChallengeRewardCard } from '@/features/beach-club/components/BeachClubTvlChallengeRewardCard/BeachClubTvlChallengeRewardCard'
 import { getBeachClubClaimFeesButtonLabel } from '@/features/beach-club/helpers/get-beach-club-claim-fees-button-label'
-import { useClaimBeachClubFeesTransaction } from '@/features/beach-club/hooks/use-claim-beach-club-fees-transaction'
 import { type BeachClubReducerAction, type BeachClubState } from '@/features/beach-club/types'
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
+import { getMerkleFeesUSDClaimableNow } from '@/helpers/merkle'
+import { useClaimMerkleRewardsTransaction } from '@/hooks/use-claim-merkle-rewards-transaction'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 
 import { getBeachClubTvlRewardsCards } from './cards'
 
 import classNames from './BeachClubTvlChallenge.module.css'
-
-const getFeesUSDClaimableNow = (merklRewards: MerklReward[] | undefined) => {
-  if (merklRewards) {
-    return merklRewards.reduce((acc, reward) => {
-      return (
-        acc +
-        Number((Number(reward.amount) / Number(10 ** reward.token.decimals)) * reward.token.price)
-      )
-    }, 0)
-  }
-
-  return 0
-}
 
 interface BeachClubTvlChallengeProps {
   beachClubData: BeachClubData
@@ -116,7 +103,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
     publicClient,
   })
 
-  const { claimBeachClubFeesTransaction } = useClaimBeachClubFeesTransaction({
+  const { claimMerkleRewardsTransaction } = useClaimMerkleRewardsTransaction({
     onSuccess: () => {
       setTimeout(() => {
         dispatch({ type: 'update-merkl-status', payload: UiTransactionStatuses.COMPLETED })
@@ -134,12 +121,12 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const claimableFeesRewardsOnBase =
     beachClubData.claimableRewardsPerChain.perChain[SupportedNetworkIds.Base]
 
-  const feesUSDclaimableNowOnBase = getFeesUSDClaimableNow(claimableFeesRewardsOnBase)
+  const feesUSDclaimableNowOnBase = getMerkleFeesUSDClaimableNow(claimableFeesRewardsOnBase)
 
   const hasClaimableFeesRewardsOnBase = feesUSDclaimableNowOnBase > 0
 
   const handleClaimFees = async () => {
-    await claimBeachClubFeesTransaction().catch((err) => {
+    await claimMerkleRewardsTransaction().catch((err) => {
       toast.error('Failed to claim fees', ERROR_TOAST_CONFIG)
       // eslint-disable-next-line no-console
       console.error('Error claiming fees', err)

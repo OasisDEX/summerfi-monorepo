@@ -13,6 +13,7 @@ import {
   type GetVaultsApyResponse,
   type SDKVaultishType,
   type SingleSourceChartData,
+  SupportedNetworkIds,
 } from '@summerfi/app-types'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
@@ -39,6 +40,7 @@ import { PortfolioYourActivity } from '@/features/portfolio/components/Portfolio
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
 import { PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
+import { getMerkleFeesUSDClaimableNow } from '@/helpers/merkle'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
@@ -62,6 +64,7 @@ interface PortfolioPageViewProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
+  merkleUsdcRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -80,6 +83,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   blogPosts,
   portfolioSumrStakingV2Data,
   sumrPriceUsd,
+  merkleUsdcRewards,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -111,6 +115,9 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   }
 
   const overallSumr = calculateOverallSumr(rewardsData)
+
+  const merklUsdcRewardsData = merkleUsdcRewards?.perChain[SupportedNetworkIds.Base]
+  const merkleUsdcClaimableNow = getMerkleFeesUSDClaimableNow(merklUsdcRewardsData)
 
   const tabs = [
     {
@@ -187,6 +194,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
                 dispatch={dispatch}
                 portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
                 sumrPriceUsd={sumrPriceUsd}
+                merkleUsdcClaimableNow={merkleUsdcClaimableNow}
               />
             ),
           },
