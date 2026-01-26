@@ -5,7 +5,10 @@ export const getMerkleFeesUSDClaimableNow = (merklRewards: MerklReward[] | undef
     return merklRewards.reduce((acc, reward) => {
       return (
         acc +
-        Number((Number(reward.amount) / Number(10 ** reward.token.decimals)) * reward.token.price)
+        Number(
+          ((Number(reward.amount) - Number(reward.claimed)) / Number(10 ** reward.token.decimals)) *
+            reward.token.price,
+        )
       )
     }, 0)
   }
