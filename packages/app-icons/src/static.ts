@@ -453,6 +453,9 @@ export const iconsSync = {
   scroller_fluid: import('./icons/scroller_fluid.svg?react') as Promise<
     typeof import('*.svg?react')
   >,
+  scroller_morpho: import('./icons/scroller_morpho.svg?react') as Promise<
+    typeof import('*.svg?react')
+  >,
   scroller_gearbox: import('./icons/scroller_gearbox.svg?react') as Promise<
     typeof import('*.svg?react')
   >,

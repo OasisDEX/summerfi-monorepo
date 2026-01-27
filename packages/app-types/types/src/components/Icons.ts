@@ -348,6 +348,7 @@ export declare const IconsList: {
   scroller_compound: IconExportType
   scroller_ethena: IconExportType
   scroller_fluid: IconExportType
+  scroller_morpho: IconExportType
   earn_1_on_1: IconExportType
   earn_discord: IconExportType
   earn_email: IconExportType

@@ -323,6 +323,7 @@ export type IconNamesList =
   | 'scroller_compound'
   | 'scroller_ethena'
   | 'scroller_fluid'
+  | 'scroller_morpho'
   | 'earn_1_on_1'
   | 'earn_discord'
   | 'earn_email'

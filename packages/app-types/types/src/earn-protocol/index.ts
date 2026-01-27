@@ -319,6 +319,13 @@ export const supportedDefillamaProtocolsConfig: {
     asset: ['USDC', 'ETH', 'EURC'],
     strategy: 'Lending',
   },
+  morpho: {
+    displayName: 'Morpho',
+    defillamaProtocolName: 'morpho-v1',
+    icon: 'scroller_morpho',
+    asset: ['USDC', 'ETH'],
+    strategy: 'Lending',
+  },
 }
 
 export const supportedDefillamaProtocols = Object.keys(
@@ -334,6 +341,7 @@ export type SupportedDefillamaTvlProtocols =
   | 'compound'
   | 'ethena'
   | 'fluid'
+  | 'morpho'
 
 export type ProAppStats = {
   monthlyVolume: number

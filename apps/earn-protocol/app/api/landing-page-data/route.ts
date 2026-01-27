@@ -41,6 +41,7 @@ const emptyTvls = {
   compound: 0n,
   ethena: 0n,
   fluid: 0n,
+  morpho: 0n,
 }
 
 const getProtocolsTvl = async (): Promise<{
