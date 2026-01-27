@@ -18,43 +18,75 @@ describe('Oracle Tests', () => {
       denominationTokenSymbol?: string
       denominationFiat?: FiatCurrency
     }[] = [
+      // ETH on Base
+      // {
+      //   chainId: ChainIds.Base,
+      //   baseTokenSymbol: 'eth',
+      //   denominationTokenSymbol: 'weth',
+      // },
+      // {
+      //   chainId: ChainIds.Base,
+      //   baseTokenSymbol: 'eth',
+      //   denominationTokenSymbol: 'usdc',
+      // },
+      // {
+      //   chainId: ChainIds.Base,
+      //   baseTokenSymbol: 'eth',
+      //   denominationFiat: FiatCurrency.USD,
+      // },
+      // SUMR/USDC
       {
         chainId: ChainIds.Base,
-        baseTokenSymbol: 'eth',
-        denominationTokenSymbol: 'weth',
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'usdc',
       },
       {
+        chainId: ChainIds.Mainnet,
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'usdc',
+      },
+      {
+        chainId: ChainIds.ArbitrumOne,
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'usdc',
+      },
+      {
+        chainId: ChainIds.Sonic,
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'usdc.e',
+      },
+      {
+        chainId: ChainIds.Hyperliquid,
+        baseTokenSymbol: 'sumr',
+        denominationTokenSymbol: 'usdc',
+      },
+      // SUMR/USD
+      {
         chainId: ChainIds.Base,
-        baseTokenSymbol: 'eth',
+        baseTokenSymbol: 'sumr',
         denominationFiat: FiatCurrency.USD,
       },
 
       {
-        chainId: ChainIds.Base,
-        baseTokenSymbol: 'sumr',
-        denominationTokenSymbol: 'weth',
-      },
-      {
-        chainId: ChainIds.Base,
+        chainId: ChainIds.Mainnet,
         baseTokenSymbol: 'sumr',
         denominationFiat: FiatCurrency.USD,
       },
-
-      // {
-      //   chainId: ChainIds.Mainnet,
-      //   baseTokenSymbol: 'wbtc',
-      //   denominationFiat: FiatCurrency.USD,
-      // },
-      // {
-      //   chainId: ChainIds.ArbitrumOne,
-      //   baseTokenSymbol: 'weth',
-      //   denominationTokenSymbol: 'eth',
-      // },
-      // {
-      //   chainId: ChainIds.Sonic,
-      //   baseTokenSymbol: 's',
-      //   denominationFiat: FiatCurrency.USD,
-      // },
+      {
+        chainId: ChainIds.ArbitrumOne,
+        baseTokenSymbol: 'sumr',
+        denominationFiat: FiatCurrency.USD,
+      },
+      {
+        chainId: ChainIds.Sonic,
+        baseTokenSymbol: 'sumr',
+        denominationFiat: FiatCurrency.USD,
+      },
+      {
+        chainId: ChainIds.Hyperliquid,
+        baseTokenSymbol: 'sumr',
+        denominationFiat: FiatCurrency.USD,
+      },
     ]
 
     test.each(spotPriceScenarios)(
@@ -77,7 +109,7 @@ describe('Oracle Tests', () => {
         expect(spot.provider).toBeDefined()
 
         console.log(
-          `Spot price for ${spot.token.toString()}:\n`,
+          `${spot.token.toString()} price in ${denomination} on ${chainId}:\n`,
           spot.price.toString(),
           '(provider:' + spot.provider.toString() + ')',
         )

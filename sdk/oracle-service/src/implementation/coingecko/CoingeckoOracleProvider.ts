@@ -21,9 +21,11 @@ import type { OracleProviderConfig } from '../Types'
 import { BigNumber } from 'bignumber.js'
 
 export type CoingeckoResponse = {
-  [address: string]: {
-    [currency: string]: number
-  }
+  [address: string]:
+    | {
+        [currency: string]: number
+      }
+    | undefined
 }
 
 /**
@@ -71,6 +73,7 @@ export class CoingeckoOracleProvider
   async getSpotPrice(
     params: Parameters<IOracleProvider['getSpotPrice']>[0],
   ): ReturnType<IOracleProvider['getSpotPrice']> {
+    // Denomination is a token
     if (params.denomination && isToken(params.denomination)) {
       const baseToken = params.baseToken
       const quoteToken = params.denomination
@@ -90,24 +93,28 @@ export class CoingeckoOracleProvider
       })
 
       const baseUSDPrice =
-        responseData[params.baseToken.address.value.toLowerCase()][
+        responseData[params.baseToken.address.value.toLowerCase()]?.[
           quoteCurrencySymbol.toLowerCase()
         ]
       const quoteUSDPrice =
-        responseData[params.denomination?.address.value.toLowerCase()][
+        responseData[params.denomination?.address.value.toLowerCase()]?.[
           quoteCurrencySymbol.toLowerCase()
         ]
       // price cannot undefined
       if (!baseUSDPrice || !quoteUSDPrice) {
-        throw Error(
-          'BaseToken or QuoteToken spot prices could not be retrieved: ' +
-            JSON.stringify(responseData),
-        )
+        const errorMessage =
+          !baseUSDPrice && !quoteUSDPrice
+            ? `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) and ${params.denomination.symbol} (${params.denomination.address.toSolidityValue()}) tokens denomination data not found on ${params.baseToken.chainInfo.chainId} and ${params.denomination.chainInfo.chainId}: `
+            : !baseUSDPrice
+              ? `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) token denomination data not found on ${params.baseToken.chainInfo.chainId}: `
+              : `${params.denomination.symbol} (${params.denomination.address.toSolidityValue()}) token denomination data not found on ${params.denomination.chainInfo.chainId}: `
+        throw Error(errorMessage + JSON.stringify(responseData))
       }
+
       // price cannot be zero or negative
       if (BigNumber(baseUSDPrice).isZero() || BigNumber(quoteUSDPrice).isZero()) {
         throw Error(
-          'BaseToken or QuoteToken spot prices retrieved zero value: ' +
+          `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) or ${params.denomination.symbol} (${params.denomination.address.toSolidityValue()}) tokens denomination data prices retrieved zero value on ${params.baseToken.chainInfo.chainId} and ${params.denomination.chainInfo.chainId}: ` +
             JSON.stringify({
               baseUSDPrice,
               quoteUSDPrice,
@@ -115,7 +122,7 @@ export class CoingeckoOracleProvider
         )
       } else if (BigNumber(baseUSDPrice).isNegative() || BigNumber(quoteUSDPrice).isNegative()) {
         throw Error(
-          'BaseToken or QuoteToken spot prices retrieved negative value: ' +
+          `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) or ${params.denomination.symbol} (${params.denomination.address.toSolidityValue()}) tokens denomination data prices retrieved negative value on ${params.baseToken.chainInfo.chainId} and ${params.denomination.chainInfo.chainId}: ` +
             JSON.stringify({
               baseUSDPrice,
               quoteUSDPrice,
@@ -134,7 +141,9 @@ export class CoingeckoOracleProvider
           quote: params.denomination,
         }),
       }
-    } else {
+    }
+    // Denomination is fiat currency or undefined
+    else {
       const quoteCurrency = params.denomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
 
@@ -150,19 +159,36 @@ export class CoingeckoOracleProvider
         },
       })
 
-      const [, price] = Object.entries(responseData)[0]
+      const fiatDenominationData = Object.entries(responseData)[0]
 
-      const priceValue = price['usd'] ?? price[quoteCurrency.toLowerCase()] ?? price
+      if (!fiatDenominationData) {
+        throw Error(
+          `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) fiat denomination data not found in response on ${params.baseToken.chainInfo.chainId}: ` +
+            JSON.stringify(responseData),
+        )
+      }
+      const fiatDenominationDataPrice = fiatDenominationData[1]
+      if (!fiatDenominationDataPrice) {
+        throw Error(
+          `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) fiat denomination data price is empty on ${params.baseToken.chainInfo.chainId}: ` +
+            JSON.stringify(responseData),
+        )
+      }
 
-      if (!price) {
-        throw Error('BaseToken spot price could not be determined')
+      const fiatDenominationDataPriceValue =
+        fiatDenominationDataPrice['usd'] ?? fiatDenominationDataPrice[quoteCurrency.toLowerCase()]
+      if (!fiatDenominationDataPriceValue) {
+        throw Error(
+          `${params.baseToken.symbol} (${params.baseToken.address.toSolidityValue()}) fiat denomination data price value is empty on ${params.baseToken.chainInfo.chainId}: ` +
+            JSON.stringify(responseData),
+        )
       }
 
       return {
         provider: OracleProviderType.Coingecko,
         token: baseToken,
         price: Price.createFrom({
-          value: priceValue.toString(),
+          value: fiatDenominationDataPriceValue.toString(),
           base: baseToken,
           quote: quoteCurrency,
         }),
@@ -188,19 +214,29 @@ export class CoingeckoOracleProvider
     })
 
     const priceByAddress = Object.fromEntries(
-      Object.entries(responseData).map(([address, price]) => {
+      Object.entries(responseData).map(([address, priceData]) => {
         const base = params.baseTokens.find(
-          (t) => t.address.value.toLowerCase() === address.toLowerCase(),
+          (t) => t.address.toSolidityValue() === address.toLowerCase(),
         )
         if (!base) {
           throw new Error(
-            `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.value)}`,
+            `Token with address ${address} not found in base tokens: ${params.baseTokens.map((t) => t.address.toSolidityValue())}`,
           )
         }
+
+        const priceValue = priceData ? priceData[quote.toLowerCase()] : undefined
+        if (!priceValue) {
+          throw new Error(
+            `Price for token ${base.symbol} (${address}) in ${quote} not found: ${JSON.stringify(
+              priceData,
+            )}`,
+          )
+        }
+
         return [
           address.toLowerCase(),
           Price.createFrom({
-            value: price[quote.toLowerCase()].toString(),
+            value: priceValue.toString(),
             base,
             quote,
           }),
@@ -350,13 +386,6 @@ export class CoingeckoOracleProvider
 
     // Otherwise, use the token_price endpoint
     const platform = this._getPlatform(chainId)
-
-    /**
-     * apiSpotUrl includes the complete path for the spot price endpoint
-     * EG <url>/price/v1.1
-     * https://portal.1inch.dev/documentation/spot-price/swagger?method=get&path=%2Fv1.1%2F1%2F%7Baddresses%7D
-     */
-
     const currencyParam = this._formatCurrencyParam(params.quoteCurrency)
     const precisionParam = this._formatPrecisionParam()
 
@@ -414,7 +443,7 @@ export class CoingeckoOracleProvider
       case ChainIds.Hyperliquid:
         return 'hyperliquid'
       default:
-        throw new Error(`Unsupported chainId for native token: ${chainId}`)
+        throw new Error(`Unsupported coingecko Id for chain: ${chainId}`)
     }
   }
 
@@ -479,8 +508,10 @@ export class CoingeckoOracleProvider
         return 'base'
       case ChainIds.Sonic:
         return 'sonic'
+      case ChainIds.Hyperliquid:
+        return 'hyperevm'
       default:
-        throw new Error(`Unsupported chainId: ${chainId}`)
+        throw new Error(`Unsupported coingecko platform chain: ${chainId}`)
     }
   }
 
