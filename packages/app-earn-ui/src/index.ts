@@ -287,6 +287,7 @@ export { VaultExposure } from './features/vault-exposure/components/VaultExposur
 export { VaultExposureTable } from './features/vault-exposure/components/VaultExposureTable/VaultExposureTable.tsx'
 export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'
 export { vaultExposureFilter } from './features/vault-exposure/table/filters/filters'
+export { arkDetailsMap } from './features/vault-exposure/table/ark-details.ts'
 
 export {
   SUCCESS_TOAST_CONFIG,

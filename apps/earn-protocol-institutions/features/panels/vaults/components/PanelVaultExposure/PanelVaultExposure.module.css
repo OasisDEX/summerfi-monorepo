@@ -20,4 +20,22 @@
     gap: var(--spacing-space-large);
     width: 100%;
   }
+
+  .availableArksSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-space-medium);
+  }
+  .availableArksSectionGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-space-medium);
+    width: 100%;
+  }
+  .sortingButtons {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-medium);
+    margin: 0 auto;
+  }
 }

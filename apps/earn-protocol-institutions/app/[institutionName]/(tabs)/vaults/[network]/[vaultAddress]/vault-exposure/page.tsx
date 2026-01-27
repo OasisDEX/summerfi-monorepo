@@ -8,7 +8,10 @@ import {
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getCachedConfig } from '@/app/server-handlers/config'
-import { getCachedVaultDetails } from '@/app/server-handlers/institution/institution-vaults'
+import {
+  getCachedArksDeployedOnChain,
+  getCachedVaultDetails,
+} from '@/app/server-handlers/institution/institution-vaults'
 import { INSTITUTIONS_CACHE_TAGS, INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 import { PanelVaultExposure } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposure'
 
@@ -29,13 +32,14 @@ export default async function InstitutionVaultVaultExposurePage({
     ],
   }
 
-  const [vault, config] = await Promise.all([
+  const [vault, config, arksDeployedOnChain] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
       vaultAddress,
       network: parsedNetwork,
     }),
     getCachedConfig(),
+    getCachedArksDeployedOnChain({ network: parsedNetwork }),
   ])
 
   if (!vault) {
@@ -48,7 +52,7 @@ export default async function InstitutionVaultVaultExposurePage({
     vault.arks.length
       ? getArksInterestRates({
           network: parsedNetwork,
-          arksList: vault.arks,
+          arksList: [...vault.arks, ...(arksDeployedOnChain as unknown as typeof vault.arks)],
         })
       : Promise.resolve({}),
     unstableCache(
@@ -71,6 +75,7 @@ export default async function InstitutionVaultVaultExposurePage({
       vault={vault}
       arkInterestRates={arkInterestRates}
       vaultApyData={vaultApyData}
+      arksDeployedOnChain={arksDeployedOnChain}
     />
   )
 }

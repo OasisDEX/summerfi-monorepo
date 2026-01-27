@@ -1,3 +1,4 @@
+import { arkDetailsMap, getProtocolLabel } from '@summerfi/app-earn-ui'
 import {
   type SDKVaultishType,
   type SDKVaultType,
@@ -10,6 +11,7 @@ import {
   serverOnlyErrorHandler,
   subgraphNetworkToId,
   subgraphNetworkToSDKId,
+  supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import {
@@ -42,6 +44,7 @@ import {
   GetVaultHistoryDocument,
 } from '@/graphql/clients/vault-history/client'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
+import { type ArksDeployedOnChain } from '@/types/arks'
 import { type InstitutionVaultRole } from '@/types/institution-data'
 
 const supportedInstitutionNetworks = [SupportedNetworkIds.Base, SupportedNetworkIds.ArbitrumOne]
@@ -516,6 +519,82 @@ const getVaultSpecificRoles: ({
   return results.flat()
 }
 
+const getLandingPageData = async () => {
+  try {
+    const landingPageDataUrl = 'https://summer.fi/earn/api/landing-page-data'
+    const response = await fetch(landingPageDataUrl, {
+      method: 'GET',
+      next: { revalidate: 300 },
+    })
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching landing page data:', error)
+
+    return []
+  }
+}
+
+const getArksDeployedOnChain: (props: {
+  network: SupportedSDKNetworks
+}) => Promise<ArksDeployedOnChain> = async ({ network }) => {
+  try {
+    const response = (await getLandingPageData()) as {
+      vaultsWithConfig: SDKVaultishType[]
+      protocolTvls: { [x: string]: string }
+    }
+
+    const arksDeployedOnChain = response.vaultsWithConfig
+      .filter((vault) => supportedSDKNetwork(vault.protocol.network) === network)
+      .flatMap((vault) => vault.arks)
+      .filter((ark) => !ark.name?.toLowerCase().includes('buffer'))
+      .sort((a, b) => {
+        const aTvl = a.inputTokenBalance ? BigInt(a.inputTokenBalance) : BigInt(0)
+        const bTvl = b.inputTokenBalance ? BigInt(b.inputTokenBalance) : BigInt(0)
+
+        if (aTvl > bTvl) return -1
+        if (aTvl < bTvl) return 1
+
+        return 0
+      })
+      .map((ark) => {
+        const arkDetails = arkDetailsMap[network][ark.id]
+        const protocol = ark.name?.split('-') ?? ['n/a']
+        const protocolLabel = getProtocolLabel(protocol)
+        const protocolAllocationName = ark.name
+          ? Object.keys(response.protocolTvls).find((protocolName) => {
+              return protocolLabel.toLowerCase().includes(protocolName.toLowerCase())
+            })
+          : undefined
+
+        const protocolAllocation = protocolAllocationName
+          ? response.protocolTvls[protocolAllocationName]
+          : undefined
+
+        const arkInfo: ArksDeployedOnChain[number] = {
+          productId: ark.productId,
+          name: protocolLabel,
+          symbol: ark.inputToken.symbol,
+          description: arkDetails?.description,
+          link: arkDetails?.link,
+          id: ark.id,
+          protocolAllocation,
+        }
+
+        return arkInfo
+      })
+
+    return arksDeployedOnChain
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching arks deployed on chain:', error)
+
+    return []
+  }
+}
+
 // endregion
 
 // region cached calls
@@ -723,6 +802,13 @@ export const getCachedVaultSpecificRoles = ({
       ],
     },
   )({ institutionName, vaultAddress, network })
+}
+
+export const getCachedArksDeployedOnChain = ({ network }: { network: SupportedSDKNetworks }) => {
+  return unstableCache(getArksDeployedOnChain, ['arks-deployed-on-chain', network], {
+    revalidate: 3600,
+    tags: [`arks-deployed-on-chain-${network.toLowerCase()}`],
+  })({ network })
 }
 
 // endregion
