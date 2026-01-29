@@ -27,11 +27,13 @@ export const TransactionQueue = ({
   removeTransaction,
   chainId,
   onTxSuccess,
+  isLoading,
 }: {
   transactionQueue: SDKTransactionItem[]
-  removeTransaction: (id: string) => void
+  removeTransaction?: (id: string) => void
   chainId: SupportedNetworkIds
   onTxSuccess?: (txid: string) => void
+  isLoading?: boolean
 }) => {
   const { userWalletAddress } = useUserWallet()
   const { chain, isSettingChain, setChain } = useChain()
@@ -59,7 +61,7 @@ export const TransactionQueue = ({
       if (txToRemove) {
         setTransactionRemovedLocally((prev) => [...prev, txToRemove])
         setTimeout(() => {
-          removeTransaction(id)
+          removeTransaction?.(id)
           setTransactionRemovedLocally((prev) => prev.filter((tx) => tx.id !== id))
         }, 600) // Duration should match the AnimateHeight transition duration
       }
@@ -99,7 +101,7 @@ export const TransactionQueue = ({
     <Card className={transactionQueueStyles.cardWrapper}>
       <AnimateHeight
         id="transaction-queue-not-connected"
-        show={!userConnected}
+        show={!userConnected && !isLoading}
         keepChildrenRendered
       >
         <div
@@ -115,7 +117,7 @@ export const TransactionQueue = ({
       </AnimateHeight>
       <AnimateHeight
         id="transaction-queue-wrong-chain"
-        show={(userConnected && !isProperChain) || isSettingChain}
+        show={((userConnected && !isProperChain) || isSettingChain) && !isLoading}
         keepChildrenRendered
       >
         <div
@@ -167,7 +169,7 @@ export const TransactionQueue = ({
       ))}
       <AnimateHeight
         id="transaction-queue-no-items"
-        show={transactionQueue.length === 0 && userConnected && isProperChain}
+        show={(transactionQueue.length === 0 && userConnected && isProperChain) || isLoading}
         keepChildrenRendered
         contentClassName={transactionQueueStyles.noTransactions}
       >

@@ -286,10 +286,13 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
  * @returns Array of table rows with extended ark information
  */
 export const vaultExposureMapper = (
-  vault: SDKVaultType,
-  arksInterestRates: InterestRates,
+  vault?: SDKVaultType,
+  arksInterestRates?: InterestRates,
   sortConfig?: TableSortedColumn<string>,
 ): TableRow<string>[] => {
+  if (!vault || !arksInterestRates) {
+    return []
+  }
   const vaultInputTokenBalance = vault.inputTokenBalance
 
   const arksLatestInterestRates = mapArkLatestInterestRates(arksInterestRates)

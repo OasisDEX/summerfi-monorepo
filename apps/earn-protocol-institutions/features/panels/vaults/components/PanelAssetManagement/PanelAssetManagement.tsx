@@ -145,7 +145,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       return <WalletLabel />
     }
     if (isLoadingAccount || isLoadingPosition) {
-      return <SkeletonLine width={150} height={14} style={{ margin: '3px 0' }} />
+      return <SkeletonLine width={100} height={20} style={{ margin: '10px 0' }} />
     }
 
     return positionTokenBalance > 0 ? (

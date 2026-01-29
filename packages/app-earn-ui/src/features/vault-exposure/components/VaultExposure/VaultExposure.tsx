@@ -9,7 +9,9 @@ import {
 } from '@summerfi/app-types'
 
 import { TabBar } from '@/components/molecules/TabBar/TabBar'
+import { Table } from '@/components/organisms/Table/Table'
 import { VaultExposureTableSection } from '@/features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection'
+import { vaultExposureColumns } from '@/features/vault-exposure/table/columns'
 import { vaultExposureFilter } from '@/features/vault-exposure/table/filters/filters'
 import { VaultExposureFilterType } from '@/features/vault-exposure/types'
 
@@ -114,6 +116,53 @@ export const VaultExposure: FC<VaultExposureProps> = ({
       handleTabChange={(tab) => {
         buttonClickEventHandler(`${tableId}-vault-exposure-tab-${tab.id.toLowerCase()}`)
       }}
+    />
+  )
+}
+
+export const VaultExposureLoading: FC = () => {
+  const tableElement = (
+    <Table
+      isLoading
+      skeletonLines={5}
+      skeletonStyles={{
+        margin: '10px 0',
+      }}
+      rows={[]}
+      columns={vaultExposureColumns({
+        apyCurrent: '',
+        apyUpdatedAt: {
+          apyUpdatedAtAltLabel: '',
+          apyUpdatedAtLabel: '',
+        },
+        isAltPressed: false,
+      })}
+      hiddenColumns={['yearlyLow', 'yearlyHigh', 'avgApy1y']}
+    />
+  )
+  const tabs = [
+    {
+      label: 'All',
+      id: VaultExposureFilterType.ALL,
+      content: tableElement,
+    },
+    {
+      label: 'Allocated',
+      id: VaultExposureFilterType.ALLOCATED,
+      content: tableElement,
+    },
+    {
+      label: 'Unallocated',
+      id: VaultExposureFilterType.UNALLOCATED,
+      content: tableElement,
+    },
+  ]
+
+  return (
+    <TabBar
+      tabs={tabs}
+      textVariant="p3semi"
+      tabHeadersStyle={{ borderBottom: '1px solid var(--earn-protocol-neutral-80)' }}
     />
   )
 }
