@@ -20,6 +20,7 @@ import { getTransakPrimaryButtonHidden } from '@/features/transak/helpers/get-tr
 import { getTransakPrimaryButtonLabel } from '@/features/transak/helpers/get-transak-primary-button-label'
 import { getTransakRefreshToken } from '@/features/transak/helpers/get-transak-refresh-token'
 import { getTransakTitle } from '@/features/transak/helpers/get-transak-title'
+import { getTransakWidgetUrl } from '@/features/transak/helpers/get-transak-widget-url'
 import { waitTransakOneSecond } from '@/features/transak/helpers/wait-for-second'
 import { transakInitialReducerState, transakReducer } from '@/features/transak/state'
 import {
@@ -130,18 +131,27 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
     return () => null
   }, [transakInstance])
 
-  const handleOpen = () => {
-    const transak = getTransakConfig({
-      config: {
+  const handleOpen = async () => {
+    const network = {
+      [SupportedNetworkIds.Mainnet]: 'ethereum',
+      [SupportedNetworkIds.Base]: 'base',
+      [SupportedNetworkIds.SonicMainnet]: 'sonic',
+      [SupportedNetworkIds.ArbitrumOne]: 'arbitrum',
+      [SupportedNetworkIds.Hyperliquid]: 'hyperliquid',
+    }[resolvedChainId]
+
+    if (!network) {
+      dispatch({ type: 'update-error', payload: 'Unsupported network for Transak' })
+
+      return
+    }
+
+    const widgetUrl = await getTransakWidgetUrl({
+      widgetParams: {
         walletAddress,
         disableWalletAddressForm: true,
-        network: {
-          [SupportedNetworkIds.Mainnet]: 'ethereum',
-          [SupportedNetworkIds.Base]: 'base',
-          [SupportedNetworkIds.SonicMainnet]: 'sonic',
-          [SupportedNetworkIds.ArbitrumOne]: 'arbitrum',
-          [SupportedNetworkIds.Hyperliquid]: 'hyperliquid',
-        }[resolvedChainId],
+        hideExchangeScreen: true,
+        network,
         email,
         ...getTransakConfigInitData({
           fiatAmount,
@@ -151,6 +161,20 @@ export const TransakWidget: FC<TransakWidgetProps> = ({
           productsAvailed: TransakAction.BUY,
         }),
       },
+    })
+
+    if (!widgetUrl) {
+      dispatch({ type: 'update-error', payload: 'Failed to initialize Transak widget' })
+
+      return
+    }
+
+    const widgetConfig = {
+      widgetUrl,
+    } as unknown as Parameters<typeof getTransakConfig>[0]['config']
+
+    const transak = getTransakConfig({
+      config: widgetConfig,
     })
 
     transak.init()

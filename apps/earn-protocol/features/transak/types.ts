@@ -143,6 +143,12 @@ export interface TransakRefreshTokenResponse {
   }
 }
 
+export interface TransakCreateWidgetUrlResponse {
+  data: {
+    widgetUrl: string
+  }
+}
+
 export interface TransakIpCountryCodeResponse {
   ipCountryCode: string
 }
@@ -203,7 +209,6 @@ export type TransakSupportedNetworksNames =
   | NetworkNames.ethereumMainnet
   | NetworkNames.baseMainnet
   | NetworkNames.arbitrumMainnet
-  | NetworkNames.optimismMainnet
 
 export interface TransakNetworkOption {
   label: string

@@ -9,6 +9,8 @@ import {
 
 export const transakStagingUrl = 'https://api-stg.transak.com'
 export const transakProductionUrl = 'https://api.transak.com'
+export const transakGatewayStagingUrl = 'https://api-gateway-stg.transak.com'
+export const transakGatewayProductionUrl = 'https://api-gateway.transak.com'
 
 export const transakEnvironment = process.env.NEXT_PUBLIC_TRANSAK_ENVIRONMENT
 export const transakPublicApiKey = process.env.NEXT_PUBLIC_TRANSAK_API_KEY
@@ -140,13 +142,6 @@ export const transakCryptoOptions: {
       value: 'USDC',
     },
   ],
-  [NetworkNames.optimismMainnet]: [
-    {
-      label: 'ETH',
-      tokenSymbol: 'ETH',
-      value: 'ETH',
-    },
-  ],
 }
 
 export const transakNetworkOptions: TransakNetworkOption[] = [
@@ -167,17 +162,5 @@ export const transakNetworkOptions: TransakNetworkOption[] = [
     value: 'arbitrum',
     chainId: SupportedNetworkIds.ArbitrumOne,
     iconName: 'earn_network_arbitrum',
-  },
-  {
-    label: 'Sonic',
-    value: 'sonic',
-    chainId: SupportedNetworkIds.SonicMainnet,
-    iconName: 'earn_network_sonic',
-  },
-  {
-    label: 'Hyperliquid',
-    value: 'hyperliquid',
-    chainId: SupportedNetworkIds.Hyperliquid,
-    iconName: 'earn_network_hyperliquid',
   },
 ]
