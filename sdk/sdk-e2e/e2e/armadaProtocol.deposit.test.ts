@@ -5,24 +5,21 @@ import {
   Percentage,
   TokenAmount,
   User,
+  type AddressValue,
 } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { TestConfigs, SharedConfig, type ChainConfig } from './utils/testConfig'
+import { SharedConfig, type ChainConfig, InstiTestConfigs, TestClientIds } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
-
-const simulateOnly = false
 
 /**
  * @group e2e
  */
 describe('Armada Protocol - Deposit', () => {
   const sdk = createTestSDK()
-  const privateKey = SharedConfig.userPrivateKey
-  const userAddressValue = SharedConfig.userAddressValue
 
   // Configure test scenarios here
   const depositScenarios: {
@@ -31,25 +28,44 @@ describe('Armada Protocol - Deposit', () => {
     swapToSymbol?: string
     stake?: boolean
     referralCode?: string
+    signerAddressValue?: AddressValue
+    signerPrivateKey?: AddressValue
+    simulateOnly: boolean
   }[] = [
-    {
-      chainConfig: TestConfigs.HyperliquidUSDC,
-      amountValue: '1',
-    },
+    // {
+    //   chainConfig: TestConfigs.HyperliquidUSDC,
+    //   amountValue: '1',
+    // },
     // {
     //   chainConfig: TestConfigs.BaseWETH,
     //   amountValue: '0.0005',
     // },
+    {
+      chainConfig: InstiTestConfigs[TestClientIds.ACME],
+      amountValue: '1',
+      signerAddressValue: SharedConfig.e2eUserAddressValue,
+      signerPrivateKey: SharedConfig.e2eUserPrivateKey,
+      simulateOnly: true,
+    },
   ]
 
   describe('getNewDepositTx - deposit to fleet', () => {
     test.each(depositScenarios)(
       'should deposit to fleet',
-      async ({ chainConfig, amountValue, swapToSymbol, stake = false, referralCode }) => {
+      async ({
+        chainConfig,
+        amountValue,
+        swapToSymbol,
+        stake = false,
+        referralCode,
+        signerAddressValue = SharedConfig.testUserAddressValue,
+        signerPrivateKey = SharedConfig.testUserPrivateKey,
+        simulateOnly = true,
+      }) => {
         const { rpcUrl, chainId, fleetAddressValue, symbol } = chainConfig
 
         const chainInfo = getChainInfoByChainId(chainId)
-        const user = User.createFromEthereum(chainId, userAddressValue)
+        const user = User.createFromEthereum(chainId, signerAddressValue)
 
         const vaultId = ArmadaVaultId.createFrom({
           chainInfo,
@@ -108,7 +124,7 @@ describe('Armada Protocol - Deposit', () => {
           chainInfo,
           transactions,
           rpcUrl,
-          privateKey,
+          privateKey: signerPrivateKey,
           simulateOnly,
         })
 

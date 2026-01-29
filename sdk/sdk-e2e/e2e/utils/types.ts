@@ -28,13 +28,6 @@ export type GovTestScenario = {
   chainConfigKey: keyof typeof TestConfigs
 }
 
-export type WhitelistScenario = {
-  targetAddress: Address
-  description: string
-  shouldWhitelist?: boolean
-  shouldRemoveFromWhitelist?: boolean
-}
-
 export type GetAllRolesScenario = {
   description: string
   roleName?: GraphRoleName

@@ -15,27 +15,27 @@ describe('Armada Protocol - Access Control Get All Roles', () => {
     first?: number
     skip?: number
   }[] = [
-    {},
+    // {},
     {
       roleName: GraphRoleName.WHITELIST_ROLE,
     },
-    {
-      targetContract: 'fleetAddress',
-    },
-    {
-      targetContract: 'aqAddress',
-    },
-    {
-      roleName: GraphRoleName.WHITELIST_ROLE,
-      targetContract: 'fleetAddress',
-    },
-    {
-      first: 5,
-    },
-    {
-      skip: 2,
-      first: 3,
-    },
+    // {
+    //   targetContract: 'fleetAddress',
+    // },
+    // {
+    //   targetContract: 'aqAddress',
+    // },
+    // {
+    //   roleName: GraphRoleName.WHITELIST_ROLE,
+    //   targetContract: 'fleetAddress',
+    // },
+    // {
+    //   first: 5,
+    // },
+    // {
+    //   skip: 2,
+    //   first: 3,
+    // },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {

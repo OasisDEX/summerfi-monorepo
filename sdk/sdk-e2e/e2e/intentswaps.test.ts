@@ -25,10 +25,10 @@ const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
 if (!rpcUrl) {
   throw new Error('Missing fork url')
 }
-const signerPrivateKey = SharedConfig.userPrivateKey
+const signerPrivateKey = SharedConfig.testUserPrivateKey
 const wallet = new Wallet(signerPrivateKey)
 const userAddress = Address.createFromEthereum({
-  value: SharedConfig.userAddressValue,
+  value: SharedConfig.testUserAddressValue,
 })
 
 describe('Intent swaps', () => {

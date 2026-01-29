@@ -15,7 +15,7 @@ describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
   const scenarios: { chainId: number; userAddressValue: AddressValue }[] = [
     {
       chainId: ChainIds.Base,
-      userAddressValue: SharedConfig.userAddressValue,
+      userAddressValue: SharedConfig.testUserAddressValue,
     },
   ]
 
