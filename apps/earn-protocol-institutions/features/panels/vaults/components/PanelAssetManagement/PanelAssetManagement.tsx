@@ -459,84 +459,108 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       variant="cardSecondary"
       className={panelAssetManagementStyles.panelAssetManagementWrapper}
     >
-      <div className={panelAssetManagementStyles.depositCards}>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Vault Assets Balance</Text>
-          <Text variant="p1semi">
-            {formatCryptoBalance(inputTokenBalance)} {vaultInputToken}
-          </Text>
+      <div className={panelAssetManagementStyles.assetManagementBlocks}>
+        <div className={panelAssetManagementStyles.statsSection}>
+          <Card style={{ flexDirection: 'column' }}>
+            <Text variant="p3semi" style={{ opacity: 0.7 }}>
+              Vault Assets Balance
+            </Text>
+            <Text variant="h4">
+              {formatCryptoBalance(inputTokenBalance)} {vaultInputToken}
+            </Text>
+          </Card>
+          <Card style={{ flexDirection: 'column' }}>
+            <Text variant="p3semi" style={{ opacity: 0.7 }}>
+              Connected Wallet Deposits
+            </Text>
+            <Text variant="h4">{positionBalanceLabel}</Text>
+          </Card>
         </div>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Wallet Deposits</Text>
-          <Text variant="p1semi">{positionBalanceLabel}</Text>
-        </div>
-      </div>
-      <div className={panelAssetManagementStyles.depositCards}>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Deposit</Text>
-          <Text variant="p4semi" style={{ margin: '3px 0' }}>
-            {positionBalanceToDepositLabel}
-          </Text>
-          <Input
-            variant="dark"
-            placeholder={`Deposit ${vaultInputToken}`}
-            value={amountDepositDisplay}
-            onChange={handleDepositAmountChange}
-            onBlur={onDepositBlur}
-            onFocus={onDepositFocus}
-          />
-          <Button
-            variant="primarySmall"
-            style={{ marginTop: '10px' }}
-            disabled={
-              isLoadingAccount ||
-              isSettingChain ||
-              !isProperChain ||
-              amountDepositParsed.isZero() ||
-              amountDepositParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
-            }
-            onClick={() => {
-              if (userWalletAddress) {
-                onDeposit({ address: userWalletAddress })
-                manualSetAmountDeposit('0')
-              }
-            }}
-          >
-            Add deposit transaction
-          </Button>
-        </div>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Withdraw</Text>
-          <Text variant="p4semi" style={{ margin: '3px 0' }}>
-            {positionBalanceToWithdrawLabel}
-          </Text>
-          <Input
-            variant="dark"
-            placeholder={`Withdraw ${vaultInputToken}`}
-            value={amountWithdrawDisplay}
-            onChange={handleWithdrawAmountChange}
-            onBlur={onWithdrawBlur}
-            onFocus={onWithdrawFocus}
-          />
-          <Button
-            variant="primarySmall"
-            style={{ marginTop: '10px' }}
-            disabled={
-              isLoadingAccount ||
-              isSettingChain ||
-              !isProperChain ||
-              amountWithdrawParsed.isZero() ||
-              amountWithdrawParsed.isGreaterThan(positionTokenBalance)
-            }
-            onClick={() => {
-              if (userWalletAddress) {
-                onWithdraw({ address: userWalletAddress })
-                manualSetAmountWithdraw('0')
-              }
-            }}
-          >
-            Add withdraw transaction
-          </Button>
+
+        <div className={panelAssetManagementStyles.actionsSection}>
+          <Card style={{ flexDirection: 'column' }}>
+            <div className={panelAssetManagementStyles.actionCardHeader}>
+              <Text variant="p3semi" style={{ opacity: 0.7 }}>
+                Deposit
+              </Text>
+              <Text variant="p4" style={{ opacity: 0.6 }}>
+                {positionBalanceToDepositLabel}
+              </Text>
+            </div>
+            <div className={panelAssetManagementStyles.actionCardContent}>
+              <Input
+                variant="dark"
+                inputWrapperStyles={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                }}
+                placeholder="Amount to deposit"
+                value={amountDepositDisplay}
+                onChange={handleDepositAmountChange}
+                onBlur={onDepositBlur}
+                onFocus={onDepositFocus}
+              />
+              <Button
+                variant="primarySmall"
+                disabled={
+                  isLoadingAccount ||
+                  isSettingChain ||
+                  !isProperChain ||
+                  amountDepositParsed.isZero() ||
+                  amountDepositParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
+                }
+                onClick={() => {
+                  if (userWalletAddress) {
+                    onDeposit({ address: userWalletAddress })
+                    manualSetAmountDeposit('0')
+                  }
+                }}
+              >
+                Add deposit transaction
+              </Button>
+            </div>
+          </Card>
+
+          <Card style={{ flexDirection: 'column' }}>
+            <div className={panelAssetManagementStyles.actionCardHeader}>
+              <Text variant="p3semi" style={{ opacity: 0.7 }}>
+                Withdraw
+              </Text>
+              <Text variant="p4" style={{ opacity: 0.6 }}>
+                {positionBalanceToWithdrawLabel}
+              </Text>
+            </div>
+            <div className={panelAssetManagementStyles.actionCardContent}>
+              <Input
+                variant="dark"
+                inputWrapperStyles={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                }}
+                placeholder="Amount to withdraw"
+                value={amountWithdrawDisplay}
+                onChange={handleWithdrawAmountChange}
+                onBlur={onWithdrawBlur}
+                onFocus={onWithdrawFocus}
+              />
+              <Button
+                variant="primarySmall"
+                disabled={
+                  isLoadingAccount ||
+                  isSettingChain ||
+                  !isProperChain ||
+                  amountWithdrawParsed.isZero() ||
+                  amountWithdrawParsed.isGreaterThan(positionTokenBalance)
+                }
+                onClick={() => {
+                  if (userWalletAddress) {
+                    onWithdraw({ address: userWalletAddress })
+                    manualSetAmountWithdraw('0')
+                  }
+                }}
+              >
+                Add withdraw transaction
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
       <Text as="h5" variant="h5">
