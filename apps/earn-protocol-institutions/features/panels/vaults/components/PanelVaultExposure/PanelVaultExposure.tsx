@@ -95,6 +95,7 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
   arksDeployedOnChain,
 }) => {
   const [sortingType, setSortingType] = useState<'protocolAllocation' | 'apy'>('apy')
+  const [includeOtherToken, setIncludeOtherToken] = useState(false)
   const allocation = getArksAllocation(vault)
 
   const isArkInCurrentVault = useCallback(
@@ -104,35 +105,49 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
     [vault],
   )
 
-  const sortedArksDeployedOnChain = useMemo(() => {
-    return [...arksDeployedOnChain].sort((a, b) => {
-      switch (sortingType) {
-        case 'apy': {
-          const aApy = arkInterestRates[a.name]
-          const bApy = arkInterestRates[b.name]
+  const sortedFilteredArksDeployedOnChain = useMemo(() => {
+    return [...arksDeployedOnChain]
+      .sort((a, b) => {
+        switch (sortingType) {
+          case 'apy': {
+            const aApy = arkInterestRates[a.name]
+            const bApy = arkInterestRates[b.name]
 
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          const aAvgApy30d = aApy
-            ? calculateAverageApy(aApy.dailyInterestRates, 30)
-            : new BigNumber(-100)
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          const bAvgApy30d = bApy
-            ? calculateAverageApy(bApy.dailyInterestRates, 30)
-            : new BigNumber(-100)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const aAvgApy30d = aApy
+              ? calculateAverageApy(aApy.dailyInterestRates, 30)
+              : new BigNumber(-100)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const bAvgApy30d = bApy
+              ? calculateAverageApy(bApy.dailyInterestRates, 30)
+              : new BigNumber(-100)
 
-          return bAvgApy30d.minus(aAvgApy30d).toNumber()
+            return bAvgApy30d.minus(aAvgApy30d).toNumber()
+          }
+          case 'protocolAllocation': {
+            const aAllocation = a.protocolAllocation ? new BigNumber(a.protocolAllocation) : zero
+            const bAllocation = b.protocolAllocation ? new BigNumber(b.protocolAllocation) : zero
+
+            return bAllocation.minus(aAllocation).toNumber()
+          }
+          default:
+            return 0
         }
-        case 'protocolAllocation': {
-          const aAllocation = a.protocolAllocation ? new BigNumber(a.protocolAllocation) : zero
-          const bAllocation = b.protocolAllocation ? new BigNumber(b.protocolAllocation) : zero
-
-          return bAllocation.minus(aAllocation).toNumber()
+      })
+      .filter((ark) => {
+        if (includeOtherToken) {
+          return true
         }
-        default:
-          return 0
-      }
-    })
-  }, [arksDeployedOnChain, arkInterestRates, sortingType])
+
+        return ark.symbol === vault.inputToken.symbol
+      })
+  }, [
+    arksDeployedOnChain,
+    arkInterestRates,
+    sortingType,
+    includeOtherToken,
+    vault.inputToken.symbol,
+  ])
 
   return (
     <Card variant="cardSecondary" className={styles.panelVaultExposureWrapper}>
@@ -164,29 +179,50 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
       </Text>
       <Card className={styles.availableArksSection}>
         {arksDeployedOnChain.length ? (
-          <div className={styles.sortingButtons}>
-            <Text as="p" variant="p4semi">
-              Sort by:
-            </Text>
-            <Badge
-              value="APY"
-              onClick={() => {
-                setSortingType('apy')
-              }}
-              isActive={sortingType === 'apy'}
-            />
-            <Badge
-              value={<>Protocol&nbsp;TVL</>}
-              onClick={() => {
-                setSortingType('protocolAllocation')
-              }}
-              isActive={sortingType === 'protocolAllocation'}
-            />
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <div className={styles.sortingButtons}>
+              <Text as="p" variant="p4semi">
+                Sort by:
+              </Text>
+              <Badge
+                value="APY"
+                onClick={() => {
+                  setSortingType('apy')
+                }}
+                isActive={sortingType === 'apy'}
+              />
+              <Badge
+                value={<>Protocol&nbsp;TVL</>}
+                onClick={() => {
+                  setSortingType('protocolAllocation')
+                }}
+                isActive={sortingType === 'protocolAllocation'}
+              />
+            </div>
+            <div className={styles.sortingButtons}>
+              <Text as="p" variant="p4semi">
+                Filter tokens:
+              </Text>
+              <Badge
+                value={vault.inputToken.symbol}
+                onClick={() => {
+                  setIncludeOtherToken(false)
+                }}
+                isActive={!includeOtherToken}
+              />
+              <Badge
+                value="All"
+                onClick={() => {
+                  setIncludeOtherToken(true)
+                }}
+                isActive={includeOtherToken}
+              />
+            </div>
           </div>
         ) : null}
         <div className={styles.availableArksSectionGrid}>
           {arksDeployedOnChain.length ? (
-            sortedArksDeployedOnChain.map((ark) => (
+            sortedFilteredArksDeployedOnChain.map((ark) => (
               <ArkDeployedOnChainCard
                 key={`${ark.productId}_${ark.name}`}
                 ark={ark}

@@ -1,0 +1,8 @@
+query GetInstitutionData($institutionId: ID!) {
+  institution(id: $institutionId) {
+    id
+    active
+    admiralsQuarters
+    harborCommand
+  }
+}

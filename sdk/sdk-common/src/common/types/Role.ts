@@ -1,7 +1,7 @@
 export type Role = {
   id: string
   name: string
-  owner: string
+  owner: `0x${string}`
   targetContract: string
   institution: {
     id: string

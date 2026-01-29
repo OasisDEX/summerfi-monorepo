@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import { redirect } from 'next/navigation'
 
 import {
+  getCachedInstitutionBasicData,
   getCachedInstitutionVaultPerformanceData,
   getCachedVaultDetails,
 } from '@/app/server-handlers/institution/institution-vaults'
@@ -40,10 +41,14 @@ export default async function InstitutionVaultOverviewPage({
     redirect('/not-found')
   }
 
-  const [vault] = await Promise.all([
+  const [vault, institutionBasicData] = await Promise.all([
     getCachedVaultDetails({
       institutionName,
       vaultAddress: parsedVaultAddress,
+      network: parsedNetwork,
+    }),
+    getCachedInstitutionBasicData({
+      institutionName,
       network: parsedNetwork,
     }),
   ])
@@ -106,10 +111,12 @@ export default async function InstitutionVaultOverviewPage({
 
   return (
     <PanelOverview
+      vaultAddress={parsedVaultAddress}
       navChartData={navChartData}
       aumChartData={aumChartData}
       arksHistoricalChartData={arksHistoricalChartData}
       summerVaultName={summerVaultName}
+      institutionBasicData={institutionBasicData}
     />
   )
 }

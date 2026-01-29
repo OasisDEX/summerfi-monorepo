@@ -37,12 +37,17 @@ import { graphqlVaultHistoryClients } from '@/app/server-handlers/institution/ut
 import { getInstitutionsSDK } from '@/app/server-handlers/sdk'
 import { vaultSpecificRolesList } from '@/constants/vaults'
 import {
+  GetInstitutionDataDocument,
+  type GetInstitutionDataQuery,
+} from '@/graphql/clients/institution/client'
+import {
   GetVaultActiveUsersDocument,
   type GetVaultActiveUsersQuery,
   GetVaultActivityLogByTimestampFromDocument,
   type GetVaultActivityLogByTimestampFromQuery,
   GetVaultHistoryDocument,
 } from '@/graphql/clients/vault-history/client'
+import { getInstiSubgraphId } from '@/helpers/get-insti-subgraph-id'
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 import { type ArksDeployedOnChain } from '@/types/arks'
 import { type InstitutionVaultRole } from '@/types/institution-data'
@@ -485,6 +490,40 @@ const getVaultWhitelist: ({
   return roles
 }
 
+const getAQWhitelist: ({
+  institutionName,
+  network,
+  addressesList,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+  addressesList: `0x${string}`[]
+}) => Promise<{
+  [address: string]: boolean
+}> = async ({ institutionName, network, addressesList }) => {
+  const institutionSDK = getInstitutionsSDK(institutionName)
+  const chainId = subgraphNetworkToSDKId(network)
+
+  const aqWhitelist = (
+    await Promise.all(
+      addressesList.map(async (targetAddress) => {
+        return await institutionSDK.armada.accessControl
+          .isWhitelistedAQ({
+            chainId,
+            targetAddress,
+          })
+          .then((isAQWhitelisted) => {
+            return {
+              [targetAddress]: isAQWhitelisted,
+            }
+          })
+      }),
+    )
+  ).reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
+  return aqWhitelist
+}
+
 const getVaultSpecificRoles: ({
   institutionName,
   vaultAddress,
@@ -577,7 +616,9 @@ const getArksDeployedOnChain: (props: {
           productId: ark.productId,
           name: protocolLabel,
           symbol: ark.inputToken.symbol,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           description: arkDetails?.description,
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           link: arkDetails?.link,
           id: ark.id,
           protocolAllocation,
@@ -592,6 +633,32 @@ const getArksDeployedOnChain: (props: {
     console.error('Error fetching arks deployed on chain:', error)
 
     return []
+  }
+}
+
+const getInstitutionBasicData: (props: {
+  institutionName: string
+  network: SupportedSDKNetworks
+}) => Promise<GetInstitutionDataQuery | undefined> = async ({ institutionName, network }) => {
+  try {
+    const client = graphqlVaultHistoryClients[network]
+
+    console.log('institution id:', getInstiSubgraphId(institutionName).toString())
+
+    return await client.request<GetInstitutionDataQuery>(
+      GetInstitutionDataDocument,
+      {
+        institutionId: getInstiSubgraphId(institutionName).toString(),
+      },
+      {
+        origin: 'earn-protocol-institutions',
+      },
+    )
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error getting institution data:', error)
+
+    return undefined
   }
 }
 
@@ -783,6 +850,30 @@ export const getCachedVaultWhitelist: ({
   )({ institutionName, vaultAddress, network })
 }
 
+export const getCachedAQWhitelist: ({
+  institutionName,
+  addressesList,
+  network,
+}: {
+  institutionName: string
+  vaultAddress: string
+  addressesList: `0x${string}`[]
+  network: SupportedSDKNetworks
+}) => Promise<{
+  [address: string]: boolean
+}> = ({ institutionName, addressesList, vaultAddress, network }) => {
+  return unstableCache(
+    getAQWhitelist,
+    ['vault-whitelist', institutionName, addressesList.join(','), network],
+    {
+      revalidate: 300,
+      tags: [
+        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
+      ],
+    },
+  )({ institutionName, addressesList, network })
+}
+
 export const getCachedVaultSpecificRoles = ({
   institutionName,
   vaultAddress,
@@ -809,6 +900,19 @@ export const getCachedArksDeployedOnChain = ({ network }: { network: SupportedSD
     revalidate: 3600,
     tags: [`arks-deployed-on-chain-${network.toLowerCase()}`],
   })({ network })
+}
+
+export const getCachedInstitutionBasicData = ({
+  network,
+  institutionName,
+}: {
+  institutionName: string
+  network: SupportedSDKNetworks
+}) => {
+  return unstableCache(getInstitutionBasicData, ['institution-basic-data', network], {
+    revalidate: 3600,
+    tags: [`institution-basic-data-${network.toLowerCase()}`],
+  })({ network, institutionName })
 }
 
 // endregion

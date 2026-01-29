@@ -19,25 +19,41 @@ import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
 import styles from './PanelUser.module.css'
 
-type UserMapperParams = {
+type WhitelistedMapperParams = {
   whitelistedWallets: Role[]
   transactionQueue: SDKTransactionItem[]
   onRevokeWhitelist: (params: { address: string }) => void
   chainId: number
   disabled?: boolean
+  aqAddress: string
   whitelistedUsersFilter: string
   userWalletAddress?: string
 }
 
-export const userListMapper = ({
+type WhitelistedAQMapperParams = {
+  whitelistedAQWallets:
+    | {
+        [key: string]: boolean
+      }
+    | undefined
+  transactionQueue: SDKTransactionItem[]
+  onRevokeAQWhitelist: (params: { address: string }) => void
+  chainId: number
+  disabled?: boolean
+  whitelistedAQUsersFilter: string
+  userWalletAddress?: string
+}
+
+export const whitelistedListMapper = ({
   whitelistedWallets,
   transactionQueue,
   onRevokeWhitelist,
   chainId,
+  aqAddress,
   disabled = false,
   whitelistedUsersFilter,
   userWalletAddress,
-}: UserMapperParams) => {
+}: WhitelistedMapperParams) => {
   return whitelistedWallets
     .filter((wallet) => {
       return whitelistedUsersFilter
@@ -46,6 +62,80 @@ export const userListMapper = ({
     })
     .map((role) => {
       const { owner: address } = role
+      const revokeId = getRevokeWhitelistId({ address, chainId })
+      const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
+      const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
+      const isAQAddress = address.toLowerCase() === aqAddress.toLowerCase()
+
+      return {
+        content: {
+          address: (
+            <TableCellNodes
+              className={clsx(styles.tableCellAddress, {
+                [styles.currentUser]: isCurrentUser,
+                [styles.aqAddress]: isAQAddress,
+              })}
+            >
+              {isCurrentUser ? (
+                <Tooltip
+                  tooltip="Your currently connected address"
+                  tooltipWrapperStyles={{ minWidth: '290px' }}
+                >
+                  <span>{address}</span>
+                </Tooltip>
+              ) : isAQAddress ? (
+                <Tooltip
+                  tooltip="Admirals Quarters address. Needs to be whitelisted for the UI deposits to work."
+                  tooltipWrapperStyles={{ minWidth: '290px' }}
+                >
+                  <span>{address}&nbsp;(Admirals&nbsp;Quarters)</span>
+                </Tooltip>
+              ) : (
+                <span>{address}</span>
+              )}
+            </TableCellNodes>
+          ),
+          action: (
+            <TableCellText style={{ marginLeft: '40px', gap: 'var(--spacing-space-small)' }}>
+              <Button
+                variant="unstyled"
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                onClick={() => onRevokeWhitelist({ address })}
+                disabled={idDisabled}
+              >
+                <Icon
+                  iconName="trash"
+                  size={16}
+                  className={styles.trashButton}
+                  style={{
+                    opacity: idDisabled ? 0.5 : 1,
+                  }}
+                />
+              </Button>
+            </TableCellText>
+          ),
+        },
+      }
+    })
+}
+
+export const whitelistedAQListMapper = ({
+  whitelistedAQWallets,
+  transactionQueue,
+  onRevokeAQWhitelist,
+  chainId,
+  disabled = false,
+  whitelistedAQUsersFilter,
+  userWalletAddress,
+}: WhitelistedAQMapperParams) => {
+  return Object.keys(whitelistedAQWallets ?? {})
+    .filter((address) => whitelistedAQWallets?.[address])
+    .filter((address) => {
+      return whitelistedAQUsersFilter
+        ? address.toLowerCase().includes(whitelistedAQUsersFilter.toLowerCase())
+        : true
+    })
+    .map((address) => {
       const revokeId = getRevokeWhitelistId({ address, chainId })
       const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
       const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
@@ -75,7 +165,7 @@ export const userListMapper = ({
               <Button
                 variant="unstyled"
                 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                onClick={() => onRevokeWhitelist({ address })}
+                onClick={() => onRevokeAQWhitelist({ address })}
                 disabled={idDisabled}
               >
                 <Icon

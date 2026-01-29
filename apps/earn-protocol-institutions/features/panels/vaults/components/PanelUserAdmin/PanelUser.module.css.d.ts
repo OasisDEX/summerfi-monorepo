@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "aqAddress": string;
   readonly "currentUser": string;
   readonly "inputFilter": string;
   readonly "panelUserAdminWrapper": string;
