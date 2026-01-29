@@ -53,6 +53,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const sdkNetworkName = chainIdToSDKNetwork(vaultChainId)
   const vaultInputToken = vault.inputToken.symbol
+  const vaultOutputToken = vault.outputToken?.symbol
   const inputTokenBalance = new BigNumber(vault.inputTokenBalance.toString())
     .div(ten.pow(vault.inputToken.decimals))
     .toNumber()
@@ -136,10 +137,8 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const positionTokenBalance = useMemo(() => {
     if (!position) return 0
 
-    return new BigNumber(position.depositsAmount.amount)
-      .div(ten.pow(vault.inputToken.decimals))
-      .toNumber()
-  }, [position, vault.inputToken.decimals])
+    return new BigNumber(position.amount.amount).toNumber()
+  }, [position])
 
   const positionBalanceLabel = useMemo(() => {
     if (!userWalletAddress) {
@@ -354,12 +353,12 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       const approveTxId = `${transactionId}-${TransactionType.Approve}`
       const approveTxDescription = (
         <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultInputToken}
+          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken}
         </Text>
       )
       const approveNotNeededTxDescription = (
         <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultInputToken} approved already
+          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken} approved already
         </Text>
       )
       const approveTxLabel = {
@@ -447,6 +446,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       selectedToken,
       vaultChainId,
       vaultInputToken,
+      vaultOutputToken,
       addTransaction,
       getWithdrawTx,
       vault.id,
@@ -526,7 +526,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
               isSettingChain ||
               !isProperChain ||
               amountWithdrawParsed.isZero() ||
-              amountWithdrawParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
+              amountWithdrawParsed.isGreaterThan(positionTokenBalance)
             }
             onClick={() => {
               if (userWalletAddress) {
