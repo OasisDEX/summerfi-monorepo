@@ -128,16 +128,20 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       if (inFlight) return inFlight
 
       const whitelistCheckPromise = (async () => {
-        const whitelisted = await isWhitelisted({
-          targetAddress: address as `0x${string}`,
-          chainId: vaultChainId,
-          fleetCommanderAddress: vault.id as `0x${string}`,
-        })
+        try {
+          const whitelisted = await isWhitelisted({
+            targetAddress: address as `0x${string}`,
+            chainId: vaultChainId,
+            fleetCommanderAddress: vault.id as `0x${string}`,
+          })
 
-        whitelistWalletsMapCheckRef.current[address] = whitelisted
-        delete inFlightWhitelistChecksRef.current[address]
+          whitelistWalletsMapCheckRef.current[address] = whitelisted
+          delete inFlightWhitelistChecksRef.current[address]
 
-        return whitelisted
+          return whitelisted
+        } finally {
+          delete inFlightWhitelistChecksRef.current[address]
+        }
       })()
 
       inFlightWhitelistChecksRef.current[address] = whitelistCheckPromise
@@ -151,9 +155,13 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     if (!userWalletAddress || isLoadingAccount) {
       setIsWalletWhitelisted(null)
     } else {
-      getWalletWhitelist(userWalletAddress).then((whitelisted) => {
-        setIsWalletWhitelisted(whitelisted)
-      })
+      getWalletWhitelist(userWalletAddress)
+        .then((whitelisted) => {
+          setIsWalletWhitelisted(whitelisted)
+        })
+        .catch(() => {
+          setIsWalletWhitelisted(false)
+        })
     }
   }, [userWalletAddress, isLoadingAccount, getWalletWhitelist])
 
