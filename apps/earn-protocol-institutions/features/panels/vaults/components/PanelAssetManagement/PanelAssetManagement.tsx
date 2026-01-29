@@ -269,7 +269,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     if (!txId.includes(TransactionType.Approve)) {
       revalidateTags({
         tags: [
-          `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+          `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
         ],
       })
       reFetchPosition()

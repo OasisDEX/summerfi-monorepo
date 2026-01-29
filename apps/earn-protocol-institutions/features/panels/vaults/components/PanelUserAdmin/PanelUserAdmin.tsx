@@ -14,7 +14,12 @@ import {
   WARNING_TOAST_CONFIG,
 } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
-import { chainIdToSDKNetwork, networkNameToSDKId, SortDirection } from '@summerfi/app-utils'
+import {
+  chainIdToSDKNetwork,
+  formatAddress,
+  networkNameToSDKId,
+  SortDirection,
+} from '@summerfi/app-utils'
 import { type Role } from '@summerfi/sdk-common'
 
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
@@ -131,7 +136,10 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
       const transactionId = getGrantWhitelistId({ address, chainId })
 
       if (whitelistedWallets.map((role) => role.owner).includes(address)) {
-        toast.info(`Address ${address} is already whitelisted`, WARNING_TOAST_CONFIG)
+        toast.info(
+          `Address ${formatAddress(address)} is already whitelisted.${!whitelistedAQWallets[address] ? ' Adding to AQ whitelist' : ''}`,
+          WARNING_TOAST_CONFIG,
+        )
 
         return
       }
@@ -166,7 +174,14 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
         toast.error('Failed to add transaction to queue', ERROR_TOAST_CONFIG)
       }
     },
-    [addTransaction, chainId, setWhitelistedTx, vaultAddress, whitelistedWallets],
+    [
+      addTransaction,
+      chainId,
+      setWhitelistedTx,
+      vaultAddress,
+      whitelistedAQWallets,
+      whitelistedWallets,
+    ],
   )
 
   const onRevokeAQWhitelist = useCallback(
@@ -311,7 +326,9 @@ export const PanelUserAdmin: FC<PanelUserAdminProps> = ({
   const onTxSuccess = () => {
     revalidateTags({
       tags: [
-        `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+        `vault-aq-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+        `vault-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+        `institution-vault-active-users-${vaultAddress.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
       ],
     })
   }

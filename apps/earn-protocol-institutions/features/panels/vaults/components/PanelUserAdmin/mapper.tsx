@@ -14,7 +14,7 @@ import dayjs from 'dayjs'
 import { type InstiVaultActiveUsersResponse } from '@/app/server-handlers/institution/institution-vaults/types'
 import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
 import { type ActiveUsersListColumns } from '@/features/panels/vaults/components/PanelUserAdmin/types'
-import { getRevokeWhitelistId } from '@/helpers/get-transaction-id'
+import { getRevokeAQWhitelistId, getRevokeWhitelistId } from '@/helpers/get-transaction-id'
 import { type SDKTransactionItem } from '@/hooks/useSDKTransactionQueue'
 
 import styles from './PanelUser.module.css'
@@ -136,7 +136,7 @@ export const whitelistedAQListMapper = ({
         : true
     })
     .map((address) => {
-      const revokeId = getRevokeWhitelistId({ address, chainId })
+      const revokeId = getRevokeAQWhitelistId({ address, chainId })
       const idDisabled = transactionQueue.some((tx) => tx.id === revokeId) || disabled
       const isCurrentUser = address.toLowerCase() === userWalletAddress?.toLowerCase()
 

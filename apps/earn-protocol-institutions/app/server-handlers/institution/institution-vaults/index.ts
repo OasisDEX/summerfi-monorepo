@@ -643,8 +643,6 @@ const getInstitutionBasicData: (props: {
   try {
     const client = graphqlVaultHistoryClients[network]
 
-    console.log('institution id:', getInstiSubgraphId(institutionName).toString())
-
     return await client.request<GetInstitutionDataQuery>(
       GetInstitutionDataDocument,
       {
@@ -824,6 +822,7 @@ export const getCachedVaultDetails = ({
   return unstableCache(getVaultDetails, ['vault-details', institutionName, vaultAddress, network], {
     revalidate: 300,
     tags: [
+      `vault-details-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
       `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
     ],
   })({ institutionName, vaultAddress, network })
@@ -844,6 +843,7 @@ export const getCachedVaultWhitelist: ({
     {
       revalidate: 300,
       tags: [
+        `vault-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
         `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
       ],
     },
@@ -868,6 +868,7 @@ export const getCachedAQWhitelist: ({
     {
       revalidate: 300,
       tags: [
+        `vault-aq-whitelist-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
         `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
       ],
     },
@@ -889,6 +890,7 @@ export const getCachedVaultSpecificRoles = ({
     {
       revalidate: 300,
       tags: [
+        `vault-roles-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
         `institution-vault-${institutionName.toLowerCase()}-${vaultAddress.toLowerCase()}-${network.toLowerCase()}`,
       ],
     },
@@ -909,10 +911,14 @@ export const getCachedInstitutionBasicData = ({
   institutionName: string
   network: SupportedSDKNetworks
 }) => {
-  return unstableCache(getInstitutionBasicData, ['institution-basic-data', network], {
-    revalidate: 3600,
-    tags: [`institution-basic-data-${network.toLowerCase()}`],
-  })({ network, institutionName })
+  return unstableCache(
+    getInstitutionBasicData,
+    ['institution-basic-data', network, institutionName.toLowerCase()],
+    {
+      revalidate: 3600,
+      tags: [`institution-basic-data-${network.toLowerCase()}-${institutionName.toLowerCase()}`],
+    },
+  )({ network, institutionName })
 }
 
 // endregion

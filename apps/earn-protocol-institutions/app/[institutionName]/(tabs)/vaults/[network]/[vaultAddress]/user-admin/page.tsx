@@ -46,7 +46,7 @@ export default async function InstitutionVaultUserAdminPage({
       institutionName,
       vaultAddress,
       network: parsedNetwork,
-      addressesList: whitelistedWallets.map((w) => w.owner),
+      addressesList: whitelistedWallets.map((w) => w.owner as `0x${string}`),
     }),
   ])
 
