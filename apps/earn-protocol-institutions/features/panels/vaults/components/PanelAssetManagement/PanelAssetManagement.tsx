@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
@@ -24,10 +24,12 @@ import {
 import { Address, getChainInfoByChainId, TokenAmount, TransactionType } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
+import Link from 'next/link'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { getDepositId, getWithdrawId } from '@/helpers/get-transaction-id'
+import { getInstitutionVaultUrl } from '@/helpers/get-url'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
 import { useNetworkAlignedClient } from '@/hooks/useNetworkAlignedClient'
 import { usePosition } from '@/hooks/usePosition'
@@ -49,7 +51,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const { revalidateTags } = useRevalidateTags()
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { publicClient } = useNetworkAlignedClient()
-  const { getDepositTx, getWithdrawTx } = useAdminAppSDK(institutionName)
+  const { getDepositTx, getWithdrawTx, isWhitelisted } = useAdminAppSDK(institutionName)
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const sdkNetworkName = chainIdToSDKNetwork(vaultChainId)
   const vaultInputToken = vault.inputToken.symbol
@@ -57,6 +59,9 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const inputTokenBalance = new BigNumber(vault.inputTokenBalance.toString())
     .div(ten.pow(vault.inputToken.decimals))
     .toNumber()
+  const [isWalletWhitelisted, setIsWalletWhitelisted] = useState<boolean | null>(null)
+  const whitelistWalletsMapCheckRef = useRef<{ [key: string]: boolean }>({})
+  const inFlightWhitelistChecksRef = useRef<{ [key: string]: Promise<boolean> }>({})
 
   const isProperChain = useMemo(() => {
     return chain.id === vaultChainId
@@ -109,6 +114,48 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     tokenDecimals: vault.inputToken.decimals,
     inputChangeHandler: () => {},
   })
+
+  const getWalletWhitelist = useCallback(
+    (address: string) => {
+      const cached = whitelistWalletsMapCheckRef.current[address]
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (cached !== undefined) return Promise.resolve(cached)
+
+      const inFlight = inFlightWhitelistChecksRef.current[address]
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (inFlight) return inFlight
+
+      const whitelistCheckPromise = (async () => {
+        const whitelisted = await isWhitelisted({
+          targetAddress: address as `0x${string}`,
+          chainId: vaultChainId,
+          fleetCommanderAddress: vault.id as `0x${string}`,
+        })
+
+        whitelistWalletsMapCheckRef.current[address] = whitelisted
+        delete inFlightWhitelistChecksRef.current[address]
+
+        return whitelisted
+      })()
+
+      inFlightWhitelistChecksRef.current[address] = whitelistCheckPromise
+
+      return whitelistCheckPromise
+    },
+    [isWhitelisted, vault.id, vaultChainId],
+  )
+
+  useEffect(() => {
+    if (!userWalletAddress || isLoadingAccount) {
+      setIsWalletWhitelisted(null)
+    } else {
+      getWalletWhitelist(userWalletAddress).then((whitelisted) => {
+        setIsWalletWhitelisted(whitelisted)
+      })
+    }
+  }, [userWalletAddress, isLoadingAccount, getWalletWhitelist])
 
   const handleDepositAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value
@@ -563,6 +610,42 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
           </Card>
         </div>
       </div>
+      {userWalletAddress && (
+        <Card style={{ flexDirection: 'column' }}>
+          <Text
+            variant="p3"
+            style={{
+              color:
+                isWalletWhitelisted === null
+                  ? 'inherit'
+                  : !isWalletWhitelisted
+                    ? 'var(--color-text-warning)'
+                    : 'var(--color-text-success)',
+            }}
+          >
+            {isWalletWhitelisted === null ? (
+              'Checking wallet whitelist status...'
+            ) : isWalletWhitelisted ? (
+              <>Your wallet is whitelisted for asset management actions.</>
+            ) : (
+              <>
+                Your wallet is not whitelisted for asset management actions. Manage access{' '}
+                <Link
+                  href={getInstitutionVaultUrl({
+                    institutionName,
+                    vault,
+                    page: 'user-admin',
+                  })}
+                  style={{ textDecoration: 'underline' }}
+                >
+                  here
+                </Link>
+                .
+              </>
+            )}
+          </Text>
+        </Card>
+      )}
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
