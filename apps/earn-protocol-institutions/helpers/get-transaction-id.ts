@@ -36,6 +36,26 @@ export const getGrantWhitelistId = ({ address, chainId }: { address: string; cha
   return `grant-whitelist-${address}-${chainId}`
 }
 
+export const getRevokeAQWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `revoke-aq-whitelist-${address}-${chainId}`
+}
+
+export const getGrantAQWhitelistId = ({
+  address,
+  chainId,
+}: {
+  address: string
+  chainId: number
+}) => {
+  return `grant-aq-whitelist-${address}-${chainId}`
+}
+
 export const getChangeVaultCapId = ({
   address,
   chainId,

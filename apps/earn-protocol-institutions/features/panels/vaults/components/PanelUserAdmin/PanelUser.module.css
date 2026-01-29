@@ -47,3 +47,7 @@
 .currentUser {
   color: var(--earn-protocol-success-50);
 }
+
+.aqAddress {
+  color: var(--earn-protocol-primary-100);
+}

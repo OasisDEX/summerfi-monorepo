@@ -1,9 +1,5 @@
-import { Card, LoadingSpinner } from '@summerfi/app-earn-ui'
+import { PanelVaultExposureLoading } from '@/features/panels/vaults/components/PanelVaultExposure/PanelVaultExposureLoading'
 
 export default function InstitutionVaultsVaultExposureLoadingTab() {
-  return (
-    <Card variant="cardSecondary">
-      <LoadingSpinner size={40} style={{ margin: '40px auto' }} />
-    </Card>
-  )
+  return <PanelVaultExposureLoading />
 }

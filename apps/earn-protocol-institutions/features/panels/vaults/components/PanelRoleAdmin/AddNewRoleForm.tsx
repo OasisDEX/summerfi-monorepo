@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, useState } from 'react'
 import { Button, Dropdown, Input, Text } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
@@ -16,7 +18,7 @@ export const AddNewRoleForm = ({
   disabled,
 }: {
   staticRole?: InstitutionVaultRoleType
-  onAddRole: ({ address, role }: { address: string; role: InstitutionVaultRoleType }) => void
+  onAddRole?: ({ address, role }: { address: string; role: InstitutionVaultRoleType }) => void
   disabled?: boolean
 }) => {
   const [isAddressValid, setIsAddressValid] = useState(false)
@@ -42,7 +44,7 @@ export const AddNewRoleForm = ({
 
   const handleAddRole = () => {
     if (!newRoleAddress || !isAddressValid) return
-    onAddRole({
+    onAddRole?.({
       address: newRoleAddress,
       role: staticRole ? staticRole : newRoleName,
     })

@@ -4,20 +4,35 @@
   gap: var(--spacing-space-medium-large);
 }
 
-.depositCards {
-  display: flex;
-  justify-content: space-evenly;
-  gap: var(--spacing-space-medium);
-  width: 100%;
-  padding: 0 100px;
-}
-
-.depositCardsItem {
+.assetManagementBlocks {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-space-medium);
-  width: 45%;
+  gap: var(--spacing-space-x-large);
+}
+
+.statsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-space-large);
+}
+
+.actionsSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-space-large);
+}
+
+.actionCardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-x-small);
+  padding-bottom: var(--spacing-space-small);
+}
+
+.actionCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-small);
 }
 
 .connectWalletButton {

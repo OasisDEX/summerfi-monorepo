@@ -1,9 +1,5 @@
-import { Card, LoadingSpinner } from '@summerfi/app-earn-ui'
+import { PanelFeeRevenueAdminLoading } from '@/features/panels/vaults/components/PanelFeeRevenueAdmin/PanelFeeRevenueAdminLoading'
 
 export default function InstitutionVaultsFeeRevenueLoadingTab() {
-  return (
-    <Card variant="cardSecondary">
-      <LoadingSpinner size={40} style={{ margin: '40px auto' }} />
-    </Card>
-  )
+  return <PanelFeeRevenueAdminLoading />
 }

@@ -127,7 +127,11 @@ export const mapActivityDataToTable: (props: {
         type: InstitutionVaultActivityType.REBALANCE,
         // XXXX.XX USDC has been rebalanced from Y to Z
         message: (
-          <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessage}
+            style={{ color: undefined }}
+          >
             <strong style={{ color: protocolLabelFromColor }}>{from}</strong>
             <ActivityArrow />
             <strong>
@@ -138,7 +142,11 @@ export const mapActivityDataToTable: (props: {
           </TableCellText>
         ),
         details: (
-          <TableCellText className={styles.activityLogMessageDetails} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessageDetails}
+            style={{ color: undefined }}
+          >
             <div>
               <strong>
                 {amount}&nbsp;{vault.inputToken.symbol}&nbsp;
@@ -164,7 +172,11 @@ export const mapActivityDataToTable: (props: {
         type: InstitutionVaultActivityType.DEPOSIT,
         // User 0x1234...5678 has deposited XXXX.XX USDC
         message: (
-          <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessage}
+            style={{ color: undefined }}
+          >
             <strong>{user}</strong>&nbsp;
             <ActivityArrow />
             <strong style={{ color: 'var(--earn-protocol-success-100)' }}>
@@ -200,7 +212,11 @@ export const mapActivityDataToTable: (props: {
         type: InstitutionVaultActivityType.WITHDRAWAL,
         // User 0x1234...5678 has withdrawn XXXX.XX USDC
         message: (
-          <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessage}
+            style={{ color: undefined }}
+          >
             <strong>{user}</strong>&nbsp;
             <ActivityArrow reversed />
             <strong style={{ color: 'var(--earn-protocol-critical-100)' }}>
@@ -258,7 +274,11 @@ export const mapActivityDataToTable: (props: {
         when: curationEvent.timestamp,
         type: InstitutionVaultActivityType.RISK_CHANGE,
         message: (
-          <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessage}
+            style={{ color: undefined }}
+          >
             {arkChangedNiceName ? (
               <>
                 <strong>{arkChangedNiceName}</strong>&nbsp;
@@ -310,7 +330,11 @@ export const mapActivityDataToTable: (props: {
         when: roleEvent.timestamp,
         type: InstitutionVaultActivityType.ROLE_CHANGE,
         message: (
-          <TableCellText className={styles.activityLogMessage} style={{ color: undefined }}>
+          <TableCellText
+            as="div"
+            className={styles.activityLogMessage}
+            style={{ color: undefined }}
+          >
             <strong>{formatActivityLogTypeToHuman(roleEvent.role.name)}</strong>&nbsp;
             <span style={{ color: actionLabelColor }}>{actionLabel}</span>
             &nbsp;
