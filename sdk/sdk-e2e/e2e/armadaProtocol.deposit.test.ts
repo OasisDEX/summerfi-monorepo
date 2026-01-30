@@ -6,9 +6,10 @@ import {
   TokenAmount,
   User,
   type AddressValue,
+  type HexData,
 } from '@summerfi/sdk-common'
 
-import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { createSendTransactionTool, sendAndLogTransactions } from '@summerfi/testing-utils'
 import { SharedConfig, type ChainConfig, InstiTestConfigs, TestClientIds } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
@@ -29,7 +30,7 @@ describe('Armada Protocol - Deposit', () => {
     stake?: boolean
     referralCode?: string
     signerAddressValue?: AddressValue
-    signerPrivateKey?: AddressValue
+    signerPrivateKey?: HexData
     simulateOnly: boolean
   }[] = [
     // {
@@ -66,6 +67,12 @@ describe('Armada Protocol - Deposit', () => {
 
         const chainInfo = getChainInfoByChainId(chainId)
         const user = User.createFromEthereum(chainId, signerAddressValue)
+        const userSendTxTool = createSendTransactionTool({
+          chainId,
+          rpcUrl,
+          signerPrivateKey,
+          simulateOnly,
+        })
 
         const vaultId = ArmadaVaultId.createFrom({
           chainInfo,
@@ -105,7 +112,7 @@ describe('Armada Protocol - Deposit', () => {
         )
 
         // Get deposit transaction
-        const transactions = await sdk.armada.users.getNewDepositTx({
+        const tx = await sdk.armada.users.getNewDepositTx({
           vaultId,
           user,
           amount,
@@ -116,24 +123,16 @@ describe('Armada Protocol - Deposit', () => {
           referralCode,
         })
 
-        expect(transactions).toBeDefined()
-        expect(transactions.length).toBeGreaterThan(0)
+        expect(tx).toBeDefined()
+        expect(tx.length).toBeGreaterThan(0)
 
         // Send transactions
-        const { statuses } = await sendAndLogTransactions({
-          chainInfo,
-          transactions,
-          rpcUrl,
-          privateKey: signerPrivateKey,
-          simulateOnly,
-        })
-
-        statuses.forEach((status) => {
-          expect(status).toBe('success')
-        })
+        const txStatus = await userSendTxTool(tx)
 
         // Verify balances after deposit (only if not simulating)
         if (!simulateOnly) {
+          expect(txStatus).toStrictEqual(['success'])
+
           const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
             vaultId,
             user,

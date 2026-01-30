@@ -8,25 +8,24 @@ export type SendTransactionToolStatus = 'success' | 'reverted'
 export const createSendTransactionTool = (params: {
   chainId: ChainId
   rpcUrl: string
-  signerPrivateKey: string
+  signerPrivateKey?: string
   simulateOnly?: boolean
 }) => {
-  const signerPrivateKey = params.signerPrivateKey
-  const simulateOnly = params.simulateOnly ?? true
+  const { chainId, rpcUrl, signerPrivateKey } = params
+  const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
 
   if (!isHex(signerPrivateKey)) {
     throw new Error('Signer privateKey is not a hex string')
   }
-  const rpcUrl = params.rpcUrl
   if (!rpcUrl) {
     throw new Error('rpcUrl is not set')
   }
 
   const useFork = process.env.SDK_USE_FORK === 'true'
   const transactionUtils = new TransactionUtils({
-    rpcUrl: rpcUrl,
+    rpcUrl,
     walletPrivateKey: signerPrivateKey,
-    chainInfo: getChainInfoByChainId(params.chainId),
+    chainInfo: getChainInfoByChainId(chainId),
     useFork: useFork ? true : false,
   })
 
