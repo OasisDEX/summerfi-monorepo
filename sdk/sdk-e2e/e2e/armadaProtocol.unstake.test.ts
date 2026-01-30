@@ -16,11 +16,11 @@ import assert from 'assert'
 jest.setTimeout(300000)
 
 const simulateOnly = true
-const privateKey = SharedConfig.userPrivateKey
+const privateKey = SharedConfig.testUserPrivateKey
 
 describe('Armada Protocol - Unstake', () => {
   const { rpcUrl, chainId, fleetAddressValue } = TestConfigs.SonicUSDC
-  const userAddressValue = SharedConfig.userAddressValue
+  const userAddressValue = SharedConfig.testUserAddressValue
 
   const chainInfo = getChainInfoByChainId(chainId)
   const user = User.createFromEthereum(chainId, userAddressValue)

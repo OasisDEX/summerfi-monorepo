@@ -18,13 +18,13 @@ export function createSdkTestSetup(testConfigKey: TestConfigKey = 'BaseUSDC') {
   })
 
   const userAddress = Address.createFromEthereum({
-    value: SharedConfig.userAddressValue,
+    value: SharedConfig.testUserAddressValue,
   })
 
   const userSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    signerPrivateKey: SharedConfig.userPrivateKey,
+    signerPrivateKey: SharedConfig.testUserPrivateKey,
     simulateOnly: false,
   })
 

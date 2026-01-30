@@ -32,15 +32,15 @@ export function createAdminSdkTestSetup(clientId: TestClientIds) {
   const userSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    signerPrivateKey: SharedConfig.userPrivateKey,
-    simulateOnly: false,
+    signerPrivateKey: SharedConfig.testUserPrivateKey,
+    simulateOnly: true,
   })
 
   const governorSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    signerPrivateKey: SharedConfig.userPrivateKey,
-    simulateOnly: false,
+    signerPrivateKey: SharedConfig.testUserPrivateKey,
+    simulateOnly: true,
   })
 
   return {

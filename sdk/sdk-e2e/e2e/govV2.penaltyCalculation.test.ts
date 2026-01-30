@@ -14,7 +14,7 @@ describe('Armada Protocol Gov V2 Penalty Calculation', () => {
   const scenarios: { chainId: ChainId; userAddressValue: AddressValue }[] = [
     {
       chainId: ChainIds.Base,
-      userAddressValue: SharedConfig.userAddressValue,
+      userAddressValue: SharedConfig.testUserAddressValue,
     },
   ]
 

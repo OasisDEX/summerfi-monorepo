@@ -12,11 +12,11 @@ import { createTestSDK } from './utils/sdkInstance'
 
 jest.setTimeout(300000)
 const simulateOnly = true
-const privateKey = SharedConfig.userPrivateKey
+const privateKey = SharedConfig.testUserPrivateKey
 
 describe('Armada Protocol - ERC20 Token Transfer', () => {
   const sdk = createTestSDK()
-  const userAddress = SharedConfig.userAddressValue
+  const userAddress = SharedConfig.testUserAddressValue
 
   const testConfigs = [
     {

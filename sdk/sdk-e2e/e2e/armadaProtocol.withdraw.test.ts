@@ -22,8 +22,8 @@ const simulateOnly = false
  */
 describe('Armada Protocol - Withdraw', () => {
   const sdk = createTestSDK()
-  const privateKey = SharedConfig.userPrivateKey
-  const userAddressValue = SharedConfig.userAddressValue
+  const privateKey = SharedConfig.testUserPrivateKey
+  const userAddressValue = SharedConfig.testUserAddressValue
 
   // Configure test scenarios here
   const withdrawScenarios: {

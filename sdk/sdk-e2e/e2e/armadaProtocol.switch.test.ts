@@ -17,7 +17,7 @@ import { SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
 const simulateOnly = false
-const privateKey = SharedConfig.userPrivateKey
+const privateKey = SharedConfig.testUserPrivateKey
 
 const chainId = ChainIds.Base
 const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
@@ -73,7 +73,7 @@ describe('Armada Protocol Switch', () => {
 
     const chainInfo = getChainInfoByChainId(chainId)
 
-    const user = User.createFromEthereum(chainId, SharedConfig.userAddressValue)
+    const user = User.createFromEthereum(chainId, SharedConfig.testUserAddressValue)
     const sourceVaultId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress: sourceFleetAddress,
