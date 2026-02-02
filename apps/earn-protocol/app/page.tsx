@@ -2,9 +2,11 @@ import { getVaultsProtocolsList, sumrNetApyConfigCookieName } from '@summerfi/ap
 import {
   formatCryptoBalance,
   getServerSideCookies,
+  networkNameToSDKId,
   parseServerResponseToClient,
   safeParseJson,
   subgraphNetworkToId,
+  subgraphNetworkToSDKId,
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
@@ -15,27 +17,50 @@ import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
+import {
+  emptyWalletAssets,
+  getCachedWalletAssets,
+} from '@/app/server-handlers/cached/get-wallet-assets'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
-const EarnAllVaultsPage = async () => {
-  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice, tvl] = await Promise.all([
-    cookies(),
-    getCachedVaultsList(),
-    getCachedConfig(),
-    getCachedVaultsInfo(),
-    getCachedSumrPrice(),
-    getCachedTvl(),
-  ])
+const EarnAllVaultsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ walletAddress?: string }>
+}) => {
+  const { walletAddress } = await searchParams
+  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice, tvl, walletAssets] =
+    await Promise.all([
+      cookies(),
+      getCachedVaultsList(),
+      getCachedConfig(),
+      getCachedVaultsInfo(),
+      getCachedSumrPrice(),
+      getCachedTvl(),
+      walletAddress ? getCachedWalletAssets(walletAddress) : Promise.resolve(emptyWalletAssets),
+    ])
+
   const systemConfig = parseServerResponseToClient(configRaw)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
     vaults,
   })
+
+  const filteredWalletAssetsVaults = walletAddress
+    ? vaultsWithConfig.filter((vault) => {
+        return walletAssets.assets.some(
+          (asset) =>
+            asset.symbol.toLowerCase() === vault.inputToken.symbol.toLowerCase() &&
+            networkNameToSDKId(asset.network) ===
+              subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
+        )
+      })
+    : vaults
 
   const [vaultsApyByNetworkMap] = await Promise.all([
     getCachedVaultsApy({
@@ -60,6 +85,7 @@ const EarnAllVaultsPage = async () => {
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsInfo={vaultsInfo}
       vaultsList={vaultsWithConfig}
+      filteredWalletAssetsVaults={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
       tvl={tvl}
     />

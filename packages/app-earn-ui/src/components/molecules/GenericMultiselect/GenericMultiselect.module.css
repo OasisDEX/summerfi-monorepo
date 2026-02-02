@@ -12,6 +12,11 @@
   transition: border-color 200ms;
   border-color: var(--earn-protocol-neutral-80);
 }
+.mainWrapperPill {
+  border: none;
+  padding-left: var(--general-space-12);
+  padding-right: var(--general-space-8);
+}
 .mainWrapper:hover {
   border-color: var(--earn-protocol-neutral-60);
 }
@@ -124,4 +129,34 @@
 
 .labelSuffix {
   transition: opacity 200ms;
+}
+
+.labelWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  gap: var(--general-space-16);
+
+  .labelPillRegular {
+    display: flex;
+    align-items: center;
+  }
+  .labelPillSide {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-secondary);
+  }
+  .labelPillValue {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-lighter);
+    border-radius: var(--radius-rounder);
+    padding: 2px var(--spacing-space-x-small);
+    letter-spacing: -0.2px;
+  }
 }

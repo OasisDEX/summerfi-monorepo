@@ -44,7 +44,7 @@
 
 .filtersGroup {
   display: flex;
-  gap: 12px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -54,4 +54,30 @@
   align-items: flex-start;
   gap: 8px;
   margin-top: 32px;
+}
+
+.pillWrapperGeneral {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px 4px 4px;
+  background-color: var(--earn-protocol-neutral-85);
+  border: none;
+  border-radius: var(--general-radius-24);
+}
+
+.pillShapedWrapper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-left: var(--general-space-8);
+}
+
+.pillShaped {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-lighter);
+  border-radius: var(--radius-rounder);
+  padding: 1px var(--spacing-space-x-small);
+  letter-spacing: -0.2px;
 }

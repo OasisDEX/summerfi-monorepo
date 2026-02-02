@@ -18,6 +18,8 @@ interface TabBarProps {
   tabs: Tab[]
   textVariant?: keyof typeof TextClassNames
   tabHeadersStyle?: CSSProperties
+  wrapperStyle?: CSSProperties
+  tabContentStyle?: CSSProperties
   defaultIndex?: number
   /**
    * Props below to use when using as a controlled component
@@ -33,6 +35,8 @@ export const TabBar: FC<TabBarProps> = ({
   tabHeadersStyle,
   useAsControlled,
   handleTabChange,
+  wrapperStyle,
+  tabContentStyle,
 }) => {
   const [activeIndex, setActiveIndex] = useState(defaultIndex)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -58,7 +62,7 @@ export const TabBar: FC<TabBarProps> = ({
   }
 
   return (
-    <div className={styles.tabBar}>
+    <div className={styles.tabBar} style={wrapperStyle}>
       <div style={{ position: 'relative', height: 'fit-content', overflow: 'hidden' }}>
         <div ref={tabHeadersRef} className={styles.tabHeaders} style={tabHeadersStyle}>
           {tabs.map((tab, index) => (
@@ -90,7 +94,9 @@ export const TabBar: FC<TabBarProps> = ({
           ))}
         </div>
       </div>
-      <div className={styles.tabContent}>{tabs[resolvedActiveIndex].content}</div>
+      <div className={styles.tabContent} style={tabContentStyle}>
+        {tabs[resolvedActiveIndex].content}
+      </div>
     </div>
   )
 }

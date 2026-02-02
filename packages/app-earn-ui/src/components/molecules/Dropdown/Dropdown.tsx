@@ -22,6 +22,7 @@ interface DropdownProps {
   dropdownValue: DropdownRawOption
   children: ReactNode
   asPill?: boolean
+  asSmallPill?: boolean
   asCard?: boolean
   withSearch?: boolean
   inputPlaceholder?: string
@@ -41,6 +42,7 @@ export const Dropdown: FC<DropdownProps> = ({
   dropdownValue,
   children,
   asPill,
+  asSmallPill,
   asCard,
   withSearch,
   inputPlaceholder,
@@ -124,33 +126,27 @@ export const Dropdown: FC<DropdownProps> = ({
       <div
         className={clsx(dropdownStyles.dropdownSelected, dropdownSelectedClassName, {
           [dropdownStyles.disabled]: isDisabled,
+          [dropdownStyles.dropdownAsPill]: asPill,
+          [dropdownStyles.dropdownAsCard]: asCard,
+          [dropdownStyles.dropdownAsSmallPill]: asSmallPill,
         })}
         onClick={hasMultipleOptions ? toggleDropdown : undefined}
         style={
-          asPill
+          asPill ?? asSmallPill
             ? {
-                padding: '8px 16px 8px 10px',
-                backgroundColor: 'var(--earn-protocol-neutral-85)',
-                border: '1px solid var(--earn-protocol-neutral-80)',
-                ...((isOpen || isHover) && {
-                  border: '1px solid var(--earn-protocol-neutral-60)',
-                }),
-                transition: 'border 0.2s ease-in-out',
-                borderRadius: 'var(--general-radius-24)',
-                fontWeight: '600',
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
+                ...((isOpen || isHover) &&
+                  !asSmallPill && {
+                    border: '1px solid var(--earn-protocol-neutral-60)',
+                  }),
                 ...dropdownChildrenStyle,
               }
             : asCard
               ? {
-                  padding: '16px 24px',
-                  backgroundColor: 'var(--earn-protocol-neutral-90)',
-                  border: '1px solid var(--earn-protocol-neutral-90)',
                   ...((isOpen || isHover) && {
                     border: '1px solid var(--earn-protocol-neutral-60)',
                     transition: 'border 0.2s ease-in-out',
                   }),
-                  borderRadius: 'var(--general-radius-24)',
                   ...dropdownChildrenStyle,
                 }
               : { ...dropdownChildrenStyle }
@@ -159,7 +155,7 @@ export const Dropdown: FC<DropdownProps> = ({
         onMouseLeave={() => setIsHover(false)}
       >
         {trigger ? trigger({ isOpen, isDisabled, dropdownValue }) : children}
-        {!trigger && hasMultipleOptions && (
+        {!trigger && hasMultipleOptions && !asSmallPill && (
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={12}

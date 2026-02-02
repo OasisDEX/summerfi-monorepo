@@ -2,7 +2,8 @@
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import { toggleArrayItem } from '@summerfi/app-utils'
-import { isEqual } from 'lodash-es'
+import clsx from 'clsx'
+import { capitalize, isEqual } from 'lodash-es'
 import Image from 'next/image'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -30,6 +31,27 @@ export interface GenericMultiselectOption {
 }
 
 interface GenericMultiselectProps {
+  fitContents?: boolean
+  icon?: IconNamesList
+  initialValues?: string[]
+  label: string
+  onChange: (value: string[]) => void
+  onSingleChange?: (value: string) => void
+  options: GenericMultiselectOption[]
+  optionGroups?: {
+    id: string
+    key: string
+    options: string[]
+    icon?: IconNamesList
+    buttonStyle?: CSSProperties
+    iconStyle?: CSSProperties
+  }[]
+  style?: CSSProperties
+  withSearch?: boolean
+}
+
+interface GenericMultiselectPillProps {
+  title: string
   fitContents?: boolean
   icon?: IconNamesList
   initialValues?: string[]
@@ -444,21 +466,8 @@ export function GenericMultiselect({
           })
         }}
       >
-        <Text
-          as="div"
-          variant="p3semi"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            width: '100%',
-            gap: 'var(--general-space-16)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>{selectLabel}</div>
+        <Text as="div" variant="p3semi" className={classNames.labelWrapper}>
+          <div className={classNames.labelPillRegular}>{selectLabel}</div>
           <Icon
             iconName={isOpen ? 'chevron_up' : 'chevron_down'}
             size={12}
@@ -466,6 +475,253 @@ export function GenericMultiselect({
               isOpen ? 'var(--earn-protocol-secondary-100)' : 'var(--earn-protocol-secondary-40)'
             }
           />
+        </Text>
+      </div>
+      {isMobile ? (
+        <MobileDrawer
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          slideFrom="bottom"
+          height="auto"
+          variant="default"
+          zIndex={1001}
+          style={{ backgroundColor: 'unset' }}
+        >
+          <MobileDrawerDefaultWrapper>{optionsMapped}</MobileDrawerDefaultWrapper>
+        </MobileDrawer>
+      ) : (
+        <div
+          className={classNames.optionsWrapper}
+          style={{
+            opacity: isOpen ? 1 : 0,
+            transform: isOpen ? 'translateY(0)' : 'translateY(-5px)',
+            pointerEvents: isOpen ? 'auto' : 'none',
+          }}
+        >
+          {optionsMapped}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function GenericMultiselectPill({
+  fitContents = false,
+  icon,
+  initialValues = [],
+  label,
+  title,
+  onChange,
+  onSingleChange,
+  optionGroups,
+  options,
+  style,
+  withSearch,
+}: GenericMultiselectPillProps): React.ReactNode {
+  const didMountRef = useRef(false)
+  const [values, setValues] = useState<string[]>(initialValues)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [search, setSearch] = useState<string>('')
+  const outsideRef = useOutsideElementClickHandler(() => setIsOpen(false))
+  const scrollRef = useRef<HTMLUListElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
+  const { isMobile } = useMobileCheck()
+
+  const matchingOptionsGroup = useMemo(() => {
+    return optionGroups?.filter(({ options: _options }) => isEqual(_options, values))[0]?.id
+  }, [optionGroups, values])
+
+  const matchingOptionsGroupLabel = useMemo(() => {
+    return optionGroups?.filter(({ options: _options }) => isEqual(_options, values))[0]?.key
+  }, [optionGroups, values])
+
+  const selectLabel = useMemo(() => {
+    switch (values.length) {
+      case 0:
+        return (
+          <>
+            {icon && (
+              <Icon iconName={icon} size={32} style={{ flexShrink: 0, marginRight: '12px' }} />
+            )}
+            All {label.toLowerCase()}
+          </>
+        )
+      case 1:
+        // eslint-disable-next-line no-case-declarations
+        const [selected] = options.filter((item) => item.value === values[0])
+
+        return <>{selected.label}</>
+      default:
+        return optionGroups && matchingOptionsGroup ? (
+          <>{matchingOptionsGroupLabel}</>
+        ) : (
+          <>
+            {icon && (
+              <Icon iconName={icon} size={32} style={{ flexShrink: 0, marginRight: '12px' }} />
+            )}
+            {capitalize(label.toLowerCase())}: {values.length}
+          </>
+        )
+    }
+  }, [icon, label, matchingOptionsGroup, matchingOptionsGroupLabel, optionGroups, options, values])
+
+  const filteredOptions = useMemo(
+    () =>
+      options.filter(({ label: _label }) =>
+        search.length ? _label.toLowerCase().includes(search.toLowerCase()) : true,
+      ),
+    [options, search],
+  )
+
+  useEffect(() => {
+    if (didMountRef.current) onChange(values)
+    else didMountRef.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values])
+
+  const optionsMapped = (
+    <ul
+      ref={scrollRef}
+      className={classNames.list}
+      style={{
+        maxHeight: fitContents ? 'auto' : '342px',
+      }}
+    >
+      <GenericMultiselectItem
+        hasCheckbox={false}
+        isClearing
+        isDisabled={values.length === 0}
+        label="Clear selection"
+        onClick={() => {
+          setValues([])
+          setIsOpen(false)
+        }}
+        style={{
+          fontSize: '14px',
+          fontWeight: 600,
+        }}
+        value=""
+      />
+      {withSearch && (
+        <li style={{ position: 'relative', color: 'neutral80' }}>
+          <Icon
+            iconName="search_icon"
+            variant="s"
+            style={{
+              position: 'absolute',
+              top: 'var(--general-space-4)',
+              left: 'var(--general-space-4)',
+              pointerEvents: 'none',
+            }}
+          />
+          <Input
+            ref={searchRef}
+            type="text"
+            autoComplete="off"
+            placeholder={`Search ${label.toLowerCase()}`}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={classNames.searchInput}
+          />
+        </li>
+      )}
+      {optionGroups && optionGroups.length > 0 && (
+        <li style={{ display: 'flex', flexDirection: 'column', gap: 'var(--general-space-4)' }}>
+          {optionGroups.map(
+            ({ id, key, options: _options, icon: optionGroupIcon, buttonStyle, iconStyle }) => (
+              <Button
+                key={id}
+                variant="unstyled"
+                style={{
+                  display: 'flex',
+                  alignContent: 'center',
+                  flexShrink: 0,
+                  padding: '0 var(--general-space-16)',
+                  whiteSpace: 'nowrap',
+                  ...(matchingOptionsGroup === id && {
+                    '&, &:hover': {
+                      color: 'neutral10',
+                      backgroundColor: 'interactive100',
+                      borderColor: 'interactive100',
+                    },
+                  }),
+                  ...buttonStyle,
+                }}
+                onClick={() => {
+                  if (matchingOptionsGroup === id) setValues([])
+                  else {
+                    setValues(_options)
+                    onSingleChange?.(`Group: ${id}`)
+                  }
+                }}
+              >
+                {optionGroupIcon && (
+                  <Icon
+                    iconName={optionGroupIcon}
+                    size={24}
+                    style={{ ...iconStyle, marginRight: 'var(--general-space-8)' }}
+                  />
+                )}
+                <Text as="span" variant="p3semi">
+                  {key} ({_options.length})
+                </Text>
+              </Button>
+            ),
+          )}
+        </li>
+      )}
+      {filteredOptions.map((option) => (
+        <GenericMultiselectItem
+          key={option.value}
+          isSelected={values.includes(option.value)}
+          onClick={(value) => {
+            setValues(toggleArrayItem<string>(values, value))
+            onSingleChange?.(value)
+          }}
+          {...option}
+        />
+      ))}
+      {filteredOptions.length === 0 && (
+        <li>
+          <Text as="p" variant="p3" style={{ margin: 'var(--general-space-4)' }}>
+            No items matching your search were found
+          </Text>
+        </li>
+      )}
+    </ul>
+  )
+
+  return (
+    <div
+      style={{ position: 'relative', userSelect: 'none', width: 'fit-content', ...style }}
+      ref={outsideRef}
+    >
+      <div
+        className={clsx(classNames.mainWrapper, classNames.mainWrapperPill)}
+        style={{
+          ...(isOpen && {
+            borderColor: 'var(--earn-protocol-neutral-60)',
+          }),
+        }}
+        onClick={() => {
+          setIsOpen((_isOpen) => {
+            if (!isOpen && searchRef.current) {
+              setSearch('')
+              searchRef.current.focus()
+            }
+
+            return !_isOpen
+          })
+        }}
+      >
+        <Text
+          as="div"
+          variant="p4semi"
+          className={classNames.labelWrapper}
+          style={{ gap: 'var(--general-space-4)' }}
+        >
+          <div className={classNames.labelPillSide}>{title}</div>
+          <div className={classNames.labelPillValue}>{selectLabel}</div>
         </Text>
       </div>
       {isMobile ? (

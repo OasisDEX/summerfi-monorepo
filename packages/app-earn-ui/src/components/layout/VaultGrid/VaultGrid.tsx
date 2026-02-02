@@ -14,6 +14,7 @@ import vaultManageGridStyles from '@/components/layout/VaultManageGrid/VaultMana
 type VaultGridProps = {
   topContent: ReactNode
   leftContent: ReactNode
+  additionalFullWithTopContent?: ReactNode
   rightContent: ReactNode
   isMobileOrTablet?: boolean
   onRefresh?: () => void
@@ -23,6 +24,7 @@ type VaultGridProps = {
 export const VaultGrid = ({
   topContent,
   leftContent,
+  additionalFullWithTopContent,
   rightContent,
   isMobileOrTablet,
   onRefresh,
@@ -54,6 +56,16 @@ export const VaultGrid = ({
       </div>
       <div className={vaultGridStyles.vaultGridPositionWrapper}>
         <Box className={vaultGridStyles.fullWidthBlock}>{topContent}</Box>
+        {additionalFullWithTopContent ? (
+          <div
+            className={vaultGridStyles.fullWidthBlock}
+            style={{
+              marginBottom: '-16px',
+            }}
+          >
+            {additionalFullWithTopContent}
+          </div>
+        ) : null}
         <Box className={vaultGridStyles.leftBlock}>{leftContent}</Box>
         <div className={vaultGridStyles.rightBlockWrapper}>
           <div className={vaultGridStyles.rightBlock}>{rightContent}</div>
