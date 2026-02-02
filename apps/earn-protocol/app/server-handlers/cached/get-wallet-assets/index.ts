@@ -18,7 +18,7 @@ export const getCachedWalletAssets = async (
   forceNoTag?: boolean,
 ): Promise<PortfolioAssetsResponse> => {
   // Return empty, default values if in dev environment
-  if (process.env.ENVIRONMENT_TAG === 'dev' || forceNoTag) {
+  if (process.env.ENVIRONMENT_TAG === 'dev' && !forceNoTag) {
     return emptyWalletAssets
   }
 
