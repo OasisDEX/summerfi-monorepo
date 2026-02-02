@@ -7,7 +7,7 @@ import { useHandleDropdownChangeEvent } from '@/hooks/use-mixpanel-event'
 export type VaultsListFiltersType = {
   assets?: string[]
   networks?: string[]
-  vaults?: string[]
+  vaults?: string
   sorting?: DropdownRawOption
   walletAddress?: string
 }
@@ -21,7 +21,6 @@ export const useVaultsListQueryParams = () => {
       if (isSoftPush) {
         window.history.pushState(null, '', url)
       } else {
-        window.history.pushState(null, '', url)
         push(url, { scroll: false })
       }
     },
@@ -36,10 +35,10 @@ export const useVaultsListQueryParams = () => {
       const newQueryParams = {
         ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
         ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
-        ...(newFilters.vaults && { vaults: newFilters.vaults.join(',') }),
-        ...(newFilters.walletAddress
-          ? { walletAddress: newFilters.walletAddress }
-          : { walletAddress: '' }),
+        ...(newFilters.walletAddress && { walletAddress: newFilters.walletAddress }),
+        ...(newFilters.vaults && {
+          vaults: newFilters.vaults !== 'risk-managed' ? newFilters.vaults : '', // if its the default one its gonna be deleted below
+        }),
         ...(newFilters.sorting && {
           sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
         }),
@@ -80,7 +79,7 @@ export const useVaultsListQueryParams = () => {
         value:
           newFilters.assets?.join(',') ??
           newFilters.networks?.join(',') ??
-          newFilters.vaults?.join(',') ??
+          newFilters.vaults ??
           newFilters.walletAddress ??
           newFilters.sorting?.value ??
           'unknown',

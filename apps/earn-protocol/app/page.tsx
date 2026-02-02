@@ -46,8 +46,13 @@ const EarnAllVaultsPage = async ({
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    systemConfig,
+    vaults,
+  })
+
   const filteredWalletAssetsVaults = walletAddress
-    ? vaults.filter((vault) => {
+    ? vaultsWithConfig.filter((vault) => {
         return walletAssets.assets.some(
           (asset) =>
             asset.symbol.toLowerCase() === vault.inputToken.symbol.toLowerCase() &&
@@ -57,14 +62,9 @@ const EarnAllVaultsPage = async ({
       })
     : vaults
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    systemConfig,
-    vaults: filteredWalletAssetsVaults,
-  })
-
   const [vaultsApyByNetworkMap] = await Promise.all([
     getCachedVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
+      fleets: filteredWalletAssetsVaults.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
@@ -84,7 +84,7 @@ const EarnAllVaultsPage = async ({
     <VaultListViewComponent
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsInfo={vaultsInfo}
-      vaultsList={vaultsWithConfig}
+      vaultsList={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
       tvl={tvl}
     />

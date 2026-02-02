@@ -265,13 +265,13 @@ export const VaultsListView = ({
 
     return sortedVaults
   }, [
-    sortVaults,
-    filterNetworks,
-    filterNetworkVaults,
-    filterAssetVaults,
     vaultsList,
-    filterAssets,
+    filterNetworks.length,
+    filterNetworkVaults,
+    filterAssets.length,
+    filterAssetVaults,
     userIsSmartAccount,
+    sortVaults,
   ])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
@@ -483,7 +483,7 @@ export const VaultsListView = ({
             ]}
             handleTabChange={(tab) => {
               updateQueryParams(queryParams, {
-                vaults: [tab.id],
+                vaults: tab.id,
               })
             }}
             defaultIndex={
