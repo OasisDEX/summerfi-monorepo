@@ -9,7 +9,7 @@ export type VaultsListFiltersType = {
   networks?: string[]
   vaults?: string
   sorting?: DropdownRawOption
-  walletAddress?: string
+  walletAddress?: (string | undefined)[]
 }
 
 export const useVaultsListQueryParams = () => {
@@ -30,12 +30,15 @@ export const useVaultsListQueryParams = () => {
   const updateQueryParams = useCallback(
     (params: ReadonlyURLSearchParams, newFilters: VaultsListFiltersType) => {
       // we want a hard reload when walletAddress filter is changed
-      const isSoftPush = !(params.get('walletAddress') ?? newFilters.walletAddress)
+      const isSoftPush =
+        !newFilters.walletAddress ||
+        params.get('walletAddress')?.toLowerCase() === newFilters.walletAddress[0]?.toLowerCase()
+
       // use soft router push to update the URL without reloading the page, except for walletAddress filter which requires full reload
       const newQueryParams = {
         ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
         ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
-        ...(newFilters.walletAddress && { walletAddress: newFilters.walletAddress }),
+        ...(newFilters.walletAddress && { walletAddress: newFilters.walletAddress.join(',') }),
         ...(newFilters.vaults && {
           vaults: newFilters.vaults !== 'risk-managed' ? newFilters.vaults : '', // if its the default one its gonna be deleted below
         }),
@@ -61,7 +64,7 @@ export const useVaultsListQueryParams = () => {
       const isNetworksChange = newFilters.networks !== undefined
       const isSortingChange = newFilters.sorting !== undefined
       const isVaultsChange = newFilters.vaults !== undefined
-      const isWalletAddressChange = newFilters.walletAddress !== ''
+      const isWalletAddressChange = newFilters.walletAddress?.[0]?.toLowerCase() !== ''
       const dropdownName = isAssetsChange
         ? 'vaults-list-view-assets'
         : isNetworksChange
@@ -80,7 +83,7 @@ export const useVaultsListQueryParams = () => {
           newFilters.assets?.join(',') ??
           newFilters.networks?.join(',') ??
           newFilters.vaults ??
-          newFilters.walletAddress ??
+          newFilters.walletAddress?.[0] ??
           newFilters.sorting?.value ??
           'unknown',
       })

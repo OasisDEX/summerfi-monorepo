@@ -220,9 +220,9 @@ export const VaultsListFiltersV2 = ({
     }
 
     if (filterWallet) {
-      updateQueryParams(queryParams, { walletAddress: '' })
+      updateQueryParams(queryParams, { walletAddress: [] })
     } else {
-      updateQueryParams(queryParams, { walletAddress: userWalletAddress })
+      updateQueryParams(queryParams, { walletAddress: [userWalletAddress] })
     }
   }
 

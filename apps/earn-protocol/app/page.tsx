@@ -64,7 +64,7 @@ const EarnAllVaultsPage = async ({
 
   const [vaultsApyByNetworkMap] = await Promise.all([
     getCachedVaultsApy({
-      fleets: filteredWalletAssetsVaults.map(({ id, protocol: { network } }) => ({
+      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
@@ -84,7 +84,8 @@ const EarnAllVaultsPage = async ({
     <VaultListViewComponent
       vaultsApyByNetworkMap={vaultsApyByNetworkMap}
       vaultsInfo={vaultsInfo}
-      vaultsList={filteredWalletAssetsVaults}
+      vaultsList={vaultsWithConfig}
+      filteredWalletAssetsVaults={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
       tvl={tvl}
     />

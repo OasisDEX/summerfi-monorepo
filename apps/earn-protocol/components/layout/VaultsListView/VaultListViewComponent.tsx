@@ -19,6 +19,7 @@ const VaultsListView = dynamic(
 
 interface VaultListViewComponentProps {
   vaultsList: SDKVaultsListType
+  filteredWalletAssetsVaults: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
@@ -27,6 +28,7 @@ interface VaultListViewComponentProps {
 
 export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
   vaultsList,
+  filteredWalletAssetsVaults,
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
@@ -36,6 +38,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
       <VaultsListView
         vaultsList={vaultsList}
+        filteredWalletAssetsVaults={filteredWalletAssetsVaults}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
         sumrPriceUsd={sumrPriceUsd}

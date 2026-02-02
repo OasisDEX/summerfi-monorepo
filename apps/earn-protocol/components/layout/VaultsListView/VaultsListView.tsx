@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  Card,
   DataBlock,
   getSumrTokenBonus,
   getUniqueVaultId,
@@ -36,6 +37,7 @@ import {
 import {
   convertWethToEth,
   findVaultInfo,
+  formatAddress,
   formatCryptoBalance,
   formatPercent,
   sdkNetworkToHumanNetwork,
@@ -74,6 +76,7 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
+  filteredWalletAssetsVaults?: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
@@ -82,6 +85,7 @@ type VaultsListViewProps = {
 
 export const VaultsListView = ({
   vaultsList,
+  filteredWalletAssetsVaults,
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
@@ -249,9 +253,10 @@ export const VaultsListView = ({
   }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
 
   const filteredAndSortedVaults = useMemo(() => {
+    const vaultsListTouse = filteredWalletAssetsVaults ?? vaultsList
     const networkFilteredVaults = filterNetworks.length
-      ? vaultsList.filter(filterNetworkVaults)
-      : vaultsList
+      ? vaultsListTouse.filter(filterNetworkVaults)
+      : vaultsListTouse
 
     const assetFilteredVaults = filterAssets.length
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
@@ -266,6 +271,7 @@ export const VaultsListView = ({
     return sortedVaults
   }, [
     vaultsList,
+    filteredWalletAssetsVaults,
     filterNetworks.length,
     filterNetworkVaults,
     filterAssets.length,
@@ -556,16 +562,38 @@ export const VaultsListView = ({
               />
             ))
           ) : (
-            <div className={vaultsListViewStyles.noVaultsWrapper}>
-              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                No vaults available
-                {filterNetworks.length
-                  ? ` for ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
-                  : ''}
-                {filterAssets.length
-                  ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
-                  : ''}
-              </Text>
+            <div
+              className={vaultsListViewStyles.noVaultsWrapper}
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              <Card
+                style={{
+                  margin: '0 auto 30px auto',
+                }}
+              >
+                <Text
+                  as="p"
+                  variant="p2"
+                  style={{
+                    color: 'var(--earn-protocol-secondary-60)',
+                    margin: '30px auto 30px auto',
+                  }}
+                >
+                  No vaults available
+                  {filterNetworks.length
+                    ? ` on ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
+                    : ''}
+                  {filterAssets.length
+                    ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
+                    : ''}
+                  {filterWallet.length
+                    ? ` for assets from ${formatAddress(filterWallet)} wallet`
+                    : ''}
+                  .
+                </Text>
+              </Card>
               <Text
                 as="p"
                 variant="p1semiColorful"
@@ -575,22 +603,7 @@ export const VaultsListView = ({
               </Text>
             </div>
           )}
-          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
-            <SumrStakeCard
-              availableToStake={sumrAvailableToStake}
-              availableToStakeUSD={sumrAvailableToStakeUSD}
-              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
-              yieldToken="USDC"
-              apy={sumrRewardApy}
-              tooltipName="sumr-stake-bonus-label"
-              onTooltipOpen={tooltipEventHandler}
-              handleClick={() => {
-                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
-                push(`/staking`)
-              }}
-            />
-          )}
-          {usingSafeVaultsList && (
+          {usingSafeVaultsList && filteredSafeVaultsList.length && (
             <>
               {filteredSafeVaultsList.map((vault, vaultIndex) => (
                 <VaultCard
@@ -626,6 +639,21 @@ export const VaultsListView = ({
                 />
               ))}
             </>
+          )}
+          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
+            <SumrStakeCard
+              availableToStake={sumrAvailableToStake}
+              availableToStakeUSD={sumrAvailableToStakeUSD}
+              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
+              yieldToken="USDC"
+              apy={sumrRewardApy}
+              tooltipName="sumr-stake-bonus-label"
+              onTooltipOpen={tooltipEventHandler}
+              handleClick={() => {
+                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
+                push(`/staking`)
+              }}
+            />
           )}
         </>
       }
