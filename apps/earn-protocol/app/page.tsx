@@ -41,7 +41,9 @@ const EarnAllVaultsPage = async ({
       getCachedVaultsInfo(),
       getCachedSumrPrice(),
       getCachedTvl(),
-      walletAddress ? getCachedWalletAssets(walletAddress) : Promise.resolve(emptyWalletAssets),
+      walletAddress
+        ? getCachedWalletAssets(walletAddress, true)
+        : Promise.resolve(emptyWalletAssets),
     ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
