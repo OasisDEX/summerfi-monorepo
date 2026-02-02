@@ -60,7 +60,7 @@ const EarnAllVaultsPage = async ({
               subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
         )
       })
-    : vaults
+    : vaultsWithConfig
 
   const [vaultsApyByNetworkMap] = await Promise.all([
     getCachedVaultsApy({
