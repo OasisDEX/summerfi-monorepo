@@ -96,6 +96,7 @@ export { HeadingWithCards } from './components/molecules/HeadingWithCards/Headin
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
 export {
   GenericMultiselect,
+  GenericMultiselectPill,
   type GenericMultiselectOption,
 } from './components/molecules/GenericMultiselect/GenericMultiselect'
 export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'

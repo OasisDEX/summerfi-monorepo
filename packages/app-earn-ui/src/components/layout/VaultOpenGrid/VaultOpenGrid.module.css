@@ -28,7 +28,7 @@
 
 @media screen and (min-width: 900px) {
   .vaultOpenGridPositionWrapper {
-    grid-template-columns: 1fr 446px;
+    grid-template-columns: 1fr 430px;
     grid-gap: var(--general-space-16);
   }
 }

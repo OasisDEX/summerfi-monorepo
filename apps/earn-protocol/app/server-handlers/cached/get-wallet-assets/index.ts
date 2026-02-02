@@ -7,12 +7,18 @@ import {
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
+export const emptyWalletAssets = {
+  totalAssetsUsdValue: 0,
+  totalAssetsPercentageChange: 0,
+  assets: [],
+}
+
 export const getCachedWalletAssets = async (
   walletAddress: string,
 ): Promise<PortfolioAssetsResponse> => {
   // Return empty, default values if in dev environment
   if (process.env.ENVIRONMENT_TAG === 'dev') {
-    return { totalAssetsUsdValue: 0, totalAssetsPercentageChange: 0, assets: [] }
+    return emptyWalletAssets
   }
 
   return await fetch(

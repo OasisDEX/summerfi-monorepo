@@ -116,3 +116,26 @@
 .searchInput::placeholder {
   color: var(--earn-protocol-secondary-40);
 }
+
+.dropdownAsPill {
+  padding: 8px 16px 8px 10px;
+  background-color: var(--earn-protocol-neutral-85);
+  border: 1px solid var(--earn-protocol-neutral-80);
+  transition: border 0.2s ease-in-out;
+  border-radius: var(--general-radius-24);
+  font-weight: 600;
+}
+
+.dropdownAsSmallPill {
+  padding: 8px;
+  background-color: var(--earn-protocol-neutral-85);
+  border: none;
+  border-radius: var(--general-radius-24);
+}
+
+.dropdownAsCard {
+  padding: 16px 24px;
+  background-color: var(--earn-protocol-neutral-90);
+  border: 1px solid var(--earn-protocol-neutral-90);
+  border-radius: var(--general-radius-24);
+}

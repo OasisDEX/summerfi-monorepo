@@ -215,7 +215,7 @@ export default function InstitutionsPage() {
         <Image src={securityAndComplianceImage} alt="Security and Compliance" />
         <SecurityAndComplianceList
           items={[
-            'Assets are fully self custodial with your preffered wallet solution ',
+            'Assets are fully self custodial with your preferred wallet solution ',
             'Assets are managed and segregated by established service providers',
             'Available to Qualified Purchasers in supported jurisdiction',
             'Minimize counterparty risk with a customizable whitelists',
