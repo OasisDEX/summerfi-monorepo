@@ -505,9 +505,6 @@ export const VaultsListView = ({
             wrapperStyle={{
               padding: '0 30px',
             }}
-            tabHeadersStyle={{
-              borderBottom: 'none',
-            }}
             useAsControlled
           />
         ) : null

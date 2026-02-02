@@ -57,14 +57,10 @@ export const VaultGrid = ({
       <div className={vaultGridStyles.vaultGridPositionWrapper}>
         <Box className={vaultGridStyles.fullWidthBlock}>{topContent}</Box>
         {additionalFullWithTopContent ? (
-          <div
-            className={vaultGridStyles.fullWidthBlock}
-            style={{
-              marginBottom: '-16px',
-            }}
-          >
-            {additionalFullWithTopContent}
-          </div>
+          <>
+            <div>{additionalFullWithTopContent}</div>
+            <div />
+          </>
         ) : null}
         <Box className={vaultGridStyles.leftBlock}>{leftContent}</Box>
         <div className={vaultGridStyles.rightBlockWrapper}>
