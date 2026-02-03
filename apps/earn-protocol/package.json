@@ -60,7 +60,7 @@
     "react-infinite-scroller": "^1.2.6",
     "react-toastify": "^11.0.3",
     "react": "19.1.0",
-    "recharts": "^2.15.0",
+    "recharts": "3.7.0",
     "sharp": "^0.33.5",
     "viem": "2.43.5",
     "wagmi": "2.10.9",

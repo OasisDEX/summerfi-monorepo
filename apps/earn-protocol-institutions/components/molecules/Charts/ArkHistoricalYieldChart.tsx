@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type ArksHistoricalChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
@@ -127,7 +127,11 @@ export const ArkHistoricalYieldChart = ({
                   lineHeight: '11px',
                   letterSpacing: '-0.5px',
                 }}
-                labelFormatter={(label: string) => {
+                labelFormatter={(label: ReactNode) => {
+                  if (typeof label !== 'string') {
+                    return label
+                  }
+
                   const parsedTimestamp = dayjs(label)
                   const formattedDate = parsedTimestamp.format(
                     ['7d', '30d'].includes(timeframe)

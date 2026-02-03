@@ -1,13 +1,14 @@
 import { LoadingSpinner, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type ForecastDataPoints } from '@summerfi/app-types'
 import {
+  type ActiveDotProps,
   Area,
   ComposedChart,
-  Customized,
   Legend,
   Line,
   ResponsiveContainer,
   Tooltip,
+  type TooltipContentProps,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -22,6 +23,16 @@ type ForecastChartProps = {
   isLoading?: boolean
   tokenPrice?: string | null
 }
+
+const renderForecastChartCross = (dotProps: ActiveDotProps) => {
+  return <ChartCross coordinateDataKeySelector="forecast" {...dotProps} />
+}
+
+const renderForecastTooltip =
+  (tokenPrice?: string | null) =>
+  (props: TooltipContentProps<number | [number, number], 'bounds' | 'forecast'>) => (
+    <ForecastTooltip {...props} tokenPrice={tokenPrice} />
+  )
 
 export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProps) => {
   return (
@@ -50,7 +61,7 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             }}
           />
           <Tooltip
-            content={<ForecastTooltip tokenPrice={tokenPrice} />}
+            content={renderForecastTooltip(tokenPrice)}
             cursor={false}
             offset={20}
             allowEscapeViewBox={{ y: true }}
@@ -67,14 +78,14 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             activeDot={false}
             animationDuration={200}
             animationBegin={200}
-            animateNewValues
+            isAnimationActive={!isLoading}
           />
           <Line
             dot={false}
             type="natural"
             dataKey="forecast"
             stroke="#FF80BF"
-            activeDot={false}
+            activeDot={renderForecastChartCross}
             connectNulls
             animationDuration={400}
             animateNewValues
@@ -87,7 +98,6 @@ export const ForecastChart = ({ data, isLoading, tokenPrice }: ForecastChartProp
             layout="horizontal"
             wrapperStyle={{ bottom: '-10px' }}
           />
-          <Customized component={<ChartCross graphicalItemIndex={1} />} />
         </ComposedChart>
       </ResponsiveContainer>
       {isLoading && (

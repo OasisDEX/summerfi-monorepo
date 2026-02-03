@@ -21,6 +21,7 @@ export function ResponseTimesChart({ responseTimes }: { responseTimes?: JsonValu
             itemStyle={{ display: 'none' }}
             cursor={false}
             labelFormatter={(label, test) =>
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               `Response Time: ${test[0] ? `${Number(Number(test[0].value).toFixed(2)) * 1000}` : 'n/a'} ms`
             }
             allowEscapeViewBox={{

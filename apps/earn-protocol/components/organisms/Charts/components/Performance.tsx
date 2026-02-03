@@ -2,6 +2,7 @@ import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type PerformanceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import {
+  type ActiveDotProps,
   Area,
   ComposedChart,
   Legend,
@@ -12,6 +13,7 @@ import {
   YAxis,
 } from 'recharts'
 
+import { ChartCross } from '@/components/organisms/Charts/components/ChartCross'
 import { NotEnoughData } from '@/components/organisms/Charts/components/NotEnoughData'
 import { PerformanceLegend } from '@/components/organisms/Charts/components/PerformanceLegend'
 import { historicalPerformanceLabelMap } from '@/components/organisms/Charts/labels'
@@ -29,6 +31,10 @@ type PerformanceChartProps = {
   timeframe: TimeframesType
   inputToken: string
   showForecast: boolean
+}
+
+const renderForecastChartCross = (dotProps: ActiveDotProps) => {
+  return <ChartCross coordinateDataKeySelector="forecast" {...dotProps} />
 }
 
 export const PerformanceChart = ({
@@ -88,7 +94,7 @@ export const PerformanceChart = ({
               Array.isArray(val)
                 ? `${val.map((v) => `${formatChartCryptoValue(Number(v))}`).join(' - ')} ${inputToken}`
                 : `${formatChartCryptoValue(Number(val))} ${inputToken}`,
-              historicalPerformanceLabelMap[valueName] ?? valueName,
+              valueName ? historicalPerformanceLabelMap[valueName] : valueName,
             ]}
             labelFormatter={(value) =>
               dayjs(value).format(
@@ -116,6 +122,7 @@ export const PerformanceChart = ({
               lineHeight: '11px',
               letterSpacing: '-0.5px',
             }}
+            cursor={false}
           />
           {showForecast ? (
             <>
@@ -129,14 +136,14 @@ export const PerformanceChart = ({
                 activeDot={false}
                 animationDuration={200}
                 animationBegin={200}
-                animateNewValues
+                isAnimationActive={!chartHidden}
               />
               <Line
                 dot={false}
                 type="natural"
                 dataKey="forecast"
                 stroke="#FF80BF"
-                activeDot={false}
+                activeDot={renderForecastChartCross}
                 connectNulls
                 animationDuration={400}
                 strokeDasharray="5 5"

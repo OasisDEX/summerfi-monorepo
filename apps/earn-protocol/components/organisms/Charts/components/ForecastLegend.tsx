@@ -1,6 +1,6 @@
-import { DefaultLegendContent, type LegendProps } from 'recharts'
+import { DefaultLegendContent, type DefaultLegendContentProps } from 'recharts'
 
-export const ForecastLegend = ({ payload, ref: _ref, ...rest }: LegendProps) => {
+export const ForecastLegend = ({ payload, ref: _ref, ...rest }: DefaultLegendContentProps) => {
   const nextPayload = payload
     ?.filter((entry) => entry.dataKey !== 'bounds')
     .map(({ dataKey: _dataKey, inactive: _inactive, ...entry }) => ({
