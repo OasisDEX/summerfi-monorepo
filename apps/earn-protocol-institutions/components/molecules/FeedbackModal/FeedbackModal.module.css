@@ -1,6 +1,6 @@
 .wrapper {
   width: 100%;
-  min-width: 480px;
+  min-width: 500px;
   flex-direction: column;
 }
 
@@ -19,13 +19,14 @@
 .fieldLabel {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .input {
   width: 100%;
   padding: 8px 10px;
+  font-size: 14px;
 }
 
 .textarea {
@@ -61,11 +62,15 @@
   font-size: 13px;
 }
 
-.metaLabel {
+.metaUser {
   color: white;
 }
 
-.metaValue {
+.metaDescription {
+  color: white;
+}
+
+.metaDate {
   font-weight: 600;
   color: rgba(200, 200, 200, 0.7);
 }

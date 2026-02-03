@@ -7,8 +7,9 @@ declare const styles: {
   readonly "messageRow": string;
   readonly "messageTimestamp": string;
   readonly "messagesList": string;
-  readonly "metaLabel": string;
-  readonly "metaValue": string;
+  readonly "metaDate": string;
+  readonly "metaDescription": string;
+  readonly "metaUser": string;
   readonly "sectionTitle": string;
   readonly "textarea": string;
   readonly "ticketCard": string;

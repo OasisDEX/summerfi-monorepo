@@ -2,8 +2,10 @@
 import { useMemo, useState } from 'react'
 import { Button, Card, Input, PillSelector, Text } from '@summerfi/app-earn-ui'
 import dayjs from 'dayjs'
+import { usePathname } from 'next/navigation'
 
 import { CHART_TIMESTAMP_FORMAT_SHORT } from '@/features/charts/helpers'
+import { useInstitutionUser } from '@/hooks/useInstitutionUser'
 
 import feedbackModalStyles from './FeedbackModal.module.css'
 
@@ -94,15 +96,15 @@ const categoryOptions = [
 ]
 
 export const FeedbackModal = () => {
+  const pathname = usePathname()
+  const { data: institutionUserData, loading: institutionUserLoading } = useInstitutionUser()
   const [tickets, setTickets] = useState<FeedbackTicket[]>(mockTickets)
-  const [institutionId, setInstitutionId] = useState('')
-  const [url, setUrl] = useState('')
   const [category, setCategory] = useState('')
   const [message, setMessage] = useState('')
 
   const canSubmit = useMemo(() => {
-    return institutionId.trim().length > 0 && message.trim().length > 0
-  }, [institutionId, message])
+    return message.trim().length > 0 && !institutionUserLoading
+  }, [message, institutionUserLoading])
 
   const handleSubmit = () => {
     if (!canSubmit) return
@@ -140,34 +142,34 @@ export const FeedbackModal = () => {
     setMessage('')
   }
 
+  const safeInstitutionName = institutionUserData?.user?.institutionsList?.[0].name
+    ? institutionUserData.user.institutionsList[0].name
+    : 'n/a'
+
   return (
     <Card variant="cardSecondary" className={feedbackModalStyles.wrapper}>
-      <Text variant="p1semi" className={feedbackModalStyles.sectionTitle}>
+      <Text variant="p2semi" className={feedbackModalStyles.sectionTitle}>
         Add feedback
       </Text>
       <div className={feedbackModalStyles.formGrid}>
+        <Input
+          variant="dark"
+          className={feedbackModalStyles.input}
+          placeholder={
+            institutionUserLoading
+              ? 'Institution: Loading...'
+              : `Institution: ${safeInstitutionName}`
+          }
+          disabled
+        />
+        <Input
+          variant="dark"
+          className={feedbackModalStyles.input}
+          placeholder={`URL: ${pathname}`}
+          disabled
+        />
         <label className={feedbackModalStyles.fieldLabel}>
-          Institution ID
-          <Input
-            variant="dark"
-            value={institutionId}
-            onChange={(ev) => setInstitutionId(ev.target.value)}
-            className={feedbackModalStyles.input}
-            placeholder="institution id"
-          />
-        </label>
-        <label className={feedbackModalStyles.fieldLabel}>
-          URL (optional)
-          <Input
-            variant="dark"
-            value={url}
-            onChange={(ev) => setUrl(ev.target.value)}
-            className={feedbackModalStyles.input}
-            placeholder="https://..."
-          />
-        </label>
-        <label className={feedbackModalStyles.fieldLabel}>
-          Category
+          <Text variant="p3semi">Category</Text>
           <PillSelector
             options={categoryOptions}
             defaultSelected={categoryOptions[0].value}
@@ -175,7 +177,7 @@ export const FeedbackModal = () => {
           />
         </label>
         <label className={feedbackModalStyles.fieldLabel}>
-          Message
+          <Text variant="p3semi">Message</Text>
           <textarea
             value={message}
             onChange={(ev) => setMessage(ev.target.value)}
@@ -196,18 +198,21 @@ export const FeedbackModal = () => {
         Submit feedback
       </Button>
 
-      <Text variant="p1semi" className={feedbackModalStyles.sectionTitle}>
-        Your feedback threads
+      <Text variant="p2semi" className={feedbackModalStyles.sectionTitle}>
+        Your institution feedback:
       </Text>
       <div className={feedbackModalStyles.ticketsList}>
         {tickets.map((ticket) => (
           <div key={ticket.id} className={feedbackModalStyles.ticketCard}>
             <div className={feedbackModalStyles.ticketMeta}>
               <div className={feedbackModalStyles.ticketMetaRow}>
-                <div className={feedbackModalStyles.metaLabel}>
-                  {ticket.messages[0].content.slice(0, 40)}...
+                <div className={feedbackModalStyles.metaUser}>
+                  <Text variant="p4semi">{ticket.user_sub}:</Text>
                 </div>
-                <div className={feedbackModalStyles.metaValue}>
+                <div className={feedbackModalStyles.metaDescription}>
+                  <Text variant="p4">{ticket.messages[0].content.slice(0, 30)}...</Text>
+                </div>
+                <div className={feedbackModalStyles.metaDate}>
                   {dayjs(ticket.created_at).format(CHART_TIMESTAMP_FORMAT_SHORT)}
                 </div>
               </div>
