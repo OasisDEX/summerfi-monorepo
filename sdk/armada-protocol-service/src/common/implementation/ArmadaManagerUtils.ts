@@ -35,6 +35,7 @@ import {
   type TransactionInfo,
   type HistoricalFleetRateResult,
   createTimeoutSignal,
+  type ChainId,
 } from '@summerfi/sdk-common'
 import {
   IArmadaSubgraphManager,
@@ -75,6 +76,13 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
   private _getUserMerklRewards: (
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
   ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
+  private _getProtocolUsageRewards: (params: {
+    userAddressValue: AddressValue
+    chainId: ChainId
+  }) => Promise<{
+    total: bigint
+    perFleet: Record<string, bigint>
+  }>
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -92,6 +100,13 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     getUserMerklRewards: (
       params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
     ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
+    getProtocolUsageRewards: (params: {
+      userAddressValue: AddressValue
+      chainId: ChainId
+    }) => Promise<{
+      total: bigint
+      perFleet: Record<string, bigint>
+    }>
   }) {
     super({ clientId: params.clientId })
 
@@ -105,6 +120,7 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     this._tokensManager = params.tokensManager
     this._deploymentProvider = params.deploymentProvider
     this._getUserMerklRewards = params.getUserMerklRewards
+    this._getProtocolUsageRewards = params.getProtocolUsageRewards
 
     this._supportedChains = params.supportedChains
     const _hubChainId = this._configProvider.getConfigurationItem({
@@ -216,6 +232,7 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
       summerToken,
       getTokenBySymbol,
       getUserMerklRewards: this._getUserMerklRewards,
+      getProtocolUsageRewards: this._getProtocolUsageRewards,
     })
   }
 
@@ -236,6 +253,7 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
       summerToken,
       getTokenBySymbol,
       getUserMerklRewards: this._getUserMerklRewards,
+      getProtocolUsageRewards: this._getProtocolUsageRewards,
     })
   }
 
@@ -252,6 +270,7 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
       summerToken,
       getTokenBySymbol,
       getUserMerklRewards: this._getUserMerklRewards,
+      getProtocolUsageRewards: this._getProtocolUsageRewards,
     })
   }
 

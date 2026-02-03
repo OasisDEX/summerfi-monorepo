@@ -112,6 +112,21 @@ export class ArmadaManager implements IArmadaManager {
       deploymentProvider: this._deploymentProvider,
       supportedChains: this._supportedChains,
       getUserMerklRewards: this.merklRewards.getUserMerklRewards.bind(this.merklRewards),
+      getProtocolUsageRewards: this.merklRewards.getProtocolUsageRewards.bind(this.merklRewards),
+    })
+    this.positions = new ArmadaManagerPositions({
+      clientId: this._clientId,
+      supportedChains: this._supportedChains,
+      blockchainClientProvider: this._blockchainClientProvider,
+      configProvider: this._configProvider,
+      tokensManager: this._tokensManager,
+      allowanceManager: this._allowanceManager,
+      oracleManager: this._oracleManager,
+      contractsProvider: this._contractsProvider,
+      swapManager: this._swapManager,
+      utils: this.utils,
+      subgraphManager: this._subgraphManager,
+      deploymentProvider: this._deploymentProvider,
     })
     this.claims = new ArmadaManagerClaims({
       ...params,

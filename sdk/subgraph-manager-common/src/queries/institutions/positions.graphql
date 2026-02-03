@@ -37,17 +37,7 @@ query GetUserPositions($accountAddress: String!) {
       id
     }
     claimedSummerToken
-    claimableSummerToken
     claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
   }
 }
 
@@ -89,17 +79,7 @@ query GetUserPosition($accountAddress: String!, $vaultId: String!) {
       id
     }
     claimedSummerToken
-    claimableSummerToken
     claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
   }
 }
 
@@ -141,17 +121,7 @@ query GetPosition($id: ID!) {
       id
     }
     claimedSummerToken
-    claimableSummerToken
     claimedSummerTokenNormalized
-    claimableSummerTokenNormalized
-    rewards {
-      claimedNormalized
-      claimableNormalized
-      rewardToken {
-        symbol
-        lastPriceUSD
-      }
-    }
   }
 }
 

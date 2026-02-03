@@ -27,12 +27,17 @@ export const mapGraphDataToArmadaPosition =
     summerToken,
     getTokenBySymbol,
     merklSummerRewards,
+    protocolUsageRewards,
   }: {
     user: IUser
     summerToken: IToken
     getTokenBySymbol: (params: { chainInfo: IChainInfo; symbol: string }) => IToken
     merklSummerRewards: {
       perChain: Partial<Record<ChainId, MerklReward[]>>
+    }
+    protocolUsageRewards: {
+      total: bigint
+      perFleet: Record<string, bigint>
     }
   }) =>
   (position: GetUserPositionQuery['positions'][number]) => {
@@ -88,14 +93,23 @@ export const mapGraphDataToArmadaPosition =
       token: summerToken,
     })
 
+    // get earned summer token from v1 vault usage rewards
+    const _claimableSummerToken = protocolUsageRewards.perFleet[position.id]
     const claimableSummerToken = TokenAmount.createFromBaseUnit({
-      amount: BigNumber(position.claimableSummerToken || '0')
+      amount: BigNumber(_claimableSummerToken || '0')
         .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
         .toFixed(),
       token: summerToken,
     })
 
-    const rewards = position.rewards.map((reward) => {
+    const _rewards = [
+      {
+        rewardToken: claimableSummerToken.token,
+        claimedNormalized: claimedSummerToken.amount,
+        claimableNormalized: claimableSummerToken.amount,
+      },
+    ]
+    const rewards = _rewards.map((reward) => {
       const token = getTokenBySymbol({
         chainInfo,
         symbol: reward.rewardToken.symbol,
