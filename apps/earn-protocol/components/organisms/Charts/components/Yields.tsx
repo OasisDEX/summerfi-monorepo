@@ -64,14 +64,14 @@ export const YieldsChart = ({
           >
             <defs>
               <linearGradient id="summerYieldGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF49A4" stopOpacity={0.8} />
+                <stop offset="30%" stopColor="#FF49A4" stopOpacity={1} />
                 <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
               </linearGradient>
             </defs>
             <XAxis
               dataKey="timestamp"
               fontSize={12}
-              interval="preserveStartEnd"
+              interval="equidistantPreserveStart"
               tickMargin={10}
               tickFormatter={(timestamp: string) => {
                 return timestamp.split(' ')[0]
@@ -81,14 +81,23 @@ export const YieldsChart = ({
               }}
             />
             <YAxis
-              strokeWidth={0}
+              strokeWidth={0.5}
+              fontSize={12}
+              interval="equidistantPreserveStart"
               tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
               style={{
                 userSelect: 'none',
               }}
             />
             <Tooltip
+              itemSorter={(val) => {
+                return -(val.value as number)
+              }}
               formatter={(val) => `${formatChartPercentageValue(Number(val), true)}`}
+              cursor={{
+                strokeOpacity: 0.3,
+                strokeWidth: 0.5,
+              }}
               wrapperStyle={{
                 zIndex: 1000,
                 backgroundColor: 'var(--color-surface-subtle)',
@@ -134,7 +143,6 @@ export const YieldsChart = ({
                 <Line
                   key={dataName}
                   type="monotone"
-                  animationId={dataIndex}
                   animationDuration={300}
                   animationBegin={dataIndex * 50}
                   animationEasing="ease-out"

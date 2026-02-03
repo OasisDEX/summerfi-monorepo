@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import {
   getDisplayToken,
   getPositionValues,
@@ -7,6 +7,7 @@ import {
   useSumrRewardsToDate,
 } from '@summerfi/app-earn-ui'
 import {
+  type ChartDataPoints,
   type IArmadaPosition,
   type SDKVaultishType,
   type TimeframesType,
@@ -15,8 +16,8 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import {
+  type ActiveDotProps,
   ComposedChart,
-  Customized,
   Line,
   ResponsiveContainer,
   Tooltip,
@@ -38,13 +39,17 @@ import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 import historicalChartStyles from './Historical.module.css'
 
 type HistoricalChartProps = {
-  data?: unknown[]
+  data?: ChartDataPoints[]
   tokenSymbol: TokenSymbolsList
   portfolioPosition: {
     position: IArmadaPosition
     vault: SDKVaultishType
   }
   timeframe: TimeframesType
+}
+
+const renderNetValueChartCross = (dotProps: ActiveDotProps) => {
+  return <ChartCross coordinateDataKeySelector="netValue" {...dotProps} />
 }
 
 export const HistoricalChart = ({
@@ -84,7 +89,7 @@ export const HistoricalChart = ({
           />
         )}
         <ResponsiveContainer
-          width={chartHidden ? '0' : '100%'}
+          width={chartHidden ? 0 : '100%'}
           height="100%"
           style={
             chartHidden
@@ -104,8 +109,18 @@ export const HistoricalChart = ({
               left: 10,
               bottom: 10,
             }}
-            onMouseMove={({ activePayload }) => {
-              if (activePayload && !chartHidden) {
+            onMouseMove={({ activeTooltipIndex }) => {
+              if (
+                activeTooltipIndex &&
+                !chartHidden &&
+                data[activeTooltipIndex as keyof typeof data]
+              ) {
+                const activePayload = data[activeTooltipIndex as keyof typeof data]
+
+                if (!Array.isArray(activePayload)) {
+                  return
+                }
+
                 setHighlightedData((prevData) => ({
                   ...prevData,
                   ...activePayload.reduce(
@@ -150,7 +165,6 @@ export const HistoricalChart = ({
               ]}
               hide={chartHidden}
             />
-            {/* Tooltip is needed for the chart cross to work */}
             <Tooltip
               formatter={() => {
                 return ''
@@ -162,7 +176,10 @@ export const HistoricalChart = ({
                 color: 'white',
                 fontSize: '12px',
               }}
-              labelFormatter={(label: string) => {
+              labelFormatter={(label: ReactNode) => {
+                if (typeof label !== 'string') {
+                  return label
+                }
                 const parsedTimestamp = dayjs(label)
                 const formattedDate = parsedTimestamp.format(
                   ['7d', '30d'].includes(timeframe)
@@ -177,14 +194,14 @@ export const HistoricalChart = ({
                 backgroundColor: 'var(--color-surface-subtle)',
                 border: 'none',
               }}
+              cursor={false}
             />
-            {!chartHidden ? <Customized component={<ChartCross />} /> : null}
             <Line
               dot={false}
               type="monotone"
               dataKey="netValue"
               stroke="#FF80BF"
-              activeDot={false}
+              activeDot={renderNetValueChartCross}
               connectNulls
               animationDuration={400}
               animateNewValues

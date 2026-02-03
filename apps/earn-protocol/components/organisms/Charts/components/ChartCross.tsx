@@ -1,29 +1,47 @@
-import { type CategoricalChartState } from 'recharts/types/chart/types'
+import { useMemo } from 'react'
+import { useIsTooltipActive, useOffset } from 'recharts'
+
+type CursorOrDotProps = {
+  payload?: {
+    dataKey: string
+    [key: string]: unknown
+  }[]
+  points?: { x: number; y: number }[] | string
+  coordinateDataKeySelector: string
+  cx?: number
+  cy?: number
+  [key: string]: unknown
+}
 
 export const ChartCross = ({
-  activeTooltipIndex,
-  tooltipTicks,
-  formattedGraphicalItems,
-  offset,
-  graphicalItemIndex,
-  ...rest
-}: CategoricalChartState & {
-  graphicalItemIndex?: number
-}) => {
-  // custom component for showing our 'crosshair' on the chart
-  if (
-    offset &&
-    tooltipTicks &&
-    activeTooltipIndex &&
-    formattedGraphicalItems[1]?.props.points[activeTooltipIndex]
-  ) {
-    if (!rest.isTooltipActive) {
-      return null
+  payload,
+  points,
+  coordinateDataKeySelector,
+  cx,
+  cy,
+}: CursorOrDotProps) => {
+  const isTooltipActive = useIsTooltipActive()
+  const offset = useOffset()
+
+  // When rendered as Line.activeDot we get cx/cy directly and skip tooltip logic
+  const pointCoordinates = useMemo(() => {
+    if (typeof cx === 'number' && typeof cy === 'number') {
+      return { x: cx, y: cy }
     }
-    // taking the active point by active tooltip index (same count as points)
-    // kinda hacky, but it works for now, we might revisit that later
-    const { x, y } =
-      formattedGraphicalItems[graphicalItemIndex ?? 0].props.points[activeTooltipIndex]
+
+    if (!isTooltipActive || !points || !payload) return null
+
+    const targetIndex = payload.findIndex((p) => p.dataKey === coordinateDataKeySelector)
+
+    if (targetIndex === -1) return null
+
+    if (!Array.isArray(points)) return null
+
+    return points[targetIndex]
+  }, [coordinateDataKeySelector, cx, cy, isTooltipActive, payload, points])
+
+  if (pointCoordinates && isTooltipActive) {
+    const { x, y } = pointCoordinates
     const pointProps = { cx: x, cy: y }
 
     return (
@@ -32,15 +50,15 @@ export const ChartCross = ({
           x1={x}
           y1={y}
           x2={x}
-          y2={`calc(100% - ${offset.bottom}px)`}
+          y2={offset ? `calc(100% - ${offset.bottom}px)` : '100%'}
           stroke="#FF80BF"
           strokeWidth={2}
           strokeDasharray="5 10"
         />
         <line
-          x1={offset.left}
+          x1={offset ? offset.left : 0}
           y1={y}
-          x2={`calc(100% - ${offset.right}px)`}
+          x2={offset ? `calc(100% - ${offset.right}px)` : '100%'}
           y2={y}
           stroke="#FF49A4"
           strokeWidth={2}
