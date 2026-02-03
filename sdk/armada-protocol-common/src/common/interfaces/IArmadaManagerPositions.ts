@@ -37,7 +37,7 @@ export interface IArmadaManagerPositions {
   getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
 
   /**
-   * @name getUserBalance
+   * @name getUserPosition
    * @description Get user position in the fleet
    *
    * @param user target user

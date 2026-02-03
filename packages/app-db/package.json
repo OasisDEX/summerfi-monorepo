@@ -5,7 +5,7 @@
   "types": "./index.ts",
   "scripts": {
     "db:migrate": "dotenv -e ../../.env -e ../../.env.local -- prisma migrate dev",
-    "prebuiald:nocache": "dotenv -e ../../.env -e ../../.env.local -- prisma generate",
+    "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- prisma generate",
     "db:push": "dotenv -e ../../.env -e ../../.env.local -- prisma db push --skip-generate"
   },
   "dependencies": {

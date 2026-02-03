@@ -101,7 +101,7 @@ export class ArmadaManagerPositions extends ArmadaManagerShared implements IArma
     return this._subgraphManager.getVault({
       chainId: params.vaultId.chainInfo.chainId,
       vaultId: params.vaultId.fleetAddress.value,
-    }) as GetVaultQuery
+    }) as Promise<GetVaultQuery>
   }
 
   /** @see IArmadaManagerPositions.getGlobalRebalancesRaw */
@@ -206,6 +206,10 @@ export class ArmadaManagerPositions extends ArmadaManagerShared implements IArma
       body: JSON.stringify(requestBody),
       signal: createTimeoutSignal(),
     })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch historical-fleet-rates: ${response.status}`)
+    }
 
     const data = (await response.json()) as {
       rates: HistoricalFleetRateResult[]

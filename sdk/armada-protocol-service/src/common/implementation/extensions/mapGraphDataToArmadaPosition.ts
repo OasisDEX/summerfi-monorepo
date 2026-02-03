@@ -94,9 +94,9 @@ export const mapGraphDataToArmadaPosition =
     })
 
     // get earned summer token from v1 vault usage rewards
-    const _claimableSummerToken = protocolUsageRewards.perFleet[position.id]
+    const _claimableSummerToken = protocolUsageRewards.perFleet[position.vault.id] ?? 0n
     const claimableSummerToken = TokenAmount.createFromBaseUnit({
-      amount: BigNumber(_claimableSummerToken || '0')
+      amount: BigNumber(_claimableSummerToken)
         .plus(merklSummerRewardsForPosition?.claimableSummerToken.toString() || '0')
         .toFixed(),
       token: summerToken,
