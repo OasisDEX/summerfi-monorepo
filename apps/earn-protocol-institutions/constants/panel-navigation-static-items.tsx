@@ -1,16 +1,12 @@
 import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
 
-export const panelNavigationStaticItems = [
-  // {
-  //   id: 'request-new-market',
-  //   label: (
-  //     <IconWithText iconName="plus" size={20}>
-  //       Request a new market
-  //     </IconWithText>
-  //   ),
-  //   // eslint-disable-next-line no-console
-  //   action: () => console.log('Request a new market'),
-  // },
+export const panelNavigationStaticItems = ({
+  actions,
+}: {
+  actions: {
+    openFeedbackModal: () => void
+  }
+}) => [
   {
     id: 'help-support',
     label: (
@@ -19,5 +15,15 @@ export const panelNavigationStaticItems = [
       </IconWithText>
     ),
     link: { href: '' },
+  },
+  {
+    id: 'open-feedback-modal',
+    label: (
+      <IconWithText iconName="plus" size={18}>
+        Feedback
+      </IconWithText>
+    ),
+    // eslint-disable-next-line no-console
+    action: actions.openFeedbackModal,
   },
 ]

@@ -1,11 +1,9 @@
 'use client'
 
-import { PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { NavigationIntermediary } from '@/components/layout/Navigation/NavigationIntermediary'
 import { IconWithText } from '@/components/molecules/IconWithText/IconWithText'
-import { panelNavigationStaticItems } from '@/constants/panel-navigation-static-items'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { getPanelOverviewNavigationTabId } from '@/helpers/get-pathname-tab-id'
 
 export const OverviewPanelNavigationWrapper = ({
@@ -13,8 +11,6 @@ export const OverviewPanelNavigationWrapper = ({
 }: {
   institutionName: string
 }) => {
-  const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
   const pathname = usePathname()
   const { push } = useRouter()
   const panelNavigationTabId = getPanelOverviewNavigationTabId(pathname)
@@ -53,11 +49,5 @@ export const OverviewPanelNavigationWrapper = ({
     },
   ]
 
-  return (
-    <PanelNavigation
-      isMobile={isMobile}
-      navigation={navigation}
-      staticItems={panelNavigationStaticItems}
-    />
-  )
+  return <NavigationIntermediary navigation={navigation} />
 }
