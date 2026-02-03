@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { Card, RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 import { type SingleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
@@ -100,7 +100,10 @@ export const AumChart = ({ chartData, timeframe, syncId }: AumChartProps) => {
                   lineHeight: '11px',
                   letterSpacing: '-0.5px',
                 }}
-                labelFormatter={(label: string) => {
+                labelFormatter={(label: ReactNode) => {
+                  if (typeof label !== 'string') {
+                    return label
+                  }
                   const parsedTimestamp = dayjs(label)
                   const formattedDate = parsedTimestamp.format(
                     ['7d', '30d'].includes(timeframe ?? defaultTimeframe)

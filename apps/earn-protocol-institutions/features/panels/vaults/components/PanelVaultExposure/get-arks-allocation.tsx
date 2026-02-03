@@ -3,7 +3,7 @@ import { getProtocolLabel, getUniqueColor, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultType } from '@summerfi/app-types'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
 
-interface AllocationItem {
+export interface AllocationItem {
   label: string
   percentage: number
   color: string
