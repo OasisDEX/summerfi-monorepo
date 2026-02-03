@@ -9,5 +9,5 @@ export const getGlobalRebalancesRaw = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getGlobalRebalancesRaw(opts.input)
+    return opts.ctx.armadaManager.positions.getGlobalRebalancesRaw(opts.input)
   })

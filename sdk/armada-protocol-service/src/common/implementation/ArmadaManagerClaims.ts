@@ -230,13 +230,14 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     })
   }
 
-  async getProtocolUsageRewards(
-    userAddressValue: AddressValue,
-    chainId: ChainId,
-  ): Promise<{
+  async getProtocolUsageRewards(params: {
+    userAddressValue: AddressValue
+    chainId: ChainId
+  }): Promise<{
     total: bigint
     perFleet: Record<string, bigint>
   }> {
+    const { userAddressValue, chainId } = params
     const chainInfo = getChainInfoByChainId(chainId)
     const client = this._blockchainClientProvider.getBlockchainClient({
       chainInfo,
@@ -313,10 +314,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     await Promise.all(
       this._supportedChains.map(async (chainInfo) => {
-        const usageRewards = await this.getProtocolUsageRewards(
-          params.user.wallet.address.toSolidityValue(),
-          chainInfo.chainId,
-        )
+        const usageRewards = await this.getProtocolUsageRewards({
+          userAddressValue: params.user.wallet.address.toSolidityValue(),
+          chainId: chainInfo.chainId,
+        })
         vaultUsagePerChain[chainInfo.chainId] = usageRewards.total
         return usageRewards
       }),
@@ -705,10 +706,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     const fleetRewardToken = this._utils.getSummerToken({ chainInfo: params.chainInfo }).address
 
     gatherMulticallArgsFromRequests.push(
-      this.getProtocolUsageRewards(
-        params.user.wallet.address.toSolidityValue(),
-        params.chainInfo.chainId,
-      ).then((protocolUsageRewards) => {
+      this.getProtocolUsageRewards({
+        userAddressValue: params.user.wallet.address.toSolidityValue(),
+        chainId: params.chainInfo.chainId,
+      }).then((protocolUsageRewards) => {
         if (protocolUsageRewards.total > 0n) {
           const fleetCommandersAddresses = Object.entries(protocolUsageRewards.perFleet)
             .filter(([_, rewards]) => rewards > 0n)

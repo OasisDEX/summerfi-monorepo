@@ -9,5 +9,5 @@ export const getPosition = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getPosition(opts.input)
+    return opts.ctx.armadaManager.positions.getPosition(opts.input)
   })

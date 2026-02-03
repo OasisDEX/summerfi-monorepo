@@ -58,6 +58,7 @@ export { getAllDistributionClaims } from './distributions/index'
 export type { IArmadaManagerBridge } from './common/interfaces/IArmadaManagerBridge'
 export type { IArmadaManagerVaults } from './common/interfaces/IArmadaManagerVaults'
 export type { IArmadaManagerUtils } from './common/interfaces/IArmadaManagerUtils'
+export type { IArmadaManagerPositions } from './common/interfaces/IArmadaManagerPositions'
 export type { IArmadaManagerAdmin } from './common/interfaces/IArmadaManagerAdmin'
 export type { IArmadaManagerAccessControl } from './common/interfaces/IArmadaManagerAccessControl'
 export {
