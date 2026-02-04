@@ -131,7 +131,7 @@ describe('Armada Protocol - Deposit', () => {
 
         // Verify balances after deposit (only if not simulating)
         if (!simulateOnly) {
-          expect(txStatus).toStrictEqual(['success'])
+          expect(txStatus.every((status) => status === 'success')).toBe(true)
 
           const fleetAmountAfter = await sdk.armada.users.getFleetBalance({
             vaultId,

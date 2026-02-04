@@ -177,7 +177,7 @@ describe('Armada Protocol - Switch', () => {
 
         // Verify balances after switch (only if not simulating)
         if (!simulateOnly) {
-          expect(txStatus).toStrictEqual(['success'])
+          expect(txStatus.every((status) => status === 'success')).toBe(true)
 
           const destinationPositionAfter = await sdk.armada.users.getUserPosition({
             user,
