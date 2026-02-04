@@ -1,5 +1,11 @@
 import type { ColumnType } from "kysely";
 
+export type FeedbackAuthorType = "admin" | "system" | "user";
+
+export type FeedbackCategory = "bug" | "feature-request" | "question";
+
+export type FeedbackStatus = "closed" | "in-progress" | "new" | "resolved";
+
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
@@ -9,24 +15,20 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 export type UserRole = "RoleAdmin" | "SuperAdmin" | "Viewer";
 
 export interface FeedbackMessages {
-  authorSub: string;
-  authorType: string;
+  authorEmail: string | null;
+  authorName: string | null;
+  authorSub: string | null;
+  authorType: FeedbackAuthorType;
+  category: FeedbackCategory | null;
   content: string;
   createdAt: Generated<Timestamp>;
-  feedbackTicketId: string;
-  id: Generated<string>;
-  updatedAt: Generated<Timestamp>;
-}
-
-export interface FeedbackTickets {
-  category: string | null;
-  createdAt: Generated<Timestamp>;
-  id: Generated<string>;
-  institutionId: string;
-  status: Generated<string>;
+  id: Generated<number>;
+  institutionId: number;
+  parentId: number | null;
+  status: Generated<FeedbackStatus>;
+  threadId: number;
   updatedAt: Generated<Timestamp>;
   url: string | null;
-  userSub: string;
 }
 
 export interface GlobalAdmins {
@@ -54,7 +56,6 @@ export interface InstitutionUsers {
 
 export interface Database {
   feedbackMessages: FeedbackMessages;
-  feedbackTickets: FeedbackTickets;
   globalAdmins: GlobalAdmins;
   institutions: Institutions;
   institutionUsers: InstitutionUsers;
