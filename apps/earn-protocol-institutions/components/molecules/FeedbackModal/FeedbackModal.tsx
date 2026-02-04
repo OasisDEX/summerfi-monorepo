@@ -278,7 +278,13 @@ const TicketMessage = ({ message }: { message: FeedbackThreadItem }) => {
       ) : (
         <>
           <div className={feedbackModalStyles.ticketReplyStatusBar}>
-            <Text variant="p4semi">
+            <Text
+              variant="p4semi"
+              style={{
+                color:
+                  message.authorType === 'admin' ? 'var(--earn-protocol-primary-100)' : undefined,
+              }}
+            >
               {message.authorName}&nbsp;
               <Text variant="p4" as="span" style={{ fontWeight: 400, opacity: 0.7 }}>
                 ({message.authorEmail})

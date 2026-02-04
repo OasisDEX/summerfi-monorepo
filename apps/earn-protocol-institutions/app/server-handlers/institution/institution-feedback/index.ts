@@ -99,11 +99,20 @@ export const submitFeedbackResponse = async ({
       !feedbackResponse.content ||
       feedbackResponse.content.trim().length < 10 ||
       Number.isNaN(Number(institutionId)) ||
-      !session.user?.institutionsList
+      (!session.user?.institutionsList && !session.user?.isGlobalAdmin)
     ) {
-      throw new Error('Invalid feedback response data')
+      throw new Error(
+        `Invalid feedback response data${JSON.stringify({
+          feedbackResponse,
+          session,
+          institutionId,
+        })}`,
+      )
     }
-    if (session.user.institutionsList.every((inst) => Number(inst.id) !== Number(institutionId))) {
+    if (
+      !session.user.isGlobalAdmin &&
+      session.user.institutionsList?.every((inst) => Number(inst.id) !== Number(institutionId))
+    ) {
       throw new Error('Institution access denied')
     }
 

@@ -1,6 +1,34 @@
 declare const styles: {
   readonly "blocksContainer": string;
   readonly "container": string;
+  readonly "contentBlock": string;
+  readonly "messageAuthor": string;
+  readonly "messageCard": string;
+  readonly "messageContent": string;
+  readonly "messageHeader": string;
+  readonly "messageMetaRow": string;
+  readonly "messageTimestamp": string;
+  readonly "messagesList": string;
+  readonly "metaGrid": string;
+  readonly "metaItem": string;
+  readonly "metaLabel": string;
+  readonly "metaValue": string;
+  readonly "replyActions": string;
+  readonly "replyForm": string;
+  readonly "replyLabel": string;
+  readonly "replyTextarea": string;
+  readonly "statusActions": string;
+  readonly "statusBadge": string;
+  readonly "statusButton": string;
+  readonly "status_closed": string;
+  readonly "status_in-progress": string;
+  readonly "status_new": string;
+  readonly "status_resolved": string;
+  readonly "submitButton": string;
+  readonly "threadCard": string;
+  readonly "threadContainer": string;
+  readonly "threadHeader": string;
+  readonly "threadSubHeader": string;
 };
 export = styles;
 
