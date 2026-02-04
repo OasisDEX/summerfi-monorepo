@@ -8,27 +8,36 @@ export type SendTransactionToolStatus = 'success' | 'reverted'
 export const createSendTransactionTool = (params: {
   chainId: ChainId
   rpcUrl: string
-  signerPrivateKey: string
+  signerPrivateKey?: string
   simulateOnly?: boolean
 }) => {
-  const signerPrivateKey = params.signerPrivateKey
-  const simulateOnly = params.simulateOnly ?? true
+  const { chainId, rpcUrl, signerPrivateKey } = params
+  const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
 
-  if (!isHex(signerPrivateKey)) {
+  if (signerPrivateKey != null && !isHex(signerPrivateKey)) {
     throw new Error('Signer privateKey is not a hex string')
   }
-  const rpcUrl = params.rpcUrl
   if (!rpcUrl) {
     throw new Error('rpcUrl is not set')
   }
 
   const useFork = process.env.SDK_USE_FORK === 'true'
-  const transactionUtils = new TransactionUtils({
-    rpcUrl: rpcUrl,
-    walletPrivateKey: signerPrivateKey,
-    chainInfo: getChainInfoByChainId(params.chainId),
-    useFork: useFork ? true : false,
-  })
+  // Branch TransactionUtils construction based on signerPrivateKey presence
+  // If signerPrivateKey is present, construct with walletPrivateKey for send/sendSimulation
+  // Otherwise, construct simulation-only TransactionUtils without walletPrivateKey
+  // so sendSimulation can run without requiring an account
+  const transactionUtils = signerPrivateKey
+    ? new TransactionUtils({
+        rpcUrl,
+        walletPrivateKey: signerPrivateKey,
+        chainInfo: getChainInfoByChainId(chainId),
+        useFork: useFork ? true : false,
+      })
+    : new TransactionUtils({
+        rpcUrl,
+        chainInfo: getChainInfoByChainId(chainId),
+        useFork: useFork ? true : false,
+      })
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
     transactionOrTransactions: T,

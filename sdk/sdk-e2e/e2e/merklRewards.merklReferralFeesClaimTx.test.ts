@@ -5,7 +5,7 @@ import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/t
 import { formatToken } from './utils/stringifiers'
 
 const simulateOnly = true
-const signerPrivateKey = SharedConfig.userPrivateKey
+const signerPrivateKey = SharedConfig.testUserPrivateKey
 
 const scenarios: { userAddress: AddressValue }[] = [
   { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },

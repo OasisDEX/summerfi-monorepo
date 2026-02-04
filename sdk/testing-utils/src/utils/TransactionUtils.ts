@@ -95,6 +95,7 @@ export class TransactionUtils {
   async sendTransaction(params: {
     transaction: Transaction
     waitForConfirmation?: boolean
+    walletPrivateKey?: Hex
   }): Promise<Hash> {
     const transactionHash = await this._sendTransaction(params)
 
@@ -108,6 +109,7 @@ export class TransactionUtils {
   async sendTransactionWithReceipt(params: {
     transaction: Transaction
     confirmations?: number
+    walletPrivateKey?: Hex
   }): Promise<TransactionReceipt> {
     const transactionHash = await this._sendTransaction(params)
 
@@ -116,12 +118,6 @@ export class TransactionUtils {
 
   async sendSimulation(params: { transaction: Transaction }): Promise<CallReturnType> {
     const account = this.account
-
-    if (!account) {
-      throw new Error(
-        'No account provided at fork construction and no private key provided to send transaction',
-      )
-    }
 
     return this.publicClient.call({
       account: account,

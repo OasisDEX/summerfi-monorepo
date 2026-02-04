@@ -18,7 +18,7 @@ describe('Armada Protocol Gov V2 getUserStakesCount', () => {
     const { testConfigKey: chainConfigKey } = scenario
     const chainConfig = TestConfigs[chainConfigKey]
     const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-    const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+    const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
     it('should get user stakes count', async () => {

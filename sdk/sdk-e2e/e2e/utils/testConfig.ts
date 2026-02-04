@@ -53,6 +53,7 @@ export const FleetAddresses = {
   Mainnet: {
     USDCHighRisk: '0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06',
     USDCLowRisk: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
+    ETHHighRisk: '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10',
   },
   Sonic: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
@@ -68,10 +69,10 @@ export const FleetAddresses = {
 export const SDKApiUrl = process.env.E2E_SDK_API_URL
 
 export const SharedConfig = {
-  userAddressValue: process.env.TEST_USER_ADDRESS as AddressValue,
-  userPrivateKey: process.env.TEST_USER_PRIVATE_KEY as HexData,
-  governorAddressValue: process.env.E2E_USER_ADDRESS as AddressValue,
-  governorPrivateKey: process.env.E2E_USER_PRIVATE_KEY as HexData,
+  testUserAddressValue: process.env.TEST_USER_ADDRESS as AddressValue,
+  testUserPrivateKey: process.env.TEST_USER_PRIVATE_KEY as HexData,
+  e2eUserAddressValue: process.env.E2E_USER_ADDRESS as AddressValue,
+  e2eUserPrivateKey: process.env.E2E_USER_PRIVATE_KEY as HexData,
 } as const
 
 export type ChainConfig = {
@@ -141,7 +142,7 @@ export const InstiTestConfigs = {
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
     aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
-    userAddressValue: SharedConfig.userAddressValue,
+    userAddressValue: SharedConfig.testUserAddressValue,
     symbol: 'ETH',
   },
   [TestClientIds.Targen]: {
@@ -152,4 +153,7 @@ export const InstiTestConfigs = {
     userAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
     symbol: 'USDT',
   },
-}
+} satisfies Record<
+  TestClientIds,
+  ChainConfig & { aqAddressValue: AddressValue; userAddressValue: AddressValue }
+>

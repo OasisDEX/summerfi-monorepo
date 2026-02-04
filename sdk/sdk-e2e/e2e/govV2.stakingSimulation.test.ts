@@ -20,7 +20,7 @@ describe('Armada Protocol Gov V2 Staking Simulation', () => {
     const { testConfigKey: chainConfigKey } = scenario
     const chainConfig = TestConfigs[chainConfigKey]
     const chainInfo = getChainInfoByChainId(chainConfig.chainId)
-    const userAddress = Address.createFromEthereum({ value: SharedConfig.userAddressValue })
+    const userAddress = Address.createFromEthereum({ value: SharedConfig.testUserAddressValue })
     const user = User.createFromEthereum(chainInfo.chainId, userAddress.value)
 
     it('should calculate staking simulation data with various amounts and periods', async () => {

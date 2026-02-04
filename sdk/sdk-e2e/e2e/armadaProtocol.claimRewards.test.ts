@@ -4,8 +4,9 @@ import {
   getChainInfoByChainId,
   User,
   type AddressValue,
+  type HexData,
 } from '@summerfi/sdk-common'
-import { RpcUrls, SharedConfig } from './utils/testConfig'
+import { RpcUrls } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { formatSumr } from './utils/stringifiers'
@@ -18,26 +19,25 @@ jest.setTimeout(300000)
  */
 describe('Armada Protocol - Claim Rewards', () => {
   const scenarios: {
-    simulateOnly: boolean
     chainId: ChainId
     rpcUrl: string
     userAddress: AddressValue
+    signerPrivateKey?: HexData
+    simulateOnly?: boolean
     includeMerkl?: boolean
     includeStakingV2?: boolean
   }[] = [
     {
-      simulateOnly: true,
       chainId: ChainIds.Base,
       rpcUrl: RpcUrls.Base,
-      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' as AddressValue,
+      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
       includeMerkl: false,
       includeStakingV2: true,
     },
     {
-      simulateOnly: true,
       chainId: ChainIds.Base,
       rpcUrl: RpcUrls.Base,
-      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' as AddressValue,
+      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
       includeMerkl: true,
       includeStakingV2: true,
     },
@@ -46,15 +46,22 @@ describe('Armada Protocol - Claim Rewards', () => {
   const sdk = createTestSDK()
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const { chainId, rpcUrl, userAddress, simulateOnly, includeMerkl, includeStakingV2 } = scenario
+    const {
+      chainId,
+      rpcUrl,
+      userAddress,
+      signerPrivateKey,
+      simulateOnly,
+      includeMerkl,
+      includeStakingV2,
+    } = scenario
 
     const chainInfo = getChainInfoByChainId(chainId)
     const user = User.createFromEthereum(chainId, userAddress)
-
     const userSendTxTool = createSendTransactionTool({
       chainId,
       rpcUrl,
-      signerPrivateKey: SharedConfig.userPrivateKey,
+      signerPrivateKey,
       simulateOnly,
     })
 
@@ -98,8 +105,10 @@ describe('Armada Protocol - Claim Rewards', () => {
         throw new Error('Did not return a tx even though there are rewards to claim')
       }
 
+      // Send transactions
       const txStatus = await userSendTxTool(tx)
 
+      // Verify results
       if (!simulateOnly) {
         expect(txStatus).toStrictEqual(['success'])
 
