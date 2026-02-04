@@ -12,6 +12,7 @@ export const AdminPanelNavigation = () => {
     { href: '/admin/institutions', label: <>Institutions</> },
     { href: '/admin/users', label: <>Users</> },
     { href: '/admin/global-admins', label: <>Global&nbsp;Admins</> },
+    { href: '/admin/feedback', label: <>Feedback</> },
   ]
 
   const activePageLabel = links.find((link) => pathname.startsWith(link.href))?.label

@@ -244,3 +244,23 @@ export async function rootAdminActionGetInstitutionData(institutionDbId: number)
 
   return institution
 }
+
+export async function rootAdminGetFeedbackList() {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  const feedbackList = await db
+    .selectFrom('feedbackMessages')
+    .where('parentId', 'is', null)
+    .selectAll()
+    .orderBy('createdAt', 'desc')
+    .execute()
+
+  db.destroy()
+
+  return feedbackList
+}
