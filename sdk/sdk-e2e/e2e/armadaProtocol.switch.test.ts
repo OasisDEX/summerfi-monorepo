@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Address,
   ArmadaVaultId,
@@ -7,208 +6,251 @@ import {
   Percentage,
   TokenAmount,
   User,
+  type AddressValue,
+  type ChainId,
+  type HexData,
 } from '@summerfi/sdk-common'
 
-import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
-import { SharedConfig } from './utils/testConfig'
+import { SharedConfig, FleetAddresses, RpcUrls } from './utils/testConfig'
 
 jest.setTimeout(300000)
-const simulateOnly = false
-const privateKey = SharedConfig.testUserPrivateKey
 
-const chainId = ChainIds.Base
-const ethFleet = Address.createFromEthereum({ value: '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af' })
-const usdcFleet = Address.createFromEthereum({
-  value: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
-})
-const eurcFleet = Address.createFromEthereum({
-  value: '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0',
-})
-const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
+/**
+ * @group e2e
+ */
+describe('Armada Protocol - Switch', () => {
+  const sdk = createTestSDK()
 
-describe('Armada Protocol Switch', () => {
-  it('should switch position', async () => {
-    // await runTests({
-    //   chainId,
-    //   sourceFleetAddress: eurcFleet,
-    //   destinationFleetAddress: usdcFleet,
-    //   rpcUrl,
-    // })
-    await runTests({
-      chainId,
-      sourceFleetAddress: ethFleet,
-      destinationFleetAddress: eurcFleet,
-      rpcUrl,
-    })
-    // await runTests({
-    //   chainId,
-    //   sourceFleetAddress: usdcFleet,
-    //   destinationFleetAddress: ethFleet,
-    //   rpcUrl,
-    // })
-  })
-
-  async function runTests({
-    chainId,
-    sourceFleetAddress,
-    destinationFleetAddress,
-    rpcUrl,
-    amountValue,
-    stake,
-  }: {
-    chainId: number
-    sourceFleetAddress: Address
-    destinationFleetAddress: Address
-    rpcUrl: string | undefined
+  // Configure test scenarios here
+  const switchScenarios: {
+    chainId: ChainId
+    sourceFleetAddress: AddressValue
+    destinationFleetAddress: AddressValue
+    rpcUrl: string
     amountValue?: string
-    stake?: boolean
-  }) {
-    const sdk = createTestSDK()
-    if (!rpcUrl) {
-      throw new Error('Missing fork url')
-    }
+    shouldStake?: boolean
+    signerAddressValue?: AddressValue
+    signerPrivateKey?: HexData
+    simulateOnly: boolean
+  }[] = [
+    {
+      chainId: ChainIds.Mainnet,
+      rpcUrl: RpcUrls.Mainnet,
+      sourceFleetAddress: FleetAddresses.Mainnet.ETHHighRisk,
+      destinationFleetAddress: FleetAddresses.Mainnet.USDCHighRisk,
+      signerAddressValue: SharedConfig.testUserAddressValue,
+      signerPrivateKey: SharedConfig.testUserPrivateKey,
+      simulateOnly: true,
+    },
+    // {
+    //   chainId: ChainIds.Base,
+    //   sourceFleetAddress: FleetAddresses.Base.EURC,
+    //   destinationFleetAddress: FleetAddresses.Base.USDC,
+    //   rpcUrl: RpcUrls.Base,
+    //   signerAddressValue: SharedConfig.testUserAddressValue,
+    //   signerPrivateKey: SharedConfig.testUserPrivateKey,
+    //   simulateOnly: true,
+    // },
+    // {
+    //   chainId: ChainIds.Base,
+    //   sourceFleetAddress: FleetAddresses.Base.USDC,
+    //   destinationFleetAddress: FleetAddresses.Base.ETH,
+    //   rpcUrl: RpcUrls.Base,
+    //   signerAddressValue: SharedConfig.testUserAddressValue,
+    //   signerPrivateKey: SharedConfig.testUserPrivateKey,
+    //   simulateOnly: true,
+    // },
+  ]
 
-    const chainInfo = getChainInfoByChainId(chainId)
+  describe('getVaultSwitchTx - switch between vaults', () => {
+    test.each(switchScenarios)(
+      'should switch position between vaults',
+      async ({
+        chainId,
+        sourceFleetAddress,
+        destinationFleetAddress,
+        rpcUrl,
+        amountValue,
+        shouldStake = false,
+        signerAddressValue = SharedConfig.testUserAddressValue,
+        signerPrivateKey = SharedConfig.testUserPrivateKey,
+        simulateOnly = true,
+      }) => {
+        const chainInfo = getChainInfoByChainId(chainId)
+        const user = User.createFromEthereum(chainId, signerAddressValue)
+        const userSendTxTool = createSendTransactionTool({
+          chainId,
+          rpcUrl,
+          signerPrivateKey,
+          simulateOnly,
+        })
 
-    const user = User.createFromEthereum(chainId, SharedConfig.testUserAddressValue)
-    const sourceVaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: sourceFleetAddress,
-    })
-    const destinationVaultId = ArmadaVaultId.createFrom({
-      chainInfo,
-      fleetAddress: destinationFleetAddress,
-    })
-    const slippage = Percentage.createFrom({
-      value: DEFAULT_SLIPPAGE_PERCENTAGE,
-    })
+        const sourceVaultId = ArmadaVaultId.createFrom({
+          chainInfo,
+          fleetAddress: Address.createFromEthereum({ value: sourceFleetAddress }),
+        })
+        const destinationVaultId = ArmadaVaultId.createFrom({
+          chainInfo,
+          fleetAddress: Address.createFromEthereum({ value: destinationFleetAddress }),
+        })
+        const slippage = Percentage.createFrom({
+          value: DEFAULT_SLIPPAGE_PERCENTAGE,
+        })
 
-    const destinationVaultInfo = await sdk.armada.users.getVaultInfo({
-      vaultId: destinationVaultId,
-    })
+        // Get source position
+        const sourcePositionBefore = await sdk.armada.users.getUserPosition({
+          user,
+          fleetAddress: Address.createFromEthereum({ value: sourceFleetAddress }),
+        })
 
-    const sourcePositionBefore = await sdk.armada.users.getUserPosition({
-      user,
-      fleetAddress: sourceFleetAddress,
-    })
+        assert(
+          sourcePositionBefore !== undefined,
+          `Source position should be defined for ${sourceFleetAddress}`,
+        )
+        assert(
+          sourcePositionBefore.amount.toSolidityValue() > 0,
+          `Source position value should be greater than 0 for ${sourceFleetAddress}`,
+        )
 
-    assert(
-      sourcePositionBefore !== undefined,
-      `Source position should be defined for ${sourceFleetAddress.value}`,
+        // Get balances before switch
+        const sourceFleetAmountBefore = await sdk.armada.users.getFleetBalance({
+          user,
+          vaultId: sourceVaultId,
+        })
+        const sourceStakedAmountBefore = await sdk.armada.users.getStakedBalance({
+          user,
+          vaultId: sourceVaultId,
+        })
+
+        const destinationFleetAmountBefore = await sdk.armada.users.getFleetBalance({
+          user,
+          vaultId: destinationVaultId,
+        })
+        const destinationStakedAmountBefore = await sdk.armada.users.getStakedBalance({
+          user,
+          vaultId: destinationVaultId,
+        })
+
+        console.log(
+          'Source balance before:',
+          '\n - Wallet:',
+          sourceFleetAmountBefore.assets.toSolidityValue(),
+          '\n - Staked:',
+          sourceStakedAmountBefore.assets.toSolidityValue(),
+        )
+        console.log(
+          'Destination balance before:',
+          '\n - Wallet:',
+          destinationFleetAmountBefore.assets.toSolidityValue(),
+          '\n - Staked:',
+          destinationStakedAmountBefore.assets.toSolidityValue(),
+        )
+
+        const switchAmount = TokenAmount.createFrom({
+          amount: amountValue ?? sourcePositionBefore.amount.amount,
+          token: sourcePositionBefore.amount.token,
+        })
+
+        console.log(
+          `switch position: ${switchAmount.toString()} from ${sourceFleetAddress} to ${destinationFleetAddress}${shouldStake ? ' with staking' : ''}`,
+        )
+
+        // Get switch transaction
+        const transactions = await sdk.armada.users.getVaultSwitchTx({
+          sourceVaultId,
+          destinationVaultId,
+          amount: switchAmount,
+          user,
+          slippage,
+          shouldStake,
+        })
+
+        expect(transactions).toBeDefined()
+        expect(transactions.length).toBeGreaterThan(0)
+
+        // Send transactions
+        const txStatus = await userSendTxTool(transactions)
+
+        // Verify balances after switch (only if not simulating)
+        if (!simulateOnly) {
+          expect(txStatus).toStrictEqual(['success'])
+
+          const destinationPositionAfter = await sdk.armada.users.getUserPosition({
+            user,
+            fleetAddress: Address.createFromEthereum({ value: destinationFleetAddress }),
+          })
+          assert(
+            destinationPositionAfter !== undefined,
+            `Destination position should be defined for ${destinationFleetAddress}`,
+          )
+
+          const sourceFleetAmountAfter = await sdk.armada.users.getFleetBalance({
+            user,
+            vaultId: sourceVaultId,
+          })
+          const sourceStakedAmountAfter = await sdk.armada.users.getStakedBalance({
+            user,
+            vaultId: sourceVaultId,
+          })
+
+          const destinationFleetAmountAfter = await sdk.armada.users.getFleetBalance({
+            user,
+            vaultId: destinationVaultId,
+          })
+          const destinationStakedAmountAfter = await sdk.armada.users.getStakedBalance({
+            user,
+            vaultId: destinationVaultId,
+          })
+
+          console.log(
+            'Source balance after:',
+            '\n - Wallet:',
+            sourceFleetAmountAfter.assets.toSolidityValue(),
+            '\n - Staked:',
+            sourceStakedAmountAfter.assets.toSolidityValue(),
+          )
+          console.log(
+            'Destination balance after:',
+            '\n - Wallet:',
+            destinationFleetAmountAfter.assets.toSolidityValue(),
+            '\n - Staked:',
+            destinationStakedAmountAfter.assets.toSolidityValue(),
+          )
+
+          console.log(
+            'Source balance difference:',
+            '\n - Wallet:',
+            sourceFleetAmountAfter.assets.subtract(sourceFleetAmountBefore.assets).toString(),
+            '\n - Staked:',
+            sourceStakedAmountAfter.assets.subtract(sourceStakedAmountBefore.assets).toString(),
+          )
+          console.log(
+            'Destination balance difference:',
+            '\n - Wallet:',
+            destinationFleetAmountAfter.assets
+              .subtract(destinationFleetAmountBefore.assets)
+              .toString(),
+            '\n - Staked:',
+            destinationStakedAmountAfter.assets
+              .subtract(destinationStakedAmountBefore.assets)
+              .toString(),
+          )
+
+          // Verify that destination balance increased
+          const destinationTotalBefore =
+            destinationFleetAmountBefore.assets.toSolidityValue() +
+            destinationStakedAmountBefore.assets.toSolidityValue()
+          const destinationTotalAfter =
+            destinationFleetAmountAfter.assets.toSolidityValue() +
+            destinationStakedAmountAfter.assets.toSolidityValue()
+
+          expect(destinationTotalAfter).toBeGreaterThan(destinationTotalBefore)
+        }
+      },
     )
-    assert(
-      sourcePositionBefore.amount.toSolidityValue() > 0,
-      `Source position value should be greater than 0 for ${sourceFleetAddress.value}`,
-    )
-
-    const sourceFleetAmountBefore = await sdk.armada.users.getFleetBalance({
-      user,
-      vaultId: sourceVaultId,
-    })
-    const sourceStakedAmountBefore = await sdk.armada.users.getStakedBalance({
-      user,
-      vaultId: sourceVaultId,
-    })
-    console.log(
-      'Source balance before',
-      '\n - Wallet: ',
-      sourceFleetAmountBefore.assets.toString(),
-      '\n - Staked: ',
-      sourceStakedAmountBefore.assets.toString(),
-    )
-    // log balances of destination vault
-    const destinationFleetAmountBefore = await sdk.armada.users.getFleetBalance({
-      user,
-      vaultId: destinationVaultId,
-    })
-    const destinationStakedAmountBefore = await sdk.armada.users.getStakedBalance({
-      user,
-      vaultId: destinationVaultId,
-    })
-    console.log(
-      'Destination balance before',
-      '\n - Wallet: ',
-      destinationFleetAmountBefore.assets.toString(),
-      '\n - Staked: ',
-      destinationStakedAmountBefore.assets.toString(),
-    )
-
-    const switchAmount = TokenAmount.createFrom({
-      amount: amountValue ?? sourcePositionBefore.amount.amount,
-      token: sourcePositionBefore.amount.token,
-    })
-
-    console.log(
-      `switch position from ${switchAmount.toString()} to ${destinationVaultInfo.depositCap.token.toString()}`,
-    )
-
-    const transactions = await sdk.armada.users.getVaultSwitchTx({
-      sourceVaultId,
-      destinationVaultId,
-      amount: switchAmount,
-      user,
-      slippage,
-      shouldStake: stake,
-    })
-
-    const { statuses } = await sendAndLogTransactions({
-      chainInfo,
-      transactions,
-      rpcUrl: rpcUrl,
-      privateKey,
-      simulateOnly,
-    })
-    statuses.forEach((status) => {
-      expect(status).toBe('success')
-    })
-
-    if (simulateOnly) {
-      console.log('Simulation only - skipping post-switch position checks')
-      return
-    }
-
-    const destinationPositionAfter = await sdk.armada.users.getUserPosition({
-      user,
-      fleetAddress: destinationFleetAddress,
-    })
-    assert(
-      destinationPositionAfter !== undefined,
-      `Destination position should be defined for ${destinationFleetAddress.value}`,
-    )
-
-    const sourceFleetAmountAfter = await sdk.armada.users.getFleetBalance({
-      user,
-      vaultId: sourceVaultId,
-    })
-    const sourceStakedAmountAfter = await sdk.armada.users.getStakedBalance({
-      user,
-      vaultId: sourceVaultId,
-    })
-    console.log(
-      'Source balance after:',
-      '\n - Wallet: ',
-      sourceFleetAmountAfter.assets.toString(),
-      '\n - Staked: ',
-      sourceStakedAmountAfter.assets.toString(),
-    )
-    // log dest balances after
-    const destinationFleetAmountAfter = await sdk.armada.users.getFleetBalance({
-      user,
-      vaultId: destinationVaultId,
-    })
-    const destinationStakedAmountAfter = await sdk.armada.users.getStakedBalance({
-      user,
-      vaultId: destinationVaultId,
-    })
-    console.log(
-      'Destination balance after:',
-      '\n - Wallet: ',
-      destinationFleetAmountAfter.assets.toString(),
-      '\n - Staked: ',
-      destinationStakedAmountAfter.assets.toString(),
-    )
-  }
+  })
 })

@@ -276,7 +276,10 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     // Are fleetShares available at all? (should be greater than dust)
     if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
-      if (beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()) {
+      if (
+        beforeFleetShares.toSolidityValue() >=
+        this._compensateAmount(previewWithdrawSharesAmount, 'decrease').toSolidityValue()
+      ) {
         // region only fleet
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')
@@ -887,7 +890,10 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     // Are fleetShares available at all? (should be greater than dust)
     if (beforeFleetShares.toSolidityValue() > 0) {
       // Yes. Are fleetShares sufficient to meet the calculatedWithdrawShares?
-      if (beforeFleetShares.toSolidityValue() >= previewWithdrawSharesAmount.toSolidityValue()) {
+      if (
+        beforeFleetShares.toSolidityValue() >=
+        this._compensateAmount(previewWithdrawSharesAmount, 'decrease').toSolidityValue()
+      ) {
         // region only fleet
         // Yes. Withdraw all from fleetShares
         LoggingService.debug('>>> Withdraw all from fleetShares')

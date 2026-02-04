@@ -9,7 +9,7 @@ import {
   type HexData,
 } from '@summerfi/sdk-common'
 
-import { createSendTransactionTool, sendAndLogTransactions } from '@summerfi/testing-utils'
+import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { SharedConfig, type ChainConfig, InstiTestConfigs, TestClientIds } from './utils/testConfig'
 import { createTestSDK } from './utils/sdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
