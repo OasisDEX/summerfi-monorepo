@@ -430,7 +430,7 @@ const TicketDetails = ({
       <Text variant="p2semi">Messages</Text>
       <div className={feedbackModalStyles.ticketRepliesWrapper}>
         <TicketMessage message={ticketRootData} />
-        {isLoadingDetails ? (
+        {isLoadingDetails && !details ? (
           <LoadingSpinner
             style={{
               margin: '10px auto',
@@ -508,7 +508,7 @@ export const FeedbackModal = () => {
   const [view, setView] = useState<'list' | 'details'>('list')
   const [threadId, setThreadId] = useState<number | null>(null)
   const { data: institutionUserData, loading: institutionUserLoading } = useInstitutionUser()
-  const [isLoadingTickets, setIsLoadingTickets] = useState(false)
+  const [isLoadingTickets, setIsLoadingTickets] = useState(true)
   const [tickets, setTickets] = useState<FeedbackThreadItem[]>([])
 
   const reloadFeedbackThreads = () => {

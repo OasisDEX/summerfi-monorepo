@@ -14,6 +14,7 @@ export const panelNavigationStaticItems = ({
         Help & Support
       </IconWithText>
     ),
+    disabled: true,
     link: { href: '' },
   },
   {
