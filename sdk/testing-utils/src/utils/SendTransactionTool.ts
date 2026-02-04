@@ -22,12 +22,22 @@ export const createSendTransactionTool = (params: {
   }
 
   const useFork = process.env.SDK_USE_FORK === 'true'
-  const transactionUtils = new TransactionUtils({
-    rpcUrl,
-    walletPrivateKey: signerPrivateKey,
-    chainInfo: getChainInfoByChainId(chainId),
-    useFork: useFork ? true : false,
-  })
+  // Branch TransactionUtils construction based on signerPrivateKey presence
+  // If signerPrivateKey is present, construct with walletPrivateKey for send/sendSimulation
+  // Otherwise, construct simulation-only TransactionUtils without walletPrivateKey
+  // so sendSimulation can run without requiring an account
+  const transactionUtils = signerPrivateKey
+    ? new TransactionUtils({
+        rpcUrl,
+        walletPrivateKey: signerPrivateKey,
+        chainInfo: getChainInfoByChainId(chainId),
+        useFork: useFork ? true : false,
+      })
+    : new TransactionUtils({
+        rpcUrl,
+        chainInfo: getChainInfoByChainId(chainId),
+        useFork: useFork ? true : false,
+      })
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
     transactionOrTransactions: T,
