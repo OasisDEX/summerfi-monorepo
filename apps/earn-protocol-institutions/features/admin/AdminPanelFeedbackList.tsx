@@ -17,10 +17,11 @@ const AdminFeedbackList = ({
       ) : (
         <>
           {feedbackList.map((feedback) => {
-            const key = `${feedback.authorSub}-${feedback.id}-${Math.random()}`
-
             return (
-              <Link key={key} href={`/admin/feedback/${feedback.institutionId}/${feedback.id}`}>
+              <Link
+                key={`${feedback.authorSub}-${feedback.id}`}
+                href={`/admin/feedback/${feedback.institutionId}/${feedback.id}`}
+              >
                 <Card style={{ flexDirection: 'column', gap: '12px', padding: '16px' }}>
                   <div
                     style={{

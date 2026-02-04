@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { readSession } from '@/app/server-handlers/auth/session'
 import {
-  gedInstitutionFeedbackThread,
+  getInstitutionFeedbackThread,
   getCachedInstitutionFeedbackList,
   submitFeedback,
   submitFeedbackResponse,
@@ -118,7 +118,7 @@ export const GET = async (request: Request) => {
   }
 
   if (threadId) {
-    const feedbackDetails = await gedInstitutionFeedbackThread({
+    const feedbackDetails = await getInstitutionFeedbackThread({
       institutionId,
       session,
       threadId,

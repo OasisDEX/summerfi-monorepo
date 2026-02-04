@@ -258,16 +258,23 @@ export async function rootAdminGetFeedbackList() {
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
 
-  const feedbackList = await db
-    .selectFrom('feedbackMessages')
-    .where('parentId', 'is', null)
-    .selectAll()
-    .orderBy('createdAt', 'desc')
-    .execute()
+  try {
+    const feedbackList = await db
+      .selectFrom('feedbackMessages')
+      .where('parentId', 'is', null)
+      .selectAll()
+      .orderBy('createdAt', 'desc')
+      .execute()
 
-  db.destroy()
+    return feedbackList
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error fetching feedback list:', err)
 
-  return feedbackList
+    throw new Error('Failed to fetch feedback list')
+  } finally {
+    db.destroy()
+  }
 }
 
 export async function rootAdminGetFeedbackDetails(threadId: string, institutionId: string) {
@@ -278,31 +285,40 @@ export async function rootAdminGetFeedbackDetails(threadId: string, institutionI
     connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
   })
 
-  // Get the root message first to verify it exists and belongs to institution
-  const rootMessage = await db
-    .selectFrom('feedbackMessages')
-    .where('id', '=', Number(threadId))
-    .where('institutionId', '=', Number(institutionId))
-    .where('parentId', 'is', null)
-    .selectAll()
-    .executeTakeFirst()
+  try {
+    // Get the root message first to verify it exists and belongs to institution
+    const rootMessage = await db
+      .selectFrom('feedbackMessages')
+      .where('id', '=', Number(threadId))
+      .where('institutionId', '=', Number(institutionId))
+      .where('parentId', 'is', null)
+      .selectAll()
+      .executeTakeFirst()
 
-  if (!rootMessage) {
-    return null
-  }
+    if (!rootMessage) {
+      return null
+    }
 
-  // Get all messages in the thread
-  const messages = await db
-    .selectFrom('feedbackMessages')
-    .where('threadId', '=', Number(threadId))
-    .where('id', '!=', Number(threadId))
-    .selectAll()
-    .orderBy('createdAt', 'asc')
-    .execute()
+    // Get all messages in the thread
+    const messages = await db
+      .selectFrom('feedbackMessages')
+      .where('threadId', '=', Number(threadId))
+      .where('id', '!=', Number(threadId))
+      .selectAll()
+      .orderBy('createdAt', 'asc')
+      .execute()
 
-  return {
-    thread: rootMessage,
-    messages,
+    return {
+      thread: rootMessage,
+      messages,
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error fetching feedback details:', err)
+
+    throw new Error('Failed to fetch feedback details')
+  } finally {
+    db.destroy()
   }
 }
 

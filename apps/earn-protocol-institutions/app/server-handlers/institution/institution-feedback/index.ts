@@ -205,7 +205,7 @@ const getInstitutionFeedbackList = async ({
   }
 }
 
-export const gedInstitutionFeedbackThread = async ({
+export const getInstitutionFeedbackThread = async ({
   institutionId,
   threadId,
   session,
