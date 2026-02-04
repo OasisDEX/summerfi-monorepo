@@ -101,13 +101,7 @@ export const submitFeedbackResponse = async ({
       Number.isNaN(Number(institutionId)) ||
       (!session.user?.institutionsList && !session.user?.isGlobalAdmin)
     ) {
-      throw new Error(
-        `Invalid feedback response data${JSON.stringify({
-          feedbackResponse,
-          session,
-          institutionId,
-        })}`,
-      )
+      throw new Error(`Invalid feedback response data`)
     }
     if (
       !session.user.isGlobalAdmin &&
