@@ -14,7 +14,7 @@ export const createSendTransactionTool = (params: {
   const { chainId, rpcUrl, signerPrivateKey } = params
   const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
 
-  if (!isHex(signerPrivateKey)) {
+  if (signerPrivateKey != null && !isHex(signerPrivateKey)) {
     throw new Error('Signer privateKey is not a hex string')
   }
   if (!rpcUrl) {
