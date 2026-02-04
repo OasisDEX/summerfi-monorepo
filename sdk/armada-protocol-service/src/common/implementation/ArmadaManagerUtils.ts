@@ -1,51 +1,26 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AdmiralsQuartersAbi, StakingRewardsManagerBaseAbi } from '@summerfi/armada-protocol-abis'
-import {
-  getDeployedRewardsRedeemerAddress,
-  isTestDeployment,
-  type IArmadaManagerUtils,
-  type IArmadaManagerMerklRewards,
-} from '@summerfi/armada-protocol-common'
+import { isTestDeployment, type IArmadaManagerUtils } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import {
   calculatePriceImpact,
-  getChainInfoByChainId,
-  IAddress,
-  Address,
-  Token,
   ITokenAmount,
-  IUser,
   LoggingService,
   Price,
   TokenAmount,
-  FiatCurrency,
-  FiatCurrencyAmount,
   TransactionType,
-  type IChainInfo,
   type HexData,
   type IPercentage,
   type IToken,
   type ISpotPriceInfo,
   type TransactionPriceImpact,
-  type IArmadaPosition,
-  type IArmadaPositionId,
   type IArmadaVaultId,
   type AddressValue,
   type TransactionInfo,
-  type HistoricalFleetRateResult,
-  createTimeoutSignal,
 } from '@summerfi/sdk-common'
-import {
-  IArmadaSubgraphManager,
-  type GetPositionHistoryQuery,
-  type GetVaultsQuery,
-  type GetVaultQuery,
-} from '@summerfi/subgraph-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { encodeFunctionData, erc20Abi, zeroAddress } from 'viem'
-import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
-import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
 import type { ISwapManager } from '@summerfi/swap-common'
 import type { IOracleManager } from '@summerfi/oracle-common'
@@ -58,23 +33,14 @@ import { ArmadaManagerShared } from './ArmadaManagerShared'
  * @description This class is the implementation of the IArmadaManagerUtils interface.
  */
 export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaManagerUtils {
-  private _supportedChains: IChainInfo[]
-  private _rewardsRedeemerAddress: IAddress
-  private _functionsUrl: string
-
-  private _hubChainInfo: IChainInfo
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
-  private _subgraphManager: IArmadaSubgraphManager
   private _blockchainClientProvider: IBlockchainClientProvider
   private _swapManager: ISwapManager
   private _oracleManager: IOracleManager
   private _tokensManager: ITokensManager
   private _deploymentProvider: IDeploymentProvider
-  private _getUserMerklRewards: (
-    params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
-  ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
 
   /** CONSTRUCTOR */
   constructor(params: {
@@ -82,39 +48,22 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
-    subgraphManager: IArmadaSubgraphManager
     blockchainClientProvider: IBlockchainClientProvider
     swapManager: ISwapManager
     oracleManager: IOracleManager
     tokensManager: ITokensManager
     deploymentProvider: IDeploymentProvider
-    supportedChains: IChainInfo[]
-    getUserMerklRewards: (
-      params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
-    ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
   }) {
     super({ clientId: params.clientId })
 
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
-    this._subgraphManager = params.subgraphManager
     this._blockchainClientProvider = params.blockchainClientProvider
     this._swapManager = params.swapManager
     this._oracleManager = params.oracleManager
     this._tokensManager = params.tokensManager
     this._deploymentProvider = params.deploymentProvider
-    this._getUserMerklRewards = params.getUserMerklRewards
-
-    this._supportedChains = params.supportedChains
-    const _hubChainId = this._configProvider.getConfigurationItem({
-      name: 'SUMMER_HUB_CHAIN_ID',
-    })
-    this._hubChainInfo = getChainInfoByChainId(Number(_hubChainId))
-    this._rewardsRedeemerAddress = getDeployedRewardsRedeemerAddress()
-    this._functionsUrl = this._configProvider.getConfigurationItem({
-      name: 'FUNCTIONS_API_URL',
-    })
   }
 
   getSummerToken(
@@ -160,108 +109,6 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
     const coinData = json[id] as { [currency: string]: number } | undefined
 
     return coinData?.usd ?? 0.25
-  }
-
-  /** POOLS */
-
-  /** @see IArmadaManagerUtils.getVaultsRaw */
-  async getVaultsRaw(params: Parameters<IArmadaManagerUtils['getVaultsRaw']>[0]) {
-    return (await this._subgraphManager.getVaults({
-      chainId: params.chainInfo.chainId,
-      clientId: this.getClientIdOrUndefined(),
-    })) as GetVaultsQuery
-  }
-
-  /** @see IArmadaManagerUtils.getVaultRaw */
-  async getVaultRaw(params: Parameters<IArmadaManagerUtils['getVaultRaw']>[0]) {
-    return this._subgraphManager.getVault({
-      chainId: params.vaultId.chainInfo.chainId,
-      vaultId: params.vaultId.fleetAddress.value,
-    }) as GetVaultQuery
-  }
-
-  /** @see IArmadaManagerUtils.getGlobalRebalancesRaw */
-  async getGlobalRebalancesRaw(
-    params: Parameters<IArmadaManagerUtils['getGlobalRebalancesRaw']>[0],
-  ) {
-    return this._subgraphManager.getGlobalRebalances({ chainId: params.chainInfo.chainId })
-  }
-
-  /** @see IArmadaManagerUtils.getUsersActivityRaw */
-  async getUsersActivityRaw(params: Parameters<IArmadaManagerUtils['getUsersActivityRaw']>[0]) {
-    return this._subgraphManager.getUsersActivity({
-      chainId: params.chainInfo.chainId,
-      where: params.where,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.getUserActivityRaw */
-  async getUserActivityRaw(params: Parameters<IArmadaManagerUtils['getUserActivityRaw']>[0]) {
-    return this._subgraphManager.getUserActivity({
-      chainId: params.vaultId.chainInfo.chainId,
-      vaultId: params.vaultId.fleetAddress.value,
-      accountAddress: params.accountAddress,
-    })
-  }
-
-  /** POSITIONS */
-  /** @see IArmadaManagerUtils.getUserPositions */
-  async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
-    const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
-    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
-
-    return parseGetUserPositionsQuery({
-      user,
-      query: await this._subgraphManager.getUserPositions({ user }),
-      summerToken,
-      getTokenBySymbol,
-      getUserMerklRewards: this._getUserMerklRewards,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.getUserPosition */
-  async getUserPosition({
-    user,
-    fleetAddress,
-  }: {
-    user: IUser
-    fleetAddress: IAddress
-  }): Promise<IArmadaPosition | undefined> {
-    const summerToken = this.getSummerToken({ chainInfo: user.chainInfo })
-    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
-
-    return parseGetUserPositionQuery({
-      user,
-      query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
-      summerToken,
-      getTokenBySymbol,
-      getUserMerklRewards: this._getUserMerklRewards,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.getPosition */
-  async getPosition(params: {
-    positionId: IArmadaPositionId
-  }): Promise<IArmadaPosition | undefined> {
-    const summerToken = this.getSummerToken({ chainInfo: params.positionId.user.chainInfo })
-    const getTokenBySymbol = this._tokensManager.getTokenBySymbol.bind(this._tokensManager)
-
-    return parseGetUserPositionQuery({
-      user: params.positionId.user,
-      query: await this._subgraphManager.getPosition({ positionId: params.positionId }),
-      summerToken,
-      getTokenBySymbol,
-      getUserMerklRewards: this._getUserMerklRewards,
-    })
-  }
-
-  /** @see IArmadaManagerUtils.getPositionHistory */
-  async getPositionHistory(
-    params: Parameters<IArmadaManagerUtils['getPositionHistory']>[0],
-  ): Promise<GetPositionHistoryQuery> {
-    return this._subgraphManager.getPositionHistory({
-      positionId: params.positionId,
-    })
   }
 
   async getFleetShares(
@@ -360,33 +207,6 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
       shares: fleetBalance.shares.add(stakedBalance.shares),
       assets: fleetBalance.assets.add(stakedBalance.assets),
     }
-  }
-
-  async getVaultsHistoricalRates(
-    params: Parameters<IArmadaManagerUtils['getVaultsHistoricalRates']>[0],
-  ): ReturnType<IArmadaManagerUtils['getVaultsHistoricalRates']> {
-    const input = {
-      fleets: params.fleets,
-    }
-
-    const res = await fetch(this._functionsUrl + '/api/vault/historicalRates', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(input),
-      signal: createTimeoutSignal(),
-    })
-
-    // handle res errors
-    if (!res.ok) {
-      const text = await res.text()
-      throw new Error(`Error fetching vault historical rates (${res.status}): ${text}`)
-    }
-
-    const data: { rates: HistoricalFleetRateResult[] } = await res.json()
-
-    return data.rates
   }
 
   /** @see IArmadaManagerUtils.convertToShares */
@@ -639,117 +459,5 @@ export class ArmadaManagerUtils extends ArmadaManagerShared implements IArmadaMa
         },
       },
     ]
-  }
-
-  /** @see IArmadaManagerUtils.getDeposits */
-  async getDeposits(
-    params: Parameters<IArmadaManagerUtils['getDeposits']>[0],
-  ): ReturnType<IArmadaManagerUtils['getDeposits']> {
-    const result = await this._subgraphManager.getDeposits({
-      positionId: params.positionId,
-      first: params.first,
-      skip: params.skip,
-    })
-
-    if (!result.position?.deposits) {
-      return []
-    }
-
-    const deposits = result.position.deposits
-
-    return deposits.map((deposit) => ({
-      from: deposit.from as AddressValue,
-      to: deposit.to as AddressValue,
-      amount: TokenAmount.createFrom({
-        amount: deposit.amount.toString(),
-        token: Token.createFrom({
-          chainInfo: params.positionId.user.chainInfo,
-          address: Address.createFromEthereum({
-            value: deposit.asset.id as AddressValue,
-          }),
-          symbol: deposit.asset.symbol,
-          name: deposit.asset.name,
-          decimals: deposit.asset.decimals,
-        }),
-      }),
-      amountUsd: FiatCurrencyAmount.createFrom({
-        amount: deposit.amountUSD,
-        fiat: FiatCurrency.USD,
-      }),
-      timestamp: Number(deposit.timestamp),
-      txHash: deposit.hash as HexData,
-      vaultBalance: TokenAmount.createFrom({
-        amount: deposit.inputTokenBalance.toString(),
-        token: Token.createFrom({
-          chainInfo: params.positionId.user.chainInfo,
-          address: Address.createFromEthereum({
-            value: deposit.asset.id as AddressValue,
-          }),
-          symbol: deposit.asset.symbol,
-          name: deposit.asset.name,
-          decimals: deposit.asset.decimals,
-        }),
-      }),
-      vaultBalanceUsd: FiatCurrencyAmount.createFrom({
-        amount: deposit.inputTokenBalanceNormalizedUSD,
-        fiat: FiatCurrency.USD,
-      }),
-    }))
-  }
-
-  /** @see IArmadaManagerUtils.getWithdrawals */
-  async getWithdrawals(
-    params: Parameters<IArmadaManagerUtils['getWithdrawals']>[0],
-  ): ReturnType<IArmadaManagerUtils['getWithdrawals']> {
-    const result = await this._subgraphManager.getWithdrawals({
-      positionId: params.positionId,
-      first: params.first,
-      skip: params.skip,
-    })
-
-    if (!result.position?.withdrawals) {
-      return []
-    }
-
-    const withdrawals = result.position.withdrawals
-
-    return withdrawals.map((withdrawal) => ({
-      from: withdrawal.from as AddressValue,
-      to: withdrawal.to as AddressValue,
-      amount: TokenAmount.createFrom({
-        amount: withdrawal.amount.toString(),
-        token: Token.createFrom({
-          chainInfo: params.positionId.user.chainInfo,
-          address: Address.createFromEthereum({
-            value: withdrawal.asset.id as AddressValue,
-          }),
-          symbol: withdrawal.asset.symbol,
-          name: withdrawal.asset.name,
-          decimals: withdrawal.asset.decimals,
-        }),
-      }),
-      amountUsd: FiatCurrencyAmount.createFrom({
-        amount: withdrawal.amountUSD,
-        fiat: FiatCurrency.USD,
-      }),
-      timestamp: Number(withdrawal.timestamp),
-      txHash: withdrawal.hash as HexData,
-      vaultBalance: TokenAmount.createFrom({
-        amount: withdrawal.inputTokenBalance.toString(),
-        token: Token.createFrom({
-          chainInfo: params.positionId.user.chainInfo,
-          address: Address.createFromEthereum({
-            value: withdrawal.asset.id as AddressValue,
-          }),
-          symbol: withdrawal.asset.symbol,
-          name: withdrawal.asset.name,
-          decimals: withdrawal.asset.decimals,
-        }),
-      }),
-      vaultBalanceUsd: FiatCurrencyAmount.createFrom({
-        amount: withdrawal.inputTokenBalanceNormalizedUSD,
-        fiat: FiatCurrency.USD,
-      }),
-    }))
   }
 }

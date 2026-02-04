@@ -13,5 +13,5 @@ export const getPositionHistory = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getPositionHistory(opts.input)
+    return opts.ctx.armadaManager.positions.getPositionHistory(opts.input)
   })

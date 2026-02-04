@@ -14,5 +14,5 @@ export const getVaultsHistoricalRates = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getVaultsHistoricalRates(opts.input)
+    return opts.ctx.armadaManager.positions.getVaultsHistoricalRates(opts.input)
   })
