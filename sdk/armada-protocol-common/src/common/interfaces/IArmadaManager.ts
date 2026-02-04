@@ -4,6 +4,7 @@ import type { IArmadaManagerMigrations } from './IArmadaManagerMigrations'
 import type { IArmadaManagerBridge } from './IArmadaManagerBridge'
 import type { IArmadaManagerVaults } from './IArmadaManagerVaults'
 import type { IArmadaManagerUtils } from './IArmadaManagerUtils'
+import type { IArmadaManagerPositions } from './IArmadaManagerPositions'
 import type { IArmadaManagerAdmin } from './IArmadaManagerAdmin'
 import type { IArmadaManagerAccessControl } from './IArmadaManagerAccessControl'
 /**
@@ -19,6 +20,7 @@ export interface IArmadaManager {
   bridge: IArmadaManagerBridge
   vaults: IArmadaManagerVaults
   utils: IArmadaManagerUtils
+  positions: IArmadaManagerPositions
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl

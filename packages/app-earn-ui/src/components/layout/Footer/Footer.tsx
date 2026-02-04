@@ -32,10 +32,6 @@ const linksList = [
         url: EXTERNAL_LINKS.KB.CONTACT,
       },
       {
-        label: 'Careers',
-        url: EXTERNAL_LINKS.WORKABLE,
-      },
-      {
         label: 'Privacy',
         url: INTERNAL_LINKS.tempPrivacy,
       },

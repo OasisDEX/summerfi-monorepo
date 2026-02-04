@@ -16,5 +16,5 @@ export const getWithdrawals = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getWithdrawals(opts.input)
+    return opts.ctx.armadaManager.positions.getWithdrawals(opts.input)
   })

@@ -430,7 +430,8 @@ export const PanelRiskParameters = ({
   const onTxSuccess = () => {
     revalidateTags({
       tags: [
-        `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+        `institution-vault-arks-implied-caps-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+        `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
       ],
     })
   }

@@ -146,7 +146,6 @@ export const EXTERNAL_LINKS = {
     AUDITS: 'https://github.com/ajna-finance/audits',
     OLD: 'https://old-ajna.summer.fi',
   },
-  WORKABLE: 'https://summerfi.workable.com/',
   TWITTER: 'https://twitter.com/summerfinance_',
   DISCORD: 'https://discord.gg/summerfi',
   GITHUB: 'https://github.com/OasisDEX/oasis-borrow',

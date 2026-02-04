@@ -1,19 +1,18 @@
 'use client'
 
-import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
+  Card,
   DataBlock,
-  Dropdown,
-  GenericMultiselect,
   getSumrTokenBonus,
   getUniqueVaultId,
   getVaultPositionUrl,
   getVaultsProtocolsList,
   getVaultUrl,
   isUserSmartAccount,
-  networkNameIconNameMap,
   SumrStakeCard,
+  TabBar,
   Text,
   useAmount,
   useAmountWithSwap,
@@ -28,7 +27,6 @@ import {
 import {
   type DropdownRawOption,
   type GetVaultsApyResponse,
-  type IconNamesList,
   type IToken,
   type SDKVaultishType,
   type SDKVaultsListType,
@@ -39,6 +37,7 @@ import {
 import {
   convertWethToEth,
   findVaultInfo,
+  formatAddress,
   formatCryptoBalance,
   formatPercent,
   sdkNetworkToHumanNetwork,
@@ -51,16 +50,17 @@ import {
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
-import { type ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
+import { VaultsSorting } from '@/components/layout/VaultsListView/types'
+import { useVaultsListQueryParams } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
+import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
-import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
 import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
-import { isStablecoin } from '@/helpers/is-stablecoin'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import {
   useHandleButtonClickEvent,
@@ -76,48 +76,16 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
+  filteredWalletAssetsVaults?: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
   tvl: number
 }
 
-enum VaultsSorting {
-  HIGHEST_APY = 'highest-apy',
-  HIGHEST_REWARDS = 'highest-rewards',
-  HIGHEST_TVL = 'highest-tvl',
-}
-
-const sortingMethods = [
-  {
-    // default sorting method
-    id: VaultsSorting.HIGHEST_APY,
-    label: 'Highest APY',
-  },
-  {
-    id: VaultsSorting.HIGHEST_REWARDS,
-    label: 'Highest SUMR Rewards',
-  },
-  {
-    id: VaultsSorting.HIGHEST_TVL,
-    label: 'Highest TVL',
-  },
-]
-
-const softRouterPush = (url: string) => {
-  window.history.pushState(null, '', url)
-}
-
-const VaultsSortingItem = ({ label, style }: { label: string; style?: CSSProperties }) => {
-  return (
-    <Text variant="p3semi" style={style}>
-      {label}
-    </Text>
-  )
-}
-
 export const VaultsListView = ({
   vaultsList,
+  filteredWalletAssetsVaults,
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
@@ -146,6 +114,7 @@ export const VaultsListView = ({
   const { sumrStakeInfo } = useUserStakeInfo()
 
   const stakingV2Enabled = !!features?.StakingV2
+  const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
 
   const sumrAvailableToStake =
     Number(sumrStakeInfo?.sumrBalances.total ?? 0) +
@@ -153,9 +122,11 @@ export const VaultsListView = ({
 
   const sumrAvailableToStakeUSD = sumrAvailableToStake * sumrPriceUsd
 
-  const { isMobile, isMobileOrTablet } = useMobileCheck(deviceType)
+  const { isMobileOrTablet } = useMobileCheck(deviceType)
   const filterNetworks = useMemo(() => queryParams.get('networks')?.split(',') ?? [], [queryParams])
   const filterAssets = useMemo(() => queryParams.get('assets')?.split(',') ?? [], [queryParams])
+  const filterWallet = useMemo(() => queryParams.get('walletAddress') ?? '', [queryParams])
+  const filterVaults = useMemo(() => queryParams.get('vaults')?.split(',') ?? [], [queryParams])
   const sortingMethodId = useMemo(
     () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
     [queryParams],
@@ -194,60 +165,6 @@ export const VaultsListView = ({
   useEffect(() => {
     void fetchStakingData()
   }, [fetchStakingData])
-
-  const updateQueryParams = useCallback(
-    (
-      params: ReadonlyURLSearchParams,
-      newFilters: { assets?: string[]; networks?: string[]; sorting?: DropdownRawOption },
-    ) => {
-      // use soft router push to update the URL without reloading the page
-      const newQueryParams = {
-        ...(newFilters.assets && { assets: newFilters.assets.join(',') }),
-        ...(newFilters.networks && { networks: newFilters.networks.join(',') }),
-        ...(newFilters.sorting && {
-          sort: newFilters.sorting.value !== 'highest-apy' ? newFilters.sorting.value : '', // if its the default one its gonna be deleted below
-        }),
-      }
-
-      const nextQueryParams = new URLSearchParams(newQueryParams)
-      const currentQueryParams = new URLSearchParams(params.toString())
-      const mergedQueryParams = new URLSearchParams({
-        ...Object.fromEntries(currentQueryParams.entries()),
-        ...Object.fromEntries(nextQueryParams.entries()),
-      })
-
-      for (const param of ['assets', 'networks', 'sort']) {
-        if (mergedQueryParams.get(param) === null || mergedQueryParams.get(param) === '') {
-          mergedQueryParams.delete(param)
-        }
-      }
-
-      const isAssetsChange = newFilters.assets !== undefined
-      const isNetworksChange = newFilters.networks !== undefined
-      const isSortingChange = newFilters.sorting !== undefined
-      const dropdownName = isAssetsChange
-        ? 'vaults-list-view-assets'
-        : isNetworksChange
-          ? 'vaults-list-view-networks'
-          : isSortingChange
-            ? 'vaults-list-view-sorting'
-            : ''
-
-      dropdownChangeHandler({
-        inputName: dropdownName,
-        value:
-          newFilters.assets?.join(',') ??
-          newFilters.networks?.join(',') ??
-          newFilters.sorting?.value ??
-          'unknown',
-      })
-
-      const newUrl = `/earn?${mergedQueryParams.toString()}`
-
-      softRouterPush(newUrl)
-    },
-    [dropdownChangeHandler],
-  )
 
   const filterAssetVaults = useCallback(
     (vault: (typeof vaultsList)[number]) => {
@@ -336,9 +253,10 @@ export const VaultsListView = ({
   }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
 
   const filteredAndSortedVaults = useMemo(() => {
+    const vaultsListTouse = filteredWalletAssetsVaults ?? vaultsList
     const networkFilteredVaults = filterNetworks.length
-      ? vaultsList.filter(filterNetworkVaults)
-      : vaultsList
+      ? vaultsListTouse.filter(filterNetworkVaults)
+      : vaultsListTouse
 
     const assetFilteredVaults = filterAssets.length
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
@@ -352,13 +270,14 @@ export const VaultsListView = ({
 
     return sortedVaults
   }, [
-    sortVaults,
-    filterNetworks,
-    filterNetworkVaults,
-    filterAssetVaults,
     vaultsList,
-    filterAssets,
+    filteredWalletAssetsVaults,
+    filterNetworks.length,
+    filterNetworkVaults,
+    filterAssets.length,
+    filterAssetVaults,
     userIsSmartAccount,
+    sortVaults,
   ])
 
   const [selectedVaultId, setSelectedVaultId] = useState<string | undefined>(
@@ -501,89 +420,6 @@ export const VaultsListView = ({
     rawToTokenAmount,
   })
 
-  const assetsList = useMemo(
-    () =>
-      mapTokensToMultiselectOptions(vaultsList).filter((option) => {
-        return option.token !== 'USD₮0' // remove the fancy glyphs
-      }),
-    [vaultsList],
-  )
-  const tokenOptionGroups = useMemo(
-    () => [
-      {
-        id: 'all-tokens',
-        key: 'All tokens',
-        icon: 'earn_network_all' as IconNamesList,
-        buttonStyle: {
-          paddingLeft: '8px',
-          paddingTop: '4px',
-          paddingBottom: '4px',
-        },
-        options: assetsList.map(({ value }) => value),
-      },
-      {
-        id: 'all-stables',
-        key: 'All stables',
-        icon: 'usd_circle' as IconNamesList,
-        buttonStyle: {
-          paddingLeft: '8px',
-          paddingTop: '4px',
-          paddingBottom: '4px',
-        },
-        iconStyle: {
-          color: '#777576',
-        },
-        options: assetsList.map(({ value }) => value).filter(isStablecoin),
-      },
-    ],
-    [assetsList],
-  )
-
-  const vaultsNetworksList = useMemo(
-    () => [
-      ...[
-        ...new Set(
-          vaultsList
-            .filter((vault) => {
-              if (userIsSmartAccount) {
-                return filterOutNonSCACompatibleVaults([vault]).length > 0
-              }
-
-              return true
-            })
-            .map(({ protocol }) => protocol.network),
-        ),
-      ].map((network) => ({
-        icon: networkNameIconNameMap[supportedSDKNetwork(network)] as IconNamesList,
-        value: network,
-        label: capitalize(sdkNetworkToHumanNetwork(supportedSDKNetwork(network))),
-      })),
-    ],
-    [vaultsList, userIsSmartAccount],
-  )
-  const vaultsNetworksOptionGroups = useMemo(() => {
-    return [
-      {
-        id: 'all-networks',
-        key: 'All networks',
-        icon: 'earn_network_all' as IconNamesList,
-        buttonStyle: {
-          paddingLeft: '8px',
-          paddingTop: '4px',
-          paddingBottom: '4px',
-        },
-        options: vaultsNetworksList.map(({ value }) => value),
-      },
-    ]
-  }, [vaultsNetworksList])
-
-  const selectedSortingMethod = useMemo(() => {
-    const sortingMethod = sortingMethods.find(({ id }) => id === sortingMethodId)
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return sortingMethod ?? sortingMethods.find(({ id }) => id === 'highest-apy')! // selecting the default one
-  }, [sortingMethodId])
-
   const handleRefresh = () => {
     buttonClickEventHandler(`vaults-list-refresh-vaults-list`)
     revalidateVaultsListData()
@@ -592,6 +428,8 @@ export const VaultsListView = ({
   const handleWhatIsLazyClick = () => {
     buttonClickEventHandler('vaults-list-what-is-lazy')
   }
+
+  const { updateQueryParams } = useVaultsListQueryParams()
 
   return (
     <VaultGrid
@@ -636,59 +474,56 @@ export const VaultsListView = ({
           />
         </div>
       }
+      additionalFullWithTopContent={
+        daoManagedVaultsEnabled ? (
+          <TabBar
+            tabs={[
+              {
+                id: 'risk-managed',
+                label: 'Risk-Managed',
+              },
+              {
+                id: 'dao-managed',
+                label: 'DAO-Managed',
+              },
+            ]}
+            handleTabChange={(tab) => {
+              updateQueryParams(queryParams, {
+                vaults: tab.id,
+              })
+            }}
+            defaultIndex={
+              filterVaults.includes('dao-managed')
+                ? 1
+                : filterVaults.includes('risk-managed')
+                  ? 0
+                  : 0
+            }
+            tabContentStyle={{
+              padding: 0,
+            }}
+            wrapperStyle={{
+              padding: '0 30px',
+            }}
+            tabHeadersStyle={{
+              borderBottom: 'none',
+            }}
+            useAsControlled
+          />
+        ) : null
+      }
       leftContent={
         <>
-          <div className={vaultsListViewStyles.leftHeaderRow}>
-            <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-              Choose a strategy
-            </Text>
-          </div>
-          <div className={vaultsListViewStyles.leftHeaderFiltersRow}>
-            <div className={vaultsListViewStyles.filtersGroup}>
-              <GenericMultiselect
-                options={assetsList}
-                label="Tokens"
-                onChange={(assets) => {
-                  updateQueryParams(queryParams, { assets })
-                }}
-                initialValues={filterAssets}
-                optionGroups={tokenOptionGroups}
-                style={{ width: isMobile ? '100%' : 'fit-content' }}
-              />
-              <GenericMultiselect
-                options={vaultsNetworksList}
-                label="Networks"
-                onChange={(networks) => {
-                  updateQueryParams(queryParams, { networks })
-                }}
-                initialValues={filterNetworks}
-                optionGroups={vaultsNetworksOptionGroups}
-                style={{ width: isMobile ? '100%' : 'fit-content' }}
-              />
-            </div>
-            <Dropdown
-              dropdownChildrenStyle={{
-                width: isMobile ? '100%' : 'fit-content',
-              }}
-              dropdownValue={{
-                value: selectedSortingMethod.id,
-                content: <VaultsSortingItem label={selectedSortingMethod.label} />,
-              }}
-              options={sortingMethods.map(({ id, label }) => ({
-                value: id,
-                content: <VaultsSortingItem label={label} />,
-              }))}
-              onChange={(sorting: DropdownRawOption) => {
-                updateQueryParams(queryParams, { sorting })
-              }}
-              asPill
-            >
-              <VaultsSortingItem
-                label={selectedSortingMethod.label}
-                style={{ paddingLeft: '5px' }}
-              />
-            </Dropdown>
-          </div>
+          <VaultsFiltersIntermediary
+            vaultsList={vaultsList}
+            sortingMethodId={sortingMethodId}
+            daoManagedVaultsEnabled={daoManagedVaultsEnabled}
+            queryParams={queryParams}
+            filterNetworks={filterNetworks}
+            filterAssets={filterAssets}
+            filterVaults={filterVaults}
+            filterWallet={filterWallet}
+          />
           {filteredAndSortedVaults?.length ? (
             filteredAndSortedVaults.map((vault, vaultIndex) => (
               <VaultCard
@@ -727,16 +562,38 @@ export const VaultsListView = ({
               />
             ))
           ) : (
-            <div className={vaultsListViewStyles.noVaultsWrapper}>
-              <Text as="p" variant="p1semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
-                No vaults available
-                {filterNetworks.length
-                  ? ` for ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
-                  : ''}
-                {filterAssets.length
-                  ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
-                  : ''}
-              </Text>
+            <div
+              className={vaultsListViewStyles.noVaultsWrapper}
+              style={{
+                textAlign: 'center',
+              }}
+            >
+              <Card
+                style={{
+                  margin: '0 auto 30px auto',
+                }}
+              >
+                <Text
+                  as="p"
+                  variant="p2"
+                  style={{
+                    color: 'var(--earn-protocol-secondary-60)',
+                    margin: '30px auto 30px auto',
+                  }}
+                >
+                  No vaults available
+                  {filterNetworks.length
+                    ? ` on ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
+                    : ''}
+                  {filterAssets.length
+                    ? ` with ${filterAssets.join(' and ')} token${filterAssets.length > 1 ? 's' : ''}`
+                    : ''}
+                  {filterWallet.length
+                    ? ` for assets from ${formatAddress(filterWallet)} wallet`
+                    : ''}
+                  .
+                </Text>
+              </Card>
               <Text
                 as="p"
                 variant="p1semiColorful"
@@ -746,22 +603,7 @@ export const VaultsListView = ({
               </Text>
             </div>
           )}
-          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
-            <SumrStakeCard
-              availableToStake={sumrAvailableToStake}
-              availableToStakeUSD={sumrAvailableToStakeUSD}
-              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
-              yieldToken="USDC"
-              apy={sumrRewardApy}
-              tooltipName="sumr-stake-bonus-label"
-              onTooltipOpen={tooltipEventHandler}
-              handleClick={() => {
-                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
-                push(`/staking`)
-              }}
-            />
-          )}
-          {usingSafeVaultsList && (
+          {usingSafeVaultsList && filteredSafeVaultsList.length && (
             <>
               {filteredSafeVaultsList.map((vault, vaultIndex) => (
                 <VaultCard
@@ -797,6 +639,21 @@ export const VaultsListView = ({
                 />
               ))}
             </>
+          )}
+          {stakingV2Enabled && userWalletAddress && sumrStakeInfo && (
+            <SumrStakeCard
+              availableToStake={sumrAvailableToStake}
+              availableToStakeUSD={sumrAvailableToStakeUSD}
+              yieldTokenApy={isLoadingRewardRates ? '-' : Number(maxApy / 100).toString()}
+              yieldToken="USDC"
+              apy={sumrRewardApy}
+              tooltipName="sumr-stake-bonus-label"
+              onTooltipOpen={tooltipEventHandler}
+              handleClick={() => {
+                buttonClickEventHandler('vaults-list-sumr-stake-card-click')
+                push(`/staking`)
+              }}
+            />
           )}
         </>
       }

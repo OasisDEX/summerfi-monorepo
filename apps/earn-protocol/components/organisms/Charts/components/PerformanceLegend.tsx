@@ -1,4 +1,4 @@
-import { DefaultLegendContent, type LegendProps } from 'recharts'
+import { DefaultLegendContent, type DefaultLegendContentProps } from 'recharts'
 
 const performanceLegendLabelMap: {
   [key: string]: string
@@ -11,16 +11,15 @@ const performanceLegendLabelMap: {
 
 export const PerformanceLegend = ({
   payload,
-  ref: _ref,
   showForecast,
   ...rest
-}: LegendProps & { showForecast: boolean }) => {
+}: DefaultLegendContentProps & { showForecast: boolean }) => {
   const nextPayload = payload
     ?.filter(({ value }) => {
-      if (showForecast && ['depositedValue', 'netValue'].includes(value)) {
+      if (showForecast && value && ['depositedValue', 'netValue'].includes(value)) {
         return false
       }
-      if (!showForecast && ['bounds', 'forecast'].includes(value)) {
+      if (!showForecast && value && ['bounds', 'forecast'].includes(value)) {
         return false
       }
 

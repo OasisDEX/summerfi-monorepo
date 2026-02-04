@@ -34,7 +34,7 @@
 }
 @media screen and (min-width: 900px) {
   .vaultGridPositionWrapper {
-    grid-template-columns: 1fr 446px;
+    grid-template-columns: 1fr 430px;
   }
 }
 .vaultGridPositionWrapper .fullWidthBlock {

@@ -4,6 +4,8 @@ import type {
   IAddress,
   IChainInfo,
   IUser,
+  AddressValue,
+  ChainId,
 } from '@summerfi/sdk-common'
 import type { Claim } from '../../distributions'
 
@@ -56,6 +58,19 @@ export interface IArmadaManagerClaims {
     voteDelegation: bigint
     perChain: Record<number, bigint>
     stakingV2: bigint
+  }>
+
+  /**
+   * @name getProtocolUsageRewards
+   * @description Gets protocol usage rewards for a user on a specific chain
+   * @param userAddressValue The user address value
+   * @param chainId The chain ID
+   * @returns Promise with total and per-fleet rewards
+   * @throws Error
+   */
+  getProtocolUsageRewards(params: { userAddressValue: AddressValue; chainId: ChainId }): Promise<{
+    total: bigint
+    perFleet: Record<string, bigint>
   }>
 
   /**

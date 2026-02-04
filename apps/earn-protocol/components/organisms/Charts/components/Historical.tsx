@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 import {
   getDisplayToken,
   getPositionValues,
@@ -7,6 +7,7 @@ import {
   useSumrRewardsToDate,
 } from '@summerfi/app-earn-ui'
 import {
+  type ChartDataPoints,
   type IArmadaPosition,
   type SDKVaultishType,
   type TimeframesType,
@@ -15,11 +16,13 @@ import {
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 import {
+  type ActiveDotProps,
   ComposedChart,
-  Customized,
   Line,
   ResponsiveContainer,
   Tooltip,
+  useActiveTooltipDataPoints,
+  useIsTooltipActive,
   XAxis,
   YAxis,
 } from 'recharts'
@@ -38,13 +41,55 @@ import { formatChartCryptoValue } from '@/features/forecast/chart-formatters'
 import historicalChartStyles from './Historical.module.css'
 
 type HistoricalChartProps = {
-  data?: unknown[]
+  data?: ChartDataPoints[]
   tokenSymbol: TokenSymbolsList
   portfolioPosition: {
     position: IArmadaPosition
     vault: SDKVaultishType
   }
   timeframe: TimeframesType
+}
+
+type LegendData = {
+  netValue: string
+  depositedValue: string
+  earnings: string
+  sumrEarned: string
+}
+
+const renderNetValueChartCross = (dotProps: ActiveDotProps) => {
+  return <ChartCross coordinateDataKeySelector="netValue" {...dotProps} />
+}
+
+const TooltipDataIntermediary = ({
+  legendBaseData,
+  setHighlightedData,
+  positionToken,
+}: {
+  legendBaseData: LegendData
+  setHighlightedData: (data: LegendData) => void
+  positionToken: string
+}) => {
+  const isTooltipActive = useIsTooltipActive()
+  const activeData = useActiveTooltipDataPoints<LegendData>()
+
+  useEffect(() => {
+    if (isTooltipActive) {
+      if (activeData?.[0]) {
+        setHighlightedData({
+          netValue: `${formatCryptoBalance(activeData[0].netValue)} ${positionToken}`,
+          depositedValue: `${formatCryptoBalance(activeData[0].depositedValue)} ${positionToken}`,
+          earnings: legendBaseData.earnings,
+          sumrEarned: legendBaseData.sumrEarned,
+        })
+      }
+    } else {
+      setHighlightedData(legendBaseData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTooltipActive, activeData])
+
+  return null
 }
 
 export const HistoricalChart = ({
@@ -67,6 +112,7 @@ export const HistoricalChart = ({
     earnings: `${formatCryptoBalance(netEarnings)} ${positionToken}`,
     sumrEarned: `${formatCryptoBalance(sumrRewards)} SUMR`,
   }
+
   const [highlightedData, setHighlightedData] = useState<{
     [key: string]: string | number
   }>(legendBaseData)
@@ -84,7 +130,7 @@ export const HistoricalChart = ({
           />
         )}
         <ResponsiveContainer
-          width={chartHidden ? '0' : '100%'}
+          width={chartHidden ? 0 : '100%'}
           height="100%"
           style={
             chartHidden
@@ -103,25 +149,6 @@ export const HistoricalChart = ({
               right: 0,
               left: 10,
               bottom: 10,
-            }}
-            onMouseMove={({ activePayload }) => {
-              if (activePayload && !chartHidden) {
-                setHighlightedData((prevData) => ({
-                  ...prevData,
-                  ...activePayload.reduce(
-                    (acc, { dataKey, value, payload: { timestamp } }) => ({
-                      ...acc,
-                      timestamp,
-                      timeframe,
-                      [dataKey]: `${formatCryptoBalance(value)} ${positionToken}`,
-                    }),
-                    {},
-                  ),
-                }))
-              }
-            }}
-            onMouseLeave={() => {
-              setHighlightedData(legendBaseData)
             }}
             dataKey="netValue"
           >
@@ -150,7 +177,6 @@ export const HistoricalChart = ({
               ]}
               hide={chartHidden}
             />
-            {/* Tooltip is needed for the chart cross to work */}
             <Tooltip
               formatter={() => {
                 return ''
@@ -162,7 +188,10 @@ export const HistoricalChart = ({
                 color: 'white',
                 fontSize: '12px',
               }}
-              labelFormatter={(label: string) => {
+              labelFormatter={(label: ReactNode) => {
+                if (typeof label !== 'string') {
+                  return label
+                }
                 const parsedTimestamp = dayjs(label)
                 const formattedDate = parsedTimestamp.format(
                   ['7d', '30d'].includes(timeframe)
@@ -177,14 +206,14 @@ export const HistoricalChart = ({
                 backgroundColor: 'var(--color-surface-subtle)',
                 border: 'none',
               }}
+              cursor={false}
             />
-            {!chartHidden ? <Customized component={<ChartCross />} /> : null}
             <Line
               dot={false}
               type="monotone"
               dataKey="netValue"
               stroke="#FF80BF"
-              activeDot={false}
+              activeDot={renderNetValueChartCross}
               connectNulls
               animationDuration={400}
               animateNewValues
@@ -200,6 +229,11 @@ export const HistoricalChart = ({
               animationDuration={400}
               animateNewValues
               hide={chartHidden}
+            />
+            <TooltipDataIntermediary
+              setHighlightedData={setHighlightedData}
+              legendBaseData={legendBaseData}
+              positionToken={positionToken}
             />
           </ComposedChart>
         </ResponsiveContainer>

@@ -1,9 +1,5 @@
-import { Card, LoadingSpinner } from '@summerfi/app-earn-ui'
+import { PanelOverviewLoading } from '@/features/panels/vaults/components/PanelOverview/PanelOverviewLoading'
 
 export default function InstitutionVaultsOverviewLoadingTab() {
-  return (
-    <Card variant="cardSecondary">
-      <LoadingSpinner size={40} style={{ margin: '40px auto' }} />
-    </Card>
-  )
+  return <PanelOverviewLoading />
 }

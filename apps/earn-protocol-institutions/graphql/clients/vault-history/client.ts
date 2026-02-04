@@ -692,6 +692,7 @@ export enum ArkDailySnapshot_OrderBy {
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -918,6 +919,7 @@ export enum ArkHourlySnapshot_OrderBy {
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -1620,6 +1622,7 @@ export enum Board_OrderBy {
   id = 'id',
   logIndex = 'logIndex',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -2289,6 +2292,7 @@ export enum Deposit_OrderBy {
   position__unstakedInputTokenBalanceNormalizedInUSD = 'position__unstakedInputTokenBalanceNormalizedInUSD',
   position__unstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -2616,6 +2620,7 @@ export enum Disembark_OrderBy {
   id = 'id',
   logIndex = 'logIndex',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -2826,6 +2831,7 @@ export enum Event_OrderBy {
   id = 'id',
   logIndex = 'logIndex',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -3003,6 +3009,7 @@ export enum FinancialsDailySnapshot_OrderBy {
   id = 'id',
   protocol = 'protocol',
   protocolControlledValueUSD = 'protocolControlledValueUSD',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -4903,6 +4910,7 @@ export enum PostActionArkSnapshot_OrderBy {
   id = 'id',
   inputTokenBalance = 'inputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -5137,6 +5145,7 @@ export enum PostActionVaultSnapshot_OrderBy {
   outputTokenSupply = 'outputTokenSupply',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -6702,6 +6711,7 @@ export enum Rebalance_OrderBy {
   id = 'id',
   logIndex = 'logIndex',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -6888,6 +6898,7 @@ export enum ReferralData_OrderBy {
   amountOfReferred = 'amountOfReferred',
   id = 'id',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -7706,6 +7717,7 @@ export enum Staked_OrderBy {
   position__unstakedInputTokenBalanceNormalizedInUSD = 'position__unstakedInputTokenBalanceNormalizedInUSD',
   position__unstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -8256,6 +8268,7 @@ export enum Unstaked_OrderBy {
   position__unstakedInputTokenBalanceNormalizedInUSD = 'position__unstakedInputTokenBalanceNormalizedInUSD',
   position__unstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -8445,6 +8458,7 @@ export enum UsageMetricsDailySnapshot_OrderBy {
   dailyWithdrawCount = 'dailyWithdrawCount',
   id = 'id',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -8590,6 +8604,7 @@ export enum UsageMetricsHourlySnapshot_OrderBy {
   hourlyWithdrawCount = 'hourlyWithdrawCount',
   id = 'id',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -9128,6 +9143,7 @@ export enum VaultDailySnapshot_OrderBy {
   outputTokenSupply = 'outputTokenSupply',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -9663,6 +9679,7 @@ export enum VaultHourlySnapshot_OrderBy {
   outputTokenSupply = 'outputTokenSupply',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -10000,6 +10017,7 @@ export enum VaultWeeklySnapshot_OrderBy {
   outputTokenSupply = 'outputTokenSupply',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -10625,6 +10643,7 @@ export enum Vault_OrderBy {
   positions = 'positions',
   pricePerShare = 'pricePerShare',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -11100,6 +11119,7 @@ export enum Withdraw_OrderBy {
   position__unstakedInputTokenBalanceNormalizedInUSD = 'position__unstakedInputTokenBalanceNormalizedInUSD',
   position__unstakedOutputTokenBalance = 'position__unstakedOutputTokenBalance',
   protocol = 'protocol',
+  protocol___hourlySnapshotsDeepCleaned = 'protocol___hourlySnapshotsDeepCleaned',
   protocol__cumulativeProtocolSideRevenueUSD = 'protocol__cumulativeProtocolSideRevenueUSD',
   protocol__cumulativeSupplySideRevenueUSD = 'protocol__cumulativeSupplySideRevenueUSD',
   protocol__cumulativeTotalRevenueUSD = 'protocol__cumulativeTotalRevenueUSD',
@@ -11161,6 +11181,7 @@ export enum Withdraw_OrderBy {
 
 export type YieldAggregator = Protocol & {
   __typename?: 'YieldAggregator';
+  _hourlySnapshotsDeepCleaned?: Maybe<Scalars['Boolean']['output']>;
   /**  Gross revenue for the protocol (revenue claimed by protocol). Examples: AMM protocol fee (Sushi's 0.05%). OpenSea 10% sell fee.  */
   cumulativeProtocolSideRevenueUSD: Scalars['BigDecimal']['output'];
   /**  Revenue claimed by suppliers to the protocol. LPs on DEXs (e.g. 0.25% of the swap fee in Sushiswap). Depositors on Lending Protocols. NFT sellers on OpenSea.  */
@@ -11263,6 +11284,10 @@ export type YieldAggregatorVaultsArrayArgs = {
 export type YieldAggregator_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  _hourlySnapshotsDeepCleaned?: InputMaybe<Scalars['Boolean']['input']>;
+  _hourlySnapshotsDeepCleaned_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _hourlySnapshotsDeepCleaned_not?: InputMaybe<Scalars['Boolean']['input']>;
+  _hourlySnapshotsDeepCleaned_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   and?: InputMaybe<Array<InputMaybe<YieldAggregator_Filter>>>;
   cumulativeProtocolSideRevenueUSD?: InputMaybe<Scalars['BigDecimal']['input']>;
   cumulativeProtocolSideRevenueUSD_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -11476,6 +11501,7 @@ export type YieldAggregator_Filter = {
 };
 
 export enum YieldAggregator_OrderBy {
+  _hourlySnapshotsDeepCleaned = '_hourlySnapshotsDeepCleaned',
   cumulativeProtocolSideRevenueUSD = 'cumulativeProtocolSideRevenueUSD',
   cumulativeSupplySideRevenueUSD = 'cumulativeSupplySideRevenueUSD',
   cumulativeTotalRevenueUSD = 'cumulativeTotalRevenueUSD',

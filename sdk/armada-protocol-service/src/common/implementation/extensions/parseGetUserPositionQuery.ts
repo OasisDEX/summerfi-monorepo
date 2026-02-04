@@ -1,4 +1,6 @@
 import {
+  type AddressValue,
+  type ChainId,
   type IArmadaPosition,
   type IChainInfo,
   type IToken,
@@ -14,6 +16,7 @@ export const parseGetUserPositionQuery = async ({
   summerToken,
   getTokenBySymbol,
   getUserMerklRewards,
+  getProtocolUsageRewards,
 }: {
   user: IUser
   query: GetUserPositionQuery | GetPositionQuery
@@ -22,10 +25,22 @@ export const parseGetUserPositionQuery = async ({
   getUserMerklRewards: (
     params: Parameters<IArmadaManagerMerklRewards['getUserMerklRewards']>[0],
   ) => ReturnType<IArmadaManagerMerklRewards['getUserMerklRewards']>
+  getProtocolUsageRewards: (params: {
+    userAddressValue: AddressValue
+    chainId: ChainId
+  }) => Promise<{
+    total: bigint
+    perFleet: Record<string, bigint>
+  }>
 }): Promise<IArmadaPosition | undefined> => {
   const merklSummerRewards = await getUserMerklRewards({
     address: user.wallet.address.value,
     chainIds: [user.chainInfo.chainId],
+  })
+
+  const protocolUsageRewards = await getProtocolUsageRewards({
+    userAddressValue: user.wallet.address.value,
+    chainId: user.chainInfo.chainId,
   })
 
   const armadaPositions = (query.positions ?? []).map(
@@ -34,6 +49,7 @@ export const parseGetUserPositionQuery = async ({
       summerToken,
       getTokenBySymbol,
       merklSummerRewards,
+      protocolUsageRewards,
     }),
   )
   return armadaPositions[0] ? armadaPositions[0] : undefined

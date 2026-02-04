@@ -186,3 +186,7 @@ body {
 .grecaptcha-badge {
   visibility: hidden;
 }
+
+.recharts-surface {
+  outline: none;
+}

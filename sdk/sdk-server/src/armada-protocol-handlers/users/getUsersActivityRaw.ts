@@ -10,5 +10,5 @@ export const getUsersActivityRaw = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getUsersActivityRaw(opts.input)
+    return opts.ctx.armadaManager.positions.getUsersActivityRaw(opts.input)
   })

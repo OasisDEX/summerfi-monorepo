@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 import { Button, Input, Text } from '@summerfi/app-earn-ui'
 
@@ -9,22 +10,23 @@ export const AddWhitelistForm = ({
   onGrantWhitelist,
   disabled,
 }: {
-  onGrantWhitelist: ({ address }: { address: string }) => void
+  onGrantWhitelist?: ({ address }: { address: `0x${string}` }) => void
   disabled: boolean
 }) => {
   const [isAddressValid, setIsAddressValid] = useState(false)
-  const [whitelistAddress, setWhitelistAddress] = useState('')
+  const [whitelistAddress, setWhitelistAddress] = useState<`0x${string}` | ''>('')
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const address = e.target.value
 
-    setWhitelistAddress(address)
+    setWhitelistAddress(address as `0x${string}`)
     setIsAddressValid(isValidAddress(address))
   }
 
   const handleAddRole = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!whitelistAddress || !isAddressValid) return
-    onGrantWhitelist({
+    onGrantWhitelist?.({
       address: whitelistAddress,
     })
     setWhitelistAddress('')

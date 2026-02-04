@@ -15,5 +15,5 @@ export const getDeposits = publicProcedure
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.utils.getDeposits(opts.input)
+    return opts.ctx.armadaManager.positions.getDeposits(opts.input)
   })

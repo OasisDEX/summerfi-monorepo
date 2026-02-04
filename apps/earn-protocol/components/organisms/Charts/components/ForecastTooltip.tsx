@@ -2,7 +2,7 @@ import { Icon, SimpleGrid, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
-import { type TooltipProps } from 'recharts'
+import { type TooltipContentProps } from 'recharts'
 
 import forecastTooltipStyles from '@/components/organisms/Charts/components/ForecastTooltip.module.css'
 
@@ -17,10 +17,10 @@ export const ForecastTooltip = ({
   payload,
   label,
   tokenPrice,
-}: TooltipProps<number | [number, number], 'bounds' | 'forecast'> & {
+}: TooltipContentProps<number | [number, number], 'bounds' | 'forecast'> & {
   tokenPrice?: string | null
 }) => {
-  const parsedPayload = payload?.reduce(
+  const parsedPayload = payload.reduce<{ bounds?: [number, number]; forecast?: number }>(
     (acc, { name: valueName, value }) => {
       return {
         ...acc,
@@ -31,10 +31,10 @@ export const ForecastTooltip = ({
             : 0,
       }
     },
-    {} as { bounds?: [number, number]; forecast?: number },
+    {},
   )
 
-  if (active && parsedPayload?.bounds && parsedPayload.forecast) {
+  if (active && parsedPayload.bounds && parsedPayload.forecast) {
     const {
       bounds: [lowerBound, upperBound],
       forecast,

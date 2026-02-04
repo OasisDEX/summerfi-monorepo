@@ -1,3 +1,5 @@
+'use client'
+
 import { type CSSProperties } from 'react'
 import { Button, Text, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
 import { type TimeframesItem, type TimeframesType } from '@summerfi/app-types'

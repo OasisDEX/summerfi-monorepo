@@ -96,6 +96,7 @@ export { HeadingWithCards } from './components/molecules/HeadingWithCards/Headin
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
 export {
   GenericMultiselect,
+  GenericMultiselectPill,
   type GenericMultiselectOption,
 } from './components/molecules/GenericMultiselect/GenericMultiselect'
 export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'
@@ -283,7 +284,10 @@ export { AccountKitAccountType } from './account-kit/types'
 export { isUserEOA } from './account-kit/helpers/is-user-eoa'
 export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
 
-export { VaultExposure } from './features/vault-exposure/components/VaultExposure/VaultExposure.tsx'
+export {
+  VaultExposure,
+  VaultExposureLoading,
+} from './features/vault-exposure/components/VaultExposure/VaultExposure.tsx'
 export { VaultExposureTable } from './features/vault-exposure/components/VaultExposureTable/VaultExposureTable.tsx'
 export { VaultExposureTableSection } from './features/vault-exposure/components/VaultExposureTableSection/VaultExposureTableSection.tsx'
 export { vaultExposureFilter } from './features/vault-exposure/table/filters/filters'

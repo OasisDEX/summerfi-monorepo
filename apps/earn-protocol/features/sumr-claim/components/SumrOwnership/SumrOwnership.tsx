@@ -1,7 +1,15 @@
 import type { FC } from 'react'
 import { RechartResponsiveWrapper, Text } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, type TooltipProps } from 'recharts'
+import {
+  Pie,
+  PieChart,
+  type PieSectorShapeProps,
+  ResponsiveContainer,
+  Sector,
+  Tooltip,
+  type TooltipContentProps,
+} from 'recharts'
 
 import { sumrOwnershipChartData } from '@/features/sumr-claim/components/SumrOwnership/config'
 
@@ -60,9 +68,10 @@ const LegendItem: FC<LegendItemProps> = ({
   )
 }
 
-const CustomTooltip: FC<TooltipProps<string, string>> = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload }: TooltipContentProps<string, string>) => {
   if (
     active &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     payload?.length &&
     payload[0].name &&
     payload[0].value &&
@@ -84,6 +93,10 @@ const CustomTooltip: FC<TooltipProps<string, string>> = ({ active, payload }) =>
   return null
 }
 
+const CustomPieShape = ({ fill }: PieSectorShapeProps) => {
+  return <Sector fill={fill} stroke="unset" style={{ outline: 'none', cursor: 'pointer' }} />
+}
+
 export const SumrOwnership = () => {
   const data = sumrOwnershipChartData
 
@@ -102,17 +115,9 @@ export const SumrOwnership = () => {
                     cy="50%"
                     innerRadius={55}
                     outerRadius={132}
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.fill}
-                        stroke="unset"
-                        style={{ outline: 'none', cursor: 'pointer' }}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                    shape={CustomPieShape}
+                  />
+                  <Tooltip content={CustomTooltip} />
                 </PieChart>
               </div>
             </ResponsiveContainer>

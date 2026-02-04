@@ -2,6 +2,8 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { humanNetworktoSDKNetwork, networkNameToSDKId } from '@summerfi/app-utils'
 
 import {
+  getCachedAQWhitelist,
+  getCachedInstitutionBasicData,
   getCachedInstitutionVaultActiveUsers,
   getCachedVaultWhitelist,
 } from '@/app/server-handlers/institution/institution-vaults'
@@ -22,17 +24,29 @@ export default async function InstitutionVaultUserAdminPage({
   if (!chainId) {
     throw new Error(`Unsupported network: ${network}`)
   }
-
-  const [whitelistedWallets, activeUsers] = await Promise.all([
+  const [institutionBasicData, whitelistedWallets] = await Promise.all([
+    getCachedInstitutionBasicData({
+      institutionName,
+      network: parsedNetwork,
+    }),
     getCachedVaultWhitelist({
       institutionName,
       vaultAddress,
       network: parsedNetwork,
     }),
+  ])
+
+  const [activeUsers, whitelistedAQWallets] = await Promise.all([
     getCachedInstitutionVaultActiveUsers({
       vaultAddress,
       chainId,
       institutionName,
+    }),
+    getCachedAQWhitelist({
+      institutionName,
+      vaultAddress,
+      network: parsedNetwork,
+      addressesList: whitelistedWallets.map((w) => w.owner as `0x${string}`),
     }),
   ])
 
@@ -40,6 +54,8 @@ export default async function InstitutionVaultUserAdminPage({
     <ClientSideSdkWrapper>
       <PanelUserAdmin
         whitelistedWallets={whitelistedWallets}
+        whitelistedAQWallets={whitelistedAQWallets}
+        institutionBasicData={institutionBasicData}
         activeUsers={activeUsers}
         vaultAddress={vaultAddress}
         network={network}

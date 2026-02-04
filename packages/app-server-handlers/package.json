@@ -55,7 +55,7 @@
     "mixpanel": "^0.18.0",
     "jose": "^6.0.10",
     "lodash-es": "^4.17.1",
-    "next": "15.5.9",
+    "next": "15.5.10",
     "viem": "2.43.5"
   },
   "dependencies": {

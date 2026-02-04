@@ -8,6 +8,7 @@ import {
   type IArmadaManagerBridge,
   type IArmadaManagerVaults,
   type IArmadaManagerUtils,
+  type IArmadaManagerPositions,
   type IArmadaManagerMerklRewards,
   type IArmadaManagerAdmin,
   type IArmadaManagerAccessControl,
@@ -26,6 +27,7 @@ import { ArmadaManagerMigrations } from './ArmadaManagerMigrations'
 import { ArmadaManagerBridge } from './ArmadaManagerBridge'
 import { ArmadaManagerVaults } from './ArmadaManagerVaults'
 import { ArmadaManagerUtils } from './ArmadaManagerUtils'
+import { ArmadaManagerPositions } from './ArmadaManagerPositions'
 import { ArmadaManagerMerklRewards } from './ArmadaManagerMerklRewards'
 import { ArmadaManagerAdmin } from './ArmadaManagerAdmin'
 import { ArmadaManagerAccessControl } from './ArmadaManagerAccessControl'
@@ -42,6 +44,7 @@ export class ArmadaManager implements IArmadaManager {
   bridge: IArmadaManagerBridge
   vaults: IArmadaManagerVaults
   utils: IArmadaManagerUtils
+  positions: IArmadaManagerPositions
   merklRewards: IArmadaManagerMerklRewards
   admin: IArmadaManagerAdmin
   accessControl: IArmadaManagerAccessControl
@@ -107,11 +110,8 @@ export class ArmadaManager implements IArmadaManager {
       blockchainClientProvider: this._blockchainClientProvider,
       tokensManager: this._tokensManager,
       oracleManager: this._oracleManager,
-      subgraphManager: this._subgraphManager,
       swapManager: this._swapManager,
       deploymentProvider: this._deploymentProvider,
-      supportedChains: this._supportedChains,
-      getUserMerklRewards: this.merklRewards.getUserMerklRewards.bind(this.merklRewards),
     })
     this.claims = new ArmadaManagerClaims({
       ...params,
@@ -120,6 +120,14 @@ export class ArmadaManager implements IArmadaManager {
       supportedChains: this._supportedChains,
       utils: this.utils,
       merklRewards: this.merklRewards,
+    })
+    this.positions = new ArmadaManagerPositions({
+      clientId: this._clientId,
+      configProvider: this._configProvider,
+      tokensManager: this._tokensManager,
+      subgraphManager: this._subgraphManager,
+      getUserMerklRewards: this.merklRewards.getUserMerklRewards.bind(this.merklRewards),
+      getProtocolUsageRewards: this.claims.getProtocolUsageRewards.bind(this.claims),
     })
     this.vaults = new ArmadaManagerVaults({
       clientId: this._clientId,

@@ -1,6 +1,6 @@
 'use client'
 
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useChain } from '@account-kit/react'
 import {
@@ -24,10 +24,12 @@ import {
 import { Address, getChainInfoByChainId, TokenAmount, TransactionType } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
+import Link from 'next/link'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
 import { TransactionQueue } from '@/components/organisms/TransactionQueue/TransactionQueue'
 import { getDepositId, getWithdrawId } from '@/helpers/get-transaction-id'
+import { getInstitutionVaultUrl } from '@/helpers/get-url'
 import { useAdminAppSDK } from '@/hooks/useAdminAppSDK'
 import { useNetworkAlignedClient } from '@/hooks/useNetworkAlignedClient'
 import { usePosition } from '@/hooks/usePosition'
@@ -49,13 +51,17 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const { revalidateTags } = useRevalidateTags()
   const { isLoadingAccount, userWalletAddress } = useUserWallet()
   const { publicClient } = useNetworkAlignedClient()
-  const { getDepositTx, getWithdrawTx } = useAdminAppSDK(institutionName)
+  const { getDepositTx, getWithdrawTx, isWhitelisted } = useAdminAppSDK(institutionName)
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const sdkNetworkName = chainIdToSDKNetwork(vaultChainId)
   const vaultInputToken = vault.inputToken.symbol
+  const vaultOutputToken = vault.outputToken?.symbol
   const inputTokenBalance = new BigNumber(vault.inputTokenBalance.toString())
     .div(ten.pow(vault.inputToken.decimals))
     .toNumber()
+  const [isWalletWhitelisted, setIsWalletWhitelisted] = useState<boolean | null>(null)
+  const whitelistWalletsMapCheckRef = useRef<{ [key: string]: boolean }>({})
+  const inFlightWhitelistChecksRef = useRef<{ [key: string]: Promise<boolean> }>({})
 
   const isProperChain = useMemo(() => {
     return chain.id === vaultChainId
@@ -109,6 +115,56 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     inputChangeHandler: () => {},
   })
 
+  const getWalletWhitelist = useCallback(
+    (address: string) => {
+      const cached = whitelistWalletsMapCheckRef.current[address]
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (cached !== undefined) return Promise.resolve(cached)
+
+      const inFlight = inFlightWhitelistChecksRef.current[address]
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (inFlight) return inFlight
+
+      const whitelistCheckPromise = (async () => {
+        try {
+          const whitelisted = await isWhitelisted({
+            targetAddress: address as `0x${string}`,
+            chainId: vaultChainId,
+            fleetCommanderAddress: vault.id as `0x${string}`,
+          })
+
+          whitelistWalletsMapCheckRef.current[address] = whitelisted
+          delete inFlightWhitelistChecksRef.current[address]
+
+          return whitelisted
+        } finally {
+          delete inFlightWhitelistChecksRef.current[address]
+        }
+      })()
+
+      inFlightWhitelistChecksRef.current[address] = whitelistCheckPromise
+
+      return whitelistCheckPromise
+    },
+    [isWhitelisted, vault.id, vaultChainId],
+  )
+
+  useEffect(() => {
+    if (!userWalletAddress || isLoadingAccount) {
+      setIsWalletWhitelisted(null)
+    } else {
+      getWalletWhitelist(userWalletAddress)
+        .then((whitelisted) => {
+          setIsWalletWhitelisted(whitelisted)
+        })
+        .catch(() => {
+          setIsWalletWhitelisted(false)
+        })
+    }
+  }, [userWalletAddress, isLoadingAccount, getWalletWhitelist])
+
   const handleDepositAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value
 
@@ -136,17 +192,15 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
   const positionTokenBalance = useMemo(() => {
     if (!position) return 0
 
-    return new BigNumber(position.depositsAmount.amount)
-      .div(ten.pow(vault.inputToken.decimals))
-      .toNumber()
-  }, [position, vault.inputToken.decimals])
+    return new BigNumber(position.amount.amount).toNumber()
+  }, [position])
 
   const positionBalanceLabel = useMemo(() => {
     if (!userWalletAddress) {
       return <WalletLabel />
     }
     if (isLoadingAccount || isLoadingPosition) {
-      return <SkeletonLine width={150} height={14} style={{ margin: '3px 0' }} />
+      return <SkeletonLine width={100} height={20} style={{ margin: '10px 0' }} />
     }
 
     return positionTokenBalance > 0 ? (
@@ -223,7 +277,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
     if (!txId.includes(TransactionType.Approve)) {
       revalidateTags({
         tags: [
-          `institution-vault-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
+          `vault-details-${institutionName.toLowerCase()}-${vault.id.toLowerCase()}-${sdkNetworkName.toLowerCase()}`,
         ],
       })
       reFetchPosition()
@@ -354,12 +408,12 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       const approveTxId = `${transactionId}-${TransactionType.Approve}`
       const approveTxDescription = (
         <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultInputToken}
+          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken}
         </Text>
       )
       const approveNotNeededTxDescription = (
         <Text variant="p3">
-          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultInputToken} approved already
+          {formatCryptoBalance(amountWithdrawParsed)}&nbsp;{vaultOutputToken} approved already
         </Text>
       )
       const approveTxLabel = {
@@ -447,6 +501,7 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       selectedToken,
       vaultChainId,
       vaultInputToken,
+      vaultOutputToken,
       addTransaction,
       getWithdrawTx,
       vault.id,
@@ -459,86 +514,146 @@ export const PanelAssetManagement: FC<PanelAssetManagementProps> = ({ vault, ins
       variant="cardSecondary"
       className={panelAssetManagementStyles.panelAssetManagementWrapper}
     >
-      <div className={panelAssetManagementStyles.depositCards}>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Vault Assets Balance</Text>
-          <Text variant="p1semi">
-            {formatCryptoBalance(inputTokenBalance)} {vaultInputToken}
-          </Text>
+      <div className={panelAssetManagementStyles.assetManagementBlocks}>
+        <div className={panelAssetManagementStyles.statsSection}>
+          <Card style={{ flexDirection: 'column' }}>
+            <Text variant="p3semi" style={{ opacity: 0.7 }}>
+              Vault Assets Balance
+            </Text>
+            <Text variant="h4">
+              {formatCryptoBalance(inputTokenBalance)} {vaultInputToken}
+            </Text>
+          </Card>
+          <Card style={{ flexDirection: 'column' }}>
+            <Text variant="p3semi" style={{ opacity: 0.7 }}>
+              Connected Wallet Deposits
+            </Text>
+            <Text variant="h4">{positionBalanceLabel}</Text>
+          </Card>
         </div>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Wallet Deposits</Text>
-          <Text variant="p1semi">{positionBalanceLabel}</Text>
+
+        <div className={panelAssetManagementStyles.actionsSection}>
+          <Card style={{ flexDirection: 'column' }}>
+            <div className={panelAssetManagementStyles.actionCardHeader}>
+              <Text variant="p3semi" style={{ opacity: 0.7 }}>
+                Deposit
+              </Text>
+              <Text variant="p4" style={{ opacity: 0.6 }}>
+                {positionBalanceToDepositLabel}
+              </Text>
+            </div>
+            <div className={panelAssetManagementStyles.actionCardContent}>
+              <Input
+                variant="dark"
+                inputWrapperStyles={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                }}
+                placeholder="Amount to deposit"
+                value={amountDepositDisplay}
+                onChange={handleDepositAmountChange}
+                onBlur={onDepositBlur}
+                onFocus={onDepositFocus}
+              />
+              <Button
+                variant="primarySmall"
+                disabled={
+                  isLoadingAccount ||
+                  isSettingChain ||
+                  !isProperChain ||
+                  amountDepositParsed.isZero() ||
+                  amountDepositParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
+                }
+                onClick={() => {
+                  if (userWalletAddress) {
+                    onDeposit({ address: userWalletAddress })
+                    manualSetAmountDeposit('0')
+                  }
+                }}
+              >
+                Add deposit transaction
+              </Button>
+            </div>
+          </Card>
+
+          <Card style={{ flexDirection: 'column' }}>
+            <div className={panelAssetManagementStyles.actionCardHeader}>
+              <Text variant="p3semi" style={{ opacity: 0.7 }}>
+                Withdraw
+              </Text>
+              <Text variant="p4" style={{ opacity: 0.6 }}>
+                {positionBalanceToWithdrawLabel}
+              </Text>
+            </div>
+            <div className={panelAssetManagementStyles.actionCardContent}>
+              <Input
+                variant="dark"
+                inputWrapperStyles={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                }}
+                placeholder="Amount to withdraw"
+                value={amountWithdrawDisplay}
+                onChange={handleWithdrawAmountChange}
+                onBlur={onWithdrawBlur}
+                onFocus={onWithdrawFocus}
+              />
+              <Button
+                variant="primarySmall"
+                disabled={
+                  isLoadingAccount ||
+                  isSettingChain ||
+                  !isProperChain ||
+                  amountWithdrawParsed.isZero() ||
+                  amountWithdrawParsed.isGreaterThan(positionTokenBalance)
+                }
+                onClick={() => {
+                  if (userWalletAddress) {
+                    onWithdraw({ address: userWalletAddress })
+                    manualSetAmountWithdraw('0')
+                  }
+                }}
+              >
+                Add withdraw transaction
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
-      <div className={panelAssetManagementStyles.depositCards}>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Deposit</Text>
-          <Text variant="p4semi" style={{ margin: '3px 0' }}>
-            {positionBalanceToDepositLabel}
-          </Text>
-          <Input
-            variant="dark"
-            placeholder={`Deposit ${vaultInputToken}`}
-            value={amountDepositDisplay}
-            onChange={handleDepositAmountChange}
-            onBlur={onDepositBlur}
-            onFocus={onDepositFocus}
-          />
-          <Button
-            variant="primarySmall"
-            style={{ marginTop: '10px' }}
-            disabled={
-              isLoadingAccount ||
-              isSettingChain ||
-              !isProperChain ||
-              amountDepositParsed.isZero() ||
-              amountDepositParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
-            }
-            onClick={() => {
-              if (userWalletAddress) {
-                onDeposit({ address: userWalletAddress })
-                manualSetAmountDeposit('0')
-              }
+      {userWalletAddress && (
+        <Card style={{ flexDirection: 'column' }}>
+          <Text
+            variant="p3"
+            style={{
+              color:
+                isWalletWhitelisted === null
+                  ? 'inherit'
+                  : !isWalletWhitelisted
+                    ? 'var(--color-text-warning)'
+                    : 'var(--color-text-success)',
             }}
           >
-            Add deposit transaction
-          </Button>
-        </div>
-        <div className={panelAssetManagementStyles.depositCardsItem}>
-          <Text variant="p3semi">Withdraw</Text>
-          <Text variant="p4semi" style={{ margin: '3px 0' }}>
-            {positionBalanceToWithdrawLabel}
+            {isWalletWhitelisted === null ? (
+              'Checking wallet whitelist status...'
+            ) : isWalletWhitelisted ? (
+              <>Your wallet is whitelisted for asset management actions.</>
+            ) : (
+              <>
+                Your wallet is not whitelisted for asset management actions. Manage access{' '}
+                <Link
+                  href={getInstitutionVaultUrl({
+                    institutionName,
+                    vault,
+                    page: 'user-admin',
+                  })}
+                  style={{ textDecoration: 'underline' }}
+                >
+                  here
+                </Link>
+                .
+              </>
+            )}
           </Text>
-          <Input
-            variant="dark"
-            placeholder={`Withdraw ${vaultInputToken}`}
-            value={amountWithdrawDisplay}
-            onChange={handleWithdrawAmountChange}
-            onBlur={onWithdrawBlur}
-            onFocus={onWithdrawFocus}
-          />
-          <Button
-            variant="primarySmall"
-            style={{ marginTop: '10px' }}
-            disabled={
-              isLoadingAccount ||
-              isSettingChain ||
-              !isProperChain ||
-              amountWithdrawParsed.isZero() ||
-              amountWithdrawParsed.isGreaterThan(selectedTokenBalance ?? new BigNumber(0))
-            }
-            onClick={() => {
-              if (userWalletAddress) {
-                onWithdraw({ address: userWalletAddress })
-                manualSetAmountWithdraw('0')
-              }
-            }}
-          >
-            Add withdraw transaction
-          </Button>
-        </div>
-      </div>
+        </Card>
+      )}
       <Text as="h5" variant="h5">
         Transaction Queue
       </Text>
