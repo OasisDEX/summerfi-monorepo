@@ -1,5 +1,6 @@
 import {
   Address,
+  ChainIds,
   getChainInfoByChainId,
   User,
   type AddressValue,
@@ -27,8 +28,8 @@ describe('Armada Protocol - Positions', () => {
   }[] = [
     {
       testSpecificFleet: false,
-      userAddress: '0xA8752762470a6a73aC874258677043c226d080ec',
-      chainId: 1,
+      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+      chainId: ChainIds.Hyperliquid,
     },
     // {
     //   testSpecificFleet: true,
