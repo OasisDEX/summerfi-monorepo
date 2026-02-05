@@ -12,7 +12,7 @@ import {
 } from '@summerfi/sdk-common'
 
 import { createSendTransactionTool } from '@summerfi/testing-utils'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 import assert from 'assert'
 import { SharedConfig, FleetAddresses, RpcUrls } from './utils/testConfig'
@@ -23,7 +23,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Switch', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   // Configure test scenarios here
   const switchScenarios: {

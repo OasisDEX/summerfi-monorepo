@@ -11,7 +11,7 @@ import {
 
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { SharedConfig, type ChainConfig, InstiTestConfigs, TestClientIds } from './utils/testConfig'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { DEFAULT_SLIPPAGE_PERCENTAGE } from './utils/constants'
 
 jest.setTimeout(300000)
@@ -20,7 +20,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol - Deposit', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   // Configure test scenarios here
   const depositScenarios: {

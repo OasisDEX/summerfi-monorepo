@@ -1,6 +1,6 @@
 import { ChainIds, TokenAmount, Percentage, Token } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import type { SwapScenario } from './utils/types'
 
 jest.setTimeout(300000)
@@ -9,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Swap Tests', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
   const slippage = Percentage.createFrom({ value: 0.5 })
 
   // Configure test scenarios here

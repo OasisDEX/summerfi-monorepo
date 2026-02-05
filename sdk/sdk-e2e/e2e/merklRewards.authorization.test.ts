@@ -1,5 +1,5 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 const scenarios: { userAddress: AddressValue }[] = [
   { userAddress: '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A' },
@@ -10,7 +10,7 @@ const scenarios: { userAddress: AddressValue }[] = [
 ]
 
 describe('Merkl Rewards - Authorization', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   describe.each(scenarios)('user address $userAddress', (scenario) => {
     const { userAddress } = scenario

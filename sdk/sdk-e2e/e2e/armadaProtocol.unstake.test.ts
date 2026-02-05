@@ -10,7 +10,7 @@ import {
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { TestConfigs, SharedConfig } from './utils/testConfig'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -31,7 +31,7 @@ describe('Armada Protocol - Unstake', () => {
 
   console.log(`Running on ${chainInfo.name} for user ${user.wallet.address.value}`)
 
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   it(`should unstake all fleet tokens for vault`, async () => {
     const balancesBefore = await logBalances('Before unstaking', sdk, user, vaultId)

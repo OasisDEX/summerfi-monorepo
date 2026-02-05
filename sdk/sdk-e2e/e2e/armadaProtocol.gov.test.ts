@@ -2,7 +2,7 @@ import { User, Wallet, Address, getChainInfoByChainId } from '@summerfi/sdk-comm
 import { zeroAddress } from 'viem'
 import assert from 'assert'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
 
@@ -12,7 +12,7 @@ const simulateOnly = true
 const privateKey = SharedConfig.testUserPrivateKey
 
 describe.skip('Armada Protocol Gov', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   const scenarios: { testConfigKey: TestConfigKey }[] = [
     {

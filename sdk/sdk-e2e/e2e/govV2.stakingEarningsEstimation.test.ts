@@ -1,4 +1,4 @@
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { SharedConfig } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY } from './utils/constants'
@@ -10,7 +10,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol Gov V2 Staking Earnings Estimation', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   const scenarios: { chainId: number; userAddressValue: AddressValue }[] = [
     {

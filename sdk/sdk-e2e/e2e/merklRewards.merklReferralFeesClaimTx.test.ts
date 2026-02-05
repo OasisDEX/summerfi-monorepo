@@ -1,5 +1,5 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { SharedConfig } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 import { formatToken } from './utils/stringifiers'
@@ -19,7 +19,7 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
     throw new Error('E2E_SDK_FORK_URL_BASE environment variable not set')
   }
 
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   let sendTxTool: SendTransactionTool
 

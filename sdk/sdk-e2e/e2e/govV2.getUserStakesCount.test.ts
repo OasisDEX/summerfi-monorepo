@@ -1,12 +1,12 @@
 import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
 
 jest.setTimeout(300000)
 
 describe('Armada Protocol Gov V2 getUserStakesCount', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   const scenarios: { testConfigKey: TestConfigKey }[] = [
     {

@@ -1,6 +1,6 @@
 import { ChainIds, User, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { SharedConfig } from './utils/testConfig'
 
 jest.setTimeout(300000)
@@ -9,7 +9,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Armada Protocol Gov V2 Penalty Calculation', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   const scenarios: { chainId: ChainId; userAddressValue: AddressValue }[] = [
     {

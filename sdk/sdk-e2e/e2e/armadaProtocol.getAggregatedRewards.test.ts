@@ -1,5 +1,5 @@
 import { type ChainId, ChainIds, User, type AddressValue } from '@summerfi/sdk-common'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 jest.setTimeout(300000)
 
@@ -17,7 +17,7 @@ describe('Armada Protocol - Get Aggregated Rewards', () => {
     },
   ]
 
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const { chainId, userAddress } = scenario

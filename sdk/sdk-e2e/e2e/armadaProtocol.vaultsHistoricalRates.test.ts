@@ -1,7 +1,7 @@
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { TestConfigs } from './utils/testConfig'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import assert from 'assert'
 
 jest.setTimeout(300000)
@@ -13,7 +13,7 @@ describe('Armada Protocol - Vaults Historical Rates', () => {
 
   console.log(`Running on ${chainInfo.name} for chainId ${chainId}`)
 
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   it('should fetch historical rates for given fleets', async () => {
     const result = await sdk.armada.users.getVaultsHistoricalRates({

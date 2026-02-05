@@ -7,7 +7,7 @@ import {
   type HexData,
 } from '@summerfi/sdk-common'
 import { RpcUrls } from './utils/testConfig'
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { createSendTransactionTool } from '@summerfi/testing-utils'
 import { formatSumr } from './utils/stringifiers'
 import assert from 'assert'
@@ -43,7 +43,7 @@ describe('Armada Protocol - Claim Rewards', () => {
     },
   ]
 
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
     const {

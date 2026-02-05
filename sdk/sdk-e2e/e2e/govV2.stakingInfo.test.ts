@@ -1,6 +1,6 @@
 import { User, Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import { SharedConfig, TestConfigs, type TestConfigKey } from './utils/testConfig'
 import { formatSumr } from './utils/stringifiers'
 import { SECONDS_PER_DAY } from './utils/constants'
@@ -8,7 +8,7 @@ import { SECONDS_PER_DAY } from './utils/constants'
 jest.setTimeout(300000)
 
 describe('Armada Protocol Gov V2 Staking Info', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
   const summerPriceUsd = 0.25 // Example SUMR price in USD for reward calculations
 
   const scenarios: { testConfigKey: TestConfigKey }[] = [

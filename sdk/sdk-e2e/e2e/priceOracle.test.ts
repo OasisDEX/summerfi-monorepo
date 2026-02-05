@@ -1,6 +1,6 @@
 import { ChainIds, FiatCurrency, getChainInfoByChainId, type ChainId } from '@summerfi/sdk-common'
 
-import { createTestSDK } from './utils/sdkInstance'
+import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
 jest.setTimeout(300000)
 
@@ -8,7 +8,7 @@ jest.setTimeout(300000)
  * @group e2e
  */
 describe('Oracle Tests', () => {
-  const sdk = createTestSDK()
+  const sdk = createTestSdkInstance()
 
   describe('getSpotPrice', () => {
     // Configure test scenarios here

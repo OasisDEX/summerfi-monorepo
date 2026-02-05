@@ -1,131 +1,147 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import {
   Address,
   ChainIds,
-  getChainInfoByChainId,
   TokenAmount,
   type ChainId,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
-
-import { SDKApiUrl, SharedConfig } from './utils/testConfig'
-import { Wallet } from 'ethers'
+import { RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
-import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { makeSDKWithSigner } from '@summerfi/sdk-client'
+import { Wallet } from 'ethers'
+import { createSendTransactionTool } from '@summerfi/testing-utils'
 
 jest.setTimeout(300000)
 
-const sendOrder: boolean = true // set to false to only get quote
-const cancelOrder: boolean = true // set to false to skip order cancellation
-const simulateOnly = false // set to true to only simulate transactions
-
-const chainId = ChainIds.Base
-const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
-if (!rpcUrl) {
-  throw new Error('Missing fork url')
-}
-const signerPrivateKey = SharedConfig.testUserPrivateKey
-const wallet = new Wallet(signerPrivateKey)
-const userAddress = Address.createFromEthereum({
-  value: SharedConfig.testUserAddressValue,
-})
-
+/**
+ * @group e2e
+ */
 describe('Intent swaps', () => {
-  it('should test intent swap flow', async () => {
-    await runTests({
-      chainId,
+  const signerPrivateKey = SharedConfig.testUserPrivateKey
+  const signerAddressValue = SharedConfig.testUserAddressValue
+
+  // Configure test scenarios here
+  const intentSwapScenarios: {
+    chainId: ChainId
+    rpcUrl: string
+    fromSymbol: string
+    amountValue: string
+    toSymbol: string
+    sendOrder: boolean
+    cancelOrder: boolean
+    limitPrice?: string
+  }[] = [
+    {
+      chainId: ChainIds.Base,
+      rpcUrl: RpcUrls.Base,
       fromSymbol: 'ETH',
       amountValue: '0.0005',
       toSymbol: 'USDC',
       limitPrice: '4720',
-    })
-    // await runTests({
-    //   chainId,
+      sendOrder: true,
+      cancelOrder: true,
+    },
+    // {
     //   fromSymbol: 'USDC',
     //   amountValue: '4',
     //   toSymbol: 'ETH',
     //   limitPrice: '0.0003',
-    // })
-  })
+    //   sendOrder: true,
+    //   cancelOrder: true,
+    // },
+  ]
 
-  async function runTests({
-    chainId,
-    fromSymbol,
-    amountValue,
-    toSymbol,
-    limitPrice,
-  }: {
-    chainId: ChainId
-    fromSymbol: string
-    amountValue: string
-    toSymbol: string
-    limitPrice?: string
-  }) {
-    const sdk = makeSDKWithSigner({
-      apiDomainUrl: SDKApiUrl,
-      signer: wallet,
-    })
-
-    const fromToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: fromSymbol })
-    // for ETH, we cannot use ETH directly we need to use WETH
-    // there is eth-flow but only smart wallets and no limit orders
-
-    const fromAmount = TokenAmount.createFrom({
-      amount: amountValue,
-      token: fromToken,
-    })
-    const toToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: toSymbol })
-
-    // get sell order quote
-    const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
-      sender: userAddress,
-      fromAmount: fromAmount,
-      toToken,
+  describe.each(intentSwapScenarios)('with scenario %#', (scenario) => {
+    const {
+      chainId,
+      rpcUrl,
+      fromSymbol,
+      amountValue,
+      toSymbol,
       limitPrice,
-    })
-    console.log('Sell Order Quote:', sellQuote.order)
+      sendOrder,
+      cancelOrder,
+    } = scenario
 
-    if (sendOrder === false) {
-      console.log('Skipping sending order')
-      return
-    }
-
-    // loop to check allowance, wrap if needed, and finally send order
-    let orderId
-    do {
-      const orderReturn = await sdk.intentSwaps.sendOrder({
-        sender: userAddress,
-        fromAmount: sellQuote.fromAmount,
-        chainId,
-        order: sellQuote.order,
+    it('should complete intent swap flow', async () => {
+      const sdk = makeSDKWithSigner({
+        apiDomainUrl: SDKApiUrl,
+        signer: new Wallet(signerPrivateKey),
       })
-      orderId = await handleOrderReturn(orderReturn)
-    } while (orderId == null)
+      const userSendTxTool = createSendTransactionTool({
+        chainId,
+        rpcUrl,
+        signerPrivateKey,
+      })
 
-    // check order status
-    const orderInfo = await sdk.intentSwaps.checkOrder({
-      chainId,
-      orderId: orderId,
+      const userAddress = Address.createFromEthereum({ value: signerAddressValue })
+
+      // for ETH, we cannot use ETH directly we need to use WETH
+      // there is eth-flow but only smart wallets and no limit orders
+      const fromToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: fromSymbol })
+
+      const fromAmount = TokenAmount.createFrom({
+        amount: amountValue,
+        token: fromToken,
+      })
+      const toToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: toSymbol })
+
+      // get sell order quote
+      const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
+        sender: userAddress,
+        fromAmount: fromAmount,
+        toToken,
+        limitPrice,
+      })
+      console.log('Sell Order Quote:', sellQuote.order)
+
+      if (sendOrder === false) {
+        console.log('Skipping sending order')
+        return
+      }
+
+      // loop to check allowance, wrap if needed, and finally send order
+      let orderId: string | undefined
+      do {
+        const orderReturn = await sdk.intentSwaps.sendOrder({
+          sender: userAddress,
+          fromAmount: sellQuote.fromAmount,
+          chainId,
+          order: sellQuote.order,
+        })
+        orderId = await handleOrderReturn({
+          orderReturn,
+          userSendTxTool,
+        })
+      } while (orderId == null)
+
+      // check order status
+      const orderInfo = await sdk.intentSwaps.checkOrder({
+        chainId,
+        orderId: orderId,
+      })
+      assert(orderInfo, 'Order info should not be null')
+      console.log('Check Order:', orderInfo)
+
+      if (cancelOrder === false) {
+        console.log('Skipping cancelling order')
+        return
+      }
+
+      // cancel order
+      const cancelResult = await sdk.intentSwaps.cancelOrder({
+        chainId,
+        orderId: orderId,
+      })
+      console.log('Cancel Order:', cancelResult)
     })
-    assert(orderInfo, 'Order info should not be null')
-    console.log('Check Order:', orderInfo)
-
-    if (cancelOrder === false) {
-      console.log('Skipping cancelling order')
-      return
-    }
-
-    // cancel order
-    const cancelResult = await sdk.intentSwaps.cancelOrder({
-      chainId,
-      orderId: orderId,
-    })
-    console.log('Cancel Order:', cancelResult)
-  }
+  })
 })
 
-const handleOrderReturn = async (
+async function handleOrderReturn({
+  orderReturn,
+  userSendTxTool,
+}: {
   orderReturn:
     | {
         status: 'wrap_to_native'
@@ -138,25 +154,18 @@ const handleOrderReturn = async (
     | {
         status: 'order_sent'
         orderId: string
-      },
-) => {
+      }
+  userSendTxTool: ReturnType<typeof createSendTransactionTool>
+}): Promise<string | undefined> {
   switch (orderReturn.status) {
     case 'wrap_to_native':
     case 'allowance_needed': {
-      console.log(`Handling ${orderReturn.status} case...`)
+      console.log(`Handling ${orderReturn.status} tx...`)
       // send tx
-      const { statuses } = await sendAndLogTransactions({
-        chainInfo: getChainInfoByChainId(chainId),
-        transactions: [orderReturn.transactionInfo],
-        rpcUrl: rpcUrl,
-        privateKey: signerPrivateKey,
-        simulateOnly,
-      })
+      const status = await userSendTxTool(orderReturn.transactionInfo)
       // Verify transaction success
-      statuses.forEach((status) => {
-        expect(status).toBe('success')
-      })
-      return
+      expect(status).toBe('success')
+      return undefined
     }
     case 'order_sent':
       console.log('Order sent:', orderReturn.orderId)
