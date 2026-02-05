@@ -1,0 +1,31 @@
+declare const styles: {
+  readonly "fieldLabel": string;
+  readonly "formGrid": string;
+  readonly "input": string;
+  readonly "messageAuthor": string;
+  readonly "messageContent": string;
+  readonly "messageRow": string;
+  readonly "messageTimestamp": string;
+  readonly "messagesList": string;
+  readonly "metaDate": string;
+  readonly "metaDescription": string;
+  readonly "metaUser": string;
+  readonly "sectionTitle": string;
+  readonly "statusSelect": string;
+  readonly "textarea": string;
+  readonly "ticketCard": string;
+  readonly "ticketDetails": string;
+  readonly "ticketDetailsBlock": string;
+  readonly "ticketDetailsWrapper": string;
+  readonly "ticketMeta": string;
+  readonly "ticketMetaRow": string;
+  readonly "ticketOriginalMessage": string;
+  readonly "ticketRepliesWrapper": string;
+  readonly "ticketReply": string;
+  readonly "ticketReplyStatusBar": string;
+  readonly "ticketReplySystemBar": string;
+  readonly "ticketsList": string;
+  readonly "wrapper": string;
+};
+export = styles;
+

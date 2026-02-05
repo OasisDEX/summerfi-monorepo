@@ -1,11 +1,9 @@
 'use client'
 
-import { PanelNavigation, useMobileCheck } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { panelNavigationStaticItems } from '@/constants/panel-navigation-static-items'
-import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
+import { NavigationIntermediary } from '@/components/layout/Navigation/NavigationIntermediary'
 import { getPanelVaultNavigationTabId } from '@/helpers/get-pathname-tab-id'
 import { getInstitutionVaultUrl } from '@/helpers/get-url'
 
@@ -68,9 +66,6 @@ export const VaultsPanelNavigationWrapper = ({
   selectedVault: SDKVaultishType
   institutionName: string
 }) => {
-  const { deviceType } = useDeviceType()
-  const { isMobile } = useMobileCheck(deviceType)
-
   const { push } = useRouter()
   const pathname = usePathname()
   const panelNavigationTabId = getPanelVaultNavigationTabId(pathname)
@@ -96,11 +91,5 @@ export const VaultsPanelNavigationWrapper = ({
     },
   ]
 
-  return (
-    <PanelNavigation
-      isMobile={isMobile}
-      navigation={navigation}
-      staticItems={panelNavigationStaticItems}
-    />
-  )
+  return <NavigationIntermediary navigation={navigation} />
 }

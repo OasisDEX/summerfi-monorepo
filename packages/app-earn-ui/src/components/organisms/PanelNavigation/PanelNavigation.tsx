@@ -29,6 +29,10 @@ const ButtonOrLink: FC<ButtonOrLinkProps> = ({ children, link, onClick, disabled
         href={link.href}
         target={link.target}
         onClick={disabled ? (e) => e.preventDefault() : undefined}
+        style={{
+          pointerEvents: disabled ? 'none' : undefined,
+          opacity: disabled ? 0.4 : undefined,
+        }}
       >
         {children}
       </Link>

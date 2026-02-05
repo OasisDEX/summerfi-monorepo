@@ -4,6 +4,11 @@ import { redirect } from 'next/navigation'
 
 import { rootAdminActionDeleteCognitoUser } from '@/app/server-handlers/admin/user'
 import { rootAdminValidateAdminSession } from '@/app/server-handlers/admin/validate-admin-session'
+import { readSession } from '@/app/server-handlers/auth/session'
+import {
+  submitFeedbackResponse,
+  updateFeedbackStatus,
+} from '@/app/server-handlers/institution/institution-feedback'
 import { COGNITO_USER_POOL_REGION } from '@/features/auth/constants'
 
 export async function rootAdminActionCreateInstitution(formData: FormData) {
@@ -243,4 +248,198 @@ export async function rootAdminActionGetInstitutionData(institutionDbId: number)
   db.destroy()
 
   return institution
+}
+
+export async function rootAdminGetFeedbackList() {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  try {
+    const feedbackList = await db
+      .selectFrom('feedbackMessages')
+      .where('parentId', 'is', null)
+      .selectAll()
+      .orderBy('createdAt', 'desc')
+      .execute()
+
+    return feedbackList
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error fetching feedback list:', err)
+
+    throw new Error('Failed to fetch feedback list')
+  } finally {
+    db.destroy()
+  }
+}
+
+export async function rootAdminGetFeedbackDetails(threadId: string, institutionId: string) {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  try {
+    // Get the root message first to verify it exists and belongs to institution
+    const rootMessage = await db
+      .selectFrom('feedbackMessages')
+      .where('id', '=', Number(threadId))
+      .where('institutionId', '=', Number(institutionId))
+      .where('parentId', 'is', null)
+      .selectAll()
+      .executeTakeFirst()
+
+    if (!rootMessage) {
+      return null
+    }
+
+    // Get all messages in the thread
+    const messages = await db
+      .selectFrom('feedbackMessages')
+      .where('threadId', '=', Number(threadId))
+      .where('id', '!=', Number(threadId))
+      .selectAll()
+      .orderBy('createdAt', 'asc')
+      .execute()
+
+    return {
+      thread: rootMessage,
+      messages,
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log('Error fetching feedback details:', err)
+
+    throw new Error('Failed to fetch feedback details')
+  } finally {
+    db.destroy()
+  }
+}
+
+export async function rootAdminFeedbackSendResponse(formData: FormData) {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const institutionId = formData.get('institutionId')
+  const threadId = formData.get('threadId')
+  const content = formData.get('content')
+
+  if (
+    typeof institutionId !== 'string' ||
+    isNaN(Number(institutionId)) ||
+    typeof threadId !== 'string' ||
+    isNaN(Number(threadId)) ||
+    typeof content !== 'string' ||
+    !content.trim()
+  ) {
+    throw new Error('institutionId, threadId and content are required')
+  }
+
+  const session = await readSession()
+
+  if (!session || !session.user?.isGlobalAdmin) {
+    throw new Error('Unauthorized')
+  }
+
+  const sendFeedbackResponse = await submitFeedbackResponse({
+    feedbackResponse: {
+      feedbackResponseId: threadId,
+      content: content.trim(),
+    },
+    institutionId: Number(institutionId),
+    session,
+  })
+
+  if (!sendFeedbackResponse) {
+    throw new Error('Failed to send feedback response')
+  }
+
+  redirect(`/admin/feedback/${institutionId}/${threadId}`)
+}
+
+export async function rootAdminFeedbackChangeStatus(formData: FormData) {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const institutionId = formData.get('institutionId')
+  const threadId = formData.get('threadId')
+  const newStatus = formData.get('status')
+
+  if (
+    typeof institutionId !== 'string' ||
+    isNaN(Number(institutionId)) ||
+    typeof threadId !== 'string' ||
+    isNaN(Number(threadId)) ||
+    typeof newStatus !== 'string' ||
+    !['closed', 'in-progress', 'new', 'resolved'].includes(newStatus)
+  ) {
+    throw new Error('institutionId, threadId and valid status are required')
+  }
+
+  const session = await readSession()
+
+  if (!session || !session.user?.isGlobalAdmin) {
+    throw new Error('Unauthorized')
+  }
+
+  const update = await updateFeedbackStatus({
+    institutionId,
+    newStatus: newStatus as 'closed' | 'in-progress' | 'new' | 'resolved',
+    session,
+    threadId,
+  })
+
+  if (!update) {
+    throw new Error('Failed to update feedback status')
+  }
+
+  redirect(`/admin/feedback/${institutionId}/${threadId}`)
+}
+
+export async function rootAdminFeedbackDelete(formData: FormData) {
+  'use server'
+  await rootAdminValidateAdminSession()
+
+  const institutionId = formData.get('institutionId')
+  const threadId = formData.get('threadId')
+
+  if (
+    typeof institutionId !== 'string' ||
+    isNaN(Number(institutionId)) ||
+    typeof threadId !== 'string' ||
+    isNaN(Number(threadId))
+  ) {
+    throw new Error('institutionId and threadId are required')
+  }
+
+  const session = await readSession()
+
+  if (!session || !session.user?.isGlobalAdmin) {
+    throw new Error('Unauthorized')
+  }
+
+  const { db } = await getSummerProtocolInstitutionDB({
+    connectionString: process.env.EARN_PROTOCOL_INSTITUTION_DB_CONNECTION_STRING as string,
+  })
+
+  try {
+    // Delete all messages
+    await db.deleteFrom('feedbackMessages').where('parentId', '=', Number(threadId)).execute()
+    await db.deleteFrom('feedbackMessages').where('threadId', '=', Number(threadId)).execute()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('Error deleting feedback thread:', error)
+
+    throw new Error('Failed to delete feedback thread')
+  } finally {
+    db.destroy()
+  }
+
+  redirect(`/admin/feedback`)
 }

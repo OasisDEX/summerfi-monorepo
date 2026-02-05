@@ -1,0 +1,205 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.blocksContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.threadContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.threadCard {
+  border-radius: 12px;
+  padding: 16px;
+  color: #e5e7eb;
+}
+
+.threadHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.threadSubHeader {
+  display: flex;
+  gap: 10px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1f2937;
+  color: #e5e7eb;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.status_new {
+  border-color: #2563eb;
+  color: #bfdbfe;
+}
+
+.status_in-progress {
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+.status_resolved {
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+.status_closed {
+  border-color: #6b7280;
+  color: #d1d5db;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.metaLabel {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.metaValue {
+  font-weight: 600;
+  word-break: break-word;
+  color: #e5e7eb;
+}
+
+.messageContent {
+  margin-top: 8px;
+}
+
+.contentBlock {
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  font-family: inherit;
+  color: #e5e7eb;
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.messageCard {
+  border-radius: 12px;
+  padding: 12px;
+  color: #e5e7eb;
+}
+
+.messageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.messageAuthor {
+  font-weight: 600;
+}
+
+.messageMetaRow {
+  display: flex;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.messageTimestamp {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.replyForm {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 12px;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.replyLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #e5e7eb;
+}
+
+.replyTextarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+  resize: vertical;
+}
+
+.replyActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitButton {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.statusActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.statusButton {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.statusButton:hover {
+  border-color: #4b5563;
+}
