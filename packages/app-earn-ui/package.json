@@ -41,7 +41,7 @@
     "tsc-watch": "^6.2.0",
     "typescript": "^5.7.3",
     "unplugin-isolated-decl": "^0.13.5",
-    "vite": "7.0.5",
+    "vite": "7.0.8",
     "vite-plugin-lib-inject-css": "^2.2.1"
   },
   "peerDependencies": {
