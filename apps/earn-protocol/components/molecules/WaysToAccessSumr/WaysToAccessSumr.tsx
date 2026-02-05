@@ -3,6 +3,7 @@ import { formatDecimalAsPercent, formatPercent } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
+import { BuySumrModal } from '@/components/molecules/BuySumrModal/BuySumrModal'
 import { SectionCard } from '@/components/molecules/CardVariants/SectionCard'
 
 import waysToAccessSumrStyles from './WaysToAccessSumr.module.css'
@@ -111,14 +112,7 @@ export const WaysToAccessSumr = ({
         <SectionCard className={waysToAccessSumrStyles.box}>
           <div className={waysToAccessSumrStyles.boxHeader}>
             <Icon iconName="sumr" size={35} />
-            <Tooltip
-              tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
-              tooltipWrapperStyles={{ minWidth: '140px' }}
-            >
-              <Text variant="h4" style={{ color: 'var(--color-text-primary-disabled)' }}>
-                Buy SUMR
-              </Text>
-            </Tooltip>
+            <Text variant="h4">Buy SUMR</Text>
           </div>
           <div className={waysToAccessSumrStyles.boxData}>
             <DataBlock
@@ -146,9 +140,7 @@ export const WaysToAccessSumr = ({
               wrapperStyles={{ width: '100%' }}
             />
           </div>
-          <Button variant="primarySmallColorful" disabled>
-            Coming January 21
-          </Button>
+          <BuySumrModal buttonVariant="primarySmallColorful" />
         </SectionCard>
       </div>
     </div>

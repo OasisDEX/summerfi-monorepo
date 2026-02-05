@@ -568,7 +568,7 @@ export const FeedbackModal = () => {
             Your institution feedback list
           </Text>
           <div className={feedbackModalStyles.ticketsList}>
-            {isLoadingTickets ? (
+            {isLoadingTickets && !tickets.length ? (
               <>
                 <SkeletonLine width="100%" height={35} style={{ margin: '5px auto' }} />
                 <SkeletonLine width="100%" height={35} style={{ margin: '5px auto' }} />

@@ -13,7 +13,6 @@ import {
   type TableSortedColumn,
   Text,
   Tooltip,
-  WithArrow,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, SortDirection } from '@summerfi/app-utils'
 import { BigNumber } from 'bignumber.js'
@@ -23,6 +22,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import Link from 'next/link'
 
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
+import { BuySumrModal } from '@/components/molecules/BuySumrModal/BuySumrModal'
 import {
   allLockedSumrPositionsTableColumns,
   lockPeriodAllocationTableColumns,
@@ -182,16 +182,7 @@ const YourLockedSumrPositionsCards = ({
           subValue: isLoading ? (
             <SkeletonLine height="14px" width="80px" style={{ margin: '3px 0' }} />
           ) : (
-            <Tooltip
-              tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
-              tooltipWrapperStyles={{ minWidth: '140px' }}
-            >
-              <WithArrow style={{ cursor: 'not-allowed' }}>
-                <Text variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
-                  Buy SUMR
-                </Text>
-              </WithArrow>
-            </Tooltip>
+            <BuySumrModal />
           ),
         }}
         cardVariant="cardPrimary"

@@ -1,6 +1,8 @@
 import { type FC } from 'react'
 import { Button, DataBlock, DataModule, Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
 
+import { BuySumrModal } from '@/components/molecules/BuySumrModal/BuySumrModal'
+
 import sumrPriceBarStyles from './SumrPriceBar.module.css'
 
 interface SumrPriceBarProps {
@@ -48,16 +50,7 @@ export const SumrPriceBar: FC<SumrPriceBarProps> = () => {
         title: (
           <div className={sumrPriceBarStyles.sumrPriceTitle}>
             <Text variant="p2semi">$SUMR Price</Text>
-            <Button variant="unstyled" style={{ cursor: 'not-allowed' }}>
-              <Tooltip
-                tooltip={<>Starts trading Jan.&nbsp;21.&nbsp;2026</>}
-                tooltipWrapperStyles={{ minWidth: '140px' }}
-              >
-                <Text variant="p3semi" style={{ color: 'var(--color-text-primary-disabled)' }}>
-                  Buy SUMR
-                </Text>
-              </Tooltip>
-            </Button>
+            <BuySumrModal />
           </div>
         ),
         titleWithIconClassName: sumrPriceBarStyles.titleWithIconFullWidth,

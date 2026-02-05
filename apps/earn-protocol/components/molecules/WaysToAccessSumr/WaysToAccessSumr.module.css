@@ -37,16 +37,11 @@
         align-items: center;
         margin-right: 10px;
 
-        >div {
+        > div {
           position: static !important;
           margin-right: -10px;
         }
       }
-
-      button {
-        width: 100%;
-      }
     }
-
   }
 }
