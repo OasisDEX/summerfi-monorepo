@@ -69,9 +69,9 @@ export const getByFleetAddressFallback = (
       }
     case ChainIds.Sonic:
       return {
-        // usdc low risk
+        // usdc.e low risk
         '0x507a2d9e87dbd3076e65992049c41270b47964f8': [
-          { token, dailyEmission: BigNumber('4,198').shiftedBy(token.decimals).toFixed() },
+          { token, dailyEmission: BigNumber('4198').shiftedBy(token.decimals).toFixed() },
         ],
       }
 
@@ -79,11 +79,11 @@ export const getByFleetAddressFallback = (
       return {
         // usdc
         '0x252e5aa42c1804b85b2ce6712cd418a0561232ba': [
-          { token, dailyEmission: BigNumber('8,826').shiftedBy(token.decimals).toFixed() },
+          { token, dailyEmission: BigNumber('8826').shiftedBy(token.decimals).toFixed() },
         ],
         // usdt
         '0x2cc190fb654141dfbeac4c0f718f4d511674d346': [
-          { token, dailyEmission: BigNumber('8,826').shiftedBy(token.decimals).toFixed() },
+          { token, dailyEmission: BigNumber('8826').shiftedBy(token.decimals).toFixed() },
         ],
       }
 
