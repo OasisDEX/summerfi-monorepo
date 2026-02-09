@@ -32,14 +32,17 @@ export const mapMigrationResponse = (
     }
   }[],
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!response || response.length === 0) {
     return []
   }
 
   const enrichedPositions = response.flatMap(({ positionsData, apyData }) =>
     positionsData.positions.map((position) => {
-      const apy7d = apyData.apyByPositionId[position.id].apy7d?.value
-      const apy = apyData.apyByPositionId[position.id].apy?.value
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const apy7d = apyData.apyByPositionId[position.id]?.apy7d?.value
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const apy = apyData.apyByPositionId[position.id]?.apy?.value
 
       return {
         ...position,
