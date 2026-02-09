@@ -3,6 +3,7 @@ import {
   getDisplayToken,
   getPositionValues,
   RechartResponsiveWrapper,
+  useHoldAlt,
   useMobileCheck,
   useSumrRewardsToDate,
 } from '@summerfi/app-earn-ui'
@@ -52,6 +53,7 @@ type HistoricalChartProps = {
 
 type LegendData = {
   netValue: string
+  netValueRaw?: number | string
   depositedValue: string
   earnings: string
   sumrEarned: string
@@ -78,6 +80,7 @@ const TooltipDataIntermediary = ({
       if (activeData?.[0]) {
         setHighlightedData({
           netValue: `${formatCryptoBalance(activeData[0].netValue)} ${positionToken}`,
+          netValueRaw: Number(activeData[0].netValue),
           depositedValue: `${formatCryptoBalance(activeData[0].depositedValue)} ${positionToken}`,
           earnings: legendBaseData.earnings,
           sumrEarned: legendBaseData.sumrEarned,
@@ -92,12 +95,27 @@ const TooltipDataIntermediary = ({
   return null
 }
 
+const NetValueTooltip = ({
+  formattedDate,
+  netValue,
+}: {
+  formattedDate: string
+  netValue: string | number | undefined
+}) => {
+  return (
+    <div>
+      Net value on {formattedDate}: {netValue}
+    </div>
+  )
+}
+
 export const HistoricalChart = ({
   data,
   tokenSymbol,
   portfolioPosition,
   timeframe,
 }: HistoricalChartProps) => {
+  const isAltPressed = useHoldAlt()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
 
@@ -113,11 +131,29 @@ export const HistoricalChart = ({
     sumrEarned: `${formatCryptoBalance(sumrRewards)} SUMR`,
   }
 
-  const [highlightedData, setHighlightedData] = useState<{
-    [key: string]: string | number
-  }>(legendBaseData)
+  const [highlightedData, setHighlightedData] = useState<LegendData>(legendBaseData)
 
   const chartHidden = !data || data.length < POINTS_REQUIRED_FOR_CHART[timeframe]
+
+  const handleLabelFormatter = (label: ReactNode) => {
+    if (typeof label !== 'string') {
+      return label
+    }
+    const parsedTimestamp = dayjs(label)
+    const formattedDate = parsedTimestamp.format(
+      ['7d', '30d'].includes(timeframe)
+        ? CHART_TIMESTAMP_FORMAT_DETAILED
+        : CHART_TIMESTAMP_FORMAT_SHORT,
+    )
+
+    if (isAltPressed) {
+      return (
+        <NetValueTooltip formattedDate={formattedDate} netValue={highlightedData.netValueRaw} />
+      )
+    }
+
+    return formattedDate
+  }
 
   return (
     <div className={historicalChartStyles.historicalChartWrapper}>
@@ -188,19 +224,7 @@ export const HistoricalChart = ({
                 color: 'white',
                 fontSize: '12px',
               }}
-              labelFormatter={(label: ReactNode) => {
-                if (typeof label !== 'string') {
-                  return label
-                }
-                const parsedTimestamp = dayjs(label)
-                const formattedDate = parsedTimestamp.format(
-                  ['7d', '30d'].includes(timeframe)
-                    ? CHART_TIMESTAMP_FORMAT_DETAILED
-                    : CHART_TIMESTAMP_FORMAT_SHORT,
-                )
-
-                return formattedDate
-              }}
+              labelFormatter={handleLabelFormatter}
               contentStyle={{
                 borderRadius: '14px',
                 backgroundColor: 'var(--color-surface-subtle)',
