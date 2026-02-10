@@ -8,6 +8,8 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { SiloRewardFetcher } from './reward-fetchers/SiloRewardFetcher'
 import { CompoundRewardFetcher } from './reward-fetchers/CompoundRewardFetcher'
 import { FluidRewardFetcher } from './reward-fetchers/FluidRewardFetcher'
+import { MorphoRewardFetcher } from './reward-fetchers/MorphoRewardFetcher'
+import { MorphoV2RewardFetcher } from './reward-fetchers/MorphoV2RewardFetcher'
 
 interface AaveMeritResponse {
   previousAPR: number | null
@@ -59,34 +61,6 @@ interface EulerReward {
     decimals: number
   }
 }
-interface MorphoVaultReward {
-  address: string // Only needed fields for vault identification
-  state: {
-    rewards: {
-      supplyApr: number | null
-      asset: {
-        address: string
-        symbol: string
-        decimals: number
-      }
-    }[]
-    allocation: {
-      market: {
-        state: {
-          rewards: {
-            supplyApr: number | null
-            asset: {
-              address: string
-              symbol: string
-              decimals: number
-            }
-          }[]
-        }
-      }
-      supplyAssetsUsd: number | null
-    }[]
-  }
-}
 interface RetryConfig {
   maxRetries?: number
   initialDelay?: number
@@ -94,7 +68,6 @@ interface RetryConfig {
 }
 
 export class RewardsService {
-  private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
   private readonly EULER_API_URL = 'https://app.euler.finance/api/v1/rewards?chainId='
   private readonly GEARBOX_API_URL =
     'https://api.merkl.xyz/v4/opportunities?mainProtocolId=gearbox&status=LIVE&'
@@ -114,6 +87,8 @@ export class RewardsService {
   private readonly siloRewardFetcher: SiloRewardFetcher
   private readonly compoundRewardFetcher: CompoundRewardFetcher
   private readonly fluidRewardFetcher: FluidRewardFetcher
+  private readonly morphoRewardFetcher: MorphoRewardFetcher
+  private readonly morphoV2RewardFetcher: MorphoV2RewardFetcher
 
   constructor(logger: Logger, ratesSubgraphClient: RatesSubgraphClient) {
     this.logger = logger
@@ -121,6 +96,8 @@ export class RewardsService {
     this.siloRewardFetcher = new SiloRewardFetcher(logger)
     this.compoundRewardFetcher = new CompoundRewardFetcher(logger)
     this.fluidRewardFetcher = new FluidRewardFetcher(logger, { blacklistSymbols: [] })
+    this.morphoRewardFetcher = new MorphoRewardFetcher(logger)
+    this.morphoV2RewardFetcher = new MorphoV2RewardFetcher(logger)
   }
 
   async getRewardRates(
@@ -144,18 +121,18 @@ export class RewardsService {
 
     const results: Record<string, RewardRate[]> = {}
 
-    // Process Morpho products in batch
+    // Process Morpho products
     if (protocolGroups[Protocol.Morpho]?.length) {
-      const morphoResults = await this.getMorphoRewardsBatch(
+      const morphoResults = await this.morphoRewardFetcher.getRewardRates(
         protocolGroups[Protocol.Morpho],
         chainId,
       )
       Object.assign(results, morphoResults)
     }
 
-    // Process Morpho V2 products in batch
+    // Process Morpho V2 products
     if (protocolGroups[Protocol.MorphoV2]?.length) {
-      const morphoV2Results = await this.getMorphoRewardsBatch(
+      const morphoV2Results = await this.morphoV2RewardFetcher.getRewardRates(
         protocolGroups[Protocol.MorphoV2],
         chainId,
       )
@@ -352,154 +329,6 @@ export class RewardsService {
     return rewards
   }
 
-  private async getMorphoRewardsBatch(
-    products: Product[],
-    chainId: ChainId,
-  ): Promise<Record<string, RewardRate[]>> {
-    this.logger.debug(
-      `[RewardsService] Getting Morpho rewards for ${products.length} products on chain ${chainId}`,
-    )
-
-    const vaults = products.map((product) => product.pool)
-    const uniqueVaults = [...new Set(vaults)]
-    const query = `
-      query GetVaultRewards($vaults: [String!]!, $chainId: Int!) {
-        vaults(where: { address_in: $vaults, chainId_in: [$chainId] }) {
-          items {
-            address
-            state {
-              rewards {
-                supplyApr
-                asset {
-                  address
-                  symbol
-                  decimals
-                }
-              }
-              allocation {
-                market {
-                  state {
-                    rewards {
-                      supplyApr
-                      asset {
-                        address
-                        symbol
-                        decimals
-                      }
-                    }
-                  }
-                }
-                supplyAssetsUsd
-              }
-            }
-          }
-        }
-      }
-    `
-
-    try {
-      const response = await this.fetchWithRetry(this.MORPHO_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          variables: { vaults: uniqueVaults, chainId },
-        }),
-      })
-
-      const { data } = await response.json()
-      const vaultItems: MorphoVaultReward[] = data?.vaults?.items || []
-
-      // Create a map for quick lookup
-      const vaultMap = new Map(vaultItems.map((v) => [v.address.toLowerCase(), v]))
-
-      return products.reduce(
-        (acc, product) => {
-          const vaultData = vaultMap.get(product.pool.toLowerCase())
-
-          acc[product.id] = vaultData ? this.processMorphoVault(vaultData) : []
-          return acc
-        },
-        {} as Record<string, RewardRate[]>,
-      )
-    } catch (error) {
-      console.error('[RewardsService] Error fetching Morpho rewards:', error)
-      return Object.fromEntries(products.map((product) => [product.id, []]))
-    }
-  }
-
-  private processMorphoVault(vaultData: MorphoVaultReward): RewardRate[] {
-    // Calculate total allocated assets in USD
-    const totalAssetsAllocated = vaultData.state.allocation.reduce(
-      (sum, alloc) => sum + (alloc.supplyAssetsUsd ?? 0),
-      0,
-    )
-
-    // Create reward rates array from vault-level rewards
-    const rewards = vaultData.state.rewards.map((reward, index) => ({
-      rewardToken: reward.asset.address,
-      rate: ((reward.supplyApr ?? 0) * 100).toString(), // Convert to percentage
-      index,
-      token: {
-        address: reward.asset.address,
-        symbol: reward.asset.symbol,
-        decimals: reward.asset.decimals,
-        precision: (10n ** BigInt(reward.asset.decimals)).toString(),
-      },
-    }))
-
-    if (totalAssetsAllocated === 0) {
-      return rewards
-    }
-
-    // Get all unique tokens from market rewards with their full asset info
-    const uniqueTokens = new Map<string, { address: string; symbol: string; decimals: number }>()
-    vaultData.state.allocation.forEach((allocation) => {
-      allocation.market.state.rewards.forEach((reward) => {
-        uniqueTokens.set(reward.asset.address, {
-          address: reward.asset.address,
-          symbol: reward.asset.symbol,
-          decimals: reward.asset.decimals,
-        })
-      })
-    })
-
-    // Calculate weighted rewards for each unique token
-    const additionalRewards: RewardRate[] = []
-    let nextIndex = rewards.length
-
-    uniqueTokens.forEach((tokenInfo, tokenAddress) => {
-      const weightedTokenRewardsApy = vaultData.state.allocation.reduce((acc, allocation) => {
-        const marketRewards = allocation.market.state.rewards
-          .filter((reward) => reward.asset.address === tokenAddress)
-          .map((reward) => {
-            return (
-              (reward.supplyApr ?? 0) * ((allocation.supplyAssetsUsd ?? 0) / totalAssetsAllocated)
-            )
-          })
-
-        return acc.concat(marketRewards)
-      }, [] as number[])
-
-      const totalWeightedApy = weightedTokenRewardsApy.reduce((sum, reward) => sum + reward, 0)
-
-      if (totalWeightedApy > 0) {
-        additionalRewards.push({
-          rewardToken: tokenInfo.address,
-          rate: (totalWeightedApy > 10 ? 0 : totalWeightedApy * 100).toString(), // Convert to percentage, cap if too high
-          index: nextIndex++,
-          token: {
-            address: tokenInfo.address,
-            symbol: tokenInfo.symbol,
-            decimals: tokenInfo.decimals,
-            precision: (10n ** BigInt(tokenInfo.decimals)).toString(),
-          },
-        })
-      }
-    })
-
-    return [...rewards, ...additionalRewards]
-  }
   private async getGearboxRewardsBatch(
     products: Product[],
     chainId: ChainId,
