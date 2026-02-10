@@ -25,7 +25,7 @@ const linksList = [
     links: [
       {
         label: 'Team',
-        url: INTERNAL_LINKS.tempAbout,
+        url: INTERNAL_LINKS.about,
       },
       {
         label: 'Contact',
@@ -33,19 +33,15 @@ const linksList = [
       },
       {
         label: 'Privacy',
-        url: INTERNAL_LINKS.tempPrivacy,
+        url: INTERNAL_LINKS.privacy,
       },
       {
         label: 'Cookie Policy',
-        url: INTERNAL_LINKS.tempCookie,
+        url: INTERNAL_LINKS.cookie,
       },
       {
         label: 'Terms',
-        url: INTERNAL_LINKS.tempTerms,
-      },
-      {
-        label: 'Security',
-        url: INTERNAL_LINKS.tempSecurity,
+        url: INTERNAL_LINKS.terms,
       },
     ],
   },
@@ -72,10 +68,6 @@ const linksList = [
         label: 'Forum',
         url: EXTERNAL_LINKS.EARN.FORUM,
       },
-      {
-        label: 'Brand assets',
-        url: INTERNAL_LINKS.tempBrand,
-      },
     ],
   },
   {
@@ -87,7 +79,7 @@ const linksList = [
       },
       {
         label: '$SUMR',
-        url: INTERNAL_LINKS.tempSumr,
+        url: INTERNAL_LINKS.sumr,
       },
     ],
   },

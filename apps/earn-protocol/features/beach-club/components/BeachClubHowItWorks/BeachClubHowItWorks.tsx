@@ -97,7 +97,7 @@ export const BeachClubHowItWorks: FC<BeachClubHowItWorksProps> = ({
           <Text as="p" variant="p3" className={classNames.generateCodeDescription}>
             By generating the code, you accept the{' '}
             <Link
-              href={INTERNAL_LINKS.tempTerms}
+              href={INTERNAL_LINKS.terms}
               target="_blank"
               style={{ display: 'inline', color: 'var(--beach-club-link)' }}
               onClick={() => {

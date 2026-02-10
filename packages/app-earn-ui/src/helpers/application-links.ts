@@ -9,26 +9,7 @@ export const INTERNAL_LINKS = {
   privacy: '/privacy',
   cookie: '/cookie',
   terms: '/terms',
-  security: '/earn/security',
-  ajnaRewards: '/earn/ajna/rewards',
-  referrals: '/earn/referrals',
-  brand: '/earn/brand',
-  borrow: '/earn/borrow',
-  multiply: '/earn/multiply',
-  earn: '/earn/earn',
-  // temporary links
-  tempAbout: 'https://pro.summer.fi/about',
-  tempPrivacy: 'https://summer.fi/privacy',
-  tempCookie: 'https://summer.fi/cookie',
-  tempTerms: 'https://summer.fi/terms',
-  tempSecurity: 'https://pro.summer.fi/security',
-  tempAjnaRewards: 'https://pro.summer.fi/ajna/rewards',
-  tempReferrals: 'https://pro.summer.fi/referrals',
-  tempBrand: 'https://summerfi.notion.site/summer-brand-guidelines',
-  tempBorrow: 'https://pro.summer.fi/earn/borrow',
-  tempMultiply: 'https://pro.summer.fi/earn/multiply',
-  tempEarn: 'https://pro.summer.fi/earn/earn',
-  tempSumr: 'https://summer.fi/earn/sumr',
+  sumr: '/earn/sumr',
 }
 
 export const EXTERNAL_LINKS = {

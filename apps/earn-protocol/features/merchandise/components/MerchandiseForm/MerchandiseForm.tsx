@@ -296,7 +296,7 @@ export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress 
         >
           Read the full{' '}
           <Link
-            href={`${INTERNAL_LINKS.tempTerms}`}
+            href={INTERNAL_LINKS.terms}
             className={classNames.termsOfConditions}
             target="_blank"
             rel="noreferrer"
