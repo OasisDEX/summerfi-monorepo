@@ -28,6 +28,7 @@ const logger = new Logger({ serviceName: 'update-summer-earn-rewards-apr', logLe
 
 export enum Protocol {
   Morpho = 'Morpho',
+  MorphoV2 = 'Morpho_V2',
   Euler = 'Euler',
   Aave = 'AaveV3',
   Gearbox = 'Gearbox',
@@ -45,6 +46,7 @@ const supportedProtocols = [
   Protocol.Silo,
   Protocol.CompoundV3,
   Protocol.Fluid,
+  Protocol.MorphoV2,
 ]
 
 export interface NetworkStatus {

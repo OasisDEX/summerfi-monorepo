@@ -153,6 +153,15 @@ export class RewardsService {
       Object.assign(results, morphoResults)
     }
 
+    // Process Morpho V2 products in batch
+    if (protocolGroups[Protocol.MorphoV2]?.length) {
+      const morphoV2Results = await this.getMorphoRewardsBatch(
+        protocolGroups[Protocol.MorphoV2],
+        chainId,
+      )
+      Object.assign(results, morphoV2Results)
+    }
+
     // Process Euler products in batch
     if (protocolGroups[Protocol.Euler]?.length) {
       const eulerResults = await this.getEulerRewardsBatch(protocolGroups[Protocol.Euler], chainId)
