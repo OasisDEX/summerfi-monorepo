@@ -334,10 +334,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
           title: 'Rewards claimable now',
           value:
             claimableRewards.lvUsdcClaimableNow > 0 ? lvUsdcValue : usdcValue ? usdcValue : '-',
-          subValue:
-            claimableRewards.usdcClaimableNow && claimableRewards.lvUsdcClaimableNow <= 0
-              ? usdcValue
-              : undefined,
+          subValue: claimableRewards.usdcClaimableNow > 0 ? usdcValue : '-',
           titleSize: 'medium',
           valueSize: 'large',
         }}
