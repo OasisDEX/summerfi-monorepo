@@ -1,7 +1,0 @@
-.countDownItem {
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--space-xxs);
-  align-items: center;
-  justify-content: center;
-}
