@@ -58,8 +58,11 @@ interface SumrInOldStakingModuleProps {
   rewardsData: ClaimDelegateExternalData
 }
 
-interface ClaimMerkleUsdcRewardsProps {
-  merkleUsdcClaimableNow: number
+interface ClaimMerkleRewardsProps {
+  claimableRewards: {
+    usdcClaimableNow: number
+    lvUsdcClaimableNow: number
+  }
   userWalletAddress: string
   viewWalletAddress: string
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
@@ -82,7 +85,10 @@ interface PortfolioRewardsCardsV2Props {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   sumrStakedV2: number
   sumrPriceUsd: number
-  merkleUsdcClaimableNow?: number
+  claimableRewards: {
+    usdcClaimableNow: number
+    lvUsdcClaimableNow: number
+  }
   viewWalletAddress: string
 }
 
@@ -205,14 +211,25 @@ const SumrInOldStakingModule: FC<SumrInOldStakingModuleProps> = ({ rewardsData }
   )
 }
 
-const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
-  merkleUsdcClaimableNow,
+const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
+  claimableRewards,
   userWalletAddress,
   viewWalletAddress,
   merklIsAuthorizedPerChain,
 }) => {
   const [isOptInOpen, setIsOptInOpen] = useState(false)
-  const value = `${formatCryptoBalance(merkleUsdcClaimableNow)} USDC`
+
+  const hasRewardsToClaim =
+    claimableRewards.usdcClaimableNow > 0 || claimableRewards.lvUsdcClaimableNow > 0
+  const usdcValue = `${formatCryptoBalance(claimableRewards.usdcClaimableNow)} USDC`
+  const lvUsdcValue = `${formatCryptoBalance(claimableRewards.lvUsdcClaimableNow)} LVUSDC`
+  const rewardsValue =
+    [
+      claimableRewards.usdcClaimableNow > 0 ? usdcValue : undefined,
+      claimableRewards.lvUsdcClaimableNow > 0 ? lvUsdcValue : undefined,
+    ]
+      .filter(Boolean)
+      .join(' + ') || '-'
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress.toLowerCase() === viewWalletAddress.toLowerCase()
@@ -249,6 +266,7 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
       }, delayPerNetwork[clientChainId])
     },
     onError: () => {
+      dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.FAILED })
       toast.error('Failed to claim fees', ERROR_TOAST_CONFIG)
     },
     network: chainIdToSDKNetwork(clientChainId),
@@ -320,8 +338,8 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
     <>
       <DataModule
         dataBlock={{
-          title: 'USDC to Claim from Staking',
-          value,
+          title: 'Rewards claimable now',
+          value: rewardsValue,
           titleSize: 'medium',
           valueSize: 'large',
         }}
@@ -330,7 +348,7 @@ const ClaimMerkleUsdcRewards: FC<ClaimMerkleUsdcRewardsProps> = ({
             variant="unstyled"
             onClick={handleClaimRewards}
             disabled={
-              merkleUsdcClaimableNow === 0 ||
+              !hasRewardsToClaim ||
               isSettingChain ||
               state.feesClaimed ||
               !isOwner ||
@@ -476,7 +494,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   state,
   sumrStakedV2,
   sumrPriceUsd,
-  merkleUsdcClaimableNow,
+  claimableRewards,
   viewWalletAddress,
 }) => {
   const hasSumrInOldModule = Number(rewardsData.sumrStakeDelegate.stakedAmount) > 0.01
@@ -503,8 +521,8 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
         </div>
       ) : userWalletAddress ? (
         <div className={classNames.cardWrapper}>
-          <ClaimMerkleUsdcRewards
-            merkleUsdcClaimableNow={merkleUsdcClaimableNow ?? 0}
+          <ClaimMerkleRewards
+            claimableRewards={claimableRewards}
             userWalletAddress={userWalletAddress}
             viewWalletAddress={viewWalletAddress}
             merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}

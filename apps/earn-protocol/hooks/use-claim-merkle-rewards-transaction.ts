@@ -74,7 +74,11 @@ export const useClaimMerkleRewardsTransaction = ({
     const tx = await getReferralFeesMerklClaimTx({
       user,
       chainInfo,
-      rewardsTokensAddresses: [usdcToken.address.value],
+      rewardsTokensAddresses: [
+        usdcToken.address.value,
+        // LVUSDC token, which is being rewarded in merkle as well
+        '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
+      ],
     })
 
     if (!tx) {

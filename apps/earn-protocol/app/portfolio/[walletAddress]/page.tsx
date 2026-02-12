@@ -95,7 +95,7 @@ const portfolioCallsHandler = async ({
     vaultsInfo,
     sumrStakingRewards,
     portfolioSumrStakingV2Data,
-    merkleUsdcRewards,
+    claimableMerklRewards,
   ] = await Promise.all([
     getCachedWalletAssets(walletAddress),
     unstableCache(
@@ -153,7 +153,7 @@ const portfolioCallsHandler = async ({
     vaultsInfo,
     sumrStakingRewards,
     portfolioSumrStakingV2Data,
-    merkleUsdcRewards,
+    claimableMerklRewards,
   }
 }
 
@@ -208,7 +208,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     vaultsInfo,
     sumrStakingRewards,
     portfolioSumrStakingV2Data,
-    merkleUsdcRewards,
+    claimableMerklRewards,
   } = await portfolioCallsHandler({ walletAddress, sumrPriceUsd })
 
   const userPositionsJsonSafe = userPositions
@@ -306,7 +306,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
       rebalanceActivity={rebalanceActivity}
       beachClubData={beachClubData}
-      merkleUsdcRewards={merkleUsdcRewards}
+      claimableMerklRewards={claimableMerklRewards}
       blogPosts={blogPosts}
       portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
       sumrPriceUsd={sumrPriceUsd}

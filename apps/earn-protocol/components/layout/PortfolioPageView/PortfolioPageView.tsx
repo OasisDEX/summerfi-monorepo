@@ -64,7 +64,7 @@ interface PortfolioPageViewProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
-  merkleUsdcRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
+  claimableMerklRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -83,7 +83,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   blogPosts,
   portfolioSumrStakingV2Data,
   sumrPriceUsd,
-  merkleUsdcRewards,
+  claimableMerklRewards,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -116,8 +116,12 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
 
   const overallSumr = calculateOverallSumr(rewardsData)
 
-  const merklUsdcRewardsData = merkleUsdcRewards?.perChain[SupportedNetworkIds.Base]
-  const merkleUsdcClaimableNow = getMerkleFeesUSDClaimableNow(merklUsdcRewardsData)
+  const claimableMerklRewardsData = claimableMerklRewards?.perChain[SupportedNetworkIds.Base]
+
+  const claimableRewards = {
+    usdcClaimableNow: getMerkleFeesUSDClaimableNow(claimableMerklRewardsData, 'USDC'),
+    lvUsdcClaimableNow: getMerkleFeesUSDClaimableNow(claimableMerklRewardsData, 'LVUSDC'),
+  }
 
   const tabs = [
     {
@@ -194,7 +198,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
                 dispatch={dispatch}
                 portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
                 sumrPriceUsd={sumrPriceUsd}
-                merkleUsdcClaimableNow={merkleUsdcClaimableNow}
+                claimableRewards={claimableRewards}
               />
             ),
           },
