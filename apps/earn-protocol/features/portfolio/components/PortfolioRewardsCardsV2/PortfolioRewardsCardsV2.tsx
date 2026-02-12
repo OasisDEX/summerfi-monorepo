@@ -223,13 +223,6 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
     claimableRewards.usdcClaimableNow > 0 || claimableRewards.lvUsdcClaimableNow > 0
   const usdcValue = `${formatCryptoBalance(claimableRewards.usdcClaimableNow)} USDC`
   const lvUsdcValue = `${formatCryptoBalance(claimableRewards.lvUsdcClaimableNow)} LVUSDC`
-  const rewardsValue =
-    [
-      claimableRewards.usdcClaimableNow > 0 ? usdcValue : undefined,
-      claimableRewards.lvUsdcClaimableNow > 0 ? lvUsdcValue : undefined,
-    ]
-      .filter(Boolean)
-      .join(' + ') || '-'
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress.toLowerCase() === viewWalletAddress.toLowerCase()
@@ -339,7 +332,12 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
       <DataModule
         dataBlock={{
           title: 'Rewards claimable now',
-          value: rewardsValue,
+          value:
+            claimableRewards.lvUsdcClaimableNow > 0 ? lvUsdcValue : usdcValue ? usdcValue : '-',
+          subValue:
+            claimableRewards.usdcClaimableNow && claimableRewards.lvUsdcClaimableNow <= 0
+              ? usdcValue
+              : undefined,
           titleSize: 'medium',
           valueSize: 'large',
         }}
