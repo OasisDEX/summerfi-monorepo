@@ -478,7 +478,7 @@ export default function PublicAccessVaults() {
           onAuditClick={handleAuditClick}
         />
       </div>
-      <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
+      <BuildBySummerFi />
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">
           Ready to allocate smarter?

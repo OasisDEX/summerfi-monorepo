@@ -343,16 +343,6 @@ export type SupportedDefillamaTvlProtocols =
   | 'fluid'
   | 'morpho'
 
-export type ProAppStats = {
-  monthlyVolume: number
-  managedOnOasis: number
-  medianVaultSize: number
-  vaultsWithActiveTrigger: number
-  executedTriggersLast90Days: number
-  lockedCollateralActiveTrigger: number
-  triggersSuccessRate: number
-}
-
 export type TotalRebalanceItemsPerStrategyId = {
   strategyId: string
   count: number
@@ -369,7 +359,6 @@ export type LandingPageData = {
     [key in SupportedDefillamaTvlProtocols]: [number, number]
   }
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
-  proAppStats: ProAppStats
   vaultsInfo: IArmadaVaultInfo[] | undefined
   totalUniqueUsers: number
   sumrPriceUsd: number

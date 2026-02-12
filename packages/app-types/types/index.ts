@@ -92,7 +92,6 @@ export type {
   GetVaultsApyResponse,
   LandingPageData,
   SupportedDefillamaTvlProtocols,
-  ProAppStats,
   TotalRebalanceItemsPerStrategyId,
   InterestRates,
   GetInterestRatesQuery,

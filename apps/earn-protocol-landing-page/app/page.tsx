@@ -119,7 +119,7 @@ export default function HomePage() {
           prototechLabsLogo={prototechLabsLogo}
           onAuditClick={handleAuditClick}
         />
-        <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
+        <BuildBySummerFi />
         <LandingFaqSection />
         <HighestQualityYieldsDisclaimer />
       </MarketingPoints>

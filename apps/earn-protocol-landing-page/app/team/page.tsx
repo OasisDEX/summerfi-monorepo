@@ -344,7 +344,7 @@ export default function TeamPage() {
         </div>
         <VerticalProtocolScroller protocols={protocolsList} />
       </div>
-      <BuildBySummerFi proAppStats={landingPageData?.proAppStats} noHeaderDescription />
+      <BuildBySummerFi noHeaderDescription />
       <StartEarningNow id="team" />
     </div>
   )

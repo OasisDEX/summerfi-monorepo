@@ -354,7 +354,7 @@ export default function SelfManagedVaults() {
           onAuditClick={handleAuditClick}
         />
       </div>
-      <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
+      <BuildBySummerFi />
       <FaqSection
         customTitle="Frequently Asked Questions"
         wrapperClassName={selfManagedVaultsStyles.faqWrapper}

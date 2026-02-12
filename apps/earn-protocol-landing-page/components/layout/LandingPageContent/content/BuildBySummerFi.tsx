@@ -1,26 +1,11 @@
 import { type FC } from 'react'
 import { Emphasis, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type ProAppStats } from '@summerfi/app-types'
-import { formatFiatBalance } from '@summerfi/app-utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import buildBySummerFiStyles from '@/components/layout/LandingPageContent/content/BuildBySummerFi.module.css'
-
-const StatBlock = ({ title, value }: { title: string; value: string }) => {
-  return (
-    <div className={buildBySummerFiStyles.statBlock}>
-      <Text variant="p3semi" as="p">
-        {title}
-      </Text>
-      <Text variant="h3" as="h3">
-        {value}
-      </Text>
-    </div>
-  )
-}
 
 const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: boolean }) => {
   const pathname = usePathname()
@@ -65,36 +50,13 @@ const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: 
 }
 
 interface BuildBySummerFiProps {
-  proAppStats?: ProAppStats
   noHeaderDescription?: boolean
 }
 
-export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({
-  proAppStats,
-  noHeaderDescription = false,
-}) => {
-  if (!proAppStats) {
-    return (
-      <div>
-        <BuildBySummerFiHeader noHeaderDescription={noHeaderDescription} />
-      </div>
-    )
-  }
-
-  const { monthlyVolume, managedOnOasis, lockedCollateralActiveTrigger } = proAppStats
-
+export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({ noHeaderDescription = false }) => {
   return (
-    <div style={{ width: '100%' }}>
+    <div>
       <BuildBySummerFiHeader noHeaderDescription={noHeaderDescription} />
-      <div className={buildBySummerFiStyles.buildBySummerFiStatBlockWrapper}>
-        <StatBlock title="Summer.fi TVL" value={`$${formatFiatBalance(managedOnOasis)}`} />
-        <StatBlock title="Summer.fi 30D Volume" value={`$${formatFiatBalance(monthlyVolume)}`} />
-        <StatBlock
-          title="Capital Automated"
-          value={`$${formatFiatBalance(lockedCollateralActiveTrigger)}`}
-        />
-        <StatBlock title="Time Operating" value="7 years" />
-      </div>
     </div>
   )
 }

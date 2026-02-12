@@ -244,8 +244,7 @@ export default function InstitutionsPage() {
         onAuditClick={handleAuditClick}
       />
       <div className={institutionsPageStyles.buildBySummerSpacer}>
-        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-        <BuildBySummerFi proAppStats={landingPageData?.proAppStats} />
+        <BuildBySummerFi />
       </div>
       <div className={institutionsPageStyles.finalCTAs}>
         <Text as="h2" variant="h2">

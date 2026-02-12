@@ -20,7 +20,6 @@ import { NextResponse } from 'next/server'
 import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/defillama/get-median-defi-project-yield'
 import { getCachedDefillamaProtocolTvl } from '@/app/server-handlers/cached/defillama/get-protocol-tvl'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedProAppStats } from '@/app/server-handlers/cached/get-pro-app-stats/get-pro-app-stats'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
@@ -100,7 +99,6 @@ export async function GET() {
     configRaw,
     rebalanceActivity,
     latestActivity,
-    proAppStats,
     protocolTvls,
     protocolApys,
     vaultsInfoRaw,
@@ -124,7 +122,6 @@ export async function GET() {
       page: 1,
       limit: 1,
     }),
-    getCachedProAppStats(),
     unstableCache(getProtocolsTvl, ['protocolTvls'], {
       revalidate: CACHE_TIMES.LP_PROTOCOLS_TVL,
       tags: [CACHE_TAGS.LP_PROTOCOLS_TVL],
@@ -172,7 +169,6 @@ export async function GET() {
     protocolTvls,
     protocolApys,
     totalRebalanceItemsPerStrategyId,
-    proAppStats,
     vaultsInfo,
     totalUniqueUsers,
     sumrPriceUsd,
