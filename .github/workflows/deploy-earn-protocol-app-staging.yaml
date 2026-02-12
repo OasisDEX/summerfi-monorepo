@@ -28,7 +28,6 @@ jobs:
           filters: |
             build-earn-protocol:
               - 'apps/earn-protocol/**'
-              - 'packages/app-db/**'
               - 'packages/app-types/**'
               - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'

@@ -9,7 +9,6 @@ import { SummerStackContext } from './summer-stack-context'
 import { addRedis } from './redis'
 import { addSummerProtocolConfig } from './summer-protocol'
 import { addSummerEarnAppTablesConfig } from './summer-earn-app-tables'
-import { addSummerProAppProductHubConfig } from './summer-pro-app-product-hub'
 import { addSparkRewardsClaim } from './spark-rewards-claim'
 
 export function API(stackContext: StackContext) {
@@ -49,7 +48,6 @@ export function API(stackContext: StackContext) {
   addApyConfig(summerContext)
   addSummerProtocolConfig(summerContext)
   addSummerEarnAppTablesConfig(summerContext)
-  addSummerProAppProductHubConfig(summerContext)
   addSparkRewardsClaim(summerContext)
 
   stack.addOutputs({
