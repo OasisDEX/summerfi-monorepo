@@ -121,7 +121,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const claimableFeesRewardsOnBase =
     beachClubData.claimableRewardsPerChain.perChain[SupportedNetworkIds.Base]
 
-  const feesUSDclaimableNowOnBase = getMerkleFeesUSDClaimableNow(claimableFeesRewardsOnBase)
+  const feesUSDclaimableNowOnBase = getMerkleFeesUSDClaimableNow(claimableFeesRewardsOnBase, 'USDC')
 
   const hasClaimableFeesRewardsOnBase = feesUSDclaimableNowOnBase > 0
 
