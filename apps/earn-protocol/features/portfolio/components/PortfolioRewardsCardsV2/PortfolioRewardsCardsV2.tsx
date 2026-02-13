@@ -241,6 +241,9 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   }, [claimableRewards.rewards])
 
   const usdcRewardsAmountWithTokenBreakdownTooltip = useMemo(() => {
+    if (!hasRewardsToClaim) {
+      return undefined
+    }
     const tokenRewardsElements = claimableRewards.rewards.map((reward) => {
       if (reward.amount > 0) {
         const tokenUsdValue = reward.amountUSD
@@ -332,7 +335,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
         </span>
       </Tooltip>
     )
-  }, [claimableRewards.rewards, claimableRewards.usdAmount])
+  }, [claimableRewards.rewards, claimableRewards.usdAmount, hasRewardsToClaim])
 
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
