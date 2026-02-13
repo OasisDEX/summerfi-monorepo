@@ -17,7 +17,7 @@ import {
   useMobileCheck,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
+import { NetworkIds, SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
   ADDRESS_ZERO,
   chainIdToSDKNetwork,
@@ -89,9 +89,14 @@ interface PortfolioRewardsCardsV2Props {
 
 const getMerklClaimRewardsButtonLabel = ({
   claimStatus,
+  isProperChain,
 }: {
   claimStatus: BeachClubState['claimStatus']
+  isProperChain: boolean
 }) => {
+  if (!isProperChain) {
+    return 'Switch to Base to claim rewards'
+  }
   switch (claimStatus) {
     case UiTransactionStatuses.PENDING:
       return 'Claiming...'
@@ -340,7 +345,6 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
-
   const revalidateUser = useRevalidateUser()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
@@ -349,6 +353,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
+  const isProperChain = Number(clientChainId) !== Number(NetworkIds.BASEMAINNET)
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
 
@@ -419,6 +424,11 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   }
 
   const handleClaimRewards = async () => {
+    if (!isProperChain) {
+      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+
+      return
+    }
     dispatch({ type: 'update-claim-status', payload: UiTransactionStatuses.PENDING })
     if (!isOptInOpen && !merklIsAuthorizedOnBase) {
       handleOptInOpenClose()
@@ -434,8 +444,8 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   }
 
   const buttonLabel = useMemo(() => {
-    return getMerklClaimRewardsButtonLabel({ claimStatus: state.claimStatus })
-  }, [state.claimStatus])
+    return getMerklClaimRewardsButtonLabel({ claimStatus: state.claimStatus, isProperChain })
+  }, [state.claimStatus, isProperChain])
 
   const claimingInProgress =
     state.claimStatus === UiTransactionStatuses.PENDING ||
