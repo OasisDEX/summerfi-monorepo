@@ -74,10 +74,6 @@ const linksList = [
     title: 'Products',
     links: [
       {
-        label: 'Summer.fi Pro',
-        url: INTERNAL_LINKS.summerPro,
-      },
-      {
         label: '$SUMR',
         url: INTERNAL_LINKS.sumr,
       },

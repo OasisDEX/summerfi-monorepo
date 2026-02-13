@@ -3,4 +3,3 @@ export { MarketingPoints } from '@/components/layout/LandingPageContent/componen
 export { ProtocolScroller } from '@/components/layout/LandingPageContent/components/ProtocolScroller'
 
 export { HigherYieldsBlock } from '@/components/layout/LandingPageContent/content/HigherYieldsBlock'
-export { SummerFiProBox } from '@/components/layout/LandingPageContent/content/SummerFiProBox'

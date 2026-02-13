@@ -45,15 +45,6 @@ export const NavigationExtraComponents: FC<NavigationExtraComponentsProps> = ({
           </Text>
         </Link>
       )}
-      <Link
-        href={INTERNAL_LINKS.summerPro}
-        target="_blank"
-        onClick={() => onNavItemClick?.({ buttonName: 'summer-pro', isEarnApp })}
-      >
-        <Text as="p" variant="p2semi" className={clsx(navigationActionsStyles.summerProButton)}>
-          Summer.fi Pro
-        </Text>
-      </Link>
     </>
   )
 }

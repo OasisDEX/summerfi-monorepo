@@ -83,18 +83,6 @@ export const NavigationMenuMobile = ({
               </Button>
             </Link>
           )}
-          <Link href={INTERNAL_LINKS.summerPro} target="_blank">
-            <Button
-              variant="textSecondaryLarge"
-              disabled={false}
-              style={{ padding: `0.25em 0.375em 0.25em 0px` }}
-              className={clsx({
-                [navigationMenuMobileStyles.activeLink]: currentPath === INTERNAL_LINKS.summerPro,
-              })}
-            >
-              Summer.fi Pro
-            </Button>
-          </Link>
           {links?.map((link) =>
             link.link ? (
               <Link

@@ -15,14 +15,12 @@ import {
   LandingPageHero,
   MarketingPoints,
   ProtocolScroller,
-  SummerFiProBox,
 } from '@/components/layout/LandingPageContent'
 import { BestOfDecentralizedFinance } from '@/components/layout/LandingPageContent/content/BestOfDecentralisedFinance'
 import { BuildBySummerFi } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { CryptoUtilities } from '@/components/layout/LandingPageContent/content/CryptoUtilities'
 import { LandingFaqSection } from '@/components/layout/LandingPageContent/content/LandingFaqSection'
 import { StartEarningNow } from '@/components/layout/LandingPageContent/content/StartEarningNow'
-import { SummerFiProSection } from '@/components/layout/LandingPageContent/content/SummerFiProSection'
 import { SumrToken } from '@/components/layout/LandingPageContent/content/SumrToken'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -78,7 +76,6 @@ export default function HomePage() {
         totalUniqueUsers={landingPageData?.totalUniqueUsers}
         tvl={landingPageData?.tvl}
       />
-      <SummerFiProBox />
       <BigGradientBox>
         <EffortlessAccessBlock uiImage={summerEarnUi} />
         <SupportedNetworksList
@@ -112,7 +109,6 @@ export default function HomePage() {
         <BestOfDecentralizedFinance />
         <SumrToken />
         <StartEarningNow id="home" />
-        <SummerFiProSection />
         <CryptoUtilities />
         <Audits
           chainSecurityLogo={chainSecurityLogo}
