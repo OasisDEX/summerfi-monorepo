@@ -353,7 +353,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
-  const isProperChain = Number(clientChainId) !== Number(NetworkIds.BASEMAINNET)
+  const isProperChain = Number(clientChainId) === Number(NetworkIds.BASEMAINNET)
 
   const handleOptInOpenClose = () => setIsOptInOpen((prev) => !prev)
 
@@ -466,11 +466,8 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
             variant="unstyled"
             onClick={handleClaimRewards}
             disabled={
-              !hasRewardsToClaim ||
-              isSettingChain ||
-              state.feesClaimed ||
-              !isOwner ||
-              claimingInProgress
+              // !hasRewardsToClaim ||
+              isSettingChain || state.feesClaimed || !isOwner || claimingInProgress
             }
           >
             <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
