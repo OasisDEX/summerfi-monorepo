@@ -63,7 +63,7 @@ interface ClaimMerkleRewardsProps {
     usdcClaimableNow: number
     lvUsdcClaimableNow: number
   }
-  userWalletAddress: string
+  userWalletAddress?: string
   viewWalletAddress: string
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
 }
@@ -225,7 +225,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const lvUsdcValue = `${formatCryptoBalance(claimableRewards.lvUsdcClaimableNow)} LVUSDC`
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
-  const isOwner = userWalletAddress.toLowerCase() === viewWalletAddress.toLowerCase()
+  const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
 
   const revalidateUser = useRevalidateUser()
   const { deviceType } = useDeviceType()
@@ -240,7 +240,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
 
   const [state, dispatch] = useReducer(beachClubReducer, {
     ...beachClubDefaultState,
-    walletAddress: userWalletAddress,
+    walletAddress: userWalletAddress ?? '', // we still display this component when no user is connected (no action is possible though so this should be fine)
     merklIsAuthorizedPerChain,
   })
 
@@ -514,7 +514,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
         <div className={classNames.cardWrapper}>
           <SumrInOldStakingModule rewardsData={rewardsData} />
         </div>
-      ) : userWalletAddress ? (
+      ) : (
         <div className={classNames.cardWrapper}>
           <ClaimMerkleRewards
             claimableRewards={claimableRewards}
@@ -523,7 +523,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
             merklIsAuthorizedPerChain={rewardsData.sumrToClaim.merklIsAuthorizedPerChain}
           />
         </div>
-      ) : null}
+      )}
       {/* <div className={clsx(classNames.cardWrapper, classNames.cardWrapperFullWidth)}>
         <SumrPriceBar />
       </div> */}
