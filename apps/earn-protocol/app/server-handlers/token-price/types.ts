@@ -1,4 +1,4 @@
-export type SumrPriceData = {
+export type TokenPriceData = {
   usd: number
   usdMarketCap: number
   usd24hVol: number

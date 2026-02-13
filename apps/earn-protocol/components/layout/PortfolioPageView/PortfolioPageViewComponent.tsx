@@ -18,6 +18,7 @@ import { sdkApiUrl } from '@/constants/sdk'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
+import { type ClaimableRewards } from '@/features/portfolio/types'
 
 import { PortfolioPageView } from './PortfolioPageView'
 
@@ -39,7 +40,7 @@ interface PortfolioPageViewComponentProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
-  claimableMerklRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
+  claimableRewards?: ClaimableRewards
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
@@ -58,7 +59,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   blogPosts,
   portfolioSumrStakingV2Data,
   sumrPriceUsd,
-  claimableMerklRewards,
+  claimableRewards,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -75,7 +76,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
         beachClubData={beachClubData}
-        claimableMerklRewards={claimableMerklRewards}
+        claimableRewards={claimableRewards}
         blogPosts={blogPosts}
         portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
         sumrPriceUsd={sumrPriceUsd}

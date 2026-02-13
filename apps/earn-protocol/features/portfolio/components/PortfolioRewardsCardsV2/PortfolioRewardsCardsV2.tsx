@@ -42,6 +42,7 @@ import {
   type ClaimDelegateState,
   type MerklIsAuthorizedPerChain,
 } from '@/features/claim-and-delegate/types'
+import { type ClaimableRewards } from '@/features/portfolio/types'
 import { useClaimMerkleRewardsTransaction } from '@/hooks/use-claim-merkle-rewards-transaction'
 import { useHandleButtonClickEvent, useHandleTooltipOpenEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -59,10 +60,7 @@ interface SumrInOldStakingModuleProps {
 }
 
 interface ClaimMerkleRewardsProps {
-  claimableRewards: {
-    usdcClaimableNow: number
-    lvUsdcClaimableNow: number
-  }
+  claimableRewards: ClaimableRewards
   userWalletAddress?: string
   viewWalletAddress: string
   merklIsAuthorizedPerChain: MerklIsAuthorizedPerChain
@@ -85,10 +83,7 @@ interface PortfolioRewardsCardsV2Props {
   dispatch: Dispatch<ClaimDelegateReducerAction>
   sumrStakedV2: number
   sumrPriceUsd: number
-  claimableRewards: {
-    usdcClaimableNow: number
-    lvUsdcClaimableNow: number
-  }
+  claimableRewards: ClaimableRewards
   viewWalletAddress: string
 }
 
@@ -219,10 +214,31 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
 }) => {
   const [isOptInOpen, setIsOptInOpen] = useState(false)
 
-  const hasRewardsToClaim =
-    claimableRewards.usdcClaimableNow > 0 || claimableRewards.lvUsdcClaimableNow > 0
-  const usdcValue = `${formatCryptoBalance(claimableRewards.usdcClaimableNow)} USDC`
-  const lvUsdcValue = `${formatCryptoBalance(claimableRewards.lvUsdcClaimableNow)} LVUSDC`
+  const hasRewardsToClaim = claimableRewards.usdAmount > 0
+  const rewardsLabel = useMemo(() => {
+    const rewards = claimableRewards.rewards
+      .map((reward) => {
+        if (reward.amount > 0) {
+          return `${formatCryptoBalance(reward.amount)} ${reward.symbol}`
+        }
+
+        return null
+      })
+      .filter(Boolean)
+
+    return rewards.length > 0 ? (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {rewards.map((reward, index) => (
+          <>
+            {index > 0 && <Text variant="p2semi"> + </Text>}
+            <Text variant="h5">{reward}</Text>
+          </>
+        ))}
+      </div>
+    ) : (
+      <div>-</div>
+    )
+  }, [claimableRewards.rewards])
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
@@ -332,9 +348,11 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
       <DataModule
         dataBlock={{
           title: 'Rewards claimable now',
-          value:
-            claimableRewards.lvUsdcClaimableNow > 0 ? lvUsdcValue : usdcValue ? usdcValue : '-',
-          subValue: claimableRewards.usdcClaimableNow > 0 ? usdcValue : '-',
+          value: rewardsLabel,
+          subValue:
+            claimableRewards.usdAmount > 0
+              ? `$${formatFiatBalance(claimableRewards.usdAmount)}`
+              : null,
           titleSize: 'medium',
           valueSize: 'large',
         }}

@@ -13,7 +13,6 @@ import {
   type GetVaultsApyResponse,
   type SDKVaultishType,
   type SingleSourceChartData,
-  SupportedNetworkIds,
 } from '@summerfi/app-types'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
@@ -38,9 +37,8 @@ import { PortfolioRewardsV2 } from '@/features/portfolio/components/PortfolioRew
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 import { PortfolioYourActivity } from '@/features/portfolio/components/PortfolioYourActivity/PotfolioYourActivity'
 import { type PositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
-import { PortfolioTabs } from '@/features/portfolio/types'
+import { type ClaimableRewards, PortfolioTabs } from '@/features/portfolio/types'
 import { calculateOverallSumr } from '@/helpers/calculate-overall-sumr'
-import { getMerkleFeesUSDClaimableNow } from '@/helpers/merkle'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useTabStateQuery } from '@/hooks/use-tab-state'
 
@@ -64,7 +62,7 @@ interface PortfolioPageViewProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
-  claimableMerklRewards?: BeachClubData['claimableRewardsPerChain'] // same interface as in BeachClubData
+  claimableRewards: ClaimableRewards
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
@@ -83,7 +81,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   blogPosts,
   portfolioSumrStakingV2Data,
   sumrPriceUsd,
-  claimableMerklRewards,
+  claimableRewards,
 }) => {
   const { features } = useSystemConfig()
   const handleButtonClick = useHandleButtonClickEvent()
@@ -115,13 +113,6 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   }
 
   const overallSumr = calculateOverallSumr(rewardsData)
-
-  const claimableMerklRewardsData = claimableMerklRewards?.perChain[SupportedNetworkIds.Base]
-
-  const claimableRewards = {
-    usdcClaimableNow: getMerkleFeesUSDClaimableNow(claimableMerklRewardsData, 'USDC'),
-    lvUsdcClaimableNow: getMerkleFeesUSDClaimableNow(claimableMerklRewardsData, 'LVUSDC'),
-  }
 
   const tabs = [
     {

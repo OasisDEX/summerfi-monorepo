@@ -6,3 +6,13 @@ export enum PortfolioTabs {
   REWARDS = 'rewards',
   BEACH_CLUB = 'beach-club',
 }
+
+export type ClaimableRewards = {
+  rewards: {
+    symbol: string
+    amount: number
+    amountUSD: number
+    priceUsd: number
+  }[]
+  usdAmount: number
+}

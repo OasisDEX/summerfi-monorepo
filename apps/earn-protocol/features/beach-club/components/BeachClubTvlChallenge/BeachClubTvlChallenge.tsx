@@ -33,7 +33,7 @@ import { type BeachClubReducerAction, type BeachClubState } from '@/features/bea
 import { ClaimDelegateOptInMerkl } from '@/features/claim-and-delegate/components/ClaimDelegateOptInMerkl/ClaimDelegateOptInMerkl'
 import { useMerklOptInTransaction } from '@/features/claim-and-delegate/hooks/use-merkl-opt-in-transaction'
 import { type MerklIsAuthorizedPerChain } from '@/features/claim-and-delegate/types'
-import { getMerkleFeesUSDClaimableNow } from '@/helpers/merkle'
+import { getMerkleNowClaimableToken } from '@/helpers/merkle'
 import { useClaimMerkleRewardsTransaction } from '@/hooks/use-claim-merkle-rewards-transaction'
 import { useHandleInputChangeEvent } from '@/hooks/use-mixpanel-event'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
@@ -121,7 +121,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const claimableFeesRewardsOnBase =
     beachClubData.claimableRewardsPerChain.perChain[SupportedNetworkIds.Base]
 
-  const feesUSDclaimableNowOnBase = getMerkleFeesUSDClaimableNow(claimableFeesRewardsOnBase, 'USDC')
+  const feesUSDclaimableNowOnBase = getMerkleNowClaimableToken(claimableFeesRewardsOnBase, 'USDC')
 
   const hasClaimableFeesRewardsOnBase = feesUSDclaimableNowOnBase > 0
 

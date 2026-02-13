@@ -7,6 +7,7 @@ import {
   type IArmadaPosition,
   type SDKVaultishType,
   type SingleSourceChartData,
+  SupportedNetworkIds,
 } from '@summerfi/app-types'
 import {
   formatAddress,
@@ -40,6 +41,7 @@ import { getClaimableMerkleRewards } from '@/app/server-handlers/raw-calls/merkl
 import { getPortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
 import { getUserPositions } from '@/app/server-handlers/sdk/get-user-positions'
+import { getCachedFleetTokenSharePrice } from '@/app/server-handlers/share-price'
 import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
@@ -47,16 +49,19 @@ import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import { getSumrStakingRewards } from '@/app/server-handlers/sumr-staking-rewards'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
+import { getCachedTokenPrice } from '@/app/server-handlers/token-price'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { mergePositionWithVault } from '@/features/portfolio/helpers/merge-position-with-vault'
+import { type ClaimableRewards } from '@/features/portfolio/types'
 import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history/client'
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
+import { getMerkleNowClaimableToken } from '@/helpers/merkle'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -170,10 +175,23 @@ const mapPortfolioVaultsApy = (
   }, {})
 
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
-  const [{ walletAddress: walletAddressRaw }, cookieRaw, sumrPrice, config] = await Promise.all([
+  const [
+    { walletAddress: walletAddressRaw },
+    cookieRaw,
+    sumrPrice,
+    usdcPrice,
+    LVUSDCSharePriceInUSDC,
+    config,
+  ] = await Promise.all([
     params,
     cookies(),
     getCachedSumrPrice(),
+    getCachedTokenPrice('usd-coin'),
+    getCachedFleetTokenSharePrice({
+      // LVUSDC token, which is being rewarded in merkle as well
+      fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17', // Replace with actual fleet address
+      chainId: SupportedNetworkIds.Base, // Replace with actual chain ID
+    }),
     getCachedConfig(),
   ])
 
@@ -292,6 +310,31 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
     vaultsApyByNetworkMap,
   })
 
+  const claimableMerklRewardsData = claimableMerklRewards.perChain[SupportedNetworkIds.Base]
+
+  const usdcClaimableNow = getMerkleNowClaimableToken(claimableMerklRewardsData, 'USDC')
+  const lvUsdcClaimableNow = getMerkleNowClaimableToken(claimableMerklRewardsData, 'LVUSDC')
+
+  const rewardsList = [
+    {
+      symbol: 'USDC',
+      amount: usdcClaimableNow,
+      amountUSD: usdcClaimableNow * usdcPrice.usd,
+      priceUsd: usdcPrice.usd,
+    },
+    {
+      symbol: 'LVUSDC',
+      amount: lvUsdcClaimableNow,
+      amountUSD: lvUsdcClaimableNow * LVUSDCSharePriceInUSDC * usdcPrice.usd,
+      priceUsd: LVUSDCSharePriceInUSDC * usdcPrice.usd,
+    },
+  ]
+
+  const claimableRewards: ClaimableRewards = {
+    rewards: rewardsList,
+    usdAmount: rewardsList.reduce((acc, reward) => acc + reward.amountUSD, 0),
+  }
+
   return (
     <PortfolioPageViewComponent
       positions={positionsWithVault}
@@ -306,7 +349,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
       rebalanceActivity={rebalanceActivity}
       beachClubData={beachClubData}
-      claimableMerklRewards={claimableMerklRewards}
+      claimableRewards={claimableRewards}
       blogPosts={blogPosts}
       portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
       sumrPriceUsd={sumrPriceUsd}
