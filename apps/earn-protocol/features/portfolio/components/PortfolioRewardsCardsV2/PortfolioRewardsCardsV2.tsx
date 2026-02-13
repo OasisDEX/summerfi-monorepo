@@ -239,6 +239,101 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
       <div>-</div>
     )
   }, [claimableRewards.rewards])
+
+  const usdcRewardsAmountWithTokenBreakdownTooltip = useMemo(() => {
+    const tokenRewardsElements = claimableRewards.rewards.map((reward) => {
+      if (reward.amount > 0) {
+        const tokenUsdValue = reward.amountUSD
+
+        return (
+          <div
+            key={reward.symbol}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px',
+              marginBottom: '6px',
+              paddingBottom: '6px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text variant="p4semi">{reward.symbol} Amount</Text>
+              <Text variant="p4">
+                {formatCryptoBalance(reward.amount)}&nbsp;{reward.symbol}
+              </Text>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text variant="p4semi">{reward.symbol} Price (USD)</Text>
+              <Text variant="p4">${formatFiatBalance(reward.priceUsd)}</Text>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text variant="p4semi">{reward.symbol} Total Value</Text>
+              <Text variant="p4semi">${formatFiatBalance(tokenUsdValue)}</Text>
+            </div>
+          </div>
+        )
+      }
+
+      return null
+    })
+
+    const validTokenElements = tokenRewardsElements.filter(Boolean)
+
+    return (
+      <Tooltip
+        tooltip={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
+            {validTokenElements.length > 0 ? (
+              <>
+                {validTokenElements}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text variant="p2semi">Total Rewards Value</Text>
+                  <Text variant="p2semi">${formatFiatBalance(claimableRewards.usdAmount)}</Text>
+                </div>
+              </>
+            ) : (
+              <Text variant="p3">No rewards available to claim</Text>
+            )}
+          </div>
+        }
+        tooltipWrapperStyles={{
+          minWidth: '320px',
+        }}
+      >
+        <span style={{ textDecoration: 'underline', textDecorationStyle: 'dotted' }}>
+          {claimableRewards.usdAmount > 0
+            ? `$${formatFiatBalance(claimableRewards.usdAmount)}`
+            : '-'}
+        </span>
+      </Tooltip>
+    )
+  }, [claimableRewards.rewards, claimableRewards.usdAmount])
+
   const merklIsAuthorizedOnBase = merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress?.toLowerCase() === viewWalletAddress.toLowerCase()
@@ -349,10 +444,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
         dataBlock={{
           title: 'Rewards claimable now',
           value: rewardsLabel,
-          subValue:
-            claimableRewards.usdAmount > 0
-              ? `$${formatFiatBalance(claimableRewards.usdAmount)}`
-              : null,
+          subValue: usdcRewardsAmountWithTokenBreakdownTooltip,
           titleSize: 'medium',
           valueSize: 'large',
         }}

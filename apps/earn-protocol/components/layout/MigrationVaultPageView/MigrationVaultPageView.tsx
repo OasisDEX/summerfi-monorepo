@@ -11,10 +11,10 @@ import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
@@ -32,7 +32,7 @@ type MigrationVaultPageViewProps = {
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
-  sumrPrice: SumrPriceData
+  sumrPrice: TokenPriceData
 }
 
 export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({

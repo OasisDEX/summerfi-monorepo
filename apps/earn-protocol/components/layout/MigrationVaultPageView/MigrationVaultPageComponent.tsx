@@ -33,10 +33,10 @@ import { usePathname, useRouter } from 'next/navigation'
 import { type Address } from 'viem'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
+import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
@@ -73,7 +73,7 @@ type MigrationVaultPageComponentProps = {
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
-  sumrPrice: SumrPriceData
+  sumrPrice: TokenPriceData
 }
 
 export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({

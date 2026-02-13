@@ -1,7 +1,7 @@
 import { SUMR_CAP, type SumrNetApyConfig } from '@summerfi/app-earn-ui'
 import { type EarnAppConfigType } from '@summerfi/app-types'
 
-import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
+import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { defaultSumrMarketCap } from '@/helpers/sumr-market-cap'
 
 export const getEstimatedSumrPrice = ({
@@ -10,7 +10,7 @@ export const getEstimatedSumrPrice = ({
   sumrNetApyConfig,
 }: {
   config: Partial<EarnAppConfigType>
-  sumrPrice: SumrPriceData
+  sumrPrice: TokenPriceData
   sumrNetApyConfig: Partial<SumrNetApyConfig>
 }) => {
   const isSumrPriceEnabled = config.features?.UseSumrCoingeckoPrice ?? false

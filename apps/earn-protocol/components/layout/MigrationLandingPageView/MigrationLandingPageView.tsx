@@ -40,7 +40,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type SumrPriceData } from '@/app/server-handlers/sumr-price/types'
+import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
@@ -90,7 +90,7 @@ interface MigrationLandingPageViewProps {
   migratablePositions: MigratablePosition[]
   walletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
-  sumrPrice: SumrPriceData
+  sumrPrice: TokenPriceData
 }
 
 export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
