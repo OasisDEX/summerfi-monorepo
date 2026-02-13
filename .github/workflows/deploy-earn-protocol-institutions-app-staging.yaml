@@ -234,7 +234,10 @@ jobs:
         id: service-update
         run: |
           aws ecs update-service --cluster $CLUSTER_NAME --service ${{ env.SERVICE_NAME }} --force-new-deployment --region $AWS_REGION
+          # Wait for the new tasks to be healthy
+          aws ecs wait services-stable --cluster $CLUSTER_NAME --services ${{ env.SERVICE_NAME }} --region $AWS_REGION
 
       - name: Invalidate CloudFront
         run: |
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.INSTITUTIONS_CF_DIST_ID }} --paths "/*"
+          INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${{ secrets.INSTITUTIONS_CF_DIST_ID }} --paths "/*" --query 'Invalidation.Id' --output text)
+          aws cloudfront wait invalidation-completed --distribution-id ${{ secrets.INSTITUTIONS_CF_DIST_ID }} --id $INVALIDATION_ID

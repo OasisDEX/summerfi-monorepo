@@ -5,7 +5,7 @@ export const INTERNAL_LINKS = {
   appUrl: 'https://summer.fi',
   beachClub: '/beach-club',
   homepage: '/earn/',
-  about: '/earn/about',
+  about: '/about',
   privacy: '/privacy',
   cookie: '/cookie',
   terms: '/terms',
