@@ -11,7 +11,7 @@ import {
 } from '@/features/claim-and-delegate/types'
 import { PortfolioRewardsCardsV2 } from '@/features/portfolio/components/PortfolioRewardsCardsV2/PortfolioRewardsCardsV2'
 import { PortfolioStakingInfoCardV2 } from '@/features/portfolio/components/PortfolioStakingInfoCardV2/PortfolioStakingInfoCardV2'
-import { ClaimableRewards } from '@/features/portfolio/types'
+import { type ClaimableRewards } from '@/features/portfolio/types'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioRewardsV2.module.css'
