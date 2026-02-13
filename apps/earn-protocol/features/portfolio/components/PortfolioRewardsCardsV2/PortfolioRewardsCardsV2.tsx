@@ -466,8 +466,11 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
             variant="unstyled"
             onClick={handleClaimRewards}
             disabled={
-              // !hasRewardsToClaim ||
-              isSettingChain || state.feesClaimed || !isOwner || claimingInProgress
+              !hasRewardsToClaim ||
+              isSettingChain ||
+              state.feesClaimed ||
+              !isOwner ||
+              claimingInProgress
             }
           >
             <Text variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
