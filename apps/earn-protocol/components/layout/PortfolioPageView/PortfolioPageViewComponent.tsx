@@ -40,7 +40,7 @@ interface PortfolioPageViewComponentProps {
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
   sumrPriceUsd: number
-  claimableRewards?: ClaimableRewards
+  claimableRewards: ClaimableRewards
 }
 
 export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = ({
