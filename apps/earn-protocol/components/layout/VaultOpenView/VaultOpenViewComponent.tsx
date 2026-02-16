@@ -96,6 +96,7 @@ type VaultOpenViewComponentProps = {
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
   sumrPriceUsd: number
+  isDaoManaged: boolean
 }
 
 export const VaultOpenViewComponent = ({
@@ -112,6 +113,7 @@ export const VaultOpenViewComponent = ({
   vaultsApyRaw,
   referralCode: referralCodeFromCookie,
   sumrPriceUsd,
+  isDaoManaged,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -132,6 +134,9 @@ export const VaultOpenViewComponent = ({
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
+  const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
+
+  console.log('isDaoManaged', isDaoManaged)
 
   const { userWalletAddress } = useUserWallet()
 
