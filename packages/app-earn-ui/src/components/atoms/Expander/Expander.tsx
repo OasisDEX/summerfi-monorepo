@@ -10,6 +10,7 @@ import styles from './Expander.module.css'
 interface ExpanderProps {
   title: ReactNode
   defaultExpanded?: boolean
+  expanded?: boolean
   children: ReactNode
   expanderButtonStyles?: CSSProperties
   expanderChevronStyles?: CSSProperties
@@ -24,6 +25,7 @@ interface ExpanderProps {
 export const Expander: FC<ExpanderProps> = ({
   title,
   defaultExpanded = false,
+  expanded,
   children,
   expanderButtonStyles = {},
   expanderButtonClassName,
@@ -34,12 +36,18 @@ export const Expander: FC<ExpanderProps> = ({
   iconVariant = 'xxs',
   onExpand,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+  const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
+  const isControlled = expanded !== undefined
+  const isExpanded = isControlled ? expanded : internalExpanded
 
   const toggleExpand = useCallback(() => {
-    setIsExpanded(!isExpanded)
-    onExpand?.(!isExpanded)
-  }, [isExpanded, onExpand])
+    const nextExpanded = !isExpanded
+
+    if (!isControlled) {
+      setInternalExpanded(nextExpanded)
+    }
+    onExpand?.(nextExpanded)
+  }, [isControlled, isExpanded, onExpand])
 
   return (
     <div className={clsx(styles.expander, expanderWrapperClassName)} style={expanderWrapperStyles}>

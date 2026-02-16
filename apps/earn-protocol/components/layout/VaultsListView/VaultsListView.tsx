@@ -55,6 +55,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { VaultsSorting } from '@/components/layout/VaultsListView/types'
 import { useVaultsListQueryParams } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
 import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
+import { VaultsInfoSidebarBlock } from '@/components/molecules/VaultsInfoSidebarBlock/VaultsInfoSidebarBlock'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
@@ -658,30 +659,33 @@ export const VaultsListView = ({
         </>
       }
       rightContent={
-        <VaultSimulationForm
-          vaultData={resolvedVaultData}
-          isMobileOrTablet={isMobileOrTablet}
-          tokenBalance={tokenBalances.tokenBalance}
-          isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
-          selectedTokenOption={selectedTokenOption}
-          handleTokenSelectionChange={handleTokenSelectionChangeWrapper}
-          tokenOptions={tokenOptions}
-          handleAmountChange={handleAmountChange}
-          inputProps={{
-            onFocus,
-            onBlur,
-            amountDisplay,
-            amountDisplayUSDWithSwap,
-            manualSetAmount,
-          }}
-          resolvedForecastAmount={resolvedForecastAmount}
-          amountParsed={amountParsed}
-          isEarnApp
-          positionExists={Boolean(positionExists)}
-          userWalletAddress={userWalletAddress}
-          isLoading={isLoading}
-          onButtonClick={buttonClickEventHandler}
-        />
+        <>
+          <VaultSimulationForm
+            vaultData={resolvedVaultData}
+            isMobileOrTablet={isMobileOrTablet}
+            tokenBalance={tokenBalances.tokenBalance}
+            isTokenBalanceLoading={tokenBalances.tokenBalanceLoading}
+            selectedTokenOption={selectedTokenOption}
+            handleTokenSelectionChange={handleTokenSelectionChangeWrapper}
+            tokenOptions={tokenOptions}
+            handleAmountChange={handleAmountChange}
+            inputProps={{
+              onFocus,
+              onBlur,
+              amountDisplay,
+              amountDisplayUSDWithSwap,
+              manualSetAmount,
+            }}
+            resolvedForecastAmount={resolvedForecastAmount}
+            amountParsed={amountParsed}
+            isEarnApp
+            positionExists={Boolean(positionExists)}
+            userWalletAddress={userWalletAddress}
+            isLoading={isLoading}
+            onButtonClick={buttonClickEventHandler}
+          />
+          {daoManagedVaultsEnabled && <VaultsInfoSidebarBlock />}
+        </>
       }
     />
   )

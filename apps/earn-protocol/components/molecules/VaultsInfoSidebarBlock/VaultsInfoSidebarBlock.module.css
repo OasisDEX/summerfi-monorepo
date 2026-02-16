@@ -1,0 +1,41 @@
+.cardWrapper {
+  margin-top: 16px;
+  padding: var(--spacing-space-large);
+  background-color: var(--color-surface-subtler);
+  flex-direction: column;
+}
+
+.expanderTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+
+.expanderButton {
+  padding: 0;
+}
+
+.expanderContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px 0;
+  letter-spacing: -0.02em;
+
+  .expanderContentRow {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  overflow: scroll;
+  max-height: calc(100vh - var(--general-space-16) - 570px);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.expanderContent::-webkit-scrollbar {
+  display: none;
+}
