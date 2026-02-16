@@ -46,7 +46,7 @@ export const getIsVaultDaoManaged = async ({
           }
         | undefined
 
-      return detailsString && detailsString.type === 'dao'
+      return detailsString ? detailsString.type === 'dao' : false
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error parsing vault details:', error)
