@@ -271,7 +271,24 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
           title={`${item.id} on ${vaultNetwork}`}
         >
-          No description available for this ark.
+          <Text
+            as="p"
+            variant="p3"
+            style={{ color: 'var(--earn-protocol-secondary-100)', fontWeight: '500' }}
+          >
+            No description available for this ark.
+          </Text>
+          <div style={{ display: 'flex', gap: 'var(--spacing-space-x-large)' }}>
+            <Link href={arkScannerUrl} target="_blank" rel="noreferrer">
+              <WithArrow
+                as="p"
+                variant="p4semi"
+                style={{ color: 'var(--earn-protocol-secondary-60)' }}
+              >
+                View contract
+              </WithArrow>
+            </Link>
+          </div>
         </div>
       ),
     }
