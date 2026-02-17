@@ -1,6 +1,6 @@
 import { type CSSProperties, type ReactNode } from 'react'
 
-import { Text } from '@/components/atoms/Text/Text'
+import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
 type EmphasisProps = {
   children: ReactNode
@@ -31,6 +31,7 @@ type EmphasisProps = {
     | 'p3semiColorfulBeachClub'
     | 'p4colorfulBeachClub'
     | 'p4semiColorfulBeachClub'
+  as?: TextAllowedHtmlTags
 }
 
 export const Emphasis = ({
@@ -38,8 +39,9 @@ export const Emphasis = ({
   variant = 'h4colorful',
   className,
   style,
+  as,
 }: EmphasisProps): React.ReactNode => (
-  <Text variant={variant} as="span" className={className} style={style}>
+  <Text variant={variant} as={as ?? 'span'} className={className} style={style}>
     {children}
   </Text>
 )
