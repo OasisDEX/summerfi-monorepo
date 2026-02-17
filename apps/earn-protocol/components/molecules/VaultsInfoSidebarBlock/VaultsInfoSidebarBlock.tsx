@@ -141,7 +141,7 @@ export const VaultsInfoSidebarBlock = () => {
         title={
           <div className={vaultsInfoSidebarBlockStyles.expanderTitleRow}>
             <Icon iconName="warning" size={16} />
-            <Text variant="p2semi">Risk Managed vs DAO Managed</Text>
+            <Text variant="p2semi">Risk-Managed by Block Analitica vs DAO Risk-Managed</Text>
           </div>
         }
         expanderButtonClassName={vaultsInfoSidebarBlockStyles.expanderButton}
@@ -156,21 +156,38 @@ export const VaultsInfoSidebarBlock = () => {
               style={{ marginBottom: '12px' }}
             />
             <Text variant="p3semi">
-              What is the difference between Lazy Summer Prime & Lazy Summer Alpha Vaults
+              What is the difference between Risk-Managed By Block Analitica & DAO Risk-Managed
             </Text>
             <Text variant="p3">
-              The key difference between Lazy Summer Prime and Alpha vaults are their approaches to
-              risk. Lazy Summer Prime are more conservative. Lazy Summer Alpha vaults are more risk
-              seeking, prioritizing a higher risk/reward ratio.
+              The key difference between{' '}
+              <Text as="span" variant="p3semi">
+                Risk-Managed By Block Analitica
+              </Text>{' '}
+              and{' '}
+              <Text as="span" variant="p3semi">
+                DAO Risk-Managed
+              </Text>{' '}
+              vaults are their approaches to risk.{' '}
+              <Text as="span" variant="p3semi">
+                Risk-Managed By Block Analitica
+              </Text>{' '}
+              are more conservative.{' '}
+              <Text as="span" variant="p3semi">
+                DAO Risk-Managed
+              </Text>{' '}
+              vaults are more risk seeking, prioritizing a higher risk/reward ratio.
             </Text>
           </div>
           <div className={vaultsInfoSidebarBlockStyles.expanderContentRow}>
-            <Icon iconName="earn_user_activities" size={16} style={{ marginTop: '1px' }} />
+            <Icon iconName="earn_yield_trend" size={16} style={{ marginTop: '1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Text variant="p3semi">Lazy Summer Prime Vaults</Text>
+              <Text variant="p3semi">Risk-Managed By Block Analitica</Text>
               <Text variant="p3">
-                Lazy Summer Prime has an active approach to risk, constantly monitoring and
-                adjusting risk parameters, and adapting to market conditions.
+                <Text as="span" variant="p3semi">
+                  Risk-Managed By Block Analitica
+                </Text>{' '}
+                has an active approach to risk, constantly monitoring and adjusting risk parameters,
+                and adapting to market conditions.
               </Text>
               <WithArrow variant="p4semi">
                 <Link
@@ -185,13 +202,16 @@ export const VaultsInfoSidebarBlock = () => {
             </div>
           </div>
           <div className={vaultsInfoSidebarBlockStyles.expanderContentRow}>
-            <Icon iconName="earn_user_activities" size={16} style={{ marginTop: '1px' }} />
+            <Icon iconName="earn_rebalance_activities" size={16} style={{ marginTop: '1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Text variant="p3semi">Lazy Summer Alpha Vaults</Text>
+              <Text variant="p3semi">DAO Risk-Managed</Text>
               <Text variant="p3">
-                Lazy Summer Alpha vaults have a more passive approach to risk, simply accepting or
-                rejecting yield sources based on a predefined framework. They also allow for more
-                concentrated exposure to yield sources.
+                <Text as="span" variant="p3semi">
+                  DAO Risk-Managed
+                </Text>{' '}
+                vaults have a more passive approach to risk, simply accepting or rejecting yield
+                sources based on a predefined framework. They also allow for more concentrated
+                exposure to yield sources.
               </Text>
               <WithArrow variant="p4semi">
                 <Link

@@ -16,9 +16,9 @@ import { isAddress } from 'viem'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
+import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -50,12 +50,12 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
-  if (!parsedVaultId && !isAddress(vaultId)) {
+  if (!parsedVaultId || !isAddress(vaultId)) {
     redirect('/not-found')
   }
 
   const [vault, { vaults }, rebalanceActivity, latestActivity] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
@@ -172,8 +172,18 @@ export async function generateMetadata({ params }: EarnVaultDetailsPageProps): P
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  if (!parsedVaultId) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
   const [vault] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

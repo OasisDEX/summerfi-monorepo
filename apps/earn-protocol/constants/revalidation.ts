@@ -1,5 +1,6 @@
 export const CACHE_TAGS = {
   VAULTS_LIST: 'vaults-list',
+  VAULT_LIST: 'vaults-details',
   INTEREST_RATES: 'interest-rates',
   PORTFOLIO_ASSETS: 'portfolio-assets',
   PORTFOLIO_DATA: 'portfolio-data',
@@ -21,6 +22,7 @@ export const CACHE_TAGS = {
   DEFI_PROTOCOL_TVL: 'defi-protocol-tvl',
   USER_DATA: 'user-data',
   STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
+  VAULT_DAO_MANAGED: 'vault-dao-managed',
 }
 
 export const CACHE_TIMES = {
@@ -47,4 +49,5 @@ export const CACHE_TIMES = {
   ALWAYS_FRESH: 0,
   USER_DATA: 300,
   STAKING_V2_GLOBAL_DATA: 300,
+  ONE_DAY: 3600 * 24,
 }

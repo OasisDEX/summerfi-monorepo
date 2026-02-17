@@ -32,6 +32,7 @@ export const VaultOpenView = ({
   vaultsApyRaw,
   referralCode,
   sumrPriceUsd,
+  isDaoManaged,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -46,6 +47,7 @@ export const VaultOpenView = ({
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
   sumrPriceUsd: number
+  isDaoManaged: boolean
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -63,6 +65,7 @@ export const VaultOpenView = ({
         vaultsApyRaw={vaultsApyRaw}
         referralCode={referralCode}
         sumrPriceUsd={sumrPriceUsd}
+        isDaoManaged={isDaoManaged}
       />
     </SDKContextProvider>
   )

@@ -25,6 +25,7 @@ interface VaultExposureTableSectionProps {
   vaultApyData: VaultApyData
   tableId: string
   buttonClickEventHandler: (buttonName: string) => void
+  isDaoManaged: boolean
 }
 
 export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
@@ -39,6 +40,7 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
   vaultApyData,
   tableId,
   buttonClickEventHandler,
+  isDaoManaged,
 }) => {
   const vaultExposureFiltered = useMemo(
     () => vaultExposureFilter({ vault: vault as SDKVaultType, allocationType }),
@@ -58,6 +60,7 @@ export const VaultExposureTableSection: FC<VaultExposureTableSectionProps> = ({
         rowsToDisplay={resolvedRowsToDisplay}
         hiddenColumns={hiddenColumns ?? []}
         vaultApyData={vaultApyData}
+        isDaoManaged={isDaoManaged}
       />
       {filteredVault.arks.length > 5 && (
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>

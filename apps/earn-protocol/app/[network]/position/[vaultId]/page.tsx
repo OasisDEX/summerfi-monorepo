@@ -32,9 +32,10 @@ import { isAddress } from 'viem'
 
 import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -87,8 +88,9 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     latestActivity,
     rebalanceActivity,
     sumrPrice,
+    isDaoManaged,
   ] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
@@ -111,14 +113,24 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       startTimestamp: dayjs().subtract(30, 'days').unix(),
     }),
     getCachedSumrPrice(),
+    getCachedIsVaultDaoManaged({
+      fleetAddress: parsedVaultId,
+      network: parsedNetwork,
+    }),
   ])
 
-  const [vaultWithConfig] = vault
-    ? decorateVaultsWithConfig({
-        vaults: [vault],
-        systemConfig,
-      })
-    : []
+  if (!vault) {
+    return (
+      <Text>
+        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
+      </Text>
+    )
+  }
+
+  const [vaultWithConfig] = decorateVaultsWithConfig({
+    vaults: [vault],
+    systemConfig,
+  })
 
   const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
 
@@ -134,21 +146,17 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     vaultsApyRaw,
     vaultInfo,
   ] = await Promise.all([
-    vault?.arks
-      ? getArksInterestRates({
-          network: parsedNetwork,
-          arksList: vault.arks.filter(
-            (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-          ),
-        })
-      : Promise.resolve({}),
-    vault?.arks
-      ? getArksInterestRates({
-          network: parsedNetwork,
-          arksList: vault.arks,
-          justLatestRates: true,
-        })
-      : Promise.resolve({}),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vaultWithConfig.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vaultWithConfig.arks,
+      justLatestRates: true,
+    }),
     unstableCache(
       getVaultsHistoricalApy,
       ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
@@ -173,22 +181,16 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
-  if (!vault) {
-    return (
-      <Text>
-        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
-      </Text>
-    )
-  }
-
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
     arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
   })
 
-  const vaultApyData =
-    vaultsApyRaw[`${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`]
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const vaultApyData = vaultsApyRaw[
+    `${vaultWithConfig.id}-${subgraphNetworkToId(supportedSDKNetwork(vaultWithConfig.protocol.network))}`
+  ] || { sma7d: null, sma30d: null, current: null }
 
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
@@ -213,6 +215,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       referralCode={referralCode}
       vaultInfo={vaultInfoParsed}
       sumrPriceUsd={sumrPriceUsd}
+      isDaoManaged={isDaoManaged}
     />
   )
 }
@@ -234,19 +237,37 @@ export async function generateMetadata({
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  if (!parsedVaultId) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
   const [vault] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
   ])
 
-  const [vaultWithConfig] = vault
-    ? decorateVaultsWithConfig({
-        vaults: [vault],
-        systemConfig,
-      })
-    : []
+  if (!vault) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
+  const [vaultWithConfig] = decorateVaultsWithConfig({
+    vaults: [vault],
+    systemConfig,
+  })
 
   const [vaultsApyRaw] = await Promise.all([
     getCachedVaultsApy({
@@ -262,11 +283,9 @@ export async function generateMetadata({
       `${vaultWithConfig.id}-${subgraphNetworkToId(supportedSDKNetwork(vaultWithConfig.protocol.network))}`
     ]
 
-  const totalValueLockedTokenParsed = vault
-    ? formatCryptoBalance(
-        new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
-      )
-    : ''
+  const totalValueLockedTokenParsed = formatCryptoBalance(
+    new BigNumber(vault.inputTokenBalance.toString()).div(ten.pow(vault.inputToken.decimals)),
+  )
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault: vaultWithConfig, days: 30 })
 
@@ -285,7 +304,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Lazy Summer Protocol - ${vault ? getDisplayToken(vault.inputToken.symbol) : ''} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,
+    title: `Lazy Summer Protocol - ${getDisplayToken(vault.inputToken.symbol)} on ${capitalize(paramsNetwork)}, $${totalValueLockedTokenParsed} TVL`,
     openGraph: {
       siteName: 'Lazy Summer Protocol',
       images: ogImageUrl,

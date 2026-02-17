@@ -168,6 +168,7 @@ export const PanelVaultExposure: FC<PanelVaultExposureProps> = ({
           columnsToHide={columnsToHide}
           tableId="vault-exposure"
           buttonClickEventHandler={() => {}}
+          isDaoManaged={false}
         />
       </Card>
       <Text as="h5" variant="h5">

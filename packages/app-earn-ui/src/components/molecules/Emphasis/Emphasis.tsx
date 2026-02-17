@@ -19,6 +19,18 @@ type EmphasisProps = {
     | 'p2semiColorful'
     | 'p3semiColorful'
     | 'p4semiColorful'
+    | 'h1colorfulBeachClub'
+    | 'h2colorfulBeachClub'
+    | 'h3colorfulBeachClub'
+    | 'h4colorfulBeachClub'
+    | 'p1colorfulBeachClub'
+    | 'p1semiColorfulBeachClub'
+    | 'p2colorfulBeachClub'
+    | 'p2semiColorfulBeachClub'
+    | 'p3colorfulBeachClub'
+    | 'p3semiColorfulBeachClub'
+    | 'p4colorfulBeachClub'
+    | 'p4semiColorfulBeachClub'
 }
 
 export const Emphasis = ({
