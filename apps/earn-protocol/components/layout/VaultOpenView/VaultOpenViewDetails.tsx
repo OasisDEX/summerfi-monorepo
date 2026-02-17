@@ -40,6 +40,7 @@ interface VaultOpenViewDetailsProps {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
+  isDaoManaged: boolean
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
@@ -50,6 +51,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   arksHistoricalChartData,
   arksInterestRates,
   vaultApyData,
+  isDaoManaged,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -100,6 +102,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
             columnsToHide={vaultExposureColumnsToHideOpenManage}
             tableId="vault-open"
             buttonClickEventHandler={buttonClickEventHandler}
+            isDaoManaged={isDaoManaged}
           />
         </VaultExposureDescription>
       </Expander>

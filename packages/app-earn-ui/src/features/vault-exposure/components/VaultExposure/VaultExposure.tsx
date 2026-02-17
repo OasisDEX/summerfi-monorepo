@@ -24,6 +24,7 @@ interface VaultExposureProps {
   columnsToHide?: string[]
   tableId: string
   buttonClickEventHandler: (buttonName: string) => void
+  isDaoManaged: boolean
 }
 
 export const VaultExposure: FC<VaultExposureProps> = ({
@@ -33,6 +34,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   columnsToHide,
   tableId,
   buttonClickEventHandler,
+  isDaoManaged,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
 
@@ -54,6 +56,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           })}
           seeAll={seeAll}
           setSeeAll={setSeeAll}
+          isDaoManaged={isDaoManaged}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALL}
           hiddenColumns={columnsToHide}
@@ -76,6 +79,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           })}
           seeAll={seeAll}
           setSeeAll={setSeeAll}
+          isDaoManaged={isDaoManaged}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.ALLOCATED}
           hiddenColumns={columnsToHide}
@@ -98,6 +102,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
           })}
           seeAll={seeAll}
           setSeeAll={setSeeAll}
+          isDaoManaged={isDaoManaged}
           resolvedRowsToDisplay={resolvedRowsToDisplay}
           allocationType={VaultExposureFilterType.UNALLOCATED}
           hiddenColumns={columnsToHide}

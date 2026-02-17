@@ -9,7 +9,7 @@ import {
   getVaultInfo,
   getVaultsHistoricalApy,
 } from '@summerfi/app-server-handlers'
-import { type SDKVaultishType, SupportedSDKNetworks } from '@summerfi/app-types'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatDecimalAsPercent,
@@ -33,10 +33,9 @@ import { isAddress } from 'viem'
 import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getTestVaultData } from '@/app/server-handlers/sdk/get-test-vault-data'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -91,7 +90,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     sumrPrice,
     isDaoManaged,
   ] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
@@ -120,10 +119,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     }),
   ])
 
-  if (
-    !vault &&
-    parsedVaultId.toLowerCase() !== '0x218f3255fa97a60bf99f175c9c5c56fdf06b15fc'.toLowerCase()
-  ) {
+  if (!vault) {
     return (
       <Text>
         No vault found with the id {parsedVaultId} on the network {parsedNetwork}
@@ -131,17 +127,8 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
-  let testVaultData: SDKVaultishType | undefined
-
-  if (
-    parsedVaultId.toLowerCase() === '0x218f3255fa97a60bf99f175c9c5c56fdf06b15fc'.toLowerCase() &&
-    parsedNetwork === SupportedSDKNetworks.Mainnet
-  ) {
-    testVaultData = getTestVaultData()
-  }
-
   const [vaultWithConfig] = decorateVaultsWithConfig({
-    vaults: [testVaultData ? testVaultData : (vault as SDKVaultishType)],
+    vaults: [vault],
     systemConfig,
   })
 
@@ -250,8 +237,18 @@ export async function generateMetadata({
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  if (!parsedVaultId) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
   const [vault] = await Promise.all([
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),

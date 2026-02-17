@@ -136,8 +136,6 @@ export const VaultOpenViewComponent = ({
   const migrationsEnabled = !!features?.Migrations
   const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
 
-  console.log('isDaoManaged', isDaoManaged)
-
   const { userWalletAddress } = useUserWallet()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
@@ -574,6 +572,7 @@ export const VaultOpenViewComponent = ({
             arksHistoricalChartData={arksHistoricalChartData}
             arksInterestRates={arksInterestRates}
             vaultApyData={vaultApyData}
+            isDaoManaged={isDaoManaged && daoManagedVaultsEnabled}
           />
         }
         sidebarContent={

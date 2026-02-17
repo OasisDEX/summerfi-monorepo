@@ -21,6 +21,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { TableRowAccent } from '@/components/atoms/TableRowAccent/TableRowAccent'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
+import { Emphasis } from '@/components/molecules/Emphasis/Emphasis'
 import {
   TableCellAllocationCap,
   TableCellAllocationCapTooltipDataBlock,
@@ -54,6 +55,7 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
   mainAllocationCap: BigNumber
   absoluteAllocationCap: BigNumber | string
   maxPercentageTVL: BigNumber | string
+  isDaoManaged: boolean
 }
 
 /**
@@ -102,6 +104,19 @@ const calculateYearlyYieldRange = (rates: { averageRate: number; date: string }[
     low: low.isNaN() ? new BigNumber(0) : low,
     high: high.isNaN() ? new BigNumber(0) : high,
   }
+}
+
+const getDaoManagedVaultArkCategory = (maxPercentageTVL: BigNumber | string) => {
+  const maxPercentageTVLBN = new BigNumber(maxPercentageTVL)
+
+  if (maxPercentageTVLBN.gte(1)) {
+    return 'Category A'
+  }
+  if (maxPercentageTVLBN.gte(0.7)) {
+    return 'Category B'
+  }
+
+  return 'Category C'
 }
 
 type MapperVaultNetwork =
@@ -159,6 +174,14 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
               <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
                 {isArkNew && <Text variant="p3semiColorful">New!&nbsp;</Text>}
                 {formatDecimalAsPercent(item.allocationRatio)} allocated
+                {item.isDaoManaged && !isBuffer ? (
+                  <>
+                    &nbsp;|&nbsp;
+                    <Emphasis variant="p4semiColorfulBeachClub">
+                      {getDaoManagedVaultArkCategory(item.maxPercentageTVL)}
+                    </Emphasis>
+                  </>
+                ) : null}
               </TableCellText>
             </div>
           </TableCellNodes>
@@ -306,6 +329,7 @@ export const vaultExposureMapper = (
   vault?: SDKVaultType,
   arksInterestRates?: InterestRates,
   sortConfig?: TableSortedColumn<string>,
+  isDaoManaged = false,
 ): TableRow<string>[] => {
   if (!vault || !arksInterestRates) {
     return []
@@ -362,6 +386,7 @@ export const vaultExposureMapper = (
       vaultTvlAllocationCap,
       mainAllocationCap,
       maxPercentageTVL,
+      isDaoManaged,
     }
 
     return extendedArk

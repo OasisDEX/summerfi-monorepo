@@ -21,6 +21,7 @@ interface VaultExposureTableProps {
   rowsToDisplay?: number
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
+  isDaoManaged: boolean
 }
 
 export const VaultExposureTable: FC<VaultExposureTableProps> = ({
@@ -30,12 +31,17 @@ export const VaultExposureTable: FC<VaultExposureTableProps> = ({
   rowsToDisplay,
   arksInterestRates,
   vaultApyData,
+  isDaoManaged,
 }) => {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
 
   const rows = useMemo(
-    () => vaultExposureMapper(vault, arksInterestRates, sortConfig).slice(0, rowsToDisplay),
-    [vault, arksInterestRates, sortConfig, rowsToDisplay],
+    () =>
+      vaultExposureMapper(vault, arksInterestRates, sortConfig, isDaoManaged).slice(
+        0,
+        rowsToDisplay,
+      ),
+    [vault, arksInterestRates, sortConfig, rowsToDisplay, isDaoManaged],
   )
 
   const handleSort = useCallback(

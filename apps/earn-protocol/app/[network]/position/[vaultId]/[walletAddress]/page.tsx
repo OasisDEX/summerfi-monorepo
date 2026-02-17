@@ -38,11 +38,11 @@ import { isAddress } from 'viem'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
-import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
@@ -53,6 +53,7 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
+import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
   getVaultIdByVaultCustomName,
@@ -89,7 +90,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const [vault, { vaults }, position, topDepositors, latestActivity, rebalanceActivity] =
     await Promise.all([
-      getVaultDetails({
+      getCachedVaultDetails({
         vaultAddress: parsedVaultId,
         network: parsedNetwork,
       }),
@@ -297,13 +298,23 @@ export async function generateMetadata({
     ? vaultId.toLowerCase()
     : getVaultIdByVaultCustomName(vaultId, String(parsedNetworkId), systemConfig)
 
+  if (!parsedVaultId) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
+
   const [position, vault] = await Promise.all([
     getUserPosition({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
       walletAddress,
     }),
-    getVaultDetails({
+    getCachedVaultDetails({
       vaultAddress: parsedVaultId,
       network: parsedNetwork,
     }),
