@@ -5,6 +5,17 @@ declare const styles: {
   readonly "chainsGrid": string;
   readonly "masonryGrid": string;
   readonly "masonryItem": string;
+  readonly "modalContentWrapper": string;
+  readonly "modalHeader": string;
+  readonly "modalHeaderIcon": string;
+  readonly "modalLink": string;
+  readonly "modalLinks": string;
+  readonly "modalPool": string;
+  readonly "modalPoolApy": string;
+  readonly "modalPoolDetails": string;
+  readonly "modalPoolName": string;
+  readonly "modalPools": string;
+  readonly "modalStats": string;
   readonly "projectAvatarIcon": string;
   readonly "protocolGrid": string;
   readonly "protocolIcon": string;

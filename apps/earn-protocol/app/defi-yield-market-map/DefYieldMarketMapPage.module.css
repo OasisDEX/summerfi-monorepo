@@ -159,3 +159,90 @@
   font-weight: 700;
   color: #fff;
 }
+
+/* Modal styles */
+.modalContentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 340px;
+  max-width: 480px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.modalHeaderIcon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.modalStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.modalPools {
+  margin-bottom: 24px;
+}
+
+.modalPool {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalPool:last-child {
+  border-bottom: none;
+}
+
+.modalPoolName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modalPoolDetails {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.modalPoolApy {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.modalLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modalLink {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.modalLink:hover {
+  color: #fff;
+}
