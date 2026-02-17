@@ -39,7 +39,7 @@ export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
       >
         {isDaoManaged
           ? 'DAO Risk-Managed Vaults offer high risk/reward yield from DeFi’s highest quality protocols. Yield sources undergo a screening process and then are subject to a risk framework that determines how much capital can be allocated to any one yield source at a time. Optimizing for higher risk/reward. '
-          : 'The Lazy Summer Protocol is a permissionless passive lending product, which sets out tooffer effortless and secure optimised yield, while diversifying risk.'}
+          : 'The Lazy Summer Protocol is a permissionless passive lending product, which sets out to offer effortless and secure optimised yield, while diversifying risk.'}
       </Text>
       <div
         style={{
