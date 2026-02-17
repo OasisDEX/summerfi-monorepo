@@ -10,13 +10,13 @@ import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 interface VaultOpenHeaderBlockProps {
   vault?: SDKVaultishType
   detailsLinks: { label: string; id: string }[]
-  isDaoManaged: boolean
+  isDaoManaged?: boolean
 }
 
 export const VaultOpenHeaderBlock: FC<VaultOpenHeaderBlockProps> = ({
   detailsLinks,
   vault,
-  isDaoManaged,
+  isDaoManaged = false,
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
 

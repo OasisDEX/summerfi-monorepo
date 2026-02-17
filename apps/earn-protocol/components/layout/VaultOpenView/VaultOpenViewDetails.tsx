@@ -40,7 +40,7 @@ interface VaultOpenViewDetailsProps {
   arksHistoricalChartData: ArksHistoricalChartData
   arksInterestRates: InterestRates
   vaultApyData: VaultApyData
-  isDaoManaged: boolean
+  isDaoManaged?: boolean
 }
 
 export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({

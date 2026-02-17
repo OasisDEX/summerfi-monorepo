@@ -24,7 +24,7 @@ interface VaultExposureProps {
   columnsToHide?: string[]
   tableId: string
   buttonClickEventHandler: (buttonName: string) => void
-  isDaoManaged: boolean
+  isDaoManaged?: boolean
 }
 
 export const VaultExposure: FC<VaultExposureProps> = ({
@@ -34,7 +34,7 @@ export const VaultExposure: FC<VaultExposureProps> = ({
   columnsToHide,
   tableId,
   buttonClickEventHandler,
-  isDaoManaged,
+  isDaoManaged = false,
 }) => {
   const [seeAll, setSeeAll] = useState(false)
 
