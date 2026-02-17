@@ -1,0 +1,99 @@
+.wrapper {
+  width: 100%;
+  max-width: 640px;
+  margin: 32px auto 0;
+  background-color: rgba(10, 10, 10, 0.2);
+  border: 1px solid #222224;
+  border-radius: 32px;
+  padding: 32px 24px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 10;
+}
+
+.iconCircle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #1c1c1f;
+  border: 1px solid #2a2a2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.barsWrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.barsContainer {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #1c1c1f;
+  border: 1px solid #2a2a2d;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+.bar {
+  width: 10px;
+  border-radius: 1px;
+  margin-bottom: 20px;
+}
+
+.barSmall {
+  height: 18px;
+  background-color: #52525b;
+}
+
+.barMedium {
+  height: 32px;
+  background-color: #a1a1aa;
+}
+
+.barMediumSmall {
+  height: 24px;
+  background-color: #52525b;
+}
+
+.badgesContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0;
+}
+
+.badge {
+  width: 18px;
+  height: 18px;
+  background-color: #161618;
+  border: 1px solid #2a2a2d;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: #db4a86;
+  letter-spacing: 0.1em;
+}

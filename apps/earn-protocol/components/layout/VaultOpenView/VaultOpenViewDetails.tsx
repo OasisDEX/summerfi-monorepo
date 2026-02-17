@@ -69,7 +69,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
 
   return (
     <div className={styles.vaultOpenViewDetailsWrapper}>
-      <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
+      <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} isDaoManaged={isDaoManaged} />
       <Expander
         onExpand={handleExpanderToggle('historical-yield')}
         title={
