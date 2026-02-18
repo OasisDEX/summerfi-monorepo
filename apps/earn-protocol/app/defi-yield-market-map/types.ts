@@ -24,6 +24,7 @@ export interface DYMChainItem {
 export interface DYMAssetItem {
   name: string
   sub: string
+  slug: string
 }
 
 export interface DYMAssetSection {

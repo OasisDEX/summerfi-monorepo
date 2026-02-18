@@ -26,7 +26,7 @@ import {
 
 import defYieldMarketMapPageStyles from './DefYieldMarketMapPage.module.css'
 
-function ProtocolIcon({ slug, label }: { slug: string; label: string }) {
+function ProductIcon({ slug, label }: { slug: string; label: string }) {
   const icon = slug in DYM_ICONS ? DYM_ICONS[slug] : undefined
 
   return (
@@ -101,7 +101,7 @@ function ModalContent({
     <Card className={defYieldMarketMapPageStyles.modalContentWrapper}>
       <div className={defYieldMarketMapPageStyles.modalHeader}>
         <div className={defYieldMarketMapPageStyles.modalHeaderIcon}>
-          <ProtocolIcon slug={item} label={protocolName} />
+          <ProductIcon slug={item} label={protocolName} />
         </div>
         <div>
           <Text variant="h5">{protocolName}</Text>
@@ -232,7 +232,7 @@ function ProtocolItemCard({
       className={defYieldMarketMapPageStyles.protocolItem}
       onClick={() => openModal('protocol', item.slug)}
     >
-      <ProtocolIcon slug={item.slug} label={item.name} />
+      <ProductIcon slug={item.slug} label={item.name} />
       <span className={defYieldMarketMapPageStyles.protocolLabel}>{item.name}</span>
     </div>
   )
@@ -280,7 +280,7 @@ function ChainsCard() {
         <div className={defYieldMarketMapPageStyles.chainsGrid}>
           {DYM_CHAINS.map((chain) => (
             <div key={chain.slug} className={defYieldMarketMapPageStyles.protocolItem}>
-              <ProtocolIcon slug={chain.slug} label={chain.name} />
+              <ProductIcon slug={chain.slug} label={chain.name} />
               <span className={defYieldMarketMapPageStyles.protocolLabel}>{chain.name}</span>
             </div>
           ))}
@@ -308,7 +308,7 @@ function AssetsCard() {
               <div key={asset.name} className={defYieldMarketMapPageStyles.protocolItem}>
                 <div className={defYieldMarketMapPageStyles.protocolIcon}>
                   <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>
-                    {dymGetInitials(asset.name)}
+                    <ProductIcon slug={asset.slug} label={asset.name} />
                   </div>
                 </div>
                 <span className={defYieldMarketMapPageStyles.protocolLabel}>{asset.name}</span>

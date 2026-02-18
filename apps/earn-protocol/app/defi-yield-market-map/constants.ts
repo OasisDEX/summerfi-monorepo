@@ -13,6 +13,8 @@ import arbitrum from '@/public/img/protocol_icons_market_map/arbitrum.png'
 import avalanche from '@/public/img/protocol_icons_market_map/avalanche.png'
 import base from '@/public/img/protocol_icons_market_map/base.png'
 import beefy from '@/public/img/protocol_icons_market_map/beefy.png'
+import benji from '@/public/img/protocol_icons_market_map/benji.png'
+import buidl from '@/public/img/protocol_icons_market_map/buidl.png'
 import cap from '@/public/img/protocol_icons_market_map/cap.png'
 import coinbaseWrappedStakedEth from '@/public/img/protocol_icons_market_map/coinbase-wrapped-staked-eth.png'
 import compound from '@/public/img/protocol_icons_market_map/compound.png'
@@ -32,6 +34,7 @@ import hyperlend from '@/public/img/protocol_icons_market_map/hyperlend.png'
 import hyperliquid from '@/public/img/protocol_icons_market_map/hyperliquid.png'
 import idleFinance from '@/public/img/protocol_icons_market_map/idle-finance.png'
 import jito from '@/public/img/protocol_icons_market_map/jito.png'
+import jtrsy from '@/public/img/protocol_icons_market_map/jtrsy.png'
 import jupiter from '@/public/img/protocol_icons_market_map/jupiter.png'
 import kaminoLend from '@/public/img/protocol_icons_market_map/kamino-lend.png'
 import karak from '@/public/img/protocol_icons_market_map/karak.png'
@@ -41,11 +44,17 @@ import lido from '@/public/img/protocol_icons_market_map/lido.png'
 import lighter from '@/public/img/protocol_icons_market_map/lighter.png'
 import linea from '@/public/img/protocol_icons_market_map/linea.png'
 import maple from '@/public/img/protocol_icons_market_map/maple.png'
+import mapollo from '@/public/img/protocol_icons_market_map/mapollo.png'
 import marginfi from '@/public/img/protocol_icons_market_map/marginfi.png'
 import marinadeFinance from '@/public/img/protocol_icons_market_map/marinade-finance.png'
+import medge from '@/public/img/protocol_icons_market_map/medge.png'
+import mfOne from '@/public/img/protocol_icons_market_map/mf-one.png'
+import mhyper from '@/public/img/protocol_icons_market_map/mhyper.png'
+import mmev from '@/public/img/protocol_icons_market_map/mmev.png'
 import morpho from '@/public/img/protocol_icons_market_map/morpho.png'
 import neutraFinance from '@/public/img/protocol_icons_market_map/neutra-finance.png'
 import optimism from '@/public/img/protocol_icons_market_map/optimism.png'
+import ousg from '@/public/img/protocol_icons_market_map/ousg.png'
 import pendle from '@/public/img/protocol_icons_market_map/pendle.png'
 import plasma from '@/public/img/protocol_icons_market_map/plasma.png'
 import pufferFinance from '@/public/img/protocol_icons_market_map/puffer-finance.png'
@@ -55,18 +64,29 @@ import resolv from '@/public/img/protocol_icons_market_map/resolv.png'
 import rocketPool from '@/public/img/protocol_icons_market_map/rocket-pool.png'
 import royco from '@/public/img/protocol_icons_market_map/royco.png'
 import sanctum from '@/public/img/protocol_icons_market_map/sanctum.png'
+import sdai from '@/public/img/protocol_icons_market_map/sdai.png'
 import silo from '@/public/img/protocol_icons_market_map/silo.png'
 import solana from '@/public/img/protocol_icons_market_map/solana.png'
 import spark from '@/public/img/protocol_icons_market_map/spark.png'
 import spectra from '@/public/img/protocol_icons_market_map/spectra.png'
 import stakewise from '@/public/img/protocol_icons_market_map/stakewise.png'
 import summerFi from '@/public/img/protocol_icons_market_map/summer_fi.png'
+import susde from '@/public/img/protocol_icons_market_map/susde.png'
+import susds from '@/public/img/protocol_icons_market_map/susds.png'
 import swell from '@/public/img/protocol_icons_market_map/swell.png'
 import symbiotic from '@/public/img/protocol_icons_market_map/symbiotic.png'
+import syrupusdc from '@/public/img/protocol_icons_market_map/syrupusdc.png'
+import syrupusdt from '@/public/img/protocol_icons_market_map/syrupusdt.png'
+import tbbill from '@/public/img/protocol_icons_market_map/tbbill.png'
 import termFinance from '@/public/img/protocol_icons_market_map/term-finance.png'
 import traderJoe from '@/public/img/protocol_icons_market_map/trader-joe.png'
 import uniswap from '@/public/img/protocol_icons_market_map/uniswap.png'
+import usdal from '@/public/img/protocol_icons_market_map/usdal.png'
+import usr from '@/public/img/protocol_icons_market_map/usr.png'
+import ustb from '@/public/img/protocol_icons_market_map/ustb.png'
+import usyc from '@/public/img/protocol_icons_market_map/usyc.png'
 import velodromeV2 from '@/public/img/protocol_icons_market_map/velodrome-v2.png'
+import wtgxx from '@/public/img/protocol_icons_market_map/wtgxx.png'
 import yearnFinance from '@/public/img/protocol_icons_market_map/yearn-finance.png'
 import yoProtocol from '@/public/img/protocol_icons_market_map/yo-protocol.png'
 
@@ -136,6 +156,27 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   optimism,
   plasma,
   solana,
+  // assets
+  benji,
+  buidl,
+  jtrsy,
+  mapollo,
+  medge,
+  mfOne,
+  mhyper,
+  mmev,
+  ousg,
+  sdai,
+  susde,
+  susds,
+  syrupusdc,
+  syrupusdt,
+  tbbill,
+  usdal,
+  usr,
+  ustb,
+  usyc,
+  wtgxx,
 }
 
 export const DYM_CATEGORIES: DYMCategory[] = [
@@ -657,36 +698,36 @@ export const DYM_YIELD_ASSETS: { [key: string]: DYMAssetSection } = {
   stablecoins: {
     label: 'Stablecoins',
     items: [
-      { name: 'sUSDe', sub: 'Ethena' },
-      { name: 'sUSDS', sub: 'Sky' },
-      { name: 'sDAI', sub: 'MakerDAO/Sky' },
-      { name: 'SyrupUSDC', sub: 'Maple' },
-      { name: 'SyrupUSDT', sub: 'Maple' },
-      { name: 'USDal', sub: 'Usual' },
-      { name: 'USR', sub: 'Resolv' },
+      { name: 'sUSDe', sub: 'Ethena', slug: 'susde' },
+      { name: 'sUSDS', sub: 'Sky', slug: 'susds' },
+      { name: 'sDAI', sub: 'MakerDAO/Sky', slug: 'sdai' },
+      { name: 'SyrupUSDC', sub: 'Maple', slug: 'syrupusdc' },
+      { name: 'SyrupUSDT', sub: 'Maple', slug: 'syrupusdt' },
+      { name: 'USDal', sub: 'Usual', slug: 'usdal' },
+      { name: 'USR', sub: 'Resolv', slug: 'usr' },
     ],
   },
   rwa: {
     label: 'Tokenized U.S. Treasuries / RWAs',
     items: [
-      { name: 'BUIDL', sub: 'BlackRock' },
-      { name: 'USYC', sub: 'Hashnote' },
-      { name: 'BENJI', sub: 'Franklin Templeton' },
-      { name: 'USTB', sub: 'Superstate' },
-      { name: 'WTGXX', sub: 'WisdomTree' },
-      { name: 'OUSG', sub: 'Ondo' },
-      { name: 'JTRSY', sub: 'Anemoy/Centrifuge' },
-      { name: 'tbBILL', sub: 'OpenEden' },
+      { name: 'BUIDL', sub: 'BlackRock', slug: 'buidl' },
+      { name: 'USYC', sub: 'Hashnote', slug: 'usyc' },
+      { name: 'BENJI', sub: 'Franklin Templeton', slug: 'benji' },
+      { name: 'USTB', sub: 'Superstate', slug: 'ustb' },
+      { name: 'WTGXX', sub: 'WisdomTree', slug: 'wtgxx' },
+      { name: 'OUSG', sub: 'Ondo', slug: 'ousg' },
+      { name: 'JTRSY', sub: 'Anemoy/Centrifuge', slug: 'jtrsy' },
+      { name: 'tbBILL', sub: 'OpenEden', slug: 'tbbill' },
     ],
   },
   hedgeFunds: {
     label: 'Tokenized Hedge Funds',
     items: [
-      { name: 'mF-ONE', sub: 'Midas' },
-      { name: 'mHYPER', sub: 'Midas' },
-      { name: 'mAPOLLO', sub: 'Midas' },
-      { name: 'mMEV', sub: 'Midas' },
-      { name: 'mEDGE', sub: 'Midas' },
+      { name: 'mF-ONE', sub: 'Midas', slug: 'mfOne' },
+      { name: 'mHYPER', sub: 'Midas', slug: 'mhyper' },
+      { name: 'mAPOLLO', sub: 'Midas', slug: 'mapollo' },
+      { name: 'mMEV', sub: 'Midas', slug: 'mmev' },
+      { name: 'mEDGE', sub: 'Midas', slug: 'medge' },
     ],
   },
 }
