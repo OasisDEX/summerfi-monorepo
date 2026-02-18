@@ -13,14 +13,6 @@ export function dymGetInitials(label: string): string {
     : label.slice(0, 2).toUpperCase()
 }
 
-export function dymFormatTVL(tvl: number): string {
-  if (tvl >= 1e9) return `$${(tvl / 1e9).toFixed(2)}B`
-  if (tvl >= 1e6) return `$${(tvl / 1e6).toFixed(1)}M`
-  if (tvl >= 1e3) return `$${(tvl / 1e3).toFixed(0)}K`
-
-  return `$${Math.round(tvl)}`
-}
-
 export function dymFindProtocolItem(slug: string): DYMProtocolItem | undefined {
   for (const cat of DYM_CATEGORIES) {
     for (const sub of cat.subcategories) {

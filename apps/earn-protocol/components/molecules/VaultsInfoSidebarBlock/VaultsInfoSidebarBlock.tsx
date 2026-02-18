@@ -107,9 +107,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">
-                    View Risk-Managed By Block Analitica vault risk framework
-                  </Text>
+                  <Text variant="p4semi">View risk framework</Text>
                 </Link>
               </WithArrow>
             </div>
@@ -198,9 +196,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">
-                    Learn more about Risk-Managed By Block Analitica vaults
-                  </Text>
+                  <Text variant="p4semi">Learn more</Text>
                 </Link>
               </WithArrow>
             </div>

@@ -1,126 +1,77 @@
-// DefiLlama API functions — isolated for easy replacement with a custom server call later
+import { type DYMProtocolModalData } from '@/app/defi-yield-market-map/types'
 
-export interface DefiLlamaPool {
-  pool: string
-  chain: string
-  project: string
-  symbol: string
-  tvlUsd: number
-  apy: number
+const PROJECT_SLUGS: { [key: string]: string } = {
+  silo: 'silo-v2',
+  'trader-joe': 'joe-v2',
+  'idle-finance': 'idle',
+  'neutra-finance': 'neutra-finance',
+  compound: 'compound-finance',
+  'coinbase-wrapped-staked-eth': 'coinbase-wrapped-staked-eth',
+  'frax-ether': 'frax-ether',
+  'velodrome-v2': 'velodrome-v2',
+  'puffer-finance': 'puffer-finance',
+  'kelp-dao': 'kelp',
+  'kamino-lend': 'kamino-lend',
+  'marinade-finance': 'marinade',
+  'yearn-finance': 'yearn-finance',
+  'convex-finance': 'convex-finance',
+  'term-finance': 'termfinance',
+  'yo-protocol': 'yo-protocol',
+  'felix-protocol': 'felix',
+  'curve-dex': 'curve-dex',
+  'rocket-pool': 'rocket-pool',
+  royco: 'royco-protocol',
 }
 
-export interface ProtocolModalData {
-  tvl: number | null
-  avgApy: number | null
-  pools: DefiLlamaPool[]
+const CACHE_TTL = 24 * 60 * 60 * 1000 // 24 hours
+const protocolCache: {
+  [key: string]: (DYMProtocolModalData & { timestamp: number }) | undefined
+} = {}
+
+const isCacheExpired = (timestamp?: number) => !timestamp || Date.now() - timestamp > CACHE_TTL
+
+const setProtocolCache = (
+  slug: string,
+  data: { tvl: number; avgApy: number; pools: DYMProtocolModalData['pools'] },
+) => {
+  protocolCache[slug] = {
+    ...data,
+    timestamp: Date.now(),
+  }
 }
 
-const TVL_SLUGS: { [key: string]: string[] } = {
-  silo: ['silo-v2', 'silo-finance', 'silo'],
-  'trader-joe': ['joe-v2', 'trader-joe'],
-  'idle-finance': ['idle', 'idle-finance'],
-  'neutra-finance': ['neutra-finance', 'neutra'],
-  'coinbase-wrapped-staked-eth': ['coinbase-wrapped-staked-eth', 'cbeth'],
-  'frax-ether': ['frax-ether', 'frax'],
-  'velodrome-v2': ['velodrome-v2', 'velodrome'],
-  'puffer-finance': ['puffer-finance', 'puffer'],
-  'kelp-dao': ['kelp-dao', 'kelpdao'],
-  'kamino-lend': ['kamino-lend', 'kamino'],
-  'marinade-finance': ['marinade-finance', 'marinade'],
-  'yearn-finance': ['yearn-finance', 'yearn'],
-  'convex-finance': ['convex-finance', 'convex'],
-  'term-finance': ['term-finance', 'term'],
-  'yo-protocol': ['yo-protocol', 'yo'],
-  'felix-protocol': ['felix-protocol', 'felix'],
-  'curve-dex': ['curve-dex', 'curve-finance', 'curve'],
-  'rocket-pool': ['rocket-pool', 'rocketpool'],
-}
+export async function fetchProtocolModalData(slug: string): Promise<DYMProtocolModalData> {
+  if (!slug) {
+    return { tvl: null, avgApy: null, pools: [] }
+  }
+  const cached = protocolCache[slug]
 
-const POOL_SLUGS: { [key: string]: string[] } = {
-  silo: ['silo-v2', 'silo-finance', 'silo'],
-  'trader-joe': ['joe-v2', 'trader-joe'],
-  'idle-finance': ['idle', 'idle-finance'],
-  'velodrome-v2': ['velodrome-v2', 'velodrome'],
-  'curve-dex': ['curve-dex', 'curve'],
-  'rocket-pool': ['rocket-pool', 'rocketpool'],
-  'ether.fi': ['ether.fi', 'etherfi'],
-  'coinbase-wrapped-staked-eth': ['coinbase-wrapped-staked-eth', 'cbeth'],
-  'frax-ether': ['frax-ether', 'frax-eth'],
-}
-
-let poolsCache: DefiLlamaPool[] | null = null
-let poolsFetchPromise: Promise<DefiLlamaPool[]> | null = null
-
-function fetchAllPools(): Promise<DefiLlamaPool[]> {
-  if (poolsCache) return Promise.resolve(poolsCache)
-  if (poolsFetchPromise) return poolsFetchPromise
-
-  poolsFetchPromise = fetch('https://yields.llama.fi/pools')
-    .then((r) => r.json())
-    .then((d) => {
-      poolsCache = (d.data as DefiLlamaPool[]) || []
-
-      return poolsCache
-    })
-    .catch(() => {
-      poolsCache = []
-
-      return []
-    })
-
-  return poolsFetchPromise
-}
-
-async function fetchTVL(slug: string): Promise<number | null> {
-  const slugsToTry = slug in TVL_SLUGS ? TVL_SLUGS[slug] : [slug]
-
-  for (const s of slugsToTry) {
-    try {
-      const r = await fetch(`https://api.llama.fi/tvl/${s}`)
-      const v = await r.json()
-
-      if (typeof v === 'number' && v > 0) return v
-    } catch {
-      // try next slug
+  if (cached && !isCacheExpired(cached.timestamp)) {
+    return {
+      tvl: cached.tvl,
+      avgApy: cached.avgApy,
+      pools: cached.pools,
     }
   }
 
-  return null
-}
+  const projectId = PROJECT_SLUGS[slug] || slug
 
-function getProtocolPools(slug: string): DefiLlamaPool[] {
-  if (!poolsCache) return []
+  const response = await fetch(`/earn/api/defi-yields-market?projectId=${projectId}`)
 
-  const slugsToTry = slug in POOL_SLUGS ? POOL_SLUGS[slug] : [slug]
-  let matched: DefiLlamaPool[] = []
+  if (!response.ok) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to fetch data for ${slug}: ${response.statusText}`)
 
-  for (const s of slugsToTry) {
-    const found = poolsCache.filter((p) => p.project === s)
-
-    if (found.length > matched.length) matched = found
+    return { tvl: null, avgApy: null, pools: [] }
   }
 
-  matched.sort((a, b) => (b.tvlUsd || 0) - (a.tvlUsd || 0))
+  const data = (await response.json()) as DYMProtocolModalData
 
-  return matched.slice(0, 6)
-}
+  setProtocolCache(slug, {
+    tvl: data.tvl ?? 0,
+    avgApy: data.avgApy ?? 0,
+    pools: data.pools,
+  })
 
-/**
- * Fetch protocol modal data from DefiLlama.
- * This function is the single entry point so it can be easily replaced
- * with a custom server call later.
- */
-export async function fetchProtocolModalData(slug: string): Promise<ProtocolModalData> {
-  const [tvl] = await Promise.all([fetchTVL(slug), fetchAllPools()])
-  const pools = getProtocolPools(slug)
-
-  let avgApy: number | null = null
-
-  if (pools.length > 0) {
-    const sum = pools.reduce((s, p) => s + (p.apy || 0), 0)
-
-    avgApy = sum / pools.length
-  }
-
-  return { tvl, avgApy, pools }
+  return { tvl: data.tvl ?? 0, avgApy: data.avgApy ?? 0, pools: data.pools }
 }

@@ -1,8 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card, Emphasis, Modal, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import {
+  AnimateHeight,
+  Card,
+  Emphasis,
+  Modal,
+  SkeletonLine,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import {
   DYM_CATEGORIES,
@@ -11,28 +21,40 @@ import {
   DYM_RISK_CURATORS,
   DYM_YIELD_ASSETS,
 } from '@/app/defi-yield-market-map/constants'
-import { type DYMCategory, type DYMProtocolItem } from '@/app/defi-yield-market-map/types'
 import {
-  dymFindProtocolItem,
-  dymFormatTVL,
-  dymGetInitials,
-} from '@/app/defi-yield-market-map/utils'
+  type DYMCategory,
+  type DYMProtocolItem,
+  type DYMProtocolModalData,
+} from '@/app/defi-yield-market-map/types'
+import { dymFindProtocolItem, dymGetInitials } from '@/app/defi-yield-market-map/utils'
 
-import {
-  type DefiLlamaPool,
-  fetchProtocolModalData,
-  type ProtocolModalData,
-} from './defi-llama-api'
+import { fetchProtocolModalData } from './defi-llama-api'
 
 import defYieldMarketMapPageStyles from './DefYieldMarketMapPage.module.css'
 
-function ProductIcon({ slug, label }: { slug: string; label: string }) {
+function ProductIcon({
+  slug,
+  label,
+  className,
+  customSize,
+}: {
+  slug: string
+  label: string
+  className?: string
+  customSize?: number
+}) {
   const icon = slug in DYM_ICONS ? DYM_ICONS[slug] : undefined
 
   return (
-    <div className={defYieldMarketMapPageStyles.protocolIcon}>
+    <div className={`${defYieldMarketMapPageStyles.protocolIcon} ${className ?? ''}`}>
       {icon !== undefined ? (
-        <Image src={icon} alt={label} width={48} height={48} style={{ objectFit: 'cover' }} />
+        <Image
+          src={icon}
+          alt={label}
+          width={customSize ?? 48}
+          height={customSize ?? 48}
+          style={{ objectFit: 'cover' }}
+        />
       ) : (
         <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>{dymGetInitials(label)}</div>
       )}
@@ -40,11 +62,8 @@ function ProductIcon({ slug, label }: { slug: string; label: string }) {
   )
 }
 
-function PoolRow({ pool }: { pool: DefiLlamaPool }) {
-  const tvlStr =
-    pool.tvlUsd >= 1e6
-      ? `$${(pool.tvlUsd / 1e6).toFixed(1)}M`
-      : `$${(pool.tvlUsd / 1e3).toFixed(0)}K`
+function PoolRow({ pool }: { pool: DYMProtocolModalData['pools'][number] }) {
+  const tvlStr = formatCryptoBalance(pool.tvlUsd)
 
   return (
     <div className={defYieldMarketMapPageStyles.modalPool}>
@@ -66,7 +85,7 @@ function ModalContent({
   type: 'protocol' | 'chain' | 'asset' | 'curator' | null
   item: string | null
 }) {
-  const [data, setData] = useState<ProtocolModalData | null>(null)
+  const [data, setData] = useState<DYMProtocolModalData | null>(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -98,123 +117,128 @@ function ModalContent({
   const protocolDesc = protocol?.description
 
   return (
-    <Card className={defYieldMarketMapPageStyles.modalContentWrapper}>
-      <div className={defYieldMarketMapPageStyles.modalHeader}>
-        <div className={defYieldMarketMapPageStyles.modalHeaderIcon}>
-          <ProductIcon slug={item} label={protocolName} />
+    <Card className={defYieldMarketMapPageStyles.modalWrapper} variant="cardSecondary">
+      <ProductIcon
+        slug={item}
+        label={protocolName}
+        customSize={300}
+        className={defYieldMarketMapPageStyles.blurredIconBackground}
+      />
+      <div className={defYieldMarketMapPageStyles.modalContentWrapper}>
+        <div className={defYieldMarketMapPageStyles.modalHeader}>
+          <div className={defYieldMarketMapPageStyles.modalHeaderIcon}>
+            <ProductIcon slug={item} label={protocolName} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Text variant="h5">{protocolName}</Text>
+            {protocolUrl && (
+              <Text variant="p4" style={{ color: 'rgba(255, 255, 255, 0.4)', marginTop: '2px' }}>
+                {protocolUrl}
+              </Text>
+            )}
+          </div>
         </div>
-        <div>
-          <Text variant="h5">{protocolName}</Text>
+
+        {protocolDesc && (
+          <Text
+            variant="p3"
+            style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              lineHeight: 1.6,
+              marginBottom: '24px',
+            }}
+          >
+            {protocolDesc}
+          </Text>
+        )}
+
+        <div className={defYieldMarketMapPageStyles.modalStats}>
+          <Card
+            variant="cardPrimaryMediumPaddings"
+            className={defYieldMarketMapPageStyles.modalStatCard}
+          >
+            <Text
+              variant="p4"
+              style={{
+                color: 'rgba(255, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '4px',
+              }}
+            >
+              Total Value Locked
+            </Text>
+            {loading ? (
+              <SkeletonLine width={80} height={24} style={{ margin: '4px 0' }} />
+            ) : (
+              <Text variant="h5">
+                {data?.tvl !== null && data?.tvl !== undefined
+                  ? formatCryptoBalance(data.tvl)
+                  : '--'}
+              </Text>
+            )}
+          </Card>
+          <Card
+            variant="cardPrimaryMediumPaddings"
+            className={defYieldMarketMapPageStyles.modalStatCard}
+          >
+            <Text
+              variant="p4"
+              style={{
+                color: 'rgba(255, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '4px',
+              }}
+            >
+              Avg APY (Top Pools)
+            </Text>
+            {loading ? (
+              <SkeletonLine width={80} height={24} />
+            ) : (
+              <Text variant="h5" style={{ color: '#10b981' }}>
+                {data?.avgApy && data.avgApy > 0.1 ? `${data.avgApy.toFixed(2)}%` : '--'}
+              </Text>
+            )}
+          </Card>
+        </div>
+        <AnimateHeight id="pools-section" show={!!data?.pools.length}>
+          <div className={defYieldMarketMapPageStyles.modalPools}>
+            <Text
+              variant="p4"
+              style={{
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.4)',
+                marginBottom: '12px',
+              }}
+            >
+              Top Yield Pools
+            </Text>
+            {data?.pools.map((pool) => <PoolRow key={pool.pool} pool={pool} />)}
+          </div>
+        </AnimateHeight>
+
+        <div className={defYieldMarketMapPageStyles.modalLinks}>
           {protocolUrl && (
-            <Text variant="p4" style={{ color: 'rgba(255, 255, 255, 0.4)', marginTop: '2px' }}>
-              {protocolUrl}
-            </Text>
+            <Link
+              className={defYieldMarketMapPageStyles.modalLink}
+              href={`https://${protocolUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WithArrow variant="p4">Visit {protocolUrl}</WithArrow>
+            </Link>
           )}
-        </div>
-      </div>
-
-      {protocolDesc && (
-        <Text
-          variant="p3"
-          style={{
-            color: 'rgba(255, 255, 255, 0.7)',
-            lineHeight: 1.6,
-            marginBottom: '24px',
-          }}
-        >
-          {protocolDesc}
-        </Text>
-      )}
-
-      <div className={defYieldMarketMapPageStyles.modalStats}>
-        <Card variant="cardSecondarySmallPaddings" style={{ flexDirection: 'column' }}>
-          <Text
-            variant="p4"
-            style={{
-              color: 'rgba(255, 255, 255, 0.4)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '4px',
-            }}
-          >
-            Total Value Locked
-          </Text>
-          {loading ? (
-            <SkeletonLine width={80} height={24} />
-          ) : (
-            <Text variant="h5">
-              {data?.tvl !== null && data?.tvl !== undefined ? dymFormatTVL(data.tvl) : '--'}
-            </Text>
-          )}
-        </Card>
-        <Card variant="cardSecondarySmallPaddings" style={{ flexDirection: 'column' }}>
-          <Text
-            variant="p4"
-            style={{
-              color: 'rgba(255, 255, 255, 0.4)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '4px',
-            }}
-          >
-            Avg APY (Top Pools)
-          </Text>
-          {loading ? (
-            <SkeletonLine width={80} height={24} />
-          ) : (
-            <Text variant="h5" style={{ color: '#10b981' }}>
-              {data?.avgApy !== null && data?.avgApy !== undefined
-                ? `${data.avgApy.toFixed(2)}%`
-                : '--'}
-            </Text>
-          )}
-        </Card>
-      </div>
-
-      {loading && (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
-          <SkeletonLine width={200} height={16} />
-        </div>
-      )}
-
-      {!loading && data && data.pools.length > 0 && (
-        <div className={defYieldMarketMapPageStyles.modalPools}>
-          <Text
-            variant="p4"
-            style={{
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              color: 'rgba(255, 255, 255, 0.4)',
-              marginBottom: '12px',
-            }}
-          >
-            Top Yield Pools
-          </Text>
-          {data.pools.map((pool) => (
-            <PoolRow key={pool.pool} pool={pool} />
-          ))}
-        </div>
-      )}
-
-      <div className={defYieldMarketMapPageStyles.modalLinks}>
-        {protocolUrl && (
-          <a
+          <Link
             className={defYieldMarketMapPageStyles.modalLink}
-            href={`https://${protocolUrl}`}
+            href={`https://defillama.com/protocol/${item}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Visit {protocolUrl} \u2192
-          </a>
-        )}
-        <a
-          className={defYieldMarketMapPageStyles.modalLink}
-          href={`https://defillama.com/protocol/${item}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          DefiLlama \u2192
-        </a>
+            <WithArrow variant="p4">DefiLlama</WithArrow>
+          </Link>
+        </div>
       </div>
     </Card>
   )
@@ -336,7 +360,7 @@ function CuratorsCard() {
             <div key={curator.name} className={defYieldMarketMapPageStyles.protocolItem}>
               <div className={defYieldMarketMapPageStyles.protocolIcon}>
                 <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>
-                  {dymGetInitials(curator.name)}
+                  <ProductIcon slug={curator.slug} label={curator.name} />
                 </div>
               </div>
               <span className={defYieldMarketMapPageStyles.protocolLabel}>{curator.name}</span>

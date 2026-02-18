@@ -161,12 +161,20 @@
 }
 
 /* Modal styles */
+.modalWrapper {
+  overflow: hidden;
+  position: relative;
+}
+
 .modalContentWrapper {
   display: flex;
   flex-direction: column;
   gap: 0;
   min-width: 340px;
   max-width: 480px;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .modalHeader {
@@ -174,6 +182,8 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 16px;
 }
 
 .modalHeaderIcon {
@@ -187,6 +197,12 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 24px;
+}
+
+.modalStatCard {
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 20, 20, 0.4);
 }
 
 .modalPools {
@@ -230,19 +246,33 @@
 
 .modalLinks {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 40px;
   padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: all;
 }
 
 .modalLink {
-  font-size: 13px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   transition: color 0.2s;
+  color: var(--earn-protocol-primary-100);
 }
 
 .modalLink:hover {
   color: #fff;
+}
+
+.blurredIconBackground {
+  pointer-events: none;
+  position: absolute;
+  top: -200px;
+  left: -200px;
+  width: 300px;
+  height: 300px;
+  filter: blur(90px);
+  opacity: 0.6;
+  z-index: 1;
 }

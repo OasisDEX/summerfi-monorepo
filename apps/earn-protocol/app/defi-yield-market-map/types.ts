@@ -34,4 +34,17 @@ export interface DYMAssetSection {
 
 export interface DYMCuratorItem {
   name: string
+  slug: string
+}
+
+export interface DYMProtocolModalData {
+  tvl: number | null
+  avgApy: number | null
+  pools: {
+    pool: string
+    tvlUsd: number
+    symbol: string
+    apy: number
+    chain: string
+  }[]
 }

@@ -10,12 +10,16 @@ import {
 import aave from '@/public/img/protocol_icons_market_map/aave.png'
 import aerodrome from '@/public/img/protocol_icons_market_map/aerodrome.png'
 import arbitrum from '@/public/img/protocol_icons_market_map/arbitrum.png'
+import augustDigital from '@/public/img/protocol_icons_market_map/august-digital.png'
 import avalanche from '@/public/img/protocol_icons_market_map/avalanche.png'
 import base from '@/public/img/protocol_icons_market_map/base.png'
 import beefy from '@/public/img/protocol_icons_market_map/beefy.png'
 import benji from '@/public/img/protocol_icons_market_map/benji.png'
+import bitwise from '@/public/img/protocol_icons_market_map/bitwise.png'
+import blockAnalitica from '@/public/img/protocol_icons_market_map/block-analitica.png'
 import buidl from '@/public/img/protocol_icons_market_map/buidl.png'
 import cap from '@/public/img/protocol_icons_market_map/cap.png'
+import clearstar from '@/public/img/protocol_icons_market_map/clearstar.png'
 import coinbaseWrappedStakedEth from '@/public/img/protocol_icons_market_map/coinbase-wrapped-staked-eth.png'
 import compound from '@/public/img/protocol_icons_market_map/compound.png'
 import convexFinance from '@/public/img/protocol_icons_market_map/convex-finance.png'
@@ -28,8 +32,10 @@ import euler from '@/public/img/protocol_icons_market_map/euler.png'
 import felixProtocol from '@/public/img/protocol_icons_market_map/felix-protocol.png'
 import fluid from '@/public/img/protocol_icons_market_map/fluid.png'
 import fraxEther from '@/public/img/protocol_icons_market_map/frax-ether.png'
+import gauntlet from '@/public/img/protocol_icons_market_map/gauntlet.png'
 import hyperbeat from '@/public/img/protocol_icons_market_map/hyperbeat.png'
 import hyperevm from '@/public/img/protocol_icons_market_map/hyperevm.png'
+import hyperithm from '@/public/img/protocol_icons_market_map/hyperithm.png'
 import hyperlend from '@/public/img/protocol_icons_market_map/hyperlend.png'
 import hyperliquid from '@/public/img/protocol_icons_market_map/hyperliquid.png'
 import idleFinance from '@/public/img/protocol_icons_market_map/idle-finance.png'
@@ -40,6 +46,7 @@ import kaminoLend from '@/public/img/protocol_icons_market_map/kamino-lend.png'
 import karak from '@/public/img/protocol_icons_market_map/karak.png'
 import kelpDao from '@/public/img/protocol_icons_market_map/kelp-dao.png'
 import kinetiq from '@/public/img/protocol_icons_market_map/kinetiq.png'
+import kpk from '@/public/img/protocol_icons_market_map/kpk.png'
 import lido from '@/public/img/protocol_icons_market_map/lido.png'
 import lighter from '@/public/img/protocol_icons_market_map/lighter.png'
 import linea from '@/public/img/protocol_icons_market_map/linea.png'
@@ -48,6 +55,7 @@ import mapollo from '@/public/img/protocol_icons_market_map/mapollo.png'
 import marginfi from '@/public/img/protocol_icons_market_map/marginfi.png'
 import marinadeFinance from '@/public/img/protocol_icons_market_map/marinade-finance.png'
 import medge from '@/public/img/protocol_icons_market_map/medge.png'
+import mevCapital from '@/public/img/protocol_icons_market_map/mev-capital.png'
 import mfOne from '@/public/img/protocol_icons_market_map/mf-one.png'
 import mhyper from '@/public/img/protocol_icons_market_map/mhyper.png'
 import mmev from '@/public/img/protocol_icons_market_map/mmev.png'
@@ -59,17 +67,20 @@ import pendle from '@/public/img/protocol_icons_market_map/pendle.png'
 import plasma from '@/public/img/protocol_icons_market_map/plasma.png'
 import pufferFinance from '@/public/img/protocol_icons_market_map/puffer-finance.png'
 import raydium from '@/public/img/protocol_icons_market_map/raydium.png'
+import re7Capital from '@/public/img/protocol_icons_market_map/re7-capital.png'
 import renzo from '@/public/img/protocol_icons_market_map/renzo.png'
 import resolv from '@/public/img/protocol_icons_market_map/resolv.png'
 import rocketPool from '@/public/img/protocol_icons_market_map/rocket-pool.png'
 import royco from '@/public/img/protocol_icons_market_map/royco.png'
 import sanctum from '@/public/img/protocol_icons_market_map/sanctum.png'
 import sdai from '@/public/img/protocol_icons_market_map/sdai.png'
+import sentora from '@/public/img/protocol_icons_market_map/sentora.png'
 import silo from '@/public/img/protocol_icons_market_map/silo.png'
 import solana from '@/public/img/protocol_icons_market_map/solana.png'
 import spark from '@/public/img/protocol_icons_market_map/spark.png'
 import spectra from '@/public/img/protocol_icons_market_map/spectra.png'
 import stakewise from '@/public/img/protocol_icons_market_map/stakewise.png'
+import steakhouse from '@/public/img/protocol_icons_market_map/steakhouse.png'
 import summerFi from '@/public/img/protocol_icons_market_map/summer_fi.png'
 import susde from '@/public/img/protocol_icons_market_map/susde.png'
 import susds from '@/public/img/protocol_icons_market_map/susds.png'
@@ -177,6 +188,18 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   ustb,
   usyc,
   wtgxx,
+  // curators
+  augustDigital,
+  bitwise,
+  blockAnalitica,
+  clearstar,
+  gauntlet,
+  hyperithm,
+  kpk,
+  mevCapital,
+  re7Capital,
+  sentora,
+  steakhouse,
 }
 
 export const DYM_CATEGORIES: DYMCategory[] = [
@@ -733,15 +756,15 @@ export const DYM_YIELD_ASSETS: { [key: string]: DYMAssetSection } = {
 }
 
 export const DYM_RISK_CURATORS: DYMCuratorItem[] = [
-  { name: 'Steakhouse' },
-  { name: 'Gauntlet' },
-  { name: 'MEV Capital' },
-  { name: 'Re7 Capital' },
-  { name: 'Block Analitica' },
-  { name: 'August Digital' },
-  { name: 'Clearstar' },
-  { name: 'kpk' },
-  { name: 'Sentora' },
-  { name: 'Hyperithm' },
-  { name: 'Bitwise' },
+  { name: 'Steakhouse', slug: 'steakhouse' },
+  { name: 'Gauntlet', slug: 'gauntlet' },
+  { name: 'MEV Capital', slug: 'mevCapital' },
+  { name: 'Re7 Capital', slug: 're7Capital' },
+  { name: 'Block Analitica', slug: 'blockAnalitica' },
+  { name: 'August Digital', slug: 'augustDigital' },
+  { name: 'Clearstar', slug: 'clearstar' },
+  { name: 'kpk', slug: 'kpk' },
+  { name: 'Sentora', slug: 'sentora' },
+  { name: 'Hyperithm', slug: 'hyperithm' },
+  { name: 'Bitwise', slug: 'bitwise' },
 ]

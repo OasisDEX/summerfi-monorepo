@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "assetSub": string;
+  readonly "blurredIconBackground": string;
   readonly "categoryHeader": string;
   readonly "categoryIcon": string;
   readonly "chainsGrid": string;
@@ -15,7 +16,9 @@ declare const styles: {
   readonly "modalPoolDetails": string;
   readonly "modalPoolName": string;
   readonly "modalPools": string;
+  readonly "modalStatCard": string;
   readonly "modalStats": string;
+  readonly "modalWrapper": string;
   readonly "projectAvatarIcon": string;
   readonly "protocolGrid": string;
   readonly "protocolIcon": string;
