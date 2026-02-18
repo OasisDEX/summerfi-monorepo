@@ -26,6 +26,7 @@ import convexFinance from '@/public/img/protocol_icons_market_map/convex-finance
 import curveDex from '@/public/img/protocol_icons_market_map/curve-dex.png'
 import drift from '@/public/img/protocol_icons_market_map/drift.png'
 import eigenlayer from '@/public/img/protocol_icons_market_map/eigenlayer.png'
+import ethena from '@/public/img/protocol_icons_market_map/ethena.png'
 import etherFi from '@/public/img/protocol_icons_market_map/ether_fi.png'
 import ethereum from '@/public/img/protocol_icons_market_map/ethereum.png'
 import euler from '@/public/img/protocol_icons_market_map/euler.png'
@@ -123,7 +124,8 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   hyperliquid,
   'idle-finance': idleFinance,
   jito,
-  jupiter,
+  'jupiter-lend': jupiter,
+  'jupiter-staked-sol': jupiter,
   'kamino-lend': kaminoLend,
   karak,
   'kelp-dao': kelpDao,
@@ -156,7 +158,7 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   'velodrome-v2': velodromeV2,
   'yearn-finance': yearnFinance,
   'yo-protocol': yoProtocol,
-  ethena: etherFi,
+  ethena,
   // networks
   arbitrum,
   avalanche,
@@ -233,7 +235,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Jupiter Lend',
-            slug: 'jupiter',
+            slug: 'jupiter-lend',
             url: 'jup.ag',
             description:
               'Solana\u2019s premier lending market integrated with Jupiter\u2019s liquidity network.',
@@ -388,7 +390,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Jupiter',
-            slug: 'jupiter',
+            slug: 'jupiter-staked-sol',
             url: 'jup.ag',
             description:
               'Jupiter\u2019s liquid staked SOL (jupSOL) with MEV kickback and enhanced yield.',
@@ -710,7 +712,7 @@ export const DYM_CHAINS: DYMChainItem[] = [
   { name: 'Solana', slug: 'solana' },
   { name: 'Base', slug: 'base' },
   { name: 'Arbitrum', slug: 'arbitrum' },
-  { name: 'HyperEVM', slug: 'hyperliquid' },
+  { name: 'HyperEVM', slug: 'hyperevm' },
   { name: 'Plasma', slug: 'plasma' },
   { name: 'Optimism', slug: 'optimism' },
   { name: 'Linea', slug: 'linea' },

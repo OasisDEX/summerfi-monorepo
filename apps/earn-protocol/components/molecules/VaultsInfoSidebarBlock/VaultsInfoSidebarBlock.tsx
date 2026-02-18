@@ -71,7 +71,7 @@ export const VaultsInfoSidebarBlock = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Image
               src={blockAnalyticaLogo}
-              alt="Block Analytica Logo"
+              alt="Block Analitica Logo"
               width={100}
               height={32}
               style={{ marginBottom: '12px' }}
@@ -97,7 +97,7 @@ export const VaultsInfoSidebarBlock = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <Text variant="p3semi">Active risk management</Text>
               <Text variant="p3">
-                Block Analytica provides active 24/7 risk monitoring for Lazy Summer Risk-Managed By
+                Block Analitica provides active 24/7 risk monitoring for Lazy Summer Risk-Managed By
                 Block Analitica vaults. Responsible for setting allocation caps in real time.
               </Text>
               <WithArrow variant="p4semi">
@@ -150,7 +150,7 @@ export const VaultsInfoSidebarBlock = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Image
               src={blockAnalyticaLogo}
-              alt="Block Analytica Logo"
+              alt="Block Analitica Logo"
               width={100}
               height={32}
               style={{ marginBottom: '12px' }}

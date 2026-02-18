@@ -116,12 +116,19 @@ function ModalContent({
 
     setLoading(true)
     setData(null)
-    fetchProtocolModalData(item).then((result) => {
-      if (!cancelled) {
-        setData(result)
-        setLoading(false)
-      }
-    })
+    fetchProtocolModalData(item)
+      .then((result) => {
+        if (!cancelled) {
+          setData(result)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setData({ tvl: null, avgApy: null, pools: [] })
+          setLoading(false)
+        }
+      })
 
     return () => {
       cancelled = true

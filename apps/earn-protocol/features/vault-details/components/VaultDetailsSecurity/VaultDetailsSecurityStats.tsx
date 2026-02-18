@@ -40,7 +40,7 @@ export const VaultDetailsSecurityStats = ({
       title: 'Risk Curators',
       value: (
         <Link href="https://blockanalitica.com/" target="_blank">
-          <Image src={blockAnalyticaLogo} alt="Block Analytica" height={30} />
+          <Image src={blockAnalyticaLogo} alt="Block Analitica" height={30} />
         </Link>
       ),
     },
