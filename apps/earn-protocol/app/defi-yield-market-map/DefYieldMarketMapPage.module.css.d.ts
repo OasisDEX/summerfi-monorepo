@@ -4,6 +4,7 @@ declare const styles: {
   readonly "categoryHeader": string;
   readonly "categoryIcon": string;
   readonly "chainsGrid": string;
+  readonly "ctaModalBlock": string;
   readonly "masonryGrid": string;
   readonly "masonryItem": string;
   readonly "modalContentWrapper": string;

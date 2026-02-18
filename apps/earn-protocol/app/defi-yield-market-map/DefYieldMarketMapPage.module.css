@@ -164,6 +164,7 @@
 .modalWrapper {
   overflow: hidden;
   position: relative;
+  background: linear-gradient(180deg, #141414 0%, #0f0f0f 100%);
 }
 
 .modalContentWrapper {
@@ -195,14 +196,15 @@
 .modalStats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 24px;
   margin-bottom: 24px;
 }
 
 .modalStatCard {
   display: flex;
   flex-direction: column;
-  background: rgba(20, 20, 20, 0.4);
+  background: rgba(40, 40, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .modalPools {
@@ -275,4 +277,17 @@
   filter: blur(90px);
   opacity: 0.6;
   z-index: 1;
+}
+
+.ctaModalBlock {
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px 48px;
+  background: linear-gradient(135deg, rgba(255, 77, 150, 0.08) 0%, rgba(162, 56, 255, 0.08) 100%);
+  border: 1px solid rgba(255, 77, 150, 0.15);
+  pointer-events: all;
 }

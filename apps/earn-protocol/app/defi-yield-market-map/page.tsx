@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import {
   AnimateHeight,
+  Button,
   Card,
   Emphasis,
   Modal,
@@ -218,6 +219,20 @@ function ModalContent({
             {data?.pools.map((pool) => <PoolRow key={pool.pool} pool={pool} />)}
           </div>
         </AnimateHeight>
+
+        <Card
+          variant="cardPrimarySmallPaddingsColorfulBorder"
+          className={defYieldMarketMapPageStyles.ctaModalBlock}
+        >
+          <Text variant="p2semi">Future proof your DeFi yield</Text>
+          <Text variant="p4" style={{ color: 'var(--color-text-secondary)' }}>
+            DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
+            Pool, so your yield stays optimized without manual effort.
+          </Text>
+          <Link href="/?vaults=dao-managed">
+            <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
+          </Link>
+        </Card>
 
         <div className={defYieldMarketMapPageStyles.modalLinks}>
           {protocolUrl && (
