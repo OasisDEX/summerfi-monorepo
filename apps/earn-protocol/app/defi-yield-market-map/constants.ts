@@ -1,14 +1,17 @@
 import { type StaticImageData } from 'next/image'
 
 import {
-  DYMAssetSection,
-  DYMCategory,
-  DYMChainItem,
-  DYMCuratorItem,
-} from '@/app/defi-yield-market-map/types'
+  type DYMAssetSection,
+  type DYMCategory,
+  type DYMChainItem,
+  type DYMCuratorItem,
+} from './types'
 
 import aave from '@/public/img/protocol_icons_market_map/aave.png'
 import aerodrome from '@/public/img/protocol_icons_market_map/aerodrome.png'
+import arbitrum from '@/public/img/protocol_icons_market_map/arbitrum.png'
+import avalanche from '@/public/img/protocol_icons_market_map/avalanche.png'
+import base from '@/public/img/protocol_icons_market_map/base.png'
 import beefy from '@/public/img/protocol_icons_market_map/beefy.png'
 import cap from '@/public/img/protocol_icons_market_map/cap.png'
 import coinbaseWrappedStakedEth from '@/public/img/protocol_icons_market_map/coinbase-wrapped-staked-eth.png'
@@ -18,11 +21,13 @@ import curveDex from '@/public/img/protocol_icons_market_map/curve-dex.png'
 import drift from '@/public/img/protocol_icons_market_map/drift.png'
 import eigenlayer from '@/public/img/protocol_icons_market_map/eigenlayer.png'
 import etherFi from '@/public/img/protocol_icons_market_map/ether_fi.png'
+import ethereum from '@/public/img/protocol_icons_market_map/ethereum.png'
 import euler from '@/public/img/protocol_icons_market_map/euler.png'
 import felixProtocol from '@/public/img/protocol_icons_market_map/felix-protocol.png'
 import fluid from '@/public/img/protocol_icons_market_map/fluid.png'
 import fraxEther from '@/public/img/protocol_icons_market_map/frax-ether.png'
 import hyperbeat from '@/public/img/protocol_icons_market_map/hyperbeat.png'
+import hyperevm from '@/public/img/protocol_icons_market_map/hyperevm.png'
 import hyperlend from '@/public/img/protocol_icons_market_map/hyperlend.png'
 import hyperliquid from '@/public/img/protocol_icons_market_map/hyperliquid.png'
 import idleFinance from '@/public/img/protocol_icons_market_map/idle-finance.png'
@@ -34,12 +39,15 @@ import kelpDao from '@/public/img/protocol_icons_market_map/kelp-dao.png'
 import kinetiq from '@/public/img/protocol_icons_market_map/kinetiq.png'
 import lido from '@/public/img/protocol_icons_market_map/lido.png'
 import lighter from '@/public/img/protocol_icons_market_map/lighter.png'
+import linea from '@/public/img/protocol_icons_market_map/linea.png'
 import maple from '@/public/img/protocol_icons_market_map/maple.png'
 import marginfi from '@/public/img/protocol_icons_market_map/marginfi.png'
 import marinadeFinance from '@/public/img/protocol_icons_market_map/marinade-finance.png'
 import morpho from '@/public/img/protocol_icons_market_map/morpho.png'
 import neutraFinance from '@/public/img/protocol_icons_market_map/neutra-finance.png'
+import optimism from '@/public/img/protocol_icons_market_map/optimism.png'
 import pendle from '@/public/img/protocol_icons_market_map/pendle.png'
+import plasma from '@/public/img/protocol_icons_market_map/plasma.png'
 import pufferFinance from '@/public/img/protocol_icons_market_map/puffer-finance.png'
 import raydium from '@/public/img/protocol_icons_market_map/raydium.png'
 import renzo from '@/public/img/protocol_icons_market_map/renzo.png'
@@ -48,6 +56,7 @@ import rocketPool from '@/public/img/protocol_icons_market_map/rocket-pool.png'
 import royco from '@/public/img/protocol_icons_market_map/royco.png'
 import sanctum from '@/public/img/protocol_icons_market_map/sanctum.png'
 import silo from '@/public/img/protocol_icons_market_map/silo.png'
+import solana from '@/public/img/protocol_icons_market_map/solana.png'
 import spark from '@/public/img/protocol_icons_market_map/spark.png'
 import spectra from '@/public/img/protocol_icons_market_map/spectra.png'
 import stakewise from '@/public/img/protocol_icons_market_map/stakewise.png'
@@ -62,6 +71,7 @@ import yearnFinance from '@/public/img/protocol_icons_market_map/yearn-finance.p
 import yoProtocol from '@/public/img/protocol_icons_market_map/yo-protocol.png'
 
 export const DYM_ICONS: { [key: string]: StaticImageData } = {
+  // protocols
   aave,
   aerodrome,
   beefy,
@@ -116,6 +126,16 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   'yearn-finance': yearnFinance,
   'yo-protocol': yoProtocol,
   ethena: etherFi,
+  // networks
+  arbitrum,
+  avalanche,
+  base,
+  ethereum,
+  hyperevm,
+  linea,
+  optimism,
+  plasma,
+  solana,
 }
 
 export const DYM_CATEGORIES: DYMCategory[] = [
