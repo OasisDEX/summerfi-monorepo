@@ -71,7 +71,7 @@ export const VaultsInfoSidebarBlock = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Image
               src={blockAnalyticaLogo}
-              alt="Block Analytica Logo"
+              alt="Block Analitica Logo"
               width={100}
               height={32}
               style={{ marginBottom: '12px' }}
@@ -97,8 +97,8 @@ export const VaultsInfoSidebarBlock = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <Text variant="p3semi">Active risk management</Text>
               <Text variant="p3">
-                Block Analytica provides active 24/7 risk monitoring for Lazy Summer Prime Vaults.
-                Responsible for setting allocation caps in real time.
+                Block Analitica provides active 24/7 risk monitoring for Lazy Summer Risk-Managed By
+                Block Analitica vaults. Responsible for setting allocation caps in real time.
               </Text>
               <WithArrow variant="p4semi">
                 <Link
@@ -107,7 +107,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">View prime vault framework</Text>
+                  <Text variant="p4semi">View risk framework</Text>
                 </Link>
               </WithArrow>
             </div>
@@ -117,9 +117,9 @@ export const VaultsInfoSidebarBlock = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <Text variant="p3semi">Risk framework</Text>
               <Text variant="p3">
-                In addition to real time risk monitoring for Lazy Summer prime vaults. Block
-                Analitca developed the risk framework for Alpha vaults, which are governed by Lazy
-                Summer DAO.
+                In addition to real time risk monitoring for Lazy Summer Risk-Managed By Block
+                Analitica vaults, Block Analitica developed the risk framework for DAO Risk-Managed
+                vaults, which are governed by Lazy Summer DAO.
               </Text>
               <WithArrow variant="p4semi">
                 <Link
@@ -128,7 +128,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">View Alpha vault risk framework</Text>
+                  <Text variant="p4semi">View DAO Risk-Managed vault risk framework</Text>
                 </Link>
               </WithArrow>
             </div>
@@ -150,7 +150,7 @@ export const VaultsInfoSidebarBlock = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <Image
               src={blockAnalyticaLogo}
-              alt="Block Analytica Logo"
+              alt="Block Analitica Logo"
               width={100}
               height={32}
               style={{ marginBottom: '12px' }}
@@ -196,7 +196,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">Learn more about Prime vaults</Text>
+                  <Text variant="p4semi">Learn more</Text>
                 </Link>
               </WithArrow>
             </div>
@@ -220,7 +220,7 @@ export const VaultsInfoSidebarBlock = () => {
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">View Alpha vault risk framework</Text>
+                  <Text variant="p4semi">View DAO Risk-Managed vault risk framework</Text>
                 </Link>
               </WithArrow>
             </div>

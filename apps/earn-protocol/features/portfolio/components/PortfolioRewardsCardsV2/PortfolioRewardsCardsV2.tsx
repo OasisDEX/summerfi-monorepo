@@ -30,6 +30,7 @@ import { useParams } from 'next/navigation'
 
 import { UnstakeOldSumrButton } from '@/components/molecules/UnstakeOldSumrButton/UnstakeOldSumrButton'
 import { delayPerNetwork } from '@/constants/delay-per-network'
+import { MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW } from '@/constants/sumr-staking-v2'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { beachClubDefaultState, beachClubReducer } from '@/features/beach-club/state'
 import { type BeachClubState } from '@/features/beach-club/types'
@@ -615,7 +616,8 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
   claimableRewards,
   viewWalletAddress,
 }) => {
-  const hasSumrInOldModule = Number(rewardsData.sumrStakeDelegate.stakedAmount) > 0.01
+  const hasSumrInOldModule =
+    Number(rewardsData.sumrStakeDelegate.stakedAmount) > MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW
   const { userWalletAddress } = useUserWallet()
 
   return (

@@ -1,0 +1,35 @@
+declare const styles: {
+  readonly "assetSub": string;
+  readonly "blurredIconBackground": string;
+  readonly "categoryHeader": string;
+  readonly "categoryIcon": string;
+  readonly "chainsGrid": string;
+  readonly "ctaModalBlock": string;
+  readonly "ctaModalBlockBig": string;
+  readonly "masonryGrid": string;
+  readonly "masonryItem": string;
+  readonly "modalContentWrapper": string;
+  readonly "modalHeader": string;
+  readonly "modalHeaderIcon": string;
+  readonly "modalLink": string;
+  readonly "modalLinks": string;
+  readonly "modalPool": string;
+  readonly "modalPoolApy": string;
+  readonly "modalPoolDetails": string;
+  readonly "modalPoolName": string;
+  readonly "modalPools": string;
+  readonly "modalStatCard": string;
+  readonly "modalStats": string;
+  readonly "modalWrapper": string;
+  readonly "projectAvatarIcon": string;
+  readonly "protocolGrid": string;
+  readonly "protocolIcon": string;
+  readonly "protocolItem": string;
+  readonly "protocolLabel": string;
+  readonly "subTitle": string;
+  readonly "subcategoryDivider": string;
+  readonly "subcategoryTitle": string;
+  readonly "wrapper": string;
+};
+export = styles;
+

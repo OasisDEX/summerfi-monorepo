@@ -1,0 +1,451 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import {
+  AnimateHeight,
+  Button,
+  Card,
+  Emphasis,
+  Modal,
+  SkeletonLine,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import { formatCryptoBalance } from '@summerfi/app-utils'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import {
+  DYM_CATEGORIES,
+  DYM_CHAINS,
+  DYM_ICONS,
+  DYM_RISK_CURATORS,
+  DYM_YIELD_ASSETS,
+} from '@/app/defi-yield-market-map/constants'
+import {
+  type DYMCategory,
+  type DYMProtocolItem,
+  type DYMProtocolModalData,
+} from '@/app/defi-yield-market-map/types'
+import { dymFindProtocolItem, dymGetInitials } from '@/app/defi-yield-market-map/utils'
+
+import { fetchProtocolModalData } from './defi-llama-api'
+
+import defYieldMarketMapPageStyles from './DefYieldMarketMapPage.module.css'
+
+function CTABlock({ big }: { big?: boolean }) {
+  return (
+    <Card
+      variant="cardPrimarySmallPaddingsColorfulBorder"
+      className={`${defYieldMarketMapPageStyles.ctaModalBlock} ${big ? defYieldMarketMapPageStyles.ctaModalBlockBig : ''}`}
+    >
+      <Text variant={big ? 'h4' : 'p2semi'}>Future proof your DeFi yield</Text>
+      <Text variant={big ? 'p1' : 'p4'} style={{ color: 'var(--color-text-secondary)' }}>
+        DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
+        Pool, so your yield stays optimized without manual effort.
+      </Text>
+      <Link href="/?vaults=dao-managed">
+        <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
+      </Link>
+    </Card>
+  )
+}
+
+function ProductIcon({
+  slug,
+  label,
+  className,
+  customSize,
+}: {
+  slug: string
+  label: string
+  className?: string
+  customSize?: number
+}) {
+  const icon = slug in DYM_ICONS ? DYM_ICONS[slug] : undefined
+
+  return (
+    <div className={`${defYieldMarketMapPageStyles.protocolIcon} ${className ?? ''}`}>
+      {icon !== undefined ? (
+        <Image
+          src={icon}
+          alt={label}
+          width={customSize ?? 48}
+          height={customSize ?? 48}
+          style={{ objectFit: 'cover' }}
+        />
+      ) : (
+        <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>{dymGetInitials(label)}</div>
+      )}
+    </div>
+  )
+}
+
+function PoolRow({ pool }: { pool: DYMProtocolModalData['pools'][number] }) {
+  const tvlStr = formatCryptoBalance(pool.tvlUsd)
+
+  return (
+    <div className={defYieldMarketMapPageStyles.modalPool}>
+      <span className={defYieldMarketMapPageStyles.modalPoolName}>{pool.symbol}</span>
+      <div className={defYieldMarketMapPageStyles.modalPoolDetails}>
+        <span className={defYieldMarketMapPageStyles.modalPoolApy}>
+          {(pool.apy || 0).toFixed(2)}%
+        </span>
+        <span>{tvlStr}</span>
+        <span>{pool.chain}</span>
+      </div>
+    </div>
+  )
+}
+
+function ModalContent({
+  item,
+}: {
+  type: 'protocol' | 'chain' | 'asset' | 'curator' | null
+  item: string | null
+}) {
+  const [data, setData] = useState<DYMProtocolModalData | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!item) {
+      return undefined
+    }
+
+    let cancelled = false
+
+    setLoading(true)
+    setData(null)
+    fetchProtocolModalData(item)
+      .then((result) => {
+        if (!cancelled) {
+          setData(result)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setData({ tvl: null, avgApy: null, pools: [] })
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [item])
+
+  if (item === null) return null
+
+  const protocol = dymFindProtocolItem(item)
+  const protocolName = protocol?.name ?? item
+  const protocolUrl = protocol?.url
+  const protocolDesc = protocol?.description
+
+  return (
+    <Card className={defYieldMarketMapPageStyles.modalWrapper} variant="cardSecondary">
+      <ProductIcon
+        slug={item}
+        label={protocolName}
+        customSize={300}
+        className={defYieldMarketMapPageStyles.blurredIconBackground}
+      />
+      <div className={defYieldMarketMapPageStyles.modalContentWrapper}>
+        <div className={defYieldMarketMapPageStyles.modalHeader}>
+          <div className={defYieldMarketMapPageStyles.modalHeaderIcon}>
+            <ProductIcon slug={item} label={protocolName} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Text variant="h5">{protocolName}</Text>
+            {protocolUrl && (
+              <Text variant="p4" style={{ color: 'rgba(255, 255, 255, 0.4)', marginTop: '2px' }}>
+                {protocolUrl}
+              </Text>
+            )}
+          </div>
+        </div>
+
+        {protocolDesc && (
+          <Text
+            variant="p3"
+            style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              lineHeight: 1.6,
+              marginBottom: '24px',
+            }}
+          >
+            {protocolDesc}
+          </Text>
+        )}
+
+        <div className={defYieldMarketMapPageStyles.modalStats}>
+          <Card
+            variant="cardPrimaryMediumPaddings"
+            className={defYieldMarketMapPageStyles.modalStatCard}
+          >
+            <Text
+              variant="p4"
+              style={{
+                color: 'rgba(255, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '4px',
+              }}
+            >
+              Total Value Locked
+            </Text>
+            {loading ? (
+              <SkeletonLine width={80} height={24} style={{ margin: '4px 0' }} />
+            ) : (
+              <Text variant="h5">
+                {data?.tvl !== null && data?.tvl !== undefined
+                  ? formatCryptoBalance(data.tvl)
+                  : '--'}
+              </Text>
+            )}
+          </Card>
+          <Card
+            variant="cardPrimaryMediumPaddings"
+            className={defYieldMarketMapPageStyles.modalStatCard}
+          >
+            <Text
+              variant="p4"
+              style={{
+                color: 'rgba(255, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '4px',
+              }}
+            >
+              Avg APY (Top Pools)
+            </Text>
+            {loading ? (
+              <SkeletonLine width={80} height={24} />
+            ) : (
+              <Text variant="h5" style={{ color: '#10b981' }}>
+                {data?.avgApy && data.avgApy > 0.1 ? `${data.avgApy.toFixed(2)}%` : '--'}
+              </Text>
+            )}
+          </Card>
+        </div>
+        <AnimateHeight id="pools-section" show={!!data?.pools.length}>
+          <div className={defYieldMarketMapPageStyles.modalPools}>
+            <Text
+              variant="p4"
+              style={{
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.4)',
+                marginBottom: '12px',
+              }}
+            >
+              Top Yield Pools
+            </Text>
+            {data?.pools.map((pool) => <PoolRow key={pool.pool} pool={pool} />)}
+          </div>
+        </AnimateHeight>
+
+        <CTABlock />
+        <div className={defYieldMarketMapPageStyles.modalLinks}>
+          {protocolUrl && (
+            <Link
+              className={defYieldMarketMapPageStyles.modalLink}
+              href={`https://${protocolUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WithArrow variant="p4">Visit {protocolUrl}</WithArrow>
+            </Link>
+          )}
+          <Link
+            className={defYieldMarketMapPageStyles.modalLink}
+            href={`https://defillama.com/protocol/${item}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <WithArrow variant="p4">DefiLlama</WithArrow>
+          </Link>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+function ProtocolItemCard({
+  item,
+  openModal,
+}: {
+  item: DYMProtocolItem
+  openModal: (type: 'protocol' | 'chain' | 'asset' | 'curator', item: string) => void
+}) {
+  return (
+    <div
+      className={defYieldMarketMapPageStyles.protocolItem}
+      onClick={() => openModal('protocol', item.slug)}
+    >
+      <ProductIcon slug={item.slug} label={item.name} />
+      <span className={defYieldMarketMapPageStyles.protocolLabel}>{item.name}</span>
+    </div>
+  )
+}
+
+function CategoryCard({
+  category,
+  openModal,
+}: {
+  category: DYMCategory
+  openModal: (type: 'protocol' | 'chain' | 'asset' | 'curator', item: string) => void
+}) {
+  return (
+    <Card className={defYieldMarketMapPageStyles.masonryItem} variant="cardSecondarySmallPaddings">
+      <div className={defYieldMarketMapPageStyles.categoryHeader}>
+        <Text variant="p3semi" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          {category.title}
+        </Text>
+      </div>
+      {category.subcategories.map((sub, i) => (
+        <div key={sub.label ?? i} className={defYieldMarketMapPageStyles.subcategoryDivider}>
+          {sub.label && (
+            <div className={defYieldMarketMapPageStyles.subcategoryTitle}>{sub.label}</div>
+          )}
+          <div className={defYieldMarketMapPageStyles.protocolGrid}>
+            {sub.items.map((item) => (
+              <ProtocolItemCard key={item.slug + item.name} item={item} openModal={openModal} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </Card>
+  )
+}
+
+function ChainsCard() {
+  return (
+    <Card className={defYieldMarketMapPageStyles.masonryItem} variant="cardSecondarySmallPaddings">
+      <div className={defYieldMarketMapPageStyles.categoryHeader}>
+        <Text variant="p3semi" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Supported Chains
+        </Text>
+      </div>
+      <div className={defYieldMarketMapPageStyles.subcategoryDivider}>
+        <div className={defYieldMarketMapPageStyles.chainsGrid}>
+          {DYM_CHAINS.map((chain) => (
+            <div key={chain.slug} className={defYieldMarketMapPageStyles.protocolItem}>
+              <ProductIcon slug={chain.slug} label={chain.name} />
+              <span className={defYieldMarketMapPageStyles.protocolLabel}>{chain.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+function AssetsCard() {
+  const sections = Object.entries(DYM_YIELD_ASSETS)
+
+  return (
+    <Card className={defYieldMarketMapPageStyles.masonryItem} variant="cardSecondarySmallPaddings">
+      <div className={defYieldMarketMapPageStyles.categoryHeader}>
+        <Text variant="p3semi" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Yield-Bearing Assets
+        </Text>
+      </div>
+      {sections.map(([key, section]) => (
+        <div key={key} className={defYieldMarketMapPageStyles.subcategoryDivider}>
+          <div className={defYieldMarketMapPageStyles.subcategoryTitle}>{section.label}</div>
+          <div className={defYieldMarketMapPageStyles.protocolGrid}>
+            {section.items.map((asset) => (
+              <div key={asset.name} className={defYieldMarketMapPageStyles.protocolItem}>
+                <div className={defYieldMarketMapPageStyles.protocolIcon}>
+                  <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>
+                    <ProductIcon slug={asset.slug} label={asset.name} />
+                  </div>
+                </div>
+                <span className={defYieldMarketMapPageStyles.protocolLabel}>{asset.name}</span>
+                <span className={defYieldMarketMapPageStyles.assetSub}>{asset.sub}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </Card>
+  )
+}
+
+function CuratorsCard() {
+  return (
+    <Card className={defYieldMarketMapPageStyles.masonryItem} variant="cardSecondarySmallPaddings">
+      <div className={defYieldMarketMapPageStyles.categoryHeader}>
+        <Text variant="p3semi" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Risk Curators
+        </Text>
+      </div>
+      <div className={defYieldMarketMapPageStyles.subcategoryDivider}>
+        <div className={defYieldMarketMapPageStyles.chainsGrid}>
+          {DYM_RISK_CURATORS.map((curator) => (
+            <div key={curator.name} className={defYieldMarketMapPageStyles.protocolItem}>
+              <div className={defYieldMarketMapPageStyles.protocolIcon}>
+                <div className={defYieldMarketMapPageStyles.projectAvatarIcon}>
+                  <ProductIcon slug={curator.slug} label={curator.name} />
+                </div>
+              </div>
+              <span className={defYieldMarketMapPageStyles.protocolLabel}>{curator.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+export default function DefYieldMarketMapPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalType, setModalType] = useState<'protocol' | 'chain' | 'asset' | 'curator' | null>(
+    null,
+  )
+  const [selectedItem, setSelectedItem] = useState<string | null>(null)
+
+  const openModal = (type: 'protocol' | 'chain' | 'asset' | 'curator', item: string) => {
+    setModalType(type)
+    setSelectedItem(item)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setModalType(null)
+    setSelectedItem(null)
+  }
+
+  return (
+    <div className={defYieldMarketMapPageStyles.wrapper}>
+      <Text variant="h1" as="h1">
+        Where will you get your&nbsp;
+        <Emphasis variant="h1colorful" as="span">
+          DeFi yield?
+        </Emphasis>
+      </Text>
+      <Text variant="p2" as="p" className={defYieldMarketMapPageStyles.subTitle}>
+        The complete DeFi Yield Market Map. Discover DeFi yield, then future proof it with Lazy
+        Summer.
+      </Text>
+      <div className={defYieldMarketMapPageStyles.masonryGrid}>
+        {DYM_CATEGORIES.map((cat) => (
+          <CategoryCard key={cat.id} category={cat} openModal={openModal} />
+        )).reduce<React.ReactNode[]>((acc, card, i) => {
+          acc.push(card)
+          if (i === 1) acc.push(<ChainsCard key="chains" />)
+          if (i === 3) acc.push(<AssetsCard key="assets" />)
+          if (i === 5) acc.push(<CuratorsCard key="curators" />)
+
+          return acc
+        }, [])}
+      </div>
+      <CTABlock big />
+      <Modal openModal={isModalOpen} closeModal={closeModal} noScroll>
+        <ModalContent type={modalType} item={selectedItem} />
+      </Modal>
+    </div>
+  )
+}

@@ -1,0 +1,298 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1400px;
+  width: 100%;
+  margin: 32px auto 0;
+
+  h1 {
+    text-align: center;
+    font-size: 60px;
+  }
+
+  .subTitle {
+    margin-top: 16px;
+    color: var(--color-text-secondary);
+  }
+}
+
+.masonryGrid {
+  column-count: 1;
+  column-gap: 24px;
+  padding: 32px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .masonryGrid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .masonryGrid {
+    column-count: 3;
+  }
+}
+
+.masonryItem {
+  break-inside: avoid;
+  margin-bottom: 24px;
+  flex-direction: column;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+  padding-left: 18px;
+  transition: border-color 0.3s;
+}
+
+.categoryIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.protocolGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+@media (max-width: 768px) {
+  .protocolGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .protocolGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.protocolItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.protocolItem:hover {
+  transform: translateY(-2px);
+}
+
+.protocolIcon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.protocolLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.2;
+  transition: color 0.2s;
+  max-width: 70px;
+  word-break: break-word;
+}
+
+.protocolItem:hover .protocolLabel {
+  color: #fff;
+}
+
+.subcategoryDivider {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.subcategoryTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 12px;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.chainsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.assetSub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: -4px;
+}
+
+.projectAvatarIcon {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--gradient-earn-protocol-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Modal styles */
+.modalWrapper {
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, #141414 0%, #0f0f0f 100%);
+}
+
+.modalContentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 340px;
+  max-width: 480px;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 16px;
+}
+
+.modalHeaderIcon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.modalStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.modalStatCard {
+  display: flex;
+  flex-direction: column;
+  background: rgba(40, 40, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalPools {
+  margin-bottom: 24px;
+}
+
+.modalPool {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalPool:last-child {
+  border-bottom: none;
+}
+
+.modalPoolName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modalPoolDetails {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.modalPoolApy {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.modalLinks {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: all;
+}
+
+.modalLink {
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s;
+  color: var(--earn-protocol-primary-100);
+}
+
+.modalLink:hover {
+  color: #fff;
+}
+
+.blurredIconBackground {
+  pointer-events: none;
+  position: absolute;
+  top: -200px;
+  left: -200px;
+  width: 300px;
+  height: 300px;
+  filter: blur(90px);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.ctaModalBlock {
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px 48px;
+  background: linear-gradient(135deg, rgba(255, 77, 150, 0.08) 0%, rgba(162, 56, 255, 0.08) 100%);
+  border: 1px solid rgba(255, 77, 150, 0.15);
+  pointer-events: all;
+}
+
+.ctaModalBlockBig {
+  max-width: 700px;
+  margin: 0 auto 24px;
+  padding: 32px 48px;
+}

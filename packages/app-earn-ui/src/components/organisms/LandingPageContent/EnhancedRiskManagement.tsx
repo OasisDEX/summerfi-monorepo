@@ -73,7 +73,7 @@ export const EnhancedRiskManagement = ({
           </div>
           <div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
-              <Image src={imagesMap.blockAnalyticaLogo} alt="Block Analytica" />
+              <Image src={imagesMap.blockAnalyticaLogo} alt="Block Analitica" />
             </div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
               <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>
@@ -198,7 +198,7 @@ export const EnhancedRiskManagementCampaign = ({
           </div>
           <div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
-              <Image src={imagesMap.blockAnalyticaLogo} alt="Block Analytica" />
+              <Image src={imagesMap.blockAnalyticaLogo} alt="Block Analitica" />
             </div>
             <div className={enhancedRiskManagementStyles.smallGradientBlock}>
               <div className={enhancedRiskManagementStyles.topBlockProtocolIcons}>

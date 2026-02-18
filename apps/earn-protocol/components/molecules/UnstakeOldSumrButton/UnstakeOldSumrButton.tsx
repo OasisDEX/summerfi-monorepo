@@ -14,6 +14,7 @@ import {
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { formatDecimalToBigInt } from '@summerfi/app-utils'
 
+import { MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW } from '@/constants/sumr-staking-v2'
 import { useUnstakeSumrTransaction } from '@/features/claim-and-delegate/hooks/use-unstake-sumr-transaction'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
@@ -49,7 +50,7 @@ export const UnstakeOldSumrButton = ({
   const resolvedWalletAddress = walletAddress as string
   const isCorrectNetwork = chain.id === SupportedNetworkIds.Base
 
-  const hasOldStakedSumr = Number(oldStakedAmount) > 0.2
+  const hasOldStakedSumr = Number(oldStakedAmount) > MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW
 
   const isLoading =
     isLoadingAccount || isLoadingUnstakeTransaction || isAuthModalOpen || isSettingChain
