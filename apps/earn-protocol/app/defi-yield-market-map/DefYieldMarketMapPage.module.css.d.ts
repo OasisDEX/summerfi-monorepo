@@ -5,6 +5,7 @@ declare const styles: {
   readonly "categoryIcon": string;
   readonly "chainsGrid": string;
   readonly "ctaModalBlock": string;
+  readonly "ctaModalBlockBig": string;
   readonly "masonryGrid": string;
   readonly "masonryItem": string;
   readonly "modalContentWrapper": string;
