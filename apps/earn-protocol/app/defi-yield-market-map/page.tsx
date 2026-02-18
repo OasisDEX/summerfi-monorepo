@@ -44,7 +44,7 @@ function CTABlock({ big }: { big?: boolean }) {
         DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
         Pool, so your yield stays optimized without manual effort.
       </Text>
-      <Link href="/?vaults=dao-managed">
+      <Link href="/?vaults=dao-managed" style={{ outline: 'none' }}>
         <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
       </Link>
     </Card>
