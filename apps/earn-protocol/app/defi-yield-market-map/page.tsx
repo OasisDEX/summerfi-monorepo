@@ -33,6 +33,24 @@ import { fetchProtocolModalData } from './defi-llama-api'
 
 import defYieldMarketMapPageStyles from './DefYieldMarketMapPage.module.css'
 
+function CTABlock({ big }: { big?: boolean }) {
+  return (
+    <Card
+      variant="cardPrimarySmallPaddingsColorfulBorder"
+      className={`${defYieldMarketMapPageStyles.ctaModalBlock} ${big ? defYieldMarketMapPageStyles.ctaModalBlockBig : ''}`}
+    >
+      <Text variant={big ? 'h4' : 'p2semi'}>Future proof your DeFi yield</Text>
+      <Text variant={big ? 'p1' : 'p4'} style={{ color: 'var(--color-text-secondary)' }}>
+        DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
+        Pool, so your yield stays optimized without manual effort.
+      </Text>
+      <Link href="/?vaults=dao-managed">
+        <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
+      </Link>
+    </Card>
+  )
+}
+
 function ProductIcon({
   slug,
   label,
@@ -220,20 +238,7 @@ function ModalContent({
           </div>
         </AnimateHeight>
 
-        <Card
-          variant="cardPrimarySmallPaddingsColorfulBorder"
-          className={defYieldMarketMapPageStyles.ctaModalBlock}
-        >
-          <Text variant="p2semi">Future proof your DeFi yield</Text>
-          <Text variant="p4" style={{ color: 'var(--color-text-secondary)' }}>
-            DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
-            Pool, so your yield stays optimized without manual effort.
-          </Text>
-          <Link href="/?vaults=dao-managed">
-            <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
-          </Link>
-        </Card>
-
+        <CTABlock />
         <div className={defYieldMarketMapPageStyles.modalLinks}>
           {protocolUrl && (
             <Link
@@ -430,6 +435,7 @@ export default function DefYieldMarketMapPage() {
           return acc
         }, [])}
       </div>
+      <CTABlock big />
       <Modal openModal={isModalOpen} closeModal={closeModal} noScroll>
         <ModalContent type={modalType} item={selectedItem} />
       </Modal>

@@ -291,3 +291,9 @@
   border: 1px solid rgba(255, 77, 150, 0.15);
   pointer-events: all;
 }
+
+.ctaModalBlock {
+  max-width: 700px;
+  margin: 0 auto 24px;
+  padding: 32px 48px;
+}
