@@ -40,8 +40,8 @@ export const vaultExposureSorter = ({
     case 'allocated':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance * (a.depositCap > 0n ? 1n : 0n),
-          b: b.inputTokenBalance,
+          a: Number(a.inputTokenBalance) * (a.depositCap > 0n ? 1 : 0),
+          b: Number(b.inputTokenBalance),
           direction: sortConfig.direction,
         }),
       )
@@ -88,8 +88,8 @@ export const vaultExposureSorter = ({
     case 'liquidity':
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance + (a.depositCap > 0n ? 1n : 0n),
-          b: b.inputTokenBalance,
+          a: Number(a.inputTokenBalance) + (a.depositCap > 0n ? 1 : 0),
+          b: Number(b.inputTokenBalance),
           direction: sortConfig.direction,
         }),
       )
@@ -104,8 +104,8 @@ export const vaultExposureSorter = ({
     default:
       return extendedArks.sort((a, b) =>
         simpleSort({
-          a: a.inputTokenBalance * (a.depositCap > 0n ? 1n : 0n),
-          b: b.inputTokenBalance,
+          a: Number(a.inputTokenBalance) * (a.depositCap > 0n ? 1 : 0),
+          b: Number(b.inputTokenBalance),
           direction: SortDirection.DESC,
         }),
       )
