@@ -14,6 +14,7 @@ import { cookies, headers } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
+import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -53,6 +54,19 @@ const EarnAllVaultsPage = async ({
     vaults,
   })
 
+  const daoManagedVaultsList = (
+    await Promise.all(
+      vaultsWithConfig.map(async (vault) => {
+        const isDaoManaged = await getCachedIsVaultDaoManaged({
+          fleetAddress: vault.id,
+          network: supportedSDKNetwork(vault.protocol.network),
+        })
+
+        return isDaoManaged ? vault.id : false
+      }),
+    )
+  ).filter(Boolean) as `0x${string}`[]
+
   const filteredWalletAssetsVaults = walletAddress
     ? vaultsWithConfig.filter((vault) => {
         return walletAssets.assets.some(
@@ -90,6 +104,7 @@ const EarnAllVaultsPage = async ({
       filteredWalletAssetsVaults={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
       tvl={tvl}
+      daoManagedVaultsList={daoManagedVaultsList}
     />
   )
 }

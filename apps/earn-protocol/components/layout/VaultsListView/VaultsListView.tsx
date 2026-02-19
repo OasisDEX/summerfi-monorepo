@@ -82,6 +82,7 @@ type VaultsListViewProps = {
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
   tvl: number
+  daoManagedVaultsList: `0x${string}`[]
 }
 
 export const VaultsListView = ({
@@ -91,6 +92,7 @@ export const VaultsListView = ({
   vaultsInfo,
   sumrPriceUsd,
   tvl,
+  daoManagedVaultsList,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
@@ -132,6 +134,30 @@ export const VaultsListView = ({
     () => queryParams.get('sort') ?? VaultsSorting.HIGHEST_APY,
     [queryParams],
   )
+
+  const vaultsFilteredByType = useMemo(() => {
+    if (!daoManagedVaultsEnabled) {
+      return vaultsList
+    }
+
+    if (filterVaults.includes('dao-managed')) {
+      return vaultsList.filter((vault) => {
+        const isDaoManaged = daoManagedVaultsList
+          .map((id) => id.toLowerCase())
+          .includes(vault.id.toLowerCase())
+
+        return isDaoManaged
+      })
+    } else {
+      return vaultsList.filter((vault) => {
+        const isDaoManaged = daoManagedVaultsList
+          .map((id) => id.toLowerCase())
+          .includes(vault.id.toLowerCase())
+
+        return !isDaoManaged
+      })
+    }
+  }, [daoManagedVaultsEnabled, daoManagedVaultsList, filterVaults, vaultsList])
 
   const sdk = useAppSDK()
 
@@ -254,7 +280,7 @@ export const VaultsListView = ({
   }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
 
   const filteredAndSortedVaults = useMemo(() => {
-    const vaultsListTouse = filteredWalletAssetsVaults ?? vaultsList
+    const vaultsListTouse = filteredWalletAssetsVaults ?? vaultsFilteredByType
     const networkFilteredVaults = filterNetworks.length
       ? vaultsListTouse.filter(filterNetworkVaults)
       : vaultsListTouse
@@ -271,7 +297,7 @@ export const VaultsListView = ({
 
     return sortedVaults
   }, [
-    vaultsList,
+    vaultsFilteredByType,
     filteredWalletAssetsVaults,
     filterNetworks.length,
     filterNetworkVaults,

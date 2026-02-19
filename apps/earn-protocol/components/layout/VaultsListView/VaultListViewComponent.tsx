@@ -24,6 +24,7 @@ interface VaultListViewComponentProps {
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
   tvl: number
+  daoManagedVaultsList: `0x${string}`[]
 }
 
 export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
@@ -33,6 +34,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
   vaultsInfo,
   sumrPriceUsd,
   tvl,
+  daoManagedVaultsList,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -43,6 +45,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
         vaultsInfo={vaultsInfo}
         sumrPriceUsd={sumrPriceUsd}
         tvl={tvl}
+        daoManagedVaultsList={daoManagedVaultsList}
       />
     </SDKContextProvider>
   )
