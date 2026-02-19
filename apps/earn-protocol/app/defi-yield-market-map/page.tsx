@@ -33,7 +33,7 @@ import { fetchProtocolModalData } from './defi-llama-api'
 
 import defYieldMarketMapPageStyles from './DefYieldMarketMapPage.module.css'
 
-function CTABlock({ big }: { big?: boolean }) {
+function CTABlock({ big, projectName }: { big?: boolean; projectName?: string }) {
   return (
     <Card
       variant="cardPrimarySmallPaddingsColorfulBorder"
@@ -41,8 +41,9 @@ function CTABlock({ big }: { big?: boolean }) {
     >
       <Text variant={big ? 'h4' : 'p2semi'}>Future proof your DeFi yield</Text>
       <Text variant={big ? 'p1' : 'p4'} style={{ color: 'var(--color-text-secondary)' }}>
-        DAO-managed vaults from Lazy Summer automatically rebalance across protocols like Rocket
-        Pool, so your yield stays optimized without manual effort.
+        {big
+          ? 'DAO-managed vaults automatically rebalance across the best yield sources, so you don’t have to.'
+          : `DAO-managed vaults from Lazy Summer automatically rebalance across protocols like ${projectName ?? 'this one'}, so your yield stays optimized without manual effort.`}
       </Text>
       <Link href="/?vaults=dao-managed" style={{ outline: 'none' }}>
         <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
@@ -245,7 +246,7 @@ function ModalContent({
           </div>
         </AnimateHeight>
 
-        <CTABlock />
+        <CTABlock projectName={protocol?.name} />
         <div className={defYieldMarketMapPageStyles.modalLinks}>
           {protocolUrl && (
             <Link
