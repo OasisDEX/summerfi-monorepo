@@ -140,7 +140,7 @@ export const VaultsListView = ({
       return vaultsList
     }
 
-    if (filterVaults.includes('dao-managed')) {
+    if (filterVaults.includes('dao-risk-managed')) {
       return vaultsList.filter((vault) => {
         const isDaoManaged = daoManagedVaultsList
           .map((id) => id.toLowerCase())
@@ -510,8 +510,8 @@ export const VaultsListView = ({
                 label: 'Risk-Managed',
               },
               {
-                id: 'dao-managed',
-                label: 'DAO-Managed',
+                id: 'dao-risk-managed',
+                label: 'DAO Risk-Managed',
               },
             ]}
             handleTabChange={(tab) => {
@@ -520,7 +520,7 @@ export const VaultsListView = ({
               })
             }}
             defaultIndex={
-              filterVaults.includes('dao-managed')
+              filterVaults.includes('dao-risk-managed')
                 ? 1
                 : filterVaults.includes('risk-managed')
                   ? 0

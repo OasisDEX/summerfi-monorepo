@@ -42,11 +42,11 @@ function CTABlock({ big, projectName }: { big?: boolean; projectName?: string })
       <Text variant={big ? 'h4' : 'p2semi'}>Future proof your DeFi yield</Text>
       <Text variant={big ? 'p1' : 'p4'} style={{ color: 'var(--color-text-secondary)' }}>
         {big
-          ? 'DAO-managed vaults automatically rebalance across the best yield sources, so you don’t have to.'
-          : `DAO-managed vaults from Lazy Summer automatically rebalance across protocols like ${projectName ?? 'this one'}, so your yield stays optimized without manual effort.`}
+          ? 'DAO Risk-Managed vaults automatically rebalance across the best yield sources, so you don’t have to.'
+          : `DAO Risk-Managed vaults from Lazy Summer automatically rebalance across protocols like ${projectName ?? 'this one'}, so your yield stays optimized without manual effort.`}
       </Text>
-      <Link href="/?vaults=dao-managed" style={{ outline: 'none' }}>
-        <Button variant="primarySmall">Explore DAO-Managed Vaults</Button>
+      <Link href="/?vaults=dao-risk-managed" style={{ outline: 'none' }}>
+        <Button variant="primarySmall">Explore DAO Risk-Managed Vaults</Button>
       </Link>
     </Card>
   )
