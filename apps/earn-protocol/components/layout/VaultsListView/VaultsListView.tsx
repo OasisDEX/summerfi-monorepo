@@ -497,7 +497,7 @@ export const VaultsListView = ({
             tabs={[
               {
                 id: 'risk-managed',
-                label: 'Risk-Managed',
+                label: 'Risk-Managed By BlockAnalitica',
               },
               {
                 id: 'dao-risk-managed',
