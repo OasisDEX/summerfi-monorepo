@@ -1,6 +1,7 @@
 'use client'
 import { type FC } from 'react'
 import { Card, TabBar, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { slugify } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,7 +9,8 @@ import Link from 'next/link'
 import { vaultDetailsHowItWorksLinks } from '@/features/vault-details/components/VaultDetailsHowItWorks/config'
 import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import governance from '@/public/img/vault_details/governance.svg'
-import howItWorks from '@/public/img/vault_details/how_it_works.svg'
+import howItWorksDao from '@/public/img/vault_details/how_it_works_dao.svg'
+import howItWorksRegular from '@/public/img/vault_details/how_it_works_regular.svg'
 
 const LinksAndDescription = () => {
   const handleButtonClick = useHandleButtonClickEvent()
@@ -76,7 +78,7 @@ const ImageWrapper = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export const VaultDetailsHowItWorks = () => {
+export const VaultDetailsHowItWorks = ({ vault }: { vault?: SDKVaultishType }) => {
   const handleButtonClick = useHandleButtonClickEvent()
   const tabs = [
     {
@@ -86,7 +88,7 @@ export const VaultDetailsHowItWorks = () => {
         <ContentWrapper>
           <ImageWrapper>
             <Image
-              src={howItWorks}
+              src={vault?.isDaoManaged ? howItWorksDao : howItWorksRegular}
               alt="how-it-works"
               sizes="100vw"
               style={{

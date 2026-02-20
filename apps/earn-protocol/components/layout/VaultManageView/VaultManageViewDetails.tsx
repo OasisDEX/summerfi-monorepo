@@ -161,7 +161,7 @@ export const VaultManageViewDetails = ({
         }
         onExpand={handleExpanderToggle('vault-exposure')}
       >
-        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork}>
+        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
           <VaultExposure
             vault={vault}
             arksInterestRates={arksInterestRates}

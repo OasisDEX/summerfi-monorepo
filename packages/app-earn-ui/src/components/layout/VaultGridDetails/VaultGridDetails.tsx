@@ -55,11 +55,23 @@ export const VaultGridDetails = ({
           <Dropdown
             options={vaults.map((item) => ({
               value: getUniqueVaultId(item),
-              content: <VaultTitleDropdownContent vault={item} link={getVaultDetailsUrl(item)} />,
+              content: (
+                <VaultTitleDropdownContent
+                  vault={item}
+                  link={getVaultDetailsUrl(item)}
+                  isDaoManaged={item.isDaoManaged}
+                />
+              ),
             }))}
             dropdownValue={{
               value: getUniqueVaultId(vault),
-              content: <VaultTitleDropdownContent vault={vault} link={getVaultDetailsUrl(vault)} />,
+              content: (
+                <VaultTitleDropdownContent
+                  vault={vault}
+                  link={getVaultDetailsUrl(vault)}
+                  isDaoManaged={vault.isDaoManaged}
+                />
+              ),
             }}
           >
             <VaultTitleWithRisk
@@ -67,6 +79,7 @@ export const VaultGridDetails = ({
               risk={vault.customFields?.risk ?? 'lower'}
               networkName={supportedSDKNetwork(vault.protocol.network)}
               isNewVault={isNewVault}
+              isDaoManagedVault={vault.isDaoManaged}
             />
           </Dropdown>
           <Button

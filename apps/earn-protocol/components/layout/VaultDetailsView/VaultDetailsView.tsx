@@ -36,7 +36,7 @@ export const VaultDetailsView: FC<VaultDetailsViewProps> = ({
 }) => {
   return (
     <>
-      <VaultDetailsHowItWorks />
+      <VaultDetailsHowItWorks vault={vault} />
       <VaultDetailsYields
         arksHistoricalChartData={arksHistoricalChartData}
         summerVaultName={summerVaultName}
