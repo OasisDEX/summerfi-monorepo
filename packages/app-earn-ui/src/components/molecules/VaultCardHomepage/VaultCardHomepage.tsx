@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
+import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
@@ -29,6 +30,7 @@ import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
+import { riskColors } from '@/helpers/risk-colors'
 
 import vaultCardHomepageStyles from './VaultCardHomepage.module.css'
 
@@ -365,8 +367,41 @@ export const VaultCardHomepage = ({
             <DataBlock
               title="Risk"
               titleIcon="clock"
-              contentDesktop={<Risk risk={customFields?.risk ?? 'lower'} variant="p1semi" />}
-              contentMobile={<Risk risk={customFields?.risk ?? 'lower'} variant="p2semi" />}
+              contentDesktop={
+                vault.isDaoManaged ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: '6px',
+                      marginTop: '5px',
+                    }}
+                  >
+                    <DaoManagedPill riskColor={riskColors.higher} small />
+                    <Risk risk="higher" variant="p4semi" />
+                  </div>
+                ) : (
+                  <Risk risk={customFields?.risk ?? 'lower'} variant="p1semi" />
+                )
+              }
+              contentMobile={
+                vault.isDaoManaged ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                      marginTop: '5px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    <DaoManagedPill riskColor={riskColors.higher} />
+                    <Risk risk="higher" />
+                  </div>
+                ) : (
+                  <Risk risk={customFields?.risk ?? 'lower'} variant="p2semi" />
+                )
+              }
             />
           </div>
         </div>

@@ -2,9 +2,10 @@ import { type FC } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
-export const DaoManagedPill: FC<{ riskColor?: string; small?: boolean }> = ({
+export const DaoManagedPill: FC<{ riskColor?: string; small?: boolean; big?: boolean }> = ({
   riskColor,
   small,
+  big,
 }) => {
   return (
     <div
@@ -14,7 +15,10 @@ export const DaoManagedPill: FC<{ riskColor?: string; small?: boolean }> = ({
         gap: '4px',
       }}
     >
-      <Text variant={small ? 'p4semi' : 'p3semi'} style={{ color: riskColor, margin: 0 }}>
+      <Text
+        variant={small ? 'p4semi' : big ? 'p1semi' : 'p3semi'}
+        style={{ color: riskColor, margin: 0 }}
+      >
         DAO Managed
       </Text>
     </div>
