@@ -19,13 +19,19 @@ export const decorateVaultsWithConfig = ({
   userPositions,
   daoManagedVaultsList,
 }: VaultConfigDecorator) => {
-  const daoManagedVaultsEnabled = systemConfig.features?.DaoManagedVaults
   const vaultsWithConfig = decorateWithFleetConfig(
     vaults,
     systemConfig,
     userPositions,
-    daoManagedVaultsEnabled ? daoManagedVaultsList : [],
+    daoManagedVaultsList,
   )
+  const daoManagedVaultsEnabled = systemConfig.features?.DaoManagedVaults
+
+  if (!daoManagedVaultsEnabled) {
+    return vaultsWithConfig.filter((vault) => {
+      return !vault.isDaoManaged
+    })
+  }
 
   return vaultsWithConfig
 }
