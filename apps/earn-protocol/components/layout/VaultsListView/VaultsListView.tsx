@@ -77,12 +77,11 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 
 type VaultsListViewProps = {
   vaultsList: SDKVaultsListType
-  filteredWalletAssetsVaults?: SDKVaultsListType
+  filteredWalletAssetsVaults: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
   tvl: number
-  daoManagedVaultsList: `0x${string}`[]
 }
 
 export const VaultsListView = ({
@@ -92,7 +91,6 @@ export const VaultsListView = ({
   vaultsInfo,
   sumrPriceUsd,
   tvl,
-  daoManagedVaultsList,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
   const { push } = useRouter()
@@ -140,24 +138,18 @@ export const VaultsListView = ({
       return vaultsList
     }
 
-    if (filterVaults.includes('dao-risk-managed')) {
-      return vaultsList.filter((vault) => {
-        const isDaoManaged = daoManagedVaultsList
-          .map((id) => id.toLowerCase())
-          .includes(vault.id.toLowerCase())
+    const vaultsListToUse = filterWallet ? filteredWalletAssetsVaults : vaultsList
 
-        return isDaoManaged
+    if (filterVaults.includes('dao-risk-managed')) {
+      return vaultsListToUse.filter((vault) => {
+        return vault.isDaoManaged
       })
     } else {
-      return vaultsList.filter((vault) => {
-        const isDaoManaged = daoManagedVaultsList
-          .map((id) => id.toLowerCase())
-          .includes(vault.id.toLowerCase())
-
-        return !isDaoManaged
+      return vaultsListToUse.filter((vault) => {
+        return !vault.isDaoManaged
       })
     }
-  }, [daoManagedVaultsEnabled, daoManagedVaultsList, filterVaults, vaultsList])
+  }, [daoManagedVaultsEnabled, filterWallet, filteredWalletAssetsVaults, vaultsList, filterVaults])
 
   const sdk = useAppSDK()
 
@@ -280,10 +272,9 @@ export const VaultsListView = ({
   }, [filterAssetVaults, filterNetworkVaults, sortVaults, vaultsList])
 
   const filteredAndSortedVaults = useMemo(() => {
-    const vaultsListTouse = filteredWalletAssetsVaults ?? vaultsFilteredByType
     const networkFilteredVaults = filterNetworks.length
-      ? vaultsListTouse.filter(filterNetworkVaults)
-      : vaultsListTouse
+      ? vaultsFilteredByType.filter(filterNetworkVaults)
+      : vaultsFilteredByType
 
     const assetFilteredVaults = filterAssets.length
       ? (networkFilteredVaults.filter(filterAssetVaults) as SDKVaultishType[] | undefined)
@@ -298,7 +289,6 @@ export const VaultsListView = ({
     return sortedVaults
   }, [
     vaultsFilteredByType,
-    filteredWalletAssetsVaults,
     filterNetworks.length,
     filterNetworkVaults,
     filterAssets.length,
@@ -335,11 +325,11 @@ export const VaultsListView = ({
         return getUniqueVaultId(vault)
       })
 
-      if (selectedVaultId && !tempVaultsIdList?.includes(selectedVaultId) && !usingSafeVaultsList) {
+      if (selectedVaultId && !tempVaultsIdList?.includes(selectedVaultId)) {
         setSelectedVaultId(nextSafeSelectedVault)
       }
     }
-  }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId, usingSafeVaultsList])
+  }, [filteredAndSortedVaults, filteredSafeVaultsList, selectedVaultId])
 
   const { position: positionExists, isLoading } = usePosition({
     chainId: subgraphNetworkToSDKId(supportedSDKNetwork(resolvedVaultData.protocol.network)),
@@ -608,7 +598,8 @@ export const VaultsListView = ({
                     margin: '30px auto 30px auto',
                   }}
                 >
-                  No vaults available
+                  No {filterVaults.includes('dao-risk-managed') ? 'DAO Risk Managed' : ''} vaults
+                  available
                   {filterNetworks.length
                     ? ` on ${filterNetworks.map((network) => capitalize(sdkNetworkToHumanNetwork(network as SupportedSDKNetworks))).join(' and ')}`
                     : ''}

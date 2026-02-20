@@ -38,6 +38,7 @@ import { isAddress } from 'viem'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -138,13 +139,20 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
     systemConfig,
     userPositions: [position],
+    daoManagedVaultsList,
   })
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+  const allVaultsWithConfig = decorateVaultsWithConfig({
+    vaults,
+    systemConfig,
+    daoManagedVaultsList,
+  })
 
   const { netValue } = getPositionValues({
     position,

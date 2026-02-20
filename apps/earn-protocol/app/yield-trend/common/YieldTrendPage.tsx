@@ -7,6 +7,7 @@ import {
 } from '@summerfi/app-utils'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { YieldTrendView } from '@/features/yield-trend/components/YieldTrendView'
@@ -25,9 +26,12 @@ export const YieldTrendPage: FC<YieldTrendPageProps> = async ({ params: paramsPr
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
     vaults,
+    daoManagedVaultsList,
   })
 
   const selectedVaultId =

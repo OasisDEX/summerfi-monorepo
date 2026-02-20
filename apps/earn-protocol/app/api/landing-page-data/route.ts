@@ -21,6 +21,7 @@ import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/de
 import { getCachedDefillamaProtocolTvl } from '@/app/server-handlers/cached/defillama/get-protocol-tvl'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -137,9 +138,12 @@ export async function GET() {
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
     vaults,
+    daoManagedVaultsList,
   })
 
   const vaultsApyByNetworkMap = await getCachedVaultsApy({

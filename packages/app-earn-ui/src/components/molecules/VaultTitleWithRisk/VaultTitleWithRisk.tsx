@@ -7,6 +7,7 @@ import {
 } from '@summerfi/app-types'
 import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
+import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
@@ -25,6 +26,7 @@ interface VaultTitleWithRiskProps {
   tooltipName?: string
   onTooltipOpen?: (tooltipName: string) => void
   isNewVault?: boolean
+  isDaoManagedVault?: boolean
 }
 
 export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
@@ -38,10 +40,13 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   tooltipName,
   onTooltipOpen,
   isNewVault = false,
+  isDaoManagedVault = false,
 }) => {
-  const color = riskColors[risk]
+  const resolvedRisk = isDaoManagedVault ? 'higher' : risk
+  const color = riskColors[resolvedRisk]
   const riskTooltipLabel = getVaultRiskTooltipLabel({
-    risk,
+    risk: resolvedRisk,
+    isDaoManagedVault,
   })
 
   return (
@@ -56,7 +61,8 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       networkName={networkName}
       value={
         <>
-          <Risk risk={risk} variant="p3semi" />
+          {isDaoManagedVault ? <DaoManagedPill riskColor={color} /> : null}
+          <Risk risk={resolvedRisk} variant="p3semi" />
           <Tooltip
             tooltip={riskTooltipLabel}
             tooltipWrapperStyles={{ minWidth: '300px' }}

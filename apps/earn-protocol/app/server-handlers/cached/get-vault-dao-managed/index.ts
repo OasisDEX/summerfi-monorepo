@@ -1,4 +1,5 @@
-import { type SupportedSDKNetworks } from '@summerfi/app-types'
+import { type SDKVaultishType, type SupportedSDKNetworks } from '@summerfi/app-types'
+import { supportedSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getIsVaultDaoManaged } from '@/app/server-handlers/get-vault-dao-managed'
@@ -16,3 +17,17 @@ export const getCachedIsVaultDaoManaged = ({
     tags: [`${CACHE_TAGS.VAULT_DAO_MANAGED}-${fleetAddress}-${network}`],
   })({ fleetAddress, network })
 }
+
+export const getDaoManagedVaultsIDsList = async (vaults: SDKVaultishType[]) =>
+  (
+    await Promise.all(
+      vaults.map(async (v) => {
+        const isDaoManaged = await getCachedIsVaultDaoManaged({
+          fleetAddress: v.id,
+          network: supportedSDKNetwork(v.protocol.network),
+        })
+
+        return isDaoManaged ? v.id : false
+      }),
+    )
+  ).filter(Boolean) as `0x${string}`[]

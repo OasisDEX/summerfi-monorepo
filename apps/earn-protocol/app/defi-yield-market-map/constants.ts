@@ -39,12 +39,10 @@ import hyperevm from '@/public/img/protocol_icons_market_map/hyperevm.png'
 import hyperithm from '@/public/img/protocol_icons_market_map/hyperithm.png'
 import hyperlend from '@/public/img/protocol_icons_market_map/hyperlend.png'
 import hyperliquid from '@/public/img/protocol_icons_market_map/hyperliquid.png'
-import idleFinance from '@/public/img/protocol_icons_market_map/idle-finance.png'
 import jito from '@/public/img/protocol_icons_market_map/jito.png'
 import jtrsy from '@/public/img/protocol_icons_market_map/jtrsy.png'
 import jupiter from '@/public/img/protocol_icons_market_map/jupiter.png'
 import kaminoLend from '@/public/img/protocol_icons_market_map/kamino-lend.png'
-import karak from '@/public/img/protocol_icons_market_map/karak.png'
 import kelpDao from '@/public/img/protocol_icons_market_map/kelp-dao.png'
 import kinetiq from '@/public/img/protocol_icons_market_map/kinetiq.png'
 import kpk from '@/public/img/protocol_icons_market_map/kpk.png'
@@ -61,9 +59,9 @@ import mfOne from '@/public/img/protocol_icons_market_map/mf-one.png'
 import mhyper from '@/public/img/protocol_icons_market_map/mhyper.png'
 import mmev from '@/public/img/protocol_icons_market_map/mmev.png'
 import morpho from '@/public/img/protocol_icons_market_map/morpho.png'
-import neutraFinance from '@/public/img/protocol_icons_market_map/neutra-finance.png'
 import optimism from '@/public/img/protocol_icons_market_map/optimism.png'
 import ousg from '@/public/img/protocol_icons_market_map/ousg.png'
+import paretoCredit from '@/public/img/protocol_icons_market_map/pareto-credit.png'
 import pendle from '@/public/img/protocol_icons_market_map/pendle.png'
 import plasma from '@/public/img/protocol_icons_market_map/plasma.png'
 import pufferFinance from '@/public/img/protocol_icons_market_map/puffer-finance.png'
@@ -109,51 +107,49 @@ export const DYM_ICONS: { [key: string]: StaticImageData } = {
   beefy,
   cap,
   'coinbase-wrapped-staked-eth': coinbaseWrappedStakedEth,
-  compound,
+  'compound-finance': compound,
   'convex-finance': convexFinance,
   'curve-dex': curveDex,
   drift,
-  eigenlayer,
+  eigencloud: eigenlayer,
   'ether.fi': etherFi,
   euler,
-  'felix-protocol': felixProtocol,
+  felix: felixProtocol,
   fluid,
   'frax-ether': fraxEther,
   hyperbeat,
   hyperlend,
   hyperliquid,
-  'idle-finance': idleFinance,
+  'pareto-credit': paretoCredit,
   jito,
   'jupiter-lend': jupiter,
   'jupiter-staked-sol': jupiter,
   'kamino-lend': kaminoLend,
-  karak,
-  'kelp-dao': kelpDao,
+  kelp: kelpDao,
   kinetiq,
   lido,
   lighter,
   maple,
   marginfi,
-  'marinade-finance': marinadeFinance,
+  marinade: marinadeFinance,
   morpho,
-  'neutra-finance': neutraFinance,
   pendle,
   'puffer-finance': pufferFinance,
   raydium,
   renzo,
   resolv,
   'rocket-pool': rocketPool,
-  royco,
+  'royco-protocol': royco,
   sanctum,
-  silo,
+  'silo-finance': silo,
   spark,
   spectra,
   stakewise,
   'summer.fi': summerFi,
   swell,
   symbiotic,
-  'term-finance': termFinance,
-  'trader-joe': traderJoe,
+  termfinance: termFinance,
+  lfj: traderJoe,
   uniswap,
   'velodrome-v2': velodromeV2,
   'yearn-finance': yearnFinance,
@@ -222,7 +218,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Compound',
-            slug: 'compound',
+            slug: 'compound-finance',
             url: 'compound.finance',
             description:
               'Algorithmic money market protocol. Pioneer of DeFi lending with battle-tested architecture.',
@@ -249,7 +245,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Felix Lending',
-            slug: 'felix-protocol',
+            slug: 'felix',
             url: 'felix.bond',
             description: 'HyperEVM-native CDP lending protocol issuing feUSD stablecoin.',
           },
@@ -288,7 +284,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           {
             name: 'Cap',
             slug: 'cap',
-            url: 'cap.finance',
+            url: 'cap.app',
             description:
               'Yield protocol on Hyperliquid with curated lending vaults and structured yield.',
           },
@@ -313,7 +309,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Silo',
-            slug: 'silo',
+            slug: 'silo-finance',
             url: 'silo.finance',
             description:
               'Risk-isolated lending pools. $400M+ TVL with Silo V2 on Sonic, Ethereum, Arbitrum.',
@@ -377,7 +373,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Marinade',
-            slug: 'marinade-finance',
+            slug: 'marinade',
             url: 'marinade.finance',
             description: 'Solana liquid staking focused on validator diversity. mSOL token.',
           },
@@ -408,9 +404,9 @@ export const DYM_CATEGORIES: DYMCategory[] = [
         label: 'Core Restaking',
         items: [
           {
-            name: 'EigenLayer',
-            slug: 'eigenlayer',
-            url: 'eigenlayer.xyz',
+            name: 'EigenCloud',
+            slug: 'eigencloud',
+            url: 'eigencloud.xyz',
             description:
               'Ethereum restaking pioneer. ~75% market share with $18.5B TVL. Secures AVS networks.',
           },
@@ -420,13 +416,6 @@ export const DYM_CATEGORIES: DYMCategory[] = [
             url: 'symbiotic.fi',
             description:
               'Permissionless, collateral-agnostic restaking. Immutable core contracts, ~8% market share.',
-          },
-          {
-            name: 'Karak',
-            slug: 'karak',
-            url: 'karak.network',
-            description:
-              'Universal restaking layer. Broadest asset support including LSTs, LRTs, stablecoins.',
           },
         ],
       },
@@ -449,9 +438,9 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Kelp DAO',
-            slug: 'kelp-dao',
+            slug: 'kelp',
             url: 'kelpdao.xyz',
-            description: 'rsETH liquid restaking token built on EigenLayer infrastructure.',
+            description: 'rsETH liquid restaking token built on EigenCloud infrastructure.',
           },
           {
             name: 'Puffer',
@@ -510,9 +499,9 @@ export const DYM_CATEGORIES: DYMCategory[] = [
             description: 'Optimism / Superchain DEX with ve(3,3) tokenomics and LP incentives.',
           },
           {
-            name: 'Trader Joe',
-            slug: 'trader-joe',
-            url: 'traderjoexyz.com',
+            name: 'LFJ',
+            slug: 'lfj',
+            url: 'lfj.gg',
             description:
               'Liquidity Book AMM on Avalanche and Arbitrum with bin-based concentrated liquidity.',
           },
@@ -574,13 +563,6 @@ export const DYM_CATEGORIES: DYMCategory[] = [
             description:
               'Delta-neutral USR stablecoin. USR holders earn 5-6% APY, RLP holders 20-40% APY.',
           },
-          {
-            name: 'Neutri (nUSD)',
-            slug: 'neutra-finance',
-            url: 'neutra.finance',
-            description:
-              'Delta-neutral yield protocol with nUSD stablecoin backed by hedged positions.',
-          },
         ],
       },
     ],
@@ -609,7 +591,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           },
           {
             name: 'Term',
-            slug: 'term-finance',
+            slug: 'termfinance',
             url: 'term.finance',
             description:
               'Weekly auction-based fixed-rate lending. $150M+ volume. Blue Sheets for retail.',
@@ -671,7 +653,7 @@ export const DYM_CATEGORIES: DYMCategory[] = [
           {
             name: 'Hyperbeat',
             slug: 'hyperbeat',
-            url: 'hyperbeat.fi',
+            url: 'hyperbeat.org',
             description:
               'Hyperliquid-native yield layer. Automated strategies for HyperEVM ecosystem.',
           },
@@ -689,14 +671,14 @@ export const DYM_CATEGORIES: DYMCategory[] = [
         items: [
           {
             name: 'Royco',
-            slug: 'royco',
+            slug: 'royco-protocol',
             url: 'royco.org',
             description:
               'Incentive marketplace for DeFi liquidity. Connects yield seekers with protocols offering rewards.',
           },
           {
             name: 'Pareto',
-            slug: 'idle-finance',
+            slug: 'pareto-credit',
             url: 'pareto.credit',
             description:
               'Credit coordination protocol (formerly Idle). Perpetual yield tranches with no lockups.',

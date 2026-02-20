@@ -32,6 +32,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -235,10 +236,13 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaultsList.vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
     systemConfig,
     userPositions: userPositionsJsonSafe,
+    daoManagedVaultsList,
   })
 
   const vaultsInfoParsed = parseServerResponseToClient(vaultsInfo)
@@ -401,10 +405,13 @@ export async function generateMetadata({
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaultsList.vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
     systemConfig,
     userPositions: userPositionsJsonSafe,
+    daoManagedVaultsList,
   })
 
   const positionsWithVault = userPositionsJsonSafe.map((position) => {

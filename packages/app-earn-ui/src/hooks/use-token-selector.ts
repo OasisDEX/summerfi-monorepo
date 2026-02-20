@@ -60,7 +60,7 @@ export const useTokenSelector = ({
     })
 
     return options
-  }, [vault.inputToken.symbol, chainId])
+  }, [baseTokenOptions, chainId, vault.inputToken.symbol])
 
   const [selectedTokenOption, setSelectedTokenOption] = useState(() => {
     if (tokenOptions.length === 0) {
@@ -77,11 +77,12 @@ export const useTokenSelector = ({
   useEffect(() => {
     setSelectedTokenOption((selectedOption) => {
       return (
+        tokenOptions.find((option) => option.value === getDisplayToken(vault.inputToken.symbol)) ??
         tokenOptions.find((option) => option.value === getDisplayToken(selectedOption.value)) ??
         tokenOptions[0]
       )
     })
-  }, [tokenOptions])
+  }, [tokenOptions, vault.inputToken.symbol])
 
   const handleTokenSelectionChange = (option: DropdownRawOption): void => {
     const value = tokenOptions.find((opt) => opt.value === option.value) ?? tokenOptions[0]

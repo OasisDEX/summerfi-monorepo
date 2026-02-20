@@ -94,7 +94,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
         }
         defaultExpanded
       >
-        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork}>
+        <VaultExposureDescription humanReadableNetwork={humanReadableNetwork} vault={vault}>
           <VaultExposure
             vault={vault}
             arksInterestRates={arksInterestRates}

@@ -30,6 +30,7 @@ export const VaultDetailsSecurity: FC<VaultDetailsSecurityProps> = ({
           totalRebalanceActions={totalRebalanceActions}
           totalUsers={totalUsers}
           tvl={tvl}
+          vault={vault}
         />
         <VaultDetailsSecurityProtocolStats />
         <VaultDetailsSecurityMoneyExpander vault={vault} />

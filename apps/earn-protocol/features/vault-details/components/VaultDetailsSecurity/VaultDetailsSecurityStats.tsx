@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { Card, DataBlock } from '@summerfi/app-earn-ui'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatWithSeparators } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,12 +15,14 @@ interface VaultDetailsSecurityStatsProps {
   totalRebalanceActions: number
   totalUsers: number
   tvl: number
+  vault?: SDKVaultishType
 }
 
 export const VaultDetailsSecurityStats = ({
   totalRebalanceActions,
   totalUsers,
   tvl,
+  vault,
 }: VaultDetailsSecurityStatsProps) => {
   const totalAssets = useMemo(() => tvl, [tvl])
 
@@ -36,15 +39,17 @@ export const VaultDetailsSecurityStats = ({
       title: 'Rebalancing Actions',
       value: formatWithSeparators(totalRebalanceActions),
     },
-    {
-      title: 'Risk Curators',
-      value: (
-        <Link href="https://blockanalitica.com/" target="_blank">
-          <Image src={blockAnalyticaLogo} alt="Block Analitica" height={30} />
-        </Link>
-      ),
-    },
-  ]
+    vault?.isDaoManaged
+      ? false
+      : {
+          title: 'Risk Curators',
+          value: (
+            <Link href="https://blockanalitica.com/" target="_blank">
+              <Image src={blockAnalyticaLogo} alt="Block Analitica" height={30} />
+            </Link>
+          ),
+        },
+  ].filter(Boolean) as { title: string; value: ReactNode }[]
 
   return (
     <>

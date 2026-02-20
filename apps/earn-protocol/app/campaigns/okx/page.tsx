@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { OkxClientComponents } from '@/app/campaigns/okx/components/ClientComponents'
 import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
@@ -29,7 +30,9 @@ export default async function OkxCampaignPage() {
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
+  const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig, daoManagedVaultsList })
   const { totalUniqueUsers } = latestActivity
 
   return (

@@ -135,6 +135,7 @@ export const PortfolioPosition = ({
               tooltipName={`portfolio-overview-risk-label-${slugifyVault(portfolioPosition.vault)}`}
               onTooltipOpen={tooltipEventHandler}
               isNewVault={isNewVault}
+              isDaoManagedVault={portfolioPosition.vault.isDaoManaged}
             />
             {isMobile && linkToPosition}
           </div>

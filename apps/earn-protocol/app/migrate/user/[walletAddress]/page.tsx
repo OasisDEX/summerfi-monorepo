@@ -6,6 +6,7 @@ import {
 import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
@@ -39,9 +40,12 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults,
     systemConfig,
+    daoManagedVaultsList,
   })
 
   const vaultsApyByNetworkMap = await getCachedVaultsApy({

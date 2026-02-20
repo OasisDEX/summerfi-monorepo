@@ -4,6 +4,7 @@ import { type Metadata } from 'next'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
@@ -32,9 +33,12 @@ const RebalanceActivityPage: FC<RebalanceActivityPageProps> = async (props) => {
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
     vaults,
+    daoManagedVaultsList,
   })
 
   return (
