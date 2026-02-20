@@ -32,7 +32,7 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
-import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -236,18 +236,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const migratablePositions = parseServerResponseToClient(migratablePositionsData)
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaultsList.vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaultsList.vaults)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,
@@ -416,18 +405,7 @@ export async function generateMetadata({
     ? parseServerResponseToClient<IArmadaPosition[]>(userPositions)
     : []
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaultsList.vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaultsList.vaults)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     vaults: vaultsList.vaults,

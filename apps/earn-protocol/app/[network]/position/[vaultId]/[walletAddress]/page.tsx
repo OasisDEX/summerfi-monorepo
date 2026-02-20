@@ -38,7 +38,7 @@ import { isAddress } from 'viem'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
-import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -139,18 +139,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],

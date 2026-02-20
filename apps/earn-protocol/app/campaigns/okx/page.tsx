@@ -1,12 +1,12 @@
 import { BigGradientBox, ProtocolStats, Text } from '@summerfi/app-earn-ui'
-import { parseServerResponseToClient, supportedSDKNetwork } from '@summerfi/app-utils'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 import Image from 'next/image'
 
 import { OkxClientComponents } from '@/app/campaigns/okx/components/ClientComponents'
 import { OkxConnectButton } from '@/app/campaigns/okx/components/OkxConnectButton'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
@@ -30,18 +30,7 @@ export default async function OkxCampaignPage() {
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const vaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig, daoManagedVaultsList })
   const { totalUniqueUsers } = latestActivity

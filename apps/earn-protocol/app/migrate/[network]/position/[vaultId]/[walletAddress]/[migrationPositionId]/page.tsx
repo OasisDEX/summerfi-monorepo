@@ -18,7 +18,7 @@ import { isAddress } from 'viem'
 
 import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama/get-median-defi-yield'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -110,18 +110,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     return <Text>No migration position found with the id {migrationPositionId}</Text>
   }
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const [vaultWithConfig] = vault
     ? decorateVaultsWithConfig({

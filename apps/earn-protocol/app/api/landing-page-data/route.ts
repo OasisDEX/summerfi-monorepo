@@ -21,7 +21,7 @@ import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/de
 import { getCachedDefillamaProtocolTvl } from '@/app/server-handlers/cached/defillama/get-protocol-tvl'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
-import { getCachedIsVaultDaoManaged } from '@/app/server-handlers/cached/get-vault-dao-managed'
+import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
@@ -138,18 +138,7 @@ export async function GET() {
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  const daoManagedVaultsList = (
-    await Promise.all(
-      vaults.map(async (v) => {
-        const isDaoManaged = await getCachedIsVaultDaoManaged({
-          fleetAddress: v.id,
-          network: supportedSDKNetwork(v.protocol.network),
-        })
-
-        return isDaoManaged ? v.id : false
-      }),
-    )
-  ).filter(Boolean) as `0x${string}`[]
+  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
