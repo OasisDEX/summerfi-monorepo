@@ -132,7 +132,6 @@ export const VaultOpenViewComponent = ({
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
-  const daoManagedVaultsEnabled = !!features?.DaoManagedVaults
 
   const { userWalletAddress } = useUserWallet()
 
