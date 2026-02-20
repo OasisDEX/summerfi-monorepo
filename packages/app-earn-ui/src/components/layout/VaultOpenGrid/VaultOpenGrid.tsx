@@ -239,6 +239,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       subgraphNetworkToSDKId(supportedSDKNetwork(item.protocol.network)) !==
                         disableDropdownOptionsByChainId
                     }
+                    isDaoManaged={item.isDaoManaged}
                   />
                 ),
               }))}
@@ -253,6 +254,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                       subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)) !==
                         disableDropdownOptionsByChainId
                     }
+                    isDaoManaged={vault.isDaoManaged}
                   />
                 ),
               }}
@@ -264,6 +266,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 tooltipName="vault-open-risk-label"
                 onTooltipOpen={tooltipEventHandler}
                 isNewVault={isNewVault}
+                isDaoManagedVault={vault.isDaoManaged}
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>

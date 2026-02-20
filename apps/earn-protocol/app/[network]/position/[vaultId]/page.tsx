@@ -88,7 +88,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     latestActivity,
     rebalanceActivity,
     sumrPrice,
-    isDaoManaged,
   ] = await Promise.all([
     getCachedVaultDetails({
       vaultAddress: parsedVaultId,
@@ -113,10 +112,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       startTimestamp: dayjs().subtract(30, 'days').unix(),
     }),
     getCachedSumrPrice(),
-    getCachedIsVaultDaoManaged({
-      fleetAddress: parsedVaultId,
-      network: parsedNetwork,
-    }),
   ])
 
   if (!vault) {
@@ -127,12 +122,30 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
+  const daoManagedVaultsList = (
+    await Promise.all(
+      vaults.map(async (v) => {
+        const isDaoManaged = await getCachedIsVaultDaoManaged({
+          fleetAddress: v.id,
+          network: supportedSDKNetwork(v.protocol.network),
+        })
+
+        return isDaoManaged ? v.id : false
+      }),
+    )
+  ).filter(Boolean) as `0x${string}`[]
+
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
     systemConfig,
+    daoManagedVaultsList,
   })
 
-  const allVaultsWithConfig = decorateVaultsWithConfig({ vaults, systemConfig })
+  const allVaultsWithConfig = decorateVaultsWithConfig({
+    vaults,
+    systemConfig,
+    daoManagedVaultsList,
+  })
 
   const cacheConfig = {
     revalidate: CACHE_TIMES.INTEREST_RATES,
@@ -215,7 +228,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       referralCode={referralCode}
       vaultInfo={vaultInfoParsed}
       sumrPriceUsd={sumrPriceUsd}
-      isDaoManaged={isDaoManaged}
     />
   )
 }
@@ -264,9 +276,15 @@ export async function generateMetadata({
     }
   }
 
+  const isDaoManaged = await getCachedIsVaultDaoManaged({
+    fleetAddress: vault.id,
+    network: supportedSDKNetwork(vault.protocol.network),
+  })
+
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
     systemConfig,
+    daoManagedVaultsList: isDaoManaged ? [vault.id as `0x${string}`] : [],
   })
 
   const [vaultsApyRaw] = await Promise.all([

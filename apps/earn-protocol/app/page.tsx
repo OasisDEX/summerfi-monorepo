@@ -49,14 +49,9 @@ const EarnAllVaultsPage = async ({
 
   const systemConfig = parseServerResponseToClient(configRaw)
 
-  const vaultsWithConfig = decorateVaultsWithConfig({
-    systemConfig,
-    vaults,
-  })
-
   const daoManagedVaultsList = (
     await Promise.all(
-      vaultsWithConfig.map(async (vault) => {
+      vaults.map(async (vault) => {
         const isDaoManaged = await getCachedIsVaultDaoManaged({
           fleetAddress: vault.id,
           network: supportedSDKNetwork(vault.protocol.network),
@@ -67,6 +62,12 @@ const EarnAllVaultsPage = async ({
     )
   ).filter(Boolean) as `0x${string}`[]
 
+  const vaultsWithConfig = decorateVaultsWithConfig({
+    systemConfig,
+    vaults,
+    daoManagedVaultsList,
+  })
+
   const filteredWalletAssetsVaults = walletAddress
     ? vaultsWithConfig.filter((vault) => {
         return walletAssets.assets.some(
@@ -76,7 +77,7 @@ const EarnAllVaultsPage = async ({
               subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network)),
         )
       })
-    : vaultsWithConfig
+    : []
 
   const [vaultsApyByNetworkMap] = await Promise.all([
     getCachedVaultsApy({
@@ -104,7 +105,6 @@ const EarnAllVaultsPage = async ({
       filteredWalletAssetsVaults={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
       tvl={tvl}
-      daoManagedVaultsList={daoManagedVaultsList}
     />
   )
 }

@@ -10905,10 +10905,85 @@ export type GetVaultQueryVariables = Exact<{
 
 export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<number>, rewardTokenEmissionsFinish: Array<number>, rewardTokenEmissionsUSD?: Array<number> | null, rebalanceCount: number, pricePerShare?: number | null, outputTokenSupply: number, inputTokenBalance: number, inputTokenPriceUSD?: number | null, outputTokenPriceUSD?: number | null, depositLimit: number, depositCap: number, minimumBufferBalance: number, createdTimestamp: number, totalValueLockedUSD: number, cumulativeTotalRevenueUSD: number, cumulativeSupplySideRevenueUSD: number, cumulativeProtocolSideRevenueUSD: number, lastUpdateTimestamp: number, withdrawableTotalAssets: number, withdrawableTotalAssetsUSD: number, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: number, depositCap: number, cumulativeEarnings: number, inputTokenBalance: number, maxDepositPercentageOfTVL: number, createdTimestamp: number, lastUpdateTimestamp: number, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null } | null };
 
+export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsAmount: Array<number>, rewardTokenEmissionsFinish: Array<number>, rewardTokenEmissionsUSD?: Array<number> | null, rebalanceCount: number, pricePerShare?: number | null, outputTokenSupply: number, inputTokenBalance: number, inputTokenPriceUSD?: number | null, outputTokenPriceUSD?: number | null, depositLimit: number, depositCap: number, minimumBufferBalance: number, createdTimestamp: number, totalValueLockedUSD: number, cumulativeTotalRevenueUSD: number, cumulativeSupplySideRevenueUSD: number, cumulativeProtocolSideRevenueUSD: number, lastUpdateTimestamp: number, withdrawableTotalAssets: number, withdrawableTotalAssetsUSD: number, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', id: string, symbol: string, decimals: number } }>, arks: Array<{ __typename?: 'Ark', id: string, productId: string, name?: string | null, details?: string | null, depositLimit: number, depositCap: number, cumulativeEarnings: number, inputTokenBalance: number, maxDepositPercentageOfTVL: number, createdTimestamp: number, lastUpdateTimestamp: number, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } }>, inputToken: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, name: string, symbol: string, decimals: number } | null }> };
+
 
 export const GetVaultDocument = /*#__PURE__*/ gql`
     query GetVault($id: ID!) {
   vault(id: $id) {
+    protocol {
+      network
+    }
+    id
+    name
+    rewardTokens {
+      id
+      token {
+        id
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsAmount
+    rewardTokenEmissionsFinish
+    rewardTokenEmissionsUSD
+    rebalanceCount
+    pricePerShare
+    arks {
+      id
+      productId
+      name
+      details
+      depositLimit
+      depositCap
+      cumulativeEarnings
+      inputTokenBalance
+      maxDepositPercentageOfTVL
+      inputToken {
+        id
+        name
+        symbol
+        decimals
+      }
+      createdTimestamp
+      lastUpdateTimestamp
+    }
+    inputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      id
+      name
+      symbol
+      decimals
+    }
+    outputTokenSupply
+    inputTokenBalance
+    inputTokenPriceUSD
+    outputTokenPriceUSD
+    depositLimit
+    depositCap
+    minimumBufferBalance
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
+    withdrawableTotalAssets
+    withdrawableTotalAssetsUSD
+  }
+}
+    `;
+export const GetVaultsDocument = /*#__PURE__*/ gql`
+    query GetVaults {
+  vaults {
     protocol {
       network
     }
@@ -10986,6 +11061,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     GetVault(variables: GetVaultQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetVaultQuery>({ document: GetVaultDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVault', 'query', variables);
+    },
+    GetVaults(variables?: GetVaultsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<GetVaultsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetVaultsQuery>({ document: GetVaultsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'GetVaults', 'query', variables);
     }
   };
 }

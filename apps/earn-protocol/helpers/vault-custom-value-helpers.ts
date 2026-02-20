@@ -10,16 +10,24 @@ type VaultConfigDecorator = {
   vaults: SDKVaultishType[]
   systemConfig: Partial<EarnAppConfigType>
   userPositions?: IArmadaPosition[]
+  daoManagedVaultsList: `0x${string}`[]
 }
 
 export const decorateVaultsWithConfig = ({
   vaults,
   systemConfig,
   userPositions,
+  daoManagedVaultsList,
 }: VaultConfigDecorator) => {
-  const vaultsWithConfig = decorateWithFleetConfig(vaults, systemConfig, userPositions)
+  const daoManagedVaultsEnabled = systemConfig.features?.DaoManagedVaults
+  const vaultsWithConfig = decorateWithFleetConfig(
+    vaults,
+    systemConfig,
+    userPositions,
+    daoManagedVaultsEnabled ? daoManagedVaultsList : [],
+  )
 
-  return vaultsWithConfig as SDKVaultishType[]
+  return vaultsWithConfig
 }
 
 export const getVaultIdByVaultCustomName = (

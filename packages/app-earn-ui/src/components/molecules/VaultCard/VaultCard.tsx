@@ -74,6 +74,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     onTooltipOpen,
     tooltipName,
     createdTimestamp,
+    isDaoManaged,
   } = props
 
   const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
@@ -134,6 +135,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           <VaultTitleWithRisk
             symbol={getDisplayToken(inputToken.symbol)}
             risk={customFields?.risk ?? 'lower'}
+            isDaoManagedVault={isDaoManaged}
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard

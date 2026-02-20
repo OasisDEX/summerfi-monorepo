@@ -67,6 +67,7 @@ interface VaultManageGridProps {
   buttonClickEventHandler: (buttonName: string) => void
   dropdownChangeHandler: ({ inputName, value }: { inputName: string; value: string }) => void
   noOfDeposits: number
+  isDaoManaged?: boolean
 }
 
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
@@ -89,6 +90,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   tooltipEventHandler,
   dropdownChangeHandler,
   noOfDeposits,
+  isDaoManaged,
 }) => {
   const isAltPressed = useHoldAlt()
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -253,6 +255,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 tooltipName="vault-manage-risk-label"
                 onTooltipOpen={tooltipEventHandler}
                 isNewVault={isNewVault}
+                isDaoManagedVault={isDaoManaged}
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>
