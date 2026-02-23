@@ -1,7 +1,4 @@
-import {
-  type ChartsDataTimeframes,
-  type SingleSourceChartData,
-} from '@summerfi/app-types/types/src/earn-protocol'
+import { type ChartsDataTimeframes, type SingleSourceChartData } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 
 import { type InstiVaultPerformanceResponse } from '@/app/server-handlers/institution/institution-vaults/types'

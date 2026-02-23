@@ -7,8 +7,7 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultishType } from '@summerfi/app-types'
-import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
+import { type MultipleSourceChartData, type SDKVaultishType } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
   formatPercent,

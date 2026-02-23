@@ -108,7 +108,7 @@ export const Dropdown: FC<DropdownProps> = ({
     .map((option) => (
       <div
         key={option.value}
-        className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
+        className={`${dropdownStyles.dropdownOption} ${option.isSeparator ? dropdownStyles.separator : ''} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
         onClick={() => handleSelectOption(option)}
       >
         <Text variant="p3semi">{option.content}</Text>

@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
-import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
+import { RiskManagedPill } from '@/components/atoms/RiskManagedPill/RiskManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
@@ -377,7 +377,7 @@ export const VaultCardHomepage = ({
                       marginTop: '5px',
                     }}
                   >
-                    <DaoManagedPill riskColor={riskColors.higher} small />
+                    <RiskManagedPill riskColor={riskColors.higher} small />
                     <Risk risk="higher" variant="p4semi" />
                   </div>
                 ) : (
@@ -395,7 +395,7 @@ export const VaultCardHomepage = ({
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    <DaoManagedPill riskColor={riskColors.higher} />
+                    <RiskManagedPill riskColor={riskColors.higher} />
                     <Risk risk="higher" />
                   </div>
                 ) : (

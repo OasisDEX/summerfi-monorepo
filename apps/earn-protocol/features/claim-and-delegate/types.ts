@@ -1,5 +1,8 @@
-import { type SupportedNetworkIds, type UiTransactionStatuses } from '@summerfi/app-types'
-import { type AuthorizedStakingRewardsCallerBaseStatus } from '@summerfi/app-types/types/src/earn-protocol'
+import {
+  type AuthorizedStakingRewardsCallerBaseStatus,
+  type SupportedNetworkIds,
+  type UiTransactionStatuses,
+} from '@summerfi/app-types'
 import { type HumanReadableNetwork } from '@summerfi/app-utils'
 
 import { type TallyDelegate } from '@/app/server-handlers/raw-calls/tally'

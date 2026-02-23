@@ -4,13 +4,11 @@ import { supportedSDKNetwork } from '@summerfi/app-utils'
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
 import { networkNameIconNameMap } from '@/constants/icon-maps'
 import { getDisplayToken } from '@/helpers/get-display-token'
-import { riskColors } from '@/helpers/risk-colors'
 
 import classNames from './VaultTitleDropdownContent.module.css'
 
@@ -34,7 +32,6 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
   isDaoManaged,
 }) => {
   const resolvedRisk = isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'
-  const color = riskColors[resolvedRisk]
 
   return (
     <div
@@ -65,7 +62,6 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
         </Text>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        {isDaoManaged ? <DaoManagedPill riskColor={color} small /> : null}
         <Risk risk={resolvedRisk} variant="p4semi" />
       </div>
     </div>

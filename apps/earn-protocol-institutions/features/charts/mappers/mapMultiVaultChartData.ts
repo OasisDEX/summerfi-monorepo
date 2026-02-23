@@ -1,8 +1,5 @@
 import { getUniqueColor } from '@summerfi/app-earn-ui'
-import {
-  type ChartsDataTimeframes,
-  type MultipleSourceChartData,
-} from '@summerfi/app-types/types/src/earn-protocol'
+import { type ChartsDataTimeframes, type MultipleSourceChartData } from '@summerfi/app-types'
 import { supportedSDKNetwork } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
 

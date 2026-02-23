@@ -25,4 +25,5 @@ export type DropdownOption =
 export type DropdownRawOption = {
   value: string
   content: ReactNode
+  isSeparator?: boolean
 }

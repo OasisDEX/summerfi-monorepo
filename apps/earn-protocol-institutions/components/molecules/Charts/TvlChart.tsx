@@ -2,8 +2,7 @@
 
 import { type ReactNode, useMemo } from 'react'
 import { RechartResponsiveWrapper } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
-import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
+import { type MultipleSourceChartData, type TimeframesType } from '@summerfi/app-types'
 import dayjs from 'dayjs'
 import { Area, ComposedChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
