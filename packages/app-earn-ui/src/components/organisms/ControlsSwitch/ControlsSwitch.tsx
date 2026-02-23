@@ -13,12 +13,14 @@ import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
+import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { Text } from '@/components/atoms/Text/Text'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
+import { riskColors } from '@/helpers/risk-colors'
 import { getTokenDisplayName } from '@/tokens/helpers'
 
 import controlsSwitchStyles from './ControlsSwitch.module.css'
@@ -47,6 +49,7 @@ const VaultSwitchCard = ({
   isMainVault = false,
   selected = false,
   onClick,
+  isDaoManaged,
 }: {
   token: string
   positionBalance?: string
@@ -58,10 +61,14 @@ const VaultSwitchCard = ({
   isMainVault?: boolean
   selected?: boolean
   onClick?: () => void
+  isDaoManaged?: boolean
 }) => {
   const apySpread = mainVaultApyLive && apyLive ? apyLive - mainVaultApyLive : null
   const apySpreadColor =
     apySpread && apySpread > 0 ? 'var(--color-text-success)' : 'var(--color-text-warning)'
+
+  const resolvedRisk = isDaoManaged ? 'higher' : risk ?? 'lower'
+  const color = riskColors[resolvedRisk]
 
   return (
     <GradientBox withHover selected={selected} onClick={onClick}>
@@ -74,7 +81,8 @@ const VaultSwitchCard = ({
         <div className={controlsSwitchStyles.titleRow}>
           <div className={controlsSwitchStyles.title}>
             <VaultTitle symbol={token} titleVariant="h5" iconSize={32} networkId={chainId} />
-            <Risk risk={risk ?? 'lower'} variant="p3semi" />
+            {isDaoManaged ? <DaoManagedPill riskColor={color} /> : null}
+            <Risk risk={resolvedRisk} variant="p3semi" />
           </div>
           {!isMainVault && (
             <Icon iconName={selected ? 'checkmark_colorful_circle' : 'checkmark_circle'} />
@@ -208,6 +216,7 @@ export const ControlsSwitch = ({
           apyLive={currentVaultApy.apy}
           risk={currentVault.customFields?.risk ?? 'lower'}
           chainId={chainId}
+          isDaoManaged={currentVault.isDaoManaged}
           isMainVault
         />
         <div className={controlsSwitchStyles.arrowForward}>
@@ -241,6 +250,7 @@ export const ControlsSwitch = ({
             mainVaultApyLive={currentVaultApy.apy}
             chainId={chainId}
             selected={selectedVault === `${vault.id}-${chainId}`}
+            isDaoManaged={vault.isDaoManaged}
             onClick={() => {
               selectVault(`${vault.id}-${chainId}`)
             }}

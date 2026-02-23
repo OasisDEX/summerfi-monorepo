@@ -64,8 +64,10 @@ export const VaultTitleDropdownContentBlock: FC<Omit<VaultDropdownContentProps, 
           {customVaultName ?? getDisplayToken(vault.inputToken.symbol)}
         </Text>
       </div>
-      {isDaoManaged ? <DaoManagedPill riskColor={color} small /> : null}
-      <Risk risk={resolvedRisk} variant="p4semi" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        {isDaoManaged ? <DaoManagedPill riskColor={color} small /> : null}
+        <Risk risk={resolvedRisk} variant="p4semi" />
+      </div>
     </div>
   )
 }

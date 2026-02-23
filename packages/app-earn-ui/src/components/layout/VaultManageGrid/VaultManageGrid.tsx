@@ -240,12 +240,19 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                         value: slugifyVault(item),
                       })
                     }
+                    isDaoManaged={item.isDaoManaged}
                   />
                 ),
               }))}
               dropdownValue={{
                 value: getVaultUrl(vault),
-                content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
+                content: (
+                  <VaultTitleDropdownContent
+                    vault={vault}
+                    link={getVaultUrl(vault)}
+                    isDaoManaged={vault.isDaoManaged}
+                  />
+                ),
               }}
             >
               <VaultTitleWithRisk
