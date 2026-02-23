@@ -13,6 +13,7 @@ declare const styles: {
   readonly "mobileContentWrapper": string;
   readonly "searchInput": string;
   readonly "selected": string;
+  readonly "separator": string;
 };
 export = styles;
 

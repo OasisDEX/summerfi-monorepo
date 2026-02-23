@@ -72,6 +72,7 @@ export type {
   ForecastDataPoints,
   GetInterestRatesParams,
   SingleSourceChartData,
+  MultipleSourceChartData,
   IArmadaPosition,
   IArmadaVaultInfo,
   PerformanceChartData,

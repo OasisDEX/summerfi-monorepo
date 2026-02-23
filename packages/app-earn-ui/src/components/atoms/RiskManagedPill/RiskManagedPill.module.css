@@ -1,0 +1,17 @@
+.pillWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: transparent;
+  border: 1px solid var(--earn-protocol-primary-100);
+  padding: 0 8px;
+  margin-right: 4px;
+  border-radius: 9999px;
+  opacity: 0.8;
+}
+
+.pillText {
+  color: white;
+  margin: 0;
+  letter-spacing: -0.03em;
+}

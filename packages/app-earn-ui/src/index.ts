@@ -32,7 +32,7 @@ export { AnimateHeight } from './components/atoms/AnimateHeight/AnimateHeight'
 export { RechartResponsiveWrapper } from './components/atoms/RechartResponsiveWrapper/RechartResponsiveWrapper'
 export { ChartBar } from './components/atoms/ChartBar/ChartBar'
 export { YieldSourceLabel } from './components/atoms/YieldSourceLabel/YieldSourceLabel'
-export { DaoManagedPill } from './components/atoms/DaoManagedPill/DaoManagedPill'
+export { RiskManagedPill } from './components/atoms/RiskManagedPill/RiskManagedPill'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'

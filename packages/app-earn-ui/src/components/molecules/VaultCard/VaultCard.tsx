@@ -135,7 +135,6 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           <VaultTitleWithRisk
             symbol={getDisplayToken(inputToken.symbol)}
             risk={customFields?.risk ?? 'lower'}
-            isDaoManagedVault={isDaoManaged}
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard
@@ -164,7 +163,14 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              minWidth: '220px',
+            }}
+          >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total Assets
             </Text>
@@ -177,7 +183,14 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
               </Text>
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              minWidth: '220px',
+            }}
+          >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best For
             </Text>
@@ -189,17 +202,45 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             </Text>
           </div>
         </div>
-        <div className={vaultCardStyles.depositCapSpacer} />
-        <Text
-          variant="p4semi"
-          style={{
-            color: 'var(--color-text-primary-hover)',
-            margin: 0,
-          }}
-        >
-          Deposit cap: {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}{' '}
-          {depositCapInToken.gt(0.1) ? `(${formatDecimalAsPercent(depositCapUsed)} used)` : ''}
-        </Text>
+        <div className={vaultCardStyles.vaultCardAssetsWrapper}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              minWidth: '220px',
+            }}
+          >
+            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              Deposit cap
+            </Text>
+            <div className={vaultCardStyles.totalAssetsDisplay}>
+              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                {formatCryptoBalance(depositCapInToken)}&nbsp;{inputToken.symbol}
+              </Text>
+              <Text variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+                {depositCapInToken.gt(0.1) ? `${formatDecimalAsPercent(depositCapUsed)} used` : ''}
+              </Text>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              minWidth: '220px',
+            }}
+          >
+            <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+              Risk Management
+            </Text>
+            <div style={{ width: 'fit-content' }}>
+              <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+                {isDaoManaged ? <>DAO&nbsp;Risk-Managed</> : <>Risk-Managed&nbsp;by&nbsp;BA</>}
+              </Text>
+            </div>
+          </div>
+        </div>
       </Card>
     </GradientBox>
   )

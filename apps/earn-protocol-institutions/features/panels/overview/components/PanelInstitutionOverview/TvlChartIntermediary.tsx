@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Card, LoadingSpinner, Text } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
-import { type MultipleSourceChartData } from '@summerfi/app-types/types/src/earn-protocol'
+import { type MultipleSourceChartData, type TimeframesType } from '@summerfi/app-types'
 
 import { ChartHeader } from '@/components/molecules/Charts/ChartHeader'
 import { TvlChart } from '@/components/molecules/Charts/TvlChart'

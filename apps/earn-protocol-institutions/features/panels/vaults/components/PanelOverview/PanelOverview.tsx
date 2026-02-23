@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
-import { type TimeframesType } from '@summerfi/app-types'
 import {
   type ArksHistoricalChartData,
   type SingleSourceChartData,
-} from '@summerfi/app-types/types/src/earn-protocol'
+  type TimeframesType,
+} from '@summerfi/app-types'
 
 import { ArkHistoricalYieldChart } from '@/components/molecules/Charts/ArkHistoricalYieldChart'
 import { AumChart } from '@/components/molecules/Charts/AumChart'

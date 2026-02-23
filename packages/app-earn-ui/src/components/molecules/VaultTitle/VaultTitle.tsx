@@ -8,6 +8,7 @@ import {
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { RiskManagedPill } from '@/components/atoms/RiskManagedPill/RiskManagedPill'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
@@ -29,6 +30,7 @@ interface VaultTitleProps {
   isVaultCard?: boolean
   iconSize?: number
   isNewVault?: boolean
+  isDaoManagedVault?: boolean
 }
 
 export const VaultTitle: FC<VaultTitleProps> = ({
@@ -42,6 +44,7 @@ export const VaultTitle: FC<VaultTitleProps> = ({
   isVaultCard,
   iconSize = 44,
   isNewVault = false,
+  isDaoManagedVault,
 }) => {
   const resolvedSymbol = getDisplayToken(symbol)
   const isIconDefined = getTokenGuarded(resolvedSymbol)?.iconName
@@ -89,6 +92,9 @@ export const VaultTitle: FC<VaultTitleProps> = ({
           >
             {isLoading ? <SkeletonLine height={40} width={70} /> : resolvedSymbol}
             {isNewVault && !isLoading && <Emphasis variant="p2semiColorful">New!</Emphasis>}
+            {!isLoading && typeof isDaoManagedVault !== 'undefined' ? (
+              <RiskManagedPill isDaoManagedVault={isDaoManagedVault} />
+            ) : null}
           </Text>
           {selected && (
             <div

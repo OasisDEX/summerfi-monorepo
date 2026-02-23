@@ -7,7 +7,6 @@ import {
 } from '@summerfi/app-types'
 import { getVaultRiskTooltipLabel } from '@summerfi/app-utils'
 
-import { DaoManagedPill } from '@/components/atoms/DaoManagedPill/DaoManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import type TextVariants from '@/components/atoms/Text/Text.module.css'
@@ -40,7 +39,7 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
   tooltipName,
   onTooltipOpen,
   isNewVault = false,
-  isDaoManagedVault = false,
+  isDaoManagedVault,
 }) => {
   const resolvedRisk = isDaoManagedVault ? 'higher' : risk
   const color = riskColors[resolvedRisk]
@@ -57,11 +56,11 @@ export const VaultTitleWithRisk: FC<VaultTitleWithRiskProps> = ({
       titleVariant={titleVariant}
       isVaultCard={isVaultCard}
       isNewVault={isNewVault}
+      isDaoManagedVault={isDaoManagedVault}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
       networkName={networkName}
       value={
         <>
-          {isDaoManagedVault ? <DaoManagedPill riskColor={color} /> : null}
           <Risk risk={resolvedRisk} variant="p3semi" />
           <Tooltip
             tooltip={riskTooltipLabel}

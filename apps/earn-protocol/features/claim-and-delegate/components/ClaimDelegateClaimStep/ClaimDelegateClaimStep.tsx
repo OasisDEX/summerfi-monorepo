@@ -11,8 +11,11 @@ import {
   useMobileCheck,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
-import { AuthorizedStakingRewardsCallerBaseStatus } from '@summerfi/app-types/types/src/earn-protocol'
+import {
+  AuthorizedStakingRewardsCallerBaseStatus,
+  SupportedNetworkIds,
+  UiTransactionStatuses,
+} from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
   isSupportedHumanNetwork,

@@ -2,6 +2,7 @@
   position: relative;
   display: inline-block;
 }
+
 .dropdownSelected {
   display: flex;
   align-items: center;
@@ -12,6 +13,7 @@
   gap: 8px;
   width: max-content;
 }
+
 .dropdownOptions {
   position: absolute;
   top: 100%;
@@ -30,18 +32,21 @@
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
+
 .dropdownOverflowWrapper {
   scrollbar-color: grey transparent;
   scrollbar-width: thin;
   overflow-y: auto;
   max-height: 210px;
 }
+
 .dropdownShow {
   max-height: 280px;
   opacity: 1;
   visibility: visible;
   pointer-events: all;
 }
+
 .dropdownHide {
   height: 0;
   width: 0;
@@ -65,14 +70,17 @@
   margin-bottom: 2px;
   gap: 8px;
 }
+
 .dropdownOption:hover {
   background-color: var(--earn-protocol-neutral-80);
   color: var(--earn-protocol-secondary-100);
   transition: all 0.3s ease-in-out;
 }
+
 .dropdownOption.selected {
   color: var(--earn-protocol-secondary-100);
 }
+
 .dropdown .mobileContentWrapper {
   display: flex;
   flex-direction: column;
@@ -80,7 +88,7 @@
   max-height: 40vh;
 }
 
-.dropdownOption > span {
+.dropdownOption>span {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -89,6 +97,11 @@
 .disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  pointer-events: none;
+}
+
+.separator {
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -107,12 +120,15 @@
     max-width: 200px;
   }
 }
+
 .searchInput:focus {
   outline: none;
 }
+
 .searchInput:hover {
   border-color: var(--color-border-hover);
 }
+
 .searchInput::placeholder {
   color: var(--earn-protocol-secondary-40);
 }
