@@ -33,7 +33,7 @@
   width: 100%;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: var(--spacing-space-medium)
+  margin-bottom: var(--spacing-space-medium);
 }
 
 .vaultCardAssetsWrapper .totalAssetsDisplay {

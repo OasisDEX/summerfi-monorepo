@@ -21,7 +21,6 @@ import Link from 'next/link'
 import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
-import { RiskManagedPill } from '@/components/atoms/RiskManagedPill/RiskManagedPill'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
@@ -368,39 +367,58 @@ export const VaultCardHomepage = ({
               title="Risk"
               titleIcon="clock"
               contentDesktop={
-                vault.isDaoManaged ? (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      gap: '6px',
-                      marginTop: '5px',
-                    }}
-                  >
-                    <RiskManagedPill riskColor={riskColors.higher} small />
-                    <Risk risk="higher" variant="p4semi" />
-                  </div>
-                ) : (
-                  <Risk risk={customFields?.risk ?? 'lower'} variant="p1semi" />
-                )
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    marginTop: '5px',
+                  }}
+                >
+                  {vault.isDaoManaged ? (
+                    <Text variant="p4semi" style={{ color: riskColors.higher }}>
+                      DAO&nbsp;Risk-Managed
+                    </Text>
+                  ) : (
+                    <Text
+                      variant="p4semi"
+                      style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
+                    >
+                      Risk-Managed&nbsp;by&nbsp;BA
+                    </Text>
+                  )}
+                  <Risk
+                    risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+                    variant="p4semi"
+                  />
+                </div>
               }
               contentMobile={
-                vault.isDaoManaged ? (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '6px',
-                      marginTop: '5px',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <RiskManagedPill riskColor={riskColors.higher} />
-                    <Risk risk="higher" />
-                  </div>
-                ) : (
-                  <Risk risk={customFields?.risk ?? 'lower'} variant="p2semi" />
-                )
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    marginTop: '5px',
+                  }}
+                >
+                  {vault.isDaoManaged ? (
+                    <Text variant="p4semi" style={{ color: riskColors.higher }}>
+                      DAO&nbsp;Risk-Managed
+                    </Text>
+                  ) : (
+                    <Text
+                      variant="p4semi"
+                      style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
+                    >
+                      Risk-Managed&nbsp;by&nbsp;BA
+                    </Text>
+                  )}
+                  <Risk
+                    risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+                    variant="p4semi"
+                  />
+                </div>
               }
             />
           </div>

@@ -8,7 +8,7 @@ export const RiskManagedPill: FC<{
   isDaoManagedVault?: boolean
   small?: boolean
   big?: boolean
-}> = ({ isDaoManagedVault = 'lower', small, big }) => {
+}> = ({ isDaoManagedVault = false, small, big }) => {
   return (
     <div className={riskManagedPillStyles.pillWrapper}>
       <Text
