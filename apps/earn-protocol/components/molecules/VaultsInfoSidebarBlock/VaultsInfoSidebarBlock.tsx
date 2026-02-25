@@ -141,7 +141,9 @@ export const VaultsInfoSidebarBlock = () => {
         title={
           <div className={vaultsInfoSidebarBlockStyles.expanderTitleRow}>
             <Icon iconName="warning" size={16} />
-            <Text variant="p2semi">Risk-Managed by Block Analitica vs DAO Risk-Managed</Text>
+            <Text variant="p2semi">
+              Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica vs DAO Risk-Managed
+            </Text>
           </div>
         }
         expanderButtonClassName={vaultsInfoSidebarBlockStyles.expanderButton}
@@ -156,12 +158,13 @@ export const VaultsInfoSidebarBlock = () => {
               style={{ marginBottom: '12px' }}
             />
             <Text variant="p3semi">
-              What is the difference between Risk-Managed By Block Analitica & DAO Risk-Managed
+              What is the difference between Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica & DAO
+              Risk-Managed
             </Text>
             <Text variant="p3">
               The key difference between{' '}
               <Text as="span" variant="p3semi">
-                Risk-Managed By Block Analitica
+                Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
               </Text>{' '}
               and{' '}
               <Text as="span" variant="p3semi">
@@ -169,7 +172,7 @@ export const VaultsInfoSidebarBlock = () => {
               </Text>{' '}
               vaults are their approaches to risk.{' '}
               <Text as="span" variant="p3semi">
-                Risk-Managed By Block Analitica
+                Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
               </Text>{' '}
               are more conservative.{' '}
               <Text as="span" variant="p3semi">
@@ -181,10 +184,10 @@ export const VaultsInfoSidebarBlock = () => {
           <div className={vaultsInfoSidebarBlockStyles.expanderContentRow}>
             <Icon iconName="earn_yield_trend" size={16} style={{ marginTop: '1px' }} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Text variant="p3semi">Risk-Managed By Block Analitica</Text>
+              <Text variant="p3semi">Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica</Text>
               <Text variant="p3">
                 <Text as="span" variant="p3semi">
-                  Risk-Managed By Block Analitica
+                  Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
                 </Text>{' '}
                 has an active approach to risk, constantly monitoring and adjusting risk parameters,
                 and adapting to market conditions.

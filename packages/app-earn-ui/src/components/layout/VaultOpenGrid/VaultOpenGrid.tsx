@@ -254,7 +254,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                     color: 'var(--earn-protocol-secondary-100)',
                   }}
                 >
-                  Risk-Managed by BA
+                  Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
                 </div>
               ),
               isSeparator: true,
