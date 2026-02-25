@@ -199,7 +199,7 @@ const VaultCardLoading = ({
               }
             />
             <DataBlock
-              title="Risk"
+              title="Risk Management"
               titleIcon="clock"
               contentDesktop={<SkeletonLine height={20} width={100} style={{ marginTop: '6px' }} />}
               contentMobile={<SkeletonLine height={18} width={85} style={{ marginTop: '4px' }} />}
@@ -364,7 +364,7 @@ export const VaultCardHomepage = ({
               }
             />
             <DataBlock
-              title="Risk"
+              title="Risk Management"
               titleIcon="clock"
               contentDesktop={
                 <div
@@ -384,7 +384,7 @@ export const VaultCardHomepage = ({
                       variant="p4semi"
                       style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
                     >
-                      Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
+                      Block&nbsp;Analitica
                     </Text>
                   )}
                   <Risk
@@ -411,7 +411,7 @@ export const VaultCardHomepage = ({
                       variant="p4semi"
                       style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
                     >
-                      Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
+                      Block&nbsp;Analitica
                     </Text>
                   )}
                   <Risk
