@@ -110,51 +110,53 @@ export const VaultDetailsSecurityMoneyExpander: FC<VaultDetailsSecurityMoneyExpa
           ))}
         </div>
         {!vault.isDaoManaged && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: 'var(--spacing-space-medium)',
-              marginTop: 'var(--spacing-space-large)',
-              gap: 'var(--spacing-space-x-small)',
-            }}
-          >
-            <Text as="p" variant="p2semi">
-              Whitelisted Actors
-            </Text>
-            <Tooltip
-              tooltip={
-                <Text as="p" variant="p4semi">
-                  Whitelist actors are entities with special permissions or access granted after
-                  approval.
-                </Text>
-              }
-              tooltipWrapperStyles={{ minWidth: '260px' }}
+          <>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: 'var(--spacing-space-medium)',
+                marginTop: 'var(--spacing-space-large)',
+                gap: 'var(--spacing-space-x-small)',
+              }}
             >
-              <Icon iconName="question_o" variant="xs" color="rgba(255, 251, 253, 1)" />
-            </Tooltip>
-          </div>
-        )}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--spacing-space-x-small)',
-            width: 'fit-content',
-          }}
-        >
-          {whitelistedActorsLinks.map((item) => (
-            <Link href={item.link} key={item.title} target="_blank">
-              <WithArrow
-                as="p"
-                variant="p3semi"
-                style={{ color: 'var(--earn-protocol-primary-100)' }}
+              <Text as="p" variant="p2semi">
+                Whitelisted Actors
+              </Text>
+              <Tooltip
+                tooltip={
+                  <Text as="p" variant="p4semi">
+                    Whitelist actors are entities with special permissions or access granted after
+                    approval.
+                  </Text>
+                }
+                tooltipWrapperStyles={{ minWidth: '260px' }}
               >
-                {item.title}
-              </WithArrow>
-            </Link>
-          ))}
-        </div>
+                <Icon iconName="question_o" variant="xs" color="rgba(255, 251, 253, 1)" />
+              </Tooltip>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--spacing-space-x-small)',
+                width: 'fit-content',
+              }}
+            >
+              {whitelistedActorsLinks.map((item) => (
+                <Link href={item.link} key={item.title} target="_blank">
+                  <WithArrow
+                    as="p"
+                    variant="p3semi"
+                    style={{ color: 'var(--earn-protocol-primary-100)' }}
+                  >
+                    {item.title}
+                  </WithArrow>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
       </Expander>
     </Card>
   )
