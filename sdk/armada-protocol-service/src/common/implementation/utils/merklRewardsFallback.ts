@@ -7,8 +7,8 @@ const createNormalizeRewardAmount =
     BigNumber(amount).shiftedBy(decimals).toFixed()
 
 // Just a static fallback data for Merkl rewards emissions by fleet address
-// Use for quick solution while Merkl is failing to provide data via their API
-// Updated manually when needed
+// Use as fallback while Merkl is failing to provide data via their API
+// Updated manually when needed, fleet addresses in lowercase
 export const getByFleetAddressFallback = (
   chainId: ChainId,
   token: IToken,
@@ -74,11 +74,11 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: normalizeRewardAmount('3717') },
         ],
         // usdc (DAO)
-        '0xd77F9a9F2b0C160dB3e9dC2Cce370c1a740C76fc': [
+        '0xd77f9a9f2b0c160db3e9dc2cce370c1a740c76fc': [
           { token, dailyEmission: normalizeRewardAmount('4900') },
         ],
         // eth (DAO)
-        '0x0C1FBCCC019320032D9acD193447560C8C632114': [
+        '0x0c1fbccc019320032d9acd193447560c8c632114': [
           { token, dailyEmission: normalizeRewardAmount('4900') },
         ],
       }
