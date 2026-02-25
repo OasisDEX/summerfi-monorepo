@@ -73,8 +73,12 @@ export const getByFleetAddressFallback = (
         '0x17ee2d03e88b55e762c66c76ec99c3a28a54ad8d': [
           { token, dailyEmission: normalizeRewardAmount('3717') },
         ],
-        // usdc HR (DAO)
-        '0x48d047532191479852c1f1903cb83700c42a3b8f': [
+        // usdc (DAO)
+        '0xd77F9a9F2b0C160dB3e9dC2Cce370c1a740C76fc': [
+          { token, dailyEmission: normalizeRewardAmount('4900') },
+        ],
+        // eth (DAO)
+        '0x0C1FBCCC019320032D9acD193447560C8C632114': [
           { token, dailyEmission: normalizeRewardAmount('4900') },
         ],
       }
