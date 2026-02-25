@@ -384,7 +384,7 @@ export const VaultCardHomepage = ({
                       variant="p4semi"
                       style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
                     >
-                      Risk-Managed&nbsp;by&nbsp;BA
+                      Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
                     </Text>
                   )}
                   <Risk
@@ -411,7 +411,7 @@ export const VaultCardHomepage = ({
                       variant="p4semi"
                       style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
                     >
-                      Risk-Managed&nbsp;by&nbsp;BA
+                      Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica
                     </Text>
                   )}
                   <Risk

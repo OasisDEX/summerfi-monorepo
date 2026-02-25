@@ -15,7 +15,11 @@ export const RiskManagedPill: FC<{
         variant={small ? 'p4semi' : big ? 'p1semi' : 'p3semi'}
         className={riskManagedPillStyles.pillText}
       >
-        {isDaoManagedVault ? <>DAO&nbsp;Risk-Managed</> : <>Risk-Managed&nbsp;by&nbsp;BA</>}
+        {isDaoManagedVault ? (
+          <>DAO&nbsp;Risk-Managed</>
+        ) : (
+          <>Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica</>
+        )}
       </Text>
     </div>
   )
