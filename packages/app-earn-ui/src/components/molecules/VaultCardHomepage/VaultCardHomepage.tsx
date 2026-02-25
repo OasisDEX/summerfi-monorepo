@@ -376,16 +376,9 @@ export const VaultCardHomepage = ({
                   }}
                 >
                   {vault.isDaoManaged ? (
-                    <Text variant="p4semi" style={{ color: riskColors.higher }}>
-                      DAO&nbsp;Risk-Managed
-                    </Text>
+                    <Text variant="p4semi">DAO&nbsp;Risk-Managed</Text>
                   ) : (
-                    <Text
-                      variant="p4semi"
-                      style={{ color: riskColors[vault.customFields?.risk ?? 'lower'] }}
-                    >
-                      Block&nbsp;Analitica
-                    </Text>
+                    <Text variant="p4semi">Block&nbsp;Analitica</Text>
                   )}
                   <Risk
                     risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
