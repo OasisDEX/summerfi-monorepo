@@ -11553,14 +11553,7 @@ export const GetUsersActivityDocument = gql`
     `;
 export const GetVaultsDocument = gql`
     query GetVaults {
-  vaults (
-    where: {
-      id_not_in: [
-        "0x0c1fbccc019320032d9acd193447560c8c632114"
-        "0xd77F9a9F2b0C160dB3e9dC2Cce370c1a740C76fc"
-      ]
-    }
-  ) {
+  vaults {
     protocol {
       network
     }
