@@ -12,7 +12,7 @@ import {
   getUsers,
   getUsersPositions,
   UserPositionsQuery,
-  VaultsQuery,
+  VaultsLiteQuery,
 } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults } from '@summerfi/summer-earn-protocol-subgraph'
 import { getVaults as getInstitutionalVaults } from '@summerfi/summer-earn-institutions-subgraph'
@@ -337,8 +337,8 @@ async function handleProtocolRoute(
   const chainData = await Promise.all(
     chainsToQuery.map(async (chainId) => {
       logger.info(`Fetching vaults for chain ID: ${chainId}`)
-      const publicVaults: VaultsQuery['vaults'] = []
-      const institutionalVaults: VaultsQuery['vaults'] = []
+      const publicVaults: VaultsLiteQuery['vaults'] = []
+      const institutionalVaults: VaultsLiteQuery['vaults'] = []
 
       try {
         const vaults = await getVaults({
@@ -359,7 +359,7 @@ async function handleProtocolRoute(
         logger.info(
           `Fetched ${institutionalVaultsResult.vaults.length} institutional vaults for chain ID: ${chainId}`,
         )
-        institutionalVaults.push(...(institutionalVaultsResult.vaults as VaultsQuery['vaults']))
+        institutionalVaults.push(...(institutionalVaultsResult.vaults as VaultsLiteQuery['vaults']))
       } catch (error) {
         logger.warn('Failed to fetch institutional vaults for chain', { chainId, error })
       }
