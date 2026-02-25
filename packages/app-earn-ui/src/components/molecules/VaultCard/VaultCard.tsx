@@ -168,7 +168,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              minWidth: '260px',
+              minWidth: '210px',
             }}
           >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -188,7 +188,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              minWidth: '260px',
+              minWidth: '210px',
             }}
           >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -208,7 +208,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              minWidth: '260px',
+              minWidth: '210px',
             }}
           >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -228,7 +228,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              minWidth: '260px',
+              minWidth: '210px',
             }}
           >
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
@@ -236,11 +236,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             </Text>
             <div style={{ width: 'fit-content' }}>
               <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {isDaoManaged ? (
-                  <>DAO&nbsp;Risk-Managed</>
-                ) : (
-                  <>Risk-Managed&nbsp;by&nbsp;Block&nbsp;Analitica</>
-                )}
+                {isDaoManaged ? <>DAO&nbsp;Risk-Managed</> : <>Block&nbsp;Analitica</>}
               </Text>
             </div>
           </div>

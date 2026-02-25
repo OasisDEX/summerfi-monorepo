@@ -102,7 +102,7 @@ export const VaultsInfoSidebarBlock = () => {
               </Text>
               <WithArrow variant="p4semi">
                 <Link
-                  href="https://blockanalitica.com/"
+                  href="https://forum.summer.fi/t/summerfi-lazy-summer-protocol-initial-fleet-and-ark-parameters-by-block-analitica/76"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
@@ -123,7 +123,7 @@ export const VaultsInfoSidebarBlock = () => {
               </Text>
               <WithArrow variant="p4semi">
                 <Link
-                  href="https://blockanalitica.com/"
+                  href="https://forum.summer.fi/t/ba-labs-risk-framework-for-summerfi-dao-managed-fleets/717"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
