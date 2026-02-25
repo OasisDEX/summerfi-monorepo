@@ -191,12 +191,12 @@ export const VaultsInfoSidebarBlock = () => {
               </Text>
               <WithArrow variant="p4semi">
                 <Link
-                  href="#"
+                  href="https://forum.summer.fi/t/summerfi-lazy-summer-protocol-initial-fleet-and-ark-parameters-by-block-analitica/76"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
                 >
-                  <Text variant="p4semi">Learn more</Text>
+                  <Text variant="p4semi">View risk framework</Text>
                 </Link>
               </WithArrow>
             </div>
@@ -215,7 +215,7 @@ export const VaultsInfoSidebarBlock = () => {
               </Text>
               <WithArrow variant="p4semi">
                 <Link
-                  href="#"
+                  href="https://forum.summer.fi/t/ba-labs-risk-framework-for-summerfi-dao-managed-fleets/717"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--earn-protocol-primary-100)' }}
