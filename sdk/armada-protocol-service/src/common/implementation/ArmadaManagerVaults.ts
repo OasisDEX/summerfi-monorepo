@@ -2013,7 +2013,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     )
     // get rewards manager addresses of the provided vaults
     const rewardsManagerAddresses = vaultsData.map((vault) => {
-      if (vault.vault && 'rewardsManager' in vault.vault) {
+      if (vault.vault && 'rewardsManager' in vault.vault && vault.vault.rewardsManager?.id) {
         return vault.vault.rewardsManager.id
       } else {
         return undefined

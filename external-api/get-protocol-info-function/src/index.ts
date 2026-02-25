@@ -286,8 +286,8 @@ async function handleUsersRoute(
 
       // Collect unique rewards manager addresses for this user on this chain
       const rewardsManagerAddresses = Array.from(
-        new Set(userPositions.map((position) => position.vault.rewardsManager.id as Address)),
-      )
+        new Set(userPositions.map((position) => position.vault.rewardsManager?.id as Address)),
+      ).filter((addr): addr is Address => !!addr)
 
       if (rewardsManagerAddresses.length > 0) {
         userChainRewards.push({
