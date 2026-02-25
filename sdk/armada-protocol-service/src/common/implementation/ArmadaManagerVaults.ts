@@ -52,7 +52,7 @@ import { BigNumber } from 'bignumber.js'
 import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { calculateRewardApy } from './utils/calculate-summer-yield'
 import type { IDeploymentProvider } from '../..'
-import { getByFleetAddressFallback } from './utils/merklRewardsFallback'
+import { getMerklRewardsByFleetAddressFallback } from './utils/merklRewardsFallback'
 import { ArmadaManagerShared } from './ArmadaManagerShared'
 import { EnsoClient, type BundleAction } from '../services/EnsoClient'
 import type { RouteParams } from '@ensofinance/sdk'
@@ -2089,7 +2089,7 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     )
 
     return {
-      byFleetAddress: getByFleetAddressFallback(chainId, sumrToken),
+      byFleetAddress: getMerklRewardsByFleetAddressFallback(chainId, sumrToken),
     }
   }
 

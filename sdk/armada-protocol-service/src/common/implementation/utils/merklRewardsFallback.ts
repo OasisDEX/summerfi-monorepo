@@ -6,10 +6,10 @@ const createNormalizeRewardAmount =
   (amount: string): string =>
     BigNumber(amount).shiftedBy(decimals).toFixed()
 
-// Just a static fallback data for Merkl rewards emissions by fleet address
-// Use as fallback while Merkl is failing to provide data via their API
+// Static fallback data for Merkl rewards emissions by fleet address (lowercase)
+// and token, with daily emission amount in token units (not decimals)
 // Updated manually when needed, fleet addresses in lowercase
-export const getByFleetAddressFallback = (
+export const getMerklRewardsByFleetAddressFallback = (
   chainId: ChainId,
   token: IToken,
 ): {
@@ -20,9 +20,16 @@ export const getByFleetAddressFallback = (
 } => {
   const normalizeRewardAmount = createNormalizeRewardAmount(token.decimals)
 
+  let dataForChain: {
+    [fleetAddress: string]: {
+      token: IToken
+      dailyEmission: string
+    }[]
+  }
+
   switch (chainId) {
     case ChainIds.Base:
-      return {
+      dataForChain = {
         // usdc low risk
         '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17': [
           { token, dailyEmission: normalizeRewardAmount('9898') },
@@ -36,8 +43,10 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: normalizeRewardAmount('24284') },
         ],
       }
+      break
+
     case ChainIds.ArbitrumOne:
-      return {
+      dataForChain = {
         // usdc low risk
         '0x71d77c39db0eb5d086611a2e950198e3077cf58a': [
           { token, dailyEmission: normalizeRewardAmount('16221') },
@@ -51,8 +60,10 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: normalizeRewardAmount('0') },
         ],
       }
+      break
+
     case ChainIds.Mainnet:
-      return {
+      dataForChain = {
         // eth low risk
         '0x67e536797570b3d8919df052484273815a0ab506': [
           { token, dailyEmission: normalizeRewardAmount('78226') },
@@ -82,16 +93,19 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: normalizeRewardAmount('4900') },
         ],
       }
+      break
+
     case ChainIds.Sonic:
-      return {
+      dataForChain = {
         // usdc.e low risk
         '0x507a2d9e87dbd3076e65992049c41270b47964f8': [
           { token, dailyEmission: normalizeRewardAmount('4198') },
         ],
       }
+      break
 
     case ChainIds.Hyperliquid:
-      return {
+      dataForChain = {
         // usdc
         '0x252e5aa42c1804b85b2ce6712cd418a0561232ba': [
           { token, dailyEmission: normalizeRewardAmount('8826') },
@@ -101,8 +115,19 @@ export const getByFleetAddressFallback = (
           { token, dailyEmission: normalizeRewardAmount('8826') },
         ],
       }
+      break
 
     default:
       throw new Error(`No Merkl rewards fallback data for chainId: ${chainId}`)
   }
+
+  // make sure fleet addresses are lowercase (should be, but just in case)
+  dataForChain = Object.fromEntries(
+    Object.entries(dataForChain).map(([fleetAddress, rewards]) => [
+      fleetAddress.toLowerCase(),
+      rewards,
+    ]),
+  )
+
+  return dataForChain
 }
