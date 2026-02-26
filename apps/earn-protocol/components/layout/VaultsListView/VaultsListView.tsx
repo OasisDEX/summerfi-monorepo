@@ -5,6 +5,7 @@ import { useUser } from '@account-kit/react'
 import {
   Card,
   DataBlock,
+  Emphasis,
   getSumrTokenBonus,
   getUniqueVaultId,
   getVaultPositionUrl,
@@ -501,7 +502,11 @@ export const VaultsListView = ({
               },
               {
                 id: 'dao-risk-managed',
-                label: 'DAO Risk-Managed',
+                label: (
+                  <>
+                    DAO Risk-Managed <Emphasis variant="p3semiColorful">New!</Emphasis>
+                  </>
+                ),
               },
             ]}
             handleTabChange={(tab) => {
