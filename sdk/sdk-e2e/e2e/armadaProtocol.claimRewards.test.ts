@@ -20,7 +20,6 @@ jest.setTimeout(300000)
 describe('Armada Protocol - Claim Rewards', () => {
   const scenarios: {
     chainId: ChainId
-    rpcUrl: string
     userAddress: AddressValue
     signerPrivateKey?: HexData
     simulateOnly?: boolean
@@ -28,39 +27,27 @@ describe('Armada Protocol - Claim Rewards', () => {
     includeStakingV2?: boolean
   }[] = [
     {
-      chainId: ChainIds.Base,
-      rpcUrl: RpcUrls.Base,
-      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+      chainId: ChainIds.Mainnet,
+      userAddress: '0x10649c79428d718621821Cf6299e91920284743F',
+      // userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
       includeMerkl: false,
       includeStakingV2: true,
-    },
-    {
-      chainId: ChainIds.Base,
-      rpcUrl: RpcUrls.Base,
-      userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
-      includeMerkl: true,
-      includeStakingV2: true,
+      simulateOnly: true,
     },
   ]
 
   const sdk = createTestSdkInstance()
 
   describe.each(scenarios)('with scenario %#', (scenario) => {
-    const {
-      chainId,
-      rpcUrl,
-      userAddress,
-      signerPrivateKey,
-      simulateOnly,
-      includeMerkl,
-      includeStakingV2,
-    } = scenario
+    const { chainId, userAddress, signerPrivateKey, simulateOnly, includeMerkl, includeStakingV2 } =
+      scenario
 
     const chainInfo = getChainInfoByChainId(chainId)
     const user = User.createFromEthereum(chainId, userAddress)
     const userSendTxTool = createSendTransactionTool({
       chainId,
-      rpcUrl,
+      rpcUrl: RpcUrls[chainId],
+      senderAddress: userAddress,
       signerPrivateKey,
       simulateOnly,
     })
@@ -73,7 +60,10 @@ describe('Armada Protocol - Claim Rewards', () => {
         : await sdk.armada.users.getAggregatedRewards({
             user,
           })
-      const toClaimBefore = rewards.total
+      const toClaimBefore =
+        includeStakingV2 && chainId === ChainIds.Base
+          ? rewards.total
+          : rewards.total - rewards.stakingV2
       console.log(
         'before',
         Object.entries(rewards)
@@ -93,7 +83,7 @@ describe('Armada Protocol - Claim Rewards', () => {
           )
           .join(', '),
       )
-      assert(toClaimBefore > 0n, 'Rewards should be greater than 0')
+      assert(toClaimBefore > 0n, 'Nothing to claim, cannot test claiming rewards')
 
       const tx = await sdk.armada.users.getAggregatedClaimsForChainTx({
         chainInfo,

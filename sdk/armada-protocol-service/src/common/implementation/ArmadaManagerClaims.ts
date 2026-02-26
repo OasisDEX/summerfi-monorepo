@@ -181,16 +181,16 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
 
     // filter only claims for the user's chain
 
-    const hasClaimedRecord = await this.hasClaimedDistributions({
+    const hasClaimedDistributions = await this.hasClaimedDistributions({
       user,
       distributionClaims,
     })
 
-    LoggingService.debug('hasClaimedRecord:', hasClaimedRecord)
+    LoggingService.debug('hasClaimedDistributions:', hasClaimedDistributions)
 
     // get distribution rewards amount
     return distributionClaims.reduce((amount, claim) => {
-      if (hasClaimedRecord[claim.contractAddress][claim.index.toString()]) {
+      if (hasClaimedDistributions[claim.contractAddress][claim.index.toString()]) {
         return amount
       } else {
         return amount + claim.amount
@@ -246,49 +246,45 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
     const summerTokenAddress = this._utils.getSummerToken({ chainInfo }).address
 
     const vaults = await this._subgraphManager.getVaults({ chainId: chainInfo.chainId })
-    const fleetCommanderAddresses = vaults.vaults.map((vault) => vault.id as `0x${string}`)
-    const stakingRewardsManagerAddresses = vaults.vaults.map((vault) => {
-      if ('rewardsManager' in vault) {
-        return vault.rewardsManager?.id as `0x${string}` | undefined
-      } else {
-        return undefined
-      }
-    })
-    // readContract summer token abi
+    const stakingRewardsManagerAddresses = vaults.vaults
+      .map((vault) => {
+        if ('rewardsManager' in vault && vault.rewardsManager?.id != undefined) {
+          return [vault.id, vault.rewardsManager.id]
+        } else {
+          return undefined
+        }
+      })
+      .filter((item): item is [`0x${string}`, `0x${string}`] => item !== undefined)
 
+    // prepare calls to read earned staking rewards from rewards managers
     const contractCalls: {
       abi: typeof StakingRewardsManagerBaseAbi
       address: HexData
       functionName: 'earned'
-    }[] = []
-    for (let index = 0; index < fleetCommanderAddresses.length; index++) {
-      const stakingRewardsManagerAddress = stakingRewardsManagerAddresses[index]
-      if (!stakingRewardsManagerAddress) {
-        continue
-      }
-      // read earned staking rewards from rewards manager
-      const earnedCall = {
+    }[] = stakingRewardsManagerAddresses.map(([_, stakingRewardsManagerAddress]) => {
+      return {
         abi: StakingRewardsManagerBaseAbi,
         address: stakingRewardsManagerAddress,
         functionName: 'earned',
         args: [userAddressValue, summerTokenAddress.value],
       } as const
-      contractCalls.push(earnedCall)
-    }
+    })
 
     const perFleet = await client
       .multicall({
         contracts: contractCalls,
       })
-      .then((multicallResults) => {
-        return multicallResults.reduce(
-          (earnedDict, result, index) => {
-            if (result.status === 'success') {
-              const address = fleetCommanderAddresses[index]
-              earnedDict[address] = result.result
-              return earnedDict
+      .then((multicallResponses) => {
+        return multicallResponses.reduce(
+          (state, response, index) => {
+            if (response.status === 'success') {
+              const fleetAddress = stakingRewardsManagerAddresses[index][0]
+              state[fleetAddress] = response.result
+              return state
             } else {
-              throw new Error('Error in multicall reading protocol usage rewards: ' + result.error)
+              throw new Error(
+                'Error in multicall reading protocol usage rewards: ' + response.error,
+              )
             }
           },
           {} as Record<string, bigint>,

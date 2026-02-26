@@ -32,11 +32,11 @@ if (!process.env.E2E_SDK_FORK_URL_HYPERLIQUID) {
 }
 
 export const RpcUrls = {
-  Mainnet: process.env.E2E_SDK_FORK_URL_MAINNET,
-  Base: process.env.E2E_SDK_FORK_URL_BASE,
-  ArbitrumOne: process.env.E2E_SDK_FORK_URL_ARBITRUM,
-  Sonic: process.env.E2E_SDK_FORK_URL_SONIC,
-  Hyperliquid: process.env.E2E_SDK_FORK_URL_HYPERLIQUID,
+  [ChainIds.Mainnet]: process.env.E2E_SDK_FORK_URL_MAINNET,
+  [ChainIds.Base]: process.env.E2E_SDK_FORK_URL_BASE,
+  [ChainIds.ArbitrumOne]: process.env.E2E_SDK_FORK_URL_ARBITRUM,
+  [ChainIds.Sonic]: process.env.E2E_SDK_FORK_URL_SONIC,
+  [ChainIds.Hyperliquid]: process.env.E2E_SDK_FORK_URL_HYPERLIQUID,
 } as const
 
 export const FleetAddresses = {
@@ -84,43 +84,43 @@ export type ChainConfig = {
 
 export const TestConfigs = {
   BaseWETH: {
-    rpcUrl: RpcUrls.Base,
+    rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.ETH,
     symbol: 'ETH',
   },
   BaseUSDC: {
-    rpcUrl: RpcUrls.Base,
+    rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.USDC,
     symbol: 'USDC',
   },
   ArbitrumUSDT: {
-    rpcUrl: RpcUrls.ArbitrumOne,
+    rpcUrl: RpcUrls[ChainIds.ArbitrumOne],
     chainId: ChainIds.ArbitrumOne,
     fleetAddressValue: FleetAddresses.ArbitrumOne.USDT,
     symbol: 'USDT',
   },
   MainnetUSDCLowRisk: {
-    rpcUrl: RpcUrls.Mainnet,
+    rpcUrl: RpcUrls[ChainIds.Mainnet],
     chainId: ChainIds.Mainnet,
     fleetAddressValue: FleetAddresses.Mainnet.USDCLowRisk,
     symbol: 'USDC',
   },
   SonicUSDC: {
-    rpcUrl: RpcUrls.Sonic,
+    rpcUrl: RpcUrls[ChainIds.Sonic],
     chainId: ChainIds.Sonic,
     fleetAddressValue: FleetAddresses.Sonic.USDC,
     symbol: 'USDC',
   },
   HyperliquidUSDC: {
-    rpcUrl: RpcUrls.Hyperliquid,
+    rpcUrl: RpcUrls[ChainIds.Hyperliquid],
     chainId: ChainIds.Hyperliquid,
     fleetAddressValue: FleetAddresses.Hyperliquid.USDC,
     symbol: 'USDC',
   },
   HyperliquidUSDT: {
-    rpcUrl: RpcUrls.Hyperliquid,
+    rpcUrl: RpcUrls[ChainIds.Hyperliquid],
     chainId: ChainIds.Hyperliquid,
     fleetAddressValue: FleetAddresses.Hyperliquid.USDT,
     symbol: 'USDT',
@@ -138,7 +138,7 @@ export enum TestClientIds {
 
 export const InstiTestConfigs = {
   [TestClientIds.ACME]: {
-    rpcUrl: RpcUrls.Base,
+    rpcUrl: RpcUrls[ChainIds.Base],
     chainId: ChainIds.Base,
     fleetAddressValue: FleetAddresses.Base.AcmeUSDC,
     aqAddressValue: '0x477285d524628faa3ed62d8086be56810a34795e',
@@ -146,7 +146,7 @@ export const InstiTestConfigs = {
     symbol: 'ETH',
   },
   [TestClientIds.Targen]: {
-    rpcUrl: RpcUrls.ArbitrumOne,
+    rpcUrl: RpcUrls[ChainIds.ArbitrumOne],
     chainId: ChainIds.ArbitrumOne,
     fleetAddressValue: FleetAddresses.ArbitrumOne.TargenUSDC,
     aqAddressValue: '0x43d2c9786e8f5a960e75d6141e44411d065a4615',
