@@ -2,6 +2,7 @@
 
 import { type FC, type ReactNode } from 'react'
 import { type DeviceType } from '@summerfi/app-types'
+import { formatPercent } from '@summerfi/app-utils'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
@@ -27,6 +28,7 @@ interface BonulsLabelProps {
   }
   deviceType?: DeviceType
   tooltipName?: string
+  managementFee?: string
   onTooltipOpen?: (tooltipName: string) => void
 }
 
@@ -36,6 +38,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
   raw,
   withTokenBonus = true,
   combinedApr,
+  managementFee,
   isLoading,
   apyUpdatedAt,
   totalSumrEarned,
@@ -45,6 +48,10 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
 }): React.ReactNode => {
   const isAltPressed = useHoldAlt()
 
+  const netApy =
+    Number(combinedApr?.replace('%', '')) -
+    (managementFee ? Number(managementFee.replace('%', '')) : 0)
+
   return (
     <Tooltip
       deviceType={deviceType}
@@ -53,28 +60,54 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
       onTooltipOpen={onTooltipOpen}
       tooltip={
         <div
-          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-small)' }}
         >
           {apy && (
             <LiveApyInfo apyCurrent={apy} apyUpdatedAt={apyUpdatedAt} isAltPressed={isAltPressed} />
           )}
           {tokenBonus && withTokenBonus && (
-            <div>
+            <div
+              style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
+            >
               <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
                 $SUMR Token Rewards:
               </Text>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 'var(--spacing-space-x-small)',
-                  alignItems: 'center',
-                }}
-              >
-                <Icon iconName="stars_colorful" size={20} />
-                <Text as="p" variant="p1semiColorful">
-                  {tokenBonus}
-                </Text>
-              </div>
+              <Icon iconName="stars_colorful" size={20} />
+              <Text as="p" variant="p1semiColorful">
+                {tokenBonus}
+              </Text>
+            </div>
+          )}
+          {managementFee && (
+            <div
+              style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
+            >
+              <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
+                Management Fee:
+              </Text>
+              <Text as="p" variant="p1semi">
+                -{managementFee}
+              </Text>
+            </div>
+          )}
+          {!Number.isNaN(netApy) && (
+            <div
+              style={{
+                display: 'flex',
+                gap: 'var(--spacing-space-x-small)',
+                alignItems: 'center',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingTop: 'var(--spacing-space-small)',
+              }}
+            >
+              <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
+                Net APY:
+              </Text>
+              <Text as="p" variant="p1semi">
+                {formatPercent(netApy, {
+                  precision: 2,
+                })}
+              </Text>
             </div>
           )}
           {tokenBonus && withTokenBonus && totalSumrEarned && (
@@ -98,8 +131,8 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
         </div>
       }
       tooltipWrapperStyles={{
-        minWidth: '240px',
-        maxWidth: '500px',
+        minWidth: '220px',
+        maxWidth: '400px',
         top: '30px',
         left: '0px',
       }}
