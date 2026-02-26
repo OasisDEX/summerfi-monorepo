@@ -79,12 +79,14 @@ const VaultSwitchCard = ({
         <div className={controlsSwitchStyles.titleRow}>
           <div className={controlsSwitchStyles.title}>
             <VaultTitle symbol={token} titleVariant="h5" iconSize={32} networkId={chainId} />
-            <RiskManagedPill isDaoManagedVault={isDaoManaged} />
             <Risk risk={resolvedRisk} variant="p3semi" />
           </div>
           {!isMainVault && (
             <Icon iconName={selected ? 'checkmark_colorful_circle' : 'checkmark_circle'} />
           )}
+        </div>
+        <div style={{ width: 'fit-content', marginBottom: '8px' }}>
+          <RiskManagedPill isDaoManagedVault={isDaoManaged} />
         </div>
         <div className={controlsSwitchStyles.dataRow}>
           <div className={controlsSwitchStyles.dataRowColumn}>

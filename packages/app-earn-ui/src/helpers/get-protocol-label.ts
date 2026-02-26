@@ -89,7 +89,11 @@ export const getProtocolLabel = (nameParts: string[], noToken = false): string =
     }
   }
 
-  const deduplicatedFinalNameArray = Array.from(new Set(finalNameArray))
+  const deduplicatedNameArray = Array.from(new Set(finalNameArray))
+    // some additional custom replaces
+    .map((part) => part.replace('MorphoV2Vault', 'Morpho V2'))
+    .map((part) => part.trim())
+    .filter((part) => part !== '')
 
-  return `${deduplicatedFinalNameArray.join(' ')}`
+  return `${deduplicatedNameArray.join(' ')}`
 }

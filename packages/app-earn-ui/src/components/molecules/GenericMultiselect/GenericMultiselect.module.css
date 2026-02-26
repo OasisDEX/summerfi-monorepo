@@ -12,11 +12,13 @@
   transition: border-color 200ms;
   border-color: var(--earn-protocol-neutral-80);
 }
+
 .mainWrapperPill {
   border: none;
   padding-left: var(--general-space-12);
   padding-right: var(--general-space-8);
 }
+
 .mainWrapper:hover {
   border-color: var(--earn-protocol-neutral-60);
 }
@@ -31,12 +33,15 @@
   font-size: 14px;
   text-align: left;
 }
+
 .searchInput:focus {
   outline: none;
 }
+
 .searchInput:hover {
   border-color: var(--color-border-hover);
 }
+
 .searchInput::placeholder {
   color: var(--earn-protocol-secondary-40);
 }
@@ -50,14 +55,17 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
 .list::-webkit-scrollbar {
   width: 6px;
   border-radius: var(--general-radius-16);
 }
+
 .list::-webkit-scrollbar-thumb {
   background-color: var(--earn-protocol-secondary-100);
   border-radius: var(--general-radius-16);
 }
+
 .list::-webkit-scrollbar-track {
   background-color: var(--earn-protocol-secondary-60);
   border-radius: var(--general-radius-16);
@@ -117,6 +125,7 @@
     background-color 100ms,
     border-color 100ms;
 }
+
 .checkboxWrapper .checkboxIcon {
   position: absolute;
   top: 0;
@@ -145,11 +154,13 @@
     display: flex;
     align-items: center;
   }
+
   .labelPillSide {
     display: flex;
     align-items: center;
     color: var(--color-text-secondary);
   }
+
   .labelPillValue {
     display: flex;
     align-items: center;
@@ -159,4 +170,8 @@
     padding: 2px var(--spacing-space-x-small);
     letter-spacing: -0.2px;
   }
+}
+
+.separator {
+  margin: var(--general-space-8) 0;
 }

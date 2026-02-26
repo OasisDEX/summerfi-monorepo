@@ -233,6 +233,7 @@ export { getTokenGuarded } from './tokens/helpers'
 export { getArkNiceName } from './helpers/get-ark-nice-name'
 export { getUniqueColor } from './helpers/get-unique-color'
 export { getProtocolLabel } from './helpers/get-protocol-label'
+export { riskColors } from './helpers/risk-colors'
 
 // forecast stuff
 export { parseForecastDatapoints } from './features/forecast/parse-forecast-datapoints'

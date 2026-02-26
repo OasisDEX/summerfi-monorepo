@@ -13,6 +13,7 @@ declare const styles: {
   readonly "mainWrapperPill": string;
   readonly "optionsWrapper": string;
   readonly "searchInput": string;
+  readonly "separator": string;
 };
 export = styles;
 

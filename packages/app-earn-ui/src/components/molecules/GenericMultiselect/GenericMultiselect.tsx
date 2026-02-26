@@ -28,6 +28,7 @@ export interface GenericMultiselectOption {
   labelSuffix?: ReactNode
   token?: TokenSymbolsList
   value: string
+  isSeparator?: boolean
 }
 
 interface GenericMultiselectProps {
@@ -147,6 +148,7 @@ function GenericMultiselectItem({
   token,
   value,
   style,
+  isSeparator = false,
 }: {
   hasCheckbox?: boolean
   isClearing?: boolean
@@ -156,6 +158,19 @@ function GenericMultiselectItem({
   style?: CSSProperties
 } & GenericMultiselectOption) {
   const [isHover, setIsHover] = useState(false)
+
+  if (isSeparator) {
+    return (
+      <li
+        className={classNames.separator}
+        style={{
+          ...style,
+        }}
+      >
+        <Text variant="p4semi">{label}</Text>
+      </li>
+    )
+  }
 
   return (
     <li

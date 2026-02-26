@@ -14,6 +14,7 @@ import {
   GradientBox,
   Icon,
   InputWithDropdown,
+  riskColors,
   SkeletonLine,
   Text,
 } from '@summerfi/app-earn-ui'
@@ -46,6 +47,7 @@ const VaultBoxContent = ({
   tokenName,
   chainId,
   risk,
+  isDaoManaged,
   apy,
   isLoading,
   amount,
@@ -57,6 +59,7 @@ const VaultBoxContent = ({
   apy?: number
   amount?: string
   isLoading?: boolean
+  isDaoManaged?: boolean
 }) => (
   <>
     <Text variant="p4semi" className={controlsSwitchTransactionViewStyles.vaultBoxFromTo}>
@@ -71,8 +74,26 @@ const VaultBoxContent = ({
     <Text variant="h5" style={{ color: 'var(--color-text-primary)' }}>
       {tokenName}
     </Text>
-    <Text variant="p4semi" style={{ color: 'var(--color-text-secondary)' }}>
+    <Text variant="p4semi" style={{ color: riskColors[risk as keyof typeof riskColors] }}>
       {capitalize(risk)} Risk
+    </Text>
+    <Text
+      variant="p4semi"
+      style={{ color: 'var(--color-text-primary-disabled)', textAlign: 'center' }}
+    >
+      {isDaoManaged ? (
+        <>
+          DAO Risk-Managed
+          <br />
+          <br />
+        </>
+      ) : (
+        <>
+          Risk-Managed
+          <br />
+          by Block Analitica
+        </>
+      )}
     </Text>
     <div className={controlsSwitchTransactionViewStyles.divider} />
     {!!apy && (
@@ -298,7 +319,8 @@ export const ControlsSwitchTransactionView = ({
             title="From"
             chainId={vaultChainId}
             tokenName={currentToken}
-            risk={capitalize(currentVault.customFields?.risk ?? 'Lower')}
+            risk={currentVault.isDaoManaged ? 'higher' : currentVault.customFields?.risk ?? 'lower'}
+            isDaoManaged={currentVault.isDaoManaged}
             apy={currentLiveApy}
             amount={currentAmount}
             isLoading={isLoading}
@@ -313,8 +335,9 @@ export const ControlsSwitchTransactionView = ({
               title="To"
               chainId={vaultChainId}
               tokenName={nextToken}
-              risk={capitalize(nextVault.customFields?.risk ?? 'Lower')}
+              risk={nextVault.isDaoManaged ? 'higher' : nextVault.customFields?.risk ?? 'lower'}
               apy={nextLiveApy}
+              isDaoManaged={nextVault.isDaoManaged}
               amount={nextAmount}
               isLoading={isLoading}
             />

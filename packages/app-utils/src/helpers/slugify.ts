@@ -12,5 +12,5 @@ export const slugify: (value: string) => string = (value) =>
     .slice(0, 50) || 'user'
 
 export const slugifyVault: (vault: SDKVaultishType) => string = (vault) => {
-  return `${vault.inputToken.symbol.toLowerCase()}-${sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network))}-${vault.customFields?.risk ?? 'lower'}`
+  return `${vault.inputToken.symbol.toLowerCase()}-${sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network))}-${vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}`
 }
