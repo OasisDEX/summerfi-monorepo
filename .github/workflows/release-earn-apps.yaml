@@ -5,6 +5,11 @@ on:
     inputs:
       release_type:
         description: 'Release type, major | minor | patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
         default: 'minor'
         required: true
 
@@ -20,21 +25,22 @@ jobs:
         with:
           token: ${{ github.token }}
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: 'Determine Release Type'
+        env:
+          RELEASE_TYPE_INPUT: ${{ github.event.inputs.release_type }}
         run: |
-          if ${{ contains(github.event.inputs.release_type, 'major') }}; then
-            echo "RELEASE_TYPE=major" >> $GITHUB_ENV
-          elif ${{ contains(github.event.inputs.release_type, 'minor') }}; then
-            echo "RELEASE_TYPE=minor" >> $GITHUB_ENV
-          elif ${{ contains(github.event.inputs.release_type, 'patch') }}; then
-            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
-          else
-            echo "NOTE: There was no release type specified in the commit message, and therefore no release will be published."
-            exit 1
-          fi
+          case "$RELEASE_TYPE_INPUT" in
+            major|minor|patch)
+              echo "RELEASE_TYPE=$RELEASE_TYPE_INPUT" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Invalid release_type: $RELEASE_TYPE_INPUT"
+              exit 1
+              ;;
+          esac
       - name: 'Release Type'
         run: echo ${{ env.RELEASE_TYPE }}
       - name: Configure git identity
