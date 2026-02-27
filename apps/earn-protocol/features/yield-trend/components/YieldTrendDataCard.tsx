@@ -95,6 +95,7 @@ export const YieldTrendDataCard = ({
         risk={selectedVault.customFields?.risk ?? 'lower'}
         networkName={supportedSDKNetwork(selectedVault.protocol.network)}
         titleVariant="h4"
+        isDaoManagedVault={selectedVault.isDaoManaged}
       />
       <div className={yieldTrendViewStyles.divider} style={{ marginTop: '32px' }} />
       <div className={yieldTrendViewStyles.chartTableHeader}>
