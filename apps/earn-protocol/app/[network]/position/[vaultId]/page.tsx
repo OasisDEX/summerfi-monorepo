@@ -83,6 +83,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
 
   const strategy = `${parsedVaultId}-${parsedNetwork}`
 
+  // Fetch initial data and start DAO check in parallel
   const [
     vault,
     { vaults },
@@ -125,7 +126,14 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     )
   }
 
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+  // Now get DAO managed vaults and vault info in parallel
+  const [daoManagedVaultsList, vaultInfo] = await Promise.all([
+    getDaoManagedVaultsIDsList(vaults),
+    unstableCache(getVaultInfo, ['vaultInfo', parsedNetwork, parsedVaultId], {
+      revalidate: CACHE_TIMES.INTEREST_RATES,
+      tags: [CACHE_TAGS.INTEREST_RATES],
+    })({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+  ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
@@ -144,47 +152,37 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     tags: [CACHE_TAGS.INTEREST_RATES],
   }
 
-  const [
-    fullArkInterestRatesMap,
-    latestArkInterestRatesMap,
-    vaultInterestRates,
-    vaultsApyRaw,
-    vaultInfo,
-  ] = await Promise.all([
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vaultWithConfig.arks.filter(
-        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-      ),
-    }),
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vaultWithConfig.arks,
-      justLatestRates: true,
-    }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
-      // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    getCachedVaultsApy({
-      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    unstableCache(
-      getVaultInfo,
-      ['vaultInfo', parsedNetwork, parsedVaultId],
-      cacheConfig,
-    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
-  ])
+  const [fullArkInterestRatesMap, latestArkInterestRatesMap, vaultInterestRates, vaultsApyRaw] =
+    await Promise.all([
+      getArksInterestRates({
+        network: parsedNetwork,
+        arksList: vaultWithConfig.arks.filter(
+          (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+        ),
+      }),
+      getArksInterestRates({
+        network: parsedNetwork,
+        arksList: vaultWithConfig.arks,
+        justLatestRates: true,
+      }),
+      unstableCache(
+        getVaultsHistoricalApy,
+        ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
+        cacheConfig,
+      )({
+        // just the vault displayed
+        fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+        })),
+      }),
+      getCachedVaultsApy({
+        fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+        })),
+      }),
+    ])
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,

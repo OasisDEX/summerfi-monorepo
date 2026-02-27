@@ -139,7 +139,73 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     )
   }
 
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
+  const { netValue } = getPositionValues({
+    position,
+    vault,
+  })
+
+  const cacheConfig = {
+    revalidate: CACHE_TIMES.INTEREST_RATES,
+    tags: [CACHE_TAGS.INTEREST_RATES],
+  }
+
+  // Fetch DAO managed vaults, vault info, and ark rates in parallel
+  const [
+    daoManagedVaultsList,
+    vaultInfo,
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
+    vaultInterestRates,
+    positionHistory,
+    positionForecastResponse,
+    migratablePositionsData,
+    cookieRaw,
+  ] = await Promise.all([
+    getDaoManagedVaultsIDsList(vaults),
+    unstableCache(
+      getVaultInfo,
+      [],
+      cacheConfig,
+    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vault.arks,
+      justLatestRates: true,
+    }),
+    unstableCache(
+      getVaultsHistoricalApy,
+      ['vaultsHistoricalApy', `${parsedVaultId}-${parsedNetworkId}`],
+      cacheConfig,
+    )({
+      // just the vault displayed
+      fleets: [{ id: parsedVaultId, protocol: { network: parsedNetwork } }].map(
+        ({ id, protocol: { network } }) => ({
+          fleetAddress: id,
+          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+        }),
+      ),
+    }),
+    getCachedPositionHistory({
+      network: parsedNetwork,
+      address: walletAddress.toLowerCase(),
+      vault,
+    }),
+    fetchForecastData({
+      fleetAddress: vault.id as `0x${string}`,
+      chainId: Number(parsedNetworkId),
+      amount: Number(netValue.toFixed(position.amount.token.decimals)),
+    }),
+    getCachedMigratablePositions({
+      walletAddress,
+    }),
+    cookies(),
+  ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
     vaults: [vault],
@@ -154,75 +220,13 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     daoManagedVaultsList,
   })
 
-  const { netValue } = getPositionValues({
-    position,
-    vault,
+  // Fetch APY data for all vaults
+  const vaultsApyByNetworkMap = await getCachedVaultsApy({
+    fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
+      fleetAddress: id,
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+    })),
   })
-
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
-  const [
-    fullArkInterestRatesMap,
-    latestArkInterestRatesMap,
-    vaultInterestRates,
-    positionHistory,
-    positionForecastResponse,
-    vaultsApyByNetworkMap,
-    migratablePositionsData,
-    vaultInfo,
-    cookieRaw,
-  ] = await Promise.all([
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks.filter(
-        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-      ),
-    }),
-    getArksInterestRates({
-      network: parsedNetwork,
-      arksList: vault.arks,
-      justLatestRates: true,
-    }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
-      // just the vault displayed
-      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    getCachedPositionHistory({
-      network: parsedNetwork,
-      address: walletAddress.toLowerCase(),
-      vault,
-    }),
-    fetchForecastData({
-      fleetAddress: vault.id as `0x${string}`,
-      chainId: Number(parsedNetworkId),
-      amount: Number(netValue.toFixed(position.amount.token.decimals)),
-    }),
-    getCachedVaultsApy({
-      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-    getCachedMigratablePositions({
-      walletAddress,
-    }),
-    unstableCache(
-      getVaultInfo,
-      [],
-      cacheConfig,
-    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
-    cookies(),
-  ])
 
   if (!positionForecastResponse.ok) {
     throw new Error('Failed to fetch forecast data')

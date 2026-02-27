@@ -34,22 +34,40 @@ const EarnAllVaultsPage = async ({
   searchParams: Promise<{ walletAddress?: string }>
 }) => {
   const { walletAddress } = await searchParams
-  const [cookieRaw, { vaults }, configRaw, vaultsInfoRaw, sumrPrice, tvl, walletAssets] =
-    await Promise.all([
-      cookies(),
-      getCachedVaultsList(),
-      getCachedConfig(),
-      getCachedVaultsInfo(),
-      getCachedSumrPrice(),
-      getCachedTvl(),
-      walletAddress
-        ? getCachedWalletAssets(walletAddress, true)
-        : Promise.resolve(emptyWalletAssets),
-    ])
+
+  // First, fetch vaults list to know what we need
+  const { vaults } = await getCachedVaultsList()
+
+  // Start APY fetch immediately with raw vaults data
+  const vaultsApyPromise = getCachedVaultsApy({
+    fleets: vaults.map(({ id, protocol: { network } }) => ({
+      fleetAddress: id,
+      chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+    })),
+  })
+
+  // Now fetch everything else in parallel including DAO managed check
+  const [
+    cookieRaw,
+    configRaw,
+    vaultsInfoRaw,
+    sumrPrice,
+    tvl,
+    walletAssets,
+    daoManagedVaultsList,
+    vaultsApyByNetworkMap,
+  ] = await Promise.all([
+    cookies(),
+    getCachedConfig(),
+    getCachedVaultsInfo(),
+    getCachedSumrPrice(),
+    getCachedTvl(),
+    walletAddress ? getCachedWalletAssets(walletAddress, true) : Promise.resolve(emptyWalletAssets),
+    getDaoManagedVaultsIDsList(vaults),
+    vaultsApyPromise,
+  ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
-
-  const daoManagedVaultsList = await getDaoManagedVaultsIDsList(vaults)
 
   const vaultsWithConfig = decorateVaultsWithConfig({
     systemConfig,
@@ -67,15 +85,6 @@ const EarnAllVaultsPage = async ({
         )
       })
     : []
-
-  const [vaultsApyByNetworkMap] = await Promise.all([
-    getCachedVaultsApy({
-      fleets: vaultsWithConfig.map(({ id, protocol: { network } }) => ({
-        fleetAddress: id,
-        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-      })),
-    }),
-  ])
 
   const vaultsInfo = parseServerResponseToClient(vaultsInfoRaw)
   const cookie = cookieRaw.toString()
