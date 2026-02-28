@@ -56,7 +56,23 @@ query Vaults {
     }
   }
 }
-
+query VaultsLite {
+  vaults(first: 1000) {
+    id
+    name
+    totalValueLockedUSD
+    arks {
+      id
+      name
+      details
+      productId
+      totalValueLockedUSD
+      vault {
+        id
+      }
+    }
+  }
+}
 query Users($first: Int, $skip: Int) {
   accounts(first: $first, skip: $skip, orderBy: id, orderDirection: asc) {
     id
