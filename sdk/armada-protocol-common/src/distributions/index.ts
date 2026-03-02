@@ -11,7 +11,7 @@ interface Distribution {
   }
 }
 
-const loadDistributions = async (urls: string[]) => {
+const loadDistributions = async (urls: string[]): Promise<Distribution[]> => {
   try {
     const calls = urls.map((url) => {
       return fetch(url).then((res) => {
@@ -20,8 +20,11 @@ const loadDistributions = async (urls: string[]) => {
         })
       })
     })
-    const results = await Promise.all(calls)
-    return results as Distribution[]
+    if (calls.length === 0) {
+      return []
+    }
+
+    return Promise.all(calls)
   } catch (error) {
     throw Error('Failed to load distributions:' + error)
   }

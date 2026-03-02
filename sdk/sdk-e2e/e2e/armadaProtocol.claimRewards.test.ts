@@ -27,9 +27,9 @@ describe('Armada Protocol - Claim Rewards', () => {
     includeStakingV2?: boolean
   }[] = [
     {
-      chainId: ChainIds.Mainnet,
-      userAddress: '0x10649c79428d718621821Cf6299e91920284743F',
+      chainId: ChainIds.Base,
       // userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+      userAddress: '0x10649c79428d718621821Cf6299e91920284743F',
       includeMerkl: false,
       includeStakingV2: true,
       simulateOnly: true,

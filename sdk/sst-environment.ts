@@ -33,7 +33,7 @@ const envSchema = z.object({
   SDK_LOGGING_ENABLED: z.string().default('false'),
   SDK_DEBUG_ENABLED: z.string().default('false'),
   SDK_DISTRIBUTIONS_BASE_URL: z.string().nonempty(),
-  SDK_DISTRIBUTIONS_FILES: z.string().nonempty(),
+  SDK_DISTRIBUTIONS_FILES: z.string().default(''),
   SDK_NAMED_REFERRALS_FILE: z.string().nonempty(),
   SDK_USE_FORK: z.string().nonempty().default(''),
   SDK_FORK_CONFIG: z.string().default(''),

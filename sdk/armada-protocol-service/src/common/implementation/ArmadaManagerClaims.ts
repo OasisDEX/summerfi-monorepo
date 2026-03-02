@@ -88,6 +88,7 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
         name: 'SDK_DISTRIBUTIONS_FILES',
       })
       .split(',')
+      .filter(Boolean)
       .map((file) => new URL(file.trim(), _distributionsBaseUrl.trim()).toString())
   }
 
@@ -102,6 +103,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       distributionsUrls: this._distributionsUrls,
       walletAddress: params.user.wallet.address.value,
     })
+
+    if (distributionClaims.length === 0) {
+      return {}
+    }
 
     const canClaimCalls = distributionClaims.map(
       (claim) =>
@@ -142,6 +147,10 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       chainInfo: this._hubChainInfo,
     })
 
+    if (distributionClaims.length === 0) {
+      return {}
+    }
+
     const hasClaimedCalls = distributionClaims.map(
       (claim) =>
         ({
@@ -178,8 +187,6 @@ export class ArmadaManagerClaims implements IArmadaManagerClaims {
       distributionsUrls: this._distributionsUrls,
       walletAddress: user.wallet.address.value,
     })
-
-    // filter only claims for the user's chain
 
     const hasClaimedDistributions = await this.hasClaimedDistributions({
       user,
