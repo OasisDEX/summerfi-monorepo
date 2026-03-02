@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -56,15 +57,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Merge dev -> main
-        run: |
-          git status
-          git pull
-          git fetch
-          git checkout main
-          git rebase dev
-          git push origin main
-          git status
+      - name: Create or reuse PR from dev to main
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const head = 'dev'
+            const base = 'main'
+            const title = 'chore: merge dev into main after earn release'
+            const body = 'Automated PR opened by release-earn-apps workflow.'
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: 'open',
+              head: `${owner}:${head}`,
+              base,
+              per_page: 1,
+            })
+
+            if (prs.length > 0) {
+              core.info(`PR already open: #${prs[0].number} ${prs[0].html_url}`)
+              return
+            }
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner,
+              repo,
+              head,
+              base,
+              title,
+              body,
+            })
+
+            core.info(`Created PR: #${pr.number} ${pr.html_url}`)
       
       - name: Generate GitHub App token for e2e-tests
         id: e2e_tests_app_token
