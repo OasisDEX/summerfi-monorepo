@@ -1,7 +1,21 @@
 declare const styles: {
+  readonly "actionsSection": string;
+  readonly "authorTypeBadge": string;
   readonly "blocksContainer": string;
   readonly "container": string;
   readonly "contentBlock": string;
+  readonly "emptyState": string;
+  readonly "feedbackAuthor": string;
+  readonly "feedbackCard": string;
+  readonly "feedbackCardBody": string;
+  readonly "feedbackCardHeader": string;
+  readonly "feedbackCardLink": string;
+  readonly "feedbackCategory": string;
+  readonly "feedbackId": string;
+  readonly "feedbackIdSection": string;
+  readonly "feedbackMeta": string;
+  readonly "feedbackPreview": string;
+  readonly "feedbackStatus": string;
   readonly "messageAuthor": string;
   readonly "messageCard": string;
   readonly "messageContent": string;
@@ -13,13 +27,18 @@ declare const styles: {
   readonly "metaItem": string;
   readonly "metaLabel": string;
   readonly "metaValue": string;
+  readonly "metadataSection": string;
   readonly "replyActions": string;
-  readonly "replyForm": string;
   readonly "replyLabel": string;
+  readonly "replySection": string;
   readonly "replyTextarea": string;
-  readonly "statusActions": string;
+  readonly "sectionHeader": string;
+  readonly "sectionLabel": string;
+  readonly "statusActionsList": string;
   readonly "statusBadge": string;
   readonly "statusButton": string;
+  readonly "statusButtonDangerous": string;
+  readonly "statusButtonDisabled": string;
   readonly "status_closed": string;
   readonly "status_in-progress": string;
   readonly "status_new": string;
@@ -29,6 +48,7 @@ declare const styles: {
   readonly "threadContainer": string;
   readonly "threadHeader": string;
   readonly "threadSubHeader": string;
+  readonly "timelineSection": string;
 };
 export = styles;
 

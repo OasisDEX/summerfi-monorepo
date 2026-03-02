@@ -1,9 +1,45 @@
-import { Card, Text } from '@summerfi/app-earn-ui'
+import { Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { rootAdminGetFeedbackList } from '@/app/server-handlers/admin/institution'
 
 import styles from './AdminPanelFeedbackList.module.css'
+
+// Component: Feedback card
+const FeedbackCard = ({
+  feedback,
+}: {
+  feedback: Awaited<ReturnType<typeof rootAdminGetFeedbackList>>[number]
+}) => (
+  <Link
+    key={`${feedback.authorSub}-${feedback.id}`}
+    href={`/admin/feedback/${feedback.institutionId}/${feedback.id}`}
+    className={styles.feedbackCardLink}
+  >
+    <div className={styles.feedbackCard}>
+      <div className={styles.feedbackCardHeader}>
+        <div className={styles.feedbackIdSection}>
+          <span className={styles.feedbackId}>#{feedback.id}</span>
+        </div>
+        <div className={styles.feedbackMeta}>
+          <span className={`${styles.feedbackStatus} ${styles[`status_${feedback.status}`]}`}>
+            {feedback.status}
+          </span>
+          <span className={styles.feedbackCategory}>{feedback.category?.replaceAll('-', ' ')}</span>
+        </div>
+      </div>
+
+      <div className={styles.feedbackCardBody}>
+        <div className={styles.feedbackAuthor}>
+          <Text variant="p3semi">{feedback.authorName}</Text>
+        </div>
+        <div className={styles.feedbackPreview}>
+          <Text variant="p4">{feedback.content.slice(0, 60)}...</Text>
+        </div>
+      </div>
+    </div>
+  </Link>
+)
 
 const AdminFeedbackList = ({
   feedbackList,
@@ -13,51 +49,13 @@ const AdminFeedbackList = ({
   return (
     <div className={styles.blocksContainer}>
       {feedbackList.length === 0 ? (
-        <Text>No feedback submitted yet.</Text>
+        <div className={styles.emptyState}>
+          <Text>No feedback submitted yet.</Text>
+        </div>
       ) : (
-        <>
-          {feedbackList.map((feedback) => {
-            return (
-              <Link
-                key={`${feedback.authorSub}-${feedback.id}`}
-                href={`/admin/feedback/${feedback.institutionId}/${feedback.id}`}
-              >
-                <Card style={{ flexDirection: 'column', gap: '12px', padding: '16px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '24px',
-                    }}
-                  >
-                    <Text variant="h4semi">#{feedback.id}</Text>
-                    <div
-                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
-                    >
-                      <Text variant="p3semi">{feedback.status}</Text>
-                      <Text variant="p3semi">{feedback.category?.replaceAll('-', ' ')}</Text>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '24px',
-                    }}
-                  >
-                    <div
-                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
-                    >
-                      <Text variant="p3semi">{feedback.authorName}</Text>
-                      <Text variant="p4">{feedback.content.slice(0, 40)}...</Text>
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            )
-          })}
-        </>
+        feedbackList.map((feedback) => (
+          <FeedbackCard key={`${feedback.authorSub}-${feedback.id}`} feedback={feedback} />
+        ))
       )}
     </div>
   )
