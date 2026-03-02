@@ -96,14 +96,20 @@ jobs:
       - name: Deploy app
         run: |
           pnpm run sst:deploy:staging
+      - name: Generate GitHub App token for e2e-tests
+        id: e2e_tests_app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.E2E_TESTS_APP_ID }}
+          private-key: ${{ secrets.E2E_TESTS_APP_PRIVATE_KEY }}
+          owner: OasisDEX
+          repositories: e2e-tests
       - name: Trigger e2e tests in e2e-tests repository
-        env:
-          E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
         run: |
-          curl -L \
+          curl -fS -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ env.E2E_TESTS_PAT }}" \
+            -H "Authorization: Bearer ${{ steps.e2e_tests_app_token.outputs.token }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/OasisDEX/e2e-tests/actions/workflows/ci_e2e_tests.yml/dispatches \
             -d "{\"ref\":\"main\", \"inputs\":{\"run_id\":\"${{ github.run_id }}\", \"repository\":\"${{ github.repository }}\"}}"
