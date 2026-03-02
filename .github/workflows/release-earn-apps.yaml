@@ -4,17 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'Release type, major | minor | patch'
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-        default: 'minor'
+        description: "Release type, major | minor | patch"
+        default: "minor"
         required: true
-
-permissions:
-  contents: write
 
 jobs:
   release:
@@ -23,30 +15,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.PAT }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: 20
-      - name: 'Determine Release Type'
-        env:
-          RELEASE_TYPE_INPUT: ${{ github.event.inputs.release_type }}
+      - name: "Determine Release Type"
         run: |
-          case "$RELEASE_TYPE_INPUT" in
-            major|minor|patch)
-              echo "RELEASE_TYPE=$RELEASE_TYPE_INPUT" >> "$GITHUB_ENV"
-              ;;
-            *)
-              echo "Invalid release_type: $RELEASE_TYPE_INPUT"
-              exit 1
-              ;;
-          esac
-      - name: 'Release Type'
+          if ${{ contains(github.event.inputs.release_type, 'major') }}; then
+            echo "RELEASE_TYPE=major" >> $GITHUB_ENV
+          elif ${{ contains(github.event.inputs.release_type, 'minor') }}; then
+            echo "RELEASE_TYPE=minor" >> $GITHUB_ENV
+          elif ${{ contains(github.event.inputs.release_type, 'patch') }}; then
+            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
+          else
+            echo "NOTE: There was no release type specified in the commit message, and therefore no release will be published."
+            exit 1
+          fi
+      - name: "Release Type"
         run: echo ${{ env.RELEASE_TYPE }}
-      - name: Configure git identity
+      - name: git config
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Make an earn-apps release
         working-directory: ./apps/earn-protocol
@@ -54,7 +45,7 @@ jobs:
           npx release-it --ci --no-npm --git.commitMessage='Release Earn App ${version}'
           --git.tagAnnotation='Earn App' -- ${{ env.RELEASE_TYPE }}
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Merge dev -> main
         run: |
@@ -65,22 +56,15 @@ jobs:
           git rebase dev
           git push origin main
           git status
-      
-      - name: Generate GitHub App token for e2e-tests
-        id: e2e_tests_app_token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.E2E_TESTS_APP_ID }}
-          private-key: ${{ secrets.E2E_TESTS_APP_PRIVATE_KEY }}
-          owner: OasisDEX
-          repositories: e2e-tests
 
       - name: Trigger prod-release e2e tests in e2e-tests repository
+        env:
+          E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
         run: |
-          curl -fS -L \
+          curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ steps.e2e_tests_app_token.outputs.token }}" \
+            -H "Authorization: Bearer ${{ env.E2E_TESTS_PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/OasisDEX/e2e-tests/actions/workflows/ci_lazy_prod_release_trigger_sleep.yml/dispatches \
             -d "{\"ref\":\"main\", \"inputs\":{\"run_id\":\"${{ github.run_id }}\", \"repository\":\"${{ github.repository }}\"}}"
