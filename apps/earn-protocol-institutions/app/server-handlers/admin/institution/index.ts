@@ -369,7 +369,7 @@ export async function rootAdminFeedbackChangeStatus(formData: FormData) {
 
   const institutionId = formData.get('institutionId')
   const threadId = formData.get('threadId')
-  const newStatus = formData.get('status')
+  const newStatus = formData.get('newStatus')
 
   if (
     typeof institutionId !== 'string' ||

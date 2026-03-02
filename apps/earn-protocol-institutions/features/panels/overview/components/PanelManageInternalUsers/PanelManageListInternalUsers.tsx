@@ -35,6 +35,41 @@ const TableCellRightAlign = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>{children}</div>
 )
 
+const isTestInstitution = (institutionName: string) => institutionName === 'ExtDemoCorp'
+
+const mangleIdentifier = (
+  value: string | undefined,
+  institutionName: string,
+): string | undefined => {
+  if (!value) return value
+  if (!isTestInstitution(institutionName)) return value
+
+  const isEmail = value.includes('@')
+
+  if (!isEmail) {
+    if (value.length <= 4) return value
+
+    return value.slice(0, 2) + '*'.repeat(value.length - 4) + value.slice(-2)
+  }
+
+  const [local, domain] = value.split('@')
+
+  if (!local || !domain) return value
+
+  const domainParts = domain.split('.')
+
+  if (domainParts.length < 2) return value
+
+  const [root] = domainParts
+  const tld = `.${domainParts.slice(1).join('.')}`
+
+  const mangledLocal = local.length <= 2 ? local : local.slice(0, 2) + '*'.repeat(local.length - 2)
+
+  const mangledRoot = root.length <= 2 ? root : root.slice(0, 2) + '*'.repeat(root.length - 2)
+
+  return `${mangledLocal}@${mangledRoot}${tld}`
+}
+
 const mapUsersToTableRows: (
   users: PanelManageListInternalUsersProps['users'],
   institutionName: string,
@@ -43,8 +78,12 @@ const mapUsersToTableRows: (
   return users.map((user) => ({
     id: user.userSub,
     content: {
-      cognitoName: user.cognitoName,
-      cognitoEmail: <TableCellRightAlign>{user.cognitoEmail}</TableCellRightAlign>,
+      cognitoName: mangleIdentifier(user.cognitoName, institutionName),
+      cognitoEmail: (
+        <TableCellRightAlign>
+          {mangleIdentifier(user.cognitoEmail, institutionName)}
+        </TableCellRightAlign>
+      ),
       role: (
         <TableCellRightAlign>
           <span style={{ fontWeight: 'bold', color: getUserRoleColor(user.role as UserRole) }}>
@@ -59,16 +98,33 @@ const mapUsersToTableRows: (
       ),
       actions: (
         <div style={{ display: 'flex', gap: '8px' }}>
-          <Link href={`/${institutionName}/overview/manage-internal-users/edit/${user.id}`}>
-            <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
-              Edit
-            </Button>
-          </Link>
-          <Link href={`/${institutionName}/overview/manage-internal-users/delete/${user.id}`}>
-            <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
-              Delete
-            </Button>
-          </Link>
+          {isTestInstitution(institutionName) ? (
+            <>
+              <Link href={`/${institutionName}/overview/manage-internal-users`}>
+                <Button variant="textSecondaryMedium" disabled>
+                  Edit
+                </Button>
+              </Link>
+              <Link href={`/${institutionName}/overview/manage-internal-users`}>
+                <Button variant="textSecondaryMedium" disabled>
+                  Delete
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href={`/${institutionName}/overview/manage-internal-users/edit/${user.id}`}>
+                <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
+                  Edit
+                </Button>
+              </Link>
+              <Link href={`/${institutionName}/overview/manage-internal-users/delete/${user.id}`}>
+                <Button variant="textSecondaryMedium" disabled={!canManageUsers}>
+                  Delete
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       ),
     },
@@ -106,6 +162,11 @@ export const PanelManageListInternalUsers = ({
       className={panelManageInternalUsersStyles.panelManageInternalUsersWrapper}
     >
       <Text variant="h2">Manage Internal Users</Text>
+      {isTestInstitution(institutionName) && (
+        <Text variant="p4semi" style={{ color: '#9ca3af' }}>
+          You are viewing a test institution. Identifying information has been obfuscated.
+        </Text>
+      )}
       <Card variant="cardPrimarySmallPaddings">
         <div className={panelManageInternalUsersStyles.usersSection}>
           {users.length === 0 ? (
