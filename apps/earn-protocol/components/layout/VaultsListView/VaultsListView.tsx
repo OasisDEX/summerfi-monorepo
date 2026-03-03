@@ -429,7 +429,28 @@ export const VaultsListView = ({
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const currentApy = currentApyData ? Number(currentApyData.apy) : 0
 
-      return currentApy > prevApy ? current : prev
+      // additional bonus to apy prev
+      const { rawSumrTokenBonus: rawSumrTokenBonusPrev } = getSumrTokenBonus({
+        merklRewards: findVaultInfo(vaultsInfo, prev)?.merklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: prev.totalValueLockedUSD,
+      })
+      const { rawSumrTokenBonus: rawSumrTokenBonusCurrent } = getSumrTokenBonus({
+        merklRewards: findVaultInfo(vaultsInfo, current)?.merklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: current.totalValueLockedUSD,
+      })
+
+      const currentApyWithBonus = currentApy + Number(rawSumrTokenBonusCurrent)
+      const prevApyWithBonus = prevApy + Number(rawSumrTokenBonusPrev)
+
+      return currentApyWithBonus > prevApyWithBonus ? current : prev
+    })
+
+    const { rawSumrTokenBonus: rawSumrTokenBonusHighestApy } = getSumrTokenBonus({
+      merklRewards: findVaultInfo(vaultsInfo, highest7dApyVault)?.merklRewards,
+      sumrPrice: sumrPriceUsd,
+      totalValueLockedUSD: highest7dApyVault.totalValueLockedUSD,
     })
 
     return {
@@ -437,12 +458,13 @@ export const VaultsListView = ({
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       highestApy: highest7dApyVault
         ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0)
+          Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0) +
+          Number(rawSumrTokenBonusHighestApy)
         : 0,
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       highestToken: highest7dApyVault ? highest7dApyVault.inputToken.symbol : '',
     }
-  }, [vaultsApyByNetworkMap, vaultsList])
+  }, [vaultsApyByNetworkMap, vaultsList, sumrPriceUsd, vaultsInfo])
 
   const {
     amountParsed,
