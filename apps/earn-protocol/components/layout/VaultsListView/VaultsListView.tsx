@@ -268,8 +268,8 @@ export const VaultsListView = ({
         ]
 
       // default sorting method which is VaultsSorting.HIGHEST_APY
-      return Number(aApy.apy + Number(Number(aRawSumrTokenBonus) * 100)) >
-        Number(bApy.apy + Number(Number(bRawSumrTokenBonus) * 100))
+      return Number(aApy.apy + Number(Number(aRawSumrTokenBonus))) >
+        Number(bApy.apy + Number(Number(bRawSumrTokenBonus)))
         ? -1
         : 1
     },

@@ -70,7 +70,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
               style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
             >
               <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-                $SUMR Token Rewards:
+                $SUMR&nbsp;Token&nbsp;Rewards:
               </Text>
               <Icon iconName="stars_colorful" size={20} />
               <Text as="p" variant="p1semiColorful">
@@ -83,7 +83,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
               style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
             >
               <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-                Management Fee:
+                Management&nbsp;Fee:
               </Text>
               <Text as="p" variant="p1semi">
                 -{managementFee}
@@ -101,7 +101,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
               }}
             >
               <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-                Net APY:
+                Net&nbsp;APY:
               </Text>
               <Text as="p" variant="p1semi">
                 {formatPercent(netApy, {
