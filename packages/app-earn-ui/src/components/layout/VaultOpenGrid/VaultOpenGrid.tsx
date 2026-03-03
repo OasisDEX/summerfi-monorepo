@@ -23,7 +23,6 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
-import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { ChartBar } from '@/components/atoms/ChartBar/ChartBar'
@@ -38,6 +37,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
@@ -165,7 +165,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     }
   }, [displaySimulationGraph])
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+  const { rawSumrTokenBonus } = getSumrTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD: vault.totalValueLockedUSD,
@@ -265,6 +265,8 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
     ]
   }, [mapVaultToDropdownItem, vaults])
 
+  const managementFee = getManagementFee(vault.inputToken.symbol)
+
   return (
     <>
       <div className={vaultOpenGridStyles.vaultOpenGridBreadcrumbsWrapper}>
@@ -322,19 +324,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               />
             </Dropdown>
             <div className={vaultOpenGridStyles.vaultBonusWrapper}>
-              {Number(rawSumrTokenBonus) > 0 && (
-                <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <BonusLabel
-                    tokenBonus={sumrTokenBonus}
-                    withTokenBonus
-                    tooltipName="vault-open-bonus-label"
-                    onTooltipOpen={tooltipEventHandler}
-                  />
-                </Text>
-              )}
-              <AdditionalBonusLabel
+              <BonusLabel
+                apy={vaultApyData.apy}
+                managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                tooltipName="vault-open-additional-bonus-label"
+                sumrTokenBonus={Number(rawSumrTokenBonus)}
+                tooltipName="vault-open-bonus-label"
                 onTooltipOpen={tooltipEventHandler}
               />
             </div>
@@ -420,7 +415,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d APY"
+                title="30d Native Yield APY"
                 tooltipName="vault-open-30d-apy"
                 onTooltipOpen={tooltipEventHandler}
                 value={
@@ -483,7 +478,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                           marginRight: 'var(--general-space-4)',
                         }}
                       >
-                        Live&nbsp;APY&nbsp;(
+                        Live&nbsp;Native&nbsp;APY&nbsp;(
                         {apyUpdatedAt.apyUpdatedAtLabel})
                       </Text>
                       <Icon iconName="info" size={16} />

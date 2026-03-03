@@ -79,7 +79,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
                 alignItems: 'center',
               }}
             >
-              <BonusLabel isLoading withTokenBonus />
+              <BonusLabel isLoading />
             </Text>
           </div>
           <SimpleGrid
@@ -128,7 +128,7 @@ export const VaultManageLoadingGrid: FC<VaultManageLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d APY"
+                title="30d Native Yield APY"
                 value={
                   <SkeletonLine
                     radius="16px"

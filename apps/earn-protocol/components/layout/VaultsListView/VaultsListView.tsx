@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { useUser } from '@account-kit/react'
 import {
   Card,
@@ -627,7 +627,7 @@ export const VaultsListView = ({
           />
           {filteredAndSortedVaults?.length ? (
             filteredAndSortedVaults.map((vault, vaultIndex) => (
-              <>
+              <Fragment key={getUniqueVaultId(vault)}>
                 {vaultIndex === 1 && !filterVaults.includes('dao-risk-managed') && (
                   <VaultsListDaoManagedVaultBanner
                     assets={daoManagedVaultsBannerData.assets}
@@ -642,7 +642,6 @@ export const VaultsListView = ({
                   />
                 )}
                 <VaultCard
-                  key={getUniqueVaultId(vault)}
                   {...vault}
                   withHover
                   showCombinedBonus
@@ -676,7 +675,7 @@ export const VaultsListView = ({
                   onTooltipOpen={tooltipEventHandler}
                   merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
                 />
-              </>
+              </Fragment>
             ))
           ) : (
             <div

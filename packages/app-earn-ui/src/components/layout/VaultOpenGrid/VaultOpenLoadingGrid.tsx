@@ -75,7 +75,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
                 alignItems: 'center',
               }}
             >
-              <BonusLabel isLoading withTokenBonus />
+              <BonusLabel isLoading />
             </Text>
           </div>
           <SimpleGrid
@@ -148,7 +148,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d APY"
+                title="30d Native Yield APY"
                 value={
                   <SkeletonLine
                     radius="16px"
@@ -166,7 +166,7 @@ export const VaultOpenLoadingGrid: FC<VaultOpenLoadingGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Live APY"
+                title="Live Native APY"
                 value={
                   <SkeletonLine
                     radius="16px"

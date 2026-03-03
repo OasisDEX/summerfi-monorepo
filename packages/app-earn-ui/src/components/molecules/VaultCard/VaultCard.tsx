@@ -18,7 +18,6 @@ import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 
-import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -64,9 +63,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     onClick,
     customFields,
     merklRewards,
-    withTokenBonus,
     sumrPrice,
-    showCombinedBonus = false,
     vaultApyData,
     wrapperStyle,
     disabled,
@@ -78,7 +75,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     isDaoManaged,
   } = props
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+  const { rawSumrTokenBonus } = getSumrTokenBonus({
     merklRewards,
     sumrPrice,
     totalValueLockedUSD,
@@ -95,15 +92,10 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     }
   }
 
-  const parsedApr = formatDecimalAsPercent(vaultApyData.apy)
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
-
-  const combinedApr = showCombinedBonus
-    ? formatDecimalAsPercent(Number(vaultApyData.apy) + Number(rawSumrTokenBonus))
-    : undefined
 
   const apyUpdatedAt = useApyUpdatedAt({
     vaultApyData,
@@ -117,7 +109,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
 
   const vaultInceptionDate = dayjs(Number(createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
-  const managementFee = formatDecimalAsPercent(getManagementFee(inputToken.symbol))
+  const managementFee = getManagementFee(inputToken.symbol)
 
   return (
     <GradientBox
@@ -145,18 +137,12 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             isNewVault={isNewVault}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
-            <AdditionalBonusLabel
-              externalTokenBonus={customFields?.bonus}
-              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
-              onTooltipOpen={onTooltipOpen}
-            />
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel
-                tokenBonus={sumrTokenBonus}
-                apy={parsedApr}
-                withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
-                combinedApr={combinedApr}
+                sumrTokenBonus={Number(rawSumrTokenBonus)}
+                apy={vaultApyData.apy}
                 managementFee={managementFee}
+                externalTokenBonus={customFields?.bonus}
                 apyUpdatedAt={apyUpdatedAt}
                 deviceType={deviceType}
                 tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}

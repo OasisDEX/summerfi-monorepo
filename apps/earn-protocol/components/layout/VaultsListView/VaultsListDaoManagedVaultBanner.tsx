@@ -25,7 +25,7 @@ export const VaultsListDaoManagedVaultBanner = ({
         <Text variant="p2semi">
           Introducing
           <span className={vaultsListViewStyles.daoManagedVaultsBannerEmphasis}>
-            DAO Managed Vaults
+            DAO Risk-Managed Vaults
           </span>
         </Text>
         <Text
@@ -34,7 +34,7 @@ export const VaultsListDaoManagedVaultBanner = ({
             color: 'var(--color-text-secondary)',
           }}
         >
-          Higher risk/reward vaults designed to outperform
+          Higher risk/reward Vaults designed to outperform
         </Text>
         <div className={vaultsListViewStyles.daoManagedVaultsBannerDataBlocks}>
           <div className={vaultsListViewStyles.daoManagedVaultsBannerDataBlock}>

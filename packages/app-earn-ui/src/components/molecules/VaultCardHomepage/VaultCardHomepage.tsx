@@ -18,18 +18,21 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
-import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Risk } from '@/components/atoms/Risk/Risk'
 import { SkeletonLine } from '@/components/atoms/SkeletonLine/SkeletonLine'
 import { Text } from '@/components/atoms/Text/Text'
+import { BonusLabelTooltip } from '@/components/molecules/BonusLabel/BonusLabel'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { riskColors } from '@/helpers/risk-colors'
+import { getVaultApyUpdatedAtLabel } from '@/hooks/use-apy-updated-at'
 
 import vaultCardHomepageStyles from './VaultCardHomepage.module.css'
 
@@ -247,24 +250,45 @@ export const VaultCardHomepage = ({
   if (!vaultsApyByNetworkMap) {
     return null
   }
-  const { apy } =
+  const { apy, apyTimestamp } =
     vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(supportedSDKNetwork(protocol.network))}`]
-  const parsedApy = formatDecimalAsPercent(apy)
-  const parsedTotalValueLocked = formatCryptoBalance(
-    new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
-  )
-  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+  const { rawSumrTokenBonus } = getSumrTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD,
   })
+  const apyUpdatedAt = getVaultApyUpdatedAtLabel({
+    apyTimestamp,
+  })
+  const managementFee = getManagementFee(inputToken.symbol)
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const grossApy = (Number(apy) ?? 0) + (Number(rawSumrTokenBonus) ?? 0)
+  const netApy = grossApy - managementFee
+
+  const parsedApy = formatDecimalAsPercent(netApy)
+  const parsedTotalValueLocked = formatCryptoBalance(
+    new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
+  )
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(String(totalValueLockedUSD)))
 
   const handleGetStartedClick = () => {
     if (onGetStartedClick) {
       onGetStartedClick(vault)
     }
   }
+
+  const liveApyParsed = typeof apy === 'number' ? formatDecimalAsPercent(apy, { precision: 2 }) : ''
+  const netApyParsed =
+    typeof netApy === 'number' ? formatDecimalAsPercent(netApy, { precision: 2 }) : ''
+  const sumrTokenBonusParsed =
+    typeof rawSumrTokenBonus === 'number'
+      ? formatDecimalAsPercent(rawSumrTokenBonus, { precision: 2 })
+      : undefined
+  const managementFeeParsed =
+    typeof managementFee === 'number'
+      ? formatDecimalAsPercent(managementFee, { precision: 2 })
+      : undefined
 
   const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
@@ -290,10 +314,6 @@ export const VaultCardHomepage = ({
             networkName={supportedSDKNetwork(protocol.network)}
             isVaultCard
             isNewVault={isNewVault}
-          />
-          <AdditionalBonusLabel
-            externalTokenBonus={customFields?.bonus}
-            sumrTokenBonus={rawSumrTokenBonus !== '0' ? sumrTokenBonus : undefined}
           />
         </div>
         <div className={vaultCardHomepageStyles.vaultCardHomepageDatablocksWrapper}>
@@ -334,12 +354,35 @@ export const VaultCardHomepage = ({
               title="APY"
               titleIcon="stars"
               contentDesktop={
-                <Text
-                  variant="p1semiColorful"
-                  style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                <div
+                  style={{
+                    display: 'block',
+                    width: 'fit-content',
+                  }}
                 >
-                  {parsedApy}
-                </Text>
+                  <Tooltip
+                    tooltip={
+                      <BonusLabelTooltip
+                        apy={apy}
+                        managementFee={managementFee}
+                        sumrTokenBonus={Number(rawSumrTokenBonus)}
+                        externalTokenBonus={vault.customFields?.bonus}
+                        apyUpdatedAt={apyUpdatedAt}
+                        liveApyParsed={liveApyParsed}
+                        netApyParsed={netApyParsed}
+                        sumrTokenBonusParsed={sumrTokenBonusParsed}
+                        managementFeeParsed={managementFeeParsed}
+                      />
+                    }
+                  >
+                    <Text
+                      variant="p1semiColorful"
+                      style={{ color: 'var(--earn-protocol-secondary-100)' }}
+                    >
+                      {parsedApy}
+                    </Text>
+                  </Tooltip>
+                </div>
               }
               contentMobile={
                 <Text variant="p2colorful" style={{ color: 'var(--earn-protocol-secondary-100)' }}>

@@ -24,7 +24,6 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
-import { AdditionalBonusLabel } from '@/components/atoms/AdditionalBonusLabel/AdditionalBonusLabel'
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -38,6 +37,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getPositionValues } from '@/helpers/get-position-values'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
@@ -243,6 +243,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     ]
   }, [mapVaultToDropdownItem, vaults])
 
+  const managementFee = getManagementFee(vault.inputToken.symbol)
+
   return (
     <>
       <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
@@ -316,20 +318,12 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               />
             </Dropdown>
             <div className={vaultManageGridStyles.vaultBonusWrapper}>
-              {Number(rawSumrTokenBonus) > 0 && (
-                <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                  <BonusLabel
-                    tokenBonus={sumrTokenBonus}
-                    withTokenBonus={Number(rawSumrTokenBonus) > 0}
-                    totalSumrEarned={formatCryptoBalance(sumrRewards)}
-                    tooltipName="vault-manage-bonus-label"
-                    onTooltipOpen={tooltipEventHandler}
-                  />
-                </Text>
-              )}
-              <AdditionalBonusLabel
+              <BonusLabel
+                apy={vaultApyData.apy}
+                managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                tooltipName="vault-manage-additional-bonus-label"
+                sumrTokenBonus={Number(rawSumrTokenBonus)}
+                tooltipName="vault-manage-bonus-label"
                 onTooltipOpen={tooltipEventHandler}
               />
             </div>
@@ -408,7 +402,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d APY"
+                title="30d Native Yield APY"
                 value={
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text variant="h4" style={{ marginRight: 'var(--general-space-8)' }}>
@@ -440,7 +434,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                           color: 'var(--color-text-success)',
                         }}
                       >
-                        Live&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
+                        Live&nbsp;Native&nbsp;APY:&nbsp;{apyCurrent}&nbsp;(
                         {apyUpdatedAt.apyUpdatedAtLabel})
                       </Text>
                       <Icon iconName="info" size={16} color="var(--color-text-success)" />
