@@ -57,6 +57,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             key={vault.id}
             {...vault}
             withHover
+            showCombinedBonus
             onClick={vaultOnClick(vault)}
             withTokenBonus={sumrNetApyConfig.withSumr}
             sumrPrice={sumrPriceUsd}

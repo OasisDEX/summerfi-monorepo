@@ -21,8 +21,7 @@ export const LiveApyInfo = ({
       {isAltPressed && apyUpdatedAt && <>Updated @ {apyUpdatedAt.apyUpdatedAtAltLabel}</>}
       <Text variant="p3" style={{ color: 'var(--color-text-secondary)' }}>
         Lazy Summer Live APY updates every 10 minutes with real-time data, ensuring the most
-        accurate, up-to-the-minute rate. Many platforms use a 24-hour simple moving average, which
-        can make APY appear artificially high or low.
+        accurate, up-to-the-minute rate.
       </Text>
     </div>
   )

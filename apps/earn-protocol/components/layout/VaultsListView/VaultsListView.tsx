@@ -225,6 +225,10 @@ export const VaultsListView = ({
       const aTvl = a.totalValueLockedUSD
       const bTvl = b.totalValueLockedUSD
 
+      if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
+        return Number(aTvl) > Number(bTvl) ? -1 : 1
+      }
+
       const aMerklRewards = findVaultInfo(vaultsInfo, a)?.merklRewards
       const bMerklRewards = findVaultInfo(vaultsInfo, b)?.merklRewards
 
@@ -239,24 +243,35 @@ export const VaultsListView = ({
         totalValueLockedUSD: bTvl,
       }).rawSumrTokenBonus
 
-      if (sortingMethodId === VaultsSorting.HIGHEST_TVL) {
-        return Number(aTvl) > Number(bTvl) ? -1 : 1
-      }
       if (sortingMethodId === VaultsSorting.HIGHEST_REWARDS) {
         return Number(aRewards) > Number(bRewards) ? -1 : 1
       }
 
+      const { rawSumrTokenBonus: aRawSumrTokenBonus } = getSumrTokenBonus({
+        merklRewards: aMerklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: aTvl,
+      })
+      const { rawSumrTokenBonus: bRawSumrTokenBonus } = getSumrTokenBonus({
+        merklRewards: bMerklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: bTvl,
+      })
       const aApy =
         vaultsApyByNetworkMap[
           `${a.id}-${subgraphNetworkToId(supportedSDKNetwork(a.protocol.network))}`
         ]
+
       const bApy =
         vaultsApyByNetworkMap[
           `${b.id}-${subgraphNetworkToId(supportedSDKNetwork(b.protocol.network))}`
         ]
 
       // default sorting method which is VaultsSorting.HIGHEST_APY
-      return Number(aApy.apy) > Number(bApy.apy) ? -1 : 1
+      return Number(aApy.apy + Number(Number(aRawSumrTokenBonus))) >
+        Number(bApy.apy + Number(Number(bRawSumrTokenBonus)))
+        ? -1
+        : 1
     },
     [vaultsApyByNetworkMap, sumrPriceUsd, sortingMethodId, vaultsInfo],
   )
@@ -630,6 +645,7 @@ export const VaultsListView = ({
                   key={getUniqueVaultId(vault)}
                   {...vault}
                   withHover
+                  showCombinedBonus
                   deviceType={deviceType}
                   selected={
                     selectedVaultId === getUniqueVaultId(vault) ||
@@ -731,6 +747,7 @@ export const VaultsListView = ({
                     tokenBalances.handleSetTokenBalanceLoading(true)
                   }}
                   withTokenBonus={sumrNetApyConfig.withSumr}
+                  showCombinedBonus
                   sumrPrice={sumrPriceUsd}
                   vaultApyData={
                     vaultsApyByNetworkMap[

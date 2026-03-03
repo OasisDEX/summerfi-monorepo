@@ -382,6 +382,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                       key={getUniqueVaultId(vault)}
                       {...vault}
                       withHover
+                      showCombinedBonus
                       selected={selectedVaultId === getUniqueVaultId(vault)}
                       onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                       withTokenBonus={sumrNetApyConfig.withSumr}
@@ -408,6 +409,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                     withTokenBonus={sumrNetApyConfig.withSumr}
                     sumrPrice={sumrPriceUsd}
+                    showCombinedBonus
                     wrapperStyle={{
                       minWidth: '300px',
                     }}

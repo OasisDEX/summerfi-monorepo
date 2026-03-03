@@ -25,6 +25,7 @@ import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
@@ -116,6 +117,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
 
   const vaultInceptionDate = dayjs(Number(createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
+  const managementFee = formatDecimalAsPercent(getManagementFee(inputToken.symbol))
 
   return (
     <GradientBox
@@ -143,23 +145,24 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
             isNewVault={isNewVault}
           />
           <div className={vaultCardStyles.vaultBonusWrapper}>
+            <AdditionalBonusLabel
+              externalTokenBonus={customFields?.bonus}
+              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
+              onTooltipOpen={onTooltipOpen}
+            />
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel
                 tokenBonus={sumrTokenBonus}
                 apy={parsedApr}
                 withTokenBonus={Number(rawSumrTokenBonus) > 0 ? withTokenBonus : false}
                 combinedApr={combinedApr}
+                managementFee={managementFee}
                 apyUpdatedAt={apyUpdatedAt}
                 deviceType={deviceType}
                 tooltipName={`${tooltipName}-${slugifyVault(props)}-bonus-label`}
                 onTooltipOpen={onTooltipOpen}
               />
             </Text>
-            <AdditionalBonusLabel
-              externalTokenBonus={customFields?.bonus}
-              tooltipName={`${tooltipName}-${slugifyVault(props)}-additional-bonus-label`}
-              onTooltipOpen={onTooltipOpen}
-            />
           </div>
         </div>
         <div className={vaultCardStyles.vaultCardAssetsWrapper}>
