@@ -47,27 +47,35 @@ export const getMigrationBestVaultApy = ({
         let best30dApy = 0
         let best7dApy = 0
 
-        networkVaults.forEach((vault) => {
-          const { apy, sma7d, sma30d } =
-            vaultsApyByNetworkMap[
-              `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-            ]
-          const currentApy = apy || 0
-          const apy30d = sma30d ?? 0
-          const apy7d = sma7d ?? 0
+        networkVaults
+          .filter((vault) => {
+            // disabled vaults should theoretically be filtered out earlier,
+            // but the portfolio page ignores the disabled flag if a user has a
+            // position in the vault, so we need to check for it here as well
+            // to avoid showing incorrect APY data for migration positions
+            return vault.customFields?.disabled !== true
+          })
+          .forEach((vault) => {
+            const { apy, sma7d, sma30d } =
+              vaultsApyByNetworkMap[
+                `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+              ]
+            const currentApy = apy || 0
+            const apy30d = sma30d ?? 0
+            const apy7d = sma7d ?? 0
 
-          if (currentApy > bestCurrentApy) {
-            bestCurrentApy = currentApy
-          }
+            if (currentApy > bestCurrentApy) {
+              bestCurrentApy = currentApy
+            }
 
-          if (apy30d > best30dApy) {
-            best30dApy = apy30d
-          }
+            if (apy30d > best30dApy) {
+              best30dApy = apy30d
+            }
 
-          if (apy7d > best7dApy) {
-            best7dApy = apy7d
-          }
-        })
+            if (apy7d > best7dApy) {
+              best7dApy = apy7d
+            }
+          })
 
         acc[chainId] = {
           lazySummerCurrentApy: bestCurrentApy,

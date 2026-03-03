@@ -63,7 +63,7 @@ describe('Armada Protocol Gov V2 Stake', () => {
     const user = User.createFromEthereum(chainId, userAddress.value)
 
     // Convert to contract units
-    const stakeAmount = (amountSumr ?? 1n) * SUMR_DECIMALS // Convert SUMR to wei
+    const stakeAmount = (amountSumr ?? 1n) * 10n ** SUMR_DECIMALS // Convert SUMR to wei
     const stakeLockupPeriod = (lockupDays ?? 0n) * SECONDS_PER_DAY // Convert days to seconds
 
     it('should stake with specified amount and lockup period', async () => {

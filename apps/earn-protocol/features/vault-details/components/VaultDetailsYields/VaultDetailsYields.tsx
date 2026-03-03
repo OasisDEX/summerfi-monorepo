@@ -41,7 +41,7 @@ export const VaultDetailsYields: FC<VaultDetailsYieldsProps> = ({
       >
         <VaultDetailsYieldsHeader
           tokenSymbol={vault.inputToken.symbol}
-          risk={capitalize(vault.customFields?.risk ?? 'Lower')}
+          risk={capitalize(vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower')}
         />
         <VaultDetailsAdvancedYield
           chartData={arksHistoricalChartData}

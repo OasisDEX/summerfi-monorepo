@@ -11,11 +11,13 @@ import {
   formatDecimalAsPercent,
   sdkNetworkToHumanNetwork,
   subgraphNetworkToId,
+  zero,
 } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { memoize } from 'lodash-es'
 import Link from 'next/link'
+import { maxUint256 } from 'viem'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { TableRowAccent } from '@/components/atoms/TableRowAccent/TableRowAccent'
@@ -49,13 +51,14 @@ type ExtendedArk = SDKVaultType['arks'][0] & {
   avgApy1y: BigNumber
   yearlyYieldRange: YieldRange
   arkTokenTVL: BigNumber
-  allocationRatio: BigNumber | string
+  allocationRatio: BigNumber
   capRatio: BigNumber
   vaultTvlAllocationCap: BigNumber
   mainAllocationCap: BigNumber
-  absoluteAllocationCap: BigNumber | string
-  maxPercentageTVL: BigNumber | string
+  absoluteAllocationCap: BigNumber
+  maxPercentageTVL: BigNumber
   isDaoManaged: boolean
+  isNoLimitAbsoluteAllocationCap: boolean
 }
 
 /**
@@ -231,7 +234,11 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
                   <div style={{ height: '1px', backgroundColor: 'var(--color-border)' }} />
                   <TableCellAllocationCapTooltipDataBlock
                     title="Absolute allocation cap"
-                    value={`${formatCryptoBalance(item.absoluteAllocationCap)} ${arkTokenSymbol}`}
+                    value={
+                      item.isNoLimitAbsoluteAllocationCap
+                        ? 'No limit'
+                        : `${formatCryptoBalance(item.absoluteAllocationCap)} ${arkTokenSymbol}`
+                    }
                   />
                   <TableCellAllocationCapTooltipDataBlock
                     title="TVL allocation cap %"
@@ -349,23 +356,23 @@ export const vaultExposureMapper = (
     const avgApy30d = calculateAverageApy(arkRates.dailyInterestRates ?? [], 30)
     const avgApy1y = calculateAverageApy(arkRates.dailyInterestRates ?? [], 365)
     const yearlyYieldRange = calculateYearlyYieldRange(arkRates.dailyInterestRates ?? [])
-    const maxPercentageTVL = new BigNumber(ark.maxDepositPercentageOfTVL.toString()).shiftedBy(
+    const maxPercentageTVL = new BigNumber(ark.maxDepositPercentageOfTVL).shiftedBy(
       -18 - 2, // -18 because its 'in wei' and then -2 because we want to use formatDecimalAsPercent
     )
-    const arkTokenTVL = new BigNumber(ark.inputTokenBalance.toString()).shiftedBy(
-      -vault.inputToken.decimals,
-    )
+    const arkTokenTVL = new BigNumber(ark.inputTokenBalance).shiftedBy(-vault.inputToken.decimals)
     const allocationRatio =
       vaultInputTokenBalance.toString() !== '0'
-        ? new BigNumber(ark.inputTokenBalance.toString()).div(vaultInputTokenBalance.toString())
-        : '0'
+        ? new BigNumber(ark.inputTokenBalance).div(vaultInputTokenBalance.toString())
+        : zero
     const absoluteAllocationCap =
       ark.depositCap.toString() !== '0'
-        ? new BigNumber(ark.depositCap.toString()).shiftedBy(-ark.inputToken.decimals).toString()
-        : '0'
+        ? new BigNumber(ark.depositCap).shiftedBy(-ark.inputToken.decimals)
+        : zero
+
+    const isNoLimitAbsoluteAllocationCap = ark.depositCap.toString() === maxUint256.toString()
 
     const vaultTvlAllocationCap = new BigNumber(
-      new BigNumber(vaultInputTokenBalance.toString()).shiftedBy(-vault.inputToken.decimals),
+      new BigNumber(vaultInputTokenBalance).shiftedBy(-vault.inputToken.decimals),
     ).times(maxPercentageTVL)
     const mainAllocationCap = BigNumber.minimum(absoluteAllocationCap, vaultTvlAllocationCap)
 
@@ -387,6 +394,7 @@ export const vaultExposureMapper = (
       mainAllocationCap,
       maxPercentageTVL,
       isDaoManaged,
+      isNoLimitAbsoluteAllocationCap,
     }
 
     return extendedArk

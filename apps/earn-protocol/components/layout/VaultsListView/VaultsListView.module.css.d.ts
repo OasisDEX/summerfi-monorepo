@@ -1,4 +1,9 @@
 declare const styles: {
+  readonly "daoManagedVaultsBanner": string;
+  readonly "daoManagedVaultsBannerArrow": string;
+  readonly "daoManagedVaultsBannerDataBlock": string;
+  readonly "daoManagedVaultsBannerDataBlocks": string;
+  readonly "daoManagedVaultsBannerEmphasis": string;
   readonly "filtersGroup": string;
   readonly "leftHeaderFiltersRow": string;
   readonly "leftHeaderRow": string;

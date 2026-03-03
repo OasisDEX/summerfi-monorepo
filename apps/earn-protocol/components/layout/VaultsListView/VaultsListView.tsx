@@ -55,6 +55,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import { VaultsSorting } from '@/components/layout/VaultsListView/types'
 import { useVaultsListQueryParams } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
+import { VaultsListDaoManagedVaultBanner } from '@/components/layout/VaultsListView/VaultsListDaoManagedVaultBanner'
 import { VaultsFiltersIntermediary } from '@/components/layout/VaultsListView/VaultsListFilters'
 import { VaultsInfoSidebarBlock } from '@/components/molecules/VaultsInfoSidebarBlock/VaultsInfoSidebarBlock'
 import { MAX_MULTIPLE } from '@/constants/sumr-staking-v2'
@@ -83,6 +84,10 @@ type VaultsListViewProps = {
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
   tvl: number
+}
+
+const getVaultApySelector = (vault: SDKVaultishType) => {
+  return `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}` as keyof GetVaultsApyResponse
 }
 
 export const VaultsListView = ({
@@ -417,6 +422,65 @@ export const VaultsListView = ({
 
   const formattedProtocolsSupportedCount = formattedProtocolsSupportedList.allVaultsProtocols.length
 
+  const daoManagedVaultsBannerData = useMemo(() => {
+    if (!vaultsList.length) {
+      return {
+        assets: [],
+        highestApy: 0,
+        highestToken: '',
+      }
+    }
+
+    const daoManagedVaults = vaultsList.filter((vault) => vault.isDaoManaged)
+    const assets = Array.from(
+      new Set(daoManagedVaults.map((vault) => vault.inputToken.symbol)),
+    ) as TokenSymbolsList[]
+
+    const highest7dApyVault = daoManagedVaults.reduce((prev, current) => {
+      const prevApyData = vaultsApyByNetworkMap[getVaultApySelector(prev)]
+      const currentApyData = vaultsApyByNetworkMap[getVaultApySelector(current)]
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const prevApy = prevApyData ? Number(prevApyData.apy) : 0
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const currentApy = currentApyData ? Number(currentApyData.apy) : 0
+
+      // additional bonus to apy prev
+      const { rawSumrTokenBonus: rawSumrTokenBonusPrev } = getSumrTokenBonus({
+        merklRewards: findVaultInfo(vaultsInfo, prev)?.merklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: prev.totalValueLockedUSD,
+      })
+      const { rawSumrTokenBonus: rawSumrTokenBonusCurrent } = getSumrTokenBonus({
+        merklRewards: findVaultInfo(vaultsInfo, current)?.merklRewards,
+        sumrPrice: sumrPriceUsd,
+        totalValueLockedUSD: current.totalValueLockedUSD,
+      })
+
+      const currentApyWithBonus = currentApy + Number(rawSumrTokenBonusCurrent)
+      const prevApyWithBonus = prevApy + Number(rawSumrTokenBonusPrev)
+
+      return currentApyWithBonus > prevApyWithBonus ? current : prev
+    })
+
+    const { rawSumrTokenBonus: rawSumrTokenBonusHighestApy } = getSumrTokenBonus({
+      merklRewards: findVaultInfo(vaultsInfo, highest7dApyVault)?.merklRewards,
+      sumrPrice: sumrPriceUsd,
+      totalValueLockedUSD: highest7dApyVault.totalValueLockedUSD,
+    })
+
+    return {
+      assets,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      highestApy: highest7dApyVault
+        ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0) +
+          Number(rawSumrTokenBonusHighestApy)
+        : 0,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      highestToken: highest7dApyVault ? highest7dApyVault.inputToken.symbol : '',
+    }
+  }, [vaultsApyByNetworkMap, vaultsList, sumrPriceUsd, vaultsInfo])
+
   const {
     amountParsed,
     manualSetAmount,
@@ -563,41 +627,56 @@ export const VaultsListView = ({
           />
           {filteredAndSortedVaults?.length ? (
             filteredAndSortedVaults.map((vault, vaultIndex) => (
-              <VaultCard
-                key={getUniqueVaultId(vault)}
-                {...vault}
-                withHover
-                showCombinedBonus
-                deviceType={deviceType}
-                selected={
-                  selectedVaultId === getUniqueVaultId(vault) ||
-                  (!selectedVaultId && vaultIndex === 0)
-                }
-                onClick={(id) => {
-                  handleChangeVault(id)
-                  // we want to use ETH as native deposit token for WETH vaults
-                  const resolvedTokenSymbol = convertWethToEth(
-                    vault.inputToken.symbol,
-                  ) as TokenSymbolsList
+              <>
+                {vaultIndex === 1 && !filterVaults.includes('dao-risk-managed') && (
+                  <VaultsListDaoManagedVaultBanner
+                    assets={daoManagedVaultsBannerData.assets}
+                    highestApy={daoManagedVaultsBannerData.highestApy}
+                    highestToken={daoManagedVaultsBannerData.highestToken}
+                    onClick={() => {
+                      buttonClickEventHandler('vaults-list-dao-managed-vaults-banner-click')
+                      updateQueryParams(queryParams, {
+                        vaults: 'dao-risk-managed',
+                      })
+                    }}
+                  />
+                )}
+                <VaultCard
+                  key={getUniqueVaultId(vault)}
+                  {...vault}
+                  withHover
+                  showCombinedBonus
+                  deviceType={deviceType}
+                  selected={
+                    selectedVaultId === getUniqueVaultId(vault) ||
+                    (!selectedVaultId && vaultIndex === 0)
+                  }
+                  onClick={(id) => {
+                    handleChangeVault(id)
+                    // we want to use ETH as native deposit token for WETH vaults
+                    const resolvedTokenSymbol = convertWethToEth(
+                      vault.inputToken.symbol,
+                    ) as TokenSymbolsList
 
-                  setSelectedTokenOption({
-                    value: resolvedTokenSymbol,
-                    label: resolvedTokenSymbol,
-                    tokenSymbol: resolvedTokenSymbol,
-                  })
-                  tokenBalances.handleSetTokenBalanceLoading(true)
-                }}
-                withTokenBonus={sumrNetApyConfig.withSumr}
-                sumrPrice={sumrPriceUsd}
-                vaultApyData={
-                  vaultsApyByNetworkMap[
-                    `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                  ]
-                }
-                tooltipName="vaults-list-vault-card"
-                onTooltipOpen={tooltipEventHandler}
-                merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
-              />
+                    setSelectedTokenOption({
+                      value: resolvedTokenSymbol,
+                      label: resolvedTokenSymbol,
+                      tokenSymbol: resolvedTokenSymbol,
+                    })
+                    tokenBalances.handleSetTokenBalanceLoading(true)
+                  }}
+                  withTokenBonus={sumrNetApyConfig.withSumr}
+                  sumrPrice={sumrPriceUsd}
+                  vaultApyData={
+                    vaultsApyByNetworkMap[
+                      `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+                    ]
+                  }
+                  tooltipName="vaults-list-vault-card"
+                  onTooltipOpen={tooltipEventHandler}
+                  merklRewards={findVaultInfo(vaultsInfo, vault)?.merklRewards}
+                />
+              </>
             ))
           ) : (
             <div

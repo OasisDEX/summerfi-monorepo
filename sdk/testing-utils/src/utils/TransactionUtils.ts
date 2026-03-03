@@ -116,11 +116,14 @@ export class TransactionUtils {
     return this._waitForReceipt({ hash: transactionHash, confirmations: params.confirmations || 5 })
   }
 
-  async sendSimulation(params: { transaction: Transaction }): Promise<CallReturnType> {
+  async sendSimulation(params: {
+    transaction: Transaction
+    senderAddress?: Hex
+  }): Promise<CallReturnType> {
     const account = this.account
 
     return this.publicClient.call({
-      account: account,
+      account: account || params.senderAddress,
       to: params.transaction.target.value,
       value: BigInt(params.transaction.value),
       data: params.transaction.calldata,

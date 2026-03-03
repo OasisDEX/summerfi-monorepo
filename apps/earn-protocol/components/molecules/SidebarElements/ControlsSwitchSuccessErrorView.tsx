@@ -241,7 +241,11 @@ export const ControlsSwitchSuccessErrorView = ({
         >
           <VaultBoxContents
             fromToken={switchedToken}
-            risk={(currentVault.customFields?.risk ?? 'lower') as RiskType}
+            risk={
+              (currentVault.isDaoManaged
+                ? 'higher'
+                : currentVault.customFields?.risk ?? 'lower') as RiskType
+            }
             currentNetValue={currentPositionValues?.netValue}
             currentNetValueUsd={currentPositionValues?.netValueUSD}
             switchedAmount={new BigNumber(switchedAmount).negated().toString()}
@@ -256,7 +260,11 @@ export const ControlsSwitchSuccessErrorView = ({
           <div className={clsx(controlsSwitchSuccessErrorViewStyles.vaultBox)}>
             <VaultBoxContents
               toToken={nextToken}
-              risk={(nextVault.customFields?.risk ?? 'lower') as RiskType}
+              risk={
+                (nextVault.isDaoManaged
+                  ? 'higher'
+                  : nextVault.customFields?.risk ?? 'lower') as RiskType
+              }
               currentNetValue={nextPositionValues?.netValue ?? new BigNumber(0)}
               currentNetValueUsd={nextPositionValues?.netValueUSD ?? new BigNumber(0)}
               switchedAmount={nextAmount}

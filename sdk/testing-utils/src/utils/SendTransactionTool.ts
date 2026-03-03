@@ -1,4 +1,10 @@
-import { getChainInfoByChainId, type ChainId, type TransactionInfo } from '@summerfi/sdk-common'
+import {
+  getChainInfoByChainId,
+  type AddressValue,
+  type ChainId,
+  type HexData,
+  type TransactionInfo,
+} from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
 
@@ -8,10 +14,11 @@ export type SendTransactionToolStatus = 'success' | 'reverted'
 export const createSendTransactionTool = (params: {
   chainId: ChainId
   rpcUrl: string
-  signerPrivateKey?: string
+  senderAddress: AddressValue
+  signerPrivateKey?: HexData
   simulateOnly?: boolean
 }) => {
-  const { chainId, rpcUrl, signerPrivateKey } = params
+  const { chainId, rpcUrl, signerPrivateKey, senderAddress } = params
   const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
 
   if (signerPrivateKey != null && !isHex(signerPrivateKey)) {
@@ -65,6 +72,7 @@ export const createSendTransactionTool = (params: {
       try {
         const res = await transactionUtils.sendSimulation({
           transaction: transaction.transaction,
+          senderAddress,
         })
         console.log('  > Simulation successful' + (res.data ? `, with result: ${res.data}` : ''))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

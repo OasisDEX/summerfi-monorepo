@@ -49,9 +49,6 @@ jobs:
       ACCOUNT_KIT_API_KEY: ${{ secrets.ACCOUNT_KIT_API_KEY }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
-      CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
-      CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-      CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
       FORECAST_API_URL: ${{ secrets.FORECAST_API_URL }}
@@ -188,9 +185,6 @@ jobs:
           # be deployed to ECS.
           docker build -f apps/earn-protocol-institutions/docker/Dockerfile \
                        --build-arg EARN_PROTOCOL_DB_CONNECTION_STRING=${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }} \
-                       --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
-                       --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
-                       --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
                        --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg CONFIG_URL_EARN=${{ secrets.CONFIG_URL_EARN }} \
