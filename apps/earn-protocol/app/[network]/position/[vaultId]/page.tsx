@@ -141,6 +141,15 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     daoManagedVaultsList,
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (vault && !vaultWithConfig) {
+    return (
+      <Text>
+        No vault found with the id {parsedVaultId} on the network {parsedNetwork}
+      </Text>
+    )
+  }
+
   const allVaultsWithConfig = decorateVaultsWithConfig({
     vaults,
     systemConfig,
@@ -276,6 +285,17 @@ export async function generateMetadata({
     systemConfig,
     daoManagedVaultsList: isDaoManaged ? [vault.id as `0x${string}`] : [],
   })
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!vaultWithConfig) {
+    return {
+      title: `Lazy Summer Protocol - Vault not found`,
+      openGraph: {
+        siteName: 'Lazy Summer Protocol',
+      },
+      keywords: getSeoKeywords(),
+    }
+  }
 
   const [vaultsApyRaw] = await Promise.all([
     getCachedVaultsApy({
