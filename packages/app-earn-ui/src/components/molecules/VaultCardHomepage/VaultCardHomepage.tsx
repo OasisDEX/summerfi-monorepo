@@ -252,11 +252,13 @@ export const VaultCardHomepage = ({
   }
   const { apy, apyTimestamp } =
     vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(supportedSDKNetwork(protocol.network))}`]
+
   const { rawSumrTokenBonus } = getSumrTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD,
   })
+
   const apyUpdatedAt = getVaultApyUpdatedAtLabel({
     apyTimestamp,
   })
@@ -282,7 +284,7 @@ export const VaultCardHomepage = ({
   const netApyParsed =
     typeof netApy === 'number' ? formatDecimalAsPercent(netApy, { precision: 2 }) : ''
   const sumrTokenBonusParsed =
-    typeof rawSumrTokenBonus === 'number'
+    !isNaN(Number(rawSumrTokenBonus)) && Number(rawSumrTokenBonus) > 0
       ? formatDecimalAsPercent(rawSumrTokenBonus, { precision: 2 })
       : undefined
   const managementFeeParsed =

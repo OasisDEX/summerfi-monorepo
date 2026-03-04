@@ -69,7 +69,7 @@ export const BonusLabelTooltip = ({
           isAltPressed={isAltPressed}
         />
       )}
-      {sumrTokenBonus && sumrTokenBonus > 0 && (
+      {sumrTokenBonus && sumrTokenBonusParsed && sumrTokenBonus > 0 && (
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
             $SUMR&nbsp;Token&nbsp;Rewards:
