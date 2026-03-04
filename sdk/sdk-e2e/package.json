@@ -33,6 +33,8 @@
     "e2e:crossChainDeposit": "jest --roots e2e -- ./e2e/armadaProtocol.crossChainDeposit.test.ts",
     "e2e:crossChainWithdraw": "jest --roots e2e -- ./e2e/armadaProtocol.crossChainWithdraw.test.ts",
     "e2e:switch": "jest --roots e2e -- ./e2e/armadaProtocol.switch.test.ts",
+    "e2e:migrationTx": "jest --roots e2e -- ./e2e/armadaProtocol.migrationTx.test.ts",
+    "e2e:migrationsRead": "jest --roots e2e -- ./e2e/armadaProtocol.migrationsRead.test.ts",
     "e2e:getAggregatedRewards": "jest --roots e2e -- ./e2e/armadaProtocol.getAggregatedRewards.test.ts",
     "e2e:claimRewards": "jest --roots e2e -- ./e2e/armadaProtocol.claimRewards.test.ts",
     "e2e:merklRewards": "jest --roots e2e -- ./e2e/merklRewards.merklRewards.test.ts",
