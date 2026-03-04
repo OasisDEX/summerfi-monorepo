@@ -1,5 +1,7 @@
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
 import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
-import { TableHeadWithTooltip } from '@/components/molecules/TableHeadWithTooltip/TableHeadWithTooltip'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { type TableColumn } from '@/components/organisms/Table/Table'
 
 export const vaultExposureColumns = ({
@@ -21,17 +23,29 @@ export const vaultExposureColumns = ({
   },
   {
     title: (
-      <TableHeadWithTooltip
-        minWidth="247px"
-        title="Live APY"
-        tooltip={
-          <LiveApyInfo
-            apyCurrent={apyCurrent}
-            apyUpdatedAt={apyUpdatedAt}
-            isAltPressed={isAltPressed}
-          />
-        }
-      />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}>
+        <Text
+          as="p"
+          variant="p4semi"
+          style={{
+            color: 'var(--earn-protocol-secondary-40',
+          }}
+        >
+          Live&nbsp;APY{' '}
+        </Text>
+        <Tooltip
+          tooltipWrapperStyles={{ minWidth: '247px' }}
+          tooltip={
+            <LiveApyInfo
+              apyCurrent={apyCurrent}
+              apyUpdatedAt={apyUpdatedAt}
+              isAltPressed={isAltPressed}
+            />
+          }
+        >
+          <Icon iconName="question_o" color="rgba(119, 117, 118, 1)" variant="xs" />
+        </Tooltip>
+      </div>
     ),
     key: 'liveApy',
     sortable: true,

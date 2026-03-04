@@ -84,10 +84,10 @@ export function Table<K extends string>({
       return
     }
 
-    let direction = SortDirection.ASC
+    let direction = SortDirection.DESC
 
-    if (sortConfig && sortConfig.key === column && sortConfig.direction === SortDirection.ASC) {
-      direction = SortDirection.DESC
+    if (sortConfig && sortConfig.key === column && sortConfig.direction === SortDirection.DESC) {
+      direction = SortDirection.ASC
     }
 
     const update = { key: column, direction }
@@ -131,15 +131,20 @@ export function Table<K extends string>({
                         onClick={() => handleColumnSorting(column.key, column.sortable)}
                       >
                         {column.title}
-                        {sortConfig?.key === column.key && column.sortable ? (
+                        {column.sortable ? (
                           <Icon
                             iconName={
+                              sortConfig?.key === column.key &&
                               sortConfig.direction === SortDirection.ASC
                                 ? 'chevron_up'
                                 : 'chevron_down'
                             }
                             size={10}
-                            color="rgba(119, 117, 118, 1)"
+                            color={
+                              sortConfig?.key === column.key
+                                ? 'rgba(119, 117, 118, 1)'
+                                : 'rgba(119, 117, 118, 0.4)'
+                            }
                           />
                         ) : null}
                       </div>
