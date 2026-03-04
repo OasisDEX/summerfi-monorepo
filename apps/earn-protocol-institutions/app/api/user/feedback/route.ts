@@ -90,7 +90,7 @@ export const POST = async (request: Request) => {
     session,
   })
 
-  revalidateTag(`institution-feedback-list-${String(institutionId).toLowerCase()}`)
+  revalidateTag(`institution-feedback-list-${String(institutionId).toLowerCase()}`, { expire: 0 })
 
   if (!submission) {
     return NextResponse.json({ error: 'submission failed' }, { status: 404 })
