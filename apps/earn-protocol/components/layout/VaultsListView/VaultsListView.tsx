@@ -428,7 +428,7 @@ export const VaultsListView = ({
       return {
         assets: [],
         highestApy: 0,
-        highestToken: '',
+        highestApyToken: '',
       }
     }
 
