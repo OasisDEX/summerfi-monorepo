@@ -12,9 +12,9 @@ import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type BridgePageProps = {
-  params: {
+  params: Promise<{
     walletAddress: string
-  }
+  }>
 }
 
 const BridgePage = async ({ params }: BridgePageProps) => {

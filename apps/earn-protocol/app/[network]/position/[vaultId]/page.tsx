@@ -235,7 +235,7 @@ export async function generateMetadata({
   params,
   searchParams,
 }: EarnVaultOpenPageProps & {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [{ network: paramsNetwork, vaultId }, systemConfig, headersList, searchParamsAwaited] =
     await Promise.all([params, getCachedConfig(), headers(), searchParams])

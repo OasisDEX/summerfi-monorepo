@@ -15,6 +15,7 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   basePath: '/earn',
   output: 'standalone',
   reactStrictMode: false,
+  serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
   experimental: {
     serverComponentsHmrCache: true,
     optimizePackageImports: [
