@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, type ReactNode } from 'react'
+import { type CSSProperties, type FC, type HTMLAttributes, type ReactNode } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -11,13 +11,14 @@ interface TableCellTextProps {
   className?: string
 }
 
-export const TableCellText: FC<TableCellTextProps> = ({
+export const TableCellText: FC<TableCellTextProps & HTMLAttributes<HTMLElement>> = ({
   children,
   style = {},
   suppressHydrationWarning,
   small = false,
   as = 'p',
   className,
+  ...rest
 }) => (
   <Text
     as={as}
@@ -25,6 +26,7 @@ export const TableCellText: FC<TableCellTextProps> = ({
     style={{ color: 'var(--earn-protocol-secondary-100)', userSelect: 'none', ...style }}
     suppressHydrationWarning={suppressHydrationWarning}
     className={className}
+    {...rest}
   >
     {children}
   </Text>
