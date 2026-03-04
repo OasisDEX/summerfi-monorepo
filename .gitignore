@@ -85,3 +85,4 @@ cdk.context.json
 # apps specific
 /apps/earn-protocol/types/generated
 /apps/earn-protocol-landing-page/types/generated
+next-env.d.ts
