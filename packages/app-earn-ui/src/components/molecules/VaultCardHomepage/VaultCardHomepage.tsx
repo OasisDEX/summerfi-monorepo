@@ -268,7 +268,7 @@ export const VaultCardHomepage = ({
   const grossApy = (Number(apy) ?? 0) + (Number(rawSumrTokenBonus) ?? 0)
   const netApy = grossApy - managementFee
 
-  const parsedApy = formatDecimalAsPercent(netApy)
+  const parsedApy = netApy > 0 ? formatDecimalAsPercent(netApy) : 'n/a'
   const parsedTotalValueLocked = formatCryptoBalance(
     new BigNumber(String(inputTokenBalance)).div(ten.pow(inputToken.decimals)),
   )

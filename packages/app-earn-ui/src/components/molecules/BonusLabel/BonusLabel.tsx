@@ -62,7 +62,7 @@ export const BonusLabelTooltip = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-x-small)' }}>
-      {apy && (
+      {!!apy && (
         <LiveApyInfo
           apyCurrent={liveApyParsed}
           apyUpdatedAt={apyUpdatedAt}
