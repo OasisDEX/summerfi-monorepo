@@ -7,12 +7,12 @@ import vaultsListViewStyles from './VaultsListView.module.css'
 export const VaultsListDaoManagedVaultBanner = ({
   assets,
   highestApy,
-  highestToken,
+  highestApyToken,
   onClick,
 }: {
   assets: TokenSymbolsList[]
   highestApy: number
-  highestToken: string
+  highestApyToken: string
   onClick?: () => void
 }) => {
   if (!assets.length) {
@@ -56,7 +56,7 @@ export const VaultsListDaoManagedVaultBanner = ({
             >
               <Icon iconName="stars" size={20} />
               <Text variant="p2semi" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-                {formatDecimalAsPercent(highestApy)} on {highestToken}
+                {formatDecimalAsPercent(highestApy)} on {highestApyToken}
               </Text>
             </div>
           </div>

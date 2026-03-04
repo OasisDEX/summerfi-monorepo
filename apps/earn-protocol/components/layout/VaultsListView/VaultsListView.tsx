@@ -63,6 +63,7 @@ import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { useUserStakeInfo } from '@/features/claim-and-delegate/hooks/use-user-stake-info'
 import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import {
@@ -468,16 +469,21 @@ export const VaultsListView = ({
       totalValueLockedUSD: highest7dApyVault.totalValueLockedUSD,
     })
 
+    const managementFee = getManagementFee(highest7dApyVault.inputToken.symbol)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const highestApy = highest7dApyVault
+      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0) +
+        Number(rawSumrTokenBonusHighestApy) -
+        managementFee
+      : 0
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const highestApyToken = highest7dApyVault ? highest7dApyVault.inputToken.symbol : ''
+
     return {
       assets,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      highestApy: highest7dApyVault
-        ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          Number(vaultsApyByNetworkMap[getVaultApySelector(highest7dApyVault)]?.apy ?? 0) +
-          Number(rawSumrTokenBonusHighestApy)
-        : 0,
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      highestToken: highest7dApyVault ? highest7dApyVault.inputToken.symbol : '',
+      highestApy,
+      highestApyToken,
     }
   }, [vaultsApyByNetworkMap, vaultsList, sumrPriceUsd, vaultsInfo])
 
@@ -632,7 +638,7 @@ export const VaultsListView = ({
                   <VaultsListDaoManagedVaultBanner
                     assets={daoManagedVaultsBannerData.assets}
                     highestApy={daoManagedVaultsBannerData.highestApy}
-                    highestToken={daoManagedVaultsBannerData.highestToken}
+                    highestApyToken={daoManagedVaultsBannerData.highestApyToken}
                     onClick={() => {
                       buttonClickEventHandler('vaults-list-dao-managed-vaults-banner-click')
                       updateQueryParams(queryParams, {
