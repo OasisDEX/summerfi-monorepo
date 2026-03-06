@@ -1,11 +1,7 @@
 import {
   Address,
-  ArmadaVaultId,
   ChainIds,
-  getChainInfoByChainId,
-  Percentage,
   TokenAmount,
-  User,
   type ChainId,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
@@ -14,11 +10,18 @@ import assert from 'assert'
 import { makeSDKWithSigner } from '@summerfi/sdk-client'
 import { Wallet } from 'ethers'
 import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
-import { privateKeyToAccount } from 'viem/accounts'
+import { privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { createWalletClient, encodeFunctionData } from 'viem'
+import { encodeFunctionData } from 'viem'
 
 const admiralsQuartersAbi = [
+  {
+    type: 'function',
+    name: 'multicall',
+    inputs: [{ name: 'data', type: 'bytes[]', internalType: 'bytes[]' }],
+    outputs: [{ name: 'results', type: 'bytes[]', internalType: 'bytes[]' }],
+    stateMutability: 'payable',
+  },
   {
     type: 'function',
     name: 'enterFleetWithPermit2',
@@ -79,6 +82,8 @@ describe('Intent swaps: Swap with Deposit', () => {
   const signerPrivateKey = SharedConfig.testUserPrivateKey
   const senderAddressValue = SharedConfig.testUserAddressValue
   const account = privateKeyToAccount(signerPrivateKey)
+  const aqAddress = '0x066bA278928cF2f502318C7f689b769F72d67809'
+  const fleetCommanderAddress = FleetAddresses.Base.USDC
 
   // Configure test scenarios here
   const intentSwapScenarios: {
@@ -154,8 +159,7 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       // loop to check allowance, wrap if needed, and finally send order
       let orderId: string | undefined
-      const aqAddress = '0x066bA278928cF2f502318C7f689b769F72d67809'
-      const fleetCommanderAddress = FleetAddresses.Base.USDC
+
       const ownerAddress = senderAddress.toSolidityValue()
       const amount = fromAmount.toSolidityValue()
       const referralCode = '0x'
@@ -166,24 +170,24 @@ describe('Intent swaps: Swap with Deposit', () => {
         amount,
         ownerAddress,
         spenderAddress: aqAddress,
-        walletClient: createWalletClient({
-          account,
-          chain: publicClient.chain,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          transport: publicClient.transport as any,
-        }),
+        account,
       })
 
-      const callData = encodeFunctionData({
+      const enterFleetCallData = encodeFunctionData({
         abi: admiralsQuartersAbi,
         functionName: 'enterFleetWithPermit2',
         args: [ownerAddress, fleetCommanderAddress, amount, referralCode, permitData, signature],
       })
-      const gasLimit = '1500000'
+      const multicallCallData = encodeFunctionData({
+        abi: admiralsQuartersAbi,
+        functionName: 'multicall',
+        args: [[enterFleetCallData]],
+      })
+      const gasLimit = '2500000'
       const hooks: { target: `0x${string}`; callData: `0x${string}`; gasLimit: string }[] = [
         {
           target: aqAddress,
-          callData,
+          callData: multicallCallData,
           gasLimit,
         },
       ]
@@ -282,14 +286,14 @@ async function _createPermit2Data({
   amount,
   ownerAddress,
   spenderAddress,
-  walletClient,
+  account,
 }: {
   chainId: ChainId
   tokenAddress: `0x${string}`
   amount: bigint
   ownerAddress: `0x${string}`
   spenderAddress: `0x${string}`
-  walletClient: ReturnType<typeof createWalletClient>
+  account: PrivateKeyAccount
 }) {
   const nonce = BigInt(Date.now()) // unique nonce
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 30) // 30 minutes
@@ -322,8 +326,7 @@ async function _createPermit2Data({
     ],
   }
 
-  const signature = await walletClient.signTypedData({
-    account: ownerAddress,
+  const signature = await account.signTypedData({
     domain,
     types,
     primaryType: 'PermitTransferFrom',

@@ -15,4 +15,5 @@ export {
   createSendTransactionTool,
   type SendTransactionTool,
   getPublicClientForChain,
+  getWalletClientForChain,
 } from './utils/SendTransactionTool'

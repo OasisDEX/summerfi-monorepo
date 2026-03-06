@@ -7,6 +7,7 @@ import {
 } from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
+import type { Account } from 'viem'
 
 export type SendTransactionTool = ReturnType<typeof createSendTransactionTool>
 export type SendTransactionToolStatus = 'success' | 'reverted'
@@ -38,12 +39,12 @@ export const createSendTransactionTool = (params: {
         rpcUrl,
         walletPrivateKey: signerPrivateKey,
         chainInfo: getChainInfoByChainId(chainId),
-        useFork: useFork ? true : false,
+        useFork,
       })
     : new TransactionUtils({
         rpcUrl,
         chainInfo: getChainInfoByChainId(chainId),
-        useFork: useFork ? true : false,
+        useFork,
       })
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
@@ -118,7 +119,22 @@ export function getPublicClientForChain(
   const transactionUtils = new TransactionUtils({
     rpcUrl,
     chainInfo: getChainInfoByChainId(chainId),
-    useFork: useFork ? true : false,
+    useFork,
   })
   return transactionUtils.publicClient
+}
+
+export function getWalletClientForChain(
+  chainId: ChainId,
+  rpcUrl: string,
+  privateKey: HexData,
+  useFork: boolean = false,
+) {
+  const transactionUtils = new TransactionUtils({
+    walletPrivateKey: privateKey,
+    rpcUrl,
+    chainInfo: getChainInfoByChainId(chainId),
+    useFork,
+  })
+  return transactionUtils.walletClient
 }

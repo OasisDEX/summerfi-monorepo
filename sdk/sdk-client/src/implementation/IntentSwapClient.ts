@@ -11,6 +11,7 @@ import {
   type SwapAdvancedSettings,
   OrderKind,
   AdapterContext,
+  type OrderPostingResult,
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 
@@ -86,15 +87,15 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   /* see IIntentSwapClient.sendHookOrder */
   sendHookOrder: IIntentSwapClient['sendHookOrder'] = async (params) => {
     const {
-      account,
       chainId,
+      account,
+      sender,
+      publicClient,
       fromAmount,
       toToken,
       order,
       postHooks,
       preHooks,
-      publicClient,
-      sender,
     } = params
     // validate chainId
     this._validateChainId(chainId)
@@ -105,6 +106,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       signer: account as any,
     })
+    AdapterContext.getInstance().setAdapter(adapter)
 
     const sdk = new TradingSdk(
       {
@@ -116,8 +118,8 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     )
 
     // approval
-    const isNotEth = fromAmount.token.symbol !== 'ETH'
-    if (isNotEth) {
+    const isErc20 = fromAmount.token.symbol !== 'ETH'
+    if (isErc20) {
       const fromTokenAddress = fromAmount.token.address.toSolidityValue()
       const currentAllowance = await sdk.getCowProtocolAllowance({
         tokenAddress: fromTokenAddress,
@@ -138,27 +140,35 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
     const parameters: TradeParameters = {
       kind: OrderKind.SELL,
-      sellToken: order.sellToken,
+      sellToken: fromAmount.token.address.toSolidityValue(),
       sellTokenDecimals: fromAmount.token.decimals,
-      buyToken: order.buyToken,
+      buyToken: toToken.address.toSolidityValue(),
       buyTokenDecimals: toToken.decimals,
       amount: fromAmount.toSolidityValue().toString(),
     }
+    LoggingService.debug('Swap: trade parameters', parameters)
 
     const advancedSettings: SwapAdvancedSettings = {
       appData: {
         metadata: {
           hooks: {
-            pre: preHooks,
+            // pre: preHooks,
             post: postHooks,
           },
         },
       },
     }
 
-    const { orderId } = await sdk.postSwapOrder(parameters, advancedSettings)
+    let orderPostResult: OrderPostingResult
+    try {
+      orderPostResult = await sdk.postSwapOrder(parameters, advancedSettings)
+    } catch (error) {
+      LoggingService.error('Error posting swap order:', error)
+      throw error
+    }
 
-    LoggingService.debug('Order created, id: ', orderId)
+    const orderId = orderPostResult.orderId
+
     return { status: 'order_sent', orderId }
   }
 
