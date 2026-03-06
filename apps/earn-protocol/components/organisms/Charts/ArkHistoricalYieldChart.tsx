@@ -48,8 +48,11 @@ export const ArkHistoricalYieldChart = ({
 
   const dataNames = [
     summerVaultName,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    ...(compare ? chartData.dataNames ?? [] : [vaultBenchmarkName]),
+    ...((compare
+      ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        chartData.dataNames ?? []
+      : [chartData.dataNames.includes(vaultBenchmarkName) ? vaultBenchmarkName : null]
+    ).filter(Boolean) as string[]),
   ].filter(Boolean) as string[]
 
   const parsedData = useMemo(() => {

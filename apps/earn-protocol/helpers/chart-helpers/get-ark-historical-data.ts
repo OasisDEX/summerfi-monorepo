@@ -183,7 +183,7 @@ export const getArkHistoricalChartData = ({
     }
   }
 
-  if (vaultBenchmark) {
+  if (vaultBenchmark?.length) {
     chartDataNames.push(vaultBenchmarkName)
     const vaultBenchmarkDailyMap = new Map<string, number>()
     const vaultBenchmarkDailyPoints = vaultBenchmark.map((dataPoint) => {
