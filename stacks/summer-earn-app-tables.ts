@@ -114,7 +114,7 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
 
   new Cron(stack, 'update-vaults-benchmark-table-cron', {
     // the vault benchmark is updated at 01:00 UTC, so we do  02:00 to ensure that all the data is ready
-    schedule: 'cron(0 1 * * ? *)',
+    schedule: 'cron(0 2 * * ? *)',
     enabled,
     job: updateVaultsBenchmarkTableCronFunction,
   })
