@@ -14,12 +14,14 @@ import { useTimeframes } from '@/hooks/use-timeframes'
 type ArkHistoricalYieldChartProps = {
   chartData: ArksHistoricalChartData
   summerVaultName: string
+  vaultBenchmarkName: string
   chartId: string
 }
 
 export const ArkHistoricalYieldChart = ({
   chartData,
   summerVaultName,
+  vaultBenchmarkName,
   chartId,
 }: ArkHistoricalYieldChartProps) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -44,8 +46,11 @@ export const ArkHistoricalYieldChart = ({
     ...chartData.colors,
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const dataNames = [summerVaultName, ...(compare ? chartData.dataNames ?? [] : [])]
+  const dataNames = [
+    summerVaultName,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    ...(compare ? chartData.dataNames ?? [] : [vaultBenchmarkName]),
+  ].filter(Boolean) as string[]
 
   const parsedData = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -54,14 +59,22 @@ export const ArkHistoricalYieldChart = ({
     }
 
     if (!compare) {
-      return chartData.data[timeframe].map((point) => ({
-        timestamp: point.timestamp,
-        [summerVaultName]: point[summerVaultName],
-      }))
+      return chartData.data[timeframe].map((point) =>
+        vaultBenchmarkName
+          ? {
+              timestamp: point.timestamp,
+              [summerVaultName]: point[summerVaultName],
+              [vaultBenchmarkName]: point[vaultBenchmarkName],
+            }
+          : {
+              timestamp: point.timestamp,
+              [summerVaultName]: point[summerVaultName],
+            },
+      )
     }
 
     return chartData.data[timeframe]
-  }, [timeframe, chartData, compare, summerVaultName])
+  }, [timeframe, chartData, compare, summerVaultName, vaultBenchmarkName])
 
   const dataToDisplay = isZoomed ? (zoomedData as typeof parsedData) : parsedData
 

@@ -75,11 +75,20 @@ export const getArkHistoricalChartData = ({
   vault,
   arkInterestRatesMap,
   vaultInterestRates,
+  vaultBenchmark,
 }: {
   vault: SDKVaultishType
   arkInterestRatesMap: InterestRates
   vaultInterestRates: GetVaultsHistoricalApyResponse
+  vaultBenchmark?: {
+    apy1dTotal: string
+    timestamp: Date
+  }[]
 }) => {
+  const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
+    ? 'ETH'
+    : 'USD'
+  const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
   const castedVault = vault as SDKVaultType
   const vaultsInterestRates =
     vaultInterestRates[
@@ -174,6 +183,131 @@ export const getArkHistoricalChartData = ({
     }
   }
 
+  if (vaultBenchmark) {
+    chartDataNames.push(vaultBenchmarkName)
+    const vaultBenchmarkDailyMap = new Map<string, number>()
+    const vaultBenchmarkDailyPoints = vaultBenchmark.map((dataPoint) => {
+      const dayTimestamp = dayjs(dataPoint.timestamp).startOf('day')
+      const dayTimestampFormatted = dayTimestamp.format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = Number(dataPoint.apy1dTotal) * 100
+
+      vaultBenchmarkDailyMap.set(dayTimestampFormatted, apy)
+
+      return {
+        dayUnix: dayTimestamp.unix(),
+        apy,
+      }
+    })
+
+    // For hourly timeframes, benchmark data is refreshed once per day,
+    // so we project the daily value across all hours in that day.
+    for (const timestamp of Object.keys(chartsDataRaw['7d'])) {
+      const dayTimestamp = dayjs(timestamp).startOf('day').format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = vaultBenchmarkDailyMap.get(dayTimestamp)
+
+      if (apy !== undefined) {
+        chartsDataRaw['7d'][timestamp][vaultBenchmarkName] = apy
+      }
+    }
+
+    for (const timestamp of Object.keys(chartsDataRaw['30d'])) {
+      const dayTimestamp = dayjs(timestamp).startOf('day').format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = vaultBenchmarkDailyMap.get(dayTimestamp)
+
+      if (apy !== undefined) {
+        chartsDataRaw['30d'][timestamp][vaultBenchmarkName] = apy
+      }
+    }
+
+    for (const timestamp of Object.keys(chartsDataRaw['90d'])) {
+      const dayTimestamp = dayjs(timestamp).startOf('day').format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = vaultBenchmarkDailyMap.get(dayTimestamp)
+
+      if (apy !== undefined) {
+        chartsDataRaw['90d'][timestamp][vaultBenchmarkName] = apy
+      }
+    }
+
+    for (const timestamp of Object.keys(chartsDataRaw['6m'])) {
+      const dayTimestamp = dayjs(timestamp).startOf('day').format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = vaultBenchmarkDailyMap.get(dayTimestamp)
+
+      if (apy !== undefined) {
+        chartsDataRaw['6m'][timestamp][vaultBenchmarkName] = apy
+      }
+    }
+
+    for (const timestamp of Object.keys(chartsDataRaw['1y'])) {
+      const dayTimestamp = dayjs(timestamp).startOf('day').format(CHART_TIMESTAMP_FORMAT_DETAILED)
+      const apy = vaultBenchmarkDailyMap.get(dayTimestamp)
+
+      if (apy !== undefined) {
+        chartsDataRaw['1y'][timestamp][vaultBenchmarkName] = apy
+      }
+    }
+
+    // For weekly timeframe, use the newest benchmark point available within each week.
+    for (const timestamp of Object.keys(chartsDataRaw['3y'])) {
+      const weekStart = dayjs(timestamp).startOf('week').unix()
+      const weekEnd = dayjs(timestamp).endOf('week').unix()
+      let newestPointForWeek: number | undefined
+
+      for (const point of vaultBenchmarkDailyPoints) {
+        if (point.dayUnix >= weekStart && point.dayUnix <= weekEnd) {
+          newestPointForWeek = point.apy
+        }
+      }
+
+      if (newestPointForWeek !== undefined) {
+        chartsDataRaw['3y'][timestamp][vaultBenchmarkName] = newestPointForWeek
+      }
+    }
+
+    const fillMissingBenchmarkValues = (timeframe: TimeframesType) => {
+      const sortedTimestamps = Object.keys(chartsDataRaw[timeframe]).sort(
+        (a, b) => dayjs(a).unix() - dayjs(b).unix(),
+      )
+
+      let lastKnownApy: number | undefined
+
+      // Forward fill: use previous known benchmark value.
+      for (const timestamp of sortedTimestamps) {
+        const currentValue = chartsDataRaw[timeframe][timestamp][vaultBenchmarkName]
+
+        if (typeof currentValue === 'number') {
+          lastKnownApy = currentValue
+        } else if (lastKnownApy !== undefined) {
+          chartsDataRaw[timeframe][timestamp][vaultBenchmarkName] = lastKnownApy
+        }
+      }
+
+      // Backward fill for leading gaps using first known point.
+      if (lastKnownApy === undefined) {
+        return
+      }
+
+      let nextKnownApy: number | undefined
+
+      for (let i = sortedTimestamps.length - 1; i >= 0; i--) {
+        const timestamp = sortedTimestamps[i]
+        const currentValue = chartsDataRaw[timeframe][timestamp][vaultBenchmarkName]
+
+        if (typeof currentValue === 'number') {
+          nextKnownApy = currentValue
+        } else if (nextKnownApy !== undefined) {
+          chartsDataRaw[timeframe][timestamp][vaultBenchmarkName] = nextKnownApy
+        }
+      }
+    }
+
+    fillMissingBenchmarkValues('7d')
+    fillMissingBenchmarkValues('30d')
+    fillMissingBenchmarkValues('90d')
+    fillMissingBenchmarkValues('6m')
+    fillMissingBenchmarkValues('1y')
+    fillMissingBenchmarkValues('3y')
+  }
+
   // mapping the interest rates for all arks (but only since the vault has APR)
   for (const arkInterestRateKey of arksInterestRatesKeys) {
     const interestRates = arkInterestRatesMap[arkInterestRateKey]
@@ -257,7 +391,11 @@ export const getArkHistoricalChartData = ({
       ...acc,
       [arkUniqueName]: getUniqueColor(arkUniqueName),
     }
-  }, {})
+  }, {}) as { [key: string]: string }
+
+  if (vaultBenchmark) {
+    chartColors[vaultBenchmarkName] = `#7baee8` // hardcoding the benchmark color for better visibility, but we can change it to something dynamic if needed
+  }
 
   const arksHistoricalChartData: ArksHistoricalChartData = {
     data: chartDataPoints,

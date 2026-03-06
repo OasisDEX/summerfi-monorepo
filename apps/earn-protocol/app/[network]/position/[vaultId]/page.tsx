@@ -38,6 +38,7 @@ import {
 } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
@@ -161,42 +162,52 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     tags: [CACHE_TAGS.INTEREST_RATES],
   }
 
-  const [fullArkInterestRatesMap, latestArkInterestRatesMap, vaultInterestRates, vaultsApyRaw] =
-    await Promise.all([
-      getArksInterestRates({
-        network: parsedNetwork,
-        arksList: vaultWithConfig.arks.filter(
-          (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
-        ),
-      }),
-      getArksInterestRates({
-        network: parsedNetwork,
-        arksList: vaultWithConfig.arks,
-        justLatestRates: true,
-      }),
-      unstableCache(
-        getVaultsHistoricalApy,
-        ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
-        cacheConfig,
-      )({
-        // just the vault displayed
-        fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
-          fleetAddress: id,
-          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-        })),
-      }),
-      getCachedVaultsApy({
-        fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
-          fleetAddress: id,
-          chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
-        })),
-      }),
-    ])
+  const [
+    vaultBenchmark,
+    fullArkInterestRatesMap,
+    latestArkInterestRatesMap,
+    vaultInterestRates,
+    vaultsApyRaw,
+  ] = await Promise.all([
+    getCachedVaultsBenchmark({
+      vaultChainId: subgraphNetworkToId(parsedNetwork),
+      vaultToken: vault.inputToken.symbol,
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vaultWithConfig.arks.filter(
+        (ark): boolean => Number(ark.depositCap) > 0 || Number(ark.inputTokenBalance) > 0,
+      ),
+    }),
+    getArksInterestRates({
+      network: parsedNetwork,
+      arksList: vaultWithConfig.arks,
+      justLatestRates: true,
+    }),
+    unstableCache(
+      getVaultsHistoricalApy,
+      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
+      cacheConfig,
+    )({
+      // just the vault displayed
+      fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+      })),
+    }),
+    getCachedVaultsApy({
+      fleets: allVaultsWithConfig.map(({ id, protocol: { network } }) => ({
+        fleetAddress: id,
+        chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
+      })),
+    }),
+  ])
 
   const arksHistoricalChartData = getArkHistoricalChartData({
     vault: vaultWithConfig,
     arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
+    vaultBenchmark,
   })
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
