@@ -61,6 +61,10 @@ export const VaultManageViewDetails = ({
   topDepositors: TopDepositorsPagination
   viewWalletAddress?: string
 }) => {
+  const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
+    ? 'ETH'
+    : 'USD'
+  const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const managementFee = getManagementFee(vault.inputToken.symbol)
@@ -151,6 +155,7 @@ export const VaultManageViewDetails = ({
           chartId="manage-view"
           chartData={arksHistoricalChartData}
           summerVaultName={getVaultNiceName({ vault })}
+          vaultBenchmarkName={vaultBenchmarkName}
         />
       </Expander>
       <Expander
