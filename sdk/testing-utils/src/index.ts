@@ -11,4 +11,8 @@ export { SwapManagerMock } from './mocks/managers/SwapManagerMock'
 export { TokensManagerMock } from './mocks/managers/TokensManagerMock'
 export { BlockchainClientProviderMock } from './mocks/managers/BlockchainClientProviderMock/BlockchainClientProviderMock'
 export { sendAndLogTransactions } from './utils/SendAndLogTransactions'
-export { createSendTransactionTool, type SendTransactionTool } from './utils/SendTransactionTool'
+export {
+  createSendTransactionTool,
+  type SendTransactionTool,
+  getPublicClientForChain,
+} from './utils/SendTransactionTool'

@@ -1492,6 +1492,58 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     })
   }
 
+  /**
+   * Calculate gas limit using eth_estimateGas simulation with a 50% safety buffer.
+   *
+   * @param chainId The chain ID for the transaction
+   * @param target The target contract address
+   * @param calldata The transaction calldata
+   * @param value The transaction value (optional)
+   * @param from The sender address
+   * @returns The estimated gas limit as a string with 50% buffer
+   */
+  private async _calculateGasLimitForCalldata(params: {
+    chainId: ChainId
+    target: IAddress
+    calldata: HexData
+    value?: bigint
+    from: IAddress
+  }): Promise<string | undefined> {
+    const SAFETY_BUFFER_MULTIPLIER = 1.5 // 50% buffer
+
+    const publicClient = this._blockchainClientProvider.getBlockchainClient({
+      chainInfo: getChainInfoByChainId(params.chainId),
+    })
+
+    try {
+      const estimatedGas = await publicClient.estimateGas({
+        account: params.from.value,
+        to: params.target.value,
+        data: params.calldata,
+        value: params.value,
+      })
+
+      const gasWithBuffer = BigInt(
+        new BigNumber(estimatedGas.toString())
+          .times(SAFETY_BUFFER_MULTIPLIER)
+          .toFixed(0, BigNumber.ROUND_UP),
+      )
+
+      LoggingService.debug('_calculateGasLimitForCalldata', {
+        estimatedGas: estimatedGas.toString(),
+        gasWithBuffer: gasWithBuffer.toString(),
+      })
+
+      return gasWithBuffer.toString()
+    } catch (error) {
+      LoggingService.error('Failed to estimate gas, using fallback', { error })
+      // Fallback to a reasonable default if estimation fails
+    }
+    throw new Error(
+      'Gas estimation failed but it should not happen, tx is failing possible no allowance',
+    )
+  }
+
   private _calculateFinalWithdrawAmount(params: {
     vaultId: IArmadaVaultId
     fleetShares: ITokenAmount

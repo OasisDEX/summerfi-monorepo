@@ -30,7 +30,8 @@
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "^6.3.2",
+    "@cowprotocol/cow-sdk": "^7.4.1",
+    "@cowprotocol/sdk-viem-adapter": "^0.3.10",
     "@ethersproject/abstract-signer": "^5.8.0",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
@@ -38,7 +39,8 @@
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server": "workspace:*",
     "@summerfi/subgraph-manager-common": "workspace:*",
-    "@trpc/client": "11.8.0"
+    "@trpc/client": "11.8.0",
+    "@uniswap/permit2-sdk": "^1.4.0"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.52.13",

@@ -9,4 +9,5 @@ export type Transaction = {
   target: IAddress
   calldata: HexData
   value: string
+  gasLimit?: string
 }

@@ -5,9 +5,17 @@ import {
   OrderSigningUtils,
   type SupportedChainId,
   ALL_SUPPORTED_CHAIN_IDS,
+  setGlobalAdapter,
+  TradingSdk,
+  type TradeParameters,
+  type SwapAdvancedSettings,
+  OrderKind,
+  AdapterContext,
 } from '@cowprotocol/cow-sdk'
+import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
+
 import type { SDKSigner } from './MakeSDKWithSigner'
-import { Price } from '@summerfi/sdk-common'
+import { LoggingService, Price } from '@summerfi/sdk-common'
 
 /**
  * @name IntentSwapClient
@@ -52,12 +60,18 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     // validate chainId
     this._validateChainId(params.chainId)
 
-    const signer = this._signer
+    const adapter = new ViemAdapter({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      provider: params.publicClient as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      signer: params.account as any,
+    })
+    AdapterContext.getInstance().setAdapter(adapter)
 
     const signingResult = await OrderSigningUtils.signOrder(
       params.order,
       params.chainId as SupportedChainId,
-      signer,
+      adapter.signer,
     )
 
     return this.rpcClient.intentSwaps.sendOrder.mutate({
@@ -69,17 +83,102 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     })
   }
 
+  /* see IIntentSwapClient.sendHookOrder */
+  sendHookOrder: IIntentSwapClient['sendHookOrder'] = async (params) => {
+    const {
+      account,
+      chainId,
+      fromAmount,
+      toToken,
+      order,
+      postHooks,
+      preHooks,
+      publicClient,
+      sender,
+    } = params
+    // validate chainId
+    this._validateChainId(chainId)
+
+    const adapter = new ViemAdapter({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      provider: publicClient as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      signer: account as any,
+    })
+
+    const sdk = new TradingSdk(
+      {
+        chainId: chainId as SupportedChainId,
+        appCode: 'summerfi-sdk',
+      },
+      {},
+      adapter,
+    )
+
+    // approval
+    const isNotEth = fromAmount.token.symbol !== 'ETH'
+    if (isNotEth) {
+      const fromTokenAddress = fromAmount.token.address.toSolidityValue()
+      const currentAllowance = await sdk.getCowProtocolAllowance({
+        tokenAddress: fromTokenAddress,
+        owner: sender.toSolidityValue(),
+      })
+      const requiredAmount = fromAmount.toSolidityValue()
+      // Only approve if needed
+      if (currentAllowance < requiredAmount) {
+        const txHash = await sdk.approveCowProtocol({
+          tokenAddress: fromTokenAddress,
+          amount: requiredAmount,
+        })
+        LoggingService.debug('Swap: approval transaction:', txHash)
+      } else {
+        LoggingService.debug('Swap: sufficient allowance already exists. Skipping approval.')
+      }
+    }
+
+    const parameters: TradeParameters = {
+      kind: OrderKind.SELL,
+      sellToken: order.sellToken,
+      sellTokenDecimals: fromAmount.token.decimals,
+      buyToken: order.buyToken,
+      buyTokenDecimals: toToken.decimals,
+      amount: fromAmount.toSolidityValue().toString(),
+    }
+
+    const advancedSettings: SwapAdvancedSettings = {
+      appData: {
+        metadata: {
+          hooks: {
+            pre: preHooks,
+            post: postHooks,
+          },
+        },
+      },
+    }
+
+    const { orderId } = await sdk.postSwapOrder(parameters, advancedSettings)
+
+    LoggingService.debug('Order created, id: ', orderId)
+    return { status: 'order_sent', orderId }
+  }
+
   /** @see IIntentSwapClient.cancelOrder */
   cancelOrder: IIntentSwapClient['cancelOrder'] = async (params) => {
     // validate chainId
     this._validateChainId(params.chainId)
 
-    const signer = this._signer
+    const adapter = new ViemAdapter({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      provider: params.publicClient as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      signer: params.account as any,
+    })
+    AdapterContext.getInstance().setAdapter(adapter)
 
     const orderCancellationsSigningResult = await OrderSigningUtils.signOrderCancellation(
       params.orderId,
       params.chainId as SupportedChainId,
-      signer,
+      adapter.signer,
     )
 
     return this.rpcClient.intentSwaps.cancelOrder.mutate({
