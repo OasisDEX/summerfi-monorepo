@@ -10,7 +10,7 @@ export const getCachedVaultsBenchmark = ({
   vaultChainId: number
   vaultToken: string
 }) => {
-  const asset = ['ETH', 'WETH'].includes(vaultToken) ? 'ETH' : 'USD'
+  const asset = ['ETH', 'WETH'].includes(vaultToken.toUpperCase()) ? 'ETH' : 'USD'
 
   return unstableCache(
     getVaultsBenchmark,
