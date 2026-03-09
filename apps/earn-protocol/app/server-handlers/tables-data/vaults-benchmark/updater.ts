@@ -76,6 +76,12 @@ async function fetchVaultsBenchmarkLatestPoints(
     },
   })
 
+  if (response.status === 403) {
+    const errorBody = await response.text()
+
+    throw new Error(`API key error when fetching ${network}/${code}: ${errorBody}`)
+  }
+
   if (!response.ok) {
     throw new Error(`Failed to fetch ${network}/${code}: ${response.status} ${response.statusText}`)
   }
