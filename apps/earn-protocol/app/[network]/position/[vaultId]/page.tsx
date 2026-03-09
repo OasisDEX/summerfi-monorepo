@@ -163,7 +163,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   }
 
   const [
-    vaultBenchmark,
+    { apy30d: vaultBenchmarkApy30d, chartData: vaultBenchmark },
     fullArkInterestRatesMap,
     latestArkInterestRatesMap,
     vaultInterestRates,
@@ -230,7 +230,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       latestActivity={latestActivity}
       topDepositors={topDepositors}
       rebalanceActivity={rebalanceActivity}
-      medianDefiYield={medianDefiYield}
+      medianDefiYield={vaultBenchmarkApy30d ? Number(vaultBenchmarkApy30d) * 100 : medianDefiYield}
       arksHistoricalChartData={arksHistoricalChartData}
       arksInterestRates={latestArkInterestRatesMap}
       vaultApyData={vaultApyData}

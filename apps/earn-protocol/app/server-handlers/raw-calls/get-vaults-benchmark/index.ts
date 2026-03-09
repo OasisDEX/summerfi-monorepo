@@ -6,12 +6,13 @@ export const getVaultsBenchmark = async ({
 }: {
   networkId: number
   asset: 'USD' | 'ETH'
-}): Promise<
-  {
+}): Promise<{
+  apy30d: string
+  chartData: {
     apy1dTotal: string
     timestamp: Date
   }[]
-> => {
+}> => {
   const connectionString = process.env.EARN_PROTOCOL_DB_CONNECTION_STRING
 
   if (!connectionString) {
@@ -25,20 +26,37 @@ export const getVaultsBenchmark = async ({
       connectionString,
     })
 
-    const vaultsBenchmarkData = await db
-      .selectFrom('vaultBenchmark')
-      .where('chainId', '=', networkId)
-      .where('asset', '=', asset)
-      .select(['apy1dTotal', 'timestamp'])
-      .orderBy('timestamp', 'desc')
-      .execute()
+    const [chartData, apy30d] = await Promise.all([
+      db
+        .selectFrom('vaultBenchmark')
+        .where('chainId', '=', networkId)
+        .where('asset', '=', asset)
+        .select(['apy1dTotal', 'timestamp'])
+        .orderBy('timestamp', 'desc')
+        .execute(),
+      db
+        .selectFrom('vaultBenchmark')
+        .where('chainId', '=', networkId)
+        .where('asset', '=', asset)
+        .select('apy30dTotal')
+        .orderBy('timestamp', 'desc')
+        .limit(1)
+        .executeTakeFirst()
+        .then((result) => result?.apy30dTotal ?? '0'),
+    ])
 
-    return vaultsBenchmarkData
+    return {
+      apy30d,
+      chartData,
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching vaults benchmark data:', error)
 
-    return []
+    return {
+      apy30d: '0',
+      chartData: [],
+    }
   } finally {
     if (dbInstance) {
       await dbInstance.db.destroy().catch((err) => {
