@@ -61,11 +61,14 @@ export const YieldsChart = ({
               left: 0,
               bottom: 10,
             }}
+            style={{
+              outline: 'none',
+            }}
           >
             <defs>
               <linearGradient id="summerYieldGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="30%" stopColor="#FF49A4" stopOpacity={1} />
-                <stop offset="100%" stopColor="#333333" stopOpacity={0.4} />
+                <stop offset="10%" stopColor="#FF49A4" stopOpacity={1} />
+                <stop offset="100%" stopColor="#333333" stopOpacity={0.2} />
               </linearGradient>
             </defs>
             <XAxis
@@ -83,8 +86,11 @@ export const YieldsChart = ({
             <YAxis
               strokeWidth={0.5}
               fontSize={12}
-              interval="equidistantPreserveStart"
-              tickFormatter={(label: string) => `${formatChartPercentageValue(Number(label))}`}
+              type="number"
+              tickFormatter={(value: string) =>
+                `${formatChartPercentageValue(Number(value), true)}`
+              }
+              tickCount={20}
               style={{
                 userSelect: 'none',
               }}

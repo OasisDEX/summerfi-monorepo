@@ -92,7 +92,7 @@ export const formatChartPercentageValue = (amount: number, detailed: boolean = f
     return `${formatAsShorthandNumbers(amount, { precision: 3 })}%`
   }
 
-  return `${new BigNumber(amount).toFixed(detailed ? 2 : 0)}%`
+  return `${new BigNumber(amount).toPrecision(detailed ? 3 : 0)}%`
 }
 
 export const formatChartDate = (date: typeof chartTimestampFormat) => {
