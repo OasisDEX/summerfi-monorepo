@@ -42,13 +42,32 @@ interface ApiResponse {
   data: BenchmarkPoint[]
 }
 
-async function fetchVaultsBenchmarkLast23H(
+async function fetchVaultsBenchmarkLatestPoints(
+  db: SummerProtocolDB['db'],
   network: Network,
+  chainId: number,
   code: Code,
   apiKey: string,
 ): Promise<BenchmarkPoint[]> {
-  const fromTimestamp = Math.floor(Date.now() / 1000) - Number(23 * 3600)
   const toTimestamp = Math.floor(Date.now() / 1000)
+  const latestPoint = await db
+    .selectFrom('vaultBenchmark')
+    .select(['timestamp'])
+    .where('chainId', '=', chainId)
+    .where('asset', '=', code.toUpperCase())
+    .orderBy('timestamp', 'desc')
+    .limit(1)
+    .executeTakeFirst()
+
+  // Fallback for first run: keep previous behavior and fetch the recent 23h window.
+  const fromTimestamp = latestPoint
+    ? Math.floor(new Date(latestPoint.timestamp).getTime() / 1000) + 1
+    : Math.floor(Date.now() / 1000) - Number(23 * 3600)
+
+  if (fromTimestamp >= toTimestamp) {
+    return []
+  }
+
   const url = `https://api.vaults.fyi/v2/historical-benchmarks/${network}?perPage=1000&code=${code}&fromTimestamp=${fromTimestamp}&toTimestamp=${toTimestamp}`
   const response = await fetch(url, {
     headers: {
@@ -83,8 +102,14 @@ export const updateVaultsBenchmark = async ({ db }: { db: SummerProtocolDB['db']
           let updated = 0
           let deleted = 0
 
-          const points = await fetchVaultsBenchmarkLast23H(network, code, VAULTS_BENCHMARK_API_KEY)
           const chainId = CHAIN_ID_MAP[network]
+          const points = await fetchVaultsBenchmarkLatestPoints(
+            db,
+            network,
+            chainId,
+            code,
+            VAULTS_BENCHMARK_API_KEY,
+          )
 
           const rows = points
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
