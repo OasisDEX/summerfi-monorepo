@@ -83,13 +83,13 @@ async function fetchWithCache(
 }
 
 async function main() {
-  const { EARN_PROTOCOL_DB_CONNECTION_STRING, VAULTS_FYI_API_KEY } = process.env
+  const { EARN_PROTOCOL_DB_CONNECTION_STRING, VAULTS_BENCHMARK_API_KEY } = process.env
 
   if (!EARN_PROTOCOL_DB_CONNECTION_STRING) {
     throw new Error('Missing EARN_PROTOCOL_DB_CONNECTION_STRING')
   }
-  if (!VAULTS_FYI_API_KEY) {
-    throw new Error('Missing VAULTS_FYI_API_KEY')
+  if (!VAULTS_BENCHMARK_API_KEY) {
+    throw new Error('Missing VAULTS_BENCHMARK_API_KEY')
   }
 
   const { db } = await getSummerProtocolDB({
@@ -98,7 +98,7 @@ async function main() {
 
   for (const network of NETWORKS) {
     for (const code of CODES) {
-      const points = await fetchWithCache(network, code, VAULTS_FYI_API_KEY)
+      const points = await fetchWithCache(network, code, VAULTS_BENCHMARK_API_KEY)
       const chainId = CHAIN_ID_MAP[network]
 
       const rows = points

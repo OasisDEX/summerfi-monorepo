@@ -68,10 +68,10 @@ async function fetchVaultsBenchmarkLast23H(
 
 export const updateVaultsBenchmark = async ({ db }: { db: SummerProtocolDB['db'] }) => {
   const startTime = Date.now()
-  const { VAULTS_FYI_API_KEY } = process.env
+  const { VAULTS_BENCHMARK_API_KEY } = process.env
 
-  if (!VAULTS_FYI_API_KEY) {
-    throw new Error('Missing VAULTS_FYI_API_KEY')
+  if (!VAULTS_BENCHMARK_API_KEY) {
+    throw new Error('Missing VAULTS_BENCHMARK_API_KEY')
   }
 
   const insertUpdatePromises: Promise<{ updated: number; deleted: number }>[] = []
@@ -83,7 +83,7 @@ export const updateVaultsBenchmark = async ({ db }: { db: SummerProtocolDB['db']
           let updated = 0
           let deleted = 0
 
-          const points = await fetchVaultsBenchmarkLast23H(network, code, VAULTS_FYI_API_KEY)
+          const points = await fetchVaultsBenchmarkLast23H(network, code, VAULTS_BENCHMARK_API_KEY)
           const chainId = CHAIN_ID_MAP[network]
 
           const rows = points
