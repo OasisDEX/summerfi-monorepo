@@ -166,7 +166,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
       vaultToken: vault.inputToken.symbol,
-      vaultId: vault.id,
     }),
     getDaoManagedVaultsIDsList(vaults),
     unstableCache(

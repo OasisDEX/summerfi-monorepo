@@ -172,7 +172,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
       vaultToken: vault.inputToken.symbol,
-      vaultId: vault.id,
     }),
     getArksInterestRates({
       network: parsedNetwork,
