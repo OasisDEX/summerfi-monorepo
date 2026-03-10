@@ -2,6 +2,7 @@ import { alchemy, arbitrum, base, mainnet } from '@account-kit/infra'
 import {
   type AlchemyAccountsConfigWithUI,
   type AlchemyAccountsUIConfig,
+  configForExternalWallets,
   cookieStorage,
   createConfig,
 } from '@account-kit/react'
@@ -10,7 +11,6 @@ import { QueryClient } from '@tanstack/react-query'
 import { type Chain } from 'viem'
 import { entryPoint07Address } from 'viem/account-abstraction'
 import { hyperliquid, sonic } from 'viem/chains'
-import { safe } from 'wagmi/connectors'
 
 export const queryClient: QueryClient = new QueryClient()
 
@@ -58,41 +58,31 @@ const GasSponsorshipIdMap = {
   [SupportedNetworkIds.Hyperliquid]: undefined,
 }
 
+// Keep external wallets settings in one place
+export const externalWalletsConfig: ReturnType<typeof configForExternalWallets> =
+  configForExternalWallets({
+    wallets: ['injected', 'safe', 'wallet_connect', 'coinbase wallet'],
+    chainType: ['evm'],
+    walletConnectProjectId: '832580820193ff6bae62a15dc0feff03',
+    hideMoreButton: false,
+    numFeaturedWallets: 15,
+    moreButtonText: 'More wallets',
+  })
+
 const uiConfigDefault: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
+  uiMode: 'modal',
   auth: {
     sections: [
-      [{ type: 'email' }],
-      [
-        { type: 'passkey' },
-        { type: 'social', authProviderId: 'google', mode: 'popup' },
-        { type: 'social', authProviderId: 'facebook', mode: 'popup' },
-      ],
       [
         {
           type: 'external_wallets',
-          walletConnect: { projectId: '832580820193ff6bae62a15dc0feff03' },
+          ...externalWalletsConfig.uiConfig,
         },
       ],
     ],
     addPasskeyOnSignup: true,
-  },
-}
-
-const uiConfigInstitutions: AlchemyAccountsUIConfig = {
-  illustrationStyle: 'outline',
-  uiMode: 'embedded',
-  auth: {
-    sections: [
-      [
-        {
-          type: 'external_wallets',
-          walletConnect: { projectId: '832580820193ff6bae62a15dc0feff03' },
-        },
-      ],
-    ],
-    hideSignInText: true,
-    addPasskeyOnSignup: false,
+    hideSignInText: false,
   },
 }
 
@@ -102,12 +92,10 @@ export const getAccountKitConfig = ({
   forkRpcUrl,
   chainId,
   basePath,
-  isInstitutions = false,
 }: {
   forkRpcUrl?: string
   chainId?: SupportedNetworkIds
   basePath?: string
-  isInstitutions?: boolean
 }): AlchemyAccountsConfigWithUI => {
   const resolvedBasePath = basePath ?? ''
 
@@ -117,8 +105,8 @@ export const getAccountKitConfig = ({
         // this is for Alchemy Signer requests
         rpcUrl: `${resolvedBasePath}/api/rpc`,
       },
-      enablePopupOauth: true,
-      connectors: [safe()],
+      enablePopupOauth: false,
+      connectors: externalWalletsConfig.connectors,
       chain: {
         [SupportedNetworkIds.ArbitrumOne]: arbitrum,
         [SupportedNetworkIds.Base]: base,
@@ -142,6 +130,6 @@ export const getAccountKitConfig = ({
         expirationTimeMs: 1000 * 60 * 90, // 90 minutes,
       },
     },
-    isInstitutions ? uiConfigInstitutions : uiConfigDefault,
+    uiConfigDefault,
   )
 }
