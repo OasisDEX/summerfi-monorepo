@@ -2,10 +2,10 @@ import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
 export const getVaultsBenchmark = async ({
   networkId,
-  asset,
+  vaultPerformanceAsset,
 }: {
   networkId: number
-  asset: 'USD' | 'ETH'
+  vaultPerformanceAsset: 'USD' | 'ETH'
 }): Promise<{
   apy30d: string
   chartData: {
@@ -30,14 +30,14 @@ export const getVaultsBenchmark = async ({
       db
         .selectFrom('vaultBenchmark')
         .where('chainId', '=', networkId)
-        .where('asset', '=', asset)
+        .where('asset', '=', vaultPerformanceAsset)
         .select(['apy1dTotal', 'timestamp'])
         .orderBy('timestamp', 'desc')
         .execute(),
       db
         .selectFrom('vaultBenchmark')
         .where('chainId', '=', networkId)
-        .where('asset', '=', asset)
+        .where('asset', '=', vaultPerformanceAsset)
         .select('apy30dTotal')
         .orderBy('timestamp', 'desc')
         .limit(1)

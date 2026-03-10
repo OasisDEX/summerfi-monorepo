@@ -67,15 +67,26 @@ export const useRevalidatePositionData = () => {
     chainName,
     vaultId,
     walletAddress,
+    vaultToken,
   }: {
     chainName?: string
     vaultId?: string
     walletAddress?: string
+    vaultToken?: string
   }) => {
+    const vaultPerformanceAsset = vaultToken
+      ? ['ETH', 'WETH'].includes(vaultToken.toUpperCase())
+        ? 'ETH'
+        : 'USD'
+      : undefined
+
     fetchRevalidate({
       tags: [
         CACHE_TAGS.VAULTS_LIST,
         CACHE_TAGS.INTEREST_RATES,
+        chainName && vaultPerformanceAsset
+          ? `${CACHE_TAGS.VAULT_PERFORMANCE}-${chainName.toLowerCase()}-${vaultPerformanceAsset.toLowerCase()}`
+          : undefined,
         walletAddress ? getUserDataCacheHandler(walletAddress) : undefined,
       ].filter(Boolean),
       paths: (chainName && vaultId

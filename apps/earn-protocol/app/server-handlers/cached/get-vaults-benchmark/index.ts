@@ -1,3 +1,4 @@
+import { chainIdToSDKNetwork, sdkNetworkToHumanNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getVaultsBenchmark } from '@/app/server-handlers/raw-calls/get-vaults-benchmark'
@@ -10,17 +11,20 @@ export const getCachedVaultsBenchmark = ({
   vaultChainId: number
   vaultToken: string
 }) => {
-  const asset = ['ETH', 'WETH'].includes(vaultToken.toUpperCase()) ? 'ETH' : 'USD'
+  const vaultPerformanceAsset = ['ETH', 'WETH'].includes(vaultToken.toUpperCase()) ? 'ETH' : 'USD'
+  const chainName = sdkNetworkToHumanNetwork(chainIdToSDKNetwork(vaultChainId))
 
   return unstableCache(
     getVaultsBenchmark,
     ['vaultsBenchmark', vaultToken.toLowerCase(), vaultChainId.toString()],
     {
       revalidate: CACHE_TIMES.ONE_DAY,
-      tags: [`${CACHE_TAGS.VAULT_PERFORMANCE}-${vaultToken.toLowerCase()}-${vaultChainId}`],
+      tags: [
+        `${CACHE_TAGS.VAULT_PERFORMANCE}-${chainName.toLowerCase()}-${vaultPerformanceAsset.toLowerCase()}`,
+      ],
     },
   )({
-    asset,
+    vaultPerformanceAsset,
     networkId: vaultChainId,
   })
 }

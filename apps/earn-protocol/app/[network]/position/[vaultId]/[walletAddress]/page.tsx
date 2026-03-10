@@ -41,6 +41,7 @@ import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/ge
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -151,6 +152,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   // Fetch DAO managed vaults, vault info, and ark rates in parallel
   const [
+    { chartData: vaultBenchmark },
     daoManagedVaultsList,
     vaultInfo,
     fullArkInterestRatesMap,
@@ -161,6 +163,11 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     migratablePositionsData,
     cookieRaw,
   ] = await Promise.all([
+    getCachedVaultsBenchmark({
+      vaultChainId: subgraphNetworkToId(parsedNetwork),
+      vaultToken: vault.inputToken.symbol,
+      vaultId: vault.id,
+    }),
     getDaoManagedVaultsIDsList(vaults),
     unstableCache(
       getVaultInfo,
@@ -249,6 +256,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault: vaultWithConfig,
     arkInterestRatesMap: fullArkInterestRatesMap,
     vaultInterestRates,
+    vaultBenchmark,
   })
 
   const migrationBestVaultApy = getMigrationBestVaultApy({
