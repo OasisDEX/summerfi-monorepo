@@ -86,17 +86,8 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
   /* see IIntentSwapClient.sendHookOrder */
   sendHookOrder: IIntentSwapClient['sendHookOrder'] = async (params) => {
-    const {
-      chainId,
-      account,
-      sender,
-      publicClient,
-      fromAmount,
-      toToken,
-      order,
-      postHooks,
-      preHooks,
-    } = params
+    const { chainId, account, sender, publicClient, fromAmount, toToken, postHooks, preHooks } =
+      params
     // validate chainId
     this._validateChainId(chainId)
 
@@ -152,7 +143,7 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       appData: {
         metadata: {
           hooks: {
-            // pre: preHooks,
+            pre: preHooks,
             post: postHooks,
           },
         },

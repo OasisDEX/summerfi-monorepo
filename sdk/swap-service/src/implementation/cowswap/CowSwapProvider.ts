@@ -354,14 +354,13 @@ export class CowSwapProvider
     // fetch two promises in parallel
     const [order /**trades*/] = await Promise.all([
       orderBookApi.getOrder(orderId),
-      orderBookApi.getTrades({ orderUid: orderId }),
+      // orderBookApi.getTrades({ orderUid: orderId }),
     ]).catch((e) => {
-      LoggingService.error('Error fetching order info from CowSwap:', e)
-      throw new Error(`Failed to fetch order info for order ID ${orderId}`)
+      return [null]
     })
 
     if (!order) {
-      throw new Error(`Order with ID ${orderId} not found`)
+      return null
     }
 
     return {

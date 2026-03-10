@@ -82,7 +82,7 @@ describe('Intent swaps: Swap with Deposit', () => {
   const signerPrivateKey = SharedConfig.testUserPrivateKey
   const senderAddressValue = SharedConfig.testUserAddressValue
   const account = privateKeyToAccount(signerPrivateKey)
-  const aqAddress = '0x066bA278928cF2f502318C7f689b769F72d67809'
+  const spenderAddressValue = '0x066bA278928cF2f502318C7f689b769F72d67809' // AQ
   const fleetCommanderAddress = FleetAddresses.Base.USDC
 
   // Configure test scenarios here
@@ -161,15 +161,16 @@ describe('Intent swaps: Swap with Deposit', () => {
       let orderId: string | undefined
 
       const ownerAddress = senderAddress.toSolidityValue()
-      const amount = fromAmount.toSolidityValue()
+      const spenderAddress = spenderAddressValue
+      const amount = sellQuote.toAmount.toSolidityValue()
+      const tokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
       const referralCode = '0x'
 
       const { permitData, signature } = await _createPermit2Data({
         chainId,
-        tokenAddress: fromAmount.token.address.toSolidityValue(),
+        tokenAddress,
         amount,
-        ownerAddress,
-        spenderAddress: aqAddress,
+        spenderAddress,
         account,
       })
 
@@ -186,7 +187,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       const gasLimit = '2500000'
       const hooks: { target: `0x${string}`; callData: `0x${string}`; gasLimit: string }[] = [
         {
-          target: aqAddress,
+          target: spenderAddressValue,
           callData: multicallCallData,
           gasLimit,
         },
@@ -219,10 +220,21 @@ describe('Intent swaps: Swap with Deposit', () => {
       } while (orderId == null)
 
       // check order status
-      const orderInfo = await sdk.intentSwaps.checkOrder({
-        chainId,
-        orderId: orderId,
-      })
+      let retry = 0
+      let orderInfo: Awaited<ReturnType<typeof sdk.intentSwaps.checkOrder>> | null = null
+      do {
+        orderInfo = await sdk.intentSwaps.checkOrder({
+          chainId,
+          orderId: orderId,
+        })
+        retry++
+        // wait 5 seconds before retrying
+        if (orderInfo === null) {
+          console.log(`Order info not available yet, retrying... (${retry}/5)`)
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+        }
+      } while (orderInfo === null && retry <= 5)
+
       assert(orderInfo, 'Order info should not be null')
       console.log('Check Order:', orderInfo)
 
@@ -284,14 +296,12 @@ async function _createPermit2Data({
   chainId,
   tokenAddress,
   amount,
-  ownerAddress,
   spenderAddress,
   account,
 }: {
   chainId: ChainId
   tokenAddress: `0x${string}`
   amount: bigint
-  ownerAddress: `0x${string}`
   spenderAddress: `0x${string}`
   account: PrivateKeyAccount
 }) {
