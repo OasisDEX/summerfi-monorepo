@@ -17,6 +17,7 @@ interface ClaimDelegateToClaimProps {
   chainId: SupportedNetworkIds
   onClaim: () => void
   isLoading?: boolean
+  merklIsAuthorizedOnBase?: boolean
   isChangingNetwork?: boolean
   canClaim: boolean
   isOnlyStep?: boolean
@@ -32,6 +33,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   chainId,
   onClaim,
   isLoading,
+  merklIsAuthorizedOnBase,
   isOnlyStep,
   isChangingNetwork,
   canClaim,
@@ -39,8 +41,14 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
   needsToAuthorizeStakingRewardsCallerBase,
 }) => {
   const buttonLabel = useMemo(() => {
-    if (needsToAuthorizeStakingRewardsCallerBase) {
-      return 'Approve 1/2'
+    if (typeof merklIsAuthorizedOnBase !== 'undefined' && !merklIsAuthorizedOnBase) {
+      return 'Authorize Merkl'
+    }
+    if (
+      typeof needsToAuthorizeStakingRewardsCallerBase !== 'undefined' &&
+      needsToAuthorizeStakingRewardsCallerBase
+    ) {
+      return 'Approve Staking Rewards Caller'
     }
     if (isChangingNetwork) {
       return 'Switching network...'
@@ -50,7 +58,13 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
     }
 
     return isOnlyStep ? 'Claim' : 'Claim 1/2'
-  }, [isLoading, isChangingNetwork, isOnlyStep, needsToAuthorizeStakingRewardsCallerBase])
+  }, [
+    isLoading,
+    isChangingNetwork,
+    isOnlyStep,
+    needsToAuthorizeStakingRewardsCallerBase,
+    merklIsAuthorizedOnBase,
+  ])
 
   return (
     <Card className={classNames.cardWrapper + (canClaim ? '' : ` ${classNames.disabled}`)}>

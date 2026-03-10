@@ -135,7 +135,8 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           },
         })
         toast.success('Merkl approval successful', SUCCESS_TOAST_CONFIG)
-        handleOptInOpenClose()
+        setIsOptInOpen(false)
+        revalidateUser(resolvedWalletAddress)
       }, delayPerNetwork[clientChainId])
     },
     onError: () => {
@@ -398,6 +399,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           ) : null
         }
         walletAddress={resolvedWalletAddress}
+        merklIsAuthorizedOnBase={merklIsAuthorizedOnBase}
         onClaim={() => {
           if (!isOptInOpen && !merklIsAuthorizedOnBase) {
             handleOptInOpenClose()
@@ -420,7 +422,9 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
           (state.claimStatus === UiTransactionStatuses.PENDING &&
             (state.pendingClaimChainId === SupportedNetworkIds.Base ||
               clientChainId === SupportedNetworkIds.Base)) ||
-          approveStakingRewardsCallerTransactionLoading
+          state.stakingApproveStatus === UiTransactionStatuses.PENDING ||
+          approveStakingRewardsCallerTransactionLoading ||
+          state.merklStatus === UiTransactionStatuses.PENDING
         }
         isChangingNetwork={isSettingChain && state.pendingClaimChainId === SupportedNetworkIds.Base}
         isChangingNetworkTo={state.pendingClaimChainId}

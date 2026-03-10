@@ -13,6 +13,7 @@ interface ClaimDelegateNetworkCardProps {
   walletAddress: string
   onClaim: () => void
   isLoading?: boolean
+  merklIsAuthorizedOnBase?: boolean
   isChangingNetwork?: boolean
   isChangingNetworkTo?: SupportedNetworkIds
   isOnlyStep?: boolean
@@ -27,6 +28,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
   balance,
   sumrPriceUsd,
   walletAddress,
+  merklIsAuthorizedOnBase,
   onClaim,
   isLoading,
   isChangingNetwork,
@@ -66,6 +68,7 @@ export const ClaimDelegateNetworkCard: FC<ClaimDelegateNetworkCardProps> = ({
       earnedInUSD={formatFiatBalance(claimableAmount * sumrPriceUsd)}
       onClaim={onClaim}
       isLoading={isLoading}
+      merklIsAuthorizedOnBase={merklIsAuthorizedOnBase}
       isChangingNetwork={isChangingNetworkTo === chainId && isChangingNetwork}
       canClaim={canClaim}
       isOnlyStep={isOnlyStep}
