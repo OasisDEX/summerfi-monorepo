@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, useEffect } from 'react'
-import { useAuthModal } from '@account-kit/react'
+import { useLogin } from '@privy-io/react-auth'
 import { Button, Card, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -39,7 +39,7 @@ const getButtonVariant = (tab: PortfolioTabs | null) => {
 
 const PortfolioPage: FC = () => {
   const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { login } = useLogin()
   const { push } = useRouter()
   const searchParams = useSearchParams()
   const tab = searchParams.get('tab') as PortfolioTabs | null
@@ -64,11 +64,7 @@ const PortfolioPage: FC = () => {
         >
           {getTitle(tab)}
         </Text>
-        <Button
-          variant={getButtonVariant(tab)}
-          onClick={openAuthModal}
-          style={{ minWidth: 'unset' }}
-        >
+        <Button variant={getButtonVariant(tab)} onClick={login} style={{ minWidth: 'unset' }}>
           Connect wallet
         </Button>
         {tab === PortfolioTabs.BEACH_CLUB && (

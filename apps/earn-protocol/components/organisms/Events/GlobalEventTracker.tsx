@@ -1,7 +1,7 @@
 'use client'
 
 import { useLayoutEffect, useRef } from 'react'
-import { useAccount, useChain, useUser } from '@account-kit/react'
+import { useAccount, useChain, useUser } from '@/providers/privy/account-kit-react-compat'
 import { getAccountType, useUserWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 

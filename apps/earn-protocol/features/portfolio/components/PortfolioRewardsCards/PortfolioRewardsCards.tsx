@@ -1,6 +1,6 @@
 'use client'
 import { type Dispatch, type FC } from 'react'
-import { useAuthModal } from '@account-kit/react'
+import { useAuthModal } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   DataModule,

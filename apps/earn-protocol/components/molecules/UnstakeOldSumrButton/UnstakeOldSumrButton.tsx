@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
-import { useAuthModal, useChain } from '@account-kit/react'
+import { useAuthModal, useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   ERROR_TOAST_CONFIG,

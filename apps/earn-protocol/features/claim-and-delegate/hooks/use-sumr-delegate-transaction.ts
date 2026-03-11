@@ -1,4 +1,8 @@
-import { useChain, useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import {
+  useChain,
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import { getAccountType } from '@summerfi/app-earn-ui'
 import { type AddressValue } from '@summerfi/sdk-common'
 

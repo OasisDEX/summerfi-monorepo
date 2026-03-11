@@ -1,4 +1,4 @@
-import { type useSmartAccountClient } from '@account-kit/react'
+import { type useSmartAccountClient } from '@/providers/privy/account-kit-react-compat'
 import { overridesGasSponsorship } from '@summerfi/app-earn-ui'
 
 /**

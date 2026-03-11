@@ -1,6 +1,6 @@
 'use client'
 import { type FC, useReducer } from 'react'
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   getTokenGuarded,
   Modal,

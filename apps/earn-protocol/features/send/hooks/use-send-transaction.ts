@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import {
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'

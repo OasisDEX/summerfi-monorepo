@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useSigner, useUser } from '@account-kit/react'
+import { useChain, useSigner, useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   DataBlock,

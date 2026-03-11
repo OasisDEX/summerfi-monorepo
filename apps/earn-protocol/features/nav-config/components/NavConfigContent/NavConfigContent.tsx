@@ -1,7 +1,11 @@
 'use client'
 import { type ChangeEvent, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useSmartAccountClient, useUser } from '@account-kit/react'
+import {
+  useChain,
+  useSmartAccountClient,
+  useUser,
+} from '@/providers/privy/account-kit-react-compat'
 import {
   Badge,
   Button,

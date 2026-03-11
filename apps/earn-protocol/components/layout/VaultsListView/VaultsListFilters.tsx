@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, type MouseEventHandler, useMemo } from 'react'
-import { useAuthModal, useUser } from '@account-kit/react'
+import { useAuthModal, useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Dropdown,
   GenericMultiselect,

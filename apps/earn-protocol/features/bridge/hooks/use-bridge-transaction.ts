@@ -4,7 +4,7 @@ import {
   type SendUserOperationWithEOA,
   useSendUserOperation,
   useSmartAccountClient,
-} from '@account-kit/react'
+} from '@/providers/privy/account-kit-react-compat'
 import { getAccountType } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {

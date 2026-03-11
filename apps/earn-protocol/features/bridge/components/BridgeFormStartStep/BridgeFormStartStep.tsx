@@ -1,6 +1,6 @@
 import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   ERROR_TOAST_CONFIG,
   InputWithDropdown,

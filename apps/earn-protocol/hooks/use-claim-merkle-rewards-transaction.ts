@@ -1,5 +1,4 @@
 'use client'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { sdkNetworkToChain } from '@summerfi/app-utils'
@@ -9,6 +8,10 @@ import { type PublicClient } from 'viem'
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
+import {
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 
 /**
  * Hook to handle claim of merkl rewards through a user operation transaction

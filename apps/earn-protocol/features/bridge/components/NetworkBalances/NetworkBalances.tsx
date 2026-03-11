@@ -1,4 +1,4 @@
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 

@@ -1,6 +1,6 @@
 'use client'
 import { type FC, useCallback, useMemo, useReducer, useState } from 'react'
-import { useChain } from '@account-kit/react'
+import { useActiveWallet } from '@privy-io/react-auth'
 import {
   getDisplayToken,
   getResolvedForecastAmountParsed,
@@ -97,7 +97,8 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const { push } = useRouter()
   const config = useSystemConfig()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
-  const { setChain, isSettingChain } = useChain()
+  const { network } = useActiveWallet()
+
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()

@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, useEffect } from 'react'
-import { useUser } from '@account-kit/react'
+import { useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,

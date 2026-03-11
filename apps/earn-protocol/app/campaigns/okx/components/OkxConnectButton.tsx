@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAuthModal, useLogout } from '@account-kit/react'
+import { useLogin, useLogout, useModalStatus } from '@privy-io/react-auth'
 import { Button, EXTERNAL_LINKS, Text, useUserWallet } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
 
@@ -59,7 +59,8 @@ export const OkxConnectButton = () => {
   const { push } = useRouter()
   const [isSettingUpOkxWallet, setIsSettingUpOkxWallet] = useState(false)
   const [isOkxWalletSetUp, setIsOkxWalletSetUp] = useState(false)
-  const { openAuthModal, isOpen: isAuthModalOpen, closeAuthModal } = useAuthModal()
+  const { login } = useLogin()
+  const { isOpen } = useModalStatus()
   const { logout } = useLogout()
   const { userWalletAddress } = useUserWallet()
   const isConnected = !!userWalletAddress
@@ -81,13 +82,12 @@ export const OkxConnectButton = () => {
     return () => {
       setIsOkxWalletSetUp(false)
       setIsSettingUpOkxWallet(false)
-      closeAuthModal()
       logout()
       setTimeout(() => {
-        openAuthModal()
+        login()
       }, 500)
     }
-  }, [logout, openAuthModal, closeAuthModal])
+  }, [logout, login])
 
   useEffect(() => {
     if (isOkxWalletAvailable && isConnected && isSameWallet) {
@@ -104,7 +104,7 @@ export const OkxConnectButton = () => {
     if (isConnected && !isSameWallet) {
       return 'You are currently connected with a non-OKX wallet'
     }
-    if ((isConnected && !isOkxWalletSetUp) || isAuthModalOpen || isSettingUpOkxWallet) {
+    if ((isConnected && !isOkxWalletSetUp) || isOpen || isSettingUpOkxWallet) {
       return 'Loading'
     }
     if (!isConnected) {
@@ -119,7 +119,7 @@ export const OkxConnectButton = () => {
     isConnected,
     isOkxWalletAvailable,
     isOkxWalletSetUp,
-    isAuthModalOpen,
+    isOpen,
     isSameWallet,
     isSettingUpOkxWallet,
   ])
@@ -148,7 +148,7 @@ export const OkxConnectButton = () => {
     <>
       <Button
         variant="primaryLargeColorful"
-        onClick={buttonHasAction ? openAuthModal : undefined}
+        onClick={buttonHasAction ? login : undefined}
         disabled={!buttonHasAction}
       >
         {buttonLabel}

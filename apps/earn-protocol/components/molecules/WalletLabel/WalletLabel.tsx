@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useAuthModal, useLogout, useSignerStatus } from '@account-kit/react'
+import { useLogin, useLogout, useModalStatus } from '@privy-io/react-auth'
 import {
   Button,
   type ButtonClassNames,
@@ -193,9 +193,8 @@ export default function WalletLabel({
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
-  const { isInitializing: isSignerInitializing, isAuthenticating: isSignerAuthenticating } =
-    useSignerStatus()
+  const { login } = useLogin()
+  const { isOpen: isAuthModalOpen } = useModalStatus()
   const { logout } = useLogout()
   const isIframe = useIsIframe()
 
@@ -218,7 +217,7 @@ export default function WalletLabel({
   }
 
   // we are not showing the skeleton in iframe, because isSignerInitializing never goes to true
-  if ((isSignerInitializing || isAuthModalOpen || isSignerAuthenticating) && !isIframe) {
+  if (isAuthModalOpen && !isIframe) {
     return (
       <Button variant={buttonVariant}>
         <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
@@ -230,7 +229,7 @@ export default function WalletLabel({
     if (variant === 'addressOnly') return null
 
     return (
-      <Button variant={buttonVariant} onClick={openAuthModal} className={walletLabelStyles.wrapper}>
+      <Button variant={buttonVariant} onClick={login} className={walletLabelStyles.wrapper}>
         {customLoginLabel ?? 'Log in'}
       </Button>
     )

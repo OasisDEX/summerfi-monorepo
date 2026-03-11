@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useChain, useUser } from '@account-kit/react'
+import { useChain, useUser } from '@/providers/privy/account-kit-react-compat'
 import { useUserWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
 import { debounce, throttle } from 'lodash-es'

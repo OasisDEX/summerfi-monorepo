@@ -1,7 +1,7 @@
 'use client'
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@account-kit/react'
+import { useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Card,
   DataBlock,

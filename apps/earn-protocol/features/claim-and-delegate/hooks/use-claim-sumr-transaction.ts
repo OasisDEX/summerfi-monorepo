@@ -1,5 +1,8 @@
 'use client'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import {
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import { getAccountType, useIsIframe, useUserWallet } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { sdkNetworkToChain } from '@summerfi/app-utils'

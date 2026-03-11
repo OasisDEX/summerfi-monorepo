@@ -1,6 +1,6 @@
 'use client'
 import { type FC, useEffect, useReducer, useState } from 'react'
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import { Modal, Sidebar, type SidebarProps, useMobileCheck } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { Transak } from '@transak/transak-sdk'

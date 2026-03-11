@@ -1,32 +1,52 @@
 'use client'
-import { type FC, type PropsWithChildren, Suspense, useRef } from 'react'
-import { type AlchemyClientState } from '@account-kit/core'
-import { AlchemyAccountProvider, type AlchemyAccountsConfigWithUI } from '@account-kit/react'
-import { getAccountKitConfig, queryClient } from '@summerfi/app-earn-ui'
+import { type FC, type PropsWithChildren, Suspense } from 'react'
+import { PrivyProvider } from '@privy-io/react-auth'
+import { createConfig as createPrivyWagmiConfig } from '@privy-io/wagmi'
+import { queryClient, SDKChainIdToAAChainMap } from '@summerfi/app-earn-ui'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { type Chain } from 'viem'
+import { http, WagmiProvider } from 'wagmi'
+
+const supportedChains = Object.values(SDKChainIdToAAChainMap) as [Chain, ...Chain[]]
+
+const wagmiConfig = createPrivyWagmiConfig({
+  chains: supportedChains,
+  transports: supportedChains.reduce<{
+    [key: number]: ReturnType<typeof http>
+  }>((acc, chain) => {
+    acc[chain.id] = http(`/earn/api/rpc/chain/${chain.id}`)
+
+    return acc
+  }, {}),
+  ssr: true,
+})
 
 const AlchemyAccountsProvider: FC<
   PropsWithChildren<{
-    initialState?: AlchemyClientState
+    initialState?: unknown
   }>
-> = ({ initialState, children }) => {
-  const ref = useRef<AlchemyAccountsConfigWithUI>(
-    getAccountKitConfig({
-      basePath: '/earn',
-    }),
-  )
-
+> = ({ children }) => {
   return (
     <Suspense>
-      <QueryClientProvider client={queryClient}>
-        <AlchemyAccountProvider
-          config={ref.current}
-          queryClient={queryClient}
-          initialState={initialState}
-        >
-          {children}
-        </AlchemyAccountProvider>
-      </QueryClientProvider>
+      <PrivyProvider
+        appId="cmmm608qu00c20cjy5p71zgqq"
+        config={{
+          loginMethods: ['wallet'],
+          appearance: {
+            showWalletLoginFirst: true,
+          },
+          embeddedWallets: {
+            disableAutomaticMigration: true,
+            ethereum: {
+              createOnLogin: 'users-without-wallets',
+            },
+          },
+        }}
+      >
+        <WagmiProvider config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </WagmiProvider>
+      </PrivyProvider>
     </Suspense>
   )
 }

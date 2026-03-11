@@ -5,7 +5,7 @@ import {
   useSignMessage,
   useSmartAccountClient,
   useUser,
-} from '@account-kit/react'
+} from '@/providers/privy/account-kit-react-compat'
 import { AccountKitAccountType, getAccountType } from '@summerfi/app-earn-ui'
 import { type TOSSignMessage } from '@summerfi/app-tos'
 

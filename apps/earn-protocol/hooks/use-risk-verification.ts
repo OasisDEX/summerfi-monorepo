@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useLogout } from '@account-kit/react'
+import { useLogout } from '@/providers/privy/account-kit-react-compat'
 import { useClientChainId, useUserWallet } from '@summerfi/app-earn-ui'
 import { fetchRisk } from '@summerfi/app-risk'
 

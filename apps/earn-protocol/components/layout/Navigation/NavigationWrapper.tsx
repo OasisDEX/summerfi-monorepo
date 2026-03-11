@@ -15,7 +15,6 @@ import {
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
-import { AutoConnectSafe } from '@/components/molecules/AutoConnectSafe/AutoConnectSafe'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { NavConfigContent } from '@/features/nav-config/components/NavConfigContent/NavConfigContent'
@@ -111,15 +110,12 @@ export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd 
       startTheGame={features?.Game ? startGame : undefined}
       featuresConfig={features}
       extraComponents={
-        <>
-          <AutoConnectSafe />
-          <NavigationExtraComponents
-            beachClubEnabled={beachClubEnabled}
-            isEarnApp
-            userWalletAddress={userWalletAddress}
-            onNavItemClick={onNavItemClick}
-          />
-        </>
+        <NavigationExtraComponents
+          beachClubEnabled={beachClubEnabled}
+          isEarnApp
+          userWalletAddress={userWalletAddress}
+          onNavItemClick={onNavItemClick}
+        />
       }
     />
   )

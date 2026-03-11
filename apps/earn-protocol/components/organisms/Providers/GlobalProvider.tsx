@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense } from 'react'
-import { type StoredState } from '@account-kit/core'
 import {
   LocalConfigContextProvider,
   type LocalConfigState,
@@ -18,7 +17,7 @@ import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfi
 
 type GlobalProviderProps = {
   children: React.ReactNode
-  accountKitInitializedState: StoredState | undefined
+  accountKitInitializedState?: unknown
   config: Partial<EarnAppConfigType>
   deviceType: DeviceType
   localConfigContextState: Partial<LocalConfigState>

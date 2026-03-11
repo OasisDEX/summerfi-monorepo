@@ -1,7 +1,11 @@
 'use client'
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
+import {
+  useChain,
+  useSignMessage,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Dropdown,

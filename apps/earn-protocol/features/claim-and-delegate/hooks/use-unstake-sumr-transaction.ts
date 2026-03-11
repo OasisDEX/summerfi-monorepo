@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import {
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import { ERROR_TOAST_CONFIG, getAccountType, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
 import { User } from '@summerfi/sdk-common'

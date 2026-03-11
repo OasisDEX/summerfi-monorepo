@@ -1,6 +1,6 @@
 import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useUser } from '@account-kit/react'
+import { useChain, useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   AccountKitAccountType,
   Button,

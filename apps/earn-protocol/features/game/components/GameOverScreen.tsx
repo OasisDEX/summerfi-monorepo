@@ -1,7 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { useChain, useSignMessage, useSmartAccountClient } from '@account-kit/react'
+import {
+  useChain,
+  useSignMessage,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card as UiCard,

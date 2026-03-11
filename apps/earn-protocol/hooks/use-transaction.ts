@@ -9,12 +9,6 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {
-  useAuthModal,
-  useChain,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
   getAccountType,
@@ -60,6 +54,12 @@ import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
+import {
+  useAuthModal,
+  useChain,
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 
 type UseTransactionParams = {
   vault: SDKVaultishType

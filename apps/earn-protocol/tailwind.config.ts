@@ -1,7 +1,6 @@
-import { withAccountKitUi } from '@account-kit/react/tailwind'
 import { type Config } from 'tailwindcss'
 
-export default withAccountKitUi({
+export default {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -15,4 +14,4 @@ export default withAccountKitUi({
     'variant',
     ['@media (prefers-color-scheme: light) { &:not(.dark, .dark *) }', '&:is(.light, .light *)'],
   ],
-}) as Config
+} as Config

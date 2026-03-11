@@ -1,5 +1,5 @@
 import { type Dispatch, type FC } from 'react'
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {

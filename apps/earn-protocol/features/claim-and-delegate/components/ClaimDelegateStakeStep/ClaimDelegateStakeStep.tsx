@@ -1,6 +1,6 @@
 import { type Dispatch, type FC } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
+import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,
