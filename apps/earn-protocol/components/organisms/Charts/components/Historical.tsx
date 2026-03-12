@@ -201,6 +201,7 @@ export const HistoricalChart = ({
               strokeWidth={0}
               tickFormatter={(label: string) => formatChartCryptoValue(Number(label))}
               interval="preserveStartEnd"
+              tickCount={10}
               scale="linear"
               width={65}
               domain={[
