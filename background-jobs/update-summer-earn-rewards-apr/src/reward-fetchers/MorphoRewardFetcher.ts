@@ -35,6 +35,7 @@ interface MorphoVaultReward {
 
 export class MorphoRewardFetcher implements IRewardFetcher {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
+  private readonly MAX_APR_THRESHOLD = 1 // 1000%
   private readonly logger: Logger
 
   constructor(logger: Logger) {
@@ -123,17 +124,22 @@ export class MorphoRewardFetcher implements IRewardFetcher {
       0,
     )
 
-    const rewards = vaultData.state.rewards.map((reward, index) => ({
-      rewardToken: reward.asset.address,
-      rate: ((reward.supplyApr ?? 0) * 100).toString(),
-      index,
-      token: {
-        address: reward.asset.address,
-        symbol: reward.asset.symbol,
-        decimals: reward.asset.decimals,
-        precision: (10n ** BigInt(reward.asset.decimals)).toString(),
-      },
-    }))
+    const rewards = vaultData.state.rewards.map((reward, index) => {
+      const apr = reward.supplyApr ?? 0
+      const rate = apr > this.MAX_APR_THRESHOLD ? 0 : apr * 100
+
+      return {
+        rewardToken: reward.asset.address,
+        rate: rate.toString(),
+        index,
+        token: {
+          address: reward.asset.address,
+          symbol: reward.asset.symbol,
+          decimals: reward.asset.decimals,
+          precision: (10n ** BigInt(reward.asset.decimals)).toString(),
+        },
+      }
+    })
 
     if (totalAssetsAllocated === 0) {
       return rewards
@@ -169,7 +175,7 @@ export class MorphoRewardFetcher implements IRewardFetcher {
       if (totalWeightedApy > 0) {
         additionalRewards.push({
           rewardToken: tokenInfo.address,
-          rate: (totalWeightedApy > 10 ? 0 : totalWeightedApy * 100).toString(),
+          rate: (totalWeightedApy > this.MAX_APR_THRESHOLD ? 0 : totalWeightedApy * 100).toString(),
           index: nextIndex++,
           token: {
             address: tokenInfo.address,
