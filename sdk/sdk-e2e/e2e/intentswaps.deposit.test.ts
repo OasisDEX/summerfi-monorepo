@@ -99,38 +99,35 @@ describe('Intent swaps: Swap with Deposit', () => {
     revokePermit2?: boolean
   }[] = [
     // eth to erc20
-    {
-      chainId: ChainIds.Base,
-      fromSymbol: 'ETH',
-      amountValue: '0.0005',
-      fleetAddressValue: FleetAddresses.Base.USDC,
-      sendOrder: true,
-      cancelOrder: false,
-      authorizePermit2: false,
-      revokePermit2: false,
-    },
-    // // erc20 to eth
     // {
     //   chainId: ChainIds.Base,
-    //   fromSymbol: 'USDC',
-    //   amountValue: '1',
-    //   depositToVault: FleetAddresses.Base.ETH,
+    //   fromSymbol: 'ETH',
+    //   amountValue: '0.0005',
+    //   fleetAddressValue: FleetAddresses.Base.USDC,
     //   sendOrder: true,
     //   cancelOrder: false,
-    //   authorizePermit2: false,
-    //   revokePermit2: false,
+    //   authorizePermit2: true,
     // },
-    // // erc20 to erc20
+    // erc20 to erc20
     // {
     //   chainId: ChainIds.Base,
     //   fromSymbol: 'EURC',
     //   amountValue: '1',
-    //   depositToVault: FleetAddresses.Base.USDC,
+    //   fleetAddressValue: FleetAddresses.Base.USDC,
     //   sendOrder: true,
     //   cancelOrder: false,
-    //   authorizePermit2: false,
-    //   revokePermit2: false,
+    //   authorizePermit2: true,
     // },
+    // erc20 to eth
+    {
+      chainId: ChainIds.Base,
+      fromSymbol: 'USDC',
+      amountValue: '1',
+      fleetAddressValue: FleetAddresses.Base.ETH,
+      sendOrder: true,
+      cancelOrder: false,
+      authorizePermit2: true,
+    },
   ]
 
   describe.each(intentSwapScenarios)('with scenario %#', (scenario) => {
@@ -177,7 +174,7 @@ describe('Intent swaps: Swap with Deposit', () => {
             fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
           }),
         })
-        .then((info) => info.assetToken)
+        .then(async (info) => info.assetToken)
 
       // get sell order quote
       const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
@@ -187,11 +184,6 @@ describe('Intent swaps: Swap with Deposit', () => {
         limitPrice,
       })
       console.log('Sell Order Quote:', fromAmount.toString(), '=>', sellQuote.toAmount.toString())
-
-      if (sendOrder === false) {
-        console.log('Skipping sending order')
-        return
-      }
 
       // check permit2 allowance
       const isPermit2AuthNeeded = await sdk.intentSwaps.isPermit2AuthorizationNeeded({
@@ -219,8 +211,10 @@ describe('Intent swaps: Swap with Deposit', () => {
         assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
-      // loop to check allowance, wrap if needed, and finally send order
-      let orderId: string | undefined
+      if (sendOrder === false) {
+        console.log('Skipping sending order')
+        return
+      }
 
       const ownerAddress = senderAddress.toSolidityValue()
       const spenderAddress = spenderAddressValue
@@ -264,6 +258,8 @@ describe('Intent swaps: Swap with Deposit', () => {
         })),
       )
 
+      // loop to check allowance, wrap if needed, and finally send order
+      let orderId: string | undefined
       do {
         const orderReturn = await sdk.intentSwaps.sendHookOrder({
           chainId,
@@ -281,6 +277,19 @@ describe('Intent swaps: Swap with Deposit', () => {
         })
       } while (orderId == null)
 
+      if (cancelOrder == true) {
+        // cancel order and exit test if cancelOrder flag is true
+        const cancelResult = await sdk.intentSwaps.cancelOrder({
+          chainId,
+          orderId: orderId,
+          account,
+          publicClient,
+        })
+
+        console.log('Cancel Order:', cancelResult)
+        return
+      }
+
       // check order status
       let retry = 0
       let orderInfo: Awaited<ReturnType<typeof sdk.intentSwaps.checkOrder>> | null = null
@@ -290,29 +299,22 @@ describe('Intent swaps: Swap with Deposit', () => {
           orderId: orderId,
         })
         retry++
-        // wait 5 seconds before retrying
-        if (orderInfo === null) {
-          console.log(`Order info not available yet, retrying... (${retry}/5)`)
-          await new Promise((resolve) => setTimeout(resolve, 3000))
+        // wait exponential retry before checking order status again if order is not yet fulfilled, up to 10 retries
+        if (orderInfo === null || orderInfo.order.status !== 'fulfilled') {
+          const waitTime = 1000 * Math.pow(retry, 2)
+          console.log(
+            `Order not fulfilled yet (status: ${orderInfo?.order.status ?? 'null'}), retrying in ${waitTime} ms... (${retry}/10)`,
+          )
+          await new Promise((resolve) => setTimeout(resolve, waitTime))
         }
-      } while (orderInfo === null && retry <= 5)
+      } while (retry <= 10 && (orderInfo === null || orderInfo.order.status !== 'fulfilled'))
 
       assert(orderInfo, 'Order info should not be null')
+      assert(
+        orderInfo.order.status === 'fulfilled',
+        `Order was not fulfilled, status: ${orderInfo.order.status}`,
+      )
       console.log('Check Order:', orderInfo)
-
-      if (cancelOrder === false) {
-        console.log('Skipping cancelling order')
-        return
-      }
-
-      // cancel order
-      const cancelResult = await sdk.intentSwaps.cancelOrder({
-        chainId,
-        orderId: orderId,
-        account,
-        publicClient,
-      })
-      console.log('Cancel Order:', cancelResult)
     })
   })
 })

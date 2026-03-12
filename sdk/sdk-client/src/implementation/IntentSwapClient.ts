@@ -16,7 +16,7 @@ import {
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
 
-import { LoggingService, Price } from '@summerfi/sdk-common'
+import { LoggingService, NATIVE_CURRENCY_ADDRESS_LOWERCASE, Price } from '@summerfi/sdk-common'
 
 const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
 
@@ -214,17 +214,38 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
   isPermit2AuthorizationNeeded: IIntentSwapClient['isPermit2AuthorizationNeeded'] = async (
     params,
   ) => {
+    if (params.amount === 0n) {
+      console.log('Allowance amount is zero')
+      return false
+    }
+
+    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      console.log('Token is native currency, no approval needed')
+      // Native token (e.g. ETH) does not require approval
+      return false
+    }
+
     const allowance = await params.publicClient.readContract({
       address: params.tokenAddress.toSolidityValue() as `0x${string}`,
       abi: erc20Abi,
       functionName: 'allowance',
       args: [params.ownerAddress.toSolidityValue() as `0x${string}`, PERMIT2_ADDRESS],
     })
+    console.log(
+      'current allowance is: ',
+      allowance.toString(),
+      'required amount is: ',
+      params.amount.toString(),
+    )
     return allowance < params.amount
   }
 
   /** @see IIntentSwapClient.getPermit2AuthorizationTx */
   getPermit2AuthorizationTx: IIntentSwapClient['getPermit2AuthorizationTx'] = (params) => {
+    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      throw new Error('Native token does not require Permit2 authorization')
+    }
+
     const calldata = encodeFunctionData({
       abi: erc20Abi,
       functionName: 'approve',
@@ -242,6 +263,10 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
   /** @see IIntentSwapClient.getPermit2RevokeTx */
   getPermit2RevokeTx: IIntentSwapClient['getPermit2RevokeTx'] = (params) => {
+    if (params.tokenAddress.toSolidityValue() === NATIVE_CURRENCY_ADDRESS_LOWERCASE) {
+      throw new Error('Native token does not require Permit2 authorization, so no need to revoke')
+    }
+
     const calldata = encodeFunctionData({
       abi: erc20Abi,
       functionName: 'approve',
