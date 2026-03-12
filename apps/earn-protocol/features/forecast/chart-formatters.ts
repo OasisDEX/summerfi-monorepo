@@ -42,15 +42,11 @@ export const formatChartCryptoValue = (amount: number) => {
   }
 
   if (amount < thousand) {
-    const kValue = amount / thousand
-
-    return `${parseFloat(kValue.toPrecision(2))}K`
+    return amount.toPrecision(3)
   }
 
   if (amount < tenThousand) {
-    const kValue = amount / thousand
-
-    return `${parseFloat(kValue.toPrecision(2))}K`
+    return amount.toFixed(0)
   }
 
   if (amount < hundredThousand) {
