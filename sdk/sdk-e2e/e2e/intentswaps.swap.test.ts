@@ -7,8 +7,7 @@ import {
 } from '@summerfi/sdk-common'
 import { RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
-import { makeSDKWithSigner } from '@summerfi/sdk-client'
-import { Wallet } from 'ethers'
+import { makeSDK } from '@summerfi/sdk-client'
 import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
 import { privateKeyToAccount } from 'viem/accounts'
 
@@ -59,9 +58,8 @@ describe('Intent swaps: Swap', () => {
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
 
     it('should complete intent swap flow', async () => {
-      const sdk = makeSDKWithSigner({
+      const sdk = makeSDK({
         apiDomainUrl: SDKApiUrl,
-        signer: new Wallet(signerPrivateKey),
       })
       const userSendTxTool = createSendTransactionTool({
         chainId,

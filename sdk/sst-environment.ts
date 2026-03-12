@@ -39,6 +39,7 @@ const envSchema = z.object({
   SDK_FORK_CONFIG: z.string().default(''),
   SDK_DEPLOYED_VERSIONS_MAP: z.string().nonempty(),
   ENSO_API_KEY: z.string().nonempty(),
+  COW_SWAP_API_KEY: z.string().nonempty(),
 })
 
 // parse envs

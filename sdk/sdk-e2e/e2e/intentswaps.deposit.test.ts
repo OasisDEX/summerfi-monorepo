@@ -1,14 +1,15 @@
 import {
   Address,
+  ArmadaVaultId,
   ChainIds,
+  getChainInfoByChainId,
   TokenAmount,
   type ChainId,
   type TransactionInfo,
 } from '@summerfi/sdk-common'
 import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testConfig'
 import assert from 'assert'
-import { makeSDKWithSigner } from '@summerfi/sdk-client'
-import { Wallet } from 'ethers'
+import { makeSDK } from '@summerfi/sdk-client'
 import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
 import { privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts'
 import { permit2Address } from '@uniswap/permit2-sdk'
@@ -90,45 +91,73 @@ describe('Intent swaps: Swap with Deposit', () => {
     chainId: ChainId
     fromSymbol: string
     amountValue: string
-    toSymbol: string
+    fleetAddressValue: `0x${string}`
     sendOrder: boolean
     cancelOrder: boolean
     limitPrice?: string
+    authorizePermit2?: boolean
+    revokePermit2?: boolean
   }[] = [
+    // eth to erc20
     {
       chainId: ChainIds.Base,
       fromSymbol: 'ETH',
       amountValue: '0.0005',
-      toSymbol: 'USDC',
+      fleetAddressValue: FleetAddresses.Base.USDC,
       sendOrder: true,
       cancelOrder: false,
+      authorizePermit2: false,
+      revokePermit2: false,
     },
+    // // erc20 to eth
     // {
     //   chainId: ChainIds.Base,
     //   fromSymbol: 'USDC',
-    //   amountValue: '5',
-    //   toSymbol: 'ETH',
+    //   amountValue: '1',
+    //   depositToVault: FleetAddresses.Base.ETH,
     //   sendOrder: true,
     //   cancelOrder: false,
+    //   authorizePermit2: false,
+    //   revokePermit2: false,
+    // },
+    // // erc20 to erc20
+    // {
+    //   chainId: ChainIds.Base,
+    //   fromSymbol: 'EURC',
+    //   amountValue: '1',
+    //   depositToVault: FleetAddresses.Base.USDC,
+    //   sendOrder: true,
+    //   cancelOrder: false,
+    //   authorizePermit2: false,
+    //   revokePermit2: false,
     // },
   ]
 
   describe.each(intentSwapScenarios)('with scenario %#', (scenario) => {
-    const { chainId, fromSymbol, amountValue, toSymbol, limitPrice, sendOrder, cancelOrder } =
-      scenario
+    const {
+      chainId,
+      fromSymbol,
+      amountValue,
+      fleetAddressValue,
+      limitPrice,
+      sendOrder,
+      cancelOrder,
+      authorizePermit2,
+      revokePermit2,
+    } = scenario
 
     const publicClient = getPublicClientForChain(chainId, RpcUrls[chainId])
 
     it('should complete intent swap flow', async () => {
-      const sdk = makeSDKWithSigner({
+      const sdk = makeSDK({
         apiDomainUrl: SDKApiUrl,
-        signer: new Wallet(signerPrivateKey),
       })
       const userSendTxTool = createSendTransactionTool({
         chainId,
         rpcUrl: RpcUrls[chainId],
         signerPrivateKey,
         senderAddressValue,
+        simulateOnly: false,
       })
 
       const senderAddress = Address.createFromEthereum({ value: senderAddressValue })
@@ -141,7 +170,14 @@ describe('Intent swaps: Swap with Deposit', () => {
         amount: amountValue,
         token: fromToken,
       })
-      const toToken = await sdk.tokens.getTokenBySymbol({ chainId, symbol: toSymbol })
+      const toToken = await sdk.armada.users
+        .getVaultInfo({
+          vaultId: ArmadaVaultId.createFrom({
+            chainInfo: getChainInfoByChainId(chainId),
+            fleetAddress: Address.createFromEthereum({ value: fleetAddressValue }),
+          }),
+        })
+        .then((info) => info.assetToken)
 
       // get sell order quote
       const sellQuote = await sdk.intentSwaps.getSellOrderQuote({
@@ -155,6 +191,32 @@ describe('Intent swaps: Swap with Deposit', () => {
       if (sendOrder === false) {
         console.log('Skipping sending order')
         return
+      }
+
+      // check permit2 allowance
+      const isPermit2AuthNeeded = await sdk.intentSwaps.isPermit2AuthorizationNeeded({
+        ownerAddress: senderAddress,
+        tokenAddress: sellQuote.toAmount.token.address,
+        amount: sellQuote.toAmount.toSolidityValue(),
+        publicClient,
+      })
+      console.log('Is Permit2 Authorization Needed?', isPermit2AuthNeeded)
+
+      // send permit2 approval first otherwise deposit will fali
+      if (isPermit2AuthNeeded && authorizePermit2) {
+        const permit2AuthorizationTxInfo = await sdk.intentSwaps.getPermit2AuthorizationTx({
+          tokenAddress: sellQuote.toAmount.token.address,
+        })
+        console.log('Sending Permit2 authorization transaction...')
+        const permit2TxStatus = await userSendTxTool(permit2AuthorizationTxInfo)
+        assert(permit2TxStatus === 'success', 'Permit2 authorization transaction failed')
+      } else if (revokePermit2) {
+        const permit2RevokeTxInfo = await sdk.intentSwaps.getPermit2RevokeTx({
+          tokenAddress: sellQuote.toAmount.token.address,
+        })
+        console.log('Sending Permit2 revoke transaction...')
+        const revokeTxStatus = await userSendTxTool(permit2RevokeTxInfo)
+        assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
       // loop to check allowance, wrap if needed, and finally send order

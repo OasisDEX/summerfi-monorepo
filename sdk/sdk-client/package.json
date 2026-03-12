@@ -33,6 +33,7 @@
     "@cowprotocol/cow-sdk": "^7.4.1",
     "@cowprotocol/sdk-viem-adapter": "^0.3.10",
     "@ethersproject/abstract-signer": "^5.8.0",
+    "@summerfi/armada-protocol-abis": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",

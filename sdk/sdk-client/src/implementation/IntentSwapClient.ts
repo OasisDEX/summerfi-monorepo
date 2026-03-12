@@ -5,35 +5,34 @@ import {
   OrderSigningUtils,
   type SupportedChainId,
   ALL_SUPPORTED_CHAIN_IDS,
-  setGlobalAdapter,
   TradingSdk,
   type TradeParameters,
   type SwapAdvancedSettings,
   OrderKind,
   AdapterContext,
   type OrderPostingResult,
+  OrderBookApi,
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
+import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
 
-import type { SDKSigner } from './MakeSDKWithSigner'
 import { LoggingService, Price } from '@summerfi/sdk-common'
+
+const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
 
 /**
  * @name IntentSwapClient
  * @implements IIntentSwapClient
  */
 export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
-  private readonly _signer: SDKSigner
-
   private _validateChainId(chainId: number) {
     if (!ALL_SUPPORTED_CHAIN_IDS.includes(chainId as SupportedChainId)) {
       throw new Error(`Unsupported chainId: ${chainId}`)
     }
   }
 
-  public constructor(params: { rpcClient: RPCMainClientType; signer: SDKSigner }) {
+  public constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
-    this._signer = params.signer
   }
 
   /** @see IIntentSwapClient.getSellOrderQuote */
@@ -86,8 +85,17 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
 
   /* see IIntentSwapClient.sendHookOrder */
   sendHookOrder: IIntentSwapClient['sendHookOrder'] = async (params) => {
-    const { chainId, account, sender, publicClient, fromAmount, toToken, postHooks, preHooks } =
-      params
+    const {
+      chainId,
+      account,
+      sender,
+      publicClient,
+      fromAmount,
+      toToken,
+      postHooks,
+      preHooks,
+      apiKey,
+    } = params
     // validate chainId
     this._validateChainId(chainId)
 
@@ -99,12 +107,14 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
     })
     AdapterContext.getInstance().setAdapter(adapter)
 
+    const options = apiKey ? new OrderBookApi({ chainId: chainId as SupportedChainId, apiKey }) : {}
+
     const sdk = new TradingSdk(
       {
         chainId: chainId as SupportedChainId,
         appCode: 'summerfi-sdk',
       },
-      {},
+      options,
       adapter,
     )
 
@@ -198,5 +208,52 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       chainId: params.chainId,
       orderId: params.orderId,
     })
+  }
+
+  /** @see IIntentSwapClient.isPermit2AuthorizationNeeded */
+  isPermit2AuthorizationNeeded: IIntentSwapClient['isPermit2AuthorizationNeeded'] = async (
+    params,
+  ) => {
+    const allowance = await params.publicClient.readContract({
+      address: params.tokenAddress.toSolidityValue() as `0x${string}`,
+      abi: erc20Abi,
+      functionName: 'allowance',
+      args: [params.ownerAddress.toSolidityValue() as `0x${string}`, PERMIT2_ADDRESS],
+    })
+    return allowance < params.amount
+  }
+
+  /** @see IIntentSwapClient.getPermit2AuthorizationTx */
+  getPermit2AuthorizationTx: IIntentSwapClient['getPermit2AuthorizationTx'] = (params) => {
+    const calldata = encodeFunctionData({
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [PERMIT2_ADDRESS, maxUint256],
+    })
+    return {
+      transaction: {
+        target: params.tokenAddress,
+        calldata,
+        value: '0',
+      },
+      description: `Authorize Permit2 to spend token ${params.tokenAddress.toSolidityValue()}`,
+    }
+  }
+
+  /** @see IIntentSwapClient.getPermit2RevokeTx */
+  getPermit2RevokeTx: IIntentSwapClient['getPermit2RevokeTx'] = (params) => {
+    const calldata = encodeFunctionData({
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [PERMIT2_ADDRESS, 0n],
+    })
+    return {
+      transaction: {
+        target: params.tokenAddress,
+        calldata,
+        value: '0',
+      },
+      description: `Revoke Permit2 authorization for token ${params.tokenAddress.toSolidityValue()}`,
+    }
   }
 }

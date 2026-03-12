@@ -97,6 +97,7 @@ export interface IIntentSwapClient {
     publicClient: PublicClient
     preHooks?: CowHook[]
     postHooks?: CowHook[]
+    apiKey?: string
   }): Promise<{ status: 'order_sent'; orderId: string }>
 
   /**
@@ -126,4 +127,36 @@ export interface IIntentSwapClient {
     chainId: ChainId
     orderId: string
   }): Promise<{ order: EnrichedOrder } | null>
+
+  /**
+   * @name isPermit2AuthorizationNeeded
+   * @description Checks if the Permit2 contract needs authorization for a specific token and amount
+   * @param ownerAddress The token owner's address
+   * @param tokenAddress The ERC-20 token address to check authorization for
+   * @param amount The required amount (in token base units) to check against the current allowance
+   * @param publicClient The public client to use for reading blockchain state
+   * @returns True if the current Permit2 allowance is less than the required amount
+   */
+  isPermit2AuthorizationNeeded(params: {
+    ownerAddress: IAddress
+    tokenAddress: IAddress
+    amount: bigint
+    publicClient: PublicClient
+  }): Promise<boolean>
+
+  /**
+   * @name getPermit2AuthorizationTx
+   * @description Creates a transaction to authorize the Permit2 contract to spend a specific token
+   * @param tokenAddress The ERC-20 token address to authorize
+   * @returns A TransactionInfo for the approve(Permit2, MaxUint256) transaction
+   */
+  getPermit2AuthorizationTx(params: { tokenAddress: IAddress }): TransactionInfo
+
+  /**
+   * @name getPermit2RevokeTx
+   * @description Creates a transaction to revoke the Permit2 contract authorization for a specific token
+   * @param tokenAddress The ERC-20 token address to revoke
+   * @returns A TransactionInfo for the approve(Permit2, 0) transaction
+   */
+  getPermit2RevokeTx(params: { tokenAddress: IAddress }): TransactionInfo
 }

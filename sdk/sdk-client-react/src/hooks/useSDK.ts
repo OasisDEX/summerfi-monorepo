@@ -86,6 +86,9 @@ import { setFleetDepositCapHandler } from '../handlers/setFleetDepositCapHandler
 import { setMinimumBufferBalanceHandler } from '../handlers/setMinimumBufferBalanceHandler'
 import { setArkDepositCapHandler } from '../handlers/setArkDepositCapHandler'
 import { setArkMaxDepositPercentageOfTVLHandler } from '../handlers/setArkMaxDepositPercentageOfTVLHandler'
+import { isPermit2AuthorizationNeededHandler } from '../handlers/isPermit2AuthorizationNeededHandler'
+import { getPermit2AuthorizationTxHandler } from '../handlers/getPermit2AuthorizeTxHandler'
+import { getPermit2RevokeTxHandler } from '../handlers/getPermit2UnauthorizeTxHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -252,6 +255,11 @@ export const useSDK = (params: UseSdk) => {
     [sdk],
   )
 
+  // PERMIT2 HANDLERS
+  const isPermit2AuthorizationNeeded = useMemo(() => isPermit2AuthorizationNeededHandler(sdk), [sdk])
+  const getPermit2AuthorizationTx = useMemo(() => getPermit2AuthorizationTxHandler(sdk), [sdk])
+  const getPermit2RevokeTx = useMemo(() => getPermit2RevokeTxHandler(sdk), [sdk])
+
   const memo = useMemo(
     () => ({
       getCurrentUser,
@@ -339,6 +347,9 @@ export const useSDK = (params: UseSdk) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      isPermit2AuthorizationNeeded,
+      getPermit2AuthorizationTx,
+      getPermit2RevokeTx,
     }),
     [
       getCurrentUser,
@@ -425,6 +436,9 @@ export const useSDK = (params: UseSdk) => {
       setMinimumBufferBalance,
       setArkDepositCap,
       setArkMaxDepositPercentageOfTVL,
+      isPermit2AuthorizationNeeded,
+      getPermit2AuthorizationTx,
+      getPermit2RevokeTx,
     ],
   )
 

@@ -61,6 +61,7 @@ export class CowSwapProvider
   private _allowanceManager: IAllowanceManager
   private _tokensManager: ITokensManager
   private _blockchainClientProvider: IBlockchainClientProvider
+  private _apiKey: string
 
   /** CONSTRUCTOR */
 
@@ -78,6 +79,7 @@ export class CowSwapProvider
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
     ) as SupportedChainId[]
+    this._apiKey = this.configProvider.getConfigurationItem({ name: 'COW_SWAP_API_KEY' })
   }
 
   /** PUBLIC */
@@ -114,7 +116,7 @@ export class CowSwapProvider
       kind: OrderQuoteSideKindSell.SELL,
     }
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
     let quote: OrderParameters | LimitOrderParameters
     try {
       const { quote: fetchedQuote } = await orderBookApi.getQuote(quoteRequest)
@@ -274,7 +276,7 @@ export class CowSwapProvider
       }
     }
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
     try {
       const orderId = await orderBookApi.sendOrder({
@@ -300,7 +302,7 @@ export class CowSwapProvider
     const { chainId, orderId, signingResult } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
     const orderUids = [orderId]
 
@@ -349,7 +351,7 @@ export class CowSwapProvider
     const { orderId, chainId } = params
     const supportedChainId = this._assertSupportedChainId(chainId)
 
-    const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
+    const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
 
     // fetch two promises in parallel
     const [order /**trades*/] = await Promise.all([
