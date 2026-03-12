@@ -1,6 +1,5 @@
 import { type Dispatch, type FC, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   BeachClubRewardSimulation,
   Button,
@@ -8,13 +7,13 @@ import {
   Icon,
   MobileDrawer,
   Modal,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
@@ -59,14 +58,14 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   const { isMobile } = useMobileCheck(deviceType)
   const currentGroupTvl = Number(beachClubData.total_deposits_referred_usd ?? 0)
   const [isOptInOpen, setIsOptInOpen] = useState(false)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const handleInputEvent = useHandleInputChangeEvent()
 
   const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
-  const { setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain } = useEarnProtocolChain()
   const merklIsAuthorizedOnBase = state.merklIsAuthorizedPerChain[SupportedNetworkIds.Base]
 
   const isOwner = userWalletAddress?.toLowerCase() === state.walletAddress.toLowerCase()
@@ -136,7 +135,7 @@ export const BeachClubTvlChallenge: FC<BeachClubTvlChallengeProps> = ({
   // chainId for now will always be Base as we support Merkl on base only
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
     if (Number(clientChainId) !== Number(chainId)) {
-      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+      setChain({ chain: chainId })
 
       return
     }

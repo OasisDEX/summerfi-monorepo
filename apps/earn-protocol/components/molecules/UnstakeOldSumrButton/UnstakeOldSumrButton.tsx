@@ -1,15 +1,15 @@
 'use client'
 import { useCallback, useMemo } from 'react'
 import { toast } from 'react-toastify'
-import { useAuthModal, useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   ERROR_TOAST_CONFIG,
   LoadingSpinner,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { formatDecimalToBigInt } from '@summerfi/app-utils'
@@ -29,9 +29,9 @@ export const UnstakeOldSumrButton = ({
   onFinished?: () => void
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
-  const { chain, isSettingChain, setChain } = useChain()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const { chain, isSettingChain, setChain } = useEarnProtocolChain()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
+  const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const revalidateUser = useRevalidateUser()
   const { unstakeSumrTransaction, isLoading: isLoadingUnstakeTransaction } =
     useUnstakeSumrTransaction({
@@ -60,7 +60,7 @@ export const UnstakeOldSumrButton = ({
       return
     }
     if (!isCorrectNetwork) {
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }
@@ -78,9 +78,9 @@ export const UnstakeOldSumrButton = ({
   const handleConnect = useCallback(() => {
     buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
-  }, [buttonClickEventHandler, openAuthModal, userWalletAddress])
+  }, [buttonClickEventHandler, login, userWalletAddress])
 
   const button = useMemo(() => {
     if (isLoading) {
