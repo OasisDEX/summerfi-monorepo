@@ -1,5 +1,6 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { ITokensManager } from '@summerfi/tokens-common'
 import {
   Address,
@@ -27,7 +28,10 @@ import {
   ETH_FLOW_ADDRESSES,
   WRAPPED_NATIVE_CURRENCIES,
   COW_PROTOCOL_VAULT_RELAYER_ADDRESS,
+  type OrderParameters,
+  type LimitOrderParameters,
 } from '@cowprotocol/cow-sdk'
+
 import { encodeFunctionData, formatEther } from 'viem'
 import { invalidateOrderAbi } from './invalidateOrderAbi'
 import { BigNumber } from 'bignumber.js'
@@ -53,9 +57,10 @@ export class CowSwapProvider
    * https://docs.cow.fi/
    * */
 
-  private readonly _supportedChainIds: SupportedChainId[]
-  private readonly _allowanceManager: IAllowanceManager
-  private readonly _tokensManager: ITokensManager
+  private _supportedChainIds: SupportedChainId[]
+  private _allowanceManager: IAllowanceManager
+  private _tokensManager: ITokensManager
+  private _blockchainClientProvider: IBlockchainClientProvider
 
   /** CONSTRUCTOR */
 
@@ -63,11 +68,13 @@ export class CowSwapProvider
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     tokensManager: ITokensManager
+    blockchainClientProvider: IBlockchainClientProvider
   }) {
     super({ ...params, type: IntentSwapProviderType.CowSwap })
 
     this._allowanceManager = params.allowanceManager
     this._tokensManager = params.tokensManager
+    this._blockchainClientProvider = params.blockchainClientProvider
     this._supportedChainIds = ALL_SUPPORTED_CHAIN_IDS.filter((chainId) =>
       isChainId(chainId),
     ) as SupportedChainId[]
@@ -101,14 +108,21 @@ export class CowSwapProvider
     const quoteRequest: OrderQuoteRequest = {
       sellToken: sellTokenAddress,
       buyToken: buyTokenAddress,
-      sellAmountBeforeFee: sellAmount,
-      kind: OrderQuoteSideKindSell.SELL,
       from,
       receiver,
+      sellAmountBeforeFee: sellAmount,
+      kind: OrderQuoteSideKindSell.SELL,
     }
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId })
-    const { quote } = await orderBookApi.getQuote(quoteRequest)
+    let quote: OrderParameters | LimitOrderParameters
+    try {
+      const { quote: fetchedQuote } = await orderBookApi.getQuote(quoteRequest)
+      quote = fetchedQuote as UnsignedOrder
+    } catch (e) {
+      LoggingService.error('Error fetching quote from CowSwap:', e)
+      throw new Error('Failed to fetch quote from CowSwap')
+    }
 
     const order: UnsignedOrder = {
       ...quote,
@@ -275,9 +289,9 @@ export class CowSwapProvider
         orderId: orderId,
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      LoggingService.error('Error sending order to CowSwap:', e?.body?.errorType)
-      throw new Error(`Failed to send order: ${e?.body?.errorType}`)
+    } catch (e) {
+      LoggingService.error('Error sending order to CowSwap:', e)
+      throw new Error(`Failed to send order`)
     }
   }
 
@@ -300,9 +314,8 @@ export class CowSwapProvider
 
       return { result }
     } catch (e) {
-      throw new Error(
-        `Failed to cancel order(s) ${orderUids.join(', ')}: ${this._parseErrorType()}`,
-      )
+      LoggingService.error('Error cancelling order(s) on CowSwap:', e)
+      throw new Error(`Failed to cancel order(s) ${orderUids.join(', ')}`)
     }
   }
 
@@ -341,12 +354,15 @@ export class CowSwapProvider
     // fetch two promises in parallel
     const [order /**trades*/] = await Promise.all([
       orderBookApi.getOrder(orderId),
-      orderBookApi.getTrades({ orderUid: orderId }),
-    ])
+      // orderBookApi.getTrades({ orderUid: orderId }),
+    ]).catch((e) => {
+      return [null]
+    })
 
     if (!order) {
       return null
     }
+
     return {
       order,
     }
@@ -359,7 +375,7 @@ export class CowSwapProvider
    * @param errorDescription The error description from CowSwap
    * @returns The parsed error type
    */
-  private _parseErrorType(): SwapErrorType {
+  private _parseErrorType(_e: unknown): SwapErrorType {
     return SwapErrorType.Unknown
   }
 

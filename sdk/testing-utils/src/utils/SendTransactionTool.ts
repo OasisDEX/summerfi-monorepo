@@ -7,6 +7,7 @@ import {
 } from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
 import { TransactionUtils } from './TransactionUtils'
+import type { Account } from 'viem'
 
 export type SendTransactionTool = ReturnType<typeof createSendTransactionTool>
 export type SendTransactionToolStatus = 'success' | 'reverted'
@@ -14,11 +15,11 @@ export type SendTransactionToolStatus = 'success' | 'reverted'
 export const createSendTransactionTool = (params: {
   chainId: ChainId
   rpcUrl: string
-  senderAddress: AddressValue
+  senderAddressValue: AddressValue
   signerPrivateKey?: HexData
   simulateOnly?: boolean
 }) => {
-  const { chainId, rpcUrl, signerPrivateKey, senderAddress } = params
+  const { chainId, rpcUrl, signerPrivateKey, senderAddressValue } = params
   const simulateOnly = signerPrivateKey == null ? true : params.simulateOnly ?? true
 
   if (signerPrivateKey != null && !isHex(signerPrivateKey)) {
@@ -38,12 +39,12 @@ export const createSendTransactionTool = (params: {
         rpcUrl,
         walletPrivateKey: signerPrivateKey,
         chainInfo: getChainInfoByChainId(chainId),
-        useFork: useFork ? true : false,
+        useFork,
       })
     : new TransactionUtils({
         rpcUrl,
         chainInfo: getChainInfoByChainId(chainId),
-        useFork: useFork ? true : false,
+        useFork,
       })
 
   return async <T extends TransactionInfo | TransactionInfo[]>(
@@ -72,7 +73,7 @@ export const createSendTransactionTool = (params: {
       try {
         const res = await transactionUtils.sendSimulation({
           transaction: transaction.transaction,
-          senderAddress,
+          senderAddress: senderAddressValue,
         })
         console.log('  > Simulation successful' + (res.data ? `, with result: ${res.data}` : ''))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,4 +109,32 @@ export const createSendTransactionTool = (params: {
 function debugViemError(msg: string, error: any) {
   console.error(msg, error.shortMessage)
   console.log('Transaction data:', error.metaMessages)
+}
+
+export function getPublicClientForChain(
+  chainId: ChainId,
+  rpcUrl: string,
+  useFork: boolean = false,
+) {
+  const transactionUtils = new TransactionUtils({
+    rpcUrl,
+    chainInfo: getChainInfoByChainId(chainId),
+    useFork,
+  })
+  return transactionUtils.publicClient
+}
+
+export function getWalletClientForChain(
+  chainId: ChainId,
+  rpcUrl: string,
+  privateKey: HexData,
+  useFork: boolean = false,
+) {
+  const transactionUtils = new TransactionUtils({
+    walletPrivateKey: privateKey,
+    rpcUrl,
+    chainInfo: getChainInfoByChainId(chainId),
+    useFork,
+  })
+  return transactionUtils.walletClient
 }

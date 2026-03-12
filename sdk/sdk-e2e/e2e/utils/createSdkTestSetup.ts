@@ -24,7 +24,7 @@ export function createSdkTestSetup(testConfigKey: TestConfigKey = 'BaseUSDC') {
   const userSendTxTool = createSendTransactionTool({
     chainId: chainId,
     rpcUrl,
-    senderAddress: userAddress.value,
+    senderAddressValue: userAddress.value,
     signerPrivateKey: SharedConfig.testUserPrivateKey,
     simulateOnly: false,
   })
