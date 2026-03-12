@@ -29,7 +29,7 @@ interface FluidFetcherOptions {
 
 export class FluidRewardFetcher implements IRewardFetcher {
   private readonly logger: Logger
-  private readonly MAX_APR_THRESHOLD = 1 // 1000%
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly blacklist: Set<string>
 
   constructor(logger: Logger, options?: FluidFetcherOptions) {

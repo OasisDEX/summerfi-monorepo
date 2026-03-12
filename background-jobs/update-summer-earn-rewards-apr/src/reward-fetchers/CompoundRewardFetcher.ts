@@ -14,7 +14,7 @@ type CompoundRewardsResponse = Array<{
 export class CompoundRewardFetcher implements IRewardFetcher {
   private readonly COMPOUND_API_URL =
     'https://v3-api.compound.finance/account/0x0000000000000000000000000000000000000000/rewards'
-  private readonly MAX_APR_THRESHOLD = 1 // 1000%
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly logger: Logger
 
   constructor(logger: Logger) {

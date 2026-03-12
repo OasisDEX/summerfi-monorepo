@@ -35,7 +35,7 @@ interface MorphoVaultReward {
 
 export class MorphoRewardFetcher implements IRewardFetcher {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
-  private readonly MAX_APR_THRESHOLD = 1 // 1000%
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly logger: Logger
 
   constructor(logger: Logger) {
