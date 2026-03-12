@@ -1,6 +1,5 @@
 'use client'
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { useAuthModal } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,

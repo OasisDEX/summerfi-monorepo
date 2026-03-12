@@ -1,10 +1,5 @@
 'use client'
 import { useCallback, useState } from 'react'
-import {
-  type SendUserOperationWithEOA,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
 import { getAccountType } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
@@ -22,6 +17,11 @@ import { type Chain, formatEther } from 'viem'
 
 import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
+import {
+  type SendUserOperationWithEOA,
+  useSendUserOperation,
+  useSmartAccountClient,
+} from '@/providers/privy/account-kit-react-compat'
 
 // Mapping for USDC token symbols by chain ID
 const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {

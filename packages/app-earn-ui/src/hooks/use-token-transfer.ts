@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { type AlchemySigner } from '@account-kit/core'
+import { toViemAccount, useWallets } from '@privy-io/react-auth'
 import {
   type Address as ViemAddress,
   createWalletClient,
@@ -35,13 +35,11 @@ export const useTokenTransfer = ({
   receiverWallet,
   userWallet,
   publicClient,
-  signer,
 }: {
   tokenAddress: string
   receiverWallet: string
   userWallet: string | undefined
   publicClient: PublicClient | undefined
-  signer: AlchemySigner | null
 }): {
   tokenInfo: TokenInfo | null
   transferAllBalance: () => Promise<string>
@@ -54,6 +52,7 @@ export const useTokenTransfer = ({
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
   const [isTransferring, setIsTransferring] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { wallets } = useWallets()
 
   // Fetch token balance and info
   const fetchTokenBalance = useCallback(async (): Promise<void> => {
@@ -111,8 +110,8 @@ export const useTokenTransfer = ({
    * Transfer ALL token balance to the receiver wallet
    */
   const transferAllBalance = useCallback(async (): Promise<string> => {
-    if (!publicClient || !signer) {
-      throw new Error('Public client and signer are required')
+    if (!publicClient) {
+      throw new Error('Public client is required')
     }
 
     if (!receiverWallet) {
@@ -127,7 +126,12 @@ export const useTokenTransfer = ({
     setError(null)
 
     try {
-      const account = signer.toViemAccount()
+      const desiredWallet = wallets.find((iWallet) => iWallet.address === userWallet)
+
+      if (!desiredWallet) {
+        throw new Error('Desired wallet not found')
+      }
+      const account = await toViemAccount({ wallet: desiredWallet })
 
       const walletClient = createWalletClient({
         account,
@@ -156,7 +160,15 @@ export const useTokenTransfer = ({
     } finally {
       setIsTransferring(false)
     }
-  }, [publicClient, signer, receiverWallet, tokenInfo, tokenAddress, fetchTokenBalance])
+  }, [
+    publicClient,
+    receiverWallet,
+    tokenInfo,
+    wallets,
+    tokenAddress,
+    fetchTokenBalance,
+    userWallet,
+  ])
 
   return {
     tokenInfo,

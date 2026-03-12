@@ -1,9 +1,12 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import { arbitrum, base, type Chain, hyperliquid, mainnet, sonic } from 'viem/chains'
 import {
+  type Config,
+  type Connector,
+  type CreateConnectorFn,
   useAccount as useWagmiAccount,
   useChainId,
   useConnect as useWagmiConnect,
@@ -13,6 +16,7 @@ import {
   useSwitchChain,
   useWalletClient,
 } from 'wagmi'
+import { type ConnectData } from 'wagmi/query'
 
 type AccountLike = {
   address?: `0x${string}`
@@ -20,12 +24,6 @@ type AccountLike = {
 
 type UserLike = {
   address?: `0x${string}`
-  type?: 'eoa' | 'sca'
-}
-
-type SmartAccountClientLike = {
-  address?: `0x${string}`
-  checkGasSponsorshipEligibility: (_params: unknown) => Promise<{ eligible: boolean }>
 }
 
 const supportedChains: Chain[] = [mainnet, arbitrum, base, sonic, hyperliquid]
@@ -46,13 +44,10 @@ export const useUser = (): UserLike | null => {
 
   return {
     address,
-    type: 'eoa',
   }
 }
 
-export const useAccount = (
-  _params?: unknown,
-): { account?: AccountLike; isLoadingAccount: boolean } => {
+export const useEarnProtocolAccount = (): { account?: AccountLike; isLoadingAccount: boolean } => {
   const { address, isConnecting, isReconnecting } = useWagmiAccount()
 
   return {
@@ -61,11 +56,15 @@ export const useAccount = (
   }
 }
 
-export const useChain = () => {
+export const useEarnProtocolChain: () => {
+  chain: Chain
+  setChain: ({ chain }: { chain: Chain }) => Promise<void>
+  isSettingChain: boolean
+} = () => {
   const chainId = useChainId()
   const { switchChainAsync, isPending } = useSwitchChain()
 
-  const setChain = useCallback(
+  const setChain: ({ chain }: { chain: Chain }) => Promise<void> = useCallback(
     async ({ chain }: { chain: Chain }) => {
       await switchChainAsync({ chainId: chain.id })
     },
@@ -79,10 +78,13 @@ export const useChain = () => {
   }
 }
 
-export const useAuthModal = () => {
+export const useEarnProtocolAuthModal: () => {
+  openAuthModal: () => void
+  isOpen: boolean
+} = () => {
   const { login, ready } = usePrivy()
 
-  const openAuthModal = useCallback(() => {
+  const openAuthModal: () => void = useCallback(() => {
     if (ready) {
       login()
     }
@@ -94,7 +96,9 @@ export const useAuthModal = () => {
   }
 }
 
-export const useLogout = () => {
+export const useEarnProtocolLogout: () => {
+  logout: () => void
+} = () => {
   const { logout } = usePrivy()
   const { disconnect } = useDisconnect()
 
@@ -108,7 +112,10 @@ export const useLogout = () => {
   }
 }
 
-export const useSignerStatus = () => {
+export const useEarnProtocolSignerStatus: () => {
+  isInitializing: boolean
+  isAuthenticating: boolean
+} = () => {
   const { ready, authenticated } = usePrivy()
 
   return {
@@ -117,10 +124,32 @@ export const useSignerStatus = () => {
   }
 }
 
-export const useConnect = () => {
+export const useEarnProtocolConnect: () => {
+  connect: (
+    params: {
+      chainId?: number | undefined
+      connector: CreateConnectorFn | Connector
+    },
+    callbacks?: {
+      onError?: (error: unknown) => void
+      onSuccess?: (data: unknown) => void
+      onSettled?: () => void
+    },
+  ) => Promise<ConnectData<Config>>
+} = () => {
   const { connectAsync } = useWagmiConnect()
 
-  const connect = useCallback(
+  const connect: (
+    params: {
+      chainId?: number | undefined
+      connector: CreateConnectorFn | Connector
+    },
+    callbacks?: {
+      onError?: (error: unknown) => void
+      onSuccess?: (data: unknown) => void
+      onSettled?: () => void
+    },
+  ) => Promise<ConnectData<Config>> = useCallback(
     async (
       params: Parameters<typeof connectAsync>[0],
       callbacks?: {
@@ -151,26 +180,11 @@ export const useConnect = () => {
   }
 }
 
-export const useSmartAccountClient = (
-  _params?: unknown,
-): { client: SmartAccountClientLike | undefined } => {
-  const { address } = useWagmiAccount()
-
-  const client = useMemo<SmartAccountClientLike | undefined>(() => {
-    if (!address) {
-      return undefined
+export const useEarnProtocolSigner: () =>
+  | {
+      signMessage: (message: string) => Promise<`0x${string}`>
     }
-
-    return {
-      address,
-      checkGasSponsorshipEligibility: async () => ({ eligible: true }),
-    }
-  }, [address])
-
-  return { client }
-}
-
-export const useSigner = () => {
+  | undefined = () => {
   const { data: walletClient } = useWalletClient()
 
   if (!walletClient) {
@@ -182,7 +196,9 @@ export const useSigner = () => {
   }
 }
 
-export const useSignMessage = (_params?: unknown) => {
+export const useEarnProtocolSignMessage: () => {
+  signMessageAsync: ({ message }: { message: string }) => Promise<`0x${string}`>
+} = () => {
   const { signMessageAsync: wagmiSignMessageAsync } = useWagmiSignMessage()
 
   const signMessageAsync = useCallback(
@@ -197,16 +213,39 @@ export const useSignMessage = (_params?: unknown) => {
   }
 }
 
-export const useSendUserOperation = ({
-  waitForTxn = true,
+export const useEarnProtocolSendUserOperation: ({
+  waitForTxn,
   onSuccess,
   onError,
 }: {
   client?: unknown
-  waitForTxn?: boolean
-  onSuccess?: (data: { hash: `0x${string}` }) => void
-  onError?: (error: unknown) => void
+  waitForTxn?: boolean | undefined
+  onSuccess?: ((data: { hash: `0x${string}` }) => void) | undefined
+  onError?: ((error: unknown) => void) | undefined
 }) => {
+  sendUserOperation: (params: {
+    uo: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint | undefined
+    }
+    overrides?: unknown
+  }) => void
+  sendUserOperationAsync: ({
+    uo,
+  }: {
+    uo: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint | undefined
+    }
+    overrides?: unknown
+  }) => Promise<{
+    hash: `0x${string}`
+  }>
+  error: Error | null
+  isSendingUserOperation: boolean
+} = ({ waitForTxn = true, onSuccess, onError }) => {
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
   const [isSendingUserOperation, setIsSendingUserOperation] = useState(false)
@@ -275,11 +314,3 @@ export const useSendUserOperation = ({
     isSendingUserOperation,
   }
 }
-
-export const cookieStorage = {
-  getItem: (_key: string) => null,
-  removeItem: (_key: string) => undefined,
-  setItem: (_key: string, _value: string) => undefined,
-}
-
-export const createConfig = (config: unknown) => config

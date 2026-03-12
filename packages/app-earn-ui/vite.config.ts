@@ -121,9 +121,8 @@ export default defineConfig(({ mode }) => {
       },
       rollupOptions: {
         external: [
-          '@account-kit/core',
-          '@account-kit/infra',
-          '@account-kit/react',
+          '@privy-io/react-auth',
+          '@privy-io/wagmi',
           '@loadable/component',
           '@summerfi/app-icons',
           '@summerfi/armada-protocol-common',

@@ -198,6 +198,18 @@ export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
 export { useClientChainId } from './hooks/use-client-chain-id'
 export { useUserWallet } from './hooks/use-user-wallet'
 export { useTokenTransfer } from './hooks/use-token-transfer'
+export {
+  useUser,
+  useEarnProtocolAccount,
+  useEarnProtocolChain,
+  useEarnProtocolAuthModal,
+  useEarnProtocolLogout,
+  useEarnProtocolSignerStatus,
+  useEarnProtocolConnect,
+  useEarnProtocolSigner,
+  useEarnProtocolSignMessage,
+  useEarnProtocolSendUserOperation,
+} from './hooks/use-earn-wallet-actions'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { vaultFaqData } from './common/faq/vault-faq'
@@ -272,19 +284,6 @@ export { accountKitCookieStateName, forksCookieName } from './constants/cookie-n
 export { BeachClubSteps } from './features/beach-club//BeachClubSteps/BeachClubSteps'
 export { BeachClubRewardSimulation } from './features/beach-club/BeachClubRewardSimulation/BeachClubRewardSimulation'
 export { BeachClubRadialGradient } from './features/beach-club/BeachClubRadialGradient/BeachClubRadialGradient'
-
-// aa kit
-export {
-  queryClient,
-  customAAKitSonicConfig,
-  customAAKitHyperliquidConfig,
-  SDKChainIdToAAChainMap,
-  getAccountKitConfig,
-} from './account-kit/config'
-export { getAccountType, overridesGasSponsorship } from './account-kit/constants'
-export { AccountKitAccountType } from './account-kit/types'
-export { isUserEOA } from './account-kit/helpers/is-user-eoa'
-export { isUserSmartAccount } from './account-kit/helpers/is-user-smart-account'
 
 export {
   VaultExposure,

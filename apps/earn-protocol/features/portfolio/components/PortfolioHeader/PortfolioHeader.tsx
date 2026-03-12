@@ -1,6 +1,5 @@
 import { type FC, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useSigner, useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   DataBlock,
@@ -34,6 +33,7 @@ import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
 import { usePublicClient } from '@/hooks/use-public-client'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
+import { useChain, useUser } from '@/providers/privy/account-kit-react-compat'
 
 import classNames from './PortfolioHeader.module.css'
 
@@ -88,7 +88,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   const { publicClient } = usePublicClient({
     chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
   })
-  const signer = useSigner()
   const { chain, setChain } = useChain()
   // temporary solution
   const { transferAllBalance, isTransferring, tokenInfo } = useTokenTransfer({
@@ -96,7 +95,6 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
     userWallet: user?.address,
     receiverWallet: viewWalletAddress,
     publicClient,
-    signer,
   })
 
   const { features } = useSystemConfig()

@@ -1,6 +1,5 @@
 'use client'
 
-import { Suspense } from 'react'
 import {
   LocalConfigContextProvider,
   type LocalConfigState,
@@ -14,10 +13,10 @@ import { type SavedLargeUserBannerSettings } from '@/components/molecules/LargeU
 import { GlobalEventTracker } from '@/components/organisms/Events/GlobalEventTracker'
 import { DeviceProvider } from '@/contexts/DeviceContext/DeviceContext'
 import { SystemConfigProvider } from '@/contexts/SystemConfigContext/SystemConfigContext'
+import { WalletProvider } from '@/providers/WalletProvider/WalletProvider'
 
 type GlobalProviderProps = {
   children: React.ReactNode
-  accountKitInitializedState?: unknown
   config: Partial<EarnAppConfigType>
   deviceType: DeviceType
   localConfigContextState: Partial<LocalConfigState>
@@ -27,20 +26,12 @@ type GlobalProviderProps = {
   sumrPriceUsd?: number
 }
 
-const AlchemyAccountsProvider = dynamic(
-  () => import('@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'),
-  {
-    ssr: false,
-  },
-)
-
 const TheGame = dynamic(() => import('../../../features/game/components/MainGameView'), {
   ssr: false,
 })
 
 export const GlobalProvider = ({
   children,
-  accountKitInitializedState,
   config,
   deviceType,
   localConfigContextState,
@@ -50,25 +41,23 @@ export const GlobalProvider = ({
   sumrPriceUsd,
 }: GlobalProviderProps) => {
   return (
-    <Suspense>
-      <SystemConfigProvider value={config}>
-        <DeviceProvider value={deviceType}>
-          <LocalConfigContextProvider value={localConfigContextState}>
-            <AlchemyAccountsProvider initialState={accountKitInitializedState}>
-              <GlobalEventTracker />
-              <MasterPage
-                analyticsCookie={analyticsCookie}
-                largeUsersData={largeUsersData}
-                largeUsersCookie={largeUsersCookie}
-                sumrPriceUsd={sumrPriceUsd}
-              >
-                {children}
-              </MasterPage>
-              <TheGame />
-            </AlchemyAccountsProvider>
-          </LocalConfigContextProvider>
-        </DeviceProvider>
-      </SystemConfigProvider>
-    </Suspense>
+    <SystemConfigProvider value={config}>
+      <DeviceProvider value={deviceType}>
+        <LocalConfigContextProvider value={localConfigContextState}>
+          <WalletProvider>
+            <GlobalEventTracker />
+            <MasterPage
+              analyticsCookie={analyticsCookie}
+              largeUsersData={largeUsersData}
+              largeUsersCookie={largeUsersCookie}
+              sumrPriceUsd={sumrPriceUsd}
+            >
+              {children}
+            </MasterPage>
+            <TheGame />
+          </WalletProvider>
+        </LocalConfigContextProvider>
+      </DeviceProvider>
+    </SystemConfigProvider>
   )
 }
