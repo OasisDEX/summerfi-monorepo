@@ -1,18 +1,17 @@
 'use client'
 
 import { type CSSProperties, type MouseEventHandler, useMemo } from 'react'
-import { useAuthModal, useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Dropdown,
   GenericMultiselect,
   type GenericMultiselectOption,
   GenericMultiselectPill,
-  isUserSmartAccount,
   networkNameIconNameMap,
   Text,
   ToggleButton,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownRawOption,
@@ -31,7 +30,6 @@ import {
 } from '@/components/layout/VaultsListView/use-vaults-list-query-params'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { mapTokensToMultiselectOptions } from '@/features/latest-activity/table/filters/mappers'
-import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { isStablecoin } from '@/helpers/is-stablecoin'
 
 import vaultsListViewStyles from './VaultsListView.module.css'
@@ -206,15 +204,15 @@ export const VaultsListFiltersV2 = ({
   filterVaults: string[]
   filterWallet: string
 }) => {
-  const { openAuthModal } = useAuthModal()
+  const { login } = useEarnProtocolLogin()
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const inWalletHandler: MouseEventHandler<HTMLDivElement> = (ev) => {
     ev.preventDefault()
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
 
       return
     }
@@ -319,9 +317,6 @@ export const VaultsFiltersIntermediary = ({
   filterVaults: string[]
   filterWallet: string
 }) => {
-  const user = useUser()
-  const userIsSmartAccount = isUserSmartAccount(user)
-
   const assetsList = useMemo(
     () =>
       mapTokensToMultiselectOptions(vaultsList).filter((option) => {
@@ -371,25 +366,13 @@ export const VaultsFiltersIntermediary = ({
 
   const vaultsNetworksList = useMemo(
     () => [
-      ...[
-        ...new Set(
-          vaultsList
-            .filter((vault) => {
-              if (userIsSmartAccount) {
-                return filterOutNonSCACompatibleVaults([vault]).length > 0
-              }
-
-              return true
-            })
-            .map(({ protocol }) => protocol.network),
-        ),
-      ].map((network) => ({
+      ...[...new Set(vaultsList.map(({ protocol }) => protocol.network))].map((network) => ({
         icon: networkNameIconNameMap[supportedSDKNetwork(network)] as IconNamesList,
         value: network,
         label: capitalize(sdkNetworkToHumanNetwork(supportedSDKNetwork(network))),
       })),
     ],
-    [vaultsList, userIsSmartAccount],
+    [vaultsList],
   )
   const vaultsNetworksOptionGroups = useMemo(() => {
     return [

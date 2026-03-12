@@ -196,13 +196,12 @@ export { useHoldAlt } from './hooks/use-hold-alt'
 export { useApyUpdatedAt } from './hooks/use-apy-updated-at'
 export { useSumrRewardsToDate } from './hooks/use-sumr-rewards-to-date'
 export { useClientChainId } from './hooks/use-client-chain-id'
-export { useUserWallet } from './hooks/use-user-wallet'
 export { useTokenTransfer } from './hooks/use-token-transfer'
 export {
-  useUser,
-  useEarnProtocolAccount,
+  getEarnProtocolChainById,
+  useEarnProtocolWallet,
   useEarnProtocolChain,
-  useEarnProtocolAuthModal,
+  useEarnProtocolLogin,
   useEarnProtocolLogout,
   useEarnProtocolSignerStatus,
   useEarnProtocolConnect,

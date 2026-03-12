@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Card,
   ControlsDepositWithdraw,
@@ -25,6 +24,7 @@ import {
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
+  useUser,
   useUserWallet,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'

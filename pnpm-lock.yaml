@@ -294,12 +294,6 @@ importers:
       knip:
         specifier: 5.64.0
         version: 5.64.0(@types/node@20.14.2)(typescript@5.7.3)
-      postcss:
-        specifier: ^8
-        version: 8.4.47
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.13
       typed-css-modules:
         specifier: 0.9.1
         version: 0.9.1

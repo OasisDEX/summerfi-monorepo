@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   ControlsDepositWithdraw,
   getDisplayToken,
   getMigrationLandingPageUrl,
-  isUserSmartAccount,
   ProjectedEarningsCombined,
   Sidebar,
   SidebarFootnote,
@@ -13,13 +11,13 @@ import {
   type SidebarProps,
   useAmount,
   useAmountWithSwap,
+  useEarnProtocolWallet,
   useForecast,
   useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
-  useUserWallet,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -61,7 +59,6 @@ import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migra
 import { mapMigrationResponse } from '@/features/migration/helpers/map-migration-response'
 import { type MigrationEarningsDataByChainId } from '@/features/migration/types'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
-import { filterOutNonSCACompatibleVaults } from '@/helpers/filter-out-non-sca-compatible-vaults'
 import { getResolvedForecastAmountParsed } from '@/helpers/get-resolved-forecast-amount-parsed'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
@@ -126,14 +123,12 @@ export const VaultOpenViewComponent = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
   const { isMobileOrTablet } = useMobileCheck(deviceType)
-  const userAAKit = useUser()
-  const userIsSmartAccount = isUserSmartAccount(userAAKit)
 
   const { features } = useSystemConfig()
 
   const migrationsEnabled = !!features?.Migrations
 
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
 
@@ -380,21 +375,13 @@ export const VaultOpenViewComponent = ({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
-    walletAddress: userAAKit?.address,
+    walletAddress: userWalletAddress,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
     type: 'default',
     isIframe,
   })
-
-  const filteredVaults = useMemo(() => {
-    if (userIsSmartAccount) {
-      return filterOutNonSCACompatibleVaults(vaults)
-    }
-
-    return vaults
-  }, [vaults, userIsSmartAccount])
 
   const { tosSidebarProps } = useTermsOfServiceSidebar({ tosState, handleGoBack: backToInit })
 
@@ -425,7 +412,7 @@ export const VaultOpenViewComponent = ({
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: nextTransaction,
-    walletAddress: userAAKit?.address,
+    walletAddress: userWalletAddress,
     publicClient,
   })
 
@@ -543,7 +530,7 @@ export const VaultOpenViewComponent = ({
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
         vaultInfo={vaultInfo}
-        vaults={filteredVaults}
+        vaults={vaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
         sumrPrice={sumrPriceUsd}
@@ -579,7 +566,6 @@ export const VaultOpenViewComponent = ({
               <TransakWidget
                 cryptoCurrency={vault.inputToken.symbol}
                 walletAddress={userWalletAddress}
-                email={userAAKit?.email}
                 isOpen={isTransakOpen}
                 onClose={() => setIsTransakOpen(false)}
               />

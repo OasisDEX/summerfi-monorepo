@@ -2,6 +2,11 @@
 
 import { useCallback, useState } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
+import {
+  type SignAuthorizationReturnType,
+  type SignTransactionReturnType,
+  type WalletClient,
+} from 'viem'
 import { arbitrum, base, type Chain, hyperliquid, mainnet, sonic } from 'viem/chains'
 import {
   type Config,
@@ -18,80 +23,68 @@ import {
 } from 'wagmi'
 import { type ConnectData } from 'wagmi/query'
 
-type AccountLike = {
-  address?: `0x${string}`
-}
-
-type UserLike = {
-  address?: `0x${string}`
-}
-
 const supportedChains: Chain[] = [mainnet, arbitrum, base, sonic, hyperliquid]
 
-const fallbackChain = base
+export const getEarnProtocolChainById = (chainId?: number): Chain => {
+  const mappedChain = supportedChains.find((chain) => chain.id === chainId)
 
-const chainById = (id?: number): Chain => {
-  return supportedChains.find((chain) => chain.id === id) ?? fallbackChain
-}
-
-export const useUser = (): UserLike | null => {
-  const { authenticated } = usePrivy()
-  const { address } = useWagmiAccount()
-
-  if (!authenticated || !address) {
-    return null
+  if (!mappedChain) {
+    throw new Error(`Unsupported chainId: ${chainId}`)
   }
 
-  return {
-    address,
-  }
+  return mappedChain
 }
 
-export const useEarnProtocolAccount = (): { account?: AccountLike; isLoadingAccount: boolean } => {
+export const useEarnProtocolWallet = (): {
+  address?: `0x${string}`
+  isLoadingAccount: boolean
+} => {
   const { address, isConnecting, isReconnecting } = useWagmiAccount()
 
   return {
-    account: address ? { address } : undefined,
+    address,
     isLoadingAccount: isConnecting || isReconnecting,
   }
 }
 
 export const useEarnProtocolChain: () => {
   chain: Chain
-  setChain: ({ chain }: { chain: Chain }) => Promise<void>
+  setChain: ({ chain }: { chain: Chain | number }) => Promise<void>
   isSettingChain: boolean
 } = () => {
   const chainId = useChainId()
   const { switchChainAsync, isPending } = useSwitchChain()
 
-  const setChain: ({ chain }: { chain: Chain }) => Promise<void> = useCallback(
-    async ({ chain }: { chain: Chain }) => {
-      await switchChainAsync({ chainId: chain.id })
+  const setChain: ({ chain }: { chain: Chain | number }) => Promise<void> = useCallback(
+    async ({ chain }: { chain: Chain | number }) => {
+      const nextChainId = typeof chain === 'number' ? chain : chain.id
+
+      await switchChainAsync({ chainId: nextChainId })
     },
     [switchChainAsync],
   )
 
   return {
-    chain: chainById(chainId),
+    chain: getEarnProtocolChainById(chainId),
     setChain,
     isSettingChain: isPending,
   }
 }
 
-export const useEarnProtocolAuthModal: () => {
-  openAuthModal: () => void
+export const useEarnProtocolLogin: () => {
+  login: () => void
   isOpen: boolean
 } = () => {
-  const { login, ready } = usePrivy()
+  const { login: privyLogin, ready } = usePrivy()
 
-  const openAuthModal: () => void = useCallback(() => {
+  const login: () => void = useCallback(() => {
     if (ready) {
-      login()
+      privyLogin()
     }
-  }, [login, ready])
+  }, [privyLogin, ready])
 
   return {
-    openAuthModal,
+    login,
     isOpen: false,
   }
 }
@@ -99,16 +92,16 @@ export const useEarnProtocolAuthModal: () => {
 export const useEarnProtocolLogout: () => {
   logout: () => void
 } = () => {
-  const { logout } = usePrivy()
+  const { logout: privyLogout } = usePrivy()
   const { disconnect } = useDisconnect()
 
-  const wrappedLogout = useCallback(() => {
+  const logout = useCallback(() => {
     disconnect()
-    logout()
-  }, [disconnect, logout])
+    privyLogout()
+  }, [disconnect, privyLogout])
 
   return {
-    logout: wrappedLogout,
+    logout,
   }
 }
 
@@ -124,7 +117,7 @@ export const useEarnProtocolSignerStatus: () => {
   }
 }
 
-export const useEarnProtocolConnect: () => {
+type UseEarnProtocolConnect = () => {
   connect: (
     params: {
       chainId?: number | undefined
@@ -136,20 +129,12 @@ export const useEarnProtocolConnect: () => {
       onSettled?: () => void
     },
   ) => Promise<ConnectData<Config>>
-} = () => {
+}
+
+export const useEarnProtocolConnect: UseEarnProtocolConnect = () => {
   const { connectAsync } = useWagmiConnect()
 
-  const connect: (
-    params: {
-      chainId?: number | undefined
-      connector: CreateConnectorFn | Connector
-    },
-    callbacks?: {
-      onError?: (error: unknown) => void
-      onSuccess?: (data: unknown) => void
-      onSettled?: () => void
-    },
-  ) => Promise<ConnectData<Config>> = useCallback(
+  const connect = useCallback(
     async (
       params: Parameters<typeof connectAsync>[0],
       callbacks?: {
@@ -180,11 +165,17 @@ export const useEarnProtocolConnect: () => {
   }
 }
 
-export const useEarnProtocolSigner: () =>
-  | {
-      signMessage: (message: string) => Promise<`0x${string}`>
-    }
-  | undefined = () => {
+type EarnProtocolSigner = {
+  signMessage: (message: string) => Promise<`0x${string}`>
+  signTransaction: (
+    transaction: Parameters<WalletClient['signTransaction']>[0],
+  ) => Promise<SignTransactionReturnType>
+  signAuthorization: (
+    transaction: Parameters<WalletClient['signAuthorization']>[0],
+  ) => Promise<SignAuthorizationReturnType>
+}
+
+export const useEarnProtocolSigner = (): EarnProtocolSigner | undefined => {
   const { data: walletClient } = useWalletClient()
 
   if (!walletClient) {
@@ -192,7 +183,14 @@ export const useEarnProtocolSigner: () =>
   }
 
   return {
-    signMessage: (message: string) => walletClient.signMessage({ message }),
+    signMessage: async (message: string): Promise<`0x${string}`> =>
+      await walletClient.signMessage({ message }),
+    signTransaction: async (
+      transaction: Parameters<WalletClient['signTransaction']>[0],
+    ): Promise<SignTransactionReturnType> => await walletClient.signTransaction(transaction),
+    signAuthorization: async (
+      transaction: Parameters<WalletClient['signAuthorization']>[0],
+    ): Promise<SignAuthorizationReturnType> => await walletClient.signAuthorization(transaction),
   }
 }
 
@@ -276,7 +274,7 @@ export const useEarnProtocolSendUserOperation: ({
           to: uo.target,
           data: uo.data,
           value: uo.value ?? 0n,
-          chain: chainById(walletClient.chain.id),
+          chain: getEarnProtocolChainById(walletClient.chain.id),
         })
 
         if (waitForTxn && publicClient) {
