@@ -1,14 +1,13 @@
 import { type Dispatch, type FC, useEffect } from 'react'
-import { useUser } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,
-  SDKChainIdToAAChainMap,
+  getEarnProtocolChainById,
   Text,
   useClientChainId,
+  useEarnProtocolWallet,
   useIsIframe,
   useMobileCheck,
-  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -44,8 +43,7 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const user = useUser()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { activeParagraph, paragraphRefs } = useVisibleParagraph()
   const { clientChainId } = useClientChainId()
 
@@ -53,14 +51,14 @@ export const ClaimDelegateAcceptanceStep: FC<ClaimDelegateAcceptanceStepProps> =
   const isIframe = useIsIframe()
 
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[clientChainId as SupportedNetworkIds],
+    chain: getEarnProtocolChainById(clientChainId as SupportedNetworkIds),
   })
 
   const tosState = useTermsOfService({
     publicClient,
     signMessage: signTosMessage,
     chainId: clientChainId,
-    walletAddress: user?.address,
+    walletAddress: userWalletAddress,
     version: TermsOfServiceVersion.SUMR_CLAIM_TOKEN_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
     host: '/earn',

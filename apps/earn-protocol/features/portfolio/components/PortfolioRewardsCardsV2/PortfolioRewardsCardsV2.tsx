@@ -426,7 +426,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
 
   const handleClaimRewards = async () => {
     if (!isProperChain) {
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }

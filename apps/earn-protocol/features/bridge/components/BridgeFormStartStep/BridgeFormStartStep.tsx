@@ -1,13 +1,13 @@
 import { type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   ERROR_TOAST_CONFIG,
   InputWithDropdown,
   Sidebar,
   SUCCESS_TOAST_CONFIG,
   useAmount,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
@@ -52,8 +52,9 @@ export const BridgeFormStartStep: FC<BridgeFormStartStepProps> = ({
   sumrPriceUsd,
 }) => {
   const router = useRouter()
-  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useChain()
-  const { userWalletAddress, isLoadingAccount: isUserWalletLoading } = useUserWallet()
+  const { chain: sourceChain, setChain: setSourceChain, isSettingChain } = useEarnProtocolChain()
+  const { address: userWalletAddress, isLoadingAccount: isUserWalletLoading } =
+    useEarnProtocolWallet()
   const sourceNetwork = chainIdToSDKNetwork(sourceChain.id)
   const humanNetworkName = sdkNetworkToHumanNetwork(sourceNetwork)
   const searchParams = useSearchParams()

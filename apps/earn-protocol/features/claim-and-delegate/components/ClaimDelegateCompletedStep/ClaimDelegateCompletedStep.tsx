@@ -1,5 +1,4 @@
 import type { FC } from 'react'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,
@@ -7,6 +6,7 @@ import {
   Icon,
   LoadableAvatar,
   Text,
+  useEarnProtocolChain,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
@@ -175,7 +175,7 @@ export const ClaimDelegateCompletedStep: FC<ClaimDelegateCompletedStepProps> = (
   sumrPriceUsd,
 }) => {
   const { walletAddress } = useParams()
-  const { chain } = useChain()
+  const { chain } = useEarnProtocolChain()
 
   const sumrClaimedStepBefore =
     state.claimStatus === UiTransactionStatuses.COMPLETED

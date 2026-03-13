@@ -1,16 +1,16 @@
 'use client'
+
 import {
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { getAccountType, useIsIframe, useUserWallet } from '@summerfi/app-earn-ui'
+  useEarnProtocolSendUserOperation,
+  useEarnProtocolWallet,
+  useIsIframe,
+} from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, type SupportedSDKNetworks } from '@summerfi/app-types'
 import { sdkNetworkToChain } from '@summerfi/app-utils'
 import { type ChainId } from '@summerfi/sdk-common'
 import { type PublicClient } from 'viem'
 
 import { AQ_BASE_ADDRESS } from '@/constants/addresses'
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
@@ -41,10 +41,6 @@ export const useClaimSumrTransaction = ({
 } => {
   const { getAggregatedClaimsForChainTx, getCurrentUser, getChainInfo } = useAppSDK()
 
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(sdkNetworkToChain(network).id),
-  })
-
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,
     onSuccess,
@@ -58,8 +54,7 @@ export const useClaimSumrTransaction = ({
     sendUserOperationAsync,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess,
     onError,
@@ -84,19 +79,11 @@ export const useClaimSumrTransaction = ({
       value: BigInt(tx[0].transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
     if (isIframe) {
       return sendSafeWalletTransaction(txParams)
     }
 
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
+    return await sendUserOperationAsync(txParams)
   }
 
   return {
@@ -135,11 +122,7 @@ export const useApproveStakingRewardsCallerTransaction = ({
 
   const sdkNetwork = sdkNetworkToChain(network)
 
-  const { userWalletAddress } = useUserWallet()
-
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(sdkNetwork.id),
-  })
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,
@@ -154,8 +137,7 @@ export const useApproveStakingRewardsCallerTransaction = ({
     sendUserOperationAsync,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess,
     onError,
@@ -173,6 +155,7 @@ export const useApproveStakingRewardsCallerTransaction = ({
       userAddress: userWalletAddress as `0x${string}`,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (tx === undefined) {
       throw new Error('authorize staking rewards caller tx is undefined')
     }
@@ -183,19 +166,11 @@ export const useApproveStakingRewardsCallerTransaction = ({
       value: BigInt(tx[0].transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
     if (isIframe) {
       return sendSafeWalletTransaction(txParams)
     }
 
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
+    return await sendUserOperationAsync(txParams)
   }
 
   return {

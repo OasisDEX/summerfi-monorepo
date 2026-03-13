@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { ERROR_TOAST_CONFIG, getAccountType, SUCCESS_TOAST_CONFIG } from '@summerfi/app-earn-ui'
+  ERROR_TOAST_CONFIG,
+  SUCCESS_TOAST_CONFIG,
+  useEarnProtocolSendUserOperation,
+} from '@summerfi/app-earn-ui'
 import { NetworkIds, type TransactionWithStatus } from '@summerfi/app-types'
 import { User } from '@summerfi/sdk-common'
 import BigNumber from 'bignumber.js'
@@ -12,7 +12,6 @@ import { debounce } from 'lodash-es'
 import { waitForTransactionReceipt } from 'viem/actions'
 
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useNetworkAlignedClient } from '@/hooks/use-network-aligned-client'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
@@ -43,19 +42,16 @@ export const useUnstakeSumrTransaction = ({
 } => {
   const { getUnstakeTx } = useAppSDK()
   const [isLocalTxLoading, setIsLocalTxLoading] = useState(false)
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(NetworkIds.BASEMAINNET),
-  })
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })
 
-  const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
-    client: smartAccountClient,
-    waitForTxn: true,
-    onSuccess,
-    onError,
-  })
+  const { sendUserOperationAsync, error, isSendingUserOperation } =
+    useEarnProtocolSendUserOperation({
+      waitForTxn: true,
+      onSuccess,
+      onError,
+    })
 
   const unstakeSumrTransaction = async () => {
     const tx = await getUnstakeTx({ amount })
@@ -71,15 +67,7 @@ export const useUnstakeSumrTransaction = ({
       value: BigInt(tx[0].transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    }).then(async (result) => {
+    return await sendUserOperationAsync(txParams).then(async (result) => {
       setIsLocalTxLoading(true)
       await waitForTransactionReceipt(publicClient, {
         hash: result.hash,
@@ -129,9 +117,6 @@ export const useUnstakeV2SumrTransaction = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(NetworkIds.BASEMAINNET),
-  })
   // debounce amount by 500ms to avoid rapid calls to getUnstakeTxV2
   const [debouncedAmount, setDebouncedAmount] = useState<bigint>(amountParsed)
   const debouncedSetAmount = useMemo(
@@ -150,17 +135,17 @@ export const useUnstakeV2SumrTransaction = ({
     }
   }, [amountParsed, debouncedSetAmount])
 
-  const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
-    client: smartAccountClient,
-    waitForTxn: true,
-    onSuccess: () => {
-      toast.success('Transaction successful', SUCCESS_TOAST_CONFIG)
-      revalidateUser(userAddress)
-    },
-    onError: () => {
-      toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
-    },
-  })
+  const { sendUserOperationAsync, error, isSendingUserOperation } =
+    useEarnProtocolSendUserOperation({
+      waitForTxn: true,
+      onSuccess: () => {
+        toast.success('Transaction successful', SUCCESS_TOAST_CONFIG)
+        revalidateUser(userAddress)
+      },
+      onError: () => {
+        toast.error('Failed to unstake $SUMR tokens', ERROR_TOAST_CONFIG)
+      },
+    })
 
   useEffect(() => {
     // refetchStakingData after all transactions are executed
@@ -221,41 +206,31 @@ export const useUnstakeV2SumrTransaction = ({
       value: BigInt(nextTransaction.transaction.value),
     }
 
-    return await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-      .then((resolvedOverrides) =>
-        sendUserOperationAsync({
-          uo: txParams,
-          overrides: resolvedOverrides,
-        }),
-      )
-      .then(async (result) => {
-        setIsLocalTxLoading(true)
-        await waitForTransactionReceipt(publicClient, {
-          hash: result.hash,
-          confirmations: 2,
-        }).finally(() => {
-          setIsLocalTxLoading(false)
-          setTransactionQueue((prevQueue) => {
-            if (!prevQueue) return prevQueue
+    return await sendUserOperationAsync(txParams).then(async (result) => {
+      setIsLocalTxLoading(true)
+      await waitForTransactionReceipt(publicClient, {
+        hash: result.hash,
+        confirmations: 2,
+      }).finally(() => {
+        setIsLocalTxLoading(false)
+        setTransactionQueue((prevQueue) => {
+          if (!prevQueue) return prevQueue
 
-            const updatedQueue = prevQueue.map((tx) => {
-              if (tx.type === nextTransaction.type) {
-                return { ...tx, executed: true }
-              }
+          const updatedQueue = prevQueue.map((tx) => {
+            if (tx.type === nextTransaction.type) {
+              return { ...tx, executed: true }
+            }
 
-              return tx
-            })
-
-            return updatedQueue
+            return tx
           })
-        })
 
-        return result
+          return updatedQueue
+        })
       })
-  }, [nextTransaction, sendUserOperationAsync, smartAccountClient, publicClient])
+
+      return result
+    })
+  }, [nextTransaction, sendUserOperationAsync, publicClient])
 
   return {
     triggerNextTransaction,

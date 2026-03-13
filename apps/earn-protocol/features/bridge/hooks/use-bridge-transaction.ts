@@ -1,6 +1,6 @@
 'use client'
 import { useCallback, useState } from 'react'
-import { getAccountType } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   type BridgeTransactionInfo,
@@ -15,13 +15,7 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { type Chain, formatEther } from 'viem'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
-import {
-  type SendUserOperationWithEOA,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
 
 // Mapping for USDC token symbols by chain ID
 const USDC_SYMBOL_BY_CHAIN_ID: { [key: number]: string } = {
@@ -143,7 +137,7 @@ interface BridgeTransactionDetails {
   prepareTransaction: (overrideAmount?: string) => void
   /** Executes the prepared bridge transaction */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  executeBridgeTransaction: () => Promise<SendUserOperationWithEOA<any> | undefined>
+  executeBridgeTransaction: () => Promise<{ hash: `0x${string}` } | undefined>
   /** Clears the current transaction state */
   clearTransaction: () => void
   /** Current transaction details */
@@ -183,12 +177,8 @@ export function useBridgeTransaction({
   const [transaction, setTransaction] = useState<BridgeTransactionInfoWithLzFeeUsd | undefined>()
 
   const { getBridgeTx, getCurrentUser, getTargetChainInfo, getSummerToken } = useAppSDK()
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(sourceChain.id),
-  })
 
-  const { sendUserOperationAsync, isSendingUserOperation } = useSendUserOperation({
-    client: smartAccountClient,
+  const { sendUserOperationAsync, isSendingUserOperation } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess,
     onError,
@@ -221,6 +211,7 @@ export function useBridgeTransaction({
           }),
         })
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!bridgeTx) {
           throw new Error('Bridge transaction is undefined')
         }
@@ -301,22 +292,16 @@ export function useBridgeTransaction({
         value: BigInt(transaction.transaction.value),
       }
 
-      const resolvedOverrides = await getGasSponsorshipOverride({
-        smartAccountClient,
-        txParams,
-      })
-
-      return await sendUserOperationAsync({
-        uo: txParams,
-        overrides: resolvedOverrides,
-      })
+      return await sendUserOperationAsync(txParams)
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error occurred'))
       onError()
+
+      return undefined
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, transaction, smartAccountClient, sendUserOperationAsync, onError])
+  }, [isLoading, transaction, sendUserOperationAsync, onError])
 
   return {
     prepareTransaction,

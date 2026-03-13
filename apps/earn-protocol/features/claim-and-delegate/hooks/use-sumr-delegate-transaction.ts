@@ -1,12 +1,6 @@
-import {
-  useChain,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { getAccountType } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation } from '@summerfi/app-earn-ui'
 import { type AddressValue } from '@summerfi/sdk-common'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
 /**
@@ -31,15 +25,12 @@ export const useSumrDelegateTransaction = ({
   error: Error | null
 } => {
   const { getDelegateTxV2 } = useAppSDK()
-  const { chain } = useChain()
-  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
-
-  const { sendUserOperationAsync, error, isSendingUserOperation } = useSendUserOperation({
-    client,
-    waitForTxn: true,
-    onSuccess,
-    onError,
-  })
+  const { sendUserOperationAsync, error, isSendingUserOperation } =
+    useEarnProtocolSendUserOperation({
+      waitForTxn: true,
+      onSuccess,
+      onError,
+    })
 
   const sumrDelegateTransaction = async (delegateTo?: string) => {
     if (!delegateTo) {
@@ -48,6 +39,7 @@ export const useSumrDelegateTransaction = ({
 
     const tx = await getDelegateTxV2({ delegateeAddress: delegateTo as AddressValue })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (tx === undefined) {
       throw new Error('Sumr delegate tx is undefined')
     }
@@ -58,15 +50,7 @@ export const useSumrDelegateTransaction = ({
       value: BigInt(tx[0].transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient: client,
-      txParams,
-    })
-
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
+    return await sendUserOperationAsync(txParams)
   }
 
   return {

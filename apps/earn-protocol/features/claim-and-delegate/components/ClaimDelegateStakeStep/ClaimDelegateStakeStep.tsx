@@ -1,6 +1,5 @@
 import { type Dispatch, type FC } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   Card,
@@ -8,15 +7,15 @@ import {
   ERROR_TOAST_CONFIG,
   Icon,
   InputWithDropdown,
-  SDKChainIdToAAChainMap,
   SkeletonLine,
   SUCCESS_TOAST_CONFIG,
   TabBar,
   Text,
   useAmount,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
@@ -112,14 +111,14 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const inputChangeHandler = useHandleInputChangeEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = (
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
 
-  const { setChain } = useChain()
+  const { setChain } = useEarnProtocolChain()
   const { clientChainId } = useClientChainId()
 
   const { publicClient } = usePublicClient({ chain: base })
@@ -218,7 +217,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
   const handleStake = async () => {
     // staking is only supported on base
     if (!isBase) {
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }
@@ -276,7 +275,7 @@ export const ClaimDelegateStakeStep: FC<ClaimDelegateStakeStepProps> = ({
     // unstaking is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }

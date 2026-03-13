@@ -1,6 +1,5 @@
 import { type Dispatch, type FC, useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import { MessageStatus } from '@layerzerolabs/scan-client'
 import {
   Alert,
@@ -12,6 +11,7 @@ import {
   Sidebar,
   SUCCESS_TOAST_CONFIG,
   Text,
+  useEarnProtocolChain,
 } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
@@ -35,7 +35,7 @@ interface BridgeFormPendingStepProps {
 }
 
 export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, dispatch }) => {
-  const { chain: sourceChain } = useChain()
+  const { chain: sourceChain } = useEarnProtocolChain()
   const searchParams = useSearchParams()
   const viaParam = searchParams.get('via')
 
@@ -121,11 +121,13 @@ export const BridgeFormPendingStep: FC<BridgeFormPendingStepProps> = ({ state, d
           <div className={styles.networkIconsWrapper}>
             <div className={styles.networkIcon}>
               <Icon iconName="sumr" size={18} className={styles.sumrIcon} />
+              {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
               {sourceNetworkIcon && <Icon size={52} iconName={sourceNetworkIcon} />}
             </div>
             <div className={styles.joiner} />
             <div className={styles.networkIcon}>
               <Icon iconName="sumr" size={18} className={styles.sumrIcon} />
+              {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
               {destinationNetworkIcon && <Icon size={52} iconName={destinationNetworkIcon} />}
             </div>
           </div>

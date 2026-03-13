@@ -1,4 +1,4 @@
-import { useChain } from '@/providers/privy/account-kit-react-compat'
+import { useEarnProtocolChain } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
@@ -23,7 +23,7 @@ export const NetworkBalances = ({
   sumrBalances,
   destinationChainId,
 }: NetworkBalancesProps) => {
-  const { chain: sourceChain } = useChain()
+  const { chain: sourceChain } = useEarnProtocolChain()
 
   if (!amount || new BigNumber(amount).isNaN() || new BigNumber(amount).isLessThan(0)) {
     return (

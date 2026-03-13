@@ -1,15 +1,14 @@
 import { type Dispatch, type FC, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   ERROR_TOAST_CONFIG,
   MobileDrawer,
   Modal,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   AuthorizedStakingRewardsCallerBaseStatus,
@@ -98,12 +97,12 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
     cookiePrefix: TermsOfServiceCookiePrefix.SUMR_CLAIM_TOKEN,
   })
 
-  const { setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain } = useEarnProtocolChain()
   const { clientChainId } = useClientChainId()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateUser = useRevalidateUser()
   const isOwner = state.walletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
 
@@ -299,7 +298,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
 
     if (Number(clientChainId) !== Number(chainId)) {
       dispatch({ type: 'set-pending-claim', payload: chainId })
-      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+      setChain({ chain: chainId })
 
       return
     }
@@ -355,7 +354,7 @@ export const ClaimDelegateClaimStep: FC<ClaimDelegateClaimStepProps> = ({
   // chainId for now will always be Base as we support Merkl on base only
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
     if (Number(clientChainId) !== Number(chainId)) {
-      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+      setChain({ chain: chainId })
 
       return
     }

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
-  useChain,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { getAccountType, SDKChainIdToAAChainMap, useIsIframe } from '@summerfi/app-earn-ui'
+  useEarnProtocolChain,
+  useEarnProtocolSendUserOperation,
+  useIsIframe,
+} from '@summerfi/app-earn-ui'
 import { type Address, type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
-import { chainIdToSDKNetwork, supportedSDKNetworkId } from '@summerfi/app-utils'
+import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import {
   type ApproveTransactionInfo,
   getChainInfoByChainId,
@@ -15,7 +14,6 @@ import {
 } from '@summerfi/sdk-common'
 
 import { MigrationSteps } from '@/features/migration/types'
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -67,13 +65,10 @@ export const useMigrationTransaction = ({
   step: MigrationSteps
   vaultChainId: SupportedNetworkIds
 }) => {
-  const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[supportedSDKNetworkId(vaultChainId)],
-  })
   const isIframe = useIsIframe()
   const { getMigrateTx } = useAppSDK()
-  const { chain } = useChain()
-  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
+  const { chain } = useEarnProtocolChain()
+  const { publicClient } = usePublicClient({ chain })
   const [waitingForTx, setWaitingForTx] = useState<TransactionHash>()
   const [txHashes, setTxHashes] = useState<
     { type: TransactionType; hash?: string; custom?: string }[]
@@ -154,8 +149,7 @@ export const useMigrationTransaction = ({
     sendUserOperationAsync: sendApproveTransaction,
     error: sendApproveTransactionError,
     isSendingUserOperation: isSendingApproveTransaction,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       onSuccessHandler({
@@ -172,8 +166,7 @@ export const useMigrationTransaction = ({
     sendUserOperationAsync: sendMigrateTransaction,
     error: sendMigrationTransactionError,
     isSendingUserOperation: isSendingMigrationTransaction,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       onSuccessHandler({
@@ -213,15 +206,7 @@ export const useMigrationTransaction = ({
             value: BigInt(tx[0][0].transaction.value),
           }
 
-          const resolvedOverrides = await getGasSponsorshipOverride({
-            smartAccountClient,
-            txParams,
-          })
-
-          return await sendApproveTransaction({
-            uo: txParams,
-            overrides: resolvedOverrides,
-          })
+          return await sendApproveTransaction(txParams)
         }
 
         const _migrateTransaction = async () => {
@@ -231,15 +216,7 @@ export const useMigrationTransaction = ({
             value: BigInt(tx[1].transaction.value),
           }
 
-          const resolvedOverrides = await getGasSponsorshipOverride({
-            smartAccountClient,
-            txParams,
-          })
-
-          return await sendMigrateTransaction({
-            uo: txParams,
-            overrides: resolvedOverrides,
-          })
+          return await sendMigrateTransaction(txParams)
         }
 
         setApproveTransaction({ tx: _approveTransaction, txData: tx[0][0] })
@@ -254,15 +231,7 @@ export const useMigrationTransaction = ({
             value: BigInt(tx[0].transaction.value),
           }
 
-          const resolvedOverrides = await getGasSponsorshipOverride({
-            smartAccountClient,
-            txParams,
-          })
-
-          return await sendMigrateTransaction({
-            uo: txParams,
-            overrides: resolvedOverrides,
-          })
+          return await sendMigrateTransaction(txParams)
         }
 
         setMigrationTransaction({ tx: _migrateTransaction, txData: tx[0] })
@@ -272,15 +241,7 @@ export const useMigrationTransaction = ({
     void fetchMigrateTx()
     // sendApproveTransaction and sendMigrateTransaction were skipped on purpose
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    getMigrateTx,
-    smartAccountClient,
-    walletAddress,
-    fleetAddress,
-    positionId,
-    slippage,
-    vaultChainId,
-  ])
+  }, [getMigrateTx, walletAddress, fleetAddress, positionId, slippage, vaultChainId])
 
   useEffect(() => {
     if (waitingForTx) {

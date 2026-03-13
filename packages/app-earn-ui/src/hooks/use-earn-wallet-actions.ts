@@ -211,39 +211,40 @@ export const useEarnProtocolSignMessage: () => {
   }
 }
 
-export const useEarnProtocolSendUserOperation: ({
+type useEarnProtocolSendUserOperationType = ({
   waitForTxn,
   onSuccess,
   onError,
 }: {
-  client?: unknown
   waitForTxn?: boolean | undefined
   onSuccess?: ((data: { hash: `0x${string}` }) => void) | undefined
-  onError?: ((error: unknown) => void) | undefined
+  onError?: ((error: Error) => void) | undefined
 }) => {
   sendUserOperation: (params: {
-    uo: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint | undefined
-    }
-    overrides?: unknown
+    target: `0x${string}`
+    data: `0x${string}`
+    value?: bigint | undefined
   }) => void
   sendUserOperationAsync: ({
-    uo,
+    target,
+    data,
+    value,
   }: {
-    uo: {
-      target: `0x${string}`
-      data: `0x${string}`
-      value?: bigint | undefined
-    }
-    overrides?: unknown
+    target: `0x${string}`
+    data: `0x${string}`
+    value?: bigint | undefined
   }) => Promise<{
     hash: `0x${string}`
   }>
   error: Error | null
   isSendingUserOperation: boolean
-} = ({ waitForTxn = true, onSuccess, onError }) => {
+}
+
+export const useEarnProtocolSendUserOperation: useEarnProtocolSendUserOperationType = ({
+  waitForTxn = true,
+  onSuccess,
+  onError,
+}) => {
   const { data: walletClient } = useWalletClient()
   const publicClient = usePublicClient()
   const [isSendingUserOperation, setIsSendingUserOperation] = useState(false)
@@ -251,10 +252,13 @@ export const useEarnProtocolSendUserOperation: ({
 
   const sendUserOperationAsync = useCallback(
     async ({
-      uo,
+      data,
+      target,
+      value,
     }: {
-      uo: { target: `0x${string}`; data: `0x${string}`; value?: bigint }
-      overrides?: unknown
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint
     }) => {
       if (!walletClient) {
         const missingWalletError = new Error('Wallet is not connected')
@@ -271,9 +275,9 @@ export const useEarnProtocolSendUserOperation: ({
 
         const hash = await walletClient.sendTransaction({
           account: walletClient.account,
-          to: uo.target,
-          data: uo.data,
-          value: uo.value ?? 0n,
+          to: target,
+          data,
+          value: value ?? 0n,
           chain: getEarnProtocolChainById(walletClient.chain.id),
         })
 

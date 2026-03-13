@@ -2,22 +2,17 @@
 import { type ChangeEvent, type FC, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
-  useChain,
-  useSignMessage,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import {
   Button,
   Dropdown,
   ERROR_TOAST_CONFIG,
-  getAccountType,
   Icon,
   Input,
   INTERNAL_LINKS,
   LoadingSpinner,
   SUCCESS_TOAST_CONFIG,
   Text,
-  useUserWallet,
+  useEarnProtocolSignMessage,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption } from '@summerfi/app-types'
 import { handleCaptcha, RECAPTCHA_SITE_KEY } from '@summerfi/app-utils'
@@ -142,12 +137,8 @@ interface MerchandiseFormProps {
 }
 
 export const MerchandiseForm: FC<MerchandiseFormProps> = ({ type, walletAddress }) => {
-  const { chain } = useChain()
-  const { client } = useSmartAccountClient({ type: getAccountType(chain.id) })
-  const { signMessageAsync } = useSignMessage({
-    client,
-  })
-  const { userWalletAddress } = useUserWallet()
+  const { signMessageAsync } = useEarnProtocolSignMessage()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [merchFormStatus, setMerchFormStatus] = useState<MerchandiseFormStatus>(
     MerchandiseFormStatus.IDLE,
   )
