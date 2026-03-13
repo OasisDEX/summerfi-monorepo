@@ -32,15 +32,15 @@ export const getMerklRewardsByFleetAddressFallback = (
       dataForChain = {
         // usdc low risk
         '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17': [
-          { token, dailyEmission: normalizeRewardAmount('9898') },
+          { token, dailyEmission: normalizeRewardAmount('18111') },
         ],
         // eurc low risk
         '0x64db8f51f1bf7064bb5a361a7265f602d348e0f0': [
-          { token, dailyEmission: normalizeRewardAmount('3192') },
+          { token, dailyEmission: normalizeRewardAmount('4590') },
         ],
         // eth low risk
         '0x2bb9ad69feba5547b7cd57aafe8457d40bf834af': [
-          { token, dailyEmission: normalizeRewardAmount('24284') },
+          { token, dailyEmission: normalizeRewardAmount('12453') },
         ],
       }
       break
@@ -49,11 +49,11 @@ export const getMerklRewardsByFleetAddressFallback = (
       dataForChain = {
         // usdc low risk
         '0x71d77c39db0eb5d086611a2e950198e3077cf58a': [
-          { token, dailyEmission: normalizeRewardAmount('16221') },
+          { token, dailyEmission: normalizeRewardAmount('4186') },
         ],
         // usdt low risk
         '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17': [
-          { token, dailyEmission: normalizeRewardAmount('2850') },
+          { token, dailyEmission: normalizeRewardAmount('731') },
         ],
         // usdc low risk (hacked, old)
         '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58': [
@@ -66,31 +66,31 @@ export const getMerklRewardsByFleetAddressFallback = (
       dataForChain = {
         // eth low risk
         '0x67e536797570b3d8919df052484273815a0ab506': [
-          { token, dailyEmission: normalizeRewardAmount('78226') },
+          { token, dailyEmission: normalizeRewardAmount('53373') },
         ],
         // eth high risk
         '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10': [
-          { token, dailyEmission: normalizeRewardAmount('47957') },
+          { token, dailyEmission: normalizeRewardAmount('62274') },
         ],
         // usdc low risk
         '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17': [
-          { token, dailyEmission: normalizeRewardAmount('42163') },
+          { token, dailyEmission: normalizeRewardAmount('69276') },
         ],
         // usdc high risk
         '0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06': [
-          { token, dailyEmission: normalizeRewardAmount('17054') },
+          { token, dailyEmission: normalizeRewardAmount('22884') },
         ],
         // usdt low risk
         '0x17ee2d03e88b55e762c66c76ec99c3a28a54ad8d': [
-          { token, dailyEmission: normalizeRewardAmount('3717') },
+          { token, dailyEmission: normalizeRewardAmount('2934') },
         ],
         // usdc (DAO)
         '0xd77f9a9f2b0c160db3e9dc2cce370c1a740c76fc': [
-          { token, dailyEmission: normalizeRewardAmount('4900') },
+          { token, dailyEmission: normalizeRewardAmount('4850') },
         ],
         // eth (DAO)
         '0x0c1fbccc019320032d9acd193447560c8c632114': [
-          { token, dailyEmission: normalizeRewardAmount('4900') },
+          { token, dailyEmission: normalizeRewardAmount('4850') },
         ],
       }
       break
@@ -99,7 +99,7 @@ export const getMerklRewardsByFleetAddressFallback = (
       dataForChain = {
         // usdc.e low risk
         '0x507a2d9e87dbd3076e65992049c41270b47964f8': [
-          { token, dailyEmission: normalizeRewardAmount('4198') },
+          { token, dailyEmission: normalizeRewardAmount('4225') },
         ],
       }
       break
@@ -108,11 +108,11 @@ export const getMerklRewardsByFleetAddressFallback = (
       dataForChain = {
         // usdc
         '0x252e5aa42c1804b85b2ce6712cd418a0561232ba': [
-          { token, dailyEmission: normalizeRewardAmount('8826') },
+          { token, dailyEmission: normalizeRewardAmount('5466') },
         ],
         // usdt
         '0x2cc190fb654141dfbeac4c0f718f4d511674d346': [
-          { token, dailyEmission: normalizeRewardAmount('8826') },
+          { token, dailyEmission: normalizeRewardAmount('2214') },
         ],
       }
       break
