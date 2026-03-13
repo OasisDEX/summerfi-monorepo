@@ -124,7 +124,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       fromSymbol: 'USDC',
       amountValue: '1',
       fleetAddressValue: FleetAddresses.Base.ETH,
-      sendOrder: true,
+      sendOrder: false,
       cancelOrder: false,
       authorizePermit2: true,
     },
@@ -211,29 +211,38 @@ describe('Intent swaps: Swap with Deposit', () => {
         assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
+      const ownerAddress = senderAddress.toSolidityValue()
+      const spenderAddress = spenderAddressValue
+      const permitAmount = sellQuote.toAmount.toSolidityValue()
+      const permitTokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
+      const referralCode = '0x'
+
+      console.log('Permit', { permitAmount, permitTokenAddress })
+
+      const { permitData, signature } = await _createPermit2Data({
+        chainId,
+        account,
+        tokenAddress: permitTokenAddress,
+        amount: permitAmount,
+        spenderAddress,
+      })
+
       if (sendOrder === false) {
         console.log('Skipping sending order')
         return
       }
 
-      const ownerAddress = senderAddress.toSolidityValue()
-      const spenderAddress = spenderAddressValue
-      const amount = sellQuote.toAmount.toSolidityValue()
-      const tokenAddress = sellQuote.toAmount.token.address.toSolidityValue()
-      const referralCode = '0x'
-
-      const { permitData, signature } = await _createPermit2Data({
-        chainId,
-        tokenAddress,
-        amount,
-        spenderAddress,
-        account,
-      })
-
       const enterFleetCallData = encodeFunctionData({
         abi: admiralsQuartersAbi,
         functionName: 'enterFleetWithPermit2',
-        args: [ownerAddress, fleetCommanderAddress, amount, referralCode, permitData, signature],
+        args: [
+          ownerAddress,
+          fleetCommanderAddress,
+          permitAmount,
+          referralCode,
+          permitData,
+          signature,
+        ],
       })
       const multicallCallData = encodeFunctionData({
         abi: admiralsQuartersAbi,
