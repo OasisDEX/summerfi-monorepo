@@ -1,6 +1,5 @@
 'use client'
 import { type Dispatch, type FC } from 'react'
-import { useAuthModal } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   DataModule,
@@ -9,7 +8,8 @@ import {
   SUMR_CAP,
   Text,
   Tooltip,
-  useUserWallet,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import {
   ADDRESS_ZERO,
@@ -40,13 +40,13 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
-  const { openAuthModal } = useAuthModal()
+  const { login } = useEarnProtocolLogin()
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
   const rawSumrUSD = rawSumr * sumrPriceUsd
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const resolvedWalletAddress = walletAddress as string
 
@@ -57,7 +57,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
   const handleConnect = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-claim-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
   }
 
@@ -123,8 +123,8 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
-  const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login } = useEarnProtocolLogin()
   const rawApy = rewardsData.sumrStakingInfo.sumrStakingApy
   const isDelegated = rewardsData.sumrStakeDelegate.delegatedToV2 !== ADDRESS_ZERO
   const rawStaked = isDelegated ? rewardsData.sumrStakeDelegate.stakedAmount : '0'
@@ -140,7 +140,7 @@ const StakedAndDelegatedSumr: FC<StakedAndDelegatedSumrProps> = ({ rewardsData }
   const handleConnect = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-staked-sumr-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
   }
 
@@ -240,8 +240,8 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
-  const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login } = useEarnProtocolLogin()
 
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedToV2.toLowerCase()
@@ -286,7 +286,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const handleConnect = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
   }
 

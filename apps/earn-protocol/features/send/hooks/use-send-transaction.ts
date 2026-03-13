@@ -1,15 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds, type TransactionHash } from '@summerfi/app-types'
 import { chainIdToSDKNetwork } from '@summerfi/app-utils'
 import { Address, type IToken, TransactionType } from '@summerfi/sdk-common'
 import { encodeFunctionData, type PublicClient } from 'viem'
 
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { isValidAddress } from '@/helpers/is-valid-address'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
@@ -31,7 +26,6 @@ export const useSendTransaction = ({
   chainId: SupportedNetworkIds
   publicClient: PublicClient
 }) => {
-  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chainId) })
   const isIframe = useIsIframe()
   const [waitingForTx, setWaitingForTx] = useState<TransactionHash>()
   const [txHashes, setTxHashes] = useState<
@@ -100,8 +94,7 @@ export const useSendTransaction = ({
     [isIframe, chainId],
   )
 
-  const { sendUserOperationAsync, isSendingUserOperation } = useSendUserOperation({
-    client: smartAccountClient,
+  const { sendUserOperationAsync, isSendingUserOperation } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       onSuccessHandler({
@@ -173,16 +166,8 @@ export const useSendTransaction = ({
       value: BigInt(transactionData.transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
-    await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
-  }, [transactionData, sendUserOperationAsync, smartAccountClient])
+    await sendUserOperationAsync(txParams)
+  }, [transactionData, sendUserOperationAsync])
 
   useEffect(() => {
     if (waitingForTx) {

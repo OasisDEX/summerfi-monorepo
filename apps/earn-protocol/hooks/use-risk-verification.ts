@@ -1,6 +1,9 @@
 import { useCallback } from 'react'
-import { useLogout } from '@/providers/privy/account-kit-react-compat'
-import { useClientChainId, useUserWallet } from '@summerfi/app-earn-ui'
+import {
+  useClientChainId,
+  useEarnProtocolLogout,
+  useEarnProtocolWallet,
+} from '@summerfi/app-earn-ui'
 import { fetchRisk } from '@summerfi/app-risk'
 
 import { type TermsOfServiceCookiePrefix } from '@/constants/terms-of-service'
@@ -18,11 +21,12 @@ export const useRiskVerification = ({
 }: {
   cookiePrefix: TermsOfServiceCookiePrefix
 }) => {
-  const { logout } = useLogout()
-  const { userWalletAddress } = useUserWallet()
+  const { logout } = useEarnProtocolLogout()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
 
   const checkRisk = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!userWalletAddress || !clientChainId) {
       // eslint-disable-next-line no-console
       console.error('Missing required parameters for risk check')
@@ -53,7 +57,7 @@ export const useRiskVerification = ({
 
       return { isRisky: false }
     }
-  }, [clientChainId, logout, userWalletAddress])
+  }, [clientChainId, cookiePrefix, logout, userWalletAddress])
 
   return { checkRisk }
 }

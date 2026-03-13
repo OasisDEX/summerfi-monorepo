@@ -1,7 +1,6 @@
 'use client'
 import { type Dispatch, type FC, useMemo, useReducer, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useAuthModal, useChain } from '@/providers/privy/account-kit-react-compat'
 import {
   Button,
   DataModule,
@@ -9,13 +8,14 @@ import {
   Icon,
   MobileDrawer,
   Modal,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
   Tooltip,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import { NetworkIds, SupportedNetworkIds, UiTransactionStatuses } from '@summerfi/app-types'
 import {
@@ -114,13 +114,13 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const { walletAddress } = useParams()
-  const { openAuthModal } = useAuthModal()
+  const { login } = useEarnProtocolLogin()
   const rawSumr = Number(rewardsData.sumrToClaim.aggregatedRewards.total)
   const rawSumrUSD = rawSumr * sumrPriceUsd
   const sumrAmount = formatCryptoBalance(rawSumr)
   const sumrAmountUSD = `$${formatFiatBalance(rawSumrUSD)}`
 
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const resolvedWalletAddress = walletAddress as string
 
@@ -131,7 +131,7 @@ const SumrAvailableToClaim: FC<SumrAvailableToClaimProps> = ({ rewardsData, sumr
   const handleConnect = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-claim-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
   }
 
@@ -350,7 +350,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
   const { deviceType } = useDeviceType()
   const { isMobile } = useMobileCheck(deviceType)
   const { clientChainId } = useClientChainId()
-  const { setChain, isSettingChain } = useChain()
+  const { setChain, isSettingChain } = useEarnProtocolChain()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
@@ -411,7 +411,7 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
 
   const handleMerklOptInAccept = (chainId: SupportedNetworkIds) => {
     if (Number(clientChainId) !== Number(chainId)) {
-      setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+      setChain({ chain: chainId })
 
       return
     }
@@ -535,8 +535,8 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const { walletAddress } = useParams()
   const resolvedWalletAddress = walletAddress as string
-  const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login } = useEarnProtocolLogin()
 
   const sumrDelegatedTo =
     state.delegatee?.toLowerCase() ?? rewardsData.sumrStakeDelegate.delegatedToV2.toLowerCase()
@@ -567,7 +567,7 @@ const YourDelegate: FC<YourDelegateProps> = ({ rewardsData, state }) => {
   const handleConnect = () => {
     buttonClickEventHandler(`portfolio-sumr-rewards-change-delegate-connect`)
     if (!userWalletAddress) {
-      openAuthModal()
+      login()
     }
   }
 
@@ -618,7 +618,7 @@ export const PortfolioRewardsCardsV2: FC<PortfolioRewardsCardsV2Props> = ({
 }) => {
   const hasSumrInOldModule =
     Number(rewardsData.sumrStakeDelegate.stakedAmount) > MINIMUM_OLD_STAKED_SUMR_TO_WITHDRAW
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   return (
     <div className={classNames.portfolioRewardsCardsWrapper}>

@@ -1,7 +1,12 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { useAuthModal, useUser } from '@/providers/privy/account-kit-react-compat'
-import { Button, Input, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import {
+  Button,
+  Input,
+  Text,
+  useEarnProtocolLogin,
+  useEarnProtocolWallet,
+} from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 import { isAddress } from 'viem'
 
@@ -11,9 +16,8 @@ import { useHandleButtonClickEvent } from '@/hooks/use-mixpanel-event'
 import classNames from './SumrClaimSearch.module.css'
 
 export const SumrClaimSearch = () => {
-  const user = useUser()
-  const { userWalletAddress } = useUserWallet()
-  const { openAuthModal } = useAuthModal()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { login } = useEarnProtocolLogin()
   const handleButtonClick = useHandleButtonClickEvent()
 
   const [inputError, setInputError] = useState('')
@@ -38,8 +42,8 @@ export const SumrClaimSearch = () => {
       return
     }
 
-    if (!user) {
-      openAuthModal()
+    if (!userWalletAddress) {
+      login()
 
       return
     }
@@ -59,7 +63,7 @@ export const SumrClaimSearch = () => {
         : 'View your address'
 
   const isButtonDisabled =
-    !user && inputValue.length === 0 ? false : !isAddress(resolvedAddress ?? '')
+    !userWalletAddress && inputValue.length === 0 ? false : !isAddress(resolvedAddress ?? '')
 
   return (
     <div className={classNames.sumrClaimSearchWrapper} id="claim">

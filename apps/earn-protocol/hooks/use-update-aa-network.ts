@@ -1,11 +1,6 @@
 'use client'
 import { useEffect } from 'react'
-import { useChain } from '@/providers/privy/account-kit-react-compat'
-import {
-  customAAKitHyperliquidConfig,
-  customAAKitSonicConfig,
-  useClientChainId,
-} from '@summerfi/app-earn-ui'
+import { useClientChainId } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -15,7 +10,7 @@ import {
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
 import { type Chain } from 'viem'
-import { arbitrum, base, mainnet } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 
 const networkIdsToAccountKitChainsMap: {
   [key in SupportedNetworkIds]: Chain
@@ -23,8 +18,8 @@ const networkIdsToAccountKitChainsMap: {
   [SupportedNetworkIds.Base]: base,
   [SupportedNetworkIds.ArbitrumOne]: arbitrum,
   [SupportedNetworkIds.Mainnet]: mainnet,
-  [SupportedNetworkIds.SonicMainnet]: customAAKitSonicConfig,
-  [SupportedNetworkIds.Hyperliquid]: customAAKitHyperliquidConfig,
+  [SupportedNetworkIds.SonicMainnet]: sonic,
+  [SupportedNetworkIds.Hyperliquid]: hyperliquid,
 }
 
 // Update account kit network based on app network derived from currently displayed strategy

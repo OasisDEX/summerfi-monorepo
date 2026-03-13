@@ -11,13 +11,15 @@ import {
 } from 'react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
-  getAccountType,
+  getEarnProtocolChainById,
   getVaultPositionUrl,
   getVaultUrl,
-  SDKChainIdToAAChainMap,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolLogin,
+  useEarnProtocolSendUserOperation,
+  useEarnProtocolWallet,
   useIsIframe,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   type EarnAllowanceTypes,
@@ -48,18 +50,11 @@ import { type PublicClient } from 'viem'
 
 import { useSlippageConfig } from '@/features/nav-config/hooks/useSlippageConfig'
 import { getApprovalTx } from '@/helpers/get-approval-tx'
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { getSafeTxHash } from '@/helpers/get-safe-tx-hash'
 import { waitForTransaction } from '@/helpers/wait-for-transaction'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useHandleButtonClickEvent, useHandleTransactionEvent } from '@/hooks/use-mixpanel-event'
 import { useRevalidatePositionData } from '@/hooks/use-revalidate'
-import {
-  useAuthModal,
-  useChain,
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
 
 type UseTransactionParams = {
   vault: SDKVaultishType
@@ -115,11 +110,11 @@ export const useTransaction = ({
   const [slippageConfig] = useSlippageConfig()
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const transactionEventHandler = useHandleTransactionEvent()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { getDepositTx: getDepositTX, getWithdrawTx: getWithdrawTX, getVaultSwitchTx } = useAppSDK()
-  const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
+  const { login, isOpen: isAuthModalOpen } = useEarnProtocolLogin()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
-  const { setChain, isSettingChain, chain } = useChain()
+  const { setChain, isSettingChain } = useEarnProtocolChain()
   const { clientChainId } = useClientChainId()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()
   const [approvalType, setApprovalType] = useState<EarnAllowanceTypes>('deposit')
@@ -133,8 +128,6 @@ export const useTransaction = ({
   const [isEditingSwitchAmount, setIsEditingSwitchAmount] = useState(false)
   const isIframe = useIsIframe()
   const revalidatePositionData = useRevalidatePositionData()
-
-  const { client: smartAccountClient } = useSmartAccountClient({ type: getAccountType(chain.id) })
 
   const isProperChainSelected = clientChainId === vaultChainId
   const isWithdraw = sidebarTransactionType === TransactionAction.WITHDRAW
@@ -298,8 +291,7 @@ export const useTransaction = ({
     sendUserOperation,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess: ({ hash }) => {
       transactionEventHandler({
@@ -380,25 +372,19 @@ export const useTransaction = ({
   })
 
   const sendTransaction = useCallback(
-    (
-      {
+    ({
+      target,
+      data,
+      value = 0n,
+    }: {
+      target: `0x${string}`
+      data: `0x${string}`
+      value?: bigint
+    }) => {
+      return sendUserOperation({
         target,
         data,
-        value = 0n,
-      }: {
-        target: `0x${string}`
-        data: `0x${string}`
-        value?: bigint
-      },
-      overrides?: { paymasterAndData: `0x${string}` },
-    ) => {
-      return sendUserOperation({
-        uo: {
-          target,
-          data,
-          value,
-        },
-        overrides,
+        value,
       })
     },
     [sendUserOperation],
@@ -458,7 +444,7 @@ export const useTransaction = ({
     [nextTransaction, vault.protocol.network],
   )
 
-  const executeNextTransaction = useCallback(async () => {
+  const executeNextTransaction = useCallback(() => {
     setTxStatus('txInProgress')
 
     if (!nextTransaction) {
@@ -498,15 +484,10 @@ export const useTransaction = ({
             value: BigInt(nextTransaction.transaction.value),
           }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
     if (isIframe) {
       sendSafeWalletTransaction(txParams)
     } else {
-      sendTransaction(txParams, resolvedOverrides)
+      sendTransaction(txParams)
     }
   }, [
     nextTransaction,
@@ -516,7 +497,6 @@ export const useTransaction = ({
     flow,
     approvalType,
     approvalCustomValue,
-    smartAccountClient,
     isIframe,
     sendSafeWalletTransaction,
     sendTransaction,
@@ -568,7 +548,7 @@ export const useTransaction = ({
     if (!userWalletAddress) {
       return {
         label: 'Log in',
-        action: openAuthModal,
+        action: login,
         disabled: isAuthModalOpen,
         loading: isAuthModalOpen,
       }
@@ -582,14 +562,14 @@ export const useTransaction = ({
       }
     }
     if (!isProperChainSelected || isSettingChain) {
-      const nextChain = SDKChainIdToAAChainMap[vaultChainId]
+      const nextChain = getEarnProtocolChainById(vaultChainId)
 
       return {
         label: `Change network to ${nextChain.name}`,
         action: () => {
           buttonClickEventHandler(`vault-${flow}-change-network-to-${slugify(nextChain.name)}`)
           setChain({
-            chain: nextChain,
+            chain: vaultChainId,
           })
         },
         disabled: isSettingChain,
@@ -743,7 +723,7 @@ export const useTransaction = ({
     nextTransaction,
     referralCodeError,
     getTransactionsList,
-    openAuthModal,
+    login,
     isAuthModalOpen,
     vaultChainId,
     setChain,
@@ -839,6 +819,7 @@ export const useTransaction = ({
     push,
     reset,
     sidebarTransactionType,
+    revalidatePositionData,
     txStatus,
     vault,
     waitingForTx,

@@ -1,7 +1,6 @@
-import { customAAKitHyperliquidConfig, customAAKitSonicConfig } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import { createPublicClient, http, type PublicClient } from 'viem'
-import { arbitrum, base, mainnet } from 'viem/chains'
+import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
 
 import { SDKChainIdToRpcGatewayMap } from '@/constants/networks-list'
 
@@ -19,7 +18,7 @@ export const basePublicClient = createPublicClient({
 }) as PublicClient // ?? not sure whats up with base typings
 
 export const sonicPublicClient = createPublicClient({
-  chain: customAAKitSonicConfig,
+  chain: sonic,
   transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.SonicMainnet]),
 })
 
@@ -29,9 +28,9 @@ export const mainnetPublicClient = createPublicClient({
 })
 
 export const hyperliquidPublicClient = createPublicClient({
-  chain: customAAKitHyperliquidConfig,
+  chain: hyperliquid,
   transport: http(SDKChainIdToRpcGatewayMap[SupportedNetworkIds.Hyperliquid]),
-}) as PublicClient // ?? not sure whats up with hyperliquid typings
+})
 
 export const publicClientMap: {
   [key in SupportedNetworkIds]: PublicClient

@@ -1,10 +1,6 @@
 'use client'
 import { useMemo } from 'react'
-import {
-  useSendUserOperation,
-  useSmartAccountClient,
-} from '@/providers/privy/account-kit-react-compat'
-import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { useEarnProtocolSendUserOperation, useIsIframe } from '@summerfi/app-earn-ui'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import { subgraphNetworkToId } from '@summerfi/app-utils'
 import { Address, User, Wallet } from '@summerfi/sdk-common'
@@ -12,7 +8,6 @@ import { useQuery } from '@tanstack/react-query'
 import { type PublicClient } from 'viem'
 
 import { type UnstakeVaultTokenBalance } from '@/features/unstake-vault-token/types'
-import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useSafeTransaction } from '@/hooks/use-safe-transaction'
 
@@ -47,10 +42,6 @@ export const useUnstakeVaultTokens = ({
   balance: UnstakeVaultTokenBalance
 } => {
   const { getUnstakeFleetTokensTx, getStakedBalance, getTargetChainInfo } = useAppSDK()
-
-  const { client: smartAccountClient } = useSmartAccountClient({
-    type: getAccountType(subgraphNetworkToId(network)),
-  })
 
   const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
     network,
@@ -92,8 +83,7 @@ export const useUnstakeVaultTokens = ({
     sendUserOperationAsync,
     error: sendUserOperationError,
     isSendingUserOperation,
-  } = useSendUserOperation({
-    client: smartAccountClient,
+  } = useEarnProtocolSendUserOperation({
     waitForTxn: true,
     onSuccess,
     onError,
@@ -106,6 +96,7 @@ export const useUnstakeVaultTokens = ({
       chainInfo,
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (tx === undefined) {
       throw new Error('unstake fleet tokens tx is undefined')
     }
@@ -116,19 +107,11 @@ export const useUnstakeVaultTokens = ({
       value: BigInt(tx.transaction.value),
     }
 
-    const resolvedOverrides = await getGasSponsorshipOverride({
-      smartAccountClient,
-      txParams,
-    })
-
     if (isIframe) {
       return sendSafeWalletTransaction(txParams)
     }
 
-    return await sendUserOperationAsync({
-      uo: txParams,
-      overrides: resolvedOverrides,
-    })
+    return await sendUserOperationAsync(txParams)
   }
 
   return {
