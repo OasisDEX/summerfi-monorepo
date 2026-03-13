@@ -84,7 +84,6 @@ describe('Intent swaps: Swap with Deposit', () => {
   const senderAddressValue = SharedConfig.testUserAddressValue
   const account = privateKeyToAccount(signerPrivateKey)
   const spenderAddressValue = '0x066bA278928cF2f502318C7f689b769F72d67809' // AQ
-  const fleetCommanderAddress = FleetAddresses.Base.USDC
 
   // Configure test scenarios here
   const intentSwapScenarios: {
@@ -124,7 +123,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       fromSymbol: 'USDC',
       amountValue: '1',
       fleetAddressValue: FleetAddresses.Base.ETH,
-      sendOrder: false,
+      sendOrder: true,
       cancelOrder: false,
       authorizePermit2: true,
     },
@@ -235,14 +234,7 @@ describe('Intent swaps: Swap with Deposit', () => {
       const enterFleetCallData = encodeFunctionData({
         abi: admiralsQuartersAbi,
         functionName: 'enterFleetWithPermit2',
-        args: [
-          ownerAddress,
-          fleetCommanderAddress,
-          permitAmount,
-          referralCode,
-          permitData,
-          signature,
-        ],
+        args: [ownerAddress, fleetAddressValue, permitAmount, referralCode, permitData, signature],
       })
       const multicallCallData = encodeFunctionData({
         abi: admiralsQuartersAbi,
@@ -308,9 +300,9 @@ describe('Intent swaps: Swap with Deposit', () => {
           orderId: orderId,
         })
         retry++
-        // wait exponential retry before checking order status again if order is not yet fulfilled, up to 10 retries
+        // wait with exponential backoff before checking order status again if order is not yet fulfilled
         if (orderInfo === null || orderInfo.order.status !== 'fulfilled') {
-          const waitTime = 1000 * Math.pow(retry, 2)
+          const waitTime = 1000 * Math.pow(2, retry - 1) // exponential backoff
           console.log(
             `Order not fulfilled yet (status: ${orderInfo?.order.status ?? 'null'}), retrying in ${waitTime} ms... (${retry}/10)`,
           )
