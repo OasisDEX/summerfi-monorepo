@@ -1,5 +1,4 @@
 import { Function, type Api, type Bucket, type Stack } from 'sst/constructs'
-import path from 'path'
 import { environmentVariables } from './sst-environment'
 import { LoggingFormat } from 'aws-cdk-lib/aws-lambda'
 
@@ -31,11 +30,7 @@ export const createBackend = ({
 
   const nameSuffix = deployedVersion.replaceAll('.', 'x')
 
-  console.log(`ENV FUNCTIONS_API_URL: `, environmentVariables.FUNCTIONS_API_URL)
-  console.log(`ENV PARTNERS_API_URL: `, environmentVariables.PARTNERS_API_URL)
-
   // create and deploy function
-
   const sdkBackend = new Function(stack, `SdkBackendV${nameSuffix}`, {
     handler: 'sdk-router-function/src/index.handler',
     runtime: 'nodejs22.x',
