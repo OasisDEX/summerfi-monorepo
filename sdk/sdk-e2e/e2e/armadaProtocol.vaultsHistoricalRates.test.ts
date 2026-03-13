@@ -1,13 +1,15 @@
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
+import { ChainIds, getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { TestConfigs } from './utils/testConfig'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 import assert from 'assert'
 
 jest.setTimeout(300000)
 
 describe('Armada Protocol - Vaults Historical Rates', () => {
-  const { chainId, fleetAddressValue } = TestConfigs.InstiBaseUSDC
+  const { chainId, fleetAddressValue } = {
+    chainId: ChainIds.Base,
+    fleetAddressValue: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17' as const,
+  }
 
   const chainInfo = getChainInfoByChainId(chainId)
 
