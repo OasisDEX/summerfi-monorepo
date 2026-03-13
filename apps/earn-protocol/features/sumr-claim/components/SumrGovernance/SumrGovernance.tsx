@@ -6,7 +6,7 @@ import {
   EXTERNAL_LINKS,
   MarketingPointsList,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
@@ -169,7 +169,7 @@ const getData = (userWalletAddress: string | undefined) => ({
 })
 
 export const SumrGovernance = () => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const data = getData(userWalletAddress)
 
   return (

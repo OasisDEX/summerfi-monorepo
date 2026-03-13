@@ -12,8 +12,8 @@ import {
   type TextClassNames,
   Tooltip,
   useClientChainId,
+  useEarnProtocolWallet,
   useIsIframe,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import {
   formatAddress,
@@ -188,7 +188,7 @@ export default function WalletLabel({
   buttonVariant = 'secondaryMedium',
 }: WalletLabelProps) {
   const [addressCopied, setAddressCopied] = useState(false)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { clientChainId } = useClientChainId()
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)

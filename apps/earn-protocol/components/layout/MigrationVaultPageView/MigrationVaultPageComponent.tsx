@@ -1,20 +1,20 @@
 'use client'
 import { type FC, useCallback, useMemo, useReducer, useState } from 'react'
-import { useActiveWallet } from '@privy-io/react-auth'
 import {
   getDisplayToken,
+  getEarnProtocolChainById,
   getResolvedForecastAmountParsed,
   getVaultPositionUrl,
-  SDKChainIdToAAChainMap,
   Sidebar,
   SidebarMobileHeader,
   type SidebarProps,
   useAmountWithSwap,
   useClientChainId,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   useForecast,
   useLocalConfig,
   useMobileCheck,
-  useUserWallet,
   VaultOpenGrid,
 } from '@summerfi/app-earn-ui'
 import {
@@ -97,7 +97,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const { push } = useRouter()
   const config = useSystemConfig()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
-  const { network } = useActiveWallet()
+  const { setChain, isSettingChain } = useEarnProtocolChain()
 
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -117,7 +117,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
     [pathname, vault.id],
   )
 
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidatePositionData = useRevalidatePositionData()
 
   const [state, dispatch] = useReducer(migrationReducer, {
@@ -221,7 +221,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   const handlePrimaryButtonClick = () => {
     if (!isCorrectNetwork) {
       setChain({
-        chain: SDKChainIdToAAChainMap[vaultChainId],
+        chain: vaultChainId,
       })
 
       return
@@ -257,7 +257,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
 
   const isMobileOrTablet = isMobile || isTablet
 
-  const networkName = SDKChainIdToAAChainMap[vaultChainId].name
+  const networkName = getEarnProtocolChainById(vaultChainId).name
 
   const sidebarProps: SidebarProps = {
     title: getMigrationFormTitle(state.step),

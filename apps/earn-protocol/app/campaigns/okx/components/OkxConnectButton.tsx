@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLogin, useLogout, useModalStatus } from '@privy-io/react-auth'
-import { Button, EXTERNAL_LINKS, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { Button, EXTERNAL_LINKS, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { useRouter } from 'next/navigation'
 
 declare global {
@@ -62,7 +62,7 @@ export const OkxConnectButton = () => {
   const { login } = useLogin()
   const { isOpen } = useModalStatus()
   const { logout } = useLogout()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const isConnected = !!userWalletAddress
   const isOkxWalletAvailable = useMemo(() => {
     return !!window.okxwallet?.isOkxWallet

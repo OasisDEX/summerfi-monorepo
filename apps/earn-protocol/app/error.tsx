@@ -1,7 +1,7 @@
 'use client' // Error boundaries must be Client Components
 
 import { useEffect } from 'react'
-import { Button, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { Button, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -12,7 +12,7 @@ import errorImage from '@/public/img/misc/error.png'
 
 export default function GlobalErrorHandler({ error }: { error: Error & { digest?: string } }) {
   const pathname = usePathname()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   useEffect(() => {
     // Log the error to an error reporting service

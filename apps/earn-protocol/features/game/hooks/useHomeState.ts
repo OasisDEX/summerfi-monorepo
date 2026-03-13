@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { playGameStartSound } from '@/features/game/helpers/audioHelpers'
@@ -13,7 +13,7 @@ import { type CardData, type GameOverParams } from '@/features/game/types'
 
 export function useHomeState() {
   const { setRunningGame } = useSystemConfig()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [gameId, setGameId] = useState<string | undefined>(undefined)
   const [referralCode, setReferralCode] = useState<string | undefined>(undefined)
   const [currentHighScore, setCurrentHighScore] = useState<number | undefined>(undefined)

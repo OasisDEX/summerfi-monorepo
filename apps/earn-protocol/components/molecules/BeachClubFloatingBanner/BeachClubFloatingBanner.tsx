@@ -6,7 +6,7 @@ import {
   Icon,
   INTERNAL_LINKS,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { getCookie, setCookie } from '@summerfi/app-utils'
 
@@ -27,7 +27,7 @@ export const BeachClubFloatingBanner = () => {
   const cookie = getCookie(beachClubCookieName)
   const handleButtonClick = useHandleButtonClickEvent()
   const handleDisplayBanner = useDisplayBannerEvent()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { features } = useSystemConfig()
 
   const beachClubEnabled = !!features?.BeachClub

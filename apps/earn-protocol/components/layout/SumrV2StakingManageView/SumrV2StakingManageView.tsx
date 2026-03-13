@@ -21,7 +21,7 @@ import {
   useAmount,
   useClientChainId,
   useEarnProtocolChain,
-  useUserWallet,
+  useEarnProtocolWallet,
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
@@ -249,7 +249,7 @@ const SumrV2StakingManageComponent = ({
     chainId: ChainIds.Base,
   })
 
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const { isSumrStakeInfoLoading, sumrStakeInfo, refetchUserStakeInfo } = useUserStakeInfo()
 
   const { publicClient } = useNetworkAlignedClient({
@@ -1345,7 +1345,7 @@ const SumrV2StakingSuccessComponent = ({
   }
   onReset: () => void
 }) => {
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: 'Base',
   })

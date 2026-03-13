@@ -9,8 +9,8 @@ import {
   NavigationExtraComponents,
   SkeletonLine,
   useCurrentUrl,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
@@ -32,7 +32,7 @@ const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabe
 export const NavigationWrapper: FC<{ sumrPriceUsd?: number }> = ({ sumrPriceUsd }) => {
   const currentPath = usePathname()
   const path = useCurrentUrl()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { features, setRunningGame, setIsGameByInvite } = useSystemConfig()
   const { deviceType } = useDeviceType()
   const { isMobileOrTablet } = useMobileCheck(deviceType)

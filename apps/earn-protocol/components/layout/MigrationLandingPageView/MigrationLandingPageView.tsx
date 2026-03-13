@@ -14,9 +14,9 @@ import {
   SliderCarouselDotsPosition,
   Text,
   TitleWithSelect,
+  useEarnProtocolWallet,
   useLocalConfig,
   useMobileCheck,
-  useUserWallet,
   VaultCard,
   WithArrow,
 } from '@summerfi/app-earn-ui'
@@ -114,7 +114,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
     useState<MigrationLandingPageViewProps['selectedNetwork']>(selectedNetwork)
   const [isConfigOpen, setIsConfigOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const positionId = searchParams.get('positionId')
