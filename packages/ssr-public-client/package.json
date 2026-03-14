@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@summerfi/app-utils": "workspace:*",
-    "viem": "2.43.5"
+    "viem": "2.45.0"
   },
   "devDependencies": {
     "@summerfi/app-types": "workspace:*",

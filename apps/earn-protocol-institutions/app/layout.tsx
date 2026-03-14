@@ -87,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
 
   const accountKitInitializedState = cookieToInitialState(
-    getAccountKitConfig({ forkRpcUrl, chainId, isInstitutions: true }),
+    getAccountKitConfig({ forkRpcUrl, chainId }),
     (await headers()).get('cookie') ?? undefined,
   )
 
