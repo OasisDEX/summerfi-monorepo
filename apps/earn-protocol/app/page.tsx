@@ -110,7 +110,7 @@ const EarnAllVaultsPage = async ({
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [{ vaults }, headersList, params, tvl] = await Promise.all([
     getCachedVaultsList(),

@@ -300,7 +300,7 @@ export async function generateMetadata({
   params,
   searchParams,
 }: EarnVaultManagePageProps & {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [
     { network: paramsNetwork, vaultId, walletAddress },
