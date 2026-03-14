@@ -1,19 +1,17 @@
 import { type ChangeEvent, type Dispatch, type FC, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain, useUser } from '@account-kit/react'
 import {
-  AccountKitAccountType,
   Button,
   Card,
   DataBlock,
   Dropdown,
   ERROR_TOAST_CONFIG,
   Input,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
   useClientChainId,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
@@ -82,7 +80,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
   const { walletAddress } = useParams()
   const [delegates, setDelegates] = useState<TallyDelegate[]>(externalData.tallyDelegates)
   const [action, setAction] = useState<ClaimDelegateAction>()
-  const { setChain } = useChain()
+  const { setChain } = useEarnProtocolChain()
   const { push } = useRouter()
   const { clientChainId } = useClientChainId()
   const [sortBy, setSortBy] = useState<DropdownRawOption>(
@@ -93,8 +91,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     Array.isArray(walletAddress) ? walletAddress[0] : walletAddress
   ) as string
 
-  const user = useUser()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const revalidateUser = useRevalidateUser()
 
   const [searchValue, setSearchValue] = useState('')
@@ -197,7 +194,7 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
     // delegation is only supported on base
     if (!isBase) {
       // eslint-disable-next-line no-console
-      setChain({ chain: SDKChainIdToAAChainMap[SupportedNetworkIds.Base] })
+      setChain({ chain: SupportedNetworkIds.Base })
 
       return
     }
@@ -237,10 +234,6 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
 
   const isRemoveDelegateLoading =
     state.delegateStatus === UiTransactionStatuses.PENDING && action === ClaimDelegateAction.REMOVE
-
-  // self delegating is available on for EOA only
-  // since we use tally that doesn't support SCA
-  const isEoa = user?.type === AccountKitAccountType.EOA
 
   const sumrDelegatedToV1 = externalData.sumrStakeDelegate.delegatedToV1.toLowerCase()
   const sumrDelegatedToV2 =
@@ -340,26 +333,24 @@ export const ClaimDelegateStep: FC<ClaimDelegateStepProps> = ({
             Earn $SUMR rewards for staking and delegating your tokens.
           </Text>
         </div>
-        {isEoa && (
-          <div className={classNames.selfDelegateCard}>
-            <ClaimDelegateCard
-              title="Delegate to yourself"
-              description="Be your own Delegate. Steer which yield sources and networks are onboarded, how capital is allocated, and how contributors are rewarded."
-              ens=""
-              address={resolvedWalletAddress}
-              isActive={state.delegatee?.toLowerCase() === resolvedWalletAddress.toLowerCase()}
-              handleClick={() =>
-                dispatch({
-                  type: 'update-delegatee',
-                  payload: resolvedWalletAddress.toLowerCase(),
-                })
-              }
-              selfDelegate
-              disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
-              isFaded={getIsCardFaded({ address: resolvedWalletAddress, state })}
-            />
-          </div>
-        )}
+        <div className={classNames.selfDelegateCard}>
+          <ClaimDelegateCard
+            title="Delegate to yourself"
+            description="Be your own Delegate. Steer which yield sources and networks are onboarded, how capital is allocated, and how contributors are rewarded."
+            ens=""
+            address={resolvedWalletAddress}
+            isActive={state.delegatee?.toLowerCase() === resolvedWalletAddress.toLowerCase()}
+            handleClick={() =>
+              dispatch({
+                type: 'update-delegatee',
+                payload: resolvedWalletAddress.toLowerCase(),
+              })
+            }
+            selfDelegate
+            disabled={isRemoveDelegateLoading || isChangeDelegateLoading}
+            isFaded={getIsCardFaded({ address: resolvedWalletAddress, state })}
+          />
+        </div>
       </div>
       <div className={classNames.rightContent}>
         <div className={classNames.rightContentHeading}>

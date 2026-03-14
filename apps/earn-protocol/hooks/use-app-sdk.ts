@@ -1,5 +1,4 @@
-import { useChain } from '@account-kit/react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolChain, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { useSDK } from '@summerfi/sdk-client-react'
 
 /**
@@ -7,12 +6,10 @@ import { useSDK } from '@summerfi/sdk-client-react'
  * @returns SDK instance configured with the current chain ID and wallet address
  */
 export const useAppSDK = () => {
-  const chain = useChain()
-  const chainId = chain.chain.id
-
-  const { userWalletAddress } = useUserWallet()
+  const { chain } = useEarnProtocolChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const walletAddress = userWalletAddress
 
-  return useSDK({ chainId, walletAddress })
+  return useSDK({ chainId: chain.id, walletAddress })
 }

@@ -1,4 +1,4 @@
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds, SupportedSDKNetworks } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 
@@ -40,7 +40,7 @@ export const useTokenBalances = ({
   if (!supportedNetworkGuard(network)) {
     throw new Error(`Unsupported network: ${network}`)
   }
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   const arbitrumTokenBalance = useTokenBalance({
     tokenSymbol,

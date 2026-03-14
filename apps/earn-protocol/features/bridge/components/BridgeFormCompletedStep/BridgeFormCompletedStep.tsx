@@ -1,6 +1,5 @@
 import { type Dispatch, type FC } from 'react'
-import { useChain } from '@account-kit/react'
-import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { Icon, Sidebar, Text, useEarnProtocolChain } from '@summerfi/app-earn-ui'
 import { SupportedNetworkIds } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -21,7 +20,7 @@ interface BridgeFormCompletedStepProps {
 }
 
 export const BridgeFormCompletedStep: FC<BridgeFormCompletedStepProps> = ({ state, dispatch }) => {
-  const { chain: sourceChain } = useChain()
+  const { chain: sourceChain } = useEarnProtocolChain()
   const searchParams = useSearchParams()
   const viaParam = searchParams.get('via')
   const isViaPortfolio = viaParam === 'portfolio'

@@ -10,7 +10,7 @@ import {
   SectionTabs,
   SkeletonLine,
   Text,
-  useUserWallet,
+  useEarnProtocolWallet,
   WithArrow,
   YieldSourceLabel,
 } from '@summerfi/app-earn-ui'
@@ -167,7 +167,7 @@ const SumrV2PageViewComponent = ({
   }
   sumrPriceUsd: number
 }) => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [isLoading, setIsLoading] = useState(true)
   const [sumrRewardApy, setSumrRewardApy] = useState<string>('0')
   const [maxApy, setMaxApy] = useState<string>('0')

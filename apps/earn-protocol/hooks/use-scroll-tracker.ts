@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolScrolledEventProps } from '@summerfi/app-types'
 import { usePathname } from 'next/navigation'
 
@@ -14,7 +14,7 @@ export const useScrollTracker = ({
   throttleMs = 1000,
   breakpointPercent = 10,
 }: UseScrollTrackerProps) => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const pathname = usePathname()
   const lastFired = useRef<number>(0)
   const firedMilestones = useRef<Set<number>>(new Set())

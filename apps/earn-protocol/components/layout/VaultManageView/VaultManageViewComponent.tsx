@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useUser } from '@account-kit/react'
 import {
   Card,
   ControlsDepositWithdraw,
@@ -19,13 +18,13 @@ import {
   Text,
   useAmount,
   useAmountWithSwap,
+  useEarnProtocolWallet,
   useForecast,
   useIsIframe,
   useLocalConfig,
   useLocalStorageOnce,
   useMobileCheck,
   useTokenSelector,
-  useUserWallet,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import { useTermsOfService } from '@summerfi/app-tos'
@@ -175,8 +174,7 @@ export const VaultManageViewComponent = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const inputChangeHandler = useHandleInputChangeEvent()
   const dropdownChangeHandler = useHandleDropdownChangeEvent()
-  const user = useUser()
-  const { userWalletAddress, isLoadingAccount } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const ownerView = viewWalletAddress.toLowerCase() === userWalletAddress?.toLowerCase()
   const { publicClient } = useNetworkAlignedClient()
   const [sidebarTransactionType, setSidebarTransactionType] = useState<TransactionAction>(
@@ -394,7 +392,7 @@ export const VaultManageViewComponent = ({
     publicClient,
     signMessage: signTosMessage,
     chainId: vaultChainId,
-    walletAddress: user?.address,
+    walletAddress: userWalletAddress,
     version: TermsOfServiceVersion.APP_VERSION,
     cookiePrefix: TermsOfServiceCookiePrefix.APP_TOKEN,
     host: '/earn',
@@ -415,7 +413,7 @@ export const VaultManageViewComponent = ({
   const { transactionFee, loading: transactionFeeLoading } = useGasEstimation({
     chainId: vaultChainId,
     transaction: nextTransaction,
-    walletAddress: user?.address,
+    walletAddress: userWalletAddress,
     publicClient,
   })
 

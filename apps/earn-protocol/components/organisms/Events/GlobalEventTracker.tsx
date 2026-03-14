@@ -1,8 +1,7 @@
 'use client'
 
 import { useLayoutEffect, useRef } from 'react'
-import { useAccount, useChain, useUser } from '@account-kit/react'
-import { getAccountType, useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolChain, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
@@ -10,21 +9,17 @@ import { usePageviewEvent } from '@/hooks/use-mixpanel-event'
 
 export const GlobalEventTracker = () => {
   const path = usePathname()
-  const user = useUser()
   const pageViewedEventHandler = usePageviewEvent()
-  const { userWalletAddress: userAddress } = useUserWallet()
-  const { chain } = useChain()
-  const { account, isLoadingAccount } = useAccount({ type: getAccountType(chain.id) })
+  const { chain } = useEarnProtocolChain()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
 
   // Track previous wallet state for connection/disconnection events
   const prevWalletRef = useRef<{
     address: string | undefined
     isConnected: boolean
-    connectionMethod: string | undefined
   }>({
     address: undefined,
     isConnected: false,
-    connectionMethod: undefined,
   })
 
   // pageview tracking
@@ -39,9 +34,7 @@ export const GlobalEventTracker = () => {
   useLayoutEffect(() => {
     if (isLoadingAccount) return
 
-    const currentAddress = userAddress ?? account?.address
-    const currentConnectionMethod = user?.type
-    const isCurrentlyConnected = Boolean(currentAddress && currentConnectionMethod)
+    const isCurrentlyConnected = Boolean(userWalletAddress)
 
     const prevState = prevWalletRef.current
     const wasConnected = prevState.isConnected
@@ -50,10 +43,9 @@ export const GlobalEventTracker = () => {
     if (!wasConnected && isCurrentlyConnected) {
       EarnProtocolEvents.walletConnected({
         page: path,
-        walletAddress: currentAddress,
+        walletAddress: userWalletAddress,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         network: chain.name ?? 'unknown',
-        connectionMethod: currentConnectionMethod,
       })
     }
 
@@ -64,28 +56,25 @@ export const GlobalEventTracker = () => {
         walletAddress: prevState.address,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         network: chain.name ?? 'unknown',
-        connectionMethod: prevState.connectionMethod,
       })
     }
 
     // Track account change (different wallet address while staying connected)
-    if (wasConnected && isCurrentlyConnected && prevState.address !== currentAddress) {
+    if (wasConnected && isCurrentlyConnected && prevState.address !== userWalletAddress) {
       EarnProtocolEvents.accountChanged({
         page: path,
-        walletAddress: currentAddress,
+        walletAddress: userWalletAddress,
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         network: chain.name ?? 'unknown',
-        connectionMethod: currentConnectionMethod,
       })
     }
 
     // Update previous state
     prevWalletRef.current = {
-      address: currentAddress,
+      address: userWalletAddress,
       isConnected: isCurrentlyConnected,
-      connectionMethod: currentConnectionMethod,
     }
-  }, [account, userAddress, user, isLoadingAccount, chain, path])
+  }, [isLoadingAccount, chain, path, userWalletAddress])
 
   return null
 }

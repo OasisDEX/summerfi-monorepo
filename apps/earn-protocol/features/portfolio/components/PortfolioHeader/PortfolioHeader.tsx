@@ -1,22 +1,15 @@
 import { type FC, useState } from 'react'
-import { toast } from 'react-toastify'
-import { useChain, useSigner, useUser } from '@account-kit/react'
 import {
   Button,
   DataBlock,
   Dropdown,
-  ERROR_TOAST_CONFIG,
   Icon,
-  isUserSmartAccount,
   LoadableAvatar,
-  SDKChainIdToAAChainMap,
   SkeletonLine,
-  SUCCESS_TOAST_CONFIG,
   Text,
-  useTokenTransfer,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, SupportedNetworkIds } from '@summerfi/app-types'
+import { type DropdownRawOption } from '@summerfi/app-types'
 import {
   formatAddress,
   formatCryptoBalance,
@@ -32,7 +25,6 @@ import { SendWidget } from '@/features/send/components/SendWidget/SendWidget'
 import { TransakWidget } from '@/features/transak/components/TransakWidget/TransakWidget'
 import { transakNetworkOptions } from '@/features/transak/consts'
 import { type TransakNetworkOption } from '@/features/transak/types'
-import { usePublicClient } from '@/hooks/use-public-client'
 import { useRevalidateUser } from '@/hooks/use-revalidate'
 
 import classNames from './PortfolioHeader.module.css'
@@ -78,26 +70,10 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   isOwner,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWallet } = useEarnProtocolWallet()
   const [isTransakOpen, setIsTransakOpen] = useState(false)
   const [isSendOpen, setIsSendOpen] = useState(false)
   const [transakNetwork, setTransakNetwork] = useState<TransakNetworkOption | null>(null)
-  const user = useUser()
-  const userIsSmartAccount = isUserSmartAccount(user)
-
-  const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
-  })
-  const signer = useSigner()
-  const { chain, setChain } = useChain()
-  // temporary solution
-  const { transferAllBalance, isTransferring, tokenInfo } = useTokenTransfer({
-    tokenAddress: '0x4f63cfea7458221cb3a0eee2f31f7424ad34bb58',
-    userWallet: user?.address,
-    receiverWallet: viewWalletAddress,
-    publicClient,
-    signer,
-  })
 
   const { features } = useSystemConfig()
   const revalidateUser = useRevalidateUser()
@@ -110,7 +86,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
   }
 
   const handleUserRefresh = () => {
-    revalidateUser(userWalletAddress)
+    revalidateUser(userWallet)
     setIsRefreshing(true)
     setTimeout(() => {
       setIsRefreshing(false)
@@ -138,7 +114,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
               disabled={
-                userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase() ||
+                userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase() ||
                 (walletData && walletData.assets.length === 0)
               }
               onClick={() => {
@@ -148,38 +124,12 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
               Send
             </Button>
           )}
-          {/* Temporary solution to transfer token from AA signer to smart account */}
-          {userIsSmartAccount && tokenInfo && Number(tokenInfo.balance) > 0 && (
-            <Button
-              variant="secondaryMedium"
-              style={{ minWidth: 'unset' }}
-              disabled={isTransferring}
-              onClick={async () => {
-                if (chain.id !== SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne].id) {
-                  setChain({
-                    chain: SDKChainIdToAAChainMap[SupportedNetworkIds.ArbitrumOne],
-                  })
-                }
-
-                try {
-                  await transferAllBalance()
-                  toast.success('Transfer successful', SUCCESS_TOAST_CONFIG)
-                } catch (error) {
-                  toast.error('Transfer failed', ERROR_TOAST_CONFIG)
-                }
-              }}
-            >
-              <Text as="span" variant="p3semi">
-                {isTransferring ? 'Transferring...' : 'Transfer'}
-              </Text>
-            </Button>
-          )}
           {/* Bringing pack the SUMR bridge view */}
           <Link href={`/bridge/${viewWalletAddress}?via=portfolio`}>
             <Button
               variant="secondaryMedium"
               style={{ minWidth: 'unset' }}
-              disabled={userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase()}
+              disabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
             >
               Bridge
             </Button>
@@ -188,24 +138,16 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           <Dropdown
             dropdownValue={{ value: transakNetwork?.value ?? '', content: null }}
             trigger={TransakTrigger}
-            isDisabled={userWalletAddress?.toLowerCase() !== viewWalletAddress.toLowerCase()}
-            options={transakNetworkOptions
-              .filter((option) => {
-                if (userIsSmartAccount) {
-                  return option.chainId !== SupportedNetworkIds.SonicMainnet
-                }
-
-                return true
-              })
-              .map((option) => ({
-                value: option.value,
-                content: (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Icon iconName={option.iconName} />
-                    <span>{option.label}</span>
-                  </div>
-                ),
-              }))}
+            isDisabled={userWallet?.toLowerCase() !== viewWalletAddress.toLowerCase()}
+            options={transakNetworkOptions.map((option) => ({
+              value: option.value,
+              content: (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Icon iconName={option.iconName} />
+                  <span>{option.label}</span>
+                </div>
+              ),
+            }))}
             onChange={handleNetworkSelect}
           >
             {null}
@@ -263,11 +205,10 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({
           />
         </div>
       </div>
-      {userWalletAddress && transakNetwork && (
+      {userWallet && transakNetwork && (
         <TransakWidget
           cryptoCurrency="USDC"
-          walletAddress={userWalletAddress}
-          email={user?.email}
+          walletAddress={userWallet}
           isOpen={isTransakOpen}
           onClose={() => {
             setIsTransakOpen(false)

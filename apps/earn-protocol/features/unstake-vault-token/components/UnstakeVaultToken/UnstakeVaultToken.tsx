@@ -1,17 +1,16 @@
 import { type FC, useCallback, useReducer, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useChain } from '@account-kit/react'
 import {
   Card,
   ERROR_TOAST_CONFIG,
   Expander,
   getDisplayToken,
   Icon,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
   Text,
   useClientChainId,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type TokenSymbolsList } from '@summerfi/app-types'
 import { subgraphNetworkToSDKId, supportedSDKNetwork } from '@summerfi/app-utils'
@@ -54,9 +53,9 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
   })
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { publicClient } = useNetworkAlignedClient()
-  const { chain, setChain } = useChain()
+  const { chain, setChain } = useEarnProtocolChain()
   const { clientChainId } = useClientChainId()
 
   const { unstakeVaultTokensTransaction, balance } = useUnstakeVaultTokens({
@@ -84,7 +83,7 @@ export const UnstakeVaultToken: FC<UnstakeVaultTokenProps> = ({ vault, walletAdd
   const handleUnstakeVaultTokens = useCallback(async () => {
     if (!isOnCorrectChain) {
       setChain({
-        chain: SDKChainIdToAAChainMap[vaultChainId],
+        chain: vaultChainId,
       })
 
       return

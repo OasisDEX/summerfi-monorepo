@@ -1,11 +1,11 @@
-import { arbitrum, base, mainnet } from '@account-kit/infra'
 import { customAAKitHyperliquidConfig, customAAKitSonicConfig } from '@summerfi/app-earn-ui'
 import { SupportedSDKNetworks } from '@summerfi/app-types'
 import { type Chain } from 'viem'
+import { arbitrum, base, mainnet } from 'viem/chains'
 
 /**
  * Converts a SupportedSDKNetworks to an AccountKit Chain
- * IMPORTANT: SONIC is currently not reexported from @account-kit/infra, so we need to import it from viem
+ * IMPORTANT: SONIC chain config is imported from viem
  * ALSO AccountKit usually uses different viem version internally, so we use chains directly from viem to
  * perform some AA logic (i.e. setChain) it may not work as expected
  * ADDITIONALY for time being sonic doesn't support smart accounts

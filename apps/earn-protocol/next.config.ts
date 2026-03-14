@@ -18,9 +18,8 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   experimental: {
     serverComponentsHmrCache: true,
     optimizePackageImports: [
-      '@account-kit/core',
-      '@account-kit/infra',
-      '@account-kit/react',
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
       '@layerzerolabs/scan-client',
       '@safe-global/safe-apps-sdk',
       '@summerfi/app-earn-ui',

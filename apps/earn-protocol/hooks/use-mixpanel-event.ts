@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useChain, useUser } from '@account-kit/react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolChain, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type EarnProtocolTransactionEventProps } from '@summerfi/app-types'
 import { debounce, throttle } from 'lodash-es'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -76,20 +75,18 @@ const flushPending = (userData: { [key: string]: any } = {}) => {
 
 const useMixpanelTracker = () => {
   const pathname = usePathname()
-  const user = useUser()
   const searchParams = useSearchParams()
-  const { userWalletAddress: walletAddress, isLoadingAccount } = useUserWallet()
-  const { chain } = useChain()
+  const { address: walletAddress, isLoadingAccount } = useEarnProtocolWallet()
+  const { chain } = useEarnProtocolChain()
 
   const userData = useMemo(() => {
     if (isLoadingAccount) return {}
 
     return {
       walletAddress,
-      connectionMethod: user?.type ?? null,
       network: chain.name,
     } as { [key: string]: any }
-  }, [chain.name, isLoadingAccount, user?.type, walletAddress])
+  }, [chain.name, isLoadingAccount, walletAddress])
 
   useEffect(() => {
     if (!isLoadingAccount) {

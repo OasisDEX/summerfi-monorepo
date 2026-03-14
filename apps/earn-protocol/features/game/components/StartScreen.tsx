@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Card, Icon, Text, useUserWallet } from '@summerfi/app-earn-ui'
+import { Button, Card, Icon, Text, useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import clsx from 'clsx'
 
 import WalletLabel from '@/components/molecules/WalletLabel/WalletLabel'
@@ -25,7 +25,7 @@ const StartScreen: React.FC<StartScreenProps> = ({
   closeGame,
   startingGame,
 }) => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { isGameByInvite } = useSystemConfig()
 
   return (

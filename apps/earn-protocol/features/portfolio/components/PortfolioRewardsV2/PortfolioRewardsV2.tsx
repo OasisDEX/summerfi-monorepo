@@ -1,5 +1,5 @@
 import { type Dispatch, type FC, useCallback, useMemo } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type AddressValue } from '@summerfi/sdk-common'
 
 import { type PortfolioSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2/types'
@@ -35,7 +35,7 @@ export const PortfolioRewardsV2: FC<PortfolioRewardsV2Props> = ({
   sumrPriceUsd,
   claimableRewards,
 }) => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const portfolioWalletAddress = state.walletAddress
 
   const {

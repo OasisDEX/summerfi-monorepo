@@ -1,6 +1,6 @@
 'use client'
 import { type FC } from 'react'
-import { BigGradientBox, Text, useUserWallet, WithArrow } from '@summerfi/app-earn-ui'
+import { BigGradientBox, Text, useEarnProtocolWallet, WithArrow } from '@summerfi/app-earn-ui'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -39,7 +39,7 @@ const SumrFundamentalTextualContent: FC<SumrFundamentalTextualContentProps> = ({
 }
 
 export const SumrFundamentalUtility = () => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
 
   return (
     <div className={classNames.sumrFundamentalUtilityWrapper}>
