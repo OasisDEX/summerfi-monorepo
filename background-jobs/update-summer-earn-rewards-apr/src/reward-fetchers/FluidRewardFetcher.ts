@@ -29,6 +29,7 @@ interface FluidFetcherOptions {
 
 export class FluidRewardFetcher implements IRewardFetcher {
   private readonly logger: Logger
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly blacklist: Set<string>
 
   constructor(logger: Logger, options?: FluidFetcherOptions) {
@@ -72,8 +73,9 @@ export class FluidRewardFetcher implements IRewardFetcher {
         for (const reward of filtered) {
           const rateNum = Number(reward.rate)
           if (!Number.isFinite(rateNum) || rateNum <= 0) continue
-          // API provides e.g. 263 -> 2.63%
-          const ratePercent = rateNum / 100
+          // API provides e.g. 263 -> 0.0263
+          const apr = rateNum / 10000
+          const rate = apr > this.MAX_APR_THRESHOLD ? 0 : apr * 100
 
           const addr = reward.token.address
           const symbol = reward.token.symbol
@@ -81,7 +83,7 @@ export class FluidRewardFetcher implements IRewardFetcher {
 
           mapped.push({
             rewardToken: addr,
-            rate: ratePercent.toString(),
+            rate: rate.toString(),
             index: index++,
             token: {
               address: addr,

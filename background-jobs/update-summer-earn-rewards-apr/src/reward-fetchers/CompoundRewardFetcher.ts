@@ -14,6 +14,7 @@ type CompoundRewardsResponse = Array<{
 export class CompoundRewardFetcher implements IRewardFetcher {
   private readonly COMPOUND_API_URL =
     'https://v3-api.compound.finance/account/0x0000000000000000000000000000000000000000/rewards'
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly logger: Logger
 
   constructor(logger: Logger) {
@@ -50,7 +51,7 @@ export class CompoundRewardFetcher implements IRewardFetcher {
         const apr = Number(aprStr)
         if (!Number.isFinite(apr) || apr <= 0) continue
 
-        const rate = (apr * 100).toString()
+        const rate = (apr > this.MAX_APR_THRESHOLD ? 0 : apr * 100).toString()
         const { address, symbol, decimals } = entry.reward_asset
 
         const rewardRate: RewardRate = {

@@ -18,6 +18,7 @@ interface MorphoVaultV2Reward {
 
 export class MorphoV2RewardFetcher implements IRewardFetcher {
   private readonly MORPHO_API_URL = 'https://blue-api.morpho.org/graphql'
+  private readonly MAX_APR_THRESHOLD = 1 // 100%
   private readonly logger: Logger
 
   constructor(logger: Logger) {
@@ -86,17 +87,22 @@ export class MorphoV2RewardFetcher implements IRewardFetcher {
   private processMorphoVaultV2(vaultData: MorphoVaultV2Reward): RewardRate[] {
     return (vaultData.rewards ?? [])
       .filter((r) => r.supplyApr != null && Number.isFinite(r.supplyApr) && r.supplyApr > 0)
-      .map((reward, index) => ({
-        rewardToken: reward.asset.address,
-        rate: ((reward.supplyApr ?? 0) * 100).toString(),
-        index,
-        token: {
-          address: reward.asset.address,
-          symbol: reward.asset.symbol,
-          decimals: reward.asset.decimals,
-          precision: (10n ** BigInt(reward.asset.decimals)).toString(),
-        },
-      }))
+      .map((reward, index) => {
+        const apr = reward.supplyApr ?? 0
+        const rate = apr > this.MAX_APR_THRESHOLD ? 0 : apr * 100
+
+        return {
+          rewardToken: reward.asset.address,
+          rate: rate.toString(),
+          index,
+          token: {
+            address: reward.asset.address,
+            symbol: reward.asset.symbol,
+            decimals: reward.asset.decimals,
+            precision: (10n ** BigInt(reward.asset.decimals)).toString(),
+          },
+        }
+      })
   }
 
   private async fetchWithRetry(url: string, options?: RequestInit): Promise<Response> {
