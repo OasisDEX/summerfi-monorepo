@@ -59,6 +59,15 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
     },
   }
 
+  const updateVaultsBenchmarkTableCronFunctionProps: FunctionProps = {
+    handler: 'background-jobs/update-summer-earn-paginated-tables/src/index.vaultsBenchmarkHandler',
+    ...commonProps,
+    environment: {
+      ...commonEnvironment,
+      TABLE_NAME: 'vaults-benchmark',
+    },
+  }
+
   const updateLatestActivityTableCronFunction = new Function(
     stack,
     'update-latest-activity-table-cron-function',
@@ -75,6 +84,12 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
     stack,
     'update-rebalance-activity-table-cron-function',
     updateRebalanceActivityTableCronFunctionProps,
+  )
+
+  const updateVaultsBenchmarkTableCronFunction = new Function(
+    stack,
+    'update-vaults-benchmark-table-cron-function',
+    updateVaultsBenchmarkTableCronFunctionProps,
   )
 
   const enabled = true
@@ -95,5 +110,12 @@ export function addSummerEarnAppTablesConfig({ stack, vpc, app }: SummerStackCon
     schedule: 'rate(10 minutes)',
     enabled,
     job: updateRebalanceActivityTableCronFunction,
+  })
+
+  new Cron(stack, 'update-vaults-benchmark-table-cron', {
+    // the vault benchmark is updated at 01:00 UTC, so we do  02:00 to ensure that all the data is ready
+    schedule: 'cron(0 2 * * ? *)',
+    enabled,
+    job: updateVaultsBenchmarkTableCronFunction,
   })
 }

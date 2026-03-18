@@ -6,7 +6,8 @@
     "build": "tsc -b --preserveWatchOutput -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "backfill": "tsx src/scripts/backfill.ts"
+    "backfill": "tsx src/scripts/backfill.ts",
+    "backfill-vaults-benchmark": "tsx src/scripts/vaults-benchmark-backfill.ts"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.2",

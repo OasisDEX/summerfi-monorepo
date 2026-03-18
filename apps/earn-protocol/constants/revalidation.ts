@@ -23,6 +23,7 @@ export const CACHE_TAGS = {
   USER_DATA: 'user-data',
   STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
   VAULT_DAO_MANAGED: 'vault-dao-managed',
+  VAULT_PERFORMANCE: 'vault-performance',
 }
 
 export const CACHE_TIMES = {

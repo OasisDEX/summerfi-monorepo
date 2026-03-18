@@ -75,8 +75,6 @@ export type AccountStakeLockupsArgs = {
 export type AccountRewards = {
   __typename?: 'AccountRewards';
   account: Account;
-  claimable: Scalars['BigInt']['output'];
-  claimableNormalized: Scalars['BigDecimal']['output'];
   claimed: Scalars['BigInt']['output'];
   claimedNormalized: Scalars['BigDecimal']['output'];
   id: Scalars['ID']['output'];
@@ -108,22 +106,6 @@ export type AccountRewards_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<AccountRewards_Filter>>>;
-  claimable?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimable_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimable_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimed?: InputMaybe<Scalars['BigInt']['input']>;
   claimedNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -183,8 +165,6 @@ export enum AccountRewards_OrderBy {
   account__referralTimestamp = 'account__referralTimestamp',
   account__stakedSummerToken = 'account__stakedSummerToken',
   account__stakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
-  claimable = 'claimable',
-  claimableNormalized = 'claimableNormalized',
   claimed = 'claimed',
   claimedNormalized = 'claimedNormalized',
   id = 'id',
@@ -2058,8 +2038,6 @@ export enum Deposit_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -3173,8 +3151,6 @@ export type Position = {
   __typename?: 'Position';
   /**  Account associated with the position  */
   account: Account;
-  claimableSummerToken: Scalars['BigInt']['output'];
-  claimableSummerTokenNormalized: Scalars['BigDecimal']['output'];
   claimedSummerToken: Scalars['BigInt']['output'];
   claimedSummerTokenNormalized: Scalars['BigDecimal']['output'];
   /**  Creation block number  */
@@ -3471,8 +3447,6 @@ export enum PositionDailySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -3666,8 +3640,6 @@ export enum PositionHourlySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -3696,8 +3668,6 @@ export enum PositionHourlySnapshot_OrderBy {
 
 export type PositionRewards = {
   __typename?: 'PositionRewards';
-  claimable: Scalars['BigInt']['output'];
-  claimableNormalized: Scalars['BigDecimal']['output'];
   claimed: Scalars['BigInt']['output'];
   claimedNormalized: Scalars['BigDecimal']['output'];
   id: Scalars['ID']['output'];
@@ -3709,22 +3679,6 @@ export type PositionRewards_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
   and?: InputMaybe<Array<InputMaybe<PositionRewards_Filter>>>;
-  claimable?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimable_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimable_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimable_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimed?: InputMaybe<Scalars['BigInt']['input']>;
   claimedNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -3795,14 +3749,10 @@ export type PositionRewards_Filter = {
 };
 
 export enum PositionRewards_OrderBy {
-  claimable = 'claimable',
-  claimableNormalized = 'claimableNormalized',
   claimed = 'claimed',
   claimedNormalized = 'claimedNormalized',
   id = 'id',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -4002,8 +3952,6 @@ export enum PositionWeeklySnapshot_OrderBy {
   inputTokenWithdrawalsNormalizedInUSD = 'inputTokenWithdrawalsNormalizedInUSD',
   outputTokenBalance = 'outputTokenBalance',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -4055,22 +4003,6 @@ export type Position_Filter = {
   account_starts_with?: InputMaybe<Scalars['String']['input']>;
   account_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   and?: InputMaybe<Array<InputMaybe<Position_Filter>>>;
-  claimableSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableSummerTokenNormalized_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_not?: InputMaybe<Scalars['BigDecimal']['input']>;
-  claimableSummerTokenNormalized_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  claimableSummerToken_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  claimableSummerToken_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_not?: InputMaybe<Scalars['BigInt']['input']>;
-  claimableSummerToken_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   claimedSummerToken?: InputMaybe<Scalars['BigInt']['input']>;
   claimedSummerTokenNormalized?: InputMaybe<Scalars['BigDecimal']['input']>;
   claimedSummerTokenNormalized_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
@@ -4319,8 +4251,6 @@ export enum Position_OrderBy {
   account__referralTimestamp = 'account__referralTimestamp',
   account__stakedSummerToken = 'account__stakedSummerToken',
   account__stakedSummerTokenNormalized = 'account__stakedSummerTokenNormalized',
-  claimableSummerToken = 'claimableSummerToken',
-  claimableSummerTokenNormalized = 'claimableSummerTokenNormalized',
   claimedSummerToken = 'claimedSummerToken',
   claimedSummerTokenNormalized = 'claimedSummerTokenNormalized',
   createdBlockNumber = 'createdBlockNumber',
@@ -7057,8 +6987,6 @@ export enum Staked_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -7608,8 +7536,6 @@ export enum Unstaked_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',
@@ -8071,7 +7997,7 @@ export type Vault = {
   rewardTokenEmissionsUSD?: Maybe<Array<Scalars['BigDecimal']['output']>>;
   /**  Aditional tokens that are given as reward for position in a protocol, usually in liquidity mining programs. e.g. SUSHI in the Onsen program, MATIC for Aave Polygon  */
   rewardTokens: Array<RewardToken>;
-  rewardsManager: RewardsManager;
+  rewardsManager?: Maybe<RewardsManager>;
   /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
   stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
   /**  Address of the staking rewards manager  */
@@ -10428,8 +10354,6 @@ export enum Withdraw_OrderBy {
   inputTokenBalanceNormalizedUSD = 'inputTokenBalanceNormalizedUSD',
   logIndex = 'logIndex',
   position = 'position',
-  position__claimableSummerToken = 'position__claimableSummerToken',
-  position__claimableSummerTokenNormalized = 'position__claimableSummerTokenNormalized',
   position__claimedSummerToken = 'position__claimedSummerToken',
   position__claimedSummerTokenNormalized = 'position__claimedSummerTokenNormalized',
   position__createdBlockNumber = 'position__createdBlockNumber',

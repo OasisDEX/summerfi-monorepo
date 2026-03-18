@@ -40,6 +40,8 @@ import { mapArkLatestInterestRates } from '@/helpers/map-ark-interest-rates'
 
 import { arkDetailsMap } from './ark-details'
 
+const protocolLabelMaxLength = 30
+
 type YieldRange = {
   low: BigNumber
   high: BigNumber
@@ -122,6 +124,17 @@ const getDaoManagedVaultArkCategory = (maxPercentageTVL: BigNumber | string) => 
   return 'Category C'
 }
 
+const truncateProtocolLabel = (
+  label: string,
+  maxLength: number = protocolLabelMaxLength,
+): string => {
+  if (label.length <= maxLength) {
+    return label
+  }
+
+  return `${label.substring(0, maxLength - 1)}…`
+}
+
 type MapperVaultNetwork =
   | SupportedSDKNetworks.Mainnet
   | SupportedSDKNetworks.ArbitrumOne
@@ -173,7 +186,50 @@ const sortedArksMapper = (vaultNetwork: MapperVaultNetwork) => {
             <TableRowAccent backgroundColor={getUniqueColor(protocolLabel)} />
             <Icon tokenName={getDisplayToken(arkTokenSymbol) as TokenSymbolsList} variant="m" />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <TableCellText>{protocolLabel}</TableCellText>
+              <div style={{ position: 'relative' }}>
+                {protocolLabel.length > protocolLabelMaxLength ? (
+                  <>
+                    <TableCellText
+                      style={{
+                        maxWidth: '200px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {truncateProtocolLabel(protocolLabel)}
+                    </TableCellText>
+                    <TableCellText
+                      style={{
+                        position: 'absolute',
+                        top: '-2px',
+                        left: '-2px',
+                        opacity: 0,
+                        // pointerEvents: 'none',
+                        transition: 'opacity 0.2s ease',
+                        zIndex: 10,
+                        textWrap: 'nowrap',
+                        backgroundColor: 'var(--earn-protocol-neutral-80)',
+                        padding: '2px',
+                        borderRadius: '4px',
+                        boxShadow: '0px 0px 8px 0px rgba(0, 0, 0, 0.1)',
+                        whiteSpace: 'pre',
+                        maxWidth: '340px',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = '1'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = '0'
+                      }}
+                    >
+                      {protocolLabel}
+                    </TableCellText>
+                  </>
+                ) : (
+                  <TableCellText>{protocolLabel}</TableCellText>
+                )}
+              </div>
               <TableCellText small style={{ color: 'var(--color-text-secondary)' }}>
                 {isArkNew && <Text variant="p3semiColorful">New!&nbsp;</Text>}
                 {formatDecimalAsPercent(item.allocationRatio)} allocated

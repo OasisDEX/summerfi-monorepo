@@ -11,6 +11,7 @@ const updateTablesSchema = z.object({
       UpdateTables.LatestActivity,
       UpdateTables.TopDepositors,
       UpdateTables.RebalanceActivity,
+      UpdateTables.VaultsBenchmark,
     ]),
   ),
 })

@@ -44,7 +44,6 @@ import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
-import { useSumrRewardsToDate } from '@/hooks/use-sumr-rewards-to-date'
 
 import vaultManageGridStyles from './VaultManageGrid.module.css'
 
@@ -61,7 +60,12 @@ interface VaultManageGridProps {
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
   sumrPrice?: number
-  onRefresh?: (params: { chainName?: string; vaultId?: string; walletAddress?: string }) => void
+  onRefresh?: (params: {
+    chainName?: string
+    vaultId?: string
+    walletAddress?: string
+    vaultToken?: string
+  }) => void
   vaultApyData: VaultApyData
   rightExtraContent?: ReactNode
   tooltipEventHandler: (tooltipName: string) => void
@@ -155,7 +159,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault,
   })
 
-  const { sumrTokenBonus, rawSumrTokenBonus } = getSumrTokenBonus({
+  const { rawSumrTokenBonus } = getSumrTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
     sumrPrice,
     totalValueLockedUSD: vault.totalValueLockedUSD,
@@ -166,6 +170,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
       chainName: sdkNetworkToHumanNetwork(supportedSDKNetwork(vault.protocol.network)),
       vaultId: vault.id,
       walletAddress: viewWalletAddress,
+      vaultToken: vault.inputToken.symbol,
     })
     setIsRefreshing(true)
     setTimeout(() => {
@@ -173,7 +178,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     }, 5000)
   }
 
-  const sumrRewards = useSumrRewardsToDate(position)
   const vaultInceptionDate = dayjs(Number(vault.createdTimestamp) * 1000)
   const isNewVault = dayjs().diff(vaultInceptionDate, 'day') <= 30
 

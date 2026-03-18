@@ -224,6 +224,22 @@ export interface TosApproval {
   signDate: Timestamp;
 }
 
+export interface VaultBenchmark {
+  apy1dBase: Numeric;
+  apy1dReward: Numeric;
+  apy1dTotal: Numeric;
+  apy30dBase: Numeric;
+  apy30dReward: Numeric;
+  apy30dTotal: Numeric;
+  apy7dBase: Numeric;
+  apy7dReward: Numeric;
+  apy7dTotal: Numeric;
+  asset: string;
+  chainId: number;
+  id: string;
+  timestamp: Timestamp;
+}
+
 export interface WalletRisk {
   address: string;
   isRisky: boolean;
@@ -289,6 +305,7 @@ export interface Database {
   token: Token;
   topDepositors: TopDepositors;
   tosApproval: TosApproval;
+  vaultBenchmark: VaultBenchmark;
   walletRisk: WalletRisk;
   weeklyFleetInterestRate: WeeklyFleetInterestRate;
   weeklyRewardRate: WeeklyRewardRate;

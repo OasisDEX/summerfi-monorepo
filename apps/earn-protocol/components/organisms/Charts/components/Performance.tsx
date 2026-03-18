@@ -78,7 +78,9 @@ export const PerformanceChart = ({
           <YAxis
             strokeWidth={0}
             tickFormatter={(label: string) => `${formatChartCryptoValue(Number(label))}`}
+            allowDecimals
             scale="linear"
+            tickCount={10}
             width={80}
             domain={[
               (dataMin: number) => {
@@ -157,7 +159,7 @@ export const PerformanceChart = ({
                 type="monotone"
                 dataKey="netValue"
                 stroke="#FF80BF"
-                activeDot={false}
+                activeDot={renderForecastChartCross}
                 connectNulls
                 animationDuration={400}
                 animateNewValues
@@ -167,7 +169,7 @@ export const PerformanceChart = ({
                 type="stepAfter"
                 dataKey="depositedValue"
                 stroke="#FF49A4"
-                activeDot={false}
+                activeDot={renderForecastChartCross}
                 connectNulls
                 animationDuration={400}
                 animateNewValues

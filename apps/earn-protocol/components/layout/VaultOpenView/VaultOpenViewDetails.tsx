@@ -56,6 +56,10 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
   const summerVaultName = getVaultNiceName({ vault })
+  const vaultBenchmarkAsset = ['ETH', 'WETH'].includes(vault.inputToken.symbol.toUpperCase())
+    ? 'ETH'
+    : 'USD'
+  const vaultBenchmarkName = `${vaultBenchmarkAsset} Vault Benchmark`
 
   const managementFee = getManagementFee(vault.inputToken.symbol)
 
@@ -83,6 +87,7 @@ export const VaultOpenViewDetails: FC<VaultOpenViewDetailsProps> = ({
           chartId="open-view"
           chartData={arksHistoricalChartData}
           summerVaultName={summerVaultName}
+          vaultBenchmarkName={vaultBenchmarkName}
         />
       </Expander>
       <Expander

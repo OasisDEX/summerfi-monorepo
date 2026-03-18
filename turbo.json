@@ -128,7 +128,8 @@
     "DUNE_LAZYSUMMER_ACCOUNT_API_KEY",
     "ENSO_API_KEY",
     "COW_SWAP_API_KEY",
-    "PARTNERS_API_URL"
+    "PARTNERS_API_URL",
+    "VAULTS_BENCHMARK_API_KEY"
   ],
   "tasks": {
     "dev": {

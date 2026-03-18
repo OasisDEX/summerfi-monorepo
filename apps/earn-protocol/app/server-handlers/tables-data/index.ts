@@ -3,6 +3,8 @@ import { type SummerProtocolDB } from '@summerfi/summer-protocol-db'
 import { GraphQLClient } from 'graphql-request'
 import { NextResponse } from 'next/server'
 
+import { updateVaultsBenchmark } from '@/app/server-handlers/tables-data/vaults-benchmark/updater'
+
 import { updateLatestActivities } from './latest-activity/updater'
 import { updateRebalanceActivity } from './rebalance-activity/updater'
 import { updateTopDepositors } from './top-depositors/updater'
@@ -49,6 +51,7 @@ export const updateTablesData = async ({
     let updatedLatestActivities
     let updatedTopDepositors
     let updatedRebalanceActivity
+    let updatedVaultsBenchmark
 
     if (tablesToUpdate.includes(UpdateTables.LatestActivity)) {
       updatedLatestActivities = await updateLatestActivities({
@@ -83,10 +86,17 @@ export const updateTablesData = async ({
       })
     }
 
+    if (tablesToUpdate.includes(UpdateTables.VaultsBenchmark)) {
+      updatedVaultsBenchmark = await updateVaultsBenchmark({
+        db,
+      })
+    }
+
     return NextResponse.json({
       updatedLatestActivities,
       updatedTopDepositors,
       updatedRebalanceActivity,
+      updatedVaultsBenchmark,
     })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
