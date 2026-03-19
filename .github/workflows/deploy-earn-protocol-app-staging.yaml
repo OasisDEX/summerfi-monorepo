@@ -43,7 +43,7 @@ jobs:
       id-token: write
     environment: staging
     needs: changes
-    if: ${{ !failure() && !cancelled() && (needs.changes.outputs.build-earn-protocol == 'true' || github.event.inputs.forceDeploy) }}
+    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' || github.event.inputs.forceDeploy }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: dev
@@ -125,8 +125,6 @@ jobs:
             hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
           restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
-      # VPN and DB check removed - staging borrow DB is stopped
-      # Revisit if BORROW_DB_READ_CONNECTION_STRING is needed at build time
 
       - name: Extract commit hash
         id: vars
