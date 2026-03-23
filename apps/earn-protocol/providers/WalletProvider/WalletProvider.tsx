@@ -1,12 +1,12 @@
 import { type FC, type ReactNode } from 'react'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { createConfig as createPrivyWagmiConfig } from '@privy-io/wagmi'
-import { queryClient, SDKChainIdToAAChainMap } from '@summerfi/app-earn-ui'
+import { queryClient, supportedViemChains } from '@summerfi/app-earn-ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { type Chain } from 'viem'
 import { http, WagmiProvider } from 'wagmi'
 
-const supportedChains = Object.values(SDKChainIdToAAChainMap) as [Chain, ...Chain[]]
+const supportedChains = Object.values(supportedViemChains) as [Chain, ...Chain[]]
 
 const wagmiConfig = createPrivyWagmiConfig({
   chains: supportedChains,
@@ -30,6 +30,7 @@ export const WalletProvider: FC<{
         loginMethods: ['wallet'],
         appearance: {
           showWalletLoginFirst: true,
+          theme: 'dark',
         },
         embeddedWallets: {
           disableAutomaticMigration: true,

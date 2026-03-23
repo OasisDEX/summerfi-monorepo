@@ -1,18 +1,17 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { usePrivy, useWallets } from '@privy-io/react-auth'
 import {
   type SignAuthorizationReturnType,
   type SignTransactionReturnType,
   type WalletClient,
 } from 'viem'
-import { arbitrum, base, type Chain, hyperliquid, mainnet, sonic } from 'viem/chains'
+import { type Chain } from 'viem/chains'
 import {
   type Config,
   type Connector,
   type CreateConnectorFn,
-  useAccount as useWagmiAccount,
   useChainId,
   useConnect as useWagmiConnect,
   useDisconnect,
@@ -23,10 +22,10 @@ import {
 } from 'wagmi'
 import { type ConnectData } from 'wagmi/query'
 
-const supportedChains: Chain[] = [mainnet, arbitrum, base, sonic, hyperliquid]
+import { supportedViemChains } from '@/constants/supported-chains'
 
 export const getEarnProtocolChainById = (chainId?: number): Chain => {
-  const mappedChain = supportedChains.find((chain) => chain.id === chainId)
+  const mappedChain = supportedViemChains.find((chain) => chain.id === chainId)
 
   if (!mappedChain) {
     throw new Error(`Unsupported chainId: ${chainId}`)
@@ -39,11 +38,11 @@ export const useEarnProtocolWallet = (): {
   address?: `0x${string}`
   isLoadingAccount: boolean
 } => {
-  const { address, isConnecting, isReconnecting } = useWagmiAccount()
+  const { ready, wallets } = useWallets()
 
   return {
-    address,
-    isLoadingAccount: isConnecting || isReconnecting,
+    address: wallets[0]?.address as `0x${string}` | undefined,
+    isLoadingAccount: !ready,
   }
 }
 

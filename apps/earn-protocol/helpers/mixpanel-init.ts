@@ -1,4 +1,4 @@
-import * as mixpanelBrowser from 'mixpanel-browser'
+import mixpanelBrowser from 'mixpanel-browser'
 
 if (!process.env.NEXT_PUBLIC_EARN_MIXPANEL_KEY) {
   throw new Error('NEXT_PUBLIC_EARN_MIXPANEL_KEY is not defined')

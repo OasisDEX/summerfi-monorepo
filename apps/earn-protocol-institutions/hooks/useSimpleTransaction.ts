@@ -7,8 +7,8 @@ import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
 import Safe from '@safe-global/safe-apps-sdk'
 import {
   getAccountType,
-  SDKChainIdToAAChainMap,
   SUCCESS_TOAST_CONFIG,
+  supportedViemChains,
   useIsIframe,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
@@ -45,7 +45,7 @@ export const useSimpleTransaction = ({
   txItem: SDKTransactionItem
 }) => {
   const { publicClient } = usePublicClient({
-    chain: SDKChainIdToAAChainMap[chainId],
+    chain: supportedViemChains[chainId],
   })
   const { userWalletAddress } = useUserWallet()
   const [waitingForTx, setWaitingForTx] = useState<`0x${string}`>()

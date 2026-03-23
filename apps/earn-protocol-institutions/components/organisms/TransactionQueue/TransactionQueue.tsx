@@ -7,7 +7,7 @@ import {
   Button,
   Card,
   Icon,
-  SDKChainIdToAAChainMap,
+  supportedViemChains,
   Text,
   useUserWallet,
 } from '@summerfi/app-earn-ui'
@@ -50,7 +50,7 @@ export const TransactionQueue = ({
   }, [chainId])
 
   const switchToProperChain = useCallback(() => {
-    setChain({ chain: SDKChainIdToAAChainMap[chainId] })
+    setChain({ chain: supportedViemChains[chainId] })
   }, [chainId, setChain])
 
   const handleTransactionRemove = useCallback(
