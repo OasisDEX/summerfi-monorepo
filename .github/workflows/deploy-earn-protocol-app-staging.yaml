@@ -52,7 +52,6 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       FUNCTIONS_API_URL: ${{ vars.FUNCTIONS_API_URL }}
-      BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.NEW_BORROW_DB_READ_CONNECTION_STRING }}
       EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
       EARN_MIXPANEL_KEY: ${{ secrets.EARN_MIXPANEL_KEY }}
       NEXT_PUBLIC_EARN_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_EARN_MIXPANEL_KEY }}
@@ -124,7 +123,6 @@ jobs:
             ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
           restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
-
 
       - name: Extract commit hash
         id: vars
