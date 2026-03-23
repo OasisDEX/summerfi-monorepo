@@ -365,7 +365,7 @@ export async function generateMetadata({
   params,
   searchParams,
 }: PortfolioPageProps & {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [
     { walletAddress: walletAddressRaw },

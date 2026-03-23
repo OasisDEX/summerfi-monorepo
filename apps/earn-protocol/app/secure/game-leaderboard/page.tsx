@@ -166,7 +166,7 @@ export default async function GameLeaderboardPage() {
         .set({ isBanned: isBanning })
         .where('userAddress', '=', userAddress)
         .execute()
-      revalidateTag(SECURE_PAGE_CACHE_TAG)
+      revalidateTag(SECURE_PAGE_CACHE_TAG, { expire: 0 })
     } catch (error) {
       // eslint-disable-next-line no-console
       throw new Error('Error connecting to the database')
@@ -221,7 +221,7 @@ export default async function GameLeaderboardPage() {
           .where('userAddress', '=', userAddress)
           .execute()
       }
-      revalidateTag(SECURE_PAGE_CACHE_TAG)
+      revalidateTag(SECURE_PAGE_CACHE_TAG, { expire: 0 })
     } catch (error) {
       // eslint-disable-next-line no-console
       throw new Error('Error connecting to the database')
@@ -291,7 +291,7 @@ export default async function GameLeaderboardPage() {
   const refreshView = async () => {
     'use server'
 
-    revalidateTag(SECURE_PAGE_CACHE_TAG)
+    revalidateTag(SECURE_PAGE_CACHE_TAG, { expire: 0 })
 
     // arbitrary delay
     await new Promise((resolve) => {

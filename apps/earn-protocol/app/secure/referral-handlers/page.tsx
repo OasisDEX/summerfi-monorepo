@@ -134,7 +134,7 @@ export default async function ReferralHandlersPage() {
   const refreshView = async () => {
     'use server'
 
-    revalidateTag(SECURE_PAGE_CACHE_TAG)
+    revalidateTag(SECURE_PAGE_CACHE_TAG, { expire: 0 })
 
     // arbitrary delay
     await new Promise((resolve) => {

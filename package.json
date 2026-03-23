@@ -82,8 +82,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "19.0.8",
-      "@types/react-dom": "19.0.3",
+      "@types/react": "19.2.3",
+      "@types/react-dom": "19.2.3",
+      "@walletconnect/logger": "3.0.2",
       "react-is": "19.1.0",
       "graphql": "16.11.0"
     }
