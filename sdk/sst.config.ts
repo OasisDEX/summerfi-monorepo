@@ -79,9 +79,15 @@ export default {
         }
       }
 
+      // log some important variables
+      console.log('\nVariables:', {
+        FUNCTIONS_API_URL: process.env.FUNCTIONS_API_URL,
+        PARTNERS_API_URL: process.env.PARTNERS_API_URL,
+      })
+
       stack.addOutputs({
         Stage: app.stage,
-        SdkApiUrl: sdkGateway.url,
+        DeployUrl: sdkGateway.url,
         DeployedVersions: deployedPaths.join(', '),
       })
     })

@@ -195,10 +195,14 @@ export class ArmadaManagerPositions extends ArmadaManagerShared implements IArma
     params: Parameters<IArmadaManagerPositions['getVaultsHistoricalRates']>[0],
   ): ReturnType<IArmadaManagerPositions['getVaultsHistoricalRates']> {
     const requestBody = {
-      fleets: params.fleets,
+      fleets: params.fleets.map((fleet) => ({
+        fleetAddress: fleet.fleetAddress.toLowerCase(),
+        chainId: fleet.chainId,
+      })),
     }
 
-    const response = await fetch(`${this._functionsUrl}/historical-fleet-rates`, {
+    const url = `${this._functionsUrl}/api/vault/historicalRates`
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -208,7 +212,14 @@ export class ArmadaManagerPositions extends ArmadaManagerShared implements IArma
     })
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch historical-fleet-rates: ${response.status}`)
+      // log the error response for debugging
+      const errorText = await response.text()
+      console.error('Error response from historicalRates API:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText,
+      })
+      throw new Error(`Failed to fetch historicalRates: ${response.status}`)
     }
 
     const data = (await response.json()) as {

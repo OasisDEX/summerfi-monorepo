@@ -90,7 +90,7 @@ export const YieldsChart = ({
               tickFormatter={(value: string) =>
                 `${formatChartPercentageValue(Number(value), true)}`
               }
-              tickCount={20}
+              tickCount={10}
               style={{
                 userSelect: 'none',
               }}

@@ -55,7 +55,7 @@ export const POST = async (request: Request) => {
   const safeTags: string[] = Array.isArray(tags) ? tags : []
   const safePaths: string[] = Array.isArray(paths) ? paths : []
 
-  safeTags.forEach((tag) => revalidateTag(tag))
+  safeTags.forEach((tag) => revalidateTag(tag, { expire: 0 }))
   safePaths.forEach((path) => revalidatePath(path))
 
   const finalMessage = []

@@ -50,7 +50,7 @@ module.exports = {
     'eslint-config-turbo',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:@next/next/recommended',
+    'plugin:@next/next/recommended-legacy',
   ],
   rules: {
     //* eslint base */

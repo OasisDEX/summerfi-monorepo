@@ -193,9 +193,7 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
         chainIds: chainIds,
         error: error instanceof Error ? error.message : String(error),
       })
-      throw new Error(
-        `Failed to fetch Merkl rewards: ${error instanceof Error ? error.message : String(error)}`,
-      )
+      return { perChain: {} }
     }
   }
 

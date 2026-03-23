@@ -16,14 +16,14 @@
     "@summerfi/summer-earn-rates-subgraph": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
-    "@types/react": "19.0.8"
+    "@types/react": "19.2.3"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
-    "@types/react": "19.0.8",
+    "@types/react": "19.2.3",
     "concurrently": "^9.0.1",
     "json-to-ts": "^1.7.0",
     "node-fetch": "^2.7.0"

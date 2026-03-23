@@ -6,7 +6,10 @@ const paramsSchema = z.object({
   referralCode: z.string(),
 })
 
-export async function GET(_request: NextRequest, { params }: { params: { referralCode: string } }) {
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ referralCode: string }> },
+) {
   const validatedParams = paramsSchema.parse(await params)
   const { referralCode } = validatedParams
 
