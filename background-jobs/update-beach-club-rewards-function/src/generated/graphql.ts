@@ -7992,7 +7992,7 @@ export type Vault = {
   rewardTokenEmissionsUSD?: Maybe<Array<Scalars['BigDecimal']['output']>>;
   /**  Aditional tokens that are given as reward for position in a protocol, usually in liquidity mining programs. e.g. SUSHI in the Onsen program, MATIC for Aave Polygon  */
   rewardTokens: Array<RewardToken>;
-  rewardsManager: RewardsManager;
+  rewardsManager?: Maybe<RewardsManager>;
   /**  Total supply of output tokens that are staked (usually in the MasterChef contract). Used to calculate reward APY.  */
   stakedOutputTokenAmount?: Maybe<Scalars['BigInt']['output']>;
   /**  Address of the staking rewards manager  */
