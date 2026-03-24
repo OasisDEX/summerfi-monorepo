@@ -1,15 +1,15 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { useChain } from '@account-kit/react'
 import {
   AnimateHeight,
   Button,
   Card,
+  getEarnProtocolChainById,
   Icon,
-  supportedViemChains,
   Text,
-  useUserWallet,
+  useEarnProtocolChain,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type SupportedNetworkIds } from '@summerfi/app-types'
 import { sdkChainIdToHumanNetwork } from '@summerfi/app-utils'
@@ -35,8 +35,8 @@ export const TransactionQueue = ({
   onTxSuccess?: (txid: string) => void
   isLoading?: boolean
 }) => {
-  const { userWalletAddress } = useUserWallet()
-  const { chain, isSettingChain, setChain } = useChain()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
+  const { chain, isSettingChain, setChain } = useEarnProtocolChain()
   const [transactionRemovedLocally, setTransactionRemovedLocally] = useState<SDKTransactionItem[]>(
     [],
   )
@@ -50,7 +50,7 @@ export const TransactionQueue = ({
   }, [chainId])
 
   const switchToProperChain = useCallback(() => {
-    setChain({ chain: supportedViemChains[chainId] })
+    setChain({ chain: getEarnProtocolChainById(chainId) })
   }, [chainId, setChain])
 
   const handleTransactionRemove = useCallback(

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useModalStatus } from '@privy-io/react-auth'
 import {
   Button,
@@ -199,12 +199,6 @@ export default function WalletLabel({
   const { logout } = useEarnProtocolLogout()
   const { isOpen: isAuthModalOpen } = useModalStatus()
   const isIframe = useIsIframe()
-
-  // removes dark mode from the document
-  // to ensure that account-kit modal is always in light mode
-  useEffect(() => {
-    document.documentElement.classList.remove('dark')
-  }, [])
 
   const handleCopyAddress = (address: string) => {
     navigator.clipboard.writeText(address)

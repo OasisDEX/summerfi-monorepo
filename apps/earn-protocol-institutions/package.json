@@ -16,9 +16,8 @@
     "generate-module-types-watch": "tcm -p './+(components|features|app)/**/*.module.css' -w -s"
   },
   "dependencies": {
-    "@account-kit/core": "4.54.1",
-    "@account-kit/infra": "4.54.1",
-    "@account-kit/react": "4.54.1",
+    "@privy-io/react-auth": "3.17.0",
+    "@privy-io/wagmi": "4.0.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.859.0",
     "@aws-sdk/credential-providers": "^3.859.0",
     "@loadable/component": "^5.16.4",

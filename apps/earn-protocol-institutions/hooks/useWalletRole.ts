@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type GlobalRoles } from '@summerfi/sdk-client'
 
 import { getUserData } from '@/helpers/get-user-data'
@@ -8,7 +8,7 @@ import { globalRoleToHuman } from '@/helpers/wallet-roles'
 export const useWalletGlobalRole = ({ institutionName }: { institutionName: string }) => {
   const [connectedRoles, setConnectedRoles] = useState<GlobalRoles[] | null>(null)
   const [isLoadingConnectedRoles, setIsLoadingConnectedRoles] = useState<boolean>(true)
-  const { isLoadingAccount, userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress, isLoadingAccount } = useEarnProtocolWallet()
   const abortControllerRef = useRef<AbortController | null>(null)
 
   useEffect(() => {

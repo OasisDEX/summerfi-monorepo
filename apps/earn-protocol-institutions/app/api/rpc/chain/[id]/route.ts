@@ -1,27 +1,38 @@
-import { supportedViemChains } from '@summerfi/app-earn-ui'
-import { type SupportedNetworkIds } from '@summerfi/app-types'
-import type { Chain } from 'viem'
+import { SupportedNetworkIds } from '@summerfi/app-types'
 
 import { INSTITUTIONS_CACHE_TIMES } from '@/constants/revalidation'
 
-export async function POST(req: Request) {
-  const id = req.url.split('/').pop()
-  let chain: Chain
+const rpcUrlMap: {
+  [key in SupportedNetworkIds]: string
+} = {
+  1: 'https://eth-mainnet.g.alchemy.com/v2',
+  42161: 'https://arb-mainnet.g.alchemy.com/v2',
+  8453: 'https://base-mainnet.g.alchemy.com/v2',
+  146: 'https://sonic-mainnet.g.alchemy.com/v2',
+  999: 'https://hyperliquid-mainnet.g.alchemy.com/v2',
+}
 
-  try {
-    chain = supportedViemChains[parseInt(id as string, 10) as SupportedNetworkIds]
-  } catch (error) {
-    return new Response(`Chain with id ${id} not found.`, {
-      status: 404,
+export async function POST(req: Request) {
+  const id = Number(req.url.split('/').pop())
+
+  if (!id || !Object.values(SupportedNetworkIds).includes(id as SupportedNetworkIds)) {
+    return new Response('Invalid network ID', {
+      status: 400,
     })
   }
 
-  const [rpcUrl] = chain.rpcUrls.alchemy.http
+  const rpcUrl = rpcUrlMap[id as SupportedNetworkIds]
+
+  if (!rpcUrl) {
+    return new Response('Unsupported network ID', {
+      status: 400,
+    })
+  }
 
   const apiKey = process.env.ACCOUNT_KIT_API_KEY
 
   if (!apiKey) {
-    return new Response('ALCHEMY_API_KEY is not set', {
+    return new Response('ACCOUNT_KIT_API_KEY is not set', {
       status: 500,
     })
   }

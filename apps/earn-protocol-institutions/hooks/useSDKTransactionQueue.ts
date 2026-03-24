@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type TransactionInfo } from '@summerfi/sdk-common'
 
 export type SDKTransactionItem = {
@@ -15,7 +15,7 @@ export type SDKTransactionItem = {
 }
 
 export const useSDKTransactionQueue = () => {
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [transactionQueue, setTransactionQueue] = useState<SDKTransactionItem[]>([])
 
   useEffect(() => {

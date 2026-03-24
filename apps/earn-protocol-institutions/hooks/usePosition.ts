@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useUserWallet } from '@summerfi/app-earn-ui'
+import { useEarnProtocolWallet } from '@summerfi/app-earn-ui'
 import { type IArmadaPosition, type SupportedNetworkIds } from '@summerfi/app-types'
 import { Address, getChainInfoByChainId, User, Wallet } from '@summerfi/sdk-common'
 
@@ -63,7 +63,7 @@ export const usePosition = ({
 }) => {
   const [position, setPosition] = useState<IArmadaPosition>()
   const { getUserPosition } = useAdminAppSDK(institutionName)
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const [isLoading, setIsLoading] = useState(false)
 
   const reFetchPosition = useCallback(async () => {

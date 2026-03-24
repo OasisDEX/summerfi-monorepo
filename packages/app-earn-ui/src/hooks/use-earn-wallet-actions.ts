@@ -92,11 +92,11 @@ export const useEarnProtocolSignerStatus: () => {
   isInitializing: boolean
   isAuthenticating: boolean
 } = () => {
-  const { ready, authenticated } = usePrivy()
+  const { ready, isModalOpen } = usePrivy()
 
   return {
     isInitializing: !ready,
-    isAuthenticating: ready && !authenticated,
+    isAuthenticating: isModalOpen,
   }
 }
 

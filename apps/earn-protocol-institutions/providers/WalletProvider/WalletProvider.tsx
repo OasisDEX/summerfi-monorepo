@@ -13,7 +13,7 @@ const wagmiConfig = createConfig({
   transports: supportedChains.reduce<{
     [key: number]: ReturnType<typeof http>
   }>((acc, chain) => {
-    acc[chain.id] = http(`/earn/api/rpc/chain/${chain.id}`)
+    acc[chain.id] = http(`/api/rpc/chain/${chain.id}`)
 
     return acc
   }, {}),

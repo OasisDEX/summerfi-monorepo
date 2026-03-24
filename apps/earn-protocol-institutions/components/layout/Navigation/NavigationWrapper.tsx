@@ -8,8 +8,8 @@ import {
   Navigation,
   NavigationConfig,
   SkeletonLine,
+  useEarnProtocolWallet,
   useMobileCheck,
-  useUserWallet,
 } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
@@ -33,7 +33,7 @@ export const NavigationWrapper: FC = () => {
   const { isMobileOrTablet } = useMobileCheck(deviceType)
   const router = useRouter()
   const currentPath = usePathname()
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { features } = useSystemConfig()
   const { authSignOutHandler, user } = useAuth()
 
