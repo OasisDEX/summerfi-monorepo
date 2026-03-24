@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useLogin, useLogout, useModalStatus } from '@privy-io/react-auth'
+import { useModalStatus } from '@privy-io/react-auth'
 import {
   Button,
   type ButtonClassNames,
@@ -12,6 +12,8 @@ import {
   type TextClassNames,
   Tooltip,
   useClientChainId,
+  useEarnProtocolLogin,
+  useEarnProtocolLogout,
   useEarnProtocolWallet,
   useIsIframe,
 } from '@summerfi/app-earn-ui'
@@ -193,14 +195,10 @@ export default function WalletLabel({
 
   const chainName = sdkChainIdToHumanNetwork(clientChainId)
 
-  const { login } = useLogin()
+  const { login } = useEarnProtocolLogin()
+  const { logout } = useEarnProtocolLogout()
   const { isOpen: isAuthModalOpen } = useModalStatus()
-  const { logout } = useLogout()
   const isIframe = useIsIframe()
-
-  const handleLogout = () => {
-    logout()
-  }
 
   // removes dark mode from the document
   // to ensure that account-kit modal is always in light mode
@@ -278,7 +276,7 @@ export default function WalletLabel({
   if (variant === 'logoutOnly') {
     return (
       <div className={`${walletLabelStyles.actionsOnlyWrapper} ${className}`}>
-        <LogoutButton onLogout={handleLogout} />
+        <LogoutButton onLogout={logout} />
       </div>
     )
   }
@@ -294,7 +292,7 @@ export default function WalletLabel({
             address={userWalletAddress}
             onCopy={handleCopyAddress}
             copied={addressCopied}
-            onLogout={handleLogout}
+            onLogout={logout}
           />
         }
         tooltipCardVariant="cardSecondarySmallPaddings"
@@ -317,7 +315,7 @@ export default function WalletLabel({
         </div>
       </Tooltip>
       <div className={walletLabelStyles.mobileCopyLogoutButtons}>
-        <LogoutButton onLogout={handleLogout} variant="primaryMedium" />
+        <LogoutButton onLogout={logout} variant="primaryMedium" />
         <CopyAddressButton
           address={userWalletAddress.toString()}
           onCopy={handleCopyAddress}

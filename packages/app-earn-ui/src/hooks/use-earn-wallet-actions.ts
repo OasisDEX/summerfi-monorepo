@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { usePrivy, useWallets } from '@privy-io/react-auth'
+import { usePrivy } from '@privy-io/react-auth'
 import {
   type SignAuthorizationReturnType,
   type SignTransactionReturnType,
@@ -9,18 +9,14 @@ import {
 } from 'viem'
 import { type Chain } from 'viem/chains'
 import {
-  type Config,
-  type Connector,
-  type CreateConnectorFn,
+  useAccount,
   useChainId,
-  useConnect as useWagmiConnect,
   useDisconnect,
   usePublicClient,
-  useSignMessage as useWagmiSignMessage,
+  useSignMessage,
   useSwitchChain,
   useWalletClient,
 } from 'wagmi'
-import { type ConnectData } from 'wagmi/query'
 
 import { supportedViemChains } from '@/constants/supported-chains'
 
@@ -38,11 +34,11 @@ export const useEarnProtocolWallet = (): {
   address?: `0x${string}`
   isLoadingAccount: boolean
 } => {
-  const { ready, wallets } = useWallets()
+  const { address, isConnecting } = useAccount()
 
   return {
-    address: wallets[0]?.address as `0x${string}` | undefined,
-    isLoadingAccount: !ready,
+    address,
+    isLoadingAccount: isConnecting,
   }
 }
 
@@ -74,33 +70,21 @@ export const useEarnProtocolLogin: () => {
   login: () => void
   isOpen: boolean
 } = () => {
-  const { login: privyLogin, ready } = usePrivy()
-
-  const login: () => void = useCallback(() => {
-    if (ready) {
-      privyLogin()
-    }
-  }, [privyLogin, ready])
+  const { connectWallet, isModalOpen } = usePrivy()
 
   return {
-    login,
-    isOpen: false,
+    login: connectWallet,
+    isOpen: isModalOpen,
   }
 }
 
 export const useEarnProtocolLogout: () => {
   logout: () => void
 } = () => {
-  const { logout: privyLogout } = usePrivy()
   const { disconnect } = useDisconnect()
 
-  const logout = useCallback(() => {
-    disconnect()
-    privyLogout()
-  }, [disconnect, privyLogout])
-
   return {
-    logout,
+    logout: disconnect,
   }
 }
 
@@ -113,54 +97,6 @@ export const useEarnProtocolSignerStatus: () => {
   return {
     isInitializing: !ready,
     isAuthenticating: ready && !authenticated,
-  }
-}
-
-type UseEarnProtocolConnect = () => {
-  connect: (
-    params: {
-      chainId?: number | undefined
-      connector: CreateConnectorFn | Connector
-    },
-    callbacks?: {
-      onError?: (error: unknown) => void
-      onSuccess?: (data: unknown) => void
-      onSettled?: () => void
-    },
-  ) => Promise<ConnectData<Config>>
-}
-
-export const useEarnProtocolConnect: UseEarnProtocolConnect = () => {
-  const { connectAsync } = useWagmiConnect()
-
-  const connect = useCallback(
-    async (
-      params: Parameters<typeof connectAsync>[0],
-      callbacks?: {
-        onError?: (error: unknown) => void
-        onSuccess?: (data: unknown) => void
-        onSettled?: () => void
-      },
-    ) => {
-      try {
-        const data = await connectAsync(params)
-
-        callbacks?.onSuccess?.(data)
-
-        return data
-      } catch (error) {
-        callbacks?.onError?.(error)
-
-        throw error
-      } finally {
-        callbacks?.onSettled?.()
-      }
-    },
-    [connectAsync],
-  )
-
-  return {
-    connect,
   }
 }
 
@@ -196,7 +132,7 @@ export const useEarnProtocolSigner = (): EarnProtocolSigner | undefined => {
 export const useEarnProtocolSignMessage: () => {
   signMessageAsync: ({ message }: { message: string }) => Promise<`0x${string}`>
 } = () => {
-  const { signMessageAsync: wagmiSignMessageAsync } = useWagmiSignMessage()
+  const { signMessageAsync: wagmiSignMessageAsync } = useSignMessage()
 
   const signMessageAsync = useCallback(
     async ({ message }: { message: string }) => {

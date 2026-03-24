@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js'
+
 import { SUMR_DECIMALS } from '@/features/bridge/constants/decimals'
 
 export type LockBucketAvailabilityMap = {

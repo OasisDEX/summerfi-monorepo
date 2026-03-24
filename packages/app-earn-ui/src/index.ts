@@ -204,7 +204,6 @@ export {
   useEarnProtocolLogin,
   useEarnProtocolLogout,
   useEarnProtocolSignerStatus,
-  useEarnProtocolConnect,
   useEarnProtocolSigner,
   useEarnProtocolSignMessage,
   useEarnProtocolSendUserOperation,

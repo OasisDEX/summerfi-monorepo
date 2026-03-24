@@ -1,5 +1,5 @@
 'use client'
-import { type Dispatch, type FC, useMemo, useReducer, useState } from 'react'
+import { type Dispatch, type FC, Fragment, useMemo, useReducer, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
   Button,
@@ -235,10 +235,10 @@ const ClaimMerkleRewards: FC<ClaimMerkleRewardsProps> = ({
     return rewards.length > 0 ? (
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
         {rewards.map((reward, index) => (
-          <>
+          <Fragment key={`${reward}-${index}`}>
             {index > 0 && <Text variant="p2semi"> + </Text>}
             <Text variant="h5">{reward}</Text>
-          </>
+          </Fragment>
         ))}
       </div>
     ) : (
