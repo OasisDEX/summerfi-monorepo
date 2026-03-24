@@ -206,7 +206,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
           </Pill>
         ) : apy ? (
           <Pill>
-            {externalTokenBonus ?? (sumrTokenBonus && sumrTokenBonus > 0) ? (
+            {(externalTokenBonus ?? (sumrTokenBonus && sumrTokenBonus > 0)) ? (
               <Icon iconName="stars" size={24} color="white" />
             ) : null}
             <span style={{ fontWeight: 600 }}>{netApyParsed}&nbsp;APY</span>

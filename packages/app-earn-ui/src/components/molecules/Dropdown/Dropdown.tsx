@@ -132,7 +132,7 @@ export const Dropdown: FC<DropdownProps> = ({
         })}
         onClick={hasMultipleOptions ? toggleDropdown : undefined}
         style={
-          asPill ?? asSmallPill
+          (asPill ?? asSmallPill)
             ? {
                 cursor: hasMultipleOptions ? 'pointer' : 'default',
                 ...((isOpen || isHover) &&

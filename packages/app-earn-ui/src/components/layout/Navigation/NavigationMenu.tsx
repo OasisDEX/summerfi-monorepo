@@ -25,7 +25,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
               [navigationMenuStyles.disabled]: link.disabled,
             })}
           >
-            {link.itemsList ?? link.dropdownContent ? (
+            {(link.itemsList ?? link.dropdownContent) ? (
               <span
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
@@ -41,7 +41,7 @@ export const NavigationMenu = ({ links, currentPath }: NavigationMenuType): Reac
               </span>
             ) : (
               <Link
-                href={link.disabled ? '' : link.link ?? '/'}
+                href={link.disabled ? '' : (link.link ?? '/')}
                 className={clsx({
                   [navigationMenuStyles.active]: link.link === currentPath,
                 })}

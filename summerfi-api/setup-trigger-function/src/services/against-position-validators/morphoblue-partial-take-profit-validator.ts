@@ -98,7 +98,7 @@ const upsertErrorsValidation = paramsSchema
 
       const getStopLossLtv = updatedStopLossData
         ? updatedStopLossData
-        : currentStopLoss?.executionLTV ?? 99_00n
+        : (currentStopLoss?.executionLTV ?? 99_00n)
 
       return triggerData.executionLTV + triggerData.withdrawStep < getStopLossLtv
     },

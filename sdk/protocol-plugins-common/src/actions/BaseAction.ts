@@ -22,10 +22,9 @@ export abstract class BaseAction<
   ParsedAbiParameters extends ParseAbiParameters<Config['parametersAbi']> = ParseAbiParameters<
     Config['parametersAbi']
   >,
-  AbiParametersTypes extends
-    AbiParametersToPrimitiveTypes<ParsedAbiParameters> = AbiParametersToPrimitiveTypes<ParsedAbiParameters>,
-> implements IAction
-{
+  AbiParametersTypes extends AbiParametersToPrimitiveTypes<ParsedAbiParameters> =
+    AbiParametersToPrimitiveTypes<ParsedAbiParameters>,
+> implements IAction {
   private readonly DefaultParamsMapping: InputSlotsMapping = [0, 0, 0, 0]
 
   /** @see IAction.getVersionedName */

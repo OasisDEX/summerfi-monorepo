@@ -91,7 +91,7 @@ export const DataBlock = ({
         <TitleWithIcon
           titleVariant={titleVariant}
           title={title}
-          iconName={titleTooltip ? tooltipIconName ?? 'question_o' : undefined}
+          iconName={titleTooltip ? (tooltipIconName ?? 'question_o') : undefined}
           tooltip={titleTooltip}
           color="rgb(119, 117, 118)"
           titleStyle={titleStyle}

@@ -128,7 +128,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
         <div className={vaultCardStyles.vaultCardHeaderWrapper}>
           <VaultTitleWithRisk
             symbol={getDisplayToken(inputToken.symbol)}
-            risk={isDaoManaged ? 'higher' : customFields?.risk ?? 'lower'}
+            risk={isDaoManaged ? 'higher' : (customFields?.risk ?? 'lower')}
             networkName={supportedSDKNetwork(protocol.network)}
             selected={selected}
             isVaultCard

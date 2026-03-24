@@ -426,7 +426,7 @@ export const VaultCardHomepage = ({
                     <Text variant="p4semi">Block&nbsp;Analitica</Text>
                   )}
                   <Risk
-                    risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+                    risk={vault.isDaoManaged ? 'higher' : (vault.customFields?.risk ?? 'lower')}
                     variant="p4semi"
                   />
                 </div>
@@ -453,7 +453,7 @@ export const VaultCardHomepage = ({
                     </Text>
                   )}
                   <Risk
-                    risk={vault.isDaoManaged ? 'higher' : vault.customFields?.risk ?? 'lower'}
+                    risk={vault.isDaoManaged ? 'higher' : (vault.customFields?.risk ?? 'lower')}
                     variant="p4semi"
                   />
                 </div>

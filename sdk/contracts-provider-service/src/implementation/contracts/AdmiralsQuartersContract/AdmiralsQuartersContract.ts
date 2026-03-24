@@ -10,9 +10,9 @@ import { AdmiralsQuartersWhitelistAbi } from '@summerfi/armada-protocol-abis'
  * @implements IAdmiralsQuartersContract
  */
 export class AdmiralsQuartersContract<
-    const TClient extends IBlockchainClient,
-    TAddress extends IAddress,
-  >
+  const TClient extends IBlockchainClient,
+  TAddress extends IAddress,
+>
   extends ContractWrapper<typeof AdmiralsQuartersWhitelistAbi, TClient, TAddress>
   implements IAdmiralsQuartersContract
 {

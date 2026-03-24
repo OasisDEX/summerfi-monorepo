@@ -16,9 +16,9 @@ import { getContractAddress } from '../plugins/utils/GetContractAddress'
  *
  * The side effects of this class will be reflected in the IStepBuilderContext passed to it as a parameter
  */
-export abstract class BaseActionBuilder<StepType extends steps.Steps>
-  implements IActionBuilder<StepType>
-{
+export abstract class BaseActionBuilder<
+  StepType extends steps.Steps,
+> implements IActionBuilder<StepType> {
   /** @see IActionBuilder.actions */
   abstract readonly actions: ActionBuilderUsedAction[]
 

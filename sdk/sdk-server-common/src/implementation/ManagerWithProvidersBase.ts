@@ -10,8 +10,7 @@ import { IManagerWithProviders } from '../interfaces/IManagerWithProviders'
 export class ManagerWithProvidersBase<
   ProviderType extends string,
   ManagerProvider extends IManagerProvider<ProviderType>,
-> implements IManagerWithProviders<ProviderType, ManagerProvider>
-{
+> implements IManagerWithProviders<ProviderType, ManagerProvider> {
   private _providersByChainId: Map<ChainId, ManagerProvider[]>
   private _providersByType: Map<ProviderType, ManagerProvider>
 
