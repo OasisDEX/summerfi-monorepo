@@ -1,7 +1,10 @@
 'use client'
 import { useEffect } from 'react'
-import { useClientChainId, useEarnProtocolChain } from '@summerfi/app-earn-ui'
-import { SupportedNetworkIds } from '@summerfi/app-types'
+import {
+  getEarnProtocolChainById,
+  useClientChainId,
+  useEarnProtocolChain,
+} from '@summerfi/app-earn-ui'
 import {
   humanNetworktoSDKNetwork,
   subgraphNetworkToId,
@@ -9,18 +12,6 @@ import {
   supportedSDKNetworkId,
 } from '@summerfi/app-utils'
 import { useParams } from 'next/navigation'
-import { type Chain } from 'viem'
-import { arbitrum, base, hyperliquid, mainnet, sonic } from 'viem/chains'
-
-const networkIdsToAccountKitChainsMap: {
-  [key in SupportedNetworkIds]: Chain
-} = {
-  [SupportedNetworkIds.Base]: base,
-  [SupportedNetworkIds.ArbitrumOne]: arbitrum,
-  [SupportedNetworkIds.Mainnet]: mainnet,
-  [SupportedNetworkIds.SonicMainnet]: sonic,
-  [SupportedNetworkIds.Hyperliquid]: hyperliquid,
-}
 
 // Update account kit network based on app network derived from currently displayed strategy
 // To avoid forced EOA popups to change network, trigger it only when EOA wallet network and app network are already aligned
@@ -46,7 +37,7 @@ export const useUpdateAANetwork = (overrideNetwork?: string) => {
   const sdkNetwork = humanNetworktoSDKNetwork(network as string)
   const appChainId = supportedSDKNetworkId(subgraphNetworkToId(supportedSDKNetwork(sdkNetwork)))
 
-  const appChain = networkIdsToAccountKitChainsMap[appChainId]
+  const appChain = getEarnProtocolChainById(appChainId)
 
   useEffect(() => {
     if (clientChainId === appChainId) {

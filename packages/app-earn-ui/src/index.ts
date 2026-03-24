@@ -276,7 +276,7 @@ export {
 // constants
 export { SUMR_CAP } from './constants/earn-protocol'
 export { networkIdIconNameMap, networkNameIconNameMap } from './constants/icon-maps'
-export { accountKitCookieStateName, forksCookieName } from './constants/cookie-names'
+export { forksCookieName } from './constants/cookie-names'
 export { supportedViemChains } from './constants/supported-chains'
 export { queryClient } from './constants/query-client'
 

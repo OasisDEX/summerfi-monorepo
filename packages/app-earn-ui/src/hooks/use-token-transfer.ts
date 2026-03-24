@@ -22,13 +22,11 @@ interface TokenInfo {
  *
  * This hook fetches balance for a single token address and returns
  * a method that transfers ALL balance to the receiver wallet.
- * Uses Alchemy signer for EOA transactions.
  *
  * @param tokenAddress - ERC20 token contract address
  * @param userWallet - The sender's wallet address
  * @param receiverWallet - The receiver's wallet address
  * @param publicClient - The viem public client for the target network
- * @param signer - The Alchemy signer for signing transactions
  */
 export const useTokenTransfer = ({
   tokenAddress,
