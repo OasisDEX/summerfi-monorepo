@@ -244,7 +244,7 @@ export const ControlsSwitchSuccessErrorView = ({
             risk={
               (currentVault.isDaoManaged
                 ? 'higher'
-                : currentVault.customFields?.risk ?? 'lower') as RiskType
+                : (currentVault.customFields?.risk ?? 'lower')) as RiskType
             }
             currentNetValue={currentPositionValues?.netValue}
             currentNetValueUsd={currentPositionValues?.netValueUSD}
@@ -263,7 +263,7 @@ export const ControlsSwitchSuccessErrorView = ({
               risk={
                 (nextVault.isDaoManaged
                   ? 'higher'
-                  : nextVault.customFields?.risk ?? 'lower') as RiskType
+                  : (nextVault.customFields?.risk ?? 'lower')) as RiskType
               }
               currentNetValue={nextPositionValues?.netValue ?? new BigNumber(0)}
               currentNetValueUsd={nextPositionValues?.netValueUSD ?? new BigNumber(0)}

@@ -79,7 +79,7 @@ export const BeachClubReferralForm: FC<BeachClubReferralFormProps> = ({
       setIsValid(false)
       setIsLoading(false)
     }
-  }, [value, onError])
+  }, [value, onError, onChange])
 
   return (
     <div className={styles.beachClubReferralFormWrapper}>

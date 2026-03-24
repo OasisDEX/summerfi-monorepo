@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable no-mixed-operators */
 let audioContext: AudioContext | null = null
 
@@ -5,10 +6,10 @@ const getAudioContext = (): AudioContext | null => {
   if (typeof window === 'undefined') return null // Avoid server-side execution
   if (!audioContext) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      audioContext = new (window.AudioContext ||
-        (window as typeof window & { webkitAudioContext?: typeof AudioContext })
-          .webkitAudioContext)()
+      audioContext = new (
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      )()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Web Audio API is not supported in this browser', e)
@@ -24,16 +25,16 @@ const getAudioContext = (): AudioContext | null => {
 const createQuickReverb = (context: AudioContext, decayTime = 0.8): ConvolverNode => {
   const convolver = context.createConvolver()
   const rate = context.sampleRate
-  const length = rate * decayTime
-  const impulse = context.createBuffer(2, length, rate)
+  const revLength = rate * decayTime
+  const impulse = context.createBuffer(2, revLength, rate)
 
   // Create impulse response with softer decay curve
   for (let channel = 0; channel < 2; channel++) {
     const impulseData = impulse.getChannelData(channel)
 
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < revLength; i++) {
       // Softer impulse response with less harsh randomness
-      const t = i / length
+      const t = i / revLength
 
       impulseData[i] = (Math.random() * 1.8 - 0.9) * (1 - t) ** 3
     }

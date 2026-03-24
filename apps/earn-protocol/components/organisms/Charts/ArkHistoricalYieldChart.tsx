@@ -50,7 +50,7 @@ export const ArkHistoricalYieldChart = ({
     summerVaultName,
     ...((compare
       ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        chartData.dataNames ?? []
+        (chartData.dataNames ?? [])
       : [chartData.dataNames.includes(vaultBenchmarkName) ? vaultBenchmarkName : null]
     ).filter(Boolean) as string[]),
   ].filter(Boolean) as string[]

@@ -216,7 +216,7 @@ export function ReferralTable({ referralsList, refreshView }: ReferralTableProps
                     }}
                   />
                 ) : (
-                  referral.custom_code ?? '-'
+                  (referral.custom_code ?? '-')
                 )}
               </td>
               <td style={{ padding: '12px', border: '1px solid #090909' }}>

@@ -30,6 +30,7 @@ export const VaultDetailsAdvancedYield: FC<VaultDetailsAdvancedYieldProps> = ({
 }) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const chartNames = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return [summerVaultName, ...(chartData.dataNames ?? [])]
   }, [chartData.dataNames, summerVaultName])
 

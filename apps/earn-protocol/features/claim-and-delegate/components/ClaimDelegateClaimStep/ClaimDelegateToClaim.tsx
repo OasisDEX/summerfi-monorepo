@@ -132,7 +132,7 @@ export const ClaimDelegateToClaim: FC<ClaimDelegateToClaimProps> = ({
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           disabled={!canClaim || isLoading || isChangingNetwork || !isOwner}
         >
-          {isLoading ?? isChangingNetwork ? (
+          {(isLoading ?? isChangingNetwork) ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--general-space-4)' }}>
               <LoadingSpinner size={16} color="var(--earn-protocol-secondary-40)" />
               <span>{buttonLabel}</span>

@@ -37,7 +37,7 @@ export const ArkHistoricalYieldChart = ({
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const dataNames = [summerVaultName, ...(compare ? chartData?.dataNames ?? [] : [])]
+  const dataNames = [summerVaultName, ...(compare ? (chartData?.dataNames ?? []) : [])]
 
   const parsedData = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

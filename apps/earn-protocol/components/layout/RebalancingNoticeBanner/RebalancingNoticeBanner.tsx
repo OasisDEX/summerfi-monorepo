@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { type FC, useMemo } from 'react'
 import { EXTERNAL_LINKS, GlobalNoticeBanner } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType, type SDKVaultType } from '@summerfi/app-types'
@@ -15,8 +16,6 @@ const BANNER_ENABLED = false
 export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType }> = ({
   vault,
 }) => {
-  if (!BANNER_ENABLED) return null
-
   const { liquidityPercentage } = useMemo(() => {
     if (!vault.inputTokenPriceUSD) {
       return {
@@ -36,6 +35,8 @@ export const RebalancingNoticeBanner: FC<{ vault: SDKVaultType | SDKVaultishType
       liquidityPercentage: liquidityPercentageTemp,
     }
   }, [vault])
+
+  if (!BANNER_ENABLED) return null
 
   const isInWithdrawalQueue =
     liquidityPercentage.lt(REBALANCING_NOTICE_THRESHOLDS.liquidityPercentage) &&

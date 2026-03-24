@@ -228,7 +228,8 @@ export const useTransaction = ({
           }),
           amount: TokenAmount.createFrom({
             token: vaultToken,
-            amount: amount && amount.gt(0) ? amount.toString() : positionAmount?.toString() ?? '0',
+            amount:
+              amount && amount.gt(0) ? amount.toString() : (positionAmount?.toString() ?? '0'),
           }),
           chainInfo: getChainInfoByChainId(vaultChainId),
           slippage: Number(slippageConfig.slippage),
