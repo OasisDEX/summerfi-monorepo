@@ -433,8 +433,8 @@ export class ArmadaManagerMerklRewards implements IArmadaManagerMerklRewards {
   }
 
   async getVaultRewardsMerklClaimTx(
-    params: Parameters<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']>[0],
-  ): ReturnType<IArmadaManagerMerklRewards['getReferralFeesMerklClaimTx']> {
+    params: Parameters<IArmadaManagerMerklRewards['getVaultRewardsMerklClaimTx']>[0],
+  ): ReturnType<IArmadaManagerMerklRewards['getVaultRewardsMerklClaimTx']> {
     const { address, chainId, rewardsTokensAddresses } = params
 
     const claimTx = await this.getUserMerklClaimDirectTx({
