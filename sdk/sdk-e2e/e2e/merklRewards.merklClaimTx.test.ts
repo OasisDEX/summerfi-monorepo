@@ -1,24 +1,28 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
 
-const scenarios: { userAddress: AddressValue }[] = [
-  { userAddress: '0x805769AA22219E3a29b301Ab5897B903A9ad2C4A' },
+const scenarios: { userAddress: AddressValue; merklChainId?: ChainId }[] = [
+  {
+    userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+    merklChainId: ChainIds.Mainnet,
+  },
   // { userAddress: '0x38233654FB0843c8024527682352A5d41E7f7324' },
   // { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
   // { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
   // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
 ]
 
-describe('Merkl Rewards - getUserMerklClaimTx', () => {
+describe('Merkl SUMR Rewards - getUserMerklClaimTx', () => {
   const sdk = createTestSdkInstance()
 
   describe.each(scenarios)('user address $userAddress', (scenario) => {
-    const { userAddress } = scenario
+    const { userAddress, merklChainId } = scenario
 
     it('should generate claim transaction for user with rewards', async () => {
       // First get rewards to find chains with rewards
       const rewards = await sdk.armada.users.getUserMerklRewards({
         address: userAddress,
+        merklChainId,
       })
 
       const allChainIds = [
@@ -38,16 +42,22 @@ describe('Merkl Rewards - getUserMerklClaimTx', () => {
       console.log(`Chains with rewards: ${chainsWithRewards}`)
       console.log(`Chains without rewards: ${chainsWithoutRewards}`)
 
+      if (chainsWithRewards.length === 0) {
+        throw new Error(
+          `No chains with rewards found for user ${userAddress} with merkl chain ${merklChainId}. Cannot test claim transaction generation.`,
+        )
+      }
       // Test chains WITH rewards - should return transaction array
       for (const chainId of chainsWithRewards) {
-        console.log(`Testing chain ${chainId} (has rewards)`)
+        console.log(`Testing chain ${chainId} with merkl chain ${merklChainId} (has rewards)`)
         const claimTransactions = await sdk.armada.users.getUserMerklClaimTx({
           address: userAddress,
           chainId,
         })
         if (!claimTransactions) {
-          console.log(`No claim transactions generated for chain ${chainId}`)
-          continue // Skip to next chain
+          throw new Error(
+            `Expected claim transactions for chain ${chainId} with merkl chain ${merklChainId} but got undefined`,
+          )
         }
 
         expect(claimTransactions).toBeDefined()
@@ -63,20 +73,24 @@ describe('Merkl Rewards - getUserMerklClaimTx', () => {
         expect(claimTx.transaction.calldata).toBeDefined()
         expect(claimTx.transaction.value).toBe('0')
 
-        console.log(`✅ Generated claim transaction for chain ${chainId}`)
+        console.log(
+          `✅ Correctly generated claim transaction for chain ${chainId} with merkl chain ${merklChainId}`,
+        )
         break // No need to test further chains with rewards
       }
 
       // Test chains WITHOUT rewards - should return undefined
       for (const chainId of chainsWithoutRewards) {
-        console.log(`Testing chain ${chainId} (no rewards)`)
+        console.log(`Testing chain ${chainId} with merkl chain ${merklChainId} (no rewards)`)
         const result = await sdk.armada.users.getUserMerklClaimTx({
           address: userAddress,
           chainId,
         })
 
         expect(result).toBeUndefined()
-        console.log(`✅ Chain ${chainId} correctly returned undefined (no rewards)`)
+        console.log(
+          `✅ Chain ${chainId} with merkl chain ${merklChainId} correctly returned undefined (no rewards)`,
+        )
         break // No need to test further chains without rewards
       }
 
