@@ -1,0 +1,27 @@
+import type { ISDKAdminManager, ISDKManager } from '@summerfi/sdk-client'
+import { type AddressValue, type ChainId } from '@summerfi/sdk-common'
+
+/**
+ * @name getVaultRewardsMerklClaimTxHandler
+ * @description Generates a transaction to claim Merkl rewards for a vault on a specific chain
+ * @param params.address The vault's address
+ * @param params.chainInfo The chain information
+ * @param params.rewardsTokensAddresses Optional array of token addresses to claim (default: all tokens)
+ */
+export const getVaultRewardsMerklClaimTxHandler =
+  (sdk: ISDKManager | ISDKAdminManager) =>
+  async ({
+    address,
+    chainId,
+    rewardsTokensAddresses,
+  }: {
+    address: AddressValue
+    chainId: ChainId
+    rewardsTokensAddresses?: AddressValue[]
+  }) => {
+    return sdk.armada.users.getVaultRewardsMerklClaimTx({
+      address,
+      chainId,
+      rewardsTokensAddresses,
+    })
+  }

@@ -40,6 +40,7 @@
     "e2e:merklRewards": "jest --roots e2e -- ./e2e/merklRewards.merklRewards.test.ts",
     "e2e:merklClaimTx": "jest --roots e2e -- ./e2e/merklRewards.merklClaimTx.test.ts",
     "e2e:merklReferralFeesClaimTx": "jest --roots e2e -- ./e2e/merklRewards.merklReferralFeesClaimTx.test.ts",
+    "e2e:merklVaultRewardsClaimTx": "jest --roots e2e -- ./e2e/merklRewards.merklVaultRewardsClaimTx.test.ts",
     "e2e:merklAuthorization": "jest --roots e2e -- ./e2e/merklRewards.authorization.test.ts",
     "e2e:ac:checkaddresscontract": "jest --roots e2e -- ./e2e/ac.checkAddressHasContractRole.test.ts",
     "e2e:ac:checkaddressglobal": "jest --roots e2e -- ./e2e/ac.checkAddressHasGlobalRole.test.ts",

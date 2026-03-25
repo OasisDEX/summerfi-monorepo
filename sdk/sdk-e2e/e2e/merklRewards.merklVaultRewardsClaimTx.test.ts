@@ -1,43 +1,34 @@
 import { ChainIds, type AddressValue, type ChainId } from '@summerfi/sdk-common'
 import { createTestSdkInstance } from './utils/createTestSdkInstance'
-import { SharedConfig } from './utils/testConfig'
+import { RpcUrls, SharedConfig } from './utils/testConfig'
 import { createSendTransactionTool, type SendTransactionTool } from '@summerfi/testing-utils'
 import { formatToken } from './utils/stringifiers'
 
 const simulateOnly = true
 const signerPrivateKey = SharedConfig.testUserPrivateKey
 
-const scenarios: { userAddress: AddressValue }[] = [
-  { userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA' },
-  // { userAddress: '0x746bb7beFD31D9052BB8EbA7D5dD74C9aCf54C6d' },
-  // { userAddress: '0xE9c245293DAC615c11A5bF26FCec91C3617645E4' },
+const scenarios: { userAddress: AddressValue; chainId: ChainId; tokens: AddressValue[] }[] = [
+  {
+    userAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+    chainId: ChainIds.Mainnet,
+    tokens: ['0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'],
+  },
 ]
 
-describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
-  const rpcUrl = process.env.E2E_SDK_FORK_URL_BASE
-  if (!rpcUrl) {
-    throw new Error('E2E_SDK_FORK_URL_BASE environment variable not set')
-  }
-
+describe('Merkl Rewards - getVaultRewardsMerklClaimTx', () => {
   const sdk = createTestSdkInstance()
 
   let sendTxTool: SendTransactionTool
 
   describe.each(scenarios)('user address $userAddress', (scenario) => {
-    const { userAddress } = scenario
+    const { userAddress, chainId, tokens } = scenario
 
-    it('should generate referral claim transaction with specific token addresses', async () => {
-      const usdcToken = await sdk.tokens.getTokenBySymbol({
-        symbol: 'USDC',
-        chainId: ChainIds.Base,
-      })
-      const usdcTokenAddress = usdcToken.address.value
-
+    it('should generate vault rewards claim transaction with specific token addresses', async () => {
       // First get rewards to find chains with rewards and get token addresses
       const rewardsData = await sdk.armada.users.getUserMerklRewards({
         address: userAddress,
-        chainIds: [ChainIds.Base],
-        rewardsTokensAddresses: [usdcTokenAddress],
+        merklChainId: chainId,
+        rewardsTokensAddresses: tokens,
       })
 
       const chainIdsWithRewards = Object.entries(rewardsData.perChain)
@@ -61,17 +52,17 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       console.log(`First chain with rewards: ${JSON.stringify(firstChainRewards, null, 2)}`)
 
       console.log(
-        `Testing referral claim transaction for chain ${firstChainId} and token ${firstChainRewards[0].token.address} with ${formatToken(BigInt(firstChainRewards[0].amount), firstChainRewards[0].token.decimals)} ${firstChainRewards[0].token.symbol}`,
+        `Testing vault rewards claim transaction for chain ${firstChainId} and token ${firstChainRewards[0].token.address} with ${formatToken(BigInt(firstChainRewards[0].amount), firstChainRewards[0].token.decimals)} ${firstChainRewards[0].token.symbol}`,
       )
 
-      const claimTransactions = await sdk.armada.users.getReferralFeesMerklClaimTx({
+      const claimTransactions = await sdk.armada.users.getVaultRewardsMerklClaimTx({
         address: userAddress,
         chainId: firstChainId,
         rewardsTokensAddresses: [firstChainRewards[0].token.address as AddressValue],
       })
 
       if (!claimTransactions) {
-        console.log(`No referral claim transactions generated with specific tokens`)
+        console.log(`No vault rewards claim transactions generated with specific tokens`)
         return
       }
 
@@ -88,21 +79,21 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       expect(claimTx.transaction.value).toBe('0')
 
       console.log(
-        `✅ Generated referral claim transaction with specific tokens for chain ${firstChainId}`,
+        `✅ Generated vault rewards claim transaction with specific tokens for chain ${firstChainId}`,
       )
 
       // try to send tx
       sendTxTool = createSendTransactionTool({
         chainId: firstChainId,
         senderAddress: userAddress,
-        rpcUrl,
+        rpcUrl: RpcUrls[firstChainId],
         signerPrivateKey,
         simulateOnly,
       })
 
       const status = await sendTxTool(claimTx)
       if (!simulateOnly) {
-        console.log(`✅ Sent referral claim transaction for chain ${firstChainId}: ${status}`)
+        console.log(`✅ Sent vault rewards claim transaction for chain ${firstChainId}: ${status}`)
       }
     })
 
@@ -110,7 +101,7 @@ describe('Merkl Rewards - getReferralFeesMerklClaimTx', () => {
       const unsupportedChainId = 999999 as ChainId
 
       await expect(
-        sdk.armada.users.getReferralFeesMerklClaimTx({
+        sdk.armada.users.getVaultRewardsMerklClaimTx({
           address: userAddress,
           chainId: unsupportedChainId,
         }),

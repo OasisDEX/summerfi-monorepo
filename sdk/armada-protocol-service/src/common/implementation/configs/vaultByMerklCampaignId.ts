@@ -55,6 +55,10 @@ const vaultsByCampaignId: Record<string, { chainId: ChainId; fleetAddress: Addre
     chainId: 1,
     fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
   },
+  '0x6ac0fe7369c96a03666c1b2c94c04d6ab3eb5f78179e9fea29526616fbe955dc': {
+    chainId: 1,
+    fleetAddress: '0x0C1FBCCC019320032D9acD193447560C8C632114',
+  },
 
   // arbi campaigns
   '4750370497051111624': {
