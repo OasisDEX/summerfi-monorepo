@@ -12,18 +12,12 @@ export const getCachedFleetTokenSharePrice = async ({
   chainId: number
 }) => {
   try {
-    return await unstableCache<() => Promise<number>>(
-      () =>
-        getFleetTokenSharePrice({
-          fleetAddress,
-          chainId,
-        }),
-      ['sharePrice'],
-      {
-        revalidate: CACHE_TIMES.SHARE_PRICE,
-        tags: [getSharePriceTag(fleetAddress, chainId)],
-      },
-    )()
+    return await unstableCache<
+      ({ fleetAddress, chainId }: { fleetAddress: string; chainId: number }) => Promise<number>
+    >(getFleetTokenSharePrice, ['sharePrice'], {
+      revalidate: CACHE_TIMES.SHARE_PRICE,
+      tags: [getSharePriceTag(fleetAddress, chainId)],
+    })({ fleetAddress, chainId })
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`Error fetching ${fleetAddress}-${chainId} share price data:`, error)
