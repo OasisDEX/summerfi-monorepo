@@ -5,7 +5,7 @@ import {
   type PortfolioWalletAsset,
 } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
-import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
+import { getUserDataCacheHandler } from '@/helpers/get-cache-handler-name'
 
 export const emptyWalletAssets = {
   totalAssetsUsdValue: 0,

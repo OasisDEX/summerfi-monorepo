@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 
 import { CACHE_TAGS } from '@/constants/revalidation'
-import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
+import { getUserDataCacheHandler } from '@/helpers/get-cache-handler-name'
 
 const fetchRevalidate = async ({
   tags,

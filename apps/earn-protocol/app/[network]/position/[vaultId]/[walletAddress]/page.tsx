@@ -6,11 +6,7 @@ import {
   sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
-import {
-  getArksInterestRates,
-  getVaultInfo,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
@@ -30,7 +26,6 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
@@ -40,8 +35,10 @@ import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-posit
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
+import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
+import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
@@ -50,7 +47,6 @@ import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/la
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
@@ -145,11 +141,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault,
   })
 
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
   // Fetch DAO managed vaults, vault info, and ark rates in parallel
   const [
     { chartData: vaultBenchmark },
@@ -168,11 +159,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       vaultToken: vault.inputToken.symbol,
     }),
     getDaoManagedVaultsIDsList(vaults),
-    unstableCache(
-      getVaultInfo,
-      [],
-      cacheConfig,
-    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
     getArksInterestRates({
       network: parsedNetwork,
       arksList: vault.arks.filter(
@@ -184,11 +171,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       arksList: vault.arks,
       justLatestRates: true,
     }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${parsedVaultId}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
+    getCachedVaultsHistoricalApy({
       // just the vault displayed
       fleets: [{ id: parsedVaultId, protocol: { network: parsedNetwork } }].map(
         ({ id, protocol: { network } }) => ({
