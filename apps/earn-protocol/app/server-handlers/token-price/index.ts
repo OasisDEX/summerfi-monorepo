@@ -1,15 +1,13 @@
-import { unstable_cache as unstableCache } from 'next/cache'
-
 import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 
-const fallbackData: TokenPriceData = {
+export const tokenPriceFallbackData: TokenPriceData = {
   usd: 0,
   usdMarketCap: 0,
   usd24hVol: 0,
   usd24hChange: 0,
 }
 
-const getTokenPrice = async ({ tokenId }: { tokenId: string }) => {
+export const getTokenPrice = async ({ tokenId }: { tokenId: string }) => {
   // check envs
   const { COINGECKO_API_URL, COINGECKO_API_VERSION, COINGECKO_API_KEY, COINGECKO_API_AUTH_HEADER } =
     process.env
@@ -73,23 +71,6 @@ const getTokenPrice = async ({ tokenId }: { tokenId: string }) => {
     // eslint-disable-next-line no-console
     console.error(`Failed to parse CoinGecko API response: ${error}`)
 
-    return fallbackData
-  }
-}
-
-export const getCachedTokenPrice = async (tokenId: string) => {
-  try {
-    return await unstableCache<() => Promise<TokenPriceData>>(
-      () => getTokenPrice({ tokenId }),
-      [`${tokenId}PriceData`],
-      {
-        revalidate: 60, // 1 minutes
-      },
-    )()
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error fetching ${tokenId} price data:`, error)
-
-    return fallbackData
+    return tokenPriceFallbackData
   }
 }

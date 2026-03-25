@@ -1,5 +1,5 @@
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedTokenPrice } from '@/app/server-handlers/token-price'
+import { getCachedTokenPrice } from '@/app/server-handlers/cached/get-token-price'
 import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 
 const fallbackData: TokenPriceData = {

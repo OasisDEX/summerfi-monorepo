@@ -5,14 +5,12 @@ import {
   safeParseJson,
 } from '@summerfi/app-utils'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getLandingPageSumrStakingV2Data } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
+import { getCachedLandingPageSumrStakingV2Data } from '@/app/server-handlers/cached/get-landing-page-sumr-staking-v2-data'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { SumrV2StakingLandingPageView } from '@/components/layout/SumrV2StakingLandingPageView/SumrV2StakingLandingPageView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
 const SumrStakingLandingPage = async () => {
@@ -33,12 +31,7 @@ const SumrStakingLandingPage = async () => {
 
   if (systemConfig.features?.StakingV2) {
     const [sumrStakingV2LandingPageData] = await Promise.all([
-      unstableCache(getLandingPageSumrStakingV2Data, [sumrPriceUsd.toString()], {
-        revalidate: CACHE_TIMES.STAKING_V2_GLOBAL_DATA,
-        tags: [CACHE_TAGS.STAKING_V2_GLOBAL_DATA],
-      })({
-        sumrPriceUsd,
-      }),
+      getCachedLandingPageSumrStakingV2Data({ sumrPriceUsd }),
     ])
 
     return (

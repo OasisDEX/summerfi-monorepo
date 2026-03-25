@@ -1,6 +1,5 @@
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import BigNumber from 'bignumber.js'
-import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getSSRPublicClient } from '@/helpers/get-ssr-public-client'
 
@@ -35,31 +34,4 @@ export const getFleetTokenSharePrice = async ({
   const sharePrice = new BigNumber(assetsResult).dividedBy(sharePricePrecisionValue).toNumber()
 
   return sharePrice
-}
-
-export const getCachedFleetTokenSharePrice = async ({
-  fleetAddress,
-  chainId,
-}: {
-  fleetAddress: string
-  chainId: number
-}) => {
-  try {
-    return await unstableCache<() => Promise<number>>(
-      () =>
-        getFleetTokenSharePrice({
-          fleetAddress,
-          chainId,
-        }),
-      [`${fleetAddress}-${chainId}-share-price`],
-      {
-        revalidate: 60, // 1 minutes
-      },
-    )()
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error fetching ${fleetAddress}-${chainId} share price data:`, error)
-
-    return 0
-  }
 }

@@ -21,6 +21,8 @@ export const CACHE_TAGS = {
   DEFI_MEDIAN_YIELD: 'defi-median-yield',
   DEFI_PROTOCOL_TVL: 'defi-protocol-tvl',
   USER_DATA: 'user-data',
+  TOKEN_PRICE: 'token-price',
+  SHARE_PRICE: 'share-price',
   STAKING_V2_GLOBAL_DATA: 'staking-v2-global-data',
   VAULT_DAO_MANAGED: 'vault-dao-managed',
   VAULT_PERFORMANCE: 'vault-performance',
@@ -49,6 +51,8 @@ export const CACHE_TIMES = {
   DEFI_PROTOCOL_TVL: 600,
   ALWAYS_FRESH: 0,
   USER_DATA: 300,
+  TOKEN_PRICE: 60,
+  SHARE_PRICE: 60,
   STAKING_V2_GLOBAL_DATA: 300,
   ONE_DAY: 3600 * 24,
 }

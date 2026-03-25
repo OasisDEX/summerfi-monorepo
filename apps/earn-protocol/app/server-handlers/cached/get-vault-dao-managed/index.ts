@@ -3,7 +3,8 @@ import { supportedSDKNetwork } from '@summerfi/app-utils'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getIsVaultDaoManaged } from '@/app/server-handlers/get-vault-dao-managed'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
+import { CACHE_TIMES } from '@/constants/revalidation'
+import { getVaultDaoManagedTag } from '@/helpers/get-cache-handler-name'
 
 export const getCachedIsVaultDaoManaged = ({
   fleetAddress,
@@ -12,9 +13,9 @@ export const getCachedIsVaultDaoManaged = ({
   fleetAddress: string
   network: SupportedSDKNetworks
 }) => {
-  return unstableCache(getIsVaultDaoManaged, [`is-vault-dao-managed-${fleetAddress}-${network}`], {
+  return unstableCache(getIsVaultDaoManaged, ['is-vault-dao-managed'], {
     revalidate: CACHE_TIMES.ONE_DAY,
-    tags: [`${CACHE_TAGS.VAULT_DAO_MANAGED}-${fleetAddress}-${network}`],
+    tags: [getVaultDaoManagedTag(fleetAddress, `${network}`)],
   })({ fleetAddress, network })
 }
 

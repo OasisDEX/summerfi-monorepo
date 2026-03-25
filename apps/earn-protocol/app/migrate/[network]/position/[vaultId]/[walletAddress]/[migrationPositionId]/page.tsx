@@ -1,9 +1,5 @@
 import { Text } from '@summerfi/app-earn-ui'
-import {
-  getArksInterestRates,
-  getVaultInfo,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   humanNetworktoSDKNetwork,
@@ -12,7 +8,6 @@ import {
   supportedSDKNetwork,
 } from '@summerfi/app-utils'
 import dayjs from 'dayjs'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -20,7 +15,9 @@ import { getCachedMedianDefiYield } from '@/app/server-handlers/cached/defillama
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
+import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
 import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
@@ -28,7 +25,6 @@ import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/la
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { MigrationVaultPageView } from '@/components/layout/MigrationVaultPageView/MigrationVaultPageView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import {
   decorateVaultsWithConfig,
@@ -120,11 +116,6 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       })
     : []
 
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
   const [
     fullArkInterestRatesMap,
     latestArkInterestRatesMap,
@@ -148,11 +139,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
           justLatestRates: true,
         })
       : Promise.resolve({}),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
+    getCachedVaultsHistoricalApy({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
@@ -165,11 +152,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
         chainId: subgraphNetworkToId(supportedSDKNetwork(network)),
       })),
     }),
-    unstableCache(
-      getVaultInfo,
-      ['vaultInfo', parsedNetwork, parsedVaultId],
-      cacheConfig,
-    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
     getCachedSumrPrice(),
   ])
 
