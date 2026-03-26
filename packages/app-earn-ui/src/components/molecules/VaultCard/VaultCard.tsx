@@ -4,6 +4,7 @@ import { type FC } from 'react'
 import {
   type DeviceType,
   type IArmadaVaultInfo,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type VaultApyData,
 } from '@summerfi/app-types'
@@ -25,7 +26,7 @@ import { GradientBox } from '@/components/molecules/GradientBox/GradientBox'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getManagementFee } from '@/helpers/get-management-fee'
-import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getUniqueVaultId } from '@/helpers/get-unique-vault-id'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 
@@ -39,13 +40,12 @@ type VaultCardProps = SDKVaultishType & {
   staggerIndex?: number
   withTokenBonus?: boolean
   sumrDilutedValuation?: string
-  sumrPrice?: number
-  showCombinedBonus?: boolean
   vaultApyData: VaultApyData
   wrapperStyle?: React.CSSProperties
   disabled?: boolean
   deviceType?: DeviceType
   tooltipName?: string
+  rewardTokenPrices: RewardTokenPrices
   onTooltipOpen?: (tooltipName: string) => void
   merklRewards?: IArmadaVaultInfo['merklRewards'] | undefined
 }
@@ -63,7 +63,6 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     onClick,
     customFields,
     merklRewards,
-    sumrPrice,
     vaultApyData,
     wrapperStyle,
     disabled,
@@ -73,11 +72,12 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
     tooltipName,
     createdTimestamp,
     isDaoManaged,
+    rewardTokenPrices,
   } = props
 
-  const { rawSumrTokenBonus } = getSumrTokenBonus({
+  const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
     merklRewards,
-    sumrPrice,
+    tokensPriceMap: rewardTokenPrices,
     totalValueLockedUSD,
   })
 
@@ -139,7 +139,7 @@ export const VaultCard: FC<VaultCardProps> = (props) => {
           <div className={vaultCardStyles.vaultBonusWrapper}>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel
-                sumrTokenBonus={Number(rawSumrTokenBonus)}
+                totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
                 apy={vaultApyData.apy}
                 managementFee={managementFee}
                 externalTokenBonus={customFields?.bonus}

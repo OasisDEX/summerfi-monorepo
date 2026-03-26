@@ -20,7 +20,7 @@ import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -122,7 +122,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
     vaultInterestRates,
     vaultApyRaw,
     vaultInfo,
-    sumrPrice,
+    rewardTokenPrices,
   ] = await Promise.all([
     vault?.arks
       ? getArksInterestRates({
@@ -153,7 +153,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       })),
     }),
     getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
-    getCachedSumrPrice(),
+    getCachedRewardTokenPrice(),
   ])
 
   const allVaultsWithConfig = decorateVaultsWithConfig({
@@ -195,7 +195,7 @@ const MigrationVaultPage = async ({ params }: MigrationVaultPageProps) => {
       vaultApyData={vaultApyData}
       migratablePosition={migratablePosition}
       walletAddress={walletAddress}
-      sumrPrice={sumrPrice}
+      rewardTokenPrices={rewardTokenPrices}
     />
   )
 }

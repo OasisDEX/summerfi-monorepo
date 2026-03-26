@@ -24,3 +24,6 @@ export const getPositionsActivePeriodsTag = (walletAddress: string): string =>
 
 export const getSharePriceTag = (fleetAddress: string, chainId: number | string): string =>
   `share-price-${fleetAddress.toLowerCase()}-${chainId}`
+
+export const getMerkleRewardsTag = (walletAddress: string): string =>
+  `claimable-merkle-rewards-${walletAddress.toLowerCase()}`

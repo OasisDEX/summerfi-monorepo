@@ -214,7 +214,7 @@ export { getScannerUrl, getScannerAddressUrl } from './helpers/get-scanner-url'
 export { getMedian } from './helpers/get-median'
 export { getOneYearEarnings } from './helpers/get-one-year-earnings'
 export { getPositionValues } from './helpers/get-position-values'
-export { getSumrTokenBonus } from './helpers/get-sumr-token-bonus'
+export { getRewardsTokenBonus } from './helpers/get-reward-token-bonus'
 export { getResolvedForecastAmountParsed } from './helpers/get-resolved-forecast-amount-parsed'
 export { getVotingPowerColor } from './helpers/get-voting-power-color'
 export {

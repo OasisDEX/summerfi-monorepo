@@ -9,7 +9,7 @@ import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedLandingPageSumrStakingV2Data } from '@/app/server-handlers/cached/get-landing-page-sumr-staking-v2-data'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { SumrV2StakingLandingPageView } from '@/components/layout/SumrV2StakingLandingPageView/SumrV2StakingLandingPageView'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
@@ -25,7 +25,7 @@ const SumrStakingLandingPage = async () => {
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config: systemConfig,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

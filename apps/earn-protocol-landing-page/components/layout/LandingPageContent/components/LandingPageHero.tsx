@@ -3,6 +3,7 @@ import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-e
 import {
   type GetVaultsApyResponse,
   type IArmadaVaultInfo,
+  type RewardTokenPrices,
   type SDKVaultishType,
 } from '@summerfi/app-types'
 import Link from 'next/link'
@@ -15,12 +16,12 @@ export const LandingPageHero = ({
   vaultsList,
   vaultsApyByNetworkMap,
   vaultsInfo,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
-  sumrPriceUsd?: number
+  rewardTokenPrices?: RewardTokenPrices
 }) => {
   const headerPartA = (
     <Text
@@ -74,7 +75,7 @@ export const LandingPageHero = ({
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
         onGetStartedClick={handleGetStartedClick}
-        sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
       />
       <Link
         href="/earn"

@@ -1,4 +1,4 @@
-import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
+import { type TokenPriceData } from '@summerfi/app-types'
 
 export const tokenPriceFallbackData: TokenPriceData = {
   usd: 0,

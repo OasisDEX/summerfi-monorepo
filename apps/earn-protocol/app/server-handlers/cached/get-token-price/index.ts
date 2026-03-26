@@ -1,7 +1,7 @@
+import { type TokenPriceData } from '@summerfi/app-types'
 import { unstable_cache as unstableCache } from 'next/cache'
 
 import { getTokenPrice, tokenPriceFallbackData } from '@/app/server-handlers/token-price'
-import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 
 export const getCachedTokenPrice = async (tokenId: string) => {
