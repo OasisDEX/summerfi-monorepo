@@ -2,7 +2,7 @@
 import { getBeachClubDb } from '@summerfi/summer-beach-club-db'
 import { getSummerProtocolDB } from '@summerfi/summer-protocol-db'
 
-import { getCachedClaimableMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
+import { getCachedClaimableSUMRLVUSDCMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { type BeachClubData } from '@/app/server-handlers/raw-calls/beach-club/types'
 import {
   defaultLatestActivityPagination,
@@ -121,7 +121,7 @@ export const getUserBeachClubData = async (walletAddress: string): Promise<Beach
     ])
 
     // these are fees rewards
-    const claimableRewardsPerChain = await getCachedClaimableMerkleRewards(walletAddress)
+    const claimableRewardsPerChain = await getCachedClaimableSUMRLVUSDCMerkleRewards(walletAddress)
 
     return {
       ...basicData,

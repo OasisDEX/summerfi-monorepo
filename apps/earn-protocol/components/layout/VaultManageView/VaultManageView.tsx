@@ -41,6 +41,7 @@ export const VaultManageView = ({
   systemConfig,
   noOfDeposits,
   rewardTokenPrices,
+  rewardTokensClaimableNow,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaultInfo?: IArmadaVaultInfo
@@ -59,6 +60,12 @@ export const VaultManageView = ({
   systemConfig: Partial<EarnAppConfigType>
   noOfDeposits: number
   rewardTokenPrices: RewardTokenPrices
+  rewardTokensClaimableNow: {
+    [tokenSymbol: string]: {
+      amount: number
+      tokenAddress: string
+    }
+  }
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -80,6 +87,7 @@ export const VaultManageView = ({
         migrationBestVaultApy={migrationBestVaultApy}
         noOfDeposits={noOfDeposits}
         rewardTokenPrices={rewardTokenPrices}
+        rewardTokensClaimableNow={rewardTokensClaimableNow}
       />
     </SDKContextProvider>
   )

@@ -27,7 +27,7 @@ import { redirect } from 'next/navigation'
 
 import { getCachedUserBeachClubData } from '@/app/server-handlers/cached/beach-club'
 import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
-import { getCachedClaimableMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
+import { getCachedClaimableSUMRLVUSDCMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPaginatedLatestActivity } from '@/app/server-handlers/cached/get-paginated-latest-activity'
 import { getCachedPortfolioSumrStakingV2Data } from '@/app/server-handlers/cached/get-portfolio-sumr-staking-v2-data'
@@ -62,7 +62,7 @@ import { type GetPositionHistoryQuery } from '@/graphql/clients/position-history
 import { getPositionHistoricalData } from '@/helpers/chart-helpers/get-position-historical-data'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { isValidAddress } from '@/helpers/is-valid-address'
-import { getMerkleNowClaimableToken } from '@/helpers/merkle'
+import { getMerkleNowClaimableTokenAmount } from '@/helpers/merkle'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
 
 type PortfolioPageProps = {
@@ -118,7 +118,7 @@ const portfolioCallsHandler = async ({
     getCachedVaultsInfo(),
     getCachedSumrStakingRewards({ walletAddress, sumrPriceUsd }),
     getCachedPortfolioSumrStakingV2Data({ walletAddress, sumrPriceUsd }),
-    getCachedClaimableMerkleRewards(walletAddress),
+    getCachedClaimableSUMRLVUSDCMerkleRewards(walletAddress),
   ])
 
   return {
@@ -295,8 +295,8 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
 
   const claimableMerklRewardsData = claimableMerklRewards.perChain[SupportedNetworkIds.Base]
 
-  const usdcClaimableNow = getMerkleNowClaimableToken(claimableMerklRewardsData, 'USDC')
-  const lvUsdcClaimableNow = getMerkleNowClaimableToken(claimableMerklRewardsData, 'LVUSDC')
+  const usdcClaimableNow = getMerkleNowClaimableTokenAmount(claimableMerklRewardsData, 'USDC')
+  const lvUsdcClaimableNow = getMerkleNowClaimableTokenAmount(claimableMerklRewardsData, 'LVUSDC')
 
   const rewardsList = [
     {

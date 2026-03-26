@@ -64,6 +64,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
+import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -147,6 +148,7 @@ export const VaultManageViewComponent = ({
   migrationBestVaultApy,
   systemConfig,
   rewardTokenPrices,
+  rewardTokensClaimableNow,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -165,6 +167,12 @@ export const VaultManageViewComponent = ({
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
   rewardTokenPrices: RewardTokenPrices
+  rewardTokensClaimableNow: {
+    [tokenSymbol: string]: {
+      amount: number
+      tokenAddress: string
+    }
+  }
 }) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -814,6 +822,12 @@ export const VaultManageViewComponent = ({
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
           <>
+            <RewardTokenClaimBox
+              vaultChainId={vaultChainId}
+              rewardTokensClaimableNow={rewardTokensClaimableNow}
+              rewardTokenPrices={rewardTokenPrices}
+              viewWalletAddress={viewWalletAddress}
+            />
             {migrationsEnabled && migratablePositions.length > 0 && (
               <MigrationBox
                 migratablePositions={migratablePositions}

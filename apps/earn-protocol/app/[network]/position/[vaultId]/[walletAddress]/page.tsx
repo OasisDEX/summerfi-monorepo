@@ -27,6 +27,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedClaimableWSTETHMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
@@ -47,6 +48,10 @@ import { VaultManageView } from '@/components/layout/VaultManageView/VaultManage
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
+import {
+  getMerkleNowClaimableTokenAddress,
+  getMerkleNowClaimableTokenAmount,
+} from '@/helpers/merkle'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -151,6 +156,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     positionForecastResponse,
     migratablePositionsData,
     rewardTokenPrices,
+    claimableWSTETHMerkleRewards,
   ] = await Promise.all([
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
@@ -192,6 +198,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       walletAddress,
     }),
     getCachedRewardTokenPrice(),
+    getCachedClaimableWSTETHMerkleRewards(walletAddress),
   ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
@@ -246,6 +253,24 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   })
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
 
+  const rewardTokensClaimableNow: {
+    [tokenSymbol: string]: {
+      amount: number
+      tokenAddress: string
+    }
+  } = {
+    WSTETH: {
+      amount: getMerkleNowClaimableTokenAmount(
+        claimableWSTETHMerkleRewards.perChain['1'],
+        'wstETH',
+      ),
+      tokenAddress: getMerkleNowClaimableTokenAddress(
+        claimableWSTETHMerkleRewards.perChain['1'],
+        'wstETH',
+      ),
+    },
+  }
+
   return (
     <VaultManageView
       systemConfig={systemConfig}
@@ -265,6 +290,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       vaultInfo={vaultInfoParsed}
       noOfDeposits={positionHistory.noOfDeposits}
       rewardTokenPrices={rewardTokenPrices}
+      rewardTokensClaimableNow={rewardTokensClaimableNow}
     />
   )
 }
