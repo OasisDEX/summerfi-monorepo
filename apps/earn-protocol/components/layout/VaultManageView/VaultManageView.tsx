@@ -7,6 +7,7 @@ import {
   type IArmadaPosition,
   type InterestRates,
   type PerformanceChartData,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -39,7 +40,7 @@ export const VaultManageView = ({
   migrationBestVaultApy,
   systemConfig,
   noOfDeposits,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaultInfo?: IArmadaVaultInfo
@@ -57,7 +58,7 @@ export const VaultManageView = ({
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
   noOfDeposits: number
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -78,7 +79,7 @@ export const VaultManageView = ({
         migratablePositions={migratablePositions}
         migrationBestVaultApy={migrationBestVaultApy}
         noOfDeposits={noOfDeposits}
-        sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
       />
     </SDKContextProvider>
   )

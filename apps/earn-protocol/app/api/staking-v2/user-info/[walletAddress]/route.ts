@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedSumrStakingV2UserData } from '@/app/server-handlers/cached/get-sumr-staking-v2-user-data'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
 export async function GET(
@@ -22,7 +22,7 @@ export async function GET(
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

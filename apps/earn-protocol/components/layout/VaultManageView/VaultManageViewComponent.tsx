@@ -39,6 +39,7 @@ import {
   type InterestRates,
   type NetworkIds,
   type PerformanceChartData,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -145,7 +146,7 @@ export const VaultManageViewComponent = ({
   migratablePositions,
   migrationBestVaultApy,
   systemConfig,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -163,7 +164,7 @@ export const VaultManageViewComponent = ({
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -775,6 +776,7 @@ export const VaultManageViewComponent = ({
       <VaultManageGrid
         vault={vault}
         vaultInfo={vaultInfo}
+        rewardTokenPrices={rewardTokenPrices}
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
@@ -796,7 +798,6 @@ export const VaultManageViewComponent = ({
             />
           )
         }
-        sumrPrice={sumrPriceUsd}
         detailsContent={
           <VaultManageViewDetails
             arksHistoricalChartData={arksHistoricalChartData}

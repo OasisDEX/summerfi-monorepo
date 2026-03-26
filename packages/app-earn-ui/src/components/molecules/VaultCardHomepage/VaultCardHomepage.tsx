@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import {
   type IArmadaVaultInfo,
   type IconNamesList,
+  type RewardTokenPrices,
   type SDKVaultishType,
   SupportedSDKNetworks,
   type VaultApyData,
@@ -29,7 +30,7 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitle } from '@/components/molecules/VaultTitle/VaultTitle'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getManagementFee } from '@/helpers/get-management-fee'
-import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { riskColors } from '@/helpers/risk-colors'
 import { getVaultApyUpdatedAtLabel } from '@/hooks/use-apy-updated-at'
@@ -228,7 +229,7 @@ type VaultCardHomepageProps = {
   selected?: boolean
   onSelect?: () => void
   onGetStartedClick?: (vault?: SDKVaultishType) => void
-  sumrPrice?: number
+  rewardTokenPrices?: RewardTokenPrices
   isLoading?: boolean
 }
 
@@ -238,7 +239,7 @@ export const VaultCardHomepage = ({
   vaultsApyByNetworkMap,
   selected = true,
   onSelect,
-  sumrPrice,
+  rewardTokenPrices,
   isLoading,
   onGetStartedClick,
 }: VaultCardHomepageProps): React.ReactNode => {
@@ -253,10 +254,10 @@ export const VaultCardHomepage = ({
   const { apy, apyTimestamp } =
     vaultsApyByNetworkMap[`${id}-${subgraphNetworkToId(supportedSDKNetwork(protocol.network))}`]
 
-  const { rawSumrTokenBonus } = getSumrTokenBonus({
+  const { totalAnnualRewardsPerToken, rawTokenBonus } = getRewardsTokenBonus({
     merklRewards: vaultInfo?.merklRewards,
-    sumrPrice,
-    totalValueLockedUSD,
+    tokensPriceMap: rewardTokenPrices,
+    totalValueLockedUSD: vault.totalValueLockedUSD,
   })
 
   const apyUpdatedAt = getVaultApyUpdatedAtLabel({
@@ -265,7 +266,7 @@ export const VaultCardHomepage = ({
   const managementFee = getManagementFee(inputToken.symbol)
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const grossApy = (Number(apy) ?? 0) + (Number(rawSumrTokenBonus) ?? 0)
+  const grossApy = (Number(apy) ?? 0) + (Number(rawTokenBonus) ?? 0)
   const netApy = grossApy - managementFee
 
   const parsedApy = netApy > 0 ? formatDecimalAsPercent(netApy) : 'n/a'
@@ -283,10 +284,7 @@ export const VaultCardHomepage = ({
   const liveApyParsed = typeof apy === 'number' ? formatDecimalAsPercent(apy, { precision: 2 }) : ''
   const netApyParsed =
     typeof netApy === 'number' ? formatDecimalAsPercent(netApy, { precision: 2 }) : ''
-  const sumrTokenBonusParsed =
-    !isNaN(Number(rawSumrTokenBonus)) && Number(rawSumrTokenBonus) > 0
-      ? formatDecimalAsPercent(rawSumrTokenBonus, { precision: 2 })
-      : undefined
+
   const managementFeeParsed =
     typeof managementFee === 'number'
       ? formatDecimalAsPercent(managementFee, { precision: 2 })
@@ -367,12 +365,11 @@ export const VaultCardHomepage = ({
                       <BonusLabelTooltip
                         apy={apy}
                         managementFee={managementFee}
-                        sumrTokenBonus={Number(rawSumrTokenBonus)}
+                        totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
                         externalTokenBonus={vault.customFields?.bonus}
                         apyUpdatedAt={apyUpdatedAt}
                         liveApyParsed={liveApyParsed}
                         netApyParsed={netApyParsed}
-                        sumrTokenBonusParsed={sumrTokenBonusParsed}
                         managementFeeParsed={managementFeeParsed}
                       />
                     }

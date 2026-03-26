@@ -5,6 +5,7 @@ import {
   type DropdownRawOption,
   type IArmadaPosition,
   type IArmadaVaultInfo,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
@@ -39,7 +40,7 @@ import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/Va
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getManagementFee } from '@/helpers/get-management-fee'
 import { getPositionValues } from '@/helpers/get-position-values'
-import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
@@ -59,7 +60,7 @@ interface VaultManageGridProps {
   isMobile?: boolean
   displaySimulationGraph?: boolean
   simulationGraph: ReactNode
-  sumrPrice?: number
+  rewardTokenPrices: RewardTokenPrices
   onRefresh?: (params: {
     chainName?: string
     vaultId?: string
@@ -77,8 +78,8 @@ interface VaultManageGridProps {
 export const VaultManageGrid: FC<VaultManageGridProps> = ({
   vault,
   vaultApyData,
-  vaults,
   vaultInfo,
+  vaults,
   detailsContent,
   sidebarContent,
   position,
@@ -87,18 +88,24 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   isMobile,
   simulationGraph,
   displaySimulationGraph,
-  sumrPrice,
   onRefresh,
   rightExtraContent,
   buttonClickEventHandler,
   tooltipEventHandler,
   dropdownChangeHandler,
   noOfDeposits,
+  rewardTokenPrices,
 }) => {
   const isAltPressed = useHoldAlt()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
     useState(displaySimulationGraph)
+
+  const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
+    tokensPriceMap: rewardTokenPrices,
+    totalValueLockedUSD: vault.totalValueLockedUSD,
+  })
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
 
@@ -159,11 +166,6 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
     vault,
   })
 
-  const { rawSumrTokenBonus } = getSumrTokenBonus({
-    merklRewards: vaultInfo?.merklRewards,
-    sumrPrice,
-    totalValueLockedUSD: vault.totalValueLockedUSD,
-  })
   const handleUserRefresh = () => {
     buttonClickEventHandler(`vault-manage-refresh-button`)
     onRefresh?.({
@@ -326,9 +328,9 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 apy={vaultApyData.apy}
                 managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                sumrTokenBonus={Number(rawSumrTokenBonus)}
                 tooltipName="vault-manage-bonus-label"
                 onTooltipOpen={tooltipEventHandler}
+                totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
               />
             </div>
           </div>

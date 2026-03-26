@@ -18,7 +18,6 @@ import { useHoldAlt } from '@/hooks/use-hold-alt'
 
 interface BonulsLabelProps {
   isLoading?: boolean
-  totalSumrEarned?: string
   apyUpdatedAt?: {
     apyUpdatedAtLabel: string
     apyUpdatedAtAltLabel: string
@@ -27,7 +26,7 @@ interface BonulsLabelProps {
   tooltipName?: string
   apy?: number
   managementFee?: number
-  sumrTokenBonus?: number
+  totalAnnualRewardsPerToken?: { [tokenSymbol: string]: number }
   externalTokenBonus?: EarnAppFleetCustomConfigType['bonus']
   onTooltipOpen?: (tooltipName: string) => void
 }
@@ -35,27 +34,24 @@ interface BonulsLabelProps {
 export const BonusLabelTooltip = ({
   apy,
   managementFee,
-  sumrTokenBonus,
   externalTokenBonus,
+  totalAnnualRewardsPerToken,
   apyUpdatedAt,
-  totalSumrEarned,
   liveApyParsed,
   netApyParsed,
-  sumrTokenBonusParsed,
   managementFeeParsed,
 }: {
   apy?: number
   managementFee?: number
-  sumrTokenBonus?: number
+  rewardsTokenBonus?: number
   externalTokenBonus?: EarnAppFleetCustomConfigType['bonus']
   apyUpdatedAt?: {
     apyUpdatedAtLabel: string
     apyUpdatedAtAltLabel: string
   }
-  totalSumrEarned?: string
+  totalAnnualRewardsPerToken?: { [tokenSymbol: string]: number }
   liveApyParsed: string
   netApyParsed: string
-  sumrTokenBonusParsed?: string
   managementFeeParsed?: string
 }): ReactNode => {
   const isAltPressed = useHoldAlt()
@@ -69,17 +65,38 @@ export const BonusLabelTooltip = ({
           isAltPressed={isAltPressed}
         />
       )}
-      {sumrTokenBonus && sumrTokenBonusParsed && sumrTokenBonus > 0 && (
-        <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
-          <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-            $SUMR&nbsp;Token&nbsp;Rewards:
-          </Text>
-          <Icon iconName="stars_colorful" size={20} />
-          <Text as="p" variant="p1semiColorful">
-            {sumrTokenBonusParsed}
-          </Text>
-        </div>
-      )}
+      {totalAnnualRewardsPerToken &&
+        Object.keys(totalAnnualRewardsPerToken).length > 0 &&
+        Object.keys(totalAnnualRewardsPerToken).map((tokenSymbol) => (
+          <div
+            key={tokenSymbol}
+            style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}
+          >
+            <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
+              {tokenSymbol === 'SUMR' ? `$SUMR` : tokenSymbol}&nbsp;Token&nbsp;Rewards:
+            </Text>
+            <Icon
+              iconName={tokenSymbol === 'SUMR' ? 'stars_colorful' : 'stars'}
+              size={20}
+              color={
+                {
+                  WSTETH: '#00a4ff',
+                }[tokenSymbol.toUpperCase()]
+              }
+            />
+            <Text
+              as="p"
+              variant="p1semiColorful"
+              style={{
+                backgroundImage: {
+                  WSTETH: 'linear-gradient(90deg, #00a4ff 0%, #89d4ff 100%)',
+                }[tokenSymbol.toUpperCase()],
+              }}
+            >
+              {formatDecimalAsPercent(totalAnnualRewardsPerToken[tokenSymbol], { precision: 2 })}
+            </Text>
+          </div>
+        ))}
       {managementFee && (
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
@@ -121,24 +138,6 @@ export const BonusLabelTooltip = ({
           </Text>
         </div>
       )}
-      {sumrTokenBonus && totalSumrEarned && (
-        <div>
-          <Text as="p" variant="p2semi" style={{ color: 'var(--color-text-primary)' }}>
-            Total&nbsp;SUMR&nbsp;Earned&nbsp;to&nbsp;Date:
-          </Text>
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--spacing-space-x-small)',
-              alignItems: 'center',
-            }}
-          >
-            <Text as="p" variant="p1semi">
-              {totalSumrEarned} $SUMR
-            </Text>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
@@ -146,25 +145,24 @@ export const BonusLabelTooltip = ({
 export const BonusLabel: FC<BonulsLabelProps> = ({
   apy,
   externalTokenBonus,
-  sumrTokenBonus,
+  totalAnnualRewardsPerToken,
   managementFee,
   isLoading,
   apyUpdatedAt,
-  totalSumrEarned,
   deviceType,
   onTooltipOpen,
   tooltipName,
 }): React.ReactNode => {
-  const grossApy = (apy ?? 0) + (sumrTokenBonus ?? 0)
+  const grossRewardsTokenBonus = totalAnnualRewardsPerToken
+    ? Object.values(totalAnnualRewardsPerToken).reduce((acc, bonus) => acc + bonus, 0)
+    : 0
+  const grossApy = (apy ?? 0) + grossRewardsTokenBonus
   const netApy = grossApy - (managementFee ?? 0)
 
   const liveApyParsed = typeof apy === 'number' ? formatDecimalAsPercent(apy, { precision: 2 }) : ''
   const netApyParsed =
     typeof netApy === 'number' ? formatDecimalAsPercent(netApy, { precision: 2 }) : ''
-  const sumrTokenBonusParsed =
-    typeof sumrTokenBonus === 'number'
-      ? formatDecimalAsPercent(sumrTokenBonus, { precision: 2 })
-      : undefined
+
   const managementFeeParsed =
     typeof managementFee === 'number'
       ? formatDecimalAsPercent(managementFee, { precision: 2 })
@@ -180,13 +178,11 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
         <BonusLabelTooltip
           apy={apy}
           managementFee={managementFee}
-          sumrTokenBonus={sumrTokenBonus}
+          totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
           externalTokenBonus={externalTokenBonus}
           apyUpdatedAt={apyUpdatedAt}
-          totalSumrEarned={totalSumrEarned}
           liveApyParsed={liveApyParsed}
           netApyParsed={netApyParsed}
-          sumrTokenBonusParsed={sumrTokenBonusParsed}
           managementFeeParsed={managementFeeParsed}
         />
       }
@@ -206,7 +202,7 @@ export const BonusLabel: FC<BonulsLabelProps> = ({
           </Pill>
         ) : apy ? (
           <Pill>
-            {externalTokenBonus ?? (sumrTokenBonus && sumrTokenBonus > 0) ? (
+            {externalTokenBonus ?? (grossRewardsTokenBonus && grossRewardsTokenBonus > 0) ? (
               <Icon iconName="stars" size={24} color="white" />
             ) : null}
             <span style={{ fontWeight: 600 }}>{netApyParsed}&nbsp;APY</span>

@@ -27,6 +27,7 @@ import { redirect } from 'next/navigation'
 
 import { getCachedUserBeachClubData } from '@/app/server-handlers/cached/beach-club'
 import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
+import { getCachedClaimableMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPaginatedLatestActivity } from '@/app/server-handlers/cached/get-paginated-latest-activity'
 import { getCachedPortfolioSumrStakingV2Data } from '@/app/server-handlers/cached/get-portfolio-sumr-staking-v2-data'
@@ -46,9 +47,11 @@ import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-inf
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedWalletAssets } from '@/app/server-handlers/cached/get-wallet-assets'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
-import { getClaimableMerkleRewards } from '@/app/server-handlers/raw-calls/merkle'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import {
+  getCachedRewardTokenPrice,
+  getCachedSumrPrice,
+} from '@/app/server-handlers/reward-token-price'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { PortfolioPageViewComponent } from '@/components/layout/PortfolioPageView/PortfolioPageViewComponent'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
@@ -115,7 +118,7 @@ const portfolioCallsHandler = async ({
     getCachedVaultsInfo(),
     getCachedSumrStakingRewards({ walletAddress, sumrPriceUsd }),
     getCachedPortfolioSumrStakingV2Data({ walletAddress, sumrPriceUsd }),
-    getClaimableMerkleRewards(walletAddress),
+    getCachedClaimableMerkleRewards(walletAddress),
   ])
 
   return {
@@ -155,19 +158,19 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const [
     { walletAddress: walletAddressRaw },
     cookieRaw,
-    sumrPrice,
+    rewardTokenPrices,
     usdcPrice,
     LVUSDCSharePriceInUSDC,
     config,
   ] = await Promise.all([
     params,
     cookies(),
-    getCachedSumrPrice(),
+    getCachedRewardTokenPrice(),
     getCachedTokenPrice('usd-coin'),
     getCachedFleetTokenSharePrice({
       // LVUSDC token, which is being rewarded in merkle as well
-      fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17', // Replace with actual fleet address
-      chainId: SupportedNetworkIds.Base, // Replace with actual chain ID
+      fleetAddress: '0x98C49e13bf99D7CAd8069faa2A370933EC9EcF17',
+      chainId: SupportedNetworkIds.Base,
     }),
     getCachedConfig(),
   ])
@@ -176,7 +179,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: rewardTokenPrices.SUMR,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
@@ -332,7 +335,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       claimableRewards={claimableRewards}
       blogPosts={blogPosts}
       portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
-      sumrPriceUsd={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
     />
   )
 }
@@ -366,7 +369,7 @@ export async function generateMetadata({
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

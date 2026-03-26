@@ -11,8 +11,8 @@ import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedSumrBalances } from '@/app/server-handlers/cached/get-sumr-balances'
 import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import {
   getIsAuthorizedStakingRewardsCallerBase,
@@ -46,7 +46,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
 
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

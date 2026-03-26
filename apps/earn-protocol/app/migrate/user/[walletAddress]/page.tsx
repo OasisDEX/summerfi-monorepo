@@ -10,7 +10,10 @@ import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vau
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import {
+  getCachedRewardTokenPrice,
+  getCachedSumrPrice,
+} from '@/app/server-handlers/reward-token-price'
 import { MigrationLandingPageView } from '@/components/layout/MigrationLandingPageView/MigrationLandingPageView'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { decorateVaultsWithConfig } from '@/helpers/vault-custom-value-helpers'
@@ -24,12 +27,14 @@ type MigrationLandingPageProps = {
 const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
   const { walletAddress } = await params
 
-  const [{ vaults }, configRaw, migratablePositionsData, sumrPrice] = await Promise.all([
-    getCachedVaultsList(),
-    getCachedConfig(),
-    getCachedMigratablePositions({ walletAddress }),
-    getCachedSumrPrice(),
-  ])
+  const [{ vaults }, configRaw, migratablePositionsData, sumrPrice, rewardTokenPrices] =
+    await Promise.all([
+      getCachedVaultsList(),
+      getCachedConfig(),
+      getCachedMigratablePositions({ walletAddress }),
+      getCachedSumrPrice(),
+      getCachedRewardTokenPrice(),
+    ])
 
   const systemConfig = parseServerResponseToClient(configRaw)
   const migrationsEnabled = !!systemConfig.features?.Migrations
@@ -69,6 +74,7 @@ const MigrationLandingPage = async ({ params }: MigrationLandingPageProps) => {
       walletAddress={walletAddress}
       migrationBestVaultApy={migrationBestVaultApy}
       sumrPrice={sumrPrice}
+      rewardTokenPrices={rewardTokenPrices}
     />
   )
 }

@@ -362,7 +362,7 @@ export type LandingPageData = {
   totalRebalanceItemsPerStrategyId: TotalRebalanceItemsPerStrategyId[]
   vaultsInfo: IArmadaVaultInfo[] | undefined
   totalUniqueUsers: number
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
   tvl: number
 }
 
@@ -434,4 +434,15 @@ export type GetVaultsApyRAWResponse = {
       },
     ]
   }[]
+}
+
+export type TokenPriceData = {
+  usd: number
+  usdMarketCap: number
+  usd24hVol: number
+  usd24hChange: number
+}
+
+export type RewardTokenPrices = {
+  [tokenSymbol: string]: TokenPriceData['usd']
 }

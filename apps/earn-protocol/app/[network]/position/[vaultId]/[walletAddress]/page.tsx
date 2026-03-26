@@ -3,7 +3,6 @@ import {
   getDisplayToken,
   getPositionValues,
   parseForecastDatapoints,
-  sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
 import { getArksInterestRates } from '@summerfi/app-server-handlers'
@@ -14,10 +13,8 @@ import {
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
-  getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
-  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   zero,
@@ -26,7 +23,7 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { cookies, headers } from 'next/headers'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -41,8 +38,8 @@ import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vault
 import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
@@ -50,7 +47,6 @@ import { VaultManageView } from '@/components/layout/VaultManageView/VaultManage
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
-import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -66,8 +62,10 @@ type EarnVaultManagePageProps = {
 }
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw, sumrPrice] =
-    await Promise.all([params, getCachedConfig(), getCachedSumrPrice()])
+  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw] = await Promise.all([
+    params,
+    getCachedConfig(),
+  ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -152,7 +150,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     positionHistory,
     positionForecastResponse,
     migratablePositionsData,
-    cookieRaw,
+    rewardTokenPrices,
   ] = await Promise.all([
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
@@ -193,7 +191,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getCachedMigratablePositions({
       walletAddress,
     }),
-    cookies(),
+    getCachedRewardTokenPrice(),
   ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
@@ -246,15 +244,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsWithConfig: allVaultsWithConfig,
     vaultsApyByNetworkMap,
   })
-  const cookie = cookieRaw.toString()
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
-  const sumrPriceUsd = getEstimatedSumrPrice({
-    config: systemConfig,
-    sumrPrice,
-    sumrNetApyConfig: sumrNetApyConfig ?? {},
-  })
 
   return (
     <VaultManageView
@@ -274,7 +264,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}
       noOfDeposits={positionHistory.noOfDeposits}
-      sumrPriceUsd={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
     />
   )
 }

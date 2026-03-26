@@ -16,6 +16,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
+  type RewardTokenPrices,
   type SDKVaultsListType,
   type SingleSourceChartData,
   type TimeframesType,
@@ -62,7 +63,7 @@ type PortfolioOverviewProps = {
   viewWalletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
   blogPosts: BlogPosts
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const PortfolioOverview = ({
@@ -75,7 +76,7 @@ export const PortfolioOverview = ({
   viewWalletAddress,
   migrationBestVaultApy,
   blogPosts,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: PortfolioOverviewProps) => {
   const buttonClickEventHandler = useHandleButtonClickEvent()
   const tooltipEventHandler = useHandleTooltipOpenEvent()
@@ -265,7 +266,7 @@ export const PortfolioOverview = ({
                     `${position.vault.id}-${subgraphNetworkToId(supportedSDKNetwork(position.vault.protocol.network))}`
                   ]
                 }
-                sumrPrice={sumrPriceUsd}
+                sumrPrice={rewardTokenPrices.SUMR}
               />
             ))
           ) : (
@@ -288,7 +289,7 @@ export const PortfolioOverview = ({
             vaultsApyByNetworkMap={vaultsApyByNetworkMap}
             style={{ marginTop: 'var(--general-space-24)' }}
             carouselId="portfolio-overview-you-might-like-carousel"
-            sumrPriceUsd={sumrPriceUsd}
+            rewardTokenPrices={rewardTokenPrices}
           />
         </Card>
         {migrationsEnabled && (

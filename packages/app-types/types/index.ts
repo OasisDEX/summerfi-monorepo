@@ -102,6 +102,8 @@ export type {
   HistoricalFleetRateResult,
   GetVaultsApyParams,
   GetVaultsApyRAWResponse,
+  TokenPriceData,
+  RewardTokenPrices,
 } from './src/earn-protocol'
 export {
   supportedDefillamaProtocols,
