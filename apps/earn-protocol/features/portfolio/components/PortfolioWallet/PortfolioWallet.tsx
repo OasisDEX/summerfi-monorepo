@@ -1,5 +1,9 @@
 import { type FC } from 'react'
-import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type GetVaultsApyResponse,
+  type RewardTokenPrices,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
 
 import { type PortfolioAssetsResponse } from '@/app/server-handlers/cached/get-wallet-assets/types'
 import { PortfolioAssets } from '@/features/portfolio/components/PortfolioAssets/PortfolioAssets'
@@ -11,14 +15,14 @@ interface PortfolioWalletProps {
   walletData: PortfolioAssetsResponse
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const PortfolioWallet: FC<PortfolioWalletProps> = ({
   walletData,
   vaultsList,
   vaultsApyByNetworkMap,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }) => {
   return (
     <div className={classNames.wrapper}>
@@ -29,7 +33,7 @@ export const PortfolioWallet: FC<PortfolioWalletProps> = ({
         vaultsList={vaultsList}
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         carouselId="portfolio-wallet-vaults-carousel"
-        sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
       />
     </div>
   )

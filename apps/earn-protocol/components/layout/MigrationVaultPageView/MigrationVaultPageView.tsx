@@ -3,6 +3,7 @@ import { type FC } from 'react'
 import {
   type ArksHistoricalChartData,
   type InterestRates,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type VaultApyData,
@@ -14,7 +15,6 @@ import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migrati
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { sdkApiUrl } from '@/constants/sdk'
 
 import { MigrationVaultPageComponent } from './MigrationVaultPageComponent'
@@ -32,7 +32,7 @@ type MigrationVaultPageViewProps = {
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
-  sumrPrice: TokenPriceData
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
@@ -48,7 +48,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
   vaultApyData,
   migratablePosition,
   walletAddress,
-  sumrPrice,
+  rewardTokenPrices,
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -65,7 +65,7 @@ export const MigrationVaultPageView: FC<MigrationVaultPageViewProps> = ({
         vaultApyData={vaultApyData}
         migratablePosition={migratablePosition}
         walletAddress={walletAddress}
-        sumrPrice={sumrPrice}
+        rewardTokenPrices={rewardTokenPrices}
       />
     </SDKContextProvider>
   )

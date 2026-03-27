@@ -20,7 +20,7 @@ import Image from 'next/image'
 import Script from 'next/script'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { largeUsersCookieName } from '@/components/molecules/LargeUserFloatingBanner/config'
 import { GlobalProvider } from '@/components/organisms/Providers/GlobalProvider'
@@ -106,7 +106,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const slippageConfig = safeParseJson(getServerSideCookies(slippageConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

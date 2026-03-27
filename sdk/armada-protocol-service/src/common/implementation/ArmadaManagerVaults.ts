@@ -2141,7 +2141,9 @@ export class ArmadaManagerVaults extends ArmadaManagerShared implements IArmadaM
     )
 
     return {
-      byFleetAddress: getMerklRewardsByFleetAddressFallback(chainId, sumrToken),
+      byFleetAddress: getMerklRewardsByFleetAddressFallback(chainId, (chainId, symbol) =>
+        this._tokensManager.getTokenBySymbol({ chainInfo: getChainInfoByChainId(chainId), symbol }),
+      ),
     }
   }
 

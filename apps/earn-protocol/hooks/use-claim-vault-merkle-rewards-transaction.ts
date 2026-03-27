@@ -1,0 +1,115 @@
+'use client'
+import { useSendUserOperation, useSmartAccountClient } from '@account-kit/react'
+import { getAccountType, useIsIframe } from '@summerfi/app-earn-ui'
+import { type SupportedSDKNetworks } from '@summerfi/app-types'
+import { sdkNetworkToChain } from '@summerfi/app-utils'
+import { type PublicClient } from 'viem'
+
+import { getGasSponsorshipOverride } from '@/helpers/get-gas-sponsorship-override'
+import { useAppSDK } from '@/hooks/use-app-sdk'
+import { useSafeTransaction } from '@/hooks/use-safe-transaction'
+
+/**
+ * THIS IS FOR THE WSTETH REWARD CLAIM
+ * Hook to handle claim of merkl rewards through a user operation transaction
+ * @param {Object} params - Hook parameters
+ * @param {() => void} params.onSuccess - Callback function called when the transaction succeeds
+ * @param {() => void} params.onError - Callback function called when the transaction fails
+ * @returns {Object} Object containing the claim transaction function, loading state, and error state
+ * @returns {() => Promise<unknown>} returns.claimVaultMerkleRewardsTransaction - Function to execute the claim transaction
+ * @returns {boolean} returns.isLoading - Whether the transaction is currently being processed
+ * @returns {Error | null} returns.error - Error object if the transaction failed, null otherwise
+ */
+export const useClaimVaultMerkleRewardsTransaction = ({
+  onSuccess,
+  onError,
+  network,
+  publicClient,
+  rewardTokenAddress,
+}: {
+  onSuccess: () => void
+  onError: () => void
+  network: SupportedSDKNetworks
+  publicClient?: PublicClient
+  rewardTokenAddress: string
+}): {
+  claimVaultMerkleRewardsTransaction: () => Promise<unknown>
+  isLoading: boolean
+  error: Error | null
+} => {
+  const { getVaultRewardsMerklClaimTx, getChainInfo, getCurrentUser } = useAppSDK()
+
+  const { client: smartAccountClient } = useSmartAccountClient({
+    type: getAccountType(sdkNetworkToChain(network).id),
+  })
+
+  const { sendSafeWalletTransaction, waitingForTx } = useSafeTransaction({
+    network,
+    onSuccess,
+    onError,
+    publicClient,
+  })
+
+  const isIframe = useIsIframe()
+
+  const {
+    sendUserOperationAsync,
+    error: sendUserOperationError,
+    isSendingUserOperation,
+  } = useSendUserOperation({
+    client: smartAccountClient,
+    waitForTxn: true,
+    onSuccess,
+    onError,
+  })
+
+  const claimVaultMerkleRewardsTransaction = async () => {
+    const user = getCurrentUser()
+    const chainInfo = getChainInfo()
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!user.wallet.address.value) {
+      throw new Error('Smart account client not connected')
+    }
+
+    if (!rewardTokenAddress) {
+      throw new Error('Reward token address is required')
+    }
+
+    const tx = await getVaultRewardsMerklClaimTx({
+      address: user.wallet.address.value,
+      chainId: chainInfo.chainId,
+      rewardsTokensAddresses: [rewardTokenAddress as `0x${string}`],
+    })
+
+    if (!tx) {
+      throw new Error('No fees to claim')
+    }
+
+    const txParams = {
+      target: tx[0].transaction.target.value,
+      data: tx[0].transaction.calldata,
+      value: BigInt(tx[0].transaction.value),
+    }
+
+    const resolvedOverrides = await getGasSponsorshipOverride({
+      smartAccountClient,
+      txParams,
+    })
+
+    if (isIframe) {
+      return sendSafeWalletTransaction(txParams)
+    }
+
+    return await sendUserOperationAsync({
+      uo: txParams,
+      overrides: resolvedOverrides,
+    })
+  }
+
+  return {
+    claimVaultMerkleRewardsTransaction,
+    isLoading: isSendingUserOperation || !!waitingForTx,
+    error: sendUserOperationError,
+  }
+}

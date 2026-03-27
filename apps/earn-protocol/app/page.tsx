@@ -22,7 +22,7 @@ import {
   emptyWalletAssets,
   getCachedWalletAssets,
 } from '@/app/server-handlers/cached/get-wallet-assets'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { VaultListViewComponent } from '@/components/layout/VaultsListView/VaultListViewComponent'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
@@ -51,7 +51,7 @@ const EarnAllVaultsPage = async ({
     cookieRaw,
     configRaw,
     vaultsInfoRaw,
-    sumrPrice,
+    rewardTokenPrices,
     tvl,
     walletAssets,
     daoManagedVaultsList,
@@ -60,7 +60,7 @@ const EarnAllVaultsPage = async ({
     cookies(),
     getCachedConfig(),
     getCachedVaultsInfo(),
-    getCachedSumrPrice(),
+    getCachedRewardTokenPrice(),
     getCachedTvl(),
     walletAddress ? getCachedWalletAssets(walletAddress, true) : Promise.resolve(emptyWalletAssets),
     getDaoManagedVaultsIDsList(vaults),
@@ -91,7 +91,7 @@ const EarnAllVaultsPage = async ({
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config: systemConfig,
-    sumrPrice,
+    sumrPrice: rewardTokenPrices.SUMR,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
@@ -102,6 +102,7 @@ const EarnAllVaultsPage = async ({
       vaultsList={vaultsWithConfig}
       filteredWalletAssetsVaults={filteredWalletAssetsVaults}
       sumrPriceUsd={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
       tvl={tvl}
     />
   )
@@ -110,7 +111,7 @@ const EarnAllVaultsPage = async ({
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [{ vaults }, headersList, params, tvl] = await Promise.all([
     getCachedVaultsList(),

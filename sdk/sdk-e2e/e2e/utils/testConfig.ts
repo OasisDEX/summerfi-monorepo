@@ -54,6 +54,7 @@ export const FleetAddresses = {
     USDCHighRisk: '0xe9cda459bed6dcfb8ac61cd8ce08e2d52370cb06',
     USDCLowRisk: '0x98c49e13bf99d7cad8069faa2a370933ec9ecf17',
     ETHHighRisk: '0x2e6abcbcced9af05bc3b8a4908e0c98c29a88e10',
+    ETHDao: '0x0c1fbccc019320032d9acd193447560c8c632114',
   },
   Sonic: {
     USDC: '0x507a2d9e87dbd3076e65992049c41270b47964f8',
@@ -106,6 +107,12 @@ export const TestConfigs = {
     chainId: ChainIds.Mainnet,
     fleetAddressValue: FleetAddresses.Mainnet.USDCLowRisk,
     symbol: 'USDC',
+  },
+  MainnetETHDao: {
+    rpcUrl: RpcUrls[ChainIds.Mainnet],
+    chainId: ChainIds.Mainnet,
+    fleetAddressValue: FleetAddresses.Mainnet.ETHDao,
+    symbol: 'ETH',
   },
   SonicUSDC: {
     rpcUrl: RpcUrls[ChainIds.Sonic],

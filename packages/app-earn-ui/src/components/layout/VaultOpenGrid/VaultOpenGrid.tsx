@@ -4,6 +4,7 @@ import { type FC, type ReactNode, useCallback, useEffect, useMemo, useState } fr
 import {
   type DropdownRawOption,
   type IArmadaVaultInfo,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SupportedNetworkIds,
@@ -38,7 +39,7 @@ import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDrop
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
 import { getManagementFee } from '@/helpers/get-management-fee'
-import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultUrl } from '@/helpers/get-vault-url'
 import { isVaultAtLeastDaysOld } from '@/helpers/is-vault-at-least-days-old'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
@@ -56,7 +57,7 @@ interface VaultOpenGridProps {
   sidebarContent: ReactNode
   isMobileOrTablet?: boolean
   medianDefiYield?: number
-  sumrPrice?: number
+  rewardTokenPrices: RewardTokenPrices
   onRefresh?: (params: {
     chainName?: string
     vaultId?: string
@@ -86,7 +87,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   sidebarContent,
   isMobileOrTablet,
   medianDefiYield,
-  sumrPrice,
   onRefresh,
   vaultApyData,
   rightExtraContent,
@@ -99,6 +99,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   buttonClickEventHandler,
   tooltipEventHandler,
   dropdownChangeHandler,
+  rewardTokenPrices,
 }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [displaySimulationGraphStaggered, setDisplaySimulationGraphStaggered] =
@@ -106,6 +107,12 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
 
   const isVaultAtLeast30dOld = isVaultAtLeastDaysOld({ vault, days: 30 })
   const isAltPressed = useHoldAlt()
+
+  const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
+    merklRewards: vaultInfo?.merklRewards,
+    tokensPriceMap: rewardTokenPrices,
+    totalValueLockedUSD: vault.totalValueLockedUSD,
+  })
 
   const apy30d = isVaultAtLeast30dOld ? (
     vaultApyData.sma30d ? (
@@ -169,12 +176,6 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
       clearInterval(timer)
     }
   }, [displaySimulationGraph])
-
-  const { rawSumrTokenBonus } = getSumrTokenBonus({
-    merklRewards: vaultInfo?.merklRewards,
-    sumrPrice,
-    totalValueLockedUSD: vault.totalValueLockedUSD,
-  })
 
   const handleUserRefresh = () => {
     buttonClickEventHandler(`vault-open-refresh-button`)
@@ -334,9 +335,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 apy={vaultApyData.apy}
                 managementFee={managementFee}
                 externalTokenBonus={vault.customFields?.bonus}
-                sumrTokenBonus={Number(rawSumrTokenBonus)}
                 tooltipName="vault-open-bonus-label"
                 onTooltipOpen={tooltipEventHandler}
+                totalAnnualRewardsPerToken={totalAnnualRewardsPerToken}
               />
             </div>
           </div>

@@ -10,7 +10,7 @@ const paramsSchema = z.object({
 
 export async function POST(
   _request: NextRequest,
-  { params }: { params: { walletAddress: string } },
+  { params }: { params: Promise<{ walletAddress: string }> },
 ) {
   try {
     const validatedParams = paramsSchema.parse(await params)

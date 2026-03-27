@@ -9,7 +9,7 @@ const paramsSchema = z.object({
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { walletAddress: string } },
+  { params }: { params: Promise<{ walletAddress: string }> },
 ) {
   const validatedParams = paramsSchema.parse(await params)
   const { walletAddress } = validatedParams

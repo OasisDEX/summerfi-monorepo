@@ -4,26 +4,23 @@ import {
   parseServerResponseToClient,
   safeParseJson,
 } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
+import { getCachedSumrBalances } from '@/app/server-handlers/cached/get-sumr-balances'
 import { getCachedSumrToClaim } from '@/app/server-handlers/cached/get-sumr-to-claim'
 import { getTallyDelegates } from '@/app/server-handlers/raw-calls/tally'
-import { getSumrBalances } from '@/app/server-handlers/sumr-balances'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { getSumrDelegateStake } from '@/app/server-handlers/sumr-delegate-stake'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getSumrStakingInfo } from '@/app/server-handlers/sumr-staking-info'
 import {
   getIsAuthorizedStakingRewardsCallerBase,
   getSumrStakingRewards,
 } from '@/app/server-handlers/sumr-staking-rewards'
 import { ClaimPageViewComponent } from '@/components/layout/ClaimPageView/ClaimPageViewComponent'
-import { CACHE_TIMES } from '@/constants/revalidation'
 import { type ClaimDelegateExternalData } from '@/features/claim-and-delegate/types'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
-import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 import { isValidAddress } from '@/helpers/is-valid-address'
 
 type ClaimPageProps = {
@@ -49,7 +46,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
 
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
@@ -75,12 +72,7 @@ const ClaimPage = async ({ params }: ClaimPageProps) => {
         tallyDelegates: delegates,
       }
     }),
-    unstableCache(getSumrBalances, ['sumrBalances', walletAddress.toLowerCase()], {
-      revalidate: CACHE_TIMES.USER_DATA,
-      tags: [getUserDataCacheHandler(walletAddress)],
-    })({
-      walletAddress,
-    }),
+    getCachedSumrBalances({ walletAddress }),
     getSumrStakingInfo(),
     getCachedSumrToClaim(walletAddress),
     getCachedConfig(),

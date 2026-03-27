@@ -1,4 +1,4 @@
-import { getSumrTokenBonus, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
+import { getRewardsTokenBonus, sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import {
   getServerSideCookies,
   parseServerResponseToClient,
@@ -9,7 +9,7 @@ import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedVaultsInfo } from '@/app/server-handlers/cached/get-vaults-info'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { SumrPageView } from '@/components/layout/SumrPageView/SumrPageView'
 import { SumrV2PageView } from '@/components/layout/SumrV2PageView/SumrV2PageView'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
@@ -53,7 +53,7 @@ const SumrPage = async () => {
 
   const sumrPriceUsd = getEstimatedSumrPrice({
     config: systemConfig,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
@@ -71,16 +71,16 @@ const SumrPage = async () => {
 
       const isEthVault = vault.assetToken.symbol === 'ETH' || vault.assetToken.symbol === 'WETH'
 
-      const { rawSumrTokenBonus } = getSumrTokenBonus({
+      const { rawTokenBonus } = getRewardsTokenBonus({
         merklRewards: vault.merklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: sumrPriceUsd ? { SUMR: sumrPriceUsd } : {},
         totalValueLockedUSD: vault.tvlUsd.amount.toString(),
       })
 
       if (isEthVault) {
-        rewards.eth = Math.max(rewards.eth, Number(rawSumrTokenBonus))
+        rewards.eth = Math.max(rewards.eth, Number(rawTokenBonus))
       } else {
-        rewards.stablecoins = Math.max(rewards.stablecoins, Number(rawSumrTokenBonus))
+        rewards.stablecoins = Math.max(rewards.stablecoins, Number(rawTokenBonus))
       }
 
       return rewards

@@ -8,7 +8,7 @@ import { type Metadata } from 'next'
 import { cookies } from 'next/headers'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { SumrV2StakingManageView } from '@/components/layout/SumrV2StakingManageView/SumrV2StakingManageView'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 
@@ -26,7 +26,7 @@ const SumrStakingManagePage = async () => {
 
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 

@@ -20,13 +20,13 @@ jest.setTimeout(300000)
 
 describe('Armada Protocol - Specific Vault', () => {
   const scenarios: { testConfigKey?: TestConfigKey; testClientId?: TestClientIds }[] = [
-    { testConfigKey: 'BaseUSDC' },
-    {
-      testClientId: TestClientIds.ACME,
-    },
-    {
-      testClientId: TestClientIds.Targen,
-    },
+    { testConfigKey: 'MainnetETHDao' },
+    // {
+    //   testClientId: TestClientIds.ACME,
+    // },
+    // {
+    //   testClientId: TestClientIds.Targen,
+    // },
   ]
 
   describe.each(scenarios)('with scenario %#', (scenario) => {

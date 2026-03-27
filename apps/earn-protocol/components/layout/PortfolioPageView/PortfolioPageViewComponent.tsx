@@ -2,6 +2,7 @@
 import { type FC } from 'react'
 import {
   type GetVaultsApyResponse,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SingleSourceChartData,
 } from '@summerfi/app-types'
@@ -39,7 +40,7 @@ interface PortfolioPageViewComponentProps {
   beachClubData: BeachClubData
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
   claimableRewards: ClaimableRewards
 }
 
@@ -58,7 +59,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
   beachClubData,
   blogPosts,
   portfolioSumrStakingV2Data,
-  sumrPriceUsd,
+  rewardTokenPrices,
   claimableRewards,
 }) => {
   return (
@@ -79,7 +80,7 @@ export const PortfolioPageViewComponent: FC<PortfolioPageViewComponentProps> = (
         claimableRewards={claimableRewards}
         blogPosts={blogPosts}
         portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
-        sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
       />
     </SDKContextProvider>
   )

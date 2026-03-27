@@ -39,6 +39,7 @@ import {
   type InterestRates,
   type NetworkIds,
   type PerformanceChartData,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -63,6 +64,7 @@ import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-d
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
 import { ArbitrumNoticeBanner } from '@/components/layout/ArbitrumNoticeBanner/ArbitrumNoticeBanner'
 import { RebalancingNoticeBanner } from '@/components/layout/RebalancingNoticeBanner/RebalancingNoticeBanner'
+import { RewardTokenClaimBox } from '@/components/layout/VaultManageView/RewardTokenClaimBox'
 import { VaultManageViewDetails } from '@/components/layout/VaultManageView/VaultManageViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { PendingTransactionsList } from '@/components/molecules/PendingTransactionsList/PendingTransactionsList'
@@ -145,7 +147,8 @@ export const VaultManageViewComponent = ({
   migratablePositions,
   migrationBestVaultApy,
   systemConfig,
-  sumrPriceUsd,
+  rewardTokenPrices,
+  rewardTokensClaimableNow,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -163,7 +166,13 @@ export const VaultManageViewComponent = ({
   migratablePositions: MigratablePosition[]
   migrationBestVaultApy: MigrationEarningsDataByChainId
   systemConfig: Partial<EarnAppConfigType>
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
+  rewardTokensClaimableNow: {
+    [tokenSymbol: string]: {
+      amount: number
+      tokenAddress: string
+    }
+  }
 }) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -775,6 +784,7 @@ export const VaultManageViewComponent = ({
       <VaultManageGrid
         vault={vault}
         vaultInfo={vaultInfo}
+        rewardTokenPrices={rewardTokenPrices}
         vaultApyData={vaultApyData}
         vaults={vaults}
         position={position}
@@ -796,7 +806,6 @@ export const VaultManageViewComponent = ({
             />
           )
         }
-        sumrPrice={sumrPriceUsd}
         detailsContent={
           <VaultManageViewDetails
             arksHistoricalChartData={arksHistoricalChartData}
@@ -813,6 +822,12 @@ export const VaultManageViewComponent = ({
         sidebarContent={<Sidebar {...resovledSidebarProps} />}
         rightExtraContent={
           <>
+            <RewardTokenClaimBox
+              vaultChainId={vaultChainId}
+              rewardTokensClaimableNow={rewardTokensClaimableNow}
+              rewardTokenPrices={rewardTokenPrices}
+              viewWalletAddress={viewWalletAddress}
+            />
             {migrationsEnabled && migratablePositions.length > 0 && (
               <MigrationBox
                 migratablePositions={migratablePositions}

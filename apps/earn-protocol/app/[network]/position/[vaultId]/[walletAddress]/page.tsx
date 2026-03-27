@@ -3,14 +3,9 @@ import {
   getDisplayToken,
   getPositionValues,
   parseForecastDatapoints,
-  sumrNetApyConfigCookieName,
   Text,
 } from '@summerfi/app-earn-ui'
-import {
-  getArksInterestRates,
-  getVaultInfo,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import {
   type IArmadaPosition,
   type PositionForecastAPIResponse,
@@ -18,10 +13,8 @@ import {
 } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
-  getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
-  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   zero,
@@ -30,31 +23,35 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
-import { cookies, headers } from 'next/headers'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
+import { getCachedClaimableWSTETHMerkleRewards } from '@/app/server-handlers/cached/claimable-merkle-rewards'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
 import { getCachedPositionHistory } from '@/app/server-handlers/cached/get-position-history'
 import { getCachedPositionsActivePeriods } from '@/app/server-handlers/cached/get-positions-active-periods'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
+import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
+import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { getCachedMigratablePositions } from '@/app/server-handlers/cached/migration'
+import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultManageView } from '@/components/layout/VaultManageView/VaultManageView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getMigrationBestVaultApy } from '@/features/migration/helpers/get-migration-best-vault-apy'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getPositionPerformanceData } from '@/helpers/chart-helpers/get-position-performance-data'
-import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
+import {
+  getMerkleNowClaimableTokenAddress,
+  getMerkleNowClaimableTokenAmount,
+} from '@/helpers/merkle'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -70,8 +67,10 @@ type EarnVaultManagePageProps = {
 }
 
 const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
-  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw, sumrPrice] =
-    await Promise.all([params, getCachedConfig(), getCachedSumrPrice()])
+  const [{ network: paramsNetwork, vaultId, walletAddress }, configRaw] = await Promise.all([
+    params,
+    getCachedConfig(),
+  ])
   const parsedNetwork = humanNetworktoSDKNetwork(paramsNetwork)
   const parsedNetworkId = subgraphNetworkToId(parsedNetwork)
   const systemConfig = parseServerResponseToClient(configRaw)
@@ -145,11 +144,6 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vault,
   })
 
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
   // Fetch DAO managed vaults, vault info, and ark rates in parallel
   const [
     { chartData: vaultBenchmark },
@@ -161,18 +155,15 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     positionHistory,
     positionForecastResponse,
     migratablePositionsData,
-    cookieRaw,
+    rewardTokenPrices,
+    claimableWSTETHMerkleRewards,
   ] = await Promise.all([
     getCachedVaultsBenchmark({
       vaultChainId: subgraphNetworkToId(parsedNetwork),
       vaultToken: vault.inputToken.symbol,
     }),
     getDaoManagedVaultsIDsList(vaults),
-    unstableCache(
-      getVaultInfo,
-      [],
-      cacheConfig,
-    )({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
     getArksInterestRates({
       network: parsedNetwork,
       arksList: vault.arks.filter(
@@ -184,11 +175,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       arksList: vault.arks,
       justLatestRates: true,
     }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${parsedVaultId}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
+    getCachedVaultsHistoricalApy({
       // just the vault displayed
       fleets: [{ id: parsedVaultId, protocol: { network: parsedNetwork } }].map(
         ({ id, protocol: { network } }) => ({
@@ -210,7 +197,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     getCachedMigratablePositions({
       walletAddress,
     }),
-    cookies(),
+    getCachedRewardTokenPrice(),
+    getCachedClaimableWSTETHMerkleRewards(walletAddress),
   ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
@@ -263,15 +251,34 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
     vaultsWithConfig: allVaultsWithConfig,
     vaultsApyByNetworkMap,
   })
-  const cookie = cookieRaw.toString()
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
-
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
-  const sumrPriceUsd = getEstimatedSumrPrice({
-    config: systemConfig,
-    sumrPrice,
-    sumrNetApyConfig: sumrNetApyConfig ?? {},
-  })
+
+  const rewardTokenVisibilityMap = {
+    // we only show the WSTETH rewards for ETH Dao managed vault
+    WSTETH:
+      vault.id.toLowerCase() === '0x0c1fbccc019320032d9acd193447560c8c632114'.toLowerCase() &&
+      Number(parsedNetworkId) === 1,
+  }
+
+  const rewardTokensClaimableNow: {
+    [tokenSymbol: string]: {
+      amount: number
+      tokenAddress: string
+    }
+  } = {
+    WSTETH: rewardTokenVisibilityMap.WSTETH
+      ? {
+          amount: getMerkleNowClaimableTokenAmount(
+            claimableWSTETHMerkleRewards.perChain['1'],
+            'wstETH',
+          ),
+          tokenAddress: getMerkleNowClaimableTokenAddress(
+            claimableWSTETHMerkleRewards.perChain['1'],
+            'wstETH',
+          ),
+        }
+      : { amount: 0, tokenAddress: '' },
+  }
 
   return (
     <VaultManageView
@@ -291,7 +298,8 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       migrationBestVaultApy={migrationBestVaultApy}
       vaultInfo={vaultInfoParsed}
       noOfDeposits={positionHistory.noOfDeposits}
-      sumrPriceUsd={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
+      rewardTokensClaimableNow={rewardTokensClaimableNow}
     />
   )
 }
@@ -300,7 +308,7 @@ export async function generateMetadata({
   params,
   searchParams,
 }: EarnVaultManagePageProps & {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
   const [
     { network: paramsNetwork, vaultId, walletAddress },

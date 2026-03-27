@@ -25,8 +25,10 @@ import {
   type DropdownRawOption,
   type GetVaultsApyResponse,
   type IconNamesList,
+  type RewardTokenPrices,
   type SDKVaultsListType,
   type SupportedSDKNetworks,
+  type TokenPriceData,
 } from '@summerfi/app-types'
 import {
   chainIdToSDKNetwork,
@@ -40,7 +42,6 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
-import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
 import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationLandingPageIlustration } from '@/features/migration/components/MigrationLandingPageIlustration/MigrationLandingPageIlustration'
@@ -91,6 +92,7 @@ interface MigrationLandingPageViewProps {
   walletAddress: string
   migrationBestVaultApy: MigrationEarningsDataByChainId
   sumrPrice: TokenPriceData
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
@@ -101,6 +103,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
   walletAddress,
   migrationBestVaultApy,
   sumrPrice,
+  rewardTokenPrices,
 }) => {
   const searchParams = useSearchParams()
   const { deviceType } = useDeviceType()
@@ -179,7 +182,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
 
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig,
   })
 
@@ -382,11 +385,10 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                       key={getUniqueVaultId(vault)}
                       {...vault}
                       withHover
-                      showCombinedBonus
                       selected={selectedVaultId === getUniqueVaultId(vault)}
                       onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                       withTokenBonus={sumrNetApyConfig.withSumr}
-                      sumrPrice={sumrPriceUsd}
+                      rewardTokenPrices={rewardTokenPrices}
                       vaultApyData={
                         vaultsApyByNetworkMap[
                           `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
@@ -408,8 +410,7 @@ export const MigrationLandingPageView: FC<MigrationLandingPageViewProps> = ({
                     selected={selectedVaultId === getUniqueVaultId(vault)}
                     onClick={() => handleChangeVault(getUniqueVaultId(vault))}
                     withTokenBonus={sumrNetApyConfig.withSumr}
-                    sumrPrice={sumrPriceUsd}
-                    showCombinedBonus
+                    rewardTokenPrices={rewardTokenPrices}
                     wrapperStyle={{
                       minWidth: '300px',
                     }}

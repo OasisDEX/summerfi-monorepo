@@ -1,6 +1,10 @@
 'use client'
 import { type FC } from 'react'
-import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type GetVaultsApyResponse,
+  type RewardTokenPrices,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
 import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import { type IArmadaVaultInfo } from '@summerfi/sdk-common'
 import dynamic from 'next/dynamic'
@@ -23,6 +27,7 @@ interface VaultListViewComponentProps {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
   tvl: number
 }
 
@@ -32,6 +37,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
+  rewardTokenPrices,
   tvl,
 }) => {
   return (
@@ -42,6 +48,7 @@ export const VaultListViewComponent: FC<VaultListViewComponentProps> = ({
         vaultsApyByNetworkMap={vaultsApyByNetworkMap}
         vaultsInfo={vaultsInfo}
         sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
         tvl={tvl}
       />
     </SDKContextProvider>

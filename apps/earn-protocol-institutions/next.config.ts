@@ -8,8 +8,9 @@ const nextConfig: (phase: string) => NextConfig = (phase) => ({
   basePath: '',
   output: 'standalone',
   reactStrictMode: false,
+  serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
   experimental: {
-    serverComponentsHmrCache: true,
+    // serverComponentsHmrCache: true,
     optimizePackageImports: [
       '@account-kit/core',
       '@account-kit/infra',

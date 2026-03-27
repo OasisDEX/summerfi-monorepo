@@ -38,7 +38,6 @@ jobs:
       REDIS_CACHE_PASSWORD: ${{ secrets.REDIS_CACHE_PASSWORD }}
       VPC_ID: ${{ secrets.VPC_ID }}
       SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
-      BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_EARN: ${{ secrets.CONFIG_URL_EARN }}
       SUMMER_HUB_CHAIN_ID: ${{ secrets.SDK_HUB_CHAIN_ID }}
