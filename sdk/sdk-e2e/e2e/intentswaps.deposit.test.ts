@@ -11,8 +11,7 @@ import { FleetAddresses, RpcUrls, SDKApiUrl, SharedConfig } from './utils/testCo
 import assert from 'assert'
 import { makeSDK } from '@summerfi/sdk-client'
 import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/testing-utils'
-import { privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts'
-import { permit2Address } from '@uniswap/permit2-sdk'
+import { privateKeyToAccount } from 'viem/accounts'
 import { encodeFunctionData } from 'viem'
 
 const admiralsQuartersAbi = [
@@ -218,9 +217,9 @@ describe('Intent swaps: Swap with Deposit', () => {
 
       console.log('Permit', { permitAmount, permitTokenAddress })
 
-      const { permitData, signature } = await _createPermit2Data({
+      const { permitData, signature } = await sdk.intentSwaps.createPermit2Data({
         chainId,
-        account,
+        viemAccount: account,
         tokenAddress: permitTokenAddress,
         amount: permitAmount,
         spenderAddress,
@@ -355,66 +354,4 @@ async function _handleOrderPrerequisites({
     default:
       throw new Error(`Unknown order status`)
   }
-}
-
-async function _createPermit2Data({
-  chainId,
-  tokenAddress,
-  amount,
-  spenderAddress,
-  account,
-}: {
-  chainId: ChainId
-  tokenAddress: `0x${string}`
-  amount: bigint
-  spenderAddress: `0x${string}`
-  account: PrivateKeyAccount
-}) {
-  const nonce = BigInt(Date.now()) // unique nonce
-  const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 30) // 30 minutes
-
-  const permitData = {
-    permitted: {
-      token: tokenAddress,
-      amount: amount,
-    },
-    nonce,
-    deadline,
-  }
-
-  const domain = {
-    name: 'Permit2',
-    chainId: chainId,
-    verifyingContract: permit2Address(chainId) as `0x${string}`,
-  }
-
-  const types = {
-    PermitTransferFrom: [
-      { name: 'permitted', type: 'TokenPermissions' },
-      { name: 'spender', type: 'address' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' },
-    ],
-    TokenPermissions: [
-      { name: 'token', type: 'address' },
-      { name: 'amount', type: 'uint256' },
-    ],
-  }
-
-  const signature = await account.signTypedData({
-    domain,
-    types,
-    primaryType: 'PermitTransferFrom',
-    message: {
-      permitted: {
-        token: tokenAddress,
-        amount: amount,
-      },
-      spender: spenderAddress,
-      nonce,
-      deadline,
-    },
-  })
-
-  return { permitData, signature }
 }
