@@ -254,10 +254,7 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
 
   const rewardTokensClaimableNow: {
-    [tokenSymbol: string]: {
-      amount: number
-      tokenAddress: string
-    }
+    [tokenSymbol: string]: { amount: number; tokenAddress: string }
   } = {
     WSTETH: {
       amount: getMerkleNowClaimableTokenAmount(
