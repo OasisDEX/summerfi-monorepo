@@ -29,14 +29,20 @@ export const getMerklRewardsByFleetAddressFallback = (
     chainId: ChainId,
     tokenSymbol: string,
     merklDailyEmissionAmount: string,
+    endTimestamp?: number,
   ) => {
     const token = getTokenBySymbol(chainId, tokenSymbol)
     if (!token) {
       throw new Error(`Token not found: ${tokenSymbol}`)
     }
+
+    const expired = endTimestamp ? Date.now() / 1000 > endTimestamp : false
+
     return {
       token,
-      dailyEmission: createNormalizeRewardAmount(token.decimals)(merklDailyEmissionAmount),
+      dailyEmission: expired
+        ? '0'
+        : createNormalizeRewardAmount(token.decimals)(merklDailyEmissionAmount),
     }
   }
 
@@ -102,7 +108,7 @@ export const getMerklRewardsByFleetAddressFallback = (
         // eth (DAO)
         '0x0c1fbccc019320032d9acd193447560c8c632114': [
           getRewardDataForToken(chainId, 'SUMR', '4946'),
-          getRewardDataForToken(chainId, 'WSTETH', '0.0776'),
+          getRewardDataForToken(chainId, 'WSTETH', '0.0776', 1774620615),
         ],
       }
       break
