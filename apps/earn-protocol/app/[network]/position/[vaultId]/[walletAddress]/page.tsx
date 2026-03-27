@@ -255,7 +255,9 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
 
   const rewardTokenVisibilityMap = {
     // we only show the WSTETH rewards for ETH Dao managed vault
-    WSTETH: vault.id.toLowerCase() === '0x0c1fbccc019320032d9acd193447560c8c632114'.toLowerCase() && Number(parsedNetworkId) === 1,
+    WSTETH:
+      vault.id.toLowerCase() === '0x0c1fbccc019320032d9acd193447560c8c632114'.toLowerCase() &&
+      Number(parsedNetworkId) === 1,
   }
 
   const rewardTokensClaimableNow: {
@@ -264,16 +266,18 @@ const EarnVaultManagePage = async ({ params }: EarnVaultManagePageProps) => {
       tokenAddress: string
     }
   } = {
-    WSTETH: rewardTokenVisibilityMap.WSTETH ? {
-      amount: getMerkleNowClaimableTokenAmount(
-        claimableWSTETHMerkleRewards.perChain['1'],
-        'wstETH',
-      ),
-      tokenAddress: getMerkleNowClaimableTokenAddress(
-        claimableWSTETHMerkleRewards.perChain['1'],
-        'wstETH',
-      ),
-    } : { amount: 0, tokenAddress: '' },
+    WSTETH: rewardTokenVisibilityMap.WSTETH
+      ? {
+          amount: getMerkleNowClaimableTokenAmount(
+            claimableWSTETHMerkleRewards.perChain['1'],
+            'wstETH',
+          ),
+          tokenAddress: getMerkleNowClaimableTokenAddress(
+            claimableWSTETHMerkleRewards.perChain['1'],
+            'wstETH',
+          ),
+        }
+      : { amount: 0, tokenAddress: '' },
   }
 
   return (
