@@ -7,7 +7,7 @@ import {
   SUCCESS_TOAST_CONFIG,
   Text,
   useClientChainId,
-  useUserWallet,
+  useEarnProtocolWallet,
 } from '@summerfi/app-earn-ui'
 import { type RewardTokenPrices } from '@summerfi/app-types'
 import {
@@ -38,7 +38,7 @@ const RewardTokenClaimButton = ({
   const { publicClient } = useNetworkAlignedClient({
     overrideNetwork: sdkNetworkToHumanNetwork(chainIdToSDKNetwork(clientChainId)),
   })
-  const { userWalletAddress } = useUserWallet()
+  const { address: userWalletAddress } = useEarnProtocolWallet()
   const { revalidateTags } = useRevalidateTags()
 
   const isProperChainSelected = clientChainId === vaultChainId
