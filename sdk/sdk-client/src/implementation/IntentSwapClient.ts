@@ -15,6 +15,7 @@ import {
 } from '@cowprotocol/cow-sdk'
 import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
+import { permit2Address } from '@uniswap/permit2-sdk'
 
 import { LoggingService, NATIVE_CURRENCY_ADDRESS_LOWERCASE, Price } from '@summerfi/sdk-common'
 
@@ -280,5 +281,64 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       },
       description: `Revoke Permit2 authorization for token ${params.tokenAddress.toSolidityValue()}`,
     }
+  }
+
+  /** @see IIntentSwapClient.createPermit2Data */
+  createPermit2Data: IIntentSwapClient['createPermit2Data'] = async (params) => {
+    const { chainId, tokenAddress, amount, spenderAddress, viemAccount: account } = params
+
+    const nonce = BigInt(Date.now())
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 60 * 30) // 30 minutes
+
+    const permitData = {
+      permitted: {
+        token: tokenAddress,
+        amount,
+      },
+      nonce,
+      deadline,
+    }
+
+    const domain = {
+      name: 'Permit2',
+      chainId,
+      verifyingContract: permit2Address(chainId) as `0x${string}`,
+    }
+
+    const types = {
+      PermitTransferFrom: [
+        { name: 'permitted', type: 'TokenPermissions' },
+        { name: 'spender', type: 'address' },
+        { name: 'nonce', type: 'uint256' },
+        { name: 'deadline', type: 'uint256' },
+      ],
+      TokenPermissions: [
+        { name: 'token', type: 'address' },
+        { name: 'amount', type: 'uint256' },
+      ],
+    }
+
+    if (!account.signTypedData) {
+      throw new Error(
+        'Account does not support signTypedData. Use a local account (e.g. privateKeyToAccount).',
+      )
+    }
+
+    const signature = await account.signTypedData({
+      domain,
+      types,
+      primaryType: 'PermitTransferFrom',
+      message: {
+        permitted: {
+          token: tokenAddress,
+          amount,
+        },
+        spender: spenderAddress,
+        nonce,
+        deadline,
+      },
+    })
+
+    return { permitData, signature }
   }
 }

@@ -23,5 +23,7 @@ export type { ITokensManagerClient } from './interfaces/ITokensManagerClient'
 export type { IUserClient } from './interfaces/IUserClient'
 export type { IUsersManager } from './interfaces/IUsersManager'
 export { PositionUtils } from './utils/PositionUtils'
+export type { CowHook } from './interfaces/IIntentSwapClient'
+export type { UnsignedOrder, EnrichedOrder } from '@cowprotocol/cow-sdk'
 
 export * from './reexports'

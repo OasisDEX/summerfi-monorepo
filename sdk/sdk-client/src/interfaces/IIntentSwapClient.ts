@@ -4,6 +4,7 @@ import type {
   IntentQuoteData,
   ChainId,
   IAddress,
+  AddressValue,
   TransactionInfo,
   HexData,
 } from '@summerfi/sdk-common'
@@ -159,4 +160,29 @@ export interface IIntentSwapClient {
    * @returns A TransactionInfo for the approve(Permit2, 0) transaction
    */
   getPermit2RevokeTx(params: { tokenAddress: IAddress }): TransactionInfo
+
+  /**
+   * @name createPermit2Data
+   * @description Creates the EIP-712 signed permit2 data for a PermitTransferFrom operation
+   * @param chainId The chain ID where the permit will be used
+   * @param tokenAddress The ERC-20 token address to permit
+   * @param amount The amount of tokens to permit (in token base units)
+   * @param spenderAddress The address authorized to spend the tokens
+   * @param viemAccount The viem account to sign the permit data with
+   * @returns The permit data and the EIP-712 signature
+   */
+  createPermit2Data(params: {
+    chainId: ChainId
+    tokenAddress: AddressValue
+    amount: bigint
+    spenderAddress: AddressValue
+    viemAccount: Account
+  }): Promise<{
+    permitData: {
+      permitted: { token: `0x${string}`; amount: bigint }
+      nonce: bigint
+      deadline: bigint
+    }
+    signature: `0x${string}`
+  }>
 }
