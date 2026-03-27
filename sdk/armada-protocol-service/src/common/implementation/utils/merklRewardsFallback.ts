@@ -108,7 +108,7 @@ export const getMerklRewardsByFleetAddressFallback = (
         // eth (DAO)
         '0x0c1fbccc019320032d9acd193447560c8c632114': [
           getRewardDataForToken(chainId, 'SUMR', '4946'),
-          getRewardDataForToken(chainId, 'WSTETH', '0.0776', 1774620615),
+          getRewardDataForToken(chainId, 'WSTETH', '0.0776', 1777557600),
         ],
       }
       break
