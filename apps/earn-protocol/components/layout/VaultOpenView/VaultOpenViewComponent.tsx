@@ -26,6 +26,7 @@ import {
   type DropdownRawOption,
   type GetVaultsApyResponse,
   type InterestRates,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -92,7 +93,7 @@ type VaultOpenViewComponentProps = {
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const VaultOpenViewComponent = ({
@@ -108,7 +109,7 @@ export const VaultOpenViewComponent = ({
   vaultApyData,
   vaultsApyRaw,
   referralCode: referralCodeFromCookie,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: VaultOpenViewComponentProps) => {
   const { getStorageOnce } = useLocalStorageOnce<{
     amount: string
@@ -530,10 +531,10 @@ export const VaultOpenViewComponent = ({
         isMobileOrTablet={isMobileOrTablet}
         vault={vault}
         vaultInfo={vaultInfo}
-        vaults={vaults}
+        rewardTokenPrices={rewardTokenPrices}
+        vaults={filteredVaults}
         medianDefiYield={medianDefiYield}
         displaySimulationGraph={displaySimulationGraph}
-        sumrPrice={sumrPriceUsd}
         onRefresh={revalidatePositionData}
         vaultApyData={vaultApyData}
         tooltipEventHandler={tooltipEventHandler}

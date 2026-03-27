@@ -69,7 +69,7 @@ export default function HomePage() {
         vaultsInfo={landingPageData?.vaultsInfo}
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
-        sumrPriceUsd={landingPageData?.sumrPriceUsd}
+        rewardTokenPrices={landingPageData?.rewardTokenPrices}
       />
       <ProtocolStats
         vaultsList={landingPageData?.vaultsWithConfig}

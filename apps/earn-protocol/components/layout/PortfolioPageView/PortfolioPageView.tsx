@@ -11,6 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SingleSourceChartData,
 } from '@summerfi/app-types'
@@ -61,7 +62,7 @@ interface PortfolioPageViewProps {
   beachClubData: BeachClubData
   blogPosts: BlogPosts
   portfolioSumrStakingV2Data: PortfolioSumrStakingV2Data
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
   claimableRewards: ClaimableRewards
 }
 
@@ -80,7 +81,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   beachClubData,
   blogPosts,
   portfolioSumrStakingV2Data,
-  sumrPriceUsd,
+  rewardTokenPrices,
   claimableRewards,
 }) => {
   const { features } = useSystemConfig()
@@ -129,7 +130,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           viewWalletAddress={viewWalletAddress}
           migrationBestVaultApy={migrationBestVaultApy}
           blogPosts={blogPosts}
-          sumrPriceUsd={sumrPriceUsd}
+          rewardTokenPrices={rewardTokenPrices}
         />
       ),
     },
@@ -141,7 +142,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
           walletData={walletData}
           vaultsList={vaultsList}
           vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-          sumrPriceUsd={sumrPriceUsd}
+          rewardTokenPrices={rewardTokenPrices}
         />
       ),
     },
@@ -188,7 +189,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
                 state={state}
                 dispatch={dispatch}
                 portfolioSumrStakingV2Data={portfolioSumrStakingV2Data}
-                sumrPriceUsd={sumrPriceUsd}
+                sumrPriceUsd={rewardTokenPrices.SUMR}
                 claimableRewards={claimableRewards}
               />
             ),
@@ -203,7 +204,7 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
                 rewardsData={rewardsData}
                 state={state}
                 dispatch={dispatch}
-                sumrPriceUsd={sumrPriceUsd}
+                sumrPriceUsd={rewardTokenPrices.SUMR}
               />
             ),
           },

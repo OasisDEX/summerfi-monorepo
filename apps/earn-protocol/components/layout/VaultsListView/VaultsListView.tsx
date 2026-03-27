@@ -5,7 +5,7 @@ import {
   Card,
   DataBlock,
   Emphasis,
-  getSumrTokenBonus,
+  getRewardsTokenBonus,
   getUniqueVaultId,
   getVaultPositionUrl,
   getVaultsProtocolsList,
@@ -27,6 +27,7 @@ import {
   type DropdownRawOption,
   type GetVaultsApyResponse,
   type IToken,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SupportedSDKNetworks,
@@ -81,6 +82,7 @@ type VaultsListViewProps = {
   vaultsApyByNetworkMap: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
   tvl: number
 }
 
@@ -94,6 +96,7 @@ export const VaultsListView = ({
   vaultsApyByNetworkMap,
   vaultsInfo,
   sumrPriceUsd,
+  rewardTokenPrices,
   tvl,
 }: VaultsListViewProps) => {
   const { deviceType } = useDeviceType()
@@ -227,29 +230,29 @@ export const VaultsListView = ({
       const aMerklRewards = findVaultInfo(vaultsInfo, a)?.merklRewards
       const bMerklRewards = findVaultInfo(vaultsInfo, b)?.merklRewards
 
-      const aRewards = getSumrTokenBonus({
+      const aRewards = getRewardsTokenBonus({
         merklRewards: aMerklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: aTvl,
-      }).rawSumrTokenBonus
-      const bRewards = getSumrTokenBonus({
+      }).rawTokenBonus
+      const bRewards = getRewardsTokenBonus({
         merklRewards: bMerklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: bTvl,
-      }).rawSumrTokenBonus
+      }).rawTokenBonus
 
       if (sortingMethodId === VaultsSorting.HIGHEST_REWARDS) {
         return Number(aRewards) > Number(bRewards) ? -1 : 1
       }
 
-      const { rawSumrTokenBonus: aRawSumrTokenBonus } = getSumrTokenBonus({
+      const { rawTokenBonus: aRawSumrTokenBonus } = getRewardsTokenBonus({
         merklRewards: aMerklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: aTvl,
       })
-      const { rawSumrTokenBonus: bRawSumrTokenBonus } = getSumrTokenBonus({
+      const { rawTokenBonus: bRawSumrTokenBonus } = getRewardsTokenBonus({
         merklRewards: bMerklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: bTvl,
       })
       const aApy =
@@ -268,7 +271,7 @@ export const VaultsListView = ({
         ? -1
         : 1
     },
-    [vaultsApyByNetworkMap, sumrPriceUsd, sortingMethodId, vaultsInfo],
+    [vaultsApyByNetworkMap, sortingMethodId, vaultsInfo, rewardTokenPrices],
   )
 
   const filteredSafeVaultsList = useMemo(() => {
@@ -435,14 +438,14 @@ export const VaultsListView = ({
       const currentApy = currentApyData ? Number(currentApyData.apy) : 0
 
       // additional bonus to apy prev
-      const { rawSumrTokenBonus: rawSumrTokenBonusPrev } = getSumrTokenBonus({
+      const { rawTokenBonus: rawSumrTokenBonusPrev } = getRewardsTokenBonus({
         merklRewards: findVaultInfo(vaultsInfo, prev)?.merklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: prev.totalValueLockedUSD,
       })
-      const { rawSumrTokenBonus: rawSumrTokenBonusCurrent } = getSumrTokenBonus({
+      const { rawTokenBonus: rawSumrTokenBonusCurrent } = getRewardsTokenBonus({
         merklRewards: findVaultInfo(vaultsInfo, current)?.merklRewards,
-        sumrPrice: sumrPriceUsd,
+        tokensPriceMap: rewardTokenPrices,
         totalValueLockedUSD: current.totalValueLockedUSD,
       })
 
@@ -452,9 +455,9 @@ export const VaultsListView = ({
       return currentApyWithBonus > prevApyWithBonus ? current : prev
     })
 
-    const { rawSumrTokenBonus: rawSumrTokenBonusHighestApy } = getSumrTokenBonus({
+    const { rawTokenBonus: rawSumrTokenBonusHighestApy } = getRewardsTokenBonus({
       merklRewards: findVaultInfo(vaultsInfo, highest7dApyVault)?.merklRewards,
-      sumrPrice: sumrPriceUsd,
+      tokensPriceMap: rewardTokenPrices,
       totalValueLockedUSD: highest7dApyVault.totalValueLockedUSD,
     })
 
@@ -474,7 +477,7 @@ export const VaultsListView = ({
       highestApy,
       highestApyToken,
     }
-  }, [vaultsApyByNetworkMap, vaultsList, sumrPriceUsd, vaultsInfo])
+  }, [vaultsApyByNetworkMap, vaultsList, vaultsInfo, rewardTokenPrices])
 
   const {
     amountParsed,
@@ -639,7 +642,6 @@ export const VaultsListView = ({
                 <VaultCard
                   {...vault}
                   withHover
-                  showCombinedBonus
                   deviceType={deviceType}
                   selected={
                     selectedVaultId === getUniqueVaultId(vault) ||
@@ -660,7 +662,7 @@ export const VaultsListView = ({
                     tokenBalances.handleSetTokenBalanceLoading(true)
                   }}
                   withTokenBonus={sumrNetApyConfig.withSumr}
-                  sumrPrice={sumrPriceUsd}
+                  rewardTokenPrices={rewardTokenPrices}
                   vaultApyData={
                     vaultsApyByNetworkMap[
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
@@ -741,8 +743,7 @@ export const VaultsListView = ({
                     tokenBalances.handleSetTokenBalanceLoading(true)
                   }}
                   withTokenBonus={sumrNetApyConfig.withSumr}
-                  showCombinedBonus
-                  sumrPrice={sumrPriceUsd}
+                  rewardTokenPrices={rewardTokenPrices}
                   vaultApyData={
                     vaultsApyByNetworkMap[
                       `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`

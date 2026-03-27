@@ -111,6 +111,7 @@ import { getCrossChainWithdrawTx } from './armada-protocol-handlers/users/getCro
 import { getUserMerklRewards } from './armada-protocol-handlers/users/getUserMerklRewards'
 import { getUserMerklClaimTx } from './armada-protocol-handlers/users/getUserMerklClaimTx'
 import { getReferralFeesMerklClaimTx } from './armada-protocol-handlers/users/getReferralFeesMerklClaimTx'
+import { getVaultRewardsMerklClaimTx } from './armada-protocol-handlers/users/getVaultRewardsMerklClaimTx'
 import { getAuthorizeAsMerklRewardsOperatorTx } from './armada-protocol-handlers/users/getAuthorizeAsMerklRewardsOperatorTx'
 import { getIsAuthorizedAsMerklRewardsOperator } from './armada-protocol-handlers/users/getIsAuthorizedAsMerklRewardsOperator'
 import { getClaimStakingV2UserRewardsTx } from './armada-protocol-handlers/users/getClaimStakingV2UserRewardsTx'
@@ -249,6 +250,7 @@ export const sdkAppRouter = router({
       authorizeStakingRewardsCallerV2: authorizeStakingRewardsCallerV2,
       isAuthorizedStakingRewardsCallerV2: isAuthorizedStakingRewardsCallerV2,
       getReferralFeesMerklClaimTx: getReferralFeesMerklClaimTx,
+      getVaultRewardsMerklClaimTx: getVaultRewardsMerklClaimTx,
       getAuthorizeAsMerklRewardsOperatorTx: getAuthorizeAsMerklRewardsOperatorTx,
       getIsAuthorizedAsMerklRewardsOperator: getIsAuthorizedAsMerklRewardsOperator,
     },

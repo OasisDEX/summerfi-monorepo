@@ -1,5 +1,6 @@
 import { arkDetailsMap, getProtocolLabel } from '@summerfi/app-earn-ui'
 import {
+  type LandingPageData,
   type SDKVaultishType,
   type SDKVaultType,
   SupportedNetworkIds,
@@ -567,12 +568,12 @@ const getLandingPageData = async () => {
     })
     const data = await response.json()
 
-    return data
+    return data as LandingPageData
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching landing page data:', error)
 
-    return []
+    return {} as LandingPageData
   }
 }
 
@@ -580,10 +581,7 @@ const getArksDeployedOnChain: (props: {
   network: SupportedSDKNetworks
 }) => Promise<ArksDeployedOnChain> = async ({ network }) => {
   try {
-    const response = (await getLandingPageData()) as {
-      vaultsWithConfig: SDKVaultishType[]
-      protocolTvls: { [x: string]: string }
-    }
+    const response = await getLandingPageData()
 
     const arksDeployedOnChain = response.vaultsWithConfig
       .filter((vault) => supportedSDKNetwork(vault.protocol.network) === network)
@@ -609,7 +607,9 @@ const getArksDeployedOnChain: (props: {
           : undefined
 
         const protocolAllocation = protocolAllocationName
-          ? response.protocolTvls[protocolAllocationName]
+          ? response.protocolTvls[
+              protocolAllocationName as keyof typeof response.protocolTvls
+            ].toString()
           : undefined
 
         const arkInfo: ArksDeployedOnChain[number] = {

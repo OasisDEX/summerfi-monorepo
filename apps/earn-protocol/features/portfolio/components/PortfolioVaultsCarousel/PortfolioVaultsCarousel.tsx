@@ -9,7 +9,11 @@ import {
   useMobileCheck,
   VaultCard,
 } from '@summerfi/app-earn-ui'
-import { type GetVaultsApyResponse, type SDKVaultsListType } from '@summerfi/app-types'
+import {
+  type GetVaultsApyResponse,
+  type RewardTokenPrices,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
 import { slugifyVault, subgraphNetworkToId, supportedSDKNetwork } from '@summerfi/app-utils'
 import { useRouter } from 'next/navigation'
 
@@ -21,7 +25,7 @@ interface PortfolioVaultsCarouselProps {
   vaultsList: SDKVaultsListType
   vaultsApyByNetworkMap: GetVaultsApyResponse
   carouselId: string
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
@@ -30,7 +34,7 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
   vaultsList,
   vaultsApyByNetworkMap,
   carouselId,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }) => {
   const { push } = useRouter()
   const buttonClickEventHandler = useHandleButtonClickEvent()
@@ -57,10 +61,9 @@ export const PortfolioVaultsCarousel: FC<PortfolioVaultsCarouselProps> = ({
             key={vault.id}
             {...vault}
             withHover
-            showCombinedBonus
             onClick={vaultOnClick(vault)}
             withTokenBonus={sumrNetApyConfig.withSumr}
-            sumrPrice={sumrPriceUsd}
+            rewardTokenPrices={rewardTokenPrices}
             tooltipName={carouselId}
             onTooltipOpen={tooltipEventHandler}
             vaultApyData={

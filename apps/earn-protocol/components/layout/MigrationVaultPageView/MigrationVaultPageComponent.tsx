@@ -21,6 +21,7 @@ import {
   type ArksHistoricalChartData,
   type IArmadaVaultInfo,
   type InterestRates,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -36,12 +37,10 @@ import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migrati
 import { type LatestActivityPagination } from '@/app/server-handlers/tables-data/latest-activity/types'
 import { type RebalanceActivityPagination } from '@/app/server-handlers/tables-data/rebalance-activity/types'
 import { type TopDepositorsPagination } from '@/app/server-handlers/tables-data/top-depositors/types'
-import { type TokenPriceData } from '@/app/server-handlers/token-price/types'
 import { VaultOpenViewDetails } from '@/components/layout/VaultOpenView/VaultOpenViewDetails'
 import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'
-import { useSystemConfig } from '@/contexts/SystemConfigContext/SystemConfigContext'
 import { MigrationSidebarContent } from '@/features/migration/components/MigrationSidebarContent/MigrationSidebarContent'
 import { getMigrationFormTitle } from '@/features/migration/helpers/get-migration-form-title'
 import { getMigrationPrimaryBtnLabel } from '@/features/migration/helpers/get-migration-primary-btn-label'
@@ -49,7 +48,6 @@ import { getMigrationSidebarError } from '@/features/migration/helpers/get-migra
 import { useMigrationTransaction } from '@/features/migration/hooks/use-migration-transaction'
 import { migrationReducer, migrationState } from '@/features/migration/state'
 import { MigrationSteps, MigrationTxStatuses } from '@/features/migration/types'
-import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import {
@@ -73,7 +71,7 @@ type MigrationVaultPageComponentProps = {
   vaultApyData: VaultApyData
   migratablePosition: MigratablePosition
   walletAddress: string
-  sumrPrice: TokenPriceData
+  rewardTokenPrices: RewardTokenPrices
 }
 
 export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> = ({
@@ -89,13 +87,12 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   vaultApyData,
   migratablePosition,
   walletAddress,
-  sumrPrice,
+  rewardTokenPrices,
 }) => {
   const { deviceType } = useDeviceType()
   const { isMobile, isTablet } = useMobileCheck(deviceType)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const { push } = useRouter()
-  const config = useSystemConfig()
   const vaultChainId = subgraphNetworkToSDKId(supportedSDKNetwork(vault.protocol.network))
   const { setChain, isSettingChain } = useEarnProtocolChain()
 
@@ -126,7 +123,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
   })
 
   const {
-    state: { sumrNetApyConfig, slippageConfig },
+    state: { slippageConfig },
   } = useLocalConfig()
   const sdk = useAppSDK()
 
@@ -313,11 +310,6 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
     isMobileOrTablet,
   }
 
-  const sumrPriceUsd = getEstimatedSumrPrice({
-    config,
-    sumrPrice,
-    sumrNetApyConfig,
-  })
   const displaySimulationGraph = amountParsed.gt(0)
 
   return (
@@ -328,7 +320,7 @@ export const MigrationVaultPageComponent: FC<MigrationVaultPageComponentProps> =
       vaultInfo={vaultInfo}
       medianDefiYield={medianDefiYield}
       displaySimulationGraph={displaySimulationGraph}
-      sumrPrice={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
       onRefresh={revalidatePositionData}
       vaultApyData={vaultApyData}
       tooltipEventHandler={tooltipEventHandler}

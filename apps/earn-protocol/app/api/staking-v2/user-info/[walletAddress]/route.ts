@@ -1,14 +1,12 @@
 import { sumrNetApyConfigCookieName } from '@summerfi/app-earn-ui'
 import { getServerSideCookies, safeParseJson } from '@summerfi/app-utils'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
-import { getLandingPageSumrStakingV2UserData } from '@/app/server-handlers/raw-calls/sumr-staking-v2'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedSumrStakingV2UserData } from '@/app/server-handlers/cached/get-sumr-staking-v2-user-data'
+import { getCachedSumrPrice } from '@/app/server-handlers/reward-token-price'
 import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
-import { getUserDataCacheHandler } from '@/helpers/get-user-data-cache-handler'
 
 export async function GET(
   _request: Request,
@@ -24,22 +22,12 @@ export async function GET(
   const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const sumrPriceUsd = getEstimatedSumrPrice({
     config,
-    sumrPrice,
+    sumrPrice: sumrPrice.usd,
     sumrNetApyConfig: sumrNetApyConfig ?? {},
   })
 
   try {
-    const userInfo = await unstableCache(
-      getLandingPageSumrStakingV2UserData,
-      ['landingPageSumrStakingV2UserData', walletAddress.toLowerCase()],
-      {
-        revalidate: 300, // 5 minutes
-        tags: [getUserDataCacheHandler(walletAddress)],
-      },
-    )({
-      walletAddress,
-      sumrPriceUsd,
-    })
+    const userInfo = await getCachedSumrStakingV2UserData({ walletAddress, sumrPriceUsd })
 
     return NextResponse.json({ userInfo })
   } catch (error) {

@@ -6,6 +6,7 @@ export const getUserMerklRewards = publicProcedure
   .input(
     z.object({
       address: z.custom<AddressValue>(isAddressValue),
+      merklChainId: z.custom<ChainId>(isChainId).optional(),
       chainIds: z.array(z.custom<ChainId>(isChainId)).optional(),
       rewardsTokensAddresses: z.array(z.custom<AddressValue>(isAddressValue)).optional(),
     }),

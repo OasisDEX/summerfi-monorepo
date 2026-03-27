@@ -17,7 +17,7 @@ import { LiveApyInfo } from '@/components/molecules/LiveApyInfo/LiveApyInfo'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getDisplayToken } from '@/helpers/get-display-token'
-import { getSumrTokenBonus } from '@/helpers/get-sumr-token-bonus'
+import { getRewardsTokenBonus } from '@/helpers/get-reward-token-bonus'
 import { getVaultPositionUrl } from '@/helpers/get-vault-url'
 import { useApyUpdatedAt } from '@/hooks/use-apy-updated-at'
 import { useHoldAlt } from '@/hooks/use-hold-alt'
@@ -96,9 +96,9 @@ export const PortfolioPosition = ({
       : 'n/a'
     : 'New Strategy'
 
-  const { sumrTokenBonus } = getSumrTokenBonus({
+  const { tokenBonus } = getRewardsTokenBonus({
     merklRewards: portfolioPosition.vaultInfo.merklRewards,
-    sumrPrice,
+    tokensPriceMap: sumrPrice ? { SUMR: sumrPrice } : {},
     totalValueLockedUSD,
   })
 
@@ -147,7 +147,7 @@ export const PortfolioPosition = ({
                 <Icon iconName="stars_colorful" size={24} style={{ display: 'inline' }} />
               </>
             }
-            value={sumrTokenBonus}
+            value={tokenBonus}
           />
           <PortfolioPositionHeaderValue title="30d APY" value={apy30dParsed} />
           <PortfolioPositionHeaderValue

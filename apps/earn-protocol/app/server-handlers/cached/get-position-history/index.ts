@@ -9,6 +9,7 @@ import {
   GetPositionHistoryDocument,
   type GetPositionHistoryQuery,
 } from '@/graphql/clients/position-history/client'
+import { getPositionHistoryTag } from '@/helpers/get-cache-handler-name'
 
 type GetPositionHistoryParams = {
   network: SupportedSDKNetworks
@@ -59,7 +60,7 @@ export async function getCachedPositionHistory({
       ...params,
       next: {
         revalidate: CACHE_TIMES.POSITION_HISTORY,
-        tags: [CACHE_TAGS.POSITION_HISTORY, address.toLowerCase()],
+        tags: [CACHE_TAGS.POSITION_HISTORY, getPositionHistoryTag(address)],
       },
     })
 

@@ -3,7 +3,7 @@ import { unstable_cache as unstableCache } from 'next/cache'
 
 import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 
-export const getCachedConfig = unstableCache(configEarnAppFetcher, ['earnAppConfig'], {
+export const getCachedConfig = unstableCache(configEarnAppFetcher, ['config'], {
   revalidate: CACHE_TIMES.CONFIG,
   tags: [CACHE_TAGS.CONFIG],
 })

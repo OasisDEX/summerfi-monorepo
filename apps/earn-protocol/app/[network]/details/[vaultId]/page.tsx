@@ -1,5 +1,5 @@
 import { getDisplayToken, Text, VaultGridDetails } from '@summerfi/app-earn-ui'
-import { getArksInterestRates, getVaultsHistoricalApy } from '@summerfi/app-server-handlers'
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   getVaultNiceName,
@@ -10,7 +10,6 @@ import {
 } from '@summerfi/app-utils'
 import capitalize from 'lodash-es/capitalize'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
 
@@ -19,12 +18,12 @@ import { getCachedTvl } from '@/app/server-handlers/cached/get-tvl'
 import { getDaoManagedVaultsIDsList } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
+import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
 import { userAddresesToFilterOut } from '@/app/server-handlers/tables-data/consts'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
@@ -96,11 +95,6 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
     daoManagedVaultsList,
   })
 
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
   const [
     fullArkInterestRatesMap,
     latestArkInterestRatesMap,
@@ -119,11 +113,7 @@ const EarnVaultDetailsPage = async ({ params }: EarnVaultDetailsPageProps) => {
       arksList: vault.arks,
       justLatestRates: true,
     }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${vault.id}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
+    getCachedVaultsHistoricalApy({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network: protocolNetwork } }) => ({
         fleetAddress: id,

@@ -20,6 +20,7 @@ artifacts
 **/*.module.css.d.ts
 database-types.ts
 sst-env.d.ts
+next-env.d.ts
 
 background-jobs/**/src/generated
 packages/**/src/generated

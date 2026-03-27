@@ -4,6 +4,7 @@ import {
   type ArksHistoricalChartData,
   type GetVaultsApyResponse,
   type InterestRates,
+  type RewardTokenPrices,
   type SDKVaultishType,
   type SDKVaultsListType,
   type SDKVaultType,
@@ -31,7 +32,7 @@ export const VaultOpenView = ({
   vaultApyData,
   vaultsApyRaw,
   referralCode,
-  sumrPriceUsd,
+  rewardTokenPrices,
 }: {
   vault: SDKVaultType | SDKVaultishType
   vaults: SDKVaultsListType
@@ -45,7 +46,7 @@ export const VaultOpenView = ({
   vaultApyData: VaultApyData
   vaultsApyRaw: GetVaultsApyResponse
   referralCode?: string
-  sumrPriceUsd: number
+  rewardTokenPrices: RewardTokenPrices
 }) => {
   return (
     <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
@@ -62,7 +63,7 @@ export const VaultOpenView = ({
         vaultApyData={vaultApyData}
         vaultsApyRaw={vaultsApyRaw}
         referralCode={referralCode}
-        sumrPriceUsd={sumrPriceUsd}
+        rewardTokenPrices={rewardTokenPrices}
       />
     </SDKContextProvider>
   )

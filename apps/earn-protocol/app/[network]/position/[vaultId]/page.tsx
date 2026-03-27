@@ -1,14 +1,5 @@
-import {
-  getDisplayToken,
-  isVaultAtLeastDaysOld,
-  sumrNetApyConfigCookieName,
-  Text,
-} from '@summerfi/app-earn-ui'
-import {
-  getArksInterestRates,
-  getVaultInfo,
-  getVaultsHistoricalApy,
-} from '@summerfi/app-server-handlers'
+import { getDisplayToken, isVaultAtLeastDaysOld, Text } from '@summerfi/app-earn-ui'
+import { getArksInterestRates } from '@summerfi/app-server-handlers'
 import { type SupportedSDKNetworks } from '@summerfi/app-types'
 import {
   formatCryptoBalance,
@@ -16,7 +7,6 @@ import {
   getServerSideCookies,
   humanNetworktoSDKNetwork,
   parseServerResponseToClient,
-  safeParseJson,
   subgraphNetworkToId,
   supportedSDKNetwork,
   ten,
@@ -25,7 +15,6 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { capitalize } from 'lodash-es'
 import { type Metadata } from 'next'
-import { unstable_cache as unstableCache } from 'next/cache'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { isAddress } from 'viem'
@@ -37,17 +26,17 @@ import {
   getDaoManagedVaultsIDsList,
 } from '@/app/server-handlers/cached/get-vault-dao-managed'
 import { getCachedVaultDetails } from '@/app/server-handlers/cached/get-vault-details'
+import { getCachedVaultInfo } from '@/app/server-handlers/cached/get-vault-info'
 import { getCachedVaultsApy } from '@/app/server-handlers/cached/get-vaults-apy'
 import { getCachedVaultsBenchmark } from '@/app/server-handlers/cached/get-vaults-benchmark'
+import { getCachedVaultsHistoricalApy } from '@/app/server-handlers/cached/get-vaults-historical-apy'
 import { getCachedVaultsList } from '@/app/server-handlers/cached/get-vaults-list'
-import { getCachedSumrPrice } from '@/app/server-handlers/sumr-price'
+import { getCachedRewardTokenPrice } from '@/app/server-handlers/reward-token-price'
 import { getPaginatedLatestActivity } from '@/app/server-handlers/tables-data/latest-activity/api'
 import { getPaginatedRebalanceActivity } from '@/app/server-handlers/tables-data/rebalance-activity/api'
 import { getPaginatedTopDepositors } from '@/app/server-handlers/tables-data/top-depositors/api'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
-import { CACHE_TAGS, CACHE_TIMES } from '@/constants/revalidation'
 import { getArkHistoricalChartData } from '@/helpers/chart-helpers/get-ark-historical-data'
-import { getEstimatedSumrPrice } from '@/helpers/get-estimated-sumr-price'
 import { getSeoKeywords } from '@/helpers/seo-keywords'
 import {
   decorateVaultsWithConfig,
@@ -92,7 +81,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     topDepositors,
     latestActivity,
     rebalanceActivity,
-    sumrPrice,
+    rewardTokenPrices,
   ] = await Promise.all([
     getCachedVaultDetails({
       vaultAddress: parsedVaultId,
@@ -116,7 +105,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       strategies: [strategy],
       startTimestamp: dayjs().subtract(30, 'days').unix(),
     }),
-    getCachedSumrPrice(),
+    getCachedRewardTokenPrice(),
   ])
 
   if (!vault) {
@@ -130,10 +119,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
   // Now get DAO managed vaults and vault info in parallel
   const [daoManagedVaultsList, vaultInfo] = await Promise.all([
     getDaoManagedVaultsIDsList(vaults),
-    unstableCache(getVaultInfo, ['vaultInfo', parsedNetwork, parsedVaultId], {
-      revalidate: CACHE_TIMES.INTEREST_RATES,
-      tags: [CACHE_TAGS.INTEREST_RATES],
-    })({ network: parsedNetwork, vaultAddress: parsedVaultId }),
+    getCachedVaultInfo({ network: parsedNetwork, vaultAddress: parsedVaultId }),
   ])
 
   const [vaultWithConfig] = decorateVaultsWithConfig({
@@ -157,11 +143,6 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     daoManagedVaultsList,
   })
 
-  const cacheConfig = {
-    revalidate: CACHE_TIMES.INTEREST_RATES,
-    tags: [CACHE_TAGS.INTEREST_RATES],
-  }
-
   const [
     { apy30d: vaultBenchmarkApy30d, chartData: vaultBenchmark },
     fullArkInterestRatesMap,
@@ -184,11 +165,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       arksList: vaultWithConfig.arks,
       justLatestRates: true,
     }),
-    unstableCache(
-      getVaultsHistoricalApy,
-      ['vaultsHistoricalApy', `${vaultWithConfig.id}-${parsedNetworkId}`],
-      cacheConfig,
-    )({
+    getCachedVaultsHistoricalApy({
       // just the vault displayed
       fleets: [vaultWithConfig].map(({ id, protocol: { network } }) => ({
         fleetAddress: id,
@@ -215,13 +192,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
     `${vaultWithConfig.id}-${subgraphNetworkToId(supportedSDKNetwork(vaultWithConfig.protocol.network))}`
   ] || { sma7d: null, sma30d: null, current: null }
 
-  const sumrNetApyConfig = safeParseJson(getServerSideCookies(sumrNetApyConfigCookieName, cookie))
   const vaultInfoParsed = parseServerResponseToClient(vaultInfo)
-  const sumrPriceUsd = getEstimatedSumrPrice({
-    config: systemConfig,
-    sumrPrice,
-    sumrNetApyConfig: sumrNetApyConfig ?? {},
-  })
 
   return (
     <VaultOpenView
@@ -241,7 +212,7 @@ const EarnVaultOpenPage = async ({ params }: EarnVaultOpenPageProps) => {
       vaultsApyRaw={vaultsApyRaw}
       referralCode={referralCode}
       vaultInfo={vaultInfoParsed}
-      sumrPriceUsd={sumrPriceUsd}
+      rewardTokenPrices={rewardTokenPrices}
     />
   )
 }
