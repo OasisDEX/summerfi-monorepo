@@ -35,11 +35,13 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
             subnets: [...vpc.vpc.privateSubnets],
           },
           securityGroups: [vpc.securityGroup],
+          timeout: '60 seconds',
         }
       : {
           handler,
           runtime: 'nodejs20.x',
           environment,
+          timeout: '60 seconds',
         }
 
   const getApyFunction = new SSTFunction(
