@@ -40,14 +40,12 @@
 @media (min-width: 532px) {
   .protocolScrollerOverflowWrapper {
     margin-top: 20px;
-    margin-bottom: var(--spacing-space-3x-large);
   }
 }
 
 @media (min-width: 1026px) {
   .protocolScrollerOverflowWrapper {
     margin-top: 20px;
-    margin-bottom: var(--spacing-space-4x-large);
   }
 }
 

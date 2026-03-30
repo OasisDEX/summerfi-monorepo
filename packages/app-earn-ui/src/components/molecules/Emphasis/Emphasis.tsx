@@ -8,6 +8,7 @@ type EmphasisProps = {
   style?: CSSProperties
   variant?:
     | 'h4colorful'
+    | 'h5colorful'
     | 'h3colorful'
     | 'h2colorful'
     | 'h1colorful'

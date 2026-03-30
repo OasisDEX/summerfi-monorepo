@@ -67,11 +67,19 @@ const LandingPageSmallBlobs = ({
   }
   backgroundColor?: string
 }) => {
+  const driftClasses = [
+    landingPageBlobsStyles.smallBlobDrift1,
+    landingPageBlobsStyles.smallBlobDrift2,
+    landingPageBlobsStyles.smallBlobDrift3,
+    landingPageBlobsStyles.smallBlobDrift4,
+  ]
+
   return (
     <>
       {SMALL_BLOB_POSITIONS.map((pos, i) => (
         <span
           key={i}
+          className={driftClasses[i % driftClasses.length]}
           style={{
             position: 'absolute',
             ...pos,
@@ -103,6 +111,12 @@ const LandingPageSmallBlobs = ({
 }
 
 const LandingPageLargeBlobs = () => {
+  const driftClasses = [
+    landingPageBlobsStyles.largeBlobDrift1,
+    landingPageBlobsStyles.largeBlobDrift2,
+    landingPageBlobsStyles.largeBlobDrift3,
+  ]
+
   return (
     <div
       style={{
@@ -118,13 +132,13 @@ const LandingPageLargeBlobs = () => {
       {LARGE_BLOB_POSITIONS.map((blob, index) => (
         <div
           key={index}
+          className={driftClasses[index % driftClasses.length]}
           style={{
             position: 'absolute',
             width: `${blob.size}px`,
             height: `${blob.size}px`,
             top: `${blob.position.y}%`,
             left: `${blob.position.x}%`,
-            transform: 'translate(-50%, -50%)',
             borderRadius: '50%',
             background: blob.background,
             filter: `blur(${blob.blur}px)`,
