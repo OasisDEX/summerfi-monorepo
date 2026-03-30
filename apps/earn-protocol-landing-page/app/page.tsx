@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { LandingPageHero, ProtocolScroller } from '@/components/layout/LandingPageContent'
 import { OurProducts } from '@/components/layout/LandingPageContent/components/OurProducts'
 import { YieldProtocolOpenToAll } from '@/components/layout/LandingPageContent/components/YieldProtocolOpenToAll'
+import { BuildBySummerFiPlain } from '@/components/layout/LandingPageContent/content/BuildBySummerFi'
 import { useLandingPageData } from '@/contexts/LandingPageContext'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 import chainSecurityLogo from '@/public/img/landing-page/auditor-logos/chainsecurity.svg'
@@ -42,10 +43,12 @@ export default function HomePage() {
       <YieldProtocolOpenToAll />
       <OurProducts />
       <Audits
+        noHeader
         chainSecurityLogo={chainSecurityLogo}
         prototechLabsLogo={prototechLabsLogo}
         onAuditClick={handleAuditClick}
       />
+      <BuildBySummerFiPlain />
     </div>
   )
 }

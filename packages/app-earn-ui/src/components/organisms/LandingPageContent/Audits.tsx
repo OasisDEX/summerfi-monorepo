@@ -38,10 +38,12 @@ export const Audits = ({
   chainSecurityLogo,
   prototechLabsLogo,
   onAuditClick,
+  noHeader,
 }: {
   chainSecurityLogo: StaticImageData
   prototechLabsLogo: StaticImageData
   onAuditClick: (auditId: string) => void
+  noHeader?: boolean
 }): ReactNode => {
   const handleAuditClick = (auditId: string) => () => {
     onAuditClick(auditId)
@@ -50,9 +52,11 @@ export const Audits = ({
   return (
     <div>
       <div className={auditsStyles.auditsHeaderWrapper}>
-        <Text variant="p2semiColorful" as="p">
-          Audits
-        </Text>
+        {!noHeader && (
+          <Text variant="p2semiColorful" as="p">
+            Audits
+          </Text>
+        )}
         <Text variant="h2" className={auditsStyles.auditsHeader}>
           Top tier security & audits
         </Text>
