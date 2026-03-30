@@ -1,58 +1,155 @@
 .landingPageHeroWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-@media (max-width: 531px) {
-  .landingPageHeroWrapper {
-    margin-bottom: var(--spacing-space-2x-large);
-  }
-}
-
-.heroHeader {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  height: calc(100vh - (2 * (102px + 56px)));
+  margin-bottom: calc(102px + 56px);
+}
+
+.heroHeader {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+  height: 100%;
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 64px;
+  margin-inline: auto;
+
+  >h1 {
+    letter-spacing: -1px;
+  }
+}
+
+.heroTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 760px;
+}
+
+.heroTitle {
+  white-space: nowrap;
+}
+
+.heroSubtitle {
+  color: #b9b8ba;
+}
+
+.heroButtons {
+  display: flex;
   align-items: center;
-  margin-bottom: 74px;
-  gap: 10px;
+  gap: 8px;
 }
 
-.heroHeaderPartA {
-  display: block;
+.heroStats {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding-top: 24px;
 }
 
-@media (max-width: 531px) {
+.heroStat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 110px;
+  padding-right: 26px;
+  margin-right: 26px;
+}
+
+.heroStatLabel {
+  color: #8a888c;
+}
+
+.heroStatValue {
+  color: #fffbfd;
+  letter-spacing: -0.56px;
+}
+
+.heroStatDivider {
+  position: absolute;
+  right: 0;
+  top: 20px;
+  width: 1px;
+  height: 20px;
+  background: #ba5d8b;
+}
+
+@media (max-width: 1080px) {
   .heroHeader {
+    padding: 0 32px;
+  }
+
+  .heroTitle {
+    white-space: normal;
+  }
+
+  .heroStats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    row-gap: 16px;
+    column-gap: 14px;
+  }
+
+  .heroStat {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  .heroStatDivider {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .landingPageHeroWrapper {
+    min-height: 0;
+    height: auto;
+    padding: 88px 0 64px;
+
+    &::after {
+      width: 95vw;
+      height: 95vw;
+      right: -38vw;
+      bottom: -20vw;
+    }
+  }
+
+  .heroHeader {
+    align-items: center;
     text-align: center;
+    padding: 0 20px;
+  }
+
+  .heroTextGroup {
+    align-items: center;
+  }
+
+  .heroButtons {
+    width: 100%;
     flex-direction: column;
-    gap: 0;
   }
 
-  .heroHeaderPartA {
+  .primaryCta,
+  .secondaryCta {
     width: 100%;
   }
 
-  .heroHeaderPartB {
-    width: 100%;
+  .heroStats {
+    grid-template-columns: 1fr;
   }
-}
 
-.heroHeaderMobile {
-  text-align: center;
-}
-
-.heroHeaderMobile>h1 {
-  display: inline;
-}
-
-.heroHeaderMobile>h1:last-child {
-  margin-left: 10px;
-}
-
-.viewAllStrategies {
-  display: block;
-  margin: var(--spacing-space-2x-large) 0;
+  .heroStat {
+    align-items: center;
+  }
 }

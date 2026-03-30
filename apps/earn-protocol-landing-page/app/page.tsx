@@ -71,6 +71,7 @@ export default function HomePage() {
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
         rewardTokenPrices={landingPageData?.rewardTokenPrices}
       />
+      <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <ProtocolStats
         vaultsList={landingPageData?.vaultsWithConfig}
         totalUniqueUsers={landingPageData?.totalUniqueUsers}
@@ -86,7 +87,6 @@ export default function HomePage() {
           ]}
         />
       </BigGradientBox>
-      <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <MarketingPoints>
         <HigherYieldsBlock
           vaultsList={landingPageData?.vaultsWithConfig}

@@ -1,5 +1,6 @@
 'use client'
-import { HomepageCarousel, SkeletonLine, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { useMemo } from 'react'
+import { Button, Emphasis, getVaultsProtocolsList, Text } from '@summerfi/app-earn-ui'
 import {
   type GetVaultsApyResponse,
   type IArmadaVaultInfo,
@@ -14,52 +15,39 @@ import landingPageHeroStyles from '@/components/layout/LandingPageContent/compon
 
 export const LandingPageHero = ({
   vaultsList,
-  vaultsApyByNetworkMap,
-  vaultsInfo,
-  rewardTokenPrices,
+  vaultsApyByNetworkMap: _vaultsApyByNetworkMap,
+  vaultsInfo: _vaultsInfo,
+  rewardTokenPrices: _rewardTokenPrices,
 }: {
   vaultsList?: SDKVaultishType[]
   vaultsApyByNetworkMap?: GetVaultsApyResponse
   vaultsInfo?: IArmadaVaultInfo[]
   rewardTokenPrices?: RewardTokenPrices
 }) => {
-  const headerPartA = (
-    <Text
-      as="h1"
-      variant="h1"
-      style={{
-        color: 'var(--earn-protocol-secondary-100)',
-        textAlign: 'center',
-        fontWeight: '600',
-      }}
-    >
-      Automated Exposure to DeFi’s
-    </Text>
-  )
+  const heroStats = useMemo(() => {
+    const formattedProtocolsSupportedList = getVaultsProtocolsList(vaultsList ?? [])
 
-  const headerPartB = (
-    <Text
-      as="h1"
-      variant="h1"
-      style={{
-        color: 'var(--earn-protocol-primary-100)',
-        textAlign: 'center',
-        fontWeight: '600',
-      }}
-    >
-      Highest Quality{' '}
-      <span style={{ position: 'relative' }}>
-        Yield
-        <Text as="span" variant="p2" style={{ position: 'absolute', top: '-6px', right: '-8px' }}>
-          1
-        </Text>
-      </span>
-    </Text>
-  )
+    return [
+      { label: 'Total Rebalances', value: '-' },
+      { label: 'Hours of user time saved', value: '-' },
+      {
+        label: 'Markets Optimized',
+        value: formattedProtocolsSupportedList.allVaultsProtocols.length,
+      },
+      { label: 'Max APY', value: '-' },
+    ]
+  }, [vaultsList])
 
-  const handleGetStartedClick = (vault?: SDKVaultishType) => {
+  const handleGetStartedClick = () => {
     EarnProtocolEvents.buttonClicked({
-      buttonName: `lp-get-started-${vault?.inputToken.symbol}-${vault?.protocol.network}`,
+      buttonName: `lp-get-started`,
+      page: '/',
+    })
+  }
+
+  const handleViewProductsClick = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: 'lp-view-products-hero',
       page: '/',
     })
   }
@@ -67,36 +55,48 @@ export const LandingPageHero = ({
   return (
     <div className={landingPageHeroStyles.landingPageHeroWrapper}>
       <div className={landingPageHeroStyles.heroHeader}>
-        <div className={landingPageHeroStyles.heroHeaderPartA}>{headerPartA}</div>
-        <div className={landingPageHeroStyles.heroHeaderPartB}>{headerPartB}</div>
+        <div className={landingPageHeroStyles.heroTextGroup}>
+          <Text variant="h1" as="h1" className={landingPageHeroStyles.heroTitle}>
+            <Emphasis variant="h1colorful">Earn more</Emphasis>, do less
+          </Text>
+          <Text variant="p1" className={landingPageHeroStyles.heroSubtitle}>
+            Institutional DeFi Vault infrastructure for everyone.
+          </Text>
+        </div>
+        <div className={landingPageHeroStyles.heroButtons}>
+          <Link
+            href="/earn"
+            prefetch={false}
+            className={landingPageHeroStyles.primaryCta}
+            onClick={() => handleGetStartedClick()}
+          >
+            <Button variant="primarySmall">Launch App</Button>
+          </Link>
+          <Link
+            href="/earn"
+            prefetch={false}
+            className={landingPageHeroStyles.primaryCta}
+            onClick={() => handleViewProductsClick()}
+          >
+            <Button variant="secondarySmall">View Products</Button>
+          </Link>
+        </div>
+        <div className={landingPageHeroStyles.heroStats}>
+          {heroStats.map((stat, index) => (
+            <div className={landingPageHeroStyles.heroStat} key={stat.label}>
+              <Text variant="p4semi" as="p" className={landingPageHeroStyles.heroStatLabel}>
+                {stat.label}
+              </Text>
+              <Text variant="h4" as="p" className={landingPageHeroStyles.heroStatValue}>
+                {stat.value}
+              </Text>
+              {index < heroStats.length - 1 && (
+                <span className={landingPageHeroStyles.heroStatDivider} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-      <HomepageCarousel
-        vaultsList={vaultsList}
-        vaultsApyByNetworkMap={vaultsApyByNetworkMap}
-        vaultsInfo={vaultsInfo}
-        onGetStartedClick={handleGetStartedClick}
-        rewardTokenPrices={rewardTokenPrices}
-      />
-      <Link
-        href="/earn"
-        prefetch={false}
-        onClick={() => {
-          EarnProtocolEvents.buttonClicked({
-            buttonName: 'lp-view-all-strategies',
-            page: '/',
-          })
-        }}
-      >
-        <Text className={landingPageHeroStyles.viewAllStrategies} variant="p3semi">
-          {vaultsList?.length ? (
-            <WithArrow style={{ color: 'white' }}>
-              View all {vaultsList.length} strategies
-            </WithArrow>
-          ) : (
-            <SkeletonLine height={30} width={200} />
-          )}
-        </Text>
-      </Link>
     </div>
   )
 }

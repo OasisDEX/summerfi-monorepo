@@ -1,4 +1,9 @@
+body {
+  background: rgb(16, 16, 16);
+}
+
 .mainContainer {
+  position: relative;
   height: 100%;
 }
 

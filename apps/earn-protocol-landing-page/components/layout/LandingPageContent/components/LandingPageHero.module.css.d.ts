@@ -1,10 +1,17 @@
 declare const styles: {
+  readonly "heroButtons": string;
   readonly "heroHeader": string;
-  readonly "heroHeaderMobile": string;
-  readonly "heroHeaderPartA": string;
-  readonly "heroHeaderPartB": string;
+  readonly "heroStat": string;
+  readonly "heroStatDivider": string;
+  readonly "heroStatLabel": string;
+  readonly "heroStatValue": string;
+  readonly "heroStats": string;
+  readonly "heroSubtitle": string;
+  readonly "heroTextGroup": string;
+  readonly "heroTitle": string;
   readonly "landingPageHeroWrapper": string;
-  readonly "viewAllStrategies": string;
+  readonly "primaryCta": string;
+  readonly "secondaryCta": string;
 };
 export = styles;
 
