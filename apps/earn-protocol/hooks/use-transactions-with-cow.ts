@@ -165,132 +165,75 @@ export const useTransaction = ({
       : ''
   }, [nextTransaction])
 
-  const getCowTransactionsList = useCallback(async () => {
-    // only deposit supported for now
-    if (ownerView && token && vaultToken && amount && userWalletAddress) {
-      if (!isDeposit) {
-        throw new Error('Cow transactions list should only be called for withdraw')
-      }
-      const fromToken: IToken = token
-      const toToken: IToken = vaultToken
-      const sender = userWalletAddress as `0x${string}`
-
-      setTxStatus('loadingTx')
-
-      try {
-        const fromAmount = TokenAmount.createFromBaseUnit({
-          amount: amount.toString(),
-          token: fromToken,
-        })
-        const orderQuote = await getIntentSwapsSellOrderQuote({
-          sender,
-          fromAmount,
-          toToken,
-        })
-        const { toAmount } = orderQuote
-
-        const isPermit2AuthNeeded = await isPermit2AuthorizationNeeded({
-          ownerAddress: sender,
-          tokenAddress: toToken.address.toSolidityValue(),
-          amount: toAmount.toSolidityValue(),
-          publicClient: publicClient as any,
-        })
-
-        const transactionsList: TransactionInfo[] = isPermit2AuthNeeded
-          ? await Promise.all([
-              getPermit2AuthorizationTx({
-                tokenAddress: toToken.address.toSolidityValue(),
-              }),
-            ])
-          : []
-
-        transactionEventHandler({
-          transactionType: isWithdraw ? 'withdraw' : 'deposit',
-          txAmount: amount.isGreaterThan(0) ? `${amount.toString()} ${token.symbol}` : undefined,
-          txEvent: 'transactionSimulated',
-          vaultSlug: slugifyVault(vault),
-          result: 'success',
-        })
-
-        if (transactionsList.length <= 0) {
-          setTxStatus('txSuccess')
-        }
-        // Map to TransactionWithStatus and set executed to false
-        setTransactions(
-          transactionsList.map((tx) => ({ ...tx, executed: false }) as TransactionWithStatus),
-        )
-        setTxStatus('txPrepared')
-      } catch (err) {
-        transactionEventHandler({
-          transactionType: isWithdraw ? 'withdraw' : 'deposit',
-          txEvent: 'transactionSimulated',
-          txAmount: amount.isGreaterThan(0) ? `${amount.toString()} ${token.symbol}` : undefined,
-          vaultSlug: slugifyVault(vault),
-          result: 'failure',
-        })
-        if (err instanceof Error) {
-          setSidebarTransactionError(err.message)
-        } else {
-          setSidebarTransactionError(errorsMap.transactionRetrievalError)
-        }
-      }
-    }
-  }, [
-    isWithdraw,
-    isDeposit,
-    ownerView,
-    token,
-    vaultToken,
-    amount,
-    userWalletAddress,
-    sidebarTransactionType,
-    getDepositTX,
-    getWithdrawTX,
-    vault,
-    vaultChainId,
-    slippageConfig.slippage,
-    referralCode,
-    transactionEventHandler,
-  ])
-
   const getTransactionsList = useCallback(async () => {
     // get deposit/withdraw transactions
     if (
-      (isWithdraw || isDeposit) &&
+      (isDeposit || isWithdraw) &&
       ownerView &&
       token &&
       vaultToken &&
       amount &&
       userWalletAddress
     ) {
-      const fromToken = {
-        [TransactionAction.DEPOSIT]: token,
-        [TransactionAction.WITHDRAW]: vaultToken,
-      }[sidebarTransactionType]
-      const toToken = {
-        [TransactionAction.DEPOSIT]: vaultToken,
-        [TransactionAction.WITHDRAW]: token,
-      }[sidebarTransactionType]
-
-      setTxStatus('loadingTx')
       try {
-        const transactionsList = await {
-          [TransactionAction.DEPOSIT]: getDepositTX,
-          [TransactionAction.WITHDRAW]: getWithdrawTX,
-        }[sidebarTransactionType]({
-          walletAddress: Address.createFromEthereum({
-            value: userWalletAddress,
-          }),
-          amount: TokenAmount.createFrom({
-            token: fromToken,
+        let transactionsList: TransactionInfo[] = []
+
+        const fromToken = {
+          [TransactionAction.DEPOSIT]: token,
+          [TransactionAction.WITHDRAW]: vaultToken,
+        }[sidebarTransactionType] as IToken
+
+        const toToken = {
+          [TransactionAction.DEPOSIT]: vaultToken,
+          [TransactionAction.WITHDRAW]: token,
+        }[sidebarTransactionType] as IToken
+
+        if (isDeposit && fromToken.symbol !== toToken.symbol) {
+          const sender = userWalletAddress as `0x${string}`
+
+          const fromAmount = TokenAmount.createFrom({
             amount: amount.toString(),
-          }),
-          toToken,
-          fleetAddress: vault.id,
-          chainInfo: getChainInfoByChainId(vaultChainId),
-          slippage: Number(slippageConfig.slippage),
-          referralCode,
-        })
+            token: fromToken,
+          })
+          const orderQuote = await getIntentSwapsSellOrderQuote({
+            sender,
+            fromAmount,
+            toToken,
+          })
+          const { toAmount } = orderQuote
+
+          const isPermit2AuthNeeded = await isPermit2AuthorizationNeeded({
+            ownerAddress: sender,
+            tokenAddress: toToken.address.toSolidityValue(),
+            amount: toAmount.toSolidityValue(),
+            publicClient: publicClient as any,
+          })
+
+          transactionsList = isPermit2AuthNeeded
+            ? await getPermit2AuthorizationTx({
+                tokenAddress: toToken.address.toSolidityValue(),
+              })
+            : []
+        } else {
+          setTxStatus('loadingTx')
+          transactionsList = await {
+            [TransactionAction.DEPOSIT]: getDepositTX,
+            [TransactionAction.WITHDRAW]: getWithdrawTX,
+          }[sidebarTransactionType]({
+            walletAddress: Address.createFromEthereum({
+              value: userWalletAddress,
+            }),
+            amount: TokenAmount.createFrom({
+              token: fromToken,
+              amount: amount.toString(),
+            }),
+            toToken,
+            fleetAddress: vault.id,
+            chainInfo: getChainInfoByChainId(vaultChainId),
+            slippage: Number(slippageConfig.slippage),
+            ...(isWithdraw && referralCode ? { referralCode } : {}),
+          })
+        }
 
         transactionEventHandler({
           transactionType: isWithdraw ? 'withdraw' : 'deposit',
@@ -301,10 +244,17 @@ export const useTransaction = ({
         })
 
         if (transactionsList.length <= 0) {
-          throw new Error('Error getting the transactions list')
+          if (isDeposit) {
+            // on deposit tx can be empty and it should then go to the swap flow
+            // do nothing
+          } else {
+            throw new Error('Error getting the transactions list')
+          }
         }
         // Map to TransactionWithStatus and set executed to false
-        setTransactions(transactionsList.map((tx) => ({ ...tx, executed: false })))
+        setTransactions(
+          transactionsList.map((tx) => ({ ...tx, executed: false }) as TransactionWithStatus),
+        )
         setTxStatus('txPrepared')
       } catch (err) {
         transactionEventHandler({
@@ -388,6 +338,9 @@ export const useTransaction = ({
     referralCode,
     transactionEventHandler,
     getVaultSwitchTx,
+    isPermit2AuthorizationNeeded,
+    getPermit2AuthorizationTx,
+    getIntentSwapsSellOrderQuote,
     positionAmount,
   ])
 
@@ -819,13 +772,13 @@ export const useTransaction = ({
       }
     }
 
-    if (isDeposit) {
-      // for deposit we want to show Cow Swap simulation
-      return {
-        label: 'Preview',
-        action: getCowTransactionsList,
-      }
-    }
+    // if (isDeposit) {
+    //   // for deposit we want to show Cow Swap simulation
+    //   return {
+    //     label: 'Preview',
+    //     action: getCowTransactionsList,
+    //   }
+    // }
 
     return {
       label: 'Preview',

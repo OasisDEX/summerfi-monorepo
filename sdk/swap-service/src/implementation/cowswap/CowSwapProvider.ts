@@ -103,6 +103,10 @@ export class CowSwapProvider
     const buyTokenAddress = params.toToken.address.value
 
     const sellAmount = params.fromAmount.toSolidityValue().toString()
+    if (BigInt(sellAmount) <= 0n) {
+      throw new Error('Sell amount must be greater than 0')
+    }
+
     const from = params.sender.value
     // If receiver is not provided, use the from address as the receiver
     const receiver = params.receiver?.value ?? params.sender.value
@@ -115,6 +119,8 @@ export class CowSwapProvider
       sellAmountBeforeFee: sellAmount,
       kind: OrderQuoteSideKindSell.SELL,
     }
+
+    LoggingService.debug('Fetching quote from CowSwap with request:', quoteRequest)
 
     const orderBookApi = new OrderBookApi({ chainId: supportedChainId, apiKey: this._apiKey })
     let quote: OrderParameters | LimitOrderParameters

@@ -7,6 +7,8 @@ import type {
   AddressValue,
   TransactionInfo,
   HexData,
+  Permit2AuthorizationTransactionInfo,
+  Permit2RevokeTransactionInfo,
 } from '@summerfi/sdk-common'
 import type { EnrichedOrder, UnsignedOrder } from '@cowprotocol/cow-sdk'
 import type { Account, PublicClient } from 'viem'
@@ -151,7 +153,9 @@ export interface IIntentSwapClient {
    * @param tokenAddress The ERC-20 token address to authorize
    * @returns A TransactionInfo for the approve(Permit2, MaxUint256) transaction
    */
-  getPermit2AuthorizationTx(params: { tokenAddress: IAddress }): TransactionInfo
+  getPermit2AuthorizationTx(params: {
+    tokenAddress: IAddress
+  }): [Permit2AuthorizationTransactionInfo]
 
   /**
    * @name getPermit2RevokeTx
@@ -159,7 +163,7 @@ export interface IIntentSwapClient {
    * @param tokenAddress The ERC-20 token address to revoke
    * @returns A TransactionInfo for the approve(Permit2, 0) transaction
    */
-  getPermit2RevokeTx(params: { tokenAddress: IAddress }): TransactionInfo
+  getPermit2RevokeTx(params: { tokenAddress: IAddress }): [Permit2RevokeTransactionInfo]
 
   /**
    * @name createPermit2Data

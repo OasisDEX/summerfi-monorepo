@@ -14,65 +14,6 @@ import { createSendTransactionTool, getPublicClientForChain } from '@summerfi/te
 import { privateKeyToAccount } from 'viem/accounts'
 import { encodeFunctionData } from 'viem'
 
-const admiralsQuartersAbi = [
-  {
-    type: 'function',
-    name: 'multicall',
-    inputs: [{ name: 'data', type: 'bytes[]', internalType: 'bytes[]' }],
-    outputs: [{ name: 'results', type: 'bytes[]', internalType: 'bytes[]' }],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
-    name: 'enterFleetWithPermit2',
-    stateMutability: 'payable',
-    inputs: [
-      {
-        name: 'owner',
-        type: 'address',
-      },
-      {
-        name: 'fleetCommander',
-        type: 'address',
-      },
-      {
-        name: 'assets',
-        type: 'uint256',
-      },
-      {
-        name: 'referralCode',
-        type: 'bytes',
-      },
-      {
-        name: 'permitData',
-        type: 'tuple',
-        components: [
-          {
-            name: 'permitted',
-            type: 'tuple',
-            components: [
-              { name: 'token', type: 'address' },
-              { name: 'amount', type: 'uint256' },
-            ],
-          },
-          { name: 'nonce', type: 'uint256' },
-          { name: 'deadline', type: 'uint256' },
-        ],
-      },
-      {
-        name: 'signature',
-        type: 'bytes',
-      },
-    ],
-    outputs: [
-      {
-        name: 'shares',
-        type: 'uint256',
-      },
-    ],
-  },
-] as const
-
 jest.setTimeout(300000)
 
 /**
@@ -198,14 +139,14 @@ describe('Intent swaps: Swap with Deposit', () => {
           tokenAddress: sellQuote.toAmount.token.address,
         })
         console.log('Sending Permit2 authorization transaction...')
-        const permit2TxStatus = await userSendTxTool(permit2AuthorizationTxInfo)
+        const [permit2TxStatus] = await userSendTxTool(permit2AuthorizationTxInfo)
         assert(permit2TxStatus === 'success', 'Permit2 authorization transaction failed')
       } else if (revokePermit2) {
         const permit2RevokeTxInfo = await sdk.intentSwaps.getPermit2RevokeTx({
           tokenAddress: sellQuote.toAmount.token.address,
         })
         console.log('Sending Permit2 revoke transaction...')
-        const revokeTxStatus = await userSendTxTool(permit2RevokeTxInfo)
+        const [revokeTxStatus] = await userSendTxTool(permit2RevokeTxInfo)
         assert(revokeTxStatus === 'success', 'Permit2 revoke transaction failed')
       }
 
@@ -231,12 +172,12 @@ describe('Intent swaps: Swap with Deposit', () => {
       }
 
       const enterFleetCallData = encodeFunctionData({
-        abi: admiralsQuartersAbi,
+        abi: getAdmiralsQuartersAbi(),
         functionName: 'enterFleetWithPermit2',
         args: [ownerAddress, fleetAddressValue, permitAmount, referralCode, permitData, signature],
       })
       const multicallCallData = encodeFunctionData({
-        abi: admiralsQuartersAbi,
+        abi: getAdmiralsQuartersAbi(),
         functionName: 'multicall',
         args: [[enterFleetCallData]],
       })
@@ -354,4 +295,65 @@ async function _handleOrderPrerequisites({
     default:
       throw new Error(`Unknown order status`)
   }
+}
+
+function getAdmiralsQuartersAbi() {
+  return [
+    {
+      type: 'function',
+      name: 'multicall',
+      inputs: [{ name: 'data', type: 'bytes[]', internalType: 'bytes[]' }],
+      outputs: [{ name: 'results', type: 'bytes[]', internalType: 'bytes[]' }],
+      stateMutability: 'payable',
+    },
+    {
+      type: 'function',
+      name: 'enterFleetWithPermit2',
+      stateMutability: 'payable',
+      inputs: [
+        {
+          name: 'owner',
+          type: 'address',
+        },
+        {
+          name: 'fleetCommander',
+          type: 'address',
+        },
+        {
+          name: 'assets',
+          type: 'uint256',
+        },
+        {
+          name: 'referralCode',
+          type: 'bytes',
+        },
+        {
+          name: 'permitData',
+          type: 'tuple',
+          components: [
+            {
+              name: 'permitted',
+              type: 'tuple',
+              components: [
+                { name: 'token', type: 'address' },
+                { name: 'amount', type: 'uint256' },
+              ],
+            },
+            { name: 'nonce', type: 'uint256' },
+            { name: 'deadline', type: 'uint256' },
+          ],
+        },
+        {
+          name: 'signature',
+          type: 'bytes',
+        },
+      ],
+      outputs: [
+        {
+          name: 'shares',
+          type: 'uint256',
+        },
+      ],
+    },
+  ] as const
 }

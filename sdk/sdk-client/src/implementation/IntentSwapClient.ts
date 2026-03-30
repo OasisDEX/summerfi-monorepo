@@ -17,7 +17,12 @@ import { ViemAdapter } from '@cowprotocol/sdk-viem-adapter'
 import { encodeFunctionData, maxUint256, erc20Abi } from 'viem'
 import { permit2Address } from '@uniswap/permit2-sdk'
 
-import { LoggingService, NATIVE_CURRENCY_ADDRESS_LOWERCASE, Price } from '@summerfi/sdk-common'
+import {
+  LoggingService,
+  NATIVE_CURRENCY_ADDRESS_LOWERCASE,
+  Price,
+  TransactionType,
+} from '@summerfi/sdk-common'
 
 const PERMIT2_ADDRESS = '0x000000000022D473030F116dDEE9F6B43aC78BA3' as const
 
@@ -252,14 +257,17 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       functionName: 'approve',
       args: [PERMIT2_ADDRESS, maxUint256],
     })
-    return {
-      transaction: {
-        target: params.tokenAddress,
-        calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Permit2Authorization,
+        transaction: {
+          target: params.tokenAddress,
+          calldata,
+          value: '0',
+        },
+        description: `Authorize Permit2 to spend token ${params.tokenAddress.toSolidityValue()}`,
       },
-      description: `Authorize Permit2 to spend token ${params.tokenAddress.toSolidityValue()}`,
-    }
+    ]
   }
 
   /** @see IIntentSwapClient.getPermit2RevokeTx */
@@ -273,14 +281,17 @@ export class IntentSwapClient extends IRPCClient implements IIntentSwapClient {
       functionName: 'approve',
       args: [PERMIT2_ADDRESS, 0n],
     })
-    return {
-      transaction: {
-        target: params.tokenAddress,
-        calldata,
-        value: '0',
+    return [
+      {
+        type: TransactionType.Permit2Revoke,
+        transaction: {
+          target: params.tokenAddress,
+          calldata,
+          value: '0',
+        },
+        description: `Revoke Permit2 authorization for token ${params.tokenAddress.toSolidityValue()}`,
       },
-      description: `Revoke Permit2 authorization for token ${params.tokenAddress.toSolidityValue()}`,
-    }
+    ]
   }
 
   /** @see IIntentSwapClient.createPermit2Data */
