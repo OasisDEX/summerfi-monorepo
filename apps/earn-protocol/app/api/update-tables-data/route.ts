@@ -54,13 +54,13 @@ export async function POST(req: NextRequest) {
   const expectedAuth = process.env.EARN_PROTOCOL_UPDATE_TABLES_AUTH_TOKEN
 
   if (!expectedAuth) {
-    dbInstance.db.destroy()
+    await dbInstance.db.destroy().catch(() => undefined)
 
     return NextResponse.json({ error: 'Authorization token is not configured' }, { status: 500 })
   }
 
   if (!authHeader || authHeader !== `Bearer ${expectedAuth}`) {
-    dbInstance.db.destroy()
+    await dbInstance.db.destroy().catch(() => undefined)
 
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
