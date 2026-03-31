@@ -22,19 +22,19 @@ export const getVaultsBenchmark = async ({
   let dbInstance: Awaited<ReturnType<typeof getSummerProtocolDB>> | undefined
 
   try {
-    const { db } = await getSummerProtocolDB({
+    dbInstance = await getSummerProtocolDB({
       connectionString,
     })
 
     const [chartData, apy30d] = await Promise.all([
-      db
+      dbInstance.db
         .selectFrom('vaultBenchmark')
         .where('chainId', '=', networkId)
         .where('asset', '=', vaultPerformanceAsset)
         .select(['apy1dTotal', 'timestamp'])
         .orderBy('timestamp', 'desc')
         .execute(),
-      db
+      dbInstance.db
         .selectFrom('vaultBenchmark')
         .where('chainId', '=', networkId)
         .where('asset', '=', vaultPerformanceAsset)

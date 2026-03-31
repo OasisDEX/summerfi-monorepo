@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const trmApiKey = process.env.TRM_API_KEY
 
   if (!trmApiKey) {
-    db.destroy()
+    await db.destroy().catch(() => undefined)
 
     return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
   }
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   const jwtSecret = process.env.EARN_PROTOCOL_JWT_SECRET
 
   if (!jwtSecret) {
-    db.destroy()
+    await db.destroy().catch(() => undefined)
 
     return NextResponse.json({ error: 'Required ENV variable is not set' }, { status: 500 })
   }

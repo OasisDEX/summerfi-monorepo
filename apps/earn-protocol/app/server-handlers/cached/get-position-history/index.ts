@@ -54,52 +54,54 @@ export async function getCachedPositionHistory({
     throw new Error('Failed to connect to Summer Protocol DB')
   }
 
-  // passing next.js fetcher with cache duration
-  const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
-    await fetch(url, {
-      ...params,
-      next: {
-        revalidate: CACHE_TIMES.POSITION_HISTORY,
-        tags: [CACHE_TAGS.POSITION_HISTORY, getPositionHistoryTag(address)],
-      },
+  try {
+    // passing next.js fetcher with cache duration
+    const customFetchCache = async (url: RequestInfo | URL, params?: RequestInit) =>
+      await fetch(url, {
+        ...params,
+        next: {
+          revalidate: CACHE_TIMES.POSITION_HISTORY,
+          tags: [CACHE_TAGS.POSITION_HISTORY, getPositionHistoryTag(address)],
+        },
+      })
+
+    const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
+
+    if (!isProperNetwork(network)) {
+      throw new Error(`getCachedPositionHistory: No endpoint found for network: ${network}`)
+    }
+
+    const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
+      fetch: customFetchCache,
     })
 
-  const isProperNetwork = (net: string): net is keyof typeof subgraphsMap => net in subgraphsMap
+    const [positionHistory, noOfDepositsQueryResult] = await Promise.all([
+      networkGraphQlClient.request<GetPositionHistoryQuery>(
+        GetPositionHistoryDocument,
+        {
+          positionId,
+        },
+        {
+          origin: 'earn-protocol-app',
+        },
+      ),
+      dbInstance.db
+        .selectFrom('latestActivity')
+        .where('userAddress', '=', address.toLowerCase())
+        .where('vaultId', '=', vault.id)
+        .where('network', '=', networkDbNameMap[network])
+        .where('actionType', '=', 'deposit')
+        .select((eb) => eb.fn.count('id').as('noOfDeposits'))
+        .executeTakeFirst(),
+    ])
 
-  if (!isProperNetwork(network)) {
-    throw new Error(`getCachedPositionHistory: No endpoint found for network: ${network}`)
-  }
-
-  const networkGraphQlClient = new GraphQLClient(subgraphsMap[network], {
-    fetch: customFetchCache,
-  })
-
-  const [positionHistory, noOfDepositsQueryResult] = await Promise.all([
-    networkGraphQlClient.request<GetPositionHistoryQuery>(
-      GetPositionHistoryDocument,
-      {
-        positionId,
-      },
-      {
-        origin: 'earn-protocol-app',
-      },
-    ),
-    dbInstance.db
-      .selectFrom('latestActivity')
-      .where('userAddress', '=', address.toLowerCase())
-      .where('vaultId', '=', vault.id)
-      .where('network', '=', networkDbNameMap[network])
-      .where('actionType', '=', 'deposit')
-      .select((eb) => eb.fn.count('id').as('noOfDeposits'))
-      .executeTakeFirst(),
-  ])
-
-  await dbInstance.db.destroy()
-
-  return {
-    positionHistory,
-    vault,
-    noOfDeposits: Number(noOfDepositsQueryResult?.noOfDeposits ?? 0),
+    return {
+      positionHistory,
+      vault,
+      noOfDeposits: Number(noOfDepositsQueryResult?.noOfDeposits ?? 0),
+    }
+  } finally {
+    await dbInstance.db.destroy()
   }
 }
 
