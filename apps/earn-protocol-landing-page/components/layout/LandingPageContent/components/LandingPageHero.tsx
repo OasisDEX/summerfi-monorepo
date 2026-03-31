@@ -153,7 +153,7 @@ export const LandingPageHero = ({
             className={landingPageHeroStyles.primaryCta}
             onClick={() => handleViewProductsClick()}
           >
-            <Button variant="secondarySmall">View Products</Button>
+            <Button variant="secondarySmall">View&nbsp;Products</Button>
           </Link>
         </div>
         <div className={landingPageHeroStyles.heroStats}>

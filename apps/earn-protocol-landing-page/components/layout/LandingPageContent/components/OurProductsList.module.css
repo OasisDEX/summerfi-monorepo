@@ -275,6 +275,7 @@
 .stackLogo {
   width: auto;
   height: auto;
+  max-width: 100px;
   object-fit: contain;
 }
 

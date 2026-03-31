@@ -67,11 +67,16 @@ const LandingPageSmallBlobs = ({
   }
   backgroundColor?: string
 }) => {
-  const driftClasses = [
-    landingPageBlobsStyles.smallBlobDrift1,
-    landingPageBlobsStyles.smallBlobDrift2,
-    landingPageBlobsStyles.smallBlobDrift3,
-    landingPageBlobsStyles.smallBlobDrift4,
+  const aliveClasses = [
+    landingPageBlobsStyles.smallBlobAlive1,
+    landingPageBlobsStyles.smallBlobAlive2,
+    landingPageBlobsStyles.smallBlobAlive3,
+    landingPageBlobsStyles.smallBlobAlive4,
+  ]
+
+  const morphClasses = [
+    landingPageBlobsStyles.smallBlobMorph1,
+    landingPageBlobsStyles.smallBlobMorph2,
   ]
 
   return (
@@ -79,7 +84,7 @@ const LandingPageSmallBlobs = ({
       {SMALL_BLOB_POSITIONS.map((pos, i) => (
         <span
           key={i}
-          className={driftClasses[i % driftClasses.length]}
+          className={aliveClasses[i % aliveClasses.length]}
           style={{
             position: 'absolute',
             ...pos,
@@ -88,18 +93,18 @@ const LandingPageSmallBlobs = ({
           }}
         >
           <span
+            className={morphClasses[i % morphClasses.length]}
             style={{
               position: 'absolute',
               inset: 0,
-              borderRadius: '50%',
               backgroundColor,
             }}
           />
           <span
+            className={morphClasses[i % morphClasses.length]}
             style={{
               position: 'absolute',
               inset: `-${glow.size}px`,
-              borderRadius: '50%',
               backgroundColor: glow.color,
               filter: `blur(${glow.size}px)`,
             }}
@@ -111,10 +116,10 @@ const LandingPageSmallBlobs = ({
 }
 
 const LandingPageLargeBlobs = () => {
-  const driftClasses = [
-    landingPageBlobsStyles.largeBlobDrift1,
-    landingPageBlobsStyles.largeBlobDrift2,
-    landingPageBlobsStyles.largeBlobDrift3,
+  const aliveClasses = [
+    landingPageBlobsStyles.largeBlobAlive1,
+    landingPageBlobsStyles.largeBlobAlive2,
+    landingPageBlobsStyles.largeBlobAlive3,
   ]
 
   return (
@@ -132,14 +137,13 @@ const LandingPageLargeBlobs = () => {
       {LARGE_BLOB_POSITIONS.map((blob, index) => (
         <div
           key={index}
-          className={driftClasses[index % driftClasses.length]}
+          className={aliveClasses[index % aliveClasses.length]}
           style={{
             position: 'absolute',
             width: `${blob.size}px`,
             height: `${blob.size}px`,
             top: `${blob.position.y}%`,
             left: `${blob.position.x}%`,
-            borderRadius: '50%',
             background: blob.background,
             filter: `blur(${blob.blur}px)`,
           }}
