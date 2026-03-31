@@ -83,6 +83,7 @@ export {
   SlideCarouselButtonPosition,
   SliderCarouselDotsPosition,
 } from './components/molecules/SlideCarousel/SlideCarousel'
+export { LatestNews } from './components/molecules/LatestNews/LatestNews'
 export {
   LinkCard,
   type LinkCardWithIcon,
@@ -120,8 +121,6 @@ export { IllustrationCircle } from './components/molecules/IllustrationCircle/Il
 export { TokenWithNetworkIcon } from './components/molecules/TokenWithNetworkIcon/TokenWithNetworkIcon'
 export { OrderInformation } from './components/molecules/OrderInformation/OrderInformation'
 export { PositionCard } from './components/molecules/PositionCard/PositionCard'
-export { VaultCardHomepage } from './components/molecules/VaultCardHomepage/VaultCardHomepage'
-export { HomepageCarousel } from './components/molecules/HomepageCarousel/HomepageCarousel'
 export {
   TableCellAllocationCap,
   TableCellAllocationCapTooltipDataBlock,

@@ -104,6 +104,9 @@ export type {
   GetVaultsApyRAWResponse,
   TokenPriceData,
   RewardTokenPrices,
+  BlogPost,
+  ParsedBlogPost,
+  BlogPosts,
 } from './src/earn-protocol'
 export {
   supportedDefillamaProtocols,

@@ -13,6 +13,7 @@ import {
 import { unstable_cache as unstableCache } from 'next/cache'
 import { NextResponse } from 'next/server'
 
+import { getCachedBlogPosts } from '@/app/server-handlers/cached/blog-posts'
 import { getCachedMedianDefiProjectYield } from '@/app/server-handlers/cached/defillama/get-median-defi-project-yield'
 import { getCachedDefillamaProtocolTvl } from '@/app/server-handlers/cached/defillama/get-protocol-tvl'
 import { getCachedConfig } from '@/app/server-handlers/cached/get-config'
@@ -100,6 +101,7 @@ export async function GET() {
     vaultsInfoRaw,
     rewardTokenPrices,
     tvl,
+    blogPosts,
   ] = await Promise.all([
     getCachedVaultsList(),
     getCachedConfig(),
@@ -128,6 +130,7 @@ export async function GET() {
     getCachedVaultsInfo(),
     getCachedRewardTokenPrice(),
     getCachedTvl(),
+    getCachedBlogPosts(),
   ])
   const systemConfig = parseServerResponseToClient(configRaw)
 
@@ -162,6 +165,7 @@ export async function GET() {
     vaultsInfo,
     totalUniqueUsers,
     rewardTokenPrices,
+    blogPosts: blogPosts.news,
     tvl,
   })
 }

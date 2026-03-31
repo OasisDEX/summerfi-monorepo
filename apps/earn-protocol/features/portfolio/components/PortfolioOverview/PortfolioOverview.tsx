@@ -15,6 +15,7 @@ import {
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import {
+  type BlogPosts,
   type GetVaultsApyResponse,
   type RewardTokenPrices,
   type SDKVaultsListType,
@@ -30,7 +31,6 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type BlogPosts } from '@/app/server-handlers/raw-calls/blog-posts/types'
 import { type MigratablePosition } from '@/app/server-handlers/raw-calls/migration'
 import { PositionHistoricalChart } from '@/components/organisms/Charts/PositionHistoricalChart'
 import { useDeviceType } from '@/contexts/DeviceContext/DeviceContext'

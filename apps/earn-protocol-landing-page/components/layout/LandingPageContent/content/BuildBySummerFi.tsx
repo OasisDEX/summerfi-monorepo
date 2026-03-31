@@ -49,6 +49,47 @@ const BuildBySummerFiHeader = ({ noHeaderDescription }: { noHeaderDescription?: 
   )
 }
 
+const BuildBySummerFiHeaderPlain = ({ noHeaderDescription }: { noHeaderDescription?: boolean }) => {
+  const pathname = usePathname()
+
+  const handleViewLeadershipCta = () => {
+    EarnProtocolEvents.buttonClicked({
+      buttonName: `lp-institutions-view-leadership`,
+      page: pathname,
+    })
+  }
+
+  return (
+    <>
+      <div
+        className={buildBySummerFiStyles.buildBySummerFiHeaderWrapper}
+        style={{ marginBottom: !noHeaderDescription ? 0 : '32px' }}
+      >
+        <Text variant="h2" className={buildBySummerFiStyles.buildBySummerFiHeader}>
+          Built by Summer.fi, DeFi’s most trusted frontend app.
+        </Text>
+      </div>
+      {!noHeaderDescription && (
+        <>
+          <div className={buildBySummerFiStyles.buildBySummerFiDescription}>
+            <Text variant="p1" as="p">
+              With Summer.fi, effortlessly earn the best yields and grow your capital faster. We
+              automatically rebalance your assets to top protocols, maximizing your returns.
+            </Text>
+          </div>
+          <div className={buildBySummerFiStyles.buildBySummerFiBottomLink}>
+            <Link href="/team" prefetch={false} onClick={handleViewLeadershipCta}>
+              <WithArrow>
+                <Text variant="p2semi">View leadership</Text>
+              </WithArrow>
+            </Link>
+          </div>
+        </>
+      )}
+    </>
+  )
+}
+
 interface BuildBySummerFiProps {
   noHeaderDescription?: boolean
 }
@@ -57,6 +98,14 @@ export const BuildBySummerFi: FC<BuildBySummerFiProps> = ({ noHeaderDescription 
   return (
     <div>
       <BuildBySummerFiHeader noHeaderDescription={noHeaderDescription} />
+    </div>
+  )
+}
+
+export const BuildBySummerFiPlain: FC<BuildBySummerFiProps> = ({ noHeaderDescription = false }) => {
+  return (
+    <div>
+      <BuildBySummerFiHeaderPlain noHeaderDescription={noHeaderDescription} />
     </div>
   )
 }
