@@ -1,4 +1,5 @@
 import { Icon, Text } from '@summerfi/app-earn-ui'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import blockAnalyticaLogo from '@/public/img/landing-page/block-analytica.svg'
@@ -79,7 +80,7 @@ const ProtocolIconRow = ({ withMore = true }: { withMore?: boolean }) => {
   )
 }
 
-const PermissionlessDeFiVaultsCard = () => {
+const PermissionlessDeFiVaultsCard = ({ maxApyRegularVault }: { maxApyRegularVault: number }) => {
   return (
     <article className={`${styles.productCard}`}>
       <Image
@@ -123,7 +124,9 @@ const PermissionlessDeFiVaultsCard = () => {
               Earn up to
             </Text>
             <Text as="p" variant="h2" className={styles.apyValue}>
-              10.12%
+              {formatDecimalAsPercent(maxApyRegularVault, {
+                precision: 2,
+              })}
             </Text>
           </div>
           <div className={styles.sideStatBlock}>
@@ -227,7 +230,7 @@ const PermissionlessRwaVaultsCard = () => {
               Earn up to
             </Text>
             <Text as="p" variant="h2" className={styles.apyValue}>
-              10.12%
+              ?????????
             </Text>
           </div>
           <div className={styles.sideStatBlock}>
@@ -358,7 +361,7 @@ const IntegrateHighQualityYield = () => {
                 Earn up to
               </Text>
               <Text as="p" variant="h2" className={styles.apyValue}>
-                10.12%
+                ?????????
               </Text>
             </div>
             <div>
@@ -464,10 +467,14 @@ const IntegrateHighQualityYield = () => {
   )
 }
 
-export const OurProductsList = () => {
+export const OurProductsList = ({
+  ourProductsStats,
+}: {
+  ourProductsStats: { maxApyRegularVault: number }
+}) => {
   return (
     <div className={styles.cardsList}>
-      <PermissionlessDeFiVaultsCard />
+      <PermissionlessDeFiVaultsCard maxApyRegularVault={ourProductsStats.maxApyRegularVault} />
       <PermissionlessRwaVaultsCard />
       <BuildYourOwnVaultCard />
       <IntegrateHighQualityYield />

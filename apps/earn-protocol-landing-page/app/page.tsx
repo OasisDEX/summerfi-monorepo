@@ -42,7 +42,12 @@ export default function HomePage() {
       />
       <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <YieldProtocolOpenToAll />
-      <OurProducts />
+      <OurProducts
+        vaultsInfo={landingPageData?.vaultsInfo}
+        vaultsList={landingPageData?.vaultsWithConfig}
+        vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
+        rewardTokenPrices={landingPageData?.rewardTokenPrices}
+      />
       <LatestNews news={landingPageData?.blogPosts} />
       <div
         style={{

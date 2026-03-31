@@ -23,17 +23,10 @@ import {
 } from '@summerfi/app-utils'
 import Link from 'next/link'
 
+import { getManagementFee } from '@/helpers/get-management-fee'
 import { EarnProtocolEvents } from '@/helpers/mixpanel'
 
 import landingPageHeroStyles from '@/components/layout/LandingPageContent/components/LandingPageHero.module.css'
-
-const getManagementFee = (tokenSymbol: string): number => {
-  // check if it has USD in the symbol, if so return 1%, otherwise return 0.3%
-  // EURC now also has 0.3% fee, same as ETH
-  const isStablecoin = tokenSymbol.includes('USD')
-
-  return isStablecoin ? 0.01 : 0.003
-}
 
 export const LandingPageHero = ({
   vaultsList,
