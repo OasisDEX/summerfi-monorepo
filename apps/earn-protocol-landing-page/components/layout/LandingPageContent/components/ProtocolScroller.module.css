@@ -1,37 +1,11 @@
 .protocolScrollerWrapper {
-  margin-top: var(--spacing-space-3x-large);
+  margin-top: 0;
 }
 
 @media (max-width: 531px) {
   .protocolScrollerWrapper {
-    margin-top: var(--spacing-space-2x-large);
+    margin-top: 0;
   }
-}
-
-.protocolScrollerHeader {
-  font-weight: 600;
-  text-align: center;
-  padding: 0 var(--spacing-space-medium);
-  max-width: 1057px;
-  margin: 0 auto;
-}
-
-@media (min-width: 532px) {
-  .protocolScrollerHeader {
-    padding: 0 var(--spacing-space-2x-large);
-  }
-}
-
-.protocolScrollerHeader>span>span {
-  font-weight: 600;
-}
-
-.headerLine {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.25rem;
 }
 
 .protocolScrollerTrackWrapper {
@@ -59,21 +33,19 @@
   height: 82px;
   width: 100vw;
   overflow: hidden;
-  margin-top: var(--spacing-space-2x-large);
+  margin-top: 20px;
   margin-bottom: var(--spacing-space-3x-large);
 }
 
 @media (min-width: 532px) {
   .protocolScrollerOverflowWrapper {
-    margin-top: var(--spacing-space-2x-large);
-    margin-bottom: var(--spacing-space-3x-large);
+    margin-top: 20px;
   }
 }
 
 @media (min-width: 1026px) {
   .protocolScrollerOverflowWrapper {
-    margin-top: var(--spacing-space-2x-large);
-    margin-bottom: var(--spacing-space-4x-large);
+    margin-top: 20px;
   }
 }
 
@@ -98,20 +70,10 @@
   height: 82px;
   pointer-events: none;
   z-index: 3;
-  background: linear-gradient(90deg, rgb(28, 28, 28) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(28, 28, 28) 100%);
-}
-
-.protocolScrollerItemGradient {
-  cursor: auto !important;
-}
-
-.protocolScrollerItemGradient::before {
-  border-radius: var(--radius-large) !important;
+  background: linear-gradient(90deg, rgb(16, 16, 16) 0%, rgba(70, 70, 70, 0) 20%, rgba(70, 70, 70, 0) 80%, rgb(16, 16, 16) 100%);
 }
 
 .protocolScrollerItem {
-  border-radius: var(--radius-large);
-  background-color: var(--color-surface-subtle);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -119,11 +81,33 @@
   min-width: 280px;
   max-width: 280px;
   padding: var(--spacing-space-medium) var(--spacing-space-large);
-  transition: background-color 0.2s ease;
+  transition: opacity 0.2s ease;
+  user-select: none;
+  opacity: 0.6;
 }
 
 .protocolScrollerItem:hover {
-  background-color: var(--color-surface-subtler);
+  opacity: 1;
+}
+
+.protocolScrollerItem::after,
+.protocolScrollerItem::before {
+  content: '';
+  position: relative;
+  top: 20px;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 100px;
+  opacity: 0.5;
+}
+
+.protocolScrollerItem::after {
+  left: 33px;
+}
+
+.protocolScrollerItem::before {
+  right: 33px;
 }
 
 .protocolScrollerItemNameIcon {

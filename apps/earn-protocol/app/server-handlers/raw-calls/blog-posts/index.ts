@@ -1,5 +1,6 @@
+import { type BlogPosts } from '@summerfi/app-types'
+
 import { parseBlogPost } from './helpers'
-import { type BlogPosts } from './types'
 
 const apiUrl = 'https://summer-fi-blog.ghost.io/ghost/api'
 

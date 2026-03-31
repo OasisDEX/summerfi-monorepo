@@ -38,10 +38,14 @@ export const Audits = ({
   chainSecurityLogo,
   prototechLabsLogo,
   onAuditClick,
+  noHeader,
+  fullWidth,
 }: {
   chainSecurityLogo: StaticImageData
   prototechLabsLogo: StaticImageData
   onAuditClick: (auditId: string) => void
+  noHeader?: boolean
+  fullWidth?: boolean
 }): ReactNode => {
   const handleAuditClick = (auditId: string) => () => {
     onAuditClick(auditId)
@@ -49,15 +53,29 @@ export const Audits = ({
 
   return (
     <div>
-      <div className={auditsStyles.auditsHeaderWrapper}>
-        <Text variant="p2semiColorful" as="p">
-          Audits
-        </Text>
+      <div
+        className={auditsStyles.auditsHeaderWrapper}
+        style={{
+          maxWidth: fullWidth ? '100%' : undefined,
+          width: fullWidth ? '100%' : undefined,
+        }}
+      >
+        {!noHeader && (
+          <Text variant="p2semiColorful" as="p">
+            Audits
+          </Text>
+        )}
         <Text variant="h2" className={auditsStyles.auditsHeader}>
           Top tier security & audits
         </Text>
       </div>
-      <div className={auditsStyles.auditBlocksWrapper}>
+      <div
+        className={auditsStyles.auditBlocksWrapper}
+        style={{
+          maxWidth: fullWidth ? '100%' : undefined,
+          width: fullWidth ? '100%' : undefined,
+        }}
+      >
         <AuditBlock
           auditUrl="https://www.chainsecurity.com/smart-contract-audit-reports"
           image={chainSecurityLogo}

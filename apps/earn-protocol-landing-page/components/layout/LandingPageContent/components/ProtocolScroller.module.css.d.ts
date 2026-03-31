@@ -1,8 +1,5 @@
 declare const styles: {
-  readonly "headerLine": string;
-  readonly "protocolScrollerHeader": string;
   readonly "protocolScrollerItem": string;
-  readonly "protocolScrollerItemGradient": string;
   readonly "protocolScrollerItemNameIcon": string;
   readonly "protocolScrollerItemTvl": string;
   readonly "protocolScrollerOverflowWrapper": string;

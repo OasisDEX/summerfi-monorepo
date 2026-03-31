@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
-import type { BlogPost, ParsedBlogPost } from './types'
+
+import { type BlogPost, type ParsedBlogPost } from '@summerfi/app-types'
 
 /**
  * Transforms a raw blog post from the Ghost CMS API into a simplified parsed format.
