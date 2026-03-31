@@ -24,7 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <GlobalStyles />
       </head>
-      <body className={` ${fontInter.variable}`}>
+      <body
+        className={` ${fontInter.variable}`}
+        style={{
+          background: 'rgb(16, 16, 16)',
+        }}
+      >
         <GoogleTagManager />
         <LandingPageDataContextProvider>
           <LandingPageBanners />
