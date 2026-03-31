@@ -39,6 +39,7 @@ export default function HomePage() {
         vaultsList={landingPageData?.vaultsWithConfig}
         vaultsApyByNetworkMap={landingPageData?.vaultsApyByNetworkMap}
         rewardTokenPrices={landingPageData?.rewardTokenPrices}
+        tvl={landingPageData?.tvl}
       />
       <ProtocolScroller protocolTvls={landingPageData?.protocolTvls} />
       <YieldProtocolOpenToAll />

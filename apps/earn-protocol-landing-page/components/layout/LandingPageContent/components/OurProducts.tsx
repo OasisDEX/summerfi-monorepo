@@ -25,38 +25,34 @@ export const OurProducts = ({
   const ourProductsStats = useMemo(() => {
     const maxApyRegularVault =
       (vaultsList
-        ? vaultsList
-            .filter((vault) => {
-              return vault.isDaoManaged === false
+        ? vaultsList.map((vault) => {
+            const vaultInfo = findVaultInfo(vaultsInfo, vault)
+            const managementFee = getManagementFee(vault.inputToken.symbol)
+
+            if (!vaultInfo) return 0
+            if (!vaultsApyByNetworkMap) return 0
+
+            const vaultApy =
+              vaultsApyByNetworkMap[
+                `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
+              ]
+
+            const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
+              merklRewards: vaultInfo.merklRewards,
+              tokensPriceMap: rewardTokenPrices,
+              totalValueLockedUSD: vault.totalValueLockedUSD,
             })
-            .map((vault) => {
-              const vaultInfo = findVaultInfo(vaultsInfo, vault)
-              const managementFee = getManagementFee(vault.inputToken.symbol)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const grossRewardsTokenBonus = totalAnnualRewardsPerToken
+              ? Object.values(totalAnnualRewardsPerToken).reduce((acc, bonus) => acc + bonus, 0)
+              : 0
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const grossApy = (vaultApy.apy ?? 0) + grossRewardsTokenBonus
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            const netApy = grossApy - (managementFee ?? 0)
 
-              if (!vaultInfo) return 0
-              if (!vaultsApyByNetworkMap) return 0
-
-              const vaultApy =
-                vaultsApyByNetworkMap[
-                  `${vault.id}-${subgraphNetworkToId(supportedSDKNetwork(vault.protocol.network))}`
-                ]
-
-              const { totalAnnualRewardsPerToken } = getRewardsTokenBonus({
-                merklRewards: vaultInfo.merklRewards,
-                tokensPriceMap: rewardTokenPrices,
-                totalValueLockedUSD: vault.totalValueLockedUSD,
-              })
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              const grossRewardsTokenBonus = totalAnnualRewardsPerToken
-                ? Object.values(totalAnnualRewardsPerToken).reduce((acc, bonus) => acc + bonus, 0)
-                : 0
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              const grossApy = (vaultApy.apy ?? 0) + grossRewardsTokenBonus
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              const netApy = grossApy - (managementFee ?? 0)
-
-              return netApy
-            })
+            return netApy
+          })
         : []
       ).sort((a, b) => b - a)[0] ?? 0
 
